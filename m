@@ -2,174 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ECA910F787
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 06:51:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B970F10F79D
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 07:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLCFvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Dec 2019 00:51:40 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:6594 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfLCFvj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 00:51:39 -0500
-IronPort-SDR: o/j+Ri+xO4fWTIVCdgPBUzjtzOJlOQ4wmggRu6QZca0TCBOkHqE4ZMckMY0XgpgEFCwVAkOZdJ
- zH0Di0t2eFwTMoCX5+Dmbv/B30Kz8UeQbcwSlJRrRyvBRAArhUElLv2NMKH+zppw4ZC7dOxlWK
- AOMf3uRfAIM2u7Wk4Qq86K3+6lV5vqjvPpzQSFfW8sP63eqIdEg5mIdaN5zTAybmjTxgYgnNgL
- KxJgiYocZbKXHSbByjv5bF9N1WRypaYrkWAm9RhI0RIYJkMYks64vQIn8f/LUTdW04Df3YiDyu
- xKI=
-X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
-   d="scan'208";a="45589731"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:51:38 -0800
-IronPort-SDR: i8krjONcTTsnPkHY7SRiGdPmITr+0xNAXFXEgjkJWTG1D1tRaDcT2sdw0OnXTIXhUqEDFgzvAR
- dttKo+ORd63AvM4to/DyzDuJF57oI5Vi7/iYpzrQEkc3xIqj3eJT457bxirU8BrDkuqz8apUvw
- JxXTyf13gnmnt2Ln1nepE0IY1Dr7ZC1/mxI+i6nWcNIcJmX2GgkCgi2Uo1v6wmGd1b+yqVAN9T
- 0VLnn5Y5apijUzN7Hq0gIyZaQmf5LOaoYKcT6i2bJwuZAsOGE6Kp5TQMK0MgNeNdOFviPXHdfV
- l0k=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-CC:     Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <11ae473f-cee1-241b-174c-915dc46209b1@mentor.com>
-Date:   Tue, 3 Dec 2019 11:21:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191127084253.16356-5-geert+renesas@glider.be>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S1726958AbfLCGE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Dec 2019 01:04:26 -0500
+Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:15454
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726521AbfLCGE0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 3 Dec 2019 01:04:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cdyazBItDTBW8xFeZuo3AV0TCDUD+2aRb0Qci/nH85agMmm3a5nbEKGo4LYmtvoMknbb9EPBTT07jsWu3+40iyivdQ9KSGyAyvii8kik8VPHD2jIEzsse76pvygP5B/fFONwRJ4ISk65tQqYkeGrukGnprBHS8pGigET3j/1Mj08dt9x9tcC1EYzi9rpPTJrqsLJzz3eJBtm7Tb43HQ6p7DzTUm/R7oBQ5t6BmIjdsuKNsz2C0b4fbD2bFoORbit8RQ2kzbd20E2YUNNj8xPvY/3UnOt9pcDXTkkDVqRMS7hX+ZgMGaETjaU1bhK2Gbv6NZK4pJ3T7LaGqHjoxxtHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
+ b=X6MqI1Gz0xg9LFIg6RtXlturhk8jjdF95JUaz9uRNdbRhkR6gdkpMxkO5wo/KHu5ETYK/DuHfDY88XyohoTAI5e1D0LrI5CkvXhzOFMRIpsetA8bAiQlxvL/zlWdUNM2lx26BoHmwvXW15rMgtzRhJAbDhRpIQY69fERjxiLPvxZt2hLpnt7OHGB/tTd13zlDOAEnGDFcTSpbqZFX+HD2YjjcSm06BaxL4prMKNnMOHwJBkXvL7VY5aA/1KTAYHqmDNIWIljV+I2ZoZ9UvEaZTVIwrbiGfGVDzfmU9hfRwC1KTHI0HZliiopvCqQ0TY9IBe6QPHSbYB//raRcVUnXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1AJvhOrjWXY8Cde7pIWJ6/TqHSbVnmBTAaREaIxIzYw=;
+ b=e8ncpEu3oY1EsgRbFKL9t/HTz++JBz5X2QN4bCFs8H9WPXTE3xg/fcUzGCLtL0yZLndJDnyB4l+c5hJRyWB718vlQaP8yH7H5b3nb82yIzjCK4If9Yuh+vzcDhhX9I5rPx/mPPa4LYe8Pzcft3LLQBcKFoBPCGi9mQY/z0pa7OQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6993.eurprd04.prod.outlook.com (52.132.212.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.18; Tue, 3 Dec 2019 06:04:22 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2495.014; Tue, 3 Dec 2019
+ 06:04:22 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>
+CC:     "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+Thread-Topic: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+Thread-Index: AQHVqZ+C2ZbmEZTAyUWwsa6EK7twoQ==
+Date:   Tue, 3 Dec 2019 06:04:22 +0000
+Message-ID: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0049.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::13) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d74b764c-9a04-4a83-cd5a-08d777b6a455
+x-ms-traffictypediagnostic: AM0PR04MB6993:|AM0PR04MB6993:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6993B5D3BD90B83B70763C6F88420@AM0PR04MB6993.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:792;
+x-forefront-prvs: 02408926C4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(199004)(189003)(102836004)(305945005)(7736002)(71200400001)(81156014)(81166006)(8676002)(71190400001)(86362001)(50226002)(5660300002)(66556008)(2201001)(66946007)(66476007)(64756008)(66446008)(6486002)(8936002)(66066001)(2501003)(2616005)(36756003)(44832011)(256004)(186003)(6436002)(7416002)(478600001)(14454004)(6116002)(4326008)(54906003)(3846002)(110136005)(316002)(25786009)(26005)(2906002)(386003)(6506007)(99286004)(52116002)(6512007)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6993;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qaf5J2slBfkgniPKk0Id/IOwwaLJgaQ/Bd51b2rCfVbnNwgIFRTu3rXlp9FkQTHJg8911WJ8r4lTMjNTBRgUneJxr2ioYaW3Pyt4tEuf21Hru/H41kteBEC6baaPBrRjYLxJkjRrKaDKwJRLMiLG5BwxvQSTbe/FYWeVgM+8f+KuOoBQNVhRd9+iN7lOzZEbTgoAAhAW1RKRsYLERZCW6SCdWHHx4I7cQ08Cz0g7+vaft9NtQEdm/WFslaAxmFgTHZs3ROgpw1RT87P++DH+6VOguOjv+RFDJN3L3wpkKfKI3sXu1wCb9wqgVEeHNUF9ZjYNldbn4B3gMMkXmjXWI6p960PSI7vVLo+fPzHHOhhhKc458dc9rAuewjm9G/z8g9RcIOC1She6ofTATW2s7+N9elnKSsRQVoy/8eQPY3YVD6OGG+2VUrx5s3AOPi6Q
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d74b764c-9a04-4a83-cd5a-08d777b6a455
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Dec 2019 06:04:22.5052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UZIQn9dnu93xfFk/PMh1yrtYJMGSeklSeuxSRR3kGMH1/IEof8aZKYCtzE8wmPAtkc5FEZGAmHWi3IX0FS+T9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6993
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Peng Fan <peng.fan@nxp.com>
 
-On 27/11/19 2:12 PM, Geert Uytterhoeven wrote:
-> Add Device Tree bindings for a GPIO repeater, with optional translation
-> of physical signal properties.  This is useful for describing explicitly
-> the presence of e.g. an inverter on a GPIO line, and was inspired by the
-> non-YAML gpio-inverter bindings by Harish Jenny K N
-> <harish_kandiga@mentor.com>[1].
->
-> Note that this is different from a GPIO Nexus Node[2], which cannot do
-> physical signal property translation.
->
-> While an inverter can be described implicitly by exchanging the
-> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-> th provider and consumer sides:
->   1. The GPIO provider (controller) looks at the flags to know the
->      polarity, so it can translate between logical (active/not active)
->      and physical (high/low) signal levels.
->   2. While the signal polarity is usually fixed on the GPIO consumer
->      side (e.g. an LED is tied to either the supply voltage or GND),
->      it may be configurable on some devices, and both sides need to
->      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->      match the actual polarity.
->      There exists a similar issue with interrupt flags, where both the
->      interrupt controller and the device generating the interrupt need
->      to agree, which breaks in the presence of a physical inverter not
->      described in DT (see e.g. [3]).
->
-> [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
->     https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
->
-> [2] Devicetree Specification v0.3-rc2, Section 2.5
->     https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
->
-> [3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
->     inverted IRQ"
->     https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  .../bindings/gpio/gpio-repeater.yaml          | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> new file mode 100644
-> index 0000000000000000..efdee0c3be43f731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
-> @@ -0,0 +1,53 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-repeater.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO Repeater
-> +
-> +maintainers:
-> +  - Harish Jenny K N <harish_kandiga@mentor.com>
-> +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> +
-> +description:
-> +  This represents a repeater for one or more GPIOs, possibly including physical
-> +  signal property translation (e.g. polarity inversion).
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-repeater
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  gpios:
-> +    description:
-> +      Phandle and specifier, one for each repeated GPIO.
-> +
-> +  gpio-line-names:
-> +    description:
-> +      Strings defining the names of the GPIO lines going out of the GPIO
-> +      controller.
-> +
-> +required:
-> +  - compatible
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +  - gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Device node describing a polarity inverter for a single GPIO
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    inverter: gpio-repeater {
-> +        compatible = "gpio-repeater";
-> +        #gpio-cells = <2>;
-> +        gpio-controller;
-> +        gpios = <&gpio 95 GPIO_ACTIVE_LOW>;
-> +    };
+Use platform_irq_count to replace of_irq_count
 
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
-just a suggestion: giving a gpio-line-names in the example would look useful.
+V1:
+ Code inspection, not tested
+
+ drivers/gpio/gpio-mvebu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 993bbeb3c006..ecfedcdadc0d 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -46,7 +46,6 @@
+ #include <linux/irqdomain.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_device.h>
+-#include <linux/of_irq.h>
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+@@ -1102,7 +1101,7 @@ static int mvebu_gpio_probe(struct platform_device *p=
+dev)
+ 		soc_variant =3D MVEBU_GPIO_SOC_VARIANT_ORION;
+=20
+ 	/* Some gpio controllers do not provide irq support */
+-	have_irqs =3D of_irq_count(np) !=3D 0;
++	have_irqs =3D platform_irq_count(pdev) !=3D 0;
+=20
+ 	mvchip =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_gpio_chip),
+ 			      GFP_KERNEL);
+--=20
+2.16.4
 
