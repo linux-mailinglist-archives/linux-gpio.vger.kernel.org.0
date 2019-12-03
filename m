@@ -2,150 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 705FD10FA46
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 09:58:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7994610FA4E
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 09:59:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfLCI6C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Dec 2019 03:58:02 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:41593 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLCI6B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 03:58:01 -0500
-X-Originating-IP: 90.76.211.102
-Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 504A31BF20D;
-        Tue,  3 Dec 2019 08:57:58 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 09:57:57 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 5/5] gpio: syscon: Add support for the Xylon LogiCVC
- GPIOs
-Message-ID: <20191203085757.GA121276@aptenodytes>
-References: <20191128155438.325738-1-paul.kocialkowski@bootlin.com>
- <20191128155438.325738-6-paul.kocialkowski@bootlin.com>
- <CACRpkdaSLsq-oA7t8OL6_6L+ivZE+a83M4JbTZ2HW5E1E7c6yw@mail.gmail.com>
+        id S1725774AbfLCI67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Dec 2019 03:58:59 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41781 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfLCI64 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 03:58:56 -0500
+Received: by mail-io1-f65.google.com with SMTP id z26so2805754iot.8
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Dec 2019 00:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OkrBqSbGQQqKvPBRe7/T56fzqMDR8HSG0Yl2TDPSNZ4=;
+        b=oVc/5gHSlenQ9kt2RH18hXenCkeBc2T/Z4fkTNAWnH7jKd1HlexTxZwIIz1NNuTIDt
+         R9TcF8nEfpPPo4epu70Wy0oAQaFzbyGZMWFvU9xOKU8YZJ83hp2IwyN9YzvZ2pj1dxdw
+         ficDhOs0TSKGEnOp8uga8mCwrsu/UcJy8NvtMpky1runYfsunwKSOe6DW3cUALWKavUp
+         V5Y6Ttq9xasqmw3aX82kN1fdPSKaZjgDzYccu47bOpgHzSNSR40GXX/+wAxL0w1PvaiE
+         HrK4MTuW2Lq9y4ayO4CXodpEGAYXOnVMn21OBmS8w1SIvTAIAA0SUNVN7ePbSZdisUdf
+         LwwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OkrBqSbGQQqKvPBRe7/T56fzqMDR8HSG0Yl2TDPSNZ4=;
+        b=g/Zep+pjSPAnjii4IX+xNOIdbEt44/rY3nXOFcFn6+qKBTJD+2gaZNMpFnlJ+6634k
+         PkB9C3lKPbhHnFI2w62z0Of5tiNbEj9x0oy+EQY4vFtF7osxpvyw3Av6oOywafTDKvVR
+         mOUfFd+ekvcVrEAMaHFx+6Q54vmKyQTqP/+UhWJ1dkKj7b7ezpWNyu6QKYNmUMMpFeWj
+         mh3tSoiJ1xmpNYOhuQDMawFUKjhx5/umQfTYGkNaawcydCBNSDssMcDdbJJxS1d2sG7i
+         wfmaHEqq2QsLoTjjAQ+i1eU+5say9QiaQ52uYJcsfecoq9zNUfR89L79PihlkoP1bKh3
+         8vBg==
+X-Gm-Message-State: APjAAAUBxeuAbGr+oO2UL5pOcH5KpJxKfO+L1raA+42EHDQ2l03OBWZE
+        yy47wYK1pwh6/7gTlPg46cCxy5KLBUBeQ4Au+Cs8Lg==
+X-Google-Smtp-Source: APXvYqxy1Cm4zHs/Qqzhe21YjsHxxFD3dtLLC75jWk1WTguSKossIwjFUEWn4+SxjqK9Fz8RXjc8OU0gRPjaQnuNNqQ=
+X-Received: by 2002:a05:6602:2352:: with SMTP id r18mr1416917iot.220.1575363535419;
+ Tue, 03 Dec 2019 00:58:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaSLsq-oA7t8OL6_6L+ivZE+a83M4JbTZ2HW5E1E7c6yw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191127232330.GA3761@sol> <CAMRc=Me5kNUuPQCTM_H=2QjUL=7R-ii+uRvdNvAz3SqL_sPzcQ@mail.gmail.com>
+ <20191128141028.GA15454@sol> <CAMRc=MeZzjuU25L_-qjP9n3O6Z3ucYUZkUoCA3sX0Z0yaXtgMw@mail.gmail.com>
+ <20191128150200.GA16492@sol> <CAMRc=Md6aQobSoDVnAiLFQyZ1dKq8j4Wwm-_Zv9vrYReJvoCgA@mail.gmail.com>
+ <20191129134907.GA24580@sol> <CAMpxmJUCjsWgZ0NHD2Uz-uG0F61J=BZe0G83=i=fewYYpWhrjQ@mail.gmail.com>
+ <20191201234318.GA6832@sol> <CAMRc=MeVNWo-weCT=ROQz0mVc-2Lh4JnBrDSf=3rBAPPCYL5Bw@mail.gmail.com>
+ <20191203020921.GA7900@sol>
+In-Reply-To: <20191203020921.GA7900@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 3 Dec 2019 09:58:44 +0100
+Message-ID: <CAMRc=McpHbGvCgKUcV40bUZ1mxe9YzaBmTiS0+afoe-V0CN4VQ@mail.gmail.com>
+Subject: Re: [PATCH 7/8] gpiolib: add new ioctl() for monitoring changes in
+ line info
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Linus,
-
-On Fri 29 Nov 19, 10:24, Linus Walleij wrote:
-> Hi Paul,
->=20
-> thanks for your patch!
->=20
-> On Thu, Nov 28, 2019 at 4:54 PM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
->=20
-> > The LogiCVC display hardware block comes with GPIO capabilities
-> > that must be exposed separately from the main driver (as GPIOs) for
-> > use with regulators and panels. A syscon is used to share the same
-> > regmap across the two drivers.
+wt., 3 gru 2019 o 03:09 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
+>
+> On Mon, Dec 02, 2019 at 06:11:06PM +0100, Bartosz Golaszewski wrote:
+> > pon., 2 gru 2019 o 00:43 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+> > >
 > >
-> > Since the GPIO capabilities are pretty simple, add them to the syscon
-> > GPIO driver.
+> > [snip!]
 > >
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> (...)
-> > +#define LOGICVC_CTRL_REG               0x40
-> > +#define LOGICVC_CTRL_GPIO_SHIFT                11
-> > +#define LOGICVC_CTRL_GPIO_BITS         5
-> > +
-> > +#define LOGICVC_POWER_CTRL_REG         0x78
-> > +#define LOGICVC_POWER_CTRL_GPIO_SHIFT  0
-> > +#define LOGICVC_POWER_CTRL_GPIO_BITS   4
-> > +
-> > +static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
-> > +                               unsigned offset, unsigned int *reg,
-> > +                               unsigned int *bit)
-> > +{
-> > +       if (offset >=3D LOGICVC_CTRL_GPIO_BITS) {
-> > +               *reg =3D LOGICVC_POWER_CTRL_REG;
-> > +
-> > +               /* To the (virtual) power ctrl offset. */
-> > +               offset -=3D LOGICVC_CTRL_GPIO_BITS;
-> > +               /* To the actual bit offset in reg. */
-> > +               offset +=3D LOGICVC_POWER_CTRL_GPIO_SHIFT;
-> > +       } else {
-> > +               *reg =3D LOGICVC_CTRL_REG;
-> > +
-> > +               /* To the actual bit offset in reg. */
-> > +               offset +=3D LOGICVC_CTRL_GPIO_SHIFT;
-> > +       }
-> > +
-> > +       *bit =3D BIT(offset);
-> > +}
->=20
-> The gpio-syscon.c is for simple syscons where the lines
-> you want to affect are nicely ordered in the registers.
-> It is intended to be generic.
->=20
-> This is kind of shoehorning a special case into the generic
-> code.
->=20
-> Isn't it more appropriate to create a specific driver for this
-> hardware?
+> > > > > >
+> > > > > > How about reusing the already existing file descriptor associat=
+ed with
+> > > > > > the chip itself? We currently only implement the ioctl() operat=
+ion on
+> > > > > > it - the poll() and read() callbacks are empty.
+> > > > > >
+> > > > > > We'd need to add two new ioctls(): GPIOLINE_WATCH_IOCTL and
+> > > > > > GPIOLINE_UNWATCH_IOCTL. The structures for both would look like=
+ this:
+> > > > > >
+> > > > > > struct gpioline_watch_request {
+> > > > > >     __u32 lineoffset
+> > > > > >     struct gpioline_info info;
+> > > > > > };
+> > > > > >
+> > > > > > struct gpioline_unwatch_request {
+> > > > > >     __u32 lineoffset;
+> > > > > > };
+> > > > > >
+> > > > > > When GPIOLINE_WATCH_IOCTL is called, we'd setup a watch for giv=
+en
+> > > > > > line: the embedded gpioline_info structure would be filled with
+> > > > > > initial info and we can now poll the gpiochip descriptor for ev=
+ents
+> > > > > > and read them. The event structure would looks like this:
+> > > > > >
+> > > > > > struct gpioline_changed {
+> > > > > >     __u32 event_type;
+> > > > > >     __u64 timestamp;
+> > > > > >     struct gpioline_info info;
+> > > > > > };
+> > > > > >
+> > > > > > Calling GPIOLINE_UNWATCH_IOCTL would of course make the kernel =
+stop
+> > > > > > emitting events for given line.
+> > > > > >
+> > > > > > Does it make sense?
+> > > > > >
+> > > > >
+> > > > > That makes sense.  But it doesn't really address the underlying p=
+roblem
+> > > > > that you have identified - it just makes it less likely that you =
+will
+> > > > > fill the kfifo.
+> > > > >
+> > > > > Correct me if I'm wrong, but a pathological process or processes =
+could
+> > > > > still swamp your kfifo with events, particularly if they are oper=
+ating
+> > > > > on bulks.
+> > > >
+> > > > Don't get me wrong - the assumption is that a process knows what it=
+'s
+> > > > doing. We expect that if it watches lines for events, then it will
+> > > > actually read them as soon as they arrive on the other end of the
+> > > > FIFO. If not - then this won't affect others, it will fill up the F=
+IFO
+> > > > associated with this process' file descriptor and we'll just drop n=
+ew
+> > > > events until it consumes old ones. In other words: I'm not worried
+> > > > about pathological processes.
+> > > >
+> > >
+> > > The reader can't guarantee that it can read faster than changes can o=
+ccur,
+> > > no matter how well intentioned it is.
+> > >
+> > > I am a bit worried if you just drop events, as there is no indication=
+ to
+> > > userspace that that has occured.
+> >
+> > This is what happens now with line events anyway. I added a patch to
+> > the v2 of this series that adds a ratelimited debug message when the
+> > kfifo is full. At least that will leave a trace in the kernel log.
+> > Unfortunately there's no other way than limiting the FIFO's size -
+> > otherwise a malicious process could hog all the memory by not reading
+> > events.
+> >
+> > >
+> > > > The problem here is that the file descriptor is created and there a=
+re
+> > > > already several (up to 64) events waiting to be read. This just
+> > > > doesn't feel right. If the process doesn't manage to consume all
+> > > > initial events in time, we'll drop new ones. The alternative is to
+> > > > allocate a larger FIFO but I just have a feeling that this whole
+> > > > approach is wrong. I'm not sure any other subsystem does something
+> > > > like this.
+> > > >
+> > > > >
+> > > > > I'd be happier with a solution that addresses what happens when t=
+he
+> > > > > kfifo is full, or even better prevents it from filling, and then =
+see
+> > > > > how that feeds back to the startup case.
+> > > > >
+> > > >
+> > > > You can't really prevent it from overflowing as you can't
+> > > > update/modify elements in the middle.
+> > > >
+> > >
+> > > You can if you let go of the idea of adding something to the fifo for
+> > > every change.  If you know the change you want to signal is already i=
+n
+> > > the fifo then you don't need to add it again.
+> > >
+> > > The idea I'm suggesting now is for the fifo to contain "your info on
+> > > line X is stale" messages.  If that hasn't been ACKed by userspace th=
+en
+> > > there is no point adding another for that line.  So worst case you ha=
+ve
+> > > num_lines messages in the fifo at any time.
+> >
+> > I see. But in this case I'm not sure a file descriptor is the right
+> > interface. When POLLIN events are detected by poll() called on an fd -
+> > it means there's data to read on the file descriptor: there's data
+> > already in the FIFO waiting to be consumed by the user-space.
+> >
+>
+> Agree with file descriptors not being ideal for this, but what other
+> options are there?
+>
+> > Let's imagine the following situation: we detect one of the conditions
+> > for emitting the event in the kernel, we set the "needs_update" flag,
+> > we then wake up the polling process, but it calls the LINE_INFO
+> > ioctl() on the changed line without ever reading the event from the
+> > fd. What would happen now? Does the unread event disappear from the fd
+> > because the user "acked" the event? What about ordering of events when
+> > line X gets updated, then line Y, then X again but the process didn't
+> > read the first event?
+> >
+>
+> The unread event can't disappear from the fifo. The fifo is write only
+> from the kernel side, right?
+>
+> You are right that things don't go well if userspace doesn't strictly
+> follow the read from fd then LINEINFO ioctl ordering.
+>
+> So probably best to keep things simple.
+>
+> And we should accept that overflows may occur.  As that would leave
+> userspace with stale info, userspace should poll the LINEINFO ioctl
+> occassionally to check that it is still in sync.
+>
+> > IIRC the way the line events are handled in sysfs (polling
+> > 'gpioXYZ/value', while 'gpioXYZ/value' doesn't work as a FIFO) was
+> > criticized for its unreliability and was one of the reasons for
+> > developing the chardev.
+> >
+>
+> Tarring it with the sysfs brush is a bit harsh!
+> You are comparing apples and oranges.
+> In the sysfs case the problem was losing events.
+> In this case losing events is not critical.
+>
+> > I would be much happier with your previous proposal: getting line_info
+> > when setting the watch and then getting it all again every time the
+> > status changes. We also get the "history" of changes that way.
+> >
+>
+> I believe the previous proposal was yours - adding watch and unwatch
+> ioctls to the chip fd.
 
-Yes I'm fine with that too. Indeed the driver has custom set/get operations
-that don't really fit well into generic code.
+The idea was yours, the concrete proposal was mine. :)
 
-> Special get/set quirks for any possible quirky offset is
-> certainly not the way to go, if this should be supported
-> we need generic properties in struct syscon_gpio_data
-> to indicate the valid bits and offsets.
+I'll try to prepare a v2 and let's discuss the code again.
 
-I guess the rationale would be to define multiple possible bit offsets for
-different ranges of GPIO offsets, but I don't think it would be very useful
-outside of this case.
+Bart
 
-I'll probably craft a new version with a dedicated driver then.
-
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3mI5UACgkQ3cLmz3+f
-v9Ejqwf9EqpCp5uGFwKQd9B+GtDJr4lmeFgNU3q869poGgN71iZlIVqLbkTlNRi5
-Zzcv3O/kk3DUpDx9c+zaz6wiiSMeh/G1u1DIvg3ewOmQSJIFI4oGw+2fClcfDhPR
-gzSBq9Oshh6gJVFQD5aD5FUswj6PBnUBNfi03dKMvFqFGxXNpagYRu0b9A+rNHrR
-QJDxjkGggG1EacHTetFQ8LVf6NNNNGtqFt43Y5vmYWfS/xJ9K7wE3byhZm9gnjcw
-/AHKKNTMv77/3UcjpY0OPlKQ0ZNN7XOQRDb4Cbp0inKkyAh1A34Wjy/PaCSbtIYJ
-0dikoJ59H99/czfZUldnSLdkeDsmCw==
-=B18y
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
+>
+> Kent.
+>
+> </snip>
