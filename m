@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 314A910F774
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 06:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ECA910F787
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 06:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbfLCFmv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Dec 2019 00:42:51 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:55187 "EHLO
+        id S1726969AbfLCFvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Dec 2019 00:51:40 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:6594 "EHLO
         esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfLCFmu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 00:42:50 -0500
-IronPort-SDR: 1d3cbX4jmGzyde8PjnivFnq6fHbKai6sEc2kaYive6h0RWkvQ9drIjeWjGmvYIS4gVLu+D52Pt
- +VI56eTKrIhDRNQIZWo3o+GjrnShHDSZy+DLArkSlkFA3JQmurvLnvMKyv9EK1EweKjyav/4Lj
- 8WSSo3b/Vv9QQM0ZMJuQ0P3Vcq1cvwcSXLOWUxweHnwpl4EJ+GLaUPURonYjl83Ysy5YEpAkRn
- 5niHbKsU2PiUqGbla+ej3PYmfz0hPgFw7+mp8m4s46N6dQ3TGTi3TScTUpnXcLRWk8/nNc706n
- aTM=
+        with ESMTP id S1726521AbfLCFvj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 00:51:39 -0500
+IronPort-SDR: o/j+Ri+xO4fWTIVCdgPBUzjtzOJlOQ4wmggRu6QZca0TCBOkHqE4ZMckMY0XgpgEFCwVAkOZdJ
+ zH0Di0t2eFwTMoCX5+Dmbv/B30Kz8UeQbcwSlJRrRyvBRAArhUElLv2NMKH+zppw4ZC7dOxlWK
+ AOMf3uRfAIM2u7Wk4Qq86K3+6lV5vqjvPpzQSFfW8sP63eqIdEg5mIdaN5zTAybmjTxgYgnNgL
+ KxJgiYocZbKXHSbByjv5bF9N1WRypaYrkWAm9RhI0RIYJkMYks64vQIn8f/LUTdW04Df3YiDyu
+ xKI=
 X-IronPort-AV: E=Sophos;i="5.69,272,1571731200"; 
-   d="scan'208";a="45589576"
+   d="scan'208";a="45589731"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:42:50 -0800
-IronPort-SDR: 6qW7kvfV2RJQ+o/o5f2nDujbmBSwumb85KO+OiaQHueozhtxi3wK5lBcFsz8N2dtJn1QT92VPT
- Qgv43tx44fcY6bo6t1sgDkAQ2/TB6bY50B/bcNaNCkLbDDm0xne8hal71H0BF7iCi91KHq8gYV
- l4H+1KNiIKYYMMtq23CtXeCb0XUbkF3MqlcarsOUStxXqUmileh72a7vzHfPC790pHde63/MTs
- gsV2+TivzEA3wls2h/41pYkDHtbxnyvWVV/rC52Hep9lVTvn/oImikOQ6lqgMEgARN2n4oTAx6
- phw=
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+  by esa1.mentor.iphmx.com with ESMTP; 02 Dec 2019 21:51:38 -0800
+IronPort-SDR: i8krjONcTTsnPkHY7SRiGdPmITr+0xNAXFXEgjkJWTG1D1tRaDcT2sdw0OnXTIXhUqEDFgzvAR
+ dttKo+ORd63AvM4to/DyzDuJF57oI5Vi7/iYpzrQEkc3xIqj3eJT457bxirU8BrDkuqz8apUvw
+ JxXTyf13gnmnt2Ln1nepE0IY1Dr7ZC1/mxI+i6nWcNIcJmX2GgkCgi2Uo1v6wmGd1b+yqVAN9T
+ 0VLnn5Y5apijUzN7Hq0gIyZaQmf5LOaoYKcT6i2bJwuZAsOGE6Kp5TQMK0MgNeNdOFviPXHdfV
+ l0k=
+Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -44,19 +44,19 @@ CC:     Alexander Graf <graf@amazon.com>,
         <devicetree@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>
 References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be>
+ <20191127084253.16356-5-geert+renesas@glider.be>
 From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <585c4ad9-31fc-e87e-07c4-b8d6aa09c7e4@mentor.com>
-Date:   Tue, 3 Dec 2019 11:12:38 +0530
+Message-ID: <11ae473f-cee1-241b-174c-915dc46209b1@mentor.com>
+Date:   Tue, 3 Dec 2019 11:21:26 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
+In-Reply-To: <20191127084253.16356-5-geert+renesas@glider.be>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
  svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -64,79 +64,112 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-> +static int gpio_aggregator_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct gpio_desc **descs;
-> +	struct gpiochip_fwd *fwd;
-> +	int i, n;
+On 27/11/19 2:12 PM, Geert Uytterhoeven wrote:
+> Add Device Tree bindings for a GPIO repeater, with optional translation
+> of physical signal properties.  This is useful for describing explicitly
+> the presence of e.g. an inverter on a GPIO line, and was inspired by the
+> non-YAML gpio-inverter bindings by Harish Jenny K N
+> <harish_kandiga@mentor.com>[1].
+>
+> Note that this is different from a GPIO Nexus Node[2], which cannot do
+> physical signal property translation.
+>
+> While an inverter can be described implicitly by exchanging the
+> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
+> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
+> th provider and consumer sides:
+>   1. The GPIO provider (controller) looks at the flags to know the
+>      polarity, so it can translate between logical (active/not active)
+>      and physical (high/low) signal levels.
+>   2. While the signal polarity is usually fixed on the GPIO consumer
+>      side (e.g. an LED is tied to either the supply voltage or GND),
+>      it may be configurable on some devices, and both sides need to
+>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
+>      match the actual polarity.
+>      There exists a similar issue with interrupt flags, where both the
+>      interrupt controller and the device generating the interrupt need
+>      to agree, which breaks in the presence of a physical inverter not
+>      described in DT (see e.g. [3]).
+>
+> [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+>     https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
+>
+> [2] Devicetree Specification v0.3-rc2, Section 2.5
+>     https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
+>
+> [3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+>     inverted IRQ"
+>     https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - New.
+> ---
+>  .../bindings/gpio/gpio-repeater.yaml          | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+> new file mode 100644
+> index 0000000000000000..efdee0c3be43f731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-repeater.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-repeater.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	n = gpiod_count(dev, NULL);
-> +	if (n < 0)
-> +		return n;
+> +title: GPIO Repeater
 > +
-> +	descs = devm_kmalloc_array(dev, n, sizeof(*descs), GFP_KERNEL);
-> +	if (!descs)
-> +		return -ENOMEM;
+> +maintainers:
+> +  - Harish Jenny K N <harish_kandiga@mentor.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
 > +
-> +	for (i = 0; i < n; i++) {
-> +		descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
+> +description:
+> +  This represents a repeater for one or more GPIOs, possibly including physical
+> +  signal property translation (e.g. polarity inversion).
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-repeater
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  gpios:
+> +    description:
+> +      Phandle and specifier, one for each repeated GPIO.
+> +
+> +  gpio-line-names:
+> +    description:
+> +      Strings defining the names of the GPIO lines going out of the GPIO
+> +      controller.
+> +
+> +required:
+> +  - compatible
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +  - gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Device node describing a polarity inverter for a single GPIO
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    inverter: gpio-repeater {
+> +        compatible = "gpio-repeater";
+> +        #gpio-cells = <2>;
+> +        gpio-controller;
+> +        gpios = <&gpio 95 GPIO_ACTIVE_LOW>;
+> +    };
 
-can you please add this check as well as we need to return EPROBE_DEFER.
 
-if (desc[i] == ERR_PTR(-ENOENT))
-<                 return -EPROBE_DEFER;
-
-
-> +		if (IS_ERR(descs[i]))
-> +			return PTR_ERR(descs[i]);
-> +	}
-> +
-> +	fwd = gpiochip_fwd_create(dev, n, descs);
-> +	if (IS_ERR(fwd))
-> +		return PTR_ERR(fwd);
-> +
-> +	platform_set_drvdata(pdev, fwd);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id gpio_aggregator_dt_ids[] = {
-> +	{ .compatible = "gpio-repeater" },
-> +	/*
-> +	 * Add GPIO-operated devices controlled from userspace below,
-> +	 * or use "driver_override" in sysfs
-> +	 */
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_aggregator_dt_ids);
-> +#endif
-> +
-> +static struct platform_driver gpio_aggregator_driver = {
-> +	.probe = gpio_aggregator_probe,
-> +	.driver = {
-> +		.name = DRV_NAME,
-> +		.groups = gpio_aggregator_groups,
-> +		.of_match_table = of_match_ptr(gpio_aggregator_dt_ids),
-> +	},
-> +};
-> +
-> +static int __init gpio_aggregator_init(void)
-> +{
-> +	return platform_driver_register(&gpio_aggregator_driver);
-> +}
-> +module_init(gpio_aggregator_init);
-> +
-> +static void __exit gpio_aggregator_exit(void)
-> +{
-> +	gpio_aggregator_remove_all();
-> +	platform_driver_unregister(&gpio_aggregator_driver);
-> +}
-> +module_exit(gpio_aggregator_exit);
-> +
-> +MODULE_AUTHOR("Geert Uytterhoeven <geert+renesas@glider.be>");
-> +MODULE_DESCRIPTION("GPIO Aggregator/Repeater");
-> +MODULE_LICENSE("GPL v2");
-
-
+just a suggestion: giving a gpio-line-names in the example would look useful.
 
