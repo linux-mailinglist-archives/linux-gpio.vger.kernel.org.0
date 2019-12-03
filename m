@@ -2,107 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 206F710FF7C
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 14:59:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 166A110FFA7
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Dec 2019 15:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfLCN7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Dec 2019 08:59:49 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38060 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfLCN7t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 08:59:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ORw0Cl9o5Bk5k3Jl51OZt5GqsGF0YHxVY+GeEG4+wjY=; b=nbMGEFk/Fs3h
-        F4zoKmON2NajONNGgaN1IatrkG3EzJsKEmewdz3GM4f6hPwF4eSvGAa26c4DokqH+eikigpJ/N5yu
-        wfvFW3DzUjL04zbfCv2tiRMw9cQpK9NOT8/bpmmz5B541xH2diX/MrmZG+TVblsGqAFu5ppvOru4G
-        +iPns=;
-Received: from fw-tnat-cam1.arm.com ([217.140.106.49] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ic8iO-0002c1-K7; Tue, 03 Dec 2019 13:59:44 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 5A95ED002FA; Tue,  3 Dec 2019 13:59:44 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     bgolaszewski@baylibre.com, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "gpiolib: of: Make of_gpio_spi_cs_get_count static" to the spi tree
-In-Reply-To: <20191130012828.14504-1-yuehaibing@huawei.com>
-Message-Id: <applied-20191130012828.14504-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Date:   Tue,  3 Dec 2019 13:59:44 +0000 (GMT)
+        id S1726105AbfLCONL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Dec 2019 09:13:11 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33949 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfLCONL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Dec 2019 09:13:11 -0500
+X-Originating-IP: 90.76.211.102
+Received: from localhost.localdomain (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 049E96000B;
+        Tue,  3 Dec 2019 14:13:00 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH v5 0/4] LogiCVC mfd and GPIO support
+Date:   Tue,  3 Dec 2019 15:12:39 +0100
+Message-Id: <20191203141243.251058-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The patch
+This series introduces support for the LogiCVC GPIO block to the syscon GPIO
+driver, with dt bindings documentation also including the top-level mfd
+component.
 
-   gpiolib: of: Make of_gpio_spi_cs_get_count static
+Changes since v4:
+- Moved the GPIO driver to a dedicated driver.
 
-has been applied to the spi tree at
+Changes since v3:
+- Added collected tags;
+- Kept syscon_gpio_data set function pointer line intact;
+- Grouped declarations in a single line as requested.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+Changes since v2:
+- Fixed dt schema examples.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Changes since v1:
+- Converted dt bindings documentation to dt schemas;
+- Used BIT macro and removed version from structure name;
+- Improved documentation example with gpio-line-names;
+- Added vendor prefix to dt bindings;
+- Added mfd component dt bindings documentation.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Cheers,
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Paul
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Paul Kocialkowski (4):
+  dt-bindings: Add Xylon vendor prefix
+  dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+  dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+  gpio: Add support for the Xylon LogiCVC GPIOs
 
-Thanks,
-Mark
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     |  69 +++++++
+ .../bindings/mfd/xylon,logicvc.yaml           |  50 ++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/gpio/Kconfig                          |   6 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-logicvc.c                   | 170 ++++++++++++++++++
+ 6 files changed, 298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+ create mode 100644 drivers/gpio/gpio-logicvc.c
 
-From a1f4c96b799b80118b50bd47320deb9013b7ff40 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 30 Nov 2019 09:28:28 +0800
-Subject: [PATCH] gpiolib: of: Make of_gpio_spi_cs_get_count static
-
-Fix sparse warning:
-
-drivers/gpio/gpiolib-of.c:35:5: warning:
- symbol 'of_gpio_spi_cs_get_count' was not declared. Should it be static?
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20191130012828.14504-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 4b19e7e26b90..f90a161ca97a 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -32,7 +32,7 @@
-  * the counting of "cs-gpios" to count "gpios" transparent to the
-  * driver.
-  */
--int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
-+static int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
- {
- 	struct device_node *np = dev->of_node;
- 
 -- 
-2.20.1
+2.24.0
 
