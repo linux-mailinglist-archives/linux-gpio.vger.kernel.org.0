@@ -2,102 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56BE2113527
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 19:48:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 572941135E1
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 20:42:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfLDSsC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 13:48:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41665 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727887AbfLDSsC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 13:48:02 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icZgq-0003fy-Ad; Wed, 04 Dec 2019 19:47:56 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icZgo-0002Xy-Mk; Wed, 04 Dec 2019 19:47:54 +0100
-Date:   Wed, 4 Dec 2019 19:47:54 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] gpio: mvebu: use platform_irq_count
-Message-ID: <20191204184754.5oj2xoem2v3544rx@pengutronix.de>
-References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
- <20191204072422.vfo3mrrcaav75jv4@pengutronix.de>
- <CAMpxmJUAk5Y3mX_irTjwveaii8W=coaG0w2aWvFXUEXqHxpArQ@mail.gmail.com>
+        id S1727867AbfLDTmd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 14:42:33 -0500
+Received: from mga03.intel.com ([134.134.136.65]:46291 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728072AbfLDTmd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 4 Dec 2019 14:42:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 11:42:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,278,1571727600"; 
+   d="scan'208";a="201512713"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 04 Dec 2019 11:42:31 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 42698F3; Wed,  4 Dec 2019 21:42:30 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] gpiolib: Fix line event handling in compatible mode
+Date:   Wed,  4 Dec 2019 21:42:28 +0200
+Message-Id: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJUAk5Y3mX_irTjwveaii8W=coaG0w2aWvFXUEXqHxpArQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 05:33:04PM +0100, Bartosz Golaszewski wrote:
-> śr., 4 gru 2019 o 08:24 Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> napisał(a):
-> >
-> > On Wed, Dec 04, 2019 at 04:20:41AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > platform_irq_count() is the more generic way (independent of
-> > > device trees) to determine the count of available interrupts. So
-> > > use this instead.
-> > >
-> > > As platform_irq_count() might return an error code (which
-> > > of_irq_count doesn't) some additional handling is necessary.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > Reviewed-and-Commit-Log-Provided-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> This is not a valid tag, but I take it as Suggested-by and Reviewed-by. :)
+The introduced line even handling ABI in the commit
 
-If you care about the validity of such tags, I suggest you take a look
-at the output of
+  61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
 
-	$ git rev-list v4.0..v5.4 | while read rev; do git cat-file commit $rev; done | sed -n 's/ *\(.*-by\):.*/\1/p' | sort | uniq -c | sort -n
+missed the fact that 64-bit kernel may serve for 32-bit applications.
+In such case the very first check in the lineevent_read() will fail
+due to alignment differences.
 
-(which finds all tags used between 4.0 and 5.4 with its usage count).
+To workaround this we do several things here:
+- put warning comment to UAPI header near to the structure description
+- derive the size of the structure in the compatible mode from its members
+- check for the size of this structure in the ->read() callback
+- return only one event in the compatible mode at a time
 
-A few of the tags (admittedly with low usage count :-) included there are:
+Above mitigation will work at least with libgpiod which does one event
+at a time.
 
-  Badly-reviewed-by
-  Bonus-points-awarded-by
-  Compile-tested and Reviewed-by
-  Enthusiastically-Acked-by
-  Mea-culpa-by
-  \o/-by
-  Brown-paper-bag-by
+Since the bug hasn't been reported earlier we assume that there is close
+to zero actual users of the compatible mode to monitor GPIO events and thus
+we might consider to rework this ABI in the future.
 
-Best regards
-Uwe
+Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib.c    | 51 ++++++++++++++++++++++++++++++++++++---
+ include/uapi/linux/gpio.h |  6 +++++
+ 2 files changed, 54 insertions(+), 3 deletions(-)
 
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 7340e4d0e873..134985210619 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -825,17 +825,26 @@ static __poll_t lineevent_poll(struct file *filep,
+ 	return events;
+ }
+ 
+-
+ static ssize_t lineevent_read(struct file *filep,
+ 			      char __user *buf,
+ 			      size_t count,
+ 			      loff_t *f_ps)
+ {
+ 	struct lineevent_state *le = filep->private_data;
++	struct gpioevent_data event, *e = &event;
++	/* We need size of each member to avoid endianess issues below */
++	size_t ts_sz = sizeof(e->timestamp), id_sz = sizeof(e->id), e_sz;
+ 	unsigned int copied;
+ 	int ret;
+ 
+-	if (count < sizeof(struct gpioevent_data))
++	/*
++	 * In compatible mode, when kernel is 64-bit and user space is 32-bit,
++	 * we may not tell what user wanted here when count is bigger than size
++	 * of one event, so, we just assume that user asks for precisely one
++	 * event.
++	 */
++	e_sz = in_compat_syscall() ? ts_sz + id_sz : sizeof(*e);
++	if (count < e_sz)
+ 		return -EINVAL;
+ 
+ 	do {
+@@ -851,7 +860,43 @@ static ssize_t lineevent_read(struct file *filep,
+ 
+ 		if (mutex_lock_interruptible(&le->read_lock))
+ 			return -ERESTARTSYS;
+-		ret = kfifo_to_user(&le->events, buf, count, &copied);
++		if (in_compat_syscall()) {
++			/*
++			 * First we peek the one event and, if there is
++			 * no error during copying to user space, skip it
++			 * later.
++			 */
++			if (kfifo_peek(&le->events, e))
++				copied = e_sz;
++			else
++				copied = 0;
++
++			/* Do not try to copy garbage to the user */
++			ret = copied ? 0 : -EFAULT;
++
++			/*
++			 * Due to endianess concerns we have to copy this
++			 * member-by-member. Luckily there are no members
++			 * less than 32-bit.
++			 */
++			if (!ret)
++				ret = copy_to_user(buf, &e->timestamp, ts_sz);
++			if (!ret)
++				ret = copy_to_user(buf + ts_sz, &e->id, id_sz);
++
++			if (ret) {
++				/*
++				 * Either we have got nothing from the FIFO or
++				 * one of copy_to_user() calls failed.
++				 */
++				ret = -EFAULT;
++			} else {
++				/* Skip peeked event if no error happened */
++				kfifo_skip(&le->events);
++			}
++		} else {
++			ret = kfifo_to_user(&le->events, buf, count, &copied);
++		}
+ 		mutex_unlock(&le->read_lock);
+ 
+ 		if (ret)
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index 799cf823d493..054756bf6991 100644
+--- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -168,6 +168,12 @@ struct gpioevent_request {
+  * struct gpioevent_data - The actual event being pushed to userspace
+  * @timestamp: best estimate of time of event occurrence, in nanoseconds
+  * @id: event identifier
++ *
++ * Warning! This structure has issues in the compatible mode, when
++ * kernel is 64-bit and user space is 32-bit, due to alignment
++ * differences.
++ *
++ * It's not recommended to retrieve more than one event at a time.
+  */
+ struct gpioevent_data {
+ 	__u64 timestamp;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.24.0
+
