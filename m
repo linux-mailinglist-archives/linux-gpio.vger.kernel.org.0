@@ -2,162 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1B6112BEF
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 13:47:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8702E112C3D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 14:05:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfLDMrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 07:47:40 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49656 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfLDMrk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 07:47:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wvspINbC0rd5pzrtB6IdbMhDRhq0Gg7sBdygu5GhV/g=; b=xXhDP38bEFkCILphtkcyG2GaF
-        jidMnvmM6z0sQcofRm5Aly/bnCMFa4fyoRZ3t1zviZvzBW8vHhdofmGYIIvsI0HWA7sUyoO7fpHO1
-        dmDDWh8zmi2YVI2jdiU9VV335soA8GuPDJYV1Epa55tPSvam/KNjhcpvcvPkwY3bhqWtY=;
-Received: from fw-tnat-cam3.arm.com ([217.140.106.51] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1icU3p-0000LL-Hi; Wed, 04 Dec 2019 12:47:17 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 10DC4D003B4; Wed,  4 Dec 2019 12:47:17 +0000 (GMT)
-Date:   Wed, 4 Dec 2019 12:47:17 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: regulator: Document ROHM BD71282
- regulator bindings
-Message-ID: <20191204124717.GR1998@sirena.org.uk>
-References: <20191118162502.GJ9761@sirena.org.uk>
- <fd1e4e652840346bd990c769eabe2f966bda4ed6.camel@fi.rohmeurope.com>
- <20191119181325.GD3634@sirena.org.uk>
- <fa69d01504817e3260d2b023ae2637aa2f1b2862.camel@fi.rohmeurope.com>
- <20191119193636.GH3634@sirena.org.uk>
- <eb685cc78b936bc61ed9f7fbfa18c96398b00909.camel@fi.rohmeurope.com>
- <20191129120925.GA5747@sirena.org.uk>
- <297fa021fb243072dbbb7bca455e57c13e8c6843.camel@fi.rohmeurope.com>
- <20191202131140.GD1998@sirena.org.uk>
- <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
+        id S1726215AbfLDNFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 08:05:09 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44209 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727530AbfLDNFJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 08:05:09 -0500
+Received: by mail-ed1-f68.google.com with SMTP id cm12so6538251edb.11
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Dec 2019 05:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=I81Ynm6LU0TBIF3mobw3f+g2sB4hxBuSkk1bFBlc9Og=;
+        b=arWhuG/K8e9O4YNuHuNwncVrHo44P47PDbbpazf/VAkApTjmWDg+2konfAHAw/JRZ1
+         q8qZk6FzWHwrGg0cNxP90m3kdnR/5Zw5FETXh1FmAIUYUu7Kso20rKEPFOFTatEdgufd
+         qjizgmMI/9zWzR59POBeafbZhJ4jUW9OAiDL0RvVFUxOGiFwrfSItfaVOPg09NkOuzhU
+         D/32JnDruCtLqLUnNuYgnrjrBk+9bHdP66yjZoiDctjL4XmHxYmQ0/wD4AKSpdtFlqyy
+         ADy8SglWatXi5NALO45ce+qKmntC4fc7FCNqUlaG0stYO8GJQMDFdYtBcz5QkFKZNGJy
+         qjfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=I81Ynm6LU0TBIF3mobw3f+g2sB4hxBuSkk1bFBlc9Og=;
+        b=GoXtfBBd+dW7G2zRYwlWkY9iSV8ARMWWBhUqLEItUeMePcvr9tZ73zTC1GPO5dQhpe
+         6ZkBIbT/Efc7hWYNx9sFbTqMBYgx4SmakVR0A16oZaTisNh3mImibieMvsByo8Jrf06j
+         fCR8XfSNV0LC+sOhbM64iSlP1mBI8M/YLmcQWvj9rv0RpwKsOBaQqxTcrXyoOqjtWa1o
+         2eJFDXJGZGQ/RSjpw0ejHf/qGA5h6QkArLAn+kDuvWvSfXZLtLdoFPWBBAWSf1qXtvFA
+         k2wWex98E8xpV9x8qkbzs5IRuHh3Taj7n5dRr09hB3Yi6r43/4XosoJlle7UFShawGbl
+         oHcw==
+X-Gm-Message-State: APjAAAU4T2iOohNNIYq1ZBja188GJzxLxCxPhDQhMTOkb1pDdLPABHzv
+        R3aWkLGG++rcOfivvDnSY/oJYBwQFYb9jiVo0q4=
+X-Google-Smtp-Source: APXvYqzlrhLEKHg1Y3m0fQqBP3mUlVTAfs+qto2r/FlNB1jyjHLLpa3xR7wMRnM8P+C0VfKCbUoj6jUjG2v6cjQJ98Y=
+X-Received: by 2002:a17:906:b6c8:: with SMTP id ec8mr2942708ejb.64.1575464707687;
+ Wed, 04 Dec 2019 05:05:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r7tUYVWcdYzDJoZW"
-Content-Disposition: inline
-In-Reply-To: <72a1f4c5768b8c08c2669ea01e60d1b614095a43.camel@fi.rohmeurope.com>
-X-Cookie: Cleanliness is next to impossible.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Reply-To: kabiruwahid1117@gmail.com
+Received: by 2002:a05:6402:1585:0:0:0:0 with HTTP; Wed, 4 Dec 2019 05:05:07
+ -0800 (PST)
+From:   Mr Kabiru Wahid <kabiruwahid1117@gmail.com>
+Date:   Wed, 4 Dec 2019 09:05:07 -0400
+X-Google-Sender-Auth: -UIQ0VbQyfRucrYrFfbgChPtPd4
+Message-ID: <CAOTe9ZpC+AidXJM4Mv=w_8sQwTSgCWmS0QHD2W_V_GX5q+c1dA@mail.gmail.com>
+Subject: Business Relationship!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Dear Friend
 
---r7tUYVWcdYzDJoZW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am Kabiru Wahid,  I am contacting you in respect of my late client
+fund $15.5 Million Dollars deposited with a bank here in Burkina which
+is about to be confiscated by his bank after many years unclaimed,
+Kindly indicate your interest by sending me your full data, You will
+be entitle to 50%;40% for me and 10% to defray all cost You should be
+rest assured that this is 100% risk-free also free from any
+scam/fraudulent act.
 
-On Mon, Dec 02, 2019 at 02:02:41PM +0000, Vaittinen, Matti wrote:
-> On Mon, 2019-12-02 at 13:11 +0000, Mark Brown wrote:
-
-> > No, look at the bindings - we support a bunch of different
-> > suspend states matching the different suspend states that the
-> > kernel as a whole supports.  We don't assume that the device will
-> > know this but you can always use the current suspend we're going
-> > for to decide where to update.
-
-> Hm. So if I understand this correctly, you mean user should set the
-> suspend 'target' - and then call the set_suspend_voltage for this
-> state. To set voltages for all states one should do loop
-
-The general idea is that we set the suspend state during the
-process of suspending rather than in advance - that way when the
-hardware doesn't understand different types of suspsend things
-work fine.
-
-> get_current_mode()
-
-> for_all_modes() {
-> 	set_mode()
-> 	set_voltage()
-> }
-
-> restore_original_mode()
-
-> am I on a right track? I'll try to see if I can find some examples of
-> this - thanks.
-
-I don't understand the save and restore of mode?  If setting the
-suspend configuration affects the runtime state then the hardware
-doesn't support suspend configuration.
-
-> > The framework doesn't care how a device is controlled, that's up
-> > to the device.  Like I said I recommend figuring out what
-> > voltages are useful to have quick access to at runtime, for
-> > example it's likely that it's good to have quick access to the
-> > highest voltage that's been set (and/or the top of the
-> > constraints).
-
-> Problem is that the run-level controlled regulator can't be
-> individually controlled (unless it is only regulator in the group). I
-
-Regulators that have to be controlled en masse aren't really
-supported by the API, it only understands regulators that are
-individually controllable.
-
-> But just to confirm, I meant for example assigning bucks 1,2,6 and 7
-> into a group which 'state' is changed via GPIO line. Say 'states' are
-> RUN0, RUN1. For each of these bucks we can define a voltage and
-> enable/disable status which is to be used on RUN0, and another
-> voltage/state tuple for RUN1.
-
-So you could also just create a group consisting of a single
-regulator?  That would be fine for the API.
-
---r7tUYVWcdYzDJoZW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3nqtQACgkQJNaLcl1U
-h9DtkQf/ZOvqt/xvJrkjQ2zSreCV2pRVglwsGchtoOcrs1gS/5iuRXJb8Fic/clC
-BMt7wBK5Zqeu6q2A3oqQ85hPjYMipgmMfwDQzNCGMTHN+EpVvmYX0R8PXWM5yEiP
-SJJ3ZVZHk2TqOIhiGwFbBpYnm3u/J5AbHeHXPXKVMuyMap2OVfXFx2DNexM1vC4X
-Kj70z8B9MA7Hv+VBbmOK/+nsQiRVkr8FyZjoefUdmIF1vPHqMWXA9S8+jziZoyZS
-6QZ5EJFXS99omTKYYeOL4R6RlrMW/Ln5HWRWWuXVNV8uvt3xqQNln9QMSNYzHGAn
-3fl1ynbYU1UiEsY07AKvLnboLE0iDA==
-=9lBU
------END PGP SIGNATURE-----
-
---r7tUYVWcdYzDJoZW--
+Yours Sincerely
+Mr Kabiru Wahid
