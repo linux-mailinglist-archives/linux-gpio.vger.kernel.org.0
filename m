@@ -2,119 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECC471128EA
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 11:09:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 238141128F8
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 11:11:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfLDKJc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 05:09:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54463 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbfLDKJc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 05:09:32 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icRb4-0006R9-Qi; Wed, 04 Dec 2019 11:09:26 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1icRb3-0006ip-Vu; Wed, 04 Dec 2019 11:09:25 +0100
-Date:   Wed, 4 Dec 2019 11:09:25 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-Message-ID: <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
-References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
- <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+        id S1727473AbfLDKK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 05:10:57 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:56576 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbfLDKK5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 05:10:57 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id CDC9D27E0A05;
+        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id d58SyFKbqL4u; Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 6D7ED27E0E3A;
+        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 6D7ED27E0E3A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575454255;
+        bh=tm1bz/38l5nlWepy+IT4YdTVC5S4emIIOh/grEnMF+w=;
+        h=From:To:Date:Message-Id;
+        b=MZ7NMmHEpRCaQ865e6RwFE55yZG1FCzmVZpIqnUyy7/Cbj9oJInEju9n/GCIf7j4L
+         NFY/LiY/BDznTa1YxUQJLkvHv0s6IJiK3vdQ4fixmqrk36LwFUeQANuwAboiGB22zm
+         J2b7x0ubuHRxrtIct1BNH91qp1JK1J7fl0BBwiPQ=
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id nJS6I94fpCeJ; Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 48BB027E0A05;
+        Wed,  4 Dec 2019 11:10:55 +0100 (CET)
+From:   Clement Leger <cleger@kalray.eu>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Clement Leger <cleger@kalray.eu>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
+Date:   Wed,  4 Dec 2019 11:10:34 +0100
+Message-Id: <20191204101042.4275-1-cleger@kalray.eu>
+X-Mailer: git-send-email 2.15.0.276.g89ea799
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> platform_irq_count() is the more generic way (independent of
-> device trees) to determine the count of available interrupts. So
-> use this instead.
-> 
-> As platform_irq_count() might return an error code (which
-> of_irq_count doesn't) some additional handling is necessary.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V3:
->  Use %pe
+Synopsys DWAPB IP includes support for pin control. This control is basic
+and allows to switch between a hardware and a software function.
+Software function is when driving GPIOs from IP and hardware is controlled
+by external signals.
+This serie export necessary interface to be able to move the driver to
+pinctrl folder and then implement the pinctrl support which is based on the
+digicolor driver. The idea is to avoid hardcoding pins in driver since
+this IP is a generic one available on multiple SoC.
 
-Great. Note that with %pe there is a dependency on commit 57f5677e535b
-("printf: add support for printing symbolic error names") which was
-applied during the current merge window.
+Clement Leger (5):
+  gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
+  pinctrl: dw: move gpio-dwapb.c to pinctrl folder
+  pinctrl: dw: use devm_gpiochip_add_data
+  pinctrl: dw: add pinctrl support for dwapb gpio driver
+  dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
 
-> V2:
->  Update commit log, and add err handling
->  Not tested, just code inspection
-> 
-> 
->  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
-> index 4122683eb1f9..baee8c3f06ad 100644
-> --- a/drivers/gpio/gpio-bcm-kona.c
-> +++ b/drivers/gpio/gpio-bcm-kona.c
-> @@ -19,7 +19,6 @@
->  #include <linux/io.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_irq.h>
->  #include <linux/init.h>
->  #include <linux/irqdomain.h>
->  #include <linux/irqchip/chained_irq.h>
-> @@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
->  
->  	kona_gpio->gpio_chip = template_chip;
->  	chip = &kona_gpio->gpio_chip;
-> -	kona_gpio->num_bank = of_irq_count(dev->of_node);
-> -	if (kona_gpio->num_bank == 0) {
-> +	ret = platform_irq_count(pdev);
-> +	if (!ret) {
->  		dev_err(dev, "Couldn't determine # GPIO banks\n");
->  		return -ENOENT;
-> +	} else if (ret < 0) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
-> +				ERR_PTR(ret));
-
-I'd say drop either the colon or the parenthesis.
-
-Best regards
-Uwe
+ .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt |  21 +-
+ MAINTAINERS                                        |   6 +-
+ drivers/gpio/Kconfig                               |   8 -
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/gpiolib-acpi.h                        |   4 -
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/dw/Kconfig                         |  11 +
+ drivers/pinctrl/dw/Makefile                        |   4 +
+ .../gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c}    | 277 +++++++++++++++++++--
+ include/linux/gpio/driver.h                        |  12 +
+ include/linux/platform_data/gpio-dwapb.h           |   1 +
+ 12 files changed, 310 insertions(+), 37 deletions(-)
+ rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt (76%)
+ create mode 100644 drivers/pinctrl/dw/Kconfig
+ create mode 100644 drivers/pinctrl/dw/Makefile
+ rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (77%)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.15.0.276.g89ea799
+
