@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F8C113777
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:18:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EEAA113779
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:18:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfLDWSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 17:18:30 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44759 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDWSa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:18:30 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so522664pgl.11;
-        Wed, 04 Dec 2019 14:18:30 -0800 (PST)
+        id S1728031AbfLDWSx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 17:18:53 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33179 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWSx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:18:53 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y206so549851pfb.0;
+        Wed, 04 Dec 2019 14:18:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BSs1JgftpIbcW3GJF8MWlTcMQiwQH0E/9HSLGnuUhZY=;
-        b=IoH+UrM7+WlqqruX7C3JJpgZEijV/IOSpHF34r9wCRyFh/u5/f2LYJJDbEMDggvUjJ
-         bLZV3olTZQYouAz+GOHum6mi26NljoRLEhDo8bWQ3Z86HZCgoytSbSkY0sFbESM17xOf
-         4nb95E6NyUUqPevaG492AcKSuK7nGs7cGlmKo8jOLm6p9SUzEOTIW0h5uJ8jc43cT1jF
-         2aA5bnqvwjIpCA9HqdodgjHv9GtyhtSs1NEWlN7+Xlp5OYadzlg6LFzk/+8gHO/e519j
-         JNu9nfckYM5lP6RIL4v6Q/web4bYPLru538uVGnfusKimDGfrMPeWSeKoL1mJHat5EYm
-         bQwg==
+        bh=YoWjZJetN7C907sf8l8S1h92ZyTU0yDuKBdSww6Y87k=;
+        b=LU9SK66lfgwFDD7kZEucKxKgHL+Jh0uoijMWnOOhs32iDyR8md94bu5b+x37tbzMBF
+         u2c2BxbH118usOWWuTQZzF9wvYfxsybTD2b4rHt356kxTgeFFl+ZSs9jDL79lX66k2aZ
+         9CJqSK+IxU2Kb8Ycb+G7/NIG+tmgdRVb2tM8x/sfmQYtomIyx4KUOvvJ2eewZ9RQrUGL
+         LnhoRvX6SXVJdfbtjmnP0JZgsQbxJzHzSuHFoxeE5PiaKrF1/+qLqpD7D+82FqjpG6ZR
+         QpZ/Ar//IWQu9IzC/Tusu11iUeXFEIcHRB2Kfhxf+ye4cQSBwSIFY3HL6fbAQg64Ziqh
+         P5WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BSs1JgftpIbcW3GJF8MWlTcMQiwQH0E/9HSLGnuUhZY=;
-        b=du5tUswdx7FLzGOv4slkh6d6Q3VMbGjupwmq/jdi9VkeAVxAQrfnNAPOLKLK6+mBLr
-         z+UjbwSJ+yP1uvaqM+ywhkMMTZCM8mNU03iL2ZLGG/Q4/fumuA6S6zE5saoR27SzY+4+
-         d6/F4ffjpgOTuh7hVmLgOPZdJ/CTmgklbhptHoTPgmR+uFQQuIeFWfgMFj4Ri6IBGsLB
-         +/EHHnN4BsjyTYM8v7/wxxiihB9YUuyWBsVlG/q+AkQB1xupfAWGJv7Np03jC6lItMxu
-         dqhMCuz+H+o8qqI5nTOsTcmGjy2BbC+RJkTRAvOVUxfuj4hrR0/MJpa/BswZhwsF7/v3
-         7aOg==
-X-Gm-Message-State: APjAAAXZv7UiSOTkyaBiY4cgdWEQtipTVLgVlRJl7JUEsamnX7fL8ce4
-        yC1AQoHWqFjoF1lpEP8N7MhK7wVAithXRnjtNvY=
-X-Google-Smtp-Source: APXvYqz0nBw+DVMCl9QmTd7VL0k2dyqyeLEhkcx2mruad872LLyUvgCc37FbvQ/MDuf7ADSYnqCNZDLv56msCKEe04g=
-X-Received: by 2002:a63:941:: with SMTP id 62mr6094824pgj.203.1575497909458;
- Wed, 04 Dec 2019 14:18:29 -0800 (PST)
+        bh=YoWjZJetN7C907sf8l8S1h92ZyTU0yDuKBdSww6Y87k=;
+        b=LQkHqEtCB25MOImB1xM4JSJLSNQfRJ5AFo3LBUdF2GS7JZwjmyw0QYVXqmoDkx2aqP
+         yv798VWv31XPbTw4L1lEA1NwTFT6jhtUD66iC/WIJT9t8alF15B3DuJNkvRyGvNczsHf
+         eLM5ylgk+8ppc0956KozRFfWOLtXeUurU8erfhEQMcDQ1AFcxvR2Sf0MEisvbiRwMJgx
+         RxX0HRo5/Ue4W3B0gbKh5CvBqD4WbQzZN5w9iHZoisau5kX1JxG+IDjQsoURV9GkPRhL
+         KCcXcFEmuRCNLzTjV9HB2RLSFQol67orew+ueeeJWFezk+1mR4VbM2lL+SK9uCnTYao/
+         TeEA==
+X-Gm-Message-State: APjAAAW/a71BxdrgT8VdrhcaHVcdUWAt5/pqrJBiBb22XyynE2ZMVtps
+        V0iBhnu5oIKcWE9ilIrZbGwPfuIWM544kVSBpsw=
+X-Google-Smtp-Source: APXvYqwtyM9hGkXIcsL/TqnEaURm/MVXLxLwkWx4EOMvJVs+NrJXMfo6qBhLyYkk3lV65mnuzBRT+bb7M7sbOeQCVSo=
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr5810042pgk.74.1575497932215;
+ Wed, 04 Dec 2019 14:18:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-2-brgl@bgdev.pl>
-In-Reply-To: <20191204155912.17590-2-brgl@bgdev.pl>
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-3-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-3-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 00:18:17 +0200
-Message-ID: <CAHp75Vfzk3FgZLLyNv7+sj8r-QFW57juBQV9O2VP01=c04AdKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] gpiolib: use 'unsigned int' instead of
- 'unsigned' in gpio_set_config()
+Date:   Thu, 5 Dec 2019 00:18:40 +0200
+Message-ID: <CAHp75Vc2E4iXDvq4wV7nkoizPaz_vRxfYztzwStt9ux9oYWExg@mail.gmail.com>
+Subject: Re: [PATCH v2 02/11] gpiolib: have a single place of calling set_config()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -64,29 +63,75 @@ On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Checkpatch complains about using 'unsigned' instead of 'unsigned int'.
+> Instead of calling the gpiochip's set_config() callback directly and
+> checking its existence every time - just add a new routine that performs
+> this check internally. Call it in gpio_set_config() and
+> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
+> the check for chip->set() as it's irrelevant to this config option.
 >
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpiolib.c | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
 >
 > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 21b02a0064f8..a31797fe78fa 100644
+> index a31797fe78fa..72211407469f 100644
 > --- a/drivers/gpio/gpiolib.c
 > +++ b/drivers/gpio/gpiolib.c
-> @@ -3042,7 +3042,7 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
+> @@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
 >   * rely on gpio_request() having been called beforehand.
 >   */
 >
-> -static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
-> +static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+> +static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
+> +                             enum pin_config_param mode)
+> +{
+> +       if (!gc->set_config)
+> +               return -ENOTSUPP;
+> +
+> +       return gc->set_config(gc, offset, mode);
+> +}
+> +
+>  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
 >                            enum pin_config_param mode)
 >  {
->         unsigned long config;
+> @@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+>         }
+>
+>         config = PIN_CONF_PACKED(mode, arg);
+> -       return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
+> +       return gpio_do_set_config(gc, offset, mode);
+>  }
+>
+>  static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
+> @@ -3294,15 +3303,9 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
+>
+>         VALIDATE_DESC(desc);
+>         chip = desc->gdev->chip;
+> -       if (!chip->set || !chip->set_config) {
+> -               gpiod_dbg(desc,
+> -                         "%s: missing set() or set_config() operations\n",
+> -                         __func__);
+> -               return -ENOTSUPP;
+> -       }
+>
+>         config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
+> -       return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
+> +       return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
+>
+> @@ -3339,7 +3342,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
+>         packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
+>                                           !transitory);
+>         gpio = gpio_chip_hwgpio(desc);
+> -       rc = chip->set_config(chip, gpio, packed);
+> +       rc = gpio_do_set_config(chip, gpio, packed);
+>         if (rc == -ENOTSUPP) {
+>                 dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
+>                                 gpio);
 > --
 > 2.23.0
 >
