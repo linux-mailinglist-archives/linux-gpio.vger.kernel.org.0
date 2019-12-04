@@ -2,129 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2964C112B91
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 13:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 710B4112BAC
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 13:43:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727635AbfLDMfW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 07:35:22 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36870 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbfLDMfW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 07:35:22 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ep17so2965699pjb.4;
-        Wed, 04 Dec 2019 04:35:21 -0800 (PST)
+        id S1727845AbfLDMnA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 07:43:00 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36393 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbfLDMm7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 07:42:59 -0500
+Received: by mail-qt1-f195.google.com with SMTP id k11so7585837qtm.3
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Dec 2019 04:42:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
-        b=GoheGBkSxxZ2NEshTyIX/Ttdx3CJSOLqcHa40SoFDIs3V8urBZ3Jy4URycaDCzXoDH
-         00kh0HualCF0KBfW8fYntwGYmPSUdZ22u/QR3EofTFJsWQ6TcMkwd1OXg9oLm6JxvxZm
-         bh7DCHbBokIJvrielyZRpZafcDUqQQMh8vbMgvh7Vz8NUFQ46Mbq3qN5/tFiiO8xurk7
-         So4p+tUanA4K5Ik2NtvjKz0DpTV9Lm++Gg8/CTvcMNcdfwwlm5W/yCfEWCcWREG2oUqB
-         EJCWUvFMoATg4rTmyvIG/RMEYfjHS/0rzo+WBkqTYlmAooznA+cJNPnOVluzw6k/lT75
-         3Z3w==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
+        b=AkbuvF8WWOeGkFuNbpEiUPeHs0D9XYCrvYJnn3sJBPk0l/N+bAJ+lU7by52a8c0/XL
+         X5y/+uJVi5SRPzgKpD7LZp2RSO63H/dWhNB+Sgv8CnTmnW6HnNvEkrD3pvFKiHue+ji0
+         Cyct4Vs7hozR5hYKDh8cJJMkT72K9aPHj93bK1Ew++bIIM698i5hGwNXpwVN8RyOlTlg
+         ekVZP06isuUhwZwFxkLwU0Sye3HMnEDkq9yUmWZzxA1JTm8RzibEufZxYTJilauyHwzc
+         pKJFDkaXtzzvkeOyU7ajhljX9QykaA8Ur2FHYJunK1Sxosbxld4ODKAYs9j7AB06Aipc
+         jW5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPZbrljyNjC5j7q28Y1yjStc3oy4UmLl5B93KBpnvIM=;
-        b=dwWAe1OmdkebWTKdRwfzKO4Ia2tCy5YeqLUy24J/ji6mVPuOSfUwKtPajBHMA89E/2
-         wHUog5PiukO+2R68v+uXLjOMsNoHKoUy6YqvXFJfej9xsV0NX36rda93BIlCSUCfp1ps
-         2jLD4Ue8R73z9K8dZeMKGfthtF/HfLiqZXpQ9d3LvUFN/6GvfULRgA6Y94Osq3/FdJ02
-         /K3uRtaeUatJgEcfe1ZsB6KQHhAjnlVoE9cUMPwheY38my3WsKiHALfTq7Iv7gFhanVJ
-         sEhdMW8Seai2jqQpkzJBYB4xyw4N49xItlYa5fm08D3rUhDwYp8gvYdwnjZ6ExMfDk8w
-         W96Q==
-X-Gm-Message-State: APjAAAUTxqDgLJYM7S4AtxaaPUA8Qmh23aH14LueSAWmy4lG5UJpDSNj
-        FubeK5uUV6dJy+/Ch09585qRW4QvPZ+qF9PqvGQ=
-X-Google-Smtp-Source: APXvYqwhVWSxxvAv2De28QrHHETKA2K8Fjug4l6wpXAC5Wz3wrCTeVAemgGKgq2ymv4AVWx6Z6UfSlORnOxvAsK067g=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr3093142pjb.30.1575462921462;
- Wed, 04 Dec 2019 04:35:21 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
+        b=lSg70nnlC8S9gcU91CQ31bKeszD2gSWXxGI0KRqFk24NoCCpb24xUzsg0HxaJEWIvs
+         Nu9gFOcTdcbwptADEKIdcHq0e0GjmEVA6UdBX2aE6sEhjFTfyn3vJ2oD4NOTfr8EDm02
+         nS21nEtIeDaA1kSWEIb5/NrVzBCOP8SB3A8oVSpgKHcNKtaSH0UJ9gOGleCb79/PlXU6
+         xhf2eSMgTOXfEHvP1fC/MsTpQcwiZUQCIC4B9rFhwZjEg7EEzaMDbbUYkerR04jDZBUm
+         YL7oq3f20K+plKMfFajiqa+zq6ZcrNDaz6pW/d2BlE7S1Ue/hfMqv9QfJXyIjIEZi+qM
+         xrmA==
+X-Gm-Message-State: APjAAAWVXvFXwcEmr2loBEqyi9zAkJv2aVCQb7H6oofejO0ZN+TucUWF
+        Prl5kX76B0cqRdyE8iGv2aVymgGxAPYNrpR8HXo=
+X-Google-Smtp-Source: APXvYqzw3gCG5cnmI6368TWfhjS/+LLSHd6b95oZCOsPTpsAjIN23auDStB1pQ1PTnMah1qk6gl8uYsnTPaZ7k01uH0=
+X-Received: by 2002:ac8:4a81:: with SMTP id l1mr2434940qtq.357.1575463377714;
+ Wed, 04 Dec 2019 04:42:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204101042.4275-2-cleger@kalray.eu>
-In-Reply-To: <20191204101042.4275-2-cleger@kalray.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Dec 2019 14:35:11 +0200
-Message-ID: <CAHp75VfL5mRB0wy86_352nosKkKqVLZC_amCbLvhBTyNZztgRw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
-To:     Clement Leger <cleger@kalray.eu>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Received: by 2002:ac8:2f0c:0:0:0:0:0 with HTTP; Wed, 4 Dec 2019 04:42:57 -0800 (PST)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Rev.Dr Emmanuel Okoye CEO Ecobank-benin" 
+        <westernunion.benin982@gmail.com>
+Date:   Wed, 4 Dec 2019 13:42:57 +0100
+Message-ID: <CAP=nHBJXiPmPL21x=_0BHWRk_3N3Yax+tTxcFi=t=AhN7g==1Q@mail.gmail.com>
+Subject: God has remembered your prayers I have already sent you Money Gram
+ payment of $5000.00 today, MG 1029-8096
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
->
-> dwapb-gpio driver which uses this function will be moved to pinctrl for
-> pinctrl support. Export this function in gpio/driver.h to allow using
-> it.
->
+Attn, dear Beneficiary.
 
-I don't think this is proper way to do it.
-The driver has to register IRQ chip and GPIO core will take care of
-ACPI related stuff.
+God has remembered your prayers
+I have already sent you Money Gram payment of $5000.00 today, MG 1029-8096
+This is because we have finally concluded to effect your transfer
+funds of $4.8,000.000usd
+through MONEY GRAM International Fund transfer Service
+Each payment will be sending to you by $5000.00 daily until the
+($4.8,000.000usd) is completely transferred
+we have this morning sent  MONEY GRAM payment of $5,000.00 in your name today
+So contact the MONEY GRAM Agent to pick up this first payment of $5000 now
 
-> Signed-off-by: Clement Leger <cleger@kalray.eu>
-> ---
->  drivers/gpio/gpiolib-acpi.h |  4 ----
->  include/linux/gpio/driver.h | 12 ++++++++++++
->  2 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-> index 1c6d65cf0629..ba2f187babe3 100644
-> --- a/drivers/gpio/gpiolib-acpi.h
-> +++ b/drivers/gpio/gpiolib-acpi.h
-> @@ -34,7 +34,6 @@ struct acpi_gpio_info {
->  void acpi_gpiochip_add(struct gpio_chip *chip);
->  void acpi_gpiochip_remove(struct gpio_chip *chip);
->
-> -void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
->  void acpi_gpiochip_free_interrupts(struct gpio_chip *chip);
->
->  int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
-> @@ -56,9 +55,6 @@ int acpi_gpio_count(struct device *dev, const char *con_id);
->  static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
->  static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
->
-> -static inline void
-> -acpi_gpiochip_request_interrupts(struct gpio_chip *chip) { }
-> -
->  static inline void
->  acpi_gpiochip_free_interrupts(struct gpio_chip *chip) { }
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index e2480ef94c55..40b9f13d77e1 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -733,6 +733,18 @@ void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
->
->  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
->
-> +
-> +#ifdef CONFIG_GPIO_ACPI
-> +
-> +void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
-> +
-> +#else
-> +
-> +static inline void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
-> +{
-> +}
-> +
-> +#endif /* CONFIG_GPIO_ACPI */
->  #else /* CONFIG_GPIOLIB */
->
->  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
-> --
-> 2.15.0.276.g89ea799
->
+Contact person Mrs. Alan Ude
+Dir. MONEY GRAM Service,Benin
+Phone number: +229 98856728
+E-mail: moneygram.1820@outlook.fr
 
+Ask him to give you the complete mtcn, sender name, question and
+answer to enable you
+pick up the $5000.00 sent today,
+Also you are instructed to re-confirm your information's
+to Mrs.Alan Ude as listed below to avoid wrong transactions.
 
--- 
-With Best Regards,
-Andy Shevchenko
+(1Your Full name:............................................
+(2 Phone number.....................................................
+(3 Contact address:.....................................
+(4 Age:..................................................................
+(5 Country..............................................
+(6) Sex .................................................................
+(7) your occupation...........................................
+
+(8)Passport/By Attach or Drivers License Number:
+Contact Mrs. Alan Ude for your MONEY GRAM payment of $4.8,000.000usd
+Note please: I have paid service fees for you but the only money you
+are required
+to send to Mrs. Alan Ude is $90.00 only Transfer fee before you can
+pick up your transfer today.
+
+Send it to via Money Gram
+Receiver's Name-----Alan Ude
+Country----------Benin
+Address-----------Cotonou
+Quest--------Honest
+Ans-----------Trust
+
+I done all my best for you to receive your transfer now ok.
+We need your urgent reply
+Best Regards
+Rev.Dr Emmanuel Okoye
+CEO Ecobank-benin
+
+If we did not receive it urgent from you today,
+I will go ahead and release you funds to Mrs. Lyndia Ppaulson as your
+representative.
