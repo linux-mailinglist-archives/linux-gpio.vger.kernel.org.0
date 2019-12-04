@@ -2,81 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9459E1127B8
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 10:36:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECC471128EA
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 11:09:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbfLDJgo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 04:36:44 -0500
-Received: from mga14.intel.com ([192.55.52.115]:27867 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbfLDJgo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:36:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 01:36:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,277,1571727600"; 
-   d="scan'208";a="294118284"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 04 Dec 2019 01:36:43 -0800
-Received: from [10.226.38.71] (unknown [10.226.38.71])
-        by linux.intel.com (Postfix) with ESMTP id BF149580AC4;
-        Wed,  4 Dec 2019 01:36:41 -0800 (PST)
-Subject: Re: linux-next: Tree for Dec 3 (pinctrl-equilibrium)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20191203155405.31404722@canb.auug.org.au>
- <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <1c54235b-545c-db3e-4225-ec6824ac6003@linux.intel.com>
-Date:   Wed, 4 Dec 2019 17:36:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727620AbfLDKJc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 05:09:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54463 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727607AbfLDKJc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 05:09:32 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icRb4-0006R9-Qi; Wed, 04 Dec 2019 11:09:26 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1icRb3-0006ip-Vu; Wed, 04 Dec 2019 11:09:25 +0100
+Date:   Wed, 4 Dec 2019 11:09:25 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+ <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1a78124d-bef9-46da-aef4-60f85fddfceb@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> platform_irq_count() is the more generic way (independent of
+> device trees) to determine the count of available interrupts. So
+> use this instead.
+> 
+> As platform_irq_count() might return an error code (which
+> of_irq_count doesn't) some additional handling is necessary.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+> 
+> V3:
+>  Use %pe
 
-Hi Randy,
+Great. Note that with %pe there is a dependency on commit 57f5677e535b
+("printf: add support for printing symbolic error names") which was
+applied during the current merge window.
 
-On 4/12/2019 12:33 AM, Randy Dunlap wrote:
-> On 12/2/19 8:54 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Please do not add any material for v5.6 to your linux-next included
->> trees until after v5.5-rc1 has been released.
->>
->> Changes since 20191202:
->>
-> on x86_64:
-> # CONFIG_OF is not set
->
->
-> ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `pinconf_generic_dt_node_to_map_all':
-> pinctrl-equilibrium.c:(.text+0xb): undefined reference to `pinconf_generic_dt_node_to_map'
->
-> Probably depends on OF.
+> V2:
+>  Update commit log, and add err handling
+>  Not tested, just code inspection
+> 
+> 
+>  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+> index 4122683eb1f9..baee8c3f06ad 100644
+> --- a/drivers/gpio/gpio-bcm-kona.c
+> +++ b/drivers/gpio/gpio-bcm-kona.c
+> @@ -19,7 +19,6 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/init.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/irqchip/chained_irq.h>
+> @@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+>  
+>  	kona_gpio->gpio_chip = template_chip;
+>  	chip = &kona_gpio->gpio_chip;
+> -	kona_gpio->num_bank = of_irq_count(dev->of_node);
+> -	if (kona_gpio->num_bank == 0) {
+> +	ret = platform_irq_count(pdev);
+> +	if (!ret) {
+>  		dev_err(dev, "Couldn't determine # GPIO banks\n");
+>  		return -ENOENT;
+> +	} else if (ret < 0) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "Couldn't determine GPIO banks: (%pe)\n",
+> +				ERR_PTR(ret));
 
-Can you please tell the compiler/toolchain details that you used when you see
-above error ?I tried few versions of gcc and i never see this linker error.
-Build always passed successfully.
+I'd say drop either the colon or the parenthesis.
 
-I have a patch that adds 'depends on OF' in the Kconfig to resolve this but i
-want to ensure that i recreate this error first & confirm resolution with the
-patch before posting it. Thanks.
+Best regards
+Uwe
 
-Regards,
-Rahul
-
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
