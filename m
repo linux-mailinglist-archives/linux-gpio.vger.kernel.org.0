@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EEAA113779
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:18:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1DB211377B
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:19:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbfLDWSx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 17:18:53 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33179 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfLDWSx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:18:53 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y206so549851pfb.0;
-        Wed, 04 Dec 2019 14:18:52 -0800 (PST)
+        id S1728053AbfLDWTY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 17:19:24 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38617 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWTY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:19:24 -0500
+Received: by mail-pg1-f195.google.com with SMTP id a33so332459pgm.5;
+        Wed, 04 Dec 2019 14:19:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YoWjZJetN7C907sf8l8S1h92ZyTU0yDuKBdSww6Y87k=;
-        b=LU9SK66lfgwFDD7kZEucKxKgHL+Jh0uoijMWnOOhs32iDyR8md94bu5b+x37tbzMBF
-         u2c2BxbH118usOWWuTQZzF9wvYfxsybTD2b4rHt356kxTgeFFl+ZSs9jDL79lX66k2aZ
-         9CJqSK+IxU2Kb8Ycb+G7/NIG+tmgdRVb2tM8x/sfmQYtomIyx4KUOvvJ2eewZ9RQrUGL
-         LnhoRvX6SXVJdfbtjmnP0JZgsQbxJzHzSuHFoxeE5PiaKrF1/+qLqpD7D+82FqjpG6ZR
-         QpZ/Ar//IWQu9IzC/Tusu11iUeXFEIcHRB2Kfhxf+ye4cQSBwSIFY3HL6fbAQg64Ziqh
-         P5WA==
+        bh=Xl8E0mgQambwqoFrAc3CJUxXJzHeSi7VR9fzrX/x0q0=;
+        b=n4bF80xcpB+udzzoUkrNj9ZfkOnls5AfByEw3XNv01PQXdQmiR3sYgKPtwr9YB2lrx
+         F8IEEklg2DIajMhePXR/6kXm+CCiqsb7+VeWY+PMr2Ij5Nn/jm9GNt1l+wxayjpDoBm0
+         FvPMA5+ck1yATpHxyOFn2n9QDJCmt9/Xm8qIsBo0ODDWQs2RZa5l9BV2dELlri/rCsIG
+         1LkUhisdlDXTy/6sThdKdqs6CYL6pCd4mUrypmxC+XIgmRkDbWsK7LTANro/LkZWSt+F
+         NxClde6xanY8IDrYT5yfYt3vH1k6tlPrX0aPeE/lGt9OkW+hNv65u/QCYJjKIB2DtqQu
+         KQLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YoWjZJetN7C907sf8l8S1h92ZyTU0yDuKBdSww6Y87k=;
-        b=LQkHqEtCB25MOImB1xM4JSJLSNQfRJ5AFo3LBUdF2GS7JZwjmyw0QYVXqmoDkx2aqP
-         yv798VWv31XPbTw4L1lEA1NwTFT6jhtUD66iC/WIJT9t8alF15B3DuJNkvRyGvNczsHf
-         eLM5ylgk+8ppc0956KozRFfWOLtXeUurU8erfhEQMcDQ1AFcxvR2Sf0MEisvbiRwMJgx
-         RxX0HRo5/Ue4W3B0gbKh5CvBqD4WbQzZN5w9iHZoisau5kX1JxG+IDjQsoURV9GkPRhL
-         KCcXcFEmuRCNLzTjV9HB2RLSFQol67orew+ueeeJWFezk+1mR4VbM2lL+SK9uCnTYao/
-         TeEA==
-X-Gm-Message-State: APjAAAW/a71BxdrgT8VdrhcaHVcdUWAt5/pqrJBiBb22XyynE2ZMVtps
-        V0iBhnu5oIKcWE9ilIrZbGwPfuIWM544kVSBpsw=
-X-Google-Smtp-Source: APXvYqwtyM9hGkXIcsL/TqnEaURm/MVXLxLwkWx4EOMvJVs+NrJXMfo6qBhLyYkk3lV65mnuzBRT+bb7M7sbOeQCVSo=
-X-Received: by 2002:a63:e14a:: with SMTP id h10mr5810042pgk.74.1575497932215;
- Wed, 04 Dec 2019 14:18:52 -0800 (PST)
+        bh=Xl8E0mgQambwqoFrAc3CJUxXJzHeSi7VR9fzrX/x0q0=;
+        b=F30MfJsHOGrtUGQhh95+NulifH2aftVYo8A14lGZK9asXmx9TRNmYVQ2L7XmLvEeOx
+         QZnPVQ4Tdqp77J4wAUfntNqz8klUCyEe/IHFJXjpLL/kPtUovsJFQgDJEsipQLeVLUpy
+         nSsB8VG2EpmN8aWxaYWKif5oAu4RjjnWo4g7r6baT575F3m3mOJxotJQqgePQN0MMCYk
+         GvqEstV884WXMvatt8Fc2ON6p1cjm+D9pddkQQWICbulKJsBCXt9JhTYoiXmdsTgV9aq
+         H8ifzByVbTCh5fwNXRIBPVPaQ8K3HKBZTD5HjM75T15TQbGgzX4XlgTU27HxH0+IkEqM
+         21Tw==
+X-Gm-Message-State: APjAAAW4xrAPPBHiE4qYDYrYmA2Z59eK0X02GuyP7vobzYVeWQPZFcZv
+        FTHtLhiD1vjjk+a07XgSLQpwy6/WM7S18YuPm1g=
+X-Google-Smtp-Source: APXvYqzT7YxFYkAqlWm7KTZo31O/e70i9EEmakKRcw+6PBRjlhIMivEQziHwnGGMKjRmU2xpMWP7U5Z06aM2hSbCgL8=
+X-Received: by 2002:a63:941:: with SMTP id 62mr6098806pgj.203.1575497962954;
+ Wed, 04 Dec 2019 14:19:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-3-brgl@bgdev.pl>
-In-Reply-To: <20191204155912.17590-3-brgl@bgdev.pl>
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-4-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-4-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 00:18:40 +0200
-Message-ID: <CAHp75Vc2E4iXDvq4wV7nkoizPaz_vRxfYztzwStt9ux9oYWExg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] gpiolib: have a single place of calling set_config()
+Date:   Thu, 5 Dec 2019 00:19:11 +0200
+Message-ID: <CAHp75VfL95BXuj=bhEjh0zbwoiaj3bQb0HEGfx8RqGppHDCyHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] gpiolib: convert the type of hwnum to unsigned
+ int in gpiochip_get_desc()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -63,75 +64,76 @@ On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Instead of calling the gpiochip's set_config() callback directly and
-> checking its existence every time - just add a new routine that performs
-> this check internally. Call it in gpio_set_config() and
-> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> the check for chip->set() as it's irrelevant to this config option.
+> gpiochip_get_desc() takes a u16 hwnum, but it turns out most users don't
+> respect that and usually pass an unsigned int. Since implicit casting to
+> a smaller type is dangerous - let's change the type of hwnum to unsigned
+> int in gpiochip_get_desc() and in gpiochip_request_own_desc() where the
+> size of hwnum is not respected either and who's a user of the former.
+>
+> This is safe as we then check the hwnum against the number of lines
+> before proceeding in gpiochip_get_desc().
 >
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/gpio/gpiolib.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
+>  drivers/gpio/gpiolib.c      | 5 +++--
+>  drivers/gpio/gpiolib.h      | 3 ++-
+>  include/linux/gpio/driver.h | 3 ++-
+>  3 files changed, 7 insertions(+), 4 deletions(-)
 >
 > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index a31797fe78fa..72211407469f 100644
+> index 72211407469f..b3ffb079e323 100644
 > --- a/drivers/gpio/gpiolib.c
 > +++ b/drivers/gpio/gpiolib.c
-> @@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
->   * rely on gpio_request() having been called beforehand.
+> @@ -140,7 +140,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
+>   * in the given chip for the specified hardware number.
 >   */
->
-> +static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
-> +                             enum pin_config_param mode)
-> +{
-> +       if (!gc->set_config)
-> +               return -ENOTSUPP;
-> +
-> +       return gc->set_config(gc, offset, mode);
-> +}
-> +
->  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->                            enum pin_config_param mode)
+>  struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
+> -                                   u16 hwnum)
+> +                                   unsigned int hwnum)
 >  {
-> @@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->         }
+>         struct gpio_device *gdev = chip->gpiodev;
 >
->         config = PIN_CONF_PACKED(mode, arg);
-> -       return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
-> +       return gpio_do_set_config(gc, offset, mode);
->  }
+> @@ -2990,7 +2990,8 @@ EXPORT_SYMBOL_GPL(gpiochip_is_requested);
+>   * A pointer to the GPIO descriptor, or an ERR_PTR()-encoded negative error
+>   * code on failure.
+>   */
+> -struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
+> +struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
+> +                                           unsigned int hwnum,
+>                                             const char *label,
+>                                             enum gpio_lookup_flags lflags,
+>                                             enum gpiod_flags dflags)
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index ca9bc1e4803c..a1cbeabadc69 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -78,7 +78,8 @@ struct gpio_array {
+>         unsigned long           invert_mask[];
+>  };
 >
->  static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-> @@ -3294,15 +3303,9 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
+> -struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip, u16 hwnum);
+> +struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
+> +                                   unsigned int hwnum);
+>  int gpiod_get_array_value_complex(bool raw, bool can_sleep,
+>                                   unsigned int array_size,
+>                                   struct gpio_desc **desc_array,
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index e2480ef94c55..4f032de10bae 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -715,7 +715,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
 >
->         VALIDATE_DESC(desc);
->         chip = desc->gdev->chip;
-> -       if (!chip->set || !chip->set_config) {
-> -               gpiod_dbg(desc,
-> -                         "%s: missing set() or set_config() operations\n",
-> -                         __func__);
-> -               return -ENOTSUPP;
-> -       }
+>  #endif /* CONFIG_PINCTRL */
 >
->         config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
-> -       return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
-> +       return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
->  }
->  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
->
-> @@ -3339,7 +3342,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
->         packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
->                                           !transitory);
->         gpio = gpio_chip_hwgpio(desc);
-> -       rc = chip->set_config(chip, gpio, packed);
-> +       rc = gpio_do_set_config(chip, gpio, packed);
->         if (rc == -ENOTSUPP) {
->                 dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
->                                 gpio);
+> -struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip, u16 hwnum,
+> +struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *chip,
+> +                                           unsigned int hwnum,
+>                                             const char *label,
+>                                             enum gpio_lookup_flags lflags,
+>                                             enum gpiod_flags dflags);
 > --
 > 2.23.0
 >
