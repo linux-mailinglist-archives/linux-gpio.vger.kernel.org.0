@@ -2,177 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC6821135E0
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 20:42:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26F8C113777
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:18:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfLDTmd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 14:42:33 -0500
-Received: from mga12.intel.com ([192.55.52.136]:12765 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbfLDTmc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 4 Dec 2019 14:42:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Dec 2019 11:42:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,278,1571727600"; 
-   d="scan'208";a="219005577"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Dec 2019 11:42:31 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 5144894; Wed,  4 Dec 2019 21:42:30 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] gpiolib: Make use of assign_bit() API
-Date:   Wed,  4 Dec 2019 21:42:29 +0200
-Message-Id: <20191204194229.64251-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
-References: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
+        id S1728011AbfLDWSa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 17:18:30 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44759 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWSa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:18:30 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so522664pgl.11;
+        Wed, 04 Dec 2019 14:18:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BSs1JgftpIbcW3GJF8MWlTcMQiwQH0E/9HSLGnuUhZY=;
+        b=IoH+UrM7+WlqqruX7C3JJpgZEijV/IOSpHF34r9wCRyFh/u5/f2LYJJDbEMDggvUjJ
+         bLZV3olTZQYouAz+GOHum6mi26NljoRLEhDo8bWQ3Z86HZCgoytSbSkY0sFbESM17xOf
+         4nb95E6NyUUqPevaG492AcKSuK7nGs7cGlmKo8jOLm6p9SUzEOTIW0h5uJ8jc43cT1jF
+         2aA5bnqvwjIpCA9HqdodgjHv9GtyhtSs1NEWlN7+Xlp5OYadzlg6LFzk/+8gHO/e519j
+         JNu9nfckYM5lP6RIL4v6Q/web4bYPLru538uVGnfusKimDGfrMPeWSeKoL1mJHat5EYm
+         bQwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BSs1JgftpIbcW3GJF8MWlTcMQiwQH0E/9HSLGnuUhZY=;
+        b=du5tUswdx7FLzGOv4slkh6d6Q3VMbGjupwmq/jdi9VkeAVxAQrfnNAPOLKLK6+mBLr
+         z+UjbwSJ+yP1uvaqM+ywhkMMTZCM8mNU03iL2ZLGG/Q4/fumuA6S6zE5saoR27SzY+4+
+         d6/F4ffjpgOTuh7hVmLgOPZdJ/CTmgklbhptHoTPgmR+uFQQuIeFWfgMFj4Ri6IBGsLB
+         +/EHHnN4BsjyTYM8v7/wxxiihB9YUuyWBsVlG/q+AkQB1xupfAWGJv7Np03jC6lItMxu
+         dqhMCuz+H+o8qqI5nTOsTcmGjy2BbC+RJkTRAvOVUxfuj4hrR0/MJpa/BswZhwsF7/v3
+         7aOg==
+X-Gm-Message-State: APjAAAXZv7UiSOTkyaBiY4cgdWEQtipTVLgVlRJl7JUEsamnX7fL8ce4
+        yC1AQoHWqFjoF1lpEP8N7MhK7wVAithXRnjtNvY=
+X-Google-Smtp-Source: APXvYqz0nBw+DVMCl9QmTd7VL0k2dyqyeLEhkcx2mruad872LLyUvgCc37FbvQ/MDuf7ADSYnqCNZDLv56msCKEe04g=
+X-Received: by 2002:a63:941:: with SMTP id 62mr6094824pgj.203.1575497909458;
+ Wed, 04 Dec 2019 14:18:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-2-brgl@bgdev.pl>
+In-Reply-To: <20191204155912.17590-2-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 00:18:17 +0200
+Message-ID: <CAHp75Vfzk3FgZLLyNv7+sj8r-QFW57juBQV9O2VP01=c04AdKQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] gpiolib: use 'unsigned int' instead of
+ 'unsigned' in gpio_set_config()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We have for some time the assign_bit() API to replace open coded
+On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Checkpatch complains about using 'unsigned' instead of 'unsigned int'.
+>
 
-	if (foo)
-		set_bit(n, bar);
-	else
-		clear_bit(n, bar);
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Use this API in GPIO library code.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 21b02a0064f8..a31797fe78fa 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -3042,7 +3042,7 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
+>   * rely on gpio_request() having been called beforehand.
+>   */
+>
+> -static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
+> +static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+>                            enum pin_config_param mode)
+>  {
+>         unsigned long config;
+> --
+> 2.23.0
+>
 
-No functional change intended.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 59 ++++++++++++++----------------------------
- 1 file changed, 20 insertions(+), 39 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 134985210619..b332121da4b5 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -224,15 +224,15 @@ int gpiod_get_direction(struct gpio_desc *desc)
- 		return -ENOTSUPP;
- 
- 	ret = chip->get_direction(chip, offset);
--	if (ret > 0) {
--		/* GPIOF_DIR_IN, or other positive */
-+	if (ret < 0)
-+		return ret;
-+
-+	/* GPIOF_DIR_IN or other positive, otherwise GPIOF_DIR_OUT */
-+	if (ret > 0)
- 		ret = 1;
--		clear_bit(FLAG_IS_OUT, &desc->flags);
--	}
--	if (ret == 0) {
--		/* GPIOF_DIR_OUT */
--		set_bit(FLAG_IS_OUT, &desc->flags);
--	}
-+
-+	assign_bit(FLAG_IS_OUT, &desc->flags, !ret);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(gpiod_get_direction);
-@@ -484,15 +484,6 @@ static int linehandle_validate_flags(u32 flags)
- 	return 0;
- }
- 
--static void linehandle_configure_flag(unsigned long *flagsp,
--				      u32 bit, bool active)
--{
--	if (active)
--		set_bit(bit, flagsp);
--	else
--		clear_bit(bit, flagsp);
--}
--
- static long linehandle_set_config(struct linehandle_state *lh,
- 				  void __user *ip)
- {
-@@ -514,22 +505,22 @@ static long linehandle_set_config(struct linehandle_state *lh,
- 		desc = lh->descs[i];
- 		flagsp = &desc->flags;
- 
--		linehandle_configure_flag(flagsp, FLAG_ACTIVE_LOW,
-+		assign_bit(FLAG_ACTIVE_LOW, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW);
- 
--		linehandle_configure_flag(flagsp, FLAG_OPEN_DRAIN,
-+		assign_bit(FLAG_OPEN_DRAIN, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN);
- 
--		linehandle_configure_flag(flagsp, FLAG_OPEN_SOURCE,
-+		assign_bit(FLAG_OPEN_SOURCE, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE);
- 
--		linehandle_configure_flag(flagsp, FLAG_PULL_UP,
-+		assign_bit(FLAG_PULL_UP, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_BIAS_PULL_UP);
- 
--		linehandle_configure_flag(flagsp, FLAG_PULL_DOWN,
-+		assign_bit(FLAG_PULL_DOWN, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_BIAS_PULL_DOWN);
- 
--		linehandle_configure_flag(flagsp, FLAG_BIAS_DISABLE,
-+		assign_bit(FLAG_BIAS_DISABLE, flagsp,
- 			lflags & GPIOHANDLE_REQUEST_BIAS_DISABLE);
- 
- 		/*
-@@ -1561,15 +1552,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *chip, void *data,
- 		struct gpio_desc *desc = &gdev->descs[i];
- 
- 		if (chip->get_direction && gpiochip_line_is_valid(chip, i)) {
--			if (!chip->get_direction(chip, i))
--				set_bit(FLAG_IS_OUT, &desc->flags);
--			else
--				clear_bit(FLAG_IS_OUT, &desc->flags);
-+			assign_bit(FLAG_IS_OUT,
-+				   &desc->flags, !chip->get_direction(chip, i));
- 		} else {
--			if (!chip->direction_input)
--				set_bit(FLAG_IS_OUT, &desc->flags);
--			else
--				clear_bit(FLAG_IS_OUT, &desc->flags);
-+			assign_bit(FLAG_IS_OUT,
-+				   &desc->flags, !chip->direction_input);
- 		}
- 	}
- 
-@@ -3371,10 +3358,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
- 	 * Handle FLAG_TRANSITORY first, enabling queries to gpiolib for
- 	 * persistence state.
- 	 */
--	if (transitory)
--		set_bit(FLAG_TRANSITORY, &desc->flags);
--	else
--		clear_bit(FLAG_TRANSITORY, &desc->flags);
-+	assign_bit(FLAG_TRANSITORY, &desc->flags, transitory);
- 
- 	/* If the driver supports it, set the persistence state now */
- 	chip = desc->gdev->chip;
-@@ -3830,10 +3814,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- 				gpio_set_open_source_value_commit(desc, value);
- 			} else {
- 				__set_bit(hwgpio, mask);
--				if (value)
--					__set_bit(hwgpio, bits);
--				else
--					__clear_bit(hwgpio, bits);
-+				__assign_bit(hwgpio, bits, value);
- 				count++;
- 			}
- 			i++;
 -- 
-2.24.0
-
+With Best Regards,
+Andy Shevchenko
