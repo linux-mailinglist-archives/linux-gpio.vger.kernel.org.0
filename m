@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 672EF112F27
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 16:59:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD86A112F60
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 17:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfLDP7m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 10:59:42 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37993 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728607AbfLDP7c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 10:59:32 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so9238590wrh.5
-        for <linux-gpio@vger.kernel.org>; Wed, 04 Dec 2019 07:59:30 -0800 (PST)
+        id S1728536AbfLDP7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 10:59:20 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34405 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbfLDP7T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 10:59:19 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f4so5163210wmj.1
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Dec 2019 07:59:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
-        b=X+uook1kRgRvmE3McO9/BVwAAZr04AoodqHjOIAmN5n2dNHYyv9wnrCFc7p4ZfwIUq
-         aIftfQ1yxXnKD2DorRPeTA2RzHIg7M+efba4oCK6k8QdovXqUfPIwq9AJ2Qcs8h/38P1
-         Gb3TB4LynazhBAZfqLQitm3PilyB3+RxPvaZNs5PmTNpwaxAWxLT9Tz0Sv7q3jdT2JrL
-         oA8c6D9J6F9wE4DAaC4/mcXHOBgKvTBV0uPpCsUHd6W3tCXuuZR0onSsA3vSQ3+aAgDP
-         ABki0FN/bur1VoZtBz0Pou7Aijz60w1Sw0jkPp5WxVj2yH3ry+Qsrkk6WVwfFsBcXoK3
-         JQIw==
+        bh=mslRHHSp/cuNnBW29h3HN5M5/Ygh6sAx6mKJrlS5yNM=;
+        b=sp0X1oV1/HpAXBOrL6SJD4ucAhA5yp4me4sYOvskJPG+WgtnSicq1AE7f3IRNCR+nz
+         ubKCiY+s0tqSxNQgr6Mrh0OVhZHGO8Po836TRyl/IIoU/AeuRAO3GZc+ygoozhvY27GD
+         ni8goZVEGJLE+3itAVgt76mf4jek0kJtsugsSgBJJ/AvlY5pb0WhvwEorznNM8AQ29yd
+         6XGuKGzQKKuI2/f1H5aZmT28BB+UDMVzdbqU9DgeidzeWF/xGh41zroMDp+8GRszlS7r
+         b7QoL8lwNWAys6rB8vF3nOXMPWLMdJcimM/56HDYoF+AjAdgIQqeQpXPO7GXxjY4sXiE
+         t28A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UOWwdCy6TVkju/XVgGYrNAwqmnFLPpHnEAl2yx/CBt8=;
-        b=SoHFbsHHmHcPSe/uyCxxF0ICtHQUcwz35IZ7s1e55R7Jvk+D4MKAAjxj0tbVECNs51
-         kju42uCO0dT5AZwRPEqZnZ15o3gcT3lo5bMAPsQhoVEXeQsHFMklhGrQODkEEL2c365O
-         u5g9BScwE7+eppAGrqduV27LuuLAJv6MgxjrzgVDEDe47KoUvT3gBQTLqJBHqUXBh2Iq
-         Pu89zMiHtXTtNw2GuZQNc5T0csg9bGn/6b7gSyqcix2e/Su06XaaYgOoza/W4MYS2CE8
-         j235N/Ddma5OuCfdG+JnxVV4i1UaMck38mqe2q+7aXxadyDLFaNsX2Dj+x/K6D6DQXp6
-         0d1A==
-X-Gm-Message-State: APjAAAWncNZeBk6aJoaDy3NixMcB/TMcZ7tI8E4T+8gf/Kpo44pZ57at
-        Y25tOLBJLeWHIDUqiWk5fjjlGVNkYA4=
-X-Google-Smtp-Source: APXvYqyuvpUu6t8eK96hpQZQvg2O8GUu1xSz5TTabWxuZMWlPkfAxDcV1SufBPt83Rn9kt6rWiUy0A==
-X-Received: by 2002:a05:6000:160d:: with SMTP id u13mr5041318wrb.22.1575475169910;
-        Wed, 04 Dec 2019 07:59:29 -0800 (PST)
+        bh=mslRHHSp/cuNnBW29h3HN5M5/Ygh6sAx6mKJrlS5yNM=;
+        b=TS604HgiQtUxWNfPyWcK38cbiBt0d8krVQd7LEjHQorgqiDDO7KESBOxsLKWghFcCz
+         AYdzI8ZEzwbv/4CAqAjfWaH2JyWkpFDiZ04QkrRddjy583v90/X5VVVEEhw4Lw2szGeq
+         RAr4BsFBxaAl04X3+1aMeJTszs34xNWq3YKmwKPQWivEYPPNseQpySc3Uo/sAy8hRXec
+         mXZQf5AlFle94zuNpVqnw+sblnnX5GhQkSTcbw6hc3Bm5Y1SpL/gEf+W6X+WpX/fnz+E
+         yZJrDgg4jhxfl4gM38AbyJXFG6uVjgSj25LEg1uSsb2w0iQi42Y2YCap2hRDSqcj35Vv
+         slog==
+X-Gm-Message-State: APjAAAXQQ34vhmr6qUhkwR75OXQpbPXPzpQDPzUdjXW11cebmDaubg5g
+        LHxEBmhGRSV1DBTQu1vllDbzDw==
+X-Google-Smtp-Source: APXvYqxUV3B6D/kjwYQmFXK7hNpMMPQEwApjdkfCje2gxgeJX1iREqHUEw1ZPy6Y5EnCjGzk2JiU7A==
+X-Received: by 2002:a7b:c392:: with SMTP id s18mr153127wmj.169.1575475157805;
+        Wed, 04 Dec 2019 07:59:17 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.28
+        by smtp.gmail.com with ESMTPSA id u18sm8640508wrt.26.2019.12.04.07.59.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2019 07:59:28 -0800 (PST)
+        Wed, 04 Dec 2019 07:59:17 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 09/11] gpiolib: provide a dedicated function for setting lineinfo
-Date:   Wed,  4 Dec 2019 16:59:12 +0100
-Message-Id: <20191204155912.17590-10-brgl@bgdev.pl>
+Subject: [PATCH v2 01/11] gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
+Date:   Wed,  4 Dec 2019 16:59:04 +0100
+Message-Id: <20191204155912.17590-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191204155912.17590-1-brgl@bgdev.pl>
 References: <20191204155912.17590-1-brgl@bgdev.pl>
@@ -64,131 +64,26 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We'll soon be filling out the gpioline_info structure in multiple
-places. Add a separate function that given a gpio_desc sets all relevant
-fields.
+Checkpatch complains about using 'unsigned' instead of 'unsigned int'.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/gpio/gpiolib.c | 98 ++++++++++++++++++++++++------------------
- 1 file changed, 55 insertions(+), 43 deletions(-)
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c89d297da270..711963aa9239 100644
+index 21b02a0064f8..a31797fe78fa 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -1145,6 +1145,60 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	return ret;
- }
- 
-+static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
-+				  struct gpioline_info *info)
-+{
-+	struct gpio_chip *chip = desc->gdev->chip;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio_lock, flags);
-+
-+	if (desc->name) {
-+		strncpy(info->name, desc->name, sizeof(info->name));
-+		info->name[sizeof(info->name) - 1] = '\0';
-+	} else {
-+		info->name[0] = '\0';
-+	}
-+
-+	if (desc->label) {
-+		strncpy(info->consumer, desc->label, sizeof(info->consumer));
-+		info->consumer[sizeof(info->consumer) - 1] = '\0';
-+	} else {
-+		info->consumer[0] = '\0';
-+	}
-+
-+	/*
-+	 * Userspace only need to know that the kernel is using this GPIO so
-+	 * it can't use it.
-+	 */
-+	info->flags = 0;
-+	if (test_bit(FLAG_REQUESTED, &desc->flags) ||
-+	    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
-+	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
-+	    test_bit(FLAG_EXPORT, &desc->flags) ||
-+	    test_bit(FLAG_SYSFS, &desc->flags) ||
-+	    !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
-+		info->flags |= GPIOLINE_FLAG_KERNEL;
-+	if (test_bit(FLAG_IS_OUT, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_IS_OUT;
-+	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
-+	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
-+		info->flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
-+				GPIOLINE_FLAG_IS_OUT);
-+	if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
-+		info->flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
-+				GPIOLINE_FLAG_IS_OUT);
-+	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
-+	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
-+	if (test_bit(FLAG_PULL_UP, &desc->flags))
-+		info->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+
-+	spin_unlock_irqrestore(&gpio_lock, flags);
-+}
-+
- /*
-  * gpio_ioctl() - ioctl handler for the GPIO chardev
+@@ -3042,7 +3042,7 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
+  * rely on gpio_request() having been called beforehand.
   */
-@@ -1185,49 +1239,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
  
--		if (desc->name) {
--			strncpy(lineinfo.name, desc->name,
--				sizeof(lineinfo.name));
--			lineinfo.name[sizeof(lineinfo.name)-1] = '\0';
--		} else {
--			lineinfo.name[0] = '\0';
--		}
--		if (desc->label) {
--			strncpy(lineinfo.consumer, desc->label,
--				sizeof(lineinfo.consumer));
--			lineinfo.consumer[sizeof(lineinfo.consumer)-1] = '\0';
--		} else {
--			lineinfo.consumer[0] = '\0';
--		}
--
--		/*
--		 * Userspace only need to know that the kernel is using
--		 * this GPIO so it can't use it.
--		 */
--		lineinfo.flags = 0;
--		if (test_bit(FLAG_REQUESTED, &desc->flags) ||
--		    test_bit(FLAG_IS_HOGGED, &desc->flags) ||
--		    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
--		    test_bit(FLAG_EXPORT, &desc->flags) ||
--		    test_bit(FLAG_SYSFS, &desc->flags) ||
--		    !pinctrl_gpio_can_use_line(chip->base + lineinfo.line_offset))
--			lineinfo.flags |= GPIOLINE_FLAG_KERNEL;
--		if (test_bit(FLAG_IS_OUT, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_IS_OUT;
--		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
--		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
--					   GPIOLINE_FLAG_IS_OUT);
--		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
--					   GPIOLINE_FLAG_IS_OUT);
--		if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_DISABLE;
--		if (test_bit(FLAG_PULL_DOWN, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
--		if (test_bit(FLAG_PULL_UP, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+		gpio_desc_to_lineinfo(desc, &lineinfo);
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
+-static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
++static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 			   enum pin_config_param mode)
+ {
+ 	unsigned long config;
 -- 
 2.23.0
 
