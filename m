@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1CD91137A6
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA9161137C8
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 23:42:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbfLDWeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 17:34:20 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33282 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728011AbfLDWeU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:34:20 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so568048pfb.0;
-        Wed, 04 Dec 2019 14:34:19 -0800 (PST)
+        id S1728098AbfLDWmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 17:42:53 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39325 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfLDWmw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 17:42:52 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so562874pfx.6;
+        Wed, 04 Dec 2019 14:42:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mj73wwGTzwobUOE10qqPsX0ktiedj3Elx2zmgNCccJ4=;
-        b=iwtBMr1Hy8CtJSLeMmSrtMcwOz8IGWK9v6+xEobUDXXH8VKGJqbTqEJKziPAyeSpfh
-         fFBDCFEBHtdsEVDinSCI9eTBZUh+yG2I5rIDJiUXno77WEgA+GLQovsTStPRniyylUHS
-         C/Ex0fjDVBBw/byoQ4R8gvurZIpQl8qyW90cCSmwPWIoMeA2m77RrgdH10p8ZVJS2GkJ
-         DHXDT+wctNxP/KWd3WiPZeB/s7ESwtkBgZTX5fntMlegK5HVvYI6e8vCAtlz7e61I6RF
-         nKvC3BCe1r5gv0uy15Hiignm1cdTiEbpsj/P9nlsStE5GURRf0J7ywG8tKe3APyWAquC
-         zsOA==
+        bh=pF5bjopQFQ3A+SmApS9xhaC/5lZoT7rSCk2k4/K0fE4=;
+        b=Q7CxIZRtAxRwNYXgAnY2x8ZSABqYYcEYAir0rRuMfUunI+Fxerl//0q8FcT1DVmfjn
+         XzXlJHh5j9uevlTyhz8h7q0o/RYfQjR0ZjoUo1D/1KGJJTkieQNF5JZ4NqchzW7b0e5o
+         qcz616/VCrszZCijm1L7szNpT5eayAgJDHDiTgul0LaYivT7+p5yYoaZAhQSSY8UL+VK
+         dakBEb/CPTPdW4tJVWL77/zTSxlTzK6E7k+j7lqiksgGkRFYf8y5NXzocpls2ycBrtWl
+         XM37VPKiRXfJW9osEbPEDJKsDKQKdFjQuH40qCYHeXzudpIzHdVg84WYRO24o04dPWeK
+         fS+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mj73wwGTzwobUOE10qqPsX0ktiedj3Elx2zmgNCccJ4=;
-        b=nwd8QrbwUT0FphsXR8EepEynSc7NsxHnYCnwOjuD0kD//n/5ziKqejHcfyY/3eiUxm
-         WQ1WXcdbuuhmNpIodvbIZ1Zy0apkhxK0OuT7g8vxpkeSvzQxThuQY3juAlIivsIlrPox
-         TvAMRfnO7RCU/njlW2eRpyIQadpnQyYm2UmcQ/E5ZPobQsUVPVasspiN1MlU6SOBbBg3
-         1uRO5VgGQWzZ5RxlthP/h+3kzaO8bYjcsEPrj8Mgmjt3EY3T/5tzBS2cBmZ6PNEreq/E
-         hxw0wuu/Y65+pBVATKn+jlm+gT1kpa1EFUEbQh+cntRYVKOmV+rdvUeY8ScS+E5LDyLD
-         +EKw==
-X-Gm-Message-State: APjAAAX+nPhl+kGZeIlPxnnhfN4v2aCwj5fEoAfGtu4C+y9tnhsyB6ez
-        1fpDjx4TJxAu2xc3lCG2CQUAK7RUtCj5Q0MSgJQ=
-X-Google-Smtp-Source: APXvYqzPL1VrsxAaAH8m3fWGppI2f1+2DcKVlmnPfqF6XpjI2H4L2ZPs+A6+Lo5lRyIykXrMDIaljzx1oqqwPYahj9g=
-X-Received: by 2002:a63:2b51:: with SMTP id r78mr5964208pgr.4.1575498859478;
- Wed, 04 Dec 2019 14:34:19 -0800 (PST)
+        bh=pF5bjopQFQ3A+SmApS9xhaC/5lZoT7rSCk2k4/K0fE4=;
+        b=gfr8SyQ6eryTJiXeTI3RsVZ3ymNKNsL8U3wwJxBlBN0EwOWder0msdmdpQODlZ5/br
+         YEW+OZYM5PNchoY5SBEY/EpBD7OCPck5iu6memrdsAIdpLtCYHDGXJpdu6EJJB65US3l
+         117Q9GBWNKp+wAXgDlB1Df8DjEwNcjO5PSpIXnOE/suMglT2qagRQLYji7AfRedxg8e7
+         gX/oRleLnR9seubuHieZnuE/xrnkSAQC9TV4vOZzRVdieIPEGQ5QvjtMP5S4yqPoG+XP
+         RqpPln6/pk1ZYLuWFcekAkVG5VjF4WRzLTert+z0I5pcYbufmPq+oS/h5lILsaX6ohgv
+         WLTA==
+X-Gm-Message-State: APjAAAWbiatoC5da41dZNRCmE0hkCn6m76UEH6s3qQdwPi7pzctqbVyw
+        kOye8bjSmiQRX1Ohae0emKM/PYGb2WCubev8rYs=
+X-Google-Smtp-Source: APXvYqymNpUaoVnbcqpxgLX98vJUDKoclbK7ri5vX4NtbmNr3chcTbHAfQl60OLoWW3pvhXgQw4moYc5eOJhW+lBB58=
+X-Received: by 2002:a63:e14a:: with SMTP id h10mr5900277pgk.74.1575499371944;
+ Wed, 04 Dec 2019 14:42:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl>
-In-Reply-To: <20191204155941.17814-1-brgl@bgdev.pl>
+References: <20191204155941.17814-1-brgl@bgdev.pl> <20191204155941.17814-2-brgl@bgdev.pl>
+In-Reply-To: <20191204155941.17814-2-brgl@bgdev.pl>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 00:34:07 +0200
-Message-ID: <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
+Date:   Thu, 5 Dec 2019 00:42:39 +0200
+Message-ID: <CAHp75VcqYsKUzxGUhn8aHg_u-B=FkqmTU2YS+yyVNfAPu+715w@mail.gmail.com>
+Subject: Re: [PATCH v2 11/11] tools: gpio: implement gpio-watch
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -60,45 +59,124 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 6:03 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Currently there is no way for user-space to be informed about changes
-> in status of GPIO lines e.g. when someone else requests the line or its
-> config changes. We can only periodically re-read the line-info. This
-> is fine for simple one-off user-space tools, but any daemon that provides
-> a centralized access to GPIO chips would benefit hugely from an event
-> driven line info synchronization.
->
-> This patch adds a new ioctl() that allows user-space processes to reuse
-> the file descriptor associated with the character device for watching
-> any changes in line properties. Every such event contains the updated
-> line information.
->
-> Currently the events are generated on three types of status changes: when
-> a line is requested, when it's released and when its config is changed.
-> The first two are self-explanatory. For the third one: this will only
-> happen when another user-space process calls the new SET_CONFIG ioctl()
-> as any changes that can happen from within the kernel (i.e.
-> set_transitory() or set_debounce()) are of no interest to user-space.
+On Wed, Dec 4, 2019 at 7:19 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Add a simple program that allows to test the new LINECHANGED_FD ioctl().
 
-> +/**
-> + * struct gpioline_info_changed - Information about a change in status
-> + * of a GPIO line
-> + * @timestamp: estimate of time of status change occurrence, in nanoseconds
-> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-> + * and GPIOLINE_CHANGED_CONFIG
-> + * @info: updated line information
+> --- a/tools/gpio/.gitignore
+> +++ b/tools/gpio/.gitignore
+> @@ -1,4 +1,5 @@
+>  gpio-event-mon
+>  gpio-hammer
+>  lsgpio
+> +gpio-watch
+
+Perhaps keep it sorted?
+
+> +++ b/tools/gpio/gpio-watch.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * gpio-watch - monitor unrequested lines for property changes using the
+> + *              character device
+> + *
+> + * Copyright (C) 2019 BayLibre SAS
+> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > + */
-> +struct gpioline_info_changed {
-> +       __u64 timestamp;
-> +       __u32 event_type;
-> +       struct gpioline_info info;
-> +       __u32 padding[4]; /* for future use */
-> +};
+> +
+> +#include <ctype.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <linux/gpio.h>
+> +#include <poll.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +#include <unistd.h>
+> +
+> +static bool isnumber(const char *str)
+> +{
+> +       size_t sz = strlen(str);
+> +       int i;
+> +
+> +       for (i = 0; i < sz; i++) {
+> +               if (!isdigit(str[i]))
+> +                       return false;
+> +       }
+> +
+> +       return true;
+> +}
 
-Has this been tested against 64-bit kernel / 32-bit userspace case?
+strtoul() will do the same.
+
+char *p;
+unsigned long dummy; // do we need it?
+dummy = strtoul(..., &p);
+return *p == '\0';
+
+> +int main(int argc, char **argv)
+> +{
+> +       struct gpioline_info_changed chg;
+> +       struct gpioline_info req;
+> +       struct pollfd pfd;
+> +       int fd, i, j, ret;
+> +       char *event;
+> +       ssize_t rd;
+> +
+> +       if (argc < 3)
+> +               goto err_usage;
+> +
+> +       fd = open(argv[1], O_RDWR | O_CLOEXEC);
+> +       if (fd < 0) {
+> +               perror("unable to open gpiochip");
+> +               return EXIT_FAILURE;
+> +       }
+> +
+> +       for (i = 0, j = 2; i < argc - 2; i++, j++) {
+> +               if (!isnumber(argv[j]))
+> +                       goto err_usage;
+> +
+> +               memset(&req, 0, sizeof(req));
+> +               req.line_offset = atoi(argv[j]);
+
+Oh, why not to call strtoul() directly?
+
+> +
+> +               ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
+> +               if (ret) {
+> +                       perror("unable to set up line watch");
+
+Don't you need to unwatch previously added ones?
+
+> +                       return EXIT_FAILURE;
+> +               }
+> +       }
+
+> +       for (;;) {
+> +               ret = poll(&pfd, 1, 5000);
+> +               if (ret < 0) {
+> +                       perror("error polling the linechanged fd");
+> +                       return EXIT_FAILURE;
+> +               } else if (ret > 0) {
+> +                       memset(&chg, 0, sizeof(chg));
+
+> +                       rd = read(pfd.fd, &chg, sizeof(chg));
+> +                       if (rd < 0 || rd != sizeof(chg)) {
+> +                               if (rd != sizeof(chg))
+> +                                       errno = EIO;
+> +
+> +                               perror("error reading line change event");
+> +                               return EXIT_FAILURE;
+> +                       }
+
+Shouldn't we handle the -EINTR?
+
+> +               }
+> +       }
+> +
+> +       return 0;
+
 
 -- 
 With Best Regards,
