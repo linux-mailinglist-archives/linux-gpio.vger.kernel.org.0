@@ -2,116 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24088112C99
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 14:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4703112CC9
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Dec 2019 14:39:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfLDNal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 08:30:41 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:36786 "EHLO
+        id S1727714AbfLDNjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Dec 2019 08:39:48 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:40756 "EHLO
         zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727635AbfLDNal (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 08:30:41 -0500
+        with ESMTP id S1727530AbfLDNjr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 08:39:47 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id ACF7527E06C1;
-        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 7201627E06C1;
+        Wed,  4 Dec 2019 14:39:46 +0100 (CET)
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 0qikLOkuYp-c; Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+        with ESMTP id I6_byX5Hm-4B; Wed,  4 Dec 2019 14:39:45 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 3FD8E27E0E3A;
-        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 3FD8E27E0E3A
+        by zimbra2.kalray.eu (Postfix) with ESMTP id D13A427E0E3A;
+        Wed,  4 Dec 2019 14:39:45 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu D13A427E0E3A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575466239;
-        bh=tSLqHvB0qnrd8OVcbvn2X2AXUID5Nh56glFAyn927+E=;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1575466785;
+        bh=b/51G/JMtf/RESNKdaIDSR4mSDKkq9pwc0l6qcotXLY=;
         h=Date:From:To:Message-ID:MIME-Version;
-        b=GcPvVXHC/K11EuTi9ADAQobQECkkmIurKOFQUFP0uk32OyKxS6tQ5Paeu4J/tJDGG
-         tB6mVKJP6+MbFDrNeaa1DJ3gDNQneBsuX7sIWidbsDNBOxZCScwaKefoApSqzPhZJg
-         7jdjIOFb+ls+vxHuQLgs5rGWSnQmZJstp+M2YAjc=
+        b=Kn5OrMwOhbHMsx/vlp7Sjz/9eV0/OfeaF3PfbpYUpSraVzgvHGpR6lYTxBUTrgVkB
+         EjeC9f1SKfzGm+lzDPbuGvlnTcRsMfYCk1CfSoZyHctTrHBORotntaSFHizMwoOGFl
+         GEYLPCps2Wn1SGEbkfc29Rn8hLmQ1jzQCU4yit9I=
 X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ohZvBbAWfMrt; Wed,  4 Dec 2019 14:30:39 +0100 (CET)
+        with ESMTP id 5kGNwuvub3ZN; Wed,  4 Dec 2019 14:39:45 +0100 (CET)
 Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 283CE27E06C1;
-        Wed,  4 Dec 2019 14:30:39 +0100 (CET)
-Date:   Wed, 4 Dec 2019 14:30:38 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id B903B27E06C1;
+        Wed,  4 Dec 2019 14:39:45 +0100 (CET)
+Date:   Wed, 4 Dec 2019 14:39:45 +0100 (CET)
 From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <2116673293.95313020.1575466238935.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
-References: <20191204101042.4275-1-cleger@kalray.eu> <CAHp75VcMm3PPAgfFPLzVwg_RN7_vQfRmufvWiPOkYaErdGiNsw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
+        "open list, GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Message-ID: <1746901411.95313623.1575466785578.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <CAHp75VfL5mRB0wy86_352nosKkKqVLZC_amCbLvhBTyNZztgRw@mail.gmail.com>
+References: <20191204101042.4275-2-cleger@kalray.eu> <CAHp75VfL5mRB0wy86_352nosKkKqVLZC_amCbLvhBTyNZztgRw@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpio: export acpi_gpiochip_request_interrupts in
+ gpio/driver.h
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [192.168.40.202]
 X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Add pinctrl support for dwapb gpio driver
-Thread-Index: r1p3somX97dhEg8W1GZwXsd76Eey8Q==
+Thread-Topic: gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
+Thread-Index: 8yoxvWMoD8iFH9qbEgN6KjALSsb5cw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Ok, should I fix the original driver first and then submit the serie to add pinctrl ?
 
-
------ On 4 Dec, 2019, at 13:24, Andy Shevchenko andy.shevchenko@gmail.com wrote:
+----- On 4 Dec, 2019, at 13:35, Andy Shevchenko andy.shevchenko@gmail.com wrote:
 
 > On Wed, Dec 4, 2019 at 12:13 PM Clement Leger <cleger@kalray.eu> wrote:
 >>
->> Synopsys DWAPB IP includes support for pin control. This control is basic
->> and allows to switch between a hardware and a software function.
->> Software function is when driving GPIOs from IP and hardware is controlled
->> by external signals.
->> This serie export necessary interface to be able to move the driver to
->> pinctrl folder and then implement the pinctrl support which is based on the
->> digicolor driver. The idea is to avoid hardcoding pins in driver since
->> this IP is a generic one available on multiple SoC.
+>> dwapb-gpio driver which uses this function will be moved to pinctrl for
+>> pinctrl support. Export this function in gpio/driver.h to allow using
+>> it.
 >>
 > 
-> This series misses at least GPIO ACPI maintainers to be Cc'ed to for
-> the certain changes.
-> Moreover, I would like to see entire series in the future in my mailbox.
-
-Sorry, I messed up with get_maintainer.pl while sending the serie.
-I can resend it properly if needed.
-
+> I don't think this is proper way to do it.
+> The driver has to register IRQ chip and GPIO core will take care of
+> ACPI related stuff.
 > 
-> I will look at v1 closer anyway.
-> 
->> Clement Leger (5):
->>   gpio: export acpi_gpiochip_request_interrupts in gpio/driver.h
->>   pinctrl: dw: move gpio-dwapb.c to pinctrl folder
->>   pinctrl: dw: use devm_gpiochip_add_data
->>   pinctrl: dw: add pinctrl support for dwapb gpio driver
->>   dt-bindings: pinctrl: dw: move sps,dwapb-gpio.txt to pinctrl
+>> Signed-off-by: Clement Leger <cleger@kalray.eu>
+>> ---
+>>  drivers/gpio/gpiolib-acpi.h |  4 ----
+>>  include/linux/gpio/driver.h | 12 ++++++++++++
+>>  2 files changed, 12 insertions(+), 4 deletions(-)
 >>
->>  .../bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt |  21 +-
->>  MAINTAINERS                                        |   6 +-
->>  drivers/gpio/Kconfig                               |   8 -
->>  drivers/gpio/Makefile                              |   1 -
->>  drivers/gpio/gpiolib-acpi.h                        |   4 -
->>  drivers/pinctrl/Kconfig                            |   1 +
->>  drivers/pinctrl/Makefile                           |   1 +
->>  drivers/pinctrl/dw/Kconfig                         |  11 +
->>  drivers/pinctrl/dw/Makefile                        |   4 +
->>  .../gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c}    | 277 +++++++++++++++++++--
->>  include/linux/gpio/driver.h                        |  12 +
->>  include/linux/platform_data/gpio-dwapb.h           |   1 +
->>  12 files changed, 310 insertions(+), 37 deletions(-)
->>  rename Documentation/devicetree/bindings/{gpio => pinctrl}/snps-dwapb-gpio.txt
->>  (76%)
->>  create mode 100644 drivers/pinctrl/dw/Kconfig
->>  create mode 100644 drivers/pinctrl/dw/Makefile
->>  rename drivers/{gpio/gpio-dwapb.c => pinctrl/dw/pinctrl-dwapb.c} (77%)
+>> diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
+>> index 1c6d65cf0629..ba2f187babe3 100644
+>> --- a/drivers/gpio/gpiolib-acpi.h
+>> +++ b/drivers/gpio/gpiolib-acpi.h
+>> @@ -34,7 +34,6 @@ struct acpi_gpio_info {
+>>  void acpi_gpiochip_add(struct gpio_chip *chip);
+>>  void acpi_gpiochip_remove(struct gpio_chip *chip);
 >>
+>> -void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
+>>  void acpi_gpiochip_free_interrupts(struct gpio_chip *chip);
+>>
+>>  int acpi_gpio_update_gpiod_flags(enum gpiod_flags *flags,
+>> @@ -56,9 +55,6 @@ int acpi_gpio_count(struct device *dev, const char *con_id);
+>>  static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
+>>  static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
+>>
+>> -static inline void
+>> -acpi_gpiochip_request_interrupts(struct gpio_chip *chip) { }
+>> -
+>>  static inline void
+>>  acpi_gpiochip_free_interrupts(struct gpio_chip *chip) { }
+>>
+>> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+>> index e2480ef94c55..40b9f13d77e1 100644
+>> --- a/include/linux/gpio/driver.h
+>> +++ b/include/linux/gpio/driver.h
+>> @@ -733,6 +733,18 @@ void gpiochip_unlock_as_irq(struct gpio_chip *chip,
+>> unsigned int offset);
+>>
+>>  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+>>
+>> +
+>> +#ifdef CONFIG_GPIO_ACPI
+>> +
+>> +void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
+>> +
+>> +#else
+>> +
+>> +static inline void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+>> +{
+>> +}
+>> +
+>> +#endif /* CONFIG_GPIO_ACPI */
+>>  #else /* CONFIG_GPIOLIB */
+>>
+>>  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
 >> --
 >> 2.15.0.276.g89ea799
 >>
