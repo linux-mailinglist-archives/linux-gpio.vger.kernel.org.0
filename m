@@ -2,73 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8412C114670
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 19:00:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EA26114875
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 22:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbfLESAd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Dec 2019 13:00:33 -0500
-Received: from sonic301-3.consmr.mail.bf2.yahoo.com ([74.6.129.42]:37802 "EHLO
-        sonic301-3.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729535AbfLESAd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 13:00:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1575568831; bh=zPC9p8T5S06DA73PD5F75wViZ/EpBpeYylTS7OqjCU4=; h=Date:From:Reply-To:Subject:From:Subject; b=lkLM6V6mUH7CUUGUxB6VNBoIyR9CwL2baaJG1X3YweaYMCX5sx2UnHoL68PMpF0KmZBXCQg9yIPV3KZo+9f1m+G4kZ+b73ZxKn2NNh0l5aBkjDVkTeejk9SCci/gcmGKCNDiJtkyzn9RBaoa96HJ94sz2xFXh0H1XaQXKUwMh3pX9cAHfEG/Fj5Hi17R29WhfWvHU8f8CJvUxCyIyYuEaC8G+rZC0HnmoxV135OaslFNlHc9rdSlszF0QC++Sn55s6Z/VOCN+Lti1DqF5q/MWZGZv7hY71iTi4YM4DUgfRYUHfVkxP40LydtgTWbJ7lw7ehMlk35lSb12Vf2WNquCw==
-X-YMail-OSG: KNsbVJcVM1mEMPfKtZmaTgmYqEa0kn4p4upKvdSBGfZO0x3ALUBHdMAtniXc_s8
- 7vNWjkeJmlpj0NNhwphjb2wgxDH4Banl94mDFO.T6muSVgSfLsNtF2aG59e3aJ.44kNnUrrlA6AW
- 1qWrDJTwr2qqjPj7X0rByNM_BdXLdPhc6xNCmKK6uj5OJU6ZLWNQW5_ga.hM6i1otip_qPyyYvtQ
- h3xI1C0k0OK68b9.Dd4eWGgzngMIckaOHeXaRcUtzaCqONwhc0TpchBAzk.QtVdBhGzfH8AtdDRs
- 41JhvBzJIqycJjM2UkRpIouYKct2YW4aXJfnu67WgsalBNfm5xKlHFeL6VJAyim0L0tuQZy.f6sw
- 9QL.2YWNC6dQzRWskd70lPcn0bNTfvujKceShzb_2p.4rCCHlaU5N7k9o5iyBFmErnoEtHJVflk4
- 6FAsdlBumVNcRlrc47zTX1cEy1ccZn0PtJJuvnPNTvgbxNNvJrlcXgvreiiLdFRwJfGzaNQ8tvmZ
- CotB3FPbVVrDjw0cEv2KJUKOfxzqw.T9xTl.7GVK7utSA0pkTBFIWWo1NJe3.EbGzowSiRsO7unQ
- DX.jHP1HFGcOFWFBwMoAUKhcCVL4HD00zcAMq8iIQT6DAVbSucIGEE4J2TVa.7aoeSspzD4kGiIX
- shpGkZqojcrDu16uHkTV3MHSgBJbCce8j379zymQcqD45KXfDYD7ieZvUKLhxW1IwAgjQzZgO.nf
- mvC7zpDchFd9StHI4EtDQDHo7LBEFwwWMmtEOYo6BQcscKBsXUQtgvsmC5HC1D0yO8ZW8cp86Ak2
- EJNg_Qhz8urYESTJo21esubGwjBHpLwe5UF8dH2c6hT3uZrx4xFKTlEFRltjGjGU3NwlxOv0n4Ua
- OtkI3Ok9vk7IBMIll_TLE3Ty_KtrTStdCnz5bzEu5u_auB.lKx5KkhaB2.NS5HmQQQNL3wlM_SQ9
- 3.mdcpOqqzFC7J6kNyjyBXQdCwftFiFdg4TdCqqlJg9dwEMbht.eWAUR_fzLs72kdLW8AB0JyN7W
- X4KjXaL.66bBvn1CKolNFq0zfYe7cVWcVyr46aFRlOBmjmDUl4mLNxFZHXA3esD_3x9zb72Ct.tP
- 5tNfgIinWI2crXrKKmK.2TdBkRS3fDkAHEuJvZx4NWhkHMkTAYvGvuHWTyqpqwMYarn6bsmWZZ5B
- rrHk8tXCH4b.fKteXlRUFy_0dS85B1pDy1kTLWa1dBXnGd2jFrS..hM4BqI2v4qKrA7ia6RLDiur
- vcbeA.4N3UQwm8hBc0.y5Gz4BslbpHXfFIXSABvIKCzEh3drvYX2nJwBggxMbvr9FY5WGf8Mxqiy
- IBr7LJaEbog--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Thu, 5 Dec 2019 18:00:31 +0000
-Date:   Thu, 5 Dec 2019 18:00:27 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh222@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <691108676.6159901.1575568827372@mail.yahoo.com>
-Subject: I NEED YOUR HELP FOR THIS TRANSFER.
+        id S1729892AbfLEVG4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Dec 2019 16:06:56 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42505 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729145AbfLEVG4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 16:06:56 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 66so3890328otd.9;
+        Thu, 05 Dec 2019 13:06:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kfZJgMdMZnEWqYp4l6MRhDa+lgrmX+5UPFpYfdvrZFQ=;
+        b=SoZxAsjeHAmoEf4nNdWHdNcH1eSxQGcAMlZkojEugsfwFP+PMHN/5fG+rRd+a6QsrN
+         UZ2nSGHtgB7j38V6j9TPs0jIXrA+Q5OOtGsGzONxVQ+ynCqo2IadyilFgPosg3/gOxdf
+         3VEQNi8ZiUF0J5ebBwjKwSVnI1m2V/fb8mcJFHJJz5VZSTeZbTV0nOK1nLiSW1ghecYD
+         /flwLufgKqBJxGPODZgph7WUClg+7YA1/B3cJsgJ2UGN4Qxyfg9Ma3+VFf8vsxZlveMq
+         0WbZLwUoPFak+8xVRRFjNI2Gvm8RxNzKG0Q3uoWlDgAn4m8Ds/4u1RwXhKM2C0/9CGja
+         C50A==
+X-Gm-Message-State: APjAAAVKlfEd2gTkmkWLBWw8xtEUxm7kwBuU/TsAzv72M3BjbzhHMyv2
+        7TT0vK57ZYd3gRo5ej7OQA==
+X-Google-Smtp-Source: APXvYqz+giNRZ8MeXlmxtPAkMj15JPvC0Xm4AbR1+kfJ6wADHeXGxnfrjZfPcXGkJATVHVwmwkF53w==
+X-Received: by 2002:a9d:75c7:: with SMTP id c7mr2839523otl.181.1575580014993;
+        Thu, 05 Dec 2019 13:06:54 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r25sm3819723otk.22.2019.12.05.13.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 13:06:54 -0800 (PST)
+Date:   Thu, 5 Dec 2019 15:06:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org
+Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
+Message-ID: <20191205210653.GA29969@bogus>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-5-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127084253.16356-5-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
+> Add Device Tree bindings for a GPIO repeater, with optional translation
+> of physical signal properties.  This is useful for describing explicitly
+> the presence of e.g. an inverter on a GPIO line, and was inspired by the
+> non-YAML gpio-inverter bindings by Harish Jenny K N
+> <harish_kandiga@mentor.com>[1].
+> 
+> Note that this is different from a GPIO Nexus Node[2], which cannot do
+> physical signal property translation.
 
+It can't? Why not? The point of the passthru mask is to not do 
+translation of flags, but without it you are always doing translation of 
+cells.
 
-Dear Friend,
+> 
+> While an inverter can be described implicitly by exchanging the
+> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
+> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
+> th provider and consumer sides:
+>   1. The GPIO provider (controller) looks at the flags to know the
+>      polarity, so it can translate between logical (active/not active)
+>      and physical (high/low) signal levels.
+>   2. While the signal polarity is usually fixed on the GPIO consumer
+>      side (e.g. an LED is tied to either the supply voltage or GND),
+>      it may be configurable on some devices, and both sides need to
+>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
+>      match the actual polarity.
+>      There exists a similar issue with interrupt flags, where both the
+>      interrupt controller and the device generating the interrupt need
+>      to agree, which breaks in the presence of a physical inverter not
+>      described in DT (see e.g. [3]).
 
-I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank(B.O.A).
+Adding an inverted flag as I've suggested would also solve this issue.
 
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me forsuccess.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank
-account.
-
-Below information is what i need from you so will can be reaching each
-other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa Hugh
+> 
+> [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+>     https://lore.kernel.org/linux-gpio/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/
+> 
+> [2] Devicetree Specification v0.3-rc2, Section 2.5
+>     https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3-rc2
+> 
+> [3] "[PATCH] wlcore/wl18xx: Add invert-irq OF property for physically
+>     inverted IRQ"
+>     https://lore.kernel.org/linux-renesas-soc/20190607172958.20745-1-erosca@de.adit-jv.com/
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
