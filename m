@@ -2,111 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA2B4114331
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 16:01:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BF34114516
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 17:48:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfLEPB1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Dec 2019 10:01:27 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54956 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfLEPB0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 10:01:26 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB5F1N9B113599;
-        Thu, 5 Dec 2019 09:01:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575558083;
-        bh=kVjWTkxbTu+ix92FQJsmWGSjvOk5Uq16GRPwyVjnh7A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Pn2vR5n8xdy2zwk6iPqDo/bY/3FCIMCoNBx6RAnGTmnn2mvTUQcLgT7fdWDUt7TNq
-         Ji33bTbJt7oXQUc7MK/dr4O+hULhKbOEnNUxwE4CUHsURzC18sHMPdyJ3S5pH4ehox
-         JYEs0JM8NsQpoju+ez2cKwrgrEfnKWH9EvloiDY0=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB5F1NQK043567
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Dec 2019 09:01:23 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Dec
- 2019 09:01:19 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Dec 2019 09:01:19 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB5F1G3G016343;
-        Thu, 5 Dec 2019 09:01:17 -0600
-Subject: Re: [PATCH] gpio: pca953x: Read irq trigger type from DT
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191205144508.31339-1-vigneshr@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <5837a37d-479d-5c33-45b5-c1b32b0cdc52@ti.com>
-Date:   Thu, 5 Dec 2019 17:01:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1729530AbfLEQsC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Dec 2019 11:48:02 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43681 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLEQsC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 11:48:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so1847991pgq.10;
+        Thu, 05 Dec 2019 08:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Zhhx3FYcBWt29U1yHWzwpVDT43Q3E7V0xJbgxP+fglE=;
+        b=Yd3DpKv2NLYbmyO9excd+6NumOM3EHqH00wyLFA+4PrMOVk5+5Q5Ch3mTbhFJ5APYG
+         ODfd5Fez4VXSChlp0SruZPCjnsTuQedkaT5qtqpysrMyCoZaASz4hAboL/s2I5xy+y/p
+         BihoeqInIC6Ltod1be2T99JqJxB1L+FpRaDK8hag0s2D9QGmARuZo68sQwkOsHoyxgZV
+         i6/5JbUIJcnK0n9OJpd1rGkFd/UgJOEah3xbItnoRKEUBImymAdYk1E0yTXu+5U3+ghF
+         XUTa3ERE5s6QCK227YOPU4lXIiyb2dyzmDnIAzlQU9HUMPAf4PP2TyUcAKVr5PN/0g4g
+         pTng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Zhhx3FYcBWt29U1yHWzwpVDT43Q3E7V0xJbgxP+fglE=;
+        b=C4gTtLueBNfNnnFFpoxsgC/RRhxBOhXJkqiYEbT+g5vBMIb/6RbN0NLEYdIm7wLwtd
+         P/sVucfr6aX7khMUbItQWDxmWgCRDsjJB9kt7FMIQU5t/uVfjbY3wKqVrBkXBLL2uQHc
+         npl1qhLW2cREdTSknx+X6+8xH8KHsKD3hHbtYPaw4kFh5ZiE+hQPZ4r+b4v0cr6JH/n5
+         SAaZ+WjnphIqFvDeraIblGw3OQkWd1VRKHtzUmd5Mkgw8AR782J49YOFlOhYOkkrFi67
+         /c/Elh0Szq+uD9s5Y32S//vy6byMusaQ2Xds5rWX+Z9sql3xRYGo1D5fiFSW2zwQlxc2
+         NZhQ==
+X-Gm-Message-State: APjAAAV0YfLxsskz/X7/p3eYKIlPo3aphy3TNirn55ul/1Pp+Bn5GCzY
+        ZahaymxVCNokH19I/+x/V+KrdmP3cxTNMQXsvQw=
+X-Google-Smtp-Source: APXvYqyEuG/HoVyekd64C1hGYMFHWQcMEPsbhjxAEfIUuv2G2mz0kl8Z38KsiWKKxTJP5JLefki+VZWlEZAvvnE4lxI=
+X-Received: by 2002:a63:941:: with SMTP id 62mr10660067pgj.203.1575564481017;
+ Thu, 05 Dec 2019 08:48:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191205144508.31339-1-vigneshr@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-10-brgl@bgdev.pl>
+ <CAHp75VfbwwDyxoZU2vHo7qo8E0rQdT3czC+Wpe7cqr5uoJVUwQ@mail.gmail.com>
+ <CAMpxmJXhEK3Whh8vGfW-TewT7uRgipBOd3hhmSGHYkH=PD_Nfw@mail.gmail.com>
+ <CAHp75VcVUdR5TU3CSp-6vvMGEzRT2S9=05h0jyzTrpiZkUKDUQ@mail.gmail.com> <CAMRc=McEsrg_2O3VAwCNLHsd+dupmzNOeC2rc0V6t6vGyGjC9w@mail.gmail.com>
+In-Reply-To: <CAMRc=McEsrg_2O3VAwCNLHsd+dupmzNOeC2rc0V6t6vGyGjC9w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Dec 2019 18:47:50 +0200
+Message-ID: <CAHp75VckYszyD6eU8n4W75pGWrnWzo3GZ4rVg+8iwEs_4xJErA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/11] gpiolib: provide a dedicated function for
+ setting lineinfo
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Dec 5, 2019 at 3:45 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> czw., 5 gru 2019 o 11:21 Andy Shevchenko <andy.shevchenko@gmail.com> napi=
+sa=C5=82(a):
+> > On Thu, Dec 5, 2019 at 11:28 AM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > =C5=9Br., 4 gru 2019 o 23:30 Andy Shevchenko <andy.shevchenko@gmail.c=
+om> napisa=C5=82(a):
+> > > > On Wed, Dec 4, 2019 at 6:02 PM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
+> > > > > +       if (desc->name) {
+> > > > > +               strncpy(info->name, desc->name, sizeof(info->name=
+));
+> > > > > +               info->name[sizeof(info->name) - 1] =3D '\0';
+> > > > > +       } else {
+> > > > > +               info->name[0] =3D '\0';
+> > > > > +       }
+> > > > > +
+> > > > > +       if (desc->label) {
+> > > > > +               strncpy(info->consumer, desc->label, sizeof(info-=
+>consumer));
+> > > > > +               info->consumer[sizeof(info->consumer) - 1] =3D '\=
+0';
+> > > > > +       } else {
+> > > > > +               info->consumer[0] =3D '\0';
+> > > > > +       }
+> > > >
+> > > > I think we have to fix GCC warnings first and then do whatever this=
+ patch does.
+> > > >
+> > >
+> > > What GCC warnings are you referring to exactly?
+> >
+> > stncpy() against partial string without NUL-terminator.
+> >
+> > So, if desc->label is longer than info->consumer, it will be copied
+> > partially. I don't check if the modern GCC clever enough to see the
+> > next operation which does the termination.
+> >
+>
+> I'm not sure I get it. What warnings does it produce and in what
+> environment?
 
-On 05/12/2019 16:45, Vignesh Raghavendra wrote:
-> Instead of hardcoding irq trigger type to IRQF_TRIGGER_LOW, let's
-> respect settings specified in DT. Default to IRQF_TRIGGER_LOW,
-> if DT does not provide a flag.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->   drivers/gpio/gpio-pca953x.c | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 6652bee01966..e0e2a77ef6ad 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -744,6 +744,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
->   	struct irq_chip *irq_chip = &chip->irq_chip;
->   	DECLARE_BITMAP(reg_direction, MAX_LINE);
->   	DECLARE_BITMAP(irq_stat, MAX_LINE);
-> +	unsigned long irqflags;
->   	int ret;
->   
->   	if (!client->irq)
-> @@ -768,10 +769,14 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
->   	bitmap_and(chip->irq_stat, irq_stat, reg_direction, chip->gpio_chip.ngpio);
->   	mutex_init(&chip->irq_lock);
->   
-> +	irqflags = irq_get_trigger_type(client->irq);
-> +	if (irqflags == IRQF_TRIGGER_NONE)
-> +		irqflags = IRQF_TRIGGER_LOW;
+Some kind of
+warning: =E2=80=98strncpy=E2=80=99 specified bound 16 equals destination si=
+ze
+[-Wstringop-truncation]
 
-I think you can just drop IRQF_TRIGGER_LOW:
-- for paltform code it will be set from resources in platform_get_irq_optional()
-- for DT code it will be set in __setup_irq()
+> I don't see any.
 
-> +	irqflags |= IRQF_ONESHOT | IRQF_SHARED;
-> +
->   	ret = devm_request_threaded_irq(&client->dev, client->irq,
->   					NULL, pca953x_irq_handler,
-> -					IRQF_TRIGGER_LOW | IRQF_ONESHOT |
-> -					IRQF_SHARED,
-> +					irqflags,
->   					dev_name(&client->dev), chip);
->   	if (ret) {
->   		dev_err(&client->dev, "failed to request irq %d\n",
-> 
+Good, I just checked and see none as well. It means GCC understands
+that strncpy() is followed by guaranteed NUL-termination.
 
--- 
-Best regards,
-grygorii
+> If you want it simpler - we can do `snprintf(info->consumer,
+> sizeof(info->consumer), desc->label ?: "")`.
+
+It makes sense only in above context.
+
+--=20
+With Best Regards,
+Andy Shevchenko
