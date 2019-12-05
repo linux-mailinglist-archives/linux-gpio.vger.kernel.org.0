@@ -2,93 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B18C113A8D
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 04:42:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D554F113DB8
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 10:23:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfLEDmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Dec 2019 22:42:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41214 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728098AbfLEDmK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Dec 2019 22:42:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SKEwuU9LCubrqhiHixUVqpCy0ldQIv/3sUOUcM8nBDs=; b=MBJ6tQQaMPWzRiQjX2yRpygbf
-        dvad/n2hXUp0+K09ULooMF6cSihWeH2kJRB60ogr1YNLs9/viLrQWIS+d1LxNt/9Om0oIbiXoJ+o7
-        YQ4Af4KYLDE26Fwm4OygR4iCXtTmZaUkommbO2x9E22SJqTPSpaISZ0UsZrQem8NQ9pRvKo2+HnDK
-        H+lExL6upZhDp2pLLd/ikAOwm1moJBrui4it/dj5tOoaXx0rhWH8sGeDpNOvMFU9u5KN7e/Dah5A0
-        y2BxrelEtJEAvm07pNJfqR63/7BNDW9pQPPMQmLxUjQthY4vvvMRnmHZEiIUW0zJ6Z1ZZpql4FE3b
-        JSw1lDxXA==;
-Received: from [2601:1c0:6280:3f0::3deb]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ici1p-0006RO-1Q; Thu, 05 Dec 2019 03:42:09 +0000
-Subject: Re: [PATCH 1/1] pinctrl: Modify Kconfig to fix linker error
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linus.walleij@linaro.org
-Cc:     sfr@canb.auug.org.au, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <cover.1575514110.git.rahul.tanwar@linux.intel.com>
- <ba937f271d1a2173828a2325990d62cb36d61595.1575514110.git.rahul.tanwar@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b92f1c7c-efdb-340d-dbfa-2a083732d8fb@infradead.org>
-Date:   Wed, 4 Dec 2019 19:42:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1729068AbfLEJXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Dec 2019 04:23:06 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36579 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfLEJXF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 04:23:05 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so2119503oic.3
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Dec 2019 01:23:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2+ymVaiKpxCGbb6mLFBeFKK14AzTNra8/JGSC81CVMs=;
+        b=MMlHVQzjz8BNYnpFpiDs0UZPUGaTU2TrVR0oiTh126oHkRd3AnBTqVTxB0eqFevSHE
+         uvkikS9S3YhLrdQrYkkl/bCSUrtcejYVB3JJO2XbcQ7MYu8m4AZYS0lSmxxNiTPbLzMn
+         nXUU7sP4YagfcJmxGE4f0bEubpdanZ3jz3gV3eEQ4PcyE5jQqaG75Ey955ZOAMymako3
+         9ONlwtVwrX9v02HlpHDiU8pdZQmbEK9nRiAFFVkR4ZHNB9/8UccCXy9m56Mjfc0jRXD/
+         b6kgwNvw5Mmif95Df/GoIY23DCIg3D8iLnKaQUL6k2xqJhZDk5BgkfBggDGe2BBVH+KB
+         Ez3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2+ymVaiKpxCGbb6mLFBeFKK14AzTNra8/JGSC81CVMs=;
+        b=spoXm0pLUIorNWeGQXJ3wtyeVsz9W+foxUOOS1ho8p7z3qXxwXN8pOWN8lTlG8I8rH
+         IEriIsNEuS+pqcvo2r95MX6T+F51nE2Eh3tx0GfLQ1Ltb/kNp6KY3hMFT3UDcI2b3ku3
+         7EMg4oR2dcRfEbuVzX5GoEMb8wxuLYAsZWZ9SEvTXx+kLDj+wzu555q63M3Avo1iaNrQ
+         wTrJig+OPdvx78sfU9qZHo4g9Q5jTHTJ14YrrL1oEmtOiNX5mpR+I2v/ImrEL9UWW7RF
+         4U5SsppFAQ/xZBMT3N1M1DS19rGg9ej2AsZYDDoW0V3Eba6prqxu2xqcZOjmjUX3d365
+         HaWg==
+X-Gm-Message-State: APjAAAWDfNb+QVG+J06EeA6rotKPMaTQTLMfQL4acXP2UqrHa08nhsNj
+        NaINHy1qUwgSIyNAotp8UPzxyundDCKuMK/3oB7oQQ==
+X-Google-Smtp-Source: APXvYqzluMSEyFEWEKRhdKW5xwVBPzAcJZFuTB7zoWh9ETQZ9ypQXyOujHC2HKRdnKfUdK5vQuhu+X0cBR17KlbGyAQ=
+X-Received: by 2002:aca:4e90:: with SMTP id c138mr6418889oib.147.1575537784750;
+ Thu, 05 Dec 2019 01:23:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ba937f271d1a2173828a2325990d62cb36d61595.1575514110.git.rahul.tanwar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1575433106-16171-1-git-send-email-peng.fan@nxp.com>
+ <20191204072422.vfo3mrrcaav75jv4@pengutronix.de> <CAMpxmJUAk5Y3mX_irTjwveaii8W=coaG0w2aWvFXUEXqHxpArQ@mail.gmail.com>
+ <20191204184754.5oj2xoem2v3544rx@pengutronix.de>
+In-Reply-To: <20191204184754.5oj2xoem2v3544rx@pengutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 5 Dec 2019 10:22:53 +0100
+Message-ID: <CAMpxmJU-WK1aXK3M_q12E_u8+wwEimuonmjFa7Hm3Z6Dp7DP_g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: mvebu: use platform_irq_count
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/4/19 7:01 PM, Rahul Tanwar wrote:
-> Fix below linker error
-> 
->     ld: drivers/pinctrl/pinctrl-equilibrium.o: in function
->     `pinconf_generic_dt_node_to_map_all':
->     pinctrl-equilibrium.c:(.text+0xb): undefined reference
->     to `pinconf_generic_dt_node_to_map'
-> 
-> Caused by below commit
-> 
->     1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
-> 
-> by adding 'depends on OF' in Kconfig driver entry.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>>
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+=C5=9Br., 4 gru 2019 o 19:47 Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
+>
+> On Wed, Dec 04, 2019 at 05:33:04PM +0100, Bartosz Golaszewski wrote:
+> > =C5=9Br., 4 gru 2019 o 08:24 Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
+> > >
+> > > On Wed, Dec 04, 2019 at 04:20:41AM +0000, Peng Fan wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > platform_irq_count() is the more generic way (independent of
+> > > > device trees) to determine the count of available interrupts. So
+> > > > use this instead.
+> > > >
+> > > > As platform_irq_count() might return an error code (which
+> > > > of_irq_count doesn't) some additional handling is necessary.
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > Reviewed-and-Commit-Log-Provided-by: Uwe Kleine-K=C3=B6nig <u.kleine-=
+koenig@pengutronix.de>
+> >
+> > This is not a valid tag, but I take it as Suggested-by and Reviewed-by.=
+ :)
+>
+> If you care about the validity of such tags, I suggest you take a look
+> at the output of
+>
+>         $ git rev-list v4.0..v5.4 | while read rev; do git cat-file commi=
+t $rev; done | sed -n 's/ *\(.*-by\):.*/\1/p' | sort | uniq -c | sort -n
+>
+> (which finds all tags used between 4.0 and 5.4 with its usage count).
+>
+> A few of the tags (admittedly with low usage count :-) included there are=
+:
+>
+>   Badly-reviewed-by
+>   Bonus-points-awarded-by
+>   Compile-tested and Reviewed-by
+>   Enthusiastically-Acked-by
+>   Mea-culpa-by
+>   \o/-by
+>   Brown-paper-bag-by
+>
+> Best regards
+> Uwe
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+I am well aware of this and there has been a discussion on LKML some
+time ago (I can no longer find it though) about introducing stricter
+rules for tags. I don't remember the outcome either though.
 
-
-Thanks.
-
-> ---
->  drivers/pinctrl/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 3bfbf2ff6e2b..ba0cad4bd072 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -422,6 +422,7 @@ config PINCTRL_TB10X
->  
->  config PINCTRL_EQUILIBRIUM
->  	tristate "Generic pinctrl and GPIO driver for Intel Lightning Mountain SoC"
-> +	depends on OF
->  	select PINMUX
->  	select PINCONF
->  	select GPIOLIB
-> 
-
-
--- 
-~Randy
-
+Bart
