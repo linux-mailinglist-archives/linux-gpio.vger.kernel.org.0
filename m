@@ -2,94 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5D3711454C
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 18:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B78E1145E6
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Dec 2019 18:27:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbfLERCc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Dec 2019 12:02:32 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:45980 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfLERCc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 12:02:32 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r11so1519857pjp.12;
-        Thu, 05 Dec 2019 09:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RHJUr25kmF0qaYU7XKGZXFCAi/6myqgpNnO6bM9rpxM=;
-        b=L5+Uiq2fJf9wLrh4uFUX4gkocBD981uCeSyNPfIDjEGLN/kecQt+wcVhm2ep+Rko/K
-         tmUMtdeYAnBC0evxnBY1PPe+z0wLKQ1Us9HByNAh+Meoq50XRy60rf2ttT4ETiRGwZa3
-         fjD0KGxjsQe1qWyY7Mo8MJ3IWxhoB4A5gn4Yfa6iAjatYg/r9oAjFHzVIDcGmp4TAFaa
-         e9fxgGokX3nAchueZh0aU/EktPP8ItgZFUKKKbhCr46eI0h5ICQ6a/A/RSqSa2Hoh6BM
-         XLqH2QnwE9XlVM1NADp+zGA7ukChsm6gL3P6l4vZeD9b6zXQ+pQDWd+0nlNnGyQp81Ki
-         +pLg==
+        id S1729931AbfLER1h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Dec 2019 12:27:37 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36765 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729450AbfLER1h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Dec 2019 12:27:37 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i4so3314508otr.3;
+        Thu, 05 Dec 2019 09:27:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RHJUr25kmF0qaYU7XKGZXFCAi/6myqgpNnO6bM9rpxM=;
-        b=azG+XOWzYEtxEPcYjc/CqaJ31HVQlL3Nlddjx1HGfASlYTWdLtPAYaF+cqhGcrslnM
-         oVB5S1ymZldH1LvVUm0vYBH6yL//qgSTHcNLVhE+a27j46crePRQZDHYEyI+KOhh2uOz
-         /ntX2v6yA9T8OakkT5B8ZvVz7gtRklvq8TNZ88jV2zIdxfSXO450D1EnXbAdLr90/zuj
-         9hEO0IM/+NMooQjjP7z8o9kZx3tWkL2YNwVPcMcAD56iadyKOs+Xfa7OJGgmAZiZ426I
-         Zrm6LpNvE6+99NWddfGwdeFQKH4Cx+S7GAW00zDTY1GRuh+JG2t/Y3NUyXCPxsiqdt0w
-         CAIQ==
-X-Gm-Message-State: APjAAAUpUORyZhK/XEKZ/Jg+2DqmfrTTp0Yj9yibMyAxu9SNJhdDcxcV
-        6wxS81tULfBD9HtcqnslEcVywYw4UAsYO1tp2P4=
-X-Google-Smtp-Source: APXvYqyqsP8cdWdeG0WdYWRvw2EMbPgQ0l70RUvop0SBX/Tfn6fSQWhKNdYN4BdFG5NCz7YeW1Qe256CHYvKJFjqM1g=
-X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr10539320pjt.20.1575565351311;
- Thu, 05 Dec 2019 09:02:31 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Beu9Ho0H5ERuGsbF7ZjrVG0ZON0A+E7tAAYEYAdqCyk=;
+        b=kgQMyMAQ+/Xhw0YG+MKF3GlD/ZPlJETN3HkW8ILdKDDrstaFW0p+oKcMYBInR/wVwo
+         6t6jhkMGsLEBUF/vk4pHApZ9nf4H6OA1ZyFBsXc3Fy20BMGS0ffXxzRN8S6PfTpeCtJE
+         Jg89mU+Hf3r7OC+erP56WYN8bQyXFFve+0zZOEKA91SruiAgdS0QWkzaqPMM2RqDJ5uT
+         ChuVpGt29hsgPEq8jyoStoqZZZoNwiK9J4fUetu9Eb6X2K+HLj5eAQTdUuExObIhJVAD
+         zQHRe1DVsPyG6TycwWriYnECugVu5JGbLOKImOLNkXvUM5hu8Hov19k2GHF2MGjS8/RK
+         +t4Q==
+X-Gm-Message-State: APjAAAVNt7bFmUQ50T8rrn89b1cpif3WscLb6zXjLpd5V4OP3hnKr205
+        06ol544HWn0b9hfYgZjnWg==
+X-Google-Smtp-Source: APXvYqxb1R7cDem9EDJctkKteK+d2GKVLOTXRE+1a0UnGmCMVMgu/gG/KmmksWOK1FE9rpvhpmjXHA==
+X-Received: by 2002:a05:6830:1e61:: with SMTP id m1mr7623640otr.68.1575566856033;
+        Thu, 05 Dec 2019 09:27:36 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n25sm3724656oic.6.2019.12.05.09.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Dec 2019 09:27:35 -0800 (PST)
+Date:   Thu, 5 Dec 2019 11:27:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH v3 4/6] gpio: sifive: Add DT documentation for SiFive GPIO
+Message-ID: <20191205172734.GA18142@bogus>
+References: <1574661437-28486-1-git-send-email-yash.shah@sifive.com>
+ <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
- <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com> <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
-In-Reply-To: <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Dec 2019 19:02:21 +0200
-Message-ID: <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574661437-28486-5-git-send-email-yash.shah@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 5, 2019 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> czw., 5 gru 2019 o 11:27 Andy Shevchenko <andy.shevchenko@gmail.com> napi=
-sa=C5=82(a):
-> > On Thu, Dec 5, 2019 at 11:42 AM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > =C5=9Br., 4 gru 2019 o 23:34 Andy Shevchenko <andy.shevchenko@gmail.c=
-om> napisa=C5=82(a):
-> > > > On Wed, Dec 4, 2019 at 6:03 PM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Mon, Nov 25, 2019 at 05:58:03AM +0000, Yash Shah wrote:
+> DT json-schema for GPIO controller added.
+> 
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-sifive.yaml      | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.yaml b/Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
+> new file mode 100644
+> index 0000000..49214bb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.yaml
 
-> > So, the test cases, I can imagine of, should include (k - kernel, u - u=
-ser):
-> > - 64k-64u: LE and BE
-> > - 64k-32u: LE and BE
-> > - 32k-32u: LE and BE
->
-> I usually use qemu VMs built with yocto for testing but I don't see
-> any way of creating a 32-bit user-space with 64-bit kernel. Any ideas
-> on how to prepare a testing environment?
+sifive,gpio.yaml would be the more standard naming.
 
-In my case it's very easy. I do
-- compile kernel as 64-bit separately;
-- compile initramfs of Buildroot distro with external kernel build provided=
-.
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-That's setup in which I observed the issue.
+Dual license new bindings: (GPL-2.0-only OR BSD-2-Clause)
 
---=20
-With Best Regards,
-Andy Shevchenko
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-sifive.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive GPIO controller
+> +
+> +maintainers:
+> +  - Yash Shah <yash.shah@sifive.com>
+> +  - Paul Walmsley <paul.walmsley@sifive.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sifive,fu540-c000-gpio
+> +      - const: sifive,gpio0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      interrupt mapping one per GPIO. Maximum 16 GPIOs.
+
+What's the minimum? If not 16, you need 'minItems'.
+
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names: true
+
+Need to define the strings. Or drop because you don't need it when 
+there's only 1.
+
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - clocks
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/sifive-fu540-prci.h>
+> +      gpio@10060000 {
+> +        compatible = "sifive,fu540-c000-gpio", "sifive,gpio0";
+> +        interrupt-parent = <&plic>;
+> +        interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
+> +        reg = <0x0 0x10060000 0x0 0x1000>;
+> +        clocks = <&tlclk PRCI_CLK_TLCLK>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +      };
+> +
+> +...
+> -- 
+> 2.7.4
+> 
