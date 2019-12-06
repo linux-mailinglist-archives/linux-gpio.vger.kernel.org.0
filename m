@@ -2,171 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DAC2114E16
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2019 10:18:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD56114F8C
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Dec 2019 11:58:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfLFJR7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Dec 2019 04:17:59 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39686 "EHLO
+        id S1726157AbfLFK6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Dec 2019 05:58:11 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33223 "EHLO
         mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfLFJR4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Dec 2019 04:17:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 77so5236469oty.6;
-        Fri, 06 Dec 2019 01:17:55 -0800 (PST)
+        with ESMTP id S1726250AbfLFK6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Dec 2019 05:58:11 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d17so5481112otc.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Dec 2019 02:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qCi2H+WKDY8CpUES0eafB7Bjt16Obq+xFoaUbyeG2tI=;
+        b=YMUyW4OP2Mzp7p/jSw15XROQP60Gtejx+87UuaS6gK4VP4/X+cKeA2/Ld4iqEELLtH
+         3EXa3c69ItFrF1QfFl10S7QoBIXArmJRiAf/sVD46rTtgcsuEQS2jg2w86owmt6jxqfz
+         4a2n1i2XoUpjXneQ7LwUIjasdC3xY0L3lys3OOnz5F9KOfX9+dw5ntHg+Cy/i9J99qBh
+         6C8B3C/DJnEGDAWAMXw0FnZaAK47iis3uO5IkX32R+HJT9VrFPUOoKQBcnzE2tnUx7Pc
+         f5vu6x44dmbuRxG9h4z+Rbe8gF8MU0xE7Gs0vuLXhHe8MoDIZjAKssNHrjjHKBVwVJBm
+         J+uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LnYDT3hI/k51rxu2RaEtNc8OwzQHfHd+q89Ne01SQkk=;
-        b=i8XqSJ8EyU3t8phhK3P1n3Vpc58AD0GLFDx0f4/nFn2f7RC6nQnbb0pWWTomGtoA2C
-         c5fFw5n1hdHBUfIzjfHj/TlTmpDVFq92dwDPMcNUVbg6yFf+lOo3JXNOQ/6WaO3IZuXr
-         o+DKK/R4H2fUcnU2NGEXmDwIBYIXirkX2hLgcTwbfDqIiTT0qdjfe9FKZQRHWa98kUJX
-         7MGEmmhIrZPOUM546BLPDx6niA8YOmicOJxLwbBnEVg/xxSWJ34T+OK0HaZcShj4TM8h
-         +BWA4dmM+2CmZ7E80E8liDjhaDBAMQAlkJsKeGfBcEgYlXNhj5FAg2J7Rq/JauAvcWt6
-         u81w==
-X-Gm-Message-State: APjAAAWf+Ot67oMaGFU3qjlFzOdyil+x382sF+mHh/XNzFi9ghDueMM0
-        6EVsQlWJh1lQqrQhCAEftW8AIMktCL/6ewfiC54=
-X-Google-Smtp-Source: APXvYqywT7RKZxy4+aQ3yqIAX1ukNQgZt1Pm6duFwv33bTsc5FszW5c30r7KI+ch+vUt5vv52/IvfRSxlMnY6lawJl4=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr5241089otm.297.1575623875215;
- Fri, 06 Dec 2019 01:17:55 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qCi2H+WKDY8CpUES0eafB7Bjt16Obq+xFoaUbyeG2tI=;
+        b=EJc7GsHDvx0d3D28Fd6sd21jUPYP96zLeuoexD5GyLCkVNAVCds5o2qdHFqRCoBe/J
+         W3LABgUDGwtxTo4vZBCsMGtB7gQnlndD449SdCIAQCyBg07eOryRtYEW6mZPqK880m8j
+         pQRA5bcM3z7a7b3GKoasknDK/NFsNEyQxnm9Gpvl0LJ3vHec40kauoUiFTLCxmDU1Cq/
+         EAH6rwJ47EW4eV5YiC+SNejN6mZo9N7KoWzRWbBnsfskZMLr1fiCVyJV81FDvxZnrSsN
+         /XuO+zla36T6LzBCQFsxJ6u5QcTfuYr43307/rW7r7fFBcguGoHAe9MWVBWrKtNzDZ1f
+         6+OQ==
+X-Gm-Message-State: APjAAAVvBkV+OV+3idUW8hmfBSdROs0vmScgxKV8rprtJLYO/4IxTe4c
+        7roEW5lXvPGb8ZhIPlzi9cZqiKCskLe7O/KnYVKFfA==
+X-Google-Smtp-Source: APXvYqzne3yNFjyZezK2n1tOFmb24uakUDsW4lpoAZPculCQRP6hLswEd04wjQ6l1Dl2bJNWpig/TCG3xZytFIWA7dA=
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr10789455otb.85.1575629889955;
+ Fri, 06 Dec 2019 02:58:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be> <20191205210653.GA29969@bogus>
-In-Reply-To: <20191205210653.GA29969@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 6 Dec 2019 10:17:43 +0100
-Message-ID: <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
+References: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 6 Dec 2019 11:57:59 +0100
+Message-ID: <CAMpxmJVH9fzheXhPYgKzPWgGYb=V_oO7haYJTSBTv4YeaxN-Yw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in compatible mode
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
-> On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
-> > Add Device Tree bindings for a GPIO repeater, with optional translation
-> > of physical signal properties.  This is useful for describing explicitly
-> > the presence of e.g. an inverter on a GPIO line, and was inspired by the
-> > non-YAML gpio-inverter bindings by Harish Jenny K N
-> > <harish_kandiga@mentor.com>[1].
-> >
-> > Note that this is different from a GPIO Nexus Node[2], which cannot do
-> > physical signal property translation.
+=C5=9Br., 4 gru 2019 o 20:42 Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
 >
-> It can't? Why not? The point of the passthru mask is to not do
-> translation of flags, but without it you are always doing translation of
-> cells.
-
-Thanks for pushing me deeper into nexuses!
-You're right, you can map from one type to another.
-However, you cannot handle the "double inversion" of an ACTIVE_LOW
-signal with a physical inverter added:
-
-        nexus: led-nexus {
-                #gpio-cells = <2>;
-                gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
-                           <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
-                           <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
-                gpio-map-mask = <3 0>;
-                // default gpio-map-pass-thru = <0 0>;
-        };
-
-        leds {
-                compatible = "gpio-leds";
-                led6-inverted {
-                        gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
-                };
-                led7-noninverted {
-                        gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
-                };
-                led8-double-inverted {  // FAILS: still inverted
-                        gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
-                };
-        };
-
-It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
-Still, the consumer would see the final translated polarity, and not the
-actual one it needs to program the consumer for.
-
-> > While an inverter can be described implicitly by exchanging the
-> > GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-> > Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-> > th provider and consumer sides:
-> >   1. The GPIO provider (controller) looks at the flags to know the
-> >      polarity, so it can translate between logical (active/not active)
-> >      and physical (high/low) signal levels.
-> >   2. While the signal polarity is usually fixed on the GPIO consumer
-> >      side (e.g. an LED is tied to either the supply voltage or GND),
-> >      it may be configurable on some devices, and both sides need to
-> >      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
-> >      match the actual polarity.
-> >      There exists a similar issue with interrupt flags, where both the
-> >      interrupt controller and the device generating the interrupt need
-> >      to agree, which breaks in the presence of a physical inverter not
-> >      described in DT (see e.g. [3]).
+> The introduced line even handling ABI in the commit
 >
-> Adding an inverted flag as I've suggested would also solve this issue.
+>   61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+>
+> missed the fact that 64-bit kernel may serve for 32-bit applications.
+> In such case the very first check in the lineevent_read() will fail
+> due to alignment differences.
+>
+> To workaround this we do several things here:
+> - put warning comment to UAPI header near to the structure description
+> - derive the size of the structure in the compatible mode from its member=
+s
+> - check for the size of this structure in the ->read() callback
+> - return only one event in the compatible mode at a time
+>
+> Above mitigation will work at least with libgpiod which does one event
+> at a time.
+>
+> Since the bug hasn't been reported earlier we assume that there is close
+> to zero actual users of the compatible mode to monitor GPIO events and th=
+us
+> we might consider to rework this ABI in the future.
+>
+> Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib.c    | 51 ++++++++++++++++++++++++++++++++++++---
+>  include/uapi/linux/gpio.h |  6 +++++
+>  2 files changed, 54 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 7340e4d0e873..134985210619 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -825,17 +825,26 @@ static __poll_t lineevent_poll(struct file *filep,
+>         return events;
+>  }
+>
+> -
+>  static ssize_t lineevent_read(struct file *filep,
+>                               char __user *buf,
+>                               size_t count,
+>                               loff_t *f_ps)
+>  {
+>         struct lineevent_state *le =3D filep->private_data;
+> +       struct gpioevent_data event, *e =3D &event;
+> +       /* We need size of each member to avoid endianess issues below */
+> +       size_t ts_sz =3D sizeof(e->timestamp), id_sz =3D sizeof(e->id), e=
+_sz;
+>         unsigned int copied;
+>         int ret;
+>
+> -       if (count < sizeof(struct gpioevent_data))
+> +       /*
+> +        * In compatible mode, when kernel is 64-bit and user space is 32=
+-bit,
+> +        * we may not tell what user wanted here when count is bigger tha=
+n size
+> +        * of one event, so, we just assume that user asks for precisely =
+one
+> +        * event.
+> +        */
+> +       e_sz =3D in_compat_syscall() ? ts_sz + id_sz : sizeof(*e);
+> +       if (count < e_sz)
+>                 return -EINVAL;
+>
+>         do {
+> @@ -851,7 +860,43 @@ static ssize_t lineevent_read(struct file *filep,
+>
+>                 if (mutex_lock_interruptible(&le->read_lock))
+>                         return -ERESTARTSYS;
+> -               ret =3D kfifo_to_user(&le->events, buf, count, &copied);
+> +               if (in_compat_syscall()) {
+> +                       /*
+> +                        * First we peek the one event and, if there is
+> +                        * no error during copying to user space, skip it
+> +                        * later.
+> +                        */
+> +                       if (kfifo_peek(&le->events, e))
+> +                               copied =3D e_sz;
+> +                       else
+> +                               copied =3D 0;
+> +
+> +                       /* Do not try to copy garbage to the user */
+> +                       ret =3D copied ? 0 : -EFAULT;
+> +
+> +                       /*
+> +                        * Due to endianess concerns we have to copy this
+> +                        * member-by-member. Luckily there are no members
+> +                        * less than 32-bit.
+> +                        */
+> +                       if (!ret)
+> +                               ret =3D copy_to_user(buf, &e->timestamp, =
+ts_sz);
+> +                       if (!ret)
+> +                               ret =3D copy_to_user(buf + ts_sz, &e->id,=
+ id_sz);
+> +
+> +                       if (ret) {
+> +                               /*
+> +                                * Either we have got nothing from the FI=
+FO or
+> +                                * one of copy_to_user() calls failed.
+> +                                */
+> +                               ret =3D -EFAULT;
+> +                       } else {
+> +                               /* Skip peeked event if no error happened=
+ */
+> +                               kfifo_skip(&le->events);
+> +                       }
+> +               } else {
+> +                       ret =3D kfifo_to_user(&le->events, buf, count, &c=
+opied);
+> +               }
+>                 mutex_unlock(&le->read_lock);
+>
+>                 if (ret)
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 799cf823d493..054756bf6991 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -168,6 +168,12 @@ struct gpioevent_request {
+>   * struct gpioevent_data - The actual event being pushed to userspace
+>   * @timestamp: best estimate of time of event occurrence, in nanoseconds
+>   * @id: event identifier
+> + *
+> + * Warning! This structure has issues in the compatible mode, when
+> + * kernel is 64-bit and user space is 32-bit, due to alignment
+> + * differences.
+> + *
+> + * It's not recommended to retrieve more than one event at a time.
+>   */
+>  struct gpioevent_data {
+>         __u64 timestamp;
+> --
+> 2.24.0
+>
 
-As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
-the inverter bindings"?
-https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
+Linus,
 
-Oh, now I understand. I was misguided by Harish' interpretation
-https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
-which assumed an "inverted" property, e.g.
+please don't apply the patches from this series - I will incorporate
+them into my LINEINFO_WATCH ioctl() series.
 
-    inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
-
-But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
-cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
-
-    /* Bit 6 expresses the presence of a physical inverter */
-    #define GPIO_INVERTED 64
-
-We need to be very careful in defining to which side the GPIO_ACTIVE_*
-applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
-Still, this doesn't help if e.g. a FET is used instead of a push-pull
-inverter, as the former needs translation of other flags (which the
-nexus can do, the caveats above still applies, though).
-
-Same for adding IRQ_TYPE_INVERTED.
-
-Related issue: how to handle physical inverters on SPI chip select lines,
-if the SPI slave can be configured for both polarities?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Bartosz Golaszewski
