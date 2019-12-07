@@ -2,73 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04FCB115D50
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Dec 2019 16:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB679115D73
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Dec 2019 17:20:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfLGPVM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Dec 2019 10:21:12 -0500
-Received: from sonic317-26.consmr.mail.bf2.yahoo.com ([74.6.129.81]:34076 "EHLO
-        sonic317-26.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726414AbfLGPVL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Dec 2019 10:21:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1575732070; bh=zPC9p8T5S06DA73PD5F75wViZ/EpBpeYylTS7OqjCU4=; h=Date:From:Reply-To:Subject:From:Subject; b=kuJy8cGzjbm6zyPpYcSuD/vge3S+CCkzMoRaUxYOvOGvEPBvDHGfSihvqJKRKIP+nVlHR9TOQWwDtd9puhMZ7X0BYSC8RHa9JmfFL1AYr2gHBWJYkK3oGDkxG5kidrbANKZ2fF+2H9BWe3Dk2D3WmUnFa0tdtN3uq15xTdmdi5zjBDNPoeDQ81oUcseud1JtEMvTwg+JpOHlXMNb0NvVsnCZzfjAYeBTmE4HEQtCw2iG2RaxbUKH9JZpRwDSMXmB346fOLo0o/I10DtRGqiJR/XKdI+QxJP865xWsFx16IT1W1eZj5hOzEYfzFf1wSb75AzUOECOBgGXOUq76tvzZQ==
-X-YMail-OSG: v4s.g98VM1lltKIB9WKuW1wKdsBWI.fh.FCn0UfKMVa_TOWUVtDL5OmroElP0WT
- RmBylL2ue58WCTify6.RfkE6_vGnfrKq8dAaPbRko0h6YVbBFN3Z82Et4hsPIO91Hlft0gcGwSaZ
- g9PydE7NSX49_KE6rOreRFY40lw19XF.HiRcy3Fyv8coe7aiucHNhSM.c_I2yJstOm81P1CIJg88
- mTyWWqG6jfcV6VfiE12USiLkDw63.VLJ58EbFC7w8p1mdhMAicjbK2i0vZAS93bCPUlmIqaqVCnL
- AxCMYl_3FkdDJw37eJHVffR.9LKz2rk_yMdyMiTr7Of9Twfq16et5jvYyuFtjYoyIFslJ6V90bmv
- OtfiqhenbRQyRSBYYj6CSXb8X4WxpmAo4uiD8CZoZTnAm55MQKKljbfLQCKwdHAbXkQ1YbIFt.bd
- PPNsBq4y9V9KKT.moZm_WmC0e_S6cPY8GJrK3iN6zcKyWQx8PaYf_fYuFp4.lemVoWtoiH6FlgMn
- XNzDXKORjlmClNVp3_CxDZyIycPPB7QR_.jehTMtL3Sy3n7jJ86SUtO7jr4XApTX0QDeT2owqsNz
- EOUTWih1Bj2CxWQSMDOaVkPEwkEA0rPxzlaTE.Dx.H1XixL0MJcJ9IFpjXmd.jVq1ifJ8ZTuMJql
- 3eHbQBhQJTUWey8ojsGz.z5zjCGMlpEdushglZwSyzziFcDmNTqGIuikDM3IGhSSUYTsTecSoNii
- DtyqgwxLPXwi_S6akBRVeXFwZsoEvSrrp9yyAHofTGZIZ.jf5LCM4QYhUzjNfnABa1ilJyoNlJ2R
- 6KLlAuCG1p3GYdSIq6ccGTfIJwBxPx1bbeyXapb7Xi4YQGybJVs6ALwJknmGXaPES.bbjAcDHnBi
- WV8Do8gt4v6V6jjZlRj3bNmI8vuquFEh.QQtNe8orW3.49GRJUb5vDny3iycuyaQ0lfvsnF6rvpU
- wlVOaXweBg2zwrs60Y16uNBzBQnWbaDbZqwKySVdrdUE.u6TPJGbHacwdcJKJ2szJ7mr0quTRyMd
- ejJ1B319MdHH9OSes8qqW1DEN0yNwcicaWna1517fA8hz5c8Fy5SKFnen8RiDtn5_HAuhN.owkLq
- 6aZvkBWORSaST1kG4HxUqhnTIhA9Qkt.QVnd7BoD3phqPlGkrJzdoJtW6Z5ZnfVWh.lI0DKEsYPQ
- 7A3vLZwL5aZaaSl2NWIr_N7dJSEPTz3OWR1CYtpZOJV5Cjd1eh5BtCDTWeAqPA.PgY_tvu3EG1XF
- 6I1pAIrIHuhFNwjr7eYUnJIeXZgVUFBT6V5PSpS0bsDWeZKPuTQ8KOLG_Y8G.HISpQsQDkCn.252
- a7Cslwg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Sat, 7 Dec 2019 15:21:10 +0000
-Date:   Sat, 7 Dec 2019 15:21:05 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh222@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <1183044059.6687849.1575732065141@mail.yahoo.com>
-Subject: I NEED YOUR HELP FOR THIS TRANSFER.
+        id S1726420AbfLGQUZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Dec 2019 11:20:25 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60588 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726414AbfLGQUY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Dec 2019 11:20:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cSv31xYM0bCVNruTSezrpDI781XDCgNT5GTDsN9nVoI=; b=kEiomYVia1aTzhEexPiGbCOs6z
+        ddNox3h40dKuvL3qeVsiAegx7y5agi6iGYO//sw7ARZuVykEWIsPaxbzPOEu9sxNch31Q/BUdAUEo
+        DRXp/suHwk8AjY306YifVdbkCWkpmPXcTERhFssIIQoJ8aftt+SNbxz8uo2e9ZKtFkyoegkxqDslw
+        hOKy4aUc5uxKzoHQGmviwJGxa8dEJqCUS/9AyPJ7w8+PryWppzxY/Gzy+1PuNYGrwNfjAShO/WdvC
+        CwKQ6dRayWkXLMpxoN/OqbFpv8Z1+2fJypaqS86Eg3adTuTwY2Ck4UvQ+TF8HE5YDsaTECvJ9yqc7
+        GgJbXO2w==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([2001:4d48:ad52:3201:222:68ff:fe15:37dd]:59786 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1idcoc-0007lk-NZ; Sat, 07 Dec 2019 16:20:18 +0000
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1idcoc-0004ni-4f; Sat, 07 Dec 2019 16:20:18 +0000
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [PATCH] gpiolib: fix up emulated open drain outputs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1idcoc-0004ni-4f@rmk-PC.armlinux.org.uk>
+Date:   Sat, 07 Dec 2019 16:20:18 +0000
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+gpiolib has a corner case with open drain outputs that are emulated.
+When such outputs are outputting a logic 1, emulation will set the
+hardware to input mode, which will cause gpiod_get_direction() to
+report that it is in input mode. This is different from the behaviour
+with a true open-drain output.
 
+Unify the semantics here.
 
-Dear Friend,
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ drivers/gpio/gpiolib.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank(B.O.A).
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 32c2048deb8c..70c60aac41cc 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -220,6 +220,14 @@ int gpiod_get_direction(struct gpio_desc *desc)
+ 	chip = gpiod_to_chip(desc);
+ 	offset = gpio_chip_hwgpio(desc);
+ 
++	/*
++	 * Open drain emulation using input mode may incorrectly report
++	 * input here, fix that up.
++	 */
++	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
++	    test_bit(FLAG_IS_OUT, &desc->flags))
++		return 0;
++
+ 	if (!chip->get_direction)
+ 		return -ENOTSUPP;
+ 
+-- 
+2.20.1
 
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me forsuccess.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank
-account.
-
-Below information is what i need from you so will can be reaching each
-other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
-
-
-Thanks.
-
-Ms Lisa Hugh
