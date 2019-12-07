@@ -2,97 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67385115C57
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Dec 2019 14:18:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04FCB115D50
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Dec 2019 16:21:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLGNSb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 7 Dec 2019 08:18:31 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:38477 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfLGNSb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Dec 2019 08:18:31 -0500
-Received: by mail-vs1-f67.google.com with SMTP id y195so7113597vsy.5
-        for <linux-gpio@vger.kernel.org>; Sat, 07 Dec 2019 05:18:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=jr+Z8tw0NpTtZMlceWQb0wEh/jnmOC4gqPRFiZKPXVY=;
-        b=s8duYlU/p7NvARQVa7YkTiVN3k1fe+TdN1y7snRwLZHiZxvJp9k8cTQds1nOqrEUoL
-         DLL1ErUxlTM/iW/HUnARezBsYWewgVxl6o2uV6LsBtVGM9EAC+XabC8ru17bWxNyItn9
-         K8GgoEUCjqGsO3lspfgi9tOVGEjHq8ZwdwO63nr0YLLkybMjtRo11BKmelSX96Nfv52w
-         4QXfn/SygHSXhfjFrc0FWF4aAelE0MG220CTgkudfVSnMcTtdlGZiGGBZ4DoClgiHgTo
-         ir6y8oZrz3IpH3nRgHdKsy9Ptpoh23l2rPUeHuWjw2kIYWxXjo84FkspUc0jVdHL2HF1
-         uLSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=jr+Z8tw0NpTtZMlceWQb0wEh/jnmOC4gqPRFiZKPXVY=;
-        b=RTqpND5gUOlHO061L7cg8Tt88Z4U1pyq3X8XdUzaBvsfJWt17L/csp/imCcspyyllz
-         q5s8bXnfL2bQ10TUJw9x9cTNlcRhxp96bkyMBnI9CtoDlhOzYc3hRPmO4f2aPbuMN2RY
-         ntkQAtemcKlOh1+vvnG9jFzz9DYbnSLT3w0zLk48zbJT6b8rDrp06qVif3RY9HwWBH8+
-         E8rncZZbPoV05WHUuH/d9qu37HPgzuwFKLWubseppe4HILepHazCgGS0QOCaT6WT66yv
-         rWG6Xc3T9tIXyf/T2gWmBk1IcLAlAYRJRzPPH9cQSFRC/A3RexKf/thny3jgT6TkxzE9
-         mIjw==
-X-Gm-Message-State: APjAAAVfPxMiGUSu+vbhu/+grK3UHfgyvxv+rdZQ9YHAu4/fvtHQOA4k
-        2n5R2+5muUxIRZKWjEX2pux6DLhGEl6a6f+wO0k=
-X-Google-Smtp-Source: APXvYqxRDcfuvP7Tyl4Ze2ZtVr5bvpzkLZkmqooRWLhTRfOV3rFkj3bQzAFIXPPFRdNOQmIGYkMcXPB1AJ4jRXamCP0=
-X-Received: by 2002:a67:de98:: with SMTP id r24mr13920746vsk.139.1575724710205;
- Sat, 07 Dec 2019 05:18:30 -0800 (PST)
+        id S1726420AbfLGPVM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Dec 2019 10:21:12 -0500
+Received: from sonic317-26.consmr.mail.bf2.yahoo.com ([74.6.129.81]:34076 "EHLO
+        sonic317-26.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726414AbfLGPVL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Dec 2019 10:21:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1575732070; bh=zPC9p8T5S06DA73PD5F75wViZ/EpBpeYylTS7OqjCU4=; h=Date:From:Reply-To:Subject:From:Subject; b=kuJy8cGzjbm6zyPpYcSuD/vge3S+CCkzMoRaUxYOvOGvEPBvDHGfSihvqJKRKIP+nVlHR9TOQWwDtd9puhMZ7X0BYSC8RHa9JmfFL1AYr2gHBWJYkK3oGDkxG5kidrbANKZ2fF+2H9BWe3Dk2D3WmUnFa0tdtN3uq15xTdmdi5zjBDNPoeDQ81oUcseud1JtEMvTwg+JpOHlXMNb0NvVsnCZzfjAYeBTmE4HEQtCw2iG2RaxbUKH9JZpRwDSMXmB346fOLo0o/I10DtRGqiJR/XKdI+QxJP865xWsFx16IT1W1eZj5hOzEYfzFf1wSb75AzUOECOBgGXOUq76tvzZQ==
+X-YMail-OSG: v4s.g98VM1lltKIB9WKuW1wKdsBWI.fh.FCn0UfKMVa_TOWUVtDL5OmroElP0WT
+ RmBylL2ue58WCTify6.RfkE6_vGnfrKq8dAaPbRko0h6YVbBFN3Z82Et4hsPIO91Hlft0gcGwSaZ
+ g9PydE7NSX49_KE6rOreRFY40lw19XF.HiRcy3Fyv8coe7aiucHNhSM.c_I2yJstOm81P1CIJg88
+ mTyWWqG6jfcV6VfiE12USiLkDw63.VLJ58EbFC7w8p1mdhMAicjbK2i0vZAS93bCPUlmIqaqVCnL
+ AxCMYl_3FkdDJw37eJHVffR.9LKz2rk_yMdyMiTr7Of9Twfq16et5jvYyuFtjYoyIFslJ6V90bmv
+ OtfiqhenbRQyRSBYYj6CSXb8X4WxpmAo4uiD8CZoZTnAm55MQKKljbfLQCKwdHAbXkQ1YbIFt.bd
+ PPNsBq4y9V9KKT.moZm_WmC0e_S6cPY8GJrK3iN6zcKyWQx8PaYf_fYuFp4.lemVoWtoiH6FlgMn
+ XNzDXKORjlmClNVp3_CxDZyIycPPB7QR_.jehTMtL3Sy3n7jJ86SUtO7jr4XApTX0QDeT2owqsNz
+ EOUTWih1Bj2CxWQSMDOaVkPEwkEA0rPxzlaTE.Dx.H1XixL0MJcJ9IFpjXmd.jVq1ifJ8ZTuMJql
+ 3eHbQBhQJTUWey8ojsGz.z5zjCGMlpEdushglZwSyzziFcDmNTqGIuikDM3IGhSSUYTsTecSoNii
+ DtyqgwxLPXwi_S6akBRVeXFwZsoEvSrrp9yyAHofTGZIZ.jf5LCM4QYhUzjNfnABa1ilJyoNlJ2R
+ 6KLlAuCG1p3GYdSIq6ccGTfIJwBxPx1bbeyXapb7Xi4YQGybJVs6ALwJknmGXaPES.bbjAcDHnBi
+ WV8Do8gt4v6V6jjZlRj3bNmI8vuquFEh.QQtNe8orW3.49GRJUb5vDny3iycuyaQ0lfvsnF6rvpU
+ wlVOaXweBg2zwrs60Y16uNBzBQnWbaDbZqwKySVdrdUE.u6TPJGbHacwdcJKJ2szJ7mr0quTRyMd
+ ejJ1B319MdHH9OSes8qqW1DEN0yNwcicaWna1517fA8hz5c8Fy5SKFnen8RiDtn5_HAuhN.owkLq
+ 6aZvkBWORSaST1kG4HxUqhnTIhA9Qkt.QVnd7BoD3phqPlGkrJzdoJtW6Z5ZnfVWh.lI0DKEsYPQ
+ 7A3vLZwL5aZaaSl2NWIr_N7dJSEPTz3OWR1CYtpZOJV5Cjd1eh5BtCDTWeAqPA.PgY_tvu3EG1XF
+ 6I1pAIrIHuhFNwjr7eYUnJIeXZgVUFBT6V5PSpS0bsDWeZKPuTQ8KOLG_Y8G.HISpQsQDkCn.252
+ a7Cslwg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Sat, 7 Dec 2019 15:21:10 +0000
+Date:   Sat, 7 Dec 2019 15:21:05 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh222@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1183044059.6687849.1575732065141@mail.yahoo.com>
+Subject: I NEED YOUR HELP FOR THIS TRANSFER.
 MIME-Version: 1.0
-Received: by 2002:a67:72c1:0:0:0:0:0 with HTTP; Sat, 7 Dec 2019 05:18:27 -0800 (PST)
-Reply-To: 3114494846@qq.com
-From:   "Mrs. Janet Keuler" <atmcardpaymecenter1972@gmail.com>
-Date:   Sat, 7 Dec 2019 05:18:27 -0800
-Message-ID: <CABXrEytxjKp_s21x=3SE-RCTa9qgFJsCDBiB1UtotztUmNd6dQ@mail.gmail.com>
-Subject: YOUR COMPENSATION PAYMENT OF $1,500,000.00 USD
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Attention: Beneficiary,
 
-NOTE: IF YOU RECEIVED THIS MESSAGE IN YOUR SPAM / BULK FOLDER, THAT IS
-BECAUSE OF THE RESTRICTIONS IMPLEMENTED BY YOUR INTERNET SERVICE
-PROVIDER, WE URGE YOU TO TREAT IT GENUINELY.
 
-This is the second time we are notifying you about the statue of your
-compensation payment of ( $1,500,000.00). Be inform that We have been
-authorized by the United Nations Compensation Commission (UNCC) to
-release your compensation payment totaling the sum of US$1,500,000.00
-through MoneyGram money transfer service. You will be receiving the
-sum of US$5,000.00 daily until the total sum of US $1,500,000.00 is
-completely transferred to you.
+Dear Friend,
 
-Besides,we have already credited your first payment of US$5,000.00
-today,therefore,you are advice to contact our director of foreign
-Remittance Department MR.ROBERT TAIWO and request him to give you the
-details of your first payment such as Money Transfer Control Number
-(MTCN) and senders name to enable you pick up your first payment of
-US$5,000.00 at any MoneyGram office located around you. Kindly contact
-him through the information stated below for faster process.
+I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank(B.O.A).
 
-CONTACT PERSON: MR.ROBERT TAIWO
-E-MAIL:  ( transfermoney212@foxmail.com )
-TEL: (+229) 96 54 83 88
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
 
-REMEMBER TO FORWARD HIM YOUR FULL INFORMATION AS REQUIRED BELOW TO
-ENABLE HIM LOCATE YOUR PAYMENT FILE AND ATTEND TO YOU IMMEDIATELY.
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me forsuccess.
 
-1. Your Full Name:
-2. Address:
-3. Age:
-4. Occupation:
-5. Telephone:
-6. Country:
+Note/ 50% for you why 50% for me after success of the transfer to your bank
+account.
 
-NOTE: that the amount to be paid to you is (USD1.500, 000.00), we
-expect your urgent response to this email to enable us monitor the
-transaction effectively.
+Below information is what i need from you so will can be reaching each
+other
 
-Best Regards
-Mrs. Janet Keuler.
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa Hugh
