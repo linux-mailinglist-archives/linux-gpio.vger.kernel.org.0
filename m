@@ -2,133 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DED191161B5
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Dec 2019 14:34:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F1DA116439
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 00:56:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfLHNen (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Dec 2019 08:34:43 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34892 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbfLHNen (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Dec 2019 08:34:43 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w23so4694890pjd.2
-        for <linux-gpio@vger.kernel.org>; Sun, 08 Dec 2019 05:34:42 -0800 (PST)
+        id S1726901AbfLHX4p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Dec 2019 18:56:45 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40850 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfLHX4p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Dec 2019 18:56:45 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y5so9245160lfy.7
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Dec 2019 15:56:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hSzMY2/yVnbqQH0Hh4V5dBmLYHxyZ5VDx6G5dpWa9Uk=;
-        b=uzThoYq0bTVAZABh2RmOi7lYUjEKb934FcOwI7E45MLwqlY/bFrXTXHO0xXfinPNfI
-         Blph9A9PxwGpjqcTjhxz8yKZ4a0zdz6l0/wZ9IS1cE12GTnIJvvbqbzwoqZW8r30WJyY
-         mtSZ9XiBa+JlIkGVNpanEgffGuh6B7Rojc7EJDulgYj7qFaXWhQa0r++FfQkYaJmlR4s
-         4Y2AVSt4atXu4YOj/1/qouLmF8ZFRBuzmtZDSL2j+Z+LMth142RmCWtoKX2kQkJGh7fB
-         WfMLq8NeV/bnp3sIuCAbWJ/n9laSpn7ruYIsyF3EUqrINwACGB7MJ11zHQG++uk572d0
-         PL5Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G98iQ4Xz1596icAZ7mOyKIsOKgGjMdou0zMqC7TfbVs=;
+        b=jaP0lKZzSBuq07uSKcJFRDfXUKQo0AVQBIHNFxx6la3qlyWukiqyuu2b6k7WWBtXiv
+         qLv7E+qDTwIVVCnnG6ulWj81HpEdvl7f293zntRt7i5Ot0JCQVBmVT1L+6Q33vFuaVBq
+         yHdGD6CSTwhkz5aCKq7TnyjRx9DqfNsgs++asIuoRnh64zevQ0vN+s7EMipU+pV1KnGT
+         XdU9fQHfPDYviHFTnT7Z5lxfyOFRgoa6ZqUVeT39nXcwX6cZbc+roGLBIYzexWndx1mI
+         dHMyfjt7nJD6xm8zGieTR0RFmq9RaKBFGVmtasmpup6ApzmcKv/a2ZDrEFW14AlUWc76
+         0Crg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hSzMY2/yVnbqQH0Hh4V5dBmLYHxyZ5VDx6G5dpWa9Uk=;
-        b=lf+mr3JnnkcskRIYJ9dHkyUrtBm6ZL17REu/BJNju0apOWg+8/WxrQ8+L3mjxEYttc
-         0b2IpLWL3nXwpSonBQYMLioe9cvqT2Jn/UuPSbnquRa2DAVVqAjz6PCxFX7kyJ2GIQxM
-         Dwo71QT18EJlMM9s6gH9jgDLd+xH6l2DmPu5WHM4v8pdreKitjw20uSFwh+DzszqvGxd
-         XijoXhSroYcOCUjMl0JAFj6cv+VERS/8+wcKbKoVrB0aHKBMGNxgS9ocl6RS8a6onCxg
-         9sJGMI11hIhctcV7OOlKsNGo58fjc+J9+IiLYODARg7g8D702wrDq1njTa7DfBu4jelC
-         W7SQ==
-X-Gm-Message-State: APjAAAW2Qq5km6hEyu8l0DSThdXPgqTQtjQ0TvYwwXEoraJ7Cq2W/q3D
-        F42gqsO13lRDMmR7qPomRS12p1yz
-X-Google-Smtp-Source: APXvYqwbABqCpmjbSUOX9Igy7FRzL+sRG9FQHnTFojvU/ZlrFoRTzYlyyxKHFqNBWZvpQeekriL0cw==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr26155885pjb.99.1575812082222;
-        Sun, 08 Dec 2019 05:34:42 -0800 (PST)
-Received: from sol (220-235-109-115.dyn.iinet.net.au. [220.235.109.115])
-        by smtp.gmail.com with ESMTPSA id g191sm23380546pfb.19.2019.12.08.05.34.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 08 Dec 2019 05:34:41 -0800 (PST)
-Date:   Sun, 8 Dec 2019 21:34:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: fix up emulated open drain outputs
-Message-ID: <20191208133436.GA20748@sol>
-References: <E1idcoc-0004ni-4f@rmk-PC.armlinux.org.uk>
- <20191208034340.GA9333@sol>
- <20191208071823.GZ25745@shell.armlinux.org.uk>
- <20191208075143.GA13664@sol>
- <20191208130256.GA25745@shell.armlinux.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G98iQ4Xz1596icAZ7mOyKIsOKgGjMdou0zMqC7TfbVs=;
+        b=IU4HUK8tWEjAU2z7mBaR+NMelMysU1H5LOa06P2EFn14QVMWHQqo0OvU0FpORTKahc
+         QNUvnN15tJunYA+ujo4Cmbj3K9fuiTzz+tqD+SnlVbRTllFjIoO7KPjMAdAlDae2VKTX
+         mVUQFC26rjeqrGtGkDgbH0IL9jNdcwZO6CYdbF9MB3rhYIVEHqDljN7krWvW8y1LouNN
+         632CxONlhwUvljA6sKSKQydqD5BqKXezxQ7RINSnizolh540PHT6rpMaiXjF+6Rxae8l
+         JVav9SflCHEgSMDuw3P8KUruZvsP+0UF3PlHEWb5edkGmDd3J2gU0EvOQbwhtyQIOIvM
+         d7Qw==
+X-Gm-Message-State: APjAAAXRuMvJNqZUFzLC/R/owj2YvHKPTaI0KfHICBU+/2ZEZoVYvbVQ
+        YtZPuZFUUvcWfR+l/CQDhSCAhi0ZHoNBgSX+LV20xzIb4E0=
+X-Google-Smtp-Source: APXvYqzVoNkq9pkmph0v2+xPiSjUlmLk/6GbSB0ueTQeLYHC7/MGvlWBMQmYVy24nsYfZn2LZ0YjErbZUliuhlouYrE=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr9095069lff.44.1575849403347;
+ Sun, 08 Dec 2019 15:56:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191208130256.GA25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191206170821.29711-1-ulf.hansson@linaro.org> <20191206170821.29711-9-ulf.hansson@linaro.org>
+In-Reply-To: <20191206170821.29711-9-ulf.hansson@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 9 Dec 2019 00:56:31 +0100
+Message-ID: <CACRpkdZAUH9+f6zS1sxVSLDdUnynEhbB7XqBETzcM2S122kwtA@mail.gmail.com>
+Subject: Re: [PATCH 8/9] mmc: jz4740: Convert to pinctrl_select_default_state()
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 08, 2019 at 01:02:56PM +0000, Russell King - ARM Linux admin wrote:
-> On Sun, Dec 08, 2019 at 03:51:43PM +0800, Kent Gibson wrote:
-> > On Sun, Dec 08, 2019 at 07:18:23AM +0000, Russell King - ARM Linux admin wrote:
-> > > On Sun, Dec 08, 2019 at 11:43:40AM +0800, Kent Gibson wrote:
-> > > > On Sat, Dec 07, 2019 at 04:20:18PM +0000, Russell King wrote:
-> > > > > gpiolib has a corner case with open drain outputs that are emulated.
-> > > > > When such outputs are outputting a logic 1, emulation will set the
-> > > > > hardware to input mode, which will cause gpiod_get_direction() to
-> > > > > report that it is in input mode. This is different from the behaviour
-> > > > > with a true open-drain output.
-> > > > > 
-> > > > > Unify the semantics here.
-> > > > > 
-> > > > > Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > > > > ---
-> > > > >  drivers/gpio/gpiolib.c | 8 ++++++++
-> > > > >  1 file changed, 8 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > > > > index 32c2048deb8c..70c60aac41cc 100644
-> > > > > --- a/drivers/gpio/gpiolib.c
-> > > > > +++ b/drivers/gpio/gpiolib.c
-> > > > > @@ -220,6 +220,14 @@ int gpiod_get_direction(struct gpio_desc *desc)
-> > > > >  	chip = gpiod_to_chip(desc);
-> > > > >  	offset = gpio_chip_hwgpio(desc);
-> > > > >  
-> > > > > +	/*
-> > > > > +	 * Open drain emulation using input mode may incorrectly report
-> > > > > +	 * input here, fix that up.
-> > > > > +	 */
-> > > > > +	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
-> > > > > +	    test_bit(FLAG_IS_OUT, &desc->flags))
-> > > > > +		return 0;
-> > > > > +
-> > > > 
-> > > > What about the FLAG_OPEN_SOURCE case?
-> > > 
-> > > do you have a scenario you can test?
-> > > 
-> > 
-> > No I don't - if I had a scenario that had tripped over this problem
-> > then I would've submitted a patch already ;-).
-> > 
-> > I'm simply pointing out that the logic that applies to
-> > emulating OPEN_DRAIN also applies to emulating OPEN_SOURCE.
-> > IMHO if you are fixing this for one then it should be fixed for both.
-> 
-> That would be nice, but it would also be nice to be sure that the fix
-> works there _and_ it doesn't break anything by fixing it.
-> 
-> I regard this as a risky change: with open drain/open source "outputs"
-> it is quite obvious when the pin is being driven, it is in output mode.
-> When the driver is off though, it is debatable whether it should be
-> regarded as in input or output mode.
-> 
+On Fri, Dec 6, 2019 at 6:08 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-Higher powers can make the call on that.
+> Let's move away from using pinctrl_pm_select_default_state() as it's
+> scheduled for removal and use pinctrl_select_default_state() instead.
+>
+> Cc: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-I just wanted to point out that the fix only deals with one of the two
-cases that need to be fixed - in case that slipped by.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Cheers,
-Kent.
-
+Yours,
+Linus Walleij
