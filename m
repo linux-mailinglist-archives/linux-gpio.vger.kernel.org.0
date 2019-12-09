@@ -2,108 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A60601168DB
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 10:07:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 560A2116D0A
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 13:22:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfLIJHY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 04:07:24 -0500
-Received: from smtp1.axis.com ([195.60.68.17]:34539 "EHLO smtp1.axis.com"
+        id S1727436AbfLIMWu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 07:22:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:58969 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbfLIJHY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:07:24 -0500
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 04:07:23 EST
-IronPort-SDR: PhzTVPKXtmwH+OjOSnfx0Jesg2XhztVzb0fC1r6/c5eqPraBIkHJTDVa+tsY+tGoIJpZ6D0eC/
- De9GETski7OBwhx6uelB25mimfda2nZU1iAEKZQXCZVpnxBaPbUQub++xBlp4lZFoeceexj5Bt
- KpcMltbs3MRmoHCS9L+Nfs3N/256lzDl1svtwaZXndtPSQ88xJWHZwyJLOhCSCXHpyVAlPCnaA
- jR2NR1ec9ZJegRi/5PbocL0aDG/u34+HTsm4WXo2zljHA6BvYCMy2Pk1KnyhCUbRskIN2Bv4Np
- y6U=
-X-IronPort-AV: E=Sophos;i="5.69,294,1571695200"; 
-   d="scan'208";a="3384606"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-Date:   Mon, 9 Dec 2019 10:00:11 +0100
-From:   Jesper Nilsson <jesper.nilsson@axis.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Jesper Nilsson <jespern@axis.com>,
-        Lars Persson <larper@axis.com>
-Subject: Re: [PATCH 4/9] mmc: usdhi6rol0: Convert to
- pinctrl_select_default_state()
-Message-ID: <20191209090011.bt6j6rsrjisbhnkg@axis.com>
-References: <20191206170821.29711-1-ulf.hansson@linaro.org>
- <20191206170821.29711-5-ulf.hansson@linaro.org>
+        id S1727412AbfLIMWu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Dec 2019 07:22:50 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 04:22:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
+   d="scan'208";a="244429061"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 04:22:48 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D3F5A141; Mon,  9 Dec 2019 14:22:47 +0200 (EET)
+Date:   Mon, 9 Dec 2019 14:22:47 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.5-2
+Message-ID: <20191209122247.GA85209@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191206170821.29711-5-ulf.hansson@linaro.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-TM-AS-GCONF: 00
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 06:08:16PM +0100, Ulf Hansson wrote:
-> Let's drop the boilerplate code for managing the default pinctrl state and
-> convert into using the new pinctrl_select_default_state().
+Hi Linus,
 
-Looks good, thanks!
+This is material for v5.5-rc2.
 
-Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
+There are two fixes for BayTrail and the rest of conversion to pass IRQ chip
+along with GPIO one. The latter is a part 2 of the merge which has been delayed
+to -rc1 for dependency reasons. It has been hanging for few weeks in Linux next.
 
-> Cc: Lars Persson <lars.persson@axis.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/mmc/host/usdhi6rol0.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
-> index b11ac2314328..969a34e698f2 100644
-> --- a/drivers/mmc/host/usdhi6rol0.c
-> +++ b/drivers/mmc/host/usdhi6rol0.c
-> @@ -199,7 +199,6 @@ struct usdhi6_host {
->  
->  	/* Pin control */
->  	struct pinctrl *pinctrl;
-> -	struct pinctrl_state *pins_default;
->  	struct pinctrl_state *pins_uhs;
->  };
->  
-> @@ -1162,8 +1161,7 @@ static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
->  					    host->pins_uhs);
->  
->  	default:
-> -		return pinctrl_select_state(host->pinctrl,
-> -					    host->pins_default);
-> +		return pinctrl_select_default_state(mmc_dev(host->mmc));
->  	}
->  }
->  
-> @@ -1770,17 +1768,6 @@ static int usdhi6_probe(struct platform_device *pdev)
->  	}
->  
->  	host->pins_uhs = pinctrl_lookup_state(host->pinctrl, "state_uhs");
-> -	if (!IS_ERR(host->pins_uhs)) {
-> -		host->pins_default = pinctrl_lookup_state(host->pinctrl,
-> -							  PINCTRL_STATE_DEFAULT);
-> -
-> -		if (IS_ERR(host->pins_default)) {
-> -			dev_err(dev,
-> -				"UHS pinctrl requires a default pin state.\n");
-> -			ret = PTR_ERR(host->pins_default);
-> -			goto e_free_mmc;
-> -		}
-> -	}
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	host->base = devm_ioremap_resource(dev, res);
-> -- 
-> 2.17.1
-> 
+Thanks,
 
-/^JN - Jesper Nilsson
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.5-2
+
+for you to fetch changes up to b9a19bdbc843abd659e8ec6b1b3c32ae3a2455eb:
+
+  pinctrl: cherryview: Pass irqchip when adding gpiochip (2019-12-09 12:55:53 +0200)
+
+----------------------------------------------------------------
+intel-pinctrl for v5.5-2
+
+* Fix Baytrail silicon issue by using a global lock
+* Fix North community pin names that user will assume their functions
+* Convert Cherryview and Baytrail to pass IRQ chip along with GPIO one
+
+The following is an automated git shortlog grouped by driver:
+
+baytrail:
+ -  Pass irqchip when adding gpiochip
+ -  Add GPIO <-> pin mapping ranges via callback
+ -  Update North Community pin list
+ -  Really serialize all register accesses
+
+cherryview:
+ -  Pass irqchip when adding gpiochip
+ -  Add GPIO <-> pin mapping ranges via callback
+ -  Split out irq hw-init into a separate helper function
+
+----------------------------------------------------------------
+Andy Shevchenko (3):
+      pinctrl: baytrail: Update North Community pin list
+      pinctrl: baytrail: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: baytrail: Pass irqchip when adding gpiochip
+
+Hans de Goede (4):
+      pinctrl: baytrail: Really serialize all register accesses
+      pinctrl: cherryview: Split out irq hw-init into a separate helper function
+      pinctrl: cherryview: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: cherryview: Pass irqchip when adding gpiochip
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   | 200 ++++++++++++++++-------------
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 107 ++++++++-------
+ 2 files changed, 173 insertions(+), 134 deletions(-)
+
 -- 
-               Jesper Nilsson -- jesper.nilsson@axis.com
+With Best Regards,
+Andy Shevchenko
+
+
