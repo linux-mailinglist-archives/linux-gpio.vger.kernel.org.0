@@ -2,52 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DC3F1170E2
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 16:53:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E5B41171E6
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 17:37:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbfLIPxp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 10:53:45 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60971 "EHLO mga12.intel.com"
+        id S1726342AbfLIQhB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 11:37:01 -0500
+Received: from mga12.intel.com ([192.55.52.136]:65260 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfLIPxp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Dec 2019 10:53:45 -0500
+        id S1725904AbfLIQhB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Dec 2019 11:37:01 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 07:53:45 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 08:37:00 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,296,1571727600"; 
-   d="scan'208";a="220005068"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 09 Dec 2019 07:53:42 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 09 Dec 2019 17:53:42 +0200
-Date:   Mon, 9 Dec 2019 17:53:42 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v1] MAINTAINERS: Append missed file to the database
-Message-ID: <20191209155342.GV2665@lahna.fi.intel.com>
-References: <20191204123135.81630-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="244511160"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Dec 2019 08:36:59 -0800
+Received: from andy by smile with local (Exim 4.93-RC5)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ieM1q-00011F-Qo; Mon, 09 Dec 2019 18:36:58 +0200
+Date:   Mon, 9 Dec 2019 18:36:58 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 1/2] gpio: sch: Add edge event support
+Message-ID: <20191209163658.GL32742@smile.fi.intel.com>
+References: <cover.1574277614.git.jan.kiszka@siemens.com>
+ <42ae6149a14f81fd86c5acb5bd33e987123b6bed.1574277614.git.jan.kiszka@siemens.com>
+ <20191122111219.GW32742@smile.fi.intel.com>
+ <5d7399ce-1776-18ef-3bb5-6e3e8e7e7524@siemens.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191204123135.81630-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <5d7399ce-1776-18ef-3bb5-6e3e8e7e7524@siemens.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 04, 2019 at 02:31:35PM +0200, Andy Shevchenko wrote:
-> When gpiolib.h internal header had been split to few, the commit 77cb907abe6c
-> ("gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h") in particular missed
-> the MAINTAINERS database update. Do it here.
-> 
-> Fixes: 77cb907abe6c ("gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, Nov 22, 2019 at 04:33:05PM +0100, Jan Kiszka wrote:
+> On 22.11.19 12:12, Andy Shevchenko wrote:
+> > On Wed, Nov 20, 2019 at 08:20:13PM +0100, Jan Kiszka wrote:
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> > > +	case IRQ_TYPE_EDGE_RISING:
+> > > +		rising = 1;
+> > > +		break;
+> > > +	case IRQ_TYPE_EDGE_FALLING:
+> > > +		falling = 1;
+> > > +		break;
+> > > +	case IRQ_TYPE_EDGE_BOTH:
+> > > +		rising = 1;
+> > > +		falling = 1;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+
+> > Won't we need to set up IRQ handler here and use handle_bad_irq() during
+> > initialization phase?
+> 
+> Why? This is just defining the edge type, not whether an interrupt could be
+> generated or not. Also, we only have edge events here, so no reason to
+> switch types.
+
+OK.
+
+> > > +	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0, sch->chip.ngpio,
+> > > +					NUMA_NO_NODE);
+> > > +	if (irq_base < 0)
+> > > +		return irq_base;
+> > > +	sch->irq_base = irq_base;
+> > > +
+> > > +	gc = devm_irq_alloc_generic_chip(&pdev->dev, "sch_gpio", 1, irq_base,
+> > > +					 NULL, handle_simple_irq);
+> > > +	if (!gc)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	gc->private = sch;
+> > > +	ct = gc->chip_types;
+> > > +
+> > > +	ct->chip.irq_mask = sch_irq_mask;
+> > > +	ct->chip.irq_unmask = sch_irq_unmask;
+> > > +	ct->chip.irq_set_type = sch_irq_type;
+> > > +
+> > > +	ret = devm_irq_setup_generic_chip(&pdev->dev, gc,
+> > > +					  IRQ_MSK(sch->chip.ngpio),
+> > > +					  0, IRQ_NOREQUEST | IRQ_NOPROBE, 0);
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > Shan't we do this in the (similar) way how it's done in pinctrl-cherryview.c
+> > driver? (Keep in mind later patches which are going to be v5.5)
+> > 
+> 
+> Can you be a bit more specific for me? Do you mean the pattern
+> gpiochip_irqchip_add / gpiochip_set_chained_irqchip? What would be the
+> difference / benefit? And how would I link sch_sci_handler to that pattern?
+
+Now we have struct irq_chip is part of GPIO chip, so, we may use it and supply
+needed callbacks and settings before calling gpiochip_add_data().
+
+Will it work in this case?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
