@@ -2,70 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F1DA116439
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 00:56:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E6D116452
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 01:20:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfLHX4p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Dec 2019 18:56:45 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40850 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfLHX4p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Dec 2019 18:56:45 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y5so9245160lfy.7
-        for <linux-gpio@vger.kernel.org>; Sun, 08 Dec 2019 15:56:44 -0800 (PST)
+        id S1726534AbfLIAU2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Dec 2019 19:20:28 -0500
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:38275 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfLIAU2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Dec 2019 19:20:28 -0500
+Received: by mail-lf1-f45.google.com with SMTP id r14so9264888lfm.5
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Dec 2019 16:20:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=G98iQ4Xz1596icAZ7mOyKIsOKgGjMdou0zMqC7TfbVs=;
-        b=jaP0lKZzSBuq07uSKcJFRDfXUKQo0AVQBIHNFxx6la3qlyWukiqyuu2b6k7WWBtXiv
-         qLv7E+qDTwIVVCnnG6ulWj81HpEdvl7f293zntRt7i5Ot0JCQVBmVT1L+6Q33vFuaVBq
-         yHdGD6CSTwhkz5aCKq7TnyjRx9DqfNsgs++asIuoRnh64zevQ0vN+s7EMipU+pV1KnGT
-         XdU9fQHfPDYviHFTnT7Z5lxfyOFRgoa6ZqUVeT39nXcwX6cZbc+roGLBIYzexWndx1mI
-         dHMyfjt7nJD6xm8zGieTR0RFmq9RaKBFGVmtasmpup6ApzmcKv/a2ZDrEFW14AlUWc76
-         0Crg==
+        bh=MHPwh1y/n4h6B3Kr1hQ3vt143Cypr4Zc4bxHvs1bL1s=;
+        b=YJ2Z9d1LLO3HiNP5Cj86Xn9PhRPnCP461HYAfLOpE33VYg4X/b5RdZMTd5G8RTuLEx
+         QcL1QGR9H3CYUKzsTz39bvQHbhtIt1XpuDyXeGSlBu4Mhw3gsH1mUAmUbFoJX5jOxC7m
+         4j2oYy6jJd7zrwoMAhPHfi20W3qlsFLgGZ2kLvaD+VU21KINczxmVb4OiITEOcWsPBZD
+         bbdzjof/2gxGhZ/z0m6PXS0Fy7CLn/jNa0soMxwdUpbkfh4JMvOqyURODNZ16xDXqdhS
+         FAk4OS0IEo8lvQLomW5Z4tV1tTGqQZKvOxFxlhpbQT9Of1ohFUmCpXXygdpESZeHVWz3
+         782Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=G98iQ4Xz1596icAZ7mOyKIsOKgGjMdou0zMqC7TfbVs=;
-        b=IU4HUK8tWEjAU2z7mBaR+NMelMysU1H5LOa06P2EFn14QVMWHQqo0OvU0FpORTKahc
-         QNUvnN15tJunYA+ujo4Cmbj3K9fuiTzz+tqD+SnlVbRTllFjIoO7KPjMAdAlDae2VKTX
-         mVUQFC26rjeqrGtGkDgbH0IL9jNdcwZO6CYdbF9MB3rhYIVEHqDljN7krWvW8y1LouNN
-         632CxONlhwUvljA6sKSKQydqD5BqKXezxQ7RINSnizolh540PHT6rpMaiXjF+6Rxae8l
-         JVav9SflCHEgSMDuw3P8KUruZvsP+0UF3PlHEWb5edkGmDd3J2gU0EvOQbwhtyQIOIvM
-         d7Qw==
-X-Gm-Message-State: APjAAAXRuMvJNqZUFzLC/R/owj2YvHKPTaI0KfHICBU+/2ZEZoVYvbVQ
-        YtZPuZFUUvcWfR+l/CQDhSCAhi0ZHoNBgSX+LV20xzIb4E0=
-X-Google-Smtp-Source: APXvYqzVoNkq9pkmph0v2+xPiSjUlmLk/6GbSB0ueTQeLYHC7/MGvlWBMQmYVy24nsYfZn2LZ0YjErbZUliuhlouYrE=
-X-Received: by 2002:a19:c648:: with SMTP id w69mr9095069lff.44.1575849403347;
- Sun, 08 Dec 2019 15:56:43 -0800 (PST)
+        bh=MHPwh1y/n4h6B3Kr1hQ3vt143Cypr4Zc4bxHvs1bL1s=;
+        b=ZfbGp+ZBT6SP3HZE+m5c2pgBI5qvpYdv3FQSCSgfuF8/kWxDU/AjfN9q9x3hpwSrj4
+         oqk5h7glW3uKtbSHYbsHepVn+Su2P+QJo8IEcHihFYfp+pTD2VPZ9xunFUA8c8epK0yW
+         aOUpdadChEqMWWW+mop/XO+M4sT+cAEa0e+ZT2rY8MdnUft9cFICLY9LqXocmgNAwZd7
+         eP80MUlOY5HprTnR1Ez4RYHoVvOXxcLR+/mJ54lNFCiEm0M+bONQFq/mnMC+0yB7S2Qe
+         o3+pprwKJM6VRKisxfX2cGMi+kc/rU9krXb5GQLcGwC+tH/zX07GGCkeunUqm/RbVe0d
+         vDpw==
+X-Gm-Message-State: APjAAAXplEwxO7jmfbqvLTp+pRC21vUjSC3oFCTHGl3DY2YaM5253Piy
+        oAE+NGDvSDWNa8PrnUKQ9PzIgUpCrxOrG19mSJEQIdxwe6F+8w==
+X-Google-Smtp-Source: APXvYqz1ICQM0K1LHeR6QTf4gipjvIQPfKyB9dj3sza1iGU1uUKxJniITX2rtw2pCgEXg1z77JkTiIlU37yi9pqJWBA=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr13375016lfi.93.1575850826412;
+ Sun, 08 Dec 2019 16:20:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20191206170821.29711-1-ulf.hansson@linaro.org> <20191206170821.29711-9-ulf.hansson@linaro.org>
-In-Reply-To: <20191206170821.29711-9-ulf.hansson@linaro.org>
+References: <20191206173343.GX25745@shell.armlinux.org.uk>
+In-Reply-To: <20191206173343.GX25745@shell.armlinux.org.uk>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Dec 2019 00:56:31 +0100
-Message-ID: <CACRpkdZAUH9+f6zS1sxVSLDdUnynEhbB7XqBETzcM2S122kwtA@mail.gmail.com>
-Subject: Re: [PATCH 8/9] mmc: jz4740: Convert to pinctrl_select_default_state()
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
+Date:   Mon, 9 Dec 2019 01:20:15 +0100
+Message-ID: <CACRpkdZv2rzA8AbFZKq0XVBaXNJR8c5tsb+1KTZ7fNuWjm5cbQ@mail.gmail.com>
+Subject: Re: pinctrl states vs pinmux vs gpio (i2c bus recovery)
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 6, 2019 at 6:08 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+Hi Russell,
 
-> Let's move away from using pinctrl_pm_select_default_state() as it's
-> scheduled for removal and use pinctrl_select_default_state() instead.
+very nice description of this dual-mode problem.
+
+I wish I had a simple and elegant way we could make it
+unambiguous and simple to use ... but it beats me right
+now.
+
+On Fri, Dec 6, 2019 at 6:33 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+
+> One may expect:
 >
-> Cc: Paul Cercueil <paul@crapouillou.net>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>         pinctrl_select_state(i2c_imx->pinctrl, i2c_imx->pinctrl_pins_default);
+>
+> to change them back to the default state, but that would be incorrect.
+> The first thing that pinctrl_select_state() does is check whether
+>
+>         p->state == state
+>
+> which it will do, as the pinctrl layer hasn't been informed of the
+> change that has happened behind its back at the pinmux level.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Some pin controllers have the .strict property set
+in their struct pinmux_ops:
+
+* @strict: do not allow simultaneous use of the same pin for GPIO and another
+*      function. Check both gpio_owner and mux_owner strictly before approving
+*      the pin request.
+
+The non-strict pin controllers are those that actually allow GPIO
+and device functions to be used on the same physical line at the
+same time. In this case there is not special GPIO mode for the
+line in some muxing registers, they are just physically connected
+somehow.
+
+One usecase is sort of like how tcpdump work for
+ethernet interfaces: a GPIO register can "snoop" on a pin while
+in used by another device.
+
+But it would notably also allow you to drive the line and interfere
+with the device. Which is exactly what this I2C recovery mechanism
+does, just that its pin controller is actually strict, will not allow
+the same line to be used for GPIO and some other function at the
+same time, so I suppose i.MX should probably explore the
+strict mode.
+
+Enabling that will sadly make the problem MORE complex
+for this I2C recovery, requiring a cycle of
+gpiod_put()/gpiod_get() to get it released from GPIO mode, i.e.
+we would need to just get the GPIO when this is strictly needed.
+Using devm_gpiod_get() and keeping a reference descriptor
+around would not work all of a sudden.
+
+I am thinking whether we can handle the non-strict controllers
+in a more elegant way, or add some API to explicitly hand over
+between device function and GPIO function. But I can't really
+see some obvious solution.
 
 Yours,
 Linus Walleij
