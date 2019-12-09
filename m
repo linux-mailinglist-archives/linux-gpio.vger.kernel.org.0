@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 502FB116DAB
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 14:09:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A0C0116DAE
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 14:09:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfLINJg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 08:09:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:29136 "EHLO mga18.intel.com"
+        id S1727645AbfLINJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 08:09:37 -0500
+Received: from mga17.intel.com ([192.55.52.151]:34154 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727639AbfLINJg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Dec 2019 08:09:36 -0500
+        id S1727644AbfLINJf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Dec 2019 08:09:35 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 05:09:34 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Dec 2019 05:09:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,294,1571727600"; 
-   d="scan'208";a="206887943"
+   d="scan'208";a="224773897"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 09 Dec 2019 05:09:33 -0800
+  by orsmga002.jf.intel.com with ESMTP; 09 Dec 2019 05:09:32 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 06DAC993; Mon,  9 Dec 2019 15:09:28 +0200 (EET)
+        id 15AC2A7D; Mon,  9 Dec 2019 15:09:28 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org,
         Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 19/24] pinctrl: lynxpoint: Reuse struct intel_pinctrl in the driver
-Date:   Mon,  9 Dec 2019 15:09:21 +0200
-Message-Id: <20191209130926.86483-20-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 20/24] pinctrl: lynxpoint: Add pin control operations
+Date:   Mon,  9 Dec 2019 15:09:22 +0200
+Message-Id: <20191209130926.86483-21-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
 References: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
@@ -41,239 +41,375 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We may use now available struct intel_pinctrl in the driver.
-No functional change implied.
+Add implementation for:
+    - pin control, group information retrieval: count, name and pins
+    - pin muxing:
+      - function information (count, name and groups)
+      - mux setting
+      - GPIO control (enable, disable, set direction)
+    - pin configuration:
+      - pull disable, up and down
+      - any other option is treated as not supported.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-lynxpoint.c | 84 ++++++++++++++++-------
- 1 file changed, 60 insertions(+), 24 deletions(-)
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c | 315 +++++++++++++++++++++-
+ 1 file changed, 314 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-lynxpoint.c b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-index ea46bd64226d..5a8c77c8306b 100644
+index 5a8c77c8306b..c209deff9efb 100644
 --- a/drivers/pinctrl/intel/pinctrl-lynxpoint.c
 +++ b/drivers/pinctrl/intel/pinctrl-lynxpoint.c
-@@ -168,13 +168,6 @@ static const struct intel_pinctrl_soc_data lptlp_soc_data = {
- #define GPINDIS_BIT	BIT(2) /* disable input sensing */
- #define GPIWP_BIT	(BIT(0) | BIT(1)) /* weak pull options */
+@@ -146,6 +146,7 @@ static const struct intel_pinctrl_soc_data lptlp_soc_data = {
  
--struct lp_gpio {
--	struct gpio_chip	chip;
--	struct device		*dev;
--	raw_spinlock_t		lock;
--	void __iomem		*regs;
--};
--
+ /* Bitmapped register offsets */
+ #define LP_ACPI_OWNED	0x00 /* Bitmap, set by bios, 0: pin reserved for ACPI */
++#define LP_IRQ2IOXAPIC	0x10 /* Bitmap, set by bios, 1: pin routed to IOxAPIC */
+ #define LP_GC		0x7C /* set APIC IRQ to IRQ14 or IRQ15 for all pins */
+ #define LP_INT_STAT	0x80
+ #define LP_INT_ENABLE	0x90
+@@ -166,7 +167,10 @@ static const struct intel_pinctrl_soc_data lptlp_soc_data = {
+ 
+ /* LP_CONFIG2 reg bits */
+ #define GPINDIS_BIT	BIT(2) /* disable input sensing */
+-#define GPIWP_BIT	(BIT(0) | BIT(1)) /* weak pull options */
++#define GPIWP_MASK	GENMASK(1, 0)	/* weak pull options */
++#define GPIWP_NONE	0		/* none */
++#define GPIWP_DOWN	1		/* weak pull down */
++#define GPIWP_UP	2		/* weak pull up */
+ 
  /*
   * Lynxpoint gpios are controlled through both bitmapped registers and
-  * per gpio specific registers. The bitmapped registers are in chunks of
-@@ -204,12 +197,34 @@ struct lp_gpio {
+@@ -195,6 +199,8 @@ static const struct intel_pinctrl_soc_data lptlp_soc_data = {
+  * ...
+  * LP94_CONFIG1 (gpio 94) ...
   * LP94_CONFIG2 (gpio 94) ...
++ *
++ * IOxAPIC redirection map applies only for gpio 8-10, 13-14, 45-55.
   */
  
-+static struct intel_community *lp_get_community(struct intel_pinctrl *lg,
-+						unsigned int pin)
-+{
-+	struct intel_community *comm;
-+	int i;
-+
-+	for (i = 0; i < lg->ncommunities; i++) {
-+		comm = &lg->communities[i];
-+		if (pin < comm->pin_base + comm->npins && pin >= comm->pin_base)
-+			return comm;
-+	}
-+
-+	return NULL;
-+}
-+
- static void __iomem *lp_gpio_reg(struct gpio_chip *chip, unsigned int offset,
- 				 int reg)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
-+	struct intel_community *comm;
- 	int reg_offset;
- 
-+	comm = lp_get_community(lg, offset);
-+	if (!comm)
-+		return NULL;
-+
-+	offset -= comm->pin_base;
-+
- 	if (reg == LP_CONFIG1 || reg == LP_CONFIG2)
- 		/* per gpio specific config registers */
- 		reg_offset = offset * 8;
-@@ -217,10 +232,10 @@ static void __iomem *lp_gpio_reg(struct gpio_chip *chip, unsigned int offset,
- 		/* bitmapped registers */
- 		reg_offset = (offset / 32) * 4;
- 
--	return lg->regs + reg + reg_offset;
-+	return comm->regs + reg_offset + reg;
+ static struct intel_community *lp_get_community(struct intel_pinctrl *lg,
+@@ -246,6 +252,308 @@ static bool lp_gpio_acpi_use(struct intel_pinctrl *lg, unsigned int pin)
+ 	return !(ioread32(acpi_use) & BIT(pin % 32));
  }
  
--static bool lp_gpio_acpi_use(struct lp_gpio *lg, unsigned int pin)
-+static bool lp_gpio_acpi_use(struct intel_pinctrl *lg, unsigned int pin)
- {
- 	void __iomem *acpi_use;
- 
-@@ -233,7 +248,7 @@ static bool lp_gpio_acpi_use(struct lp_gpio *lg, unsigned int pin)
- 
++static bool lp_gpio_ioxapic_use(struct gpio_chip *chip, unsigned int offset)
++{
++	void __iomem *ioxapic_use = lp_gpio_reg(chip, offset, LP_IRQ2IOXAPIC);
++	u32 value;
++
++	value = ioread32(ioxapic_use);
++
++	if (offset >= 8 && offset <= 10)
++		return !!(value & BIT(offset -  8 + 0));
++	if (offset >= 13 && offset <= 14)
++		return !!(value & BIT(offset - 13 + 3));
++	if (offset >= 45 && offset <= 55)
++		return !!(value & BIT(offset - 45 + 5));
++
++	return false;
++}
++
++static int lp_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	return lg->soc->ngroups;
++}
++
++static const char *lp_get_group_name(struct pinctrl_dev *pctldev,
++				     unsigned int selector)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	return lg->soc->groups[selector].name;
++}
++
++static int lp_get_group_pins(struct pinctrl_dev *pctldev,
++			     unsigned int selector,
++			     const unsigned int **pins,
++			     unsigned int *num_pins)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	*pins		= lg->soc->groups[selector].pins;
++	*num_pins	= lg->soc->groups[selector].npins;
++
++	return 0;
++}
++
++static const struct pinctrl_ops lptlp_pinctrl_ops = {
++	.get_groups_count	= lp_get_groups_count,
++	.get_group_name		= lp_get_group_name,
++	.get_group_pins		= lp_get_group_pins,
++};
++
++static int lp_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	return lg->soc->nfunctions;
++}
++
++static const char *lp_get_function_name(struct pinctrl_dev *pctldev,
++					unsigned int selector)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	return lg->soc->functions[selector].name;
++}
++
++static int lp_get_function_groups(struct pinctrl_dev *pctldev,
++				  unsigned int selector,
++				  const char * const **groups,
++				  unsigned int *num_groups)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++
++	*groups		= lg->soc->functions[selector].groups;
++	*num_groups	= lg->soc->functions[selector].ngroups;
++
++	return 0;
++}
++
++static int lp_pinmux_set_mux(struct pinctrl_dev *pctldev,
++			     unsigned int function, unsigned int group)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	const struct intel_pingroup *grp = &lg->soc->groups[group];
++	unsigned long flags;
++	int i;
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++
++	/* Now enable the mux setting for each pin in the group */
++	for (i = 0; i < grp->npins; i++) {
++		void __iomem *reg = lp_gpio_reg(&lg->chip, grp->pins[i], LP_CONFIG1);
++		u32 value;
++
++		value = ioread32(reg);
++
++		value &= ~USE_SEL_MASK;
++		if (grp->modes)
++			value |= grp->modes[i];
++		else
++			value |= grp->mode;
++
++		iowrite32(value, reg);
++	}
++
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	return 0;
++}
++
++static int lp_gpio_request_enable(struct pinctrl_dev *pctldev,
++				  struct pinctrl_gpio_range *range,
++				  unsigned int pin)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	void __iomem *reg = lp_gpio_reg(&lg->chip, pin, LP_CONFIG1);
++	void __iomem *conf2 = lp_gpio_reg(&lg->chip, pin, LP_CONFIG2);
++	unsigned long flags;
++	u32 value;
++
++	pm_runtime_get(lg->dev);
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++
++	/*
++	 * Reconfigure pin to GPIO mode if needed and issue a warning,
++	 * since we expect firmware to configure it properly.
++	 */
++	value = ioread32(reg);
++	if ((value & USE_SEL_MASK) != USE_SEL_GPIO) {
++		iowrite32((value & USE_SEL_MASK) | USE_SEL_GPIO, reg);
++		dev_warn(lg->dev, FW_BUG "pin %u forcibly reconfigured as GPIO\n", pin);
++	}
++
++	/* Enable input sensing */
++	iowrite32(ioread32(conf2) & ~GPINDIS_BIT, conf2);
++
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	return 0;
++}
++
++static void lp_gpio_disable_free(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int pin)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	void __iomem *conf2 = lp_gpio_reg(&lg->chip, pin, LP_CONFIG2);
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++
++	/* Disable input sensing */
++	iowrite32(ioread32(conf2) | GPINDIS_BIT, conf2);
++
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	pm_runtime_put(lg->dev);
++}
++
++static int lp_gpio_set_direction(struct pinctrl_dev *pctldev,
++				 struct pinctrl_gpio_range *range,
++				 unsigned int pin, bool input)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	void __iomem *reg = lp_gpio_reg(&lg->chip, pin, LP_CONFIG1);
++	unsigned long flags;
++	u32 value;
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++
++	value = ioread32(reg);
++	value &= ~DIR_BIT;
++	if (input) {
++		value |= DIR_BIT;
++	} else {
++		/*
++		 * Before making any direction modifications, do a check if GPIO
++		 * is set for direct IRQ. On Lynxpoint, setting GPIO to output
++		 * does not make sense, so let's at least warn the caller before
++		 * they shoot themselves in the foot.
++		 */
++		WARN(lp_gpio_ioxapic_use(&lg->chip, pin),
++		     "Potential Error: Setting GPIO to output with IOxAPIC redirection");
++	}
++	iowrite32(value, reg);
++
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	return 0;
++}
++
++static const struct pinmux_ops lptlp_pinmux_ops = {
++	.get_functions_count	= lp_get_functions_count,
++	.get_function_name	= lp_get_function_name,
++	.get_function_groups	= lp_get_function_groups,
++	.set_mux		= lp_pinmux_set_mux,
++	.gpio_request_enable	= lp_gpio_request_enable,
++	.gpio_disable_free	= lp_gpio_disable_free,
++	.gpio_set_direction	= lp_gpio_set_direction,
++};
++
++static int lp_pin_config_get(struct pinctrl_dev *pctldev, unsigned int pin,
++			     unsigned long *config)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	void __iomem *conf2 = lp_gpio_reg(&lg->chip, pin, LP_CONFIG2);
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	unsigned long flags;
++	u32 value, pull;
++	u16 arg = 0;
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++	value = ioread32(conf2);
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	pull = value & GPIWP_MASK;
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		if (pull)
++			return -EINVAL;
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		if (pull != GPIWP_DOWN)
++			return -EINVAL;
++
++		arg = 1;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		if (pull != GPIWP_UP)
++			return -EINVAL;
++
++		arg = 1;
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++
++	return 0;
++}
++
++static int lp_pin_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			     unsigned long *configs, unsigned int num_configs)
++{
++	struct intel_pinctrl *lg = pinctrl_dev_get_drvdata(pctldev);
++	void __iomem *conf2 = lp_gpio_reg(&lg->chip, pin, LP_CONFIG2);
++	enum pin_config_param param;
++	unsigned long flags;
++	int i, ret = 0;
++	u32 value;
++
++	raw_spin_lock_irqsave(&lg->lock, flags);
++
++	value = ioread32(conf2);
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			value &= ~GPIWP_MASK;
++			break;
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			value &= ~GPIWP_MASK;
++			value |= GPIWP_DOWN;
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			value &= ~GPIWP_MASK;
++			value |= GPIWP_UP;
++			break;
++		default:
++			ret = -ENOTSUPP;
++		}
++
++		if (ret)
++			break;
++	}
++
++	if (!ret)
++		iowrite32(value, conf2);
++
++	raw_spin_unlock_irqrestore(&lg->lock, flags);
++
++	return ret;
++}
++
++static const struct pinconf_ops lptlp_pinconf_ops = {
++	.is_generic	= true,
++	.pin_config_get	= lp_pin_config_get,
++	.pin_config_set	= lp_pin_config_set,
++};
++
++static const struct pinctrl_desc lptlp_pinctrl_desc = {
++	.pctlops	= &lptlp_pinctrl_ops,
++	.pmxops		= &lptlp_pinmux_ops,
++	.confops	= &lptlp_pinconf_ops,
++	.owner		= THIS_MODULE,
++};
++
  static int lp_gpio_request(struct gpio_chip *chip, unsigned int offset)
  {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	void __iomem *conf2 = lp_gpio_reg(chip, offset, LP_CONFIG2);
- 	u32 value;
-@@ -259,7 +274,7 @@ static int lp_gpio_request(struct gpio_chip *chip, unsigned int offset)
- 
- static void lp_gpio_free(struct gpio_chip *chip, unsigned int offset)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *conf2 = lp_gpio_reg(chip, offset, LP_CONFIG2);
- 
- 	/* disable input sensing */
-@@ -276,7 +291,7 @@ static int lp_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 
- static void lp_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	unsigned long flags;
- 
-@@ -292,7 +307,7 @@ static void lp_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
- 
- static int lp_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	unsigned long flags;
- 
-@@ -306,7 +321,7 @@ static int lp_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- static int lp_gpio_direction_output(struct gpio_chip *chip, unsigned int offset,
- 				    int value)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *reg = lp_gpio_reg(chip, offset, LP_CONFIG1);
- 	unsigned long flags;
- 
-@@ -333,7 +348,7 @@ static void lp_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_data *data = irq_desc_get_irq_data(desc);
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
--	struct lp_gpio *lg = gpiochip_get_data(gc);
-+	struct intel_pinctrl *lg = gpiochip_get_data(gc);
- 	struct irq_chip *chip = irq_data_get_irq_chip(data);
- 	void __iomem *reg, *ena;
- 	unsigned long pending;
-@@ -360,7 +375,7 @@ static void lp_gpio_irq_handler(struct irq_desc *desc)
- static void lp_irq_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct lp_gpio *lg = gpiochip_get_data(gc);
-+	struct intel_pinctrl *lg = gpiochip_get_data(gc);
- 	u32 hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_STAT);
- 	unsigned long flags;
-@@ -381,7 +396,7 @@ static void lp_irq_mask(struct irq_data *d)
- static void lp_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct lp_gpio *lg = gpiochip_get_data(gc);
-+	struct intel_pinctrl *lg = gpiochip_get_data(gc);
- 	u32 hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
-@@ -394,7 +409,7 @@ static void lp_irq_enable(struct irq_data *d)
- static void lp_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct lp_gpio *lg = gpiochip_get_data(gc);
-+	struct intel_pinctrl *lg = gpiochip_get_data(gc);
- 	u32 hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_INT_ENABLE);
- 	unsigned long flags;
-@@ -407,7 +422,7 @@ static void lp_irq_disable(struct irq_data *d)
- static int lp_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct lp_gpio *lg = gpiochip_get_data(gc);
-+	struct intel_pinctrl *lg = gpiochip_get_data(gc);
- 	u32 hwirq = irqd_to_hwirq(d);
- 	void __iomem *reg = lp_gpio_reg(&lg->chip, hwirq, LP_CONFIG1);
- 	unsigned long flags;
-@@ -466,7 +481,7 @@ static struct irq_chip lp_irqchip = {
- 
- static int lp_gpio_irq_init_hw(struct gpio_chip *chip)
- {
--	struct lp_gpio *lg = gpiochip_get_data(chip);
-+	struct intel_pinctrl *lg = gpiochip_get_data(chip);
- 	void __iomem *reg;
- 	unsigned int base;
- 
-@@ -484,18 +499,32 @@ static int lp_gpio_irq_init_hw(struct gpio_chip *chip)
- 
- static int lp_gpio_probe(struct platform_device *pdev)
- {
--	struct lp_gpio *lg;
-+	const struct intel_pinctrl_soc_data *soc;
-+	struct intel_pinctrl *lg;
- 	struct gpio_chip *gc;
- 	struct resource *io_rc, *irq_rc;
- 	struct device *dev = &pdev->dev;
- 	void __iomem *regs;
-+	unsigned int i;
- 	int ret;
- 
-+	soc = (const struct intel_pinctrl_soc_data *)device_get_match_data(dev);
-+	if (!soc)
-+		return -ENODEV;
-+
- 	lg = devm_kzalloc(dev, sizeof(*lg), GFP_KERNEL);
- 	if (!lg)
+ 	struct intel_pinctrl *lg = gpiochip_get_data(chip);
+@@ -525,6 +833,11 @@ static int lp_gpio_probe(struct platform_device *pdev)
+ 	if (!lg->communities)
  		return -ENOMEM;
  
- 	lg->dev = dev;
-+	lg->soc = soc;
-+
-+	lg->ncommunities = lg->soc->ncommunities;
-+	lg->communities = devm_kcalloc(dev, lg->ncommunities,
-+				       sizeof(*lg->communities), GFP_KERNEL);
-+	if (!lg->communities)
-+		return -ENOMEM;
++	lg->pctldesc           = lptlp_pinctrl_desc;
++	lg->pctldesc.name      = dev_name(dev);
++	lg->pctldesc.pins      = lg->soc->pins;
++	lg->pctldesc.npins     = lg->soc->npins;
 +
  	platform_set_drvdata(pdev, lg);
  
  	io_rc = platform_get_resource(pdev, IORESOURCE_IO, 0);
-@@ -510,7 +539,14 @@ static int lp_gpio_probe(struct platform_device *pdev)
- 		return -EBUSY;
- 	}
- 
--	lg->regs = regs;
-+	for (i = 0; i < lg->soc->ncommunities; i++) {
-+		struct intel_community *comm = &lg->communities[i];
-+
-+		*comm = lg->soc->communities[i];
-+
-+		comm->regs = regs;
-+		comm->pad_regs = regs + 0x100;
-+	}
- 
- 	raw_spin_lock_init(&lg->lock);
- 
-@@ -578,7 +614,7 @@ static int lp_gpio_runtime_resume(struct device *dev)
- 
- static int lp_gpio_resume(struct device *dev)
- {
--	struct lp_gpio *lg = dev_get_drvdata(dev);
-+	struct intel_pinctrl *lg = dev_get_drvdata(dev);
- 	void __iomem *reg;
- 	int i;
- 
 -- 
 2.24.0
 
