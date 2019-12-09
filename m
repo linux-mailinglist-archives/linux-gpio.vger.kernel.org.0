@@ -2,40 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D008F117471
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 19:40:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35992117809
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 22:10:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbfLISkx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 13:40:53 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:48569 "EHLO rere.qmqm.pl"
+        id S1726780AbfLIVJj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 16:09:39 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:13966 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfLISkx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Dec 2019 13:40:53 -0500
+        id S1726408AbfLIVJi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Dec 2019 16:09:38 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47WsQL1kDfzCS;
-        Mon,  9 Dec 2019 19:38:18 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Wwjz3FfCzKW;
+        Mon,  9 Dec 2019 22:07:03 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1575916698; bh=mP4IVsF26GolA/qoisGsW9KuB5321gAdX6Kb63gtye0=;
-        h=Date:From:Subject:To:Cc:From;
-        b=jeOGNh1PmUYaOWnTMdS5bJGwov6KUqbN4Z/HZPr59kqzhJHrCrEwSzxRDtj+yqOGp
-         oJ2HwCpZn8AERqQq/JerhZh8EXVm8iZmlUKyQ3kBqjl5vfnktoY99713MWmbCaM6sz
-         k6LOkBaCixjpzwHTUVdTDjkmsOF0mtqIDXjwMPzmhpn1hXfmTdRp/dqlLM47wJj55I
-         giYnSukMPAF2PFzVrIG9qGoZedCyryiBcd34LYuy7+rTKHHhTnfbkCee97huTmKZ3G
-         5vBK0XHn/nmGy8EljwFT1a9FCjZeUEQLzDIh0F9jF6jIyVN8uLBUS6W81xqdhLeOF9
-         UMGgxLIeh+btQ==
+        t=1575925623; bh=mP4IVsF26GolA/qoisGsW9KuB5321gAdX6Kb63gtye0=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=dt2FTeNtLn5SzVmT4ac/2vCOJvqgwYdnvgjwIvJsvwGIqGB8HHrMqq6Ov40eT3kZa
+         RlYcwgkz/4h78c5S+IEvEe3yAxHqRiQrsP/KgKyvpjJ/vreTkv1655RVB2QrILVdvB
+         pgGDVz99iez3X6+pGrtlMoUoBABIpSPBKlktGNSBGi7Aql1dBaCer7Y/36jhkAHE9w
+         2h/TPpP0K01fKGuL9oaPm7MTVXMO3Dgl71D6lj5A0HyDyIeq6PKvVnmlTx425rbrnP
+         OBramOobh/Sk4+2K3AjVO3nP7F9voOyAX4wXLblSXnZRGEtSwMypVSED23kRPP9Azg
+         4B3u+DL9nBtAw==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 09 Dec 2019 19:40:50 +0100
-Message-Id: <56d2568cd45a13c738e2804d04348566a8ee8d03.1575916778.git.mirq-linux@rere.qmqm.pl>
+Date:   Mon, 09 Dec 2019 22:09:35 +0100
+Message-Id: <56d2568cd45a13c738e2804d04348566a8ee8d03.1575925023.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] gpio: add gpiod_toggle_active_low()
+Subject: [PATCH 1/4] gpio: add gpiod_toggle_active_low()
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
