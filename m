@@ -2,86 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D06D21166E7
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 07:27:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A60601168DB
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 10:07:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfLIG1b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 01:27:31 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58076 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfLIG1a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Dec 2019 01:27:30 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB96RSuW040218;
-        Mon, 9 Dec 2019 00:27:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575872848;
-        bh=7hvhhN/6YoaOIPBhtvUMCaNZZpkzI6k17aeCBBhi1eM=;
-        h=From:To:CC:Subject:Date;
-        b=ax4rUGAKP5K+2xiPQAjAcd3sycahAD+ZHe1nyic9+82PCNwZiDtlYrVLiXU49vSEM
-         Ohbd0Xmik3QPQLHM0oVtKLd7udQ7fXfdUS+RWOvYltVlJL00kp6bE4oFhd+lViQXTC
-         +UBHdYPnCTPH4rZXC3HqeSZ5ML9UfCYnH8ZWCc8A=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB96RSJn064117
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 9 Dec 2019 00:27:28 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
- 2019 00:27:28 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 9 Dec 2019 00:27:28 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB96RQMf043836;
-        Mon, 9 Dec 2019 00:27:26 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2] gpio: pca953x: Don't hardcode irq trigger type
-Date:   Mon, 9 Dec 2019 11:57:49 +0530
-Message-ID: <20191209062749.26429-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.24.0
+        id S1727044AbfLIJHY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 04:07:24 -0500
+Received: from smtp1.axis.com ([195.60.68.17]:34539 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbfLIJHY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 9 Dec 2019 04:07:24 -0500
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Mon, 09 Dec 2019 04:07:23 EST
+IronPort-SDR: PhzTVPKXtmwH+OjOSnfx0Jesg2XhztVzb0fC1r6/c5eqPraBIkHJTDVa+tsY+tGoIJpZ6D0eC/
+ De9GETski7OBwhx6uelB25mimfda2nZU1iAEKZQXCZVpnxBaPbUQub++xBlp4lZFoeceexj5Bt
+ KpcMltbs3MRmoHCS9L+Nfs3N/256lzDl1svtwaZXndtPSQ88xJWHZwyJLOhCSCXHpyVAlPCnaA
+ jR2NR1ec9ZJegRi/5PbocL0aDG/u34+HTsm4WXo2zljHA6BvYCMy2Pk1KnyhCUbRskIN2Bv4Np
+ y6U=
+X-IronPort-AV: E=Sophos;i="5.69,294,1571695200"; 
+   d="scan'208";a="3384606"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Date:   Mon, 9 Dec 2019 10:00:11 +0100
+From:   Jesper Nilsson <jesper.nilsson@axis.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Jesper Nilsson <jespern@axis.com>,
+        Lars Persson <larper@axis.com>
+Subject: Re: [PATCH 4/9] mmc: usdhi6rol0: Convert to
+ pinctrl_select_default_state()
+Message-ID: <20191209090011.bt6j6rsrjisbhnkg@axis.com>
+References: <20191206170821.29711-1-ulf.hansson@linaro.org>
+ <20191206170821.29711-5-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206170821.29711-5-ulf.hansson@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Don't hardcode irq trigger to IRQF_TRIGGER_LOW while registering IRQ
-handler. IRQ/platform core will take care of setting appropriate trigger
-type.
+On Fri, Dec 06, 2019 at 06:08:16PM +0100, Ulf Hansson wrote:
+> Let's drop the boilerplate code for managing the default pinctrl state and
+> convert into using the new pinctrl_select_default_state().
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
-v2:
-Drop explicit call to irq_get_trigger_type() as this is take care of in core
-code.
+Looks good, thanks!
 
- drivers/gpio/gpio-pca953x.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 6652bee01966..40e48f7d83bb 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -770,8 +770,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- 
- 	ret = devm_request_threaded_irq(&client->dev, client->irq,
- 					NULL, pca953x_irq_handler,
--					IRQF_TRIGGER_LOW | IRQF_ONESHOT |
--					IRQF_SHARED,
-+					IRQF_ONESHOT | IRQF_SHARED,
- 					dev_name(&client->dev), chip);
- 	if (ret) {
- 		dev_err(&client->dev, "failed to request irq %d\n",
+> Cc: Lars Persson <lars.persson@axis.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/mmc/host/usdhi6rol0.c | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/usdhi6rol0.c b/drivers/mmc/host/usdhi6rol0.c
+> index b11ac2314328..969a34e698f2 100644
+> --- a/drivers/mmc/host/usdhi6rol0.c
+> +++ b/drivers/mmc/host/usdhi6rol0.c
+> @@ -199,7 +199,6 @@ struct usdhi6_host {
+>  
+>  	/* Pin control */
+>  	struct pinctrl *pinctrl;
+> -	struct pinctrl_state *pins_default;
+>  	struct pinctrl_state *pins_uhs;
+>  };
+>  
+> @@ -1162,8 +1161,7 @@ static int usdhi6_set_pinstates(struct usdhi6_host *host, int voltage)
+>  					    host->pins_uhs);
+>  
+>  	default:
+> -		return pinctrl_select_state(host->pinctrl,
+> -					    host->pins_default);
+> +		return pinctrl_select_default_state(mmc_dev(host->mmc));
+>  	}
+>  }
+>  
+> @@ -1770,17 +1768,6 @@ static int usdhi6_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	host->pins_uhs = pinctrl_lookup_state(host->pinctrl, "state_uhs");
+> -	if (!IS_ERR(host->pins_uhs)) {
+> -		host->pins_default = pinctrl_lookup_state(host->pinctrl,
+> -							  PINCTRL_STATE_DEFAULT);
+> -
+> -		if (IS_ERR(host->pins_default)) {
+> -			dev_err(dev,
+> -				"UHS pinctrl requires a default pin state.\n");
+> -			ret = PTR_ERR(host->pins_default);
+> -			goto e_free_mmc;
+> -		}
+> -	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	host->base = devm_ioremap_resource(dev, res);
+> -- 
+> 2.17.1
+> 
+
+/^JN - Jesper Nilsson
 -- 
-2.24.0
-
+               Jesper Nilsson -- jesper.nilsson@axis.com
