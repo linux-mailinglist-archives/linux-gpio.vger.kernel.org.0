@@ -2,68 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2B2116611
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 06:13:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4481116617
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 06:15:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbfLIFNO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 00:13:14 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:24579 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfLIFNO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Dec 2019 00:13:14 -0500
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xB95D6eM022154;
-        Mon, 9 Dec 2019 14:13:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xB95D6eM022154
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1575868387;
-        bh=GTF6UD3GYv8Er8qBdaQM26T7zUbSphvd8n0MGPxzJy4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sHrlam1ug+XAKmOiNnNH/w6Or1cM00bqCTkagGuzUv6ScGFyttQqv0gz4REQJi61h
-         xZ7BfgjymEWbPXCrQzRwkMJiOLddyGob9av0XeLp+0OMlBTskiwb49roDU2ScpZ/jA
-         MelRvM9B2Biy5PlO4RLGrA2Q22vwlxejgycY3ATLABZclN27MbK9tCV9vliuhRdU8/
-         m2EwjsfZvGg2wwe4ohayPYXBfOBUUp2vzud27TM0wJkHCgH7RyydACM00vCNQlgw5t
-         rfsALfCtrBG+TvyXbwiCHCWjx3BNSGAxZE0OJzEaatXr7L8sGzxEAIBWh8m6324wNO
-         50ckqM4tiha4w==
-X-Nifty-SrcIP: [209.85.221.169]
-Received: by mail-vk1-f169.google.com with SMTP id i4so4003434vkc.3;
-        Sun, 08 Dec 2019 21:13:07 -0800 (PST)
-X-Gm-Message-State: APjAAAVUpzz5r7A4rY5/0oYNz9LaHy2Z9RK2qswZiBM7lm++ux4Lyu/d
-        Qd14211qpStZbrHtrWiFJH9Rtv8kFhbMeWYzDBs=
-X-Google-Smtp-Source: APXvYqwu3z97Xto7Aw0zyY0/OicAagBB5SATn47eMNkysBLPaW+ssK6AAwzTGNMGpF5rJIohxNVjtU/p/k1cW8thYVk=
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr11641934vkb.26.1575868386201;
- Sun, 08 Dec 2019 21:13:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20191206170821.29711-1-ulf.hansson@linaro.org> <20191206170821.29711-10-ulf.hansson@linaro.org>
-In-Reply-To: <20191206170821.29711-10-ulf.hansson@linaro.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 9 Dec 2019 14:12:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQF3VeQz67tAxtRXX3VYoCJSNc+xLTu9Pn331kJXVB+QQ@mail.gmail.com>
-Message-ID: <CAK7LNAQF3VeQz67tAxtRXX3VYoCJSNc+xLTu9Pn331kJXVB+QQ@mail.gmail.com>
-Subject: Re: [PATCH 9/9] mmc: uniphier-sd: Convert to pinctrl_select_default_state()
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S1725854AbfLIFPK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 00:15:10 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54846 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfLIFPK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Dec 2019 00:15:10 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB95F8ZF091561;
+        Sun, 8 Dec 2019 23:15:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575868508;
+        bh=EyuMnGkYXKYwJOyPgwsdnQQYvmnlhhBxVc+f7mSxO8o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pqr97GYV4K4YVUQauehsTM9ehjKtQFJKvnuazq68cPmczENxNAXVVWBjoCVBmsm8X
+         f4o6t9H54dYufP2ak+pjf+p/kz+yklwR6wlOJFNHpurjvHj9uoFPPmDkEX0OYRpiL0
+         1vlnVl6gpsGFqk5XMOs1viJkYJiPG806Hs86E+Vg=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB95F877085804
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 8 Dec 2019 23:15:08 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 8 Dec
+ 2019 23:15:06 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 8 Dec 2019 23:15:06 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB95F4Pm003003;
+        Sun, 8 Dec 2019 23:15:05 -0600
+Subject: Re: [PATCH] gpio: pca953x: Read irq trigger type from DT
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191205144508.31339-1-vigneshr@ti.com>
+ <5837a37d-479d-5c33-45b5-c1b32b0cdc52@ti.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <bfaa7ed4-6acf-3941-0de6-f139eed7cf99@ti.com>
+Date:   Mon, 9 Dec 2019 10:45:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <5837a37d-479d-5c33-45b5-c1b32b0cdc52@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 7, 2019 at 2:08 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> Let's drop the boilerplate code for managing the default pinctrl state and
-> convert into using the new pinctrl_select_default_state().
->
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
+Hi Grygorii,
 
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On 05/12/19 8:31 pm, Grygorii Strashko wrote:
+> 
+> 
+> On 05/12/2019 16:45, Vignesh Raghavendra wrote:
+[...]
 
+>> @@ -768,10 +769,14 @@ static int pca953x_irq_setup(struct pca953x_chip
+>> *chip, int irq_base)
+>>       bitmap_and(chip->irq_stat, irq_stat, reg_direction,
+>> chip->gpio_chip.ngpio);
+>>       mutex_init(&chip->irq_lock);
+>>   +    irqflags = irq_get_trigger_type(client->irq);
+>> +    if (irqflags == IRQF_TRIGGER_NONE)
+>> +        irqflags = IRQF_TRIGGER_LOW;
+> 
+> I think you can just drop IRQF_TRIGGER_LOW:
+> - for paltform code it will be set from resources in
+> platform_get_irq_optional()
+> - for DT code it will be set in __setup_irq()
+> 
 
+Ok, will drop setting IRQF_TRIGGER_LOW in v2.
+
+Thanks for the review!
+
+>> +    irqflags |= IRQF_ONESHOT | IRQF_SHARED;
+>> +
+>>       ret = devm_request_threaded_irq(&client->dev, client->irq,
+>>                       NULL, pca953x_irq_handler,
+>> -                    IRQF_TRIGGER_LOW | IRQF_ONESHOT |
+>> -                    IRQF_SHARED,
+>> +                    irqflags,
+>>                       dev_name(&client->dev), chip);
+>>       if (ret) {
+>>           dev_err(&client->dev, "failed to request irq %d\n",
+>>
+> 
 
 -- 
-Best Regards
-Masahiro Yamada
+Regards
+Vignesh
