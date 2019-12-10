@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F060A1199B4
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:52:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE93119967
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:47:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfLJVHw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 16:07:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54538 "EHLO mail.kernel.org"
+        id S1729743AbfLJVqD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 16:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727629AbfLJVHv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:07:51 -0500
+        id S1729498AbfLJVcv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:32:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D1924687;
-        Tue, 10 Dec 2019 21:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDFC7207FF;
+        Tue, 10 Dec 2019 21:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012070;
-        bh=GnQbOwM7WkzyvqqeFRk9acVA5AeQFUGfQbjYtec5xoM=;
+        s=default; t=1576013570;
+        bh=RbX6+Z4jCo6nzQ+Vy1qb12MbVoi1m5ZYQ4/pNJpUm9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VTEUGOKU25fTWTWQF7JWWomEJ0g9ENTjGODQaBtDXkX6pO8NiHG4J6LQ1ydbU3WeF
-         uG7i2SYyK1Nhw12dZuSUodywjpMRXklVsofWpc9M2AHXPlH/dnfzYhjd/D9J/k9so6
-         djxKyY+6jif6x46XKOxrB+T4lMF8/4LecHgZ6eNc=
+        b=c8h4SHkzpaB0jqrCSnFLfA5cBZWHc3Lc/Ysr0CFcRNPPaz4UrgY/fJxtO2qwii5yb
+         wQBqxPdtzRadXX5RcYOjpwmWQxD4+rNeCHTXrgOCdbPGL2NyQTqM8IQ946fyXQausl
+         yHZjuIfhs0yO1S6zIIBHxmvAXtWDhcZxHpg2WfTE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Elena Petrova <lenaptr@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 051/350] pinctrl: devicetree: Avoid taking direct reference to device name string
-Date:   Tue, 10 Dec 2019 16:02:36 -0500
-Message-Id: <20191210210735.9077-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 024/177] pinctrl: devicetree: Avoid taking direct reference to device name string
+Date:   Tue, 10 Dec 2019 16:29:48 -0500
+Message-Id: <20191210213221.11921-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
+References: <20191210213221.11921-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -91,10 +91,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 5d6d8b1e90620..dbaacde1b36af 100644
+index 2969ff3162c35..177ee1136e349 100644
 --- a/drivers/pinctrl/devicetree.c
 +++ b/drivers/pinctrl/devicetree.c
-@@ -29,6 +29,13 @@ struct pinctrl_dt_map {
+@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
  static void dt_free_map(struct pinctrl_dev *pctldev,
  		     struct pinctrl_map *map, unsigned num_maps)
  {
@@ -108,7 +108,7 @@ index 5d6d8b1e90620..dbaacde1b36af 100644
  	if (pctldev) {
  		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
  		if (ops->dt_free_map)
-@@ -63,7 +70,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
  
  	/* Initialize common mapping table entry fields */
  	for (i = 0; i < num_maps; i++) {
@@ -123,7 +123,7 @@ index 5d6d8b1e90620..dbaacde1b36af 100644
  		map[i].name = statename;
  		if (pctldev)
  			map[i].ctrl_dev_name = dev_name(pctldev->dev);
-@@ -71,10 +84,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
  
  	/* Remember the converted mapping table entries */
  	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
@@ -136,7 +136,7 @@ index 5d6d8b1e90620..dbaacde1b36af 100644
  
  	dt_map->pctldev = pctldev;
  	dt_map->map = map;
-@@ -82,6 +93,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
+@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
  	list_add_tail(&dt_map->node, &p->dt_maps);
  
  	return pinctrl_register_map(map, num_maps, false);
