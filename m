@@ -2,96 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D05D61191E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 21:28:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF9481191E5
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 21:29:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfLJU2f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 15:28:35 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:59857 "EHLO
+        id S1726522AbfLJU3A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 15:29:00 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:46139 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfLJU2e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 15:28:34 -0500
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M89P1-1iiKUE0lgh-005KcS; Tue, 10 Dec 2019 21:28:33 +0100
-Received: by mail-qk1-f179.google.com with SMTP id k6so17641251qki.5;
-        Tue, 10 Dec 2019 12:28:32 -0800 (PST)
-X-Gm-Message-State: APjAAAWN0jcFRxy70ZS5Pbt2Dt+hbgrm8lRcFMX/xbUJCc/mA19gE89e
-        wOkP4w5vx/wSuh/N3Mq/Gdn3WhRJYUXZ1rhQ+II=
-X-Google-Smtp-Source: APXvYqwt9caxIUrIQ2NdHcG+cD2q94bydYJ7whIaffA5PYvMfQleMpxvcQxJOlg1tgvDnanZiobaAJqL4Q0Twu9SfCk=
-X-Received: by 2002:a37:5b45:: with SMTP id p66mr6225717qkb.394.1576009711991;
- Tue, 10 Dec 2019 12:28:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20191210195414.705239-1-arnd@arndb.de> <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
-In-Reply-To: <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
+        with ESMTP id S1725999AbfLJU3A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 15:29:00 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N8GdE-1hjJuA0Kdk-014Ebs; Tue, 10 Dec 2019 21:28:46 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 10 Dec 2019 21:28:15 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a35xz_ZDN=5ZLjy6nniMtpJLwxmNmjr7d6NrOq1TU989g@mail.gmail.com>
-Message-ID: <CAK8P3a35xz_ZDN=5ZLjy6nniMtpJLwxmNmjr7d6NrOq1TU989g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: xgs-iproc: remove __exit annotation for iproc_gpio_remove
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/o7CudpYHFP0rDjHiqPJCJgRGCgB9HvzhXdeU3v+nhQ/O99Z0sR
- 4sO9+1w4cKFImpI4I5w9WYji6mulKAuIbtv86682+z21ft1bg7N0ynRlfe9xljtP9Hq1irW
- KRRMppP5BstRLVCuOsRejAJ5+ssvjAEPhbxGHae1nFzOHeBpbEG1XvtfSqgEUPh5Af1BCGq
- NTHsOY3Zz8eRxJyhRk/2g==
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hongwei Zhang <hongweiz@ami.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: aspeed: avoid return type warning
+Date:   Tue, 10 Dec 2019 21:28:31 +0100
+Message-Id: <20191210202842.2546758-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:wVxlXYdoiPhUAJZhlt2X1D7PcABmLjxtergfMBgekFChQe6tWpZ
+ I8w8dAsL3MhlxAzx3aJut0o8lNQ+huDa+/03lMKZtybCPmqB0AJTOBwNTfynmFBoPF8q11X
+ 0fl7rzVQ5Q2JVM39J6A/ntiE4ZYpUnCxy8/sdi3n7INo3/32jvI6513Rf/7/e+EF6ypwqMw
+ 7jpgkIgG3VV33LgyN3ZHw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zAmb2zOHaDg=:onB4eygwOw8tQBK2DbnZ9z
- tOqkpO4IYhi9qqodNPRK9zByp8XScvBvIbik3ieseDjoo0uBsbQo8B90XEVwMXJDCn92vEHDD
- yqHsEI39EW19iQMnSNXcMcMf/RuHD39PGM7317WqO8MOk4D9VUkT85SrOZB+OMYmqHXdInQJv
- OZiM7h1G3CmjifR0/NpW0XuX674QwhDLZQDUjTd/injBq+UvG3ZzH0+FwUDsytDYmgipm+Lob
- tY50lsl4YfU7MWRcCCiI5+8z8F82f8RB6gVhnevd3WkIs+5fOw9jUHavo3dUll5MOu1IyGaih
- ANoHoI6HBV7BvAipFc1VaA9a/K+GVOAoL0n+1DL9u4fOl0dUff4AeCwUjx5lKhx9RUBHRbslI
- OxcoPKFTytMfIEnJz2jvIHLhOrvXECO56KlLXYAdh8K8624gLJrEThyTYptJXeeZIPFAObZvV
- iRCHoFgfsTNbH+bm/q98IrjFG/5dFoQe0da/7FegdBEUGmIHqNUVU3bJnCexJyRGQsok+bD9P
- bRZ+o5yqZWhp64O0VLiobYAONKLBvr/Py0JllQqTwm/sfSbVdEABHMTx94PssOCyZ7mwJe47L
- quranFGST4PUk2cxWuvEBw1vJQxPKqWKBJ43QQrAsMnE6PZWfJq4Cr/W0tl/DPMZoJfSAD2IR
- VCkeZAUCh1kHvyE4wPhNcW7HZooTB+hZgtSc9bSvEl//RDHgHrXGtmqK8M7WX5de4D3as85hw
- +EKwyYU+qucdybel8huHQ+jTHugsmHGVoq4q6FcxNutDSFmklYReG48/fdxJK4x5fQL+Nxgvm
- WIInG9jvHi1A00jNcmN/NwJjsm3Uv723deYWujYeyYG8l/OA+E4nGT3kj3huAJcn1yq7Jd0vP
- QR3drhE+8c9MP2n04ZPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y4ivtR1MltI=:StSJ9oDv/HYfCyShHA3Kln
+ HJlWZ7FKH4rMnxsdZ2nBl/UW6bh5gdRtvDC7vF0RXZcURVmMYONqK3dKQBoPqnUs6OhRdRvaV
+ fGRHQlH3Z4dy1+lh4Usamimlb50nX1pL7c9XXCvkaICeUSQb8GGTdQvjgtx7F0KKDME5TkrrG
+ vcp+5d7zxDK4UzkAyOGGEsZkm8a7Lb7eAXSdnHsCYArnYzOVliIUeGcAHVK0/Lu0TCj5hXX7X
+ fVbLVxTGXu+UAWIRrGCHtKxuOwtL/a7TQA1fFTMG2QD/PtZ/3n/g9rWSL6dwcbLFmZmqxJnIQ
+ chErrX1bOl0U93KPojuBe+zu9gXC02JfzeqL5MrH61EibZylCVWR3xu+FHuLkjaZmXNiDycMn
+ 6y3zUNhipDojd9jN3Um/lKDi7Cq7OaHbPTDsQGqV8HeUeOcz0OBgMOaASpgoXrWskpkHBWmyW
+ TzqkRJsMdb9nxCuAeOdozIL6fP3g8bdnCo3mnXrwKSU03CIdxjC6swqjGA71WzxIz1NzjJoC9
+ bCf2p/keV+p7B2b37XKapDRGpDbzrdWy0dSwsYqsF4VuPQWtjRLV3YGHbMocgckkIOG3yWaHn
+ 54sLNcUWiHO80jq9qRFMPmG8nldxRxceGtieFYJ4M4LfP+q+X+oQSgrnq2xZgRNd4/QvaKGji
+ ApkJsGJbhOaXlkdON4aoL2l6aixNE6Gdh14opggsVlJaKt5rkxyIDWFhyuFzXyuSMnFMBnACj
+ SARPLDbBB6oLHVI2K3Xe4enmJcz10DTzP2urQVQvpLd+8OHImMx1O7a3tHAPP9GV1e9RE4ZY/
+ PeTepEbRI5+/RQ+0bq+NqBLvowYmvTpaLLeP5M1fc3LBgWW32wURRueAs/HhIgpuXzvt6f/OG
+ eMl+mUJZ38GzOcZdS6EQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:24 PM Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
->
-> On Tue, 2019-12-10 at 20:54 +0100, Arnd Bergmann wrote:
-> > When built into the kernel, the driver causes a link problem:
-> >
-> > `iproc_gpio_remove' referenced in section `.data' of drivers/gpio/gpio-xgs-iproc.o: defined in discarded section `.exit.text' of drivers/gpio/gpio-xgs-iproc.o
-> >
-> > Remove the incorrect annotation.
-> >
-> > Fixes: 6a41b6c5fc20 ("gpio: Add xgs-iproc driver")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->
-> What's the current best practice w.r.t.__init and __exit? I seem to
-> have messed this up on multiple fronts.
+gcc has a hard time tracking whether BUG_ON(1) ends
+execution or not:
 
-These are used for anything that is a module_init() function or a
-module_exit() function, or called from one, but generally not
-for any callbacks.
+drivers/gpio/gpio-aspeed-sgpio.c: In function 'bank_reg':
+drivers/gpio/gpio-aspeed-sgpio.c:112:1: error: control reaches end of non-void function [-Werror=return-type]
 
-In particular the probe() and remove() callbacks of a device driver
-can get called at runtime when the device is hotplugged through
-sysfs.
+Use the simpler BUG() that gcc knows cannot continue.
 
-       Arnd
+Fixes: f8b410e3695a ("gpio: aspeed-sgpio: Rename and add Kconfig/Makefile")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpio/gpio-aspeed-sgpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
+index 7e99860ca447..8319812593e3 100644
+--- a/drivers/gpio/gpio-aspeed-sgpio.c
++++ b/drivers/gpio/gpio-aspeed-sgpio.c
+@@ -107,7 +107,7 @@ static void __iomem *bank_reg(struct aspeed_sgpio *gpio,
+ 		return gpio->base + bank->irq_regs + GPIO_IRQ_STATUS;
+ 	default:
+ 		/* acturally if code runs to here, it's an error case */
+-		BUG_ON(1);
++		BUG();
+ 	}
+ }
+ 
+-- 
+2.20.0
+
