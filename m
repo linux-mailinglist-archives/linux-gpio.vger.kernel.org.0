@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65ADE119AB7
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 23:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C4EA119ADE
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 23:10:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfLJWD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 17:03:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33582 "EHLO mail.kernel.org"
+        id S1728780AbfLJWEZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 17:04:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727740AbfLJWD2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:03:28 -0500
+        id S1728766AbfLJWEY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:04:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B29920637;
-        Tue, 10 Dec 2019 22:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8133B20828;
+        Tue, 10 Dec 2019 22:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015407;
-        bh=O0fYVVir9x2NlIxa2pfU57UP2BYcxFpxhpdNby5zruQ=;
+        s=default; t=1576015464;
+        bh=WjS0Tq7OrsE2NjIqEF56Rkua9+801ORAczYUD93TxZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIf3hpuSy1wES3OxDF+2Z3GJjcmMI/ZrHyv94HTbZmK4GwES1llmpXRxuSBd5XgFW
-         m99zJoN5WBKperGjvX9sEcYAQPrGkbqOiS5CH4O2hSnhWH6Qrrm5RapkWEjX6OZPQN
-         Gl5RbJS0dYVVh90jY3X0LYAtEb2hx07wacT18Tvs=
+        b=Kjznzty4CyoJKchwddGfw6fAevhHQplhVIUAmT6050/Fo+rroC4VW0F52l+eri3OH
+         kDwHllNWTXJQ8TW/y/BYvduw89kncH5qJFGIhm5MJfRdy1OfN8051sAA3+Wy86Yh1/
+         Zkg//xp+9tnYxcmP7tlGD7uUxOSSG3n3BpMV62xc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Elena Petrova <lenaptr@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 021/130] pinctrl: devicetree: Avoid taking direct reference to device name string
-Date:   Tue, 10 Dec 2019 17:01:12 -0500
-Message-Id: <20191210220301.13262-21-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 070/130] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Tue, 10 Dec 2019 17:02:01 -0500
+Message-Id: <20191210220301.13262-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
 References: <20191210220301.13262-1-sashal@kernel.org>
@@ -44,109 +44,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit be4c60b563edee3712d392aaeb0943a768df7023 ]
+[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
 
-When populating the pinctrl mapping table entries for a device, the
-'dev_name' field for each entry is initialised to point directly at the
-string returned by 'dev_name()' for the device and subsequently used by
-'create_pinctrl()' when looking up the mappings for the device being
-probed.
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
 
-This is unreliable in the presence of calls to 'dev_set_name()', which may
-reallocate the device name string leaving the pinctrl mappings with a
-dangling reference. This then leads to a use-after-free every time the
-name is dereferenced by a device probe:
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
 
-  | BUG: KASAN: invalid-access in strcmp+0x20/0x64
-  | Read of size 1 at addr 13ffffc153494b00 by task modprobe/590
-  | Pointer tag: [13], memory tag: [fe]
-  |
-  | Call trace:
-  |  __kasan_report+0x16c/0x1dc
-  |  kasan_report+0x10/0x18
-  |  check_memory_region
-  |  __hwasan_load1_noabort+0x4c/0x54
-  |  strcmp+0x20/0x64
-  |  create_pinctrl+0x18c/0x7f4
-  |  pinctrl_get+0x90/0x114
-  |  devm_pinctrl_get+0x44/0x98
-  |  pinctrl_bind_pins+0x5c/0x450
-  |  really_probe+0x1c8/0x9a4
-  |  driver_probe_device+0x120/0x1d8
-
-Follow the example of sysfs, and duplicate the device name string before
-stashing it away in the pinctrl mapping entries.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Reported-by: Elena Petrova <lenaptr@google.com>
-Tested-by: Elena Petrova <lenaptr@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20191002124206.22928-1-will@kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/devicetree.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index c4aa411f5935b..3a7c2d6e4d5f6 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -40,6 +40,13 @@ struct pinctrl_dt_map {
- static void dt_free_map(struct pinctrl_dev *pctldev,
- 		     struct pinctrl_map *map, unsigned num_maps)
- {
-+	int i;
-+
-+	for (i = 0; i < num_maps; ++i) {
-+		kfree_const(map[i].dev_name);
-+		map[i].dev_name = NULL;
-+	}
-+
- 	if (pctldev) {
- 		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
- 		if (ops->dt_free_map)
-@@ -74,7 +81,13 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 
- 	/* Initialize common mapping table entry fields */
- 	for (i = 0; i < num_maps; i++) {
--		map[i].dev_name = dev_name(p->dev);
-+		const char *devname;
-+
-+		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
-+		if (!devname)
-+			goto err_free_map;
-+
-+		map[i].dev_name = devname;
- 		map[i].name = statename;
- 		if (pctldev)
- 			map[i].ctrl_dev_name = dev_name(pctldev->dev);
-@@ -82,10 +95,8 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 
- 	/* Remember the converted mapping table entries */
- 	dt_map = kzalloc(sizeof(*dt_map), GFP_KERNEL);
--	if (!dt_map) {
--		dt_free_map(pctldev, map, num_maps);
--		return -ENOMEM;
--	}
-+	if (!dt_map)
-+		goto err_free_map;
- 
- 	dt_map->pctldev = pctldev;
- 	dt_map->map = map;
-@@ -93,6 +104,10 @@ static int dt_remember_or_free_map(struct pinctrl *p, const char *statename,
- 	list_add_tail(&dt_map->node, &p->dt_maps);
- 
- 	return pinctrl_register_map(map, num_maps, false);
-+
-+err_free_map:
-+	dt_free_map(pctldev, map, num_maps);
-+	return -ENOMEM;
- }
- 
- struct pinctrl_dev *of_pinctrl_get(struct device_node *np)
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 96f0246ad2f2b..82b63208135ae 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -134,7 +134,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 33232041ee86d..3eccc9b3ca84a 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1453,7 +1453,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
 -- 
 2.20.1
 
