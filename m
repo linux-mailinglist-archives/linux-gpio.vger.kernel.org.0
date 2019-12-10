@@ -2,98 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE042118990
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 14:24:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51070118A17
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 14:44:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfLJNYN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 08:24:13 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:57637 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbfLJNYM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 08:24:12 -0500
-X-Originating-IP: 90.182.112.136
-Received: from localhost (136.112.broadband15.iol.cz [90.182.112.136])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 52D7960018;
-        Tue, 10 Dec 2019 13:24:06 +0000 (UTC)
-Date:   Tue, 10 Dec 2019 14:24:02 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1727131AbfLJNog (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 08:44:36 -0500
+Received: from mga01.intel.com ([192.55.52.88]:17284 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727061AbfLJNog (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 08:44:36 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 05:44:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,299,1571727600"; 
+   d="scan'208";a="225152211"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 05:44:34 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iefoY-00039Y-6r; Tue, 10 Dec 2019 15:44:34 +0200
+Date:   Tue, 10 Dec 2019 15:44:34 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v5 13/16] rtc: bd70528 add BD71828 support
-Message-ID: <20191210132402.GK1463890@piout.net>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
- <648d09ab52fb125cab8d26dd13ef71dd4fd5f778.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in compatible
+ mode
+Message-ID: <20191210134434.GU32742@smile.fi.intel.com>
+References: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mc88eiLtu7_0y51nGDzM0nRmwaOurLx9isf=qRB0uj7KA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <648d09ab52fb125cab8d26dd13ef71dd4fd5f778.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mc88eiLtu7_0y51nGDzM0nRmwaOurLx9isf=qRB0uj7KA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Tue, Dec 10, 2019 at 10:06:04AM +0100, Bartosz Golaszewski wrote:
+> śr., 4 gru 2019 o 20:42 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisał(a):
+> >
+> > The introduced line even handling ABI in the commit
+> >
+> >   61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> >
+> > missed the fact that 64-bit kernel may serve for 32-bit applications.
+> > In such case the very first check in the lineevent_read() will fail
+> > due to alignment differences.
+> >
+> > To workaround this we do several things here:
+> > - put warning comment to UAPI header near to the structure description
+> > - derive the size of the structure in the compatible mode from its members
+> > - check for the size of this structure in the ->read() callback
+> > - return only one event in the compatible mode at a time
+> >
+> > Above mitigation will work at least with libgpiod which does one event
+> > at a time.
+> >
+> > Since the bug hasn't been reported earlier we assume that there is close
+> > to zero actual users of the compatible mode to monitor GPIO events and thus
+> > we might consider to rework this ABI in the future.
+> >
+> 
+> How come this only affects the read operation but not the structures
+> passed as arguments to ioctl() calls?
 
-On 18/11/2019 09:00:47+0200, Matti Vaittinen wrote:
-> @@ -468,26 +596,35 @@ static int bd70528_probe(struct platform_device *pdev)
->  	 *  leave them enabled as irq-controller should disable irqs
->  	 *  from sub-registers when IRQ is disabled or freed.
->  	 */
-> -	ret = regmap_update_bits(mfd->regmap,
-> +	if (enable_main_irq) {
-> +		ret = regmap_update_bits(mfd->regmap,
->  				 BD70528_REG_INT_MAIN_MASK,
->  				 BD70528_INT_RTC_MASK, 0);
-> -	if (ret) {
-> -		dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
-> -		return ret;
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to enable RTC interrupts\n");
-> +			return ret;
-> +		}
->  	}
->  
->  	return rtc_register_device(rtc);
->  }
+On x86 the rest of the structures is naturally aligned by 8 bytes.
 
-Missing blank line here.
-
-> +static const struct platform_device_id bd718x7_rtc_id[] = {
-> +	{ "bd70528-rtc", ROHM_CHIP_TYPE_BD70528 },
-> +	{ "bd71828-rtc", ROHM_CHIP_TYPE_BD71828 },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, bd718x7_rtc_id);
->  
-
-Else, Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+But you are right, the ABI is broken more widely than simple ->read().
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
+
