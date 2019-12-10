@@ -2,104 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B274119D4D
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 23:37:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9009A119F92
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 00:36:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfLJWeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 17:34:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730063AbfLJWeA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:34:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A601C208C3;
-        Tue, 10 Dec 2019 22:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576017239;
-        bh=12JXYKByqO3x4CmWFEQUCTSCcQ7aP0VNMdMcR4qvP5I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvFXmAIdgCe0YBaNDcDXzVVhPk6IlWPMao0315zoYWpielJQ3RF5nmqbtYNec6iRk
-         AtplWmPBotTxaGfdAh6dYfKbaJEJlXuP6u8uR+HkV7P/aofbK5F9C+3EMzRtOqc6oo
-         Z87ZhaaFJj7YrEEF9YjlsUMwf1hvn319H/z6GIzY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 36/71] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-Date:   Tue, 10 Dec 2019 17:32:41 -0500
-Message-Id: <20191210223316.14988-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
-References: <20191210223316.14988-1-sashal@kernel.org>
+        id S1726362AbfLJXgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 18:36:14 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44100 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLJXgN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 18:36:13 -0500
+Received: by mail-pf1-f196.google.com with SMTP id d199so692930pfd.11;
+        Tue, 10 Dec 2019 15:36:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=tMFsoiQ1JTdEjW5nt4kb9CZsuPmur1i5swl5XGfNWeY=;
+        b=sp74goInBTBfTcbH0vLZAwSCtJ56DLPWfReGLpiKGB3Jpidrwusb1uTOlah0vlFG7P
+         iiMfeVV3ZnLflfMASfTwvgJLfi4oe18CiJThdCp3LQTMB+Uqq7YU6tuKOQQC2OtD2eeK
+         E4vIMgmRLO48yCOh3xFQNkVD2BES6kd8SUZwwzmdAUjy5alfxzzj7quz8ylT/mbsVCkk
+         U80UboAGBt/zh1N9lsvgEh/K+T44f7sj9IkngsBzlC+Go3T+pM7rdpJZbIVi5dtyAThN
+         xWyJEVOq07L41aBuyRc9/OsSb9Vp5fzlVFwMtFnzqnhtohMk5eoiz7shZ/tGpqoHE5l/
+         Ia/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=tMFsoiQ1JTdEjW5nt4kb9CZsuPmur1i5swl5XGfNWeY=;
+        b=raLZ64yFGHdvKfJq4ZGXO8NFaxZeDR7nxRnJC2XJoO3jOuoKRMcdnT5gRw24HKXaD4
+         yVEzwikJnZOpcL/0BDK3qI35a6QimER2hUlIfRvUpuyeWFCkwCKwde5NTVl87NmW5Vfg
+         hXoRxi0Yr9iNfoJaKVb6uqZYb9GP2bdWaFLaDWmDeUcfdMOFj0Sex5jcjDnbnNoOsCKL
+         jsLqvd1joY0a/CAbvy+GOwmzFJOibGocY4TJy/SYrOvE5EKrkJO78zjkmnQD1jscDNnM
+         LfWvBWPhgfAVjsTS+86myhrn3ZAiQIJ14yon3VFok1mP0g1nIkt7lQjnMOAwvpQ1anQ8
+         OUNw==
+X-Gm-Message-State: APjAAAVPYOoBEdzOMMMCYjW1rNERd95wSgkm0L/cCLq1vsrsY4vQIg0k
+        JApVz4O4EIVGvhItCKDX+sE=
+X-Google-Smtp-Source: APXvYqxvy9S6VzhXvVGLJSoj3Hh+to8+tYICGolfMw0db5XfVda3a5TkrjHCP5cqKugIKy1hvShRjA==
+X-Received: by 2002:a62:7683:: with SMTP id r125mr535411pfc.132.1576020972280;
+        Tue, 10 Dec 2019 15:36:12 -0800 (PST)
+Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id x4sm127947pff.143.2019.12.10.15.36.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 15:36:11 -0800 (PST)
+Date:   Wed, 11 Dec 2019 07:36:05 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Message-ID: <20191210233605.GA4640@sol>
+References: <20191210021525.13455-1-warthog618@gmail.com>
+ <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+ <20191210145515.GB3509@sol>
+ <CAMRc=MemKDFDHpEdq2OKvEduBTdi2c3oQmgeYF8qX1rcc-rk8A@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MemKDFDHpEdq2OKvEduBTdi2c3oQmgeYF8qX1rcc-rk8A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Dec 10, 2019 at 04:34:21PM +0100, Bartosz Golaszewski wrote:
+> wt., 10 gru 2019 o 15:55 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
+> > > wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > > >
+> > > > Restore the external behavior of gpio-mockup to what it was prior to the
+> > > > change to using GPIO_LINE_DIRECTION.
+> > > >
+> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > ---
+> > > >
+> > > > Fix a regression introduced in v5.5-rc1.
+> > > >
+> > > > The change to GPIO_LINE_DIRECTION reversed the polarity of the
+> > > > dir field within gpio-mockup.c, but overlooked inverting the value on
+> > > > initialization and when returned by gpio_mockup_get_direction.
+> > > > The latter is a bug.
+> > > > The former is a problem for tests which assume initial conditions,
+> > > > specifically the mockup used to initialize chips with all lines as inputs.
+> > > > That superficially appeared to be the case after the previous patch due
+> > > > to the bug in gpio_mockup_get_direction.
+> > > >
+> > > >  drivers/gpio/gpio-mockup.c | 7 +++++--
+> > > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > > > index 56d647a30e3e..c4fdc192ea4e 100644
+> > > > --- a/drivers/gpio/gpio-mockup.c
+> > > > +++ b/drivers/gpio/gpio-mockup.c
+> > > > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > > >         int direction;
+> > > >
+> > > >         mutex_lock(&chip->lock);
+> > > > -       direction = !chip->lines[offset].dir;
+> > > > +       direction = chip->lines[offset].dir;
+> > > >         mutex_unlock(&chip->lock);
+> > > >
+> > > >         return direction;
+> > > > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > > >         struct gpio_chip *gc;
+> > > >         struct device *dev;
+> > > >         const char *name;
+> > > > -       int rv, base;
+> > > > +       int rv, base, i;
+> > > >         u16 ngpio;
+> > > >
+> > > >         dev = &pdev->dev;
+> > > > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > > >         if (!chip->lines)
+> > > >                 return -ENOMEM;
+> > > >
+> > > > +       for (i = 0; i < gc->ngpio; i++)
+> > > > +               chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
+> > > > +
+> > > >         if (device_property_read_bool(dev, "named-gpio-lines")) {
+> > > >                 rv = gpio_mockup_name_lines(dev, chip);
+> > > >                 if (rv)
+> > > > --
+> > > > 2.24.0
+> > > >
+> > >
+> > > Hi Kent,
+> > >
+> > > I was applying and testing your libgpiod series and noticed that the
+> > > gpio-tools tests fail after applying patches 16 & 17 (with linux
+> > > v5.5-rc1). Is this fix related to this?
+> > >
+> >
+> > I don't think so.  I've only been able to trip this problem with a
+> > couple of corner cases in my Go uapi test suite.
+> > I have been unable to reproduce it with the tools as it requires
+> > multiple requests with the same chip fd, including an as-is, to trip.
+> >
+> > And running the libgpiod tests against v5.5-rc1 works for me.
+> > Can you provide more details as to the errors you are seeing?
+> >
+> 
+> Hmm whatever that was, it's gone now. Must have been some leftovers
+> from previous builds. All works now.
+> 
+> > Btw, I was writing tests for your LINEINFO_WATCH patch v2, which I was
+> > applying to v5.5-rc1, when I ran across this.  That works ok if I
+> > __packed the changed struct.
+> 
+> These things can still change, so don't spend too much time on it yet. :)
+> 
 
-[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+Absolutely.  But as this is an ABI addition I wanted to have something
+to give it a decent workout before it gets applied.
+So far the only problems I've found are the alignment and isolation
+issues already mentioned.
 
-The definitions for bit field [19:18] of the Peripheral Function Select
-Register 3 were accidentally copied from bit field [20], leading to
-duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
-ET0_ETXD4 functions.
+> Since the lineinfo struct is not __packed, I'd prefer to not use it
+> for any struct embedding it. I'll just add appropriate padding for
+> 64-bit alignment.
+> 
 
-Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
-enum values, and correcting the functions.
+Explicit padding for 64-bit alignment makes sense to me.
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> > And I can confirm that patch v2 doesn't isolate watches on different
+> > chip fds.
+> >
+> 
+> Yeah, I'll fix this.
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-index 2fb9a7b71b412..a2667c9b5819a 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-@@ -133,7 +133,7 @@ enum {
- 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
- 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
- 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
--	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
-+	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
- 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
- 		GPIO_FN_ET0_ETXD3_A,
- 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index c691b2e343746..ab09d385f95d1 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -1458,7 +1458,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(ET0_ETXD2_A),
- 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
- 	GPIO_FN(ET0_ETXD3_A),
--	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
-+	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
- 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
- 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
- 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
-@@ -1954,7 +1954,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP3_20 [1] */
- 		FN_EX_WAIT0, FN_TCLK1_B,
- 	    /* IP3_19_18 [2] */
--		FN_RD_WR, FN_TCLK1_B, 0, 0,
-+		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
- 	    /* IP3_17_15 [3] */
- 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
- 		FN_ET0_ETXD3_A, 0, 0, 0,
--- 
-2.20.1
+One more thing - since it is possible to lose change events due to fifo
+overflow, how about adding a seqnum?  And if you do end up doing a v2 of
+the event ABI to fix its alignment, adding one there as well.
+
+Kent.
 
