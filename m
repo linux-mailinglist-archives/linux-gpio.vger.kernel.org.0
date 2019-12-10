@@ -2,87 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7B1119C51
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 23:28:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70D16119E12
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 23:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLJW1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 17:27:25 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:60998
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbfLJW1Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:27:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=kqjOHnsTX2ImT7/4FP7DdoMUB5nfkElAn5lfjIGOr1BUXTNLbnOGdXR2SQbqbily
-        +Jqr/eaEeeVBfMB3Ayoq5W7hM6swlmE+JVTpDKgSxbOit6qoCcR62rzwM1tpKBq7ueT
-        0LiLyX53+lIJMROVszvtN46WIVAKPW7knAdLRV0I=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576016844;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=qs09g72P2WzVk9kLKtCbEP5yzZXU32zVewyt6/1ZN4c=;
-        b=IC44f+FS9xUHKxAV0bz6aLrPNMNm3SPR84JAo62z10KRmD3MDNydi2Cvu7H8jF7d
-        CWZHQe8bgGVzVKiT4EYX2vgnzfNHsE4HFeqkQE7j7cOnBXqcptBunlwsGNTOIlJ0nvH
-        LfoMSpM9b+yxd4PWBHzMThiyr+seyepHFOU993LA=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.0
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8DA2C2BB50
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 10 Dec 2019 22:27:24 +0000
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        rnayak@codeaurora.org, lsrao@codeaurora.org, mka@chromium.org,
-        swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
-Message-ID: <0101016ef1ec96ab-5815fb77-649a-4783-95ca-cc32d7161d47-000000@us-west-2.amazonses.com>
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org>
- <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
+        id S1727901AbfLJWmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 17:42:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728536AbfLJWbb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:31 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CDEC20828;
+        Tue, 10 Dec 2019 22:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576017091;
+        bh=ztm9+c7mnXrc+ghtQEh2nXABFn+MTsi79zBf51x//Lk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OJwE5/WZBfdbgpeL2aZhjsd2tQAjn7fgPVY1mmHsZGPVohb93tjPdAVdosLu7sY3w
+         Z5lpE8uyHjL/iureknpiBlDrv9fMC5EtJaLbGZDEi1pyvUWrTVHVzuRPr5nUIxvEdH
+         QGpXyorKFsfkLNaIGef7I+cy5dS+hcxWTHh0TfeQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 46/91] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Tue, 10 Dec 2019 17:29:50 -0500
+Message-Id: <20191210223035.14270-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-SES-Outgoing: 2019.12.10-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30 2019 at 01:07 -0600, Maulik Shah wrote:
->Specify wakeup parent irqchip for sc7180 TLMM.
->
->Cc: devicetree@vger.kernel.org
->Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Lina Iyer <ilina@codeaurora.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
->---
-> arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
-> 1 file changed, 1 insertion(+)
->
->diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->index 69d5e2c..9040eee 100644
->--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->@@ -321,6 +321,7 @@
-> 			interrupt-controller;
-> 			#interrupt-cells = <2>;
-> 			gpio-ranges = <&tlmm 0 0 120>;
->+			wakeup-parent = <&pdc>;
->
-> 			qup_uart2_default: qup-uart2-default {
-> 				pinmux {
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->of Code Aurora Forum, hosted by The Linux Foundation
->
+[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
+
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
+
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 2fb9a7b71b412..a2667c9b5819a 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -133,7 +133,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 33232041ee86d..3eccc9b3ca84a 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1453,7 +1453,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
+-- 
+2.20.1
+
