@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E59F91192DF
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:07:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C8B71195D7
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:25:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfLJVEi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 16:04:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        id S1728585AbfLJVKo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 16:10:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfLJVEi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:04:38 -0500
+        id S1728578AbfLJVKm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E501524684;
-        Tue, 10 Dec 2019 21:04:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E5724697;
+        Tue, 10 Dec 2019 21:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576011877;
-        bh=cNL+w5hmyJtoWwvZWcLJMvw4ijDgt/IQp22TT2F5qTw=;
+        s=default; t=1576012242;
+        bh=4XaO/l1dHSV0PsaVCEHumtoMjvvBIDX9YGBWihvkMLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h32rXEU4/NbMNr4UU1xCdOw/LqkZD42tvb/LH/fCPFtcHC298Rs5bFFPqx8K2CIsH
-         +KoOBOe94ffzP9SvJBY6bwoP3hxDEWWCWXn6fmza5CXCxU8eJCOhTU3UK7yMZw6woe
-         s+e5Bh25E3srr8KVzxAKYCojL1PJjoyi+SxC49qI=
+        b=hZVwll5Ecgn3m77h2aXIV9Dtu6ayjOqpHZ/kumn7djXlZ0LP+ohKwlt+baVpGj1By
+         R7IrBGvHawLD18zx3U81e2BILHR/MzCASIIGWo2WtL32jnoHGp/d83FWCz1DKOoaYx
+         NYhFfmvMlF1vONB97HWryAEBz9917/t1kcFF6vO4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 029/350] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit31 when using SIM0_D"
-Date:   Tue, 10 Dec 2019 15:58:41 -0500
-Message-Id: <20191210210402.8367-29-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 190/350] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
+Date:   Tue, 10 Dec 2019 16:04:55 -0500
+Message-Id: <20191210210735.9077-151-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210402.8367-1-sashal@kernel.org>
-References: <20191210210402.8367-1-sashal@kernel.org>
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,77 +46,60 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7666dfd533d4c55733037775d47a8e3551b341a2 ]
+[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
 
-This reverts commit e167d723e1a472d252e5c4baf823b77ce5543b05.
+The definitions for bit field [19:18] of the Peripheral Function Select
+Register 3 were accidentally copied from bit field [20], leading to
+duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
+ET0_ETXD4 functions.
 
-According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
-24, 2018, the SEL_SIMCARD_{0,1} definition was to be deleted.  However,
-this errata merely fixed an accidental double definition in the Hardware
-User's Manual Rev. 1.00.  The real definition is still present in later
-revisions of the manual (Rev. 1.50 and Rev. 2.00).
+Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
+enum values, and correcting the functions.
 
-Hence revert the commit to recover the definition.
-
-Based on a patch in the BSP by Takeshi Kihara
-<takeshi.kihara.df@renesas.com>.
-
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Link: https://lore.kernel.org/r/20190904121658.2617-4-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-index 3808409cab385..5200dadd6b3ef 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
-@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
- 
- /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
-+#define MOD_SEL1_31		FM(SEL_SIMCARD_0)		FM(SEL_SIMCARD_1)
- #define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
- #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
- #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
-@@ -469,6 +470,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
- 
- #define PINMUX_MOD_SELS	\
- \
-+			MOD_SEL1_31 \
- MOD_SEL0_30_29		MOD_SEL1_30 \
- 			MOD_SEL1_29 \
- MOD_SEL0_28		MOD_SEL1_28 \
-@@ -1197,7 +1199,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_MSEL(IP13_19_16,		RIF0_D1_A,	SEL_DRIF0_0),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		SDA1_B,		SEL_I2C1_1),
- 	PINMUX_IPSR_MSEL(IP13_19_16,		TCLK2_B,	SEL_TIMER_TMU_1),
--	PINMUX_IPSR_GPSR(IP13_19_16,		SIM0_D_A),
-+	PINMUX_IPSR_MSEL(IP13_19_16,		SIM0_D_A,	SEL_SIMCARD_0),
- 
- 	PINMUX_IPSR_GPSR(IP13_23_20,		MLB_DAT),
- 	PINMUX_IPSR_MSEL(IP13_23_20,		TX0_B,		SEL_SCIF0_1),
-@@ -1265,7 +1267,7 @@ static const u16 pinmux_data[] = {
- 	PINMUX_IPSR_GPSR(IP15_15_12,		TPU0TO2),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		SDA1_D,		SEL_I2C1_3),
- 	PINMUX_IPSR_MSEL(IP15_15_12,		FSO_CFE_1_N_B,	SEL_FSO_1),
--	PINMUX_IPSR_GPSR(IP15_15_12,		SIM0_D_B),
-+	PINMUX_IPSR_MSEL(IP15_15_12,		SIM0_D_B,	SEL_SIMCARD_1),
- 
- 	PINMUX_IPSR_GPSR(IP15_19_16,		SSI_SDATA6),
- 	PINMUX_IPSR_MSEL(IP15_19_16,		HRTS2_N_A,	SEL_HSCIF2_0),
-@@ -4961,8 +4963,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
- 				   1, 2, 2, 2, 1, 1, 2, 1, 4),
- 			     GROUP(
--		/* RESERVED 31 */
--		0, 0,
-+		MOD_SEL1_31
- 		MOD_SEL1_30
- 		MOD_SEL1_29
- 		MOD_SEL1_28
+diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+index 96f0246ad2f2b..82b63208135ae 100644
+--- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
++++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
+@@ -134,7 +134,7 @@ enum {
+ 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
+ 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
+ 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
+-	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
++	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
+ 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
+ 		GPIO_FN_ET0_ETXD3_A,
+ 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+index 5dfd991ffdaab..dbc36079c3811 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
+@@ -1450,7 +1450,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(ET0_ETXD2_A),
+ 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
+ 	GPIO_FN(ET0_ETXD3_A),
+-	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
++	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
+ 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
+ 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
+ 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
+@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	    /* IP3_20 [1] */
+ 		FN_EX_WAIT0, FN_TCLK1_B,
+ 	    /* IP3_19_18 [2] */
+-		FN_RD_WR, FN_TCLK1_B, 0, 0,
++		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
+ 	    /* IP3_17_15 [3] */
+ 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
+ 		FN_ET0_ETXD3_A, 0, 0, 0,
 -- 
 2.20.1
 
