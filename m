@@ -2,38 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2732A119602
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:25:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90390119645
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:26:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfLJVYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 16:24:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32930 "EHLO mail.kernel.org"
+        id S1729562AbfLJVZk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 16:25:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfLJVKw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:52 -0500
+        id S1729553AbfLJVZj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:25:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F49246B8;
-        Tue, 10 Dec 2019 21:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD5E214D8;
+        Tue, 10 Dec 2019 21:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012252;
-        bh=5h334oil8b9BE4AdJTlzTqznOyqxlcpwG2PSJfE1q/M=;
+        s=default; t=1576013138;
+        bh=cXy8ZML0fsnWkhNXvFU3jBh1336ClxUKiYLWUWD3YtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUCOdgqTth2aLjqeG59ORYdRBHUGC/PE6+VnOZ1R73MOUc8TXNwYgv7ke9BxHXsTt
-         MulKs78mtWP+dYl18iw1l4DTtwvrm5tlWziT4z+P0GlLpMMxyZMDLuzlABGXLtTF+s
-         HK03i+sFaXUKHlC2jdbT4945LOQg9Qc7W7nxm5k0=
+        b=isRUARWdhpkEZX4k5nVvHQZFOX4MnIoRar0tkhSKqa/b5pvID+vvhQSf3xYifY8hd
+         Ygu7IaMkHC71E+2X7InhnLp8Tv7eWp2pa4XTL4QRXk7WNpr5MweruNrpzYCagEQx4e
+         L2rr0duoYxbPtaeFR94XNDPE7HlJ5AnEYNXB/SW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 199/350] pinctrl: amd: fix __iomem annotation in amd_gpio_irq_handler()
-Date:   Tue, 10 Dec 2019 16:05:04 -0500
-Message-Id: <20191210210735.9077-160-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 022/292] Revert "pinctrl: sh-pfc: r8a77990: Fix MOD_SEL1 bit30 when using SSI_SCK2 and SSI_WS2"
+Date:   Tue, 10 Dec 2019 16:20:41 -0500
+Message-Id: <20191210212511.11392-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
-References: <20191210210735.9077-1-sashal@kernel.org>
+In-Reply-To: <20191210212511.11392-1-sashal@kernel.org>
+References: <20191210212511.11392-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,48 +44,103 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 10ff58aa3c2e2a093b6ad615a7e3d8bb0dc613e5 ]
+[ Upstream commit 3672bc7093434621c83299ef27ea3b3225a67600 ]
 
-The regs pointer in amd_gpio_irq_handler() should have __iomem
-on it, so add that to fix the following sparse warnings:
+This reverts commit e87882eb9be10b2b9e28156922c2a47d877f5db4.
 
-drivers/pinctrl/pinctrl-amd.c:555:14: warning: incorrect type in assignment (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:555:14:    expected unsigned int [usertype] *regs
-drivers/pinctrl/pinctrl-amd.c:555:14:    got void [noderef] <asn:2> *base
-drivers/pinctrl/pinctrl-amd.c:563:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:563:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:563:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:580:34: warning: incorrect type in argument 1 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:580:34:    expected void const volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:580:34:    got unsigned int [usertype] *
-drivers/pinctrl/pinctrl-amd.c:587:25: warning: incorrect type in argument 2 (different address spaces)
-drivers/pinctrl/pinctrl-amd.c:587:25:    expected void volatile [noderef] <asn:2> *addr
-drivers/pinctrl/pinctrl-amd.c:587:25:    got unsigned int [usertype] *
+According to the R-Car Gen3 Hardware Manual Errata for Rev 1.00 of Aug
+24, 2018, the SEL_SSI2_{0,1} definition was to be deleted.  However,
+this errata merely fixed an accidental double definition in the Hardware
+User's Manual Rev. 1.00.  The real definition is still present in later
+revisions of the manual (Rev. 1.50 and Rev. 2.00).
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-Link: https://lore.kernel.org/r/20191022151154.5986-1-ben.dooks@codethink.co.uk
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Hence revert the commit to recover the definition.
+
+Based on a patch in the BSP by Takeshi Kihara
+<takeshi.kihara.df@renesas.com>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190904121658.2617-3-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 2c61141519f80..eab078244a4c3 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -540,7 +540,8 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
- 	irqreturn_t ret = IRQ_NONE;
- 	unsigned int i, irqnr;
- 	unsigned long flags;
--	u32 *regs, regval;
-+	u32 __iomem *regs;
-+	u32  regval;
- 	u64 status, mask;
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+index 2dfb8d9cfda12..3808409cab385 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77990.c
+@@ -448,6 +448,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ #define MOD_SEL0_1_0	   REV4(FM(SEL_SPEED_PULSE_IF_0),	FM(SEL_SPEED_PULSE_IF_1),	FM(SEL_SPEED_PULSE_IF_2),	F_(0, 0))
  
- 	/* Read the wake status */
+ /* MOD_SEL1 */			/* 0 */				/* 1 */				/* 2 */				/* 3 */			/* 4 */			/* 5 */		/* 6 */		/* 7 */
++#define MOD_SEL1_30		FM(SEL_SSI2_0)			FM(SEL_SSI2_1)
+ #define MOD_SEL1_29		FM(SEL_TIMER_TMU_0)		FM(SEL_TIMER_TMU_1)
+ #define MOD_SEL1_28		FM(SEL_USB_20_CH0_0)		FM(SEL_USB_20_CH0_1)
+ #define MOD_SEL1_26		FM(SEL_DRIF2_0)			FM(SEL_DRIF2_1)
+@@ -468,7 +469,7 @@ FM(IP12_31_28)	IP12_31_28	FM(IP13_31_28)	IP13_31_28	FM(IP14_31_28)	IP14_31_28	FM
+ 
+ #define PINMUX_MOD_SELS	\
+ \
+-MOD_SEL0_30_29 \
++MOD_SEL0_30_29		MOD_SEL1_30 \
+ 			MOD_SEL1_29 \
+ MOD_SEL0_28		MOD_SEL1_28 \
+ MOD_SEL0_27_26 \
+@@ -1058,7 +1059,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		RIF0_CLK_B,	SEL_DRIF0_1),
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		SCL2_B,		SEL_I2C2_1),
+ 	PINMUX_IPSR_MSEL(IP10_27_24,		TCLK1_A,	SEL_TIMER_TMU_0),
+-	PINMUX_IPSR_GPSR(IP10_27_24,		SSI_SCK2_B),
++	PINMUX_IPSR_MSEL(IP10_27_24,		SSI_SCK2_B,	SEL_SSI2_1),
+ 	PINMUX_IPSR_GPSR(IP10_27_24,		TS_SCK0),
+ 
+ 	PINMUX_IPSR_GPSR(IP10_31_28,		SD0_WP),
+@@ -1067,7 +1068,7 @@ static const u16 pinmux_data[] = {
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		RIF0_D0_B,	SEL_DRIF0_1),
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		SDA2_B,		SEL_I2C2_1),
+ 	PINMUX_IPSR_MSEL(IP10_31_28,		TCLK2_A,	SEL_TIMER_TMU_0),
+-	PINMUX_IPSR_GPSR(IP10_31_28,		SSI_WS2_B),
++	PINMUX_IPSR_MSEL(IP10_31_28,		SSI_WS2_B,	SEL_SSI2_1),
+ 	PINMUX_IPSR_GPSR(IP10_31_28,		TS_SDAT0),
+ 
+ 	/* IPSR11 */
+@@ -1085,13 +1086,13 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_IPSR_MSEL(IP11_11_8,		RX0_A,		SEL_SCIF0_0),
+ 	PINMUX_IPSR_MSEL(IP11_11_8,		HRX1_A,		SEL_HSCIF1_0),
+-	PINMUX_IPSR_GPSR(IP11_11_8,		SSI_SCK2_A),
++	PINMUX_IPSR_MSEL(IP11_11_8,		SSI_SCK2_A,	SEL_SSI2_0),
+ 	PINMUX_IPSR_GPSR(IP11_11_8,		RIF1_SYNC),
+ 	PINMUX_IPSR_GPSR(IP11_11_8,		TS_SCK1),
+ 
+ 	PINMUX_IPSR_MSEL(IP11_15_12,		TX0_A,		SEL_SCIF0_0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		HTX1_A),
+-	PINMUX_IPSR_GPSR(IP11_15_12,		SSI_WS2_A),
++	PINMUX_IPSR_MSEL(IP11_15_12,		SSI_WS2_A,	SEL_SSI2_0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		RIF1_D0),
+ 	PINMUX_IPSR_GPSR(IP11_15_12,		TS_SDAT1),
+ 
+@@ -4957,11 +4958,12 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		MOD_SEL0_1_0 ))
+ 	},
+ 	{ PINMUX_CFG_REG_VAR("MOD_SEL1", 0xe6060504, 32,
+-			     GROUP(2, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1, 1,
+-				   2, 2, 2, 1, 1, 2, 1, 4),
++			     GROUP(1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1, 1,
++				   1, 2, 2, 2, 1, 1, 2, 1, 4),
+ 			     GROUP(
+-		/* RESERVED 31, 30 */
+-		0, 0, 0, 0,
++		/* RESERVED 31 */
++		0, 0,
++		MOD_SEL1_30
+ 		MOD_SEL1_29
+ 		MOD_SEL1_28
+ 		/* RESERVED 27 */
 -- 
 2.20.1
 
