@@ -2,58 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63811118C98
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 16:34:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C5CB118D39
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 17:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfLJPee (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 10:34:34 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36718 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfLJPee (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 10:34:34 -0500
-Received: by mail-il1-f194.google.com with SMTP id b15so16513869iln.3
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2019 07:34:33 -0800 (PST)
+        id S1727177AbfLJQGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 11:06:32 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:44926 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727425AbfLJQGa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 11:06:30 -0500
+Received: by mail-qv1-f68.google.com with SMTP id n8so4367704qvg.11
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2019 08:06:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=FGyjYTdu5ZHfhBTYWa8rY8PUU33rrbDpvrkOm5yDTKU=;
-        b=zsi7BXLZHizQ/ZIdGHk1obNgb9g5EtEzg1WCUE/CFWb/TfvqW8pzY+TGw/g/ciM9iV
-         xvc2rZQZu94so3EXcA5h9HThj/wJe5oDwUDTSSL2vqv5C423zz6VJwAvnvHv226Q6X1z
-         BbtVZBbhxtuvbeSP5WaA6bqMqUu6t1SXf64SVmI492DuNoJ87VixAy9KECN9qe6airKJ
-         y9MyNlbZVZdxQtwAAOd+LAb2qT1UvvxQDVUEWAvwLdwVudg5Le01IxP50oTy04o+IRqp
-         MMK/x1HVGZEd6yDpqyrcVAQrnv7KSofV/In1ibOuRau1nP0YzXeYx0cKUBODlErPEv8K
-         3m2Q==
+        bh=N1UvQlX+rftmt1IipMuYBFoi1gthaz56Dkcwxg7H398=;
+        b=lrIHun1MfLYP1e/tYAfx4eR48Yyo7nJwtayRcxwumnDx7WHI1RtY9vCcysK76vLjPu
+         9/I8TZ3LJctKt2Up579QJlC1QJPkKdkGN1sx/ManvPkucdx0FQ364Kau9wrJZgLetS6A
+         dIsKWDs4vXvAvSv45BcNeVHnXAqaUrXFigkQpBA92GwS1Lr1xZQjdnmYdI82mnmSPHlK
+         zFVoQcYiSbPG1O6IS5oaKZe/pwVs3PjrdEhAZQnSeNEltB/yGf4xzvLzghBibk8VfLau
+         ITZACYt1uZVd4cagkbz5/8/oZSrLoaKGXjh366ViiDvcWf2DPb/5rVBBQSgrY+DZVaU3
+         PFig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FGyjYTdu5ZHfhBTYWa8rY8PUU33rrbDpvrkOm5yDTKU=;
-        b=YMQ0v6MnbtY5w1qdJfBWyKhKtOVx8I9OMszj0UCS47vNQIvryMuPzekZVfopXRKj1o
-         jy7v+bTmiEDef6Bx3OLTXUm/JfuqN+rdqfQu8ijrEnaREI0g6iJKz2hX4kOtL7z1krhi
-         EL7Ilxn7v9ttNjvZ15H7ybOSi1vM6Eg2AUZePSounbi3qu8oAxSV57U3/1CLbvRNA5sC
-         4yGiNWKYbn8QC9VMHf2cMTeCCNzdVkiL6DP+xPDMbaDRrFRnUWPcyXnRIZKkaO2rgDfV
-         gMH2tiN7vEye3kgbOuAyNmB+2KV35/bEV5tkCVjGeHdtoeU34G/hWU00kr5wfA8ncKaW
-         LolA==
-X-Gm-Message-State: APjAAAVprdVpVBu95rln+ETAxLkXOvmeGJ8cF62Oli6R/TU9wvrVgKsM
-        XhLX6iPbtsjKsDGHEaD8qhQlUsjZFBBDdPhfYFhOrg==
-X-Google-Smtp-Source: APXvYqxR6yL60usvgtnxayjCw7D66FdmmysWcML2rqCAD7Jj4eV7h4xdg0eGxLK1ndOT2EpRQNCwnViaykhRbnK+7Do=
-X-Received: by 2002:a05:6e02:beb:: with SMTP id d11mr33169519ilu.220.1575992073058;
- Tue, 10 Dec 2019 07:34:33 -0800 (PST)
+        bh=N1UvQlX+rftmt1IipMuYBFoi1gthaz56Dkcwxg7H398=;
+        b=qjewKFPup+FJAKFeSpffZKMcJhHdEpp3O6SIfH6GC0q8m5viFdL++qrN+rfVnDnEW7
+         jsrUvoHEsaWvpf3GWDRNh3RZgWW44oyN9t9ES9eQ1942YCXJOAzN0ESO2hEc2Bgo9qqn
+         144rSF1XWYpIxtikq3PWhwjRd+HJwyeO31b21s2+X/C2TXDBOT4ZoImT4ZFHT/ReEgPH
+         yCFu9nnhsnV2ngQcEGgODm1eLWoan6KrCRn2LFv0hqgWszWeq9F9GOpEQ4unGrKcZPU1
+         Rj0SQXuL+CXXqeVzQWdzlHBpgl9rpgODWO/vRYgdveA36JUkn9bZRzyjM/0Vh6A1I79H
+         H+mQ==
+X-Gm-Message-State: APjAAAUJUysiC3zk3aCSx/xZdOoPqed+G+JAFkZELBP/sl0Qdlpe7Mw+
+        KsdBTyvy/EhcZYQOyQKuT+7J0v6ZTXA1wXj/GNs2PQ==
+X-Google-Smtp-Source: APXvYqyMcyWcTu3UfJI302X2BUf9PBvDMvMfFpLYsYLLBW3NcndyiInAzAdKDp/FPdvTI3rVIv4NZvcF8+OBJgw4NNU=
+X-Received: by 2002:a0c:d4aa:: with SMTP id u39mr29122609qvh.76.1575993989367;
+ Tue, 10 Dec 2019 08:06:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210021525.13455-1-warthog618@gmail.com> <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
- <20191210145515.GB3509@sol>
-In-Reply-To: <20191210145515.GB3509@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 10 Dec 2019 16:34:21 +0100
-Message-ID: <CAMRc=MemKDFDHpEdq2OKvEduBTdi2c3oQmgeYF8qX1rcc-rk8A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+References: <20191201032407.23589-1-warthog618@gmail.com>
+In-Reply-To: <20191201032407.23589-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 10 Dec 2019 17:06:17 +0100
+Message-ID: <CAMpxmJVjNab1OH6mMBxcwoGtzB+KLH=dg9sTE8R708ksc8GiXg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v4 00/20] Add support for bias flags and SET_CONFIG
 To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -61,110 +56,89 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 10 gru 2019 o 15:55 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
+niedz., 1 gru 2019 o 04:24 Kent Gibson <warthog618@gmail.com> napisa=C5=82(=
+a):
 >
-> On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
-> > wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
-> > >
-> > > Restore the external behavior of gpio-mockup to what it was prior to =
-the
-> > > change to using GPIO_LINE_DIRECTION.
-> > >
-> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > ---
-> > >
-> > > Fix a regression introduced in v5.5-rc1.
-> > >
-> > > The change to GPIO_LINE_DIRECTION reversed the polarity of the
-> > > dir field within gpio-mockup.c, but overlooked inverting the value on
-> > > initialization and when returned by gpio_mockup_get_direction.
-> > > The latter is a bug.
-> > > The former is a problem for tests which assume initial conditions,
-> > > specifically the mockup used to initialize chips with all lines as in=
-puts.
-> > > That superficially appeared to be the case after the previous patch d=
-ue
-> > > to the bug in gpio_mockup_get_direction.
-> > >
-> > >  drivers/gpio/gpio-mockup.c | 7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> > > index 56d647a30e3e..c4fdc192ea4e 100644
-> > > --- a/drivers/gpio/gpio-mockup.c
-> > > +++ b/drivers/gpio/gpio-mockup.c
-> > > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_=
-chip *gc, unsigned int offset)
-> > >         int direction;
-> > >
-> > >         mutex_lock(&chip->lock);
-> > > -       direction =3D !chip->lines[offset].dir;
-> > > +       direction =3D chip->lines[offset].dir;
-> > >         mutex_unlock(&chip->lock);
-> > >
-> > >         return direction;
-> > > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_devi=
-ce *pdev)
-> > >         struct gpio_chip *gc;
-> > >         struct device *dev;
-> > >         const char *name;
-> > > -       int rv, base;
-> > > +       int rv, base, i;
-> > >         u16 ngpio;
-> > >
-> > >         dev =3D &pdev->dev;
-> > > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_devi=
-ce *pdev)
-> > >         if (!chip->lines)
-> > >                 return -ENOMEM;
-> > >
-> > > +       for (i =3D 0; i < gc->ngpio; i++)
-> > > +               chip->lines[i].dir =3D GPIO_LINE_DIRECTION_IN;
-> > > +
-> > >         if (device_property_read_bool(dev, "named-gpio-lines")) {
-> > >                 rv =3D gpio_mockup_name_lines(dev, chip);
-> > >                 if (rv)
-> > > --
-> > > 2.24.0
-> > >
-> >
-> > Hi Kent,
-> >
-> > I was applying and testing your libgpiod series and noticed that the
-> > gpio-tools tests fail after applying patches 16 & 17 (with linux
-> > v5.5-rc1). Is this fix related to this?
-> >
+>  Changes v3 -> v4:
+>  - tests require kernel v5.5.0
+>  - use std::map for bias mappings in cxx bindings
+>  - drop gpiod_line_is_requested_values
+>  - various formatting and coding style fixes
+>  - relocate common tool code into tools-common
+>  - tools bail on bad command line parameters
+>  - add drive option to gpioset in a separate patch
+>  - split out documentation update for gpiod_line_set_value_bulk
+>  - split out change to vals variable in gpiod_Line_set_value
 >
-> I don't think so.  I've only been able to trip this problem with a
-> couple of corner cases in my Go uapi test suite.
-> I have been unable to reproduce it with the tools as it requires
-> multiple requests with the same chip fd, including an as-is, to trip.
+> This patch series adds support for changes to the GPIO uAPI that are on
+> track to be included in the v5.5 kernel.  There are two components to the
+> uAPI changes - the addition of bias flags and a new SET_CONFIG ioctl.  Th=
+is
+> series adds support to the libgpiod API, and to both C++ and Python
+> bindings, for both of those components.
 >
-> And running the libgpiod tests against v5.5-rc1 works for me.
-> Can you provide more details as to the errors you are seeing?
+> The libgpiod tools are also updated, where appropriate, to support the bi=
+as
+> flags.
+>
+> The series is based on the current libgpiod master:
+>  master@00418df tests: fix a typo in comment
+>
+> Kent Gibson (20):
+>   core: add support for bias flags
+>   tests: add tests for bias flags
+>   bindings: cxx: add support for bias flags
+>   bindings: cxx: tests: add tests for bias flags
+>   bindings: python: add support for bias flags
+>   bindings: python: tests: add tests for bias flags
+>   core: add support for SET_CONFIG
+>   tests: add tests for SET_CONFIG
+>   bindings: cxx: add support for SET_CONFIG
+>   bindings: cxx: tests: add tests for SET_CONFIG methods
+>   bindings: python: move tuple to int array conversion into helper
+>     function
+>   bindings: python: add support for SET_CONFIG
+>   bindings: python: tests: add tests for SET_CONFIG methods
+>   tools: add support for bias flags
+>   tools: add tests for bias flags
+>   tools: gpioset: add support for drive flags
+>   tools: add tests for drive flags
+>   core: document gpiod_line_set_value_bulk NULL values behaviour
+>   bindings: cxx: fix indentation of wrapped field descriptions
+>   bindings: python: make vals in gpiod_Line_set_value consistent with
+>     other functions
+>
+>  bindings/cxx/gpiod.hpp                 |  85 ++++-
+>  bindings/cxx/line.cpp                  |  56 +++
+>  bindings/cxx/line_bulk.cpp             |  89 +++++
+>  bindings/cxx/tests/gpiod-cxx-test.cpp  |   2 +-
+>  bindings/cxx/tests/tests-line.cpp      | 215 +++++++++++
+>  bindings/python/gpiodmodule.c          | 485 +++++++++++++++++++++++--
+>  bindings/python/tests/gpiod_py_test.py | 256 ++++++++++++-
+>  include/gpiod.h                        | 297 +++++++++++++++
+>  lib/core.c                             | 214 ++++++++++-
+>  lib/ctxless.c                          | 114 +++++-
+>  tests/gpiod-test.c                     |   4 +-
+>  tests/tests-ctxless.c                  |  64 +++-
+>  tests/tests-event.c                    | 120 ++++++
+>  tests/tests-line.c                     | 468 +++++++++++++++++++++++-
+>  tools/gpio-tools-test                  |   2 +-
+>  tools/gpio-tools-test.bats             | 175 +++++++++
+>  tools/gpioget.c                        |  17 +-
+>  tools/gpiomon.c                        |  21 +-
+>  tools/gpioset.c                        |  41 ++-
+>  tools/tools-common.c                   |  22 ++
+>  tools/tools-common.h                   |   2 +
+>  21 files changed, 2679 insertions(+), 70 deletions(-)
+>
+> --
+> 2.24.0
 >
 
-Hmm whatever that was, it's gone now. Must have been some leftovers
-from previous builds. All works now.
+I applied the entire series with some very minor tweaks to coding
+style and commit messages. Great work! Let's fix any leftover bugs (if
+any) during this linux release cycle and release libgpiod v1.5
+together with linux v5.5.
 
-> Btw, I was writing tests for your LINEINFO_WATCH patch v2, which I was
-> applying to v5.5-rc1, when I ran across this.  That works ok if I
-> __packed the changed struct.
-
-These things can still change, so don't spend too much time on it yet. :)
-
-Since the lineinfo struct is not __packed, I'd prefer to not use it
-for any struct embedding it. I'll just add appropriate padding for
-64-bit alignment.
-
-> And I can confirm that patch v2 doesn't isolate watches on different
-> chip fds.
->
-
-Yeah, I'll fix this.
-
-Bart
-
-> Kent.
+Best regards,
+Bartosz Golaszewski
