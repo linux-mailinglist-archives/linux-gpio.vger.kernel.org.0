@@ -2,126 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 139DF11791B
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Dec 2019 23:13:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E34F117D9A
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 03:15:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfLIWNv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Dec 2019 17:13:51 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44080 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLIWNv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Dec 2019 17:13:51 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so7793513pgl.11
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Dec 2019 14:13:50 -0800 (PST)
+        id S1726602AbfLJCPx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Dec 2019 21:15:53 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44247 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbfLJCPx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Dec 2019 21:15:53 -0500
+Received: by mail-pg1-f195.google.com with SMTP id x7so8068140pgl.11;
+        Mon, 09 Dec 2019 18:15:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=yo0DBQP6olVYld+QqR40EIZ5CI+nDeXH2q0W73K+blw=;
-        b=FkEM7j7vlMlRR5kkXg7Lw6n3otl6GTo1gNNix7MzWjYhwNXDX5VIbIhRkHtDakXNMN
-         VOy6fpqHbaD7XOe2pxchZyHnaK7VMGuxaS6VJMBnFFR1RknopH1ZwExvX+hxzmiuSvHa
-         lRUpxSAd1n+Djf8VFnHvJKnNjuXIK1iKbP/MGsDO38YcM+ziX1JAOA7l0ykkiuqxjpR/
-         ii+k9csh4TQ6HIDkIbpzeTenjOu4sS2D1CYLNUqgQB3qBC3fs8OpHxbCqeUZGEk2z+wa
-         rdwR0E9eubjgdtpInyV9ZuSIPtEEnuNuDIFGulim0khaqEzuAz7M608sVgkrAGJ7Re40
-         z3AA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
+        b=qCtNVB18l4AXH3spU0ssTTWN9LziniY+tGLO5PgmoQBm4LP2kr+u/IstmffKCZ199+
+         tOVBNiCcnXHk9jnv8HAozN/t8h1b59cHEZRCxBx9YzTnEZVe7f/LX1efff9NM7OG7UHR
+         66XR/yfafX6snheRcg+Yj6jo8rVHZ4JqzC0DdnH200Z5LbVaxzs6VAOE327E9r/9KO0d
+         np81G6P60lGqE+BOII9bDmZVQTSCtQORPqDq43lmZzX41w1I24y6dJq5F6uc4ZUaDqV3
+         ZxBG/QnLQ+PBSgXEhGWRP/z/RVdWoqG+/6hwAbEHG3rxjmyXH/pgplvucJJ5hc0x2xJ5
+         n9yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=yo0DBQP6olVYld+QqR40EIZ5CI+nDeXH2q0W73K+blw=;
-        b=KXK4T3M5NilwUxSruYW98FfWpEFQQtObb6bxWA4KlOha8+bgIWe+wjxn0z5oLyEsZB
-         +zTD0rLJGLAprsxXaoQj4ZSKqBnyeLC5CVCnkIIE3HcNxuXl6Ood2bd1N5t9EvEC9hwc
-         pLIPgl5Ytkh0AGIbFA0yvaiV32N80Ze4rxvEnh9f9l1Juk9q3YcWytv2tUwEK9GISCg8
-         aS2UaLOG9AWQdai1EMbCmfG3kNSzFjDmrqfE/wGAExIrwwMwRE5lhyfOXfUwFKpYdOmQ
-         Xx8tFENhWS32LCVTWsCb7sMUJSeXnxgn3TWZ7XvGAhN9kqW3czJgUJesxWWk+qDFkqY9
-         zkLg==
-X-Gm-Message-State: APjAAAVc0Xn7kBqgV1AE07xe6ZK+y0OyksPNZpvchcAr9QpPVobXgrpZ
-        eMAlVU/j2pI18+BOn7f0monMmw==
-X-Google-Smtp-Source: APXvYqznSmUwaFhrmZSWkKFtOvv3dESgDaEoltHBEfbR1FsrJQp0ICXI9xzzy4t1Ej6BfYNGIOHqmg==
-X-Received: by 2002:a63:d901:: with SMTP id r1mr21047882pgg.328.1575929630414;
-        Mon, 09 Dec 2019 14:13:50 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id j3sm477409pfi.8.2019.12.09.14.13.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 09 Dec 2019 14:13:49 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] arm64: dts: meson: a1: add pinctrl controller support
-In-Reply-To: <5fb2a7f9-bd5b-2ac2-0158-cae1ca743bf9@baylibre.com>
-References: <1573819429-6937-1-git-send-email-qianggui.song@amlogic.com> <1573819429-6937-4-git-send-email-qianggui.song@amlogic.com> <5fb2a7f9-bd5b-2ac2-0158-cae1ca743bf9@baylibre.com>
-Date:   Mon, 09 Dec 2019 14:13:49 -0800
-Message-ID: <7hblshrvtu.fsf@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GQ27vds6K6xy/R1eo6hlJxEYMhnm8WZmX1KVY2NhyVo=;
+        b=jwAAEQD5vKJJgxfiwBxxJsKYcY6W7dVuMeKhgOdqxuLFcR1dAHU/cwVq7OzFV/ce3x
+         v3bgcDjCMVnbt0bid5Dwb7Vah76EXAqVaaLQZgqQB+dm2eOpWIffgy5ppDbXVaOZEBRS
+         j0Fei5GZIqYoSBMUCUhHTDH50YXP3Y+uin1ukamZ6KkZBgEsT+i32h+wjQlC3Ip4eJki
+         ontnpdaQ12n5LXS9Zga9VeVw5rkVzKlWsbAJqNn+xtIte26X/aq6jHJa8DGTA6kgziiF
+         uTbM5LWBP9EY2SDDwEGX2od+D4aWu3NJMU66hmHyZDh6nOxgCWH7w1vdN7U8JA6YF35B
+         kLpw==
+X-Gm-Message-State: APjAAAXKFQ5kk0Hr+WwqDvLrLLfOGWDpMCAXPZU0vqYzi8eQham9F7kZ
+        K/Zp6W8sW34LHmdxi7PjGZd4kw8F
+X-Google-Smtp-Source: APXvYqy0qwnCTB1mskWQjDuVFXOnTeLnHaka5/VTEI+Bs7ZCHYEqRCkGA0QcpPA+DbJVCWkzmd+F2g==
+X-Received: by 2002:a62:1d55:: with SMTP id d82mr32879494pfd.165.1575944152488;
+        Mon, 09 Dec 2019 18:15:52 -0800 (PST)
+Received: from sol.lan (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id m13sm790391pga.70.2019.12.09.18.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 18:15:51 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        bamv2005@gmail.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Date:   Tue, 10 Dec 2019 10:15:25 +0800
+Message-Id: <20191210021525.13455-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Restore the external behavior of gpio-mockup to what it was prior to the
+change to using GPIO_LINE_DIRECTION.
 
-> On 15/11/2019 13:03, Qianggui Song wrote:
->> add peripheral pinctrl controller to a1 SoC
->> 
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index 7210ad049d1d..0965259af869 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -5,6 +5,7 @@
->>  
->>  #include <dt-bindings/interrupt-controller/irq.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/gpio/meson-a1-gpio.h>
->>  
->>  / {
->>  	compatible = "amlogic,a1";
->> @@ -74,6 +75,23 @@
->>  			#size-cells = <2>;
->>  			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
->>  
->> +			periphs_pinctrl: pinctrl@0400 {
->> +				compatible = "amlogic,meson-a1-periphs-pinctrl";
->> +				#address-cells = <2>;
->> +				#size-cells = <2>;
->> +				ranges;
->> +
->> +				gpio: bank@0400 {
->> +					reg = <0x0 0x0400 0x0 0x003c>,
->> +					      <0x0 0x0480 0x0 0x0118>;
->> +					reg-names = "mux", "gpio";
->> +					gpio-controller;
->> +					#gpio-cells = <2>;
->> +					gpio-ranges = <&periphs_pinctrl 0 0 62>;
->> +				};
->> +
->> +			};
->> +
->>  			uart_AO: serial@1c00 {
->>  				compatible = "amlogic,meson-gx-uart",
->>  					     "amlogic,meson-ao-uart";
->> 
->
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-Queued for v5.6 with Neil's tag.
+Fix a regression introduced in v5.5-rc1.
 
-Kevin
+The change to GPIO_LINE_DIRECTION reversed the polarity of the
+dir field within gpio-mockup.c, but overlooked inverting the value on
+initialization and when returned by gpio_mockup_get_direction.
+The latter is a bug.
+The former is a problem for tests which assume initial conditions,
+specifically the mockup used to initialize chips with all lines as inputs.
+That superficially appeared to be the case after the previous patch due
+to the bug in gpio_mockup_get_direction.
+
+ drivers/gpio/gpio-mockup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 56d647a30e3e..c4fdc192ea4e 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 	int direction;
+ 
+ 	mutex_lock(&chip->lock);
+-	direction = !chip->lines[offset].dir;
++	direction = chip->lines[offset].dir;
+ 	mutex_unlock(&chip->lock);
+ 
+ 	return direction;
+@@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	struct gpio_chip *gc;
+ 	struct device *dev;
+ 	const char *name;
+-	int rv, base;
++	int rv, base, i;
+ 	u16 ngpio;
+ 
+ 	dev = &pdev->dev;
+@@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	if (!chip->lines)
+ 		return -ENOMEM;
+ 
++	for (i = 0; i < gc->ngpio; i++)
++		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
++
+ 	if (device_property_read_bool(dev, "named-gpio-lines")) {
+ 		rv = gpio_mockup_name_lines(dev, chip);
+ 		if (rv)
+-- 
+2.24.0
+
