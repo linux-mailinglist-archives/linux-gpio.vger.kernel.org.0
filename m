@@ -2,43 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 863F51191D3
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 21:24:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D05D61191E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 21:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfLJUYo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 15:24:44 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44112 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfLJUYn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 15:24:43 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C61B4886BF;
-        Wed, 11 Dec 2019 09:24:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1576009478;
-        bh=cCJ4IOUErdRXpS39JIAoWUSB/QOu2X0QuS4VhmhhzYk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=ivCMbiiPoyvBkAbJvQMZus7eq8oDUJHfmIBM1N7NGCtQqpKVHsA/ajVC3uOdTstzz
-         jgn0EURerQBdDjnuUlyfyJtmjN599ppzwyI+I1IIVOCHaHl35SNN+Xe7RvWvCPmihJ
-         AWYNw3dF0IARL5nL4XIWO9B0skzGA6/6ArtZQIjr0QLx7fwcnCwgihTX12HbDhRefy
-         o8nuxg4JEPB2pFG5s541HgcoxEN20nwiWNOgxwK3kRXwn/oRaMWSMDsfgJ5hKXIrvH
-         +CUX1Ap9W9ZY8ZYldbOP+/jRD8eNuG/IKy63zPYFayK47MMCA9YmuA11o3yufWD3wQ
-         Yv9kAOoM8yP9g==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5defff050000>; Wed, 11 Dec 2019 09:24:37 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Wed, 11 Dec 2019 09:24:33 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Wed, 11 Dec 2019 09:24:33 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "arnd@arndb.de" <arnd@arndb.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        id S1726689AbfLJU2f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 15:28:35 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:59857 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLJU2e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 15:28:34 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M89P1-1iiKUE0lgh-005KcS; Tue, 10 Dec 2019 21:28:33 +0100
+Received: by mail-qk1-f179.google.com with SMTP id k6so17641251qki.5;
+        Tue, 10 Dec 2019 12:28:32 -0800 (PST)
+X-Gm-Message-State: APjAAAWN0jcFRxy70ZS5Pbt2Dt+hbgrm8lRcFMX/xbUJCc/mA19gE89e
+        wOkP4w5vx/wSuh/N3Mq/Gdn3WhRJYUXZ1rhQ+II=
+X-Google-Smtp-Source: APXvYqwt9caxIUrIQ2NdHcG+cD2q94bydYJ7whIaffA5PYvMfQleMpxvcQxJOlg1tgvDnanZiobaAJqL4Q0Twu9SfCk=
+X-Received: by 2002:a37:5b45:: with SMTP id p66mr6225717qkb.394.1576009711991;
+ Tue, 10 Dec 2019 12:28:31 -0800 (PST)
+MIME-Version: 1.0
+References: <20191210195414.705239-1-arnd@arndb.de> <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
+In-Reply-To: <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 10 Dec 2019 21:28:15 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a35xz_ZDN=5ZLjy6nniMtpJLwxmNmjr7d6NrOq1TU989g@mail.gmail.com>
+Message-ID: <CAK8P3a35xz_ZDN=5ZLjy6nniMtpJLwxmNmjr7d6NrOq1TU989g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xgs-iproc: remove __exit annotation for iproc_gpio_remove
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "bcm-kernel-feedback-list@broadcom.com" 
         <bcm-kernel-feedback-list@broadcom.com>,
@@ -49,51 +43,55 @@ CC:     "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
         "rjui@broadcom.com" <rjui@broadcom.com>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] gpio: xgs-iproc: remove __exit annotation for
- iproc_gpio_remove
-Thread-Topic: [PATCH] gpio: xgs-iproc: remove __exit annotation for
- iproc_gpio_remove
-Thread-Index: AQHVr5OrBiJXFgirdU+/MD3yYsX4TKey9pWA
-Date:   Tue, 10 Dec 2019 20:24:33 +0000
-Message-ID: <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
-References: <20191210195414.705239-1-arnd@arndb.de>
-In-Reply-To: <20191210195414.705239-1-arnd@arndb.de>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:8c06:5a00:1627:6912]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E290714BFDB0144FA4F4989701784D39@atlnz.lc>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:/o7CudpYHFP0rDjHiqPJCJgRGCgB9HvzhXdeU3v+nhQ/O99Z0sR
+ 4sO9+1w4cKFImpI4I5w9WYji6mulKAuIbtv86682+z21ft1bg7N0ynRlfe9xljtP9Hq1irW
+ KRRMppP5BstRLVCuOsRejAJ5+ssvjAEPhbxGHae1nFzOHeBpbEG1XvtfSqgEUPh5Af1BCGq
+ NTHsOY3Zz8eRxJyhRk/2g==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zAmb2zOHaDg=:onB4eygwOw8tQBK2DbnZ9z
+ tOqkpO4IYhi9qqodNPRK9zByp8XScvBvIbik3ieseDjoo0uBsbQo8B90XEVwMXJDCn92vEHDD
+ yqHsEI39EW19iQMnSNXcMcMf/RuHD39PGM7317WqO8MOk4D9VUkT85SrOZB+OMYmqHXdInQJv
+ OZiM7h1G3CmjifR0/NpW0XuX674QwhDLZQDUjTd/injBq+UvG3ZzH0+FwUDsytDYmgipm+Lob
+ tY50lsl4YfU7MWRcCCiI5+8z8F82f8RB6gVhnevd3WkIs+5fOw9jUHavo3dUll5MOu1IyGaih
+ ANoHoI6HBV7BvAipFc1VaA9a/K+GVOAoL0n+1DL9u4fOl0dUff4AeCwUjx5lKhx9RUBHRbslI
+ OxcoPKFTytMfIEnJz2jvIHLhOrvXECO56KlLXYAdh8K8624gLJrEThyTYptJXeeZIPFAObZvV
+ iRCHoFgfsTNbH+bm/q98IrjFG/5dFoQe0da/7FegdBEUGmIHqNUVU3bJnCexJyRGQsok+bD9P
+ bRZ+o5yqZWhp64O0VLiobYAONKLBvr/Py0JllQqTwm/sfSbVdEABHMTx94PssOCyZ7mwJe47L
+ quranFGST4PUk2cxWuvEBw1vJQxPKqWKBJ43QQrAsMnE6PZWfJq4Cr/W0tl/DPMZoJfSAD2IR
+ VCkeZAUCh1kHvyE4wPhNcW7HZooTB+hZgtSc9bSvEl//RDHgHrXGtmqK8M7WX5de4D3as85hw
+ +EKwyYU+qucdybel8huHQ+jTHugsmHGVoq4q6FcxNutDSFmklYReG48/fdxJK4x5fQL+Nxgvm
+ WIInG9jvHi1A00jNcmN/NwJjsm3Uv723deYWujYeyYG8l/OA+E4nGT3kj3huAJcn1yq7Jd0vP
+ QR3drhE+8c9MP2n04ZPw==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEyLTEwIGF0IDIwOjU0ICswMTAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOg0K
-PiBXaGVuIGJ1aWx0IGludG8gdGhlIGtlcm5lbCwgdGhlIGRyaXZlciBjYXVzZXMgYSBsaW5rIHBy
-b2JsZW06DQo+IA0KPiBgaXByb2NfZ3Bpb19yZW1vdmUnIHJlZmVyZW5jZWQgaW4gc2VjdGlvbiBg
-LmRhdGEnIG9mIGRyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5vOiBkZWZpbmVkIGluIGRpc2Nh
-cmRlZCBzZWN0aW9uIGAuZXhpdC50ZXh0JyBvZiBkcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXByb2Mu
-bw0KPiANCj4gUmVtb3ZlIHRoZSBpbmNvcnJlY3QgYW5ub3RhdGlvbi4NCj4gDQo+IEZpeGVzOiA2
-YTQxYjZjNWZjMjAgKCJncGlvOiBBZGQgeGdzLWlwcm9jIGRyaXZlciIpDQo+IFNpZ25lZC1vZmYt
-Ynk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQoNClJldmlld2VkLWJ5OiBDaHJpcyBQ
-YWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQoNCldoYXQncyB0aGUg
-Y3VycmVudCBiZXN0IHByYWN0aWNlIHcuci50Ll9faW5pdCBhbmQgX19leGl0PyBJIHNlZW0gdG8N
-CmhhdmUgbWVzc2VkIHRoaXMgdXAgb24gbXVsdGlwbGUgZnJvbnRzLg0KDQo+IC0tLQ0KPiAgZHJp
-dmVycy9ncGlvL2dwaW8teGdzLWlwcm9jLmMgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
-bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-aW8vZ3Bpby14Z3MtaXByb2MuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXhncy1pcHJvYy5jDQo+IGlu
-ZGV4IDc3M2U1YzI0MzA5ZS4uYjIxYzJlNDM2YjYxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dw
-aW8vZ3Bpby14Z3MtaXByb2MuYw0KPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby14Z3MtaXByb2Mu
-Yw0KPiBAQCAtMjgwLDcgKzI4MCw3IEBAIHN0YXRpYyBpbnQgaXByb2NfZ3Bpb19wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAgDQo+IC1z
-dGF0aWMgaW50IF9fZXhpdCBpcHJvY19ncGlvX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiArc3RhdGljIGludCBpcHJvY19ncGlvX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPiAgew0KPiAgCXN0cnVjdCBpcHJvY19ncGlvX2NoaXAgKmNoaXA7DQo+
-ICANCg==
+On Tue, Dec 10, 2019 at 9:24 PM Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
+>
+> On Tue, 2019-12-10 at 20:54 +0100, Arnd Bergmann wrote:
+> > When built into the kernel, the driver causes a link problem:
+> >
+> > `iproc_gpio_remove' referenced in section `.data' of drivers/gpio/gpio-xgs-iproc.o: defined in discarded section `.exit.text' of drivers/gpio/gpio-xgs-iproc.o
+> >
+> > Remove the incorrect annotation.
+> >
+> > Fixes: 6a41b6c5fc20 ("gpio: Add xgs-iproc driver")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+>
+> What's the current best practice w.r.t.__init and __exit? I seem to
+> have messed this up on multiple fronts.
+
+These are used for anything that is a module_init() function or a
+module_exit() function, or called from one, but generally not
+for any callbacks.
+
+In particular the probe() and remove() callbacks of a device driver
+can get called at runtime when the device is hotplugged through
+sysfs.
+
+       Arnd
