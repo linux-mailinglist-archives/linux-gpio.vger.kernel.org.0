@@ -2,36 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8B71195D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE79B11960B
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Dec 2019 22:25:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbfLJVKo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 16:10:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
+        id S1727958AbfLJVYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 16:24:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfLJVKm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:42 -0500
+        id S1727506AbfLJVKw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E5724697;
-        Tue, 10 Dec 2019 21:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22B3E246AF;
+        Tue, 10 Dec 2019 21:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012242;
-        bh=4XaO/l1dHSV0PsaVCEHumtoMjvvBIDX9YGBWihvkMLQ=;
+        s=default; t=1576012251;
+        bh=dC6fjqGh654ZZLwYjdy87ftZ5dG/h1Xx9eEY+r9Uk6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hZVwll5Ecgn3m77h2aXIV9Dtu6ayjOqpHZ/kumn7djXlZ0LP+ohKwlt+baVpGj1By
-         R7IrBGvHawLD18zx3U81e2BILHR/MzCASIIGWo2WtL32jnoHGp/d83FWCz1DKOoaYx
-         NYhFfmvMlF1vONB97HWryAEBz9917/t1kcFF6vO4=
+        b=1CmsVIdVGPBbLbliVtnUKOlLgY6ihmRnVqACPBbdMKv9P7yKDxieqet1UZ0tHniLU
+         SU+w8iLDYxIyWrv63iKU+VasR0zrBfD1ceyHSVCrTG1+MHYMvfV5nW+aJKNzVimm3I
+         yip71i/qS9alvx1+OrqDgxZgmKddLo8hwDLeYlrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>, linux-sh@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 190/350] pinctrl: sh-pfc: sh7734: Fix duplicate TCLK1_B
-Date:   Tue, 10 Dec 2019 16:04:55 -0500
-Message-Id: <20191210210735.9077-151-sashal@kernel.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 198/350] pinctrl: qcom: sc7180: Add missing tile info in SDC_QDSD_PINGROUP/UFS_RESET
+Date:   Tue, 10 Dec 2019 16:05:03 -0500
+Message-Id: <20191210210735.9077-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -44,62 +46,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-[ Upstream commit 884caadad128efad8e00c1cdc3177bc8912ee8ec ]
+[ Upstream commit 81898a44f288607cb3b11a42aed6efb646891c19 ]
 
-The definitions for bit field [19:18] of the Peripheral Function Select
-Register 3 were accidentally copied from bit field [20], leading to
-duplicates for the TCLK1_B function, and missing TCLK0, CAN_CLK_B, and
-ET0_ETXD4 functions.
+The SDC_QDSD_PINGROUP/UFS_RESET macros are missing the .tile info needed to
+calculate the right register offsets. Adding them here and also
+adjusting the offsets accordingly.
 
-Fix this by adding the missing GPIO_FN_CAN_CLK_B and GPIO_FN_ET0_ETXD4
-enum values, and correcting the functions.
+Fixes: f2ae04c45b1a ("pinctrl: qcom: Add SC7180 pinctrl driver")
 
-Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191024131308.16659-1-geert+renesas@glider.be
+Reported-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Link: https://lore.kernel.org/r/20191021141507.24066-1-rnayak@codeaurora.org
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/include/cpu-sh4/cpu/sh7734.h | 2 +-
- drivers/pinctrl/sh-pfc/pfc-sh7734.c  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-sc7180.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/sh/include/cpu-sh4/cpu/sh7734.h b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-index 96f0246ad2f2b..82b63208135ae 100644
---- a/arch/sh/include/cpu-sh4/cpu/sh7734.h
-+++ b/arch/sh/include/cpu-sh4/cpu/sh7734.h
-@@ -134,7 +134,7 @@ enum {
- 	GPIO_FN_EX_WAIT1, GPIO_FN_SD1_DAT0_A, GPIO_FN_DREQ2, GPIO_FN_CAN1_TX_C,
- 		GPIO_FN_ET0_LINK_C, GPIO_FN_ET0_ETXD5_A,
- 	GPIO_FN_EX_WAIT0, GPIO_FN_TCLK1_B,
--	GPIO_FN_RD_WR, GPIO_FN_TCLK0,
-+	GPIO_FN_RD_WR, GPIO_FN_TCLK0, GPIO_FN_CAN_CLK_B, GPIO_FN_ET0_ETXD4,
- 	GPIO_FN_EX_CS5, GPIO_FN_SD1_CMD_A, GPIO_FN_ATADIR, GPIO_FN_QSSL_B,
- 		GPIO_FN_ET0_ETXD3_A,
- 	GPIO_FN_EX_CS4, GPIO_FN_SD1_WP_A, GPIO_FN_ATAWR, GPIO_FN_QMI_QIO1_B,
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 5dfd991ffdaab..dbc36079c3811 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -1450,7 +1450,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
- 	GPIO_FN(ET0_ETXD2_A),
- 	GPIO_FN(EX_CS5), GPIO_FN(SD1_CMD_A), GPIO_FN(ATADIR), GPIO_FN(QSSL_B),
- 	GPIO_FN(ET0_ETXD3_A),
--	GPIO_FN(RD_WR), GPIO_FN(TCLK1_B),
-+	GPIO_FN(RD_WR), GPIO_FN(TCLK0), GPIO_FN(CAN_CLK_B), GPIO_FN(ET0_ETXD4),
- 	GPIO_FN(EX_WAIT0), GPIO_FN(TCLK1_B),
- 	GPIO_FN(EX_WAIT1), GPIO_FN(SD1_DAT0_A), GPIO_FN(DREQ2),
- 		GPIO_FN(CAN1_TX_C), GPIO_FN(ET0_LINK_C), GPIO_FN(ET0_ETXD5_A),
-@@ -1949,7 +1949,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	    /* IP3_20 [1] */
- 		FN_EX_WAIT0, FN_TCLK1_B,
- 	    /* IP3_19_18 [2] */
--		FN_RD_WR, FN_TCLK1_B, 0, 0,
-+		FN_RD_WR, FN_TCLK0, FN_CAN_CLK_B, FN_ET0_ETXD4,
- 	    /* IP3_17_15 [3] */
- 		FN_EX_CS5, FN_SD1_CMD_A, FN_ATADIR, FN_QSSL_B,
- 		FN_ET0_ETXD3_A, 0, 0, 0,
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+index 6399c8a2bc22c..d6cfad7417b1c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+@@ -77,6 +77,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = pull,			\
+ 		.drv_bit = drv,				\
+@@ -102,6 +103,7 @@ enum {
+ 		.intr_cfg_reg = 0,			\
+ 		.intr_status_reg = 0,			\
+ 		.intr_target_reg = 0,			\
++		.tile = SOUTH,				\
+ 		.mux_bit = -1,				\
+ 		.pull_bit = 3,				\
+ 		.drv_bit = 0,				\
+@@ -1087,14 +1089,14 @@ static const struct msm_pingroup sc7180_groups[] = {
+ 	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
+ 	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
+ 	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
+-	[119] = UFS_RESET(ufs_reset, 0x97f000),
+-	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x97a000, 15, 0),
+-	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x97a000, 13, 6),
+-	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x97a000, 11, 3),
+-	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x97a000, 9, 0),
+-	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x97b000, 14, 6),
+-	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x97b000, 11, 3),
+-	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x97b000, 9, 0),
++	[119] = UFS_RESET(ufs_reset, 0x7f000),
++	[120] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x7a000, 15, 0),
++	[121] = SDC_QDSD_PINGROUP(sdc1_clk, 0x7a000, 13, 6),
++	[122] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x7a000, 11, 3),
++	[123] = SDC_QDSD_PINGROUP(sdc1_data, 0x7a000, 9, 0),
++	[124] = SDC_QDSD_PINGROUP(sdc2_clk, 0x7b000, 14, 6),
++	[125] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x7b000, 11, 3),
++	[126] = SDC_QDSD_PINGROUP(sdc2_data, 0x7b000, 9, 0),
+ };
+ 
+ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
 -- 
 2.20.1
 
