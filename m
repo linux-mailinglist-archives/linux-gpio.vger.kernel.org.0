@@ -2,132 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7832011A718
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 10:29:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D334E11A720
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 10:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfLKJ3c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 04:29:32 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37950 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbfLKJ32 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 04:29:28 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x185so1520391pfc.5
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 01:29:28 -0800 (PST)
+        id S1728265AbfLKJap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 04:30:45 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36055 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727493AbfLKJao (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 04:30:44 -0500
+Received: by mail-qt1-f196.google.com with SMTP id k11so5697232qtm.3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 01:30:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pBUfK/Gfy8GSSSi2c/5xoyMI0JFkHyIWPlFy3Th0EN0=;
-        b=eERC+yexJ3T4TmQGp6qAsmLhHS4VN3w91Ek9g+Lf0ZPNc3sp2SkJekKRCg2JXraV5h
-         Ki31BrUeAz2X801pbBvV9SBfBjTdiZ/rKzKO+QdjZMmwtSW7pYY7c1FgU2wLdjHl3YSe
-         cyTFa8beFtDVEYz8gAYS0mz1eJWG3PNnMMzsDDt6yjVwcva7NpDxhuQRGS4bJJjk8ENP
-         bnxqt8I8eqPMBokaNAyfId7IiailZ6QdXGc+x/qFyiNBSH0eDG1KiRD+HAIR5oXZZpl2
-         BD92EXx6KxHhm2c01hw+X08fiRaxnCHzZTlu1w33g46y5ehG0NFpAv04n1chMCNzx1Gy
-         +QGg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2BC+9/TiZfps/b95kJW4uBoQA4KaDxSNdYTJBUn4gCs=;
+        b=NPdllIBA+bj+UStDT7bl1Rv1PclFC4OqrdpoNdXo7cz0Mj3FkjxI7pucjAVFANaogi
+         NffE55LMj+mJ4LTVFm3bo448ejF9005PtfGOKoL+yTsoq5GKf6d0nGG27QNWKnRCeR0N
+         p9x0u0eR+7IbL+Q6djt0iTdnKLCIC3O6fdu2+FXFF20Ghki/CCvNgGlK2G6q7JTApE73
+         it0Wf6/UpiTErJcyhUgIPY4BHonA5IkzXb9j2/d0yRW8o99nrsbIYRxYpNzgVy0E6A/3
+         vTglo5Mm4bq6+Ay6AKQU8yPUea8RGK3cdIxqXAqKlbCktXdNOBxZxzbzJB8yfqSQnjrL
+         j5qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pBUfK/Gfy8GSSSi2c/5xoyMI0JFkHyIWPlFy3Th0EN0=;
-        b=Dtc1liso6Fm64Wzeu+fCFyly66zSZSkBUrzYs/ctltBvsp8w+ikxXKxb2wVaPsXQsG
-         QRDAGXZURTegUaT7VJ1Czha13MPO3SwZMO8Q2fLHyMlecwnq4xDnobwJESH8KWoJkvFm
-         pnM3pworZlBNK0B81m+P4QpmB/p51E9mhQbJseD985kGxJSw90zQWKX2aRRZDCmu16oL
-         +BGW9di9pubQaUIHDKx38wsIMvohOLB8uBBD/YbgVeSFoGb1+UT0U7RGKNHcY4ZYY/Ov
-         Mi4Y1xTjUK7waRlRJGKeAFFedf9JjN4odLJZX/4Q0N3SbIVOSUh6dyL0wboaKCQ2k8Ox
-         ipdA==
-X-Gm-Message-State: APjAAAWF1h23EQ+px71aYXCG1mv87pc3VAuaKt0b8WGsaA6ekB3GIyOh
-        M8L3SmLrYL0/MUKybQElzuc=
-X-Google-Smtp-Source: APXvYqxME4CgApxD9MtdaEpSMJGCCF1ix10OXWonF5ARyP82sNgi+NCb+D2cP+8OMEmpjGsL6PDIkQ==
-X-Received: by 2002:a62:6001:: with SMTP id u1mr2725270pfb.158.1576056567626;
-        Wed, 11 Dec 2019 01:29:27 -0800 (PST)
-Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
-        by smtp.gmail.com with ESMTPSA id c8sm2135135pfj.106.2019.12.11.01.29.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 01:29:26 -0800 (PST)
-Date:   Wed, 11 Dec 2019 17:29:21 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in compatible
- mode
-Message-ID: <20191211092921.GA21730@sol>
-References: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mc88eiLtu7_0y51nGDzM0nRmwaOurLx9isf=qRB0uj7KA@mail.gmail.com>
- <20191210143902.GA3509@sol>
- <20191210165548.GY32742@smile.fi.intel.com>
- <CAMpxmJVMW=3k2odB9UKEzeopZ0q7T48Cux6ux=1j72Hv5A4yOQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2BC+9/TiZfps/b95kJW4uBoQA4KaDxSNdYTJBUn4gCs=;
+        b=onAb5C0Il4DYnjO7BZVsHwDBU192/4+AntwfIVb/sQRoUzClNgfBnESgSQfcmmCwQP
+         OCM+1tyRrm2SVc8QxJmNMfuB37uno1GU6LbwPbVbpq5qVNbhXu4Qzs7CnwYrVG2KUzYS
+         WEnrCMSejN4ColyJ9zipb1k/JWb6IJVB2Uk6slAzVM7dGMQ39J4zUmzMSncL+rm78nFf
+         R1TzfsvVFp7OA3S/9otthrIWd47wQB8KpnEoIJy7SsE5d2XpVjWCdEI9LyGsp5qcZTVD
+         uWdcd7aV+kRb+J0/+ygxj4grsRVmnSAVB/whAMRXXS2dQJqPkaE5s50hs6Ls0WVbpf2L
+         FjBg==
+X-Gm-Message-State: APjAAAV9RiWU5L1lkdRFB7V5KiU3R+uE1rS3OVuJx248e2PO+Gxeer5/
+        NLip1uzhprhs5/XSRzdE2TNYtTHSsL30jDCNoejaWw==
+X-Google-Smtp-Source: APXvYqxaTP18w6zc4VO5j7KsdsiDxibQ8t/74TgQNa6gYF+g7p5dJRc/VEErwcCQJiSS7ym4scFbWgWHFE2Li4AvAc4=
+X-Received: by 2002:ac8:6691:: with SMTP id d17mr1791217qtp.57.1576056643909;
+ Wed, 11 Dec 2019 01:30:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVMW=3k2odB9UKEzeopZ0q7T48Cux6ux=1j72Hv5A4yOQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+ <1575451330-11112-2-git-send-email-peng.fan@nxp.com> <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+In-Reply-To: <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Dec 2019 10:30:33 +0100
+Message-ID: <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:18:39AM +0100, Bartosz Golaszewski wrote:
-> wt., 10 gru 2019 o 17:55 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisał(a):
+=C5=9Br., 4 gru 2019 o 11:09 Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
+>
+> On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
 > >
-> > > For Go the structs are aligned based on the size of their components so
-> > > that arrays of struct are naturally aligned.  The struct is given a
-> > > hidden trailing pad so that a subsequent struct will be correctly aligned.
-> > > The sizeof the struct includes this hidden pad.
-> > > I'm pretty sure the same is true for gcc.
-> > >
-> > > The gpioevent_data contains a __u64 which causes the whole struct to be
-> > > 64 bit aligned on 64 bit, so it actually looks like this internally:
-> > >
-> > > struct gpioevent_data {
-> > >       __u64 timestamp;
-> > >       __u32 id;
-> > >     __u32 pad; // hidden
-> > > };
-> > >
-> > > so 16 bytes.
-> > >
-> > > On 32 bit the struct is 32 bit aligned and the trailing pad is missing,
-> > > so 12 bytes. This causes grief for the read due to the size mismatch.
+> > platform_irq_count() is the more generic way (independent of
+> > device trees) to determine the count of available interrupts. So
+> > use this instead.
 > >
-> > Exactly.
+> > As platform_irq_count() might return an error code (which
+> > of_irq_count doesn't) some additional handling is necessary.
 > >
-> > > (I'm sorry to say I had to add the pad to my Go gpiod library to get it
-> > > to read event data - but forgot to go back later and work out why -
-> > > until now :-()
-> > >
-> > > Your new info change struct has the same problem, as it also contains a
-> > > __u64 and ends up with an odd number of __u32s, so gets a trailing pad
-> > > on 64 bit.  Using __packed seems to inhibit the trailing pad.
-> > > Or you could explicitly add the pad so the struct will be 64bit aligned
-> > > even on 32bit.
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
 > >
-> > I spoke to colleague of mine and has been told that best option is to fill all
-> > gaps explicitly to have all members in the struct + 8 bytes alignment at the
-> > end (also with explicit member).
-> >
-> > > Neither of those options are available for the
-> > > gpioevent_data, as that would break the ABI.
-> >
-> > ABI needs v2 actually.
-> >
-> 
-> I finally sat down to integrate this with my series and figured that
-> this can't go on top of it. It's a bug-fix actually and maybe even
-> stable material.
-> 
-> On the other hand - if we have so few users of GPIO chardev with
-> 32-bit user-space and 64-bit kernel - maybe we should just bite the
-> bullet, not fix this one, deprecate it and introduce a proper v2 of
-> the API?
-> 
+> > V3:
+> >  Use %pe
+>
+> Great. Note that with %pe there is a dependency on commit 57f5677e535b
+> ("printf: add support for printing symbolic error names") which was
+> applied during the current merge window.
+>
 
-Fixing it in API v2 makes the most sense to me.
+Why would %pe be better in this case? The function returned an int -
+why convert it to a pointer?
 
-Kent.
+Bart
+
+> > V2:
+> >  Update commit log, and add err handling
+> >  Not tested, just code inspection
+> >
+> >
+> >  drivers/gpio/gpio-bcm-kona.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.=
+c
+> > index 4122683eb1f9..baee8c3f06ad 100644
+> > --- a/drivers/gpio/gpio-bcm-kona.c
+> > +++ b/drivers/gpio/gpio-bcm-kona.c
+> > @@ -19,7 +19,6 @@
+> >  #include <linux/io.h>
+> >  #include <linux/gpio/driver.h>
+> >  #include <linux/of_device.h>
+> > -#include <linux/of_irq.h>
+> >  #include <linux/init.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/irqchip/chained_irq.h>
+> > @@ -586,11 +585,18 @@ static int bcm_kona_gpio_probe(struct platform_de=
+vice *pdev)
+> >
+> >       kona_gpio->gpio_chip =3D template_chip;
+> >       chip =3D &kona_gpio->gpio_chip;
+> > -     kona_gpio->num_bank =3D of_irq_count(dev->of_node);
+> > -     if (kona_gpio->num_bank =3D=3D 0) {
+> > +     ret =3D platform_irq_count(pdev);
+> > +     if (!ret) {
+> >               dev_err(dev, "Couldn't determine # GPIO banks\n");
+> >               return -ENOENT;
+> > +     } else if (ret < 0) {
+> > +             if (ret !=3D -EPROBE_DEFER)
+> > +                     dev_err(dev, "Couldn't determine GPIO banks: (%pe=
+)\n",
+> > +                             ERR_PTR(ret));
+>
+> I'd say drop either the colon or the parenthesis.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
