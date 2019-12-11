@@ -2,96 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FE5811B65C
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:00:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 280AF11B7BC
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:10:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbfLKQAV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 11:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbfLKPNq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F299624688;
-        Wed, 11 Dec 2019 15:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077225;
-        bh=X4VIC8oeeIK8CMKIcEh7CuwIMwujoPvmyiVCWldE7Dc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIEDqJsdHiNlEY7pZIqE47K8pINGAgUFsVLCwYC82ZpjwWIqc6r1dVkyhVOWxwKL2
-         d1mjjq9E8GEKIiZ5kDMBwGWO8R0XUlEqZFLpnyjaoB3PzRXLAxbuAcH6DyVFmv5Yxf
-         0Vqm4Nb40iYmp9o/zWl/SYCvvpdu5fspay8coRp8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 104/134] gpio: mpc8xxx: Don't overwrite default irq_set_type callback
-Date:   Wed, 11 Dec 2019 10:11:20 -0500
-Message-Id: <20191211151150.19073-104-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        id S1731128AbfLKQJ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 11:09:26 -0500
+Received: from mail-qk1-f169.google.com ([209.85.222.169]:42785 "EHLO
+        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731051AbfLKPMH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 10:12:07 -0500
+Received: by mail-qk1-f169.google.com with SMTP id z14so9572924qkg.9
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 07:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WlPM/YHVMJ7UCNl2eZLZOOG7aVPUieazQLzoHK/wCZI=;
+        b=LsiNBM/FsroUH4smxOe1imJV4dPcZjb/uHGn+Wp31XCVd43g7vuF8y4w5pRvcYNC4r
+         jY/uuxrKwpkAat4JElPjEbk+rOvoOsicLYRuwsQ9ytI207UUE2yzykSwgdQGU9F8heK4
+         UwWYU7vhDeX1bKZEDkOZ7KisnriznV/JJvfP6gf/42u7Zjv0TCNY5UU1P2ZvrryxaxoK
+         +241GcARrddlBC0jKJbGmyXF5wzVmDIgK3IIACyX3jBr0SwcaN/64JYIP1v+vuPZRnbm
+         zdHjj4UzOu/qg7rNSgv9ode5CE+QnvUGEQ8+cqIFM7iBryLajgFrXNkMthY8yhYBdQGy
+         4r1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WlPM/YHVMJ7UCNl2eZLZOOG7aVPUieazQLzoHK/wCZI=;
+        b=oK0EUD/KIkV815hcHiPCLvURzIvDBGCSL3ZqlPrOu6wqP7V4xLPtWT1bV/6LUU4StI
+         P8qOif7Y2k9hA5onHKW3nQ6n9TGDIUIFBreVJ7D1fHL8wHQJg51QU9x2sBR0hvcHqax3
+         UT89mEuJPl7dsEvtRmuaT9QX4SMXMJjWNyp2kd90amIHXGy9nImOXjv1ZNmm75Qe2WyL
+         /Lu/sDyB5v+kPhpNiGf1d+0+A+z0PFRJsWh4B7Lx5for50qnA7mCPlwWhivjzyUWcdIk
+         v1WMZvDKU6IzGkfPhBQllFvFvLfGMr1NvfdKScdpRGzdpc3lu5clAc/Y1OktVzR8Bj7Q
+         dOng==
+X-Gm-Message-State: APjAAAWsU6m4ic9rIgrbiHNsdfA3+sLoycaDMPdLMR7ai0himnh6re74
+        mp/wh9tIVHVuoBrSbz0aB/occ+DyfERE7RGfSEmNbw==
+X-Google-Smtp-Source: APXvYqxl1xrD4MtXqbrkFEiz63zdtPszg9xDvbfcvPrJS6Orq2Hc5A0XCKwVf/iGCeYME1nlObxILIrr6uNtuDv8SYQ=
+X-Received: by 2002:a05:620a:136e:: with SMTP id d14mr3035585qkl.263.1576077126350;
+ Wed, 11 Dec 2019 07:12:06 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191203192305.31722-1-jsavitz@redhat.com>
+In-Reply-To: <20191203192305.31722-1-jsavitz@redhat.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Dec 2019 16:11:55 +0100
+Message-ID: <CAMpxmJXNXJKMqPiJrKXtJ0GXxVjvv61aSgDHeX_p2TWTphsUFQ@mail.gmail.com>
+Subject: Re: [libgpiod] bindings: python: fix segfault when calling Line.request()
+To:     Joel Savitz <jsavitz@redhat.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        fedora-rpi@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+wt., 3 gru 2019 o 20:24 Joel Savitz <jsavitz@redhat.com> napisa=C5=82(a):
+>
+> When Line.request() is called without the required 'consumer=3Dvalue'
+> argument, the module attempts access an empty dictionary object
+> resulting in a segfault. This patch avoids such access when the
+> dictionary is empty and maintains the current design where the
+> LineBulk object is responsible for validation of arguments.
+>
+> Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> ---
+>  bindings/python/gpiodmodule.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/bindings/python/gpiodmodule.c b/bindings/python/gpiodmodule.=
+c
+> index 2f6ef51..ae7e1cc 100644
+> --- a/bindings/python/gpiodmodule.c
+> +++ b/bindings/python/gpiodmodule.c
+> @@ -434,8 +434,12 @@ static PyObject *gpiod_Line_request(gpiod_LineObject=
+ *self,
+>         gpiod_LineBulkObject *bulk_obj;
+>         int rv;
+>
+> -       def_val =3D PyDict_GetItemString(kwds, "default_val");
+> -       def_vals =3D PyDict_GetItemString(kwds, "default_vals");
+> +       if (PyDict_Size(kwds) > 0) {
+> +               def_val =3D PyDict_GetItemString(kwds, "default_val");
+> +               def_vals =3D PyDict_GetItemString(kwds, "default_vals");
+> +       } else {
+> +               def_val =3D def_vals =3D NULL;
+> +       }
+>
+>         if (def_val && def_vals) {
+>                 PyErr_SetString(PyExc_TypeError,
+> --
+> 2.23.0
+>
 
-[ Upstream commit 4e50573f39229d5e9c985fa3b4923a8b29619ade ]
+Applied to master and 1.4.x stable.
 
-The per-SoC devtype structures can contain their own callbacks that
-overwrite mpc8xxx_gpio_devtype_default.
-
-The clear intention is that mpc8xxx_irq_set_type is used in case the SoC
-does not specify a more specific callback. But what happens is that if
-the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
-this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
-following SoCs are affected:
-
-- fsl,mpc8572-gpio
-- fsl,ls1028a-gpio
-- fsl,ls1088a-gpio
-
-On these boards, the irq_set_type does exactly nothing, and the GPIO
-controller keeps its GPICR register in the hardware-default state. On
-the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
-even if the IRQ client requests LEVEL_HIGH. Another implication is that
-the IRQs are not checked (e.g. level-triggered interrupts are not
-rejected, although they are not supported).
-
-Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between incarnations at a single place")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20191115125551.31061-1-olteanv@gmail.com
-Tested-by: Michael Walle <michael@walle.cc>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpio-mpc8xxx.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index b863421ae7309..a031cbcdf6ef9 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -377,7 +377,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	 * It's assumed that only a single type of gpio controller is available
- 	 * on the current machine, so overwriting global data is fine.
- 	 */
--	mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
-+	if (devtype->irq_set_type)
-+		mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
- 
- 	if (devtype->gpio_dir_out)
- 		gc->direction_output = devtype->gpio_dir_out;
--- 
-2.20.1
-
+Thanks,
+Bartosz
