@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 030E311B34D
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 16:41:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1690F11B187
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 16:31:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733179AbfLKPlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 10:41:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
+        id S1733230AbfLKPbM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 10:31:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387485AbfLKP1x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:53 -0500
+        id S1732518AbfLKP3V (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3CAB24658;
-        Wed, 11 Dec 2019 15:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B582465B;
+        Wed, 11 Dec 2019 15:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078072;
-        bh=OSuoJBffl0SPH/noodNnIxyPimiT8MXfS1RUd1KxZGI=;
+        s=default; t=1576078160;
+        bh=wpVZEkabTJ7pmhyTr+HxL/7uQO+PlD2xUkrU60uAKLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pUAjufWTK/DNMOXE0SyUr4hAyul5CBdyU2e5H9VWUze82+FTbOMorzquUOow7B3JY
-         36OE2FMNHgAruP489clMgCwvkykwkY+pZtobEa8Dr5uUubF7QmpbPVHXZXgSXERW78
-         bE9L1tgqHFMkz/AGYqlskHIrem7rzXbAxvzSiSX0=
+        b=BJVFh/cEVYoKieVh4VbMdIio/fXW5y2MMwAz5D2Rojo1pOMk7L7Yagl3ZGqKZBunk
+         BhLK8S1cAxk8PSKm8fRXi2UrNWuOx9D8ZdI7vQ5hWRK86qX2Qz9m/UnxLXScD2hccs
+         iMjP1FZwQ738DLrsmLwgcA3jz83nYMUi7PLvTbAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
         Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 63/79] gpio: mpc8xxx: Don't overwrite default irq_set_type callback
-Date:   Wed, 11 Dec 2019 10:26:27 -0500
-Message-Id: <20191211152643.23056-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 45/58] gpio: mpc8xxx: Don't overwrite default irq_set_type callback
+Date:   Wed, 11 Dec 2019 10:28:18 -0500
+Message-Id: <20191211152831.23507-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index c8673a5d94122..3f10f9599f2cb 100644
+index 8c93dec498fa4..e7783b852d697 100644
 --- a/drivers/gpio/gpio-mpc8xxx.c
 +++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -348,7 +348,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+@@ -337,7 +337,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
  	 * It's assumed that only a single type of gpio controller is available
  	 * on the current machine, so overwriting global data is fine.
  	 */
