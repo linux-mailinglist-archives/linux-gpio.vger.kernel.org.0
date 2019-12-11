@@ -2,83 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 564EE11A01B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 01:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9691D11A02B
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 01:46:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfLKAkH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 19:40:07 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33300 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727096AbfLKAkH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 19:40:07 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 21so22012362ljr.0
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2019 16:40:06 -0800 (PST)
+        id S1726417AbfLKAqo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 19:46:44 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42652 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLKAqn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 19:46:43 -0500
+Received: by mail-pl1-f195.google.com with SMTP id x13so663310plr.9;
+        Tue, 10 Dec 2019 16:46:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+6mwPhn94U0FJCp8N/iLCGyoYPPPkFesQi/ZLGlNabg=;
-        b=DzWEDMV6zFCN5CPxuB98wPU/lUNXV9fCtKG8vCaJDjqrBnuzhjUaeFZ1+la3wXQNbZ
-         8/1piJtHwCYSk/iJH2vOcrQprWHzccO/cVI8fc6j9HT3nMHYJPMp50W2ZbayjxlZafpm
-         OEJRafmYkmHflbQUtOlcyMahRvYz91/Hf3goXN6Zz+WIFvhQesbfOgF9knBF8WlES3+4
-         fSxUmiSMjXRfs+mEUZbI+ocT2kGtWBHBQ/Q7pfc/glkE9HXO7uVV1HvthjvSH71AzryA
-         0t0LBbJSLwDUNu6noDycU/vAunTwuYiBsh7EDK/8nri5y9zn1jgRN8DduJjuRD3zSQA6
-         fmiQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N1elZBuJY4GBuX3uFolJrHbi8MGBzm5QM+2Z4mH8mi4=;
+        b=astYXXI7KsL9ZVMyven/lyBSCD+/nkxR0Wp1M28nr0/q9Q1rsAWVyZSl7NoVK9semO
+         L82R2jAK9wxxEz4ovoTvYcF07SL/oCYWyVB+xKpOGAIkeLaWFEDtc3a1xr5dIvF8WCsc
+         Z+F5cexr46s+Y0iHX4cd6CFEwjUv4QjLsy/MS5et2p3y5tzTZeaK84ZtdycGQYtjiQx7
+         PRBvKfAZA7V6myac+8CopbpjxyQSY10TyNcR+75/ZH18u/EiRXPoiOcjmsxUpcVkZ0VC
+         rpygh6fUHeXcP1OTO9gN7M2M7YusMcbZ1ZLc7D2YtVNZE8E4Qvv+xlFTxI9qQHAaw2G2
+         Jl3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+6mwPhn94U0FJCp8N/iLCGyoYPPPkFesQi/ZLGlNabg=;
-        b=CEgIslyMAe5rf1EZawMn2nJkuwG9tzfGOpHauR/GdTPgqAgQESzhRzhQT4PNgT1d1p
-         t7nIn48iFQoJhPYZC6UVWjQxAvHpXTeHLqG7o06XNSI8piP2b6cLIbyjkvg6KdGnOl3A
-         2gcVTzxboz04Q3LAGekS9A6F4MQE1bR8YIvr2PvcmNwuoz/zCU1Zha42rSRZgscqh67H
-         VGFTs3qLaPnQDic7zMUgPIm6jBHql6bGXuLG5s9ZxbLUtzdoxdT+5TGQd0TH+lVPhEsD
-         GUp9dKgFUBSZpOkQl96859Aj6ngWbIqB/Jxnr3SLt58fF03kslVV0DzWRB6R6t1J5joh
-         H58Q==
-X-Gm-Message-State: APjAAAV2t8uMZgeEp+q3Pa3cSG5nnPGyoqOi4/EBd4uYy0HCqxhkWRjt
-        dAOKD3+kHFdH0OFv7IEc9AH0/aDTIAn+bKnlqzLYCg==
-X-Google-Smtp-Source: APXvYqz+5hSx8AyIO68PLEgCzJXxNiyGKQgrsukDLUqC8J76DV8xgyxi+ERIJqysr1OXhO0gL6QnXeuXk3A1jZ6O+EM=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr93491ljm.218.1576024805657;
- Tue, 10 Dec 2019 16:40:05 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N1elZBuJY4GBuX3uFolJrHbi8MGBzm5QM+2Z4mH8mi4=;
+        b=EZVeZA2qlVQmJGMuVgQd8cazX1XpmTNql5wtynvbySil2Mc5Ph+r4a+WgrSLu7wMRr
+         BJn59opEq6tc5tQN1PvoKOmHhCaVVeMLhyBpnZT2WT2JrZqc9BvHRbaYWbTJum7VxW9X
+         SClRtvcrpNTBG29q4cC6TxvisFfoC+PDNomnWM0ecmZq5K17TPY1HkOrJAK2EPTSEorC
+         Fn8EagjNIizmmVwNCr3wG7JDI6XYH5XFa0J6LFvVrvdMrcGlB8JR1gP98eDreYMTt9qv
+         OmmdoM5PQatstuFMYCzerId15rwIwQPdI4Ymw0x3KCtEkhEiMFYHfXqjvuoxyVqTOx/x
+         HHGw==
+X-Gm-Message-State: APjAAAV5xHoyn63I9YchKPk6Rx0AR9dw8UwqHKd7HIjKe1o46Vsulwqx
+        gViDlmsQpiWM+bB7IqxDj9dJSH+uveE=
+X-Google-Smtp-Source: APXvYqyARvj0CN1MobUTixxAcUMZJF1WTGiash12tvmzPnRJFwqM9PZfuau42OOlxtBoIAQeVfPbyw==
+X-Received: by 2002:a17:902:bf06:: with SMTP id bi6mr278190plb.229.1576025202782;
+        Tue, 10 Dec 2019 16:46:42 -0800 (PST)
+Received: from sol.lan (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id t8sm230431pfq.92.2019.12.10.16.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 16:46:42 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        bamv2005@gmail.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v2] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Date:   Wed, 11 Dec 2019 08:46:31 +0800
+Message-Id: <20191211004631.8756-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <cover.1575925023.git.mirq-linux@rere.qmqm.pl> <56d2568cd45a13c738e2804d04348566a8ee8d03.1575925023.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <56d2568cd45a13c738e2804d04348566a8ee8d03.1575925023.git.mirq-linux@rere.qmqm.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Dec 2019 01:39:54 +0100
-Message-ID: <CACRpkdZ0mk2dWBnWh+mRmBy2t-ALONtvv23Hr-2o8LD8CPYtgg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio: add gpiod_toggle_active_low()
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 10:09 PM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
-qmqm.pl> wrote:
+Restore the external behavior of gpio-mockup to what it was prior to the
+change to using GPIO_LINE_DIRECTION.
 
-> Add possibility to toggle active-low flag of a gpio descriptor. This is
-> useful for compatibility code, where defaults are inverted vs DT gpio
-> flags or the active-low flag is taken from elsewhere.
->
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+Fixes: e42615ec233b ("gpio: Use new GPIO_LINE_DIRECTION")
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Changes v1 -> v2:
+ - add Fixes tag.
+ 
+Fix a regression introduced in v5.5-rc1.
 
-Proliferating APIs isn't good but I think this is the lesser evil
-given the mess there is in the MMC subsystem for this stuff.
+The change to GPIO_LINE_DIRECTION reversed the polarity of the
+dir field within gpio-mockup.c, but overlooked inverting the value on
+initialization and when returned by gpio_mockup_get_direction.
+The latter is a bug.
+The former is a problem for tests which assume initial conditions,
+specifically the mockup used to initialize chips with all lines as inputs.
+That superficially appeared to be the case after the previous patch due
+to the bug in gpio_mockup_get_direction.
 
-Maybe I can make a second attempt to move all polarity
-toggling back to gpiolib-of.c and remove the API after this
-has landed, hehe ;)
+ drivers/gpio/gpio-mockup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 56d647a30e3e..c4fdc192ea4e 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 	int direction;
+ 
+ 	mutex_lock(&chip->lock);
+-	direction = !chip->lines[offset].dir;
++	direction = chip->lines[offset].dir;
+ 	mutex_unlock(&chip->lock);
+ 
+ 	return direction;
+@@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	struct gpio_chip *gc;
+ 	struct device *dev;
+ 	const char *name;
+-	int rv, base;
++	int rv, base, i;
+ 	u16 ngpio;
+ 
+ 	dev = &pdev->dev;
+@@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+ 	if (!chip->lines)
+ 		return -ENOMEM;
+ 
++	for (i = 0; i < gc->ngpio; i++)
++		chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
++
+ 	if (device_property_read_bool(dev, "named-gpio-lines")) {
+ 		rv = gpio_mockup_name_lines(dev, chip);
+ 		if (rv)
+-- 
+2.24.0
+
