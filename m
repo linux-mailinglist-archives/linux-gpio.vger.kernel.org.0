@@ -2,101 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A47811ABCB
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 14:15:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3374711ABE3
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 14:19:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbfLKNPa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 08:15:30 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39504 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbfLKNP3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 08:15:29 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c16so11157159qko.6
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 05:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+PB7EX7lDwiMw8Kbb0mQdnM19n3srgqYc0puD6EH7Ng=;
-        b=dnZsQXljRvH8bQR/1WpIxRW/yP93fCFc+YQT+bh52rtRzKAKwXAAUmH8zlV97jXIJi
-         2f7tYLxiMUjcCysS1NTnrdpE/IltabmXh7yBm/HfQs1X7J0w3WHD3wQKU+dLSnrTOzK/
-         RNReMiDyp1zZA6Ml1HscM3Y3gC/0kbOg1dXTyqXU3AQqwJ9cSG7qxvucFQ8Ve1rG7m3Z
-         tCv8yBy4x7kR5W/bLqF2dygNT62dv+AjQB6SxuH1y2GNeetZNA2M4DG/o6pnCyovKWfW
-         ODhMGiEkzHZALz+feeLKgWpXffTiFH6N3VfGyR3TWQvimALoOK3+qjbBqq4/jIsqN45/
-         5q6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+PB7EX7lDwiMw8Kbb0mQdnM19n3srgqYc0puD6EH7Ng=;
-        b=MzdI1ZaTyEm+uGnpOlouB74Q8ltBbD0zm7QY1QDtSZGvKf5P5pcmY23nXqKzUvhUIe
-         HKcCesouZqR04qFUPW389UvVEwhIhaBntpyT5v5uk/uuPZs7K9qQJosAfulCDPC5ecqe
-         MkUH0C5rA+R3tSDNQL4Ud+M8LKxw9+xBqHqrSuKVEfIfwzlcdkBV20Qz9xgJKSbqaWJE
-         Nvo3V+rLKfS+MbLEgpZifbkGAGGTZJvFHURQpaf3I7N04mZLhCB8pWi0OGduwWTS1RVA
-         BisvQRDuLjRfOrOf9CjdAw4hMRQRaL/NFd9PoQ1CewnmPuvYcBwk7y1XPUqxCgQ6KiiQ
-         y+Bg==
-X-Gm-Message-State: APjAAAXGJI6IxJ4vqSooKXo4udgFEsyXxKeusQt3ST4Q98FBvxllrJci
-        Ee7ELXl/CB2Oun8kYMDd1qDW1YMGyh3z/S+CQaqq7A==
-X-Google-Smtp-Source: APXvYqwEH+gE7sudKrThUzXAm0Gs8Xg82LRYRxieL5GQ5/NQ4KdSYSKi/Zz/Cs6nb9Sh3iPShczr4GwI0rWFjYVHbks=
-X-Received: by 2002:a37:744:: with SMTP id 65mr2756449qkh.323.1576070128866;
- Wed, 11 Dec 2019 05:15:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20191204194229.64251-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mc88eiLtu7_0y51nGDzM0nRmwaOurLx9isf=qRB0uj7KA@mail.gmail.com>
- <20191210143902.GA3509@sol> <20191210165548.GY32742@smile.fi.intel.com>
- <CAMpxmJVMW=3k2odB9UKEzeopZ0q7T48Cux6ux=1j72Hv5A4yOQ@mail.gmail.com>
- <20191211092921.GA21730@sol> <20191211104723.GO32742@smile.fi.intel.com>
-In-Reply-To: <20191211104723.GO32742@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Dec 2019 14:15:17 +0100
-Message-ID: <CAMpxmJXAG=FW2x7zS77ZGH-9Og+0eeWfv-qA=UWq+KZ4UoWwqg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Fix line event handling in compatible mode
+        id S1729438AbfLKNTq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 08:19:46 -0500
+Received: from mga06.intel.com ([134.134.136.31]:51574 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729428AbfLKNTq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:19:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 05:19:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="220456848"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 11 Dec 2019 05:19:43 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 11 Dec 2019 15:19:42 +0200
+Date:   Wed, 11 Dec 2019 15:19:42 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] pinctrl: intel: Move Lynxpoint to pin control
+ umbrella
+Message-ID: <20191211131942.GR2110480@lahna.fi.intel.com>
+References: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 11 gru 2019 o 11:47 Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> On Wed, Dec 11, 2019 at 05:29:21PM +0800, Kent Gibson wrote:
-> > On Wed, Dec 11, 2019 at 10:18:39AM +0100, Bartosz Golaszewski wrote:
-> > > wt., 10 gru 2019 o 17:55 Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> > > > > Neither of those options are available for the
-> > > > > gpioevent_data, as that would break the ABI.
-> > > >
-> > > > ABI needs v2 actually.
-> > > >
-> > >
-> > > I finally sat down to integrate this with my series and figured that
-> > > this can't go on top of it. It's a bug-fix actually and maybe even
-> > > stable material.
-> > >
-> > > On the other hand - if we have so few users of GPIO chardev with
-> > > 32-bit user-space and 64-bit kernel - maybe we should just bite the
-> > > bullet, not fix this one, deprecate it and introduce a proper v2 of
-> > > the API?
-> > >
-> >
-> > Fixing it in API v2 makes the most sense to me.
->
-> I agree. Please, use only second patch in my series (if needed I can rese=
-nd
-> it separately) and drop this one.
->
-> P.S. Actually it's not a bugfix since it's never worked from the day 1.
->
+On Mon, Dec 09, 2019 at 03:09:02PM +0200, Andy Shevchenko wrote:
+> Andy Shevchenko (24):
+>   pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+>   pinctrl: lynxpoint: Use raw_spinlock for locking
+>   pinctrl: lynxpoint: Correct amount of pins
+>   pinctrl: lynxpoint: Drop useless assignment
+>   pinctrl: lynxpoint: Use %pR to print IO resource
+>   pinctrl: lynxpoint: Use standard pattern for memory allocation
+>   pinctrl: lynxpoint: Assume 2 bits for mode selector
+>   pinctrl: lynxpoint: Relax GPIO request rules
+>   pinctrl: lynxpoint: Keep pointer to struct device instead of its
+>     container
+>   pinctrl: lynxpoint: Switch to memory mapped IO accessors
+>   pinctrl: lynxpoint: Convert unsigned to unsigned int
+>   pinctrl: lynxpoint: Extract lp_gpio_acpi_use() for future use
+>   pinctrl: lynxpoint: Move ->remove closer to ->probe()
+>   pinctrl: lynxpoint: Move lp_irq_type() closer to IRQ related routines
+>   pinctrl: lynxpoint: Move ownership check to IRQ chip
+>   pinctrl: lynxpoint: Implement ->irq_ack() callback
+>   pinctrl: lynxpoint: Implement intel_gpio_get_direction callback
+>   pinctrl: lynxpoint: Add pin control data structures
+>   pinctrl: lynxpoint: Reuse struct intel_pinctrl in the driver
+>   pinctrl: lynxpoint: Add pin control operations
+>   pinctrl: lynxpoint: Implement ->pin_dbg_show()
+>   pinctrl: lynxpoint: Add GPIO <-> pin mapping ranges via callback
+>   pinctrl: lynxpoint: Switch to pin control API
+>   pinctrl: lynxpoint: Update summary in the driver
 
-Yeah I guess so. Anyway, in this case, I won't be adding the event
-watch feature to v1 - I'll go ahead and just add it to v2 then.
+Looks great to me! For the whole series,
 
-Bart
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
