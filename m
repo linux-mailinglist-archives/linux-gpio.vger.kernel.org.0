@@ -2,74 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB40511AD7B
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 15:32:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25BEB11AD7E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 15:32:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfLKOcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 09:32:12 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39087 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729791AbfLKOcL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 09:32:11 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so5546804lfb.6;
-        Wed, 11 Dec 2019 06:32:10 -0800 (PST)
+        id S1729879AbfLKOci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 09:32:38 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36744 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729791AbfLKOci (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 09:32:38 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n12so16880425lfe.3;
+        Wed, 11 Dec 2019 06:32:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=I/qN2tanqUKZDvFX3/9aZXGYpQisaWWATCmdCTHOfCc=;
-        b=oJuoLuHBHavjgxV4Hx1cgqWgJm4QE1N/K9Orkb1D1+vAzEv8nU9pqTV7hrvK4ljF0a
-         x490B8FYuXVTcPvCpbEafoxe55Gd5Xz0oggGfU3nkbZOQXz4kHn7NraAgF4U+/ce1wU6
-         b18BpiJMTocO5SUv4Ru4PmxmIaYk8LWRAXhuYNOSc93GLhNtWycujnc7z7EtXK6n4diw
-         hx67j1teSEIcreOk4S2U4E/rUB9dHQGKznboYxSVTn0GhsDFqX/gGruy15z4bmWJqRHn
-         /LyNZLr1WClDgiEfWZpJmFX5BBdHQQlN/SsrEW5j+e1QZf9xE7qRRsXNmuUH+DjTMYqv
-         Erow==
-X-Gm-Message-State: APjAAAWm9D40sixEOjBEjgTxBkYgrUzCBcEtXKxZaZ5Z3NZFsxeK/Wy6
-        L+In97GlqKAsoGvfXWbb7oU=
-X-Google-Smtp-Source: APXvYqxcbhVK9kxySlyOcrIdHH+ijf3BhMhBtW/zkiYEMH/YQ3hcXL+bKnv5UxBcUsFeJEGMoOLb/A==
-X-Received: by 2002:a19:f716:: with SMTP id z22mr2494614lfe.14.1576074729594;
-        Wed, 11 Dec 2019 06:32:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+LrjmXEDHAWD8D/nfsHsPfYpxxDVLV4SbgFUsF+OLNI=;
+        b=B6AZYASLgmOqsETp85PWYQT/uXHDJ/DeF0ZEviUfZar35KhdFMu5ksr2DDESAW4WMZ
+         3hplK7PAPqNFCs+/WybVSa4BBf59j23Qg6Od7W6gcWmfDAsJFsd6lmB4Ez3Ihatn01PK
+         0Dsar4x35HDIEec2VsBCCpCJyU0iO1suF0dmxnJ8pJUBaD7DoqL15+6+jE6Pdfp2+nfx
+         iZZbjzi8NUA4cdz0GgV4BMTEZTVSRuK8eWZkm7VynX9IA2WjlG3mVHiAlE15oxSYhH+j
+         q/teh2anXJ9bVN70EsbEyF0+vq2RO4me5ArdTW0Xji5nzL9ULus8G+IENJIn/8btkCD+
+         9udw==
+X-Gm-Message-State: APjAAAUx1rkIwfYZM1JDB0xoNqfIG6shbb9J3hvFPNkyGqyZ9Ae0gig5
+        CEPWAM/EIL2tdKk0NPYRvLg=
+X-Google-Smtp-Source: APXvYqy5kCCWhoHVOcEeKgXhF2Tk8x/uttuI9860O6BB82DMhQIMic6BIeM3gASU97uiuy0efWDNXQ==
+X-Received: by 2002:a19:dc1e:: with SMTP id t30mr2471646lfg.34.1576074756348;
+        Wed, 11 Dec 2019 06:32:36 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id k23sm1318457ljj.85.2019.12.11.06.32.08
+        by smtp.gmail.com with ESMTPSA id y11sm1474057lfc.27.2019.12.11.06.32.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 06:32:09 -0800 (PST)
-Date:   Wed, 11 Dec 2019 16:31:58 +0200
+        Wed, 11 Dec 2019 06:32:35 -0800 (PST)
+Date:   Wed, 11 Dec 2019 16:32:24 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Use new GPIO direction defines for intel pinctrl
-Message-ID: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH 1/3] pinctrl: pinctrl-intel: Use GPIO direction definitions
+Message-ID: <b14ba01f6fcbaffbbfbfe1f257fd25691671c652.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We added definitions for GPIO line directions here:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=9208b1e77d6e8e9776f34f46ef4079ecac9c3c25
+Use new GPIO_LINE_DIRECTION_IN and GPIO_LINE_DIRECTION_OUT when
+returning GPIO direction to GPIO framework.
 
-Let's use them on Intel pincontrollers too.
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
+ drivers/pinctrl/intel/pinctrl-intel.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Matti Vaittinen (3):
-  pinctrl: pinctrl-intel: Use GPIO direction definitions
-  pinctrl: pinctrl-cherryview: Use GPIO direction definitions
-  pinctrl: pinctrl-baytrail: Use GPIO direction definitions
-
- drivers/pinctrl/intel/pinctrl-baytrail.c   | 4 ++--
- drivers/pinctrl/intel/pinctrl-cherryview.c | 3 ++-
- drivers/pinctrl/intel/pinctrl-intel.c      | 3 ++-
- 3 files changed, 6 insertions(+), 4 deletions(-)
-
-
-base-commit: e42617b825f8 ("Linux 5.5-rc1")
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 4860bc9a4e48..821da94cfa6c 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -944,7 +944,8 @@ static int intel_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 	if (padcfg0 & PADCFG0_PMODE_MASK)
+ 		return -EINVAL;
+ 
+-	return !!(padcfg0 & PADCFG0_GPIOTXDIS);
++	return padcfg0 & PADCFG0_GPIOTXDIS ? GPIO_LINE_DIRECTION_IN :
++					     GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int intel_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
 -- 
 2.21.0
 
