@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F68E11B7B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C32DE11B666
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbfLKPL6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 10:11:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        id S1731587AbfLKQAn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 11:00:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbfLKPL6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:58 -0500
+        id S1731486AbfLKPNl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86AB2173E;
-        Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3E6124688;
+        Wed, 11 Dec 2019 15:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077117;
-        bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
+        s=default; t=1576077221;
+        bh=mnM0pqkvhIGDKUdKdcPkorlp2nZEimXF2wDbAzyLPhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JcAB0e/CbI8YBwYoehpJzcMMFVSJPlxthIpWlIb3ITPx+a2Tq5j2G4L/Vb03IY/BK
-         uOeT37i8wuZBPoLb2EPNMu5evyRJ1QuYPSv/ts5OuXA5fVOivSCB/funX9BkxPu/Vq
-         XCWSglvn6f+fJtDDx57aIGAQp1a4N4eM+StGtKt0=
+        b=yyShlHHzVkfGX0tMiugZz43TtejvqUHUsUngIHrma/KGEHz/m26zqixuvevZlWuxU
+         Sv8dQGVC5buZGyTd9Zfc1RNnxqMd+ZS++/n+1oufapGBBLrTMn6kjZFxSS4BMQEhM/
+         2NkDkIbfb25Qezz6d9ni+lSIlpyPj/5frLo231kM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 006/134] gpio: mxc: Only get the second IRQ when there is more than one IRQ
-Date:   Wed, 11 Dec 2019 10:09:42 -0500
-Message-Id: <20191211151150.19073-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 101/134] gpio/mpc8xxx: fix qoriq GPIO reading
+Date:   Wed, 11 Dec 2019 10:11:17 -0500
+Message-Id: <20191211151150.19073-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -43,61 +43,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit c8f3d144004dd3f471ffd414690d15a005e4acd6 ]
+[ Upstream commit 787b64a43f7acacf8099329ea08872e663f1e74f ]
 
-On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
-GPIO bank, so it is better to check the IRQ count before getting
-second IRQ to avoid below error message during probe:
+Qoriq requires the IBE register to be set to enable GPIO inputs to be
+read.  Set it.
 
-[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
-[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
-[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
-[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
-[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
-[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
-[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
-[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: https://lore.kernel.org/r/E1iX3HC-00069N-0T@rmk-PC.armlinux.org.uk
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mxc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 7907a87558662..c77d474185f31 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mxc_gpio_port *port;
-+	int irq_count;
- 	int irq_base;
- 	int err;
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de29c94c..b863421ae7309 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -386,6 +386,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
  
-@@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
+ 	gc->to_irq = mpc8xxx_gpio_to_irq;
  
--	port->irq_high = platform_get_irq(pdev, 1);
--	if (port->irq_high < 0)
--		port->irq_high = 0;
-+	irq_count = platform_irq_count(pdev);
-+	if (irq_count < 0)
-+		return irq_count;
++	if (of_device_is_compatible(np, "fsl,qoriq-gpio"))
++		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
 +
-+	if (irq_count > 1) {
-+		port->irq_high = platform_get_irq(pdev, 1);
-+		if (port->irq_high < 0)
-+			port->irq_high = 0;
-+	}
- 
- 	port->irq = platform_get_irq(pdev, 0);
- 	if (port->irq < 0)
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+ 		pr_err("%pOF: GPIO chip registration failed with status %d\n",
 -- 
 2.20.1
 
