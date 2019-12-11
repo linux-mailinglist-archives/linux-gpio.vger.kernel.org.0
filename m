@@ -2,75 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8503111B8E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:35:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E06411B971
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 18:00:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbfLKQf0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 11:35:26 -0500
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:60818 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730107AbfLKQf0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 11:35:26 -0500
-X-Greylist: delayed 1686 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Dec 2019 11:35:26 EST
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id xBBG2sOW011995;
-        Wed, 11 Dec 2019 11:07:11 -0500
-Received: from pbmxdp02.intersil.corp (pbmxdp02.pb.intersil.com [132.158.200.223])
-        by pbmsgap02.intersil.com with ESMTP id 2wr74gk1j6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 11 Dec 2019 11:07:11 -0500
-Received: from pbmxdp01.intersil.corp (132.158.200.222) by
- pbmxdp02.intersil.corp (132.158.200.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1531.3; Wed, 11 Dec 2019 11:07:10 -0500
-Received: from localhost.localdomain (132.158.202.109) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server id
- 15.1.1531.3 via Frontend Transport; Wed, 11 Dec 2019 11:07:09 -0500
-From:   Chris Brandt <chris.brandt@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        "Chris Brandt" <chris.brandt@renesas.com>
-Subject: [PATCH] pinctrl: rza1: reduce printed messages
-Date:   Wed, 11 Dec 2019 11:06:38 -0500
-Message-ID: <20191211160638.31853-1-chris.brandt@renesas.com>
-X-Mailer: git-send-email 2.23.0
+        id S1730751AbfLKRAU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 12:00:20 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41191 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730724AbfLKRAU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 12:00:20 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s18so2085968pfd.8
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 09:00:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc:user-agent:date;
+        bh=ce6WNTG7rh0D6PYR3MERWUAiOBArcBck/LmHc2D3ygw=;
+        b=muwnhYRVbRIl1/FH/sh7c/z64lzbxd6S/l/xPht7E52tGir1Rx6FfNb9HZ2pGndxIw
+         KCBc7jMfwPGEvUQcQYIjFKfP2UZ/QUmBwYONDRlgf4iv5YpcBTUy4e+KlquoXJANwD7t
+         NcO+EfCHRXKsSmpnhY3Eeg2mjLF0YiZaE3/cI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
+         :user-agent:date;
+        bh=ce6WNTG7rh0D6PYR3MERWUAiOBArcBck/LmHc2D3ygw=;
+        b=an7Z6dq8srmpwwOUokxQ5UHCY48MG0hWmy0GsfmZsKiN4+VOfrWdUIYTVFQMq3ykc4
+         HrbludSiEpD0kzq2RUdV0VyIxEbKGmZEcyksjleQ5Uie53EUoEsMKk6+3qXlxhsGY1Je
+         8D5Hbxk8S7vI2rJrtXEs7EgpBo5/N2XWatAJdLCUynlKwKFpSAUhGXOZrYnkgTBoy/TN
+         v5sALAED7WBXCnheIr7xYJQWLw6PKzAs8j46NJ/dg4nl36VXLpXisbc44XVWPtQ6MON7
+         zvwdWjXRrtlcFaQ8N+fUEYXfzjGoILI3JORbtTgZVewZDx6rjBDdti48oGWKrEl9QmFo
+         B4jA==
+X-Gm-Message-State: APjAAAWVU7wEFzN6iAFn9E41hplFtMVHVf7z09oM2bXCvbmYh6wjm3ai
+        2jRY/F2JwvhFX9ezsbJG01c4ujD8byg=
+X-Google-Smtp-Source: APXvYqwHqcCf25xYB+15bX59RJ/uXB6IfGVawfbg6uE3UzxtPpTL08Xzex9gfnfEWTNSCoYyFeZtsA==
+X-Received: by 2002:a63:a357:: with SMTP id v23mr5231196pgn.223.1576083619403;
+        Wed, 11 Dec 2019 09:00:19 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id a26sm3843300pfo.5.2019.12.11.09.00.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 09:00:18 -0800 (PST)
+Message-ID: <5df120a2.1c69fb81.fa9bc.901d@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-11_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911200000 definitions=main-1912110135
-X-Proofpoint-Spam-Reason: mlx
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0101016ef36a90e5-678f09f2-8fcd-4fe9-8e1f-3f1622ad0c5e-000000@us-west-2.amazonses.com>
+References: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org> <0101016ef36a90e5-678f09f2-8fcd-4fe9-8e1f-3f1622ad0c5e-000000@us-west-2.amazonses.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7180: Add new qup functions
+To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dianders@chromium.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 11 Dec 2019 09:00:18 -0800
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since this message is printed for each port, it creates a lot of output
-during boot and would serve better only during debugging.
+Quoting Rajendra Nayak (2019-12-10 21:24:37)
+> on sc7180 we have cases where multiple functions from the same
+> qup instance share the same pin. This is true for qup02/04/11 and qup13.
+> Add new function names to distinguish which qup function to use.
+>=20
+> The device tree files for this platform haven't landed in mainline yet,
+> so there aren't any users upstream who should break with this change
+> in function names, however, anyone using the devicetree files that were
+> posted on the lists and using these specific function names will need
+> to update their changes.
+>=20
+> Reported-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- drivers/pinctrl/pinctrl-rza1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index 017fc6b3e27e..86e5bf59bde5 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -1235,7 +1235,7 @@ static int rza1_parse_gpiochip(struct rza1_pinctrl *rza1_pctl,
- 
- 	pinctrl_add_gpio_range(rza1_pctl->pctl, range);
- 
--	dev_info(rza1_pctl->dev, "Parsed gpiochip %s with %d pins\n",
-+	dev_dbg(rza1_pctl->dev, "Parsed gpiochip %s with %d pins\n",
- 		 chip->label, chip->ngpio);
- 
- 	return 0;
--- 
-2.23.0
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
