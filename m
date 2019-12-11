@@ -2,96 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 717F911B3B7
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 16:44:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F68E11B7B1
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 17:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387925AbfLKPoG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 10:44:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38851 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387474AbfLKPoG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 10:44:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so24563267wrh.5
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 07:44:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vCDnxqsCcrgs8Skrb9redSb5XLToMsKqT71mzybQwBw=;
-        b=v2f6LNEB8qn+AtPYCBQdFpxVospZ/0dOVznS9pjtc5M1tryCIQv5oK8jlMUbv3SDJz
-         a+/EmfXJYtw+hZ+JHlKEsnbQMFG93vsuPCRRhB5dmu/zbRKo1VIz09RbUUdRtivPcAUs
-         RCOeKFpsdcpcr0fPgtNN6ekjbH2atimAYBKdjQlxCIIUn3isFdUyXC9IF1/VE1jHfpU6
-         lY0Q6d9DLmhKiK0XpOkNCNpLxXm/61y6E7ko0NqrVfUS9Vc+Gk0iQlMNJVE4phrh2Sjn
-         Yzmx6sGj3SrNWLIXzJ6XMUtEJ2VflFJyGc/G5nDaTPlQiBUb/Q81A/XOMg0ho6xXrCb2
-         zAkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vCDnxqsCcrgs8Skrb9redSb5XLToMsKqT71mzybQwBw=;
-        b=OkzYPnHJk6JbY5b9EqJkOTlYYJkjNReaq8h064O4uKRgHbJbDYLEqs/QsvGaWGqBFH
-         2mSJXjUSnoGOYiOeFrTRzzYFbozgxaFtDCbPi+G1fJiT99LdhMY3M+m3/rfiIxqxQUcF
-         O3CeJPOwnLRbwX0bzYrBNX7fCVfkgH7vGT854L4EtbHMZD+JQ5CREY4P00mDInrhkj8W
-         HomIC+Wo67ZbNTE6AZaHjehu55E4Zki1eAhjq1pjki4OVqgjWAs7cmFhlBNgOpQ0xFHI
-         pi6ke4hd6vAiA1H1yQzn23jK5HXmtdSPMt/sRFMOThPG+QXhCQ46vFQdAHQRQUOPwDU5
-         7n1w==
-X-Gm-Message-State: APjAAAW/2rpv/zo7C6df5AbkTVwUvTkhm4+XaYj9h9LgkNiLoXc9NXks
-        vh+p67fh11T1euLCZKhNpRTFq691LM8=
-X-Google-Smtp-Source: APXvYqzC8LRj3xs2frTBT7a7UVIOfE7Dee/hQcwsojftp7lsz2q4lcnWWD5q7uRHEEuoZXYEr7gM2A==
-X-Received: by 2002:adf:ff8a:: with SMTP id j10mr483153wrr.312.1576079045020;
-        Wed, 11 Dec 2019 07:44:05 -0800 (PST)
-Received: from localhost.localdomain (lfbn-1-7161-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
-        by smtp.gmail.com with ESMTPSA id d16sm2917102wrg.27.2019.12.11.07.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 07:44:04 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [libgpiod][PATCH] build: check linux headers version at build-time
-Date:   Wed, 11 Dec 2019 16:44:02 +0100
-Message-Id: <20191211154402.8946-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
+        id S1731016AbfLKPL6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 10:11:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731012AbfLKPL6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A86AB2173E;
+        Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077117;
+        bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JcAB0e/CbI8YBwYoehpJzcMMFVSJPlxthIpWlIb3ITPx+a2Tq5j2G4L/Vb03IY/BK
+         uOeT37i8wuZBPoLb2EPNMu5evyRJ1QuYPSv/ts5OuXA5fVOivSCB/funX9BkxPu/Vq
+         XCWSglvn6f+fJtDDx57aIGAQp1a4N4eM+StGtKt0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 006/134] gpio: mxc: Only get the second IRQ when there is more than one IRQ
+Date:   Wed, 11 Dec 2019 10:09:42 -0500
+Message-Id: <20191211151150.19073-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Original libgpiod relied on linux headers v4.8 to build but it was only
-documented in README and not enforced at build-time. We now support
-features first available in linux v5.5. Add a check to configure.ac that
-verifies if recent enough kernel headers are available - otherwise we'd
-fail only when trying to build the library.
+[ Upstream commit c8f3d144004dd3f471ffd414690d15a005e4acd6 ]
 
+On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
+GPIO bank, so it is better to check the IRQ count before getting
+second IRQ to avoid below error message during probe:
+
+[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
+[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
+[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
+[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
+[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
+[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- configure.ac | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpio/gpio-mxc.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 62e2671..e939889 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -89,6 +89,15 @@ AC_CHECK_HEADERS([dirent.h], [], [HEADER_NOT_FOUND_LIB([dirent.h])])
- AC_CHECK_HEADERS([sys/poll.h], [], [HEADER_NOT_FOUND_LIB([sys/poll.h])])
- AC_CHECK_HEADERS([sys/sysmacros.h], [], [HEADER_NOT_FOUND_LIB([sys/sysmacros.h])])
- AC_CHECK_HEADERS([linux/gpio.h], [], [HEADER_NOT_FOUND_LIB([linux/gpio.h])])
-+AC_CHECK_HEADERS([linux/version.h], [], [HEADER_NOT_FOUND_LIB([linux/version.h])])
-+
-+AC_COMPILE_IFELSE([AC_LANG_SOURCE(
-+#include <linux/version.h>
-+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 5, 0)
-+#error
-+#endif
-+)],
-+[], [AC_MSG_ERROR(["libgpiod needs linux headers version >= v5.5.0"])])
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 7907a87558662..c77d474185f31 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct mxc_gpio_port *port;
++	int irq_count;
+ 	int irq_base;
+ 	int err;
  
- AC_ARG_ENABLE([tools],
- 	[AC_HELP_STRING([--enable-tools],
+@@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(port->base))
+ 		return PTR_ERR(port->base);
+ 
+-	port->irq_high = platform_get_irq(pdev, 1);
+-	if (port->irq_high < 0)
+-		port->irq_high = 0;
++	irq_count = platform_irq_count(pdev);
++	if (irq_count < 0)
++		return irq_count;
++
++	if (irq_count > 1) {
++		port->irq_high = platform_get_irq(pdev, 1);
++		if (port->irq_high < 0)
++			port->irq_high = 0;
++	}
+ 
+ 	port->irq = platform_get_irq(pdev, 0);
+ 	if (port->irq < 0)
 -- 
-2.23.0
+2.20.1
 
