@@ -2,57 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E0C11A667
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 10:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F3B211A673
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 10:08:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfLKJAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 04:00:47 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34425 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfLKJAq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 04:00:46 -0500
-Received: by mail-il1-f194.google.com with SMTP id w13so18794118ilo.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 01:00:46 -0800 (PST)
+        id S1728030AbfLKJH7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 04:07:59 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36698 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfLKJH7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Dec 2019 04:07:59 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a203so8913176qkc.3
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Dec 2019 01:07:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=2+SYstpsmRi699Er2ILUdweEKga8FQwyz0HU6eHs/8I=;
-        b=IwHbmKd13ezqDoJQKy/R4uH/seWKHnooxINFFwbmpezCSMZljv4E3PCroyLKAWIN0f
-         sGEIRZgER84lrSw1/zoEEqb7RtskZH042OKXa1zJ4mu9xZ7rF0dHfh7ZoRiY3M2nWut2
-         YfRLREnbFrp1LzcjUoDZNPmvTEkm+MZMQD2zun/vCuFa+OSWOWy5xsE671nkA3AGhnzE
-         qE2q9UpXoBaLX25CWWGbZc8tp8kVGFtFvDI+bZvgOx5NFhgNytMaCOBf5bxI08Ibzoqb
-         aSmZ0SWiqvfvHczdB4CnqJu/KSXEUYQyaMtxeVxxD4wPtdrlvITbaupnu3ZExEUducyE
-         Y7mw==
+        bh=+1+2OzonF8JaI5zb2TCQGTWjY1hWFqWalCfMdztL7bw=;
+        b=S60wH1RHuXQ8mOnPL0RhPKzQIGXltV0Cv9h00AH+VYro56n5frUBSr4jG3994daVvT
+         V+vThx0M+M5TKEPRP7rKgYkWR9SLOxLfctebgbS4/teJyPdNqlqYK9Sqae4OYe3pOZfj
+         RbOKuXYBl+rwcuW9scJiI3DZUILjSRdRChb2cUjEMEG/J6gALdSSdCrSN73Zs+Oaq7Ld
+         ncsVZLJRCCbXDi37Bkc0aQABg2eiqLVtoela5xrLAMI6eSLhlktSHK/xO5UF2xLQLYer
+         yMxhiSsTvhVSoG04ZT4mwPZHx/2a+Y7mdi6v2EwwgKDOC/A2904us+0B2fJX/ZY9l4Bm
+         hO1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2+SYstpsmRi699Er2ILUdweEKga8FQwyz0HU6eHs/8I=;
-        b=DZzKcy1Dqeqvg2BqVCjCatT+eOJdRZyK6+lhYVQTQWpK60eHHwBqE4t/zo4Rjt6Nvj
-         EohjdkK+IEsycAW7c2xxhR7y4KrZ1kk3GJfUA+Gel+9uQVfhKbtn+MZZVDhg6YPi4sEH
-         qI2YZopR89Nm4Cosew8nIuFMMMep3X/J7JdQsjDaHjpnMoBOSsteWaRIH92eaWAaUUBN
-         hf5MwvL16UUorUp3lYiDY7z0YJ9YSWhktwSAeZV85SMEv7OPfi/QXVqv89evDh3ZAyLu
-         jDJxgnTnPPhORb4eBBRBfqNbnW1F5YC9LLTV+wWaT3KMwdfe1T1CWLwCypQjWyhzh9KO
-         Y8LA==
-X-Gm-Message-State: APjAAAUJBF7Jg5IAjMVAffOeEq2U9GKDFuXM9m/1NNUzS67NRQYUyd6v
-        86wa5urap8w22ep5Ayn/yLSDNlqdaXOnubNyRa4ffw==
-X-Google-Smtp-Source: APXvYqyS8LbG6E9XAOLBdtoQz17koiZIDdSIvdrNjQdPQytPutaWJbkQvz86NlpCKRGX6jndFGkwt+ExRsJ4XqsAthk=
-X-Received: by 2002:a92:49d1:: with SMTP id k78mr2145697ilg.6.1576054846070;
- Wed, 11 Dec 2019 01:00:46 -0800 (PST)
+        bh=+1+2OzonF8JaI5zb2TCQGTWjY1hWFqWalCfMdztL7bw=;
+        b=hbbH/LvTPt70kFWoCIRP3PuUlr9GRIHENexL3x1/EKZkMpPiK6G+ddBnJJPksXRKTg
+         CiWDAdU2ZkjBndSNj3s+sRduyEwlrkz4l3YByt2jcInb3R3/HsvV+PmJFSMAW41fAOUo
+         7ZOHX6CwWxjcqu6wqazKLdS0BCrdc0QVxjyv9vfstkNOUXZsQXdqfqCXcKv+Qy6O1gx7
+         W6OcKbHJOEEYxvtcaeGM8Phey1UL+YHNlrya/4biDkXrABeIF9UC/iHEXaQp1NxXNLmq
+         KqtgkhJSIFK2R2Zw0/nTc+LScxvdIf94csY8gUgDM+UPxEGAxlmNko8S+laKnPc6zzq0
+         ly4w==
+X-Gm-Message-State: APjAAAX1sF9fPTNISkAfybby8e4BKIDWpgshU/QkY9Y7qyeeCc/5HvJf
+        PM6//VTH4OqHSPxyY3haj15MwWrAY4U2temPwycQQg==
+X-Google-Smtp-Source: APXvYqxo51nvYaIkggIMq8ITtXp9gbKNulM8Wmtc5DRGjuFLLqvLJhg/1ssY8su+0/x7Vipo/ClbnBGeVsB5uoQ3mKs=
+X-Received: by 2002:a37:6255:: with SMTP id w82mr1919216qkb.330.1576055278589;
+ Wed, 11 Dec 2019 01:07:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211004631.8756-1-warthog618@gmail.com>
-In-Reply-To: <20191211004631.8756-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 11 Dec 2019 10:00:35 +0100
-Message-ID: <CAMRc=Mcr668LQVB5yUBdn523UdV4aYUrSYCg1VEokBTTuNxhdA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20191210202842.2546758-1-arnd@arndb.de> <f6a514d1-44cb-4577-af07-fd2f3fefc974@www.fastmail.com>
+In-Reply-To: <f6a514d1-44cb-4577-af07-fd2f3fefc974@www.fastmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Dec 2019 10:07:47 +0100
+Message-ID: <CAMpxmJUD8A1qtmZmOxAq3XojFG5LHu_DS94LC7orinz_O9zY=A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aspeed: avoid return type warning
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>
+        Joel Stanley <joel@jms.id.au>,
+        Hongwei Zhang <hongweiz@ami.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -60,36 +62,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 11 gru 2019 o 01:46 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
+wt., 10 gru 2019 o 23:10 Andrew Jeffery <andrew@aj.id.au> napisa=C5=82(a):
 >
-> Restore the external behavior of gpio-mockup to what it was prior to the
-> change to using GPIO_LINE_DIRECTION.
 >
-> Fixes: e42615ec233b ("gpio: Use new GPIO_LINE_DIRECTION")
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
 >
-> Changes v1 -> v2:
->  - add Fixes tag.
+> On Wed, 11 Dec 2019, at 06:58, Arnd Bergmann wrote:
+> > gcc has a hard time tracking whether BUG_ON(1) ends
+> > execution or not:
+> >
+> > drivers/gpio/gpio-aspeed-sgpio.c: In function 'bank_reg':
+> > drivers/gpio/gpio-aspeed-sgpio.c:112:1: error: control reaches end of
+> > non-void function [-Werror=3Dreturn-type]
+> >
+> > Use the simpler BUG() that gcc knows cannot continue.
+> >
+> > Fixes: f8b410e3695a ("gpio: aspeed-sgpio: Rename and add Kconfig/Makefi=
+le")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 >
-> Fix a regression introduced in v5.5-rc1.
->
-> The change to GPIO_LINE_DIRECTION reversed the polarity of the
-> dir field within gpio-mockup.c, but overlooked inverting the value on
-> initialization and when returned by gpio_mockup_get_direction.
-> The latter is a bug.
-> The former is a problem for tests which assume initial conditions,
-> specifically the mockup used to initialize chips with all lines as inputs=
-.
-> That superficially appeared to be the case after the previous patch due
-> to the bug in gpio_mockup_get_direction.
->
->  drivers/gpio/gpio-mockup.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
 Applied for fixes.
 
-Thanks!
 Bartosz
