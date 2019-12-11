@@ -2,166 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6698F11B515
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 16:52:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 030E311B34D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 16:41:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732491AbfLKPVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Dec 2019 10:21:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
+        id S1733179AbfLKPlx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Dec 2019 10:41:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731843AbfLKPVl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387485AbfLKP1x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:53 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0189322527;
-        Wed, 11 Dec 2019 15:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3CAB24658;
+        Wed, 11 Dec 2019 15:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077700;
-        bh=UV2G6q/DXBthsE3ae57WamEql2zCNb2Q2GjMnMRBGkw=;
+        s=default; t=1576078072;
+        bh=OSuoJBffl0SPH/noodNnIxyPimiT8MXfS1RUd1KxZGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVtOquf2oudfARqi89sn3/KsjQWYysEwZDWuXJ0m58z4Ma4JA/pzs8g/4gleSf+aL
-         PoKGktQ5kHpTbpK2d57QCM4Ql7yirxLMeQoLeAhuTibWRt4/w0pJdLilsGFa9KrfGa
-         iEVXNYCBkLO8JSwk5RBVkW335ePwd9fMuX2njb8Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        b=pUAjufWTK/DNMOXE0SyUr4hAyul5CBdyU2e5H9VWUze82+FTbOMorzquUOow7B3JY
+         36OE2FMNHgAruP489clMgCwvkykwkY+pZtobEa8Dr5uUubF7QmpbPVHXZXgSXERW78
+         bE9L1tgqHFMkz/AGYqlskHIrem7rzXbAxvzSiSX0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Michael Walle <michael@walle.cc>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 137/243] gpio: OF: Parse MMC-specific CD and WP properties
-Date:   Wed, 11 Dec 2019 16:04:59 +0100
-Message-Id: <20191211150348.405211936@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 63/79] gpio: mpc8xxx: Don't overwrite default irq_set_type callback
+Date:   Wed, 11 Dec 2019 10:26:27 -0500
+Message-Id: <20191211152643.23056-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 81c85ec15a1946f2e347ec0bf66936121eb97ce7 ]
+[ Upstream commit 4e50573f39229d5e9c985fa3b4923a8b29619ade ]
 
-When retrieveing CD (card detect) and WP (write protect)
-GPIO handles from the device tree, make sure to assign
-them active low by default unless the "cd-inverted" or
-"wp-inverted" properties are set. These properties mean
-that respective signal is active HIGH since the SDHCI
-specification stipulates that this kind of signals
-should be treated as active LOW.
+The per-SoC devtype structures can contain their own callbacks that
+overwrite mpc8xxx_gpio_devtype_default.
 
-If the twocell GPIO flag is also specified as active
-low, well that's nice and we will silently ignore the
-tautological specification.
+The clear intention is that mpc8xxx_irq_set_type is used in case the SoC
+does not specify a more specific callback. But what happens is that if
+the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
+this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
+following SoCs are affected:
 
-If however the GPIO line is specified as active low
-in the GPIO flasg cell and "cd-inverted" or "wp-inverted"
-is also specified, the latter takes precedence and we
-print a warning.
+- fsl,mpc8572-gpio
+- fsl,ls1028a-gpio
+- fsl,ls1088a-gpio
 
-The current effect on the MMC slot-gpio core are as
-follows:
+On these boards, the irq_set_type does exactly nothing, and the GPIO
+controller keeps its GPICR register in the hardware-default state. On
+the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
+even if the IRQ client requests LEVEL_HIGH. Another implication is that
+the IRQs are not checked (e.g. level-triggered interrupts are not
+rejected, although they are not supported).
 
-For CD GPIOs: no effect. The current code in
-mmc/core/host.c calls mmc_gpiod_request_cd() with
-the "override_active_level" argument set to true,
-which means that whatever the GPIO descriptor
-thinks about active low/high will be ignored, the
-core will use the MMC_CAP2_CD_ACTIVE_HIGH to keep
-track of this and reads the raw value from the
-GPIO descriptor, totally bypassing gpiolibs inversion
-semantics. I plan to clean this up at a later point
-passing the handling of inversion semantics over
-to gpiolib, so this patch prepares the ground for
-that.
-
-Fow WP GPIOs: this is probably fixing a bug, because
-the code in mmc/core/host.c calls mmc_gpiod_request_ro()
-with the "override_active_level" argument set to false,
-which means it will respect the inversion semantics of
-the gpiolib and ignore the MMC_CAP2_RO_ACTIVE_HIGH
-flag for everyone using this through device tree.
-However the code in host.c confusingly goes to great
-lengths setting up the MMC_CAP2_RO_ACTIVE_HIGH flag
-from the GPIO descriptor and by reading the "wp-inverted"
-property of the node. As far as I can tell this is all
-in vain and the inversion is broken: device trees that
-use "wp-inverted" do not work as intended, instead the
-only way to actually get inversion on a line is by
-setting the second cell flag to GPIO_ACTIVE_HIGH (which
-will be the default) or GPIO_ACTIVE_LOW if they want
-the proper MMC semantics. Presumably all device trees do
-this right but we need to parse and handle this properly.
-
-Cc: linux-mmc@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between incarnations at a single place")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Link: https://lore.kernel.org/r/20191115125551.31061-1-olteanv@gmail.com
+Tested-by: Michael Walle <michael@walle.cc>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/gpio/gpio-mpc8xxx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index e0f149bdf98ff..1147ad968fd75 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -60,6 +60,45 @@ static struct gpio_desc *of_xlate_and_get_gpiod_flags(struct gpio_chip *chip,
- static void of_gpio_flags_quirks(struct device_node *np,
- 				 enum of_gpio_flags *flags)
- {
-+	/*
-+	 * Handle MMC "cd-inverted" and "wp-inverted" semantics.
-+	 */
-+	if (IS_ENABLED(CONFIG_MMC)) {
-+		if (of_property_read_bool(np, "cd-gpios")) {
-+			if (of_property_read_bool(np, "cd-inverted")) {
-+				if (*flags & OF_GPIO_ACTIVE_LOW) {
-+					/* "cd-inverted" takes precedence */
-+					*flags &= ~OF_GPIO_ACTIVE_LOW;
-+					pr_warn("%s GPIO handle specifies CD active low - ignored\n",
-+						of_node_full_name(np));
-+				}
-+			} else {
-+				/*
-+				 * Active low is the default according to the
-+				 * SDHCI specification. If the GPIO handle
-+				 * specifies the same thing - good.
-+				 */
-+				*flags |= OF_GPIO_ACTIVE_LOW;
-+			}
-+		}
-+		if (of_property_read_bool(np, "wp-gpios")) {
-+			if (of_property_read_bool(np, "wp-inverted")) {
-+				/* "wp-inverted" takes precedence */
-+				if (*flags & OF_GPIO_ACTIVE_LOW) {
-+					*flags &= ~OF_GPIO_ACTIVE_LOW;
-+					pr_warn("%s GPIO handle specifies WP active low - ignored\n",
-+						of_node_full_name(np));
-+				}
-+			} else {
-+				/*
-+				 * Active low is the default according to the
-+				 * SDHCI specification. If the GPIO handle
-+				 * specifies the same thing - good.
-+				 */
-+				*flags |= OF_GPIO_ACTIVE_LOW;
-+			}
-+		}
-+	}
- 	/*
- 	 * Some GPIO fixed regulator quirks.
- 	 * Note that active low is the default.
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index c8673a5d94122..3f10f9599f2cb 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -348,7 +348,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	 * It's assumed that only a single type of gpio controller is available
+ 	 * on the current machine, so overwriting global data is fine.
+ 	 */
+-	mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
++	if (devtype->irq_set_type)
++		mpc8xxx_irq_chip.irq_set_type = devtype->irq_set_type;
+ 
+ 	if (devtype->gpio_dir_out)
+ 		gc->direction_output = devtype->gpio_dir_out;
 -- 
 2.20.1
-
-
 
