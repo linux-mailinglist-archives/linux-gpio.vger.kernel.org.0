@@ -2,175 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 154F111A181
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 03:41:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3211511A183
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 03:41:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfLKClA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 21:41:00 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:7700 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbfLKCk7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1727733AbfLKCk7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 10 Dec 2019 21:40:59 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:49101 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727302AbfLKCk6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:40:58 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Xh4m14qHzW9;
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Xh4m5tZ8zr8;
         Wed, 11 Dec 2019 03:40:56 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1576032056; bh=ax8k3kdpX2PJMhw57PNrJBf75thucfVxSMfYkKFcdZ0=;
+        t=1576032056; bh=2BKpvhlj6oD5VT84hyCgsMikUKEOtDXi13iL2FgPGJ4=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=GmUFAfGTUaWBBb1cuoDRvtSup7FsnUnIj5EHQpIfEjHQHl/Y7ur5XUZijWR4PLpz9
-         8yvPn0B3xvSM+dhyCZ9BxUansATMwX4i8FZgIAQHkupR9dDl5fFrGTgXGxohwk5MZg
-         WpIgKYya1mbi+/4nKdTR9CYaZMPXoCTi50YGsdVZOYmYEc2XlfSk+n0ToAe9NZYWI7
-         CxnA6jsLPBxQ05r2Csgty+WgHoNrkMzCS9f4SX3lPkkGBOxkdkqicmR5TwHHPi76fe
-         XNUvZo4bd3FE9e0/dE1e6FLYNUZYp/aQxF1G3F2C1xUxJmrPhdj4y3bbUHNPK57jW+
-         BxQWfZ6VV7FCg==
+        b=cHE9lspkR9HZMXFL8xn2Qdj9P411LmykVfs5OpZegEp5BbBwYxGkMZ0wksLlHaZFX
+         zBOq3Qj3tP6jFCqsm+uqVtS5daRIshXocBIn539m6OKmSN3yZfzbKEb9WHznMpWish
+         7hoEjP3beQuQKkIf6mIH+pVNZsa3cKF95qqJJfVXKNw7kYznSz4IfDf/aRw8qcJlqb
+         lAUianzK9QU1N8jhOHBTuG0um1uLv8lVcpCrt/TGppT+3dF6eXcEQF7gnUcCDjxgyR
+         b+buP9wKZ3B4dyygzn6MDq0a3YeLaR7YuUhB+34ArrdAv/3SBZvyq6yqKUlAmtSJll
+         Y3wmGT4CzROOQ==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Wed, 11 Dec 2019 03:40:55 +0100
-Message-Id: <a60f563f11bbff821da2fa2949ca82922b144860.1576031637.git.mirq-linux@rere.qmqm.pl>
+Date:   Wed, 11 Dec 2019 03:40:56 +0100
+Message-Id: <db189b715596d63caf8c6a088bddc71dd69a879b.1576031637.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 2/4] mmc: rework wp-gpio handling
+Subject: [PATCH v2 3/4] mmc: rework cd-gpio handling
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     linux-mmc@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use MMC_CAP2_RO_ACTIVE_HIGH flag as indicator if GPIO line is to be
-inverted compared to DT/platform-specified polarity. The flag is not
-used after init in GPIO mode anyway. No functional changes intended.
+There are a few places around the code that invert inverted and possibly
+inverted CD line. That's really confusing. Squash them all into one
+place in mmc_gpiod_request_cd(). MMC_CAP2_CD_ACTIVE_HIGH is used
+analogously to WP line: in GPIO mode it is used only at probe time to
+switch polarity, for native mode it is left as is.
 
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
-  v2: moved argument removal in sdhci-esdhc-imx to the right patch
----
- drivers/gpio/gpiolib-of.c          |  4 ----
- drivers/mmc/core/host.c            | 11 ++++-------
- drivers/mmc/core/slot-gpio.c       |  3 +++
- drivers/mmc/host/pxamci.c          |  8 ++++----
- drivers/mmc/host/sdhci-esdhc-imx.c |  3 ++-
- 5 files changed, 13 insertions(+), 16 deletions(-)
+ drivers/gpio/gpiolib-of.c    | 17 -----------------
+ drivers/mmc/core/host.c      | 21 ++++-----------------
+ drivers/mmc/core/slot-gpio.c | 17 ++++++++---------
+ 3 files changed, 12 insertions(+), 43 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index dc27b1a88e93..b0b77e52e261 100644
+index b0b77e52e261..8310da48ba01 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -120,10 +120,6 @@ static void of_gpio_flags_quirks(struct device_node *np,
- 			if (of_property_read_bool(np, "cd-inverted"))
- 				*flags ^= OF_GPIO_ACTIVE_LOW;
- 		}
--		if (!strcmp(propname, "wp-gpios")) {
--			if (of_property_read_bool(np, "wp-inverted"))
+@@ -104,23 +104,6 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 				 enum of_gpio_flags *flags,
+ 				 int index)
+ {
+-	/*
+-	 * Handle MMC "cd-inverted" and "wp-inverted" semantics.
+-	 */
+-	if (IS_ENABLED(CONFIG_MMC)) {
+-		/*
+-		 * Active low is the default according to the
+-		 * SDHCI specification and the device tree
+-		 * bindings. However the code in the current
+-		 * kernel was written such that the phandle
+-		 * flags were always respected, and "cd-inverted"
+-		 * would invert the flag from the device phandle.
+-		 */
+-		if (!strcmp(propname, "cd-gpios")) {
+-			if (of_property_read_bool(np, "cd-inverted"))
 -				*flags ^= OF_GPIO_ACTIVE_LOW;
 -		}
- 	}
+-	}
  	/*
  	 * Some GPIO fixed regulator quirks.
+ 	 * Note that active low is the default.
 diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 105b7a7c0251..b3484def0a8b 100644
+index b3484def0a8b..e655dc1b5b85 100644
 --- a/drivers/mmc/core/host.c
 +++ b/drivers/mmc/core/host.c
-@@ -176,7 +176,6 @@ int mmc_of_parse(struct mmc_host *host)
+@@ -175,7 +175,6 @@ int mmc_of_parse(struct mmc_host *host)
+ 	struct device *dev = host->parent;
  	u32 bus_width, drv_type, cd_debounce_delay_ms;
  	int ret;
- 	bool cd_cap_invert, cd_gpio_invert = false;
--	bool ro_cap_invert, ro_gpio_invert = false;
+-	bool cd_cap_invert, cd_gpio_invert = false;
  
  	if (!dev || !dev_fwnode(dev))
  		return 0;
-@@ -255,9 +254,11 @@ int mmc_of_parse(struct mmc_host *host)
+@@ -218,10 +217,12 @@ int mmc_of_parse(struct mmc_host *host)
+ 	 */
+ 
+ 	/* Parse Card Detection */
++
+ 	if (device_property_read_bool(dev, "non-removable")) {
+ 		host->caps |= MMC_CAP_NONREMOVABLE;
+ 	} else {
+-		cd_cap_invert = device_property_read_bool(dev, "cd-inverted");
++		if (device_property_read_bool(dev, "cd-inverted"))
++			host->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
+ 
+ 		if (device_property_read_u32(dev, "cd-debounce-delay-ms",
+ 					     &cd_debounce_delay_ms))
+@@ -232,25 +233,11 @@ int mmc_of_parse(struct mmc_host *host)
+ 
+ 		ret = mmc_gpiod_request_cd(host, "cd", 0, false,
+ 					   cd_debounce_delay_ms * 1000,
+-					   &cd_gpio_invert);
++					   NULL);
+ 		if (!ret)
+ 			dev_info(host->parent, "Got CD GPIO\n");
+ 		else if (ret != -ENOENT && ret != -ENOSYS)
+ 			return ret;
+-
+-		/*
+-		 * There are two ways to flag that the CD line is inverted:
+-		 * through the cd-inverted flag and by the GPIO line itself
+-		 * being inverted from the GPIO subsystem. This is a leftover
+-		 * from the times when the GPIO subsystem did not make it
+-		 * possible to flag a line as inverted.
+-		 *
+-		 * If the capability on the host AND the GPIO line are
+-		 * both inverted, the end result is that the CD line is
+-		 * not inverted.
+-		 */
+-		if (cd_cap_invert ^ cd_gpio_invert)
+-			host->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
  	}
  
  	/* Parse Write Protection */
--	ro_cap_invert = device_property_read_bool(dev, "wp-inverted");
- 
--	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, &ro_gpio_invert);
-+	if (device_property_read_bool(dev, "wp-inverted"))
-+		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
-+	ret = mmc_gpiod_request_ro(host, "wp", 0, 0, NULL);
- 	if (!ret)
- 		dev_info(host->parent, "Got WP GPIO\n");
- 	else if (ret != -ENOENT && ret != -ENOSYS)
-@@ -266,10 +267,6 @@ int mmc_of_parse(struct mmc_host *host)
- 	if (device_property_read_bool(dev, "disable-wp"))
- 		host->caps2 |= MMC_CAP2_NO_WRITE_PROTECT;
- 
--	/* See the comment on CD inversion above */
--	if (ro_cap_invert ^ ro_gpio_invert)
--		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
--
- 	if (device_property_read_bool(dev, "cap-sd-highspeed"))
- 		host->caps |= MMC_CAP_SD_HIGHSPEED;
- 	if (device_property_read_bool(dev, "cap-mmc-highspeed"))
 diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-index da2596c5fa28..582ec3d720f6 100644
+index 582ec3d720f6..303e825ecfd8 100644
 --- a/drivers/mmc/core/slot-gpio.c
 +++ b/drivers/mmc/core/slot-gpio.c
-@@ -241,6 +241,9 @@ int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
- 			return ret;
+@@ -19,7 +19,6 @@
+ struct mmc_gpio {
+ 	struct gpio_desc *ro_gpio;
+ 	struct gpio_desc *cd_gpio;
+-	bool override_cd_active_level;
+ 	irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
+ 	char *ro_label;
+ 	char *cd_label;
+@@ -80,13 +79,6 @@ int mmc_gpio_get_cd(struct mmc_host *host)
+ 		return -ENOSYS;
+ 
+ 	cansleep = gpiod_cansleep(ctx->cd_gpio);
+-	if (ctx->override_cd_active_level) {
+-		int value = cansleep ?
+-				gpiod_get_raw_value_cansleep(ctx->cd_gpio) :
+-				gpiod_get_raw_value(ctx->cd_gpio);
+-		return !value ^ !!(host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH);
+-	}
+-
+ 	return cansleep ?
+ 		gpiod_get_value_cansleep(ctx->cd_gpio) :
+ 		gpiod_get_value(ctx->cd_gpio);
+@@ -194,10 +186,17 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const char *con_id,
+ 			ctx->cd_debounce_delay_ms = debounce / 1000;
  	}
  
-+	if (host->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
++	/* override forces default (active-low) polarity ... */
++	if (override_active_level && !gpiod_is_active_low(desc))
++		gpiod_toggle_active_low(desc);
++
++	/* ... or active-high */
++	if (host->caps2 & MMC_CAP2_CD_ACTIVE_HIGH)
 +		gpiod_toggle_active_low(desc);
 +
  	if (gpio_invert)
  		*gpio_invert = !gpiod_is_active_low(desc);
  
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 024acc1b0a2e..b2bbcb09a49e 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -740,16 +740,16 @@ static int pxamci_probe(struct platform_device *pdev)
- 			goto out;
- 		}
+-	ctx->override_cd_active_level = override_active_level;
+ 	ctx->cd_gpio = desc;
  
-+		if (!host->pdata->gpio_card_ro_invert)
-+			mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
- 		ret = mmc_gpiod_request_ro(mmc, "wp", 0, 0, NULL);
- 		if (ret && ret != -ENOENT) {
- 			dev_err(dev, "Failed requesting gpio_ro\n");
- 			goto out;
- 		}
--		if (!ret) {
-+		if (!ret)
- 			host->use_ro_gpio = true;
--			mmc->caps2 |= host->pdata->gpio_card_ro_invert ?
--				0 : MMC_CAP2_RO_ACTIVE_HIGH;
--		}
- 
- 		if (host->pdata->init)
- 			host->pdata->init(dev, pxamci_detect_irq, mmc);
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index 1c988d6a2433..dccb4df46512 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1381,13 +1381,14 @@ static int sdhci_esdhc_imx_probe_nondt(struct platform_device *pdev,
- 				host->mmc->parent->platform_data);
- 	/* write_protect */
- 	if (boarddata->wp_type == ESDHC_WP_GPIO) {
-+		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+
- 		err = mmc_gpiod_request_ro(host->mmc, "wp", 0, 0, NULL);
- 		if (err) {
- 			dev_err(mmc_dev(host->mmc),
- 				"failed to request write-protect gpio!\n");
- 			return err;
- 		}
--		host->mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
- 	}
- 
- 	/* card_detect */
+ 	return 0;
 -- 
 2.20.1
 
