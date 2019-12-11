@@ -2,135 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DEFF119FC3
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 01:07:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FB3119FDB
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Dec 2019 01:24:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLKAHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Dec 2019 19:07:05 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38078 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfLKAHF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 19:07:05 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r14so15227003lfm.5
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2019 16:07:04 -0800 (PST)
+        id S1727054AbfLKAYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Dec 2019 19:24:21 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33190 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLKAYV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Dec 2019 19:24:21 -0500
+Received: by mail-lj1-f195.google.com with SMTP id 21so21983448ljr.0
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Dec 2019 16:24:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1vKqFJGzj7zP9jxAQ/Fxr2GBQpU3k9RbiY8pAqobny0=;
-        b=XSRuM9usxGH3asxsaXj6dtz/rkxCqUZFsZF5E4NGQqMDAp8E9lnlB+IjoaarN/OcLF
-         6kfzdeD7826IhCPZ5O6JrA8MGb9occsM9FiL9Vs/S+qBbYfkhtvWrTfo7ngFAUkg0N4H
-         FmwRtLnR+G9u0bDUKY0cfsesfzjhERZqREW85OTjJk3Ng2GYBExYhSUmqO95axW6mJ5I
-         tGppw7/OBBZMk7c9RuDKpECoEMPMCXKLcYVpWT/d30bvWHHmQdhx9ptWTmxKh9Pe7XlF
-         5rPW3o7FVr2ADMe58rF6XyObuJNbJx4yZtERJmIXkxtn8KANzhb+I578JOxBvtm6uC3b
-         uXnw==
+        bh=FzptMs7UZH6tl5XnB4UdAl95BzHbDkNlnuDcD9QRDL8=;
+        b=cLhiqiuP6lKc2NY83ihPT47G3f+3QK4gZxKFKmw65nI/bJUTPbL1OjQ3/4EllNePCM
+         OBINPY2S7VQ49MkrBdTCMtAjDl6tcNokO7M8rS2kQtWpfU0g+d3zdtKiOMkYGsyKmOr8
+         JkZOg0YTxCt4YVjkOhCNImrhQDKtSjw6qYJNLuE8MQtu9GkRGEiq08YmpoX0yD2p5qPQ
+         D/sdqJRrkY1E0EaTMYyDhsblV9geNYlSdkpSKp8bRuByL3iYs0NdjZbsWTlKq1WwXOPo
+         kiJ8wMZb9xBnMw9ZnPAq1XrFyhqAluKOJjgBE0OSi8dd4m32SO0dsx7U/6aP4NqAZLoN
+         MH9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1vKqFJGzj7zP9jxAQ/Fxr2GBQpU3k9RbiY8pAqobny0=;
-        b=f9OuSNne0NTt/IViQpXl74JmzL0Bzn3KC5mkhsU05KuRWm6Dig3MZqV16kJw+PQOTb
-         bbS05vK6WyajXXT7SnfdYVG82/zXF9TuTM1GenwXJyCf4qNdskaTmObrxi8ywiTVfpwE
-         /9VI5G0WFsRv/jn+mfY7td85iI1eKZKqIEj2yjUel6Y1XZMEWS7CDpDZDwX/lKYdM08q
-         6LfZ9PaAtkCo+HItDCz75niL60DxIghc9KbQIi3yiNzYt5aJfRYjcaCj6+99lo94X6EX
-         NK8EQZMURA324tm0WcfeuSqwzyg7eNOb/I6KK6iWpIRfw97EClBuPBxTsALsfec+wLqW
-         eRzw==
-X-Gm-Message-State: APjAAAUsPY8VGtUSzjRrrzfIcMzCAJxJY0bybyHPQNk5LUOCAXqAgBCX
-        azldONDTmnXb9fBhQmd33s2oLavKMJ7peIgu3T4zgA==
-X-Google-Smtp-Source: APXvYqxVW0ZSopDXaAGHYtoUrhx2h12DD/w/jNt0W6I1hMAEhJb0fNLsF9WPsuEKi7yK29CRbsxEeBcvpTHHaU7Qj4s=
-X-Received: by 2002:a19:c648:: with SMTP id w69mr349735lff.44.1576022823210;
- Tue, 10 Dec 2019 16:07:03 -0800 (PST)
+        bh=FzptMs7UZH6tl5XnB4UdAl95BzHbDkNlnuDcD9QRDL8=;
+        b=NB0LbOx2sp5nyv5267N9GHIQoqJyHGnFDxMi5FaklonaxKoK0ROHo1WZVJSh165KG+
+         uEXNwMAp/6RxZ9h4vMhzZArP9FScEm3UCFgpvLwWgEvSRPSwy3IiAx4qMv66pUV2M+F0
+         mAFwf3dFoz9+sfRbG0enLHPXPOgBMPgR7rzTA9NqMrgg93mKuEtacKGOdyXtNg1FPhtl
+         /WkO7F37CbQA+YmhzAQVqiyQSzv6byzD3SxLrJb+3KtYDOjOeVvFRiGUDsuL+cWON7+5
+         p8KXtmIvrRkxJ0BdBdjjP6eeKRj99awibWe/a9v0fjTGfcLrdQso1aySoOkjlHN12bOA
+         qqfw==
+X-Gm-Message-State: APjAAAUrPTVqpuuQb+GQHm2SvJ3zmX87UwPmQlXd+JongthcHSEwPlDe
+        NFeAC5QV09mcZ4nqQUfAc2Yhc4+XF9uZL2wRAoE9uQ==
+X-Google-Smtp-Source: APXvYqxunEspa1cPku2zi+O3v5VP7+hdM/iiNVHSELvrW9FMmlBlF5UcunUZT+DJ74s0UyP/7ItRKxU/YAJNU6q4iw0=
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr74491ljh.42.1576023859174;
+ Tue, 10 Dec 2019 16:24:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com> <20191120133409.9217-2-peter.ujfalusi@ti.com>
- <CACRpkdbXX3=1EGpGRf6NgwUfY2Q0AKbGM8gJvVpY+BRAo5MQvQ@mail.gmail.com>
- <d423bc53-31df-b1b4-37da-932b7208a29e@ti.com> <CACRpkdafEdsN6i16SA175wE4J_4+EhS5Uw4Qsg=cZ=EuDYHmgg@mail.gmail.com>
- <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
-In-Reply-To: <89afb07f-fb70-3f44-2396-df350ca15690@ti.com>
+References: <20191129185836.2789-1-hdegoede@redhat.com> <20191129185836.2789-3-hdegoede@redhat.com>
+ <CACRpkdbRb-LF2tNN-ueo=tKuJc+u4B7Y20+BCyqnN7wYbm8y7Q@mail.gmail.com>
+ <87wobfj65b.fsf@intel.com> <47c36b75-bc30-502b-7f8d-035cf2348fc4@redhat.com>
+In-Reply-To: <47c36b75-bc30-502b-7f8d-035cf2348fc4@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 11 Dec 2019 01:06:51 +0100
-Message-ID: <CACRpkdYe47SZDW1JXT6g5n+AEOYd2PH92YtBnjQsd=Z2GJroZQ@mail.gmail.com>
-Subject: Re: [RFC 1/2] dt-bindings: gpio: Document shared GPIO line usage
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Date:   Wed, 11 Dec 2019 01:24:07 +0100
+Message-ID: <CACRpkdaJGZsJpYu3cgQCeWuJD1y9CQyzuk_VYfGfAT8WC=_1VA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/i915/vlv_dsi: Control panel and backlight enable
+ GPIOs on BYT
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 10:31 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 28/11/2019 12.06, Linus Walleij wrote:
+On Mon, Dec 2, 2019 at 4:49 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> > The ambition to use refcounted GPIOs to solve this
-> > usecase is probably wrong, I would say try to go for a
-> > GPIO-based reset controller instead.
+> There is only one problem, currently is is not possible to
+> unregister a mapping added with pinctrl_register_mappings
+> and the i915 driver is typically a module which can be unloaded
+> and I believe actually is unloaded as part of the i915 CI.
 >
-> I did that. A bit more lines of code than the gpio-shared.
-> Only works if all clients are converted to reset controller, all must
-> use reset_control_get_shared()
-
-I don't think that's too much to ask, the usecase needs to
-be expressed somewhere whether in code or DT properties.
-
-> But my biggest issue was that how would you put a resets/reset-names to
-> DT for a device where the gpio is used for enabling an output/input pin
-> and not to place the device or part of the device to reset.
-
-Rob suggest using GPIOs but represent them in the Linux kernel
-as resets.
-
-This would be a semantic effect of the line being named "reset-gpios"
-as Rob pointed out. Name implies usage. We can formalize it
-with DT YAML as well, these days, then it is impossible to get it
-wrong, as long as the bindings are correct.
-
-When you call the reset subsystem to create the reset handle
-it can be instructed to look for a GPIO, possibly shared, and
-this way replace the current explicit GPIO handling code
-in the driver. It will just look as a reset no matter how many
-other device or just this one is using it.
-
-> Sure, one can say that something is in 'reset' when it is not enabled,
-> but do you put the LCD backlight to 'reset' when you turn it off?
+> pinctrl_register_mappings copies the passed in mapping, but
+> it is a shallow copy, so it contains pointers to the modules
+> const segment and we do not want to re-add another copy of
+> the mapping when the module loads a second time.
 >
-> Is your DC motor in 'reset' when it is not working?
+> Fixing this is easy though, there already is a pinctrl_unregister_map()
+> function, we just need to export it so that the i915 driver can
+> remove the mapping when it is unbound.
 >
-> GPIO stands for General Purpose Input/Output, one of the purpose is to
-> enable/disable things, reset things, turn on/off things or anything one
-> could use 3.3V (or more/less).
+> Linus would exporting this function be ok with you?
 
-Answered by explict interpretation of DT bindings
-named "reset-gpios". Those are resets, nothing else.
+Yep!
 
-> > The fact that some Linux drivers are already using explicit
-> > GPIO's for their reset handling is maybe unfortunate,
-> > they will simply have to grow code to deal with a reset
-> > alternatively to GPIO, like first try to grab a reset
-> > handle and if that doesn't fall back to use a GPIO.
->
-> Sure, it can be done, but when we hit a case when the reset framework is
-> not fitting for some devices use of the shared GPIO, then what we will do?
+> Linus, question what is the purpose of the "dupping" / shallow
+> copying of the argument passed to pinctrl_register_map ?
 
-That can be said about literally anything we do in any
-framework we design. Rough consensus and running code.
-Bad paths will be taken sometimes, hopefully not too much.
-We clean up the mess we create and refactor as we go
-along, it is always optimistic design.
+The initial commit contained this comment later removed:
 
-> How would it satisfy the regulator use case? We put the regulators to
-> 'reset' when they are turned off / disabled?
++       /*
++        * Make a copy of the map array - string pointers will end up in the
++        * kernel const section anyway so these do not need to be deep copied.
++        */
 
-We don't try to fix that now, if it's not broken don't fix it.
-Let's try to fix the reset problem instead.
+The use was to free up memory for platforms using boardfiles
+with a gazillion variants and huge pin control tables, so these
+could be marked  __initdata and discarded after boot.
+As the strings would anyway stay around we didn't need to
+deep copy.
+
+See for example in arch/arm/mach-u300/core.c
+static struct pinctrl_map __initdata u300_pinmux_map[]
+
+> Since
+> it is shallow the mem for any pointers contained within there need
+> to be kept around by the caller, so why not let the caller keep
+> the pinctrl_map struct itself around too?
+
+So the strings will be kept around because the kernel can't get
+rid of strings. (Yeah it is silly, should haven been fixed ages
+ago, but not by me, haha :)
+
+> If we are going to export pinctrl_unregister_map() we need to make it
+> do the right thing for dupped maps too, we can just store the dup flag
+> in struct pinctrl_maps. So this is easy, but I wonder if we cannot
+> get rid of the dupping all together ?
+
+Maybe ... I don't know. What do you think? I suppose you could
+make u300 crash if you do that.
 
 Yours,
 Linus Walleij
