@@ -2,136 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6978611CE8B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 14:40:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DB6511CEA5
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 14:44:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfLLNks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 08:40:48 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35033 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729457AbfLLNks (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 08:40:48 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j6so2351585lja.2
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 05:40:46 -0800 (PST)
+        id S1729469AbfLLNoZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 08:44:25 -0500
+Received: from mail-eopbgr1410132.outbound.protection.outlook.com ([40.107.141.132]:59096
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729392AbfLLNoZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:44:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HrJuJgFWUoHpLYaDKyn8nGZ+EFqxA2vTvXDPJNWT3ms9HMaGwgu+yyvWHmIAMqGbkZxx6iDONP1odlPXHBy/vsMPbb87km7XrNHnBxfmKeyl4/8KJTILcaraLtZp82TXX6jQMUBxgySdz2U3DWaz14wX2nw6AcZe2A1DZBU4RRO0b3lRZ3uH/mFinDmeQtD2dU4v5QPcoh4h++GZgqr17vAnQMRB/0/iudDZuzZxjfpUUnSy9CfHSz/cXulxv8sHQdaRuvAkr7Uey1YqFerfID7YW0SxXRabZQuokYqE3bUQwsbngT8e0wXYdkodkcjC0IRsEPL9U+HHmgKb+U3pPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fc5yh4LVAiggzPN+wor+bf3kjTBee23Lfe8dsCoGEGg=;
+ b=G/cqS+A50ysTKWlDMBCfmbvkNg6l9rDDJlcBoWGob549zkqaGkqswGWnsf87csOhrPkFdNTa1+B5JdWFZ+WW2EFNg18MbickiwKMFsL/0WVkXu3JyTNmV1unHfeBpkXRY5kJXHZbdMmPEuOiTHSk3ZajOzoeYntAxewmOZIXRA4LQggwyxY2dQPQSGn3l0X7U2MPfBIdmQBXzSgLQq4oCTb9pH+QEK3NysQPOq/6qRpTO2jQIi+Ek1sYZfOrBYrNvOWF08bB6VxdJQ5k0UxCmyYznCkbX2tcTvAlj/Kpm7EQKwHNZRGJgSBF5bIEOTDRIUNyyFVS4fF52xmKZ8+pzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
-        b=DRzJQiVQg/nQ/ASUfL3q6cDwUxWJ56eQnZWGgR+JOoveYSxcv7+j9kjbi9XlxA1AEO
-         A02/XOPXYlK843ecHoWeaRH53jfl/cx5u3XSjbfE6QXM6s9uUsm05zfWWRKxADesDQaV
-         PnpOe4EYjBF5MZNs5FNBPAYxERQpmPL1TeloXm3jpv3+AB/lT3PvU4ZBj/VaARR4vYaR
-         uJAZHSCgQIgMRkQV60ebT26TmXAs0cOXjT+DYySEPkfd4IKU4kJpTPp6/Mka/ayB4hXZ
-         fNwhN8IIW0TkBhIE6JdShsrKJP3KtegCAZBZzOcTXVPJ7RuZIJLfrFV04K8VZIFI/qoI
-         sOeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
-        b=sogVm77wFFrwQq38WXAZxVnaWjahlhE2sRQhwqe9xNQpvG4YYB5X8QcSQJVMLX98fb
-         IzJTTjqU2SjSPjW8ErQt5fON+7v69T/kd7jLGgpWcC8NwxyP3AmjIf1K04gzjZLo0MNo
-         oHeH5IG7C3DcDWk+DEBaWwcnaM//VHB8IG9samTL/CPO/0rqabgIRaHEFNhx1f9cpUCe
-         2ucPBmXca24PMWaZ2160yTssjB6CHOIPI0Op0L3DM4JQZHFbgcap8wBoS9EY4JOkIzUv
-         CEeBvgz9IfmiDOjVFQyu0H7ovw2T271bpqd8Ck7EKzjJSAGecjKxFA3X4FLfH0mLvog6
-         +dIQ==
-X-Gm-Message-State: APjAAAUM/xGvkOmTGti33zh/2WSihEqYr/daUbEjOqkREEGCUd6GpBsw
-        u+36URuLCJBCMVSoFFHiUjqjN7glTRMbSiK+9eBlAg==
-X-Google-Smtp-Source: APXvYqz4WIPVD6RaEfzhjt2nRL8Q3ReinXWMfS2taUKWfU1ppqbKjrPvuAhDEVOow4IVqRo34vof7KNX/xH9rfQS/Dc=
-X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6024597ljk.77.1576158044254;
- Thu, 12 Dec 2019 05:40:44 -0800 (PST)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fc5yh4LVAiggzPN+wor+bf3kjTBee23Lfe8dsCoGEGg=;
+ b=TrGMPt6Ga4g30cMnX2CpZt+R/pOICjB+02D93F87bIFfIll71tcuI4FH0vxjONNzkRwDt0B909HM9m48ZxNjnhBJ0HCYwFor30FQ0unXm01kxnNLINPTMhZjyuxEZSbBuHjFNHCD4iU9CyD+8me/I/PrHRlGTclPo6s2KxmhQBM=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1612.jpnprd01.prod.outlook.com (52.133.160.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.17; Thu, 12 Dec 2019 13:44:21 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
+ 13:44:21 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH] pinctrl: rza1: reduce printed messages
+Thread-Topic: [PATCH] pinctrl: rza1: reduce printed messages
+Thread-Index: AQHVsD0N18LySv2+wEyDYhBVub9Giqe2QQ0AgABBLmA=
+Date:   Thu, 12 Dec 2019 13:44:21 +0000
+Message-ID: <TY1PR01MB1562D31F6F362D6F588BD6FE8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191211160638.31853-1-chris.brandt@renesas.com>
+ <20191212094436.r5zergjlduobjq7n@uno.localdomain>
+In-Reply-To: <20191212094436.r5zergjlduobjq7n@uno.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctN2RkYTg0MTItMWNlNS0xMWVhLWFhNTUtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDdkZGE4NDE0LTFjZTUtMTFlYS1hYTU1LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMTA3OCIgdD0iMTMyMjA2MzE4NTgzMzkxNDgwIiBoPSJVUzh6TlhlTHErVWtmYUZRdDJmZUNyM2tkWG89IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d3b0cdc7-1bbd-488c-f2bb-08d77f0964ac
+x-ms-traffictypediagnostic: TY1PR01MB1612:
+x-microsoft-antispam-prvs: <TY1PR01MB1612A8A2DBCF33F260D667068A550@TY1PR01MB1612.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(189003)(199004)(186003)(316002)(8676002)(54906003)(71200400001)(81156014)(81166006)(5660300002)(8936002)(26005)(52536014)(33656002)(7696005)(2906002)(15650500001)(4744005)(6506007)(66556008)(66446008)(55016002)(86362001)(6916009)(478600001)(4326008)(66476007)(64756008)(9686003)(76116006)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1612;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8JrpVXabJh8Yn2xlGcTRqLDKt7VavKZnrxiS3nN4UIllhXdSnqGthaSgXlm6iGxn+FKfYmGIvIVjM8r/FW/QpWDQeS26wSq85Gy+dOt1zcmGgqM3/q/30pPpSOw/Ji9r5wA7zfE+3+BB9d8pYUSdWmGO17vTQw6LMUUNuTDtS1SfmtCENiTRt4Xc/j4gYPbPTh98/4huQln719//IrDSzW7G7B8q2AxEoSynt28uku3yVWsIfvZtIEZqygxXkXyy6sbWOXpiUc1aG+Yf9B5fl8n3N1Q3YMWjBMKyB9dHO1dstSvCbUxsLbzZZDk3w8QVrhRhfFTyTlEprl/Fu8Is33sbU7G9PpQjZWKMXiNz51I+IkER4V2DVYGevGYw+xgh/aCQZsFKfO0g0JFZ5miHWX4rsEk1FKhqo7pj8RO1phsoVw+ZP8j+ww9PLvdSdpiu
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-4-geert+renesas@glider.be>
-In-Reply-To: <20191127084253.16356-4-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 14:40:29 +0100
-Message-ID: <CACRpkdZs0_VvfpE34bgrMtBVeamCsq6BaqfyJc1tyvWCornSUw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] gpiolib: Add support for GPIO line table lookup
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3b0cdc7-1bbd-488c-f2bb-08d77f0964ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 13:44:21.4804
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FSBi7yy6Qf3m2eFivB9BZG7SgG/m6/ZOeoNjPmbx+NkXPEI+ln2w1baNbdRTLAgsUQ5rIWFuTtJ8oB3VD0OqMXU/Wdjj2ZFnYNeNBa9mLMM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1612
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> Currently GPIOs can only be referred to by GPIO controller and offset in
-> GPIO lookup tables.
->
-> Add support for looking them up by line name.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-OK I see what you want to do...
-
-> +               if (p->chip_hwnum == (u16)-1) {
-
-If you want to use this then use:
-
-if (p->chip_hwnum == U16_MAX)
-
-from <linux/limits.h>
-
-> +                       desc = gpio_name_to_desc(p->chip_label);
-> +                       if (desc) {
-> +                               *flags = p->flags;
-> +                               return desc;
-> +                       }
-> +
-> +                       dev_warn(dev, "cannot find GPIO line %s, deferring\n",
-> +                                p->chip_label);
-> +                       return ERR_PTR(-EPROBE_DEFER);
-> +               }
-> +
->                 chip = find_chip_by_name(p->chip_label);
->
->                 if (!chip) {
-> diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
-> index 1ebe5be05d5f81fa..84c1c097e55eefaf 100644
-> --- a/include/linux/gpio/machine.h
-> +++ b/include/linux/gpio/machine.h
-> @@ -31,7 +31,7 @@ enum gpio_lookup_flags {
->   */
->  struct gpiod_lookup {
->         const char *chip_label;
-> -       u16 chip_hwnum;
-> +       u16 chip_hwnum;                 /* if -1, chip_label is named line */
-
-/* if U16_MAX then chip_label is the named line we are looking for */
-
-But the member name "chip_label" is completely abused with this
-setup, it should then be renamed as part of the patch set to something
-like chip_label_or_line_name so it is clear what it is or
-just name it "const char *key".
-
-But I'm not entirely convinced about reusing the existing
-struct gpio_lookup for this.
-
-What about constructing a new lookup struct specifically for this?
-I understand it is more work, but will that not be more
-maintainable and readable?
-
-Yours,
-Linus Walleij
+SGkgSmFjb3BvLA0KDQpPbiBUaHUsIERlYyAxMiwgMjAxOSwgSmFjb3BvIE1vbmRpIHdyb3RlOg0K
+PiA+IC0JZGV2X2luZm8ocnphMV9wY3RsLT5kZXYsICJQYXJzZWQgZ3Bpb2NoaXAgJXMgd2l0aCAl
+ZCBwaW5zXG4iLA0KPiA+ICsJZGV2X2RiZyhyemExX3BjdGwtPmRldiwgIlBhcnNlZCBncGlvY2hp
+cCAlcyB3aXRoICVkIHBpbnNcbiIsDQo+ID4gIAkJIGNoaXAtPmxhYmVsLCBjaGlwLT5uZ3Bpbyk7
+DQo+IA0KPiBQbGVhc2UgYWxpZ24gdGhpcyBsaW5lIHRvIHRoZSBvcGVuICggLi4uIFNvcnJ5IHRv
+IGJvdGhlciBmb3Igc3VjaCBtaW5vciB0aGluZy4NCg0KRmFpciBwb2ludCENCkknbGwgZml4IGFu
+ZCByZXNlbmQuDQoNCj4gVGhlcmUgYXJlIG90aGVyIGRldl9pbmZvIHdoaWNoIG1pZ2h0IHNob3cg
+dXAgZnJlcXVlbnRseSwgSSdtIGxvb2tpbmcgYXQgbGluZQ0KPiAxMDU0IGluIGV4YW1wbGUuIEkg
+dGhpbmsgaXQncyBmaW5lIGFzIHRoZXkgc2hvdyB0aGUgYWN0dWFsbHkgZW5hYmxlZCBncm91cHMu
+Li4NCg0KWWEsIEknbSBPSyB0aGF0LiBXaGVuIGNoZWNraW5nIHNvbWVvbmUncyBsb2dzLCBJIGNh
+biBzZWUgaWYgdGhleSBhY3R1YWxseSBlbmFibGVkDQp0aGUgcGlucyBvciBub3QuDQoNCkkgd2Fz
+IGp1c3QgYW5ub3llZCBieSBhbGwgdGhlIHRleHQgYWJvdXQgcmVnaXN0ZXJpbmcgdGhlIHBvcnRz
+Li4uLnRoYXQgY29tZXMgZnJvbQ0KdGhlIC5kdHNpIHRoYXQgbm8gb25lIGV2ZXJ5IGNoYW5nZXMu
+Li4uLmFuZCBJIHdhcyBzY3JvbGxpbmcgdGhvdWdoIHRyeWluZyB0byBmaW5kDQpteSBwcmludCBk
+ZWJ1ZyBtZXNzYWdlcyBmb3IgYW5vdGhlciBkcml2ZXIgSSB3YXMgZGVidWdnaW5nICAgOm8NCg0K
+DQo+IEFud2F5LCBtaW5vciBhbGlnbmVtZW50IGlzc3VlIGFwYXJ0DQo+IEFja2VkLWJ5OiBKYWNv
+cG8gTW9uZGkgPGphY29wb0BqbW9uZGkub3JnPg0KDQoNClRoYW5rIHlvdS4NCkknbGwgcmVzZW5k
+IHdpdGggeW91ciBBQ0sNCg0KDQpDaHJpcw0KDQo=
