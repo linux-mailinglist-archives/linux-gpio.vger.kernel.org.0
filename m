@@ -2,90 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82ACC11D10E
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 16:31:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D4711D151
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 16:48:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbfLLPbv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 10:31:51 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34639 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729097AbfLLPbv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 10:31:51 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l18so2040822lfc.1
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 07:31:50 -0800 (PST)
+        id S1729459AbfLLPsQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 10:48:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38617 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729432AbfLLPsQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 10:48:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so3049222wmi.3
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 07:48:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ECIp9lV6kJ+VM+6W7bBk3Sdy+LzurMj7dRD2Wk/+8N0=;
-        b=b/TELp6QCwaXPDO9kaxh1LNS6hl2y/m9h+qIZeOi/JE7x4Ws8x2zw0/PTtRzRfs2yy
-         K8UswXohSzdNsWP7mWOSDld6pgtvcOpoY8/jYLYvxxvntzQ4rpmeSlcZV3+H6LlOhS7b
-         v6U+gqlikaQqB8bJzmBmsEGMFL4yxu20K9mJNqkvPcQCbOvY1EANEeqtfIIon/R2gaHa
-         VlhrDdjqVizCY+mEHoFxzKRcEjd96cmVJ6fuIgKXipL685jRgQjRJaFraVv2haoI/GJE
-         qRAmbDDx67PT9FmuNVAi9DK8w7BiOKHsHcXm/HiRsA1mLqb5NNffqvRJk5lDBZIxg9Wv
-         Ns2A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=n8vF9XNoq8z6lGj5X7N3vW0Qdo3VLesTtOSH5vM0z9g=;
+        b=tWDQHCzjEidxQRC+S3IK6O7tlY/wx1abfeFkrfPopDd3QnLtcJm/2dSOfbn4oBuHob
+         r5oqnlemPeEejKOCEADPAyAr0Cn6ISp7836+r+o8bI0ZppfhowGu586AmRKCjlF4XovA
+         Gan7Xv/WYJBpQPmip9CyMywfOCnw5YFEkNw+lfBkNsZ97VqUaLcFuP++4ZBfVBdkqyAu
+         iS+Zh6cT5jmUAdSFEM6h/dQgBqqVy8JV17rG7osun1xfooVf1WiWuhgYi2xxuuO7fAvt
+         SfVBVpVTBZeLFibk13ApL2uYWHGl00qSzJXR1iTJMR2XPTEkA6tAW2o+iWHF2t/b+41M
+         +f7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ECIp9lV6kJ+VM+6W7bBk3Sdy+LzurMj7dRD2Wk/+8N0=;
-        b=DyN47+5i84CBDTG2Zs0G80414i/tmmiY/rXFvLPt+r6dRbwxvOph2XvDEAtq7jmOCW
-         40H3HKEFKIoDeB54FDUtCZv7BHhw9KbZ9m49KCBNRHxuxNRFUCDHMc9+qaktHnYvqKdO
-         VVbvkdI9gWYOagu1UT2KOykhX4GrRQosbh7fIAWwaxUfrFgPo811MMGmox+GtvMOAE2O
-         3Rj5hHVY5vvJC8OfdAAW0978Y3tI4GLvtdMtCBOXBhq3EVNEnOL79ZO2PvZ1RFmfNKIp
-         2Q0x2gtRtT/zcJ7bTBC5Rai20XphtWqFe2hCNv3dXeytwL/W3ADX2Pa5OTO+IwW6d/ru
-         k1Aw==
-X-Gm-Message-State: APjAAAUTZC8mx/8rTpxJT7FEYRZQHGOM+BVlDzn7hr55JfXYA+Y0Z4zl
-        HbSEPicmVt3FKbHpSOkrcnFbzjZTNTF/RKH4Dd2OGg==
-X-Google-Smtp-Source: APXvYqw1PlfuejP1ZPxzLQvWLLSvj4Zx4f38wbFgrFKRxNPyTKCVACivic8/ENzEHqljQsQrx4I1syaFHSBrQG19/gM=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr5854026lfi.93.1576164708519;
- Thu, 12 Dec 2019 07:31:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=n8vF9XNoq8z6lGj5X7N3vW0Qdo3VLesTtOSH5vM0z9g=;
+        b=jrzrPpxqJUyGYQce+6VO3EG/nrqVyvlojRW86E2V1WefS7U16k8WAfohNOSZtv8Qfp
+         +ndMY8V9c3jc2x6vqMv2tYLHxmynR4m6G0joMHMgbZj+rcI65hw3CEgQY1unMoBNU34b
+         UwDxCvJkdMiOkcPiw0bpgFF309Hz3ymc96KaCxmqY+8IP1FANYlyr52bFXLiflMoCWsO
+         J5kTdr85mt9Sw504m2Cx5c7ECdChWjf9KHDjolFHFzHCBWhxUFlIfSSKaBCEQAqKRCBV
+         qQ86ta3bsktQvEn5jLQIfVucjOW2TC9YOM9bmGNM+EKOA681xhwK1IXN5l0/uNNgpvoK
+         F3Xw==
+X-Gm-Message-State: APjAAAXejb+Oi2ckMYx+pj57wYnhvK4Nq3LJ1MzNeRS0G0i9xhNV/7Q/
+        aIoLrRIJ4ACX+gCPN7nRMkrDRA==
+X-Google-Smtp-Source: APXvYqxOLMy2RQ678Cljt3+lFrWx65iFon1zUH2zHDgdT62aQXQwwk5Wxg4qyHDQTsa3N8dQjdgobg==
+X-Received: by 2002:a1c:6a05:: with SMTP id f5mr7206712wmc.2.1576165693930;
+        Thu, 12 Dec 2019 07:48:13 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id p26sm6519960wmc.24.2019.12.12.07.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 07:48:13 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:48:04 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 0/3] Add DA9062 GPIO support
+Message-ID: <20191212154804.GB3468@dell>
+References: <20191129165817.20426-1-m.felsch@pengutronix.de>
+ <20191210095115.kxvm7elfkiw2kdem@pengutronix.de>
+ <CACRpkda0BCBj1LeFkWsjBPHi_4d-F+eu0tDLm9VrFbn1RyWkWA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com> <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
-In-Reply-To: <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 16:31:37 +0100
-Message-ID: <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: mvebu: use platform_irq_count
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkda0BCBj1LeFkWsjBPHi_4d-F+eu0tDLm9VrFbn1RyWkWA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 4:29 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Use platform_irq_count to replace of_irq_count
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >
-> > V1:
-> >  Code inspection, not tested
->
-> Patch applied.
+On Thu, 12 Dec 2019, Linus Walleij wrote:
 
-Oops dropped again now that I see there are comments on
-2/2 that warrants a v2 of this as well.
+> On Tue, Dec 10, 2019 at 10:51 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > gentle ping.
+> (...)
+> > > Marco Felsch (3):
+> > >   dt-bindings: mfd: da9062: add gpio bindings
+> > >   mfd: da9062: add support for the DA9062 GPIOs in the core
+> > >   pinctrl: da9062: add driver support
+> 
+> I can merge this to the pinctrl subsystem but then I need
+> Lee's ACK on patches 1 & 2 as they are to the MFD subsystem
+> and I think he will want me to create an immutable branch too?
+> 
+> As Lee is not even on the To: line I think it is unlikely to happen,
+> so maybe repost, stating your request for his ACK?
 
-Yours,
-Linus Walleij
+Or any other line I guess?  Seeing as these aren't in my inbox.
+
+Yes, please submit a RESEND with me as a recipient.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
