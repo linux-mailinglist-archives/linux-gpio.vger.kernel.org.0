@@ -2,62 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E795111CC1D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 12:21:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3635211CC57
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 12:36:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbfLLLVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 06:21:40 -0500
-Received: from mga07.intel.com ([134.134.136.100]:4991 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbfLLLVk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:21:40 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 03:21:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,305,1571727600"; 
-   d="scan'208";a="220672957"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 12 Dec 2019 03:21:36 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 12 Dec 2019 13:21:35 +0200
-Date:   Thu, 12 Dec 2019 13:21:35 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Use new GPIO direction defines for intel pinctrl
-Message-ID: <20191212112135.GE2110480@lahna.fi.intel.com>
-References: <cover.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
+        id S1728613AbfLLLg1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 06:36:27 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41291 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbfLLLg1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 06:36:27 -0500
+Received: by mail-io1-f67.google.com with SMTP id c16so2350760ioo.8
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 03:36:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=ycWvQYFzUKSBFFV5ryuMq9POXJLsNlVaVUA/wZEnTyY=;
+        b=Fi9PbQq56iRTyP5PCVqFDHkBrupwft0BeRJYpn+IWX9NhPpuKzODTxhZIH+0LtrjcR
+         oPsS72VJvuR3NMeRx702fHS8EkzWD21XsQDIaAj/DDZrlbiSAOtC3PGJV8quIHt66fX4
+         Iq7JEgoLtYQl/9ruv5vs6bKfbztJeAQHyCksBbmNLMuSGbZm3IaxWrbZmHF8WxCVjhub
+         rZ+vLMQjjD5uuvzDdj65zx3sNqcJFxYrlAuRDhdtdQ4gkdO9hB8anSPyAqtLdw6B35Ub
+         QvUiPyPngYvi1+WJ/jvz8BbNBZLWq5XDKJseumkixEaMS8xJn7c1HHzSXfrWv4Cu9oJN
+         E2ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=ycWvQYFzUKSBFFV5ryuMq9POXJLsNlVaVUA/wZEnTyY=;
+        b=Js+jscWzR8LhRhdfBJiEgT8WnjZjiu8Ylt2u8WPFMF1sKbrWr7QK8usoqfNmk0LPVX
+         d0dCcQztAL4aU3XanHTnL0Wzfa/Wh05wub8eg5Zm4lZDymBTAmopgUxE+LoMwb2EqnRP
+         mr07LVZdDPZ1KwD78rrQDoJlVWkldjBmOgJyvrXtAFCxf+falDKe0ujR05OBEyWsAkOt
+         10Yu1LGi3Vx7BIAsJrn549wYe4tWWWzvABiAc36GsCcAU2eo+foKCIZ+2WxLS8BvR4G2
+         QcSSe/6sk5fvczpZYlBgrp2k9GR52ITNtNzR/AEp+ObJvs7718ADeg4fMyKN7lHkqqR9
+         QE0w==
+X-Gm-Message-State: APjAAAXIGt2Mty9hSGtktbEKEYMOMlva9l9jfLQinXEVnEtAW7Jl7b6e
+        kcaQmozuu/QBmzIh/B0Ix9a0T6+/M8DRVQEIhLA=
+X-Google-Smtp-Source: APXvYqyPDQ8/ROQWFHLJmCTaBdaPLrNMA0FQCi5zdhVVarpvPvvZ9yoNt0+Uot3AvL31hjLAK2Gmm910eG8NRIui7bw=
+X-Received: by 2002:a02:cd3b:: with SMTP id h27mr7619967jaq.18.1576150586582;
+ Thu, 12 Dec 2019 03:36:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Received: by 2002:a05:6622:89:0:0:0:0 with HTTP; Thu, 12 Dec 2019 03:36:26
+ -0800 (PST)
+From:   Dao Alpha <daoalpha44@gmail.com>
+Date:   Thu, 12 Dec 2019 11:36:26 +0000
+Message-ID: <CAKt4=qF9c-HAatK6-jWOfthevnx=xNEYtT5n91No1Ai6YKF2ZQ@mail.gmail.com>
+Subject: Dear Friend,?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:33:54AM +0200, Matti Vaittinen wrote:
-> We added definitions for GPIO line directions here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=9208b1e77d6e8e9776f34f46ef4079ecac9c3c25
-> 
-> Let's use them on Intel pincontrollers too.
-> 
-> Changes for v2:
->   - Replaced ternary operator with if() for better readability
-> 
-> ---
-> 
-> Matti Vaittinen (3):
->   pinctrl: pinctrl-intel: Use GPIO direction definitions
->   pinctrl: pinctrl-cherryview: Use GPIO direction definitions
->   pinctrl: pinctrl-baytrail: Use GPIO direction definitions
+Dear Friend,
+My Seasons of greetings to you and your family.
 
-Andy, please pick these up with my,
+First, I am Mr. Dao Alpha, a banker working with Bank of Africa here
+in my country Burkina Faso West Africa, and I have a business
+transaction that will benefit both of us, and want to know if you can
+handle and claim the fund to your country's account. The amount is
+($10.5Million). After the transfer, we have to share it, 50% for me,
+and 50% for you. Please let me know if you can assist me, for more
+details information on how to proceed, and then claim this money to
+your country successfully. I hope you will work with me honestly?
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+This business is legal, risk free and will be 100% successful, because
+I arranged it properly before contacting you.
+
+If yes, update me with your personal information such as;
+
+1. Your name in Full:
+2. Your House Address:
+3. Your Occupation:
+4. Your Age:
+5. Your direct phone number;
+
+Regards.
+Mr. Dao Alpha.
