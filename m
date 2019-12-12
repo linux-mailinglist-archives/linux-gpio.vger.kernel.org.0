@@ -2,74 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C2111C969
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 10:39:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEAE911C9B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 10:42:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfLLJiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 04:38:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728329AbfLLJit (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:38:49 -0500
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05FE52173E;
-        Thu, 12 Dec 2019 09:38:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143529;
-        bh=YiBHRvmzqwP2Wcik2ucd5vLbYHnFu3fPz1cXkn7qxfY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bXrka/lB2G+PKc73Fwbd0Cfp/zQWZGY5Qz1X1NztoqumrJjBf+Yny9ObSeBmb9ww9
-         S9BA5Y3M7rBSUEqBtLbgixO3oYaKf0Zpjjyc13hZOounJN5qxo1Rf1FYzih03/V9bU
-         mBJoMwttf4ouaDkFIrTRReMO0OyiNLPa44eAGEkk=
-Received: by mail-lf1-f41.google.com with SMTP id r14so1174890lfm.5;
-        Thu, 12 Dec 2019 01:38:48 -0800 (PST)
-X-Gm-Message-State: APjAAAWMtM20YyZmGJFMDMv+0AWY5EccPS0uxzy9OiehGHgX2wjvdN0Y
-        fAOT57yiTP55U0oWBcrsRjEJtPbba7HeqKfXkiM=
-X-Google-Smtp-Source: APXvYqyu6b08O6ZGMeq8/kKx/orBKXWk5tK9GegZevaZ2Ce3P9wKAHrRq/kEDZ52TNvDve1nfF/peti7vg4C6vQePZ0=
-X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr5132078lfp.106.1576143527223;
- Thu, 12 Dec 2019 01:38:47 -0800 (PST)
+        id S1728578AbfLLJmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 04:42:32 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:57627 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbfLLJmb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 04:42:31 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 939E420006;
+        Thu, 12 Dec 2019 09:42:27 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 10:44:36 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Chris Brandt <chris.brandt@renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: rza1: reduce printed messages
+Message-ID: <20191212094436.r5zergjlduobjq7n@uno.localdomain>
+References: <20191211160638.31853-1-chris.brandt@renesas.com>
 MIME-Version: 1.0
-References: <20191212092726.41027-1-chenzhou10@huawei.com>
-In-Reply-To: <20191212092726.41027-1-chenzhou10@huawei.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 12 Dec 2019 10:38:35 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
-Message-ID: <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
-Subject: Re: [PATCH -next v2] pinctrl: samsung: fix build error without CONFIG_OF_GPIO
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
-        linux-gpio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4l7cagjh5kgyubuu"
+Content-Disposition: inline
+In-Reply-To: <20191211160638.31853-1-chris.brandt@renesas.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 10:30, Chen Zhou <chenzhou10@huawei.com> wrote:
+
+--4l7cagjh5kgyubuu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Chris,
+
+On Wed, Dec 11, 2019 at 11:06:38AM -0500, Chris Brandt wrote:
+> Since this message is printed for each port, it creates a lot of output
+> during boot and would serve better only during debugging.
 >
-> If CONFIG_OF_GPIO is n, build fails:
->
-> drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
-> drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
->    gc->of_node = bank->of_node;
->
-> Use #ifdef to guard this.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+Seems fair
+
 > ---
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pinctrl/pinctrl-rza1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 017fc6b3e27e..86e5bf59bde5 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -1235,7 +1235,7 @@ static int rza1_parse_gpiochip(struct rza1_pinctrl *rza1_pctl,
+>
+>  	pinctrl_add_gpio_range(rza1_pctl->pctl, range);
+>
+> -	dev_info(rza1_pctl->dev, "Parsed gpiochip %s with %d pins\n",
+> +	dev_dbg(rza1_pctl->dev, "Parsed gpiochip %s with %d pins\n",
+>  		 chip->label, chip->ngpio);
 
-I was thinking about adding OF_GPIO but I could not trigger such case
-as you mention. How can I reproduce this?
+Please align this line to the open ( ... Sorry to bother for such
+minor thing.
 
-Anyway, the select/dependencies in Kconfig should be fixed up -
-PINCTRL_SAMSUNG should depend on OF and GPIOLIB.
+There are other dev_info which might show up frequently, I'm
+looking at line 1054 in example. I think it's fine as they show the
+actually enabled groups...
 
-Best regards,
-Krzysztof
+Anway, minor alignement issue apart
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+   j
+>
+>  	return 0;
+> --
+> 2.23.0
+>
+
+--4l7cagjh5kgyubuu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl3yDAMACgkQcjQGjxah
+VjxDpA//X1R1THIIeYa63NuMnCE/aCvRX4VGXYF4EkLek51yXJRwr/AuQd4IEiwL
+kubHdhGNR9iI4eAUJ4Hplgtl6LHpUKWvrysW5GnzucgtCyT4xV78Hnz8CEq2vPiA
+Z6BkD+/jHEI8MOeq3FwRAtUGKlugP90+HZgZ6kVsoR8EGxLaspd6c3qyvEsPNm3u
+vTJw4q7SJpj0/e9GP61lvfhmpln6I9CFc9TWcIo6qt3PceeqkgCZplCDVpy5lofb
+tC64/O55xshXQGEDGHs4Jc0t4gDt3KCDKxeCGjhf2Wl0/wSefpcegY/x8mV5xn1y
+8zZfeI8Swj2JteUbcBcbPJ0nJYnDCk2cq9FARuGIC0JrdSJeR8IcYULx21fQC7CC
+FI0lx5Mgdgw784qwX58A7oRdxuerp8QOxlftbdoO43upmMKNYX8WDTYLiD7luvO3
+ysPv+WumC8OD/ZxR8wnubDFLXL/az9dO5mmm8g21ZFievL4d8v8uWmZpTNyYzsmE
+OiETISgMNQgISuv4nIXAxkUeUVnkWTOGKpZChK8RT5LCvCbyI6U6blW2Opkb/tAr
+SIHGPkDyy4xAu6sZlQq7QZoF2ea7t0ht4A4oQy3kz8rLQqOCg4RQjeCYHqLzJ+w2
+KND7fY4rLdzRbOhcXzfgxff9aCACQgypSLatI5BvM4dG3WvJnoU=
+=NYrg
+-----END PGP SIGNATURE-----
+
+--4l7cagjh5kgyubuu--
