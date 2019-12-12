@@ -2,430 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFAB511D1CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:04:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2833D11D1E3
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:08:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfLLQEX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 11:04:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51665 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729827AbfLLQEX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 11:04:23 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ifQwr-0003cZ-KC; Thu, 12 Dec 2019 17:04:17 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ifQwr-0004LH-3h; Thu, 12 Dec 2019 17:04:17 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-Date:   Thu, 12 Dec 2019 17:04:13 +0100
-Message-Id: <20191212160413.15232-4-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191212160413.15232-1-m.felsch@pengutronix.de>
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+        id S1729705AbfLLQIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 11:08:50 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43201 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729739AbfLLQIu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 11:08:50 -0500
+Received: by mail-qt1-f194.google.com with SMTP id b3so2683114qti.10
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 08:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6xL5oHx6JhfySW6vNlCWxSH0U7ZkAzHSyw1I4MBhOBU=;
+        b=bX0qcXCfrctzXDS/zTTqs6TEaaJAU5p5CsU4r/5/bKGYfQYofP2Ae0gBQel5/wwdh0
+         iJ2cx1hOBcJw2uT6qMHTzMHRo5U9ndec/mh1nW0E/oy3kDUHngJDaI5a6Mt6QDB7Zh3O
+         dyjAz+ug5qnFQxQ4IZoRP5rMghfhGc8NldSweIlVJQmGdoxJpU7aUh0qRmlziBJnQ/fk
+         u4pmrr77wEOXvqc2gbXJ3o/0AbdNr9l2Y6k4PNoxH0z8nDQuxY9GR6ta87xJ75rBJUzs
+         umrKZYrpChkC2N72J/mQTVKQbOj0TPfkwPb9o2seXvtOtZkLELyaLh/6USr4/sHNARPF
+         WpgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6xL5oHx6JhfySW6vNlCWxSH0U7ZkAzHSyw1I4MBhOBU=;
+        b=SZbWh3Ch11lEF1DpX02DmjlIN6EZN5hf062j8RFG/IYKOeaO2/TBpMj+Weu3UrmTCz
+         fhETrWZqVavEnMoH3bmmpXS6FYAHBdWxis/dcgLhtH6QCZMvSOh1FBLb9d9tv5jg5mq7
+         9f9qcTDTGEx/7PVaFoAgbUxSJOQQGA5+AgJOpcBBcTfGZ0nUq+6tHulrHPnloWvQljB9
+         wgxSrA6i2asQaRt688Do8NP7wuC9ne2AndYmIXZxYS0Z8p5BZgXFvm0WzlHSJwR6P3zG
+         I543e0QzMZWpX1+4QzrHn9O2/x8+Pizg/krMcYYBbMug24PSWz2Xv+K/kumJmK1rvmc2
+         aqug==
+X-Gm-Message-State: APjAAAWAASDSOa2Ze6+Av0mLpQJuBQpg7O668xoWRqXW1uFDmz4i8cot
+        HxlRdKMsu0Df80I7YLIY++ltGjK211lz+ofAN74cyA==
+X-Google-Smtp-Source: APXvYqyHX+4gkmFrb0PetZfIRJsKK01/Htm4j9k5//KWMeGY8spRtLpR1itsFlTDdkQHvk5JZswQdyreZWZAfH/iR44=
+X-Received: by 2002:ac8:6784:: with SMTP id b4mr7837731qtp.27.1576166929494;
+ Thu, 12 Dec 2019 08:08:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+ <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com> <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
+In-Reply-To: <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Dec 2019 17:08:38 +0100
+Message-ID: <CAMpxmJX73eufsaXzFjkb2S9Adztv7PqDEhBSDHfmbB_+VGrXEw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-be used as input, output or have a special use-case.
+czw., 12 gru 2019 o 16:31 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Thu, Dec 12, 2019 at 4:29 PM Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+> >
+> > On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
+> >
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Use platform_irq_count to replace of_irq_count
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V1:
+> > >  Code inspection, not tested
+> >
+> > Patch applied.
+>
+> Oops dropped again now that I see there are comments on
+> 2/2 that warrants a v2 of this as well.
+>
+> Yours,
+> Linus Walleij
 
-The patch adds the support for the normal input/output use-case.
+Linus,
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-Changelog:
+FYI I picked up v3 of this series into my tree.
 
-v3:
-- add comment for gpio private include
-- add missing bits.h include
-- add pin_config state container and set initial pin state to push-pull
-- make use of GPIO_LINE_DIRECTION_{IN,OUT}
-- update MAINTAINERS entry -> gpio-da90??.c already covered but not
-  pinctrl-da90??.c
-
-v2:
-- fix minor style issue
-- move from drivers/gpio to drivers/pinctrl
-- Fix spelling issue
-- rename local gpio_dir to gpio_mode
-- Add datasheet reference and TODO notes
-- move gpio to mfd-root node to avoid hierarchical interrupt chips
-- Add gpio-controller property check
-- remove of_device_id since we drop the gpio of-subnode
-- Drop da9062_gpio_get_hwgpio
-
- MAINTAINERS                      |   1 +
- drivers/pinctrl/Kconfig          |  12 ++
- drivers/pinctrl/Makefile         |   1 +
- drivers/pinctrl/pinctrl-da9062.c | 297 +++++++++++++++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 drivers/pinctrl/pinctrl-da9062.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..2b680790fdf8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4837,6 +4837,7 @@ F:	drivers/leds/leds-da90??.c
- F:	drivers/mfd/da903x.c
- F:	drivers/mfd/da90??-*.c
- F:	drivers/mfd/da91??-*.c
-+F:	drivers/pinctrl/pinctrl-da90??.c
- F:	drivers/power/supply/da9052-battery.c
- F:	drivers/power/supply/da91??-*.c
- F:	drivers/regulator/da903x.c
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b372419d61f2..977787c158cc 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -126,6 +126,18 @@ config PINCTRL_DA850_PUPD
- 	  Driver for TI DA850/OMAP-L138/AM18XX pinconf. Used to control
- 	  pullup/pulldown pin groups.
- 
-+config PINCTRL_DA9062
-+	tristate "Dialog Semiconductor DA9062 PMIC pinctrl and GPIO Support"
-+	depends on MFD_DA9062
-+	select GPIOLIB
-+	help
-+	  The Dialog DA9062 PMIC provides multiple GPIOs that can be muxed for
-+	  different functions. This driver bundles a pinctrl driver to select the
-+	  function muxing and a GPIO driver to handle the GPIO when the GPIO
-+	  function is selected.
-+
-+	  Say yes to enable pinctrl and GPIO support for the DA9062 PMIC.
-+
- config PINCTRL_DIGICOLOR
- 	bool
- 	depends on OF && (ARCH_DIGICOLOR || COMPILE_TEST)
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac537fdbc998..2397684cbe11 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_PINCTRL_AT91PIO4)	+= pinctrl-at91-pio4.o
- obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
- obj-$(CONFIG_PINCTRL_BM1880)	+= pinctrl-bm1880.o
- obj-$(CONFIG_PINCTRL_DA850_PUPD) += pinctrl-da850-pupd.o
-+obj-$(CONFIG_PINCTRL_DA9062)	+= pinctrl-da9062.o
- obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
- obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
- obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
-diff --git a/drivers/pinctrl/pinctrl-da9062.c b/drivers/pinctrl/pinctrl-da9062.c
-new file mode 100644
-index 000000000000..39f13fcbd3a8
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-da9062.c
-@@ -0,0 +1,297 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Dialog DA9062 pinctrl and GPIO driver.
-+ * Based on DA9055 GPIO driver.
-+ *
-+ * TODO:
-+ *   - add pinmux and pinctrl support (gpio alternate mode)
-+ *
-+ * Documents:
-+ * [1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-+ *
-+ * Copyright (C) 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
-+#include <linux/bits.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/gpio/driver.h>
-+
-+#include <linux/mfd/da9062/core.h>
-+#include <linux/mfd/da9062/registers.h>
-+
-+/*
-+ * We need this get the gpio_desc from a <gpio_chip,offset> tuple to decide if
-+ * the gpio is active low without a vendor specific dt-binding.
-+ */
-+#include <../gpio/gpiolib.h>
-+
-+#define DA9062_TYPE(offset)		(4 * (offset % 2))
-+#define DA9062_PIN_SHIFT(offset)	(4 * (offset % 2))
-+#define DA9062_PIN_ALTERNATE		0x00 /* gpio alternate mode */
-+#define DA9062_PIN_GPI			0x01 /* gpio in */
-+#define DA9062_PIN_GPO_OD		0x02 /* gpio out open-drain */
-+#define DA9062_PIN_GPO_PP		0x03 /* gpio out push-pull */
-+#define DA9062_GPIO_NUM			5
-+
-+struct da9062_pctl {
-+	struct da9062 *da9062;
-+	struct gpio_chip gc;
-+	unsigned int pin_config[DA9062_GPIO_NUM];
-+};
-+
-+static int da9062_pctl_get_pin_mode(struct da9062_pctl *pctl,
-+				    unsigned int offset)
-+{
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int ret, val;
-+
-+	ret = regmap_read(regmap, DA9062AA_GPIO_0_1 + (offset >> 1), &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val >>= DA9062_PIN_SHIFT(offset);
-+	val &= DA9062AA_GPIO0_PIN_MASK;
-+
-+	return val;
-+}
-+
-+static int da9062_pctl_set_pin_mode(struct da9062_pctl *pctl,
-+				    unsigned int offset, unsigned int mode_req)
-+{
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	unsigned int mode = mode_req;
-+	unsigned int mask;
-+	int ret;
-+
-+	mode &= DA9062AA_GPIO0_PIN_MASK;
-+	mode <<= DA9062_PIN_SHIFT(offset);
-+	mask = DA9062AA_GPIO0_PIN_MASK << DA9062_PIN_SHIFT(offset);
-+
-+	ret = regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-+				 mask, mode);
-+	if (!ret)
-+		pctl->pin_config[offset] = mode_req;
-+
-+	return ret;
-+}
-+
-+static int da9062_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int gpio_mode, val;
-+	int ret;
-+
-+	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+	if (gpio_mode < 0)
-+		return gpio_mode;
-+
-+	switch (gpio_mode) {
-+	case DA9062_PIN_ALTERNATE:
-+		return -ENOTSUPP;
-+	case DA9062_PIN_GPI:
-+		ret = regmap_read(regmap, DA9062AA_STATUS_B, &val);
-+		if (ret < 0)
-+			return ret;
-+		break;
-+	case DA9062_PIN_GPO_OD:
-+	case DA9062_PIN_GPO_PP:
-+		ret = regmap_read(regmap, DA9062AA_GPIO_MODE0_4, &val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return !!(val & BIT(offset));
-+}
-+
-+static void da9062_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+
-+	regmap_update_bits(regmap, DA9062AA_GPIO_MODE0_4, BIT(offset),
-+			   value << offset);
-+}
-+
-+static int da9062_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	int gpio_mode;
-+
-+	gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+	if (gpio_mode < 0)
-+		return gpio_mode;
-+
-+	switch (gpio_mode) {
-+	case DA9062_PIN_ALTERNATE:
-+		return -ENOTSUPP;
-+	case DA9062_PIN_GPI:
-+		return GPIO_LINE_DIRECTION_IN;
-+	case DA9062_PIN_GPO_OD:
-+	case DA9062_PIN_GPO_PP:
-+		return GPIO_LINE_DIRECTION_OUT;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int da9062_gpio_direction_input(struct gpio_chip *gc,
-+				       unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	struct gpio_desc *desc = gpiochip_get_desc(gc, offset);
-+	unsigned int gpi_type;
-+	int ret;
-+
-+	ret = da9062_pctl_set_pin_mode(pctl, offset, DA9062_PIN_GPI);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If the gpio is active low we should set it in hw too. No worries
-+	 * about gpio_get() because we read and return the gpio-level. So the
-+	 * gpiolib active_low handling is still correct.
-+	 *
-+	 * 0 - active low, 1 - active high
-+	 */
-+	gpi_type = !gpiod_is_active_low(desc);
-+
-+	return regmap_update_bits(regmap, DA9062AA_GPIO_0_1 + (offset >> 1),
-+				DA9062AA_GPIO0_TYPE_MASK << DA9062_TYPE(offset),
-+				gpi_type << DA9062_TYPE(offset));
-+}
-+
-+static int da9062_gpio_direction_output(struct gpio_chip *gc,
-+					unsigned int offset, int value)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	unsigned int pin_config = pctl->pin_config[offset];
-+	int ret;
-+
-+	ret = da9062_pctl_set_pin_mode(pctl, offset, pin_config);
-+	if (ret)
-+		return ret;
-+
-+	da9062_gpio_set(gc, offset, value);
-+
-+	return 0;
-+}
-+
-+static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
-+				  unsigned long config)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct regmap *regmap = pctl->da9062->regmap;
-+	int gpio_mode;
-+
-+	/*
-+	 * We need to meet the following restrictions [1, Figure 18]:
-+	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
-+	 *				  gpio input
-+	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
-+	 *				  gpio output open-drain.
-+	 */
-+
-+	switch (pinconf_to_config_param(config)) {
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+		if (gpio_mode < 0)
-+			return -EINVAL;
-+		else if (gpio_mode != DA9062_PIN_GPI)
-+			return -ENOTSUPP;
-+		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-+					  BIT(offset), BIT(offset));
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		gpio_mode = da9062_pctl_get_pin_mode(pctl, offset);
-+		if (gpio_mode < 0)
-+			return -EINVAL;
-+		else if (gpio_mode != DA9062_PIN_GPO_OD)
-+			return -ENOTSUPP;
-+		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
-+					  BIT(offset), BIT(offset));
-+	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
-+		return da9062_pctl_set_pin_mode(pctl, offset,
-+						DA9062_PIN_GPO_OD);
-+	case PIN_CONFIG_DRIVE_PUSH_PULL:
-+		return da9062_pctl_set_pin_mode(pctl, offset,
-+						DA9062_PIN_GPO_PP);
-+	default:
-+		return -ENOTSUPP;
-+	}
-+}
-+
-+static int da9062_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct da9062_pctl *pctl = gpiochip_get_data(gc);
-+	struct da9062 *da9062 = pctl->da9062;
-+
-+	return regmap_irq_get_virq(da9062->regmap_irq,
-+				   DA9062_IRQ_GPI0 + offset);
-+}
-+
-+static const struct gpio_chip reference_gc = {
-+	.owner = THIS_MODULE,
-+	.get = da9062_gpio_get,
-+	.set = da9062_gpio_set,
-+	.get_direction = da9062_gpio_get_direction,
-+	.direction_input = da9062_gpio_direction_input,
-+	.direction_output = da9062_gpio_direction_output,
-+	.set_config = da9062_gpio_set_config,
-+	.to_irq = da9062_gpio_to_irq,
-+	.can_sleep = true,
-+	.ngpio = DA9062_GPIO_NUM,
-+	.base = -1,
-+};
-+
-+static int da9062_pctl_probe(struct platform_device *pdev)
-+{
-+	struct device *parent = pdev->dev.parent;
-+	struct da9062_pctl *pctl;
-+	int i;
-+
-+	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
-+	if (!pctl)
-+		return -ENOMEM;
-+
-+	pctl->da9062 = dev_get_drvdata(parent);
-+	if (!pctl->da9062)
-+		return -EINVAL;
-+
-+	if (!device_property_present(parent, "gpio-controller"))
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(pctl->pin_config); i++)
-+		pctl->pin_config[i] = DA9062_PIN_GPO_PP;
-+
-+	/*
-+	 * Currently the driver handles only the GPIO support. The
-+	 * pinctrl/pinmux support can be added later if needed.
-+	 */
-+	pctl->gc = reference_gc;
-+	pctl->gc.label = dev_name(&pdev->dev);
-+	pctl->gc.parent = &pdev->dev;
-+#ifdef CONFIG_OF_GPIO
-+	pctl->gc.of_node = parent->of_node;
-+#endif
-+
-+	platform_set_drvdata(pdev, pctl);
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &pctl->gc, pctl);
-+}
-+
-+static struct platform_driver da9062_pctl_driver = {
-+	.probe = da9062_pctl_probe,
-+	.driver = {
-+		.name	= "da9062-gpio",
-+	},
-+};
-+module_platform_driver(da9062_pctl_driver);
-+
-+MODULE_AUTHOR("Marco Felsch <kernel@pengutronix.de>");
-+MODULE_DESCRIPTION("DA9062 PMIC pinctrl and GPIO Driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:da9062-gpio");
--- 
-2.20.1
-
+Bart
