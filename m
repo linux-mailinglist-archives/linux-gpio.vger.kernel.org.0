@@ -2,75 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A12F411D0FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 16:28:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E62D11D108
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 16:29:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfLLP2G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 10:28:06 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43210 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728939AbfLLP2G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 10:28:06 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so1990394lfq.10
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 07:28:05 -0800 (PST)
+        id S1729009AbfLLP3g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 10:29:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41102 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729013AbfLLP3e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 10:29:34 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so2747436ljc.8
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 07:29:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a3HoIlbnDsQ+bG9LL9JaGOgzii63aNDgW55yKpCip9Q=;
-        b=iKPEiMkKQgBQ4g2yPLGxQjeGhMyleGCLknPgXerp//TZbCetjQRPk0GwMRD1WJWWh+
-         nrTwHEIOkBB34TYXuOi9YObv2wC3fdH8p08IfQLU9LUXhNp1ObJACUNQryh4iw/iN7/J
-         oCIvUcHOAR6nY3v4xCJEPkm5FKaOWK5fGZEvnN8WVIqtXw48XWCRpddOiN/OlQ2aRqgo
-         6ZhVx6Nlt4upYgtta0Yyos1/+smXER5q20OgjRzSWGBMxYavvyZjdM+H5G9HKjXJvlBE
-         OBVTQb3i0yF0Ljjqvd5Rt/U8xxg8LDV0m91fNszkUwKDKlVtlWupOQ9+ZvGmKAdeg7Cp
-         //Yw==
+        bh=qTpkotce35zOQrVkQ1ddp2xTck4OkTwMYGpdBkrE2zc=;
+        b=UzEaq2vnzr9sjAB8ubKyX2pmHVWmdWkuu+kXjYG2MrzZD1H3BCHFpbhGTRmEhU2lOT
+         OsxjshF4T1juteQFcTCADG9+eUhhqBXa1LK7eTSY3cUAUZTikyDVIqcbmcmZIQuRxA6L
+         +517/FUr48FJvqV5Tr9xy3tuB2iRmccAiG9kYzTcjSSq3rCLDwyjpt18RS8SYr9PA0jr
+         mXVoz/WVbIQmTmvhUapSfHUWf/g3WkNxTansBEtW996+m9U+dD+ToYp0AHoFboma2Umw
+         ef2KrP/fZWJce09hRI69t023T50EAaAtJXUh5Omb32YPhdLcg5ruX60UShLSzSr14EEY
+         d6mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a3HoIlbnDsQ+bG9LL9JaGOgzii63aNDgW55yKpCip9Q=;
-        b=HEy7WAinpcWYo98lm6gImGdwDVrp33MgXa227Rs2eVLkTl5cP7/Z/Qc8jALRMsXLF+
-         0Sk+Voe6CJoyeMA+g8W/vcLZj0RgX6qfqhMiWPZOnWtXeRAtt3O5zBliluvwFXksBDgE
-         gA069UQcVTM1k8MAnNW0XfWju/UTu37/PJ2vYoDoNqu6vAcgR6Ue5cdrICYVjQzBdWIr
-         httLxg6c/3jAc1D3aL3DuTevGOE+c2Hg6BLnXxWYcdcL2LFPvl6qD92pXoQCkWnvQFg6
-         ohy0aP0u5GUYHVhInM567D9aGDrRdfWDwRNeyVMxgZyt7/Lv5IJodPH/GdupoYkBQYgn
-         om8Q==
-X-Gm-Message-State: APjAAAXclG/bpWzTRB+H3c1gVkDXS47YK/yhbGbSyaWxoG8BbPEWDhh1
-        o9DPvnKgPA3aLJRZds6XXD2MYxkQ+PN4EFHl/IHc4Q==
-X-Google-Smtp-Source: APXvYqxiy9bV88GGh0k1LLBojYnrA1fLF0F8FrE5iWdwSwTFvk+H0DElw5XdBSrCzUI8nlHvxA8+NcTHLRbEJpbUXLc=
-X-Received: by 2002:a19:2389:: with SMTP id j131mr5789532lfj.86.1576164484490;
- Thu, 12 Dec 2019 07:28:04 -0800 (PST)
+        bh=qTpkotce35zOQrVkQ1ddp2xTck4OkTwMYGpdBkrE2zc=;
+        b=XyIjWQGa1JKoHIAldq33nEMLlUAQ+elkbu/Q7qwf30NWYdDPXxdPaPI1TXQHNlkzo9
+         ouVDdta3gGjZcLNLppSzatN3izVsiCzlH7QwOCcNx1MTQo638Dcmwid1IYGntoXME4S5
+         DFksZPN1MxrTbxb3oAJ7eXC3IOLDtVslm1aYMgQRa2W/TZpX0GC3XVB06rhc3D0uuopm
+         yApJ5Yo3TJMttifP4sgPIk3VUi2sNMN/e9QCUgUdRhR9rfDvPf4pY9XZWVlfBVUbckLH
+         ObTsGDQMOg+FanTJIj4U9+sEwPHtmU1gleZ83CzVOjh4imBE0vfzQfJJbGSXZnXogZka
+         tEDA==
+X-Gm-Message-State: APjAAAUi1cgS92UTC3WtnZe/ugkiSZGAWhYvshtCPlh2yZe1nilXmD+G
+        O6QkbrMmItgKssBX3tjp0q6RYHAtfv6JSbohZjdBxA==
+X-Google-Smtp-Source: APXvYqyj+Hsn41+C6NSE3ED5W7WfWudu0qa263fd1v1kKFO4Z7x5NLyw0A//WCDy2x3t0vaix6Qdu0vgTudDQt588nQ=
+X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6403872ljk.77.1576164571573;
+ Thu, 12 Dec 2019 07:29:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20191202050110.15340-1-andrew@aj.id.au>
-In-Reply-To: <20191202050110.15340-1-andrew@aj.id.au>
+References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 16:27:52 +0100
-Message-ID: <CACRpkdaHXYdHOtCE=_e549rP5DpzP0ayOR4nJmq055Ftiorr-A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 12 Dec 2019 16:29:19 +0100
+Message-ID: <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: mvebu: use platform_irq_count
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "rjui@broadcom.com" <rjui@broadcom.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 5:59 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-> Early revisions of the AST2600 datasheet are conflicted about the state
-> of the LPC/eSPI strapping bit (SCU510[6]). Conversations with ASPEED
-> determined that the reference pinmux configuration tables were in error
-> and the SCU documentation contained the correct configuration. Update
-> the driver to reflect the state described in the SCU documentation.
+> From: Peng Fan <peng.fan@nxp.com>
 >
-> Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Use platform_irq_count to replace of_irq_count
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>
+> V1:
+>  Code inspection, not tested
 
-Patch applied for fixes.
+Patch applied.
 
 Yours,
 Linus Walleij
