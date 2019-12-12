@@ -2,44 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D92B211CE5D
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 14:33:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6978611CE8B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 14:40:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbfLLNdh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 08:33:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40342 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbfLLNdh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 08:33:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 6so410540oix.7;
-        Thu, 12 Dec 2019 05:33:36 -0800 (PST)
+        id S1729460AbfLLNks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 08:40:48 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35033 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbfLLNks (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 08:40:48 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so2351585lja.2
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 05:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
+        b=DRzJQiVQg/nQ/ASUfL3q6cDwUxWJ56eQnZWGgR+JOoveYSxcv7+j9kjbi9XlxA1AEO
+         A02/XOPXYlK843ecHoWeaRH53jfl/cx5u3XSjbfE6QXM6s9uUsm05zfWWRKxADesDQaV
+         PnpOe4EYjBF5MZNs5FNBPAYxERQpmPL1TeloXm3jpv3+AB/lT3PvU4ZBj/VaARR4vYaR
+         uJAZHSCgQIgMRkQV60ebT26TmXAs0cOXjT+DYySEPkfd4IKU4kJpTPp6/Mka/ayB4hXZ
+         fNwhN8IIW0TkBhIE6JdShsrKJP3KtegCAZBZzOcTXVPJ7RuZIJLfrFV04K8VZIFI/qoI
+         sOeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=B1c5GbpC2qZV4XZL32ReXMmOl4Gf9Xdye7e43MFMR8g=;
-        b=ir+J4KCiAPAkjvp0ky7CL/fRvOfMW0Zm7o6v1rXeaVUwDUxF+C9TNjXpn/BysOxlk7
-         jJoVe5vx7/SBDPPYb7u1VhtIifglsrR+YblRpsrivUjYZYP9lccjXlwbyfruFgZBi8qa
-         FG80TRt7j8ounLnQC3UpkFKEVH/R6a6/IJHuA+ChO6JBMQ5umQTxLXd46SyztwKTsBUj
-         +kXOZseOs9sI5AUoKcO2Vr3PN/+LrB6oxo5jqQKIwFy3+s96Uop2ypSNkqKzDZ5/i3KZ
-         6oaJR4CsJthXtHp5SJYfNYltMOJyuTE6WmZQV9n85PdWWAtrg0fWq9yUp/ixquWJprKb
-         WHPA==
-X-Gm-Message-State: APjAAAVhFittvr2zZoo96SeXv2x9q8StI17TKbAhNdj1Uu3I2nzUKQ7u
-        HaYg40oYzoh4JCwP1mVESs5PZCWVAVuwNI6D3Tk=
-X-Google-Smtp-Source: APXvYqyZrB81syD0Ce6WwALcSofZswA84PMJGyV785ydrh5qmd3i1ZIC8I8AuxCcmSbHRH3rYOaGved6PnxX/cMztls=
-X-Received: by 2002:aca:4e87:: with SMTP id c129mr4645921oib.153.1576157615510;
- Thu, 12 Dec 2019 05:33:35 -0800 (PST)
+        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
+        b=sogVm77wFFrwQq38WXAZxVnaWjahlhE2sRQhwqe9xNQpvG4YYB5X8QcSQJVMLX98fb
+         IzJTTjqU2SjSPjW8ErQt5fON+7v69T/kd7jLGgpWcC8NwxyP3AmjIf1K04gzjZLo0MNo
+         oHeH5IG7C3DcDWk+DEBaWwcnaM//VHB8IG9samTL/CPO/0rqabgIRaHEFNhx1f9cpUCe
+         2ucPBmXca24PMWaZ2160yTssjB6CHOIPI0Op0L3DM4JQZHFbgcap8wBoS9EY4JOkIzUv
+         CEeBvgz9IfmiDOjVFQyu0H7ovw2T271bpqd8Ck7EKzjJSAGecjKxFA3X4FLfH0mLvog6
+         +dIQ==
+X-Gm-Message-State: APjAAAUM/xGvkOmTGti33zh/2WSihEqYr/daUbEjOqkREEGCUd6GpBsw
+        u+36URuLCJBCMVSoFFHiUjqjN7glTRMbSiK+9eBlAg==
+X-Google-Smtp-Source: APXvYqz4WIPVD6RaEfzhjt2nRL8Q3ReinXWMfS2taUKWfU1ppqbKjrPvuAhDEVOow4IVqRo34vof7KNX/xH9rfQS/Dc=
+X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6024597ljk.77.1576158044254;
+ Thu, 12 Dec 2019 05:40:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-3-geert+renesas@glider.be> <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
-In-Reply-To: <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Dec 2019 14:33:24 +0100
-Message-ID: <CAMuHMdVL2w=DzOHTh-Tq6NZLTNUKxUneMi3wX71Z83mdsy3LTA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] gpiolib: Add support for gpiochipN-based table lookup
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-4-geert+renesas@glider.be>
+In-Reply-To: <20191127084253.16356-4-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 14:40:29 +0100
+Message-ID: <CACRpkdZs0_VvfpE34bgrMtBVeamCsq6BaqfyJc1tyvWCornSUw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] gpiolib: Add support for GPIO line table lookup
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,94 +74,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-On Thu, Dec 12, 2019 at 2:20 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Currently GPIO controllers can only be referred to by label in GPIO
-> > lookup tables.
-> >
-> > Add support for looking them up by "gpiochipN" name, with "N" either the
-> > corresponding GPIO device's ID number, or the GPIO controller's first
-> > GPIO number.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Currently GPIOs can only be referred to by GPIO controller and offset in
+> GPIO lookup tables.
 >
-> What the commit message is missing is a rationale, why is this needed?
-
-Right. To be added: so they can be looked up in the GPIO lookup table
-using either the chip's label, or the "gpiochipN" name.
-
-> > If this is rejected, the GPIO Aggregator documentation must be updated.
-> >
-> > The second variant is currently used by the legacy sysfs interface only,
-> > so perhaps the chip->base check should be dropped?
+> Add support for looking them up by line name.
 >
-> Anything improving the sysfs is actively discouraged by me.
-> If it is just about staying compatible it is another thing.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-OK, so N must be the corresponding GPIO device's ID number.
+OK I see what you want to do...
 
-> > +static int gpiochip_match_id(struct gpio_chip *chip, void *data)
-> > +{
-> > +       int id = (uintptr_t)data;
-> > +
-> > +       return id == chip->base || id == chip->gpiodev->id;
-> > +}
-> >  static struct gpio_chip *find_chip_by_name(const char *name)
-> >  {
-> > -       return gpiochip_find((void *)name, gpiochip_match_name);
-> > +       struct gpio_chip *chip;
-> > +       int id;
-> > +
-> > +       chip = gpiochip_find((void *)name, gpiochip_match_name);
-> > +       if (chip)
-> > +               return chip;
-> > +
-> > +       if (!str_has_prefix(name, GPIOCHIP_NAME))
-> > +               return NULL;
-> > +
-> > +       if (kstrtoint(name + strlen(GPIOCHIP_NAME), 10, &id))
-> > +               return NULL;
-> > +
-> > +       return gpiochip_find((void *)(uintptr_t)id, gpiochip_match_id);
+> +               if (p->chip_hwnum == (u16)-1) {
+
+If you want to use this then use:
+
+if (p->chip_hwnum == U16_MAX)
+
+from <linux/limits.h>
+
+> +                       desc = gpio_name_to_desc(p->chip_label);
+> +                       if (desc) {
+> +                               *flags = p->flags;
+> +                               return desc;
+> +                       }
+> +
+> +                       dev_warn(dev, "cannot find GPIO line %s, deferring\n",
+> +                                p->chip_label);
+> +                       return ERR_PTR(-EPROBE_DEFER);
+> +               }
+> +
+>                 chip = find_chip_by_name(p->chip_label);
 >
-> Isn't it easier to just  augment the existing match function to
-> check like this:
->
-> static int gpiochip_match_name(struct gpio_chip *chip, void *data)
-> {
->         const char *name = data;
->
->         if (!strcmp(chip->label, name))
->                return 0;
+>                 if (!chip) {
+> diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
+> index 1ebe5be05d5f81fa..84c1c097e55eefaf 100644
+> --- a/include/linux/gpio/machine.h
+> +++ b/include/linux/gpio/machine.h
+> @@ -31,7 +31,7 @@ enum gpio_lookup_flags {
+>   */
+>  struct gpiod_lookup {
+>         const char *chip_label;
+> -       u16 chip_hwnum;
+> +       u16 chip_hwnum;                 /* if -1, chip_label is named line */
 
-return true;
+/* if U16_MAX then chip_label is the named line we are looking for */
 
->         return !strcmp(dev_name(&chip->gpiodev->dev), name);
-> }
+But the member name "chip_label" is completely abused with this
+setup, it should then be renamed as part of the patch set to something
+like chip_label_or_line_name so it is clear what it is or
+just name it "const char *key".
 
-Oh, didn't think of using dev_name() on the gpiodev.
-Yes, with the chip->base check removed, the code can be simplified.
+But I'm not entirely convinced about reusing the existing
+struct gpio_lookup for this.
 
-Or just
+What about constructing a new lookup struct specifically for this?
+I understand it is more work, but will that not be more
+maintainable and readable?
 
-        return !strcmp(chip->label, name) ||
-               !strcmp(dev_name(&chip->gpiodev->dev), name);
-
-> We should I guess also add some kerneldoc to say we first
-> match on the label and second on dev_name().
-
-OK.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
