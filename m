@@ -2,102 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2833D11D1E3
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B9311D1F0
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:10:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfLLQIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 11:08:50 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43201 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729739AbfLLQIu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 11:08:50 -0500
-Received: by mail-qt1-f194.google.com with SMTP id b3so2683114qti.10
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 08:08:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6xL5oHx6JhfySW6vNlCWxSH0U7ZkAzHSyw1I4MBhOBU=;
-        b=bX0qcXCfrctzXDS/zTTqs6TEaaJAU5p5CsU4r/5/bKGYfQYofP2Ae0gBQel5/wwdh0
-         iJ2cx1hOBcJw2uT6qMHTzMHRo5U9ndec/mh1nW0E/oy3kDUHngJDaI5a6Mt6QDB7Zh3O
-         dyjAz+ug5qnFQxQ4IZoRP5rMghfhGc8NldSweIlVJQmGdoxJpU7aUh0qRmlziBJnQ/fk
-         u4pmrr77wEOXvqc2gbXJ3o/0AbdNr9l2Y6k4PNoxH0z8nDQuxY9GR6ta87xJ75rBJUzs
-         umrKZYrpChkC2N72J/mQTVKQbOj0TPfkwPb9o2seXvtOtZkLELyaLh/6USr4/sHNARPF
-         WpgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6xL5oHx6JhfySW6vNlCWxSH0U7ZkAzHSyw1I4MBhOBU=;
-        b=SZbWh3Ch11lEF1DpX02DmjlIN6EZN5hf062j8RFG/IYKOeaO2/TBpMj+Weu3UrmTCz
-         fhETrWZqVavEnMoH3bmmpXS6FYAHBdWxis/dcgLhtH6QCZMvSOh1FBLb9d9tv5jg5mq7
-         9f9qcTDTGEx/7PVaFoAgbUxSJOQQGA5+AgJOpcBBcTfGZ0nUq+6tHulrHPnloWvQljB9
-         wgxSrA6i2asQaRt688Do8NP7wuC9ne2AndYmIXZxYS0Z8p5BZgXFvm0WzlHSJwR6P3zG
-         I543e0QzMZWpX1+4QzrHn9O2/x8+Pizg/krMcYYBbMug24PSWz2Xv+K/kumJmK1rvmc2
-         aqug==
-X-Gm-Message-State: APjAAAWAASDSOa2Ze6+Av0mLpQJuBQpg7O668xoWRqXW1uFDmz4i8cot
-        HxlRdKMsu0Df80I7YLIY++ltGjK211lz+ofAN74cyA==
-X-Google-Smtp-Source: APXvYqyHX+4gkmFrb0PetZfIRJsKK01/Htm4j9k5//KWMeGY8spRtLpR1itsFlTDdkQHvk5JZswQdyreZWZAfH/iR44=
-X-Received: by 2002:ac8:6784:: with SMTP id b4mr7837731qtp.27.1576166929494;
- Thu, 12 Dec 2019 08:08:49 -0800 (PST)
-MIME-Version: 1.0
-References: <1575352925-17271-1-git-send-email-peng.fan@nxp.com>
- <CACRpkdaTLVNXd+-j_gkOfKnTk02XaZiMA_XxUeM0_4zZ_F-=ug@mail.gmail.com> <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
-In-Reply-To: <CACRpkdYjCnx46kOuWXMZFme3emm1TugqjQPDctakOppAeCZvZg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Dec 2019 17:08:38 +0100
-Message-ID: <CAMpxmJX73eufsaXzFjkb2S9Adztv7PqDEhBSDHfmbB_+VGrXEw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: mvebu: use platform_irq_count
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        id S1729774AbfLLQKW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 11:10:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:52050 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729731AbfLLQKW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:10:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5435030E;
+        Thu, 12 Dec 2019 08:10:21 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7FCC3F6CF;
+        Thu, 12 Dec 2019 08:10:20 -0800 (PST)
+Date:   Thu, 12 Dec 2019 16:10:19 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191212161019.GF4310@sirena.org.uk>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SxgehGEc6vB0cZwN"
+Content-Disposition: inline
+In-Reply-To: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+X-Cookie: We have DIFFERENT amounts of HAIR --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 12 gru 2019 o 16:31 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Thu, Dec 12, 2019 at 4:29 PM Linus Walleij <linus.walleij@linaro.org> =
-wrote:
-> >
-> > On Tue, Dec 3, 2019 at 7:04 AM Peng Fan <peng.fan@nxp.com> wrote:
-> >
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > Use platform_irq_count to replace of_irq_count
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V1:
-> > >  Code inspection, not tested
-> >
-> > Patch applied.
->
-> Oops dropped again now that I see there are comments on
-> 2/2 that warrants a v2 of this as well.
->
-> Yours,
-> Linus Walleij
 
-Linus,
+--SxgehGEc6vB0cZwN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-FYI I picked up v3 of this series into my tree.
+On Wed, Dec 11, 2019 at 06:09:18PM +0100, Marco Felsch wrote:
 
-Bart
+> so one argument more for my solution. Also we don't configure the "pad"
+> to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
+> function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
+> Instead we tell the regulator to use _this_ GPIO e.g. for voltage
+> selection so we go the other way around. My last argument why pinctrl
+> isn't the correct place is that the GPIO1 can be used for
+> regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
+> have different states which is invalid IMHO.
+
+Note that there's two bits to my concern - one is if we should be using
+gpiolib or pinctrl, the other is what's driving the input (whichever API
+it's configured through) which didn't seem to be mentioned.
+
+--SxgehGEc6vB0cZwN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yZmoACgkQJNaLcl1U
+h9Ax8Af+NzakOK4jJKQRyY0wT3cczNnHphTUSbJ1zrH7fM+0K/2I8E6301iWfElB
+un6MYIjc8w5BMwLzMZ+Vjd6ZTheXHXnKeJPNNv69Fh4tUOS2vUQ2qRCtKvkLKF5q
+g5xwlTsMi3sBeFJljAoDfttiTvqj5XT1BERgNNPp8MSzQ2FWvKj+rDn+kvNq//Os
+Qf425pla6Go2FYVUSuauWZCQxWkqW7uDzCeDxpNurGvHhTCYNHQf8hAtkyGoGm6V
+UfGnSkypXK7vDrS25gYNIuyDN1RAjGhQIhBHuU3QLzLFNa1ozZ7xtNxnl3pcFvk9
+fzbFegJweraLhfQ7SYhcpiTJUZKQfA==
+=pK4s
+-----END PGP SIGNATURE-----
+
+--SxgehGEc6vB0cZwN--
