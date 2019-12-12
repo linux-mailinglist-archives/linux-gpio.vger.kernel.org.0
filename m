@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95D9311D2A3
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:46:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A72E011D2AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 17:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfLLQpx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 11:45:53 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.3]:49079 "EHLO
+        id S1729776AbfLLQse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 11:48:34 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.8]:61827 "EHLO
         mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729912AbfLLQpw (ORCPT
+        by vger.kernel.org with ESMTP id S1729762AbfLLQse (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:45:52 -0500
-Received: from [46.226.52.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-a.eu-west-1.aws.symcld.net id A8/98-12117-CBE62FD5; Thu, 12 Dec 2019 16:45:48 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSfUxbZRTGeXsvlwu086WAHMnA0K3olLYUx3a
-  ZumhmZuMg7B8lTlEv40K7tKVpC7QSTSFhW0GFDdgyvrpNBhlsy4SJjOKMwAhsMiMIW5jLXAcx
-  fJQIg+kiMnt7Yep/v3Oe55z3yZtDE9JRKprmbFbObGT1MiqE1KoCXlb0GBczE0cexjGu/huBT
-  GvNZZK5u3wVMdUrLSKmw7WCmNHueor5vXuMYEq/7Q96jda0tzopzS/jPZSm4u9EzYP22L3kvk
-  CdMSvP9lGgtqnuCmVyPGUrOeoNcqA5cRkKoRE+Q4DXO4iEYoCEqrM/E0LRgeCvzx9RfEHiQQI
-  6pmYDy1AwLcXHRNB3WMULUnwPwZ2uHwleoDADVYO/+ici8AME59r7/YsJPIvgK2enfzwcZ4K7
-  btw3QftcH0Cla7uASeCsj+cdJJbDN+5lkmcJZqGkeBUJDxth+NCCn4Pxq+CeGvJ7EI6BpeI2f
-  wYCR8HEpEvEM2AMTT1CNsCRMH1/NVDwczBUcgsJ/QQYvjm5xjJobOhf4xgYcZWvcRqcqD0StO
-  6/fq5nrc9AU3kpyccHvBlWe+1C2wSXPKdJgePhzNmLlMAb4fJn5f7vAewioauxQlSJVLX/iS1
-  wApx0L1ICvwjNp2aJWv9XhMHQiUnyJCJbEZNl1uVqrQZWp1eoExMVanWSQp2yVaHetl3Jfqxg
-  lVy+opCzWBVqJVtoUVrshv36bKWRs7Yj331lm3pbutDjJa+yFz1Di2SRkkrxYqZ0Q1Zetl3LW
-  rQfmvP1nKUXbaRpGUjGDD4tzMzlcrYcnd53pesy0GJZhKSTlyUWE2uw6HIF6RpS0JXTDacJKW
-  nMM3LRURIRb8K8SZtvfLJi/dZHUEx0uAQFBARIxSbObNBZ/6/PoCgaycIlt/ktYp3R+uSlGV8
-  IkS+E+l1/CCv7rxTtEO0dSn5J99O8l+W2xlbvfE5+oKikSBMe05ya3fb0oQzn7Q67bSaiIOBh
-  nLPucXBbSmzGhS9yRou3uVcLVgZfT6347orqvpuq3iTXJL8Zdy3xLc/48b5Lt+6lb4nfEbWha
-  WnelF71Q8vK/Nh789eD/yDeWCgKafg+rnt4ZYcqHSeXWnfnP0s5DEc2XVwQTU3YvRcqpg4q58
-  pTQxOmicPP56k8ZXfTJo5/6in9urEv0ztR89srRVeNaQZLjRfP3Gj+ZFeY6+3hLytvvs8q5v4
-  8Jk+9s2cgVG7f945nIDQyt3PoUco0pHiT9hfqz9dXOdjlXTvHdnvhYGzI+S0ZmztsGQdy2skC
-  GWnRsuoXCLOF/Qc/rsOHZgQAAA==
+        Thu, 12 Dec 2019 11:48:34 -0500
+Received: from [46.226.52.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-8.bemta.az-a.eu-west-1.aws.symcld.net id 40/C1-22069-D5F62FD5; Thu, 12 Dec 2019 16:48:29 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEJsWRWlGSWpSXmKPExsWSoc9orBud/yn
+  W4Mlsa4v5R86xWqyaupPF4v7Xo4wWU/4sZ7LYPP8Po8XlXXPYLD7susps0br3CLsDh8emVZ1s
+  Hneu7WHz6P9r4PF5k1wASxRrZl5SfkUCa0bn4ttMBWd5K/7dvMfawNjK3cXIycEosJRZ4l5rS
+  BcjF5B9jEWiq+ckI4SzmVHid+9PNpAqFoETzBJf3kqB2EIC05gkXu0RBikSEnjIKHG2aQlYEZ
+  uAhcTkEw/YQBIiAp8ZJdZsOgI2ilngNaPExs5trCBVwgJuEh/vvmQBsUUE3CWuvDzNCmEbSSz
+  /u4wRYp2qxNa9B8FsXoFEif3tZ9khVudJnFvYA7aNU8BW4tTd/6wQT8hKfGlczQxiMwuIS9x6
+  Mp8JxJYQEJBYsuc8M4QtKvHy8T+o+lSJk003GCHiOhJnrz+BspUk5s09AmXLSlya3w1l+0pMP
+  XuADaa+58hKqLiFxJLuVqBfOIBsFYl/hyohwgUSe35egCpXk5h47BPUOTISO3u6oeLzWSRenh
+  OYwKg/C8nVELaOxILdn9ggbG2JZQtfM88Ch4SgxMmZT1gWMLKsYrRIKspMzyjJTczM0TU0MNA
+  1NDTSNbQ0BmITvcQq3US91FLd8tTiEl1DvcTyYr3iytzknBS9vNSSTYzA5JVScPDQDsaVX9/q
+  HWKU5GBSEuWdwPMpVogvKT+lMiOxOCO+qDQntfgQowwHh5IE76tcoJxgUWp6akVaZg4wkcKkJ
+  Th4lER4t4GkeYsLEnOLM9MhUqcYdTkmvJy7iFmIJS8/L1VKnJcJpEgApCijNA9uBCypX2KUlR
+  LmZWRgYBDiKUgtys0sQZV/xSjOwagkzHsbZApPZl4J3KZXQEcwAR1hGAl2REkiQkqqgUmxd/a
+  p/mrNaKGKbCV9yWPH7h6TvLxyrtBio2knv84SqvO6ce7Cf88zrFJLLbcpss7d+GjJl/dLMo1m
+  m915/MD2z/Kph98yhO7+czyl7Wr5pK55+b+P57dXTjW+nXuh1WqK8vWXeyW+KPA6nHkmJ//BI
+  lxlvrz65q6V/05L+Xv9Xpzo2TPpGftWpZ/B3wLDTdW7Pf4pqVx2P7/epk73k5ibtWi3yZbG2q
+  2Jm2xmbum7Llcuf2BNA78/v/zvNYseabryKpi5PPJ3nrWOPUqZ58ALyw4Z6bavk5k4vsxTaup
+  L8bc5O/1LmDqbii/LCYv7Qu27le5Kdszdw3P0ufS9TbcDPPwFDtrxOTNd2Tx9cboSS3FGoqEW
+  c1FxIgDe3L4eZQQAAA==
 X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-23.tower-272.messagelabs.com!1576169147!609118!1
-X-Originating-IP: [104.47.0.59]
+X-Msg-Ref: server-7.tower-262.messagelabs.com!1576169307!283000!1
+X-Originating-IP: [104.47.1.51]
 X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.44.22; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 24767 invoked from network); 12 Dec 2019 16:45:48 -0000
-Received: from mail-he1eur01lp2059.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.59)
-  by server-23.tower-272.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Dec 2019 16:45:48 -0000
+Received: (qmail 27966 invoked from network); 12 Dec 2019 16:48:27 -0000
+Received: from mail-ve1eur01lp2051.outbound.protection.outlook.com (HELO EUR01-VE1-obe.outbound.protection.outlook.com) (104.47.1.51)
+  by server-7.tower-262.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Dec 2019 16:48:27 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gK+1m2BE+bwP/+C9pa1nrx1emg4KsKn/h54HtcIBT6fp57O648U4TzUjvlYY9UErx/ohpD1jJFNItDarTMPc+ZWzSeWRpuc9mGVlD5P5PChRDpANsFkVsfE/soyYIOONTY3wG3J4fA84jHp//vyV4A+6W19Rqy4N5lqzDyEFVFaO8Qt5w9LxtmHiDyrUxog5fZbr8zALJ56x7X28rY5JSgVfOGTsSsDpPGA5p2YBttiYQ916wvTL1yRdg/hSzLHwjcXA5Il/BjkoVpJJMv4aLjNXdt9apUj9vHi7lcLWt2hPuHxINBwa5Ylxs2cYM0T3YF/Vtdvna3g8/vRJRkV5xQ==
+ b=NLQW9e80/Jo6BXevLV7/t7gI3A8Zn5yQPGBLTjT+S5lEn8Xm1fe7ysRjv8gkM4oG8k5+AKWv6zCQMh3t1EjdhReVhQ3ULx2FnkNVaRB8izlcaBDPl0+4XIdbY0fow1Z6KKI0pWOFqRU45NeJjmvZQkBiwwWOfdIl4K40ICMzeaItDrOi4hnTXj7iVwZpa2A8jk7FpauDFDop4SaF0RbaS1NSlD1fe4CkrndLub1m1TXj99E3LxPfANtV64do1rjZPPkdlqWVT7koaqn0OGOwtebAFVHWeGP8SG7izju7Om0I1fgL/ah/iXmfyMNSCnDTwZp49fgEspsPgU1E/KwBug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bTTDDnQF6yGyf4LNfrqV9lYTzjffA+Kdo9rfzAWuVaM=;
- b=OiAJWPU4cZgZXVAF66xLBil1a8izBZfNwoVRvuCmUsjqRKR7upTk6u1ARIxbZYa2t8XOoccFj9vUlrWaddJrGpkw61RPdaMKpT7R4UBTpnOQBLdctKKL18HJ6OJEEheN+iPiOjQR+w2RrqxVphvQuvg7O6w14oN9jqG+M/jajXkteWyWK3IrTdTGd5x808+zCNbQosEeZTE5u3gXbg5QKobwwweRpNfJqq3o4k657vYU+/E2oQbS+KJuQHhLcpTQEjWyaUaPp4wb6OAwxtfSx9NF7rIDjR6gFFzjwRJWhFYLWt/rJkZazLIN37zXz2DWrqG4ynsWdCZSHOvPVBIPIA==
+ bh=ZoXBWvC0OPkyF1fHRIbUx3eD5blJJGZfcUyU+J6+aTY=;
+ b=GGF+/YCrK4t8vZaa1ZNamhkBeIjRrbZlQKeLyJ8ZJAK6xRbmaDn+9uhW7+Y2pXJ7QvhuAnS7BLBgH70rCuTX8S0SE0THmmFK/6dZHAOCq6/15rj/sC4xIujU4a63qab9q4EXkB9oarrwsd8ufS9212h/ag+KI7KyW9TRuWe0IljaTXZAPPfRsAcqOsxn33ujOIytHYqsCtn33Hvm9FaAnLlRDl+jx42xzHGAsBxRt+WIRo4vvfgQAMiEnjMuqG/XNsdujYGQNxjI1zSTrLKyixH7cBo4XGUIWXOxd/IVQL6xzakAXWOYqorrOCcpjIi0P+bsL11n0q+0PCUSdInZLw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
  dkim=pass header.d=diasemi.com; arc=none
@@ -57,16 +57,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=dialogsemiconductor.onmicrosoft.com;
  s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bTTDDnQF6yGyf4LNfrqV9lYTzjffA+Kdo9rfzAWuVaM=;
- b=GzMfjLqe+fT1EBGLjsUdp5AiswX5/hsGE+MSeikrjj4eOWQpa5eJ+0pCtkOHwhJzM9E+Jgvdlu5flITWhJmr3vXtEFQ/hkNrGUL3y4D/CCNBkWiPRL0N95b/3/mjt46AiJcW3vWQ2Pm6X1Rdx0TqwDp+EfkdHDW63X2eGB4werQ=
+ bh=ZoXBWvC0OPkyF1fHRIbUx3eD5blJJGZfcUyU+J6+aTY=;
+ b=TN36SBw4q/79KMi80e1J6rQ/Y4g+sZFspL2J1sUG1aFfUUsFIEKxE81QoyqCbpfwWDr+LBC+Fggl70pa6uyLWHJ7yc2dfltBAyCTvCvgAR9Zc0B/+5qVTrsAIh4Jd+wWtY1Yk+CowolkBOPTA5U+oRi4vgB5aVXpAxTbfCAhzTs=
 Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM (10.169.155.140) with Microsoft
+ AM5PR1001MB1202.EURPRD10.PROD.OUTLOOK.COM (10.169.149.148) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Thu, 12 Dec 2019 16:45:46 +0000
+ 15.20.2516.16; Thu, 12 Dec 2019 16:48:26 +0000
 Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2516.019; Thu, 12 Dec 2019
- 16:45:46 +0000
+ 16:48:26 +0000
 From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 To:     Marco Felsch <m.felsch@pengutronix.de>,
         Support Opensource <Support.Opensource@diasemi.com>,
@@ -77,16 +77,14 @@ CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062
- GPIOs in the core
-Thread-Topic: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062
- GPIOs in the core
-Thread-Index: AQHVsQXcKFcQyOE/80WxSSkJ3fgLS6e2sC7A
-Date:   Thu, 12 Dec 2019 16:45:46 +0000
-Message-ID: <AM5PR1001MB099464F0AD7334D0AE67011C80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+Subject: RE: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Thread-Topic: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Thread-Index: AQHVsQXfQ9DGkUJA90ed8RfDS4RwT6e2sLrQ
+Date:   Thu, 12 Dec 2019 16:48:26 +0000
+Message-ID: <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-3-m.felsch@pengutronix.de>
-In-Reply-To: <20191212160413.15232-3-m.felsch@pengutronix.de>
+ <20191212160413.15232-4-m.felsch@pengutronix.de>
+In-Reply-To: <20191212160413.15232-4-m.felsch@pengutronix.de>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -94,31 +92,31 @@ X-MS-TNEF-Correlator:
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 346cf975-cbfd-46a2-d075-08d77f22bcb5
-x-ms-traffictypediagnostic: AM5PR1001MB1043:
+x-ms-office365-filtering-correlation-id: 69abee29-50f1-431d-b920-08d77f231bf7
+x-ms-traffictypediagnostic: AM5PR1001MB1202:
 x-ms-exchange-sharedmailbox-routingagent-processed: True
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB1043FF2ABFB1D29303F827AFA7550@AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-microsoft-antispam-prvs: <AM5PR1001MB1202696EA343D8578FFB65B8A7550@AM5PR1001MB1202.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(366004)(189003)(199004)(8676002)(4326008)(110136005)(316002)(54906003)(81156014)(81166006)(2906002)(8936002)(86362001)(55016002)(55236004)(66476007)(9686003)(7696005)(71200400001)(5660300002)(66446008)(66946007)(64756008)(186003)(76116006)(33656002)(53546011)(52536014)(26005)(66556008)(6506007)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1043;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(39860400002)(366004)(376002)(189003)(199004)(54906003)(186003)(55016002)(64756008)(76116006)(66446008)(66556008)(110136005)(33656002)(316002)(66946007)(66476007)(26005)(2906002)(5660300002)(52536014)(71200400001)(4326008)(478600001)(8936002)(8676002)(86362001)(81156014)(81166006)(6506007)(53546011)(55236004)(9686003)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1202;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
 received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xzkjdq/c7x1Wij/9wuQ82GVBDxYpUTDWbGhMD55U/orDh/MsAYrBrHhGSysYQa/UtLpyT4/CJhDjmewu4YodbYI64RALHVDLUqOXEPYbZ/unixndxIRHEJyPjApJAU1vB2J0cKhNv4q/ozIbyucnX3rxr2xCWTguZfyDPVlluGZlB89KXeJCu0HTJzXi6aHQxZsUY2igkq1TGDZ9NLcGvt+DxYd6KuvgrUCX6c+ToENyAfALw6zlfIjTosgMhgyvzL4ZxtnHkazyLcxBbZhNpTKzhLofRFZuOh70tnELiy+uyM3Znt0oikW/uyqhIp2ZIF8Sv988YoubvVh3FKErBngyMnCVfZ1kKYeU27dEnEh8zwXiHIo6S9gY2Zm7IVnbVlOUURowdLUyXKZwCru0C9Pbal004hu5+tLUt5jwI3gamMkm+YerTGV9BdLelAF3
+x-microsoft-antispam-message-info: WLcKWDKymmBnUg/sgavELY/0SA9nde0e4Ioc/OTX+WqSXlicwfe0Dk7ue0tO3jpnkpBSMT48k8+LEhqRryb2e99P19f4yZLuLxLLvESijVx7SZmf1kjNV6G8khfwQXZVM/ymPV1cXJPLx9Rx10AAw1+y3iKnFnR7V0LJL/M7ZYbLLdNm05/oUBeE/6XkORYlunN5gOvr4qEW3Fi98gBI75gRlcPT+y7tCJrdzB5BHhjZDmMUdLwlPh0a1w9t+wB5KRV9tIQH2EqN/qKeUHIn73RlnA3vqDpceFHhMI5BhZabBh/eP9/CJxPQpL/RzfpErQxHB57ZN3aZUOva1qB7EfvFVa6WOnNR1RTIwQyH9ehSlopZays+blnDLOtYPLxQeWD7WzEATw7O87k5t1S2X45KGouPaXe7J+tQUWwNcIGlx6wsM9zMuNDHznaZiZDx
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 346cf975-cbfd-46a2-d075-08d77f22bcb5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 16:45:46.6562
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69abee29-50f1-431d-b920-08d77f231bf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 16:48:26.5257
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e9CrwFPlyiMdKgK6Lcfn0eA0eH8vKHb7OMn7M5thpnseEcCV+QNDX2OECWW0mnpteeIPK+LM5xbNomtbNqpVB0C9Ec3FFgcBVo9XZcIBJOU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1043
+X-MS-Exchange-CrossTenant-userprincipalname: 3hwDHCh65USDR4CO4kWD/UGV0Pc6BrGdgKLoW546tNN6z+wHRbk5XfB3loYWJLuhmZ15IBDeO/Sev7SFECsBjKJNWvsaElRa7GcQmIGg3Y0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1202
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -126,56 +124,53 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 12 December 2019 16:04, Marco Felsch wrote:
 
-> Currently the da9062 GPIO's aren't available. The patch adds the support
-> to make these available by adding a gpio device with the corresponding
-> irq resources. Furthermore the patch fixes a minor style issue for the
-> onkey device.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-> ---
->  drivers/mfd/da9062-core.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> index e69626867c26..5290bdc0ddcd 100644
-> --- a/drivers/mfd/da9062-core.c
-> +++ b/drivers/mfd/da9062-core.c
-> @@ -233,6 +233,14 @@ static struct resource da9062_onkey_resources[] =3D =
-{
->  	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY",
-> IORESOURCE_IRQ),
->  };
->=20
-> +static struct resource da9062_gpio_resources[] =3D {
-> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI0, 1, "GPI0", IORESOURCE_IRQ),
-> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI1, 1, "GPI1", IORESOURCE_IRQ),
-> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI2, 1, "GPI2", IORESOURCE_IRQ),
-> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI3, 1, "GPI3", IORESOURCE_IRQ),
-> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI4, 1, "GPI4", IORESOURCE_IRQ),
-> +};
+> +static int da9062_gpio_set_config(struct gpio_chip *gc, unsigned int off=
+set,
+> +				  unsigned long config)
+> +{
+> +	struct da9062_pctl *pctl =3D gpiochip_get_data(gc);
+> +	struct regmap *regmap =3D pctl->da9062->regmap;
+> +	int gpio_mode;
 > +
->  static const struct mfd_cell da9062_devs[] =3D {
->  	{
->  		.name		=3D "da9062-core",
-> @@ -266,7 +274,13 @@ static const struct mfd_cell da9062_devs[] =3D {
->  		.name		=3D "da9062-onkey",
->  		.num_resources	=3D ARRAY_SIZE(da9062_onkey_resources),
->  		.resources	=3D da9062_onkey_resources,
-> -		.of_compatible =3D "dlg,da9062-onkey",
-> +		.of_compatible	=3D "dlg,da9062-onkey",
-> +	},
-> +	{
-> +		.name		=3D "da9062-gpio",
-> +		.num_resources	=3D ARRAY_SIZE(da9062_gpio_resources),
-> +		.resources	=3D da9062_gpio_resources,
-> +		.of_compatible	=3D "dlg,da9062-gpio",
->  	},
->  };
->=20
-> --
-> 2.20.1
+> +	/*
+> +	 * We need to meet the following restrictions [1, Figure 18]:
+> +	 * - PIN_CONFIG_BIAS_PULL_DOWN -> only allowed if the pin is used as
+> +	 *				  gpio input
+> +	 * - PIN_CONFIG_BIAS_PULL_UP   -> only allowed if the pin is used as
+> +	 *				  gpio output open-drain.
+> +	 */
+> +
+> +	switch (pinconf_to_config_param(config)) {
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		gpio_mode =3D da9062_pctl_get_pin_mode(pctl, offset);
+> +		if (gpio_mode < 0)
+> +			return -EINVAL;
+> +		else if (gpio_mode !=3D DA9062_PIN_GPI)
+> +			return -ENOTSUPP;
+> +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
+> +					  BIT(offset), BIT(offset));
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		gpio_mode =3D da9062_pctl_get_pin_mode(pctl, offset);
+> +		if (gpio_mode < 0)
+> +			return -EINVAL;
+> +		else if (gpio_mode !=3D DA9062_PIN_GPO_OD)
+> +			return -ENOTSUPP;
+> +		return regmap_update_bits(regmap, DA9062AA_CONFIG_K,
+> +					  BIT(offset), BIT(offset));
 
+Apologies for the delay on reviewing. Just looking at the datasheet, how do=
+ we
+disable PULL_DOWN (for input) and PULL_UP (for output)? Should we not have =
+a
+'PIN_CONFIG_BIAS_DISABLE' case here to handle this?
+
+> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		return da9062_pctl_set_pin_mode(pctl, offset,
+> +						DA9062_PIN_GPO_OD);
+> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		return da9062_pctl_set_pin_mode(pctl, offset,
+> +						DA9062_PIN_GPO_PP);
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +}
