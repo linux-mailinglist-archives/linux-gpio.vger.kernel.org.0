@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02C5611C5F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 07:35:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8870D11C5FB
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Dec 2019 07:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfLLGff (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 01:35:35 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39551 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfLLGff (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 01:35:35 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so783777lfb.6;
-        Wed, 11 Dec 2019 22:35:33 -0800 (PST)
+        id S1727840AbfLLGgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Dec 2019 01:36:06 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45067 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfLLGgG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 01:36:06 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so761975lfa.12;
+        Wed, 11 Dec 2019 22:36:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hm/O+8iLvUpIN7zAOCeaNWnmTVwhDTl6QvgdqsBbH9s=;
-        b=XAB6FCv57L78E1iIGJ3IPdh2HaaT9PQsoGjUozln9qScCDvV6N/geOkA6AtgR63e3B
-         axPYgz2FHbyBADNSRy26XJIS9gfm4BR0fViIjzyFUX3jaYTGAntmmKhAkzIz0mAG4TyK
-         4utbaDAmotmhzsqZmLOcDemhiLMMi6upOBLfBh0fh+FzDbjXF0A7iZtbsxTL/r4X3J0e
-         3cAkSf9Y1mIMYq+Y7+HNsabFml55sdRtXTFBHuYD8jK8ipvWVBS3Mv5svebZh2Nal+Rq
-         zajh1wHYaB7hp+SclkuzkI8Am1OaxZcLbN2TIK6lA+1res3cLeWFBz0EJjTcHigbFHC+
-         RGbQ==
-X-Gm-Message-State: APjAAAVUKcifNd3ai/ayjDGrNafLMIwcMRIVZtOB+VtkkRMj4lZbV/ni
-        KmsqCGdkYTgYzuJoCbOyOAw=
-X-Google-Smtp-Source: APXvYqxNi8/Kpm3AwGj2j1bDb7P73QrEP+IeNBj1OPWrAiPOaK6R7yE1YE1kwHflhH2bYr5VImshIw==
-X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr4584538lfq.176.1576132532549;
-        Wed, 11 Dec 2019 22:35:32 -0800 (PST)
+        bh=52GRzE2LrbCdRaFMXkD1n/FkbMFyp9p/ZmIw21up4vE=;
+        b=q6OcrcVbM+A8DdWsv/LtCELRpSeU42vPkQgKnJ/M2pOZ0HDcjCXD718U0LlvWWXOUx
+         1eyiWiDaNNKPY8vYZ1pyiPwqA2sYGpMLPAle7uCH9DW0satUTOT2+OId42aRuiZHzjs/
+         XHWWryGHfVTXm+dk++Hwd1NsriObguFrFGrFjK74FSNl6R+ZfhGM4p5CGuxIY8GZRayr
+         14+GVMVEp99iBrRykFgw8PVV89AyBCv1BVz52iePzqEltDhXM7XWgfKYxZQj2YjO2fZy
+         P/rApNBpCQL0FX5Dy91JVO7RTFXnMj2B6QESKoQtUqbIlBzJiCjEDtk5Ii0Oob+WwdlR
+         oL6g==
+X-Gm-Message-State: APjAAAXFoEBZrgq2kyj6QQzJSR3CnB0Nq4ZBIxCn0ZGafMV7d/cjxths
+        PMCv90es4/gaX84KPJ5RQg4=
+X-Google-Smtp-Source: APXvYqwxxrMCCWuOBCo0HRT3e+PdDzA5S9WWiy6/6joBzScC56EHuKPoH87AL6B09DWxdgKbyvDxDg==
+X-Received: by 2002:a19:4351:: with SMTP id m17mr4754990lfj.61.1576132564072;
+        Wed, 11 Dec 2019 22:36:04 -0800 (PST)
 Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id m15sm2414125ljg.4.2019.12.11.22.35.31
+        by smtp.gmail.com with ESMTPSA id q25sm2381778lji.7.2019.12.11.22.36.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 22:35:32 -0800 (PST)
-Date:   Thu, 12 Dec 2019 08:35:19 +0200
+        Wed, 11 Dec 2019 22:36:03 -0800 (PST)
+Date:   Thu, 12 Dec 2019 08:35:52 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] pinctrl: pinctrl-cherryview: Use GPIO direction
+Subject: [PATCH v2 3/3] pinctrl: pinctrl-baytrail: Use GPIO direction
  definitions
-Message-ID: <78255e34b3542b57955565bcf1b518b1369dd541.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
+Message-ID: <0e8c584bff32da970510201b504e43a84a340cae.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -58,26 +58,27 @@ Use new GPIO_LINE_DIRECTION_IN and GPIO_LINE_DIRECTION_OUT when
 returning GPIO direction to GPIO framework.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-cherryview.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 582fa8a75559..7f049c17fce3 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1287,7 +1287,10 @@ static int chv_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
- 	direction = ctrl0 & CHV_PADCTRL0_GPIOCFG_MASK;
- 	direction >>= CHV_PADCTRL0_GPIOCFG_SHIFT;
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 9ffb22211d2b..362276ad5640 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1160,9 +1160,9 @@ static int byt_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 	raw_spin_unlock_irqrestore(&vg->lock, flags);
  
--	return direction != CHV_PADCTRL0_GPIOCFG_GPO;
-+	if (direction == CHV_PADCTRL0_GPIOCFG_GPO)
+ 	if (!(value & BYT_OUTPUT_EN))
+-		return 0;
 +		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
- }
+ 	if (!(value & BYT_INPUT_EN))
+-		return 1;
++		return GPIO_LINE_DIRECTION_IN;
  
- static int chv_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+ 	return -EINVAL;
+ }
 -- 
 2.21.0
 
