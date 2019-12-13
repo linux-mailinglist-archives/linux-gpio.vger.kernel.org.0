@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4143311E476
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 14:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F096511E47E
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 14:23:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfLMNUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 08:20:49 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36915 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMNUt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 08:20:49 -0500
-Received: by mail-lj1-f196.google.com with SMTP id u17so2622759lja.4
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 05:20:47 -0800 (PST)
+        id S1726463AbfLMNXy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 08:23:54 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37272 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMNXx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 08:23:53 -0500
+Received: by mail-lj1-f193.google.com with SMTP id u17so2632894lja.4
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 05:23:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=3lLLEYa4JqozwsOeIKC6yRPJKwsSh2t+1mekpQMYYYQ=;
-        b=jfZN5Oic4ZAkmDVwi44aSTFH4Fl2KkcMMA5TNYVyT6OznTZJtnF4qFJUCxOkFS0Jku
-         5jUdO2NAbMRsHIR3rm3yzJhisNTboT2g2ilR/FJtMyJROMCIIDv93zLT2MBNO2TgWji6
-         30klOG09CswtVsWlcHRAvW92os8znnqfRXE8Jntw9d1Sbdp5flqtM6FWwW3RvxHW4mVi
-         XnXaYpM47yPU4LeI7uJuZbOGxBWZzF+ZOHHyHu8PbON3/1R0L2zwcsbLiWALV7Vu1rM6
-         CRQ+gkUUAT4F2IXmxFoSW4xwBbRtvJoAVzMK5DFsWo4IV5Jc+mFgfurQxhby7qA8mBeG
-         h2jQ==
+        b=wkYmtHoEDtkqloUDsiTMolH3vvBMGg+1melxy0QnVhIrCStNeWyV/Ryo7F/SFT6Rxh
+         KVf74Sh4uY6aLe2v8EIVYqQ1gFNHvsj01IfoUntZwf1kdrSjtu8bVtWfKVMs8b0mGcn2
+         ndTEzZ08nVoF8vxYbBr105KG06lnpqYYVO7jXzXb3/vkThzgzwiDEXMPi6Gt/gA74sm8
+         Lc+il4oiO/D8ma4YURk7woi4FlsvQnfK8uj2eQFBWQX+hSpyoBAqQiMrvSAO3a8MtaBA
+         MFPArXsi5/7hTDRYx9pq7d6xsrNh0Nqz+BURT7yGRWVR3DmwXOvetxDLF24gPIwT/v4C
+         8nHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=3lLLEYa4JqozwsOeIKC6yRPJKwsSh2t+1mekpQMYYYQ=;
-        b=mmmYCq102g3lt7jEzaqhK7Mq//lqTXLlDi2KvMmxlFmvMfeAXJ6DsUHmHOIpPe/P+6
-         dM6P/nxsceVCBI4z96+/loyEGxso/QiMNdUIbVxL+Oj5dGY45d8gBfIhqA13/q2ZnbA4
-         RZBJCd0WMNzyvHJFGsdjwnRGxHDuOIHcFOPZ25118m+eLYUq0pGbzhjC/2j1sNndbwgA
-         BM/j9aGZADPWuMl95YLaa6GZ9mDbrZ3WXIYtNIFlrUchiTj7vBFYi6yH1XO6bpF9VLYE
-         IgeMtB6PsG31UiGj4u/4e0wiUqS0noxK/Scn2s0YcOJDPo9VTIDwOM/ijje2fQvQoLA4
-         5Tag==
-X-Gm-Message-State: APjAAAVPNR7X5uz6tb9NEV8slJT/bXCqklHJDt7ZSXmMNVn7tFg18E59
-        l9mMmhjiAZVxB7cFpWFpgJJGSLM/nf0=
-X-Google-Smtp-Source: APXvYqyB5DejUXXsJ+z/f8M3sX70yIfWHRM3PUva+ufRhTB9Zru5s5gt7T4L3nL1so0Uk2xqAVryuQ==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr9669354ljj.47.1576243246678;
-        Fri, 13 Dec 2019 05:20:46 -0800 (PST)
+        b=MPE4hiSIlH0v42Kp/z4xBgOyVi2EuOaVXns8M/3e3e8k/k19Iy/8BoRGBIApwQ8YbS
+         ANX2Gzg9gpywRdYziNB7OWyV1HoivYAdB7+eTWq2ztHJCd/wDj9X8jfwx8oP6DAFSVz3
+         KsfOH5WD6USzIc3+Mo5i7YDGt2cHVisnODkXxAqZcMRvlt9t/AuyhXWlzk21VAeUlaqv
+         TWjGfzd/hhiiHstIkK8Ro/WunPEiiItXeElW9eYnFIfUxbbFDY8L9eOu+DiVz2vJrUEG
+         1O8nBbfO6DMLEEiBX3vMSj+d17lwaO0NMnT2tDtTfyMbdIfcazMoAfq1qJcUt/FXXzTv
+         mphw==
+X-Gm-Message-State: APjAAAUKsoYpDZUN6mP1PLKYHXq5zxg80lP63qpfZ02tvttlGF7rLxx2
+        UIPfLDf1MSZqkvWJ5WWrV3HVLHaj+Bk=
+X-Google-Smtp-Source: APXvYqw8cxPsYdmF2U5/pWha8eM1rRMrzMebjDl5UdTXbiX1C3LZFMhX19aBpKakRZRNmH9Ldkhv/g==
+X-Received: by 2002:a2e:99d0:: with SMTP id l16mr9665986ljj.1.1576243430753;
+        Fri, 13 Dec 2019 05:23:50 -0800 (PST)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id s16sm4613727lfc.35.2019.12.13.05.20.45
+        by smtp.gmail.com with ESMTPSA id v4sm4800702ljg.19.2019.12.13.05.23.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 05:20:45 -0800 (PST)
+        Fri, 13 Dec 2019 05:23:49 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Benjamin GAIGNARD <benjamin.gaignard@st.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH] pinctrl: Enforce device links
-Date:   Fri, 13 Dec 2019 14:20:43 +0100
-Message-Id: <20191213132043.20806-1-linus.walleij@linaro.org>
+Subject: [PATCH v2] pinctrl: Enforce device links
+Date:   Fri, 13 Dec 2019 14:23:48 +0100
+Message-Id: <20191213132348.21146-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
