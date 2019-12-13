@@ -2,96 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92E9511E5D5
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 15:47:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3B1611E74F
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 17:00:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfLMOrE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 09:47:04 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23270 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfLMOrE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 13 Dec 2019 09:47:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 06:47:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
-   d="scan'208";a="211456249"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Dec 2019 06:47:02 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ifmDe-0004Gc-C9; Fri, 13 Dec 2019 16:47:02 +0200
-Date:   Fri, 13 Dec 2019 16:47:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/5] pinctrl: baytrail: Clean up (part 3)
-Message-ID: <20191213144702.GW32742@smile.fi.intel.com>
-References: <20191212102557.87754-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdaMgeqpBN0WydqirDX9eC_ypVcd=7PW+e96rsuMx7wJNg@mail.gmail.com>
+        id S1727993AbfLMQAE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 11:00:04 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36598 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727980AbfLMQAE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 11:00:04 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n12so2335166lfe.3
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 08:00:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6d355onEMaQLbFzGsPL3qOJq28B0iID9uA32I/OH8KY=;
+        b=RWONLY0C20iDqzVgHJOMcG0CbIMsarnktxykVv3fzYeDcK6YbJdMcv6KZE7y0BCOlw
+         kLoWcGHRdoHmerJ3dVsBoOp4+zwDg69u2Io0/U/CLa1xJvkhFLD8LWAP0muL6aVREdlr
+         dq+PsPNZF/el3cTFU9c2TLiU19CHe1GqHUjhb9Ao2Js8Swj/6tWPBA7nCliYmQ2ENqoq
+         hV/HLAOs2jFe5nVBnbYC33Yl1pAlomhdJeOm3hDAhsk430Id7SWzriiZyxqxlmZ3qMta
+         g9H4lygWNPJQKBKl3RS5+yH5mlJUPdGNspRipjnSbgj5B4PwJcy9sof2EmJsR3mce3dI
+         IgIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6d355onEMaQLbFzGsPL3qOJq28B0iID9uA32I/OH8KY=;
+        b=c8giYjA9XuhPHnAwRKTZQ4TleWX/DjmTybL+YPPgWGr0DQ05/MIAdb4vhNfXmxszRN
+         kFvtsU/X47W3sj+1xCJ4eQEmw9bP9Q5NchpPeDWQ3kQh7PPHgCtz00m+rjWSwKvWB/Jj
+         PVBXFewCf87GDP3ObIR3DSzQz/IkuxjncjwqKA9wBJ63BXVAWk6IKsr4Fpd2YCXdp9wx
+         +2AquyjZtok7JTFz58ej1b1x7uJ9YQ2smhQqDR/GZXrQmLCX5O9Vk126KX4TKWoNxKPp
+         69Xh95VBE+dalutCRxQoZE6eJ6Gi8bfT4ack9mDI5Cw5mWoP0r6kXP6mX9MHSW4nWx/6
+         lbOg==
+X-Gm-Message-State: APjAAAWAytbzSaAZNY/5qunwxmC25+NfiZwQ6iQaFJVA5BNxmxLmOXKw
+        HRnNBoeckZt6uwbXSwe7Ff/LPtFnBiLKFoZZgFBipw==
+X-Google-Smtp-Source: APXvYqyf9tBuza0aFqrtSUyxftprBtALJcGpe4oAZEEePdM+WgDYDegqUpqrrK70d4RPfcTRXsPPG2o1rKeoC2pjSzU=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr9309054lff.44.1576252802440;
+ Fri, 13 Dec 2019 08:00:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaMgeqpBN0WydqirDX9eC_ypVcd=7PW+e96rsuMx7wJNg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 16:59:50 +0100
+Message-ID: <CACRpkdaQZZcaPtDfieGSP9wSow11Xv3K_x89bq=QeYGb2BhpHw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency
+ on S3C24xx and S3C64xx
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 02:41:16PM +0100, Linus Walleij wrote:
-> On Thu, Dec 12, 2019 at 11:26 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > This is a part 3 of clean up pin control driver for Intel Baytrail.
-> > After this applied the driver will use all available data structures
-> > from pinctrl-intel.h header.
-> >
-> > Note, that patch which exposes common pin control data structrure for drivers
-> > will be used by Lynxpoint as well.
-> >
-> > This has been tested on the tablet with SD card detection and buttons pressed.
-> >
-> > Based on our pinctrl/intel for-next branch.
-> 
-> The series:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Dec 13, 2019 at 8:24 AM Krzysztof Kozlowski <krzk@kernel.org> wrote=
+:
 
-Thanks!
+> All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which us=
+es
+> both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
+> therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
+> failed:
+>
+>     drivers/pinctrl/samsung/pinctrl-samsung.c: In function =E2=80=98samsu=
+ng_gpiolib_register=E2=80=99:
+>     drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: =E2=80=98stru=
+ct gpio_chip=E2=80=99 has no member named =E2=80=98of_node=E2=80=99
+>        gc->of_node =3D bank->of_node;
+>          ^
+>
+> Rework the dependencies so all Samsung drivers and common
+> PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
+> and OF are enabled).
+>
+> Reported-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> Please collect up what you have and send this with a pull
-> request so I have the full picture in my tree soon-ish.
-> 
-> The reason is that I want a clean baseline to deal with this:
-> 
-> $ git grep gpiochip_set_chained_irqchip drivers/pinctrl/
-> drivers/pinctrl/intel/pinctrl-baytrail.c:
-> gpiochip_set_chained_irqchip(gc, &byt_irqchip,
-> drivers/pinctrl/intel/pinctrl-cherryview.c:
-> gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
-> drivers/pinctrl/intel/pinctrl-intel.c:
-> gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq,
-> NULL);
-> 
-> If you volunteer to get rid of these three gpiochip_set_chained_irqchip()
-> calls, even better :D
-> 
-> They are the three last users before I can delete
-> gpiochip_set_chained_irqchip() from the kernel.
+What should this be applied on? It doesn't apply to my fixes
+branch which is close to v5.5-rc1. Please rebase and resend
+if this was not based on that.
 
-I see your point. I would like:
-1/ wait for next rc (supposed to have the PR I sent and your applied recently)
-2/ the rest to be hanging few days at least in Linux next.
+Should this have a Fixes: tag?
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
