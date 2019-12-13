@@ -2,98 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD4111E4CE
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 14:41:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE0311E5CB
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 15:44:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfLMNla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 08:41:30 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35146 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbfLMNla (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 08:41:30 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 15so2007998lfr.2
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 05:41:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=um38lbZzpKxt7uGrxa36YCv92PPQyVOLwWn9L2epGKw=;
-        b=BOankhjAV8/8bQZ9lCqvpucVKAdP2rIYl36RyhmQyNYYYYJnIj87tF9eW0lT5Ci0G0
-         qwPap4RfRCoE3brK5KkxYbqKUAqv+gubXf2Jk32p82hdTpnf0zdcpa0sRXAw7gP2+l98
-         /freSdGau54VZknmHwSTPigDK7cpfpm4O/GcXm16sofmRJyoqoETPG33WrNsG4IedeKW
-         9YfiTjNasQ9lQFeX0Nsv9Df9MdEyWKncWn0EE8o3zT/7+3EwOlWLKMYmSfFSy0YFCJp5
-         oVdTRq7Dg3oTxWM17e8pjCCQ9aT4CW9pBEWsZLGhcvjcUHc/HNGnFsW6SC0vDTS86gsy
-         SE+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=um38lbZzpKxt7uGrxa36YCv92PPQyVOLwWn9L2epGKw=;
-        b=tiF1POc/pfijL1al7MEQP6Dc4xTEXMhoaqBFJUW7xVjVhSZPY00o5odxYf0SjWMwby
-         9VYh/TSX23CRAtvOenuvu++Cpr8eBJA8LjJORdnwjdTzNN3DKFPTGqXiKjQ+A1Xk7BHz
-         xZoGUgSUIPISsePMVES06iN6LSTIb/s972uYQZJIw0OPvU1B5bgC8avJDnA6wFYkuNvo
-         KWjYtTV3OfBBPOjbx+uAKDezQgoxxMrVvMDDvZmkl/rl27ncklNbStso/g3dJ7hX49qo
-         scA2Y5oEgIwnI80WAvCdeeW0n1lOzmcNtGcXufdlIR9aVS2z3zMEmM+jUachi/kJsj3a
-         1H7w==
-X-Gm-Message-State: APjAAAUlg9aqMvUDqVrkjbRhjGjiOtM3iPhiMZFYOIHJBeEjAP24lXC9
-        jbTbTBwM6KNDHKcnd2z3V3JMdiTvBToI3JB9/y3lKw==
-X-Google-Smtp-Source: APXvYqwbbvWd65YUyu4esLaZfC/PenW81yd1uucK0muugdgcY2qC6d8Ydw2aygE/kIMzkuUjESzuArRz16qjhAbaea4=
-X-Received: by 2002:ac2:55a8:: with SMTP id y8mr8848404lfg.117.1576244488265;
- Fri, 13 Dec 2019 05:41:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20191212102557.87754-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20191212102557.87754-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 Dec 2019 14:41:16 +0100
-Message-ID: <CACRpkdaMgeqpBN0WydqirDX9eC_ypVcd=7PW+e96rsuMx7wJNg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] pinctrl: baytrail: Clean up (part 3)
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1727741AbfLMOof (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 09:44:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:12100 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727619AbfLMOoe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Dec 2019 09:44:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Dec 2019 06:44:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,309,1571727600"; 
+   d="scan'208";a="415655861"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Dec 2019 06:44:31 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ifmBD-0004Dl-I4; Fri, 13 Dec 2019 16:44:31 +0200
+Date:   Fri, 13 Dec 2019 16:44:31 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v2 00/24] pinctrl: intel: Move Lynxpoint to pin control
+ umbrella
+Message-ID: <20191213144431.GV32742@smile.fi.intel.com>
+References: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdaxTMPNcRMkKxJ9y3W8x7pwwnNaG+=Tc0P+-3ZzpnFmww@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaxTMPNcRMkKxJ9y3W8x7pwwnNaG+=Tc0P+-3ZzpnFmww@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:26 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Dec 13, 2019 at 02:36:36PM +0100, Linus Walleij wrote:
+> On Mon, Dec 9, 2019 at 2:09 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Intel Lynxpoint GPIO is actually half way to the Chassis specification
+> > that has been established starting from Intel Skylake. It has some pin control
+> > properties we may utilize. To achieve this, move the driver under pin control
+> > umbrella and do a bunch of clean ups.
+> >
+> > The series has been tested on Broadwell Ultrabook where Lynxpoint GPIO
+> > is exposed to the OS.
+> >
+> > It has a dependency to patches in my review branch [1]. That dependency patch
+> > is supposed to be submitted soon as a part of Baytrail clean up. In the
+> > mentioned branch the patches are represented in the correct order.
+> >
+> > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/log/?h=review-andy
+> >
+> > Changes v2:
+> > - fixed ordering in Kconfig and Makefile (Mika)
+> > - finished conversion to pin control
+> 
+> This is some really nice development and just go ahead:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> If you want to make my life simple could you do this:
 
-> This is a part 3 of clean up pin control driver for Intel Baytrail.
-> After this applied the driver will use all available data structures
-> from pinctrl-intel.h header.
->
-> Note, that patch which exposes common pin control data structrure for drivers
-> will be used by Lynxpoint as well.
->
-> This has been tested on the tablet with SD card detection and buttons pressed.
->
-> Based on our pinctrl/intel for-next branch.
+I want, though I think above makes it harder. I'll not expecting any patches
+against gpio-lynxpoint.c (and if they will be an author should Cc me anyway).
+Besides the series nicely grouped on top of prerequisites which are solely
+Intel pin control (no need for GPIO). Thus I prefer to send simple 1 PR during
+this cycle to pin control subsystem and that's it.
 
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Tell me if you think it won't work.
 
-Please collect up what you have and send this with a pull
-request so I have the full picture in my tree soon-ish.
+> - One pull request just moving the driver to the pin control
+>   subsystem. I will pull this into both the pinctrl and the GPIO
+>   tree.
+> 
+> - One pull request based on top of the last commit in the first
+>   pull request with just the rest of refactorings and improvements.
+>   I will just pull this into the pinctrl tree on top of the moved driver.
 
-The reason is that I want a clean baseline to deal with this:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-$ git grep gpiochip_set_chained_irqchip drivers/pinctrl/
-drivers/pinctrl/intel/pinctrl-baytrail.c:
-gpiochip_set_chained_irqchip(gc, &byt_irqchip,
-drivers/pinctrl/intel/pinctrl-cherryview.c:
-gpiochip_set_chained_irqchip(chip, &pctrl->irqchip, irq,
-drivers/pinctrl/intel/pinctrl-intel.c:
-gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq,
-NULL);
 
-If you volunteer to get rid of these three gpiochip_set_chained_irqchip()
-calls, even better :D
-
-They are the three last users before I can delete
-gpiochip_set_chained_irqchip() from the kernel.
-
-Yours,
-Linus Walleij
