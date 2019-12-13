@@ -2,78 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C009911DF9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 09:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BFF811DFBB
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 09:49:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbfLMImX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 03:42:23 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33087 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfLMImX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 03:42:23 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n25so1363683lfl.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 00:42:22 -0800 (PST)
+        id S1726739AbfLMIsO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 03:48:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33491 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfLMIsN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 03:48:13 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so1374719lfl.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 00:48:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=a+daNgiQiCYJ8MM6UhnHVrWdoGUXOn3GJH0VpgdC9SpDGXCOkLoPmTrlEqRvbWJSWy
-         scJgeIUaLdduo9o91tDrNbzuthgAPOM+aFslD2C8TAcTn1tMXB+WFmtOrTcyb+iujSMm
-         7oUPcMGhQBLpN99Q5fopI9AB5FHtDFFgTs4hShQap/ML5xXW3jaBZ0I1lvhSAhM1jDPv
-         ujjyEpNoH383Drw+a2PgfQ3Yo6URBxeqlRWSJygP0NQJUkP0r2uCOw88AmCK3y5gPvfc
-         4JPfg+gDEUV27h+riy/0uIHzNAKSe1b2pC1GVrN+eAOOp5FrGij5sffNU2QagZHee+tA
-         xU6w==
+        bh=Rr+x1DIP1g1/KgRpSfHJSzeL4NNFx671OCjuV/vX6RI=;
+        b=scNwe2O5QhBXfBOt3IjCVoJEjevAiU6USOetssutDbJWLfyJWVndWsZDvWW71CQYiG
+         VK32P310iwbnHOT1jW8wAoNgnvxcSzuTv/55nym+iU6x85ADbyGe1huamHVHf2zC1F93
+         JIbdPRQN3GvjL3s+GEMrZT6y8V16Uh4+LI1tFWsSR5KTxof2G76+m/XoGWjbhnDRuecl
+         krXxgWelnmTmt5rkaX32h5GcAvX/L2Ey4bqai7cPz33O2iMreAO5hqS+JkwSK+1PfXsv
+         s/VWYkuayvgwdFBiWWoh1DZ122uMgPhAQRJDA4clNr/PQWVjz6FcV7Vau4mqKfNTPMmr
+         +bHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+3AGyagak+SsQwMgJI8DqZjJRt+2sRcK1YdTOf2bFE8=;
-        b=SDEFuCF+NjSv8yftxpfDmyvmOxcPhLAHGtWCVMmKxv753Onp4uecrObMvGxnQTqy3U
-         j5Kt4AMCDFmCkBS9QKSEo5dJ/sxMLdYl4YFqoD1Zvbt2Ih3Xai/gs2V/9MTommsJWFK7
-         D/B5YlVzkOBY2DzbWHziSYKxFYUJHwlT/TzC5aXG5QJ7mgpMV59/lq72BUUcjSSY63x5
-         /6g2txOJrAuFhU2TO7G9WDgfZkdoMZRhU/I0IHDOvA3icS0O8vcMuEthqlQqI39hVRvt
-         Jq2e7TycHusmD2UfJIZcJ0QCmrhUlQxSkcBAIVZQ5YxVHYeD7eK9RgCnzkaKsoeFgvg1
-         3O4w==
-X-Gm-Message-State: APjAAAXcKC2AHLr1NJDtGQ8WyrqerCHsDBni55jfhCg+hgo/7wgwRqQg
-        /BxYJhx4OCXS8wFjdZ5U6xgtI6axCjLjCmlE5qgtWJsG6WU=
-X-Google-Smtp-Source: APXvYqz79bn/tRSB6q2MlLzPdVGXKAD3lMBgrE6UtCaOD5iDixhhmHkxpkSan8geCglyFBt3hCB+ZaEC8V1y5zn49yA=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8062235lfp.133.1576226541430;
- Fri, 13 Dec 2019 00:42:21 -0800 (PST)
+        bh=Rr+x1DIP1g1/KgRpSfHJSzeL4NNFx671OCjuV/vX6RI=;
+        b=CW9fyws9RJ3MJFNlek/ibYYZY2kT/+ze1Bn6VLFIB9dJLMRsShXzp5RedQFGg72TBZ
+         KwjxzKF9BS8VEOWQ3x0PdeDQPD37bOc+Aovoc2IDLxvM/Gq708S+vgHEhKYf25DNaJxt
+         h0mueLM9LZr5TwahClPzyf0QFufOvu4QjY5vqTnxrZGZY4VC+Yvkg73VXZ4N7kL0JW0w
+         faKW5Vr6nj6Fy5VkJd5+wwQwmvqQ3+5u06vx73ddoLuv65Y1OC3KJmeVo9fJ9p57R91c
+         UTlwwalmd0WZnSFchHN8+KAunblM5X/CN2bbTiI7rfhhGjdN6GVy1gKLVmeQRCi/XdXm
+         m3Xg==
+X-Gm-Message-State: APjAAAWifqt3R8otdhFFasYD2T3b3CHk25jK+2u3eTih8TiZsRb4N/b/
+        b2gGh0O2ZXNHx5gK7+dqvnZT9JhTNIkiu67eWkaX/w==
+X-Google-Smtp-Source: APXvYqwhoLPGJ2pldnisIzV0cBSTI53njCKP4Cy76wqlT3521n0r+bpxhYrwfU6BsfJhR67BVugqRW4tqQaZGqxTt88=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8073967lfp.133.1576226890954;
+ Fri, 13 Dec 2019 00:48:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20191202061432.3996-1-andrew@aj.id.au>
-In-Reply-To: <20191202061432.3996-1-andrew@aj.id.au>
+References: <20191203141243.251058-1-paul.kocialkowski@bootlin.com> <20191203141243.251058-2-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20191203141243.251058-2-paul.kocialkowski@bootlin.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 13 Dec 2019 09:42:10 +0100
-Message-ID: <CACRpkdZVdP+rfnhF8Dfk+jLsqTEvm_tqv6to2s4nnJh8diaM+A@mail.gmail.com>
-Subject: Re: [PATCH 0/7] pinctrl: aspeed-g6: USB and pinconf support
-To:     Andrew Jeffery <andrew@aj.id.au>
+Date:   Fri, 13 Dec 2019 09:47:59 +0100
+Message-ID: <CACRpkdb2dvdyAUxt98TaoKAyMsFgZkOyUnn+J=NYWrnjRvp5dw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add Xylon vendor prefix
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 2, 2019 at 7:12 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Tue, Dec 3, 2019 at 3:13 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-> This series adds USB and pinconf support to the AST2600 pincontrol driver. The
-> patches have largely been developed by Johnny Huang from ASPEED and have been
-> used for bringup and verification of the chip. The were developed around the
-> time of the 5.4 merge window but I got distracted for a while and haven't had
-> an opportunity to send them until now. They've had a run in the OpenBMC kernel
-> tree and so shouldn't cause any issues, but given where we are for 5.5 I'm just
-> getting them in early for 5.6 so we don't miss another release.
+> Xylon is an electronics company that produces FPGA hardware block designs
+> optimized for Xilinx FPGAs.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-All 7 patches applied!
+Patch applied to the GPIO tree.
 
 Yours,
 Linus Walleij
