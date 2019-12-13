@@ -2,89 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31BEE11E027
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 10:04:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AAE211E14E
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 10:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbfLMJEv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 04:04:51 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:37358 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbfLMJEv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 04:04:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 7C26027E0FF8;
-        Fri, 13 Dec 2019 10:04:49 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id oTghcug-zDYp; Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 447DD27E1025;
-        Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 447DD27E1025
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1576227888;
-        bh=YbT6pQyDPlpE+GVVX0wl0vX9pyh+DxB2qE6TYF3nbGk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=VwkjP4XaxfogLWOEwImB8DT5kHh6DTipWmZcNlg0zKKZN3Xtfo9xao5NO4RpQf4gi
-         1N8525L8NtviJqpMAMp4JVC9drbVSjhJfp219lnVT117ybvaWeploErA9UjIQG/t7V
-         KdLxNsnCmMAr16wsBwsR6nFV2dMb7yaJbNnVM7s8=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id QiA5EynfsNfZ; Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 2AEE127E0FF8;
-        Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-Date:   Fri, 13 Dec 2019 10:04:48 +0100 (CET)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalray.eu>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        "open list, GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <695291639.96501294.1576227887986.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <CACRpkdbHGitYzwVEVYLUmaE+Qn0ix1O1bOSjoTJomf+h9b4+rg@mail.gmail.com>
-References: <20191204101042.4275-1-cleger@kalray.eu> <CACRpkdbHGitYzwVEVYLUmaE+Qn0ix1O1bOSjoTJomf+h9b4+rg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Add pinctrl support for dwapb gpio driver
+        id S1726029AbfLMJ6H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 04:58:07 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44460 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbfLMJ6H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 04:58:07 -0500
+Received: by mail-lj1-f196.google.com with SMTP id c19so1931979lji.11
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 01:58:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gQvjoAIq1lwY1cihw0edTlVsvS4hblrvKhZLt2o7yRo=;
+        b=U/gCvQa0C8fp3iVKJhx0vBUt0PKFuNFM6SSSB6ihOGiYf8DrW7iq+1YekeCTTxXOVW
+         wA9kO32dpsd0uQM8TAz8UtneQN+P/STd9y7C3oklU8IKWKq4HLmauGD6BnpmZ7iDuZng
+         SQo0ak1qNqQdQLAdjdJpaRZMNsmlbROrTck2PxWSMWA1pEXtJHWUll0tFoE44sU342Nf
+         +iVXD4rDz2GqEaL+j34YCkxDq6MgJkT5saOWL12O+djrWRrzFUS/8TEWdE85vTOOgq0/
+         p+FTg/6IfT6Yw6EICXB0kxMXmQY+b4urp1jV9t48Nuj+ruxYKT1BlDjg1hghnJZ+lVvZ
+         t1hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gQvjoAIq1lwY1cihw0edTlVsvS4hblrvKhZLt2o7yRo=;
+        b=kHgE2K4SIQA9wrGHbegS9E9ZzgQzxIGvG1RJj2MS8WaOgGVf60RtWvc3hjhsRb16ZF
+         u0N9Tytzzjs27IWrFbVB9bwXVBtKoKnS1iU8TkjAeXlus/B2rkWhQeY5O0XTb8U++M9+
+         ZLKeWvUh7nEAG9zt33evTs1TfliZOtCSHUtL7z0lxqmZBLUfj59zCLPsOzmo4VWbRCrQ
+         RJuqiW9U1pqMFwJEKeiSLOYIOFxH6pnY2RfPLYRLDzY5dDqBjkHw7u46JiapvqbiXsH2
+         MZUiiaGfL+doZo1D0ilh6OPRqNR2dbIGZz73ubAtgsb+YZaqwLWHRQDORJ+gmpdChg4R
+         OLrA==
+X-Gm-Message-State: APjAAAWN/jTbAzyvg/q3IkGnOumNYZnD8uOVPNmQUnUn9mAoTRmjZ7j7
+        +TVrPw/UYhSWC+bINJRyhAbsefgUO5K9nB/a36Xcww==
+X-Google-Smtp-Source: APXvYqzu8HOUUFv2+ceRlEgeqgx8XNvHnW+7dom4XrnAzRcH0CCbokozbEW15A+wcVH7XZt92FtVTGxMTi9B00CIqHI=
+X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr9102521ljk.77.1576231085018;
+ Fri, 13 Dec 2019 01:58:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - GC75 (Linux)/8.8.12_GA_3794)
-Thread-Topic: Add pinctrl support for dwapb gpio driver
-Thread-Index: SRXaXJiVFyFDIZi2qjVcUnwBi2wsHQ==
+References: <20191204144106.10876-1-alexandre.torgue@st.com>
+In-Reply-To: <20191204144106.10876-1-alexandre.torgue@st.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 13 Dec 2019 10:57:53 +0100
+Message-ID: <CACRpkdb30kFbpxb52GALXJM67tFvJ8tR83NR+44PMOKJzJjruQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinmux: fix a possible null pointer in pinmux_can_be_used_for_gpio
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Ok thanks for your review, I will do that.
+On Wed, Dec 4, 2019 at 3:41 PM Alexandre Torgue <alexandre.torgue@st.com> wrote:
 
-Regards,
+> This commit adds a check on ops pointer to avoid a kernel panic when
+> ops->strict is used. Indeed, on some pinctrl driver (at least for
+> pinctrl-stmfx) the pinmux ops is not implemented. Let's assume than gpio
+> can be used in this case.
+>
+> Fixes: 472a61e777fe ("pinctrl/gpio: Take MUX usage into account")
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-Cl=C3=A9ment L=C3=A9ger
+Patch applied for fixes.
 
------ On 13 Dec, 2019, at 09:59, Linus Walleij linus.walleij@linaro.org wro=
-te:
-
-> On Wed, Dec 4, 2019 at 11:10 AM Clement Leger <cleger@kalray.eu> wrote:
->=20
->> Synopsys DWAPB IP includes support for pin control. This control is basi=
-c
->> and allows to switch between a hardware and a software function.
->> Software function is when driving GPIOs from IP and hardware is controll=
-ed
->> by external signals.
->> This serie export necessary interface to be able to move the driver to
->> pinctrl folder and then implement the pinctrl support which is based on =
-the
->> digicolor driver. The idea is to avoid hardcoding pins in driver since
->> this IP is a generic one available on multiple SoC.
->=20
-> The overall approach is correct, just tidy up the patch series the
-> way indicated by Andy and we can probably proceed efficiently with
-> this. I will review the patch adding the pinctrl interfaces separately.
->=20
-> Yours,
-> Linus Walleij
+Yours,
+Linus Walleij
