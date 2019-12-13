@@ -2,93 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C69B211E220
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 11:38:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B159411E433
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 14:00:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfLMKi0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Dec 2019 05:38:26 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38396 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfLMKiZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 05:38:25 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so6095782wrh.5
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Dec 2019 02:38:25 -0800 (PST)
+        id S1727127AbfLMNAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 08:00:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53470 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLMNAi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Dec 2019 08:00:38 -0500
+Received: by mail-wm1-f67.google.com with SMTP id w8so3047916wmd.3;
+        Fri, 13 Dec 2019 05:00:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3PajvE4U89zM4c9b6Z3Ov4BIDK06c8U6cfU/TzH08+0=;
-        b=QJtcK5Q98jqQJctfBclFZQgZwwjBBe7trS9gB4hCyVLX3tSbswC2f7apFDXDdc9FCk
-         bSiTeoS6TmFJk+AoYOVNAxjSj25sxM3IAj1qt5RBisbzi3o78OJCAe1jJkZGYW/Lqo5C
-         DIgWzmDnWmVzjy7AQogXRIMEdKq/kaZjpffj1pcYmTCEHAhkXsezVJYs5b7BDgb4j4Fz
-         Mes6GeXbvTrZ1qvmx1RK/WBPqrmY3M7jsf936VM6Bg3ATsNAxkGd5iNk0L6Or7lphiEV
-         TU/obVxMZGB6aqGUkXJke/FZofhldvEIfoWJfQWeMudqfsPlxxaPi2IZn6bwJfrEeHC0
-         KqZQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hGQ559nNApWoEp4fLc5NyKNERO/Sq7kGESc+bkuaG+E=;
+        b=QQgXx6DE5LjdeVtTnBIQe9nt9t7LaQO6V22p5p6UYIcC2/0rR581hb0nImyJgvS3GJ
+         sApUrqVcAIFt6iyE2mP8QOmDBdkf4PU6Crtg6IkFdVnm8CrsXqjuwe8+BDmN4bspL75r
+         yZlHaaEF3ZyGdf4iNnFD7m2GovoQOWNuoiOmdpjxSE6DmWMzt5UqDLxEzkC54tU6Y9zk
+         kZbPjR4oO/B4/Xgu2tc+f8TX7NE2udeIcIk+HjH7qYKbrbRlrBNP6zLXee/Ia8wPlQ0j
+         V3SodMCCORbzz9LJo2z2T61zMUjPAzJTkqZ1waQyZ7cc5dyWpApiw244+XadelQK+ut8
+         uarg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3PajvE4U89zM4c9b6Z3Ov4BIDK06c8U6cfU/TzH08+0=;
-        b=ormDaThUnx62uS8wIeHwL72SXBEPt4KpPrfh90wlxjZVmn+BkLJivMVFfBgx5fFNQ0
-         lu5oyknhbYpdcsfX2IwL86UdJVqMM1CkFtPBH/aGY/ZDOz3a4F93MEvcUBtxt/7F12+D
-         AojaFC4v2wBlSNJ8A07oz4JU57aF0Wp8f/BljzF1qA2qiqfTT/N2qSVYw5GktqYznp3E
-         /fgj+reJ+ytFvYjRmjlReDsM+OGStVHB5HN89dbV7S8oU9tfDv5Rzkr+nMpz6cKYlH6o
-         s+HUTDzE0ju9VcwWXcoDwCrMVR2lAteiPIJRYq2LNlauJkFuykra8eKA46eEVwU6wy9Y
-         x0yg==
-X-Gm-Message-State: APjAAAWVdWFABb3RPnPd0F45lVoea6JvPvnVtL7X2+vFn2xlRJ2FmyKf
-        QV8xS86eMLfsdR7vgk2O2UEdDA==
-X-Google-Smtp-Source: APXvYqwSlwN/xryi9wsN+GWdpVYtgcBzeElei/4HaQPkIFno6ZioimPpsoWMIS9mGO3ma6clldo8Og==
-X-Received: by 2002:a5d:6390:: with SMTP id p16mr12186910wru.170.1576233504648;
-        Fri, 13 Dec 2019 02:38:24 -0800 (PST)
-Received: from dell ([95.149.164.71])
-        by smtp.gmail.com with ESMTPSA id m7sm9626326wma.39.2019.12.13.02.38.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hGQ559nNApWoEp4fLc5NyKNERO/Sq7kGESc+bkuaG+E=;
+        b=ZzUuGco0Cz4wzvus3uVpkcmDifgG5oej+JjvyH7giY+veHDazfiVfxGBqMjazuufJU
+         erdnOT59F6E+zw4PEd17/FPoCdh50P5Ej0au8INRlTBk9pzlPymu3gBWQplbbjIivJxi
+         RRj1OhVu4MZUKH4Cfd+wQG1HkKB6JmZBksNMdMuOBn95GcDWoSg8K4VIJGJRto6b4DR9
+         gIPHu+PbBIGBErXsrjx/Lr+1javRX7v5S4Ff9ypIUuW50LyomA4QaQBLWVODbSrFGYO1
+         vZnHDL4npE+4hM3bZ429se+2U4G8g65ZPTdmsL+7BCejGw/bVRH4c9kk8bcRO2yPwdlv
+         ZJug==
+X-Gm-Message-State: APjAAAXo1JLQjJ/hnKVuL2FsX9YqBdJZRPSm9GpamBObgN8NRLq8DclL
+        lI2oPWunwVMcX8HcsB+88ow=
+X-Google-Smtp-Source: APXvYqzGWiJNVe20i3lvFUHW03jcuaoVdCetWWs71pgtS8wrZm2oLQ5+sa8e99ajGOeQWGyObv0FPQ==
+X-Received: by 2002:a7b:cc82:: with SMTP id p2mr13780915wma.159.1576242036673;
+        Fri, 13 Dec 2019 05:00:36 -0800 (PST)
+Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
+        by smtp.gmail.com with ESMTPSA id s1sm10109546wmc.23.2019.12.13.05.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2019 02:38:24 -0800 (PST)
-Date:   Fri, 13 Dec 2019 10:38:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio bindings
-Message-ID: <20191213103821.GC3648@dell>
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-2-m.felsch@pengutronix.de>
+        Fri, 13 Dec 2019 05:00:35 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH] gpio: tegra186: Allow building on Tegra194-only configurations
+Date:   Fri, 13 Dec 2019 14:00:34 +0100
+Message-Id: <20191213130034.219227-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212160413.15232-2-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 Dec 2019, Marco Felsch wrote:
+From: Thierry Reding <treding@nvidia.com>
 
-> Add gpio device documentation to make the da9062 gpios available for
-> users.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Changelog:
-> 
-> v2:
-> - remove sub-node documentation
-> - squash gpio properties into mfd documentation
-> ---
->  Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+The driver is compatible with both Tegra186 and Tegra194, but currently
+it cannot be selected if only Tegra194 support is enabled. Allow builds
+with only Tegra194 support enabled to select this driver.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+While at it, select this driver by default on Tegra194 builds because it
+is an essential part of the system.
 
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Note: One other option would be to simplify this and depend only on
+ARCH_TEGRA, like we do for GPIO_TEGRA. This has the slighty disadvantage
+that it will be built by default on all Tegra platforms, so it will end
+up unused in many cases.
+
+For now, I decided to just add the Tegra194 SoC configuration to the
+conditionals, but it might be worth reconsidering the above-mentioned
+simplification if this driver is applicable to any other future chips.
+
+Thierry
+
+ drivers/gpio/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8adffd42f8cb..6ab25fe1c423 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -553,8 +553,8 @@ config GPIO_TEGRA
+ 
+ config GPIO_TEGRA186
+ 	tristate "NVIDIA Tegra186 GPIO support"
+-	default ARCH_TEGRA_186_SOC
+-	depends on ARCH_TEGRA_186_SOC || COMPILE_TEST
++	default ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC
++	depends on ARCH_TEGRA_186_SOC || ARCH_TEGRA_194_SOC || COMPILE_TEST
+ 	depends on OF_GPIO
+ 	select GPIOLIB_IRQCHIP
+ 	select IRQ_DOMAIN_HIERARCHY
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.23.0
+
