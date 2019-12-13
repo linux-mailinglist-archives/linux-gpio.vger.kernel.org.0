@@ -2,108 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7E6711DB54
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 01:55:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FC0011DE9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Dec 2019 08:24:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfLMAzq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Dec 2019 19:55:46 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32792 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfLMAzq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Dec 2019 19:55:46 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b6so4815951wrq.0
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Dec 2019 16:55:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gFjhozgG0wJvhDM360uom2X/mNpI/FjmSBDUTyP3cAk=;
-        b=Racuw22f7+pJ6uT9JFY9UKo0OLsikNY/eEUH3YQ6Ve+NSCAVgJh0Zd6rHUOK6SyA3F
-         viwwP03XAisSR6dCxCu2KS5PLhNbSzmcWXE9j4IfFWauXkT7TyLDWBhVh5lAhjxwutrV
-         AXedO+6jiXvcsPFyHxIvRmSWPZVAIWSgH/ax0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gFjhozgG0wJvhDM360uom2X/mNpI/FjmSBDUTyP3cAk=;
-        b=Mw0RVTZmM5UOjg6QeBgitznxys9me3X00r6GFQL52Lyx6q4UeQRSLSgPNRY2yF2dkV
-         7Ic6DQk8codgxNUk0RCXL++pOBhv4PS56Wjr6Mq5YZpON2KQegpwMYL4pWEiG6skChC0
-         Y5p+rAwfmo1NTXVGd+R4pHunATy5bl0m2IKclB1zl8f2F+Te4TPyicvHopZ0i0hoJqC9
-         a61ZqASpVuJdUIRXlf+jGDwIOCArKL0/9XE+LS4BMLtCWVxikdBBnRND431mJDssdz7J
-         tiusHHBbPB9cO6yszkRbj+bsQP39cOuG1vz/BGt9fiAguls5y2wZTrO2LEgNOB94ZSoT
-         v4Sg==
-X-Gm-Message-State: APjAAAUkkzZKE5LcM3ZFL3GuqCH4ECrmpcHTufxsb/iojUDclcby64X3
-        2gBYL8wXyYZ2e4jfMENgiTnuYQ==
-X-Google-Smtp-Source: APXvYqzdij9d5WV2KSvynrYakAFyUlnevS/Iz6htmvAoKT/4hvWf5MZFA0y7Xl19BmhVuW+oj8Jg9w==
-X-Received: by 2002:a5d:44cd:: with SMTP id z13mr9454072wrr.104.1576198543557;
-        Thu, 12 Dec 2019 16:55:43 -0800 (PST)
-Received: from rj-aorus.ric.broadcom.com ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id x7sm7925462wrq.41.2019.12.12.16.55.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 16:55:42 -0800 (PST)
-Subject: Re: [PATCH 1/1] pinctrl: iproc: Set irq handler based on trig type
-To:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        linus.walleij@linaro.org, rjui@broadcom.com, sbranden@broadcom.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20191212220923.15089-1-hamish.martin@alliedtelesis.co.nz>
- <20191212220923.15089-2-hamish.martin@alliedtelesis.co.nz>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <a5a47959-8a56-c558-f104-c4071bb512c3@broadcom.com>
-Date:   Thu, 12 Dec 2019 16:55:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1725828AbfLMHYk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Dec 2019 02:24:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfLMHYk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Dec 2019 02:24:40 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C43E22527;
+        Fri, 13 Dec 2019 07:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576221879;
+        bh=UJOcuiK3ixX2rYyqQ3xVgxA+rehXX7Onup49ad9LIxM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xt9g7vzEgw+yoGRY2BQ+YyBfP3QnfE+sVGdJkgEOYOyG43Im4y5mFssgaG7yc4/35
+         iHDZmCilf893Kyhe3EtfpV9GXYFS2A1Su65udSt6SnbT2C6tjb2Utt1HePM5CiYpOi
+         jJu8s7vvzIrqSLWrRil25sDnu+xH7F7UQ9sdjEJc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency on S3C24xx and S3C64xx
+Date:   Fri, 13 Dec 2019 08:24:33 +0100
+Message-Id: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20191212220923.15089-2-hamish.martin@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which uses
+both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
+therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
+failed:
 
+    drivers/pinctrl/samsung/pinctrl-samsung.c: In function ‘samsung_gpiolib_register’:
+    drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: ‘struct gpio_chip’ has no member named ‘of_node’
+       gc->of_node = bank->of_node;
+         ^
 
-On 2019-12-12 2:09 p.m., Hamish Martin wrote:
-> Rather than always using handle_simple_irq() as the gpio_irq_chip
-> handler, set a more appropriate handler based on the IRQ trigger type
-> requested.
-> This is important for level triggered interrupts which need to be
-> masked during handling.
-> 
-> Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-> ---
->   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> index 831a9318c384..c79e91eb1a47 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-> @@ -288,6 +288,11 @@ static int iproc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->   		       rising_or_high);
->   	raw_spin_unlock_irqrestore(&chip->lock, flags);
->   
-> +	if (type & IRQ_TYPE_EDGE_BOTH)
-> +		irq_set_handler_locked(d, handle_edge_irq);
-> +	else
-> +		irq_set_handler_locked(d, handle_level_irq);
-> +
+Rework the dependencies so all Samsung drivers and common
+PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
+and OF are enabled).
 
-I think it would make more sense to put them under the above spinlock 
-protection, right?
+Reported-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/pinctrl/samsung/Kconfig | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-In addition, with this, can the default assignment in 'iproc_gpio_probe' 
-be removed?
+diff --git a/drivers/pinctrl/samsung/Kconfig b/drivers/pinctrl/samsung/Kconfig
+index 779c0e9eca3f..dfd805e76862 100644
+--- a/drivers/pinctrl/samsung/Kconfig
++++ b/drivers/pinctrl/samsung/Kconfig
+@@ -4,12 +4,13 @@
+ #
+ config PINCTRL_SAMSUNG
+ 	bool
++	depends on OF_GPIO
+ 	select PINMUX
+ 	select PINCONF
+ 
+ config PINCTRL_EXYNOS
+ 	bool "Pinctrl common driver part for Samsung Exynos SoCs"
+-	depends on OF && GPIOLIB
++	depends on OF_GPIO
+ 	depends on ARCH_EXYNOS || ARCH_S5PV210 || COMPILE_TEST
+ 	select PINCTRL_SAMSUNG
+ 	select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV210)
+@@ -25,11 +26,12 @@ config PINCTRL_EXYNOS_ARM64
+ 
+ config PINCTRL_S3C24XX
+ 	bool "Samsung S3C24XX SoC pinctrl driver"
+-	depends on OF
++	depends on OF_GPIO
+ 	depends on ARCH_S3C24XX || COMPILE_TEST
+ 	select PINCTRL_SAMSUNG
+ 
+ config PINCTRL_S3C64XX
+ 	bool "Samsung S3C64XX SoC pinctrl driver"
++	depends on OF_GPIO
+ 	depends on ARCH_S3C64XX || COMPILE_TEST
+ 	select PINCTRL_SAMSUNG
+-- 
+2.7.4
 
-girq->handler = handle_simple_irq;
-
-Thanks,
-
-Ray
-
->   	dev_dbg(chip->dev,
->   		"gpio:%u level_triggered:%d dual_edge:%d rising_or_high:%d\n",
->   		gpio, level_triggered, dual_edge, rising_or_high);
-> 
