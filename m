@@ -2,84 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC1111F77C
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Dec 2019 12:50:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C3211F8D6
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Dec 2019 17:23:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726135AbfLOLup convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Sun, 15 Dec 2019 06:50:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44794 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfLOLup (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 Dec 2019 06:50:45 -0500
-Received: by mail-ed1-f67.google.com with SMTP id cm12so2711030edb.11;
-        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VQb8AJk5LNTjc5T1l/6wnDNHTC2CJyoRZWm9i8TCC6Y=;
-        b=A0fe0YlK4Q7tH8msv7qbStmlJAgSVHaLyA5wWmFY4wDDzdrHTFZSOkJOjQaad8TbGK
-         JHaqHb3o+P1UFdJWfDWdT9Dp3jdOEk1wUu678ZLU55u0vM/Tx298fLBtvInjD9UbggAD
-         lWly1+sWanLAamCIdCwhlyF575Dgt+GugbEihslNuNIn+5pNwuHkWgBTXsJIvMjUYn7P
-         hTW3028KguKQKFiwQqhVsAQ+HPI4wTIL90feHseKR+g0UPlPeRMyT2bAQ3zN9xUA4sBn
-         TV9yzuQJhATJMMfgCzdzMpQE4kJPk/2Z5vNvitYGXhRYxupLZCX7NJ9J42X66gPSXlA4
-         65cg==
-X-Gm-Message-State: APjAAAUxWhQJEZPHI9s7cmUuoQEVpt3wrpy/K6ee6WYmaRI5HXPCt8C/
-        1VYd2eHkL1azlZP8AqXU70A=
-X-Google-Smtp-Source: APXvYqySGZN88GuNZI3q/4jIa46RYAeOm8r3e/4RoLEa9a1DPs6w4iZdHpCADlYueTiK1rOSy2zyGw==
-X-Received: by 2002:a17:906:229b:: with SMTP id p27mr27526719eja.21.1576410643077;
-        Sun, 15 Dec 2019 03:50:43 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id bo13sm1007730ejb.5.2019.12.15.03.50.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Dec 2019 03:50:41 -0800 (PST)
-Date:   Sun, 15 Dec 2019 12:50:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Chen Zhou <chenzhou10@huawei.com>
-Subject: Re: [PATCH] pinctrl: samsung: Fix missing OF and GPIOLIB dependency
- on S3C24xx and S3C64xx
-Message-ID: <20191215115039.GA30973@kozik-lap>
-References: <1576221873-28738-1-git-send-email-krzk@kernel.org>
+        id S1726192AbfLOQVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 15 Dec 2019 11:21:16 -0500
+Received: from out28-171.mail.aliyun.com ([115.124.28.171]:45368 "EHLO
+        out28-171.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfLOQVQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 Dec 2019 11:21:16 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4172439|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.293193-0.00302139-0.703785;DS=SPAM|spam_blackmail|0.615241-0.000983383-0.383776;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GHgOK.D_1576426866;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GHgOK.D_1576426866)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Mon, 16 Dec 2019 00:21:12 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, linus.walleij@linaro.org
+Subject: Fix bugs in X1000/X1500 and add X1830 pinctrl driver v8.
+Date:   Mon, 16 Dec 2019 00:20:58 +0800
+Message-Id: <1576426864-35348-1-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <1576221873-28738-1-git-send-email-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 08:24:33AM +0100, Krzysztof Kozlowski wrote:
-> All Samsung pinctrl drivers select common part - PINCTRL_SAMSUNG which uses
-> both OF and GPIOLIB inside.  However only Exynos drivers depend on these,
-> therefore after enabling COMPILE_TEST, on x86_64 build of S3C64xx driver
-> failed:
-> 
->     drivers/pinctrl/samsung/pinctrl-samsung.c: In function ‘samsung_gpiolib_register’:
->     drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: ‘struct gpio_chip’ has no member named ‘of_node’
->        gc->of_node = bank->of_node;
->          ^
-> 
-> Rework the dependencies so all Samsung drivers and common
-> PINCTRL_SAMSUNG part depend on OF_GPIO (which is default yes if GPIOLIB
-> and OF are enabled).
-> 
-> Reported-by: Chen Zhou <chenzhou10@huawei.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/pinctrl/samsung/Kconfig | 6 ++++--
-
-Applied.
-
-Best regards,
-Krzysztof
+v7->v8:
+Separate the part of introduce reg_offset in [4/4] in v7 into [3/5] in v8.
 
