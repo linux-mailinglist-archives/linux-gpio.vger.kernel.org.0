@@ -2,74 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBE812022E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:21:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26DAA12025A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfLPKTS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 05:19:18 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39419 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfLPKTS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:19:18 -0500
-Received: by mail-vs1-f65.google.com with SMTP id p21so3755876vsq.6
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:19:17 -0800 (PST)
+        id S1727070AbfLPK0Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 05:26:25 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36539 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbfLPK0Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:26:24 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so6210065ljg.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:26:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ueDedzI946XH4PwhczhGeVD5DlLhpVlGlKAyHYsNtI4=;
-        b=xMTLZBe9EHbZSuDD63/fynjBq0TMvoIuWQ2+Dk5OTT8tQ4Zuo3Cy9HImD3UWs5kLKj
-         E4A0y7sKPT5+yPfjFyjJ7oHj8z1mCgWU5d+xPUuMK7ASBydMJpQ6lfFj8cEl9LsnWSgY
-         VpnrjZqhGsHjJeQ6v8kocpglYnRSgLWBTANs1jQM9sOFKlTVUKGSIQ4KAuiKiaX0x+c2
-         fqibsiogCi/u6AdiPCoRX0kgFt2oHdSDZh7+SzFqBX+hbyUke1edkmGrRoIRPRAvNg55
-         WhKITFUqStneT8rBJUjFtU4egb9jtGKhQw5Gv/9AZcNDUgvKnraUSpNO7qtHxskWSQDA
-         kGNQ==
+        bh=OkpVHHKfDIvE++qC7pqWmg/jiaUV0l9IrypFklbrI6o=;
+        b=lDL84PL+2Ns4vFAqwLLrdQi1O+3TQ6U/1dl28aR2f5iPN84nonscwhbbksUFjIlS5R
+         otbTznmgxLMJaAner5nrpGth72IVvBmT/6uaM4tx+Y+mEEawgORon/elo6UPVH5JvJYb
+         Ck2/MV674z0jbmRgEZH0vAlKytoZnH/ItSxaGXx0K213YovI7A4yEtfAGr8qVFC8qILi
+         94ezCXOUyfvLoV8f/yzdmpj1qIfvNUfwHHlA4TO3fmxjmrNVgk41krWYbwyb3SMyU9cr
+         Nn8qkvnhE3ahvqrWYa02Vf4Ret+ZHDC4hZD4vr81kUyvgcplB6Y5bMnP2WfkMtddC/uN
+         iXIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ueDedzI946XH4PwhczhGeVD5DlLhpVlGlKAyHYsNtI4=;
-        b=Z/oAoTuQxfhp71rWsm4ELT0HStCP77JGvjsCam2ZQv9NhGL6lrgHd3nrGmfmItakOh
-         aAfzn41CMB292ZM4RD14wB1og7d+82Lo/Q1PhVYTrcj+6FC3b6HMbKcWNs1mQ3jYcm/d
-         cQod5VggUy0/zHVtvenLNa/XFtA6NRUrKqWbS7JFMrM8nHqjRseq8PkVhuFKQpkUi+yQ
-         mdSfyC0rIHsAzKwp6RuC1Tw42ir88+sezQJtHHZ/kacbDDQ5SKBZToastMY33vHn0jDl
-         GrbYOC9ifNwc6kJOgXWnGPeIVPoQSAg26pCr/7vdYggOA9g1o0gIxvTVIfbVwJSV0hqO
-         Nj4Q==
-X-Gm-Message-State: APjAAAUPPKIsCgp6iAfsszOy9JzQpV9cps4XY3nJyUti9RqsBJyHfhaI
-        1rRdd4in4mB3jpqmtgyQdDbPtM82Zrq4grOiIRmRaA==
-X-Google-Smtp-Source: APXvYqxU/gsQDQg+UNwUJ5SeGezCQPaVBedec32xSUzB+8OIBESUkr8UHH8x2mW1oxPqPqmPbBDRtHMDadQ8H2wzpYo=
-X-Received: by 2002:a67:d592:: with SMTP id m18mr20877265vsj.85.1576491557076;
- Mon, 16 Dec 2019 02:19:17 -0800 (PST)
+        bh=OkpVHHKfDIvE++qC7pqWmg/jiaUV0l9IrypFklbrI6o=;
+        b=nSXngXK4/qAMInDn215bAXAchDypjM572A8QYx/rH9Z492ocdktwG+tUze41xYG72C
+         zkL8qHhCA3I5Y59MX6L9WaPcMK5C6hoEFZVEgeUEPiRgTSf+GHCbd1fRoVh2h2JdPpnf
+         8lgmNg0HaZNnRTQMBstBq56oeZgvIpYoTJdfWkLRw3dH+0A7N/UMU9rH/oWHqCTol9t0
+         4r2C2aAHJa88CnP0S9WUjGIA3FTKnJx1pNXk3SqIr72wdDSsRmuLeicKuaYV3kvGc50v
+         oZlTWW8EHarJCMOCuNqA/NH9DQhkvHptNmcaBI4TqtolLXIaO6o5c6rk9JCYPzgbgy3z
+         0gDQ==
+X-Gm-Message-State: APjAAAXiTBiIcq7WZIMNXRvmTNDGJLowJhZnPFIBQpvqs3jEOnL6i4AX
+        z0BFkqXGkYYp2AxpTaasEMIXah6julfD8BAmimy4dw==
+X-Google-Smtp-Source: APXvYqyfCsSztFtNTTzlCe+aXkIxE7g02n2kJDD5isrSGVNYwnEfbfi911iDlZCap4HI8gvXspWAPVC8NvrEdEvcY0s=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr18582325ljm.233.1576491982626;
+ Mon, 16 Dec 2019 02:26:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20191209130926.86483-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdaxTMPNcRMkKxJ9y3W8x7pwwnNaG+=Tc0P+-3ZzpnFmww@mail.gmail.com> <20191213144431.GV32742@smile.fi.intel.com>
-In-Reply-To: <20191213144431.GV32742@smile.fi.intel.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com>
+In-Reply-To: <20191215163810.52356-1-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:19:06 +0100
-Message-ID: <CACRpkdZxRhF1gc0XvA23P=aTiq-a-WNF=ZMnw29eR46J2PGnUA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/24] pinctrl: intel: Move Lynxpoint to pin control umbrella
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Mon, 16 Dec 2019 11:26:10 +0100
+Message-ID: <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs from VBT
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 3:44 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> > If you want to make my life simple could you do this:
->
-> I want, though I think above makes it harder. I'll not expecting any patches
-> against gpio-lynxpoint.c (and if they will be an author should Cc me anyway).
-> Besides the series nicely grouped on top of prerequisites which are solely
-> Intel pin control (no need for GPIO). Thus I prefer to send simple 1 PR during
-> this cycle to pin control subsystem and that's it.
+> Linus, this series starts with the already discussed pinctrl change to
+> export the function to unregister a pinctrl-map. We can either merge this
+> through drm-intel, or you could pick it up and then provide an immutable
+> branch with it for merging into drm-intel-next. Which option do you prefer?
 
-Fair enough, if you are convinced that will work then go ahead.
+I have created an immutable branch with these changes and pulled it
+to my "devel" branch for v5.6:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
+
+Please pull this in and put the other patches on top of that.
+
+I had a bit of mess in my subsystems last kernel cycle so I
+want to avoid that by strictly including all larger commits
+in my trees.
 
 Yours,
 Linus Walleij
