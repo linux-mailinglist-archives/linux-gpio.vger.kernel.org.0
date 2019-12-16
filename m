@@ -2,58 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DAAE12079E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 14:52:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 434241207B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 14:56:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfLPNwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 08:52:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20548 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727788AbfLPNwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 08:52:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576504319;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=92SYUSBikdk3xyYnFqKeAftGqF8EgbhEnCGGofd5R5U=;
-        b=ANDHWhMbHepItxwad5ItNRKJMdSCR+ba8D2rPm7PBpbBL/N9vBMKXiziTSK6xO27zIxUnD
-        QFdtWWhsKQDcDJ06FG7zdsQyyJKKKIuC2uF5W8zAVaUErQrl77aaUcqNVthrmvN/vEnKa5
-        iTrWTzS8GL2rcHb1u2C/W3B6wsFL9qA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-k93j_GiyPMm6M-LxYAMY-g-1; Mon, 16 Dec 2019 08:51:58 -0500
-X-MC-Unique: k93j_GiyPMm6M-LxYAMY-g-1
-Received: by mail-wm1-f69.google.com with SMTP id y125so1080519wmg.1
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 05:51:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=92SYUSBikdk3xyYnFqKeAftGqF8EgbhEnCGGofd5R5U=;
-        b=SW8Y1TRjsfOxOc2zPKOhlISBh3ODUicglV6Qxu9knb2sWJsH3e4zu5XSdsgJOLVn5H
-         AZE7V2DsqtELrKRgwUd0B0pfwCJs+7/O8vy5sdLgtzSMuD/EKXM68JtYg2PgmKiZa490
-         qGLTNFPpVqKLON07DFUqN4pyKuG+z/9eTvoaBjYBkGKLTTpxnp+R7sbQ/qjOdU7pI+bY
-         ZlFxDfYtlElkCNY2/shZKQlUj4by9ZIaBzy8HG5f0RIDE6Iq7hAqB02WTVsiqZkzkYLE
-         8Q9HQV8FVHsEzM5TfI3W30TfHO8JPqDNP0H2yzHZEPJOMd08Ol0vihcXyl54bkLKZzt2
-         WTmQ==
-X-Gm-Message-State: APjAAAV1z5JP4hEG2C1AfZqBG0asfclRFxLTVzuc5hFK/lqSDKoAGpJ7
-        mDANuznGm6eipmyax9VOHZMURl4CXaEZ/KwxGmA98kU3jsLy4w6oyi7rjCOMA+FIe1wdWUvnuCy
-        1+2likRDOcyG8qRKI71f+vQ==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr31393741wmm.57.1576504316479;
-        Mon, 16 Dec 2019 05:51:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwyxMC8rOEm3cQf/zGU6nzBkVtCLQ2bPDjiwI95jk9Cscpkz7pIDerHyRW1DrZwA6GRaoPVeQ==
-X-Received: by 2002:a05:600c:224d:: with SMTP id a13mr31393720wmm.57.1576504316212;
-        Mon, 16 Dec 2019 05:51:56 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id o66sm17703254wmo.20.2019.12.16.05.51.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 05:51:55 -0800 (PST)
-Subject: Re: [PATCH 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
- LCD is initially off
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+        id S1727894AbfLPN4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 08:56:33 -0500
+Received: from mga17.intel.com ([192.55.52.151]:19359 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727609AbfLPN4d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Dec 2019 08:56:33 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 05:56:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
+   d="scan'208";a="227118511"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga002.jf.intel.com with SMTP; 16 Dec 2019 05:56:28 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 16 Dec 2019 15:56:27 +0200
+Date:   Mon, 16 Dec 2019 15:56:27 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
@@ -62,131 +32,167 @@ Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
+ lookup from mfd to the i915 driver
+Message-ID: <20191216135627.GS1208@intel.com>
 References: <20191215163810.52356-1-hdegoede@redhat.com>
- <20191215163810.52356-4-hdegoede@redhat.com>
- <20191216134551.GQ1208@intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c7fe3911-be20-33dd-96c1-58eccd0f323f@redhat.com>
-Date:   Mon, 16 Dec 2019 14:51:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ <20191215163810.52356-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191216134551.GQ1208@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-Thank you for the reviews.
-
-On 16-12-2019 14:45, Ville Syrjälä wrote:
-> On Sun, Dec 15, 2019 at 05:38:08PM +0100, Hans de Goede wrote:
->> When the LCD has not been turned on by the firmware/GOP, because e.g. the
->> device was booted with an external monitor connected over HDMI, we should
->> not turn on the panel-enable GPIO when we request it.
->>
->> Turning on the panel-enable GPIO when we request it, means we turn it on
->> too early in the init-sequence, which causes some panels to not correctly
->> light up.
->>
->> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
->> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
->>
->> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
->> booted with an external monitor connected over HDMI.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>   drivers/gpu/drm/i915/display/intel_dsi.h     | 2 +-
->>   drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 7 +++----
->>   drivers/gpu/drm/i915/display/vlv_dsi.c       | 2 +-
->>   3 files changed, 5 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i915/display/intel_dsi.h
->> index de7e51cd3460..675771ea91aa 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dsi.h
->> +++ b/drivers/gpu/drm/i915/display/intel_dsi.h
->> @@ -203,7 +203,7 @@ void bxt_dsi_reset_clocks(struct intel_encoder *encoder, enum port port);
->>   
->>   /* intel_dsi_vbt.c */
->>   bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id);
->> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi);
->> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on);
->>   void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi);
->>   void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
->>   				 enum mipi_seq seq_id);
->> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> index 5352e8c9eca5..027970348b22 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
->> @@ -688,17 +688,16 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
->>    * On some BYT/CHT devs some sequences are incomplete and we need to manually
->>    * control some GPIOs.
->>    */
->> -void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi)
->> +void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
->>   {
->>   	struct drm_device *dev = intel_dsi->base.base.dev;
->>   	struct drm_i915_private *dev_priv = to_i915(dev);
->>   	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
->> +	enum gpiod_flags flags = panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW;
+On Sun, Dec 15, 2019 at 05:38:09PM +0100, Hans de Goede wrote:
+> Move the Crystal Cove PMIC panel GPIO lookup-table from
+> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
 > 
-> Can't we just tell it not to change the current setting?
-
-We could use GPIOD_ASIS for that, but with the SoC pins (when the PMIC is
-not used for backlight control) things get a bit muddy, I've seen several
-instances of this message from drivers/pinctrl/intel/pinctrl-baytrail.c
-trigger when the GOP did not init the panel:
-
-dev_warn(vg->dev, FW_BUG "pin %u forcibly re-configured as GPIO\n", offset);
-
-And in that case with GPIOD_ASIS I have no idea which we initially get,
-so this approach, where we clearly define which initial value we want,
-seems better.
-
-Regards,
-
-Hans
-
-p.s.
-
-The intel-gfx CI seems to seriously dislike my patches lately, almost
-always failing them; and usually on what at least seem to be unrelated
-test-cases. Any advice on how to deal with this?
-
-
-
-
+> The moved looked-up table is adding a GPIO lookup to the i915 PCI
+> device and the GPIO subsys allows only one lookup table per device,
 > 
->>   
->>   	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
->>   	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
->> -		intel_dsi->gpio_panel =
->> -			gpiod_get(dev->dev, "panel", GPIOD_OUT_HIGH);
->> -
->> +		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
->>   		if (IS_ERR(intel_dsi->gpio_panel)) {
->>   			DRM_ERROR("Failed to own gpio for panel control\n");
->>   			intel_dsi->gpio_panel = NULL;
->> diff --git a/drivers/gpu/drm/i915/display/vlv_dsi.c b/drivers/gpu/drm/i915/display/vlv_dsi.c
->> index 178d0fffba5b..e86e4a11e199 100644
->> --- a/drivers/gpu/drm/i915/display/vlv_dsi.c
->> +++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
->> @@ -1910,7 +1910,7 @@ void vlv_dsi_init(struct drm_i915_private *dev_priv)
->>   
->>   	vlv_dphy_param_init(intel_dsi);
->>   
->> -	intel_dsi_vbt_gpio_init(intel_dsi);
->> +	intel_dsi_vbt_gpio_init(intel_dsi, current_mode != NULL);
->>   
->>   	drm_connector_init(dev, connector, &intel_dsi_connector_funcs,
->>   			   DRM_MODE_CONNECTOR_DSI);
->> -- 
->> 2.23.0
+> The intel_soc_pmic_core.c code only adds lookup-table entries for the
+> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
+> able to access some GPIOs on the SoC itself, which requires entries for
+> these GPIOs in the lookup-table.
 > 
+> Since the lookup-table is attached to the i915 PCI device it really
+> should be part of the i915 driver, this will also allow us to extend
+> it with GPIOs from other sources when necessary.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
+>  drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
+>  2 files changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> index 027970348b22..847f04eec2a1 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+> @@ -25,6 +25,7 @@
+>   */
+>  
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/gpio/machine.h>
+>  #include <linux/mfd/intel_soc_pmic.h>
+>  #include <linux/slab.h>
+>  
+> @@ -686,8 +687,18 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id)
+>  
+>  /*
+>   * On some BYT/CHT devs some sequences are incomplete and we need to manually
+> - * control some GPIOs.
+> + * control some GPIOs. We need to add a GPIO lookup table before we get these.
+>   */
+> +static struct gpiod_lookup_table pmic_panel_gpio_table = {
+> +	/* Intel GFX is consumer */
+> +	.dev_id = "0000:00:02.0",
+> +	.table = {
+> +		/* Panel EN/DISABLE */
+> +		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
+> +		{ },
+> +	},
+> +};
 
+Feels like a failure in abstraction to have these irrelevant details
+exposed on the consumer side. Also slightly concerned that someone
+refactoring things in the pmic driver could now break this without
+realizing it. But if people want it done this way I can live with it.
+
+> +
+>  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  {
+>  	struct drm_device *dev = intel_dsi->base.base.dev;
+> @@ -697,6 +708,8 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  
+>  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+>  	    (mipi_config->pwm_blc == PPS_BLC_PMIC)) {
+> +		gpiod_add_lookup_table(&pmic_panel_gpio_table);
+> +
+>  		intel_dsi->gpio_panel = gpiod_get(dev->dev, "panel", flags);
+>  		if (IS_ERR(intel_dsi->gpio_panel)) {
+>  			DRM_ERROR("Failed to own gpio for panel control\n");
+> @@ -707,8 +720,16 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_on)
+>  
+>  void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+>  {
+> +	struct drm_device *dev = intel_dsi->base.base.dev;
+> +	struct drm_i915_private *dev_priv = to_i915(dev);
+> +	struct mipi_config *mipi_config = dev_priv->vbt.dsi.config;
+> +
+>  	if (intel_dsi->gpio_panel) {
+>  		gpiod_put(intel_dsi->gpio_panel);
+>  		intel_dsi->gpio_panel = NULL;
+>  	}
+> +
+> +	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+> +	    (mipi_config->pwm_blc == PPS_BLC_PMIC))
+
+Needless parens here as well.
+
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+
+> +		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
+>  }
+> diff --git a/drivers/mfd/intel_soc_pmic_core.c b/drivers/mfd/intel_soc_pmic_core.c
+> index 47188df3080d..ddd64f9e3341 100644
+> --- a/drivers/mfd/intel_soc_pmic_core.c
+> +++ b/drivers/mfd/intel_soc_pmic_core.c
+> @@ -9,8 +9,6 @@
+>   */
+>  
+>  #include <linux/acpi.h>
+> -#include <linux/gpio/consumer.h>
+> -#include <linux/gpio/machine.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+> @@ -25,17 +23,6 @@
+>  #define BYT_CRC_HRV		2
+>  #define CHT_CRC_HRV		3
+>  
+> -/* Lookup table for the Panel Enable/Disable line as GPIO signals */
+> -static struct gpiod_lookup_table panel_gpio_table = {
+> -	/* Intel GFX is consumer */
+> -	.dev_id = "0000:00:02.0",
+> -	.table = {
+> -		/* Panel EN/DISABLE */
+> -		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
+> -		{ },
+> -	},
+> -};
+> -
+>  /* PWM consumed by the Intel GFX */
+>  static struct pwm_lookup crc_pwm_lookup[] = {
+>  	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight", 0, PWM_POLARITY_NORMAL),
+> @@ -96,9 +83,6 @@ static int intel_soc_pmic_i2c_probe(struct i2c_client *i2c,
+>  	if (ret)
+>  		dev_warn(dev, "Can't enable IRQ as wake source: %d\n", ret);
+>  
+> -	/* Add lookup table binding for Panel Control to the GPIO Chip */
+> -	gpiod_add_lookup_table(&panel_gpio_table);
+> -
+>  	/* Add lookup table for crc-pwm */
+>  	pwm_add_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
+>  
+> @@ -121,9 +105,6 @@ static int intel_soc_pmic_i2c_remove(struct i2c_client *i2c)
+>  
+>  	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
+>  
+> -	/* Remove lookup table for Panel Control from the GPIO Chip */
+> -	gpiod_remove_lookup_table(&panel_gpio_table);
+> -
+>  	/* remove crc-pwm lookup table */
+>  	pwm_remove_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
+>  
+> -- 
+> 2.23.0
+
+-- 
+Ville Syrjälä
+Intel
