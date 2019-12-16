@@ -2,91 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A06A1208DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 15:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1120B1208FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 15:55:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfLPOqD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 09:46:03 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40870 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbfLPOqD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 09:46:03 -0500
-Received: by mail-lf1-f65.google.com with SMTP id i23so4409982lfo.7;
-        Mon, 16 Dec 2019 06:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
-        b=JeX9P7d5K86kD8jxLP0OqYX0Xo7tQt3V7bahsEzimx4TzCVwClPFlR1qlAegLRv9r3
-         p8si4pZeC0qzILFh9hYvpL75xyt2EuEUHmYq40odgPYB7fFdVDDRc7/E0Y9prfl5ZKSX
-         ZAzBRUWj4mgKGDR60sKFlX5R5yuStVbhL5mwyjaAvTs+KxHi81GdWr0JtXqnbEq/oPxg
-         W95/lZ8Uf2WuFbM25WYjm9l3PABEQOoX1Hbb5u7vzgLpx54F1dlY9qKrNXb2bE6WBlFr
-         VOUYhlxkep9Ckt8hE950xvXYsYhSgMr2Pypq0rp6B4/fxv8QlzH9KyO9FRoh5IccS695
-         +GbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8hrwNb+62xlSS4630TGqVTgZpEq9XuNM/h7RXL5PTp4=;
-        b=LNidchNzoHgItrXeplriLMvErObnG/Hs4HgkJ6nCxNASlcTmaFKuvAMQbggKtLpB4H
-         BeNOCKd+XL4g22AgRPynGf11ydfv0vzsp3VcdAHtd0kSb6L3cUr/eRcBSYNHADcLUoa3
-         d3QRJxjjI1v5hoSpHw7TaKRrNcxKwMuV8bKqyeedBzQ211nOp2A6SXcSFC132GFBNM81
-         YRbbvTiIcivVZ7WomOs8I3QbxKEtDbhgl4H/wwLw9RVH/FpeCdeYEQTID5b6ibSZ1em3
-         Xp4BnZM0Izx3N35TuG5OijNxeB4YDsbMY08NJWEJPovHcDdtTs7tag8UH2SrZKoWI4mz
-         4Kfg==
-X-Gm-Message-State: APjAAAXVahNZ99c1p5/5tl3LFoa35ZO3A5hC/7gzz2xB0iQVOSwTKyMr
-        LQyJIJe4tDuAVfm0dAgIclA71bgr
-X-Google-Smtp-Source: APXvYqxpUiYf76+8+R/J8+oxqzt6bKaYvjoUEm+LQ9lETcooxx3UqoSOQ5rP7pNrP6GB6JavMqdwKw==
-X-Received: by 2002:a19:8a41:: with SMTP id m62mr16906210lfd.5.1576507560617;
-        Mon, 16 Dec 2019 06:46:00 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n23sm9158442lfa.41.2019.12.16.06.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 06:45:59 -0800 (PST)
-Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        id S1728063AbfLPOzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 09:55:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:57962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728008AbfLPOzd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Dec 2019 09:55:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6664A1FB;
+        Mon, 16 Dec 2019 06:55:32 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D91B93F718;
+        Mon, 16 Dec 2019 06:55:31 -0800 (PST)
+Date:   Mon, 16 Dec 2019 14:55:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20191215183047.9414-1-digetx@gmail.com>
-Message-ID: <b108c394-cdbc-e6c7-1688-69e05eea2279@gmail.com>
-Date:   Mon, 16 Dec 2019 17:45:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
+ bd71828 PMIC regulators
+Message-ID: <20191216145528.GE4161@sirena.org.uk>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191215183047.9414-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vv4Sf/kQfcwinyKX"
+Content-Disposition: inline
+In-Reply-To: <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-15.12.2019 21:30, Dmitry Osipenko пишет:
-> Hello,
-> 
-> I was investigating why CPU hangs during of GPIO driver suspend and in
-> the end it turned out that it is a Broadcom WiFi driver problem because
-> it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and this
-> may cause a bit weird CPU hang on writing to INT_ENB register during of
-> GPIO driver suspend. Meanwhile I also noticed that a few things could be
-> improved in the driver, that's what this small series addresses.
-> 
-> Dmitry Osipenko (3):
->   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
->   gpio: tegra: Properly handle irq_set_irq_wake() error
->   gpio: tegra: Use NOIRQ phase for suspend/resume
-> 
->  drivers/gpio/gpio-tegra.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
-> 
 
-For the reference, here is the WiFi driver fix:
+--vv4Sf/kQfcwinyKX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://patchwork.ozlabs.org/patch/1209997/
+On Wed, Dec 11, 2019 at 11:46:11AM +0200, Matti Vaittinen wrote:
+
+> +static int bd71828_ldo6_get_voltage(struct regulator_dev *rdev)
+> +{
+> +	return BD71828_LDO_6_VOLTAGE;
+> +}
+> +
+> +static const struct regulator_ops bd71828_ldo6_ops = {
+> +	.enable = regulator_enable_regmap,
+> +	.disable = regulator_disable_regmap,
+> +	.get_voltage = bd71828_ldo6_get_voltage,
+
+You can just set fixed_uV in the regulator_desc, you don't need a
+get_voltage() operation here.  Otherwise this looks good, I'll apply it
+and please send an incremental fix for this.
+
+--vv4Sf/kQfcwinyKX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33mt8ACgkQJNaLcl1U
+h9DPqggAhcsF1ZeRBaP6Lzz9ZA0lX48wnM91c45AzpXxhBPVmVU8EJrJFkmUT+zI
+VYHCWzrWqZoUwoxRDUntTg0W7omOi4CoU10/2SGjxkdxHiAmutKvaV8e155DaKRj
+hhZGeaSRdWgD3uYUZGBB1W9OYmzuHx6NtlL76FfabMt6TTPQCq7X3VjSuI4wi4oN
+7JLtu6Gzf2WNSmP1uqZLMSqk1RvgZa2K1rgRwf+SYhTD21VWliTuq/qGtg0zmijW
+BA398k1yTl123ecTnS9Fnk+IsqPSTd/mBJT4TmFkdakxVm3JSYIqpqIiJYZtGOBs
+aUVTHrBVlYfYIk4raTP8w2l2xYiNdg==
+=0wbA
+-----END PGP SIGNATURE-----
+
+--vv4Sf/kQfcwinyKX--
