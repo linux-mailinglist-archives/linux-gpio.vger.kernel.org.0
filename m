@@ -2,119 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D7DC120FD3
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 17:43:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7D85120FD6
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 17:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbfLPQlX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 11:41:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45343 "EHLO
+        id S1726383AbfLPQl4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 11:41:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38295 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbfLPQlX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 11:41:23 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so3898956wrj.12
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 08:41:22 -0800 (PST)
+        with ESMTP id S1726263AbfLPQlz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 11:41:55 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so8103882wrh.5
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 08:41:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Wad68DLaXUpd0xmHmGc4hyH7aNMrYmcFPI6lvzyrzXQ=;
-        b=ZUl2wU8huzRepFCJe7yB6pF057RW3caVmmRvTKRDOdPECwbEIB0WefXqVHnVyANG51
-         g5T22LDlh2yQLNAv708JsGohtDmViR8MgHBxQn/6No0xuswgQ4YrVXCmjytjX67eleE/
-         Rp5jkygE9YLzltRq1VkqZtxx5kK4h//PSSw742m0L7HWFdlUHnuEIRaEcjkJ4raUcfEf
-         HmrOkebAcd8HbWC4sFmTPedNt2WDm1JwiFfKxlJaij8xugE1B7IIRHaL6KnfDFYpeBgL
-         qERcKs/N55IXPtvl60tG6bSo+GEcxPhvEHpnvh0EEp7lhMx+dCHIkAkrvVV+IB7cNeB+
-         nl8A==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=isTIfaObzhS1/5bZonYRWbDD+hRSQ6mFmU4grStSX44=;
+        b=uozs0YlKTOQBirSM7sw8e/WETIDrutVulM/suq0+cDyGRDLQU+yXN5MW7ODJpSgLEa
+         JgT/IJugM1jeUrdQEcYdQ5ozzniscEtR5PrOgTJC3I39nsdR5NEDcOuj1aO28ZMoSmjd
+         iHDek34x08dFp2AK/UPBxJK4SOLKLPbURUa216fGayYkDu4NjQLVE1eRp7nlRAk/lrLi
+         FEg/Pf+YE7NWOtqjd0RO9Ke/+L96/IndRdO//yTNOGkAlMBkD2FUBV76CrA18VyZX0NP
+         MsPCObeKdeKSj1cUrxxUJnSGefgwRU8/B0UC+Z3gEZlCv/kFt2ddj96F7deU0Isekdw6
+         CNsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Wad68DLaXUpd0xmHmGc4hyH7aNMrYmcFPI6lvzyrzXQ=;
-        b=qjf0sjbjFT0P9Jl1iG7KfggBzLJY7ilul5NT1jZP1GbYqDb+KjdTx1trHVPl3cbH9Z
-         IgVA6Ck41WBpFdRao6vHRu7Uls6plXQ26EsOk3wWKxx6GnpKHOgaFEwsqYLYJBIv24S/
-         yub0J2Bth490kKkNEnelm3RgJyQhPxUZJaJXfy1tvY1PTxhTDlqUq3k/2OiQAklg23pe
-         GtwgbX1asF9/HfmJy9rNZ87BTzEmvU7t1JYr4cfeMkjM8oLDv49WNyz9qLKXyt5WEXni
-         1IFVHSdj6ZKs147BaJsnEs2G92iYi5SFFIBLFfAVEtxJeeGaj86eQy5E7oPIVf1cmXtt
-         C2ag==
-X-Gm-Message-State: APjAAAUbqDeV/BH4xBI6AGkLkQuN5oncwUU4ebm+H2nZMNWz6VMGXwPZ
-        cq/OJvOc3y9ia4F56p5EzRITew==
-X-Google-Smtp-Source: APXvYqwzL/lxHeATvNiqlDcJrYl6wzPRCIG9ji/dIYZtc3SBOtEVGWzMvLG64qHY14Tril+j6sQMqA==
-X-Received: by 2002:adf:f1c6:: with SMTP id z6mr15126699wro.279.1576514481576;
-        Mon, 16 Dec 2019 08:41:21 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id z3sm22137942wrs.94.2019.12.16.08.41.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=isTIfaObzhS1/5bZonYRWbDD+hRSQ6mFmU4grStSX44=;
+        b=mard+hRq9flEPux7AmWpOEB4OIzt/6DMdCr73nqTKev0J6uzq6iL1cSbGmqJS4oYvN
+         79mDzDjY8JtsXURdGdljun6VsN+lG8B/L3JF0VyWZjR90xSRAXMmn9tn1QCnAgRWlAwW
+         XrmZNZdqr0gxQzQknbPjoziBMkO2zCyeFXyPiwwfu9hZ4hKc1jUVwkRw6JM+4EAMSzue
+         8733F8AVNfb7RaGW4OgYSxSTH/ghurj2/WG2i/NAfqLyqH8y7obpUm9XBE/cLBPWnR8c
+         d+jjbncDvWy4uuyLdLL1S0NHUNlXEh31on/Uw16QldCY20JDfyVDbFlo82KlXdKyR50i
+         fkMA==
+X-Gm-Message-State: APjAAAUeFgx0j1LjwElty4kISw4OSUf7B96Oq6RrgLTrYUNEqIng8H0f
+        hl6BkrIWBYwCl8v8nqUZem2xNQ==
+X-Google-Smtp-Source: APXvYqyMeAydqVtRFg2OSOzFrexgRBfWLknXsxIu0N8FlQXDXw5IlLvaM/xwEUGZk7OGH+HJ0c6yPQ==
+X-Received: by 2002:adf:ebc3:: with SMTP id v3mr30920505wrn.280.1576514513950;
+        Mon, 16 Dec 2019 08:41:53 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id s10sm22295442wrw.12.2019.12.16.08.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:41:20 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:41:20 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 04/15] mfd: rohm PMICs - use platform_device_id to
- match MFD sub-devices
-Message-ID: <20191216164120.GB18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <e5998dff02b4e155059f38614191daf32a778a0a.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 16 Dec 2019 08:41:53 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: mockup: fix coding style
+Date:   Mon, 16 Dec 2019 17:41:49 +0100
+Message-Id: <20191216164149.5376-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e5998dff02b4e155059f38614191daf32a778a0a.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> Thanks to Stephen Boyd I today learned we can use platform_device_id
-> to do device and module matching for MFD sub-devices!
-> 
-> Do device matching using the platform_device_id instead of using
-> explicit module_aliases to load modules and custom parent-data field
-> to do module loading and sub-device matching.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> No changes since v5
-> 
->  drivers/clk/clk-bd718x7.c             | 12 ++++++++-
->  drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
+I have missed two indentation issues in commit 64e7112ee307 ("gpio:
+mockup: add set_config to support pull up/down"). This commit fixes them.
 
->  drivers/mfd/rohm-bd70528.c            |  3 +--
->  drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
->  include/linux/mfd/rohm-generic.h      |  3 +--
+Fixes: 64e7112ee307 ("gpio: mockup: add set_config to support pull up/down")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-mockup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index c4fdc192ea4e..94b8d3ae27bc 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -156,7 +156,7 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
+ 	mutex_lock(&chip->lock);
+ 
+ 	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
+-		!test_bit(FLAG_IS_OUT, &desc->flags)) {
++	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
+ 		curr = __gpio_mockup_get(chip, offset);
+ 		if (curr == value)
+ 			goto out;
+@@ -165,7 +165,7 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
+ 		irq_type = irq_get_trigger_type(irq);
+ 
+ 		if ((value == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
+-			(value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
++		    (value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
+ 			irq_sim_fire(sim, offset);
+ 	}
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.23.0
+
