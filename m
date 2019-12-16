@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB7E120265
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:28:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E31E120288
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:30:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLPK2X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 05:28:23 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37603 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbfLPK2X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:28:23 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u17so6202784lja.4
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:28:21 -0800 (PST)
+        id S1727404AbfLPKaI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 05:30:08 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:32876 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfLPKaI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:30:08 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so3842672lfl.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:30:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
-        b=kiHB4903z0YwS4JpJ1gi73s6446AzmG+vycJ0iyY97WttaKy2iGzEj3edupk5Ytma4
-         sCWlfm/Rxehb/LtxMP5pO00Ufe/6xX1+VMPoaDeUggEsVuap1N9u4sw7ssD3nbDI/zFh
-         dN0zfPlhE1/4zMCaBTzL/gd9KQ3DvH4mEM32gjjNxRSpoB6R1nRyhA3M6oK/nQo8S0NQ
-         IxawwPGhTYhsIrtUIcc1o6o8DCCkp8JVlAAqXKt4UrN8hIBxIyWOi9e1SeoGO6OAwRyX
-         KOtMAorX9TkHU5jRK9asVCmhp7qr+l3dHawUJqq667yore78GofGrl8Kxmz4Z39tnvKd
-         72fA==
+        bh=zAZ66aTL4botjOAzyywFJUSCyL81NlmcXv7uzteZ4R8=;
+        b=MNDQAaFQhnjUWeVovtaucXzv5IniCaNpgTqcGXFx4jLe9x12jIYadC1PDnKMkPQDMK
+         l2ehosXgsMnxhudijyOvnJ+2vzbUWEIeHPFUriZ0paYwJfnoOn54P2B+sQklEVWVQcw4
+         1T13ARTxSHB4SWDKf+zLThCGQ1iXcfpXnb6ACQsNk7u2HJXgpABr6a2qReZ5vfuS007z
+         NjpK9Bhvzu5DQHSzVNXdv0/U8izrlloNKK1hMI5lpzL6sQzLwNTL1SIjwhP6Zna7Ivxv
+         ewXg9sokgFFnzWqgeMrYd7orbCOiTcx9is4y2ZlEFFndxObGz4NfhSy7ItC3L8XppQCW
+         Mw0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cu1+Hou8B++1NEwHbXDIcfHUJVKmIeBKoDLkmWPOXCI=;
-        b=dpK6GgKjiu73vt3qxLFwzF0yWkDCIgT/0ajXVcSoWS2R9sjqQmMLLVH4qArb3PwwC9
-         c2hWG30ODk1pS4ANtQ90pb9ZrmkZKagGXrjxRitWgzsyv8ITfjtHmjrjFks01oRQzxA3
-         85hFdLBZwuz0JYrimVAr4keoqIKX0V+wBwJ9r/4fkR0GhPiQ44rdYdX4hRMEmbhmpEM0
-         wnYKsl8c0Uyzqan7CLMGlXIwv17jp5yoiXbDYU6BQmiwSwrztX7mZUGqP86RUlBYkpfP
-         79A9+b0L66P86W6UQ8xVKOS1LatZN5GN+Ogd8Dq7EHjg++N20EzXBNu7A0eY/YusfENx
-         PuOQ==
-X-Gm-Message-State: APjAAAVcL7F8k04pQL6kpoyRG3A6fhP9Yb6OaQiS9l+6tWuW5wev7CLd
-        EqveK+5F+xNg/+JEYUD0ttOBgga3f0H3PBMB/2kBsQ==
-X-Google-Smtp-Source: APXvYqzIK3/hH2FPyLoT1jp9cAXyv3Rqw/xnQY9Cr/V3d9Y+7lqo0CgT1RLffzK4WqPw4AE1exyAkY88bA5xiNu7h+g=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr18088445ljh.42.1576492100956;
- Mon, 16 Dec 2019 02:28:20 -0800 (PST)
+        bh=zAZ66aTL4botjOAzyywFJUSCyL81NlmcXv7uzteZ4R8=;
+        b=AG130HAHjOtN2ryNcJX2imYlZcpBn8L2rK5nckU4DN+kX4twMKuEQQRJ5Z5S/YwUYA
+         z8Ka4ANT9t3SJYMhWiwzG09rkAlJIcTFtzGvL1AC7b8ltqZtz68Km4K8sxU23thedPLJ
+         SsuPXbyllEy4KNVywUABuZ6cYUlDFu2lRxrthj4+qLy3tNBaSGaJH6Qgzs93CYQvo0+C
+         0CRNXmZ+l4DBFxT53JfcIjmKbEkv7x5tySgqaQcTs5s0h/FD6AcrVb8oozqz0g/Ifnai
+         MG8HzIkN3IdipX0VCWvkbNS6A/7NqwOwOFzqlGVhZxtUMIQ/fMLI76DjjDIyXlXxOI3Y
+         Dq9w==
+X-Gm-Message-State: APjAAAWoAbu6LR9Ss5Rqa9G+PnLiz9ea3vZn+wJ4epuqmOYGwtwLecny
+        lk3Te6Fb0KW9qudZzvogJBy3P3kqPyWBecoX0vTNYg==
+X-Google-Smtp-Source: APXvYqxlD1vfPmZyf5Z5diCSQWuPAUZ5VXeaBxCzjkY1MrbIYOP/373nkrVwCGdhAD+O1kDqu2EG46B1jbTPzJyZdoo=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr15738312lfi.93.1576492205964;
+ Mon, 16 Dec 2019 02:30:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-4-hdegoede@redhat.com>
-In-Reply-To: <20191215163810.52356-4-hdegoede@redhat.com>
+References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-6-hdegoede@redhat.com>
+In-Reply-To: <20191215163810.52356-6-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:28:09 +0100
-Message-ID: <CACRpkdYpg-fE3Kf=VSKpC1VaCzHjt5n31jfqOgRgWzFZ9HYtsA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
- LCD is initially off
+Date:   Mon, 16 Dec 2019 11:29:54 +0100
+Message-ID: <CACRpkdZCehawbGz+dELgjte6pTz0oEFQ3mo-2FuM4CQwm58tHQ@mail.gmail.com>
+Subject: Re: [PATCH 5/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs on BYT
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
@@ -66,22 +66,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> When the LCD has not been turned on by the firmware/GOP, because e.g. the
-> device was booted with an external monitor connected over HDMI, we should
-> not turn on the panel-enable GPIO when we request it.
+> On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
+> do not control the LCD panel- and backlight-enable GPIOs. So far, when
+> the VBT indicates we should use the SoC for backlight control, we have
+> been relying on these GPIOs being configured as output and driven high by
+> the Video BIOS (GOP) when it initializes the panel.
 >
-> Turning on the panel-enable GPIO when we request it, means we turn it on
-> too early in the init-sequence, which causes some panels to not correctly
-> light up.
+> This does not work when the device is booted with a HDMI monitor connected
+> as then the GOP will initialize the HDMI instead of the panel, leaving the
+> panel black, even though the i915 driver tries to output an image to it.
 >
-> This commits adds a panel_is_on parameter to intel_dsi_vbt_gpio_init()
-> and makes intel_dsi_vbt_gpio_init() set the initial GPIO value accordingly.
+> Likewise on some device-models when the GOP does not initialize the DSI
+> panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
+> of muxing it to the PWM controller.
 >
-> This fixes the panel not lighting up on a Thundersoft TST168 tablet when
-> booted with an external monitor connected over HDMI.
+> This commit makes the DSI code control the SoC GPIOs for panel- and
+> backlight-enable on BYT, when the VBT indicates the SoC should be used
+>
+> for backlight control. It also ensures that the PWM0 pin is muxed to the
+> PWM controller in this case.
+>
+> This fixes the LCD panel not lighting up on various devices when booted
+> with a HDMI monitor connected. This has been tested to fix this on the
+> following devices:
+>
+> Peaq C1010
+> Point of View MOBII TAB-P800W
+> Point of View MOBII TAB-P1005W
+> Terra Pad 1061
+> Yours Y8W81
 >
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
+Looks good to me:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
