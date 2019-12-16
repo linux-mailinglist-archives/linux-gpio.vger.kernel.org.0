@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF1B12031B
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 12:01:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BABA120364
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 12:11:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfLPK7S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 05:59:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51715 "EHLO
+        id S1727140AbfLPLLh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 06:11:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53966 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727466AbfLPK7R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:59:17 -0500
+        with ESMTP id S1727229AbfLPLLh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 06:11:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576493956;
+        s=mimecast20190719; t=1576494696;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hQ6sYFdb7LHBsbEybHzcurKWWaevQ2cyS6out70xyhQ=;
-        b=aP7u+RyU3KNTdtzRSlRCrySPDSiZivgEeJcHGjYYrLFa4zvEgf+1PY6yqUbM0ouOXqvANf
-        OeIrOTO2sCIkFsLbjdKdbUs7rf7QXEZLTJDouY/hFTk3xCALnmFdNzBjtOorkZtVxJPKDD
-        /+bZi9TbTMvggSjD7iNJxBJPFSVDH/Q=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-xUjZaD5DNaCAAvEVLgLarw-1; Mon, 16 Dec 2019 05:59:13 -0500
-X-MC-Unique: xUjZaD5DNaCAAvEVLgLarw-1
-Received: by mail-wr1-f71.google.com with SMTP id z10so457747wrt.21
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:59:12 -0800 (PST)
+        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
+        b=HlczcXQT9ln0kH0KRS9ZNmd0f8VEYgxFKL8NfkWffHr3WeTewA+x7ozcinH0n2VfDy5jOk
+        vvdUhQS9uDoPtHjxGyXYlmutv4gFOZP33VCVrt23+woajvVYcTKzqXnafVev3uqhDPe2eY
+        NKeLu18tXxCCRQAfqTTYU+mSkVhZNdk=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-uviQYuZiPdKAbbawb8HcGg-1; Mon, 16 Dec 2019 06:11:34 -0500
+X-MC-Unique: uviQYuZiPdKAbbawb8HcGg-1
+Received: by mail-wr1-f70.google.com with SMTP id t3so3534350wrm.23
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 03:11:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=hQ6sYFdb7LHBsbEybHzcurKWWaevQ2cyS6out70xyhQ=;
-        b=c73BzERniaeJSxweM0sj/m8Y1kxd9s5UYd1jHr7R/GDkH89HHl3n7eyr5I0zQCtYte
-         2TrOvM4DuFeRGNDqB5g8KcmhrUPEE/eYPs1gTJI0l2lbQMJK3dqlF+9Oa8e1AYQnsL1t
-         cSOUGLL5p7etJVgbIP0cVwyob9iutCCW5Zd2s6+7Sl6AWH5+LTxW87bzl+ECMUxPH2yB
-         EtHNg41jpxvUvEXp0e+CKlftBYc/LcvgJzTRJxWHPBKPKpgFyschRjPQnK/aB618iAKP
-         CoBjplbDQsp8/3yF8u2iipvVQwzVOlqb8mGjW2E6ZNXNNOQ1GxSBJRAOXMpf3T1BrKdx
-         u33Q==
-X-Gm-Message-State: APjAAAUePu47xTHWUyUVx3iSq43fy0w3fprUCk8xG5HWM7pir0YgIO9g
-        /wjCeQzQVkfzuGC5J3YYUPH2nmSIOTWGxCJ1mS520sdMQZJbpWDoV3XxBflc48BQPbmCtyWuzF9
-        WM2QyLbcySgO4TQb/rLffdQ==
-X-Received: by 2002:adf:d848:: with SMTP id k8mr28536782wrl.328.1576493951606;
-        Mon, 16 Dec 2019 02:59:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwuvaGOybV0XNDKQ0IqtqC93KS7+4qbR1CruhBbHrdFS8xkO4lkM5kRrehoFB3fnxoPD5bNoQ==
-X-Received: by 2002:adf:d848:: with SMTP id k8mr28536750wrl.328.1576493951322;
-        Mon, 16 Dec 2019 02:59:11 -0800 (PST)
+        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
+        b=oHBPS4Gxu2N5okXCIMr/jjnWDQZEtxPzPa1cn4fPRt+rtlh2LBokG8d45gZlzqTrAA
+         WTycRwqwMeZ2AMB5StmWQHj25y7iXdE2uZlmHpSURhnZBI+jwqgXpbTGZt7FXXjyxI6I
+         EpE3NtFyZktpDmZOu+kw0k1+ip/UP4HJxnGbEIN3nDLSkHdhtbxZfGYWlDGAZuAk9rnz
+         otljM8xoIRAUXqENfUNAlgygl3Jn1lstIiJXcOYMOHvZKy19knmxWICt6ru0yi+nGJRs
+         8gfzch4uwkUj4ZAcxpAmu1XVoh8mqkLgRRGJFNz8ItlgOyw5GDCGXHPWbzX6pWtSP9jw
+         6YqQ==
+X-Gm-Message-State: APjAAAVbkru30yUDh7QA8l4RNrMlNIcpsQaRdcfTwabD9NYIq1JzDL+h
+        V+eqZrezuE0Y23FNFzHYrKwWG20o3zWTuw58FNYduPxBAXJYn8sEyw6S4d/HJuNkQAizHRABXVC
+        sRn3jIW6qHL/u6o/qLRu5Cw==
+X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955314wmc.161.1576494693464;
+        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz95JVS+9hzCpx2tUeBC+2E8wF70N/Kg5EXyntvwnCxuCB6OinaKV46tDHhavo+POTw6isKJw==
+X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955289wmc.161.1576494693250;
+        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
 Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id s19sm19808552wmj.33.2019.12.16.02.59.10
+        by smtp.gmail.com with ESMTPSA id x18sm20950368wrr.75.2019.12.16.03.11.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 02:59:10 -0800 (PST)
+        Mon, 16 Dec 2019 03:11:32 -0800 (PST)
 Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
  GPIOs from VBT
 To:     Linus Walleij <linus.walleij@linaro.org>
@@ -66,8 +66,8 @@ Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
 References: <20191215163810.52356-1-hdegoede@redhat.com>
  <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2a356fad-a473-3e37-4a7b-731594524862@redhat.com>
-Date:   Mon, 16 Dec 2019 11:59:08 +0100
+Message-ID: <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+Date:   Mon, 16 Dec 2019 12:11:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
@@ -93,34 +93,26 @@ On 16-12-2019 11:26, Linus Walleij wrote:
 > I have created an immutable branch with these changes and pulled it
 > to my "devel" branch for v5.6:
 > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
-> 
-> Please pull this in and put the other patches on top of that.
 
-Great, thank you.
+Ugh, taking one last look at the "pinctrl: Export pinctrl_unregister_mappings"
+patch it is no good, sorry.
 
-Jani, a question about how I am supposed to push this (when this has been
-also reviewed by some i915 devs and passes CI), can I just do:
+I just realized that if the mapping has been dupped, the if (maps_node->maps == map)
+check will never be true, because maps_node->maps is the return value from kmemdup
+and map is the map originally passed in while registering.
 
-dim backmerge drm-intel-next-queued linux-pinctrl/ib-pinctrl-unreg-mappings
-cat other-patches | dim apply-branch drm-intel-next-queued
-dim push-branch drm-intel-next-queued
+Linus, can you please drop this from your -next ?
 
-Or I guess that dim backmerge is reserved for other drm branches only and I
-should do:
+So I see 2 options:
+1) Add an orig_map member to maps_node and use that in the comparison,
+this is IMHO somewhat ugly
 
-dim checkout drm-intel-next-queued
-git merge linux-pinctrl/ib-pinctrl-unreg-mappings
-cat other-patches | dim apply-branch drm-intel-next-queued
-dim push-branch drm-intel-next-queued
+2) Add a new pinctrl_register_mappings_no_dup helper and document in
+pinctrl_unregister_mappings kdoc that it can only be used together
+with the no_dup variant.
 
-Or should I leave merging linux-pinctrl/ib-pinctrl-unreg-mappings into
-drm-intel-next-queued up to you?
-
-> I had a bit of mess in my subsystems last kernel cycle so I
-> want to avoid that by strictly including all larger commits
-> in my trees.
-
-I understand.
+I believe that 2 is by far the best option. Linus do you agree or
+do you have any other suggestions?
 
 Regards,
 
