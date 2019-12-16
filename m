@@ -2,38 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4F7121B4E
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5C3121B4D
 	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 21:52:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfLPUvq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1727523AbfLPUvq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 16 Dec 2019 15:51:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43022 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727338AbfLPUvl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Dec 2019 15:51:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45461 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727500AbfLPUvq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 15:51:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576529500;
+        s=mimecast20190719; t=1576529505;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=z8T4172WDbHP38/LNRIKQ98QP5O9HGLPqYMQ7D5S2CM=;
-        b=O2b8+60aOtLtF/Rvgexhb85nMI4+ePwbgiZb+HOinR1Ovlvqy9tSVZVY/NFG4dsgDjQrNs
-        /vAGT0EDWGXte4japRma7vKV13DJDvMUukEMD746oQr1a5YbPCuRh9pyLVaDedVdavus17
-        m22Td1tKiCHfV662g7lSE8K1ouWHSy4=
+        bh=EPtGGtbmK8Ua4ihCISYN9ulc/oNUQiVsk18eHaZb2Ok=;
+        b=VgOK8j7ttnXwYUbvSiO0vL4FQx38uhLu11uiQ4qLKBNA3AA4Xcz4lFis6IXiKnlbmlU9U5
+        2iVrKEHX6JSkXO7E0a/s6KL02M3jglDWRLijLrr22kRbVQE4yOfME8FgRc7KSZRlbwPWtS
+        ITo2vPDOSaQFVwZIPtBfFOcsbBPJ62Q=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-oYiYyOFdNYilDOZhmFMUaw-1; Mon, 16 Dec 2019 15:51:39 -0500
-X-MC-Unique: oYiYyOFdNYilDOZhmFMUaw-1
+ us-mta-239-kAMdGsJIPkyoA21YfKjQVw-1; Mon, 16 Dec 2019 15:51:41 -0500
+X-MC-Unique: kAMdGsJIPkyoA21YfKjQVw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C9A5107ACC4;
-        Mon, 16 Dec 2019 20:51:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12B67800D5B;
+        Mon, 16 Dec 2019 20:51:40 +0000 (UTC)
 Received: from shalem.localdomain.com (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 39C791001B00;
-        Mon, 16 Dec 2019 20:51:35 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D35201001B00;
+        Mon, 16 Dec 2019 20:51:37 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
@@ -46,11 +45,10 @@ To:     Jani Nikula <jani.nikula@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: [PATCH v2 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO lookup from mfd to the i915 driver
-Date:   Mon, 16 Dec 2019 21:51:21 +0100
-Message-Id: <20191216205122.1850923-5-hdegoede@redhat.com>
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 5/5] drm/i915/dsi: Control panel and backlight enable GPIOs on BYT
+Date:   Mon, 16 Dec 2019 21:51:22 +0100
+Message-Id: <20191216205122.1850923-6-hdegoede@redhat.com>
 In-Reply-To: <20191216205122.1850923-1-hdegoede@redhat.com>
 References: <20191216205122.1850923-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -62,150 +60,200 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Move the Crystal Cove PMIC panel GPIO lookup-table from
-drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
+On Bay Trail devices the MIPI power on/off sequences for DSI LCD panels
+do not control the LCD panel- and backlight-enable GPIOs. So far, when
+the VBT indicates we should use the SoC for backlight control, we have
+been relying on these GPIOs being configured as output and driven high by
+the Video BIOS (GOP) when it initializes the panel.
 
-The moved looked-up table is adding a GPIO lookup to the i915 PCI
-device and the GPIO subsys allows only one lookup table per device,
+This does not work when the device is booted with a HDMI monitor connecte=
+d
+as then the GOP will initialize the HDMI instead of the panel, leaving th=
+e
+panel black, even though the i915 driver tries to output an image to it.
 
-The intel_soc_pmic_core.c code only adds lookup-table entries for the
-PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
-able to access some GPIOs on the SoC itself, which requires entries for
-these GPIOs in the lookup-table.
+Likewise on some device-models when the GOP does not initialize the DSI
+panel it also leaves the mux of the PWM0 pin in generic GPIO mode instead
+of muxing it to the PWM controller.
 
-Since the lookup-table is attached to the i915 PCI device it really
-should be part of the i915 driver, this will also allow us to extend
-it with GPIOs from other sources when necessary.
+This commit makes the DSI code control the SoC GPIOs for panel- and
+backlight-enable on BYT, when the VBT indicates the SoC should be used
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+for backlight control. It also ensures that the PWM0 pin is muxed to the
+PWM controller in this case.
+
+This fixes the LCD panel not lighting up on various devices when booted
+with a HDMI monitor connected. This has been tested to fix this on the
+following devices:
+
+Peaq C1010
+Point of View MOBII TAB-P800W
+Point of View MOBII TAB-P1005W
+Terra Pad 1061
+Yours Y8W81
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
- drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
- 2 files changed, 22 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/i915/display/intel_dsi.h     |  3 +-
+ drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 64 ++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i=
+915/display/intel_dsi.h
+index 675771ea91aa..7481a5aa3084 100644
+--- a/drivers/gpu/drm/i915/display/intel_dsi.h
++++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+@@ -45,8 +45,9 @@ struct intel_dsi {
+ 	struct intel_dsi_host *dsi_hosts[I915_MAX_PORTS];
+ 	intel_wakeref_t io_wakeref[I915_MAX_PORTS];
+=20
+-	/* GPIO Desc for CRC based Panel control */
++	/* GPIO Desc for panel and backlight control */
+ 	struct gpio_desc *gpio_panel;
++	struct gpio_desc *gpio_backlight;
+=20
+ 	struct intel_connector *attached_connector;
+=20
 diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/d=
 rm/i915/display/intel_dsi_vbt.c
-index 4210f449553e..89558ccf79c8 100644
+index 89558ccf79c8..0032161e0f76 100644
 --- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
 +++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
-@@ -25,6 +25,7 @@
-  */
-=20
+@@ -27,6 +27,8 @@
  #include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
+ #include <linux/gpio/machine.h>
  #include <linux/mfd/intel_soc_pmic.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/machine.h>
  #include <linux/slab.h>
 =20
-@@ -686,8 +687,18 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi,=
- u16 panel_id)
+ #include <asm/intel-mid.h>
+@@ -525,11 +527,15 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *=
+intel_dsi,
+ {
+ 	if (seq_id =3D=3D MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
+ 		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
++	if (seq_id =3D=3D MIPI_SEQ_BACKLIGHT_ON && intel_dsi->gpio_backlight)
++		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 1);
 =20
+ 	intel_dsi_vbt_exec(intel_dsi, seq_id);
+=20
+ 	if (seq_id =3D=3D MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
+ 		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
++	if (seq_id =3D=3D MIPI_SEQ_BACKLIGHT_OFF && intel_dsi->gpio_backlight)
++		gpiod_set_value_cansleep(intel_dsi->gpio_backlight, 0);
+ }
+=20
+ void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
+@@ -688,6 +694,8 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, =
+u16 panel_id)
  /*
   * On some BYT/CHT devs some sequences are incomplete and we need to man=
 ually
-- * control some GPIOs.
-+ * control some GPIOs. We need to add a GPIO lookup table before we get =
+  * control some GPIOs. We need to add a GPIO lookup table before we get =
 these.
++ * If the GOP did not initialize the panel (HDMI inserted) we may need t=
+o also
++ * change the pinmux for the SoC's PWM0 pin from GPIO to PWM.
   */
-+static struct gpiod_lookup_table pmic_panel_gpio_table =3D {
-+	/* Intel GFX is consumer */
+ static struct gpiod_lookup_table pmic_panel_gpio_table =3D {
+ 	/* Intel GFX is consumer */
+@@ -699,23 +707,69 @@ static struct gpiod_lookup_table pmic_panel_gpio_ta=
+ble =3D {
+ 	},
+ };
+=20
++static struct gpiod_lookup_table soc_panel_gpio_table =3D {
 +	.dev_id =3D "0000:00:02.0",
 +	.table =3D {
-+		/* Panel EN/DISABLE */
-+		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("INT33FC:01", 10, "backlight", GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP("INT33FC:01", 11, "panel", GPIO_ACTIVE_HIGH),
 +		{ }
 +	},
++};
++
++static const struct pinctrl_map soc_pwm_pinctrl_map[] =3D {
++	PIN_MAP_MUX_GROUP("0000:00:02.0", "soc_pwm0", "INT33FC:00",
++			  "pwm0_grp", "pwm"),
 +};
 +
  void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi, bool panel_is_=
 on)
  {
  	struct drm_device *dev =3D intel_dsi->base.base.dev;
-@@ -697,6 +708,8 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_=
-dsi, bool panel_is_on)
+ 	struct drm_i915_private *dev_priv =3D to_i915(dev);
+ 	struct mipi_config *mipi_config =3D dev_priv->vbt.dsi.config;
+ 	enum gpiod_flags flags =3D panel_is_on ? GPIOD_OUT_HIGH : GPIOD_OUT_LOW=
+;
++	bool want_backlight_gpio =3D false;
++	bool want_panel_gpio =3D false;
++	struct pinctrl *pinctrl;
++	int ret;
 =20
  	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
  	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC) {
-+		gpiod_add_lookup_table(&pmic_panel_gpio_table);
+ 		gpiod_add_lookup_table(&pmic_panel_gpio_table);
++		want_panel_gpio =3D true;
++	}
 +
++	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc =3D=3D PPS_BLC_SOC)=
+ {
++		gpiod_add_lookup_table(&soc_panel_gpio_table);
++		want_panel_gpio =3D true;
++		want_backlight_gpio =3D true;
+=20
++		/* Ensure PWM0 pin is muxed as PWM instead of GPIO */
++		ret =3D pinctrl_register_mappings(soc_pwm_pinctrl_map,
++					     ARRAY_SIZE(soc_pwm_pinctrl_map));
++		if (ret)
++			DRM_ERROR("Failed to register pwm0 pinmux mapping\n");
++
++		pinctrl =3D devm_pinctrl_get_select(dev->dev, "soc_pwm0");
++		if (IS_ERR(pinctrl))
++			DRM_ERROR("Failed to set pinmux to PWM\n");
++	}
++
++	if (want_panel_gpio) {
  		intel_dsi->gpio_panel =3D gpiod_get(dev->dev, "panel", flags);
  		if (IS_ERR(intel_dsi->gpio_panel)) {
  			DRM_ERROR("Failed to own gpio for panel control\n");
-@@ -707,8 +720,16 @@ void intel_dsi_vbt_gpio_init(struct intel_dsi *intel=
-_dsi, bool panel_is_on)
-=20
- void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
- {
-+	struct drm_device *dev =3D intel_dsi->base.base.dev;
-+	struct drm_i915_private *dev_priv =3D to_i915(dev);
-+	struct mipi_config *mipi_config =3D dev_priv->vbt.dsi.config;
-+
- 	if (intel_dsi->gpio_panel) {
- 		gpiod_put(intel_dsi->gpio_panel);
- 		intel_dsi->gpio_panel =3D NULL;
+ 			intel_dsi->gpio_panel =3D NULL;
+ 		}
  	}
 +
-+	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
-+	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC)
-+		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
++	if (want_backlight_gpio) {
++		intel_dsi->gpio_backlight =3D
++			gpiod_get(dev->dev, "backlight", flags);
++		if (IS_ERR(intel_dsi->gpio_backlight)) {
++			DRM_ERROR("Failed to own gpio for backlight control\n");
++			intel_dsi->gpio_backlight =3D NULL;
++		}
++	}
  }
-diff --git a/drivers/mfd/intel_soc_pmic_core.c b/drivers/mfd/intel_soc_pm=
-ic_core.c
-index 47188df3080d..ddd64f9e3341 100644
---- a/drivers/mfd/intel_soc_pmic_core.c
-+++ b/drivers/mfd/intel_soc_pmic_core.c
-@@ -9,8 +9,6 @@
-  */
 =20
- #include <linux/acpi.h>
--#include <linux/gpio/consumer.h>
--#include <linux/gpio/machine.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-@@ -25,17 +23,6 @@
- #define BYT_CRC_HRV		2
- #define CHT_CRC_HRV		3
+ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
+@@ -729,7 +783,17 @@ void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *in=
+tel_dsi)
+ 		intel_dsi->gpio_panel =3D NULL;
+ 	}
 =20
--/* Lookup table for the Panel Enable/Disable line as GPIO signals */
--static struct gpiod_lookup_table panel_gpio_table =3D {
--	/* Intel GFX is consumer */
--	.dev_id =3D "0000:00:02.0",
--	.table =3D {
--		/* Panel EN/DISABLE */
--		GPIO_LOOKUP("gpio_crystalcove", 94, "panel", GPIO_ACTIVE_HIGH),
--		{ },
--	},
--};
--
- /* PWM consumed by the Intel GFX */
- static struct pwm_lookup crc_pwm_lookup[] =3D {
- 	PWM_LOOKUP("crystal_cove_pwm", 0, "0000:00:02.0", "pwm_pmic_backlight",=
- 0, PWM_POLARITY_NORMAL),
-@@ -96,9 +83,6 @@ static int intel_soc_pmic_i2c_probe(struct i2c_client *=
-i2c,
- 	if (ret)
- 		dev_warn(dev, "Can't enable IRQ as wake source: %d\n", ret);
-=20
--	/* Add lookup table binding for Panel Control to the GPIO Chip */
--	gpiod_add_lookup_table(&panel_gpio_table);
--
- 	/* Add lookup table for crc-pwm */
- 	pwm_add_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
-=20
-@@ -121,9 +105,6 @@ static int intel_soc_pmic_i2c_remove(struct i2c_clien=
-t *i2c)
-=20
- 	regmap_del_irq_chip(pmic->irq, pmic->irq_chip_data);
-=20
--	/* Remove lookup table for Panel Control from the GPIO Chip */
--	gpiod_remove_lookup_table(&panel_gpio_table);
--
- 	/* remove crc-pwm lookup table */
- 	pwm_remove_table(crc_pwm_lookup, ARRAY_SIZE(crc_pwm_lookup));
-=20
++	if (intel_dsi->gpio_backlight) {
++		gpiod_put(intel_dsi->gpio_backlight);
++		intel_dsi->gpio_backlight =3D NULL;
++	}
++
+ 	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+ 	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC)
+ 		gpiod_remove_lookup_table(&pmic_panel_gpio_table);
++
++	if (IS_VALLEYVIEW(dev_priv) && mipi_config->pwm_blc =3D=3D PPS_BLC_SOC)=
+ {
++		pinctrl_unregister_mappings(soc_pwm_pinctrl_map);
++		gpiod_remove_lookup_table(&soc_panel_gpio_table);
++	}
+ }
 --=20
 2.23.0
 
