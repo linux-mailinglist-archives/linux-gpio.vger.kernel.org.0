@@ -2,110 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58BF7120538
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:16:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01160120542
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:16:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfLPMNs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 07:13:48 -0500
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:40397 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbfLPMNs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:13:48 -0500
-Received: by mail-wm1-f54.google.com with SMTP id t14so6419553wmi.5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:13:46 -0800 (PST)
+        id S1727546AbfLPMQd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 07:16:33 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:42311 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbfLPMQc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:16:32 -0500
+Received: by mail-ua1-f66.google.com with SMTP id d8so1979379uak.9
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:16:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=pXv8OxQ1bocrEkQ8ZXaVl4TgemIXM7Ni1oLyAsKVhGs=;
-        b=efbL63aOgKASXMjxb1GOUeBe7nDW1Q2kIYB4X/G63+vliUrtXhCS7rxsjBoU4l3uOS
-         Hmk/MWnhBvHlCamVPmR1bpacNTF9TPXNFbKhxhTShm3BUzk1n2PupDJDuV0Bav6bZp4U
-         QG3ei9ojySb5T32u7J41MQYHGZq0GMmQfwX6ZdVTX0TjdfjWceR55m+lyVuQivQw51r8
-         rWZfLRJ2B+ennZ+uwsCP6yKivGE8i96+ewb/yJuj/z7Tu+HHS6G3JYPiYu6cBsZdrWj4
-         ldxoWglG2fznL9RWMC9rhrkLsiBClB59M/6mZ6q7xTtJfn9NN2LsjxdKcFoExsgPaENh
-         kxWw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g6hMK4zvmiSQXDEVIro/DLpNW8Dnq2eeAYZqmv+C7n4=;
+        b=ACbNbFswU1bSLXpKw7frBiJCD6yT6A648nS5mwhOnzZ/oCoWad3p+XghmD1WWzlVJm
+         txMzHtwXkBDWokJ/qZ+h2NJNPo9VbjuBgNeD2ooLabCNucUnCK0laHcbbaDut7vIo027
+         DGIbWg5yK8l48N2llclSO2ZAL85UBWtMaooZlHhG8lnHmOvHVcS+QEgB/B532FqJdWQh
+         Ud6qSt1MTC7AD4yTbOkjMO5VSHEg7XmLrE6VGezhugDqk9s7SNpN9mJC+dL9rWjyTL+v
+         ag2YGxtfHBMl2JzSpFfkRk+npQR6zGCl2dRnuhF+/nv3CFHdQT4l5R3tgcRsFnEci7bQ
+         ONyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=pXv8OxQ1bocrEkQ8ZXaVl4TgemIXM7Ni1oLyAsKVhGs=;
-        b=j8ikVUpmecmQVFNayU6FKCD0cJKZe4GWSJXHTyKTL70hmnuf3Y0bc9QkGO7eodAyXB
-         zVpYjwtZiFLuB+yjBNHm469DarP0sYTQsCT7+/4Jzl5mTCD6ol0hqEYY72NU6xvO1LO9
-         sPWCM3ovZJlOGs+5chD60JbClCd7u1EvM4zkJznat4+uSLb6Wq+tsAjPluj/8siZzlv2
-         upgKLktvpXCcY3S78y3ESJNycy8T3+IqsgD2Ka8rLPYCR5oU6TScKbe1FUA9Xf/6q/43
-         yPDJSWnBkx1VdgtT0pfboqtVrlU7n11gUaVhq8uP08X+xzhCkkBlRzvb+kFX9K1I8e4o
-         ZlDw==
-X-Gm-Message-State: APjAAAVY8RNT2s9nrCTpSU8rdHrGcsLi2Q5HLhMbXOMEzqe9XfY0rjGE
-        EuZdHMF3C5XZDYeYkddxXsQyO5z2aKw=
-X-Google-Smtp-Source: APXvYqxFANGefuSbV8XfP+Yiw3z0F8/fHHpAlOgvyBZnGSd/hACr1OQNPHSO703gQp01pMeu9OLGTw==
-X-Received: by 2002:a1c:7d93:: with SMTP id y141mr31002627wmc.111.1576498426068;
-        Mon, 16 Dec 2019 04:13:46 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id c2sm21612637wrp.46.2019.12.16.04.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 04:13:45 -0800 (PST)
-Message-ID: <5df774f9.1c69fb81.498f6.f72e@mx.google.com>
-Date:   Mon, 16 Dec 2019 04:13:45 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g6hMK4zvmiSQXDEVIro/DLpNW8Dnq2eeAYZqmv+C7n4=;
+        b=PdaOTw2X1/WxBTv4yoy+3margdk+ge1+N8uCZhoaGEC1c3vHQHQASbHbp88jbBdNqi
+         fI+w9S4d+UlSbVA9DOK+NFfu+rjsZs1+0jRwWOw/oTM522Z6m6sa0LFlmbXK7Eioc2Vh
+         ZW5a9KW+xlIStrDplXPMLTdicdjm3dCb1NmA+giLwknmd9It9eyQITAa058tSr+cB5un
+         MLmHdYpPBkXXJthWVT51NShCaYVlFoo5vo3wKmm8ShpmH2kDqARzwOlgrclVQexKHPb0
+         a+zG0nHM59jDDN3lBO0t5oYH+iXwDh2DQ0O8RK50BwitUtrLAxXn8OUticfn52oV6sTZ
+         YCgg==
+X-Gm-Message-State: APjAAAVyDk63+NQ3XnnkY8buRm/mN5EpRNEqyu3YxQ5wjxsSIQ7RpSwb
+        j+fZAgZ/sYt4YFGULhP5JqxeBus1qhL7RLtaILTdhr9gUE4BNQ==
+X-Google-Smtp-Source: APXvYqxgrIn4al26ZnFpKqCL0TxyFBEwhX8AWXeCD4bBS7Ttf4sGA8fJ1Pg64Ke5L5GoUz3YDXkMxfaBaYcspaOS/YE=
+X-Received: by 2002:ab0:1c0a:: with SMTP id a10mr22825812uaj.140.1576498591580;
+ Mon, 16 Dec 2019 04:16:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.5-rc1-11-g286e7beaa4cc
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: fixes
-Subject: linusw/fixes build: 5 builds: 0 failed,
- 5 passed (v5.5-rc1-11-g286e7beaa4cc)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20191215163810.52356-1-hdegoede@redhat.com> <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
+ <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+In-Reply-To: <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 13:16:20 +0100
+Message-ID: <CACRpkdaYgpY=Anem00tPS=HPCD5XUrfWmWjvPkszggnHCpgK2Q@mail.gmail.com>
+Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
+ GPIOs from VBT
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/fixes build: 5 builds: 0 failed, 5 passed (v5.5-rc1-11-g286e7beaa4cc)
+On Mon, Dec 16, 2019 at 12:11 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
-5.5-rc1-11-g286e7beaa4cc/
+> Ugh, taking one last look at the "pinctrl: Export pinctrl_unregister_mappings"
+> patch it is no good, sorry.
 
-Tree: linusw
-Branch: fixes
-Git Describe: v5.5-rc1-11-g286e7beaa4cc
-Git Commit: 286e7beaa4cc7734894ee214569de4669ed9891e
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 5 unique architectures
+Ooops!
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+> Linus, can you please drop this from your -next ?
 
-Detailed per-defconfig build reports:
+Sure, done.
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
+> So I see 2 options:
+> 1) Add an orig_map member to maps_node and use that in the comparison,
+> this is IMHO somewhat ugly
+>
+> 2) Add a new pinctrl_register_mappings_no_dup helper and document in
+> pinctrl_unregister_mappings kdoc that it can only be used together
+> with the no_dup variant.
+>
+> I believe that 2 is by far the best option. Linus do you agree or
+> do you have any other suggestions?
 
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
+What about (3) look for all calls to pinctrl_register_mappings()
+in the kernel.
 
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
+Hey it is 2 places in total:
+arch/arm/mach-u300/core.c:      pinctrl_register_mappings(u300_pinmux_map,
+drivers/pinctrl/cirrus/pinctrl-madera-core.c:           ret =
+pinctrl_register_mappings(pdata->gpio_configs,
 
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
+Delete  __initdata from the u300 table, the other one seems
+safe. Fold this into your patch.
 
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+Go with the original idea.
 
----
-For more info write to <info@kernelci.org>
+Yours,
+Linus Walleij
