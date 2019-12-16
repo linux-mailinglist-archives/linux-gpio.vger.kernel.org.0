@@ -2,74 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F63E1202B0
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:33:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 225541202CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfLPKdf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 05:33:35 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35481 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbfLPKdf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:33:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 15so3845565lfr.2
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:33:34 -0800 (PST)
+        id S1727482AbfLPKjv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 05:39:51 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40096 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727391AbfLPKjv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:39:51 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so3829731lfo.7
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:39:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
-        b=RDOSNMLefpSQpETal85Bim9dPhogcTCS67hhUNMY+1TEzPu40+B8/Ri9cpSlWYEzEr
-         X0vgBsDyYL2PXIC/0V8fl10D9tSbnPiZia3+s+/eCCTadthyMr6NucS5B/3O9mHT/Txd
-         fT68R1/ja79MMnNvWrrDwVtb1c3M0R0dnE7pGC65XQPv62Zun2qZMLG2tLswiZ0c/mLi
-         8M57mVlVCQbwQ95NMX5/Mzz31bsQBbwwx6cK2VRiRzIyMVMkt411kY9yfNq9a7SDQfXB
-         A2aTBqHcTVtIfNymGpOn2uThr3BELb8O+zSDS14EJFP0G1CQlffGF9hZ+fxv6jj2/Q1J
-         fk8w==
+        bh=eASUinPkaGZJHOgTIA6SaLKdBIe8ndKbRshIZuG4fiA=;
+        b=gvMSEBB0eZnELFRmfIx+0Ef0369plyPv8mYJq1s4eaHxkEkW5VnmgwqeNz355t5TWl
+         Sn+cFXB4DxEcHvFWI7u/LfZeMLEGqNlsyCnYcJp8bUraj4vhcVxezg0Dn86FM5UNxnmh
+         FSOaLsLlCJHiE9/5Ins+lr6SDTlu88BPlvJwAG5AP7SlSiidb78l00dSDAhzJgtSnvX5
+         lTut3TUCJ+O23llKsTL/fihV3fyGQQi4mkfQGkB5hadELN9w1ha3rPKL11fECr8lzCP9
+         QhiWKUdJmBL98fMhEP1w1sU2at2NGKzQISN0OMgUzUCqFicb2X5kh7CXV543rRcmPfHq
+         xygw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
-        b=TdP04PtosuLaNTs14DKeEXCy3uOjg3gSkmCOwUlKEJdrcGw5vyX1400G2n2q1NV7H9
-         PjpDYnZQ4Op3ttM7n05ThB9JYAetmHIGavb6tzOIr5Cde2og6UIP3QEcXhoCO+vqwT/y
-         WXD2SCeJbKDRDjKbmm07Ew1VEUZsEmqd5XqLp1J2Hxjg3vFcLgM6hiVxF1kKzGH1dT38
-         jVmOV84UfpDC20rd/khIsUW/jVN839eS2cSAvXPA23R+p0svHgTmOjgbO8eiXIkzyc2P
-         ETvQGL4Pd/RL2oD1/pCvFFCGzLWsUVZQ7fbUJIN8zhq1JBVamR1KRXq0d/ttS6Bn6m/T
-         5tPA==
-X-Gm-Message-State: APjAAAW2f1shBXXenPP9/JY5DkLOWmE1nH5NmD/nNvDpJyGaMegQEjFc
-        ZiwG0KS0/fX/2pEmlW0Nv2nDlTwNaws8GXLu61Mctw==
-X-Google-Smtp-Source: APXvYqymHPUmY8/CzNHdDAD6AwTm1kirH1H2wRv3LEavU5/vztz8RFIuac9dcS+gpU/Uw8IJghQSICFKXObovOuodQw=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr15747213lfi.93.1576492413336;
- Mon, 16 Dec 2019 02:33:33 -0800 (PST)
+        bh=eASUinPkaGZJHOgTIA6SaLKdBIe8ndKbRshIZuG4fiA=;
+        b=O+FTfiu4oFzGkMYmGXiV+7koqXtPEzRhGnXUCx3DIlWdsTVoEb2+tnOVBLbF29lhnQ
+         o3fmmlE4EUG1L+rZnZ9SISAaHfUbfsUyggzxhBeBwMqpqJ8Iw343ymG1okzITmZbVgYg
+         d/YDCqFAsaUrDb5UsqSAYYpGkKjCC4kpWhyDq288nfQjL5bseaez+3vG53ncdK9s4f+t
+         mAog/jq8gps3qpnntuvuvll38XtJQo3Eg5VA2kKnV9D8wdHTWfS0sjfr7lFnyjolbRnc
+         QMgd0sL/G7EYXCwvGAAZbjosEWzv+PcgTGL6ISWqEw/m3LTe9L9LZ1tC7fNXosEy6F4c
+         2UOA==
+X-Gm-Message-State: APjAAAUamgr36zONnySfBDTZ3LV+OFNSUixRHdgFXjuXkAh2WWYZDYeX
+        lB72U+QvGjr0D2QMODFe64hgvC9NqLxemGgQsOkjsBM+DzWO8Q==
+X-Google-Smtp-Source: APXvYqxzt8KKeZI8wgfcQPj0YZ9QX8xthNB6bqmMjGdR0Pj43hONYwxcydmJ2yGX9OFyPLBM5DVYrwUa2gH8n7yfSjI=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr15930092lfp.133.1576492788774;
+ Mon, 16 Dec 2019 02:39:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-4-m.felsch@pengutronix.de> <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
-In-Reply-To: <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
+References: <20191211192742.95699-1-brendanhiggins@google.com> <20191211192742.95699-2-brendanhiggins@google.com>
+In-Reply-To: <20191211192742.95699-2-brendanhiggins@google.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:33:21 +0100
-Message-ID: <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+Date:   Mon, 16 Dec 2019 11:39:37 +0100
+Message-ID: <CACRpkdaTJej2zFX0y7mAYymBdGNvHpp3VyU0kOd=ScA_gMAf-A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/7] pinctrl: equilibrium: add unspecified HAS_IOMEM dependency
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     jdike@addtoit.com, Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com, linux-um@lists.infradead.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
+        David Gow <davidgow@google.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Wed, Dec 11, 2019 at 8:28 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 
-> Nice catch, Linus is it okay to add this as follow up patch? The current
-> patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+> Currently CONFIG_PINCTRL_EQUILIBRIUM=y implicitly depends on
+> CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+> the following build error:
+>
+> ld: drivers/pinctrl/pinctrl-equilibrium.o: in function `eqbr_pinctrl_probe':
+> drivers/pinctrl/pinctrl-equilibrium.c:908: undefined reference to `devm_platform_ioremap_resource'
+> ld: drivers/pinctrl/pinctrl-equilibrium.c:223: undefined reference to `devm_ioremap_resource'
+>
+> Fix the build error by adding the CONFIG_HAS_IOMEM=y dependency.
+>
+> Reported-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-No strong opinion on that as long as the result is running code.
+Patch applied but I augmented it with the recently added
+OF dependency so it now says:
+depends on OF && HAS_IOMEM
 
 Yours,
 Linus Walleij
