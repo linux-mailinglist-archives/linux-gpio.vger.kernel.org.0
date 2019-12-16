@@ -2,80 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 946F411FF95
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 09:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3949611FFBE
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 09:30:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfLPIUL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 03:20:11 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:38565 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfLPIUK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 03:20:10 -0500
-Received: by mail-ua1-f68.google.com with SMTP id z17so1772430uac.5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 00:20:09 -0800 (PST)
+        id S1726756AbfLPIaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 03:30:04 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:42122 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLPIaD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 03:30:03 -0500
+Received: by mail-ua1-f65.google.com with SMTP id d8so1773314uak.9
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 00:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4ejdI6l2MpiYe782h59jIGE5FMUmgtUe4qzVwYNXmww=;
-        b=zNhA6sQIvrirlHCC9+lV8lwZmYIThF6Cb5/e10jRvCda1SodrIGyW+1y1FRxISYeqt
-         ymjut6ALn0lrVMeyzd0+Wq5TK73LF/UmbntZSTE9+HDYoHZzjMkMfFVWskPN3ePSbaSm
-         Rhp5nBqj+mVFO+JZSBBZsmiMg46Xoa7lxa0A4zIzuj9RLdtazLXsimA1mhiYn+Byk2ic
-         ZfEAwaDeDohDz18BHRUzfZHvQkhnPUaTP/eCjcihcbpl2twLfFUvg3T9/WvkDqfekzIo
-         lY5jMNMerytVgatLCjJcUkR14W9DYj/i3K7Xmj6dJsVsLnQ3SkDBa+d2qyALhl9Fw0TW
-         FChQ==
+        bh=kDxQhaeLo6rNMVFT3CBcpOhBFhoVMYpLfsYqZHIsllM=;
+        b=GJ6KAmw6S+sq3Ccetl/H3ixiZVhos+PR0jEMWgPCzfx0kYdnBXsUmmddRDGHKCa+IW
+         XpoIFbLS8+19HgHvj1aji88fMJFyb1lR/OZ36673QRjkhDqdlzrIFkgM8oE+oLQDArnf
+         b7+9QxLZM6bFfD0TyRkuo4e0dVkdBL0SKoIBmAyTVM1uFsJHNelZ/+e0ANXGZ4aezkeZ
+         o4gb0cTRAp9bOD/PgQ9vQbyM+lGwK9Ok7JQXcF4SJ5b4Kw9UhJJL2BCwrf0d2BtMgGGk
+         5R3A+AL4JyWngHzSseIzNmoBzR/zYQxFslU5c3tgyAMleZF6TpW7mWEL4HtKwSHPi2AZ
+         9W7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4ejdI6l2MpiYe782h59jIGE5FMUmgtUe4qzVwYNXmww=;
-        b=dsXPVUIZ+KwRgYvMhxOFunXFRjgZXgIHGY8fC6q7XRFc00kPPgGQp1jHM0t307PATi
-         EIC+GEfRVDxB3eqcgH+LDvePShunTpnnJMJK0voJkSwrvZYRK03b57XmY+PYgZxID+cQ
-         1f4Xx53bOMr8FcS/2ss8Ui66Uvs8o7Q2azqn46g/WCGAGNAPXvaRRKkVRzoFp1VKK0e8
-         DwvO4ZysI4l7ud3j98n5tDb3p0tDccW9tSMUhU1TlzY+kTPVgEJW2vHiOLc4t+QFuqbK
-         d8PDBxbaga5wIEmtoKdfEHcwIx0SZZCYSxIDVk5RsFDQG48KiUyaKcbT2ZnPJuEUFY/d
-         Xx2Q==
-X-Gm-Message-State: APjAAAXnIp7VtpCPdVZNSKcNYIN7uXy1xI59526dyz5fRxD2kJ90yw7O
-        4Ir/Q/XJOlv6XYO9r16yxxmSDmUQgqMJtHAMZMUEjg==
-X-Google-Smtp-Source: APXvYqyMIA/7VP13JucpywWenFRwuvJQzwyVI4uVwVCF1oD8d8lLCXdxOD2nx2LY/dqipJEgihXFLTAgCEdx8FIQays=
-X-Received: by 2002:ab0:32ce:: with SMTP id f14mr5108941uao.54.1576484409083;
- Mon, 16 Dec 2019 00:20:09 -0800 (PST)
+        bh=kDxQhaeLo6rNMVFT3CBcpOhBFhoVMYpLfsYqZHIsllM=;
+        b=UfDAIjb0O455AvRKKMA5SBG3hKKN97mSFgli9agRlqE0GliquwPL7KKLSNKeI+PvCz
+         fGlmkJterWB5ZkHa+fr0fceY0PAx3whaFSm6JmOK7PBdnP0xTHz1b7V1XNHS3zaZbipK
+         po0UZPjiMpVMiETyLz2/nq1OmGUDar2IYi5gTBCKwOG7Kx2+PBM1/UBnS8bFlQOSBaum
+         BLqWw3bI6s8u43AoWaGU5KFFO2Mt/975eqXg+7M6IsE4zFLr3sUk55ILdH816gJlkyn+
+         H1wXwB9t6icFr84bqxokImNf17+LLzDVe5PYY9nbFiUEZZ8lj6GVgx3XKXBwbKnRbW0C
+         cZtg==
+X-Gm-Message-State: APjAAAWkkCmgBkR8MimQFpxm6PpIy1hTpbMz9uUrFIsZptyqmfIto1ZZ
+        SRxCPg1f2jzkOkKYu6Js84+LKJwKi2ZtWMKgUHh11Q==
+X-Google-Smtp-Source: APXvYqwni+l6XxPCyreJYxRHqzJXidyE2iM9tvx9B737sdIeXKOHoRA6FLpVo5xoUtWtnIiiMdWW6jDBBKJSinB1wok=
+X-Received: by 2002:ab0:5512:: with SMTP id t18mr22623715uaa.128.1576485002794;
+ Mon, 16 Dec 2019 00:30:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org> <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1572419178-5750-2-git-send-email-mkshah@codeaurora.org>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com> <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:19:58 +0100
-Message-ID: <CACRpkdZtbViGmGr=L3C4ibx3RVvB0tsv6JamvOPzo2mRmfk1FQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Mon, 16 Dec 2019 09:29:51 +0100
+Message-ID: <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com>
+Subject: Re: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
+        linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 8:07 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Wed, Dec 11, 2019 at 10:47 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-> GPIOs that can be configured as wakeup sources, have their
-> interrupt lines routed to PDC interrupt controller.
+> Bunch of MFD sub-devices which are instantiated by MFD do not have
+> own device-tree nodes but have (for example) the GPIO consumer
+> information in parent device's DT node. Add resource managed
+> devm_gpiod_get_array() for such devices so that they can get the
+> consumer information from parent DT while still binding the GPIO
+> reservation life-time to this sub-device life time.
 >
-> Provide the interrupt map of the GPIO to its wakeup capable
-> interrupt parent.
+> If devm_gpiod_get_array is used as such - then unloading and then
+> re-loading the child device fails as the GPIOs reserved during first
+> load are not freed when driver for sub-device is unload (if parent
+> stays there).
 >
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>
+> Changes since v5:
+> - renamed internal function (no __ - prefixes for Linus :] )
 
-Patch applied for v5.6 with the ACKs!
+Thanks, as there are things happening in the GPIO subsystem I
+have put this one patch on an immutable branch here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-devm-gpiod-get-parent-array
+
+Please ask the maintainer (I guess Lee?) to pull this into wherever
+the rest of the patches should be merged if you want patches beyond
+this point to be applied for the next (v5.6) merge window, then this
+patch is not needed in the series.
 
 Yours,
 Linus Walleij
