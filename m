@@ -2,37 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D43F6121B46
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 21:52:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF1CB121B48
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 21:52:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfLPUvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 15:51:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50155 "EHLO
+        id S1726530AbfLPUvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 15:51:36 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38534 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726729AbfLPUvc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 15:51:32 -0500
+        with ESMTP id S1727229AbfLPUvg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 15:51:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576529491;
+        s=mimecast20190719; t=1576529495;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pvjquvCkoze0MtjNw3nKGvgtAe0VvOjNZaCP9z525sw=;
-        b=I1bwQtUI5Ic2Pmoe2RzFp9jvmNjgje/KcRULXdfRFLzVr2L7/xiVYluC48kpRBxrAeH2Jn
-        f5PA+nPMTvC8Nx27+pLJMZw7IWyhYxJ1wjPF1oPSP6s3+Lx0RvU0Ge/uid3QI0jr4HHqte
-        zVmNZJwpZ8V6k30NXQG5uFUeHzB1BCY=
+        bh=PeaHwy6WlGE88ZYmmfDM+iROmBri+Cz7ZaSoLHEK8O8=;
+        b=YL75t7oIHwZo0E4hb4yd/uTUwV5bB5t0mQYwOr6KZ4XlrOO1g5URSXXBiEAWqnKYteKb7n
+        BOREtE3VPr4m4rXt/nhIH2g+oHsVqHYN+gWBYPHb5Zz3rrJsAuWvil7v3SiV5makRdzfrN
+        2/gNpyYDdgwyMQS4kTfaUycthvTK5yY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-0P7U2uBGPNaQW1ifvJCavQ-1; Mon, 16 Dec 2019 15:51:30 -0500
-X-MC-Unique: 0P7U2uBGPNaQW1ifvJCavQ-1
+ us-mta-33-8ZbnFOOSOFmkS70I7bsuiw-1; Mon, 16 Dec 2019 15:51:32 -0500
+X-MC-Unique: 8ZbnFOOSOFmkS70I7bsuiw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20B9C107ACC4;
-        Mon, 16 Dec 2019 20:51:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FD30107ACC5;
+        Mon, 16 Dec 2019 20:51:30 +0000 (UTC)
 Received: from shalem.localdomain.com (ovpn-116-96.ams2.redhat.com [10.36.116.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6A2A1001B00;
-        Mon, 16 Dec 2019 20:51:25 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 65EC91001B00;
+        Mon, 16 Dec 2019 20:51:28 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Jani Nikula <jani.nikula@linux.intel.com>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
@@ -46,12 +46,13 @@ To:     Jani Nikula <jani.nikula@linux.intel.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH v2 1/5] pinctrl: Allow modules to use pinctrl_[un]register_mappings
-Date:   Mon, 16 Dec 2019 21:51:18 +0100
-Message-Id: <20191216205122.1850923-2-hdegoede@redhat.com>
+Subject: [PATCH v2 2/5] drm/i915/dsi: Move poking of panel-enable GPIO to intel_dsi_vbt.c
+Date:   Mon, 16 Dec 2019 21:51:19 +0100
+Message-Id: <20191216205122.1850923-3-hdegoede@redhat.com>
 In-Reply-To: <20191216205122.1850923-1-hdegoede@redhat.com>
 References: <20191216205122.1850923-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -59,224 +60,192 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently only the drivers/pinctrl/devicetree.c code allows registering
-pinctrl-mappings which may later be unregistered, all other mappings
-are assumed to be permanent.
+On some older devices (BYT, CHT) which may use v2 VBT MIPI-sequences,
+we need to manually control the panel enable GPIO as v2 sequences do
+not do this.
 
-Non-dt platforms may also want to register pinctrl mappings from code whi=
-ch
-is build as a module, which requires being able to unregister the mapping
-when the module is unloaded to avoid dangling pointers.
+So far we have been carrying the code to do this on BYT/CHT devices
+with a Crystal Cove PMIC in vlv_dsi.c, but as this really is a shortcomin=
+g
+of the VBT MIPI-sequences, intel_dsi_vbt.c is a better place for this,
+so move it there.
 
-To allow unregistering the mappings the devicetree code uses 2 internal
-functions: pinctrl_register_map and pinctrl_unregister_map.
+This is a preparation patch for adding panel-enable and backlight-enable
+GPIO support for BYT devices where instead of the PMIC the SoC is used
+for backlight control.
 
-pinctrl_register_map allows the devicetree code to tell the core to
-not memdup the mappings as it retains ownership of them and
-pinctrl_unregister_map does the unregistering, note this only works
-when the mappings where not memdupped.
-
-The only code relying on the memdup/shallow-copy done by
-pinctrl_register_mappings is arch/arm/mach-u300/core.c this commit
-replaces the __initdata with const, so that the shallow-copy is no
-longer necessary.
-
-After that we can get rid of the internal pinctrl_unregister_map function
-and just use pinctrl_register_mappings directly everywhere.
-
-This commit also renames pinctrl_unregister_map to
-pinctrl_unregister_mappings so that its naming matches its
-pinctrl_register_mappings counter-part and exports it.
-
-Together these 2 changes will allow non-dt platform code to
-register pinctrl-mappings from modules without breaking things on
-module unload (as they can now unregister the mapping on unload).
-
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
--Drop __initdata from arch/arm/mach-u300/core.c pinctrl-map, so
- that we can drop the dup behavior for non device-tree callers
--Stop memdupping the pinctrl-maps in some cases, remove all code for
- dealing with dupped maps, including the extra coded added for this in v1
- of this patch
--Drop the private (non-dupping) pinctrl_register_map function, now that
- our public pinctrl_register_mappings does not dup we can simply use it
- everywhere
----
- arch/arm/mach-u300/core.c       |  2 +-
- drivers/pinctrl/core.c          | 41 +++++++++++++--------------------
- drivers/pinctrl/core.h          |  4 ----
- drivers/pinctrl/devicetree.c    |  4 ++--
- include/linux/pinctrl/machine.h |  5 ++++
- 5 files changed, 24 insertions(+), 32 deletions(-)
+ drivers/gpu/drm/i915/display/intel_dsi.h     |  2 +
+ drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 46 +++++++++++++++++++-
+ drivers/gpu/drm/i915/display/vlv_dsi.c       | 27 +-----------
+ 3 files changed, 48 insertions(+), 27 deletions(-)
 
-diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
-index a79fa3b0c8ed..a1694d977ec9 100644
---- a/arch/arm/mach-u300/core.c
-+++ b/arch/arm/mach-u300/core.c
-@@ -201,7 +201,7 @@ static unsigned long pin_highz_conf[] =3D {
- };
+diff --git a/drivers/gpu/drm/i915/display/intel_dsi.h b/drivers/gpu/drm/i=
+915/display/intel_dsi.h
+index b15be5814599..de7e51cd3460 100644
+--- a/drivers/gpu/drm/i915/display/intel_dsi.h
++++ b/drivers/gpu/drm/i915/display/intel_dsi.h
+@@ -203,6 +203,8 @@ void bxt_dsi_reset_clocks(struct intel_encoder *encod=
+er, enum port port);
 =20
- /* Pin control settings */
--static struct pinctrl_map __initdata u300_pinmux_map[] =3D {
-+static const struct pinctrl_map u300_pinmux_map[] =3D {
- 	/* anonymous maps for chip power and EMIFs */
- 	PIN_MAP_MUX_GROUP_HOG_DEFAULT("pinctrl-u300", NULL, "power"),
- 	PIN_MAP_MUX_GROUP_HOG_DEFAULT("pinctrl-u300", NULL, "emif0"),
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 2bbd8ee93507..b0eea728455d 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -1376,8 +1376,15 @@ void devm_pinctrl_put(struct pinctrl *p)
+ /* intel_dsi_vbt.c */
+ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi, u16 panel_id);
++void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi);
++void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi);
+ void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+ 				 enum mipi_seq seq_id);
+ void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec);
+diff --git a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c b/drivers/gpu/d=
+rm/i915/display/intel_dsi_vbt.c
+index f90946c912ee..8be7d6c507aa 100644
+--- a/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
++++ b/drivers/gpu/drm/i915/display/intel_dsi_vbt.c
+@@ -453,8 +453,8 @@ static const char *sequence_name(enum mipi_seq seq_id=
+)
+ 		return "(unknown)";
  }
- EXPORT_SYMBOL_GPL(devm_pinctrl_put);
 =20
--int pinctrl_register_map(const struct pinctrl_map *maps, unsigned num_ma=
-ps,
--			 bool dup)
-+/**
-+ * pinctrl_register_mappings() - register a set of pin controller mappin=
-gs
-+ * @maps: the pincontrol mappings table to register. Note the pinctrl-co=
-re
-+ *	keeps a reference to the passed in maps, so they should _not_ be
-+ *	marked with __initdata.
-+ * @num_maps: the number of maps in the mapping table
-+ */
-+int pinctrl_register_mappings(const struct pinctrl_map *maps,
-+			      unsigned num_maps)
+-void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
+-				 enum mipi_seq seq_id)
++static void intel_dsi_vbt_exec(struct intel_dsi *intel_dsi,
++			       enum mipi_seq seq_id)
  {
- 	int i, ret;
- 	struct pinctrl_maps *maps_node;
-@@ -1430,17 +1437,8 @@ int pinctrl_register_map(const struct pinctrl_map =
-*maps, unsigned num_maps,
- 	if (!maps_node)
- 		return -ENOMEM;
-=20
-+	maps_node->maps =3D maps;
- 	maps_node->num_maps =3D num_maps;
--	if (dup) {
--		maps_node->maps =3D kmemdup(maps, sizeof(*maps) * num_maps,
--					  GFP_KERNEL);
--		if (!maps_node->maps) {
--			kfree(maps_node);
--			return -ENOMEM;
--		}
--	} else {
--		maps_node->maps =3D maps;
--	}
-=20
- 	mutex_lock(&pinctrl_maps_mutex);
- 	list_add_tail(&maps_node->node, &pinctrl_maps);
-@@ -1448,22 +1446,14 @@ int pinctrl_register_map(const struct pinctrl_map=
- *maps, unsigned num_maps,
-=20
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(pinctrl_register_mappings);
-=20
- /**
-- * pinctrl_register_mappings() - register a set of pin controller mappin=
-gs
-- * @maps: the pincontrol mappings table to register. This should probabl=
-y be
-- *	marked with __initdata so it can be discarded after boot. This
-- *	function will perform a shallow copy for the mapping entries.
-- * @num_maps: the number of maps in the mapping table
-+ * pinctrl_unregister_mappings() - unregister a set of pin controller ma=
-ppings
-+ * @maps: the pincontrol mappings table passed to pinctrl_register_mappi=
-ngs()
-+ *	when registering the mappings.
-  */
--int pinctrl_register_mappings(const struct pinctrl_map *maps,
--			      unsigned num_maps)
--{
--	return pinctrl_register_map(maps, num_maps, true);
--}
--EXPORT_SYMBOL_GPL(pinctrl_register_mappings);
--
--void pinctrl_unregister_map(const struct pinctrl_map *map)
-+void pinctrl_unregister_mappings(const struct pinctrl_map *map)
- {
- 	struct pinctrl_maps *maps_node;
-=20
-@@ -1478,6 +1468,7 @@ void pinctrl_unregister_map(const struct pinctrl_ma=
-p *map)
+ 	struct drm_i915_private *dev_priv =3D to_i915(intel_dsi->base.base.dev)=
+;
+ 	const u8 *data;
+@@ -519,6 +519,18 @@ void intel_dsi_vbt_exec_sequence(struct intel_dsi *i=
+ntel_dsi,
  	}
- 	mutex_unlock(&pinctrl_maps_mutex);
- }
-+EXPORT_SYMBOL_GPL(pinctrl_unregister_mappings);
-=20
- /**
-  * pinctrl_force_sleep() - turn a given controller device into sleep sta=
-te
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index 7f34167a0405..840103c40c14 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -236,10 +236,6 @@ extern struct pinctrl_gpio_range *
- pinctrl_find_gpio_range_from_pin_nolock(struct pinctrl_dev *pctldev,
- 					unsigned int pin);
-=20
--int pinctrl_register_map(const struct pinctrl_map *maps, unsigned num_ma=
-ps,
--			 bool dup);
--void pinctrl_unregister_map(const struct pinctrl_map *map);
--
- extern int pinctrl_force_sleep(struct pinctrl_dev *pctldev);
- extern int pinctrl_force_default(struct pinctrl_dev *pctldev);
-=20
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 674920daac26..9357f7c46cf3 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -51,7 +51,7 @@ void pinctrl_dt_free_maps(struct pinctrl *p)
- 	struct pinctrl_dt_map *dt_map, *n1;
-=20
- 	list_for_each_entry_safe(dt_map, n1, &p->dt_maps, node) {
--		pinctrl_unregister_map(dt_map->map);
-+		pinctrl_unregister_mappings(dt_map->map);
- 		list_del(&dt_map->node);
- 		dt_free_map(dt_map->pctldev, dt_map->map,
- 			    dt_map->num_maps);
-@@ -92,7 +92,7 @@ static int dt_remember_or_free_map(struct pinctrl *p, c=
-onst char *statename,
- 	dt_map->num_maps =3D num_maps;
- 	list_add_tail(&dt_map->node, &p->dt_maps);
-=20
--	return pinctrl_register_map(map, num_maps, false);
-+	return pinctrl_register_mappings(map, num_maps);
-=20
- err_free_map:
- 	dt_free_map(pctldev, map, num_maps);
-diff --git a/include/linux/pinctrl/machine.h b/include/linux/pinctrl/mach=
-ine.h
-index ddd1b2773431..e987dc9fd2af 100644
---- a/include/linux/pinctrl/machine.h
-+++ b/include/linux/pinctrl/machine.h
-@@ -153,6 +153,7 @@ struct pinctrl_map {
-=20
- extern int pinctrl_register_mappings(const struct pinctrl_map *map,
- 				unsigned num_maps);
-+extern void pinctrl_unregister_mappings(const struct pinctrl_map *map);
- extern void pinctrl_provide_dummies(void);
- #else
-=20
-@@ -162,6 +163,10 @@ static inline int pinctrl_register_mappings(const st=
-ruct pinctrl_map *map,
- 	return 0;
  }
 =20
-+static inline void pinctrl_unregister_mappings(const struct pinctrl_map =
-*map)
++void intel_dsi_vbt_exec_sequence(struct intel_dsi *intel_dsi,
++				 enum mipi_seq seq_id)
 +{
++	if (seq_id =3D=3D MIPI_SEQ_POWER_ON && intel_dsi->gpio_panel)
++		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
++
++	intel_dsi_vbt_exec(intel_dsi, seq_id);
++
++	if (seq_id =3D=3D MIPI_SEQ_POWER_OFF && intel_dsi->gpio_panel)
++		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
 +}
 +
- static inline void pinctrl_provide_dummies(void)
+ void intel_dsi_msleep(struct intel_dsi *intel_dsi, int msec)
  {
+ 	struct drm_i915_private *dev_priv =3D to_i915(intel_dsi->base.base.dev)=
+;
+@@ -671,3 +683,33 @@ bool intel_dsi_vbt_init(struct intel_dsi *intel_dsi,=
+ u16 panel_id)
+=20
+ 	return true;
  }
++
++/*
++ * On some BYT/CHT devs some sequences are incomplete and we need to man=
+ually
++ * control some GPIOs.
++ */
++void intel_dsi_vbt_gpio_init(struct intel_dsi *intel_dsi)
++{
++	struct drm_device *dev =3D intel_dsi->base.base.dev;
++	struct drm_i915_private *dev_priv =3D to_i915(dev);
++	struct mipi_config *mipi_config =3D dev_priv->vbt.dsi.config;
++
++	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
++	    mipi_config->pwm_blc =3D=3D PPS_BLC_PMIC) {
++		intel_dsi->gpio_panel =3D
++			gpiod_get(dev->dev, "panel", GPIOD_OUT_HIGH);
++
++		if (IS_ERR(intel_dsi->gpio_panel)) {
++			DRM_ERROR("Failed to own gpio for panel control\n");
++			intel_dsi->gpio_panel =3D NULL;
++		}
++	}
++}
++
++void intel_dsi_vbt_gpio_cleanup(struct intel_dsi *intel_dsi)
++{
++	if (intel_dsi->gpio_panel) {
++		gpiod_put(intel_dsi->gpio_panel);
++		intel_dsi->gpio_panel =3D NULL;
++	}
++}
+diff --git a/drivers/gpu/drm/i915/display/vlv_dsi.c b/drivers/gpu/drm/i91=
+5/display/vlv_dsi.c
+index 403fb09fcb63..c1edd8857af0 100644
+--- a/drivers/gpu/drm/i915/display/vlv_dsi.c
++++ b/drivers/gpu/drm/i915/display/vlv_dsi.c
+@@ -23,7 +23,6 @@
+  * Author: Jani Nikula <jani.nikula@intel.com>
+  */
+=20
+-#include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
+=20
+ #include <drm/drm_atomic_helper.h>
+@@ -797,9 +796,6 @@ static void intel_dsi_pre_enable(struct intel_encoder=
+ *encoder,
+ 	if (!IS_GEMINILAKE(dev_priv))
+ 		intel_dsi_prepare(encoder, pipe_config);
+=20
+-	/* Power on, try both CRC pmic gpio and VBT */
+-	if (intel_dsi->gpio_panel)
+-		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 1);
+ 	intel_dsi_vbt_exec_sequence(intel_dsi, MIPI_SEQ_POWER_ON);
+ 	intel_dsi_msleep(intel_dsi, intel_dsi->panel_on_delay);
+=20
+@@ -943,11 +939,8 @@ static void intel_dsi_post_disable(struct intel_enco=
+der *encoder,
+ 	/* Assert reset */
+ 	intel_dsi_vbt_exec_sequence(intel_dsi, MIPI_SEQ_ASSERT_RESET);
+=20
+-	/* Power off, try both CRC pmic gpio and VBT */
+ 	intel_dsi_msleep(intel_dsi, intel_dsi->panel_off_delay);
+ 	intel_dsi_vbt_exec_sequence(intel_dsi, MIPI_SEQ_POWER_OFF);
+-	if (intel_dsi->gpio_panel)
+-		gpiod_set_value_cansleep(intel_dsi->gpio_panel, 0);
+=20
+ 	/*
+ 	 * FIXME As we do with eDP, just make a note of the time here
+@@ -1539,10 +1532,7 @@ static void intel_dsi_encoder_destroy(struct drm_e=
+ncoder *encoder)
+ {
+ 	struct intel_dsi *intel_dsi =3D enc_to_intel_dsi(encoder);
+=20
+-	/* dispose of the gpios */
+-	if (intel_dsi->gpio_panel)
+-		gpiod_put(intel_dsi->gpio_panel);
+-
++	intel_dsi_vbt_gpio_cleanup(intel_dsi);
+ 	intel_encoder_destroy(encoder);
+ }
+=20
+@@ -1867,20 +1857,7 @@ void vlv_dsi_init(struct drm_i915_private *dev_pri=
+v)
+=20
+ 	vlv_dphy_param_init(intel_dsi);
+=20
+-	/*
+-	 * In case of BYT with CRC PMIC, we need to use GPIO for
+-	 * Panel control.
+-	 */
+-	if ((IS_VALLEYVIEW(dev_priv) || IS_CHERRYVIEW(dev_priv)) &&
+-	    (dev_priv->vbt.dsi.config->pwm_blc =3D=3D PPS_BLC_PMIC)) {
+-		intel_dsi->gpio_panel =3D
+-			gpiod_get(dev->dev, "panel", GPIOD_OUT_HIGH);
+-
+-		if (IS_ERR(intel_dsi->gpio_panel)) {
+-			DRM_ERROR("Failed to own gpio for panel control\n");
+-			intel_dsi->gpio_panel =3D NULL;
+-		}
+-	}
++	intel_dsi_vbt_gpio_init(intel_dsi);
+=20
+ 	drm_connector_init(dev, connector, &intel_dsi_connector_funcs,
+ 			   DRM_MODE_CONNECTOR_DSI);
 --=20
 2.23.0
 
