@@ -2,114 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC73120FFF
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 17:49:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA8F1121B44
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 21:52:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfLPQra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 11:47:30 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37512 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfLPQr3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 11:47:29 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so12487wmf.2
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 08:47:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
-        b=MupdptuUoWe4nG6XWXO8Am4U5S+54eAzf2A0C0d2Y/5L2NO1Pz8TTYTYp5Oj5iY/hm
-         93t/S9vt5md+700bRha+NTqKBl6oALW4Cyyoy6nn+4F5ibH3bCyki7R/JsAZ4NHflnE+
-         ylV5xuhgvWwd1TxuaFKOb/aFAARfMBD2SMozH1sxIsh3v61V0bAF0jCcttX+d+5MsQ8a
-         N7X0BKMbj5GiVmGpbnjoYcA5U6nauymoWAe/L8NRaOKwVvAw6MyZaLOAepZg7xnyZ+Wh
-         oZqdlXigYNHIy+jwcnTQ+KhoxTXXftAxwM7ur1lCbGU4eP+IxWxLxRdYTCK5wujQtV8H
-         6qig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Hk4aENi5JfntNywk6okXwxduwNUObctMo6Ti9zshqoY=;
-        b=Mc1krppbvOvTnlc9cb3ffdUfCjb36LvwGVaFuXtqkTB+XU3WNAUPgNIRC5XVFIubxJ
-         WzXrrYj6+dkkt0AGGB83oZ+nQaB3TEASQKR0XIli0gfN2fEtir9XrTZEGBEhRaGzxJvO
-         CDwDASdzwQ7M4mOhXvYI1Bej2pYTmiTl46Ol0k6tP96P/xHQnJOpZnR/Qk0UmuSKrhYi
-         cSojV0EGyf6x9ZQjq7lMqvLESX5jYbOVsiFH1pYhLKC0TcCdUAuti7FCO7IURxPdzNyJ
-         lu5khRE2pbXvekKE0JA/d9mX2S2PcgzCQSWsUKQa9yuUYuJYl9YL0BTG9cVQP0SesdHO
-         1yog==
-X-Gm-Message-State: APjAAAXAI+7icLScITnoSZ2PGsbRpN3iaS6fMD8vSxCx6Kq8gs390sWM
-        FACdBMoeXvmMaRKNhBDVlHtxhg==
-X-Google-Smtp-Source: APXvYqyNpItBQC+K60hdbMXgCjsSVi+l3bidixDPaRGU5wZG3XvKQQsnCfJdpNCLx9rGhg7CBCc8sw==
-X-Received: by 2002:a05:600c:108a:: with SMTP id e10mr30010613wmd.38.1576514848119;
-        Mon, 16 Dec 2019 08:47:28 -0800 (PST)
-Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id p5sm21821060wrt.79.2019.12.16.08.47.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:47:27 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:47:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v6 07/15] clk: bd718x7: Support ROHM BD71828 clk block
-Message-ID: <20191216164726.GD18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        id S1726940AbfLPUv3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 15:51:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50996 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726730AbfLPUv3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Dec 2019 15:51:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576529488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=q4pspJCdzJHL0VVXVauT76J/4/qmwgwoup+ryPsQ0H4=;
+        b=G7iKu4nmPZEDltb8UwJjxSc8ndcHuWKvYSNc2XPv9c/JdEI+AcECGs6Ic9eQ29V8nGPsrv
+        ymZpEHMhI7OsPR2m+3sGjmgau4sTNkmDB0OOAS/wg039NB4qP4FOthO3gQaE0Oiw8lXNnG
+        2IP2eiVaiuuPvtA1mYTEkeHzBiSV5s0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-111-YXQNXfcXNxil1ya8_5vNkA-1; Mon, 16 Dec 2019 15:51:27 -0500
+X-MC-Unique: YXQNXfcXNxil1ya8_5vNkA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A269C189DF47;
+        Mon, 16 Dec 2019 20:51:25 +0000 (UTC)
+Received: from shalem.localdomain.com (ovpn-116-96.ams2.redhat.com [10.36.116.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 712741001B00;
+        Mon, 16 Dec 2019 20:51:23 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/5] drm/i915/dsi: Control panel and backlight enable GPIOs from VBT
+Date:   Mon, 16 Dec 2019 21:51:17 +0100
+Message-Id: <20191216205122.1850923-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b88c451a1bece5a22936e9a021146f3e026f8885.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 11 Dec 2019, Matti Vaittinen wrote:
+Hi All,
 
-> BD71828GW is a single-chip power management IC for battery-powered portable
-> devices. Add support for controlling BD71828 clk using bd718x7 driver.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> No changes since v5
-> 
->  drivers/clk/Kconfig              |  6 ++---
->  drivers/clk/clk-bd718x7.c        | 38 +++++++++++++++++++++++---------
+Here is v2 of my patch-series to make the
+i915 code control the SoC panel- and backlight-enable GPIOs on Bay Trail
+devices when the VBT indicates that the SoC should be used for backlight
+control. This fixes the panel not lighting up on various devices when
+booted with a HDMI monitor connected, in which case the firmware skips
+initializing the panel as it inits the HDMI instead.
 
->  include/linux/mfd/rohm-bd70528.h |  6 -----
->  include/linux/mfd/rohm-bd71828.h |  4 ----
->  include/linux/mfd/rohm-bd718x7.h |  6 -----
+This series has been tested on; and fixes this issue on; the following mo=
+dels:
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Peaq C1010
+Point of View MOBII TAB-P800W
+Point of View MOBII TAB-P1005W
+Terra Pad 1061
+Thundersoft TST178
+Yours Y8W81
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Linus the main change in v2 is the discussed fixing of the patch to
+export pinctrl_unregister_mappings. Can you please provide a new
+immutable branch with the new version (assuming the new version is ok)?
+
+Another change on the version is the use of intel_dsi_get_hw_state() to
+check if the panel is on instead of relying on the current_mode pointer
+in "[PATCH v2 3/5] drm/i915/dsi: Init panel-enable GPIO to low when the
+LCD is initially off (v2)".
+
+Other then that there are some small style tweaks addressing comments
+from Andy and Ville.
+
+Lee, I know you don't like this, but unfortunately this series introcudes
+some (other) changes to drivers/mfd/intel_soc_pmic_core.c. The GPIO subsy=
+s
+allows only one mapping-table per consumer, so in hindsight adding the co=
+de
+which adds the mapping for the PMIC panel-enable pin to the PMIC mfd driv=
+er
+was a mistake, as the PMIC code is a provider where as mapping-tables are
+per consumer. The 4th patch fixes this by moving the mapping-table to the
+i915 code, so that we can also add mappings for some of the pins on the S=
+oC
+itself. Since this whole series makes change to the i915 code I plan to
+merge this mfd change to the drm-intel tree.
+
+Regards,
+
+Hans
+
