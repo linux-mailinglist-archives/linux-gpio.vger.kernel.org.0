@@ -2,119 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BABA120364
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 12:11:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E391F120447
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 12:46:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfLPLLh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 06:11:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53966 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727229AbfLPLLh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 06:11:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576494696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
-        b=HlczcXQT9ln0kH0KRS9ZNmd0f8VEYgxFKL8NfkWffHr3WeTewA+x7ozcinH0n2VfDy5jOk
-        vvdUhQS9uDoPtHjxGyXYlmutv4gFOZP33VCVrt23+woajvVYcTKzqXnafVev3uqhDPe2eY
-        NKeLu18tXxCCRQAfqTTYU+mSkVhZNdk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-uviQYuZiPdKAbbawb8HcGg-1; Mon, 16 Dec 2019 06:11:34 -0500
-X-MC-Unique: uviQYuZiPdKAbbawb8HcGg-1
-Received: by mail-wr1-f70.google.com with SMTP id t3so3534350wrm.23
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 03:11:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WjOUTFpOi6Gu4d+B9mMstxxsH+1mt4QNI2pngEePaBo=;
-        b=oHBPS4Gxu2N5okXCIMr/jjnWDQZEtxPzPa1cn4fPRt+rtlh2LBokG8d45gZlzqTrAA
-         WTycRwqwMeZ2AMB5StmWQHj25y7iXdE2uZlmHpSURhnZBI+jwqgXpbTGZt7FXXjyxI6I
-         EpE3NtFyZktpDmZOu+kw0k1+ip/UP4HJxnGbEIN3nDLSkHdhtbxZfGYWlDGAZuAk9rnz
-         otljM8xoIRAUXqENfUNAlgygl3Jn1lstIiJXcOYMOHvZKy19knmxWICt6ru0yi+nGJRs
-         8gfzch4uwkUj4ZAcxpAmu1XVoh8mqkLgRRGJFNz8ItlgOyw5GDCGXHPWbzX6pWtSP9jw
-         6YqQ==
-X-Gm-Message-State: APjAAAVbkru30yUDh7QA8l4RNrMlNIcpsQaRdcfTwabD9NYIq1JzDL+h
-        V+eqZrezuE0Y23FNFzHYrKwWG20o3zWTuw58FNYduPxBAXJYn8sEyw6S4d/HJuNkQAizHRABXVC
-        sRn3jIW6qHL/u6o/qLRu5Cw==
-X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955314wmc.161.1576494693464;
-        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz95JVS+9hzCpx2tUeBC+2E8wF70N/Kg5EXyntvwnCxuCB6OinaKV46tDHhavo+POTw6isKJw==
-X-Received: by 2002:a1c:7dc4:: with SMTP id y187mr28955289wmc.161.1576494693250;
-        Mon, 16 Dec 2019 03:11:33 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id x18sm20950368wrr.75.2019.12.16.03.11.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2019 03:11:32 -0800 (PST)
-Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
- GPIOs from VBT
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        id S1727368AbfLPLo5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 06:44:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:51524 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfLPLo5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 16 Dec 2019 06:44:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6BFE1FB;
+        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3535C3F6CF;
+        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
+Date:   Mon, 16 Dec 2019 11:44:54 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191215163810.52356-1-hdegoede@redhat.com>
- <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1474a983-3e22-d59b-255a-edd3a41f0967@redhat.com>
-Date:   Mon, 16 Dec 2019 12:11:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191216114454.GB4161@sirena.org.uk>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdarJ5chDfgc5F=ntzG1pw7kchtzp0Upp+OH9CH6WLnvXw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+X-Cookie: Backed up the system lately?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-On 16-12-2019 11:26, Linus Walleij wrote:
-> On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> 
->> Linus, this series starts with the already discussed pinctrl change to
->> export the function to unregister a pinctrl-map. We can either merge this
->> through drm-intel, or you could pick it up and then provide an immutable
->> branch with it for merging into drm-intel-next. Which option do you prefer?
-> 
-> I have created an immutable branch with these changes and pulled it
-> to my "devel" branch for v5.6:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Ugh, taking one last look at the "pinctrl: Export pinctrl_unregister_mappings"
-patch it is no good, sorry.
+On Mon, Dec 16, 2019 at 09:55:25AM +0100, Marco Felsch wrote:
+> On 19-12-12 16:51, Mark Brown wrote:
 
-I just realized that if the mapping has been dupped, the if (maps_node->maps == map)
-check will never be true, because maps_node->maps is the return value from kmemdup
-and map is the map originally passed in while registering.
+> > Something needs to say what that thing is, especially if it's runtime
+> > controllable.  In your case from the point of view of software there is
+> > actually no enable control so we shouldn't be providing an enable
+> > operation to the framework.
 
-Linus, can you please drop this from your -next ?
+> The enabel control signal is always available, please check [1] table
+> 63. There is a mux in front of the enable pin so:
 
-So I see 2 options:
-1) Add an orig_map member to maps_node and use that in the comparison,
-this is IMHO somewhat ugly
+What I'm saying is that I think the binding needs to explicitly talk
+about that since at the minute it's really confusing reading it as it
+is, it sounds very much like it's trying to override that in a chip
+specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
+really quite unusual.
 
-2) Add a new pinctrl_register_mappings_no_dup helper and document in
-pinctrl_unregister_mappings kdoc that it can only be used together
-with the no_dup variant.
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I believe that 2 is by far the best option. Linus do you agree or
-do you have any other suggestions?
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33bjYACgkQJNaLcl1U
+h9CVdAf+Kp9Gt6jI1smdYRC5q9QzC1/I+pAe/kPYZU9nCkKrN7T/h4QamB0ktmgq
+8ovpP1GU56emAoDhnLgevc9IiJHlvlzog0LL0RWzMb4zf7CuC3hqDt/mIEwKvVqv
+vXueIgBOwgBYjkunL4ECOsMz4I1v5uBCmbJTCQwnZWpzkTdabJmr49W0LX2y/yPI
+9AgCDJBU1mvD78xAlwMiBWHILuSWcja4dXyBFE0Q4IWyFF1HkslkgrBQL7YY0LaI
+wFmnd/nERtjKaTK3ZqL7cXKjz+PbyswmJXT0E1Y4rDRit//tgtJVoUGVmCP5KYpY
+bBjSjH7xodB796EmcMPayWwZ23L96g==
+=MSqr
+-----END PGP SIGNATURE-----
 
-Hans
-
+--oC1+HKm2/end4ao3--
