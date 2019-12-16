@@ -2,95 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E8EF12054E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:18:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72A53120578
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfLPMSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 07:18:45 -0500
-Received: from mga02.intel.com ([134.134.136.20]:45921 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfLPMSp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Dec 2019 07:18:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Dec 2019 04:18:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,321,1571727600"; 
-   d="scan'208";a="266240411"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Dec 2019 04:18:41 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1igpKi-0006VZ-Up; Mon, 16 Dec 2019 14:18:40 +0200
-Date:   Mon, 16 Dec 2019 14:18:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
- GPIOs from VBT
-Message-ID: <20191216121840.GS32742@smile.fi.intel.com>
-References: <20191215163810.52356-1-hdegoede@redhat.com>
+        id S1727564AbfLPMVu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 07:21:50 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:39383 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727542AbfLPMVu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:21:50 -0500
+Received: by mail-vk1-f194.google.com with SMTP id t129so1545495vkg.6
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Osz9VkIv77cDwS5TcCegl7t+g2vcc4c6bR2gC0bBTE=;
+        b=DZZyv8KM/AkMijIzHa1GdiQtmMM5jFO5/iApv4ZaWBvNM353Ymxg2+pnW5EC9h1d10
+         raOcV/4ZpE2mLiy9niImgy6S2uIbA8AxH7zU77oNYUJK5xvF07asZDBu2dJQL1Nt3X8x
+         6HN96msV5Xasoa7rvuf7T9sxjtSopJk43dVkSSJ1RkjWKxqXtfKtVaWoc6wECXGLbsW6
+         +5KQFjSFWGoSMFLp4WestwfyV+ESb9MvghUFcvSOF1K4p1gyWUHq00PnIs22QsYnLQ66
+         zzcsQnc5XGu/COfqK2j7KirCwaIBS0mSgbm1k2K1q1CxtYxlAMMyEMywAX2JwUw3AoxK
+         cEcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Osz9VkIv77cDwS5TcCegl7t+g2vcc4c6bR2gC0bBTE=;
+        b=gM1fD1kNtd3IgxMm2f52mfkH7Qc6SVQcAG4EeQ4j5e5BEIHimM8++H+v6gbWU4r7AW
+         B7wG1H/5iHOhwqxlRQW1AU1cw8/r4s/za81cABfeX5P5qizrrnVcvjnqJDQmvPXvAPLN
+         FCe+SmIEh5rO4MQDGVz6MiBVshe0i4OKxt2DkQwTF95gJ8L/RT7LeiUOU4af7j0WuuMz
+         I/LY/cLJd2rO6OWhQx+NcHDYjGXVwXkrJwy9O/g/y1W7AdK9KnFjyuZfRG0uXlKIjaWA
+         ss3JwX6SrFSdLuFsE0g0ruZEkb0yxNU20yoq5z5QkcBUaJpmvXIfjw0aQUv/6ViaG/Oz
+         m3rQ==
+X-Gm-Message-State: APjAAAVdeo3118U+C9MKLRsf5cBnVBY8GW88FlER0/O9QY8xph0yQm/8
+        Q+btDDsddF4CIzfyE+g3Rin9AQEcpzMvbBGe/7hjeg==
+X-Google-Smtp-Source: APXvYqx0xjbvyReO9ph3sJ/hbSdKSuPIz6dCp5eLmtjvK0OiHzZ5p261fyvWyE0OL/9Yo5d+jJByHNJNcdJ2/e/Yeww=
+X-Received: by 2002:a1f:add3:: with SMTP id w202mr2070054vke.30.1576498909436;
+ Mon, 16 Dec 2019 04:21:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191215163810.52356-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <f34765b5cb4e949c2e85415ded3d0ee7736cc97b.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdbUS7WeQ7OoTtjGnB7L=uhYncwwcHxkJ1Uj6GqYCGNGJA@mail.gmail.com> <812acba9df70c4bb6975580c7965b61e923a3a13.camel@fi.rohmeurope.com>
+In-Reply-To: <812acba9df70c4bb6975580c7965b61e923a3a13.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Dec 2019 13:21:38 +0100
+Message-ID: <CACRpkdbi9AhGnG3hBwXNQV9foK=JNBH8WUNvXZVxbEX4LyDCig@mail.gmail.com>
+Subject: Re: [PATCH v6 10/15] gpio: devres: Add devm_gpiod_get_parent_array
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 05:38:05PM +0100, Hans de Goede wrote:
-> Hi All,
-> 
-> This is a new (completely rewritten) version of my patches to make the
-> i915 code control the SoC panel- and backlight-enable GPIOs on Bay Trail
-> devices when the VBT indicates that the SoC should be used for backlight
-> control. This fixes the panel not lighting up on various devices when
-> booted with a HDMI monitor connected, in which case the firmware skips
-> initializing the panel as it inits the HDMI instead.
-> 
-> This series has been tested on; and fixes this issue on; the following models:
-> 
-> Peaq C1010
-> Point of View MOBII TAB-P800W
-> Point of View MOBII TAB-P1005W
-> Terra Pad 1061
-> Thundersoft TST178
-> Yours Y8W81
-> 
-> Linus, this series starts with the already discussed pinctrl change to
-> export the function to unregister a pinctrl-map. We can either merge this
-> through drm-intel, or you could pick it up and then provide an immutable
-> branch with it for merging into drm-intel-next. Which option do you prefer?
-> 
-> Lee, I know you don't like this, but unfortunately this series introcudes
-> some (other) changes to drivers/mfd/intel_soc_pmic_core.c. The GPIO subsys
-> allows only one mapping-table per consumer, so in hindsight adding the code
-> which adds the mapping for the PMIC panel-enable pin to the PMIC mfd driver
-> was a mistake, as the PMIC code is a provider where as mapping-tables are
-> per consumer. The 4th patch fixes this by moving the mapping-table to the
-> i915 code, so that we can also add mappings for some of the pins on the SoC
-> itself. Since this whole series makes change to the i915 code I plan to
-> merge this mfd change to the drm-intel tree.
+On Mon, Dec 16, 2019 at 9:59 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
 
-FWIW, Lee, I believe there will be no (significant) changes in the driver Hans
-touched. For the record it seems only Hans is touching drivers for old Intel
-platforms (such as Baytrail and Cherryview).
+> I dropped the run-level support from regulator patch (for now at
+> least). This means that I no longer have GPIO consumers needing this
+> new API in the series.
 
--- 
-With Best Regards,
-Andy Shevchenko
+OK I dropped it for now, we can add it when needed.
 
-
+Yours,
+Linus Walleij
