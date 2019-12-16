@@ -2,95 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A7C12059E
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:30:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A66E612062A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:47:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfLPM2n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 07:28:43 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:41221 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727542AbfLPM2m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:28:42 -0500
-Received: by mail-vk1-f195.google.com with SMTP id p191so1548019vkf.8
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:28:42 -0800 (PST)
+        id S1727641AbfLPMrb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 07:47:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39266 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727605AbfLPMrb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:47:31 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b72so4519177wme.4
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:47:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QaoPgwh2xfV295jRIGnmPYl36fDZZNdnkiloN5hh4CE=;
-        b=S/B9vSxtl+yCUJ5TJtpNk2Stv/n4pxJen2cvthe3ynAP3s2fdfTEDf3tZomPyz6/ti
-         c56rzuxM4QAB6cX1SwuBlhogEMIItrAmGHHi3ns9bmKzWiSCvIoPoAQsE6LewWidcSt/
-         uS/ygBA6WwzxnYrECvxR1yO2wGs7T55an3bXKgv1VII9O7KQetwebEVFyS7PP5o5JG8Z
-         WXw7M3EFBu/VJ44dxGgmBl8Gz7OGufeX8UpyQueudgpm0MdnhWFUBNsCWFzcddS22VKX
-         sPNZI3c8eaEF8pJD1EuxwIwS1BAOsagfTF+6dyoXqycYB/nk0NUuEatN48eLbR9wzjR0
-         GqBA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=FrpERIvZJcRHgCfHOuSE8lURa3YIk7XJ1DhNc+zCnFY=;
+        b=eGEsanV5Iz4X7KVRdZj4+EgbeSc1rz4b6jupcEiYsTynFgcU08FeBc3dBMPkKbx49M
+         fYadTSoVaqO/Yv1/K9T6muL8UWxy5eE/d4Rd/JWe722NwFDGRPeKEYQkwAjr/vHvTE6N
+         yd+lDG995ONUhmbSWrMuoRi2qtSSoB26vG18KhnEGPdMoMyxZcOxMi9ho5nzFwQx39HA
+         diHUlQvnAIq35TNbC8+NT13zB+h8oS8Ogxx/ANAZFU6FaAFEQJII2ww0QrBS7XXiwMyg
+         J925L7RRqHt0DtXD8s+AUJcCAfTd58kQAfLB0/AJGd+k75MF2CEaaiwKHz+QaTJIY3sF
+         gQRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QaoPgwh2xfV295jRIGnmPYl36fDZZNdnkiloN5hh4CE=;
-        b=AOVCpu7+8ulTQHQBVV5hc1PmKQwkD0k4qA5X0LH/rbb6JPDKbgyIqSOOtrRVjxtfwM
-         47aj3c/P2nxzkppnyMu/+Vdx2+QAuVznjRkqabQJUXL8Kf9RIta+OeC7dIJXEx31CABj
-         AVNYKxUXGnpywYAYfe3QEWZoesPOnGz6laL4ANrTNAEJDArd3cQuVELLFaWljCoJUK7e
-         YZG6ZFezx3ePkBYJxkG6eJ3U8GXDkwkyNEQ9sIodrwTbzsUDF/tCdojLhy3575aO2381
-         u1XamhhUmEJAcPi9gI3ylpxl+oF7jhB2ul+bTHIcf0Uct5Y1i5cR4AUiC3fyNHbo3yHR
-         dwGw==
-X-Gm-Message-State: APjAAAV5mgIvh99cKBat9V40aZb4J4ZLmOVQi7GZld076x/fCF2udcZn
-        2hQflFEqxWs7QU2STIovG7wwHvTSeulAU5ear65MqQ==
-X-Google-Smtp-Source: APXvYqw/AlQK61lzoibi6xl6okziErleCZ8cs/LBZLmTMrBvWdsoY+o2BjyAVo3CYVnu+ks556/YdO+EFNqOolU0srg=
-X-Received: by 2002:a1f:fe4e:: with SMTP id l75mr24217758vki.18.1576499321815;
- Mon, 16 Dec 2019 04:28:41 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=FrpERIvZJcRHgCfHOuSE8lURa3YIk7XJ1DhNc+zCnFY=;
+        b=YQKkbIzWmsabRrxw5YU/jQ6OsjlVX4hKh9TzoFS7erdbbfMoOr1LHso3kjufue0L3a
+         kRnQmajKIFI+wu04q4m+7QO9v0MMd0qavDPTG7b3J2Yb1CB/t7Wo9PrKlF5Ir5hUtiGj
+         J04PWLoGM8NndmCXt9aiHzxKRkM/b2PJXaFsCdJISN1VEQs0zDw+GmFgYPi+2+A2xjFL
+         i+QCYQsNPKavCAKWR1NQ9A21x+ifQMaf8rf5Baw0J5nVjihObnNnu7uIVgWbEhTQnOh1
+         GZg3bydnBeeJRdG5AJbmP+OBpyZsv9/pnMzRqLekO4cIe3TXm0BdUZuUYDg0GFWSPIqt
+         3XFw==
+X-Gm-Message-State: APjAAAXh1VQJT5ePHKSWiKlt3BPY8YYBGZE3JTvvenDiGBAgB2IqBjfD
+        M43eLwFf/vcY0n7sAsL0Ro3dtfyjtFo=
+X-Google-Smtp-Source: APXvYqxMaTvzJhoVg4G0ucsUqTS85h6zLgOyKtIxekY+aCYV9qb20nvZ1K/lcrIkQUiQv2ZdmK28Zg==
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr31227092wmc.9.1576500449411;
+        Mon, 16 Dec 2019 04:47:29 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id o1sm22036795wrn.84.2019.12.16.04.47.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 04:47:28 -0800 (PST)
+Message-ID: <5df77ce0.1c69fb81.19108.0d13@mx.google.com>
+Date:   Mon, 16 Dec 2019 04:47:28 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de> <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de> <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de> <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
-In-Reply-To: <20191212162152.5uu3feacduetysq7@pengutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 13:28:30 +0100
-Message-ID: <CACRpkdbkiQLmyxHG4mAOqOho34UkUZwctRwsUgyJKCgZBOUEvQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.5-rc1-10-g3ae42ab1a87b
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel boot: 37 boots: 0 failed,
+ 36 passed with 1 conflict (v5.5-rc1-10-g3ae42ab1a87b)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 5:21 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> On 19-12-12 16:10, Mark Brown wrote:
+linusw/devel boot: 37 boots: 0 failed, 36 passed with 1 conflict (v5.5-rc1-=
+10-g3ae42ab1a87b)
 
-> > Note that there's two bits to my concern - one is if we should be using
-> > gpiolib or pinctrl, the other is what's driving the input (whichever API
-> > it's configured through) which didn't seem to be mentioned.
->
-> gpiolib or pinctrl:
-> I pointed out all my arguments above so I think it is time for Linus.
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.5-rc1-10-g3ae42ab1a87b/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.5-rc1-10-g3ae42ab1a87b/
 
-I think I've elaborated on this?
+Tree: linusw
+Branch: devel
+Git Describe: v5.5-rc1-10-g3ae42ab1a87b
+Git Commit: 3ae42ab1a87b8966d53dc0f508c28b18112a18b2
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 35 unique boards, 14 SoC families, 3 builds out of 5
 
-The API is fine with me, because this thing does some autonomous
-control and I don't know any better way to share that same line
-with the GPIO subsystem than to make this offset available to
-the regulator driver.
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
 
-Yours,
-Linus Walleij
+arm:
+    multi_v7_defconfig:
+        imx6q-sabrelite:
+            lab-baylibre: PASS (gcc-8)
+            lab-collabora: FAIL (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
