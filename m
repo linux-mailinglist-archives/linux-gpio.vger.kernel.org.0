@@ -2,127 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94FEA120ED8
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 17:10:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21871120F7C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 17:31:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfLPQKT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 11:10:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46946 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbfLPQKT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 11:10:19 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z7so7909450wrl.13
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 08:10:17 -0800 (PST)
+        id S1726551AbfLPQbp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 11:31:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35345 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbfLPQbo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 11:31:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so7423711wmb.0
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 08:31:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=wBlvcCO8Ml/H3509NAX+qSULZon7Go2sxTKRNZ2ctvE=;
-        b=cXv6nwlv5pmdDWI5Y7fvYBC08HVao0ujeoZ+7ojLX6RoCDn8hreHedCs3lAgk0Gk/1
-         UHW3JvpWt+pi/gzHwcOvv05kCPRivGFMzcHyMcYP0x35zcal9iIdwDatmGkcF5fcQ6Xs
-         VBY8rQawpt+crj27oTb9ERdm/cu8IMc5iKJWzLYMu/ROqZaWhXSo/iSTzLK5L6+T7kz5
-         vzU8CftoZwUEP4SDSneANgLgQ8v1+lwSWYMjy/hIOtryfimxrX1odtPyTx0+4bqQNFEa
-         2eJkifCe0okcSE/VE71ZqbBTpPzP8FFPc+tXIK6kL8zAPr47XlZAkzPidGzT3wtnFD9/
-         D4PQ==
+        bh=tOdF2v2tnPw84XyFs+DLGKUeb/1Y9vVZVEyHczF+0yg=;
+        b=v75PO5hRYI3xifwe8IjjxOk8gXJmuPeTk8r/sebv8k5VXvGx2syxR0H2BKR6+vXv2H
+         tXer/YdwJlAMyR6zpiMe252PHatrAG2aKC/69EAn0ZDmqxbtiiKDtszJ1HIgL3DgkLRd
+         Y71pqiVAxrAniWaaLJfzb0lXCjDqpPY6au4dWY3RakMG9IrCBjprhEWpW4oSTXYKR6o2
+         mdt/kTckQyZGRZ8izFK+O2fSRgUC3kCpertIvQABHrTv22+fA88ER9ECqNDpFSkkqWlN
+         vlL4nqfNXTN3xHkdXsyHbGlOzAyx7gQHwXYJX9pETi/63ceapo1lij7b17hsEHuP5nWb
+         PQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=wBlvcCO8Ml/H3509NAX+qSULZon7Go2sxTKRNZ2ctvE=;
-        b=kXujGEYl1/CJ4UpyjRKARQj7hLDXnvl0mwSKTf2PdA0d4di3sbKCP+8pVzNw0h51PG
-         OPex/A1D6CjJLisWrfNGXSlF1CUYhZZftfbTijM6eagOOx7npD4a3WI1OMLOfLh7FM8r
-         0f4MwkLxbkvUnC7dIaQ3l+zT/xXJVhyhyPP1MoyhlJ19lI0U0J8EY9Mis5E2wwsgc0A5
-         eF59UoEDW4sOSn3bXl+ns7wc390VPYLOeHzcndqBFllwjuURINSmOBq5M8s/39Upgs0u
-         GLvRGkhmJOHdwsdMWzO2PizZxLb2NOrM9T/kwaaT2KPICh4MFA6q+lFz5urGdPPGHqP1
-         rwRw==
-X-Gm-Message-State: APjAAAWe9zTxF+qcTv9UvIu3EnTO2mbjyleV4lM5Bh+T4ZnUDmHG/9mr
-        jcS6eLtY7FlAP5VkK6Rdb7uAIg==
-X-Google-Smtp-Source: APXvYqx5XSE4BmIOlkRofxhble/1rYpcYC58fzYcnPbCJdxQ+lw+Sz3KW8autUMHTKtkQigKTBxOnQ==
-X-Received: by 2002:adf:ebc3:: with SMTP id v3mr30755356wrn.280.1576512617135;
-        Mon, 16 Dec 2019 08:10:17 -0800 (PST)
+        bh=tOdF2v2tnPw84XyFs+DLGKUeb/1Y9vVZVEyHczF+0yg=;
+        b=nBZc0IS64VBbcdeSY3SMljpy1jm362JGel33BMjYBqkBridN5XZhsZO66HTvEtNEIx
+         1iPKWRZb9Hb/hTIBaMX5HdnzdJzK+XcREYvbSjxd4+tQkZaF2dh+MtWKDFbEgDcnG7A2
+         rfuOw1ewjt55mVmi+x7TpccaB8k2HkKt91PK+wGrF2xia655/z7AXFPfxhxU/25qankf
+         n7u/APsGQLOHEjRELuUPp2r1Q+60hGcImpAem+0FZC+S+qaWESIUM0GpZLWuRVoWwxTD
+         ZulOUvttXlQpOE/IR3iCa3u9Qe+OxASGPLZ9OtPecISP7UqR/mW4xt02BBd8UM+Qhxq9
+         VdRg==
+X-Gm-Message-State: APjAAAUQrqoYrALP4bRNEwQH90SyudcvazxZKpkQl94BEZktl96DqxCI
+        kRgz7NdjouLhH1GjqouepRpzJA==
+X-Google-Smtp-Source: APXvYqza4ODdROrK4+NXBOk9wQRDqm6YbdINa4RvvhiswJwObb7hlbCMFzyXEVki5DExzxaNMZShsg==
+X-Received: by 2002:a05:600c:2218:: with SMTP id z24mr31321397wml.50.1576513902937;
+        Mon, 16 Dec 2019 08:31:42 -0800 (PST)
 Received: from dell ([185.17.149.202])
-        by smtp.gmail.com with ESMTPSA id f1sm21916406wro.85.2019.12.16.08.10.15
+        by smtp.gmail.com with ESMTPSA id w20sm21142865wmk.34.2019.12.16.08.31.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2019 08:10:16 -0800 (PST)
-Date:   Mon, 16 Dec 2019 16:10:15 +0000
+        Mon, 16 Dec 2019 08:31:42 -0800 (PST)
+Date:   Mon, 16 Dec 2019 16:31:41 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/i915/dsi: Control panel and backlight enable
- GPIOs from VBT
-Message-ID: <20191216161015.GM2369@dell>
-References: <20191215163810.52356-1-hdegoede@redhat.com>
- <20191216121840.GS32742@smile.fi.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        joel@jms.id.au, andrew@aj.id.au, lgirdwood@gmail.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Subject: Re: [PATCH v3 5/6] dt-bindings: mfd: da9062: add regulator gpio
+ enable/disable documentation
+Message-ID: <20191216163141.GS2369@dell>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-6-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191216121840.GS32742@smile.fi.intel.com>
+In-Reply-To: <20191129172537.31410-6-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 16 Dec 2019, Andy Shevchenko wrote:
+On Fri, 29 Nov 2019, Marco Felsch wrote:
 
-> On Sun, Dec 15, 2019 at 05:38:05PM +0100, Hans de Goede wrote:
-> > Hi All,
-> > 
-> > This is a new (completely rewritten) version of my patches to make the
-> > i915 code control the SoC panel- and backlight-enable GPIOs on Bay Trail
-> > devices when the VBT indicates that the SoC should be used for backlight
-> > control. This fixes the panel not lighting up on various devices when
-> > booted with a HDMI monitor connected, in which case the firmware skips
-> > initializing the panel as it inits the HDMI instead.
-> > 
-> > This series has been tested on; and fixes this issue on; the following models:
-> > 
-> > Peaq C1010
-> > Point of View MOBII TAB-P800W
-> > Point of View MOBII TAB-P1005W
-> > Terra Pad 1061
-> > Thundersoft TST178
-> > Yours Y8W81
-> > 
-> > Linus, this series starts with the already discussed pinctrl change to
-> > export the function to unregister a pinctrl-map. We can either merge this
-> > through drm-intel, or you could pick it up and then provide an immutable
-> > branch with it for merging into drm-intel-next. Which option do you prefer?
-> > 
-> > Lee, I know you don't like this, but unfortunately this series introcudes
-> > some (other) changes to drivers/mfd/intel_soc_pmic_core.c. The GPIO subsys
-> > allows only one mapping-table per consumer, so in hindsight adding the code
-> > which adds the mapping for the PMIC panel-enable pin to the PMIC mfd driver
-> > was a mistake, as the PMIC code is a provider where as mapping-tables are
-> > per consumer. The 4th patch fixes this by moving the mapping-table to the
-> > i915 code, so that we can also add mappings for some of the pins on the SoC
-> > itself. Since this whole series makes change to the i915 code I plan to
-> > merge this mfd change to the drm-intel tree.
+> At the gpio-based regulator enable/disable documentation. This property
+> can be applied to each subnode within the 'regulators' node so each
+> regulator can be configured differently.
 > 
-> FWIW, Lee, I believe there will be no (significant) changes in the driver Hans
-> touched. For the record it seems only Hans is touching drivers for old Intel
-> platforms (such as Baytrail and Cherryview).
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> Changelog:
+> v3:
+> - adapt binding description
+> 
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-More exceptions, yay!
-
-Again, in *this* case, it's probably fine.  What I want to know is;
-what happens when it's not fine?  What happens when you or someone
-else starts changing MFD and DRM on more active files?  Then I will
-have to insist on an immutable branch.  So it would be better for the
-DRM tree to be able to handle that use-case sooner rather than later,
-regardless of who has the most churn.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
