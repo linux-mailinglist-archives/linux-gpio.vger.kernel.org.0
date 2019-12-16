@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB6F11FF7F
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 09:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FAC511FF81
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 09:16:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfLPIPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 03:15:39 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:45240 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLPIPi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 03:15:38 -0500
-Received: by mail-vk1-f196.google.com with SMTP id g7so1367413vkl.12
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 00:15:38 -0800 (PST)
+        id S1726798AbfLPIQe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 03:16:34 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36257 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfLPIQd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 03:16:33 -0500
+Received: by mail-vs1-f65.google.com with SMTP id m5so3588899vsj.3
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 00:16:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Qu4go+LfnKNu76tzONlM/DXLfpoLwvN/WGMtsTcLNx8=;
-        b=leqpCm4mwbX2Ey94U37p2i9Bbx2RkIfvb6WvQBDRNgtT+BR4hoBJgsQ9ofMZk5fgW5
-         aqxcfB+w0CyBiGJxW4/iwcSMgOronAmehBnbN81GmoJ70EOU1PUCsHaWHY98vwPhJ44T
-         TdoXMzTniNcKi8V8AEo+GkUhJ0dLg4ypg8jqEqpplE+ltTEnK5qErmotbHGqAkodjLG+
-         tf4Q5K/uXylKQEEgLK77AIFTtqOg0tNi8n3CfamBgzRNKyv2g7Jq9h57fPnhyJlcrrzm
-         cwEcHY9vODoelw/MO0sk05APT3/mfurBJmYf1ri/44TwKzvTZejfR2XBWGKUVsGLVaZ1
-         Eyhw==
+        bh=uNL/md3eBXURlPuzMpt+NNW2vHDC+deKynwVOIfF2jc=;
+        b=ZR1bDqm1sBrbGQOrhQCGhzMkwGgIGGPWNy0UiW+R03u70yVQeYsJ+q09N5CsZm8+H4
+         u5rqgmSwDu/1esfl/LXurubXpL+IaO6DEgbsWCM4V8Pp2qgrlRIPIukat/vWCWbUzzNy
+         7iAUp1hPK+wphwibDujKFThkphRiHjPDrpuK96gq5dWkK83EAYHTjt422DRW9Q5NHUWA
+         UVpxKcEFKlsjWFKl6H+pMIJ1PHHfnzNEx7bUvXjd8focSsTWq63mulVF0jJKU0Bj7o7P
+         KCdhgL78MZfjZHzx4bvLZKnxeIG1t8r24zj2Zq8O8hYlTdTnoe+eiQpzQWh5iXwSoLVx
+         /DSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Qu4go+LfnKNu76tzONlM/DXLfpoLwvN/WGMtsTcLNx8=;
-        b=KZJ725iUgilKvzdyuAht8arYwh4yRKz1zGi9+kDyMNjxb1DI5Nusu/fvQlRMQueI39
-         gned3I0yi96SBPF0UFOvbnNhROnXcSipdJTfW1677+uTJpRG9V4OmWHm02BZWq37ucMF
-         T6Lq5KIr9+WZCI44DpcJtZBXzSu16IqLpv/Qk/nKcC8RVcbcAXt0866mkp0iNJWDCjmc
-         Ugp1PGHBncbINk0XCfHaVJ/mHZaIDdeNVXpFL9HpIDSHbhD0B+YmshgnIb8GDaGv2twv
-         PwcSG7YEwUkTQH5oBZTDaW/W10e75NMl5uH+AAnUe0dsA+klisbQQRZ1jWK09TabaQUe
-         d+GQ==
-X-Gm-Message-State: APjAAAVN8GQqH2UHDBNnfdnmre3tKWV+qAf/oVxyAuq1CX8/+KQDpT1N
-        Z3tgf3SmVmcVmf8n+JWDPcD6CygMmXmsgsz16J7BfA==
-X-Google-Smtp-Source: APXvYqxsLIGSSYoLhqReMPk/ckHJ7XR9h2vXGNBZs6Z+b9XI4Prqv4oOpdbXnDGHV9aGiX7g2AlfDFsUeaCDtmU0zBU=
-X-Received: by 2002:a1f:ccc6:: with SMTP id c189mr12309632vkg.5.1576484137990;
- Mon, 16 Dec 2019 00:15:37 -0800 (PST)
+        bh=uNL/md3eBXURlPuzMpt+NNW2vHDC+deKynwVOIfF2jc=;
+        b=kiyUZdDZxj8QRRiR+I/ru/q75ye5GOs/Q5khCJWTGUDp04YRfBy84Csdh7gQHNCzWZ
+         R7KOUA3csUkmk3df78faFD4Cv/Dqrj7TPl0t8nv/AJPjO0qD3I5Kr93mPYGienPmTTZ2
+         BMvlxTKlCvN4EdcYd/UcMXsPba8hSJgPvagslhibWIo86GVrAH0hApkD254Xrz3t729X
+         kYSwCER5zt1StxO5ToJ6V79GNo/4gII1raS/SPuHIvaJi2HgMSjhkccWTrz5ehkQVJRd
+         qpWMxIRG564md7HXEZOBRHf0cH8DP9f864AsZSCDEMjIWyxEwACHhueUA8hei6+owrX2
+         +5mQ==
+X-Gm-Message-State: APjAAAWHb9HdoQAoJ+sIR/XkfUtVnDRBOzi1RsgZOnTDmfZ/4oYK2ztL
+        MOGQnJbbJeFEJwzrQYRTvGzklRRDaSOz91a/ThiJXg==
+X-Google-Smtp-Source: APXvYqxZgmG+r2lTV8LKe+Xl0XG0KMUrLOVjhm5O5XKw+42XV8qr8FSzvIn12G9bZTlTbNGjb2WiK96uAA1oxkXvC7Y=
+X-Received: by 2002:a67:d592:: with SMTP id m18mr20632386vsj.85.1576484192909;
+ Mon, 16 Dec 2019 00:16:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210164446.53912-1-paul@crapouillou.net>
-In-Reply-To: <20191210164446.53912-1-paul@crapouillou.net>
+References: <20191210195853.883483-1-arnd@arndb.de>
+In-Reply-To: <20191210195853.883483-1-arnd@arndb.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 09:15:26 +0100
-Message-ID: <CACRpkdZA=0vYhYUXYYNtjkaWKRbm9Y=iQLyjcNWLStpfd=LRAg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me,
+Date:   Mon, 16 Dec 2019 09:16:22 +0100
+Message-ID: <CACRpkdb88egVZr400QaAL=B_2qx3W2FsdWPZzZMWcB1u-R0YKg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: equilibrium: add CONFIG_OF dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -57,24 +58,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 5:44 PM Paul Cercueil <paul@crapouillou.net> wrote:
+On Tue, Dec 10, 2019 at 8:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> JZ4760 support was added in parallel of the previous patch so this one
-> slipped through. The first SoC to use the new register is the JZ4760 and
-> not the JZ4770, fix it here.
+> Without this, randconfig builds get a link failure
 >
-> Fixes: 7009d046a601 ("pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT
-> config")
+> drivers/pinctrl/pinctrl-equilibrium.o: In function `pinconf_generic_dt_node_to_map_all':
+> pinctrl-equilibrium.c:(.text+0x96d): undefined reference to `pinconf_generic_dt_node_to_map'
 >
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Fixes: 1948d5c51dba ("pinctrl: Add pinmux & GPIO controller driver for a new SoC")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Patch applied for fixes.
-
->  The commit it fixes was added in v5.5-rc1, so I didn't Cc
->  linux-stable - I wasn't sure if I had to.
-
-No need for that when it is fixing a current -rc, that is what
--rc:s are for.
+Rahul sent an identical patch that was previously applied,
+but thanks anyways!
 
 Yours,
 Linus Walleij
