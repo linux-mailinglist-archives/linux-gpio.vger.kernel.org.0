@@ -2,91 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25D2A12029C
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:31:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F63E1202B0
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 11:33:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfLPKbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 05:31:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33534 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKbA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:31:00 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 21so6234492ljr.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:30:59 -0800 (PST)
+        id S1727369AbfLPKdf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 05:33:35 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35481 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbfLPKdf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 05:33:35 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 15so3845565lfr.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 02:33:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R2CAqD7yphVxKpqpK+F/eAr7MRlAfENWVqw0CFqAnoY=;
-        b=F98ofzZswi1ON1bAKTPSWd5+Icm6mrMRcWlGoNTeahpUdZxvSM6qFcZqGN4zAN4Osp
-         NdlLEy7XHE0zbPmUPi2zZq5/U5/a9Ue2B+XfIh+EluUE+NoHaOMSjoxvxpExuwNfwwOs
-         2oTEoPYR/rTYGmGXHzgc0Pr/FAj3QmcuhcAhTsRGt6RmxDIqCHgnOQMkUTOAHb4I3u1R
-         m/2YQVrcDL+DR1UUH/SkmD8dEzpXTM4KzvF07eOk6LXi/nqEznJiz6kcl0yeiO3Lfg0O
-         dcea358D79Zrq3wRs5ExA4+mnB0OVo8ZagEMOi3YmF/JKgrNYhNQ40lRqBXcsKfb/BZy
-         RfWQ==
+        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
+        b=RDOSNMLefpSQpETal85Bim9dPhogcTCS67hhUNMY+1TEzPu40+B8/Ri9cpSlWYEzEr
+         X0vgBsDyYL2PXIC/0V8fl10D9tSbnPiZia3+s+/eCCTadthyMr6NucS5B/3O9mHT/Txd
+         fT68R1/ja79MMnNvWrrDwVtb1c3M0R0dnE7pGC65XQPv62Zun2qZMLG2tLswiZ0c/mLi
+         8M57mVlVCQbwQ95NMX5/Mzz31bsQBbwwx6cK2VRiRzIyMVMkt411kY9yfNq9a7SDQfXB
+         A2aTBqHcTVtIfNymGpOn2uThr3BELb8O+zSDS14EJFP0G1CQlffGF9hZ+fxv6jj2/Q1J
+         fk8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R2CAqD7yphVxKpqpK+F/eAr7MRlAfENWVqw0CFqAnoY=;
-        b=i3MZtG/Rf8Cz/HeHJ5NfqaoAZqxGHMF9FWCJ7GwP00BDtFShJIljs2zoYD9t76rbqg
-         2RD3CUQn+5opSKD5Xq/P+4Ws0upk2r6xskqaxHZbBAJd5AUH7y9lMDJqNaRBy/4XOw87
-         fS8lc0lEJTe3Z8/VBWyJVyNa3epNRYDeSjDPotNCAh9ZrglV0AvBQ8nxkQFfZEPEpkm0
-         hYNOG/A9rcaDKPBMj6aenljskvcCvkPYNMkjBOp4LFDH63zXbLVd/QAdJQYo+UqC5Q2w
-         cXStVVHLkZUecjLLRNqmr5Ba3DEPY9Iy0bzinzHj1KCScZV4bm0XynJ6wr2D6829KRDB
-         ePeQ==
-X-Gm-Message-State: APjAAAWCtoqZfipXuM0gDZjNZWUFwH4DfVtwKmo7jxUsXYEo+T0ZNOB7
-        zkoEtsl8b9+dsUwLssPD8Fn5+4u/eyA3k0iZCQiEFw==
-X-Google-Smtp-Source: APXvYqycu9hlE1s4S+Sge2Bqv8D+k87tga/cDOXtTcuobEYzip+IsUlyb9ENhVmckOFQwM0Ke6RmQOIym8zJ1np0yPg=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr18594833ljm.233.1576492258842;
- Mon, 16 Dec 2019 02:30:58 -0800 (PST)
+        bh=Kf4GwMcKEyP7E4ADJPoI/Ppjsvr0zxu955LKFceYGDw=;
+        b=TdP04PtosuLaNTs14DKeEXCy3uOjg3gSkmCOwUlKEJdrcGw5vyX1400G2n2q1NV7H9
+         PjpDYnZQ4Op3ttM7n05ThB9JYAetmHIGavb6tzOIr5Cde2og6UIP3QEcXhoCO+vqwT/y
+         WXD2SCeJbKDRDjKbmm07Ew1VEUZsEmqd5XqLp1J2Hxjg3vFcLgM6hiVxF1kKzGH1dT38
+         jVmOV84UfpDC20rd/khIsUW/jVN839eS2cSAvXPA23R+p0svHgTmOjgbO8eiXIkzyc2P
+         ETvQGL4Pd/RL2oD1/pCvFFCGzLWsUVZQ7fbUJIN8zhq1JBVamR1KRXq0d/ttS6Bn6m/T
+         5tPA==
+X-Gm-Message-State: APjAAAW2f1shBXXenPP9/JY5DkLOWmE1nH5NmD/nNvDpJyGaMegQEjFc
+        ZiwG0KS0/fX/2pEmlW0Nv2nDlTwNaws8GXLu61Mctw==
+X-Google-Smtp-Source: APXvYqymHPUmY8/CzNHdDAD6AwTm1kirH1H2wRv3LEavU5/vztz8RFIuac9dcS+gpU/Uw8IJghQSICFKXObovOuodQw=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr15747213lfi.93.1576492413336;
+ Mon, 16 Dec 2019 02:33:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215163810.52356-1-hdegoede@redhat.com> <20191215163810.52356-5-hdegoede@redhat.com>
-In-Reply-To: <20191215163810.52356-5-hdegoede@redhat.com>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-4-m.felsch@pengutronix.de> <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
+In-Reply-To: <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Dec 2019 11:30:46 +0100
-Message-ID: <CACRpkdYLXU9SmrNZfk9vrJuai9O-evAoq_c1oPJ7Q=NQU8=gng@mail.gmail.com>
-Subject: Re: [PATCH 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
- lookup from mfd to the i915 driver
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+Date:   Mon, 16 Dec 2019 11:33:21 +0100
+Message-ID: <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 5:38 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-> Move the Crystal Cove PMIC panel GPIO lookup-table from
-> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
->
-> The moved looked-up table is adding a GPIO lookup to the i915 PCI
-> device and the GPIO subsys allows only one lookup table per device,
->
-> The intel_soc_pmic_core.c code only adds lookup-table entries for the
-> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
-> able to access some GPIOs on the SoC itself, which requires entries for
-> these GPIOs in the lookup-table.
->
-> Since the lookup-table is attached to the i915 PCI device it really
-> should be part of the i915 driver, this will also allow us to extend
-> it with GPIOs from other sources when necessary.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Nice catch, Linus is it okay to add this as follow up patch? The current
+> patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
 
-Looks OK to me
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-But Lee & Andy should have a final word on this.
+No strong opinion on that as long as the result is running code.
 
 Yours,
 Linus Walleij
