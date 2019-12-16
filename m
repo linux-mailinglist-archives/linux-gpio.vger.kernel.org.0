@@ -2,100 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E391F120447
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 12:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C096E1204AB
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 13:06:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfLPLo5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 06:44:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:51524 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfLPLo5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 16 Dec 2019 06:44:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6BFE1FB;
-        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3535C3F6CF;
-        Mon, 16 Dec 2019 03:44:56 -0800 (PST)
-Date:   Mon, 16 Dec 2019 11:44:54 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191216114454.GB4161@sirena.org.uk>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+        id S1727316AbfLPMDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Dec 2019 07:03:15 -0500
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:46502 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfLPMDP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 07:03:15 -0500
+Received: by mail-wr1-f46.google.com with SMTP id z7so6871422wrl.13
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Dec 2019 04:03:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=b1kGm+M5dvK2s6C19e3OZZ8XuYbY85tyaCJoXgauCmU=;
+        b=Jn1croKdHOCcDu0rX/ldvFoN44NexI6sO5NoyyGFC/ROXHjQMmtQGAUzJo1xJtPF38
+         g8G0Jzh8aEWh7tqFX1ElNVJd4P10HU/0/fly1XYpapeWjbe91wG4loDkOFA469cNbmOE
+         k/SWuelZbs2tkIkCcI+w1VK3uGUQlQCpQimiHV3W356nHTOfpHY8RzAkzVjXQ7oHSsum
+         UDDn+gUeh8jEHXxv6wLdpEmxmwADfyeLGMAjGJk8BxUjfwzHGq+6xTfTUV4HxnvTxnQZ
+         1eEMCdQty2uyhesbVJjyQm20l1WNAAndS47PAUD/U8HI39R5Knd8vUOMNwnFhL1yVHrc
+         bxhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=b1kGm+M5dvK2s6C19e3OZZ8XuYbY85tyaCJoXgauCmU=;
+        b=KiLiEt8cAiOvYt3JffSVguP/WGjYgNXC584Wflg7dqFH5xuvtEW+8vwAGyMo75CqNL
+         DuwvLtGpBfOAieMRIdbmfcDnDwGNvgzpJ6fM0kb65CsNzn21c40Hh4MAEk6pHQXij3Vb
+         INT9/vgBjRrt5IL5fGzqGvAEohBTIANqQoD0A6Boe/zwnUg0kZC8itduqNGGFKJpdXnb
+         bb9lyAv/bTZdLD6wpbprBPt81tQxcKbXVnb4TLkN6O2lOfPyWZDkcVJ6qR/9SKz4gpgg
+         fK6/lmXUBeEywhwa+G5sIRrKED96T2EjSYd2gsfGBlq/GQgGCZfU6TXlJ57JjODfuH4G
+         zOgQ==
+X-Gm-Message-State: APjAAAVnxrQVKNAsG7xU0NJ9M61KunsbBLSSj65TqF/OkHNRU1AkfS/d
+        RaazgfIx5j53mvQJfepU6oWI6Uvw5WQ=
+X-Google-Smtp-Source: APXvYqzOMfc11Z5g7mdHCsdl37FhZzjBNf8spm/6pL19qB3jyMBRp2t4R7oT27ThVUQ8wDa9pzig8w==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr30082840wrm.284.1576497792490;
+        Mon, 16 Dec 2019 04:03:12 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a9sm11505976wmm.15.2019.12.16.04.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Dec 2019 04:03:11 -0800 (PST)
+Message-ID: <5df7727f.1c69fb81.dab3f.b5bd@mx.google.com>
+Date:   Mon, 16 Dec 2019 04:03:11 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
-Content-Disposition: inline
-In-Reply-To: <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
-X-Cookie: Backed up the system lately?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.5-rc1-10-g3ae42ab1a87b
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 5 builds: 0 failed,
+ 5 passed (v5.5-rc1-10-g3ae42ab1a87b)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+linusw/devel build: 5 builds: 0 failed, 5 passed (v5.5-rc1-10-g3ae42ab1a87b)
 
---oC1+HKm2/end4ao3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.5-rc1-10-g3ae42ab1a87b/
 
-On Mon, Dec 16, 2019 at 09:55:25AM +0100, Marco Felsch wrote:
-> On 19-12-12 16:51, Mark Brown wrote:
+Tree: linusw
+Branch: devel
+Git Describe: v5.5-rc1-10-g3ae42ab1a87b
+Git Commit: 3ae42ab1a87b8966d53dc0f508c28b18112a18b2
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
 
-> > Something needs to say what that thing is, especially if it's runtime
-> > controllable.  In your case from the point of view of software there is
-> > actually no enable control so we shouldn't be providing an enable
-> > operation to the framework.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-> The enabel control signal is always available, please check [1] table
-> 63. There is a mux in front of the enable pin so:
+Detailed per-defconfig build reports:
 
-What I'm saying is that I think the binding needs to explicitly talk
-about that since at the minute it's really confusing reading it as it
-is, it sounds very much like it's trying to override that in a chip
-specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
-really quite unusual.
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
 
---oC1+HKm2/end4ao3
-Content-Type: application/pgp-signature; name="signature.asc"
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
 
------BEGIN PGP SIGNATURE-----
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl33bjYACgkQJNaLcl1U
-h9CVdAf+Kp9Gt6jI1smdYRC5q9QzC1/I+pAe/kPYZU9nCkKrN7T/h4QamB0ktmgq
-8ovpP1GU56emAoDhnLgevc9IiJHlvlzog0LL0RWzMb4zf7CuC3hqDt/mIEwKvVqv
-vXueIgBOwgBYjkunL4ECOsMz4I1v5uBCmbJTCQwnZWpzkTdabJmr49W0LX2y/yPI
-9AgCDJBU1mvD78xAlwMiBWHILuSWcja4dXyBFE0Q4IWyFF1HkslkgrBQL7YY0LaI
-wFmnd/nERtjKaTK3ZqL7cXKjz+PbyswmJXT0E1Y4rDRit//tgtJVoUGVmCP5KYpY
-bBjSjH7xodB796EmcMPayWwZ23L96g==
-=MSqr
------END PGP SIGNATURE-----
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
 
---oC1+HKm2/end4ao3--
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
