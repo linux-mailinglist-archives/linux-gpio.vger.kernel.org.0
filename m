@@ -2,123 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 45A731226C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 09:36:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23420122739
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 10:00:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbfLQIfq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 03:35:46 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46783 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726520AbfLQIfp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Dec 2019 03:35:45 -0500
-Received: from [37.163.141.23] (port=40521 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        id S1726760AbfLQJAz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 04:00:55 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53207 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbfLQJAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 04:00:52 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ih8KT-0002cv-Fc; Tue, 17 Dec 2019 09:35:41 +0100
-Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
-To:     Daniel Mack <daniel@zonque.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
-        pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-9-daniel@zonque.org>
- <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
- <20191212163315.GA3932@kunai>
- <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <4f2e1332-eac3-e54d-5de8-b84a76cb1a34@lucaceresoli.net>
-Date:   Tue, 17 Dec 2019 09:35:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih8ib-0005JE-7E; Tue, 17 Dec 2019 10:00:37 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih8iY-0002ZB-4H; Tue, 17 Dec 2019 10:00:34 +0100
+Date:   Tue, 17 Dec 2019 10:00:34 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217090034.GD31182@pengutronix.de>
+References: <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <482316ef-775a-cb7b-015e-e00463503e6b@zonque.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM5PR1001MB09941005A47B603805D3C53280510@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:06:18 up 109 days, 20:20, 84 users,  load average: 0.31, 0.48,
+ 0.52
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Daniel,
+On 19-12-16 16:32, Adam Thomson wrote:
+> On 16 December 2019 08:55, Marco Felsch wrote:
+> 
+> > On 19-12-12 16:51, Mark Brown wrote:
+> > > On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
+> > >
+> > > > "... what's driving the input ..":
+> > > > Sorry I didn't get you here. What did you mean? The input is driven by
+> > > > the host. This can be any gpio line and in my case it is a gpio line
+> > > > driven by the soc-hw during a suspend operation.
+> > >
+> > > Something needs to say what that thing is, especially if it's runtime
+> > > controllable.  In your case from the point of view of software there is
+> > > actually no enable control so we shouldn't be providing an enable
+> > > operation to the framework.
+> > 
+> > The enabel control signal is always available, please check [1] table
+> > 63. There is a mux in front of the enable pin so:
+> > 
+> >              +-------------
+> >  Seq. |\     |   Regulator
+> >  GPI1 | \    |
+> >  GPI2 | | -- > Enable
+> >  GPI3 | /    |
+> >       |/     .
+> >              .
+> >              .
+> > 
+> > Adam please correct me if this is wrong.
+> 
+> Yes the register can always be configured regardless of the associated pin
+> configuration, but if say GPIO1 was configured as a GPO but a regulator was
+> configured to use GPIO1 as its GPI control mechanism, the output signal from
+> GPIO1 would be ignored, the sequencer control would not have any effect and
+> you're simply left with manual I2C control. Really we shouldn't be getting into
+> that situation though. If a GPIO is to be used as a regulator control signal
+> then it should be marked as such and I don't think we should be able to use that
+> pin for anything other than regulator control.
 
-On 15/12/19 21:27, Daniel Mack wrote:
-> Hi,
-> 
-> Thanks for the review!
-> 
-> On 12/12/2019 5:33 pm, Wolfram Sang wrote:
->> Hi Luca,
->>
->> thanks for the review!
->>
->>> good, but I think there's a problem in this function. A "normal"
->>> master_xfer function issues a repeated start between one msg and the
->>> next one, at least in the typical case where all msgs have the same
->>> slave address. Your implementation breaks repeated start. At first sight
->>> we might need more complex code here to coalesce all consecutive msgs
->>> with the same address into a single i2c_transfer() call.
->>
->> Note that it is by far the standard case that all messages in a transfer
->> have the same client address (99,999%?). But technically, this is not a
->> requirement and the repeated start on the bus is totally independent of
->> the addresses used. It is just a master wanting to send without being
->> interrupted by another master.
-> 
-> I'm not quite sure I understand.
-> 
-> Let's assume the following setup. An i2c client (some driver code) is
-> sending a list of messages to the a2b xfer function, which in turn is
-> logically connected to a 'real' i2c bus master that'll put the data on
-> the wire.
-> 
-> The a2b code has to tell the 'master node' the final destination of the
-> payload by programming registers on its primary i2c address, and then
-> forwards the messages to its secondary i2c address. The layout of the
-> messages don't change, and neither do the flags; i2c messages are being
-> sent as i2c messages, except their addresses are changed, a bit like NAT
-> in networking. That procedure is described on page 3-4 of the TRM,
-> "Remote Peripheral I2C Accesses".
-> 
-> The 'real' i2c master that handles the hardware bus is responsible for
-> adding start conditions, and as the messages as such are untouched, I
-> believe it should do the right thing. The code in my xfer functions
-> merely suppresses reprogramming remote addresses by remembering the last
-> one that was used, but that is independent of the start conditions on
-> the wire.
+I see, so we have to guarantee that the requested gpio is configured as
+input. This can be done by:
 
-My concern is not about the start condition, it's about the *repeated*
-start condition.
+  if (gpi->flags & FLAG_IS_OUT)
+  	return -EINVAL;
 
-The first question is whether the A2B chips can do it. What if the host
-processor sets a slave chip address and then issues two messages
-separated by a repeated start condition? Will the slave transceiver emit
-a repeated start condition too?
+Regards,
+  Marco
 
-If the answer is "yes", then the issue moves to the driver code. A
-master xfer function receives a set of messages that are normally
-emitted with a repeated start between each other. But ad242x_i2c_xfer()
-splits the msgs and calls i2c_transfer_buffer_flags() with one msg at a
-time. i2c_transfer_buffer_flags() then will emit a stop condition.
-
-This is not necessarily a problem, unless multi-master is used, but if
-there are limitations or deviations from the standard they should at
-least be well known and documented.
+> > 
+> > [1] https://www.dialog-
+> > semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+> > 
+> > Regards,
+> >   Marco
+> > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 -- 
-Luca
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
