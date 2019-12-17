@@ -2,159 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67A1A122EA0
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 15:25:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E86B6122F11
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 15:44:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfLQOZk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 09:25:40 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36133 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfLQOZk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 09:25:40 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so3404009wma.1
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2019 06:25:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
-        b=nDOQqhZNRhoqSIT9ygYhf6sYksvjQo/V0MI0iG8xAI89/NE0iO63AgxOdrYKa917lh
-         cV57WmnloRdU8ZjuMMbUdWOmp2MgBXI2WEQ5WqGnLOoJOFyKMPsabxDfUcaNKPAPeiM2
-         zv4czVKjcJqiWovFGXwRRlP2dVy0h+1BS1p9/h4xdRTva3rVoO1B1OcPZ/XgmnA+sJ40
-         vWKeXt+JEwXo0VccppBW2PHy+gJw6MXFYRlbIzyrMoKTbuZ7A7Y74SobzBvgiX6bUQpV
-         WikCepIxqMQ9K/Ngfgj9jIUxHUgZNtMRIlArBYGinPF/qsIGu7SOJYhQd1ZXTxJwZQUR
-         5tkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6kERw8dQIBACWsW0c+lQf/JA1vmIIx6c9Yg7JLLE81M=;
-        b=alPaK9729WAX+EPAlsXZi4lJexfaS5xARm1baMVw9D1Wt/RD9FipZyN+vLNjmQDodf
-         TjW93Fg+FJvmSn0ieHvOYR3oXRq4goZx1OygRTs8hnP9JitV4lr4EzPzGF58PluRZBi4
-         +PnA1AelPk+m65cYBcFGAuZs4jKioRxiNWDrbG8cUUHFX8tlnaXRGPaY6Nq7HYLOHRrF
-         jthWbToyrzx4wT8TZO2602BxdWJKpPEFeNWrlPGO/MO31XsCnJsWSR6lNIqzYO02LOvK
-         AWeyCYbffgGXhWMCL18X7AbzJo0yVV332IsLFP36mUIkOQPK1QfPooxKQFoy5a7GxFAX
-         gTkg==
-X-Gm-Message-State: APjAAAUch9ODj1YOtctGXif2/kgtOTljRJXtkoc64gveIxrE92uX95nD
-        gfGd94drhDCcWI1gBIRLNkKA2Q==
-X-Google-Smtp-Source: APXvYqxwCwi38Wr5D9A/L2wvMeZPSaKLDoI2uWPVSQnU9lhUcxlxXv46EcbtmUS5uruundfigIgz8w==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr5654182wml.138.1576592738272;
-        Tue, 17 Dec 2019 06:25:38 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id s65sm3189680wmf.48.2019.12.17.06.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2019 06:25:37 -0800 (PST)
-Date:   Tue, 17 Dec 2019 14:25:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v6 05/15] mfd: bd71828: Support ROHM BD71828 PMIC - core
-Message-ID: <20191217142537.GN18955@dell>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <252de5646fedfec7c575269843a47091fe199c79.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <20191216164641.GC18955@dell>
- <5593db6b3328c0a1a7069d839f5c777b4b3822b6.camel@fi.rohmeurope.com>
- <20191217135430.GM18955@dell>
- <20191217140810.GD3489463@kroah.com>
+        id S1728872AbfLQOop (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 09:44:45 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:36969 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLQOoo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 09:44:44 -0500
+Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MuUvS-1hqm5e2k0Q-00rXXn; Tue, 17 Dec 2019 15:44:28 +0100
+Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
+To:     Greg KH <greg@kroah.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+References: <20191217102219.29223-1-info@metux.net>
+ <20191217103152.GB2914497@kroah.com>
+ <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
+ <20191217140646.GC3489463@kroah.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <d938b8e1-d9ce-9ad6-4178-86219e99d4df@metux.net>
+Date:   Tue, 17 Dec 2019 15:43:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191217140646.GC3489463@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191217140810.GD3489463@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:w0io69mBkaf+1h5xS2clNhiKVEe0x4xPMiO1d6eDOgUuj5grIk6
+ So0gw1+GpivSUVTFQR/DDSbg+QPfwUh7WmxUQSwRGfkUPGn5UuLFc7ZXrVgMiGCWcvV7EnZ
+ YcouJJBHv4s14A2UoTWwsoWv1v7AXM1bV8eKUMEFutfAUA0OO6kYs7L0qW0jC11eMqimXtO
+ a6XJNpIUDfbJJ14c1ttfw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sYdPWCf9KOc=:0AdzDPaTOQKhydTgTxPD3i
+ 7vxT1r6DXk1q3sntultkN3yeyfwZO1L5/I1tey9mzWV4VA+QtLhy8j/GxOIkVoro6LseGlci6
+ W12X0KPN6zHyzUFSEN+WudCDKhMSlfHeKZFry+8utzzVh6X9+igOSGELwhRWwdqQJiZOcu0oO
+ QZ05ieWKgwvl2Uh/MTg3RL2rBdrdsEAyemNTcVIECVbSPuHPq8auHKLK93V7iegjvA0alhL1U
+ /WaxrxT+hXtjLC5Y831LJC9pTnymxqwddhRor0yitiemCO20+Mt4kNnapMMvBDlgit3U9kCWQ
+ ghGaWfk2sB8r7OhNMqgF4AcETtelNyx8ZQjuxDdhj3ikLhlIf4dSz/5U1KyusXwnJ7lk0EX8V
+ dPLRb30N/xbIpSx44Lhd6/rgXBKpZ7FH12J/8gAAyWIKwO+w0pwFu8U8MTiUnCLlpDB7s67q8
+ Tq14Jj4cBz5vzTEHK1X6ZMsayDQl4Lm9NCbf+JrbqipltyHENFei9Roxzr27MBzuTGO7qSiT+
+ IDmX9O+smuMCUheOjOxXAWdsli6m+5yHIx4jWjyt9GNlGerF+YvMktccX/fSzS+5MhHH9zJqy
+ DgtqxPSJhnAd5M/YSfD7Ivsjhoxx6G5V2BHwwGwEhVxZWIK6leQxc9x7ntbA+ploa4GgA/8Mv
+ AOdgb5DGJbfqvDiIjJyE3Kq6vR97PhyIOT4HY9flUCSa1gKkPC5p/WvWC6mpXlfXCRgzt3IF+
+ 3oVArTRk9F1Kc+K0wuTuPBtt4Kgs+Un9XjZUDiZdMnIqH1J2Ed29wURCgNhD6S8guCL7jAL7I
+ Z0z8+jHTBIU3qT6HA9SqRQtKynKLt5/00XkPx6phElHcm7JrtRgFPVAz1gTlfHSQr6qUSFbrz
+ q03NkMAgx3EPRvOQwR7w==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 17 Dec 2019, gregkh@linuxfoundation.org wrote:
-> On Tue, Dec 17, 2019 at 01:54:30PM +0000, Lee Jones wrote:
-> > On Tue, 17 Dec 2019, Vaittinen, Matti wrote:
-> > > On Mon, 2019-12-16 at 16:46 +0000, Lee Jones wrote:
-> > > > On Wed, 11 Dec 2019, Matti Vaittinen wrote:
-> > > > 
-> > > > > BD71828GW is a single-chip power management IC for battery-powered
-> > > > > portable
-> > > > > devices. The IC integrates 7 buck converters, 7 LDOs, and a 1500 mA
-> > > > > single-cell linear charger. Also included is a Coulomb counter, a
-> > > > > real-time
-> > > > > clock (RTC), 3 GPO/regulator control pins, HALL input and a 32.768
-> > > > > kHz
-> > > > > clock gate.
-> > > > > 
-> > > > > Add MFD core driver providing interrupt controller facilities and
-> > > > > i2c
-> > > > > access to sub device drivers.
-> > > > > 
-> > > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > > ---
-> > > > > 
-> > > > > Changes since v5:
-> > > > > - No changes
-> > > > > 
-> > > > >  drivers/mfd/Kconfig              |  15 ++
-> > > > >  drivers/mfd/Makefile             |   2 +-
-> > > > >  drivers/mfd/rohm-bd71828.c       | 319 +++++++++++++++++++++++
-> > > > >  include/linux/mfd/rohm-bd71828.h | 425
-> > > > > +++++++++++++++++++++++++++++++
-> > > > >  include/linux/mfd/rohm-generic.h |   1 +
-> > > > >  5 files changed, 761 insertions(+), 1 deletion(-)
-> > > > >  create mode 100644 drivers/mfd/rohm-bd71828.c
-> > > > >  create mode 100644 include/linux/mfd/rohm-bd71828.h
+On 17.12.19 15:06, Greg KH wrote:
 
-[...]
-> > 
-> > If you have this in your header:
-> > 
-> >   GPL-2.0-only
-> > 
-> > Your MODULE tags should read:
-> > 
-> > MODULE_LICENSE("GPL v2");
-> 
-> Nope, as per module.h, which is quoted here, either:
-> 	MODULE_LICENSE("GPL");
-> or:
-> 	MODULE_LICENSE("GPL v2");
-> mean the exact same thing.
+> That's not needed, and you are going to break the implicit ordering we
+> already have with link order.  
 
-Interesting.  I always took a non-specified version to mean:
+Ups, 10 points for you - I didn't consider that.
 
-  "... and any other future version of the licence"
+> You are going to have to figure out what
+> bus type the driver is, to determine what segment it was in, to figure
+> out what was loaded before what.
 
-Educated, thanks!
+hmm, if it's just the ordering by bus type (but not within one bus
+type), then it shouldn't be the big deal to fix, as I'll need one table
+and register-loop per bus-type anyways.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+By the way: how is there init order ensured with dynamically loaded
+modules ? (for cases where there aren't explicit symbol dependencies)
+
+
+--mtx
+
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
