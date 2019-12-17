@@ -2,104 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B3A122516
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 07:56:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB53A12258E
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 08:36:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfLQG4d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 01:56:33 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45098 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfLQG4d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 01:56:33 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-5b-5df87c1ebcc5
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 31.34.08102.E1C78FD5; Tue, 17 Dec 2019 07:56:30 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Tue, 17 Dec 2019 07:56:26 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        id S1728083AbfLQHfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 02:35:45 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35281 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfLQHfo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 02:35:44 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih7OK-00044B-An; Tue, 17 Dec 2019 08:35:36 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih7OH-0008Gx-Pm; Tue, 17 Dec 2019 08:35:33 +0100
+Date:   Tue, 17 Dec 2019 08:35:33 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Topic: [PATCH v6 09/15] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Index: AQHVsAfYI3uVDvKcOUypO4bwmJ45Qqe80OIAgAEMf4A=
-Date:   Tue, 17 Dec 2019 06:56:23 +0000
-Message-ID: <06f1f3529fc168daa513e0a6db7b4e0147f86358.camel@fi.rohmeurope.com>
-References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191216145528.GE4161@sirena.org.uk>
-In-Reply-To: <20191216145528.GE4161@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <270552940107BB4D8F91F4EA5DFF4642@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191217073533.GC31182@pengutronix.de>
+References: <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfVAUZRzHe3af23142WY9MR4prU6LMULAzHmmmIaZatxmimFqppnSkxbY
-        OCa4o72DEW2KSQVBYsTzZLoA5XiRt+nwitEIhhs6DA8ijxej0AhlGNQGswgUxdplVfjr+T7P
-        9/l+P88fvwfR+jo2AmWYbZJsFjMNTDD0Ntw5Fb3+k1vG2IOthNQGRlhSOFPPksUjZ1kyW+mH
-        xDExyZBJbyEgx30DOnKo71sd2VfjZshYWysk4//2ADI3fJAiR++epMjNkt91pLqgFpJvjt8F
-        ZKi9giFtf34NyNnmYYbU/RKgSEVdLyQ3/i6iSMD/OnH4Z1hyyd/DkH2BUZoc6PSx5N6FU5CU
-        DmxPWCe0VLUA4c7CESDcGD3AClUte4XvnJdYwdNUxAgXL3QwQldlCyvUlNp1wlx/GRSmqt1Q
-        +HH0NCWUV92mBHeJDwgNzfOs8I9nfRL/fkh8imjLfScj3Rzzygchps6TTUx2O7v7/GmvLh+c
-        YItBEML8Vlx2pUBXDIKRnh8BeOiYg9U2vQBPLQ7AYoAQw8fj4l+XAmF8NHYs1DCqpvnhEPzV
-        9ztUvZpPwe4fCijtTirumq65r1/CPdMuWtWQfwZ7S1qBWsnxibix6mMN1Q/w2LB9qTOI34Iv
-        X/dCVQN+HS7Kn6E0Vjj2TM3rtEfzuLbjZ1rTa/DVK/funxtw5+2JpSfT/Cbsbo/Rogn44uI4
-        q+mn8dFDE0ua41fhc19OwsPgMecKgnM57VyRdq5IO1ekTwBdE8BZYkZmumiT4jbLUs5m2WLK
-        UpZUS5YHaGM3ewb81/1GN6AQ6AZrEWVYw4Vuv2XUP5piScsziVZTspyTKVm7AUa0IYw789S8
-        Uc+liXl7JNnywHocQUM4FzlRZtTzKusjScqW5AfuEwgZMPf8XqV0lSylS7s/zMi0LdsUClLL
-        gyPCrJI5TZLFHJspWR2PZKsyH6oVqnCH9ihxzpotZimnWtQPotDhq5UuGvkq61y0HpotZiki
-        nBtUSbx61ZRjfgi6BsIRMKzm/lKLQpW/97DnmoKgFMSWxDkVYROXrYh8YHl7xwsksr/8XUeS
-        /VXX9bLCRFvnuY0JjfW+F7dF+zZugOPlztiBxvPUF6l0c8zgs0mbovqmu36L9dd2oG3vWXeW
-        VPsf2WoHFW2zazfs90Tt7Nv1x1j8k/vl+ZG83F2labk3IwOX7QsJg0b08k9xxtdSGno/k01v
-        1n8uBr0FPw11QQO0msS452jZKv4PHr7zGzgEAAA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216114454.GB4161@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:51:55 up 109 days, 19:06, 74 users,  load average: 0.31, 0.39,
+ 0.44
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-VGhhbmtzIE1hcmssDQoNCk9uIE1vbiwgMjAxOS0xMi0xNiBhdCAxNDo1NSArMDAwMCwgTWFyayBC
-cm93biB3cm90ZToNCj4gT24gV2VkLCBEZWMgMTEsIDIwMTkgYXQgMTE6NDY6MTFBTSArMDIwMCwg
-TWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4gPiArc3RhdGljIGludCBiZDcxODI4X2xkbzZf
-Z2V0X3ZvbHRhZ2Uoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJkZXYpDQo+ID4gK3sNCj4gPiArCXJl
-dHVybiBCRDcxODI4X0xET182X1ZPTFRBR0U7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgcmVndWxhdG9yX29wcyBiZDcxODI4X2xkbzZfb3BzID0gew0KPiA+ICsJLmVu
-YWJsZSA9IHJlZ3VsYXRvcl9lbmFibGVfcmVnbWFwLA0KPiA+ICsJLmRpc2FibGUgPSByZWd1bGF0
-b3JfZGlzYWJsZV9yZWdtYXAsDQo+ID4gKwkuZ2V0X3ZvbHRhZ2UgPSBiZDcxODI4X2xkbzZfZ2V0
-X3ZvbHRhZ2UsDQo+IA0KPiBZb3UgY2FuIGp1c3Qgc2V0IGZpeGVkX3VWIGluIHRoZSByZWd1bGF0
-b3JfZGVzYywgeW91IGRvbid0IG5lZWQgYQ0KPiBnZXRfdm9sdGFnZSgpIG9wZXJhdGlvbiBoZXJl
-LiAgT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZCwgSSdsbCBhcHBseQ0KPiBpdA0KPiBhbmQgcGxl
-YXNlIHNlbmQgYW4gaW5jcmVtZW50YWwgZml4IGZvciB0aGlzLg0KDQpXaWxsIGRvIDopDQoNCkJy
-LA0KCU1hdHRpDQo=
+On 19-12-16 11:44, Mark Brown wrote:
+> On Mon, Dec 16, 2019 at 09:55:25AM +0100, Marco Felsch wrote:
+> > On 19-12-12 16:51, Mark Brown wrote:
+> 
+> > > Something needs to say what that thing is, especially if it's runtime
+> > > controllable.  In your case from the point of view of software there is
+> > > actually no enable control so we shouldn't be providing an enable
+> > > operation to the framework.
+> 
+> > The enabel control signal is always available, please check [1] table
+> > 63. There is a mux in front of the enable pin so:
+> 
+> What I'm saying is that I think the binding needs to explicitly talk
+> about that since at the minute it's really confusing reading it as it
+> is, it sounds very much like it's trying to override that in a chip
+> specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
+> really quite unusual.
+
+Hm.. I still think that we don't mux the pin to some special function.
+It is still a gpio input pin and if we don't request the pin we could
+read the input from user-space too and get a 'valid' value. Muxing would
+happen if we change the pad to so called _alternate_ function. Anyway,
+lets find a binding description:
+
+name:
+ - dlg,vsel-sense-gpios
+
+IMHO this is very descriptive and needs no update.
+
+description:
+ - A GPIO reference to a local general purpose input, [1] calls it GPI.
+   The DA9062 regulators can select between voltage-a/-b settings.
+   Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
+   active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
+   to select between different signal sources, valid sources are: the
+   internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
+   information. Most the time the internal sequencer is fine but
+   sometimes it is necessary to use the signal from the DA9062 GPI
+   pads. This binding covers the second use case.
+   Attention: Sharing the same GPI for other purposes or across multiple
+   regulators is possible but the polarity setting must equal.
+
+[1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
+
+Regards,
+  Marco
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
