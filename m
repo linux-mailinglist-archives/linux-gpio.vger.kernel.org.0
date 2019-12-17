@@ -2,267 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CD78121C29
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Dec 2019 22:51:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E05FE1224CE
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 07:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfLPVvE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Dec 2019 16:51:04 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37005 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbfLPVvE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Dec 2019 16:51:04 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ep17so3601837pjb.4;
-        Mon, 16 Dec 2019 13:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
-        b=oSKxRFjZilaMpzgJltlBgqaWD2rGZM/fE7M3YD9DmDc2pySzRC1UI+lQP1oTaQAYph
-         0X9+m3tz2QUtTdRQtRUwvIUp8ZDFHQ2xR8EwDLncR3IxGipcVdKlXrs6HvUYKkrE4S2r
-         76Lb6LToOunSXQE0eeb0m/5kAjTXeXyjqmswtKjj/8zVizRD7dygRaSrD8ps56uwdMzp
-         Mvt0k+Kaz4mlZJEjrNQ3TFfbX6IaThMTNRcCyZoLlhBOnSYxJW/5ODbWAgpEPYPzQCzf
-         g2hiliMLaLp2aMX70mLmNnMQN74giLfqQHOhPlPDevP69ZdMw9O/Gln7XsdvYVDp8n7o
-         Ddig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+xJ7AuWshCK/rKZ+UPRR9KpKzBzzJ/zLDj2LbgfCe70=;
-        b=AMJb0kpXYPSTU4wxV/ICWD66hJxJmljg6FbIywVAOZAKOHIkeQxYmgU7gPE77QwUMC
-         LUngfO2lL/n5/IFjzct2GmONESSfTV6koNr1mkRUUl8eJI2B+HDLPazfCU1Hbt2Z//J9
-         ST6dFFaCgpOtejQI9Y00/98OVBFSFveh4YQ/uyhK7Lcriaepl3fLBnlwXlHJt1I3v4jT
-         ZDE/yfjlL/sgJad89dnxKk8R0AP6YBqX2Rp4yesx6Hjy6pNw9in/BTpELMKDi4tXHB/A
-         vWC5F5+ClyfGyWEdXVZLVI2cejQQOkuPu/DWT/HX8nDoUGPcB3Y2OraZ2riAktw1FJFi
-         UJsA==
-X-Gm-Message-State: APjAAAVkM32Gk7+Iv0J9D9bwIOjUWyUl18GxxTm1EELSgyB4peaDf8ml
-        EOcSCK5gLTPGuyrCpxXnr6XtQMryERLV41HYnWM=
-X-Google-Smtp-Source: APXvYqzEdkeB4ph9YGYvX3ZNEG9A0T3KWxL9/K8KzZe7uhifYuMF1e7WqVPnA59GN9mafj8sJCdPwzE4OoQbWUfLaRA=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr1873888pjq.132.1576533062790;
- Mon, 16 Dec 2019 13:51:02 -0800 (PST)
+        id S1726167AbfLQGkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 01:40:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46831 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfLQGkP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 01:40:15 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih6Wg-0006mX-3m; Tue, 17 Dec 2019 07:40:10 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ih6Wf-0001MH-Gn; Tue, 17 Dec 2019 07:40:09 +0100
+Date:   Tue, 17 Dec 2019 07:40:09 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [RESEND PATCH v3 3/3] pinctrl: da9062: add driver support
+Message-ID: <20191217064009.GB31182@pengutronix.de>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-4-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994E2D72A95E4AC4796F80A80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191216074734.ctjxx6rqtj6mt2dw@pengutronix.de>
+ <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20191129191023.2209-1-miquel.raynal@bootlin.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 16 Dec 2019 23:50:51 +0200
-Message-ID: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbZ67jp64oMS0Q=aDuo18i_fT22grST0qSVjk_9EV=4hw@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:38:49 up 109 days, 18:52, 74 users,  load average: 0.32, 0.49,
+ 0.49
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I would like to be Cc'ed on the matters.
-
-On Fri, Nov 29, 2019 at 9:13 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> functions but can also manage the intensity on each of its ports with
-> PWM. Each output is independent and may be tuned with 16 values (4
-> bits per output). The period is always 32kHz, only the duty-cycle may
-> be changed. One can use any output as GPIO or PWM.
-
-Thanks for an update!
-
-Still I think it's wrong approach. What should be done is:
- - adding a pin configuration type of PWM (when, for example, argument
-defines duty cycle and period)
- - conversion to pin control of this driver
- - enabling pin configuration PWM for it.
-
-For now it looks like a custom way of doing it.
-If GPIO maintainers are okay with it, I'll not object, just want to
-have than something like TODO updated for the matter.
-
-Taking above into consideration, I also provide my comments to the patch
-
-...
-
->  #include <linux/bits.h>
-> +#include <linux/bitmap.h>
-
-It seems you need to take gpio/fixes branch as a base.
-
-...
-
->  #define PCA_INT                        BIT(8)
->  #define PCA_PCAL               BIT(9)
-
-> +#define MAX_PWM                        BIT(10)
-
-Use same prefix.
-
-...
-
-> +#define PWM_MAX_COUNT 16
-> +#define PWM_PER_REG 2
-
-> +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)
-
-Can we simple put 4 here?
-
-...
-
-> +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)
-
-Please use plain numbers for the GENMASK() arguments.
-
-...
-
-> +struct max7313_pwm_data {
-> +       struct gpio_desc *desc;
-> +};
-
-Are you plan to extend this? Can we directly use struct gpio_desc pointer?
-
-...
-
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> +           chip->driver_data & MAX_PWM) {
-
-Can't we simple check only for a flag for now?
-
-> +               if (reg >= MAX7313_MASTER &&
-> +                   reg < (MAX7313_INTENSITY + bank_sz))
-> +                       return true;
-> +       }
-
-...
-
-> +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> +           chip->driver_data & MAX_PWM) {
-> +               if (reg >= MAX7313_MASTER &&
-> +                   reg < (MAX7313_INTENSITY + bank_sz))
-> +                       return true;
-> +       }
-
-This is a duplicate from above. Need a helper?
-
-...
-
-> +/*
-> + * Max7313 PWM specific methods
-> + *
-> + * Limitations:
-> + * - Does not support a disabled state
-> + * - Period fixed to 31.25ms
-> + * - Only supports normal polarity
-> + * - Some glitches cannot be prevented
-> + */
-
-Can we have below in a separate file and attach it to the gpio-pca953x
-code iff CONFIG_PWM != n?
-
-...
-
-> +       mutex_lock(&pca_chip->i2c_lock);
-
-> +       regmap_read(pca_chip->regmap, reg, &val);
-
-No error check?
-
-> +       mutex_unlock(&pca_chip->i2c_lock);
-
-...
-
-> +       if (shift)
-
-Redundant.
-
-> +               val >>= shift;
-
-...
-
-> +       mutex_lock(&pca_chip->i2c_lock);
-> +       regmap_read(pca_chip->regmap, reg, &output);
-> +       mutex_unlock(&pca_chip->i2c_lock);
-
-No error check?
-
-...
-
-> +       mutex_lock(&pca_chip->i2c_lock);
-> +       regmap_read(pca_chip->regmap, reg, &output);
-> +       mutex_unlock(&pca_chip->i2c_lock);
-
-No error check?
-
-...
-
-> +static int max7313_pwm_request(struct pwm_chip *chip,
-> +                              struct pwm_device *pwm)
-> +{
-> +       struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> +       struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> +       struct max7313_pwm_data *data;
-> +       struct gpio_desc *desc;
-> +
-> +       desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
-> +                                        "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
-> +       if (IS_ERR(desc)) {
-
-> +               dev_err(&pca_chip->client->dev,
-
-Can't we get to struct device easily?
-If it's possible maybe we could move next line to this one?
-
-> +                       "pin already in use (probably as GPIO): %ld\n",
-> +                       PTR_ERR(desc));
-> +               return PTR_ERR(desc);
-> +       }
-
-> +       return 0;
-> +}
-
-...
-
-> +       if (intensity)
-> +               set_bit(pwm->hwpwm, max_pwm->active_pwm);
-> +       else
-> +               clear_bit(pwm->hwpwm, max_pwm->active_pwm);
-
-assign_bit()
-
-By the way, do you really need it to be atomic? Perhaps __asign_bit()?
-
-...
-
-> +       active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);
-
-> +       if (!active)
-
-In this case more readable will be active == 0 since you compare this
-to the exact value.
-
-> +               ret = max7313_pwm_set_master_intensity(pca_chip, 0);
-> +       else if (active == 1)
-> +               ret = max7313_pwm_set_master_intensity(pca_chip,
-> +                                                      PWM_INTENSITY_MASK);
-
-...
-
-> +       if (IS_ENABLED(CONFIG_PWM)) {
-
-I'm not sure it eliminates all PWM related callbacks.
-
-> +               ret = max7313_pwm_probe(&client->dev, chip);
-> +               if (ret) {
-> +                       dev_err(&client->dev, "pwm probe failed, %d\n", ret);
-> +                       return ret;
-> +               }
-> +       }
-
---
-With Best Regards,
-Andy Shevchenko
+On 19-12-16 11:33, Linus Walleij wrote:
+> On Mon, Dec 16, 2019 at 8:47 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> 
+> > Nice catch, Linus is it okay to add this as follow up patch? The current
+> > patch isn't wrong without the 'PIN_CONFIG_BIAS_DISABLE' case.
+> 
+> No strong opinion on that as long as the result is running code.
+
+Of course the code is running and was tested. Just didn't covered this
+use case.
+
+Adam is this okay with you?
+
+Regards,
+  Marco
+
+> Yours,
+> Linus Walleij
+> 
