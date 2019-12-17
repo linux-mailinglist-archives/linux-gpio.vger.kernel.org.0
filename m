@@ -2,96 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F6C8122D3D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 14:45:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA8F122D48
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 14:46:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfLQNpa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 08:45:30 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:50523 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfLQNpa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 08:45:30 -0500
-Received: from [192.168.1.155] ([95.114.21.161]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MfYgC-1i1FZn1CtU-00fzgB; Tue, 17 Dec 2019 14:45:11 +0100
-Subject: Re: [PATCH] RFC: platform driver registering via initcall tables
-To:     Greg KH <greg@kroah.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, dmitry.torokhov@gmail.com,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        arnd@arndb.de, masahiroy@kernel.org, michal.lkml@markovi.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20191217102219.29223-1-info@metux.net>
- <20191217103152.GB2914497@kroah.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <6422bc88-6d0a-7b51-aaa7-640c6961b177@metux.net>
-Date:   Tue, 17 Dec 2019 14:44:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728561AbfLQNqU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 08:46:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40119 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbfLQNqT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 08:46:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so3220979wmi.5
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2019 05:46:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kZuWd/3jkSU468vrZtKybTAjJX1Jep24XVi1Wi4q33k=;
+        b=XK994wVVrkzFy0kYAn6YNVPCGij+VqhuMZC2yPF2zmpoSL1t182ncy8nuiNo5zng4Z
+         WPFfdmKerYYyv2faiAywqYmjUlJWN8c8sDMRIiX2QhGVIqH9X2zcK+ROViyaRiDUZfjN
+         MS46kihklyILLInJAkBt/mjzCwvf4dpgp0yac7AA3B1aclCBtqlsVz1qRWbAJUzDd6Wp
+         walFi+txkCkoY1p6ZAmsmDSUtNZN4W9uvEoo1yOW0pXVuhMT3ppXifn3dvN1DFIBG6hT
+         /2vATZu+R8Iuq8zTRgwX1otltmSndbWvbKrOSQtab37hC5Xokm6YJYdFkuILS1JKU5S4
+         RQMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kZuWd/3jkSU468vrZtKybTAjJX1Jep24XVi1Wi4q33k=;
+        b=H2Po2KVgOs5KPA8fWO/z9/f6tJb8wn4Dy1WnP7k4k9aKhcnzKdTfvUM/afLWf7dqHt
+         Uuqblm2EX+E2xCo1xPBcxU4kYCA49SZUDAVJdqw7Tef29NPo8IBy3rMjlMeDwZpfVcyO
+         rATJoi/Sw1Jk01DANomX0PE1ObORQPagmo8+qEWb3x5BLbM1OZfdXWKaQkMsXgVlpCQ5
+         03MelUbg6m8LXoU3jBmn1ICpHkgGm+i61s1++AQwYT3ifsARYZoiKh5SrWYCPLyU2GgV
+         LMgqIZ+bvn0yvtogP18SXFnrPTXVJG4VxK0ChKcdc4mN4N8TWFfHYrAp+fPS9fDgfeLn
+         jHog==
+X-Gm-Message-State: APjAAAXMX9NDsraZQaMvU8XZFIg3q5MCWK0DcOalaeeelG26ZX84RLNo
+        1nbzbvtQGGM+cN/jQpjQA/cPjA==
+X-Google-Smtp-Source: APXvYqyNCklkEVENRexg11/lVsAZF67JMyMSJB9/s1vxBi0hQ6lOnAJ1HSWjhfQSwKh/52Z4A1/krA==
+X-Received: by 2002:a1c:3d07:: with SMTP id k7mr5986321wma.79.1576590377924;
+        Tue, 17 Dec 2019 05:46:17 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id r15sm2967823wmh.21.2019.12.17.05.46.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 05:46:17 -0800 (PST)
+Date:   Tue, 17 Dec 2019 13:46:17 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Mack <daniel@zonque.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
+Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
+Message-ID: <20191217134617.GK18955@dell>
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-8-daniel@zonque.org>
+ <20191217133952.GJ18955@dell>
 MIME-Version: 1.0
-In-Reply-To: <20191217103152.GB2914497@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:UIxsKeF+t4AJ8q6DRnqSCsifxsav8JqTSzPbvflDT49nTCN38N2
- kn8QUDipr/KlL5RzF2fLtyOuCzxNjxUSI4UZqAlp6xIsJjV2bywjnE+BMyjssnPF9+oH6ww
- j5NFvhGrB1pzGK+XoSpXibonoL3JFM9dGJqe8hfLnfeBH94z62AKKyID1MFmz2D/kfr9ua1
- +I6P+xiT9RjL5BBgRigTg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nhzDFcqFHhI=:Tt4Fe7MEEtN81vc41C7AoZ
- wctLg7SjkItjTD1J3EE0wIIRp68zGRkICb7akDkm7TzGVY/Jv10cHWbbYxhEfiW4whMmm7gx1
- calgbAvlJfzZju7vWqVRx24cZKnsPXbGGNQI6AltrredEl0JuONWHGFccnaBRDzW2rH1MKxpx
- 7guijvh0tF+MuaZMsUVm1dIggOl4cQFDElahLOqvviCWwKyID5OeS4sL9WhPMRRYqxAHM9q5O
- uPRf4lICI04o5CkAW0vu/jJU2fDAqqn8VRS8aZfQZtuRhCtoDTvZTEoOMN/icN7ljMBCxrxzO
- jKVvHCAs/ZD0+MWmVOPS6sdGZYhKGJfOrGUMZTIo07lGNMYuMdb6Mvx7qAuFP3Yttazz361XR
- WOiEbrlEia6jOwJTx0JGQiUkJqwUMutPSCYqHT+ZlswBl3PcXs2kTDeEimiMTkTWcs6cnQ5YJ
- 0Ev+Ibgd1aJ5uVBqPmFfJs821dyrQ/nj2kpivSX944s+JlT5J79FdHn3yG5tlk4NsXcGYZpDb
- +Su81EDqspIcaHEsqNYqm4wHR4C4MRln/yQ/qEtoFPV/rx6N17k0IIo+d/DbjDUJ5PoLA6scG
- u5HIncBDs/JHZGLSftyL04NMt7m/WCxdQ6vh4pOOgJ+pBlIOtaNs/sr2RGvaMd1drejh8xN8T
- oVqTHasq/lYf0bopjmsmrUnoodoESr4GakdnC5EivRzMSeLiz11uVTbijiJ6z5hpZxZEUXDoy
- GSj9nLs8W6dvwEJKDzhLDRZdwjHLl6WE/XxOcwxG3eQ2N/ab5WauSh8y5djcp7H16KpJZ6A69
- pcY7K1TMdNUlig8lhlUX+Ij4IEaClVQj0yKqknPNhhHZTCef462eFxVdARrJ0sbaH1PRWpIfH
- buhiRZ+mDZotLHFEAKJ93oZ2o67FNflSKVDFquVEZb6lab6XoEveVJVdH6nxtOBexbBLcxxXW
- ARVod/u0vtgm8aj0oa/n+a8Xz6kwOYwTrei/SbYDwnKT6YuTO5xQd
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191217133952.GJ18955@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17.12.19 11:31, Greg KH wrote:
+On Tue, 17 Dec 2019, Lee Jones wrote:
 
-Hi,
+> On Mon, 09 Dec 2019, Daniel Mack wrote:
+> 
+> > The core driver for these devices is split into several parts.
+> > 
+> > The master node driver is an I2C client. It is responsible for
+> > bringing up the bus topology and discovering the slave nodes.
+> > This process requries some knowlegde of the slave node configuration
+> > to program the bus timings correctly, so the master drivers walks
+> > the tree of nodes in the devicetree. The slave driver handles platform
+> > devices that are instantiated by the master node driver after
+> > discovery has finished.
+> > 
+> > Master nodes expose two addresses on the I2C bus, one (referred to as
+> > 'BASE' in the datasheet) for accessing registers on the transceiver
+> > node itself, and one (referred to as 'BUS') for accessing remote
+> > registers, either on the remote transceiver itself, or on I2C hardware
+> > connected to that remote transceiver, which then acts as a remote I2C
+> > bus master.
+> > 
+> > In order to allow MFD sub-devices to be registered as children of
+> > either the master or any slave node, the details on how to access the
+> > registers are hidden behind a regmap config. A pointer to the regmap
+> > is then exposed in the struct shared with the sub-devices.
+> > 
+> > The ad242x-bus driver is a simple proxy that occupies the BUS I2C
+> > address and which is referred to through a devicetree handle by the
+> > master driver.
+> > 
+> > For the discovery process, the driver has to wait for an interrupt
+> > to occur. In case no interrupt is configured in DT, the driver falls
+> > back to interrupt polling. After the discovery phase is completed,
+> > interrupts are only needed for error handling and GPIO handling,
+> > both of which is not currenty implemented.
+> > 
+> > Code common to both the master and the slave driver lives in
+> > 'ad242x-node.c'.
+> > 
+> > Signed-off-by: Daniel Mack <daniel@zonque.org>
+> > 
+> > mfd
+> 
+> ?
+> 
+> > ---
+> >  drivers/mfd/Kconfig         |  11 +
+> >  drivers/mfd/Makefile        |   1 +
+> >  drivers/mfd/ad242x-bus.c    |  42 +++
+> >  drivers/mfd/ad242x-master.c | 611 ++++++++++++++++++++++++++++++++++++
+> >  drivers/mfd/ad242x-node.c   | 262 ++++++++++++++++
+> >  drivers/mfd/ad242x-slave.c  | 234 ++++++++++++++
+> >  include/linux/mfd/ad242x.h  | 400 +++++++++++++++++++++++
+> 
+> This device, or at least the way it's been coded is batty!
+> 
+> It's going to need a lot of massaging before being accepted.
 
-> No, what is so "special" about platform drivers that they require this?
+One thing I should mention upfront; there is too much code "doing
+things" in here for it to be an MFD.  MFDs don't care about; syncs,
+slots, TDM, inverting lines, upstreams, downstreams, etc etc etc.
+Anything remotely technical or functional, the code that "does things"
+should be moved out to the relevant areas.  In the case of this
+device, that's looking like one of the Audio related subsystems.
 
-Nothing, of course ;-)
-
-It's the the starting point for this PoC. The idea actually is doing
-this for all other driver types, too (eg. spi, pci, usb, ...). But
-they'll need their own tables, as different *_register() functions have
-to be called - just haven't implemented that yet.
-
-> If anything, we should be moving _AWAY_ from platform drivers and use
-> real bus drivers instead.
-
-That would be nice, but, unfortunately, we have lots of devices which
-aren't attached to any (probing-capable) bus. That's why we have things
-like oftree, etc.
-
-> Please no, I don't see why this is even needed.
-
-The idea is getting rid of all the init code, which all just does the
-same, just calls some *_register() function.
-
-
---mtx
-
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
