@@ -2,397 +2,264 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F1E2123523
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 19:42:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27022123591
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 20:24:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLQSmr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 13:42:47 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:50830 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfLQSmr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 13:42:47 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id f6ik2100g5USYZQ016ikjb; Tue, 17 Dec 2019 19:42:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihHnw-0003dn-HA; Tue, 17 Dec 2019 19:42:44 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihHnw-0000EO-Fi; Tue, 17 Dec 2019 19:42:44 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers
-Date:   Tue, 17 Dec 2019 19:42:42 +0100
-Message-Id: <20191217184242.827-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        id S1726723AbfLQTYX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 14:24:23 -0500
+Received: from mail.bugwerft.de ([46.23.86.59]:41530 "EHLO mail.bugwerft.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfLQTYX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Dec 2019 14:24:23 -0500
+Received: from [192.168.178.106] (pD95EF574.dip0.t-ipconnect.de [217.94.245.116])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id BC582281AEB;
+        Tue, 17 Dec 2019 19:17:55 +0000 (UTC)
+Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-8-daniel@zonque.org> <20191217133952.GJ18955@dell>
+From:   Daniel Mack <daniel@zonque.org>
+Message-ID: <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
+Date:   Tue, 17 Dec 2019 20:24:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191217133952.GJ18955@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Despite using the same compatible values ("r8a7795"-based) because of
-historical reasons, R-Car H3 ES1.x (R8A77950) and R-Car H3 ES2.0+
-(R8A77951) are really different SoCs, with different part numbers, and
-with different Pin Function Controller blocks.
+Hi Lee,
 
-Reflect this in the pinctrl configuration, by replacing the existing
-CONFIG_PINCTRL_PFC_R8A7795 symbol by two new config symbols:
-CONFIG_PINCTRL_PFC_R8A77950 and CONFIG_PINCTRL_PFC_R8A77951.  The latter
-are selected automatically, depending on the soon-to-be-introduced
-corresponding SoC-specific config options, and on the current common
-config option, to relax dependencies.
+Thanks a lot for your review, much appreciated.
 
-Rename the individual pin control driver source files from
-pfc-r8a7795-es1.c to pfc-r8a77950.c, and from pfc-r8a7795.c to
-pfc-r8a77951.c, and make them truly independent.
-As both SoCs share the same compatible value, special care must be taken
-to match them to the correct pin control driver, if support for it is
-included in the running kernel.
+I'll leave out the trivial things from your reply and address those in a v2.
 
-This will allow making support for early R-Car H3 revisions optional,
-the largest share of which is taken by the pin control driver.
+I'm well aware of the fact that there are some details in this driver 
+stack that deserve discussion. I wanted to title this set 'RFC', but I 
+forgot to do so when I sent it.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Suggestions for simplifying sh_pfc_quirk_match(), or for alternative
-solutions are welcome!
+On 12/17/19 2:39 PM, Lee Jones wrote:
+> On Mon, 09 Dec 2019, Daniel Mack wrote:
+> 
+>> The core driver for these devices is split into several parts.
+>>
+>> The master node driver is an I2C client. It is responsible for
+>> bringing up the bus topology and discovering the slave nodes.
+>> This process requries some knowlegde of the slave node configuration
+>> to program the bus timings correctly, so the master drivers walks
+>> the tree of nodes in the devicetree. The slave driver handles platform
+>> devices that are instantiated by the master node driver after
+>> discovery has finished.
+>>
+>> Master nodes expose two addresses on the I2C bus, one (referred to as
+>> 'BASE' in the datasheet) for accessing registers on the transceiver
+>> node itself, and one (referred to as 'BUS') for accessing remote
+>> registers, either on the remote transceiver itself, or on I2C hardware
+>> connected to that remote transceiver, which then acts as a remote I2C
+>> bus master.
+>>
+>> In order to allow MFD sub-devices to be registered as children of
+>> either the master or any slave node, the details on how to access the
+>> registers are hidden behind a regmap config. A pointer to the regmap
+>> is then exposed in the struct shared with the sub-devices.
+>>
+>> The ad242x-bus driver is a simple proxy that occupies the BUS I2C
+>> address and which is referred to through a devicetree handle by the
+>> master driver.
+>>
+>> For the discovery process, the driver has to wait for an interrupt
+>> to occur. In case no interrupt is configured in DT, the driver falls
+>> back to interrupt polling. After the discovery phase is completed,
+>> interrupts are only needed for error handling and GPIO handling,
+>> both of which is not currenty implemented.
+>>
+>> Code common to both the master and the slave driver lives in
+>> 'ad242x-node.c'.
 
-This complements, but has no dependencies on "[PATCH 0/5] arm64:
-renesas: Split/rename R-Car H3 support"
-https://lore.kernel.org/linux-renesas-soc/20191217183841.432-1-geert+renesas@glider.be/T/#t
 
-For your convenience, all of this is available in the
-topic/r8a7795-rename-v1 branch of my renesas-drivers git repository at
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
----
- drivers/pinctrl/sh-pfc/Kconfig                | 10 ++-
- drivers/pinctrl/sh-pfc/Makefile               |  4 +-
- drivers/pinctrl/sh-pfc/core.c                 | 65 +++++++++++++++----
- .../{pfc-r8a7795-es1.c => pfc-r8a77950.c}     | 26 ++++----
- .../sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c}  | 39 ++++-------
- drivers/pinctrl/sh-pfc/sh_pfc.h               |  4 +-
- 6 files changed, 89 insertions(+), 59 deletions(-)
- rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c => pfc-r8a77950.c} (99%)
- rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c} (99%)
+>> +++ b/drivers/mfd/ad242x-bus.c
+>> @@ -0,0 +1,42 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/init.h>
+>> +#include <linux/mfd/ad242x.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +
+>> +static int ad242x_bus_i2c_probe(struct i2c_client *i2c,
+>> +				const struct i2c_device_id *id)
+>> +{
+>> +	dev_set_drvdata(&i2c->dev, i2c);
+>> +	i2c_set_clientdata(i2c, &i2c->dev);
+> 
+> Please explain to me what you think is happening here.
+> 
+>> +	return 0;
+>> +}
+> 
+> What does this driver do?  Seems kinda pointless?
 
-diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
-index ecf3b045bf755008..cf0e0dc42b84c06f 100644
---- a/drivers/pinctrl/sh-pfc/Kconfig
-+++ b/drivers/pinctrl/sh-pfc/Kconfig
-@@ -26,7 +26,8 @@ config PINCTRL_SH_PFC
- 	select PINCTRL_PFC_R8A7792 if ARCH_R8A7792
- 	select PINCTRL_PFC_R8A7793 if ARCH_R8A7793
- 	select PINCTRL_PFC_R8A7794 if ARCH_R8A7794
--	select PINCTRL_PFC_R8A7795 if ARCH_R8A7795
-+	select PINCTRL_PFC_R8A77950 if ARCH_R8A77950 || ARCH_R8A7795
-+	select PINCTRL_PFC_R8A77951 if ARCH_R8A77951 || ARCH_R8A7795
- 	select PINCTRL_PFC_R8A77960 if ARCH_R8A77960
- 	select PINCTRL_PFC_R8A77961 if ARCH_R8A77961
- 	select PINCTRL_PFC_R8A77965 if ARCH_R8A77965
-@@ -115,8 +116,11 @@ config PINCTRL_PFC_R8A7793
- config PINCTRL_PFC_R8A7794
- 	bool "R-Car E2 pin control support" if COMPILE_TEST
- 
--config PINCTRL_PFC_R8A7795
--	bool "R-Car H3 pin control support" if COMPILE_TEST
-+config PINCTRL_PFC_R8A77950
-+	bool "R-Car H3 ES1.x pin control support" if COMPILE_TEST
-+
-+config PINCTRL_PFC_R8A77951
-+	bool "R-Car H3 ES2.0+ pin control support" if COMPILE_TEST
- 
- config PINCTRL_PFC_R8A77960
- 	bool "R-Car M3-W pin control support" if COMPILE_TEST
-diff --git a/drivers/pinctrl/sh-pfc/Makefile b/drivers/pinctrl/sh-pfc/Makefile
-index 3bc05666e1a6652e..9ebe321d24c488b0 100644
---- a/drivers/pinctrl/sh-pfc/Makefile
-+++ b/drivers/pinctrl/sh-pfc/Makefile
-@@ -18,8 +18,8 @@ obj-$(CONFIG_PINCTRL_PFC_R8A7791)	+= pfc-r8a7791.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7792)	+= pfc-r8a7792.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7793)	+= pfc-r8a7791.o
- obj-$(CONFIG_PINCTRL_PFC_R8A7794)	+= pfc-r8a7794.o
--obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795.o
--obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795-es1.o
-+obj-$(CONFIG_PINCTRL_PFC_R8A77950)	+= pfc-r8a77950.o
-+obj-$(CONFIG_PINCTRL_PFC_R8A77951)	+= pfc-r8a77951.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77960)	+= pfc-r8a7796.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77961)	+= pfc-r8a7796.o
- obj-$(CONFIG_PINCTRL_PFC_R8A77965)	+= pfc-r8a77965.o
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index 65e52688f0916cbf..1ae79690d2d74756 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -23,6 +23,7 @@
- #include <linux/platform_device.h>
- #include <linux/psci.h>
- #include <linux/slab.h>
-+#include <linux/sys_soc.h>
- 
- #include "core.h"
- 
-@@ -568,18 +569,18 @@ static const struct of_device_id sh_pfc_of_table[] = {
- 		.data = &r8a7794_pinmux_info,
- 	},
- #endif
--#ifdef CONFIG_PINCTRL_PFC_R8A7795
-+/* Both r8a7795 entries must be present to make sanity checks work */
-+#ifdef CONFIG_PINCTRL_PFC_R8A77950
- 	{
- 		.compatible = "renesas,pfc-r8a7795",
--		.data = &r8a7795_pinmux_info,
-+		.data = &r8a77950_pinmux_info,
- 	},
--#ifdef DEBUG
-+#endif
-+#ifdef CONFIG_PINCTRL_PFC_R8A77951
- 	{
--		/* For sanity checks only (nothing matches against this) */
--		.compatible = "renesas,pfc-r8a77950",	/* R-Car H3 ES1.0 */
--		.data = &r8a7795es1_pinmux_info,
-+		.compatible = "renesas,pfc-r8a7795",
-+		.data = &r8a77951_pinmux_info,
- 	},
--#endif /* DEBUG */
- #endif
- #ifdef CONFIG_PINCTRL_PFC_R8A77960
- 	{
-@@ -886,19 +887,57 @@ static void __init sh_pfc_check_driver(const struct platform_driver *pdrv)
- static inline void sh_pfc_check_driver(struct platform_driver *pdrv) {}
- #endif /* !DEBUG */
- 
--static int sh_pfc_probe(struct platform_device *pdev)
--{
- #ifdef CONFIG_OF
--	struct device_node *np = pdev->dev.of_node;
-+static const void *sh_pfc_quirk_match(void)
-+{
-+#if defined(CONFIG_PINCTRL_PFC_R8A77950) || \
-+    defined(CONFIG_PINCTRL_PFC_R8A77951)
-+	const struct soc_device_attribute *match;
-+	static const struct soc_device_attribute quirks[] = {
-+		{
-+			.soc_id = "r8a7795", .revision = "ES1.*",
-+#ifdef CONFIG_PINCTRL_PFC_R8A77950
-+			.data = &r8a77950_pinmux_info,
-+#else
-+			.data = (void *)-ENODEV,
-+#endif
-+		},
-+		{
-+			.soc_id = "r8a7795",
-+#ifdef CONFIG_PINCTRL_PFC_R8A77951
-+			.data = &r8a77951_pinmux_info,
-+#else
-+			.data = (void *)-ENODEV,
- #endif
-+		},
-+
-+		{ /* sentinel */ }
-+	};
-+
-+	match = soc_device_match(quirks);
-+	if (match)
-+		return match->data;
-+#endif /* CONFIG_PINCTRL_PFC_R8A77950 || CONFIG_PINCTRL_PFC_R8A77951 */
-+
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
-+static int sh_pfc_probe(struct platform_device *pdev)
-+{
- 	const struct sh_pfc_soc_info *info;
- 	struct sh_pfc *pfc;
- 	int ret;
- 
- #ifdef CONFIG_OF
--	if (np)
--		info = of_device_get_match_data(&pdev->dev);
--	else
-+	if (pdev->dev.of_node) {
-+		info = sh_pfc_quirk_match();
-+		if (IS_ERR(info))
-+			return PTR_ERR(info);
-+
-+		if (!info)
-+			info = of_device_get_match_data(&pdev->dev);
-+	} else
- #endif
- 		info = (const void *)platform_get_device_id(pdev)->driver_data;
- 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c b/drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-similarity index 99%
-rename from drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-rename to drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-index ad05da8f65161c3d..04812e62f3a476a8 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R8A7795 ES1.x processor support - PFC hardware block.
-+ * R8A77950 processor support - PFC hardware block.
-  *
-  * Copyright (C) 2015-2017  Renesas Electronics Corporation
-  */
-@@ -5562,8 +5562,8 @@ static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static int r8a7795es1_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
--				     u32 *pocctrl)
-+static int r8a77950_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
-+				   u32 *pocctrl)
- {
- 	int bit = -EINVAL;
- 
-@@ -5820,8 +5820,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static unsigned int r8a7795es1_pinmux_get_bias(struct sh_pfc *pfc,
--					       unsigned int pin)
-+static unsigned int r8a77950_pinmux_get_bias(struct sh_pfc *pfc,
-+					     unsigned int pin)
- {
- 	const struct pinmux_bias_reg *reg;
- 	unsigned int bit;
-@@ -5838,8 +5838,8 @@ static unsigned int r8a7795es1_pinmux_get_bias(struct sh_pfc *pfc,
- 		return PIN_CONFIG_BIAS_PULL_DOWN;
- }
- 
--static void r8a7795es1_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
--				       unsigned int bias)
-+static void r8a77950_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-+				     unsigned int bias)
- {
- 	const struct pinmux_bias_reg *reg;
- 	u32 enable, updown;
-@@ -5861,15 +5861,15 @@ static void r8a7795es1_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
- 	sh_pfc_write(pfc, reg->puen, enable);
- }
- 
--static const struct sh_pfc_soc_operations r8a7795es1_pinmux_ops = {
--	.pin_to_pocctrl = r8a7795es1_pin_to_pocctrl,
--	.get_bias = r8a7795es1_pinmux_get_bias,
--	.set_bias = r8a7795es1_pinmux_set_bias,
-+static const struct sh_pfc_soc_operations r8a77950_pinmux_ops = {
-+	.pin_to_pocctrl = r8a77950_pin_to_pocctrl,
-+	.get_bias = r8a77950_pinmux_get_bias,
-+	.set_bias = r8a77950_pinmux_set_bias,
- };
- 
--const struct sh_pfc_soc_info r8a7795es1_pinmux_info = {
-+const struct sh_pfc_soc_info r8a77950_pinmux_info = {
- 	.name = "r8a77950_pfc",
--	.ops = &r8a7795es1_pinmux_ops,
-+	.ops = &r8a77950_pinmux_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c b/drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-similarity index 99%
-rename from drivers/pinctrl/sh-pfc/pfc-r8a7795.c
-rename to drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-index d3145aa135d0fdcd..256fab4b03d35621 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * R8A7795 ES2.0+ processor support - PFC hardware block.
-+ * R8A77951 processor support - PFC hardware block.
-  *
-  * Copyright (C) 2015-2019 Renesas Electronics Corporation
-  */
-@@ -5915,7 +5915,8 @@ static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static int r8a7795_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin, u32 *pocctrl)
-+static int r8a77951_pin_to_pocctrl(struct sh_pfc *pfc,
-+				   unsigned int pin, u32 *pocctrl)
- {
- 	int bit = -EINVAL;
- 
-@@ -6172,8 +6173,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static unsigned int r8a7795_pinmux_get_bias(struct sh_pfc *pfc,
--					    unsigned int pin)
-+static unsigned int r8a77951_pinmux_get_bias(struct sh_pfc *pfc,
-+					     unsigned int pin)
- {
- 	const struct pinmux_bias_reg *reg;
- 	unsigned int bit;
-@@ -6190,8 +6191,8 @@ static unsigned int r8a7795_pinmux_get_bias(struct sh_pfc *pfc,
- 		return PIN_CONFIG_BIAS_PULL_DOWN;
- }
- 
--static void r8a7795_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
--				   unsigned int bias)
-+static void r8a77951_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-+				     unsigned int bias)
- {
- 	const struct pinmux_bias_reg *reg;
- 	u32 enable, updown;
-@@ -6213,29 +6214,15 @@ static void r8a7795_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
- 	sh_pfc_write(pfc, reg->puen, enable);
- }
- 
--static const struct soc_device_attribute r8a7795es1[] = {
--	{ .soc_id = "r8a7795", .revision = "ES1.*" },
--	{ /* sentinel */ }
-+static const struct sh_pfc_soc_operations r8a77951_pinmux_ops = {
-+	.pin_to_pocctrl = r8a77951_pin_to_pocctrl,
-+	.get_bias = r8a77951_pinmux_get_bias,
-+	.set_bias = r8a77951_pinmux_set_bias,
- };
- 
--static int r8a7795_pinmux_init(struct sh_pfc *pfc)
--{
--	if (soc_device_match(r8a7795es1))
--		pfc->info = &r8a7795es1_pinmux_info;
--
--	return 0;
--}
--
--static const struct sh_pfc_soc_operations r8a7795_pinmux_ops = {
--	.init = r8a7795_pinmux_init,
--	.pin_to_pocctrl = r8a7795_pin_to_pocctrl,
--	.get_bias = r8a7795_pinmux_get_bias,
--	.set_bias = r8a7795_pinmux_set_bias,
--};
--
--const struct sh_pfc_soc_info r8a7795_pinmux_info = {
-+const struct sh_pfc_soc_info r8a77951_pinmux_info = {
- 	.name = "r8a77951_pfc",
--	.ops = &r8a7795_pinmux_ops,
-+	.ops = &r8a77951_pinmux_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
-index 640d2a4cb838804f..aa298332f00f1a8e 100644
---- a/drivers/pinctrl/sh-pfc/sh_pfc.h
-+++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
-@@ -318,8 +318,8 @@ extern const struct sh_pfc_soc_info r8a7791_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7792_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7793_pinmux_info;
- extern const struct sh_pfc_soc_info r8a7794_pinmux_info;
--extern const struct sh_pfc_soc_info r8a7795_pinmux_info;
--extern const struct sh_pfc_soc_info r8a7795es1_pinmux_info;
-+extern const struct sh_pfc_soc_info r8a77950_pinmux_info;
-+extern const struct sh_pfc_soc_info r8a77951_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77960_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77961_pinmux_info;
- extern const struct sh_pfc_soc_info r8a77965_pinmux_info;
--- 
-2.17.1
+As explained in the commit log, these devices expose two addresses on 
+the i2c bus, and each of which exists for a distinct purpose. The 
+primary one is used to access registers on the master node itself, the 
+second one is proxying traffic to remote nodes.
 
+Now, the question is how to support that, and the approach chosen here 
+is to have a dummy driver sitting on the 2nd address, and to reach out 
+to it via a DT phandle from the master node. I don't like that much 
+either, but I'm not aware of a cleaner way to bind two addresses with 
+one driver. If there is any, I'd be happy to change that.
+
+>> +struct ad242x_node *ad242x_master_get_node(struct ad242x_master *master)
+>> +{
+>> +	return &master->node;
+>> +}
+>> +EXPORT_SYMBOL_GPL(ad242x_master_get_node);
+>> +
+>> +struct ad242x_i2c_bus *ad242x_master_get_bus(struct ad242x_master *master)
+>> +{
+>> +	return &master->bus;
+>> +}
+>> +EXPORT_SYMBOL_GPL(ad242x_master_get_bus);
+>> +
+>> +const char *ad242x_master_get_clk_name(struct ad242x_master *master)
+>> +{
+>> +	return __clk_get_name(master->sync_clk);
+>> +}
+>> +EXPORT_SYMBOL_GPL(ad242x_master_get_clk_name);
+>> +
+>> +unsigned int ad242x_master_get_clk_rate(struct ad242x_master *master)
+>> +{
+>> +	return master->sync_clk_rate;
+>> +}
+>> +EXPORT_SYMBOL_GPL(ad242x_master_get_clk_rate);
+> 
+> All of these functions provide abstraction for the sake of
+> abstraction.  They should be removed and replaced with the code
+> contained within them.
+
+That would mean to expose the internals of the struct, which is what I 
+wanted to avoid. But okay, I'll see how the respin of this driver looks 
+like and reconsider.
+
+>> +	return ret == 0 ? -ETIMEDOUT : 0;
+>> +}
+>> +
+>> +/* See Table 3-2 in the datasheet */
+> 
+> Do you provide a link to the datasheet anywhere?
+
+Yes, in the cover letter. But you're right, I can add that to the code 
+as well. Will do.
+
+>> +static unsigned int ad242x_master_respoffs(struct ad242x_node *node)
+>> +{
+>> +	if (node->tdm_mode == 2 && node->tdm_slot_size == 16)
+>> +		return 238;
+>> +
+>> +	if ((node->tdm_mode == 2 && node->tdm_slot_size == 32) ||
+>> +	    (node->tdm_mode == 4 && node->tdm_slot_size == 16))
+>> +		return 245;
+>> +
+>> +	return 248;
+> 
+> No magic numbers please.  You need to define them.
+
+I generally agree, but these are just magic numbers in the datasheet.
+You're thinking of something like this, next to a comment?
+
+   #define AD242X_RESPOFFS_248 248
+
+>> +	master->sync_clk_rate = clk_get_rate(master->sync_clk);
+>> +	if (master->sync_clk_rate != 44100 && master->sync_clk_rate != 48000) {
+> 
+> Please define these magic numbers.
+> 
+> Something descriptive that tells us what the different clock speeds
+> do.
+
+The device can only operate on one of the two clock speeds. I can add a 
+comment on that, but do you think defines for these two particular 
+constants would make the code more readable?
+
+>> +	master->dn_slot_alt_fmt =
+>> +		of_property_read_bool(dev->of_node,
+>> +				      "adi,alternate-downstream-slot-format");
+>> +	master->up_slot_alt_fmt =
+>> +		of_property_read_bool(dev->of_node,
+>> +				      "adi,alternate-upstream-slot-format");
+> 
+> Obviously this all needs to be run past the DT maintainer(s).
+
+Yes, absolutely. I believe I copied them all in the thread.
+
+>> +	/* Register platform devices for nodes */
+>> +
+>> +	for_each_available_child_of_node(nodes_np, np)
+>> +		of_platform_device_create(np, NULL, dev);
+> 
+> What are you doing here?
+> 
+> Either use OF to register all child devices OR use MFD, not a mixture
+> of both.
+
+Okay, this one is interesting, and I'd really appreciate some guidance here.
+
+What the master node driver does here is register a number of slave node 
+devices which are then handled by the driver in ad242x-slave.c. Because 
+the master is not able to auto-probe slave nodes, users need to define 
+them manually in DT. The driver will try to discover them at probe time, 
+and then create a platform device for each of them.
+
+Both the master driver and the slave driver are then registering 
+sub-devices for functions (such as GPIO, clk, audio-codec etc) via MFD, 
+as they can be enabled on both device types. And the function-drivers 
+are agnostic about whether the device type (master or slave) they 
+communicate with.
+
+What would be a good way to support this scheme if not by a mixture of 
+child devices and MFD?
+
+>> +static int ad242x_slave_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct ad242x_slave *slave;
+>> +	struct ad242x_node *mnode;
+>> +	struct regmap *regmap;
+>> +	unsigned int val;
+>> +	int i, ret;
+>> +
+>> +	slave = devm_kzalloc(dev, sizeof(*slave), GFP_KERNEL);
+>> +	if (!slave)
+>> +		return -ENOMEM;
+>> +
+>> +	regmap = devm_regmap_init(dev, NULL, slave, &ad242x_regmap_config);
+>> +	if (IS_ERR(regmap)) {
+>> +		ret = PTR_ERR(regmap);
+>> +		dev_err(dev, "regmap init failed: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	of_property_read_u32(dev->of_node, "reg", &val);
+>> +	slave->node.id = val;
+> 
+> This looks like an abuse of the 'reg' property.
+
+I had my doubts about that as well, but I've found my places that do 
+similar things. Not sure, but of course that can be renamed.
+
+
+Again, thanks for your review.
+
+Daniel
