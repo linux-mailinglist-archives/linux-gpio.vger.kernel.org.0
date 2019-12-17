@@ -2,126 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB53A12258E
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 08:36:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E291122641
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 09:05:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfLQHfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 02:35:45 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35281 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726072AbfLQHfo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 02:35:44 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ih7OK-00044B-An; Tue, 17 Dec 2019 08:35:36 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ih7OH-0008Gx-Pm; Tue, 17 Dec 2019 08:35:33 +0100
-Date:   Tue, 17 Dec 2019 08:35:33 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191217073533.GC31182@pengutronix.de>
-References: <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
+        id S1726524AbfLQIFM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Dec 2019 03:05:12 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42161 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbfLQIFL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 03:05:11 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so10173240wro.9
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2019 00:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fxAZfC9vmolZiVlLpMvcqpScZw+v0UnXZ2/3gdD1PQU=;
+        b=P8Ir1Y+sa+9qizCrqZ9njBGtZhOlAxadSDlDWqoVv7majgjwz4KLATGq1ypY8Xadx8
+         6AvVDfimq5rweOvMWz5Rk9RVH7vyBtxaWMhteVEWZ5XDqguzvk9qEG/+aa6/mEt5wpsZ
+         G9OEqbh+GNCSd20GHTQ2L/41fdh6Sv5J9D58dwsMJh5d/5RmJHsNtTzzcJdK592Yul9a
+         48K8pY4RgPCGuXdLxq8JFqE/bZXUz1V3qILJdoPmlcATjCAR20tF+YwRhEMBoFf/ACBy
+         vQQXkpZM+Oitb5xp1XYO0RcX0+jG0Lm8xKVspfxrifwq7iGKvSGd1KtENhSJARdfLUOg
+         Xpqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fxAZfC9vmolZiVlLpMvcqpScZw+v0UnXZ2/3gdD1PQU=;
+        b=lSL862sptUwLcpoFSiK6EtkaP7i3fVau37ry/LqpY0ip1DSAZayT3aWI7V87YgfXki
+         fMvRj9gsKrdxn10iM+yPFXk7L0H/waIL2f+vlp1bwMgrhSjAV22QhTzuco93eCJx8vNQ
+         RPKuOeRLWl5of2uln96IC+nGXFTDrwPEUU0KGh36CPSHbnmNX8hnRmfE4/3xqTHiiZKu
+         CM2wXFjoKG/0c2oP75cVCTZJAL5cvnKyVEEbQ8hn6/e6jCH22iRNxfkvBtpI0cIjvq8B
+         7dWtsmO3jHj1YIBOCPRRp/YGLQmIL/ueXl/An9fR01zSDNZnL0c6Ti9Yb1t5ezObMRcI
+         bCsA==
+X-Gm-Message-State: APjAAAWZjMEw6Sg8hJRAmEX/UOgbTZcBy4fLhdMzDEE4+fHXK8f7kn/R
+        J59IVQbatHnlKVqAACT+4hXldg==
+X-Google-Smtp-Source: APXvYqzdM1IU1Znt+UOIvBqM1ONjsi0UnVLRZGI/dQjTYSpWTXPuvwYov3WaFnfb+CyufHv8opBDnA==
+X-Received: by 2002:a5d:608a:: with SMTP id w10mr4406380wrt.136.1576569909844;
+        Tue, 17 Dec 2019 00:05:09 -0800 (PST)
+Received: from dell (h185-20-99-142.host.redstation.co.uk. [185.20.99.142])
+        by smtp.gmail.com with ESMTPSA id z11sm24880779wrt.82.2019.12.17.00.05.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Dec 2019 00:05:09 -0800 (PST)
+Date:   Tue, 17 Dec 2019 08:05:09 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v2 4/5] drm/i915/dsi: Move Crystal Cove PMIC panel GPIO
+ lookup from mfd to the i915 driver
+Message-ID: <20191217080509.GH18955@dell>
+References: <20191216205122.1850923-1-hdegoede@redhat.com>
+ <20191216205122.1850923-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191216114454.GB4161@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:51:55 up 109 days, 19:06, 74 users,  load average: 0.31, 0.39,
- 0.44
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191216205122.1850923-5-hdegoede@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19-12-16 11:44, Mark Brown wrote:
-> On Mon, Dec 16, 2019 at 09:55:25AM +0100, Marco Felsch wrote:
-> > On 19-12-12 16:51, Mark Brown wrote:
+On Mon, 16 Dec 2019, Hans de Goede wrote:
+
+> Move the Crystal Cove PMIC panel GPIO lookup-table from
+> drivers/mfd/intel_soc_pmic_core.c to the i915 driver.
 > 
-> > > Something needs to say what that thing is, especially if it's runtime
-> > > controllable.  In your case from the point of view of software there is
-> > > actually no enable control so we shouldn't be providing an enable
-> > > operation to the framework.
+> The moved looked-up table is adding a GPIO lookup to the i915 PCI
+> device and the GPIO subsys allows only one lookup table per device,
 > 
-> > The enabel control signal is always available, please check [1] table
-> > 63. There is a mux in front of the enable pin so:
+> The intel_soc_pmic_core.c code only adds lookup-table entries for the
+> PMIC panel GPIO (as it deals only with the PMIC), but we also need to be
+> able to access some GPIOs on the SoC itself, which requires entries for
+> these GPIOs in the lookup-table.
 > 
-> What I'm saying is that I think the binding needs to explicitly talk
-> about that since at the minute it's really confusing reading it as it
-> is, it sounds very much like it's trying to override that in a chip
-> specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
-> really quite unusual.
+> Since the lookup-table is attached to the i915 PCI device it really
+> should be part of the i915 driver, this will also allow us to extend
+> it with GPIOs from other sources when necessary.
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_dsi_vbt.c | 23 +++++++++++++++++++-
+>  drivers/mfd/intel_soc_pmic_core.c            | 19 ----------------
+>  2 files changed, 22 insertions(+), 20 deletions(-)
 
-Hm.. I still think that we don't mux the pin to some special function.
-It is still a gpio input pin and if we don't request the pin we could
-read the input from user-space too and get a 'valid' value. Muxing would
-happen if we change the pad to so called _alternate_ function. Anyway,
-lets find a binding description:
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-name:
- - dlg,vsel-sense-gpios
-
-IMHO this is very descriptive and needs no update.
-
-description:
- - A GPIO reference to a local general purpose input, [1] calls it GPI.
-   The DA9062 regulators can select between voltage-a/-b settings.
-   Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
-   active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
-   to select between different signal sources, valid sources are: the
-   internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
-   information. Most the time the internal sequencer is fine but
-   sometimes it is necessary to use the signal from the DA9062 GPI
-   pads. This binding covers the second use case.
-   Attention: Sharing the same GPI for other purposes or across multiple
-   regulators is possible but the polarity setting must equal.
-
-[1] https://www.dialog-semiconductor.com/sites/default/files/da9062_datasheet_3v6.pdf
-
-Regards,
-  Marco
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
