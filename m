@@ -2,83 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2585F124D1D
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 17:23:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3149F124D78
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 17:27:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfLRQXv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 11:23:51 -0500
-Received: from mga03.intel.com ([134.134.136.65]:15079 "EHLO mga03.intel.com"
+        id S1727710AbfLRQ0U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 11:26:20 -0500
+Received: from smtp2.axis.com ([195.60.68.18]:46355 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbfLRQXu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Dec 2019 11:23:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:23:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
-   d="scan'208";a="415881663"
-Received: from dshoemak-mobl.amr.corp.intel.com (HELO [10.251.3.243]) ([10.251.3.243])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Dec 2019 08:23:47 -0800
-Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
- nodes
-To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
-        lee.jones@linaro.org
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-12-daniel@zonque.org>
- <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
- <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <ff0e2420-a2c6-17e7-2761-f6544e2c0cb7@linux.intel.com>
-Date:   Wed, 18 Dec 2019 09:32:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726980AbfLRQ0U (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:26:20 -0500
+IronPort-SDR: YH9AgxxdhWOLwLlrUlwoR/X6uYvSXtdaAwFArokfZwhhTzOzDGuRoFiCgk6U7Fik02syJkuzCl
+ IbK0UmUihXB6ubOcv7cY0oVSS3jFO4bKmQtTY8SkGfSzqRiLQxR+jUVAdaO0p2/ykYaj7c4yWF
+ MtOAAl43S8vfcMBpJ4XOhut271b3kTizkJskg30PImN1QqgwslLARvFkfcbpPdN3Ms87aCEfqN
+ tcZ4BGdalNSLNIoc0vZmQN2yzaIr8u2GM4rYzk6a5ADOmD2dPLvgx0gMYlciiYolZdzgAhcKF4
+ lto=
+X-IronPort-AV: E=Sophos;i="5.69,330,1571695200"; 
+   d="scan'208";a="3621155"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+Date:   Wed, 18 Dec 2019 17:26:16 +0100
+From:   Jesper Nilsson <jesper.nilsson@axis.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@axis.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
+Message-ID: <20191218162616.qsxsltfsrxotzqhb@axis.com>
+References: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-TM-AS-GCONF: 00
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Dec 18, 2019 at 11:16:02AM +0100, Ben Dooks (Codethink) wrote:
+> The artpec6_pconf_set should have marked reg as __iomem,
+>  which ends up making sparse complain about address
+> space conversions. Add the __iomem to silence the
+> following warnings:
+> 
+> drivers/pinctrl/pinctrl-artpec6.c:814:13: warning: incorrect type in assignment (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:814:13:    expected unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:814:13:    got void [noderef] <asn:2> *
+> drivers/pinctrl/pinctrl-artpec6.c:825:34: warning: incorrect type in argument 1 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:825:34:    expected void const volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:825:34:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:827:25: warning: incorrect type in argument 2 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:827:25:    expected void volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:827:25:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:837:34: warning: incorrect type in argument 1 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:837:34:    expected void const volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:837:34:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:840:25: warning: incorrect type in argument 2 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:840:25:    expected void volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:840:25:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:850:34: warning: incorrect type in argument 1 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:850:34:    expected void const volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:850:34:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:853:25: warning: incorrect type in argument 2 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:853:25:    expected void volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:853:25:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:864:34: warning: incorrect type in argument 1 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:864:34:    expected void const volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:864:34:    got unsigned int *reg
+> drivers/pinctrl/pinctrl-artpec6.c:867:25: warning: incorrect type in argument 2 (different address spaces)
+> drivers/pinctrl/pinctrl-artpec6.c:867:25:    expected void volatile [noderef] <asn:2> *addr
+> drivers/pinctrl/pinctrl-artpec6.c:867:25:    got unsigned int *reg
+> 
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> ---
 
 
-On 12/18/19 3:49 AM, Daniel Mack wrote:
-> Hi,
-> 
-> On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
->> On 12/9/19 12:35 PM, Daniel Mack wrote:
-> 
->>> +    if (!ad242x_node_is_master(priv->node) &&
->>> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
->>> SND_SOC_DAIFMT_CBM_CFM)) {
->>> +        dev_err(component->dev, "slave node must be clock master\n");
->>> +        return -EINVAL;
->>> +    }
->>
->> It was my understanding that the master node provides the clock to the
->> bus, so not sure how it could be a clock slave, and conversely how a
->> slave node could provide a clock to the bus?
-> 
-> The slave nodes receive the A2B clock from the master node and then
-> produce digital audio output that is sent to other components such as
-> codecs. Hence, in ASoC terms, they are the clock master.
-> 
-> Likewise, as the master node is receiving its clock from other
-> components, it has to be a clock slave in the audio network.
-> 
-> Does that make sense?
 
-Your slave node acts as a bridge then, but it seems you don't model the 
-bus-facing interface, which has to follow the master clock. Or do you?
 
-Likewise the master has an 'SOC-facing' interface and a bus-facing 
-interface. it *could* be master on both if ASRC was supported. The point 
-is that the bus-facing interface is not clock slave.
+> Cc: Lars Persson <lars.persson@axis.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-arm-kernel@axis.com
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/pinctrl/pinctrl-artpec6.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+> index 986e04ac6b5b..439a997b6bdb 100644
+> --- a/drivers/pinctrl/pinctrl-artpec6.c
+> +++ b/drivers/pinctrl/pinctrl-artpec6.c
+> @@ -798,7 +798,7 @@ static int artpec6_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>  	enum pin_config_param param;
+>  	unsigned int arg;
+>  	unsigned int regval;
+> -	unsigned int *reg;
+> +	unsigned int __iomem *reg;
+
+	void __iomem *reg;
+
+We're using as an argument to readl()?
+
+>  	int i;
+>  
+>  	/* Check for valid pin */
+> -- 
+> 2.24.0
+> 
+
+/^JN - Jesper Nilsson
+-- 
+               Jesper Nilsson -- jesper.nilsson@axis.com
