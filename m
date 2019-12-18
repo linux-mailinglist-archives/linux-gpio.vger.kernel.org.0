@@ -2,95 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECB4D1245AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 12:21:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F3A9124609
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 12:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfLRLVC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 18 Dec 2019 06:21:02 -0500
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:47269 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726676AbfLRLVC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Dec 2019 06:21:02 -0500
-Received: from [37.162.94.155] (port=27596 helo=[192.168.43.3])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1ihXNz-00B31J-Q6; Wed, 18 Dec 2019 12:20:59 +0100
-Subject: Re: [PATCH 06/10] mfd: Add core driver for AD242x A2B transceivers
-To:     Daniel Mack <daniel@zonque.org>, Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        broonie@kernel.org, lars@metafoo.de, pascal.huerst@gmail.com
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-8-daniel@zonque.org> <20191217133952.GJ18955@dell>
- <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <e288a6e1-a967-d7cd-72fc-d190819953e3@lucaceresoli.net>
-Date:   Wed, 18 Dec 2019 12:20:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726676AbfLRLq1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 06:46:27 -0500
+Received: from foss.arm.com ([217.140.110.172]:43340 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbfLRLq1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 06:46:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DC430E;
+        Wed, 18 Dec 2019 03:46:26 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AE713F6CF;
+        Wed, 18 Dec 2019 03:46:26 -0800 (PST)
+Date:   Wed, 18 Dec 2019 11:46:24 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 03/11] ASoC: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20191218114624.GB3219@sirena.org.uk>
+References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
+ <20191217121642.28534-4-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <ce6e0b19-ec40-c17b-cee6-05eca52d5df3@zonque.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8BIT
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
+Content-Disposition: inline
+In-Reply-To: <20191217121642.28534-4-srinivas.kandagatla@linaro.org>
+X-Cookie: Power is poison.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Daniel,
 
-On 17/12/19 20:24, Daniel Mack wrote:
->>> +++ b/drivers/mfd/ad242x-bus.c
->>> @@ -0,0 +1,42 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +
->>> +#include <linux/i2c.h>
->>> +#include <linux/init.h>
->>> +#include <linux/mfd/ad242x.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +
->>> +static int ad242x_bus_i2c_probe(struct i2c_client *i2c,
->>> +                const struct i2c_device_id *id)
->>> +{
->>> +    dev_set_drvdata(&i2c->dev, i2c);
->>> +    i2c_set_clientdata(i2c, &i2c->dev);
->>
->> Please explain to me what you think is happening here.
->>
->>> +    return 0;
->>> +}
->>
->> What does this driver do?  Seems kinda pointless?
-> 
-> As explained in the commit log, these devices expose two addresses on
-> the i2c bus, and each of which exists for a distinct purpose. The
-> primary one is used to access registers on the master node itself, the
-> second one is proxying traffic to remote nodes.
-> 
-> Now, the question is how to support that, and the approach chosen here
-> is to have a dummy driver sitting on the 2nd address, and to reach out
-> to it via a DT phandle from the master node. I don't like that much
-> either, but I'm not aware of a cleaner way to bind two addresses with
-> one driver. If there is any, I'd be happy to change that.
+--uQr8t48UFsdbeI+V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Have a look at i2c_new_dummy_device(), perhaps it is what you need here.
+On Tue, Dec 17, 2019 at 12:16:34PM +0000, Srinivas Kandagatla wrote:
 
--- 
-Luca
+> +config SND_SOC_WCD934X
+> +	tristate "WCD9340/WCD9341 Codec"
+> +	depends on SLIMBUS
+> +	select REGMAP_SLIMBUS
+> +	select REGMAP_IRQ
+> +	help
 
+Why does this not depend on the MFD change?
+
+--uQr8t48UFsdbeI+V
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36EY8ACgkQJNaLcl1U
+h9CJewf/UNyw0O0xrJ7lqLqOtpx2X0NT8thQQh2NcyNp4m8qbmYDJ15qmTMAM+yj
+mP+3wP/Qf8hD8sTAidpOg9krTC5rCGi8k7lHizePkZEkmxilFp6IEr4xPSFimHhR
+bp2p/9XvAgJcXlsDTaRRknBtErDfSIfcNmPjC9Lz0Q9jAlQKMjPVj9K7Wm4o96zQ
+L/Cz3jQOHeNSRCBQKjkMDUSesDQIzZUAAEShRq82RT+dxa8K531f8AoFQKf+D2KZ
+3EmrYGye3MJgMTZ+8elie/8uBaRKqhCei3zZecF05lN43KThV/U5aEGY/p/RW6O4
+xnnuzr+hkC5Hu7jMR8DbzcNHfEuS+g==
+=vos4
+-----END PGP SIGNATURE-----
+
+--uQr8t48UFsdbeI+V--
