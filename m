@@ -2,66 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF6B31243BF
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 10:53:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F51124412
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 11:17:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725955AbfLRJxF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 04:53:05 -0500
-Received: from mail.bugwerft.de ([46.23.86.59]:46500 "EHLO mail.bugwerft.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725799AbfLRJxF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Dec 2019 04:53:05 -0500
-Received: from [10.10.222.226] (unknown [194.162.236.226])
-        by mail.bugwerft.de (Postfix) with ESMTPSA id 3A811281DF4;
-        Wed, 18 Dec 2019 09:46:38 +0000 (UTC)
-Subject: Re: [alsa-devel] [PATCH 00/10] mfd: Add support for Analog Devices
- A2B transceiver
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
-        lee.jones@linaro.org
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <cb86a793-014a-1acf-c144-f9014ac0a0ac@linux.intel.com>
-From:   Daniel Mack <daniel@zonque.org>
-Message-ID: <22803ea0-0c4a-b096-ec11-5e8f5c27d8d3@zonque.org>
-Date:   Wed, 18 Dec 2019 10:53:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726360AbfLRKQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 05:16:59 -0500
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:60630 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726545AbfLRKQ7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 05:16:59 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1ihWO0-00073q-Sq; Wed, 18 Dec 2019 10:16:56 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1ihWO0-00AFWW-Cp; Wed, 18 Dec 2019 10:16:56 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     ben.dooks@codethink.co.uk
+Cc:     Jesper Nilsson <jesper.nilsson@axis.com>,
+        Lars Persson <lars.persson@axis.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
+Date:   Wed, 18 Dec 2019 10:16:02 +0000
+Message-Id: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <cb86a793-014a-1acf-c144-f9014ac0a0ac@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The artpec6_pconf_set should have marked reg as __iomem,
+ which ends up making sparse complain about address
+space conversions. Add the __iomem to silence the
+following warnings:
 
-On 12/17/19 8:29 PM, Pierre-Louis Bossart wrote:
->> Transceivers can both receive and provide audio, and streams can be
->> routed from one node to any other, including many others. The tricky
->> bit is how to expose the audio routing in DT in a sane way.
->> The way it is implemented here, the slave nodes specify the number of
->> slots they each consume and generate, and which thereof they forward
->> from one side to the other. This mimics the internal register
->> structure and should allow for even exotic setups.
-> 
-> It was my understanding that the A2B bus is bidirectional but with
-> separate time windows allocated for host->device and device->host
-> transmission. The wording seems to hint at device-to-device
-> communication but I wonder if this is really what you meant.
+drivers/pinctrl/pinctrl-artpec6.c:814:13: warning: incorrect type in assignment (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:814:13:    expected unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:814:13:    got void [noderef] <asn:2> *
+drivers/pinctrl/pinctrl-artpec6.c:825:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:825:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:825:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:827:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:827:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:827:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:837:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:837:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:837:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:840:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:840:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:840:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:850:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:850:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:850:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:853:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:853:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:853:25:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:864:34: warning: incorrect type in argument 1 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:864:34:    expected void const volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:864:34:    got unsigned int *reg
+drivers/pinctrl/pinctrl-artpec6.c:867:25: warning: incorrect type in argument 2 (different address spaces)
+drivers/pinctrl/pinctrl-artpec6.c:867:25:    expected void volatile [noderef] <asn:2> *addr
+drivers/pinctrl/pinctrl-artpec6.c:867:25:    got unsigned int *reg
 
-Yes, audio frames can be exchanged between two slave nodes without
-interaction by the master node. I'm not sure what the best way is to
-describe that in DT really, but as the hardware is capable of doing it,
-there must be a way to enable such setups.
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>
+Cc: Lars Persson <lars.persson@axis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@axis.com
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/pinctrl/pinctrl-artpec6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks,
-Daniel
+diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+index 986e04ac6b5b..439a997b6bdb 100644
+--- a/drivers/pinctrl/pinctrl-artpec6.c
++++ b/drivers/pinctrl/pinctrl-artpec6.c
+@@ -798,7 +798,7 @@ static int artpec6_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	enum pin_config_param param;
+ 	unsigned int arg;
+ 	unsigned int regval;
+-	unsigned int *reg;
++	unsigned int __iomem *reg;
+ 	int i;
+ 
+ 	/* Check for valid pin */
+-- 
+2.24.0
 
