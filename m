@@ -2,72 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2A4212551B
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 22:54:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D75F125612
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 23:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfLRVyf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 16:54:35 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46058 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRVye (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 16:54:34 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v10so1984385oiv.12;
-        Wed, 18 Dec 2019 13:54:34 -0800 (PST)
+        id S1726824AbfLRV76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 16:59:58 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35352 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbfLRV7w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 16:59:52 -0500
+Received: by mail-ot1-f66.google.com with SMTP id f71so4338263otf.2
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Dec 2019 13:59:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=cAXunSiS3rXXq9GdLKW/V7VUvrBFqv7fL5lt8QMJqg8=;
+        b=lJuvIkv3ZuUg54v5qswfzmxdE7r9TiyiTX3JNurAu/+4UDE/Akue35Beac5wU2Yka2
+         TwFKdar436/Bgz4S/Dnand2w+C9v9tvDVI7RUsgLveJbv2fK19oYMD0NCdzpabibXOaw
+         6w7CWg3NNmXEbxlASOUskEqh4Gi/Tods4YAO+ilK5tSZ2se0Nuw34UPUvaGEPabEiks2
+         pplCHK4zwZYHp26kgAHfxGMgkW2qA64lmCH/GsgQD3vscHDaT+R93t9GA34XEWKGZDMh
+         E2kVIHt3Ryiuans4QsX0HCbz9Hl8nNtgIPmWD0dB2YGqFSxgWDefGaQbybKKx8MF9j8O
+         A0jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4RebbRKcBu8o8r+u/BBh/JSYzRJPnaXsDajYWgLnYyw=;
-        b=uJ0Hv9qmpjjQ4C8wtscrrjYcMCBe7piHv0j76Zuy0ocRkLCFPUNvXUHVeYV3o29eGr
-         4Yo09EtaBGO7ONXr1FOBBOCbvt2pDV3Qye1rk0VTvtV2nzObJhWurWhFW/LIe+qodJu7
-         oES7PiRwMnzMts2bdqZRFyg9TZpCOY3T+vtmeAsXOEkoV4s2l8p6/7hDCaxNz1DuY8ec
-         YDIYjWh32KU/iZGHtduh+13QJsH8lw3fi3xdzuuYNNnvYjR8lCP6HE0HGZYP7xyjVEc8
-         Y5Y+Oz9A5ctNndUWe8uJV394NhISkJ7IEXR7+wb3wIf4z2RUgdzOO9/t+E5HHn/caJ7U
-         trNA==
-X-Gm-Message-State: APjAAAVnjCZHIob9SWehSolCN+/AB6ZZJajAoyfcBoWZyaGomH4nqjvI
-        VgA6xdMYxKDxgsSnhi08jA==
-X-Google-Smtp-Source: APXvYqwZrcJhNxjx6lo9XtXroFdtRIESqHQuSWgDp6/7eHy2HGyZGdP4rPahMSQLRpcY8klzgrhuug==
-X-Received: by 2002:aca:5490:: with SMTP id i138mr1620807oib.34.1576706073981;
-        Wed, 18 Dec 2019 13:54:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k5sm1276825otp.33.2019.12.18.13.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 13:54:33 -0800 (PST)
-Date:   Wed, 18 Dec 2019 15:54:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio bindings
-Message-ID: <20191218215432.GA23682@bogus>
-References: <20191212160413.15232-1-m.felsch@pengutronix.de>
- <20191212160413.15232-2-m.felsch@pengutronix.de>
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=cAXunSiS3rXXq9GdLKW/V7VUvrBFqv7fL5lt8QMJqg8=;
+        b=UI/iVhJJ6d5iQP3zZzEp05zbON2S6VM7i42b/a4F0IDphu2l2jmQzNAQa/f5IZdMNS
+         +aFLZm8IzEM3HRYgvBfRlehK0yyCw84PZqxQ1p4MeW6u2uoYvtuD7152VMhnK7pGFbT6
+         nshc9+8M2ztp3rspofK7kY88a0ZVcvR5lDA8tslO7EPytCcw6Km7+EiswHyp+98Rxdb/
+         kYsDmu72/GD6smdYKLVVWg+zP9AlZFER7CWhiKvNDgPD8K4zFcMOC0Pgog3E48DKBgYa
+         PpjC4zDQTiuzi2/h7iTn7HEu9gyyxEk9FBkoIPk9hKrkOWakP+Oq5edNSZrP90ou7e4C
+         uMcg==
+X-Gm-Message-State: APjAAAUc0oXty8Qxv4r5pbsxA+i33oPs34b0KpeK47lk6YcpbrlyavQk
+        c8kxA1zBDgsd+O+rt7vFt3NyuGTp0jU8bKPP8DY=
+X-Google-Smtp-Source: APXvYqz9jdmE8goxpzxIwM1Kha3AzV+ikLR12gEE6MhNWz8NEvNHaSGiFP/nq8tDNQQLsWaWQcCrI8Gh0Pk5YyZ0dgA=
+X-Received: by 2002:a9d:3a65:: with SMTP id j92mr4536409otc.37.1576706391657;
+ Wed, 18 Dec 2019 13:59:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212160413.15232-2-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Reply-To: mcompola444@gmail.com
+Received: by 2002:a4a:7319:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 13:59:50
+ -0800 (PST)
+From:   Mrs Mcompola <mcompola444@gmail.com>
+Date:   Wed, 18 Dec 2019 13:59:50 -0800
+X-Google-Sender-Auth: yv3qpWWzRgmke27fNjjQnx4I9WA
+Message-ID: <CANv7eTs8UGNVvp7kfte0t59Z8RSX9RCE=HpOrRxXip09w1d47g@mail.gmail.com>
+Subject: Dear Friend, My present internet connection is very slow in case you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 12 Dec 2019 17:04:11 +0100, Marco Felsch wrote:
-> Add gpio device documentation to make the da9062 gpios available for
-> users.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Changelog:
-> 
-> v2:
-> - remove sub-node documentation
-> - squash gpio properties into mfd documentation
-> ---
->  Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
+ Dear Friend
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+  I am Mrs.M Compola. am sending this brief letter to solicit your
+
+partnership to transfer $5 million US Dollars. I shall send you
+
+more information and procedures when I receive positive response from
+
+you.
+
+
+Mrs M Compola
