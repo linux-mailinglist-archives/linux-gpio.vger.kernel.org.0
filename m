@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 580E4124855
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 14:26:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 444E9124857
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 14:26:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLRN0D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 08:26:03 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46969 "EHLO
+        id S1726939AbfLRN0T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 08:26:19 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44138 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbfLRN0D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 08:26:03 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y14so1195186pfm.13;
-        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+        with ESMTP id S1726749AbfLRN0S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 08:26:18 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 195so341909pfw.11;
+        Wed, 18 Dec 2019 05:26:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
-        b=EuPrTdPICea62Y0tIErzBNfDUENFZJbz9R5n1Z9b+BF0u3hi7RSPV/M4zGidXYLwsT
-         IIdO0kgr6ZIu/TSLnt2IK3XfN9R/afZLO9oRzZTP6692QEDV9KqzI8bFG9jhmyAFwDP0
-         OY3RlUnwNxf54R1Dx8AaLmHUtup4+aVviOgIkbZOkHY+PTTlWe86LmWIsWpGNP9A+nug
-         JxHbmiN3hX+1pqtS4/1tmISISZAVEgK8mCpQY3T1bKXAi5UTk018bgwR6w9rBOW9hrSy
-         GGfdRK+kL7mf2CSYNXpKDLSal8Afbs/HjnAYTorQ72ZsLxU0wT+cd+cGwn+praAGkPcS
-         Eksw==
+        bh=idlyZxvEnPlghpQU8kfe9TImOw9EeUeKU6bmuNGfafY=;
+        b=fX6AxVP0pgTdM/OcE0lfO1+/4MYe1P34y4x4NqIy9OCO70Nk6sna6l8AFqjX01Lf6u
+         SgWrRAFOF9TkQX/txS9Omov8XdiMd4i9nPw54u4EGesaa0nsy9Rw8LZA9Lq+7BE27VB5
+         GMqg2l6H1hpXLGBsdyJ4k2dR/mk1+aD3WshShHvl1W92rYBTp7nHnuTqWG4+N+z7PY0N
+         crfC1bb5SzabuDfgfPDqAPku5wuWnsY8M6E7VK2hRGlAxh5d+USdx7PRtZUPsYkUt+qL
+         tk7IS31TlyjB0c49DmtCiMmEqnrx7bEYJrl03f/46ftlbWnst1t7bknR7jtmdqUr53dT
+         7ThQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
-        b=f330fuY7HrLDPNhCbTYV6+kxL01v7WZljDi/4dPPEd1QtqywAIfKWitatMKBZmxCWo
-         thyEdQl4jRy9GbDo2hFV+onO+mMaTqShkCZUbVtAFP3kZUZG7jt2KixsZyHCLQvueDMw
-         KmHqmTz5Bw2Yx0jQyr+/2llCYDSur8FR0ij8GIajgLzFJCBnJdw5/eFeVw6pGUhIQqZU
-         /EVFyGIwhCmb1JvBvosN/T9v10YwazGvlSKlpOmzrUkFsCbCOj/CfHACDGnOfjrFSdWk
-         aaykKDSmJGEsQnVAO/Hd6X4+KY74IZeiEoGSYq4M6LAX1FoA5Vw0bOyxvrgba7FPHGd5
-         NAxw==
-X-Gm-Message-State: APjAAAX30+EXfNzW3MARekS2wAWbK9hTyZ7hVnvqh6QYJrm5ow0F+6H3
-        ZqdhHcydmrrXOagI069xjUY=
-X-Google-Smtp-Source: APXvYqyhl40/66a/zQm3aoOEHmBZy0P5ZD0xIBuQlOp+jdCrpW269eX8KVBXPX5kKVuZcqbq9+fNTQ==
-X-Received: by 2002:aa7:949a:: with SMTP id z26mr292450pfk.98.1576675562596;
-        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+        bh=idlyZxvEnPlghpQU8kfe9TImOw9EeUeKU6bmuNGfafY=;
+        b=RcsuI7DIeyG6fmbA0Am+kK1ExNeYr2qSgTyB2qqkZPJwoqDWDlqCt5awReYELQgm6n
+         +g+GxoH/zArkP/TKlYdCetJreKxvRZyh4pcOSB/oTjU/StTnL0NOBT1TvgxJqw2ALWpL
+         JMjFXvMY9+sqUtkLr0oungQ6e46M4tmv8GJelHQWL8JVj6BR2EAqG8HzxFOvANy+/s1i
+         6WAARAQB+FImdpPoQFD5ZGnKQRycLsxg85YRif5vFit180GUor5CNMfdki2rbe58Ptfk
+         UxqBMjG3QU2cC/dGzVqLeOB0SM19F4eFkGkBIPFHDTjP6ynqAR07J6efmrFGUit03rBi
+         RDAg==
+X-Gm-Message-State: APjAAAVrJTAePB+74JeQlKOeZkTieGPD8CytmZ9+hREE5kHOQ7sqbxnV
+        /a4KtiarRCoNEynPoylcjng=
+X-Google-Smtp-Source: APXvYqxfnoweorQOxa3vqLFo5GCBT8FkKIocf3TLrmgKBXFs2tqavGhKe5SKBktyQubuc98Mh1T/JA==
+X-Received: by 2002:aa7:8299:: with SMTP id s25mr2902934pfm.261.1576675578000;
+        Wed, 18 Dec 2019 05:26:18 -0800 (PST)
 Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id l1sm3263770pgs.47.2019.12.18.05.25.58
+        by smtp.gmail.com with ESMTPSA id l127sm3307141pgl.48.2019.12.18.05.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+        Wed, 18 Dec 2019 05:26:17 -0800 (PST)
 From:   Jia-Ju Bai <baijiaju1990@gmail.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 1/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_remove()
-Date:   Wed, 18 Dec 2019 21:25:51 +0800
-Message-Id: <20191218132551.10537-1-baijiaju1990@gmail.com>
+Subject: [PATCH 2/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_irq_map/unmap()
+Date:   Wed, 18 Dec 2019 21:26:05 +0800
+Message-Id: <20191218132605.10594-1-baijiaju1990@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -58,77 +58,65 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 The driver may sleep while holding a spinlock.
 The function call path (from bottom to top) in Linux 4.19 is:
 
-drivers/gpio/gpiolib-sysfs.c, 796: 
-	mutex_lock in gpiochip_sysfs_unregister
-drivers/gpio/gpiolib.c, 1455: 
-	gpiochip_sysfs_unregister in gpiochip_remove
-drivers/gpio/gpio-grgpio.c, 460: 
-	gpiochip_remove in grgpio_remove
-drivers/gpio/gpio-grgpio.c, 449: 
-	_raw_spin_lock_irqsave in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 261: 
+	request_irq in grgpio_irq_map
+drivers/gpio/gpio-grgpio.c, 255: 
+	_raw_spin_lock_irqsave in grgpio_irq_map
 
-kernel/irq/irqdomain.c, 243:
-	mutex_lock in irq_domain_remove
-drivers/gpio/gpio-grgpio.c, 463: 
-	irq_domain_remove in grgpio_remove
-drivers/gpio/gpio-grgpio.c, 449: 
-	_raw_spin_lock_irqsave in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 318: 
+	free_irq in grgpio_irq_unmap
+drivers/gpio/gpio-grgpio.c, 299: 
+	_raw_spin_lock_irqsave in grgpio_irq_unmap
 
-mutex_lock() can sleep at runtime.
+request_irq() and free_irq() can sleep at runtime.
 
-To fix these bugs, gpiochip_remove() and irq_domain_remove() are called
-without holding the spinlock.
+To fix these bugs, request_irq() and free_irq() are called without
+holding the spinlock.
 
 These bugs are found by a static analysis tool STCheck written by myself.
 
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 ---
- drivers/gpio/gpio-grgpio.c      | 5 ++++-
- sound/soc/sti/uniperif_player.c | 3 ++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-grgpio.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 08234e64993a..60a2871c5ba7 100644
+index 08234e64993a..3224933f4c8f 100644
 --- a/drivers/gpio/gpio-grgpio.c
 +++ b/drivers/gpio/gpio-grgpio.c
-@@ -448,13 +448,16 @@ static int grgpio_remove(struct platform_device *ofdev)
+@@ -253,17 +253,16 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
+ 	lirq->irq = irq;
+ 	uirq = &priv->uirqs[lirq->index];
+ 	if (uirq->refcnt == 0) {
++		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
+ 				  dev_name(priv->dev), priv);
+ 		if (ret) {
+ 			dev_err(priv->dev,
+ 				"Could not request underlying irq %d\n",
+ 				uirq->uirq);
+-
+-			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+-
+ 			return ret;
  		}
++		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+ 	}
+ 	uirq->refcnt++;
+ 
+@@ -309,8 +308,11 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
+ 	if (index >= 0) {
+ 		uirq = &priv->uirqs[lirq->index];
+ 		uirq->refcnt--;
+-		if (uirq->refcnt == 0)
++		if (uirq->refcnt == 0) {
++			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 			free_irq(uirq->uirq, priv);
++			return;
++		}
  	}
  
-+	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+
- 	gpiochip_remove(&priv->gc);
- 
- 	if (priv->domain)
- 		irq_domain_remove(priv->domain);
- 
- out:
--	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
-+	if (ret)
-+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
- 
- 	return ret;
- }
-diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
-index 48ea915b24ba..62244e207679 100644
---- a/sound/soc/sti/uniperif_player.c
-+++ b/sound/soc/sti/uniperif_player.c
-@@ -601,13 +601,14 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
- 	mutex_unlock(&player->ctrl_lock);
- 
- 	spin_lock_irqsave(&player->irq_lock, flags);
-+	spin_unlock_irqrestore(&player->irq_lock, flags);
-+
- 	if (player->substream && player->substream->runtime)
- 		uni_player_set_channel_status(player,
- 					      player->substream->runtime);
- 	else
- 		uni_player_set_channel_status(player, NULL);
- 
--	spin_unlock_irqrestore(&player->irq_lock, flags);
- 	return 0;
- }
- 
+ 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 -- 
 2.17.1
 
