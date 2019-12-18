@@ -2,105 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FC4124871
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 14:33:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF5981248EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 15:01:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfLRNdO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 08:33:14 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58044 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbfLRNdN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 08:33:13 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-7b-5dfa2a97b167
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 01.2F.08102.79A2AFD5; Wed, 18 Dec 2019 14:33:11 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 18 Dec 2019 14:33:05 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAR/gA==
-Date:   Wed, 18 Dec 2019 13:33:05 +0000
-Message-ID: <60906cc2c51c726a8d7f4fbfd31deb72489ceb04.camel@fi.rohmeurope.com>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-         <20191218131700.GB42175@sirena.org.uk>
-In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4D3FA5736842F04EAD470EBE9F8DE766@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1727217AbfLROBy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 09:01:54 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:38641 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfLROBy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 09:01:54 -0500
+Received: by mail-vs1-f65.google.com with SMTP id v12so1434292vsv.5
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Dec 2019 06:01:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nWpZ8hAd7FUovUz3VnEeC9jKUVwXFStq4OLlcUe32fk=;
+        b=tVAIlo8SBCEWTUL6sbCZVxY5xl1m14gicgIkuld11jK7G5ONmMleDzHNwIK33DUi70
+         cDk/Y7PgO0/R6yhq9tXzGNeXH4Q1M0Ajamh5wxpIPfCDcbCDgcLD+Djq15Dl72Ad0k9z
+         CLmEBpXHiEQjd/SzN4W4f9JIPcclme1w1+YgVTL8QY7czFHk2tn9I27FU2xBoKSid3wb
+         TxVYK/9aj9dD+ZjTG7IXhPPoO99FTRYhGBYdTMEcj+VE4lYTQn1gtCYRSdf2P49X68kx
+         9f0rXjru96p+slgnvel8TE/JtCATu38U6xMPWipb6hM1LLjo89QNsPF3xC3YVQ2PwSGP
+         K+/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nWpZ8hAd7FUovUz3VnEeC9jKUVwXFStq4OLlcUe32fk=;
+        b=juxhBqhTHHs4j7EWTijCmQtX2+XCSNiCvXNzxtQk4aKMIda4mwQKVg/PI/cQ6s8EEt
+         i7bhXjenC0iWfi+hTOpB1muyUvXpZCHimrXQjr11pQsNhJWDFy5P/p8IOA7vzOCByNE8
+         4nck9KuA6yd1rthE0N7CIDW+vOo6m6DFiGehKRlj74FCBBltV9+wWUP+mNjP4ZXXH3Uv
+         ccwe/eVV7zjZUjAR1pMVhnZ2IdG5YiyfViXv1JW5arfuf7kDp+cj6rywbiUEEAXnKJsd
+         rFyqGYK2gehy6kdJjeTT8o/aXrd5+1ZYVJUCN6KvDJrGSu3wkSX9z4VefS4kAO424hIm
+         saGg==
+X-Gm-Message-State: APjAAAVRAGXvfpjORdONotMjjq4CMJu4Fu6P5x+Vb1Y+ksCHzw2yBsf/
+        IELV3fpnWNqr5NweoDFw8S2K7mws2xa5MqorcJrYEw==
+X-Google-Smtp-Source: APXvYqzkFH1g+PqryFVGtuG+lac1yFJaK7FtgFUUP582cfTjMgRsbmSAikWTkyPuUzV8Z+ThYeg5wJ031sxAgsbSxkM=
+X-Received: by 2002:a67:ff82:: with SMTP id v2mr1450518vsq.35.1576677713314;
+ Wed, 18 Dec 2019 06:01:53 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxjH895d7w7wtrMivHa6uEs2h0bU6ZI3hhi2ZPGWmc3MbFm2VDzH
-        jevsD7iWRbYsYRomBcYAIcTG1smvNVitVtGNYGwqOtepS7UC4pQ0NEwIgYyhUBDcXW8Kf73P
-        83yf7/N5/nheGte3UQbaZHWIslUwc2QqEfTOBtY3rp0xbhwZfBG1RO5Q6NBYG4Xm6q5SaNId
-        JlBDLE6iePAQQMe6b+pQ5R/ndOhgs59E9zpOE2jg0RWAHkfLMVT/5GcM/VP1QIeOf99CoLPH
-        ngB0u/MoiTpGTwF09USURK29EQwdbb1GoPEJJ4Yi4XdQQ3iMQvfDV0h0MNKHo7KL3RSa7zlD
-        oOqb23NX8T6PD/CzM3WAH+8ro3iP7xv+V9d9ig+0O0n+r54ukr/k9lF8c/VhHf/4ei3BDx33
-        E/xvfRcwvtGTwHh/VTfgvSemKP7fwMs72U/TcvYKjq92mQqsG7btSZNuPP0RK6yh909PnwSl
-        YJKqACk0ZLfAvuAEWQFSaT17B8ByTwOlJdcAbJw+qSQ0TbI5sOJu0pDOrocNM81JA85G02BT
-        9DCuCsvYIvjD2TCuNcmwf26Y0OK34W3PIKHOIdhXYfvpHLXMsO/DA74I0FgDALo7R3WqkMJu
-        hv1tdUkYYFdBZ+kYpsY4mwkDQ1M6bWsWtnT9iWvxcjg8OP9/nYMXE7EkC2ezoL9zg2bNhaNn
-        xnEtfgXWV8YobYel8PcjcaIGZLgWEVwLbtcit2uR27XI/RPQtQNoEUzmAsEhbsqWxeJs2SZZ
-        lOdzmyUAtLub/AU8Db0bAhgNQmAFjXHLGU5KGPUv7LXll0iCXcqTi82iPQQgjXPpzL1yRWPy
-        hZKvRdn2THqJJrhMZk2s1qhnVdY+USwU5WfqSprmIFP/+oxRv1QWC8T9X5jMjgUZo1PU4amG
-        dLtozRdlodgh5an3kWdXDkSVlijch6qdsRcKFqWqWcNgHV0z7G7C6W53axOuJ6w2q2jIZJjX
-        lFZWbZWKrc9BIyCTBtwy5nKWoi5RPt/zOSMKAlMQdFYS4RAWJEMpyPe7gh+sTv8sr3Br9se2
-        +IG5pqH6T8zBjJKp2iMfTmz7aF124u9dlaa7CL25h/zSd+FyRny7rac/ZfNq83vznt27nVtb
-        Z3fs3HGeJApiFqvzEmGAiY7eN7xEyfm3Ho70DnRFT50rGm3bOBi6Vb2yrIozr4gYvVsk7yN7
-        0Xffrsl9wBF2Sdi0Fpftwn8xKXZtOQQAAA==
+References: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1576031636.git.mirq-linux@rere.qmqm.pl>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Dec 2019 15:01:17 +0100
+Message-ID: <CAPDyKFp62ZVzNeReNmk3NWeqjWVoOVFj9BYQza9nU=E-iDvvVg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] mmc: simplify WP/CD GPIO handling
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
-XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
-MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
-ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NCg0KQWxscmlnaHQuIEkgdGhvdWdodCB5b3UgbWlzc2Vk
-IGl0IGFzIHlvdSBhcGxpZWQgdGhlIDkvMTUgYWxyZWFkeS4gSQ0KdGhpbmsgSSBoYWQgdGhlIHY2
-IHdyaXR0ZW4gb24gdG9wIG9mIGxpbnV4IHRhZyB2NS41LXJjMS4NCg0KQW55d2F5cywgSSdsbCBj
-bG9uZSB0aGUgcmVndWxhdG9yIHRyZWUgYW5kIHJlYmFzZSB0aGlzIHBhdGNoIG9uIHRvcCBvZg0K
-Zm9yLTUuNiBoZWFkLiAoSXQnbGwgbWVhbiB0aGVzZSBwYXRjaGVzIGNvbWUgaW4gd3Jvbmcgb3Jk
-ZXIgYXMgdGhlDQphbHJlYWR5IGFwcGxpZWQgMDkgZGVwZW5kcyBvbiBub3QteWV0LWFwcGxpZWQg
-MDggLSBidXQgYXMgd2UgZG9uJ3QgaGF2ZQ0KdGhlIGNvbmZpZyBmb3IgQkQ3MTgyOCBpbi10cmVl
-IHlldCB0aGlzIHdvbid0IG1hdHRlciwgcmlnaHQ/KQ0KDQpUaGFua3MgZm9yIHRha2luZyB0aGlz
-Lg0KDQpCciwNCglNYXR0aQ0K
+On Wed, 11 Dec 2019 at 03:40, Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qm=
+qm.pl> wrote:
+>
+> This series removes convoluted handling of inverted CD and WP lines in
+> SD/MMC host drivers when using GPIOs.
+>
+> First patch adds an API: gpiod_toggle_active_low() that switches line
+> inversion flag in the gpiod structure. Next two patches modify MMC
+> host's WP and CD initialization to apply all the inversions onto
+> gpiod's active-low flag. Final patch removes now-unused argument from
+> init functions.
+>
+> x86 allyesconfig build-tested.
+>
+> v2: move argument removal in sdhci-esdhc-imx.c to last patch
+>
+> Micha=C5=82 Miros=C5=82aw (4):
+>   gpio: add gpiod_toggle_active_low()
+>   mmc: rework wp-gpio handling
+>   mmc: rework cd-gpio handling
+>   mmc: remove mmc_gpiod_request_*(invert_gpio)
+>
+>  drivers/gpio/gpiolib-of.c          | 21 -------------------
+>  drivers/gpio/gpiolib.c             | 11 ++++++++++
+>  drivers/mmc/core/host.c            | 33 ++++++++----------------------
+>  drivers/mmc/core/slot-gpio.c       | 31 ++++++++++------------------
+>  drivers/mmc/host/davinci_mmc.c     |  4 ++--
+>  drivers/mmc/host/mmc_spi.c         |  4 ++--
+>  drivers/mmc/host/mmci.c            |  4 ++--
+>  drivers/mmc/host/pxamci.c          | 12 +++++------
+>  drivers/mmc/host/s3cmci.c          |  4 ++--
+>  drivers/mmc/host/sdhci-acpi.c      |  2 +-
+>  drivers/mmc/host/sdhci-esdhc-imx.c | 15 +++++++-------
+>  drivers/mmc/host/sdhci-pci-core.c  |  4 ++--
+>  drivers/mmc/host/sdhci-sirf.c      |  2 +-
+>  drivers/mmc/host/sdhci-spear.c     |  2 +-
+>  drivers/mmc/host/tmio_mmc_core.c   |  2 +-
+>  include/linux/gpio/consumer.h      |  7 +++++++
+>  include/linux/mmc/slot-gpio.h      |  5 ++---
+>  17 files changed, 67 insertions(+), 96 deletions(-)
+>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
