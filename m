@@ -2,97 +2,255 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E38E412375E
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Dec 2019 21:38:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B79D123F78
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 07:20:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfLQUiZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Dec 2019 15:38:25 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44418 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbfLQUiZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Dec 2019 15:38:25 -0500
-Received: by mail-io1-f66.google.com with SMTP id b10so12549705iof.11
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2019 12:38:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bf4DW07ux663sZ7zB+kziR4YNNMjqy9A2bO2qaVQs7c=;
-        b=SWfYOp7v2Gbzvj0oex2xBcjnDjxUg4jBwLcNA8Lj7Y20hF7uJS8Z+wqqD+6oKZME9U
-         3p6Hh+fBlmoE58Y8glJzGHG3nV2ShrZXJI8oFnXr40yYSDt+Y/Yu67GPHgbuOPgKcRLa
-         F3Wu2wWaSCDep6oSq/EtkLx/PZFaVr9IF38mE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bf4DW07ux663sZ7zB+kziR4YNNMjqy9A2bO2qaVQs7c=;
-        b=AnayGsi/xDc4TGABUhxSuQ1zx/wkHx5KkBdzTao0rOVBsho+Ad9SrsO6HL1VVo8Hng
-         fJ5DQLRfGHPA9yQGca5qPYRWJh74q5FsevwUpP4/8pk0NpTK3aATz4dogPtgerJS77ea
-         I5BgJeCcok3MEwH+hHKemS1jut7o77oJRPw6k2CIUu2CNV4//BCtmH32qfKo6Ph9c/Af
-         OfKHkCRoVDFZ0OSxerKd7CZLOeqh8XS0RyIBmIBRNmxB2XhtCIh110xkpd0sH3rGN4FT
-         JELQAdiGgj8AqNf6wqT5ABqXsp2VzbSEYC0tYI3DH61LkwTU/e9Tzdkm8fwiw4Ftz1lU
-         e/Pg==
-X-Gm-Message-State: APjAAAXVjTk16LBNFeDFfcWqRbTwbEZ/+4BKVsfjjLzuTM1x1Q9YBxgv
-        UpsJEmGbjMMLghc76nPKnImmvcDetEk=
-X-Google-Smtp-Source: APXvYqwFTbSzTrbRnmNXl5Q8BOQl89gdpmfOyy6vmEC989EPlrhLfA0ne8jpFI5DM81v3tVjFaoapw==
-X-Received: by 2002:a5d:94c4:: with SMTP id y4mr5290361ior.163.1576615104131;
-        Tue, 17 Dec 2019 12:38:24 -0800 (PST)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
-        by smtp.gmail.com with ESMTPSA id v17sm7162216ilh.12.2019.12.17.12.38.22
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2019 12:38:22 -0800 (PST)
-Received: by mail-il1-f181.google.com with SMTP id t8so760742iln.4
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Dec 2019 12:38:22 -0800 (PST)
-X-Received: by 2002:a92:ca90:: with SMTP id t16mr4548825ilo.218.1576615101966;
- Tue, 17 Dec 2019 12:38:21 -0800 (PST)
-MIME-Version: 1.0
-References: <1572419178-5750-1-git-send-email-mkshah@codeaurora.org> <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1572419178-5750-3-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 17 Dec 2019 12:38:09 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Wkte6aEy_dbNDBgAFimJd6kRPXN1v05K94qoVOaHiCzQ@mail.gmail.com>
-Message-ID: <CAD=FV=Wkte6aEy_dbNDBgAFimJd6kRPXN1v05K94qoVOaHiCzQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Add wakeup parent for TLMM
-To:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1725881AbfLRGUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 01:20:31 -0500
+Received: from mga07.intel.com ([134.134.136.100]:57078 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbfLRGUb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 01:20:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Dec 2019 22:20:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,328,1571727600"; 
+   d="scan'208";a="221931738"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2019 22:20:27 -0800
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yixin.zhu@linux.intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH] dt-bindings: pinctrl: intel: Update to use generic bindings
+Date:   Wed, 18 Dec 2019 14:20:24 +0800
+Message-Id: <20191218062024.25475-1-rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Bjorn / Andy,
+Kernel 5.5 adds generic pin mux & cfg node schema. Update pinctrl bindings
+for LGM to use these newly added schemas. Also, rename filename to match
+the compatible string.
 
-On Wed, Oct 30, 2019 at 12:07 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Specify wakeup parent irqchip for sc7180 TLMM.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+---
+ .../devicetree/bindings/pinctrl/intel,lgm-io.yaml  |  76 ++++++++++++++
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 ---------------------
+ 2 files changed, 76 insertions(+), 116 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
 
-I see that Linus W. applied patch #1:
+diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+new file mode 100644
+index 000000000000..a386fb520510
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-io.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
++
++maintainers:
++  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
++
++description: |
++  Pinmux & GPIO controller controls pin multiplexing & configuration including
++  GPIO function selection & GPIO attributes configuration.
++
++allOf:
++  - $ref: pincfg-node.yaml#
++  - $ref: pinmux-node.yaml#
++
++properties:
++  compatible:
++    const: intel,lgm-io
++
++  reg:
++    maxItems: 1
++
++# Client device subnode's properties
++patternProperties:
++  '-pins$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      function: true
++      group: true
++      pins: true
++      pinmux: true
++      bias-pull-up: true
++      bias-pull-down: true
++      drive-strength: true
++      slew-rate: true
++      drive-open-drain: true
++      output-enable: true
++
++    required:
++      - function
++      - group
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    pinctrl: pinctrl@e2880000 {
++        compatible = "intel,lgm-io";
++        reg = <0xe2880000 0x100000>;
++
++        uart0-pins {
++             pins = <64>, /* UART_RX0 */
++                    <65>; /* UART_TX0 */
++             function = "CONSOLE_UART0";
++             pinmux = <1>,
++                      <1>;
++             groups = "CONSOLE_UART0";
++          };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+deleted file mode 100644
+index 240d429f773b..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
++++ /dev/null
+@@ -1,116 +0,0 @@
+-# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
+-
+-maintainers:
+-  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
+-
+-description: |
+-  Pinmux & GPIO controller controls pin multiplexing & configuration including
+-  GPIO function selection & GPIO attributes configuration.
+-
+-  Please refer to [1] for details of the common pinctrl bindings used by the
+-  client devices.
+-
+-  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-
+-properties:
+-  compatible:
+-    const: intel,lgm-io
+-
+-  reg:
+-    maxItems: 1
+-
+-# Client device subnode's properties
+-patternProperties:
+-  '-pins$':
+-    type: object
+-    description:
+-      Pinctrl node's client devices use subnodes for desired pin configuration.
+-      Client device subnodes use below standard properties.
+-
+-    properties:
+-      function:
+-        $ref: /schemas/types.yaml#/definitions/string
+-        description:
+-          A string containing the name of the function to mux to the group.
+-
+-      groups:
+-        $ref: /schemas/types.yaml#/definitions/string-array
+-        description:
+-          An array of strings identifying the list of groups.
+-
+-      pins:
+-        $ref: /schemas/types.yaml#/definitions/uint32-array
+-        description:
+-          List of pins to select with this function.
+-
+-      pinmux:
+-        description: The applicable mux group.
+-        allOf:
+-          - $ref: "/schemas/types.yaml#/definitions/uint32-array"
+-
+-      bias-pull-up:
+-        type: boolean
+-
+-      bias-pull-down:
+-        type: boolean
+-
+-      drive-strength:
+-        description: |
+-          Selects the drive strength for the specified pins in mA.
+-          0: 2 mA
+-          1: 4 mA
+-          2: 8 mA
+-          3: 12 mA
+-        allOf:
+-          - $ref: /schemas/types.yaml#/definitions/uint32
+-          - enum: [0, 1, 2, 3]
+-
+-      slew-rate:
+-        type: boolean
+-        description: |
+-          Sets slew rate for specified pins.
+-          0: slow slew
+-          1: fast slew
+-
+-      drive-open-drain:
+-        type: boolean
+-
+-      output-enable:
+-        type: boolean
+-
+-    required:
+-      - function
+-      - groups
+-
+-    additionalProperties: false
+-
+-required:
+-  - compatible
+-  - reg
+-
+-additionalProperties: false
+-
+-examples:
+-  # Pinmux controller node
+-  - |
+-    pinctrl: pinctrl@e2880000 {
+-        compatible = "intel,lgm-pinctrl";
+-        reg = <0xe2880000 0x100000>;
+-
+-        uart0-pins {
+-             pins = <64>, /* UART_RX0 */
+-                    <65>; /* UART_TX0 */
+-             function = "CONSOLE_UART0";
+-             pinmux = <1>,
+-                      <1>;
+-             groups = "CONSOLE_UART0";
+-          };
+-    };
+-
+-...
+-- 
+2.11.0
 
-https://lore.kernel.org/r/CACRpkdY9ETQRHn7x2D2XVLZ810Uo1cPQxMBqTy5LnrORRNjTVw@mail.gmail.com
-
-...so I think this patch is ready to go.
-
-FWIW, feel free to add:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
