@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1009312471D
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 13:43:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6513E124720
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 13:44:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfLRMn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 07:43:58 -0500
-Received: from mail-eopbgr30044.outbound.protection.outlook.com ([40.107.3.44]:5796
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        id S1726963AbfLRMoC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 07:44:02 -0500
+Received: from mail-eopbgr50058.outbound.protection.outlook.com ([40.107.5.58]:60166
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725930AbfLRMn6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Dec 2019 07:43:58 -0500
+        id S1725930AbfLRMoB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 07:44:01 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UGe/2rzd7woiJY+bSydVu8ZVaUrph5EuLsvaUhF3/z738znFziHBghYIFn0AcrK/AgBEe8KRM2PJYLl1rUxKqp89Vwu9CYCu16OwT6n++hpfZi5IXp6KWlogBM3tyi/8y4up1VP9SJsL7unmNBonW+LKbsp7ZenzuL19Nxc7SiBz2N0gyDk2WCpG98q7zD5Guw99qV4Glv5SXxbZDWuvZFMobOKduxq8Xh9HOe/y92o4vWYqgGjsaiqS3Hw4jerXQhCV/LIurw1rQX/IrlkmGkZKNbUm4k3+Uk8TkbTb4JerpJ5RA25POsGsxD7Mm8hrPrt+xSv38Gr9/O9cCdDmJw==
+ b=LThZircIiJ8q2qyVuoqDaqEiK3rC/IY4mUGnDa2Nz0YVenmmApN75z3wLzfrFePXtJ9lz1PlwWbEcv0ny11fOHMko4FgMjm7BfPcWJ7CgR+Kxa+hW4S/4KiE0QbHPX1PdAc+SGerT1fvBRTw9GQ5PSIbk/HiqkWywMoCC3p3zal0snkTVt5V1lbPkHVHTYrdgl/lurOZZK7Tqe7qccanX56WZAK8aBxuDx8rQhot17P2B5JadiNt0ZNYO87rAi4IzQY7+L/r8EKlhodnmuhlgsqLnTo+1RYe7/damY7JsMaDQfA+I2F8Nqj94ONvDASEWbYnzLJf3TiBBoCDQFcLoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zssb56up1R/q7ZqlqzZltOvkUEbo+1At4Et7FtWROWc=;
- b=ZJ39VXNfFSobej6oDtNgFp0SJz0+Mfg2lQ2Ze2hTNFbDAME1JZZkgs/awG3oPygdrjhFjF1PKstuu2Ld8olFMFx1Y+SjjPalvbWD5OdGxF48wxWP42KVLJqJ+qkUSUOGXY7WeH8NQvblSIJFSbpBDNe9T/33cqO4vwtPxkk6TrmRItF6S7XOlVHfSOlyr4Rw2cd0U8OEMDRBD51+m0fxd+231CsN9wSsvFfpm6LpEQVvx5ns176WMnqAS9FHDKrsLDPxUZ9cRvfuzHNkdujaf0IYsOmtHJdrIZqCxdJ/iKpUYl7fYMm2G3Ea0lxtMFPy10y1aNmvsi2A7fZMuDT/Jw==
+ bh=zXmh6yLvhmI1rRF4OiSOjfrSxv0Mj/7HwudiBKb9Njs=;
+ b=dAFymI14tRWKlfl+ezGfU2D18xR7+Q/K/eot3/1XlSa9srtF+lclqx+D/gm3GEesLXcZWwUwe0SefmHOlELJmbie7S4iKu6CvpXrrC8wwlOVqgewhChkq4DGXq5Dpr4g7StPFQASENASJjJn+SXh5eJCJDR+GJXr4Fcg2AEkUTuSFmqZrPM4c0kGi9+CGblGAlfVjgo6yTp8vcxLn4l1A37Al2/4xT+mYi6g+qBjWcpZzC5k5ERGiwptL2Vaae+/ooA62Tx/1dVYmVi+qIshdVtwTWHidw4NtrxsLJrDwn6Th5rZxSuQVnJqUyEX+/aSlt/y68N5H4bE5lj6o15kMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zssb56up1R/q7ZqlqzZltOvkUEbo+1At4Et7FtWROWc=;
- b=TqLBvSxOovSV26r20M3B/fgu70MCFLrtB4+H5pXg+vZR864CDF/wPrfupJMcByR+b8ypeiMe6yF98V5VcFlovvInvHisroVs3zFXlPT2F1taKt1rGbpP2/KJBulKETr7oq1pWf/pL70Vp3oA68ZZJajQKY/vK5b213PUEOo3FYA=
+ bh=zXmh6yLvhmI1rRF4OiSOjfrSxv0Mj/7HwudiBKb9Njs=;
+ b=RNiX/2HhgFJ5EXwg1AG4pEg76pG97A5IJzNRHlzqWjKgvoNFEGPBEvUETewLxHp85wTofdDp4H6Eu+8yBYfZrGu1NM1FKiwckenSnBYEXFfjoLDo8DKPO5Jl2j0bidjTaxC+cRR4ZmGwrvYAARNmqoAlfX59Vabfn1pDp5vIhS8=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4722.eurprd04.prod.outlook.com (20.176.215.92) with Microsoft SMTP
+ AM0PR04MB4129.eurprd04.prod.outlook.com (52.134.95.157) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Wed, 18 Dec 2019 12:43:53 +0000
+ 15.20.2538.18; Wed, 18 Dec 2019 12:43:56 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::505:87e7:6b49:3d29]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::505:87e7:6b49:3d29%7]) with mapi id 15.20.2559.012; Wed, 18 Dec 2019
- 12:43:53 +0000
+ 12:43:56 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
         "andrew@lunn.ch" <andrew@lunn.ch>,
@@ -47,11 +47,13 @@ CC:     "linux-arm-kernel@lists.infradead.org"
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
-Thread-Topic: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
-Thread-Index: AQHVtaDOy35Q6KpKLESPO8UEr8sdHw==
-Date:   Wed, 18 Dec 2019 12:43:53 +0000
-Message-ID: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH 2/2] pinctrl: sunxi: sun50i-h5 use platform_irq_count
+Thread-Topic: [PATCH 2/2] pinctrl: sunxi: sun50i-h5 use platform_irq_count
+Thread-Index: AQHVtaDQL4CWzSE89kGgSj94vmuXjQ==
+Date:   Wed, 18 Dec 2019 12:43:56 +0000
+Message-ID: <1576672860-14420-2-git-send-email-peng.fan@nxp.com>
+References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -66,30 +68,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.67]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5cfbedf3-6676-48e9-6ac9-08d783b7f066
-x-ms-traffictypediagnostic: AM0PR04MB4722:|AM0PR04MB4722:
+x-ms-office365-filtering-correlation-id: eb54d18d-a5bd-479b-4d08-08d783b7f27c
+x-ms-traffictypediagnostic: AM0PR04MB4129:|AM0PR04MB4129:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB47229E82078D44E9E632F9FC88530@AM0PR04MB4722.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-microsoft-antispam-prvs: <AM0PR04MB412971096A12FA61B77A61AF88530@AM0PR04MB4129.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
 x-forefront-prvs: 0255DF69B9
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(136003)(346002)(396003)(189003)(199004)(6506007)(110136005)(54906003)(5660300002)(66946007)(66446008)(71200400001)(2906002)(26005)(316002)(7416002)(4326008)(52116002)(81166006)(8936002)(44832011)(8676002)(81156014)(478600001)(66556008)(6486002)(36756003)(6512007)(2616005)(86362001)(66476007)(186003)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(376002)(39860400002)(136003)(346002)(189003)(199004)(478600001)(6506007)(36756003)(2906002)(66476007)(54906003)(6486002)(81166006)(66556008)(66446008)(26005)(81156014)(186003)(5660300002)(8936002)(71200400001)(2616005)(8676002)(44832011)(110136005)(66946007)(6512007)(4326008)(7416002)(316002)(52116002)(86362001)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4129;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2zt38CnXp6UZQjLEFBDj/kyNU7gw1do5wuTm/kLdJ5dFUtRk7nEy4ONOuW/RQ376rOQRmDlelQ0emDoPF/RJxYGYhmsYaul6SxYmR+0iEMFYxp4sxWf82WGFSb9liB6LbVzdfWTLobh0YAGCpzGkj8GZhrIB1WV8mZ/B3yMCnqpFTN4iS9VZQj+nb5xvFx03gaXU3V1IsE+Fi6j/FHy1uEkCUSTiE5J/XfWFEcSFl1atOnjOLbdAqKBY8bML9WzJ1ewbNO3fOoKUgS2u8DM41AXVFraBncOYnHgViV5yKhR3aCC30bBNwjVmNMjED89OW2jNVnlAho9nliJlcby/f4duIfdyu5+gG+Wq/n2TeqCpWyIz/n6gI4eCVfW21O9hB1kI8ypIoLpgTm2nixex554FSAIx+KcNRI0kZKs7pWJBrJBSn6DzUXi1A4ESACv3
+x-microsoft-antispam-message-info: gRrYOjtrox4pqGvZ3anZIbENYe7I6QpmsWi1H0WIG2UWko7LP5/B0UzXPbLgJ8FqrKO/f4bd35aVA7TCT3ex/TL+LfNRa4PM3XJ6AZMkLyP/1QO53Mjnj1RD3v3ii5Il2d0bZr3sOB5ohW5nkxTkp9KVCLNXWYvVuXOjf3UXBoR4zSB3LkGU5aR1J9iIIaWsXnabKIrfEo2FOotjk8LXiKkZ1dzxYy7zztq1wc0UMYhNxvnVCuxZEC0tTZIYCe6jDKZtJ6/lHDvcQMCXOEztjXIB49naJhbygiAcUoBgzFnd6fdW7HNn2rvPmE5150pYFojKlV6DtlKYkxdd4D7s7YjyB/uftak1Q+zQVkPDjxalOMcyzw0Pafy711Tj+mHWmUzOwM07J9gKlaHfND/YI7Hxbl5loCtJsL+2rKqvlKsGi3GXgL2Ooi0AUouc6NLh
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cfbedf3-6676-48e9-6ac9-08d783b7f066
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:43:53.3511
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb54d18d-a5bd-479b-4d08-08d783b7f27c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Dec 2019 12:43:56.8409
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gr7MxKJ4SsFNJJXERNRLVXv06YjaPYmwMbHk2Q/bpSOCFxSFd8CnBduuH3DibSHSfuaLpukmY+2yaNduwwIZLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4722
+X-MS-Exchange-CrossTenant-userprincipalname: 9n8IYfVWK20ekLrvSF8rRjr6TznZzJa7HwOQ6IsXYwlqmk3/5ImxBqHCo/YPYDkPHIuI4RV9uQH10TRNYBzOoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4129
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -97,58 +99,52 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-platform_irq_count() and platform_get_irq() is the more generic
-way (independent of device trees) to determine the count of available
-interrupts. So use this instead.
+platform_irq_count() is the more generic way (independent of
+device trees) to determine the count of available interrupts. So
+use this instead.
 
 As platform_irq_count() might return an error code (which
 of_irq_count doesn't) some additional handling is necessary.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/=
-mvebu/pinctrl-armada-37xx.c
-index aa9dcde0f069..cc66a6429a06 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -15,7 +15,6 @@
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c b/drivers/pinctrl/su=
+nxi/pinctrl-sun50i-h5.c
+index a78d7b922ef4..31d62bbb7f43 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
+@@ -19,7 +19,6 @@
+ #include <linux/platform_device.h>
  #include <linux/of.h>
- #include <linux/of_address.h>
  #include <linux/of_device.h>
 -#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
  #include <linux/pinctrl/pinctrl.h>
-@@ -739,7 +738,14 @@ static int armada_37xx_irqchip_register(struct platfor=
-m_device *pdev,
- 		return ret;
- 	}
 =20
--	nr_irq_parent =3D of_irq_count(np);
-+	nr_irq_parent =3D platform_irq_count(pdev);
-+	if (nr_irq_parent < 0) {
-+		if (nr_irq_parent !=3D -EPROBE_DEFER)
-+			dev_err(dev, "Couldn't determine irq count: %pe\n",
-+				ERR_PTR(nr_irq_parent));
-+		return nr_irq_parent;
+ #include "pinctrl-sunxi.h"
+@@ -549,7 +548,17 @@ static const struct sunxi_pinctrl_desc sun50i_h5_pinct=
+rl_data =3D {
+=20
+ static int sun50i_h5_pinctrl_probe(struct platform_device *pdev)
+ {
+-	switch (of_irq_count(pdev->dev.of_node)) {
++	int ret;
++
++	ret =3D platform_irq_count(pdev);
++	if (ret < 0) {
++		if (ret !=3D -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Couldn't determine irq count: %pe\n",
++				ERR_PTR(ret));
++		return ret;
 +	}
 +
- 	spin_lock_init(&info->irq_lock);
-=20
- 	if (!nr_irq_parent) {
-@@ -776,7 +782,7 @@ static int armada_37xx_irqchip_register(struct platform=
-_device *pdev,
- 	if (!girq->parents)
- 		return -ENOMEM;
- 	for (i =3D 0; i < nr_irq_parent; i++) {
--		int irq =3D irq_of_parse_and_map(np, i);
-+		int irq =3D platform_get_irq(pdev, i);
-=20
- 		if (irq < 0)
- 			continue;
++	switch (ret) {
+ 	case 2:
+ 		dev_warn(&pdev->dev,
+ 			 "Your device tree's pinctrl node is broken, which has no IRQ of PG ban=
+k routed.\n");
 --=20
 2.16.4
 
