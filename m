@@ -2,94 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15FEE1247E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 14:17:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 580E4124855
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 14:26:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfLRNRD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 08:17:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:45986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbfLRNRD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Dec 2019 08:17:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F51430E;
-        Wed, 18 Dec 2019 05:17:02 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7F223F718;
-        Wed, 18 Dec 2019 05:17:01 -0800 (PST)
-Date:   Wed, 18 Dec 2019 13:17:00 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "corbet@lwn.net" <corbet@lwn.net>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828 PMIC
- regulators" to the regulator tree
-Message-ID: <20191218131700.GB42175@sirena.org.uk>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
- <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
-Content-Disposition: inline
-In-Reply-To: <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-X-Cookie: In the next world, you're on your own.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726846AbfLRN0D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 08:26:03 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46969 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbfLRN0D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 08:26:03 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y14so1195186pfm.13;
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
+        b=EuPrTdPICea62Y0tIErzBNfDUENFZJbz9R5n1Z9b+BF0u3hi7RSPV/M4zGidXYLwsT
+         IIdO0kgr6ZIu/TSLnt2IK3XfN9R/afZLO9oRzZTP6692QEDV9KqzI8bFG9jhmyAFwDP0
+         OY3RlUnwNxf54R1Dx8AaLmHUtup4+aVviOgIkbZOkHY+PTTlWe86LmWIsWpGNP9A+nug
+         JxHbmiN3hX+1pqtS4/1tmISISZAVEgK8mCpQY3T1bKXAi5UTk018bgwR6w9rBOW9hrSy
+         GGfdRK+kL7mf2CSYNXpKDLSal8Afbs/HjnAYTorQ72ZsLxU0wT+cd+cGwn+praAGkPcS
+         Eksw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mQvM79wcujGNIpd4aeOU0khxD9KQpsb8Nw6gV8bnRSU=;
+        b=f330fuY7HrLDPNhCbTYV6+kxL01v7WZljDi/4dPPEd1QtqywAIfKWitatMKBZmxCWo
+         thyEdQl4jRy9GbDo2hFV+onO+mMaTqShkCZUbVtAFP3kZUZG7jt2KixsZyHCLQvueDMw
+         KmHqmTz5Bw2Yx0jQyr+/2llCYDSur8FR0ij8GIajgLzFJCBnJdw5/eFeVw6pGUhIQqZU
+         /EVFyGIwhCmb1JvBvosN/T9v10YwazGvlSKlpOmzrUkFsCbCOj/CfHACDGnOfjrFSdWk
+         aaykKDSmJGEsQnVAO/Hd6X4+KY74IZeiEoGSYq4M6LAX1FoA5Vw0bOyxvrgba7FPHGd5
+         NAxw==
+X-Gm-Message-State: APjAAAX30+EXfNzW3MARekS2wAWbK9hTyZ7hVnvqh6QYJrm5ow0F+6H3
+        ZqdhHcydmrrXOagI069xjUY=
+X-Google-Smtp-Source: APXvYqyhl40/66a/zQm3aoOEHmBZy0P5ZD0xIBuQlOp+jdCrpW269eX8KVBXPX5kKVuZcqbq9+fNTQ==
+X-Received: by 2002:aa7:949a:: with SMTP id z26mr292450pfk.98.1576675562596;
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
+        by smtp.gmail.com with ESMTPSA id l1sm3263770pgs.47.2019.12.18.05.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 05:26:02 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH 1/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_remove()
+Date:   Wed, 18 Dec 2019 21:25:51 +0800
+Message-Id: <20191218132551.10537-1-baijiaju1990@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+drivers/gpio/gpiolib-sysfs.c, 796: 
+	mutex_lock in gpiochip_sysfs_unregister
+drivers/gpio/gpiolib.c, 1455: 
+	gpiochip_sysfs_unregister in gpiochip_remove
+drivers/gpio/gpio-grgpio.c, 460: 
+	gpiochip_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449: 
+	_raw_spin_lock_irqsave in grgpio_remove
 
-On Wed, Dec 18, 2019 at 08:06:04AM +0000, Vaittinen, Matti wrote:
+kernel/irq/irqdomain.c, 243:
+	mutex_lock in irq_domain_remove
+drivers/gpio/gpio-grgpio.c, 463: 
+	irq_domain_remove in grgpio_remove
+drivers/gpio/gpio-grgpio.c, 449: 
+	_raw_spin_lock_irqsave in grgpio_remove
 
-> I think you missed the [PATCH v6 08/15] regulator: bd718x7: Split
-> driver to common and bd718x7 specific parts
+mutex_lock() can sleep at runtime.
 
-I didn't miss it, it was queued but it doesn't apply.
+To fix these bugs, gpiochip_remove() and irq_domain_remove() are called
+without holding the spinlock.
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature; name="signature.asc"
+These bugs are found by a static analysis tool STCheck written by myself.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/gpio/gpio-grgpio.c      | 5 ++++-
+ sound/soc/sti/uniperif_player.c | 3 ++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl36JssACgkQJNaLcl1U
-h9CIwwf/XGxw7qI5+W4mZUmXbHBLRi2mSDCtLaIN9ZXkq0cxNLHz+arkHxlXRnGH
-TgXToL545RFyVMoMsNJ9mgx6N/K6dKycIoz6e2R2KMshQXgG1vsR00SqpzOmWSTD
-vuLsweAjda+fSnq8LOxaYCjSyCuC7+kg1OyRToeYUanBAEHL0nnNPc0LaodC2mmz
-5oIVqN5KtXLuc9yHBuHn9E6DQpyFFdDwGxscWVVuNKXGbh1YezDw44dIZtb/ZMK5
-piw8gK+P9piymdh1rSw0W2dgHojmNgaZWGa1qhbf/9JmaWwc1Wu4q0NZ/dED0JJj
-6xQL1PTl40C8GA7Hfd20UUQ/YMu5MQ==
-=1AaP
------END PGP SIGNATURE-----
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+index 08234e64993a..60a2871c5ba7 100644
+--- a/drivers/gpio/gpio-grgpio.c
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -448,13 +448,16 @@ static int grgpio_remove(struct platform_device *ofdev)
+ 		}
+ 	}
+ 
++	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
++
+ 	gpiochip_remove(&priv->gc);
+ 
+ 	if (priv->domain)
+ 		irq_domain_remove(priv->domain);
+ 
+ out:
+-	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
++	if (ret)
++		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+ 
+ 	return ret;
+ }
+diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_player.c
+index 48ea915b24ba..62244e207679 100644
+--- a/sound/soc/sti/uniperif_player.c
++++ b/sound/soc/sti/uniperif_player.c
+@@ -601,13 +601,14 @@ static int uni_player_ctl_iec958_put(struct snd_kcontrol *kcontrol,
+ 	mutex_unlock(&player->ctrl_lock);
+ 
+ 	spin_lock_irqsave(&player->irq_lock, flags);
++	spin_unlock_irqrestore(&player->irq_lock, flags);
++
+ 	if (player->substream && player->substream->runtime)
+ 		uni_player_set_channel_status(player,
+ 					      player->substream->runtime);
+ 	else
+ 		uni_player_set_channel_status(player, NULL);
+ 
+-	spin_unlock_irqrestore(&player->irq_lock, flags);
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
 
---ZoaI/ZTpAVc4A5k6--
