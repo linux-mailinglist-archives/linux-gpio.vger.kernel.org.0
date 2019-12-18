@@ -2,74 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA6C1253E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 21:51:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A4212551B
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 22:54:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfLRUvT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 15:51:19 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39588 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfLRUvS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 15:51:18 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 77so4084692oty.6;
-        Wed, 18 Dec 2019 12:51:18 -0800 (PST)
+        id S1726530AbfLRVyf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 16:54:35 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46058 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfLRVye (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 16:54:34 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v10so1984385oiv.12;
+        Wed, 18 Dec 2019 13:54:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nSEj6kyDhq5P6mAclRcvCmoF52iAZQnMbrNJi3sF4JA=;
-        b=JyTl4fDyRoIW9oSgB2mvLAl4hOKeIRGVUS4cYxnZQAdvoBGA00RSomlZCsqYyXLC0o
-         4v3Rpk5MXhk5ijJofxxGy7k1bG00SQ6JQ34Vp1Kwyeg/iXOBl3fGpggbhnhqTtlIzew3
-         wydmxTiZcZ65g6GJW/5Rzgt7avkQqr3lEPYYqjH2uKbxbbmRmp1x5wkNDab9/3lYcnlh
-         YpyPLLpJqBHE2C7/NfH/y+heFm7AylmtF7CDZtHsKwWPwzkjYgPk8oeD3pRcuvu+JNGf
-         SF+SZ0MvO5B9olS+hcP6n1g/Uu8PGTFW0g3yqCzCG8DX3IRp8yexlOkZsxL7zegzCFMV
-         nhgg==
-X-Gm-Message-State: APjAAAWSN6uDlvPj/qkHfnrcvUVwe/OAIr9OSGEQesekebWfn2QzlI/b
-        FbW+UjAfmMz1JRuKYCpZMg==
-X-Google-Smtp-Source: APXvYqygAa2pY0RW+kCp3G3EmR9J+pePpjjBE3bTxuC6HQw9JYgh4wl5v+3NVqjlcimD0GHFuRxY6A==
-X-Received: by 2002:a05:6830:605:: with SMTP id w5mr556250oti.79.1576702277913;
-        Wed, 18 Dec 2019 12:51:17 -0800 (PST)
+        bh=4RebbRKcBu8o8r+u/BBh/JSYzRJPnaXsDajYWgLnYyw=;
+        b=uJ0Hv9qmpjjQ4C8wtscrrjYcMCBe7piHv0j76Zuy0ocRkLCFPUNvXUHVeYV3o29eGr
+         4Yo09EtaBGO7ONXr1FOBBOCbvt2pDV3Qye1rk0VTvtV2nzObJhWurWhFW/LIe+qodJu7
+         oES7PiRwMnzMts2bdqZRFyg9TZpCOY3T+vtmeAsXOEkoV4s2l8p6/7hDCaxNz1DuY8ec
+         YDIYjWh32KU/iZGHtduh+13QJsH8lw3fi3xdzuuYNNnvYjR8lCP6HE0HGZYP7xyjVEc8
+         Y5Y+Oz9A5ctNndUWe8uJV394NhISkJ7IEXR7+wb3wIf4z2RUgdzOO9/t+E5HHn/caJ7U
+         trNA==
+X-Gm-Message-State: APjAAAVnjCZHIob9SWehSolCN+/AB6ZZJajAoyfcBoWZyaGomH4nqjvI
+        VgA6xdMYxKDxgsSnhi08jA==
+X-Google-Smtp-Source: APXvYqwZrcJhNxjx6lo9XtXroFdtRIESqHQuSWgDp6/7eHy2HGyZGdP4rPahMSQLRpcY8klzgrhuug==
+X-Received: by 2002:aca:5490:: with SMTP id i138mr1620807oib.34.1576706073981;
+        Wed, 18 Dec 2019 13:54:33 -0800 (PST)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e6sm1215390otl.12.2019.12.18.12.51.16
+        by smtp.gmail.com with ESMTPSA id k5sm1276825otp.33.2019.12.18.13.54.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 12:51:17 -0800 (PST)
-Date:   Wed, 18 Dec 2019 14:51:16 -0600
+        Wed, 18 Dec 2019 13:54:33 -0800 (PST)
+Date:   Wed, 18 Dec 2019 15:54:32 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v4 4/6] gpio: sifive: Add DT documentation for SiFive GPIO
-Message-ID: <20191218205116.GA31691@bogus>
-References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
- <1575976274-13487-5-git-send-email-yash.shah@sifive.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio bindings
+Message-ID: <20191218215432.GA23682@bogus>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575976274-13487-5-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <20191212160413.15232-2-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:41:12 +0530, Yash Shah wrote:
-> DT json-schema for GPIO controller added.
+On Thu, 12 Dec 2019 17:04:11 +0100, Marco Felsch wrote:
+> Add gpio device documentation to make the da9062 gpios available for
+> users.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [Atish: Compatible string update]
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  .../devicetree/bindings/gpio/sifive,gpio.yaml      | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/sifive,gpio.yaml
+> Changelog:
+> 
+> v2:
+> - remove sub-node documentation
+> - squash gpio properties into mfd documentation
+> ---
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
