@@ -2,81 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D164C124BAE
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 16:28:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2585F124D1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 17:23:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfLRP2Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 10:28:16 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33685 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLRP2P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 10:28:15 -0500
-Received: by mail-lj1-f196.google.com with SMTP id p8so2631096ljg.0;
-        Wed, 18 Dec 2019 07:28:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NGB0Bht5iuAhGYY8+BK8lXynDdbbH0NCySaOeUZsF9Q=;
-        b=CElXgf2Klb0noNFucfG1GDOjLqnMBNcOXXqZdVOK6xOVs3KX9bggRS09lL5rsfFVtm
-         yXEywA9e5CfLlR0B2XhQyzUMJ9L83+aaXAO4v/mxfrwtQF/J8vTUouACtLVHSTq/RSMI
-         gUHTSBrg2ZvU8dy7xidG8UQptYGyBozEXoeaA8KCoDSpGSc+SC+eh9AqZXixC3d0Ic5d
-         N4I9FKec8Z/VeCi6whOwWsTE2jHgM2Pm/DvHM9lFERLNdaQtzoAU+O+sCqgb8MTXN59Z
-         KyLnvt3x+fgtbmF6b0dGBbUmXrUmbhL+DHQBY+MSpQrIULmHt2ZfnM7GpTDUMwQgEJr/
-         72Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NGB0Bht5iuAhGYY8+BK8lXynDdbbH0NCySaOeUZsF9Q=;
-        b=h+h6jrwsgx4Gkzchzgf3CTKNwFtgQgoaYk1RFuOrMHoBcz0aT0NnA0IdUNZ/oKqDIY
-         RL/gas4D/ulPLQFJrpRcM2Thw3q8X70rl/WcZmk4w6dHK1zB+pQzSRTA3A8MttMB/bU0
-         6huI79G1C0nZUkNFdiGvZXIjxLrCOCJpv/ERVfpJqyfyhJoFYCjVS61CFjnX/Lt+/n6s
-         Vp3dq18bfK5ChvdRk7erCQY6aGZg7/QnXx0FecDxAeg5YflkiYLv3gBSiFuQZWnlALqY
-         rANoEBeD1Klurz/9u6vkA+vfah4zdo5KtOs1tRe+vxDeFJzpReoLujAp/VIoY2bvSLtv
-         12vw==
-X-Gm-Message-State: APjAAAW0/iQKkWLoj1JblRdeeqWX2ZP9GKRwQuT8XcxIaRbZgnzfNrc6
-        qZlbUdXQQoR9dZSNNNnunfEc+km6sOPK6Ts5NNI=
-X-Google-Smtp-Source: APXvYqwRXR6SYoiNPvwbThVTZFiIWXv19mPiee7yYheOO2EF59zuRJmhpBpkJVuauhHrW8NUK5B5sny+ZKnji/BawQc=
-X-Received: by 2002:a2e:6e10:: with SMTP id j16mr2223416ljc.202.1576682892704;
- Wed, 18 Dec 2019 07:28:12 -0800 (PST)
+        id S1727215AbfLRQXv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 11:23:51 -0500
+Received: from mga03.intel.com ([134.134.136.65]:15079 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbfLRQXu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:23:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Dec 2019 08:23:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,330,1571727600"; 
+   d="scan'208";a="415881663"
+Received: from dshoemak-mobl.amr.corp.intel.com (HELO [10.251.3.243]) ([10.251.3.243])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Dec 2019 08:23:47 -0800
+Subject: Re: [alsa-devel] [PATCH 10/10] ASoC: Add codec component for AD242x
+ nodes
+To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     lars@metafoo.de, sboyd@kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, broonie@kernel.org, pascal.huerst@gmail.com,
+        lee.jones@linaro.org
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-12-daniel@zonque.org>
+ <0565e5cd-9a6e-db65-0632-0bc1aa1d79db@linux.intel.com>
+ <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <ff0e2420-a2c6-17e7-2761-f6544e2c0cb7@linux.intel.com>
+Date:   Wed, 18 Dec 2019 09:32:40 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1576672860-14420-1-git-send-email-peng.fan@nxp.com>
- <CAOMZO5DeA24EUjr-E=V=tGNaZ7UkOEi+F5-kEBqEB288DSNSoA@mail.gmail.com>
- <AM0PR04MB4481B3EAB2DDC42A137E8AAB88530@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CAOMZO5BK0Pa6Aw6n7Tf+C6+Fg15WNbEUOzKCQTaWqTUu6yoPjA@mail.gmail.com>
- <20191218145955.GE26938@lunn.ch> <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
-In-Reply-To: <CAOMZO5BibF5A9sw=fLr3DXLf9LXYdxWy=aK7KCE3L0bt5eX+9Q@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 18 Dec 2019 12:28:07 -0300
-Message-ID: <CAOMZO5BOv2e2_NWHxXRQk0v6Q10FgKLQO-HvTgi5oF_bwUEphg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: mvebu: armada-37xx: use use platform api
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        "wens@csie.org" <wens@csie.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <35e7e6e7-7c70-785c-bdf3-79089134699e@zonque.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:09 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-> Yes, I think that returning the error like:
 
-s/returning/printing
+On 12/18/19 3:49 AM, Daniel Mack wrote:
+> Hi,
+> 
+> On 12/17/19 8:28 PM, Pierre-Louis Bossart wrote:
+>> On 12/9/19 12:35 PM, Daniel Mack wrote:
+> 
+>>> +    if (!ad242x_node_is_master(priv->node) &&
+>>> +       ((format & SND_SOC_DAIFMT_MASTER_MASK) !=
+>>> SND_SOC_DAIFMT_CBM_CFM)) {
+>>> +        dev_err(component->dev, "slave node must be clock master\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>
+>> It was my understanding that the master node provides the clock to the
+>> bus, so not sure how it could be a clock slave, and conversely how a
+>> slave node could provide a clock to the bus?
+> 
+> The slave nodes receive the A2B clock from the master node and then
+> produce digital audio output that is sent to other components such as
+> codecs. Hence, in ASoC terms, they are the clock master.
+> 
+> Likewise, as the master node is receiving its clock from other
+> components, it has to be a clock slave in the audio network.
+> 
+> Does that make sense?
 
-> dev_err(dev, "Couldn't determine irq count: %d\n", nr_irq_parent);
->
-> would make the code cleaner.
->
-> Maybe just a matter of taste though ;-)
+Your slave node acts as a bridge then, but it seems you don't model the 
+bus-facing interface, which has to follow the master clock. Or do you?
+
+Likewise the master has an 'SOC-facing' interface and a bus-facing 
+interface. it *could* be master on both if ASRC was supported. The point 
+is that the bus-facing interface is not clock slave.
