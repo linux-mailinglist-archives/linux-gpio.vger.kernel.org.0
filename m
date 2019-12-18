@@ -2,108 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE5E1248DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 15:01:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6A5E124973
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 15:25:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbfLROBi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 09:01:38 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:59018 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfLROBg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 09:01:36 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-87-5dfa313d1e2b
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DE.4F.08102.D313AFD5; Wed, 18 Dec 2019 15:01:33 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 18 Dec 2019 15:01:27 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Topic: Applied "regulator: bd71828: Basic support for ROHM bd71828
- PMIC regulators" to the regulator tree
-Thread-Index: AQHVtNcCPO+Kt0OMfE2l+CzrBWADfqe/eY8AgABW2wCAAAxsgA==
-Date:   Wed, 18 Dec 2019 14:01:27 +0000
-Message-ID: <b72cd22df0bbbb159cda08e556037f1ccf490b3d.camel@fi.rohmeurope.com>
-References: <applied-5b1c4a22c7945e97ff2a7924abfeb3239043f8eb.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
-         <de7424126e285d9bbd21a70945415d78203c2ba7.camel@fi.rohmeurope.com>
-         <20191218131700.GB42175@sirena.org.uk>
-In-Reply-To: <20191218131700.GB42175@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0EC2AB5390333649B5FA8FB87510E416@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1727108AbfLROZB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 09:25:01 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54241 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfLROZA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 09:25:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id m24so2032676wmc.3
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Dec 2019 06:24:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nn/KRQfGAOpLMIozgAkS2/UpT2LQKqzYyFnIUYqjdc8=;
+        b=PbfrBKd7sk9jBy/VZfBGda7e0Ya/uc2qye9uZ6reXavLIvkJZsL0c0fBVYvb/fYaU+
+         Z1rg0BV/imcaTobRWfopvly992mCM8lBvzu4VfZ3AhC6Xzdt89X6ZTRq0P9vfci7w3jD
+         51rV+7mTtgVQHvCBV2Y4anxsAQ4p5ADldJW822ArxwfH2LvvsU/izUNsvD/J72y5pWlj
+         cNPNhzatgjMpw6cIx4ieqH60n2HIZX5MvvL1GeKt+84Ya6sHH1mDCfxkrytdtDuBdoZV
+         m6mdbu+3g0RcBPpRvR/9JH81yWCG+8YiVIXxG4SpkRPoPB8YzbQiN76DaQthIn78WUp5
+         W1Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nn/KRQfGAOpLMIozgAkS2/UpT2LQKqzYyFnIUYqjdc8=;
+        b=avAYNUOXyXU7kuFYbEbQZEOeLZz4ctrSLcrvCM4f2e2K44lXiYTlwCIi4r1dez9zHv
+         F9O6vbzMkqG9RzA00qr3gmf1hHM1c2+4ptKTQjzVbav3u1jnEzWEuHqOLKXLMSMbRMsa
+         Yuwj6+dhGq64naSed9/owYSZ/Fk1oQZhCbldPBqLG+3jGNDgdArV02c5UVo81xnFQ0Og
+         X5fHqmxG0cdwFWV8W5Hpe6KHZCO7nxJQsNDiGA7nMa9hanIfwZmFbO+hpVqwdIejHHaS
+         cCSf0xwowKZLEhpygxZYzsusFyihJIiy/ZHxLA0ulqjemrF/qZpYxSVSNvvXfkOdL19B
+         UIxA==
+X-Gm-Message-State: APjAAAWFyyL1RFkVYWZ19Xp1gphdsEv+tSuq3CR3XJoo0P0F8VU7uz1Z
+        qEjhZhouhb7NU5Ub/NjwLQMliA==
+X-Google-Smtp-Source: APXvYqwszVHo6nOMtIewbPrWCdR1DqzwDIGQNIivQBNDUYmC62l7fg2aYmk4Pjt7PiWlt8XyemZZHw==
+X-Received: by 2002:a1c:1fc5:: with SMTP id f188mr3808523wmf.55.1576679098584;
+        Wed, 18 Dec 2019 06:24:58 -0800 (PST)
+Received: from debian-brgl.home (amontpellier-652-1-53-230.w109-210.abo.wanadoo.fr. [109.210.44.230])
+        by smtp.gmail.com with ESMTPSA id x11sm2889981wre.68.2019.12.18.06.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 06:24:58 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [libgpiod][PATCH 0/7] teach libgpiod to read multiple line events at once
+Date:   Wed, 18 Dec 2019 15:24:42 +0100
+Message-Id: <20191218142449.10957-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0wUVxTGc2dmZy7gNOMK3du1mjhtbWzDK5p4E221bYhDjMTEtCaNhI7u
-        lCHCLs4uKjVGjAFlwdcCtW5dWHnVCBVZBBUhpRsW7NZCiKAoPrKWkoBmadVKAB+dYarw1/3u
-        +c7vfuePcyFprGXMMMPqkBSrmMnTkVTHmenG2E8Sp1ITvv9jFa7uG2DwwXAtg1+4uhj81BOk
-        cFlomMbDHQcBrujsMeCi3y8Y8IGqBhoPNZ+n8P1/AwA/6z9E4NLnPxH4n+J7Bny6oJrCTRXP
-        Ab7eeorGzY/OAdxV10/jmpt9BD5Vc5XC448LCdwXTMJlwTCD7wYDND7QN0ji/PZOBr+80Ujh
-        Iz3r1i4S6svrgTA95QLC+GA+I5TX7xEuu+8ygu9sIS3cudFGC7946hmh6kiJQXh27TgljJxu
-        oITuwYuEcKJ8khAaijuBcKZughGe+BZv5L6OWr1VdOzclJFujf/0myi5IJyQ7Yrc3dLiA3ng
-        7wgniICIW4HyTnTTThAJjdwAQOdK7hn0y1WAwj/UASeAkOZWI+ctRgOiuVhUNlU1A5BcfxSq
-        7C8hNWMBtwMdbgqSepOCbr8YpXT9OSryjczUKe4DVPRXKdA0y6Wgh12XgB52HyBP6yODZkRw
-        y9HtWtdMGuAWocK8MKFpkjMh38iEQR+bQ9VtvaSuY9Dony//r/OofTJEaUOT3DLU0Bqvo2tR
-        S8kgqeslqLQoxOgzzEe/nRymjoG33XMS3LO0ew7tnkO759BeYDgLUJaYkZkuOqTEOEXKiVNs
-        cpZ6bLNl+YC+d08vgVf+ZD8gIPCDdyDBx7C8PJlqfGurzZIri3Y5TcnJlOx+gCDJR7NDh1SP
-        tYi530mK7bW1EFK8if0wdDzVyGlZ2yUpW1Jeu+9CyCO2LXYq1ThfkdKl3d9mZDpmbQJGaI9H
-        mqPtktUiKWKOQ07T9iPNri6IZs1Tcy3xKs7as8UstaqjQfAxPDbqqSRhp6emkjRSVptVMptY
-        dqnaymmtco71TdAYMEHAL2D3J6juPPXzvXlnTI0g1Ai4bCbCIc5a5jwQPz6R25HUIl45umFs
-        DdW78uTi5PdSVvUcnf7isEJXVMlG/2Pf5t73cSDmq33XU27+6vU++PLVBdeuQNM+rxFZNz+J
-        cbvOr9gY8rLFS4RmJm6vybS/wBy482P79oWNQ9tqNjUnr3FeLF0/kFQ3vOXyuh3lll74cLzr
-        s4H8K065+9rPPGWXxcSPSMUu/gfQRcVfOQQAAA==
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMTItMTggYXQgMTM6MTcgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
-IE9uIFdlZCwgRGVjIDE4LCAyMDE5IGF0IDA4OjA2OjA0QU0gKzAwMDAsIFZhaXR0aW5lbiwgTWF0
-dGkgd3JvdGU6DQo+IA0KPiA+IEkgdGhpbmsgeW91IG1pc3NlZCB0aGUgW1BBVENIIHY2IDA4LzE1
-XSByZWd1bGF0b3I6IGJkNzE4eDc6IFNwbGl0DQo+ID4gZHJpdmVyIHRvIGNvbW1vbiBhbmQgYmQ3
-MTh4NyBzcGVjaWZpYyBwYXJ0cw0KPiANCj4gSSBkaWRuJ3QgbWlzcyBpdCwgaXQgd2FzIHF1ZXVl
-ZCBidXQgaXQgZG9lc24ndCBhcHBseS4NClJpZ2h0LiBUaGUgcm9obS1nZW5lcmljLmggaXMgY2hh
-bmdlZCBieQ0KW1BBVENIIHY2IDA0LzE1XSBtZmQ6IHJvaG0gUE1JQ3MgLSB1c2UgcGxhdGZvcm1f
-ZGV2aWNlX2lkIHRvIG1hdGNoIE1GRA0Kc3ViLWRldmljZXMNCg0KZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvbWZkL3JvaG0tZ2VuZXJpYy5oIGIvaW5jbHVkZS9saW51eC9tZmQvcm9obS0NCmdl
-bmVyaWMuaA0KaW5kZXggYmZmMTVhYzI2ZjJjLi45MjJmODgwMDgyMzIgMTAwNjQ0DQotLS0gYS9p
-bmNsdWRlL2xpbnV4L21mZC9yb2htLWdlbmVyaWMuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQv
-cm9obS1nZW5lcmljLmgNCkBAIC00LDcgKzQsNyBAQA0KICNpZm5kZWYgX19MSU5VWF9NRkRfUk9I
-TV9IX18NCiAjZGVmaW5lIF9fTElOVVhfTUZEX1JPSE1fSF9fDQogDQotZW51bSB7DQorZW51bSBy
-b2htX2NoaXBfdHlwZSB7DQoNCg0KSSB0aGluayB0aGlzIGlzIHRoZSByb290IG9mIHRoZSBjb25m
-bGljdCBoZXJlIGFzIFtQQVRDSCB2NiAwNC8xNV0gaXMNCm5vdCBpbiByZWd1bGF0b3IgdHJlZS4g
-SG93IHNob3VsZCBJIGhhbmRsZSB0aGlzIHNvIHRoYXQgaXQgd29uJ3QNCmNvbmZsaWN0IGluIHlv
-dXIgYW5kIExlZSdzIHRyZWVzPw0KDQpCciwNCglNYXR0aQ0K
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+In v2 of my series adding the line status watch I introduced a regression
+that made it impossible to read more than one event at the same time. This
+is because I use libgpiod for testing and it doesn't allow to read more
+than one event from user-space.
+
+This series adds this missing functionality so that we can test v3 and avoid
+this problem.
+
+Bartosz Golaszewski (7):
+  core: use gpiod_line_event_get_fd() in gpiod_line_event_read()
+  core: provide functions for reading multiple line events at once
+  tests: event: extend test coverage for reading multiple line events at
+    once
+  bindings: cxx: provide a method for reading multiple line events
+  bindings: cxx: tests: add a test-case for reading multiple line events
+  bindings: python: add a method for reading multiple line events
+  bindings: python: tests: add a test-case for reading multiple line
+    events
+
+ bindings/cxx/gpiod.hpp                 |  7 +++
+ bindings/cxx/line.cpp                  | 45 +++++++++++---
+ bindings/cxx/tests/tests-event.cpp     | 31 ++++++++++
+ bindings/python/gpiodmodule.c          | 57 ++++++++++++++++++
+ bindings/python/tests/gpiod_py_test.py | 22 +++++++
+ include/gpiod.h                        | 25 ++++++++
+ lib/core.c                             | 68 ++++++++++++++++-----
+ tests/tests-event.c                    | 83 ++++++++++++++++++++++++++
+ 8 files changed, 314 insertions(+), 24 deletions(-)
+
+-- 
+2.23.0
+
