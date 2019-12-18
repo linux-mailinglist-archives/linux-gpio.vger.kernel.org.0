@@ -2,89 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14979125240
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 20:48:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D71211253B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 21:41:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfLRTsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 14:48:19 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:43466 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727532AbfLRTsT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 14:48:19 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id fXoF2100C5USYZQ06XoFVq; Wed, 18 Dec 2019 20:48:16 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihfIt-0007y1-JB; Wed, 18 Dec 2019 20:48:15 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1ihfIt-0003Kb-I4; Wed, 18 Dec 2019 20:48:15 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/6] sh: sh7269: Remove bogus SSU GPIO function definitions
-Date:   Wed, 18 Dec 2019 20:48:12 +0100
-Message-Id: <20191218194812.12741-7-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191218194812.12741-1-geert+renesas@glider.be>
-References: <20191218194812.12741-1-geert+renesas@glider.be>
+        id S1727929AbfLRUl0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 15:41:26 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37100 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726376AbfLRUl0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 15:41:26 -0500
+Received: by mail-ot1-f67.google.com with SMTP id k14so4049763otn.4;
+        Wed, 18 Dec 2019 12:41:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vjAWgj8LPRVBBw4YOgmZJNGJyNN6iEbkQXZFrIxWMd0=;
+        b=f/o6m4kkdrseDeko1cTkyQ3A0Er94juvAd+hgIjUj5gyOia3cWFoK8oaRVIkbCdSON
+         um3AcstN7D9XBtPrGe7s9hnrn/G7EEWRDjRXNmLt7geaIHU375vdUTuqA6dI5dJnA9+6
+         oRJWZpLq7j90hA3/qZa8yb7Z7HHJa7/3fR+2JtFOP5r2i0rRPjjCmdsN1ivDQen0wwP8
+         rNfJGF2IKNwCzl6lws75QEzbN2lLHxhJ1+ccPutXRO9NJ/kFQeFWYuEBMZ0EAFHWDogv
+         UyjhJ06xj5PNdlg8DpQei8jL20rVi69KvUiP0ZeBvNulKdnRPW7/50dPeyAgSPbkT8tt
+         JJOw==
+X-Gm-Message-State: APjAAAWn/TkzYR2R6OM1GD9DshP3OPjPBsSj3mo07UAVI+yd1ZQq6y/u
+        /gucl76KxikixfWg1uFT2uSiXhE=
+X-Google-Smtp-Source: APXvYqzQqGo/mhAS3tDmnfbWxDRBX1it8whjpDyON36SIKPZWsEZwe6SklGflwoLOyGplD0lHy7Kkw==
+X-Received: by 2002:a9d:7a88:: with SMTP id l8mr4842838otn.187.1576701685257;
+        Wed, 18 Dec 2019 12:41:25 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s9sm1180127oic.15.2019.12.18.12.41.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 12:41:24 -0800 (PST)
+Date:   Wed, 18 Dec 2019 14:41:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
+        linus.walleij@linaro.org, vinod.koul@linaro.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+Message-ID: <20191218204123.GA18202@bogus>
+References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org>
+ <20191217121642.28534-2-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217121642.28534-2-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SH7269 has no Synchronous Serial Communication Unit (SSU).
-Remove the bogus enum IDs, which caused holes in pinmux_func_gpios[].
+On Tue, 17 Dec 2019 12:16:32 +0000, Srinivas Kandagatla wrote:
+> This patch adds bindings for wcd9340/wcd9341 audio codec which can
+> support both SLIMbus and I2S/I2C interface.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../bindings/sound/qcom,wcd934x.yaml          | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
+> 
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Presumably this has been copied from sh7203.
-
-The runtime-check under development reports:
-
-    sh7269_pfc: empty function gpio 141
-    sh7269_pfc: empty function gpio 142
-    sh7269_pfc: empty function gpio 143
-    sh7269_pfc: empty function gpio 144
-    sh7269_pfc: empty function gpio 145
-    sh7269_pfc: empty function gpio 146
-    sh7269_pfc: empty function gpio 147
-    sh7269_pfc: empty function gpio 148
-    sh7269_pfc: empty function gpio 149
-    sh7269_pfc: empty function gpio 150
-    sh7269_pfc: empty function gpio 151
-    sh7269_pfc: empty function gpio 152
-    sh7269_pfc: empty function gpio 153
-    sh7269_pfc: empty function gpio 154
-    sh7269_pfc: empty function gpio 155
-    sh7269_pfc: empty function gpio 156
----
- arch/sh/include/cpu-sh2a/cpu/sh7269.h | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/arch/sh/include/cpu-sh2a/cpu/sh7269.h b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-index b887cc402b712557..fece521c74b30d4d 100644
---- a/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-+++ b/arch/sh/include/cpu-sh2a/cpu/sh7269.h
-@@ -126,12 +126,6 @@ enum {
- 	GPIO_FN_TIOC0D, GPIO_FN_TIOC0C, GPIO_FN_TIOC0B, GPIO_FN_TIOC0A,
- 	GPIO_FN_TCLKD, GPIO_FN_TCLKC, GPIO_FN_TCLKB, GPIO_FN_TCLKA,
- 
--	/* SSU */
--	GPIO_FN_SCS0_PD, GPIO_FN_SSO0_PD, GPIO_FN_SSI0_PD, GPIO_FN_SSCK0_PD,
--	GPIO_FN_SCS0_PF, GPIO_FN_SSO0_PF, GPIO_FN_SSI0_PF, GPIO_FN_SSCK0_PF,
--	GPIO_FN_SCS1_PD, GPIO_FN_SSO1_PD, GPIO_FN_SSI1_PD, GPIO_FN_SSCK1_PD,
--	GPIO_FN_SCS1_PF, GPIO_FN_SSO1_PF, GPIO_FN_SSI1_PF, GPIO_FN_SSCK1_PF,
--
- 	/* SCIF */
- 	GPIO_FN_SCK0, GPIO_FN_RXD0, GPIO_FN_TXD0,
- 	GPIO_FN_SCK1, GPIO_FN_RXD1, GPIO_FN_TXD1, GPIO_FN_RTS1, GPIO_FN_CTS1,
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
