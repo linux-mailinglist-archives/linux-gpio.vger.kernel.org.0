@@ -2,68 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D75F125612
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Dec 2019 23:00:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97A171259AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 03:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLRV76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Dec 2019 16:59:58 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35352 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbfLRV7w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Dec 2019 16:59:52 -0500
-Received: by mail-ot1-f66.google.com with SMTP id f71so4338263otf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Dec 2019 13:59:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=cAXunSiS3rXXq9GdLKW/V7VUvrBFqv7fL5lt8QMJqg8=;
-        b=lJuvIkv3ZuUg54v5qswfzmxdE7r9TiyiTX3JNurAu/+4UDE/Akue35Beac5wU2Yka2
-         TwFKdar436/Bgz4S/Dnand2w+C9v9tvDVI7RUsgLveJbv2fK19oYMD0NCdzpabibXOaw
-         6w7CWg3NNmXEbxlASOUskEqh4Gi/Tods4YAO+ilK5tSZ2se0Nuw34UPUvaGEPabEiks2
-         pplCHK4zwZYHp26kgAHfxGMgkW2qA64lmCH/GsgQD3vscHDaT+R93t9GA34XEWKGZDMh
-         E2kVIHt3Ryiuans4QsX0HCbz9Hl8nNtgIPmWD0dB2YGqFSxgWDefGaQbybKKx8MF9j8O
-         A0jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=cAXunSiS3rXXq9GdLKW/V7VUvrBFqv7fL5lt8QMJqg8=;
-        b=UI/iVhJJ6d5iQP3zZzEp05zbON2S6VM7i42b/a4F0IDphu2l2jmQzNAQa/f5IZdMNS
-         +aFLZm8IzEM3HRYgvBfRlehK0yyCw84PZqxQ1p4MeW6u2uoYvtuD7152VMhnK7pGFbT6
-         nshc9+8M2ztp3rspofK7kY88a0ZVcvR5lDA8tslO7EPytCcw6Km7+EiswHyp+98Rxdb/
-         kYsDmu72/GD6smdYKLVVWg+zP9AlZFER7CWhiKvNDgPD8K4zFcMOC0Pgog3E48DKBgYa
-         PpjC4zDQTiuzi2/h7iTn7HEu9gyyxEk9FBkoIPk9hKrkOWakP+Oq5edNSZrP90ou7e4C
-         uMcg==
-X-Gm-Message-State: APjAAAUc0oXty8Qxv4r5pbsxA+i33oPs34b0KpeK47lk6YcpbrlyavQk
-        c8kxA1zBDgsd+O+rt7vFt3NyuGTp0jU8bKPP8DY=
-X-Google-Smtp-Source: APXvYqz9jdmE8goxpzxIwM1Kha3AzV+ikLR12gEE6MhNWz8NEvNHaSGiFP/nq8tDNQQLsWaWQcCrI8Gh0Pk5YyZ0dgA=
-X-Received: by 2002:a9d:3a65:: with SMTP id j92mr4536409otc.37.1576706391657;
- Wed, 18 Dec 2019 13:59:51 -0800 (PST)
+        id S1726895AbfLSCue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Dec 2019 21:50:34 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8147 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726463AbfLSCud (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Dec 2019 21:50:33 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 86CAE7DB640449C6FB7B;
+        Thu, 19 Dec 2019 10:50:31 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 19 Dec 2019 10:50:20 +0800
+From:   Ma Feng <mafeng.ma@huawei.com>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        "Gregory Clement" <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Ma Feng <mafeng.ma@huawei.com>
+Subject: [PATCH] pinctrl: armada-37xx: Remove unneeded semicolon
+Date:   Thu, 19 Dec 2019 10:51:05 +0800
+Message-ID: <1576723865-111331-1-git-send-email-mafeng.ma@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Reply-To: mcompola444@gmail.com
-Received: by 2002:a4a:7319:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 13:59:50
- -0800 (PST)
-From:   Mrs Mcompola <mcompola444@gmail.com>
-Date:   Wed, 18 Dec 2019 13:59:50 -0800
-X-Google-Sender-Auth: yv3qpWWzRgmke27fNjjQnx4I9WA
-Message-ID: <CANv7eTs8UGNVvp7kfte0t59Z8RSX9RCE=HpOrRxXip09w1d47g@mail.gmail.com>
-Subject: Dear Friend, My present internet connection is very slow in case you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- Dear Friend
+Fixes coccicheck warning:
 
-  I am Mrs.M Compola. am sending this brief letter to solicit your
+drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:736:2-3: Unneeded semicolon
+drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:803:2-3: Unneeded semicolon
 
-partnership to transfer $5 million US Dollars. I shall send you
+Fixes: commit 5715092a458c ("pinctrl: armada-37xx: Add gpio support")
+       commit 2f227605394b ("pinctrl: armada-37xx: Add irqchip support")
 
-more information and procedures when I receive positive response from
+Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+---
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-you.
+diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+index aa9dcde..9f0b3d3 100644
+--- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
++++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+@@ -733,7 +733,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret) {
+ 		dev_err(dev, "no gpio-controller child node\n");
+ 		return ret;
+@@ -800,7 +800,7 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
+ 			ret = 0;
+ 			break;
+ 		}
+-	};
++	}
+ 	if (ret)
+ 		return ret;
 
+--
+2.6.2
 
-Mrs M Compola
