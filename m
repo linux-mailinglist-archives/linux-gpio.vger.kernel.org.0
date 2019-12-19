@@ -2,84 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0476C1266BC
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:22:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3526126731
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:34:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLSQWW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 11:22:22 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38745 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfLSQWW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 11:22:22 -0500
-Received: by mail-io1-f66.google.com with SMTP id v3so6355938ioj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 08:22:22 -0800 (PST)
+        id S1726936AbfLSQeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 11:34:06 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35393 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfLSQeG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 11:34:06 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so6931150lja.2;
+        Thu, 19 Dec 2019 08:34:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n81r7QrGuep9hV+3PKVLL2hvZEUY0LLXJO5ENAZWN5M=;
-        b=c1P8t0wKClU8n5NQN4ppo/B0Q6B38XEbPLd+ORo1cUS0Ixx/Pd/iga9Cc18cdU7CeE
-         UXl8s+dSoQAfchCg17VhEJDCRX2lQLhLjstfXDaficT9/33zFS+0APdxVTnZxmMDnH1Y
-         iQjnZcbyuvHKCQP9Xp7FpcBXaPeNKDgR4EhMxDad4Vaw4sxX9dIQorIBVYFWLGzrFBkR
-         Zrov6PpiYn4lKtvyYIN7CRc7I2DW1ghFz/WecChzSCTAd8Uh5bIfvo/5Llop5KNcJ7Qk
-         /jHJ6tLN2hoy5f8sHmvIcONL98AvLePH3Dc+ERTxpTjcto1L2nYon0kM6i3TnOm4a8Nt
-         A3KA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
+        b=fYwP12aOi9NdXLIYBDuMsIPSrXPApDqz1POx12Skp5WX/xXXSTSsF/HVtd7Wf+G4AW
+         A/0iKnvcDCBdN1udrsefmIgBSgvsHGMPH+bPozR/f2ZCXuR22TgnzCUey7Z3WTX4S+o1
+         53PkDayjk238dAMSO1Ha21+HUiLGYI1RCrorqWH8TyP0jAgeriBPEypujR22PRj9mTb6
+         dKJEZew4DEO3wEQQ9ncPmtx0a1F39/sVZt2iqF6ZYsO4uNPDxohorTYg/IGT/nF6AZTC
+         w7sq1iAHf9La7k5GuZnXwUr6wJk1wAjJyWRjx/nvLWwE4oUBQC7s093m1MEvX26GuXFj
+         /9jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n81r7QrGuep9hV+3PKVLL2hvZEUY0LLXJO5ENAZWN5M=;
-        b=caOg4iXrT1DTzqcyrZtG3hq9LpELunIFSRXzpaLbWwuiX0eJDsRn7F2E1SXJWIzLVg
-         tsVLe7Osi0j0l/TQHxao71dRgD5L31AmDKJGTBxY9v9Jz1g0mq/GoPpvqTi/P9pKtokB
-         BItrRYL8bbzk9Ys3qqwTQvlk+fHgFgdodVZKIZ05zFwWsrKofT9XJXgncF+J7heGe3BL
-         30z85XquGzilX61Dl4T8UpfgWuPp/lTr06XRNMF15eNGTV3DJyVFVGasJnvwZj/k0sd0
-         2nhvNqKHog79XpoRAlPG3FW6MlZ26BaIwjTdWrISX65O15cBM7VEKp2mSP5HEXVmrrD0
-         MkGA==
-X-Gm-Message-State: APjAAAUhhv10JsriuQHqXPeG8SKd5DW1oISlQ8v0EbaaeZY5oN0ssNNV
-        j058apda9c3hVmpCjLdPg5vfd3WXfPhKyRjaZ4JaeQ==
-X-Google-Smtp-Source: APXvYqyrT8wvS1ZFGoN+rfRmHHdo8+PM6oEXfu/rT2FKRX2JOC1Q5EaDaqpRdCWbu6cVS8DAwmn+7enb8iEi+Sa2Omg=
-X-Received: by 2002:a02:3312:: with SMTP id c18mr7785705jae.24.1576772541788;
- Thu, 19 Dec 2019 08:22:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-9-brgl@bgdev.pl>
- <CAHp75VfVHr2LGZYSVhQ+KmhvGrnH=1ZNAPzJOTdZDh7wsjFddw@mail.gmail.com>
-In-Reply-To: <CAHp75VfVHr2LGZYSVhQ+KmhvGrnH=1ZNAPzJOTdZDh7wsjFddw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 19 Dec 2019 17:22:11 +0100
-Message-ID: <CAMRc=Meb78=x2+0+aFoZkSgRP3b+f9FvUNs_AJJ4rahpM=PPbw@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] gpiolib: emit a debug message when adding events
- to a full kfifo
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
+        b=SYGwakmBD1qRWQWXX7dtnP+oQztbo7PtVWajWnaobPwRNXkAoLkyh1KDPZEdTCUDnm
+         EYOpppi9T3vOXATh/fOk7WsyNcdtzKNgKwdqvJ6ghHr9MPzT9YbBlX2JjCSMWJFhB8di
+         iTmxJELugFxZ+JNd2YC7mF45WTExSPPyZG83QJ1nXoI9B34gqTaSV9J+72gSEapYeamP
+         ZK5X5AdVf873Oj6j1+MDnFpxhlTx6ZTaziqks8etHBnJk7O/xsDZe51FMUCHgJB2xgnK
+         qaarNE7LyvNsgFdwsAoovs8l5b8djjr4Vd0LfKKqnYrreAcE01xrh9mwBemCRIqy8JmM
+         M8Eg==
+X-Gm-Message-State: APjAAAXUNT2WFrL83/gbt0MaQ2eYU25rGGcqahfaVVC7y2VpPN3NVelw
+        pvQJShpOLS8endQHvv4Di/M0xYw/
+X-Google-Smtp-Source: APXvYqytljIvdSb9uKAA4Z5f9O3C9KOePxedpYlxO/c853cn0BV5XGhgglOiAUNSRF8Vr2L4UbB00A==
+X-Received: by 2002:a2e:91cb:: with SMTP id u11mr6801694ljg.82.1576773243568;
+        Thu, 19 Dec 2019 08:34:03 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id g85sm2824824lfd.66.2019.12.19.08.34.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 08:34:02 -0800 (PST)
+Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic
+ readl_relaxed/writel_relaxed accessors
+To:     Ben Dooks <ben.dooks@codethink.co.uk>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191215183047.9414-1-digetx@gmail.com>
+ <20191215183047.9414-2-digetx@gmail.com>
+ <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
+ <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e6a67fa4-977d-bac9-f7c0-51d5cea526e5@gmail.com>
+Date:   Thu, 19 Dec 2019 19:34:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 4 gru 2019 o 23:28 Andy Shevchenko <andy.shevchenko@gmail.com> na=
-pisa=C5=82(a):
->
-> On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently if the line-event kfifo is full, we just silently drop any ne=
-w
-> > events. Add a ratelimited debug message so that we at least have some
-> > trace in the kernel log of event overflow.
-> >
->
-> Hmm... I don't like prints in IRQ context (even threaded).
-> Can we rather switch to trace points at some point?
->
+19.12.2019 18:57, Ben Dooks пишет:
+> On 19/12/2019 11:01, Bartosz Golaszewski wrote:
+>> niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com>
+>> napisał(a):
+>>>
+>>> There is no point in using old-style raw accessors, the generic
+>>> accessors
+>>> do the same thing and also take into account CPU endianness. Tegra
+>>> SoCs do
+>>> not support big-endian mode in the upstream kernel, but let's switch
+>>> away
+>>> from the outdated things anyway, just to keep code up-to-date.
+> 
+> Good idea, I think I got most of the way to booting a tegra jetson board
+> with a big endian image a few years ago, but never got time to finish
+> the work.
+> 
 
-This is something that will be very rare and unlikely - I don't see
-how trace points will help here with all the boiler-plate.
-
-Bart
+Thanks, I remember yours effort in regards to the upstreaming big endian
+support for Jetson :) You were pretty close back then, but Thierry had a
+different opinion in regards to maintaining that support in terms of
+having extra testing burden.
