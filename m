@@ -2,133 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA9CE126540
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 15:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F53D1265AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 16:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSOxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 09:53:47 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34213 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfLSOxr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 09:53:47 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so6294948wrr.1;
-        Thu, 19 Dec 2019 06:53:45 -0800 (PST)
+        id S1726779AbfLSPZ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 10:25:56 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34246 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbfLSPZ4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 10:25:56 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z22so1857831ljg.1;
+        Thu, 19 Dec 2019 07:25:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=01d2gKZkJOH7YhD865nJbGooLC6bhXHzXr9512PTLlc=;
-        b=BxnoeLQes+YjrmmG4OTy/48AZHav+Dt5GpOaL3hMU+F4oppqTj8h4gqN2IGwBNYDh/
-         yYO/r7jtiLxS6CGumCLBPxdBDA8wyWbdKXfMmpAtdRJph6b/3NTE6A1uCOWiydC/VYGW
-         Aa++D0PiA+2zJBCMCVTF8m0JsHF6zwmPg0/3r60X7zmQ6xOqGxYam8CsiR/XXgzcqL5M
-         00b6iwhISyn5bTb7iAskcftlCcbODZgn9wL2ybxTRhq3iisB1FccX7E9xgg3bY2CfmRJ
-         zzz9UuxUnpJ0W/Wk5hY3wCQhcfg8bRUkpAL2gm2RqkdspDJU82bm1ywStdKTaWgi7Nsz
-         RqYA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yqXyqCEU/X28oi4oNMERZW19vUW8+ITl1VJ657B32AQ=;
+        b=F63mDoYG+4XNcwtFC5rbojj7p2G1SYZ2dSzGNihTpA6GQ5Eaq8AB4BevQ7HB/YXE6L
+         JDsuyeAN1tABCdOus9JeI0o/m29KUb42zGru4W+kyZENE1F078cKFExWKODh76lPV9v/
+         lKVRrBfEFEy0G2UoGF7HPeLjNCOFcuB8pD1z3i1060LdMdG/3hkFVVQlEdSjG5oIWdMD
+         4sRASqkHA5CGV/yTgttZnRKAWK7dR07tZSzFVLMvsXNYqVF6I5ihnPzbPFE+jAv0sAxw
+         2Y+10PXQHiPIpy3+7u2QJafe17FzsmQt6Cwwd+xIEM5CPQOft72hxhno5U1Q6bOu5f8d
+         0KbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=01d2gKZkJOH7YhD865nJbGooLC6bhXHzXr9512PTLlc=;
-        b=bYLV30OBP9prEvnbZtcq92ULYCFgw8M4PraNR9zTtVWdwE0RkIDsi7ao/GJoZn1J+u
-         I0s+bfCz39C+pjrT5YcSPlZWkhB93dBM8mV815+fKntJ0nt5TF237qXdfIhQVbbx4ocB
-         cZyXlBinTTTRNEBzxfDPc5niCNCWvHDXR3CeE3ttAtEs3aICwO9Q9c+rm/mL9X/DGIQT
-         zYgDI30QkytOoLnA3mwW1Vsh9HHjBLzyqK5Qx0xrnDH1dm59XZ8GMWaK+m3IZLIzyEgd
-         3CJeIk8FxWj189r0xbFqUknZVr/BmKpQGJ5YZ45pq8PGPGLbYgd8n7NN2zHNWqlKCETh
-         S6xQ==
-X-Gm-Message-State: APjAAAWutKdctYSoj64Zdwfv100AalEFQfhJqseQEoY7bI5GAMRGZ244
-        LnI5W/EGm/WKxEDYgKE8Z1k=
-X-Google-Smtp-Source: APXvYqxtcDi/kFePMXlvYf2lp9TovOeQHaEGqXYMgs/QzTIXtDNWbb4uLwN21d0Buj8R8pQZwYj0ug==
-X-Received: by 2002:adf:fd91:: with SMTP id d17mr10409326wrr.340.1576767224435;
-        Thu, 19 Dec 2019 06:53:44 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id o1sm6728363wrn.84.2019.12.19.06.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 06:53:42 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:53:41 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yqXyqCEU/X28oi4oNMERZW19vUW8+ITl1VJ657B32AQ=;
+        b=ZALvkvPv1/8J+20QZvMb528exgBJnj5ztuluH378CqXc7esPpg5qV62QXs3+Rr2OU1
+         MR0A2m+3s4vmD1cZwuFneeyc44o6/Y+Mpz6RFhkv69zxJzTJXty+Ue9H8XsuYndS1tc2
+         V/WEIOjX+xREoCRGIo2lVeXpho379c9d4D39vqiXNjS9w9gXRoQRvjLZnqtmKrEeST1b
+         k7rFZqXEJ0kiv0VQ8lydQ7TKzuigdID9jTCbhAsn6S+dOQ+jmee4regH2akiTZL5U5iO
+         HXlRsX3TJ1ieeJ3aLPP3eb0D/F1aPszEsaFBJQSi1CeLgSOK4ch8a+I/kOY3T2mlTvWs
+         YI7Q==
+X-Gm-Message-State: APjAAAUVJpb2hO8YhzKInkyf7lBePdfldIs4YKeP1+GNfUUNqyfWCluc
+        6iwnfBBiNOxyj0n2DGlP9pfaF1Qu
+X-Google-Smtp-Source: APXvYqy5diovob/ZJdsyh0gLijnyKUDNXGbYOijwkRSTKNzQJaAtxAWV4K6nd87cOjuAx212Bmq/jA==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr6419075ljg.3.1576769153989;
+        Thu, 19 Dec 2019 07:25:53 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e9sm2922774ljp.87.2019.12.19.07.25.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 07:25:53 -0800 (PST)
+Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic
+ readl_relaxed/writel_relaxed accessors
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
-Message-ID: <20191219145341.GL1440537@ulmo>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        LKML <linux-kernel@vger.kernel.org>
 References: <20191215183047.9414-1-digetx@gmail.com>
+ <20191215183047.9414-2-digetx@gmail.com>
+ <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1e214577-1abe-22e6-ca55-2e9806fdb9b0@gmail.com>
+Date:   Thu, 19 Dec 2019 18:25:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yQDbd2FCF2Yhw41T"
-Content-Disposition: inline
-In-Reply-To: <20191215183047.9414-1-digetx@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+19.12.2019 14:01, Bartosz Golaszewski пишет:
+> niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com> napisał(a):
+>>
+>> There is no point in using old-style raw accessors, the generic accessors
+>> do the same thing and also take into account CPU endianness. Tegra SoCs do
+>> not support big-endian mode in the upstream kernel, but let's switch away
+>> from the outdated things anyway, just to keep code up-to-date.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/gpio/gpio-tegra.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+>> index 6fdfe4c5303e..f6a382fbd12d 100644
+>> --- a/drivers/gpio/gpio-tegra.c
+>> +++ b/drivers/gpio/gpio-tegra.c
+>> @@ -96,12 +96,12 @@ struct tegra_gpio_info {
+>>  static inline void tegra_gpio_writel(struct tegra_gpio_info *tgi,
+>>                                      u32 val, u32 reg)
+>>  {
+>> -       __raw_writel(val, tgi->regs + reg);
+>> +       writel_relaxed(val, tgi->regs + reg);
+>>  }
+>>
+>>  static inline u32 tegra_gpio_readl(struct tegra_gpio_info *tgi, u32 reg)
+>>  {
+>> -       return __raw_readl(tgi->regs + reg);
+>> +       return readl_relaxed(tgi->regs + reg);
+>>  }
+>>
+>>  static unsigned int tegra_gpio_compose(unsigned int bank, unsigned int port,
+>> --
+>> 2.24.0
+>>
+> 
+> The entire series looks good to me, but I'll wait for Thierry's acks
+> just in case.
 
---yQDbd2FCF2Yhw41T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Dec 15, 2019 at 09:30:44PM +0300, Dmitry Osipenko wrote:
-> Hello,
->=20
-> I was investigating why CPU hangs during of GPIO driver suspend and in
-> the end it turned out that it is a Broadcom WiFi driver problem because
-> it keeps OOB wake-interrupt enabled while WLAN interface is DOWN and this
-> may cause a bit weird CPU hang on writing to INT_ENB register during of
-> GPIO driver suspend. Meanwhile I also noticed that a few things could be
-> improved in the driver, that's what this small series addresses.
->=20
-> Dmitry Osipenko (3):
->   gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
->   gpio: tegra: Properly handle irq_set_irq_wake() error
->   gpio: tegra: Use NOIRQ phase for suspend/resume
->=20
->  drivers/gpio/gpio-tegra.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
-
-Patches look good:
-
-Reviewed-by: Thierry Reding <treding@nvidia.com>
-
-I also applied this series on top of v5.5-rc1 and ran it through our
-test system:
-
-    Test results:
-        13 builds:  13 pass, 0 fail
-        22 boots:   22 pass, 0 fail
-        34 tests:   34 pass, 0 fail
-
-    Linux version:  5.5.0-rc1-g3d0b4fced39e
-    Boards tested:  tegra124-jetson-tk1, tegra186-p2771-0000,
-                    tegra194-p2972-0000, tegra20-ventana,
-                    tegra210-p2371-2180, tegra30-cardhu-a04
-
-All tests passing, so:
-
-Tested-by: Thierry Reding <treding@nvidia.com>
-
---yQDbd2FCF2Yhw41T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37jvMACgkQ3SOs138+
-s6HZYA/+KkwZWvDrOQ/xInN24cWeziIx62H3vJwfR9+Tjbdww4+9yMeMtj5ZWqMy
-fXJZ5t/UokIk+x9MoUYHUIOB6Iv0JhobZ9vWW9IikMfPKbHUPsQI8PrDG5Irnqxg
-AehGhD5Z11O3CSR/N1AEP5iv5udWFuhcb23FJMBNYhNxx7+DfU0iDJ54BmRKoaTG
-xWH5wBIJIXR06J80bJUaJezl5yocm6I7LgC/rzbiM1R+8hNz/nkyLoon5MEJOvUy
-dfNNn+2upmavuoG+EMcZgKCHPHb8CILSciNrcDmSp2EP1/OOYgm9urytQRrnHwWn
-0a/P//Zasnmb7kUYqcSNa9b8xD7aZ/lMS2zvLmtWHeF9uQigJtxmeFcFEU/DofeV
-LMfxE+ePRof2N7EztSgOxpVqS6V0OMzr5TquUq9d0CxDVkfzq1LHZO+9XY4MCTzi
-xD+Ncn/te+xJmLoiXMMVOnlpa4e3BzO583aBMAR6cLwzNHRhKOAhCws1pxieH9aR
-Bg2vGbwkrDK4c2AouHoNROlu/DN2n+GVhlH+b93P0xRJJAvgvwOhuUnwYj4Nt4Hf
-oTWbSN9AVBRSBQQdnH4R3N6idMPj4SInVWWF2jgvl5IJGGWOtKQCHYI/TmFmu69i
-LKcAZPJjK+eOdWMaoCrhnv0QMN7Of+4Rhx1OLSRm9MX9QF40E6I=
-=CltG
------END PGP SIGNATURE-----
-
---yQDbd2FCF2Yhw41T--
+Thank you very much for taking a look at the patches!
