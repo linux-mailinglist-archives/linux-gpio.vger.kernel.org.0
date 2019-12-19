@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BABA31266AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:20:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0476C1266BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:22:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfLSQUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 11:20:00 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36612 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbfLSQUA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 11:20:00 -0500
-Received: by mail-io1-f65.google.com with SMTP id r13so6347719ioa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 08:20:00 -0800 (PST)
+        id S1726971AbfLSQWW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 11:22:22 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38745 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfLSQWW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 11:22:22 -0500
+Received: by mail-io1-f66.google.com with SMTP id v3so6355938ioj.5
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 08:22:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=x7d4TllQNgMDMPZTRJpJmOWDPekc1T35SM9lCcLfJdQ=;
-        b=SCuxem4Jxz0STF3/inTNjLORR6liCKiEzIao5lCAoWanEIukjQRnfqWvt3UdERFwa4
-         gIQxD0doQs8L56Er+ycUEQLMMMrJSdBq5z681aqGoooQ/vPpl3LxW5NGl/SirdFRwZLY
-         2tWTZzsKYBkJoCNYYJfYV9wOyz5kJIv495o7/m+6rRx1r+RPKI0iojCfnAAvVWN648PE
-         6m6ldIUqvjwtXnAwfNAfxtPWArrssB2TL2uaLZROlAE0N4WGoPO4tm1l6qJpDZuJEJPq
-         05GePHvq8vEnIhslymxzuEmOqO8GvosIYxWqcyfG/ugY+rGmrS+yuZCPgnrRxsPSd9Qh
-         sk6Q==
+        bh=n81r7QrGuep9hV+3PKVLL2hvZEUY0LLXJO5ENAZWN5M=;
+        b=c1P8t0wKClU8n5NQN4ppo/B0Q6B38XEbPLd+ORo1cUS0Ixx/Pd/iga9Cc18cdU7CeE
+         UXl8s+dSoQAfchCg17VhEJDCRX2lQLhLjstfXDaficT9/33zFS+0APdxVTnZxmMDnH1Y
+         iQjnZcbyuvHKCQP9Xp7FpcBXaPeNKDgR4EhMxDad4Vaw4sxX9dIQorIBVYFWLGzrFBkR
+         Zrov6PpiYn4lKtvyYIN7CRc7I2DW1ghFz/WecChzSCTAd8Uh5bIfvo/5Llop5KNcJ7Qk
+         /jHJ6tLN2hoy5f8sHmvIcONL98AvLePH3Dc+ERTxpTjcto1L2nYon0kM6i3TnOm4a8Nt
+         A3KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=x7d4TllQNgMDMPZTRJpJmOWDPekc1T35SM9lCcLfJdQ=;
-        b=MbjlUdu9DXvN3PAcuoOnAryjbI78EVUwi6sJFUV+0ADFb3Nv1nJrKfYtFHst1zTDPM
-         XPw3NBQ+ANKb3YGib6+DZgw/LI2Pe4C5KMDlxcVYa2ro4xLnKcYCCj3wWwk1I+TkPGCC
-         56D+jv7s+oh/sueKXRJ98uAXG2e44vcahOsOQwYmhH3fKUZc1RudYAuGmkP7GHZcdHBZ
-         2GdK6CXjOby5AJMfS3Wu2wMzwbhdkmIFMJPBFDQ94ZwooCplgvqrKFM9NsFn04zVVMnw
-         QPENsg3ZCqsDctG8ckuetQuaNuIP/HKXUaN4/rIJjE1Rti5Ty8R6BkziHx/9BBlgzt/s
-         Q/9g==
-X-Gm-Message-State: APjAAAUMNNKP5NvpOQoaV/nGuQaXKoEjDXQnnEvXhriounQUZ5G1cWsJ
-        1dopFYPWfl7ySAklVGZ6xPSff0d7qL9psVA8Ut/9fm0V
-X-Google-Smtp-Source: APXvYqyPBd6B2KV5t/GSBcPBsGOvvHmqItuV+Y/Q99BlKJU4kbND51rDCxtqycefrrihej3Lv9q5C5+xtakGk0cfVY8=
-X-Received: by 2002:a6b:fb19:: with SMTP id h25mr6564091iog.40.1576772399642;
- Thu, 19 Dec 2019 08:19:59 -0800 (PST)
+        bh=n81r7QrGuep9hV+3PKVLL2hvZEUY0LLXJO5ENAZWN5M=;
+        b=caOg4iXrT1DTzqcyrZtG3hq9LpELunIFSRXzpaLbWwuiX0eJDsRn7F2E1SXJWIzLVg
+         tsVLe7Osi0j0l/TQHxao71dRgD5L31AmDKJGTBxY9v9Jz1g0mq/GoPpvqTi/P9pKtokB
+         BItrRYL8bbzk9Ys3qqwTQvlk+fHgFgdodVZKIZ05zFwWsrKofT9XJXgncF+J7heGe3BL
+         30z85XquGzilX61Dl4T8UpfgWuPp/lTr06XRNMF15eNGTV3DJyVFVGasJnvwZj/k0sd0
+         2nhvNqKHog79XpoRAlPG3FW6MlZ26BaIwjTdWrISX65O15cBM7VEKp2mSP5HEXVmrrD0
+         MkGA==
+X-Gm-Message-State: APjAAAUhhv10JsriuQHqXPeG8SKd5DW1oISlQ8v0EbaaeZY5oN0ssNNV
+        j058apda9c3hVmpCjLdPg5vfd3WXfPhKyRjaZ4JaeQ==
+X-Google-Smtp-Source: APXvYqyrT8wvS1ZFGoN+rfRmHHdo8+PM6oEXfu/rT2FKRX2JOC1Q5EaDaqpRdCWbu6cVS8DAwmn+7enb8iEi+Sa2Omg=
+X-Received: by 2002:a02:3312:: with SMTP id c18mr7785705jae.24.1576772541788;
+ Thu, 19 Dec 2019 08:22:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218142449.10957-1-brgl@bgdev.pl> <20191218142449.10957-4-brgl@bgdev.pl>
- <20191219133502.GA12028@firefly> <CAMpxmJVXgx-zduPT4pAFJw3QFFCb=7f3aXB-rhd2uXuKYefTSg@mail.gmail.com>
- <20191219140518.GA12078@firefly> <CAMRc=MdKhLpBsDjcwM4JfFkUmx_VFAjfxNrMFWUBsc8ZWO49Ow@mail.gmail.com>
- <20191219143631.GA12100@firefly>
-In-Reply-To: <20191219143631.GA12100@firefly>
+References: <20191204155912.17590-1-brgl@bgdev.pl> <20191204155912.17590-9-brgl@bgdev.pl>
+ <CAHp75VfVHr2LGZYSVhQ+KmhvGrnH=1ZNAPzJOTdZDh7wsjFddw@mail.gmail.com>
+In-Reply-To: <CAHp75VfVHr2LGZYSVhQ+KmhvGrnH=1ZNAPzJOTdZDh7wsjFddw@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 19 Dec 2019 17:19:48 +0100
-Message-ID: <CAMRc=McXP7g=XCYZiOhmXR_WLvYgT2aJ76E=S-uq5NMzjj_6kw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 3/7] tests: event: extend test coverage for
- reading multiple line events at once
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Thu, 19 Dec 2019 17:22:11 +0100
+Message-ID: <CAMRc=Meb78=x2+0+aFoZkSgRP3b+f9FvUNs_AJJ4rahpM=PPbw@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] gpiolib: emit a debug message when adding events
+ to a full kfifo
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,50 +62,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 19 gru 2019 o 15:36 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
+=C5=9Br., 4 gru 2019 o 23:28 Andy Shevchenko <andy.shevchenko@gmail.com> na=
+pisa=C5=82(a):
 >
-> > > >
-> > > > I'm not sure I understand. We can't have two event fd's for the sam=
-e
-> > > > line. Or are you thinking about setting up a second line, generatin=
-g
-> > > > events on it and consuming them so that we can rely on the timing t=
-o
-> > > > make sure the events were registered for the first one too?
-> > > >
-> > >
-> > > I was thinking of two event fds on the one line, and you are
-> > > correct, there can only be one, so that wont work.
-> > > Wrt using two lines, I'm not sure ordering can be guaranteed as you
-> > > end up with two separate debugfs writes...
-> > >
+> On Wed, Dec 4, 2019 at 6:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 > >
-> > Yeah I gave it a spin and it turns out it's not reliable - some events
-> > still get dropped albeit less than without any syncing. The usleep()
-> > calls are still better than this. Any other ideas? I agree this is not
-> > optimal, but couldn't come up with anything else.
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently if the line-event kfifo is full, we just silently drop any ne=
+w
+> > events. Add a ratelimited debug message so that we at least have some
+> > trace in the kernel log of event overflow.
 > >
 >
-> The two options I can think of are getting the debugfs write
-> to block until the simulated interrupt has been serviced, or adding a
-> multi-line set to the mockup so the two lines can be set simultaneously.
-> I'm not sure the first is possible.
-> And the second wont help if it results in two interrupts unless the
-> order the interrupts are serviced is guaranteed.
-> Either way it seems like a whole lot of work just to remove the sleeps,
-> so the sleeps seem like a reasonable workaround :(.
+> Hmm... I don't like prints in IRQ context (even threaded).
+> Can we rather switch to trace points at some point?
 >
 
-Now when I looked at gpio-mockup again I'm under the impression that
-the interrupt should be fired from the set() callback, not from the
-debugfs write callback. But this is a minor detail and it won't help
-here.
-
-Anyway, I'm really not sure how to do it any differently. We can also
-be less strict in user-space - we can schedule, let's say, 16 events
-without sleeps and not really verify the number of read events - just
-check if it's bigger than 1 and that what we read are actual events
-(valid event_type).
+This is something that will be very rare and unlikely - I don't see
+how trace points will help here with all the boiler-plate.
 
 Bart
