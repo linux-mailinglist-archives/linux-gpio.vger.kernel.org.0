@@ -2,229 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64631125F08
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 11:33:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFCF125F69
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 11:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbfLSKdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 05:33:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50588 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfLSKdS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 05:33:18 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so4893084wmb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 02:33:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=Jq/RoVBQUdYougVCwhsmeMWjBjrNCV266LCRZYiOKSQCC+HXqnkdyFQNLqbV3MQfjk
-         t4Ro8rV3EKvd4KHJqxr8Ldmg6vZxVW18xqPRqQ5+YdNa6aT/IVZjHV/M3/VUMo4XXImK
-         BFeXhpMFYhwAY5fqnVWVHs+holLoSXbry+uDxP7kjoMd8l33khaUEtoP7rHWELMiaMfy
-         ZNx6rE0HyNd9nKxLTtTg8m2CPnrZ9lINMdS05P3Z+H7wR/KyXAqCyu4wbwbNYuTORc6k
-         Cdq3snOBdrvb5cHDDxDwpa1yt3c1FQYnDhJhViq3v8DtUHkje3sFj0OdZSw/NmgjfrKk
-         FoHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UpfkndITw/1h6ZYfXIWQrUX2mzHma7l6m7IK0V8q2nM=;
-        b=IPks9OyU5Iohgs+8ELYortztJ/264dx6TuB5NkhkOb5IveKSzrbnu3HX48zu1kMx5B
-         +iIHbUAwKnzsburI4BqpQ8gz41ExphK4EN7tS7qT9aqVyr3By/0GUTywqMyQIbgJmkZ8
-         XY/E3MIdg175oP1QOxslco5aoeOVdnuAqhE0/ZJTOWRGRStgJqfZChAMB/d98qBd9imJ
-         rbDQunKUcjWxbkdq7CCfyja0P9qpUXQ5+gls1JeBa1UYUA9zRCA3NhVCPwr1WUcEhTZw
-         LR2u1N22M3IR+X8Csb0Ge+/yr8TbWDzgqfFMyNgbdQnjMJtlN/RRc0c8wx3jNNLO2B4S
-         3jHw==
-X-Gm-Message-State: APjAAAU1ct6Xfuqm+78q8w8W+QOSzYZ53yKg348Gybnoc828lgmwomIQ
-        yN7140zksudiUtIMIjTerzOIqg==
-X-Google-Smtp-Source: APXvYqwl6PRQmxRp2FeaUrF1dSbhoP+n1mCs6HIPNucmAod9GoKn3RCFhO9Un5ocsWwCOZY6wlcBjA==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr8847992wml.138.1576751596755;
-        Thu, 19 Dec 2019 02:33:16 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id i11sm5962942wrs.10.2019.12.19.02.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 02:33:15 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc:     robh@kernel.org, vinod.koul@linaro.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, linux-gpio@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v6 11/11] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-Date:   Thu, 19 Dec 2019 10:31:53 +0000
-Message-Id: <20191219103153.14875-12-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+        id S1726752AbfLSKmu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 05:42:50 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:42221 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726734AbfLSKmt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 19 Dec 2019 05:42:49 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576752169; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: To: From: Sender;
+ bh=T9NsD/M02vdnbyOUnwhyyGvAMjZyJMRP82J5Usiy73c=; b=CdY8KbsCXeYckDzZkNXPemqIfV88LaWDMWyf44xvVZGKC4oxBWhX51InQipvzaKUEFwe6npw
+ eK03FhD4/ql0+hla+KX9RV36qZLpnbp5Krg9khCUAyqsQ0JO9GE8v8imlPdfXKSDFgURZTJ3
+ XDT652bBYRCvf65eIxuPKOTjRz8=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb5426.7fc03d6f2ca8-smtp-out-n01;
+ Thu, 19 Dec 2019 10:42:46 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A3D07C447BB; Thu, 19 Dec 2019 10:42:46 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33C73C4479C;
+        Thu, 19 Dec 2019 10:42:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33C73C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     sricharan@codeaurora.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
+        sivaprak@codeaurora.org
+Subject: [PATCH V2 0/7] Add minimal boot support for IPQ6018
+Date:   Thu, 19 Dec 2019 16:11:42 +0530
+Message-Id: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support to Lenovo Yoga c630 compatible strings
-and related setup to the sound machine driver.
+The IPQ6018 is Qualcomm’s 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/sdm845.c | 86 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+This series adds minimal board boot support for ipq6018-cp01 board.
 
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 28f3cef696e6..3b5547a27aad 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -24,6 +24,9 @@
- #define RIGHT_SPK_TDM_TX_MASK   0xC0
- #define SPK_TDM_RX_MASK         0x03
- #define NUM_TDM_SLOTS           8
-+#define SLIM_MAX_TX_PORTS 16
-+#define SLIM_MAX_RX_PORTS 16
-+#define WCD934X_DEFAULT_MCLK_RATE	9600000
- 
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
-@@ -36,6 +39,39 @@ struct sdm845_snd_data {
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
- 
-+static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
-+	int ret = 0, i;
-+
-+	for (i = 0 ; i < dai_link->num_codecs; i++) {
-+		ret = snd_soc_dai_get_channel_map(rtd->codec_dais[i],
-+				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
-+
-+		if (ret != 0 && ret != -ENOTSUPP) {
-+			pr_err("failed to get codec chan map, err:%d\n", ret);
-+			return ret;
-+		} else if (ret == -ENOTSUPP) {
-+			/* Ignore unsupported */
-+			continue;
-+		}
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
-+							  rx_ch_cnt, rx_ch);
-+		else
-+			ret = snd_soc_dai_set_channel_map(cpu_dai, tx_ch_cnt,
-+							  tx_ch, 0, NULL);
-+	}
-+
-+	return 0;
-+}
-+
- static int sdm845_tdm_snd_hw_params(struct snd_pcm_substream *substream,
- 					struct snd_pcm_hw_params *params)
- {
-@@ -151,6 +187,11 @@ static int sdm845_snd_hw_params(struct snd_pcm_substream *substream,
- 	case QUATERNARY_TDM_TX_0:
- 		ret = sdm845_tdm_snd_hw_params(substream, params);
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		ret = sdm845_slim_snd_hw_params(substream, params);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
- 		break;
-@@ -173,7 +214,20 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(card);
- 	struct snd_jack *jack;
--	int rval;
-+	struct snd_soc_dai_link *dai_link = rtd->dai_link;
-+	/*
-+	 * Codec SLIMBUS configuration
-+	 * RX1, RX2, RX3, RX4, RX5, RX6, RX7, RX8, RX9, RX10, RX11, RX12, RX13
-+	 * TX1, TX2, TX3, TX4, TX5, TX6, TX7, TX8, TX9, TX10, TX11, TX12, TX13
-+	 * TX14, TX15, TX16
-+	 */
-+	unsigned int rx_ch[SLIM_MAX_RX_PORTS] = {144, 145, 146, 147, 148, 149,
-+					150, 151, 152, 153, 154, 155, 156};
-+	unsigned int tx_ch[SLIM_MAX_TX_PORTS] = {128, 129, 130, 131, 132, 133,
-+					    134, 135, 136, 137, 138, 139,
-+					    140, 141, 142, 143};
-+	int rval, i;
-+
- 
- 	if (!pdata->jack_setup) {
- 		rval = snd_soc_card_jack_new(card, "Headset Jack",
-@@ -211,6 +265,21 @@ static int sdm845_dai_init(struct snd_soc_pcm_runtime *rtd)
- 			return rval;
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		for (i = 0 ; i < dai_link->num_codecs; i++) {
-+			rval = snd_soc_dai_set_channel_map(rtd->codec_dais[i],
-+							  ARRAY_SIZE(tx_ch),
-+							  tx_ch,
-+							  ARRAY_SIZE(rx_ch),
-+							  rx_ch);
-+			if (rval != 0 && rval != -ENOTSUPP)
-+				return rval;
-+
-+			snd_soc_dai_set_sysclk(rtd->codec_dais[i], 0,
-+					       WCD934X_DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -256,6 +325,14 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 		}
- 		snd_soc_dai_set_fmt(cpu_dai, fmt);
- 		snd_soc_dai_set_fmt(codec_dai, codec_dai_fmt);
-+		break;
-+	case QUATERNARY_MI2S_RX:
-+		snd_soc_dai_set_sysclk(cpu_dai,
-+			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
-+			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
-+		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
-+
-+
- 		break;
- 
- 	case QUATERNARY_TDM_RX_0:
-@@ -294,6 +371,8 @@ static int sdm845_snd_startup(struct snd_pcm_substream *substream)
- 			}
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -338,6 +417,9 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
- 		}
- 		break;
-+	case SLIMBUS_0_RX...SLIMBUS_6_TX:
-+	case QUATERNARY_MI2S_RX:
-+		break;
- 
- 	default:
- 		pr_err("%s: invalid dai id 0x%x\n", __func__, cpu_dai->id);
-@@ -451,6 +533,8 @@ static int sdm845_snd_platform_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sdm845_snd_device_id[]  = {
- 	{ .compatible = "qcom,sdm845-sndcard" },
-+	{ .compatible = "qcom,db845c-sndcard" },
-+	{ .compatible = "lenovo,yoga-c630-sndcard" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sdm845_snd_device_id);
+[v2]
+ * Splitted dt bindings  and driver into different patches. Added missing bindings
+   and some style changes.
+ * Added ipq6018 schema
+ * Addressed review comments for gcc clock bindings.
+ * Removed all clk critical flags, removed 1/1 factor clocks, moved to new
+   way of specifying clk parents, and addressed other review comments.
+ * Sorted nodes based on address, name, label. Removed unused clock nodes,
+   Addressed other review comments.
+
+Sricharan R (7):
+  dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+  pinctrl: qcom: Add ipq6018 pinctrl driver
+  dt-bindings: qcom: Add ipq6018 bindings
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+  arm64: dts: Add ipq6018 SoC and CP01 board support
+  arm64: defconfig: Enable qcom ipq6018 clock and pinctrl
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |    7 +
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  172 +
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts       |   41 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  215 +
+ arch/arm64/configs/defconfig                       |    3 +
+ drivers/clk/qcom/Kconfig                           |    8 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 4674 ++++++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq6018.c             | 1161 +++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
+ include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
+ 15 files changed, 6715 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
+
 -- 
-2.21.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
