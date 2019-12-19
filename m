@@ -2,130 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2E5F126FBD
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 22:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9D06127092
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 23:21:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfLSVdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 16:33:51 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35676 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 16:33:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j1so450941lja.2
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 13:33:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=PqR4x8+f9h2Qn/e8Pu7yo3KcXeRHhFv38n6yorLO0Ug=;
-        b=CBz77i1+cO1ZzfRyHCuPs2lWQc8MNXKOd8UnR8KIwv2ButzuSX5Q0Uzg6RhYpOT7bO
-         SmlbQw3On2pYwbmZ8S4scNa7Z4sJNUvFJXLAqmdCn+jWmeM30PoQ4Ux3+ulVxH8OI/6K
-         +3ljNBvOX1mcnfDdt3Al4YIeK5xhztrwh6y9efzjtZNYO8AqnmSIqUc0Vo1jXQ+3+3aE
-         2cu9W9RWEAA6hfhjxUXH6Rn6KunkxwQRKujnDSJWLiny69Am3KNmIvrS/Ef3kXm2gEZ3
-         c5i/kiGuY9EUmmP4+84E1+I7tmWZxeXPdIN3SlhWquC9YPHiu96rOwG5cc30LzmKuIot
-         L9Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=PqR4x8+f9h2Qn/e8Pu7yo3KcXeRHhFv38n6yorLO0Ug=;
-        b=cLZOCOMhXP4KB+sxPD4UOO5JdLHhLDQUbISbs6yXT06c3CvnW/YAxgke6G2xYyyQvH
-         9Bp/wI3RtwSMBrsQ4OHSz3mM4cPTN5UtVKp81JHi4LMpoPcE2hu2ioLVpUVEpclU8uD5
-         Ji+1eDZsY0L+HUIBUmcMi/HvVjZrXtsiby+2doFZhIVl5vOOxmhLgt5WzPeLE2jtlyEX
-         3wcJM3HEPxjblfD7gP5dXHbkaHC3iqM/YE8NNTinRF0p1DNlsQFSWGKJp1i1DNKZ2bAi
-         CMvM4lb0rsHzvsep3yPSTrYQFlFg9ApktoAaFtOMRm/mekUh+hxaH1vVlBEl7fOr7ZCZ
-         a1JQ==
-X-Gm-Message-State: APjAAAXiMS8bwHF1O2MRkQ279repUbcoJ2cQrCpa15lQqiBSZm6lTnxc
-        mk3a6E0bMge8TKHqxMLH5+dDg/qhRQ3sGNv8Ns1YXA==
-X-Google-Smtp-Source: APXvYqz19W2owPoKz+mA6kiWEUSTR8sk4af5EkB2e/vEhQHVrVOyBFIZCzLq8fe6Xg5K9N/ABY3tBHpcKTz1BD2FN4I=
-X-Received: by 2002:a2e:a490:: with SMTP id h16mr5702791lji.251.1576791228697;
- Thu, 19 Dec 2019 13:33:48 -0800 (PST)
+        id S1726880AbfLSWVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 17:21:35 -0500
+Received: from mga18.intel.com ([134.134.136.126]:45120 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726866AbfLSWVe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 19 Dec 2019 17:21:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 14:21:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,333,1571727600"; 
+   d="scan'208";a="267347305"
+Received: from dmulla-mobl.amr.corp.intel.com (HELO [10.254.112.28]) ([10.254.112.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Dec 2019 14:21:32 -0800
+Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
+ wcd9340/wcd9341 codec
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, spapothi@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+ <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
+ <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+Date:   Thu, 19 Dec 2019 14:05:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Dec 2019 22:33:37 +0100
-Message-ID: <CACRpkdbY1XBspR0rrXVvCW2LwnRfA_DnA0YzwFy-dHCVhQSr0A@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for the v5.5 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-sorry that this fixes pull request took a while. Too much christmas
-business going on.
 
-This contains a few really important Intel fixes and some odd fixes.
+>> It was my understanding that in SLIMbus the Linux devices are created 
+>> at probe time, and when the device reports present this 
+>> 'device_status' callback is used to notify the codec driver of a 
+>> change. The rationale for this was that the codec driver may control 
+>> power switches/gpios that are necessary for the device to appear on 
+>> the bus.
+> 
+> We use same rational here to power switch and flip reset pins in device 
+> probe to power up the actual SLIMBus device in device probe.
+> 
+> Only difference here is that the actual SLIMBus device itself is 
+> represented as many child devices based on there functionality.
+> 
+> SLIMBus parent device in this case is MFD device which is created at 
+> probe time. However child devices for that device like gpio controller, 
+> codec, clock controller and soundwire controller are created only after 
+> the device is enumerated on the bus. Before that none of these devices 
+> will be in a position to talk on the bus.
+> 
+> 
+>>
+>> This argument was used to require an change in the SoundWire 
+>> implementation, so we followed this model of creating devices at probe 
+>> time based on information reported by ACPI/DT, and used the 
+>> 'update_status' callback when the device is present on the bus (which 
+>> may happen after a delay or controlled by an external power switch). 
+>> This approach can lead to 'ghost devices' described in firmware but 
+>> not populated in hardware, and power management opens on how long a 
+>> bus needs to remain active if no devices report present.
+>>
+>> What I understand from the code above is that the devices are actually 
+>> created when the SLIMbus device reports PRESENT, which seems a 180 
+>> degree change in directions?
+>>
+> Note these are the child devices of the MFD SLIMBus device.
 
-Details in the signed tag as usual.
+Ah ok. I guess the creation of those child devices when the parent 
+SLIMbus device reports PRESENT initially if fine, it's the part where 
+you remove them if the device loses sync or gets powered off which is 
+odd. And I guess technically you could still have race conditions where 
+a child device starts a transaction just as the parent is no longer 
+attached to the bus.
 
-Please pull it in!
+>> I would however not remove the devices when the status is down but 
+>> only on an explicit .remove.
+> 
+> Am open for suggestions but I would not like the child devices to talk 
+> on the bus once the SLIMbus device is down! Only way to ensure or make 
+> it silent is to remove.
 
-Yours,
-Linus Walleij
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.5-3
-
-for you to fetch changes up to 9e65527ac3bab5480529d1ad07d4d228cc0295cd:
-
-  pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config (2019-12-16 11:38:20 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.5 kernel cycle:
-
-- A host of fixes for the Intel baytrail and cherryview:
-  properly serialize all register accesses and add the irqchip
-  with the gpiochip as we need to, fix some pin lists and
-  initialize the hardware in the right order.
-- Fix the Aspeed G6 LPC configuration.
-- Handle a possible NULL pointer exception in the core.
-- Fix the Kconfig dependencies for the Equilibrium driver.
-
-----------------------------------------------------------------
-Alexandre Torgue (1):
-      pinctrl: pinmux: fix a possible null pointer in
-pinmux_can_be_used_for_gpio
-
-Andrew Jeffery (1):
-      pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
-
-Andy Shevchenko (3):
-      pinctrl: baytrail: Update North Community pin list
-      pinctrl: baytrail: Add GPIO <-> pin mapping ranges via callback
-      pinctrl: baytrail: Pass irqchip when adding gpiochip
-
-Hans de Goede (4):
-      pinctrl: baytrail: Really serialize all register accesses
-      pinctrl: cherryview: Split out irq hw-init into a separate helper function
-      pinctrl: cherryview: Add GPIO <-> pin mapping ranges via callback
-      pinctrl: cherryview: Pass irqchip when adding gpiochip
-
-Linus Walleij (1):
-      Merge tag 'intel-pinctrl-v5.5-2' of
-git://git.kernel.org/.../pinctrl/intel into fixes
-
-Paul Cercueil (1):
-      pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config
-
-Rahul Tanwar (1):
-      pinctrl: Modify Kconfig to fix linker error
-
- drivers/pinctrl/Kconfig                    |   1 +
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c |  24 ++--
- drivers/pinctrl/intel/pinctrl-baytrail.c   | 200 ++++++++++++++++-------------
- drivers/pinctrl/intel/pinctrl-cherryview.c | 107 ++++++++-------
- drivers/pinctrl/pinctrl-ingenic.c          |   2 +-
- drivers/pinctrl/pinmux.c                   |   2 +-
- 6 files changed, 184 insertions(+), 152 deletions(-)
+it's as if you are missing a mechanism to forward the parent status to 
+the children so use remove() for lack of a better solution?
