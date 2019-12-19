@@ -2,58 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F47712605B
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 12:01:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B74D126088
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 12:10:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfLSLBx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 06:01:53 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38513 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbfLSLBx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 06:01:53 -0500
-Received: by mail-qk1-f194.google.com with SMTP id k6so4288878qki.5
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 03:01:52 -0800 (PST)
+        id S1726698AbfLSLKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 06:10:41 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37480 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfLSLKk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 06:10:40 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w47so4716234qtk.4
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 03:10:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=r4FrNo5LLEspvU9m0EiGD3eytJBEaYUVyq8SH3ZcE3o=;
-        b=C0W0Svkg0Llp9ZQuiZFYuGlJcklhQKzim592wdhPRyuZfzvO6Sy8GmgRlXLBdYyg8M
-         CnrXmmjidsnz1OPlJ7lXISjmdDSwrtPul+4xso+ezWUJxWZKbQLz/mVUb+ZLF+eH9bTQ
-         u75sjyRdj/GEuKHBsLnLOh9VFM4yqIFq36tZDoF6mvyeqaatSfPS9TCEk4HMmDsOFcz0
-         WNHxhb1zWXDPywtVLafp3q4kuWplraaVjhNkKR/AiGQMnOon2GZ66zSaq0dyvqUj5U8D
-         WAhrOKJsCtgkz2d5eRKxlVtMQKHP0XMUdWi5RzJITjwMjKCCJmwKqBNgL0SfgwQBAczw
-         lsog==
+        bh=SJiLbsEyOxS8sGorfLAOU4xJKF3nGQf0Amv/oVqLTpM=;
+        b=dm+K4tCbb0SMvVMAS0DtrlIoPpBOu2T6hGIWa5e7atlrpaJCuIes0zfCXr3T5q7nLs
+         kCwvc1d1itkC2VjSGzn3qrkyXgtOkoW08YOAl0CKzd/ah4172kFKW0LPoSUpbNkC2RGH
+         0P1kMf7/C/K9ig+o3VoEDpj/Q6kZT6fARM7OvSkMLaGKMQCDctwCGNw0G5H/PhVzOrT9
+         rCj0biTH7OWie/kAr3zTxePDI0/x1GwlbSYqrOXqbTzt8WRXgp4EniJHAr8AS/WK2mbX
+         SvOY2W2dEstfqvrnKwKZg0hg5YNAa4d+UqyBTP0C2ybhrvg78unmXrWyrRHP9DhjDsGx
+         teUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r4FrNo5LLEspvU9m0EiGD3eytJBEaYUVyq8SH3ZcE3o=;
-        b=qy1x7wlhamGX3HJ26hqlirWqbJcoZdYwmhESvJNiJOSceHOpOjrC9EeR4rp5vBnlj5
-         gUyKT3B5PN11fWuRoyI3ROImNHREBqpy8iqPbbuqtCQpdmExQVaL+Esd/gIgFCw4dsBH
-         QZ9Jr+fefSYN5895EgeLgcw0ighvgAtFK1srrT+wNi0zRKV5L+zbiZtHLBVO261xQQl/
-         RDc5DOFn6oNXKCq6QrYP16eUxRH7k6QAuTYhKZNR5IUNyBxlyCgVLuirPeJRmqKfjx+L
-         1BreEPD/TXuGKrVA/yt8jC/Oul3ZRFlLVhqde/vCFU25dljgm5dpchxlV9AJqfa1O4jI
-         vvdA==
-X-Gm-Message-State: APjAAAWXG8QUviMvAziYiB8V88Wbl5jomS/nlddjy/F5x1Zw/hV6EeOp
-        s4zClB3bhfFjraDpAgSpgyjb5XlVRX3u9TIPLXnJEg==
-X-Google-Smtp-Source: APXvYqy4PaZdM7lBnMAneYnTWwRA+ttNw2J5709a9anujnDKaPB/StYNQhpvIdo1lY7WcNj00iKtDkcKHWISHo02XbM=
-X-Received: by 2002:a37:6fc4:: with SMTP id k187mr7098160qkc.21.1576753312007;
- Thu, 19 Dec 2019 03:01:52 -0800 (PST)
+        bh=SJiLbsEyOxS8sGorfLAOU4xJKF3nGQf0Amv/oVqLTpM=;
+        b=uV4FS+20RoX4GeSMiuPPdPn7ZyflXqslzNGr/u0UCe5U8vQZnMhcKUWDmjfPxmguhm
+         is1DZRHliGevz3v0e388xbxhHKF8XI0zJisH3DfI1KFAYWzeyBgHEpQMME1OLutA4wWL
+         tHiJwcTYT6R9BEEkjl+CeahnGJclTCaEXHbpqAeFoSdchfdbrWqR7eZ0e1bNVyG5x9T8
+         kxNXxfYYRxtsuo30XbAmxYUl2USJ7UDZphlIa3k1fAIU/ZxUGLG32/Pzwm9sx6V2S+Vj
+         6MeO1SKrCX0aXhC3NUvJuXwbvhDkpB84Q1PJ+7GT39h5DDtbTxPBiPlqq49+Carot770
+         nI1Q==
+X-Gm-Message-State: APjAAAVtxg5BLXDHx5lfyqsqo6xhszaCpmwpY8kM8g6sTD7yNcGw3gZh
+        SkzV3U2VYBRYMD9iULiYvGvGzxJ7yKTslDAmXr3Clg==
+X-Google-Smtp-Source: APXvYqz2qAh5BXMI++n+PMlkR+N2stu371MGABqkdfpkG3bOIyTOMjLKw7m81VpyLOpj10ZoKe2TibEs4vNq/2Jzheo=
+X-Received: by 2002:aed:3b6e:: with SMTP id q43mr6255037qte.57.1576753839903;
+ Thu, 19 Dec 2019 03:10:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215183047.9414-1-digetx@gmail.com> <20191215183047.9414-2-digetx@gmail.com>
-In-Reply-To: <20191215183047.9414-2-digetx@gmail.com>
+References: <20191218132551.10537-1-baijiaju1990@gmail.com>
+In-Reply-To: <20191218132551.10537-1-baijiaju1990@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 19 Dec 2019 12:01:41 +0100
-Message-ID: <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic readl_relaxed/writel_relaxed
- accessors
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Thu, 19 Dec 2019 12:10:29 +0100
+Message-ID: <CAMpxmJXZKZYg_B_EpGbnoCEfdKw756KF5gurC4ck6RwjNd7A-g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context
+ bugs in grgpio_remove()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -62,45 +59,97 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com> napisa=C5=82=
-(a):
+=C5=9Br., 18 gru 2019 o 14:26 Jia-Ju Bai <baijiaju1990@gmail.com> napisa=C5=
+=82(a):
 >
-> There is no point in using old-style raw accessors, the generic accessors
-> do the same thing and also take into account CPU endianness. Tegra SoCs d=
-o
-> not support big-endian mode in the upstream kernel, but let's switch away
-> from the outdated things anyway, just to keep code up-to-date.
+> The driver may sleep while holding a spinlock.
+> The function call path (from bottom to top) in Linux 4.19 is:
 >
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> drivers/gpio/gpiolib-sysfs.c, 796:
+>         mutex_lock in gpiochip_sysfs_unregister
+> drivers/gpio/gpiolib.c, 1455:
+>         gpiochip_sysfs_unregister in gpiochip_remove
+> drivers/gpio/gpio-grgpio.c, 460:
+>         gpiochip_remove in grgpio_remove
+> drivers/gpio/gpio-grgpio.c, 449:
+>         _raw_spin_lock_irqsave in grgpio_remove
+>
+> kernel/irq/irqdomain.c, 243:
+>         mutex_lock in irq_domain_remove
+> drivers/gpio/gpio-grgpio.c, 463:
+>         irq_domain_remove in grgpio_remove
+> drivers/gpio/gpio-grgpio.c, 449:
+>         _raw_spin_lock_irqsave in grgpio_remove
+>
+> mutex_lock() can sleep at runtime.
+>
+> To fix these bugs, gpiochip_remove() and irq_domain_remove() are called
+> without holding the spinlock.
+>
+> These bugs are found by a static analysis tool STCheck written by myself.
+>
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 > ---
->  drivers/gpio/gpio-tegra.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/gpio/gpio-grgpio.c      | 5 ++++-
+>  sound/soc/sti/uniperif_player.c | 3 ++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-> index 6fdfe4c5303e..f6a382fbd12d 100644
-> --- a/drivers/gpio/gpio-tegra.c
-> +++ b/drivers/gpio/gpio-tegra.c
-> @@ -96,12 +96,12 @@ struct tegra_gpio_info {
->  static inline void tegra_gpio_writel(struct tegra_gpio_info *tgi,
->                                      u32 val, u32 reg)
->  {
-> -       __raw_writel(val, tgi->regs + reg);
-> +       writel_relaxed(val, tgi->regs + reg);
->  }
+> diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+> index 08234e64993a..60a2871c5ba7 100644
+> --- a/drivers/gpio/gpio-grgpio.c
+> +++ b/drivers/gpio/gpio-grgpio.c
+> @@ -448,13 +448,16 @@ static int grgpio_remove(struct platform_device *of=
+dev)
+>                 }
+>         }
 >
->  static inline u32 tegra_gpio_readl(struct tegra_gpio_info *tgi, u32 reg)
->  {
-> -       return __raw_readl(tgi->regs + reg);
-> +       return readl_relaxed(tgi->regs + reg);
->  }
+> +       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+> +
+>         gpiochip_remove(&priv->gc);
 >
->  static unsigned int tegra_gpio_compose(unsigned int bank, unsigned int p=
-ort,
-> --
-> 2.24.0
+>         if (priv->domain)
+>                 irq_domain_remove(priv->domain);
 >
+>  out:
+> -       spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+> +       if (ret)
+> +               spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 
-The entire series looks good to me, but I'll wait for Thierry's acks
-just in case.
+In general there is no need for locking in remove() callbacks. I guess
+you can safely remove the spinlock here all together.
+
+>
+>         return ret;
+>  }
+> diff --git a/sound/soc/sti/uniperif_player.c b/sound/soc/sti/uniperif_pla=
+yer.c
+> index 48ea915b24ba..62244e207679 100644
+> --- a/sound/soc/sti/uniperif_player.c
+> +++ b/sound/soc/sti/uniperif_player.c
+> @@ -601,13 +601,14 @@ static int uni_player_ctl_iec958_put(struct snd_kco=
+ntrol *kcontrol,
+>         mutex_unlock(&player->ctrl_lock);
+>
+>         spin_lock_irqsave(&player->irq_lock, flags);
+> +       spin_unlock_irqrestore(&player->irq_lock, flags);
+
+Yeah I can tell this was generated automatically - what does this line
+is expected to achieve?
 
 Bart
+
+> +
+>         if (player->substream && player->substream->runtime)
+>                 uni_player_set_channel_status(player,
+>                                               player->substream->runtime)=
+;
+>         else
+>                 uni_player_set_channel_status(player, NULL);
+>
+> -       spin_unlock_irqrestore(&player->irq_lock, flags);
+>         return 0;
+>  }
+>
+> --
+> 2.17.1
+>
