@@ -2,115 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7DAA126335
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:16:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD7C3126342
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:17:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLSNP6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 08:15:58 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54589 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbfLSNP6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:15:58 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep17so2506308pjb.4;
-        Thu, 19 Dec 2019 05:15:58 -0800 (PST)
+        id S1726830AbfLSNR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 08:17:28 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42860 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSNR1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:17:27 -0500
+Received: by mail-io1-f66.google.com with SMTP id n11so4158278iom.9
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 05:17:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EVebG2mxl2pFbRKmtKvplGDYfctGq6ipwixunLpsjMo=;
-        b=i1fphoqZCkW4TfNecoJIQUs7pOzb64NjVceblA4niuUzc3lN9qr7fCDirz8Qtly2pU
-         7mats1aY7LeNSFoqLpabz+qUtMSf5S4LBHNu2d0EAdu/Pxy/7ufPxtANYZbYsF/SdZ5V
-         iq7rO/HUELq6aJ82b3X35Pov1K1hzLY0ATZbM8fSMFF4dkn1/2k6AA+EjFwBT1BpkBlS
-         I6nDHwepj2UKBWwMNO33djHVHeNHUf7fXOKf3RZtyhcZHHjaVBaXDS50+g0845Km4l50
-         VFcVZRytMHgnq1qyS7JfeySpMOjUewwcXZJNmoS4ORL2Uk+A6oq3sho7e8ODrMqrCrLj
-         ew2A==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jw4pmutuy+Vq97iclaQ8+r0oYbBvDyG4Nv1qzyzsrWU=;
+        b=LFUH1vdr/zB8R4iQUX1VdCJ5DJbOKe7GdTOH3PkFeydwmE7naIinE52ec+tOae3k/x
+         kSQS/nO31+WMKhPzYbamyaOj0rObU6yFQ7ODCYON+v2cBs5M0vgSeL3NFDTgmoZS660p
+         UXyaIiQkMBm6ssxqh9nlTRlHsu4WQwZHPQK11HTs5GxXnFZofQcFBQLpZpSi6uyqamu/
+         DZtEFUYLWUbb1RCtYp0ZG9XbbY+m4H5Rs/BMfCWQoKOdH7ZBGMhpaSbJzWJW2rOp3lE8
+         3cyR6LWuVLfGIfEnXWYG0dLqFHSo79RbSftItp1+9DGtTXVoeQgp9W5xjlqaoKOd650E
+         WVVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EVebG2mxl2pFbRKmtKvplGDYfctGq6ipwixunLpsjMo=;
-        b=IrzQoKjFOiXxfPs64PyFMqAVGZtj/4IoNLMoe3O2faLxaEaVJPTdEqhKhRySCn4wiQ
-         DL7QL7Sro8Viu/BQZa6jQSTLo06r5fkgiD1pmiFHsXpRVyfPny38liyT8bKM+SY4R1FT
-         600Usz+1kHDbcHQmLufENtvNlLXlEFC42mfRH/5Zmv8LYqMHHKRzwm6s4XvcG1kTTgUL
-         MPscaG+Xpmxh+/cbEOXgeXmkYvgHO1KT2liaDkilKjlbBGabt7XT+qDfWl2d5RQXoibH
-         h0Q5SSguVbmH3k2k7c0X2rrjDnAPpLXkYXmG+OVseThTbQI7gs5VBq/W6cMI8BZ1LW9c
-         RT0w==
-X-Gm-Message-State: APjAAAVbi+6KXbMwUW2R5IPjJr9xhP7CkTDdBqxXH5hQcpqwCSf4wZQG
-        WnqStRGa6f3/qX4wnGmKwgM=
-X-Google-Smtp-Source: APXvYqx0fVJulRJtPx/+jJSN0Soric4f4PecZWngEHjcQePZUFaRW9bCzm5WXlZtsWup7o1/aBb8QQ==
-X-Received: by 2002:a17:90a:d145:: with SMTP id t5mr9755894pjw.57.1576761357616;
-        Thu, 19 Dec 2019 05:15:57 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id d22sm8079229pfo.187.2019.12.19.05.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:15:56 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH 1/2 v2] gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in grgpio_remove()
-Date:   Thu, 19 Dec 2019 21:14:59 +0800
-Message-Id: <20191219131459.18640-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jw4pmutuy+Vq97iclaQ8+r0oYbBvDyG4Nv1qzyzsrWU=;
+        b=F7Hakwl5OJC74iTbVJ8E7nmbRKwxf6OaXHrnl4VecxWtf+DR9XTA6/71xu1Y6moNXQ
+         g1ULGtCktSlweGA4n3Xt4J06/wNuCxGKlTM7Ygfrjf6MgmTG9/hBF7yn1iwsbfBN0L1d
+         DJLr0c6S6pWXsktSqEGy5DWtoMj52OwrPeZ1crF7i5mwqCvlPnbxQNCwvhDk6DNIz2W3
+         Nf1FleCxu96r8R0kNlhMrNaWOp/anlbZaE6j0WBJwVFXFoEOp0Unp89r+l57BmEh19jZ
+         rhbKBQDb9fvmk7moiHvGxCLlg19m1VHwU50MVJfzdoJsErdZOT5s+db5TN+/ueWQLCYG
+         Z9SQ==
+X-Gm-Message-State: APjAAAVhTa/alLlMfjRMbC1CavWXpv1FKhkQSxV19N7GkyMc8Yk56Kty
+        zE87bete7A4v3XBvnOpqZCEFsn5Gj5cuo78CkP3ixQ==
+X-Google-Smtp-Source: APXvYqwvNyyAhHwXAbfyd3QPNsoCzCD1REk3C8Va6CVWCncIMlprP/hrEm3OHy84MRRJ8VpUBzSY/wXGzh0D6GLiUfY=
+X-Received: by 2002:a02:c85b:: with SMTP id r27mr6964167jao.57.1576761446932;
+ Thu, 19 Dec 2019 05:17:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
+ <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
+ <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
+ <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
+ <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
+ <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com>
+ <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
+ <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com> <20191219131249.GA12008@firefly>
+In-Reply-To: <20191219131249.GA12008@firefly>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 19 Dec 2019 14:17:16 +0100
+Message-ID: <CAMRc=MfS49ENPS=ousx0EY-_-HM7QGtevknb9PBkewcbk7YJ4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-drivers/gpio/gpiolib-sysfs.c, 796:
-	mutex_lock in gpiochip_sysfs_unregister
-drivers/gpio/gpiolib.c, 1455:
-	gpiochip_sysfs_unregister in gpiochip_remove
-drivers/gpio/gpio-grgpio.c, 460:
-	gpiochip_remove in grgpio_remove
-drivers/gpio/gpio-grgpio.c, 449:
-	_raw_spin_lock_irqsave in grgpio_remove
+czw., 19 gru 2019 o 14:13 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
+):
+>
+> On Thu, Dec 19, 2019 at 02:05:19PM +0100, Bartosz Golaszewski wrote:
+> > wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> na=
+pisa=C5=82(a):
+> > >
+> > > > On a different note: why would endianness be an issue here? 32-bit
+> > > > variables with 64-bit alignment should still be in the same place i=
+n
+> > > > memory, right?
+> > >
+> > > With explicit padding, yes.
+> > >
+> > > > Any reason not to use __packed for this structure and not deal with
+> > > > this whole compat mess?
+> > >
+> > > Have been suggested that explicit padding is better approach.
+> > > (See my answer to Kent)
+> > >
+> > > > I also noticed that my change will only allow user-space to read on=
+e
+> > > > event at a time which seems to be a regression with regard to the
+> > > > current implementation. I probably need to address this too.
+> > >
+> > > Yes, but we have to have ABI v2 in place.
+> >
+> > Hi Andy,
+> >
+> > I was playing with some ideas for the new ABI and noticed that on
+> > 64-bit architecture the size of struct gpiochip_info is reported to be
+> > 68 bytes, not 72 as I would expect. Is implicit alignment padding not
+> > applied to a struct if there's a non-64bit-aligned 32-bit field at the
+> > end of it? Is there something I'm missing here?
+> >
+>
+> Struct alignment is based on the size of the largest element.
+> The largest element of struct gpiopchip_info is a __u32, so the struct
+> gets 32-bit alignment, even on 64-bit.
+>
+> The structs with the problems all contain a __u64, and so get padded out
+> to a 64-bit boundary.
+>
 
-kernel/irq/irqdomain.c, 243:
-	mutex_lock in irq_domain_remove
-drivers/gpio/gpio-grgpio.c, 463:
-	irq_domain_remove in grgpio_remove
-drivers/gpio/gpio-grgpio.c, 449:
-	_raw_spin_lock_irqsave in grgpio_remove
+Thanks for the clarification, now it makes sense. I assumed memory
+alignment depends on the architecture. I need to educate myself more
+on this subject I guess.
 
-mutex_lock() can sleep at runtime.
-
-To fix these bugs, the lock is dropped in grgpio_remove(), because there
-is no need for locking in remove() callbacks.
-
-These bugs are found by a static analysis tool STCheck written by
-myself.
-
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
-v2:
-* Drop the lock instead of moving the calls to lock functions.
-  Thank Bartosz for good advice.
-
----
- drivers/gpio/gpio-grgpio.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-index 08234e64993a..a49f0711ca94 100644
---- a/drivers/gpio/gpio-grgpio.c
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -437,8 +437,6 @@ static int grgpio_remove(struct platform_device *ofdev)
- 	int i;
- 	int ret = 0;
- 
--	spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
--
- 	if (priv->domain) {
- 		for (i = 0; i < GRGPIO_MAX_NGPIO; i++) {
- 			if (priv->uirqs[i].refcnt != 0) {
-@@ -454,8 +452,6 @@ static int grgpio_remove(struct platform_device *ofdev)
- 		irq_domain_remove(priv->domain);
- 
- out:
--	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
--
- 	return ret;
- }
- 
--- 
-2.17.1
-
+Bart
