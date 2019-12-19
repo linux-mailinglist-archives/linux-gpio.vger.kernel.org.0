@@ -2,136 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8A41262CE
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:02:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D35B61262DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLSNCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 08:02:19 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54424 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfLSNCS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:02:18 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b19so5337637wmj.4;
-        Thu, 19 Dec 2019 05:02:17 -0800 (PST)
+        id S1726836AbfLSNFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 08:05:31 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40905 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfLSNFb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:05:31 -0500
+Received: by mail-io1-f67.google.com with SMTP id x1so5639681iop.7
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 05:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=okuPUIyHHPxQ7OWLIYuoTdlLR46yS3KFSDODbIAwh5g=;
-        b=lDU8pRm12TPnLlZn6PZCWYB9UU8gml0kVNpg28ei+O/3LWOtI8x3wxzxIvg+kH0qJb
-         m5pOxMijUEgUd5K2bkWpIaVBNYU3Hd5lM6GdBbE9XeKsDshM5JnPJY3R5bQP9HqaItKi
-         A27ztnoE67q3uGBweMa4pxVdmjjTVQuZiaiDGUb5oQqEJhXopcNR6nuiWQ2gzv+s9usl
-         lv05iUI9nIXsnBSM1q3nyVtWmZQ3+F6oBK7+wua6efbj5V8Mawoilk73UefzqePsEOrA
-         FWJNflNA9r2PB7VDTYECRMW4qTAMyS4gaYYdHRRhv0ZyM1ogcS/SgUJmOGuIkEqC1Xs5
-         usfg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Q9IeE6+mers9j/OTuTOGvwYflrrqr9t/fsIYndVowUw=;
+        b=L3/0EauOaRXnR88vYq71/LZuB5X8fi8V4T9P7Y8BksHjUR1VmgUIyzH8N9otJVP39S
+         C5DKgTkmjx6iGzEMHfbR28APeKZRZdwISL6Q3QH80MHdTcGvOkaNERNMASgVWec4AndB
+         SrvMy+vxnIfJ+ByFZvfzYjNgcKIRR2PIk3IqwlOyDjXiZsHuqWHTZ4+g+eBdIEnEa/lt
+         YmbduU7AfrJoOjtx6HrfV5PemPZtGTKDNOdWrrnXo5jj4Jm1AIaWWXGDnhRGAnMCQo2h
+         voqeISJ0leERTeUR8Cvz+2Yo+kG/3ETbDq5dI3/vjcYZtGzG2sDr9/OY04+2JlEEyFR8
+         pdHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=okuPUIyHHPxQ7OWLIYuoTdlLR46yS3KFSDODbIAwh5g=;
-        b=ch4lIvTX1vhTJiYjwiqUFR5q18wIyaOvxlwKPxAnctVaRnBZ0vnPNcGYnNfEv828fv
-         beVbkUz+NLyrNVXGEW4aJfpsQZXfwFFySG8mPlstx0axw+No0veTm20Ycj3OM3huyOZm
-         ZwsXSv2QIoiA4rdzwxwmYKGCOwzseZG/gZPARSJ6BBXq1Yxhd7K1fLEMh4oIoBLvYGRq
-         gHW2zVR0Plu8xDBIh0Pr9DdMavTM12BHVG8fP5PmG2qURo19ND8E48W/hwRh4/L6HU4x
-         bJ+9PSBOGCY2nIoqu9n4xgVc3zYc5/gIRuv5xmPpqCXowgVHvQYtn23iUSowSiZhNm83
-         UwIQ==
-X-Gm-Message-State: APjAAAU6sKCFDt1ScIzgID60b6fL/p/BxjekWMGpR3NeFT93MZoeUbmV
-        EGoBSErvOFr8mfP1SPKDvGI=
-X-Google-Smtp-Source: APXvYqx1wHpOv/1/buQ5Fd+qhQMtmiuM0pARXR/8JiOMgg4TdC45IRYzRWErWKUpJPKWDZn0k6uL6g==
-X-Received: by 2002:a7b:c936:: with SMTP id h22mr9518756wml.115.1576760536521;
-        Thu, 19 Dec 2019 05:02:16 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id c2sm6422895wrp.46.2019.12.19.05.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:02:14 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:02:13 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: tegra: fix missing __iomem in suspend/resume
-Message-ID: <20191219130213.GF1440537@ulmo>
-References: <20191218110456.2533088-1-ben.dooks@codethink.co.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Q9IeE6+mers9j/OTuTOGvwYflrrqr9t/fsIYndVowUw=;
+        b=Kq1w58r21HzjifYPvbrUfeQ5mdD0YVTYK/bLB8FIy+bLrll2H7wtPQpWLGZ4hklBCM
+         T0dAkSEyljI3vryEopRL3gs0LCccM7RkgivKd6Vy32pCXt7iUxXwBvgjhJvMNHCiq+u0
+         tZOCP8Qso5CxrHqOc28luChL1z28xp/co0Y7XoTPR+I8tHtfvjCtoI5SVyr4cb1Fsemx
+         nghF9wPpsT/3xahgMuJwfx5VdJh3r7DFnLCkGyRgJksQNZij3n39GVZxmVfWizz6mwgO
+         5G9PBuojX3UR5kyLPoJFtzEx6loPiQ4FWK9wURgrszm99ttSIfzM+5hPFGeTg/hbKTNu
+         50DA==
+X-Gm-Message-State: APjAAAXZIE1C8eOu33gS8lgp4jVETKSMCfi8jkEz+KH8lBEvBUle9ZBr
+        aBXbKKYWaTS5m4hrMY/Ot/CQtfT7JmUQyewTBlnzLB8/
+X-Google-Smtp-Source: APXvYqy3xlLDr0/gRQDpMAxQavF9FnYrp/wUuQlcsVkS1ys9H2j774s8xBfPSlE5CcdpyDlWi8Wv2BNMMsJlu8yk57o=
+X-Received: by 2002:a6b:fc0c:: with SMTP id r12mr5436644ioh.189.1576760730506;
+ Thu, 19 Dec 2019 05:05:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vA66WO2vHvL/CRSR"
-Content-Disposition: inline
-In-Reply-To: <20191218110456.2533088-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
+ <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
+ <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
+ <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
+ <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
+ <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com> <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
+In-Reply-To: <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 19 Dec 2019 14:05:19 +0100
+Message-ID: <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> napisa=
+=C5=82(a):
+>
+> > On a different note: why would endianness be an issue here? 32-bit
+> > variables with 64-bit alignment should still be in the same place in
+> > memory, right?
+>
+> With explicit padding, yes.
+>
+> > Any reason not to use __packed for this structure and not deal with
+> > this whole compat mess?
+>
+> Have been suggested that explicit padding is better approach.
+> (See my answer to Kent)
+>
+> > I also noticed that my change will only allow user-space to read one
+> > event at a time which seems to be a regression with regard to the
+> > current implementation. I probably need to address this too.
+>
+> Yes, but we have to have ABI v2 in place.
 
---vA66WO2vHvL/CRSR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Andy,
 
-On Wed, Dec 18, 2019 at 11:04:56AM +0000, Ben Dooks (Codethink) wrote:
-> The functions should have __iomem on the register pointer
-> so add that to silence the following sparse warnings:
->=20
-> drivers/pinctrl/tegra/pinctrl-tegra.c:657:22: warning: incorrect type in =
-assignment (different address spaces)
-> drivers/pinctrl/tegra/pinctrl-tegra.c:657:22:    expected unsigned int [u=
-sertype] *regs
-> drivers/pinctrl/tegra/pinctrl-tegra.c:657:22:    got void [noderef] <asn:=
-2> *
-> drivers/pinctrl/tegra/pinctrl-tegra.c:659:42: warning: incorrect type in =
-argument 1 (different address spaces)
-> drivers/pinctrl/tegra/pinctrl-tegra.c:659:42:    expected void const vola=
-tile [noderef] <asn:2> *addr
-> drivers/pinctrl/tegra/pinctrl-tegra.c:659:42:    got unsigned int [userty=
-pe] *
-> drivers/pinctrl/tegra/pinctrl-tegra.c:675:22: warning: incorrect type in =
-assignment (different address spaces)
-> drivers/pinctrl/tegra/pinctrl-tegra.c:675:22:    expected unsigned int [u=
-sertype] *regs
-> drivers/pinctrl/tegra/pinctrl-tegra.c:675:22:    got void [noderef] <asn:=
-2> *
-> drivers/pinctrl/tegra/pinctrl-tegra.c:677:25: warning: incorrect type in =
-argument 2 (different address spaces)
-> drivers/pinctrl/tegra/pinctrl-tegra.c:677:25:    expected void volatile [=
-noderef] <asn:2> *addr
-> drivers/pinctrl/tegra/pinctrl-tegra.c:677:25:    got unsigned int [userty=
-pe] *
->=20
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Dmitry Osipenko <digetx@gmail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+I was playing with some ideas for the new ABI and noticed that on
+64-bit architecture the size of struct gpiochip_info is reported to be
+68 bytes, not 72 as I would expect. Is implicit alignment padding not
+applied to a struct if there's a non-64bit-aligned 32-bit field at the
+end of it? Is there something I'm missing here?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---vA66WO2vHvL/CRSR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37dNUACgkQ3SOs138+
-s6GZJw//aFS8hSpfqd0GKaC9F+4SGGrGqYE/8A2zRfODoBZV/3f68xpTz18WWY/4
-hKXVSJ9P7ue0bqj86a1z7zo539MSMXMyc1ggDm/Ei4oZKPn35dDuKMWvgn/1fvHg
-1Hndi0XB5grLBsmHslkdblqa/YQsa6Zynlcu4rL52L2vxhdtf3NwzuIyoC6kJ4cb
-Jd1R/77EPPKMqY3mbim85igwrjCIzOwRBwYEvKm/TcLA3yKgA58VRlFnpckjeR5D
-4BshsbHOlqhm9En2+nzHd3KPPoxg0uKpxGKt3u22EdELQJdE8/oHNIAF6MguqXVF
-8J/4FnQJiiBLyLHbbjHFP25CG1oKKzXDf0KIXgMbcN0UnW9qfPBdHMSMVaNLSGwb
-EcUSTFMnLOTBwWN/eei/YIGgtoDrkLeuZHiDFuYIB0Fu/O56/hCwfGC1oGcKHA1T
-URtLflt2899mufGyqS8tzJxOA2hriVnWGAg9WwxFZr9lgELIFOQKJI/w/EjeUlLm
-B1ZOgQufW4mwBUDBgMgBeUnqI3ehDhaiuf33qxw42qsE4ubVXp22lMgcNKHAWz9/
-WLsF+k9LLXjeaGavze+gOeQHarD7Jg1WRgURswzoV+nIK/eMIf36C+88QOl0rX4f
-tQwQHC2gN4SJphBtJr1mqG9MVRlHj1eZrXQAx/2ewfA1G9ciizg=
-=Ssbm
------END PGP SIGNATURE-----
-
---vA66WO2vHvL/CRSR--
+Bart
