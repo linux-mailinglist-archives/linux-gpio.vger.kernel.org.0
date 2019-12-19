@@ -2,118 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD7C3126342
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:17:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BABE12639A
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 14:35:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfLSNR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 08:17:28 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42860 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSNR1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:17:27 -0500
-Received: by mail-io1-f66.google.com with SMTP id n11so4158278iom.9
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 05:17:27 -0800 (PST)
+        id S1726751AbfLSNfO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 08:35:14 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37889 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNfO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 08:35:14 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so3273515pfc.5
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 05:35:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jw4pmutuy+Vq97iclaQ8+r0oYbBvDyG4Nv1qzyzsrWU=;
-        b=LFUH1vdr/zB8R4iQUX1VdCJ5DJbOKe7GdTOH3PkFeydwmE7naIinE52ec+tOae3k/x
-         kSQS/nO31+WMKhPzYbamyaOj0rObU6yFQ7ODCYON+v2cBs5M0vgSeL3NFDTgmoZS660p
-         UXyaIiQkMBm6ssxqh9nlTRlHsu4WQwZHPQK11HTs5GxXnFZofQcFBQLpZpSi6uyqamu/
-         DZtEFUYLWUbb1RCtYp0ZG9XbbY+m4H5Rs/BMfCWQoKOdH7ZBGMhpaSbJzWJW2rOp3lE8
-         3cyR6LWuVLfGIfEnXWYG0dLqFHSo79RbSftItp1+9DGtTXVoeQgp9W5xjlqaoKOd650E
-         WVVQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NVRfxbEgLFTvoCx0ZfCbabBZ4zDYahJW1fLwqy/+dv8=;
+        b=C6dFwAudCUCLczLIwHe7DYAk4fisoKJzLc3oqJOapoqSOkU1M0Qo+92JdMdYv1mYg/
+         +17eON6IBgfv8KUwSeFshWMb9zv4nrE65Gu6wswxf8R55a2IKFuvA4J8PocMZG6xcqa8
+         2hep4vDe27Z9uKb7r5I/VGYcYrd5J+/ypX+z9StgULxapmJU2u0x52h0lVbG+89AN0oo
+         D/E3nyCOylrxmMJJ77YlMD+ISmppCUuPVrxH9AZsGC9qkwAoerercV37ndXUj2ZQ1x5f
+         gnF5nmahYxl1wURagoPQ0ctjiD/LzBVO3KO2oLb0aEF05YfiC9h/hy4cQKhbcSClB6bz
+         aIyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jw4pmutuy+Vq97iclaQ8+r0oYbBvDyG4Nv1qzyzsrWU=;
-        b=F7Hakwl5OJC74iTbVJ8E7nmbRKwxf6OaXHrnl4VecxWtf+DR9XTA6/71xu1Y6moNXQ
-         g1ULGtCktSlweGA4n3Xt4J06/wNuCxGKlTM7Ygfrjf6MgmTG9/hBF7yn1iwsbfBN0L1d
-         DJLr0c6S6pWXsktSqEGy5DWtoMj52OwrPeZ1crF7i5mwqCvlPnbxQNCwvhDk6DNIz2W3
-         Nf1FleCxu96r8R0kNlhMrNaWOp/anlbZaE6j0WBJwVFXFoEOp0Unp89r+l57BmEh19jZ
-         rhbKBQDb9fvmk7moiHvGxCLlg19m1VHwU50MVJfzdoJsErdZOT5s+db5TN+/ueWQLCYG
-         Z9SQ==
-X-Gm-Message-State: APjAAAVhTa/alLlMfjRMbC1CavWXpv1FKhkQSxV19N7GkyMc8Yk56Kty
-        zE87bete7A4v3XBvnOpqZCEFsn5Gj5cuo78CkP3ixQ==
-X-Google-Smtp-Source: APXvYqwvNyyAhHwXAbfyd3QPNsoCzCD1REk3C8Va6CVWCncIMlprP/hrEm3OHy84MRRJ8VpUBzSY/wXGzh0D6GLiUfY=
-X-Received: by 2002:a02:c85b:: with SMTP id r27mr6964167jao.57.1576761446932;
- Thu, 19 Dec 2019 05:17:26 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NVRfxbEgLFTvoCx0ZfCbabBZ4zDYahJW1fLwqy/+dv8=;
+        b=OdFjFIWOxJjT244pD2BXnZeH38JKVfg0H7uOVnaPgSzdFHhpK8EqjlZmDukNLFXiYX
+         XP0PzHNqHzmKnUkWKtl9TfdJKRD8o8vsZ/HkpKpuAkLycj4IUFluzHLIZRQUfF3hZJsq
+         KwHCauqNo40YEP8I8dxuWBAWPY+mouORpDrvlWWUaxok7nPVpw5sMQ5Rh+ztNoG0MpIr
+         qNJV4eNHAGeL2RkYA7hQ6/104lx8mzRgHRcmlNOC1h8AAiAhdkTMBJJOJZvTrrK+4vCk
+         Qk3ttZ6Y+mMGKhX4YO5yLcK7A0wzJm85gIAvV4kw2pxMzsKpi2xPb1ZcadYs7LJGZXwf
+         tUpw==
+X-Gm-Message-State: APjAAAVdr/kMpQaNX2Hnoc3bNzBbH6akvxJagXEm3R76VTzlKz78jlvM
+        PpC1tjW8Mwkn0D6wyUs4uRbUmr/k
+X-Google-Smtp-Source: APXvYqyJ6vQ7Oy9UR+p/lD2qCiTkhSMa/UxNNgWJgFGW3Egacc95XPxbIz1nzt9cSM+7bJWD9Zsm5A==
+X-Received: by 2002:a63:28c7:: with SMTP id o190mr8847140pgo.394.1576762513407;
+        Thu, 19 Dec 2019 05:35:13 -0800 (PST)
+Received: from firefly (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id g26sm561639pfo.130.2019.12.19.05.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 05:35:12 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:35:02 +0000
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [libgpiod][PATCH 3/7] tests: event: extend test coverage for
+ reading multiple line events at once
+Message-ID: <20191219133502.GA12028@firefly>
+References: <20191218142449.10957-1-brgl@bgdev.pl>
+ <20191218142449.10957-4-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20191204155941.17814-1-brgl@bgdev.pl> <CAHp75VdiAtHtdrUP2EmLULh86oO37ha8si10gFKYRavXCEwRRQ@mail.gmail.com>
- <CAMpxmJVXVVVMPA_hRbs3mUsFs=s_VtQK9SvvYK3Xc5X27NPTKw@mail.gmail.com>
- <CAHp75VfXc88Fa6=zs=9iToz27QdXHqRCDPQwBPs2P-rsBF8nHw@mail.gmail.com>
- <CAMRc=Me4xWsQggmr=BvJrA9-FnPkxFkOYsRTsSXCtyNwFnsHNw@mail.gmail.com>
- <CAHp75VfzP8-0wKmPTTKYe+fc6=r_4sVcJPyOsM8YTuH=i4rxmA@mail.gmail.com>
- <CAMRc=MfxteQDmeZn_Et0uFs2cPvLGpJ5BTeBOn37o=2Oo_eU=Q@mail.gmail.com>
- <CAHp75VfeEB5RudwMaoiMTMMY3zW-kz-h=rJ3Cu5_tyRL6ZuF1w@mail.gmail.com>
- <CAMRc=Mcy=Q+9Eb6mb5JEq+CCbxgBY1CfTDsYj1Rt9bcLXgeY=g@mail.gmail.com> <20191219131249.GA12008@firefly>
-In-Reply-To: <20191219131249.GA12008@firefly>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 19 Dec 2019 14:17:16 +0100
-Message-ID: <CAMRc=MfS49ENPS=ousx0EY-_-HM7QGtevknb9PBkewcbk7YJ4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218142449.10957-4-brgl@bgdev.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 19 gru 2019 o 14:13 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
->
-> On Thu, Dec 19, 2019 at 02:05:19PM +0100, Bartosz Golaszewski wrote:
-> > wt., 10 gru 2019 o 18:00 Andy Shevchenko <andy.shevchenko@gmail.com> na=
-pisa=C5=82(a):
-> > >
-> > > > On a different note: why would endianness be an issue here? 32-bit
-> > > > variables with 64-bit alignment should still be in the same place i=
-n
-> > > > memory, right?
-> > >
-> > > With explicit padding, yes.
-> > >
-> > > > Any reason not to use __packed for this structure and not deal with
-> > > > this whole compat mess?
-> > >
-> > > Have been suggested that explicit padding is better approach.
-> > > (See my answer to Kent)
-> > >
-> > > > I also noticed that my change will only allow user-space to read on=
-e
-> > > > event at a time which seems to be a regression with regard to the
-> > > > current implementation. I probably need to address this too.
-> > >
-> > > Yes, but we have to have ABI v2 in place.
-> >
-> > Hi Andy,
-> >
-> > I was playing with some ideas for the new ABI and noticed that on
-> > 64-bit architecture the size of struct gpiochip_info is reported to be
-> > 68 bytes, not 72 as I would expect. Is implicit alignment padding not
-> > applied to a struct if there's a non-64bit-aligned 32-bit field at the
-> > end of it? Is there something I'm missing here?
-> >
->
-> Struct alignment is based on the size of the largest element.
-> The largest element of struct gpiopchip_info is a __u32, so the struct
-> gets 32-bit alignment, even on 64-bit.
->
-> The structs with the problems all contain a __u64, and so get padded out
-> to a 64-bit boundary.
->
+On Wed, Dec 18, 2019 at 03:24:45PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add test cases for new helpers allowing users to read multiple events
+> at once.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  tests/tests-event.c | 83 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+> 
+> diff --git a/tests/tests-event.c b/tests/tests-event.c
+> index d425d1a..1f4a2eb 100644
+> --- a/tests/tests-event.c
+> +++ b/tests/tests-event.c
+> @@ -552,3 +552,86 @@ GPIOD_TEST_CASE(invalid_fd, 0, { 8 })
+>  	g_assert_cmpint(ret, ==, -1);
+>  	g_assert_cmpint(errno, ==, EINVAL);
+>  }
+> +
+> +GPIOD_TEST_CASE(read_multiple_events, 0, { 8 })
+> +{
+> +	g_autoptr(gpiod_chip_struct) chip = NULL;
+> +	struct gpiod_line_event events[3];
+> +	struct timespec ts = { 1, 0 };
+> +	struct gpiod_line *line;
+> +	gint ret;
+> +
+> +	chip = gpiod_chip_open(gpiod_test_chip_path(0));
+> +	g_assert_nonnull(chip);
+> +	gpiod_test_return_if_failed();
+> +
+> +	line = gpiod_chip_get_line(chip, 4);
+> +	g_assert_nonnull(line);
+> +	gpiod_test_return_if_failed();
+> +
+> +	ret = gpiod_line_request_both_edges_events(line, GPIOD_TEST_CONSUMER);
+> +	g_assert_cmpint(ret, ==, 0);
+> +
+> +	gpiod_test_chip_set_pull(0, 4, 1);
+> +	usleep(10000);
+> +	gpiod_test_chip_set_pull(0, 4, 0);
+> +	usleep(10000);
+> +	gpiod_test_chip_set_pull(0, 4, 1);
+> +	usleep(10000);
+> +
 
-Thanks for the clarification, now it makes sense. I assumed memory
-alignment depends on the architecture. I need to educate myself more
-on this subject I guess.
+I assume the sleep is to wait for the event to be generated from the
+call gpiod_test_chip_set_pull, which is not guaranteed to occur before
+the call returns, otherwise you can toggle the line too fast and may
+miss events.
+Arbitrary sleeps in code, including tests, should be avoided as they
+are brittle and obsure what you are actually waiting for.
+An alternative in this case is to add a second event fd and wait for
+the event to arrive there before continuing.
 
-Bart
+Kent.
+
+> +	ret = gpiod_line_event_wait(line, &ts);
+> +	g_assert_cmpint(ret, ==, 1);
+> +
+> +	ret = gpiod_line_event_read_multiple(line, events, 3);
+> +	g_assert_cmpint(ret, ==, 3);
+> +
+> +	g_assert_cmpint(events[0].event_type, ==,
+> +			GPIOD_LINE_EVENT_RISING_EDGE);
+> +	g_assert_cmpint(events[1].event_type, ==,
+> +			GPIOD_LINE_EVENT_FALLING_EDGE);
+> +	g_assert_cmpint(events[2].event_type, ==,
+> +			GPIOD_LINE_EVENT_RISING_EDGE);
+> +}
+> +
+> +GPIOD_TEST_CASE(read_multiple_events_fd, 0, { 8 })
+> +{
+> +	g_autoptr(gpiod_chip_struct) chip = NULL;
+> +	struct gpiod_line_event events[3];
+> +	struct timespec ts = { 1, 0 };
+> +	struct gpiod_line *line;
+> +	gint ret, fd;
+> +
+> +	chip = gpiod_chip_open(gpiod_test_chip_path(0));
+> +	g_assert_nonnull(chip);
+> +	gpiod_test_return_if_failed();
+> +
+> +	line = gpiod_chip_get_line(chip, 4);
+> +	g_assert_nonnull(line);
+> +	gpiod_test_return_if_failed();
+> +
+> +	ret = gpiod_line_request_both_edges_events(line, GPIOD_TEST_CONSUMER);
+> +	g_assert_cmpint(ret, ==, 0);
+> +
+> +	gpiod_test_chip_set_pull(0, 4, 1);
+> +	usleep(10000);
+> +	gpiod_test_chip_set_pull(0, 4, 0);
+> +	usleep(10000);
+> +	gpiod_test_chip_set_pull(0, 4, 1);
+> +	usleep(10000);
+> +
+> +	ret = gpiod_line_event_wait(line, &ts);
+> +	g_assert_cmpint(ret, ==, 1);
+> +
+> +	fd = gpiod_line_event_get_fd(line);
+> +	g_assert_cmpint(fd, >=, 0);
+> +
+> +	ret = gpiod_line_event_read_fd_multiple(fd, events, 3);
+> +	g_assert_cmpint(ret, ==, 3);
+> +
+> +	g_assert_cmpint(events[0].event_type, ==,
+> +			GPIOD_LINE_EVENT_RISING_EDGE);
+> +	g_assert_cmpint(events[1].event_type, ==,
+> +			GPIOD_LINE_EVENT_FALLING_EDGE);
+> +	g_assert_cmpint(events[2].event_type, ==,
+> +			GPIOD_LINE_EVENT_RISING_EDGE);
+> +}
+> -- 
+> 2.23.0
+> 
