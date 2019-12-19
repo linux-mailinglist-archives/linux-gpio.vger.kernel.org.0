@@ -2,474 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77C6D126DFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 20:30:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2E5F126FBD
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 22:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfLST36 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 14:29:58 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44825 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726982AbfLST35 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 14:29:57 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so3519030oia.11;
-        Thu, 19 Dec 2019 11:29:56 -0800 (PST)
+        id S1726996AbfLSVdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 16:33:51 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35676 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSVdu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 16:33:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id j1so450941lja.2
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 13:33:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=PqR4x8+f9h2Qn/e8Pu7yo3KcXeRHhFv38n6yorLO0Ug=;
+        b=CBz77i1+cO1ZzfRyHCuPs2lWQc8MNXKOd8UnR8KIwv2ButzuSX5Q0Uzg6RhYpOT7bO
+         SmlbQw3On2pYwbmZ8S4scNa7Z4sJNUvFJXLAqmdCn+jWmeM30PoQ4Ux3+ulVxH8OI/6K
+         +3ljNBvOX1mcnfDdt3Al4YIeK5xhztrwh6y9efzjtZNYO8AqnmSIqUc0Vo1jXQ+3+3aE
+         2cu9W9RWEAA6hfhjxUXH6Rn6KunkxwQRKujnDSJWLiny69Am3KNmIvrS/Ef3kXm2gEZ3
+         c5i/kiGuY9EUmmP4+84E1+I7tmWZxeXPdIN3SlhWquC9YPHiu96rOwG5cc30LzmKuIot
+         L9Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=vnzka5eyFy5ceQuyg54/QRnQ90UxN2zZIMq8E1pcJo0=;
-        b=fO9/f+HbD2h7GyJ6IXBP/nylm6qcpZchuQsmtXMuBg68MkCRs1zw8RsHmNVwhz8qA4
-         pi3HosTy/AY+bXMUl+L0Q6H9uDYxDu5OeQlz4g4aaoTrNMjoLFq51AEtI7EcbgeQZNDe
-         xSp2jFg3q/NmdsREpCgl0pxeUjpnUWxHf9V4nZCdRCyVO99GXSTKLHj7ffvszFbs6wZL
-         /NlQqf2rl751CTbobhQCGBd52deRnTP1qHmQh/1nF+4nro4/wYwad5qS38YD+EAmqj7N
-         0nFhyH3+fJWxs0GaXXi3kfN5e4SWVEZ8bigzI1k1GiFNH9IWcsK6+apUuDI+ebq/qFn1
-         6Iqg==
-X-Gm-Message-State: APjAAAWioNlEf9gIZcuVf8X1ani5gBPxgyp6Eh+gxIbwvJZrh29yzDdQ
-        ntFCPry05zHm7ZS/CfHm1A==
-X-Google-Smtp-Source: APXvYqzGB1dq3QFQQuopJr0nkGg3fQuhs75mFQX+UmuYGN/xO10MkUzd9zWMp9VAR4XkUl156D1UCw==
-X-Received: by 2002:a05:6808:3c5:: with SMTP id o5mr3132907oie.142.1576783795658;
-        Thu, 19 Dec 2019 11:29:55 -0800 (PST)
-Received: from localhost ([2607:fb90:20de:fb54:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id m2sm2285209oim.13.2019.12.19.11.29.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 11:29:55 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:29:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Mack <daniel@zonque.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org,
-        lee.jones@linaro.org, lars@metafoo.de, pascal.huerst@gmail.com
-Subject: Re: [PATCH 01/10] dt-bindings: mfd: Add documentation for ad242x
-Message-ID: <20191219192908.GA22461@bogus>
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-2-daniel@zonque.org>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=PqR4x8+f9h2Qn/e8Pu7yo3KcXeRHhFv38n6yorLO0Ug=;
+        b=cLZOCOMhXP4KB+sxPD4UOO5JdLHhLDQUbISbs6yXT06c3CvnW/YAxgke6G2xYyyQvH
+         9Bp/wI3RtwSMBrsQ4OHSz3mM4cPTN5UtVKp81JHi4LMpoPcE2hu2ioLVpUVEpclU8uD5
+         Ji+1eDZsY0L+HUIBUmcMi/HvVjZrXtsiby+2doFZhIVl5vOOxmhLgt5WzPeLE2jtlyEX
+         3wcJM3HEPxjblfD7gP5dXHbkaHC3iqM/YE8NNTinRF0p1DNlsQFSWGKJp1i1DNKZ2bAi
+         CMvM4lb0rsHzvsep3yPSTrYQFlFg9ApktoAaFtOMRm/mekUh+hxaH1vVlBEl7fOr7ZCZ
+         a1JQ==
+X-Gm-Message-State: APjAAAXiMS8bwHF1O2MRkQ279repUbcoJ2cQrCpa15lQqiBSZm6lTnxc
+        mk3a6E0bMge8TKHqxMLH5+dDg/qhRQ3sGNv8Ns1YXA==
+X-Google-Smtp-Source: APXvYqz19W2owPoKz+mA6kiWEUSTR8sk4af5EkB2e/vEhQHVrVOyBFIZCzLq8fe6Xg5K9N/ABY3tBHpcKTz1BD2FN4I=
+X-Received: by 2002:a2e:a490:: with SMTP id h16mr5702791lji.251.1576791228697;
+ Thu, 19 Dec 2019 13:33:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191209183511.3576038-2-daniel@zonque.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 19 Dec 2019 22:33:37 +0100
+Message-ID: <CACRpkdbY1XBspR0rrXVvCW2LwnRfA_DnA0YzwFy-dHCVhQSr0A@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for the v5.5 series
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:35:01PM +0100, Daniel Mack wrote:
-> This patch adds documentation on the top-level MFD support for AD242x
-> devices. The bindings implemented by drivers for sub-devices of the
-> MFD are documented in other files in their respective subsystems.
-> 
-> The example in this file is referred to by other documents.
-> 
-> Signed-off-by: Daniel Mack <daniel@zonque.org>
-> ---
->  .../bindings/mfd/adi,ad242x-bus.yaml          |  29 +++
->  .../bindings/mfd/adi,ad242x-master.yaml       | 235 ++++++++++++++++++
->  .../bindings/mfd/adi,ad242x-slave.yaml        | 108 ++++++++
->  3 files changed, 372 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-bus.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-master.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/adi,ad242x-slave.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/adi,ad242x-bus.yaml b/Documentation/devicetree/bindings/mfd/adi,ad242x-bus.yaml
-> new file mode 100644
-> index 000000000000..89ca8d009bb9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/adi,ad242x-bus.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/mfd/adi,ad242x-bus.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Analog Devices AD242x A²B bus node
-> +
-> +maintainers:
-> +  - Daniel Mack <daniel@zonque.org>
-> +
-> +description: |
-> +  AD242x slave nodes represent the secondary I²C address a master node
-> +  transceiver exposes on the bus.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad2428w-bus
+Hi Linus,
 
-Where is this in the example?
+sorry that this fixes pull request took a while. Too much christmas
+business going on.
 
-Is A2B a standard thing? If so, then shouldn't some of this be split 
-into a A2B binding and then AD242x specific binding?
+This contains a few really important Intel fixes and some odd fixes.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      The secondary I²C address of the master node
-> +      (called 'BUS' in the datasheet)
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> diff --git a/Documentation/devicetree/bindings/mfd/adi,ad242x-master.yaml b/Documentation/devicetree/bindings/mfd/adi,ad242x-master.yaml
-> new file mode 100644
-> index 000000000000..649510575a79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/adi,ad242x-master.yaml
-> @@ -0,0 +1,235 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/mfd/adi,ad242x-master.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Analog Devices AD242x A²B master node transceiver
-> +
-> +maintainers:
-> +  - Daniel Mack <daniel@zonque.org>
-> +
-> +description: |
-> +  AD242x devices are A²B (Automotive Audio Bus) transceivers that are connected
-> +  to each other in a daisy-chain. The payload transported on that bus includes
-> +  multi-channel audio, I²C, GPIOs and others.
-> +
-> +  The datasheet is located here:
-> +
-> +    https://www.analog.com/media/en/technical-documentation/user-guides/AD242x_TRM_Rev1.1.pdf
-> +
-> +  The primary node in the chain is called the master node, and the nodes in the
-> +  chain are called slave nodes. A master can address up to 15 slave nodes. The
-> +  master node exposes two I²C addresses, one for accessing the registers on the
-> +  node itself, and one for registers on one of the slave nodes.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad2428w-master
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      The primary I²C address of the master node
-> +      (called 'BASE' in the datasheet)
-> +
-> +  clocks:
-> +    minItems: 1
-> +
-> +  clock-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    const: sync
-> +
-> +  clock-frequency:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    enum: [44100, 48000]
-> +    description: |
-> +      Specifies the clock frequency in Hz to configure on the given sync clock.
-> +      If not specified, the clock is expected to already be configured to either
-> +      44100 or 48000 Hz.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  adi,a2b-bus:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description: Specifies the bus handle node
-> +
-> +  adi,upstream-slot-size:
-> +    description: The size for upstream slots
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [8, 12, 16, 20, 24, 28, 32]
-> +
-> +  adi,downstream-slot-size:
-> +    description: The size for downstream slots
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [8, 12, 16, 20, 24, 28, 32]
-> +
-> +  adi,tdm-mode:
-> +    description: The TDM mode to use
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [2, 4, 8, 12, 16, 20, 24, 32]
-> +
-> +  adi,tdm-slot-size:
-> +    description: The TDM slot size to use
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [16, 32]
-> +
-> +  adi,alternate-upstream-slot-format:
-> +    description: Selects the alternate format for upstream slots
-> +    type: boolean
-> +
-> +  adi,alternate-downstream-slot-format:
-> +    description: Selects the alternate format for downstream slots
-> +    type: boolean
-> +
-> +  adi,invert-xcvr-b:
-> +    description: Inverts the LVDS XCVR B data line
-> +    type: boolean
-> +
-> +  adi,alternating-sync:
-> +    description: Drives the SYNC pin for I²S operation
-> +    type: boolean
-> +
-> +  adi,invert-sync:
-> +    description: Invert the SYNC pin
-> +    type: boolean
-> +
-> +  adi,early-sync:
-> +    description: |
-> +      Make the SYNC pin change one cycle before the first slot is transmitted
-> +    type: boolean
-> +
-> +  adi,spread-a2b-clock:
-> +    description: Enables spread spectrum mode for A²B bus clocks
-> +    type: boolean
-> +
-> +  adi,spread-a2b-i2s-clock:
-> +    description: Enables spread spectrum mode for both A²B and I²S clocks
-> +    type: boolean
-> +
-> +  adi,spread-spectrum-high:
-> +    description: Selects high spectrum spreading mode
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - adi,a2b-bus
-> +  - adi,upstream-slot-size
-> +  - adi,downstream-slot-size
-> +  - adi,tdm-mode
-> +  - adi,tdm-slot-size
-> +
-> +examples:
-> +  - |
-> +    sync_clock: clock {
-> +      compatible = "fixed-clock";
-> +      #clock-cells = <0>;
-> +      clock-frequency  = <48000>;
-> +    };
-> +
-> +    i2c-bus {
-> +      ad2428w-master@68 {
-> +        reg = <0x68>;
-> +        compatible = "adi,ad2428w-master";
-> +        adi,a2b-bus = <&a2b_bus>;
-> +        clocks = <&sync_clock>;
-> +        clock-names = "sync";
-> +
-> +        adi,upstream-slot-size = <24>;
-> +        adi,downstream-slot-size = <24>;
-> +        adi,tdm-mode = <2>;
-> +        adi,tdm-slot-size = <32>;
-> +        adi,alternating-sync;
-> +        adi,early-sync;
-> +
-> +        codec {
-> +          compatible = "adi,ad2428w-codec";
-> +          #sound-dai-cells = <1>;
-> +        };
-> +
-> +        clock {
-> +          compatible = "adi,ad2428w-clk";
-> +          #clock-cells = <1>;
-> +          clock-output-names = "master-clk1", "master-clk2";
-> +        };
-> +
-> +        nodes {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          node@0 {
-> +            compatible = "adi,ad2428w-slave";
-> +            reg = <0>;
-> +
-> +            adi,alternating-sync;
-> +            adi,early-sync;
-> +            adi,invert-sync;
-> +            adi,tdm-mode = <8>;
-> +            adi,tdm-slot-size = <32>;
-> +
-> +            downstream {
-> +              rx-slots = <2 3 6 7 8 9>;
-> +              #tx-slots = <4>;
-> +              #forward-slots = <6>;
-> +            };
-> +
-> +            upstream {
-> +              rx-slots = <0 1 6 7 8 9>;
-> +              #tx-slots = <4>;
-> +              #forward-slots = <6>;
-> +            };
-> +
-> +            a2bgpio: gpio {
-> +              compatible = "adi,ad2428w-gpio";
-> +              gpio-controller;
-> +              #gpio-cells = <2>;
-> +
-> +              gpio-over-distance {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                pin@0 {
-> +                  reg = <0>;
-> +                  adi,virtual-port-mask = <0x01>;
-> +                };
-> +              };
-> +            };
-> +
-> +            i2c {
-> +              compatible = "adi,ad2428w-i2c";
-> +              clock-frequency = <400000>;
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              // I²C client devices located on the remote side
-> +              eeprom-top@52 {
-> +                reg = <0x52>;
-> +                compatible = "atmel,24c02";
-> +                read-only;
-> +              };
-> +            };
-> +
-> +            a2bclk: clock {
-> +              compatible = "adi,ad2428w-clk";
-> +              #clock-cells = <1>;
-> +              clock-output-names = "node0-clk1", "node0-clk2";
-> +            };
-> +
-> +            codec {
-> +              compatible = "adi,ad2428w-codec";
-> +              #sound-dai-cells = <1>;
-> +              adi,pdm-highpass-filter;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/mfd/adi,ad242x-slave.yaml b/Documentation/devicetree/bindings/mfd/adi,ad242x-slave.yaml
-> new file mode 100644
-> index 000000000000..3bea04dff267
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/adi,ad242x-slave.yaml
-> @@ -0,0 +1,108 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/mfd/adi,ad242x-slave.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Analog Devices AD242x A²B slave node transceiver
-> +
-> +maintainers:
-> +  - Daniel Mack <daniel@zonque.org>
-> +
-> +description: |
-> +  AD242x slave nodes are connected to the master node through a daisy-chain.
-> +  Modules of this type must be listed under the 'nodes' property of the master
-> +  DT schema.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad2428w-slave
-> +
-> +  adi,tdm-mode:
-> +    description: The TDM mode to use
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [2, 4, 8, 12, 16, 20, 24, 32]
-> +
-> +  adi,tdm-slot-size:
-> +    description: The TDM slot size to use
-> +    allOf:
-> +      - $ref: '/schemas/types.yaml#/definitions/uint32'
-> +      - enum: [16, 32]
-> +
-> +  adi,alternating-sync:
-> +    description: Drives the SYNC pin for I²S operation
-> +    type: boolean
-> +
-> +  adi,invert-sync:
-> +    description: Invert the SYNC pin
-> +    type: boolean
-> +
-> +  adi,early-sync:
-> +    description: |
-> +      Make the SYNC pin change one cycle before the first slot is transmitted
-> +    type: boolean
-> +
-> +  adi,spread-a2b-clock:
-> +    description: Enables spread spectrum mode for A²B bus clocks
-> +    type: boolean
-> +
-> +  adi,spread-a2b-i2s-clock:
-> +    description: Enables spread spectrum mode for both A²B and I²S clocks
-> +    type: boolean
-> +
-> +  adi,spread-spectrum-high:
-> +    description: Selects high spectrum spreading mode
-> +    type: boolean
-> +
-> +  upstream:
-> +    type: object
-> +    properties:
-> +      rx-slots:
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          A bitmask that describes the slots that are received by the
-> +          transceiver from the upstream (A) side and put into its TX output
-> +          framebuffers. If not specified, an empty bitmask is assumed.
-> +
-> +      '#tx-slots':
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          The number of slots this transceiver contributes to the upstream
-> +          traffic from its RX input frame buffer
-> +
-> +      '#forward-slots':
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          The number of slots this transceiver forwards from the upstream side
-> +          to the downstream side.
-> +
-> +  downstream:
-> +    type: object
-> +    properties:
-> +      rx-slots:
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          A bitmask that describes the slots that are received by the
-> +          transceiver from the downstream (B) side and put into its TX output
-> +          framebuffers. If not specified, an empty bitmask is assumed.
-> +
-> +      '#tx-slots':
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          The number of slots this transceiver contributes to the downstream
-> +          traffic from its RX input frame buffer
-> +
-> +      '#forward-slots':
-> +        $ref: '/schemas/types.yaml#/definitions/uint32'
-> +        description: |
-> +          The number of slots this transceiver forwards from the downstream side
-> +          to the upstream side.
-> +
-> +required:
-> +  - compatible
-> +  - adi,tdm-mode
-> +  - adi,tdm-slot-size
-> +  - upstream
-> +  - downstream
-> -- 
-> 2.23.0
-> 
+Details in the signed tag as usual.
+
+Please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.5-3
+
+for you to fetch changes up to 9e65527ac3bab5480529d1ad07d4d228cc0295cd:
+
+  pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config (2019-12-16 11:38:20 +0100)
+
+----------------------------------------------------------------
+Pin control fixes for the v5.5 kernel cycle:
+
+- A host of fixes for the Intel baytrail and cherryview:
+  properly serialize all register accesses and add the irqchip
+  with the gpiochip as we need to, fix some pin lists and
+  initialize the hardware in the right order.
+- Fix the Aspeed G6 LPC configuration.
+- Handle a possible NULL pointer exception in the core.
+- Fix the Kconfig dependencies for the Equilibrium driver.
+
+----------------------------------------------------------------
+Alexandre Torgue (1):
+      pinctrl: pinmux: fix a possible null pointer in
+pinmux_can_be_used_for_gpio
+
+Andrew Jeffery (1):
+      pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
+
+Andy Shevchenko (3):
+      pinctrl: baytrail: Update North Community pin list
+      pinctrl: baytrail: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: baytrail: Pass irqchip when adding gpiochip
+
+Hans de Goede (4):
+      pinctrl: baytrail: Really serialize all register accesses
+      pinctrl: cherryview: Split out irq hw-init into a separate helper function
+      pinctrl: cherryview: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: cherryview: Pass irqchip when adding gpiochip
+
+Linus Walleij (1):
+      Merge tag 'intel-pinctrl-v5.5-2' of
+git://git.kernel.org/.../pinctrl/intel into fixes
+
+Paul Cercueil (1):
+      pinctrl: ingenic: Fixup PIN_CONFIG_OUTPUT config
+
+Rahul Tanwar (1):
+      pinctrl: Modify Kconfig to fix linker error
+
+ drivers/pinctrl/Kconfig                    |   1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c |  24 ++--
+ drivers/pinctrl/intel/pinctrl-baytrail.c   | 200 ++++++++++++++++-------------
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 107 ++++++++-------
+ drivers/pinctrl/pinctrl-ingenic.c          |   2 +-
+ drivers/pinctrl/pinmux.c                   |   2 +-
+ 6 files changed, 184 insertions(+), 152 deletions(-)
