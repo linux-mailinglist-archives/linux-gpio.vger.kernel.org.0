@@ -2,97 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3526126731
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:34:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF13D126781
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 17:58:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfLSQeG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 11:34:06 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35393 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfLSQeG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 11:34:06 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j6so6931150lja.2;
-        Thu, 19 Dec 2019 08:34:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
-        b=fYwP12aOi9NdXLIYBDuMsIPSrXPApDqz1POx12Skp5WX/xXXSTSsF/HVtd7Wf+G4AW
-         A/0iKnvcDCBdN1udrsefmIgBSgvsHGMPH+bPozR/f2ZCXuR22TgnzCUey7Z3WTX4S+o1
-         53PkDayjk238dAMSO1Ha21+HUiLGYI1RCrorqWH8TyP0jAgeriBPEypujR22PRj9mTb6
-         dKJEZew4DEO3wEQQ9ncPmtx0a1F39/sVZt2iqF6ZYsO4uNPDxohorTYg/IGT/nF6AZTC
-         w7sq1iAHf9La7k5GuZnXwUr6wJk1wAjJyWRjx/nvLWwE4oUBQC7s093m1MEvX26GuXFj
-         /9jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NbGUxJZschh5pU5eBUWoyfxmgLY0Jtie4Fq87j9uajM=;
-        b=SYGwakmBD1qRWQWXX7dtnP+oQztbo7PtVWajWnaobPwRNXkAoLkyh1KDPZEdTCUDnm
-         EYOpppi9T3vOXATh/fOk7WsyNcdtzKNgKwdqvJ6ghHr9MPzT9YbBlX2JjCSMWJFhB8di
-         iTmxJELugFxZ+JNd2YC7mF45WTExSPPyZG83QJ1nXoI9B34gqTaSV9J+72gSEapYeamP
-         ZK5X5AdVf873Oj6j1+MDnFpxhlTx6ZTaziqks8etHBnJk7O/xsDZe51FMUCHgJB2xgnK
-         qaarNE7LyvNsgFdwsAoovs8l5b8djjr4Vd0LfKKqnYrreAcE01xrh9mwBemCRIqy8JmM
-         M8Eg==
-X-Gm-Message-State: APjAAAXUNT2WFrL83/gbt0MaQ2eYU25rGGcqahfaVVC7y2VpPN3NVelw
-        pvQJShpOLS8endQHvv4Di/M0xYw/
-X-Google-Smtp-Source: APXvYqytljIvdSb9uKAA4Z5f9O3C9KOePxedpYlxO/c853cn0BV5XGhgglOiAUNSRF8Vr2L4UbB00A==
-X-Received: by 2002:a2e:91cb:: with SMTP id u11mr6801694ljg.82.1576773243568;
-        Thu, 19 Dec 2019 08:34:03 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g85sm2824824lfd.66.2019.12.19.08.34.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 08:34:02 -0800 (PST)
-Subject: Re: [PATCH v1 1/3] gpio: tegra: Use generic
- readl_relaxed/writel_relaxed accessors
-To:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191215183047.9414-1-digetx@gmail.com>
- <20191215183047.9414-2-digetx@gmail.com>
- <CAMpxmJUmLOZoKeeo4XMVEOWKRgwfS4O2szVboY-qTTYXg_aTVg@mail.gmail.com>
- <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e6a67fa4-977d-bac9-f7c0-51d5cea526e5@gmail.com>
-Date:   Thu, 19 Dec 2019 19:34:01 +0300
+        id S1726944AbfLSQ6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 11:58:45 -0500
+Received: from mga02.intel.com ([134.134.136.20]:14807 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSQ6o (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:58:44 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 08:58:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
+   d="scan'208";a="228308843"
+Received: from dpshah-mobl1.amr.corp.intel.com (HELO [10.254.191.243]) ([10.254.191.243])
+  by orsmga002.jf.intel.com with ESMTP; 19 Dec 2019 08:58:42 -0800
+Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
+ wcd9340/wcd9341 codec
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, spapothi@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
+Date:   Thu, 19 Dec 2019 10:36:48 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <b38cd167-4a61-4903-cf44-910dcb66f751@codethink.co.uk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-19.12.2019 18:57, Ben Dooks пишет:
-> On 19/12/2019 11:01, Bartosz Golaszewski wrote:
->> niedz., 15 gru 2019 o 19:31 Dmitry Osipenko <digetx@gmail.com>
->> napisał(a):
->>>
->>> There is no point in using old-style raw accessors, the generic
->>> accessors
->>> do the same thing and also take into account CPU endianness. Tegra
->>> SoCs do
->>> not support big-endian mode in the upstream kernel, but let's switch
->>> away
->>> from the outdated things anyway, just to keep code up-to-date.
-> 
-> Good idea, I think I got most of the way to booting a tegra jetson board
-> with a big endian image a few years ago, but never got time to finish
-> the work.
-> 
 
-Thanks, I remember yours effort in regards to the upstreaming big endian
-support for Jetson :) You were pretty close back then, but Thierry had a
-different opinion in regards to maintaining that support in terms of
-having extra testing burden.
+> +static int wcd934x_slim_status(struct slim_device *sdev,
+> +			       enum slim_device_status status)
+> +{
+> +	switch (status) {
+> +	case SLIM_DEVICE_STATUS_UP:
+> +		return wcd934x_slim_status_up(sdev);
+> +	case SLIM_DEVICE_STATUS_DOWN:
+> +		mfd_remove_devices(&sdev->dev);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+this is interesting/surprising - I just noticed what looks like a 
+significant change in how probe/initialization are handled.
+
+It was my understanding that in SLIMbus the Linux devices are created at 
+probe time, and when the device reports present this 'device_status' 
+callback is used to notify the codec driver of a change. The rationale 
+for this was that the codec driver may control power switches/gpios that 
+are necessary for the device to appear on the bus.
+
+This argument was used to require an change in the SoundWire 
+implementation, so we followed this model of creating devices at probe 
+time based on information reported by ACPI/DT, and used the 
+'update_status' callback when the device is present on the bus (which 
+may happen after a delay or controlled by an external power switch). 
+This approach can lead to 'ghost devices' described in firmware but not 
+populated in hardware, and power management opens on how long a bus 
+needs to remain active if no devices report present.
+
+What I understand from the code above is that the devices are actually 
+created when the SLIMbus device reports PRESENT, which seems a 180 
+degree change in directions?
+
+I actually prefer it this way, and all current discussions in MIPI 
+circles point to the fact that when the bus starts all devices on that 
+bus should already be powered and have the ability to report present 
+immediately (if the bus starts in a 'safe' mode and then later programs 
+different PHY parameters, a device can no longer join the bus)
+
+I would however not remove the devices when the status is down but only 
+on an explicit .remove.
+
+Feedback welcome.
+-Pierre
+
