@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3418125DE7
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 10:44:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA718125DED
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Dec 2019 10:45:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfLSJoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 04:44:21 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46656 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfLSJoV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 04:44:21 -0500
-Received: by mail-lf1-f68.google.com with SMTP id f15so3836734lfl.13;
-        Thu, 19 Dec 2019 01:44:18 -0800 (PST)
+        id S1726757AbfLSJpA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 04:45:00 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40572 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfLSJpA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 04:45:00 -0500
+Received: by mail-lj1-f194.google.com with SMTP id u1so5472762ljk.7;
+        Thu, 19 Dec 2019 01:44:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Pigykuj3FqSHxhPUFlwgdyDtB15Fr1ua0h8Tg1lOV6k=;
-        b=Ak5SIDzl8M1jX3KST5jRRT3Gz2+3V3U1OqdYYfDrG+0xVUvvUOh/3B9UONKGXXyBLw
-         8U1c6y7NJQKg1el8kMvl9QVpr+d3BgLhMWY9qGqlGxUPtCB/cOVOJJfNyVfwCmqIeJaY
-         1enH7zBwfMlikSY5ZGU6P1bGQqf1c43Rt5hZFearzPloigYfOC2iGZrxHHyFVmjsmxua
-         6Xj09ccIMZLwPdNYSw2bGXSvYA5uRVT5QuLJyZwaruYieiR4UnQ5UMt1lfh93TVg5oEZ
-         jbr+e78EckW90MWsiONWV3HehOaCv5abTpazIJtTTcXGrOOS5pXmQOcbswhQuZrnHylJ
-         JUKw==
-X-Gm-Message-State: APjAAAU0bA4qONDrpbMhSF6v1CexqVEGHWmVRGhVEQoSuiS1JC78f0pc
-        1eQcVk2PtDbFWlv6fFi0hsQ=
-X-Google-Smtp-Source: APXvYqzIIe4rAc74TIGLKMOANeb804N8SGchp3yxrW0ivjcLgc1ro4jWZBdh5JTSbPhuTfVS4bi1Zg==
-X-Received: by 2002:a19:f519:: with SMTP id j25mr4778087lfb.41.1576748657291;
-        Thu, 19 Dec 2019 01:44:17 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NSehp+Csx2//FuzVBj6xVMQdFCBzIJOetbQwBhRQZmg=;
+        b=S82YMQ+mXIHh8d9JK/ASuPCpUfAh4X05KvzhON3p4qvb7HKA+3Ne1TLg7m/fsWfqPb
+         OShTo0S9nQbLePDUBbwbL7zkKVYdk4z4ICGFU4moKQvI30dKfbi7YB72k5it1ZuvYRTk
+         mDQwsA2lvZfTMpKeJmV8o9eA2/qFdSl26bcU/iSJMRdJnRAZu+a0YCH1tGeWfh40++O0
+         O1pasVfYYaQ+QfzVhve/dntAR5AN40BNR3b/GJlLFHbKsKAVfjn/3bYom/0P7E74WIUf
+         e8qHObApEMijzw3Ym40bkTwKjjz2bpu9REu3rkFLSIvP/QOdfS+ObZbvCtlmtDZDgAVI
+         0crw==
+X-Gm-Message-State: APjAAAWl0+iHdEMjA1hYhj5UkNwdM1SFN5QIjK00ubv8agiCcUfb7bfP
+        c28Fdd4Bnfuogx1Wt/iKL0c=
+X-Google-Smtp-Source: APXvYqxlWKSoBe9JFhNqgFRSL+sdviCsdpdkP7A1dHFdduzmfyRbUkLIY8ufv8vkr2yR3jnjhs+Fiw==
+X-Received: by 2002:a2e:8797:: with SMTP id n23mr5148240lji.176.1576748697699;
+        Thu, 19 Dec 2019 01:44:57 -0800 (PST)
 Received: from localhost.localdomain (dyt4gctb359myxd0pkwmt-4.rev.dnainternet.fi. [2001:14bb:430:5140:37cf:5409:8fcc:4495])
-        by smtp.gmail.com with ESMTPSA id e20sm2472778ljl.59.2019.12.19.01.44.15
+        by smtp.gmail.com with ESMTPSA id u16sm2481893ljo.22.2019.12.19.01.44.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 01:44:16 -0800 (PST)
-Date:   Thu, 19 Dec 2019 11:44:08 +0200
+        Thu, 19 Dec 2019 01:44:57 -0800 (PST)
+Date:   Thu, 19 Dec 2019 11:44:50 +0200
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -52,246 +52,89 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v7 00/12] Support ROHM BD71828 PMIC
-Message-ID: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v7 01/12] dt-bindings: leds: ROHM BD71282 PMIC LED driver
+Message-ID: <389367d4bb5283420e22f078c60e0805d23183ee.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Patch series introducing support for ROHM BD71828 PMIC
+Document ROHM BD71828 PMIC LED driver device tree bindings.
 
-ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
-regulators can be controlled individually via I2C. Bucks 1,2,6 and
-7 can also be assigned to a "regulator group" controlled by run-levels.
-Eg. Run level specific voltages and enable/disable statuses for each of
-these bucks can be set via register interface. The buck run-level group
-assignment (selection if buck is to be controlled individually or via
-run-levels) can be changed at run-time via I2C.
-
-This patch series brings only the basic support for controlling
-regulators individually via I2C.
-
-In addition to the bucks and LDOs there are:
-
-- The usual clk gate
-- 4 IO pins (mostly usable as GPO or tied to specific purpose)
-- power button support
-- RTC
-- two LEDs
-- battery charger
-- HALL sensor input
-
-This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
-
-Power-supply driver for charger is not included in this series.
-
-The series also adds LED DT-node lookup based on node name or given
-property name/value pair in LED core. It also adds generic default-state
-and default-trigger property handling to LED core. Follow-up patches
-simplifying few other LED drivers should follow.
-
-Changelog v7:
-  - Rebased on top of v5.5-rc2
-  - Dropped already applied patches
-    - basic regulator support (in regulator tree now)
-    - regulator dt-bindings (in regulator tree now)
-    - gpio devm function documentation (in GPIO tree now)
-  - Dropped new devm-variant of gpio_array getting for MFD sub-devices who
-    have consumer information in parent DT node as gpio consumer was
-    dropped from the series
-  - removed extra line-breaks from MFD driver and Makefile
-  - fixed RTC patch subject line (added missing colon)
-  - included a patch which adds compatible for ROHM BD71850 PMIC
-
-Changelog v6:
-  Rebased on top of v5.5-rc1
-  LED core:
-    - Do new fw-node look-up only if the new match data is given. That
-      way behaviour for existing drivers is not changed
-    - Handle generic LED properties by core only if explisitly requested
-      in init-data. That way behaviour for existing drivers is not changed
-      until they are verified to work.
-  BD71828 LEDs:
-    - Fix module loading by adding "dummy" of_device_id table.
-  DT bindings:
-    All:
-    - Remove regulator run-level properties as run-level support was
-      dropped for now.
-    - Change SPDX to dual lisence
-    LED:
-    - added select: false
-    - replace oneOf + const by enum
-    Regulator:
-    - remove forgotten comments
-    - comment indenting
-    MFD:
-    - remove unnecessary descriptions
-  Regulators:
-    - Dropped patch 12 with run-level controls
-    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
-      already only filled for DVS bucks.
-  GPIO:
-    - rename internal function.
-  RTC:
-    - Added missing blank line
-  
-Changelog v5:
-  Only LED patch (patch 15) changed, rest as in v4.
-  LED:
-    - Fixed issues reported by Dan Carpenter and kbuild-bot static
-      analysis.
-Changelog v4 (first non RFC):
-  General:
-    - Changed subdevice loading and chip version identification to use
-      platform ID.
-    - License identifiers changed to GPL-2.0-only
-  MFD:
-    - Styling fixes mostly
-  DT-Bindings:
-    - a few more checks as suggested by Rob Herring.
-    - Order of DT patches changed.
-    - me as maintainer
-    - standard units to new properties (microvolts, ohms)
-    - runlevel values in an array
-  LED:
-    - BD71828 driver added (back)
-      - Added DT support
-    - Added LED DT node lookup in led framework when init_data is given
-      with DT node match information.
-    - Added common property parsing for default-state and
-      default-trigger.
-  Regulators:
-    - dropped sysfs interfaces
-    - fixed module unload/reload by binding gpio consumer information to
-      regulator device not to MFD.
-  GPIO:
-    - Added devm_gpiod_get_parent_array
-    - added few missing devm functions to documentation
-
-Changelog v3:
-  DT-Bindings:
-    - yamlify
-    - add LED binding doc
-  CLK:
-    - Move clk register definitions from MFD headers to clk driver
-  GPIO:
-    - Add generic direction define and use it.
-  LED:
-    - Drop LED driver from the series (for now).
-
-Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
-  General:
-    -Patch ordering changed to provide dt binding documents right after the
-     MFD core.
-  DT-Bindings for regulators (Patch 3)
-    -Fix typo in PMIC model number
-  RTC (patch 11)
-    -Reverted renaming in order to reduce patch size.
-    -Reworded commit message
-  BD71828 regulator (patch 7)
-    -Add MODULE_ALIAS
-  GPIO (patch 12)
-    -Remove file-name from comment
-    -prefix IN and OUT defines with chip type
-    -improved documentation for the INPUT only pin.
-    -removed empty left-over function
-    -removed unnecessary #ifdef CONFIG_OF_GPIO
-    -removed unnecessary error print
-    -Add MODULE_ALIAS
-
-Patch 1:
-        dt-bindings for LEDs on BD71828 PMIC
-Patch 2:
-	dt-bindings for BD71828 PMIC
-Patch 3:
-	Convert rohm PMICs with common sub-devices to use platform_
-	device_id to match MFD sub-devices
-Patch 4:
-	Add compatible for BD71850
-Patch 5:
-        BD71828 MFD core.
-Patch 6:
-	Power button support using GPIO keys.
-Patch 7:
-        CLK gate support using existing clk-bd718x7
-Patch 8:
-        Split existing bd718x7 regulator driver to generic ROHM dt
-        parsing portion (used by more than one ROHM drivers) and
-        bd718x8 specific parts
-Patch 9:
-        Support BD71828 RTC block using BD70528 RTC driver
-Patch 10:
-        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
-Patch 11:
-	Add LED node lookup and common LED binding parsing support
-	to LED class/core
-Patch 12:
-        Support toggling the LEDs on BD71828.
-
-This patch series is based on v5.5-rc2
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
-Matti Vaittinen (12):
-  dt-bindings: leds: ROHM BD71282 PMIC LED driver
-  dt-bindings: mfd: Document ROHM BD71828 bindings
-  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
-  mfd: bd718x7: Add compatible for BD71850
-  mfd: bd71828: Support ROHM BD71828 PMIC - core
-  mfd: input: bd71828: Add power-key support
-  clk: bd718x7: Support ROHM BD71828 clk block
-  regulator: bd718x7: Split driver to common and bd718x7 specific parts
-  rtc: bd70528: add BD71828 support
-  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
-  leds: Add common LED binding parsing support to LED class/core
-  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
+No changes since v6
 
- .../bindings/leds/rohm,bd71828-leds.yaml      |  52 +++
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  50 ++-
- drivers/gpio/Kconfig                          |  12 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd71828.c                   | 159 +++++++
- drivers/leds/Kconfig                          |  10 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/led-class.c                      |  99 +++-
- drivers/leds/led-core.c                       | 258 +++++++++--
- drivers/leds/leds-bd71828.c                   | 118 +++++
- drivers/mfd/Kconfig                           |  15 +
- drivers/mfd/Makefile                          |   1 +
- drivers/mfd/rohm-bd70528.c                    |   3 +-
- drivers/mfd/rohm-bd71828.c                    | 344 ++++++++++++++
- drivers/mfd/rohm-bd718x7.c                    |  43 +-
- drivers/regulator/Kconfig                     |   4 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/bd718x7-regulator.c         | 200 +++------
- drivers/regulator/rohm-regulator.c            |  95 ++++
- drivers/rtc/Kconfig                           |   3 +-
- drivers/rtc/rtc-bd70528.c                     | 168 ++++++-
- include/linux/leds.h                          |  94 +++-
- include/linux/mfd/rohm-bd70528.h              |  19 +-
- include/linux/mfd/rohm-bd71828.h              | 423 ++++++++++++++++++
- include/linux/mfd/rohm-bd718x7.h              |   6 -
- include/linux/mfd/rohm-generic.h              |  48 +-
- include/linux/mfd/rohm-shared.h               |  27 ++
- 29 files changed, 2190 insertions(+), 263 deletions(-)
+ .../bindings/leds/rohm,bd71828-leds.yaml      | 52 +++++++++++++++++++
+ 1 file changed, 52 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
- create mode 100644 drivers/gpio/gpio-bd71828.c
- create mode 100644 drivers/leds/leds-bd71828.c
- create mode 100644 drivers/mfd/rohm-bd71828.c
- create mode 100644 drivers/regulator/rohm-regulator.c
- create mode 100644 include/linux/mfd/rohm-bd71828.h
- create mode 100644 include/linux/mfd/rohm-shared.h
 
-
-base-commit: d1eef1c619749b2a57e514a3fa67d9a516ffa919
+diff --git a/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+new file mode 100644
+index 000000000000..b50f4bcc98f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/rohm,bd71828-leds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71828 Power Management Integrated Circuit LED driver
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  This module is part of the ROHM BD71828 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
++
++  The LED controller is represented as a sub-node of the PMIC node on the device
++  tree.
++
++  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
++
++select: false
++
++properties:
++  compatible:
++    const: rohm,bd71828-leds
++
++patternProperties:
++  "^led-[1-2]$":
++    type: object
++    description:
++      Properties for a single LED.
++    properties:
++      #allOf:
++        #- $ref: "common.yaml#"
++      rohm,led-compatible:
++        description: LED identification string
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/string"
++          - enum:
++            - bd71828-ambled
++            - bd71828-grnled
++      function:
++        description:
++          Purpose of LED as defined in dt-bindings/leds/common.h
++        $ref: "/schemas/types.yaml#/definitions/string"
++      color:
++        description:
++          LED colour as defined in dt-bindings/leds/common.h
++        $ref: "/schemas/types.yaml#/definitions/uint32"
++
++required:
++  - compatible
 -- 
 2.21.0
 
