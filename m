@@ -2,104 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 922E612776B
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 09:46:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C2F127947
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 11:27:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLTIqF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Dec 2019 03:46:05 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45829 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLTIqF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 03:46:05 -0500
-Received: by mail-il1-f196.google.com with SMTP id p8so7274607iln.12
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 00:46:05 -0800 (PST)
+        id S1726210AbfLTK13 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Dec 2019 05:27:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54782 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfLTK1Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 05:27:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so8374619wmj.4
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 02:27:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KC26HLxDRJovHhJMQJ5lAOVG1MGnXvkpVbRgP05Myy8=;
-        b=wGysDDgA6GikQjvpFg8fc9uWKd6ow/H5uWmlEJTvI6JSdWwXLy7FE3Jk45OM7TPvx8
-         uDGbc6HjJYSEVAtx4uLF2iO4gIm6UMOpD2b+z2IlGicu85cZ7Pax5SHniFT1UWJv91tt
-         dWsk/0xi4OGemcCc/UtNS94tkNge5KaCf0kwUQKC8SZWKmZYI756Ic7b5y+7FwczBX6y
-         KMd8F4vcQdw20wrpAco9thUkr0jKhm2yz5exzZVOsmGj8wQbFg3e9PJXApdYVgi7oTyN
-         huFMvLT5kaaXNxt58BBbOi1NPj4O4HMlL3fdS6mZxpf63vTvUavDdJAOXWWJEwDjpQ8f
-         xpng==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
+        b=vLmOQumrckuy/uRuCU6yj4xJmKBQPT49yE9Lmv9XbT/e4gBL/sCo8bZKZcNnCad6h0
+         EzThNeJ09aW/PlljQ59lBAJU4BTFH/sJ04aytmPiYK8I+kWIlRR7MA+jfxfIdYPt0QA+
+         nWQBF3Yni8tdLR3XUHykRBHWmfvqVXQaGhEGSRHgOQSSpQYvqCdZLAV47obw4KLsYyi9
+         53sRvzHkBz6I54lzaP/B2akmRLThzlzDdlRePi86UJs02KQobisvc7mvwOLdjBx6VCTX
+         127qaleSFwWS0mM1so33m0aD7tPk56PVtyMWniexnnQ7x7CARkRBFdSJ9Z+wu8UimdzM
+         7p3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KC26HLxDRJovHhJMQJ5lAOVG1MGnXvkpVbRgP05Myy8=;
-        b=I6SgjCJYcDg5h2zUs515tEuxxI8/qAtxc1WwGJwLZDdA4UBjSfk6pWqZ/vBi8q/1K7
-         BEUFB2/twaaMrZPI+pFKf9NrtsXayYUT++ecnlV6niXkg8IeVRTjNogHjGw1R4OG4PBU
-         kfoN6SfhgOSv7TOJglYCtHBKPQg+V9crlafY/6Z7X7bcep4ok9vJTg9x8HkByX4Gcs5M
-         rQyZEueGVx3tR0DMqK9BxNybbfRrc0yoppDZaWnnrtmtW4DKXv4XEGgYMCxG1SjNsYdC
-         94xsoNoCHARePr30qMmk2amv2oGOiUhlo/9yeUpGR45Utu+rlFH/V/ykZV3m0OCuuCv9
-         QPRA==
-X-Gm-Message-State: APjAAAXPIZEX2vbSU0vPrHUER2DaRdIoKZfb7UpYad86/9zxw8WVkxGX
-        6CsDaEiRGPxbna0owyxxJFhyIHmUHZ6f4aFbQ+CKIw==
-X-Google-Smtp-Source: APXvYqzfZI/yDgZRH6zmbRR6u1hg2SOZ1sEwewAt9u+5DJxdAzgsObY6+rRXk4URsBrcWW71e7mazhPpGhACe16NMpw=
-X-Received: by 2002:a92:8712:: with SMTP id m18mr6251028ild.40.1576831564827;
- Fri, 20 Dec 2019 00:46:04 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
+        b=SVoIl+fk+6sz5I6SmHWLHZZgAETO/QNpU6lkcFgTPsQUS2r89r+JMBPy6asx+k1vya
+         HTfjY0kHOCTb7s1D8TfFHlOkXbDF0fA8giw7EdXNVYtXzA4Jmxppn2J4HfjrTpOo/AvA
+         /BZopNUw9qpttXEZUFhIG//gwIT80pxIiqUxld21+y5HWhtVRlHERbXL7tQSB84phXBd
+         7vpb7Rv8uba+7o8MfBcOiX1lr4ljTdocqjN0S/gIKdngzTprftzp7F68qcgjN8/7+5RN
+         Z+OsgdJXzxpW25wYjIL7htor/6T3ZeQFhx6lM+9fcRqxnXB+EcgFPu7rlXygyZhT06ve
+         xYXw==
+X-Gm-Message-State: APjAAAUtn9sw+GWWbuwJvYCyaa2MIgstmmTyFsILQ51GTUWB6fvllpSQ
+        rLIEgi+XcirLNS2/R1zvIFzS0XV4Q4M=
+X-Google-Smtp-Source: APXvYqyVpEoQ0ffKKhojLArPhnqkXcZq4Qsi1o1iUUiVSKzewceGkEew3wQ3Hvpb8P8F0HzsUlM/ag==
+X-Received: by 2002:a7b:c246:: with SMTP id b6mr15254728wmj.75.1576837643320;
+        Fri, 20 Dec 2019 02:27:23 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r68sm9232066wmr.43.2019.12.20.02.27.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Dec 2019 02:27:22 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
+ wcd9340/wcd9341 codec
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, spapothi@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+ <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
+ <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
+ <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <3fa4997f-4409-97f6-ba10-a87013383eb7@linaro.org>
+Date:   Fri, 20 Dec 2019 10:27:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
- <20191219172414.GA2094615@kroah.com>
-In-Reply-To: <20191219172414.GA2094615@kroah.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 20 Dec 2019 09:45:53 +0100
-Message-ID: <CAMRc=McM6VeOHj5hhk5bLoc=Vy3LTnuoCt-18s8BFOZDbChqqw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 19 gru 2019 o 18:24 Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> napisa=C5=82(a):
->
-> On Thu, Dec 19, 2019 at 06:15:27PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently there is no way for user-space to be informed about changes
-> > in status of GPIO lines e.g. when someone else requests the line or its
-> > config changes. We can only periodically re-read the line-info. This
-> > is fine for simple one-off user-space tools, but any daemon that provid=
-es
-> > a centralized access to GPIO chips would benefit hugely from an event
-> > driven line info synchronization.
-> >
-> > This patch adds a new ioctl() that allows user-space processes to reuse
-> > the file descriptor associated with the character device for watching
-> > any changes in line properties. Every such event contains the updated
-> > line information.
-> >
-> > Currently the events are generated on three types of status changes: wh=
-en
-> > a line is requested, when it's released and when its config is changed.
-> > The first two are self-explanatory. For the third one: this will only
-> > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > as any changes that can happen from within the kernel (i.e.
-> > set_transitory() or set_debounce()) are of no interest to user-space.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >  drivers/gpio/gpiolib.c    | 191 ++++++++++++++++++++++++++++++++++++--
-> >  drivers/gpio/gpiolib.h    |   1 +
-> >  include/uapi/linux/gpio.h |  24 +++++
-> >  tools/gpio/gpio-watch     | Bin 0 -> 26528 bytes
->
-> Did you mean for this binary file to be checked in?
->
 
-No, of course not, it's a mistake. I'll remove it in v4.
 
-Bart
+On 19/12/2019 20:05, Pierre-Louis Bossart wrote:
+>>>
+>> Note these are the child devices of the MFD SLIMBus device.
+> 
+> Ah ok. I guess the creation of those child devices when the parent 
+> SLIMbus device reports PRESENT initially if fine, it's the part where 
+> you remove them if the device loses sync or gets powered off which is 
+> odd. And I guess technically you could still have race conditions where 
+> a child device starts a transaction just as the parent is no longer 
+> attached to the bus.
+
+Losing power to SLIMBus device is very odd usecase and if it happens 
+suggests that threre are bigger issues on the board design itself. This 
+case should never happen. Even if it happens we would get timeout errors 
+on every SLIMbus transactions.
+
+> 
+>>> I would however not remove the devices when the status is down but 
+>>> only on an explicit .remove.
+>>
+>> Am open for suggestions but I would not like the child devices to talk 
+>> on the bus once the SLIMbus device is down! Only way to ensure or make 
+>> it silent is to remove.
+> 
+> it's as if you are missing a mechanism to forward the parent status to 
+> the children so use remove() for lack of a better solution?
+That is true. This gives bit more control on the slave device lifecycle.
+Current solution works fine for now with less complexities across 
+multiple drivers. I also agree that there is scope of improvement in 
+future for this.
+
+Thanks,
+srini
