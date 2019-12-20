@@ -2,98 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A97127AD1
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 13:15:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E7A9127EBF
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 15:50:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfLTMPp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Dec 2019 07:15:45 -0500
-Received: from mga12.intel.com ([192.55.52.136]:5665 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfLTMPp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:15:45 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 04:15:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="416519636"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Dec 2019 04:15:43 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1iiHC3-0002kc-8y; Fri, 20 Dec 2019 14:15:43 +0200
-Date:   Fri, 20 Dec 2019 14:15:43 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-Message-ID: <20191220121543.GY32742@smile.fi.intel.com>
-References: <20191219171528.6348-1-brgl@bgdev.pl>
- <20191219171528.6348-13-brgl@bgdev.pl>
- <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
- <CAMpxmJV4UU21x8rfNMaJ6G2OiRa3qC2vYQWH4C_T+nS4b_NcUw@mail.gmail.com>
+        id S1727391AbfLTOum (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Dec 2019 09:50:42 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39904 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbfLTOul (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 09:50:41 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 77so12140004oty.6;
+        Fri, 20 Dec 2019 06:50:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WX10vICYYRvoUi29Bg7nghuIV/IRkRBUGYTlCz77POw=;
+        b=h4Ep7ozmlsGYPifmQqIf+l8tigH7HyfxNTuZ04Fh62rXqhc068z6XVwwhbsBTIfzlE
+         62fioCFzBMQDNmiGtD1Dw+WtlKyT1NckaOigqaKfc+TN4CvmevsGMlVLbtUyJkn3+S9h
+         CFdnRyXLLlVBtcjwdYJEe9cowdoNbNb/Xb4NRXkDkv/SFNV5M3IC6AmU7+mkN+2dar+Y
+         Gkh4witmgzLmEGEPQtemAcFveN81oMiY3oJCmNClUYq+GiVtwpXZnxZo9sIEDaaEmDaW
+         nz8lRdZAHQUEW6nmz/RYS8Ltpnx80SfX1h32dpAWzGIIiUmV2wlNSDtfCVnusHF+ECPt
+         CaYA==
+X-Gm-Message-State: APjAAAWiCVrJ0qFfy4tJf8pVfHPqUYxSj5xjoTNeT8SOLewNr14cM0nW
+        q+AcsSCXkiGdvqM4h7U9DFKncG4Kk34JQWCA7Ds=
+X-Google-Smtp-Source: APXvYqyJfWHsIwMzr4B7jUQ/MHRfy0TUIc7UQtDOKVGgjT24Ynml5q9N/yvlferG3HqtPALA9efqtkiEANEIbG1R9ac=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr15711603otm.297.1576853441079;
+ Fri, 20 Dec 2019 06:50:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJV4UU21x8rfNMaJ6G2OiRa3qC2vYQWH4C_T+nS4b_NcUw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191212135301.17915-1-chris.brandt@renesas.com> <CACRpkdYOXvWpAs1LkgeQFxZiU=HvnaUod=px+42qpJBrcKGCfw@mail.gmail.com>
+In-Reply-To: <CACRpkdYOXvWpAs1LkgeQFxZiU=HvnaUod=px+42qpJBrcKGCfw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Dec 2019 15:50:29 +0100
+Message-ID: <CAMuHMdUTyhKSt6qEhnkgKZpn5KizUDLe8zztY5cy0ZSxCSj+Mw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: rza1: reduce printed messages
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Chris Brandt <chris.brandt@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:25:59PM +0100, Bartosz Golaszewski wrote:
-> czw., 19 gru 2019 o 19:17 Andy Shevchenko <andy.shevchenko@gmail.com>
-> napisał(a):
-> > On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hi Linus,
 
-...
-
-> > > +/**
-> > > + * struct gpioline_info_changed - Information about a change in status
-> > > + * of a GPIO line
-> > > + * @info: updated line information
-> > > + * @timestamp: estimate of time of status change occurrence, in nanoseconds
-> > > + * and GPIOLINE_CHANGED_CONFIG
-> > > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
-> > > + */
-> > > +struct gpioline_info_changed {
+On Mon, Dec 16, 2019 at 10:41 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Dec 12, 2019 at 2:53 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> > Since this message is printed for each port, it creates a lot of output
+> > during boot and would serve better only during debugging.
 > >
-> > > +       struct gpioline_info info;
-> >
-> > Is this guaranteed to be always 8 byte aligned?
-> > I'm expecting to see some comments there and / or here about it.
-> >
-> 
-> struct gpioline_info alone is 32-bit aligned but its size is 72 bytes
-> which works for 64-bit alignment. This new structure's biggest element
-> in 64-bit, so it's 64-bit aligned on 64-bit arch. We have 72 bytes of
-> gpioline_info, 8 bytes of timestamp, 32 bytes of event type and 5 * 32
-> bytes of padding. Should be fine, but I'll add comments to the header.
+> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> I think Geert usually pick these up as well, else tell me if I should
+> just apply it.
 
-Yes, what I meant is to add comment at least to struct gpioline_info definition
-that if somebody would like to change it there (which also might be a
-problematic here, if there is no versioning scheme / length member).
+Indeed.
 
-> > > +       __u64 timestamp;
-> > > +       __u32 event_type;
-> > > +       __u32 padding[5]; /* for future use */
-> > > +};
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+and queueing in sh-pfc-for-v5.6.
 
-Offtopic a bit, had you had a chance to look at Buildroot and our scripts
-I shared?
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
