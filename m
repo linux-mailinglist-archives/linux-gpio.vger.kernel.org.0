@@ -2,109 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67C2F127947
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 11:27:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A9121279AE
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 11:55:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfLTK13 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Dec 2019 05:27:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54782 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfLTK1Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 05:27:25 -0500
-Received: by mail-wm1-f68.google.com with SMTP id b19so8374619wmj.4
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 02:27:24 -0800 (PST)
+        id S1727205AbfLTKzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Dec 2019 05:55:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42746 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLTKzH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 05:55:07 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q6so8946878wro.9
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 02:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
-        b=vLmOQumrckuy/uRuCU6yj4xJmKBQPT49yE9Lmv9XbT/e4gBL/sCo8bZKZcNnCad6h0
-         EzThNeJ09aW/PlljQ59lBAJU4BTFH/sJ04aytmPiYK8I+kWIlRR7MA+jfxfIdYPt0QA+
-         nWQBF3Yni8tdLR3XUHykRBHWmfvqVXQaGhEGSRHgOQSSpQYvqCdZLAV47obw4KLsYyi9
-         53sRvzHkBz6I54lzaP/B2akmRLThzlzDdlRePi86UJs02KQobisvc7mvwOLdjBx6VCTX
-         127qaleSFwWS0mM1so33m0aD7tPk56PVtyMWniexnnQ7x7CARkRBFdSJ9Z+wu8UimdzM
-         7p3w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=lnsxrNECjkBnFDoUoh4Zk3vI7gih7BdHS5VDD/ljXCsq9ilLRKOZ8GzzX7sx/6q8XK
+         zXuAKwefaAx9xOCMJiNWqqF/21CHWenY5X0UiZceAAACBFFJpSOR2/UekgYy3Alhn+7K
+         ieZJlFRB2hooAr36DkhTxOLH/VBGWvH3v/mySwaI6BcLANoApcE8RhKRUozqUqqmupM9
+         pRRKHrcSYVWSErKLI8B7XsVpW7oGvA9qLZMI7MVHFPZ7zG0gSaC9VyAIgYXmv8TF26Ih
+         fDVRzS4kElTzBv5ztckoj5PvaMpdOldZIi3GMchS7cYL/6H8DBkQYaUkNyrvhqkZXB72
+         YaSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
-        b=SVoIl+fk+6sz5I6SmHWLHZZgAETO/QNpU6lkcFgTPsQUS2r89r+JMBPy6asx+k1vya
-         HTfjY0kHOCTb7s1D8TfFHlOkXbDF0fA8giw7EdXNVYtXzA4Jmxppn2J4HfjrTpOo/AvA
-         /BZopNUw9qpttXEZUFhIG//gwIT80pxIiqUxld21+y5HWhtVRlHERbXL7tQSB84phXBd
-         7vpb7Rv8uba+7o8MfBcOiX1lr4ljTdocqjN0S/gIKdngzTprftzp7F68qcgjN8/7+5RN
-         Z+OsgdJXzxpW25wYjIL7htor/6T3ZeQFhx6lM+9fcRqxnXB+EcgFPu7rlXygyZhT06ve
-         xYXw==
-X-Gm-Message-State: APjAAAUtn9sw+GWWbuwJvYCyaa2MIgstmmTyFsILQ51GTUWB6fvllpSQ
-        rLIEgi+XcirLNS2/R1zvIFzS0XV4Q4M=
-X-Google-Smtp-Source: APXvYqyVpEoQ0ffKKhojLArPhnqkXcZq4Qsi1o1iUUiVSKzewceGkEew3wQ3Hvpb8P8F0HzsUlM/ag==
-X-Received: by 2002:a7b:c246:: with SMTP id b6mr15254728wmj.75.1576837643320;
-        Fri, 20 Dec 2019 02:27:23 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r68sm9232066wmr.43.2019.12.20.02.27.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 02:27:22 -0800 (PST)
-Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
- wcd9340/wcd9341 codec
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, vinod.koul@linaro.org,
-        devicetree@vger.kernel.org, spapothi@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
- <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
- <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
- <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <3fa4997f-4409-97f6-ba10-a87013383eb7@linaro.org>
-Date:   Fri, 20 Dec 2019 10:27:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=CpmFGgZO34qhJWU+6GOLPdEA6n61xcsuhxkC5yA0w2Qs2pNR8chUd+F4CU1WB48dc7
+         57Rf4kDuA60zdE0Yvdrn9FUQ2cUJjgMtFjBLZQweWWE76a1IQmKfxttg6E37A4shb7IA
+         oDWYfbFB7YXmOCX8iA8AOnBLnaa7cOMa8lrku5VwWgIivKchYhoQ/FQJVytY+rY2FeLK
+         iDDKjDYZtYHM10z55ND553lmGq10bG9FGKWTVlJXLluOHaaw7yfAVgMEq1FUab2V4w2a
+         qQtM09E4q6P1JSE7mJxPQm5mvtp4JQmGFbputvzXkokxI8yDtnqpA6q7ytQj6eEWycKu
+         LQ+g==
+X-Gm-Message-State: APjAAAWEflnIsHHNPOcfsjqhDCQK+GCX/Hgcooky99v4bCiV4IB/X8jo
+        yUls4/b+aYyHgYmlRqeqG78fMA==
+X-Google-Smtp-Source: APXvYqyicvSFzhHzxpljiw/uidTI78NGorAjjg+bi/J4O8iYxkHUB7TVkQ+2LhBMrPCHOQeS/2zn7Q==
+X-Received: by 2002:adf:f052:: with SMTP id t18mr14250816wro.192.1576839304724;
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id f17sm9339549wmc.8.2019.12.20.02.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:55:05 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
+Message-ID: <20191220105505.GS18955@dell>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
+ <20191219143647.GQ18955@dell>
+ <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 19/12/2019 20:05, Pierre-Louis Bossart wrote:
->>>
->> Note these are the child devices of the MFD SLIMBus device.
-> 
-> Ah ok. I guess the creation of those child devices when the parent 
-> SLIMbus device reports PRESENT initially if fine, it's the part where 
-> you remove them if the device loses sync or gets powered off which is 
-> odd. And I guess technically you could still have race conditions where 
-> a child device starts a transaction just as the parent is no longer 
-> attached to the bus.
-
-Losing power to SLIMBus device is very odd usecase and if it happens 
-suggests that threre are bigger issues on the board design itself. This 
-case should never happen. Even if it happens we would get timeout errors 
-on every SLIMbus transactions.
+On Fri, 20 Dec 2019, Vaittinen, Matti wrote:
 
 > 
->>> I would however not remove the devices when the status is down but 
->>> only on an explicit .remove.
->>
->> Am open for suggestions but I would not like the child devices to talk 
->> on the bus once the SLIMbus device is down! Only way to ensure or make 
->> it silent is to remove.
-> 
-> it's as if you are missing a mechanism to forward the parent status to 
-> the children so use remove() for lack of a better solution?
-That is true. This gives bit more control on the slave device lifecycle.
-Current solution works fine for now with less complexities across 
-multiple drivers. I also agree that there is scope of improvement in 
-future for this.
+> On Thu, 2019-12-19 at 14:36 +0000, Lee Jones wrote:
+> > On Thu, 19 Dec 2019, Vaittinen, Matti wrote:
+> > 
+> > > Hello Mark, Lee, Rob
+> > > 
+> > > I just noticed we have a dependency here. This binding is referring
+> > > to
+> > > regulator binding - which was applied by Mark and is thus missing
+> > > from
+> > > the series. What's the best way forward?
+> > > 
+> > > On Thu, 2019-12-19 at 11:46 +0200, Matti Vaittinen wrote:
+> > > > ROHM BD71828 Power management IC integrates 7 buck converters, 7
+> > > > LDOs,
+> > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> > > > and a 32.768 kHz clock gate.
+> > > > 
+> > > > Document the dt bindings drivers are using.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
+> > > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > 
+> > > > No changes since v6
+> > > 
+> > > //snip
+> > > 
+> > > > +  regulators:
+> > > > +    $ref: ../regulator/rohm,bd71828-regulator.yaml
+> > > 
+> > > This file is missing from the series and is applied to Mark's tree.
+> > 
+> > Shouldn't matter.  I guess they're all heading for he same release.
+> > 
+> Ok. Thanks for clarification. I was asking this because Rob asked me to
+> reorder the patches a few versions ago so that the dt_binding_check
+> Make target would not be broken between commits. He asked me to submit
+> the regulator and LED bindings first and MFD (which refers to those)
+> only after them. Thus I was wondering if the final merge order of MFD
+> and regulator trees is such that it can result the breakage Rob hoped
+> to avoid. But I am more than glad if the series can go in like this :)
 
-Thanks,
-srini
+It's not something that concerns me personally.  I only care about
+*build* breakages.  Rob might be more upset about it however.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
