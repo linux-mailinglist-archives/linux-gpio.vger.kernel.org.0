@@ -2,142 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A9121279AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 11:55:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B501279E6
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 12:26:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfLTKzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Dec 2019 05:55:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42746 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfLTKzH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 05:55:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so8946878wro.9
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 02:55:05 -0800 (PST)
+        id S1727198AbfLTL0L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Dec 2019 06:26:11 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42820 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfLTL0L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Dec 2019 06:26:11 -0500
+Received: by mail-qk1-f196.google.com with SMTP id z14so6072185qkg.9
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Dec 2019 03:26:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
-        b=lnsxrNECjkBnFDoUoh4Zk3vI7gih7BdHS5VDD/ljXCsq9ilLRKOZ8GzzX7sx/6q8XK
-         zXuAKwefaAx9xOCMJiNWqqF/21CHWenY5X0UiZceAAACBFFJpSOR2/UekgYy3Alhn+7K
-         ieZJlFRB2hooAr36DkhTxOLH/VBGWvH3v/mySwaI6BcLANoApcE8RhKRUozqUqqmupM9
-         pRRKHrcSYVWSErKLI8B7XsVpW7oGvA9qLZMI7MVHFPZ7zG0gSaC9VyAIgYXmv8TF26Ih
-         fDVRzS4kElTzBv5ztckoj5PvaMpdOldZIi3GMchS7cYL/6H8DBkQYaUkNyrvhqkZXB72
-         YaSg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k8kYT/giIfGkzEyDaTLw5uWSWD/PKdfRcdySeHBbOIc=;
+        b=0X653SLfZNSEO/Z0hHuv1zWsbliVSJtZtWdOa+Ry7XnYv7DIc2ZmpunTfkv0OUH1tN
+         7PGiHeNQqkzBha5MSgH9+CocziAqShdM8hEUIDqvaN9dqUOl+qV4DxxXxNkEYsmPVWFf
+         pXyj5qP6i1t2JDQkRKPevT76mlTYWmF5vRd7mTPMnbqLHA2umw+jO1kyk4Ti5LeFdx90
+         Bz/AV+xllb4m7jIefbgvzcCRg6EDthPUsYP6j/9+qWD2MwYKi0wScSRVKBwSbM0sMsEY
+         GWRklvcHAFfZ9BuIMEHGxBvut6Yb3XiX2eMnyYIgqr7+qsURt8NEkRaRzEIVY053unM/
+         5J+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
-        b=CpmFGgZO34qhJWU+6GOLPdEA6n61xcsuhxkC5yA0w2Qs2pNR8chUd+F4CU1WB48dc7
-         57Rf4kDuA60zdE0Yvdrn9FUQ2cUJjgMtFjBLZQweWWE76a1IQmKfxttg6E37A4shb7IA
-         oDWYfbFB7YXmOCX8iA8AOnBLnaa7cOMa8lrku5VwWgIivKchYhoQ/FQJVytY+rY2FeLK
-         iDDKjDYZtYHM10z55ND553lmGq10bG9FGKWTVlJXLluOHaaw7yfAVgMEq1FUab2V4w2a
-         qQtM09E4q6P1JSE7mJxPQm5mvtp4JQmGFbputvzXkokxI8yDtnqpA6q7ytQj6eEWycKu
-         LQ+g==
-X-Gm-Message-State: APjAAAWEflnIsHHNPOcfsjqhDCQK+GCX/Hgcooky99v4bCiV4IB/X8jo
-        yUls4/b+aYyHgYmlRqeqG78fMA==
-X-Google-Smtp-Source: APXvYqyicvSFzhHzxpljiw/uidTI78NGorAjjg+bi/J4O8iYxkHUB7TVkQ+2LhBMrPCHOQeS/2zn7Q==
-X-Received: by 2002:adf:f052:: with SMTP id t18mr14250816wro.192.1576839304724;
-        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
-Received: from dell ([2.27.35.132])
-        by smtp.gmail.com with ESMTPSA id f17sm9339549wmc.8.2019.12.20.02.55.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
-Date:   Fri, 20 Dec 2019 10:55:05 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
-Message-ID: <20191220105505.GS18955@dell>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
- <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
- <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
- <20191219143647.GQ18955@dell>
- <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k8kYT/giIfGkzEyDaTLw5uWSWD/PKdfRcdySeHBbOIc=;
+        b=aG1EXp/OBOhy8VnskEM/i9kIEB+MDoADKRzukz1kzrIeFsJ3ThDW5VtxOBtw9zTdHD
+         CgmizYdfsKOY+Uo8Nfuxu7UPzvsgNj8Zj4DnIqLAWPLCRaNO0oFGX+oY7W94RzyRhNQi
+         jwlDxkfOCvwMdaop7mtS64QmzLRH5XcoeQ4q8/SYeK/BLSUN+wDmX2fU+skBg4/yyRdp
+         gRIp9FGdAjdzBGmK2GqZmcDp99YwV0QMWk5OaHR2uV8NJTC3QkP8/nhx859FaiYqJ4K0
+         yfv9ubQnEXvkftuNbusqvZnZePKl8rBlidMnfJFSubRN3vxiz5tUrP3ANGDHQGtKddbR
+         7X0g==
+X-Gm-Message-State: APjAAAWBzDtHRgiM1NaxlCqcV7ZvCfXSeBmEZAjZ2wyTXs/K0Bpph/83
+        RvW5Gobu/Dm21+1efpdCnpUpM9onXS+KnR0GC2WWzg==
+X-Google-Smtp-Source: APXvYqzhcyZgFVFv3H+mbO4rYzV1eboUn9h9EbLhQ6JMtk0i27uNsQVjcs0Y65TTI4yoGipZQRB7jphk4bVR2sC+gkM=
+X-Received: by 2002:a37:744:: with SMTP id 65mr12553936qkh.323.1576841170045;
+ Fri, 20 Dec 2019 03:26:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191219171528.6348-1-brgl@bgdev.pl> <20191219171528.6348-13-brgl@bgdev.pl>
+ <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
+In-Reply-To: <CAHp75VeMEngXiFmvTrsW7UZMz0ppR-W-J4D1xU+qKGfLXkG3kg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 20 Dec 2019 12:25:59 +0100
+Message-ID: <CAMpxmJV4UU21x8rfNMaJ6G2OiRa3qC2vYQWH4C_T+nS4b_NcUw@mail.gmail.com>
+Subject: Re: [PATCH v3 12/13] gpiolib: add new ioctl() for monitoring changes
+ in line info
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 20 Dec 2019, Vaittinen, Matti wrote:
+czw., 19 gru 2019 o 19:17 Andy Shevchenko <andy.shevchenko@gmail.com>
+napisa=C5=82(a):
+>
+> On Thu, Dec 19, 2019 at 7:17 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> >
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently there is no way for user-space to be informed about changes
+> > in status of GPIO lines e.g. when someone else requests the line or its
+> > config changes. We can only periodically re-read the line-info. This
+> > is fine for simple one-off user-space tools, but any daemon that provid=
+es
+> > a centralized access to GPIO chips would benefit hugely from an event
+> > driven line info synchronization.
+> >
+> > This patch adds a new ioctl() that allows user-space processes to reuse
+> > the file descriptor associated with the character device for watching
+> > any changes in line properties. Every such event contains the updated
+> > line information.
+> >
+> > Currently the events are generated on three types of status changes: wh=
+en
+> > a line is requested, when it's released and when its config is changed.
+> > The first two are self-explanatory. For the third one: this will only
+> > happen when another user-space process calls the new SET_CONFIG ioctl()
+> > as any changes that can happen from within the kernel (i.e.
+> > set_transitory() or set_debounce()) are of no interest to user-space.
+>
+> > -       } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL) {
+> > +       } else if (cmd =3D=3D GPIO_GET_LINEINFO_IOCTL ||
+> > +                  cmd =3D=3D GPIO_GET_LINEINFO_WATCH_IOCTL) {
+>
+> Wouldn't be better for maintenance to have them separated from the day 1?
+>
 
-> 
-> On Thu, 2019-12-19 at 14:36 +0000, Lee Jones wrote:
-> > On Thu, 19 Dec 2019, Vaittinen, Matti wrote:
-> > 
-> > > Hello Mark, Lee, Rob
-> > > 
-> > > I just noticed we have a dependency here. This binding is referring
-> > > to
-> > > regulator binding - which was applied by Mark and is thus missing
-> > > from
-> > > the series. What's the best way forward?
-> > > 
-> > > On Thu, 2019-12-19 at 11:46 +0200, Matti Vaittinen wrote:
-> > > > ROHM BD71828 Power management IC integrates 7 buck converters, 7
-> > > > LDOs,
-> > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
-> > > > and a 32.768 kHz clock gate.
-> > > > 
-> > > > Document the dt bindings drivers are using.
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
-> > > > >
-> > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> > > > 
-> > > > No changes since v6
-> > > 
-> > > //snip
-> > > 
-> > > > +  regulators:
-> > > > +    $ref: ../regulator/rohm,bd71828-regulator.yaml
-> > > 
-> > > This file is missing from the series and is applied to Mark's tree.
-> > 
-> > Shouldn't matter.  I guess they're all heading for he same release.
-> > 
-> Ok. Thanks for clarification. I was asking this because Rob asked me to
-> reorder the patches a few versions ago so that the dt_binding_check
-> Make target would not be broken between commits. He asked me to submit
-> the regulator and LED bindings first and MFD (which refers to those)
-> only after them. Thus I was wondering if the final merge order of MFD
-> and regulator trees is such that it can result the breakage Rob hoped
-> to avoid. But I am more than glad if the series can go in like this :)
+Sure. Will fix in v4.
 
-It's not something that concerns me personally.  I only care about
-*build* breakages.  Rob might be more upset about it however.
+> ...
+>
+> > +       if (test_bit(desc_to_gpio(desc), priv->watched_lines)) {
+>
+> if (!test_bit(...))
+>   return NOTIFY_DONE;
+>
+> ?
+>
+> > +                       pr_debug_ratelimited(
+> > +                               "%s: lineinfo event FIFO is full - even=
+t dropped\n",
+>
+> > +                               __func__);
+>
+> This is in 99.9% cases redundant in *_dbg() calls.
+>
+> > +               ret =3D NOTIFY_OK;
+> > +       }
+> > +
+> > +       return ret;
+>
+> return NOTIFY_OK;
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yeah, makes sense.
+
+> ?
+>
+> > +}
+>
+> ...
+>
+> > @@ -3111,6 +3285,7 @@ static int gpio_set_bias(struct gpio_chip *chip, =
+struct gpio_desc *desc)
+> >                 if (ret !=3D -ENOTSUPP)
+> >                         return ret;
+> >         }
+> > +
+> >         return 0;
+> >  }
+> >
+>
+> This hunk doesn't belong to this patch.
+>
+
+Ha! Of course it doesn't. :)
+
+> ...
+>
+> > +/**
+> > + * struct gpioline_info_changed - Information about a change in status
+> > + * of a GPIO line
+> > + * @info: updated line information
+> > + * @timestamp: estimate of time of status change occurrence, in nanose=
+conds
+> > + * and GPIOLINE_CHANGED_CONFIG
+> > + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RE=
+LEASED
+> > + */
+> > +struct gpioline_info_changed {
+>
+> > +       struct gpioline_info info;
+>
+> Is this guaranteed to be always 8 byte aligned?
+> I'm expecting to see some comments there and / or here about it.
+>
+
+struct gpioline_info alone is 32-bit aligned but its size is 72 bytes
+which works for 64-bit alignment. This new structure's biggest element
+in 64-bit, so it's 64-bit aligned on 64-bit arch. We have 72 bytes of
+gpioline_info, 8 bytes of timestamp, 32 bytes of event type and 5 * 32
+bytes of padding. Should be fine, but I'll add comments to the header.
+
+Bart
+
+> > +       __u64 timestamp;
+> > +       __u32 event_type;
+> > +       __u32 padding[5]; /* for future use */
+> > +};
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
