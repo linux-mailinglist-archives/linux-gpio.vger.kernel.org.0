@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA6BB1273E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 04:29:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA3D51273FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 04:34:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLTD3b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Dec 2019 22:29:31 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:40133 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfLTD3b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 22:29:31 -0500
-Received: by mail-wr1-f48.google.com with SMTP id c14so7983341wrn.7
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 19:29:30 -0800 (PST)
+        id S1726986AbfLTDec (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Dec 2019 22:34:32 -0500
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:50227 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLTDec (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Dec 2019 22:34:32 -0500
+Received: by mail-wm1-f43.google.com with SMTP id a5so7485316wmb.0
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Dec 2019 19:34:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=brFsvjILp3+FcL0fJP9PTLlh3TRPgtrx4xCfSbr7NOA=;
-        b=l4OPX1SCY0aX/HMgBTRG/ISEv49FWeDF9USChiq/QVyjCimNssNhXoe4QCLvkxIpVx
-         gQNOxbU7vwBnjfaYWO3jZD+kEndVX1ump5aOVjGC4GqsA75Gy8pdwqKIHbHHK4CA5Xve
-         5104H1wc6F7VPCr9giduZaGHOTg5KpCmdqZONQJ36WdaSFalHrXTnZvAACmDGQ5PRLkL
-         XUImMXbBEKF/KGI6/6WjtRwWIAo9N3CRKc/K50h8/Zs4Z+phml5DHqIL0/Vdt68webng
-         CgEiiQsdTSK74xjXYl2Z3dxN/FSjZaK7Hs8it5zLQuGdJHcQkQ8gSsdy+oH3x6eJCF45
-         48bw==
+        bh=HrAhS1+eem1uCHzxgkwexZR1s5lTl3Rv93UYeH57BBs=;
+        b=S7AArjkkFTKLlr6feyX1tRDAqrSL3MpZXKgdnVxI5KtOrC9fF2vVl60LW8ugWVqcd6
+         OD3LjfjJP8AFtfQPjjEfL7o+MLzAoZ7tQrUaGY1CUtQk5TnPHBf9OIkcTZDoJ4TxEAZR
+         o+RivENNTlbGnKE4dbohogjZJMZVw0XGaq6XWRe2s4kbQEk1PsztBP/ecV+q9JU64gn/
+         Ff7nzRPOL5VtjUfLww9j5VNJf+lgbeiZ6JJLc+nKGWMZZliXISGUuMBeGBEDW/v8Xxgr
+         bbRDjsH2O29szO6G4IVpPH2/vfewAyblFJXdcOJm8Eh8tYiu7f++kiWC9wXMMJmSslQd
+         dtCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=brFsvjILp3+FcL0fJP9PTLlh3TRPgtrx4xCfSbr7NOA=;
-        b=pRkr0nWpnYAEHzgnsO/aapBH5Gvpil4bUEvhz9rJaYfsqbgUJAvp+YU84tF7syV5nL
-         HKlXWJHHDo0EWXvFeHCLGzejFjOBDnTbeKxuJnofoL9Hu4OFx16aZ8izhE8Pmnz84pop
-         ZhLZflfb1cXMF0qP2okhEKTh2q4+f3zXiR5Tg0gdzfhG968gpPuwWgK0J9JpMcHVzBS/
-         BADHXRFAONhEXzmN3gysV500Qk1osWCycMH84lo0RkJZRiRGXztEVw9eiV6VUyi5GIJl
-         /E21JUmwyXnCvgX3cX85m2NtSOZMZxp5XbNQTSFopYsuR8fD+QVt3KS8C+HaapRelgh8
-         zlaw==
-X-Gm-Message-State: APjAAAVO1896VzTtexPw0f4jbhaCV7QaI6/jtVub88QmjVgSPOl1IqXp
-        345rdbnSBX4H01Yo+bD0QsSY8vRt+KdEWQ==
-X-Google-Smtp-Source: APXvYqzPGttPxjajfNz5tcNmxyZNEwsq1OXTVaJih5vMWKsNDVXmYzjRosZxv8ksyJy+zSyMAeJ5Ww==
-X-Received: by 2002:a5d:480f:: with SMTP id l15mr12696221wrq.305.1576812569198;
-        Thu, 19 Dec 2019 19:29:29 -0800 (PST)
+        bh=HrAhS1+eem1uCHzxgkwexZR1s5lTl3Rv93UYeH57BBs=;
+        b=a13bnUItF/tLkMfleMhZkXGWxl5+qdG0gyWw5XloUi0//Ty6nIiP0S+OaHjp+Y5br+
+         sth9FvTKVWlGeFfWKjsbWuni4ahHBirG/mm1KW4cKuPj3JrUzXj1/1Lh7LXaMIJy+P4Z
+         7s+Mrmxba8M7zkc55cbvwVPdcaAiBQ6PlMPnyg/ggMn4Lv9mJ3JdO1Hfv38h0XMmt/1G
+         ZksJORZxlxMA2l0xpB69LiCqLu+O0E9rKzkPi0gZwk3l37A7AEzne/7i3pDmrkB5/DBk
+         iHSEJ2/1CdBnv6v7wztEUkzCgQiWJJZBSX3qo91fiyTLVzHAJ5Ha1X+W8m168A985zrN
+         ixHg==
+X-Gm-Message-State: APjAAAXpgzm5+m0kKeB6utKzEWyU2gZQof6OUNyOr4mV21UWab4w2LRS
+        1wWlmLgtxn2so+YJoaA50x5E1h6FCBRn+Q==
+X-Google-Smtp-Source: APXvYqxw6Bcx++B38gdZTqGDldAUViwGZWGJOtByQNS1s1lC4feSHPAgIIl8y7YDi4WFTzoibGZbLg==
+X-Received: by 2002:a05:600c:290f:: with SMTP id i15mr13883773wmd.115.1576812870404;
+        Thu, 19 Dec 2019 19:34:30 -0800 (PST)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id q3sm7878472wmc.47.2019.12.19.19.29.28
+        by smtp.gmail.com with ESMTPSA id x7sm8420940wrq.41.2019.12.19.19.34.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 19:29:28 -0800 (PST)
-Message-ID: <5dfc4018.1c69fb81.5bc67.80c9@mx.google.com>
-Date:   Thu, 19 Dec 2019 19:29:28 -0800 (PST)
+        Thu, 19 Dec 2019 19:34:29 -0800 (PST)
+Message-ID: <5dfc4145.1c69fb81.247bc.abef@mx.google.com>
+Date:   Thu, 19 Dec 2019 19:34:29 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: v5.5-rc1-8-g6cc1d4568120
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.5-rc1-20-g06c4fc5eda6b
 X-Kernelci-Tree: linusw
-X-Kernelci-Branch: devel
-Subject: linusw/devel build: 5 builds: 0 failed,
- 5 passed (v5.5-rc1-8-g6cc1d4568120)
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next boot: 46 boots: 0 failed,
+ 45 passed with 1 untried/unknown (v5.5-rc1-20-g06c4fc5eda6b)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,50 +62,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 5 builds: 0 failed, 5 passed (v5.5-rc1-8-g6cc1d4568120)
+linusw/for-next boot: 46 boots: 0 failed, 45 passed with 1 untried/unknown =
+(v5.5-rc1-20-g06c4fc5eda6b)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.5-rc1-8-g6cc1d4568120/
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.5-rc1-20-g06c4fc5eda6b/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.5-rc1-20-g06c4fc5eda6b/
 
 Tree: linusw
-Branch: devel
-Git Describe: v5.5-rc1-8-g6cc1d4568120
-Git Commit: 6cc1d4568120bc8013b52873d9a40bdc6ae7802a
+Branch: for-next
+Git Describe: v5.5-rc1-20-g06c4fc5eda6b
+Git Commit: 06c4fc5eda6bce50e3995e436db6aa7fb5bc56eb
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 5 unique architectures
+Tested: 43 unique boards, 14 SoC families, 2 builds out of 5
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+Boot Regressions Detected:
 
-Detailed per-defconfig build reports:
+arm64:
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+    defconfig:
+        gcc-8:
+          sun50i-a64-pine64-plus:
+              lab-baylibre: new failure (last pass: v5.5-rc1-18-g65115d1733=
+b4)
 
 ---
 For more info write to <info@kernelci.org>
