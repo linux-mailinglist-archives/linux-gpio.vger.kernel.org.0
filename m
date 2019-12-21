@@ -2,57 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 875BD1281FB
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Dec 2019 19:15:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FC99128B0B
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Dec 2019 20:26:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfLTSPL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Dec 2019 13:15:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727459AbfLTSPL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 20 Dec 2019 13:15:11 -0500
-Subject: Re: [GIT PULL] pin control fixes for the v5.5 series
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576865711;
-        bh=tA5CZVASqIaskzAkusfsQ6gfEx9UR6qJBzv7fx06Q2c=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=uS+RgCjJoW2l3IEjinVnGYY+J/NRGQApvIk7lD869cxoBwAjX5FvkLeIQnB1IoK0K
-         pVgLq+02u/6efos0ZUQ+8qkZohoo96+EfM1jTZcV3sO/Ai13dc6a69o5ZhKJAXGyVx
-         7yy0gBUaC9gomWd2Ky6aXuKnrglQAL3VFOi5WEKk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdbY1XBspR0rrXVvCW2LwnRfA_DnA0YzwFy-dHCVhQSr0A@mail.gmail.com>
-References: <CACRpkdbY1XBspR0rrXVvCW2LwnRfA_DnA0YzwFy-dHCVhQSr0A@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdbY1XBspR0rrXVvCW2LwnRfA_DnA0YzwFy-dHCVhQSr0A@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.5-3
-X-PR-Tracked-Commit-Id: 9e65527ac3bab5480529d1ad07d4d228cc0295cd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7190a23a58b7587eadbe53aaffca280882838f35
-Message-Id: <157686571095.29164.13062266512729283298.pr-tracker-bot@kernel.org>
-Date:   Fri, 20 Dec 2019 18:15:10 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>
+        id S1726763AbfLUT0c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Dec 2019 14:26:32 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42838 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUT0c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Dec 2019 14:26:32 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9022C1C24DF; Sat, 21 Dec 2019 20:26:29 +0100 (CET)
+Date:   Sat, 21 Dec 2019 20:26:28 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v7 01/12] dt-bindings: leds: ROHM BD71282 PMIC LED driver
+Message-ID: <20191221192628.GI32732@amd>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <389367d4bb5283420e22f078c60e0805d23183ee.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="0NB0lE7sNnW8+0qW"
+Content-Disposition: inline
+In-Reply-To: <389367d4bb5283420e22f078c60e0805d23183ee.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 19 Dec 2019 22:33:37 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.5-3
+--0NB0lE7sNnW8+0qW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7190a23a58b7587eadbe53aaffca280882838f35
+On Thu 2019-12-19 11:44:50, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC LED driver device tree bindings.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thank you!
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--0NB0lE7sNnW8+0qW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3+ceQACgkQMOfwapXb+vJJ2wCfYAOe58hN8obn+J7VsS8wSsyl
+wScAnA28iJQPpN8gVwmgYEu1HmtWAv/J
+=54nq
+-----END PGP SIGNATURE-----
+
+--0NB0lE7sNnW8+0qW--
