@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4EC612A11A
+	by mail.lfdr.de (Postfix) with ESMTP id 316EB12A119
 	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2019 13:08:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfLXMH7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Dec 2019 07:07:59 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52838 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbfLXMHZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Dec 2019 07:07:25 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so2264577wmc.2
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2019 04:07:24 -0800 (PST)
+        id S1726262AbfLXMH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Dec 2019 07:07:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44423 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfLXMH0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Dec 2019 07:07:26 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so19648059wrm.11
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Dec 2019 04:07:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mz8L4Lt49G62seSrgK4yK746p50+Z1piYFhJRAF8PTU=;
-        b=1ctErHlCXj0LHw9fSbHRDNvyy0282E54F8kPgEYWs/gUR5so4AOy2w6mraAl3zWcZs
-         6Abv5b097LP7786/IdbQDcEk54IppMe6AyT66mwIQEOgHd6g1YQmdOnrPkmRWwqXBm95
-         suOSVMNmr9gxrrSfSm7dc6FPz6AdCSDGg0utf3DXEeeGJmBPWhQ/6ptZ+m5OHGVQ6gJC
-         3FStMfuag1M9CogknkLdA5+YhqpBXbE8pZcFLhG6VjCYl770nFFyV7AnLTn1aDuKuvv6
-         xdYgnZS31zySbhmy0VOEIWPFM6Sc/MWITkWH7BRA6MEl7WPmXC2ypAAOgze/8+I3brFm
-         zHQA==
+        bh=K3tKF/sG1li0TNgHDm/zaOCBiB+0gN/tDFvNC2uEQ+I=;
+        b=g9lElHhRIBO+8JEjfNQMA2XVSiVQ30Ri7z2hJTRPm/j76Zx+jJmIIj5Xk1TO2WTEgS
+         JcPqP0HQePpxXiyH++hJanMAX+vXYghttAmn6yYEdiN25cuFwAXOeIX1q5Pe0oIAwcBh
+         42iR7XTlVPGTIJwvBP6pxkEOCSLU0meQVw9ZuvwFC4zdFig7tW2Ozy0cx5W+ZyXQdrZb
+         rh4daaHeRMx2uAe5Mg0ug7aXbCnNSOd0hCK6SmGf2O5Wum2RjliPZyRwGfZrlObGe8lz
+         qlIxQNUjMKFU+3s9zbZGimAfru7gT2n+4SEHBbpFfvht7MRLthOreQqSC9/YTbj58JOq
+         q+7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mz8L4Lt49G62seSrgK4yK746p50+Z1piYFhJRAF8PTU=;
-        b=tLUtVwmhPOld7PToaf220snGpGPM+vKfFVOHulKXqXrDwH77T/aCWPsWtPreeTW+DJ
-         CrBIv1VKSk+eXnbTVU98PzWjNxWoypDWOxssxISCFhna9QNOzbqSWfkk25799T996f3i
-         YsBm8Gs1LI95KAzRtEEFKqgDydHGEYXNheQl/INjl4Dy9R+P4kDbcqf1FNxjic/4CVHo
-         5Wom6MYC4cVBe3+NExP0BttyqgtvkUidaKXtcRoiSvpWaQ06gQAaH3WHdc/AuZ6nLpe1
-         93CEC8eg7CILV3zuhsxdsdGioKOYHwsXfPxGckWWfGthhNFbWDtV698tffJ+tTPJTzRW
-         C+RQ==
-X-Gm-Message-State: APjAAAXz86wecyh89po+NkT66xeKwwN8U4vIBkz62s6npplx+UyqbVPL
-        NLW2O7XT6Ez+91FM7/9Vr0ZcSw==
-X-Google-Smtp-Source: APXvYqx6H+V3XXlrgcnZ5bJlmLgjaXFmx8wQ9PyJP+zBULWP0t3ogFFagIjhhXnah8PgMnS3g24EgA==
-X-Received: by 2002:a1c:7508:: with SMTP id o8mr3862612wmc.74.1577189243537;
-        Tue, 24 Dec 2019 04:07:23 -0800 (PST)
+        bh=K3tKF/sG1li0TNgHDm/zaOCBiB+0gN/tDFvNC2uEQ+I=;
+        b=LFQ0HThHr122SMzhTIDzYtTZmJEX7dLVuf2k6tNytZyrYKHZ+KbSQg4gZxN3OCCLAh
+         1hrtsYw0CWIKa9ew5909GMp2SyUV3TVt3uQ5MluzRh0cFZl+0yAqD3z2BC8iNuqb4CX/
+         0HvayL+aouixWAgjhYzzINijjBuo5KBpj1MEc2pjpQnRtrx9rO/pXpBL8gyCFxo+baF8
+         i8I87P6BHMoAZBKxcT2/5VfkhPBFqoAGeO/lgEAXczhCVMAHWQJS9nszCP/a9xnNvjms
+         dq/TTazBPOg7TKIH6OOJYpkygg6cLnms3gmUQ8b38tZDReuimZdapaMb6s6cYtAPXWnS
+         gOPA==
+X-Gm-Message-State: APjAAAVYmuwgSXtV5vAVrHyByciN2ZcRldlYnr7dk/6vdsiKGmWAoYCc
+        S1nyFpGAzmWZKiwSl1N88IETNg==
+X-Google-Smtp-Source: APXvYqzl4dthlgxAbEzxEkPONj4TiKBr71Sgs3FieyhYDXLXvuH07TMky9rTBxWiG9PFPeEE6pMnSQ==
+X-Received: by 2002:adf:fe86:: with SMTP id l6mr33840026wrr.252.1577189244487;
+        Tue, 24 Dec 2019 04:07:24 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id s10sm23829210wrw.12.2019.12.24.04.07.22
+        by smtp.gmail.com with ESMTPSA id s10sm23829210wrw.12.2019.12.24.04.07.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Dec 2019 04:07:23 -0800 (PST)
+        Tue, 24 Dec 2019 04:07:24 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 06/13] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
-Date:   Tue, 24 Dec 2019 13:07:02 +0100
-Message-Id: <20191224120709.18247-7-brgl@bgdev.pl>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 07/13] kfifo: provide noirqsave variants of spinlocked in and out helpers
+Date:   Tue, 24 Dec 2019 13:07:03 +0100
+Message-Id: <20191224120709.18247-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191224120709.18247-1-brgl@bgdev.pl>
 References: <20191224120709.18247-1-brgl@bgdev.pl>
@@ -67,34 +66,74 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Unduplicate the offset check by simply calling gpiochip_get_desc() and
-checking its return value.
+Provide variants of spinlocked kfifo_in() and kfifo_out() routines which
+don't disable interrupts.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/gpio/gpiolib.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/kfifo.h | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 007f16fdf782..81d5eda4de7d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1175,10 +1175,11 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
+index fc4b0b10210f..123c200ed7cb 100644
+--- a/include/linux/kfifo.h
++++ b/include/linux/kfifo.h
+@@ -517,6 +517,26 @@ __kfifo_uint_must_check_helper( \
+ 	__ret; \
+ })
  
- 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
- 			return -EFAULT;
--		if (lineinfo.line_offset >= gdev->ngpio)
--			return -EINVAL;
- 
--		desc = &gdev->descs[lineinfo.line_offset];
-+		desc = gpiochip_get_desc(chip, lineinfo.line_offset);
-+		if (IS_ERR(desc))
-+			return PTR_ERR(desc);
++/**
++ * kfifo_in_spinlocked_noirqsave - put data into fifo using a spinlock for
++ * locking, don't disable interrupts
++ * @fifo: address of the fifo to be used
++ * @buf: the data to be added
++ * @n: number of elements to be added
++ * @lock: pointer to the spinlock to use for locking
++ *
++ * This is a variant of kfifo_in_spinlocked() but uses spin_lock/unlock()
++ * for locking and doesn't disable interrupts.
++ */
++#define kfifo_in_spinlocked_noirqsave(fifo, buf, n, lock) \
++({ \
++	unsigned int __ret; \
++	spin_lock(lock); \
++	__ret = kfifo_in(fifo, buf, n); \
++	spin_unlock(lock); \
++	__ret; \
++})
 +
- 		if (desc->name) {
- 			strncpy(lineinfo.name, desc->name,
- 				sizeof(lineinfo.name));
+ /* alias for kfifo_in_spinlocked, will be removed in a future release */
+ #define kfifo_in_locked(fifo, buf, n, lock) \
+ 		kfifo_in_spinlocked(fifo, buf, n, lock)
+@@ -569,6 +589,28 @@ __kfifo_uint_must_check_helper( \
+ }) \
+ )
+ 
++/**
++ * kfifo_out_spinlocked_noirqsave - get data from the fifo using a spinlock
++ * for locking, don't disable interrupts
++ * @fifo: address of the fifo to be used
++ * @buf: pointer to the storage buffer
++ * @n: max. number of elements to get
++ * @lock: pointer to the spinlock to use for locking
++ *
++ * This is a variant of kfifo_out_spinlocked() which uses spin_lock/unlock()
++ * for locking and doesn't disable interrupts.
++ */
++#define kfifo_out_spinlocked_noirqsave(fifo, buf, n, lock) \
++__kfifo_uint_must_check_helper( \
++({ \
++	unsigned int __ret; \
++	spin_lock(lock); \
++	__ret = kfifo_out(fifo, buf, n); \
++	spin_unlock(lock); \
++	__ret; \
++}) \
++)
++
+ /* alias for kfifo_out_spinlocked, will be removed in a future release */
+ #define kfifo_out_locked(fifo, buf, n, lock) \
+ 		kfifo_out_spinlocked(fifo, buf, n, lock)
 -- 
 2.23.0
 
