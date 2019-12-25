@@ -2,76 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 049C712A451
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Dec 2019 23:37:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2FE612A6BE
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Dec 2019 09:22:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfLXWhV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Dec 2019 17:37:21 -0500
-Received: from sonic312-21.consmr.mail.bf2.yahoo.com ([74.6.128.83]:33720 "EHLO
-        sonic312-21.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbfLXWhV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Dec 2019 17:37:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1577227040; bh=ZkSLcXkg1xPrFHtzBsy9ipALcIc7hyyhd9T7GsQ9zU4=; h=Date:From:Reply-To:Subject:References:From:Subject; b=MVdgLSOgsCmN8fOa9vbji+2dsMv42yVNpsxpcNAUIKdYT3O64rmZZCkLpDfPbteuqI+p3UJwTd0cL0/FkSq8uZ1p7qHx38w6Kmd71ID92ue8UmKKHqWQUBGzsuyuNvX43jSocljlN+wgVo3kZSTDp8SJ2Aq2DX/Rsh7ttI3sjBLffuoXxNPLbVKBdyEUKiG9z7qOnHpx9ZdyFQFuZyd/djvTaAOxV3/I2WIDbQMuIbtOBYKUwJ+M/2hF8/L2kz8rYgw7hCmJJ0L/p1uMB46UwXM8eOGG/rsqOvDWwttHi6Lz/x1NEfFrCb8JI995fAeetLX0jV0MYAhIix5Ytzxx7g==
-X-YMail-OSG: O5pdnxAVM1k_Ih5R7nD6f7o0nfooVn129SjKrIxSwgmV8LyhYonh8D5anoZGoiC
- gY6.Z4ZMnDXRttksQ3.jsxmwY12LZvi9fUShy_sBxsQIeWZxxyopeDlFAO7vtGOOehkXQOzBJhVR
- 5SjqRn8eHqWp8wu5BKfnaHA1c6wWLSEuLeywfIW0vUXktCeKtP9FkOKqwON6tAJ4xjMJUZmv0wCD
- PK43CHkjGbqNvbcrXBGP7myln9GJREcx2CXFn8UEFftilib2_s9g9U3cFRgj_p50UvdGwVZ0IKzw
- abqVGPFgxFBte3tk.sBuTttk8ReRKC3NrYc5qK1z9MEFofTRaTev5QywpprBb0UKWzt2FyYvXKvj
- KMtUx_Ts8Ir0TTWvcp9GB..b7HaUNPyM0jBR1vXiudL_ZXfbBxGjr.5yg4TqjysIGMAajGk5Dh_u
- GGqid0.iO9NIdzHjcR79J0izlLrmn6U5usVyIZv1qLWwtdyCKa5xWdt_OXs7ZEUBNofxfMv3Gq9T
- 4MZRLHS0CmO6ra82tTXJlHrPXZN8IbQewC7rf8fe3YrAanbNCYv2o60qMTpoVJKlLE.ciBaWBb39
- b5p5KLFR1F6TQh70tg39QCW8TBOwtI_SYu09fD4kVGxj77oPlHz22VlH1WTlt9Z3Vtd4CsOTMsmx
- 3MmEnV8EYcV1CyD1CCB160pPyJ4M7Pjpn0IMZcWatS12oFEQV_iPMuHxZ4MQuxcOgmRET0N2TrEj
- W3waPTMxR3UFJNBVKrW.VR8lebv7J3TrfCV77Zdcpt92CGRhoKfe_sAcyIAyANe_2ya6EOaKXvKN
- vhYpk4qEexh8CDn6i2dTfH0mP85P5C.qKhUjNyvuOrva70xnenp.QeNq8I1bAgcRcQZFp21.Kxqk
- kdwSHBQfnvxkvmbkh5Z_MMTGrz6DriJx7m39M.3EEZIkIoySmGRDYM7Me71Wz6B0qxcLrOiffj7r
- FqF1WzA6rOyWxgsUR_dNr1MqhzvPyl0tBKBus4o5S7Ixkyb9BmAeojpQT7uyP1tO2hXbV8tRW6VA
- BuiuwSoRCeRKiYWSjzkxVxWddHouZqcHVYN9ibdlLbXp4ouQFHMyQqhHJEWfJDR42jf64_M7zQlz
- ma.i6AzFwA_AICX2G1MTq2_psPCgaQ_LjjgZRmQqt32WrA9gyPc_YGgC1KkjRSbt0q3zxnp3rlqC
- uccfMxf2wDBTXPufjq3CLoKfhax1a8X0VyOR_VIYJAwJJ.WFeF2dQFUmVBLJe8lFQBADYuFuntEM
- EX7qw_VzZ5FgDlofwqJldML0egRK2U2AH_N7rYLvAAfiDLy9rg7l5FXpG37BwWJhrkL6Y.YuZzpr
- blzc-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.bf2.yahoo.com with HTTP; Tue, 24 Dec 2019 22:37:20 +0000
-Date:   Tue, 24 Dec 2019 22:37:14 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh222@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <797286316.2164836.1577227034877@mail.yahoo.com>
-Subject: YOUR CO-OPERATION FOR THIS TRANSFER.
+        id S1726185AbfLYIUf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Dec 2019 03:20:35 -0500
+Received: from mail01.vodafone.es ([217.130.24.71]:6410 "EHLO
+        mail01.vodafone.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfLYIUe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Dec 2019 03:20:34 -0500
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Dec 2019 03:20:33 EST
+IronPort-SDR: ioyLoO0DhPTfCzgg+SHUFozyO+a8RP5R1admDg7VrA3FFSFMZmzKRbN1PFyyVPdOi8HyDdkdBp
+ WBDhaQXMR3Sw==
+IronPort-PHdr: =?us-ascii?q?9a23=3AippbDh8JQ+YbWP9uRHKM819IXTAuvvDOBiVQ1K?=
+ =?us-ascii?q?B30uscTK2v8tzYMVDF4r011RmVBN6dsagfwLWO+4nbGkU4qa6bt34DdJEeHz?=
+ =?us-ascii?q?Qksu4x2zIaPcieFEfgJ+TrZSFpVO5LVVti4m3peRMNQJW2aFLduGC94iAPER?=
+ =?us-ascii?q?vjKwV1Ov71GonPhMiryuy+4ZLebxhGiTanf79+Mhu7oQrTu8UKnIBvNrs/xh?=
+ =?us-ascii?q?zVr3VSZu9Y33loJVWdnxb94se/4ptu+DlOtvwi6sBNT7z0c7w3QrJEAjsmNX?=
+ =?us-ascii?q?s15NDwuhnYUQSP/HocXX4InRdOHgPI8Qv1Xpb1siv9q+p9xCyXNtD4QLwoRT?=
+ =?us-ascii?q?iv6bpgRRn1gykFKjE56nnahMJwgqJBvhyvpAFxzIHIb4+aL/d+YqHQcs8GSW?=
+ =?us-ascii?q?ZdQspdSSpMCZ68YYsVCOoBOP5VoY/nqFATtxW+HwisBObuyj9Uh3/2w7c12P?=
+ =?us-ascii?q?kmHAHawQwgG84BsHXJo9rvL6cfSuW1w7PJzTXHdf9WxSny6IzWfRA5u/6DQa?=
+ =?us-ascii?q?h8cdLNyUQ2EQ7Ok1aeqZT9Mj+Ly+gAsXKX4/duWO6zkWIrtQ58riKhy8osjI?=
+ =?us-ascii?q?TCm5gbxUre9SpjxYY4Pdi4SElmbtG6CJZQrCSaN5duQsMlXmFopD42yr0Ytp?=
+ =?us-ascii?q?6/eygH0JEnyATea/yDaYiH/BbjWPqeLDtimnJlf6+wiAy88UinzO3zSNO430?=
+ =?us-ascii?q?hRriZdk9nMsG4C1wDL58SZV/dw/F2t1SuB2gzP8O1IP085mbDVJpMh2rIwk4?=
+ =?us-ascii?q?AcsUXHHi/4gkX2i6qWe104+ui17+TofrTmqYKGOI9vkQz+N74hms27AegiLg?=
+ =?us-ascii?q?gBQWyb9vqk1LL54UL1Wq1KjuEunqnDrJ/aPdgbprK+AwJN1oYj6hC/Dyqp0d?=
+ =?us-ascii?q?gBknkHNFNFeBWcgoj3NFHBPur4Ae28g1uyijdrwe7JPrn7DpXKNHjDn+SpQb?=
+ =?us-ascii?q?Eo709a1Rp2wshe4LpKBbwbZvH+QEn8sJrfFBBqCQGsx/fbD4BZ38smQ2OKA7?=
+ =?us-ascii?q?OYLqqa5VuB/vguJuiQZZEctS3VOf8l4PvnjHt/lEJLLoez2p5CTHnwJu5nJk?=
+ =?us-ascii?q?SFYGTlyoMdDGMBvwY3V8TvgVyGFyJeY3uqVql6/i1tW9HuNpvKWo342O/J5y?=
+ =?us-ascii?q?y8BJADPm0=3D?=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2GEKgBkGQNelyMYgtllgkQBGAEBgns?=
+ =?us-ascii?q?3GyASk0JUBnUdihKFM4N8FYYaDIFbDQEBAQEBNQIBAYRAgiIkOBMCAw0BAQU?=
+ =?us-ascii?q?BAQEBAQUEAQECEAEBAQEBCBYGhXNCAQwBgWsihBeBA4EsgwOCUymtEhoChSO?=
+ =?us-ascii?q?EcoE2AYwYGnmBB4FEgjKFAgESAWyFIQSNRSGIS2GXfoI+BJYwDYIpAYw4A4J?=
+ =?us-ascii?q?UiRGnIoI3VYELgQpxTTiBchmBHU8YDY0sji1AgRYQAk+FQIdcgjIBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2GEKgBkGQNelyMYgtllgkQBGAEBgns3GyASk0JUBnUdi?=
+ =?us-ascii?q?hKFM4N8FYYaDIFbDQEBAQEBNQIBAYRAgiIkOBMCAw0BAQUBAQEBAQUEAQECE?=
+ =?us-ascii?q?AEBAQEBCBYGhXNCAQwBgWsihBeBA4EsgwOCUymtEhoChSOEcoE2AYwYGnmBB?=
+ =?us-ascii?q?4FEgjKFAgESAWyFIQSNRSGIS2GXfoI+BJYwDYIpAYw4A4JUiRGnIoI3VYELg?=
+ =?us-ascii?q?QpxTTiBchmBHU8YDY0sji1AgRYQAk+FQIdcgjIBAQ?=
+X-IronPort-AV: E=Sophos;i="5.69,353,1571695200"; 
+   d="scan'208";a="298594790"
+Received: from mailrel04.vodafone.es ([217.130.24.35])
+  by mail01.vodafone.es with ESMTP; 25 Dec 2019 09:15:29 +0100
+Received: (qmail 32157 invoked from network); 25 Dec 2019 04:33:51 -0000
+Received: from unknown (HELO 192.168.1.88) (seigo@[217.217.179.17])
+          (envelope-sender <tulcidas@mail.telepac.pt>)
+          by mailrel04.vodafone.es (qmail-ldap-1.03) with SMTP
+          for <linux-gpio@vger.kernel.org>; 25 Dec 2019 04:33:51 -0000
+Date:   Wed, 25 Dec 2019 05:33:42 +0100 (CET)
+From:   La Primitiva <tulcidas@mail.telepac.pt>
+Reply-To: La Primitiva <laprimitivaes@zohomail.eu>
+To:     linux-gpio@vger.kernel.org
+Message-ID: <2745360.259361.1577248422442.JavaMail.javamailuser@localhost>
+Subject: Take home 750,000 Euros this end of year
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-References: <797286316.2164836.1577227034877.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.14873 YMailNodin Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Attn: Email User,
+
+You have won, you are to reply back with your name and phone number for
+claim.
+
+La Primitiva
 
 
-Dear Friend,
-
-I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank(B.O.A).
-
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
-
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me forsuccess.
-
-Note/ 50% for you why 50% for me after success of the transfer to your bank
-account.
-
-Below information is what i need from you so will can be reaching each
-other
-
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
 
 
-Thanks.
+----------------------------------------------------
+This email was sent by the shareware version of Postman Professional.
 
-Ms Lisa Hugh.
