@@ -2,94 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C646F12AD69
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2019 17:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7243F12AE3C
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2019 20:14:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfLZQQC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Dec 2019 11:16:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38988 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfLZQQC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Dec 2019 11:16:02 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so13374529pfs.6;
-        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
+        id S1726534AbfLZTOl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Dec 2019 14:14:41 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45666 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfLZTOl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Dec 2019 14:14:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so24307138wrj.12;
+        Thu, 26 Dec 2019 11:14:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
-        b=OOwZeBmE81M04vqBjpbAQPzE1Jv7jX88b+pZMM4skQSdW5QALfcM5UmXOZhj7/FTkj
-         4DhhNJVBgdY2v5jYTZSvR7SjywMtapzuo94KlQhX+i6gd5qEU70YJjXcGW5wlrv6/DLH
-         04erO3Xts4xY+OTACxMlHd9zwhYsvTs+7+b5tSqtSzRRF+2vJLzlc5ShWkr6yXDN/Z5P
-         Cs6NqkIQzW5fpc3w9talZH/jXomQOF8gLQG2TxuLxk/W4pIU+2n6OV4BfIDq9Ls7bXG5
-         N7LmxXMt8wpbp7C6l1/KyrBUR5jHtMqnYnA9OSENlKkWdwirmF4pu/lCe4EH/9TXAcbZ
-         hRIQ==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RdDU189IRzDSSQuuwdRp+bg/X99qADOf/XTXJFRaKx4=;
+        b=KVjxXtkb4O7D1uapjkYYG0rrjj+A1LKb0U6nGIXmA9OI/zMOsCv7TdGZeAOkECxRL8
+         2ShuVJVy6Oq042w8o/wXJXRKtn9lViF42w0H9TnZon49HDJIU5wzP7hvSKycahF+xx2h
+         uoGglak/WFzV0BJgyvdxA9EVGQG/QdUFGPxctFrSHlYw9fLFv+N4NNzX+l+QfKsCsHeW
+         R6LMMvku0xaCYf5U7B95QmZm7DUAYT+xLQTfLstIKdtMgJ+bDDbGkb8AHcwDhRuX8D6n
+         NQfeyhtxX2s1eXCFUBdteMva1kKruFL9VyEpxNN9G5W+j8yfQ0zZ4Ctu/K1Xh6c8A1Ba
+         JqtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jkvhyKVe9beEFOrVuTAJtQsNNZWB09LHeEspW9aoOto=;
-        b=MR8G+z+lpp4nYq24VPrcW5ZklKa6dQ5o1Qq91M6KQcLSkPK/bY2Ves2yrSa30I7GZy
-         EwsfwHLwCNWOMa0I7JCzav6QW4cK7L7zEcOklGdGvI+1r/tLGzjzVbsvmBA2KNdfgaBN
-         TzM81/ckVK0wtHSdafveV8kS2v84fQ7/BGJNYCEpOHRncMRnNWdCcOJPZo6orVAFsVPb
-         d2cvi7rSYR4UzJDa7i2HV4Q34E7cuYsioSCzTcvyh+/MoI3NmO/DKw493MhDIMHtbu9m
-         4IzmduKvSuGLrxNMBIO7cO/goJRx+wTCsL6SabeBBSJuMX/FoGBwU5eMTFEvqarqMulG
-         m/ng==
-X-Gm-Message-State: APjAAAWeena9yTT7Xw3IaNHXmZs4aAFKNESl9HY9ckIWDIfsNrTIXBC/
-        RTlLCBg5DWedhGtd8hDcbko=
-X-Google-Smtp-Source: APXvYqwVVFAvQB+Vc97OxwqUsIcXopUjlkiipdOIflXffhnqN51FDYFXBGdYuGbNEFp+n+2UzJ7cpw==
-X-Received: by 2002:a63:5809:: with SMTP id m9mr47977371pgb.26.1577376961023;
-        Thu, 26 Dec 2019 08:16:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j38sm34451197pgj.27.2019.12.26.08.15.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Dec 2019 08:16:00 -0800 (PST)
-Date:   Thu, 26 Dec 2019 08:15:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Yury Norov <ynorov@marvell.com>
-Subject: Re: [PATCH v2 07/11] bitmap: Introduce bitmap_replace() helper
-Message-ID: <20191226161559.GA26197@roeck-us.net>
-References: <20191022172922.61232-1-andriy.shevchenko@linux.intel.com>
- <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RdDU189IRzDSSQuuwdRp+bg/X99qADOf/XTXJFRaKx4=;
+        b=HoJINLRc7fSMRCgm9JrXIIYZg5uHxBGHVfkBrcWzJ3S0r6ynsd9pR+PHfrXzhUiIMO
+         WUzlWyDq8rCu1KQE35oCPIdY3/1TQr19tiqz10d2wy0gWrLn0+Dvz+w+QxAXq6wpEAT8
+         YWJJ7u1s+AbTiRXZYgm8E0bhBaB6HQrv2dmpjDjzELhEx3sqJWJt1qtKfu2/La0yax7Z
+         T6VEyxFSc3zbfpbcUY+PvYGubd5PShljCSXsNyfwDs+sNtf2ruvevmkm6p6EGqx/NY/T
+         YUnwt0jchGz6Za18ww4RPqOsidnR336y8+R/FD/UQAK00c7cMbAYkVppEcF4rM186Bnm
+         RiIw==
+X-Gm-Message-State: APjAAAWLtHdbdXhQDFptsthuM8KIeNWEHrxw8DU7XpkIexuV1ut//Mtv
+        oG56seJPnvz05cleF6g+Y74elq+oTCM=
+X-Google-Smtp-Source: APXvYqzurwb5xdQo8gGlQM8ofNX/VGIdzgCohcUjwg5XUj0XVHKV+JN1pgFVp4z/TFKgeDxZP+Shcg==
+X-Received: by 2002:a5d:6390:: with SMTP id p16mr6977473wru.170.1577387679392;
+        Thu, 26 Dec 2019 11:14:39 -0800 (PST)
+Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id s128sm9098950wme.39.2019.12.26.11.14.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 11:14:38 -0800 (PST)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH] pinctrl: meson: meson8b: add the GPIOH pinmux settings for ETH_RXD{2,3}
+Date:   Thu, 26 Dec 2019 20:14:25 +0100
+Message-Id: <20191226191425.3797490-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022172922.61232-8-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+GPIOH_5 and GPIOH_6 can have two Ethernet related functions:
+- GPIOH_5 can be ETH_TXD1 or ETH_RXD3
+- GPIOH_6 can be ETH_TXD0 or ETH_RXD2
 
-On Tue, Oct 22, 2019 at 08:29:18PM +0300, Andy Shevchenko wrote:
-> In some drivers we want to have a single operation over bitmap which is
-> an equivalent to:
-> 
-> 	*dst = (*old & ~(*mask)) | (*new & *mask)
-> 
-> Introduce bitmap_replace() helper for this.
-> 
-> Cc: Yury Norov <ynorov@marvell.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Add the bits for eth_rxd3_h and eth_rxd2_h so the ETH_RXD function can
+be disabled when using the ETH_TXD function of GPIOH_{5,6}. No problem
+was observed so far, but in theory this could lead to two different
+signals being routed to the same pad (which could break Ethernet).
 
-This patch results in the following boot log messages on various architectures.
-I have seen it on arm and mipsel, but others may be affected as well.
+These settings were found in the public "Amlogic Ethernet controller
+user guide":
+http://openlinux.amlogic.com/@api/deki/files/75/=Amlogic_Ethenet_controller_user_Guide.pdf
 
-test_bitmap: [lib/test_bitmap.c:282] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
-test_bitmap: [lib/test_bitmap.c:286] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
-test_bitmap: [lib/test_bitmap.c:290] bitmaps contents differ: expected "0-1,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,56-57,60-61", got "0-2,4-5,8,12-13,16,20-21,24,28,32-33,36-37,40-41,44-45,48-49,52-53,55-57,60-61"
-test_bitmap: [lib/test_bitmap.c:294] bitmaps contents differ: expected "0,4,8-9,12,16-17,20,24-25,28-29,32-34,36-38,40-42,44-46,48-50,52-54,56-58,60-62", got "0,4,6,8-10,12,14,16-18,20,22,24-26,28-30,32-54,56-63"
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ drivers/pinctrl/meson/pinctrl-meson8b.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Guenter
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index 2d5339edd0b7..6cd4b3ec1b40 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -233,6 +233,8 @@ static const unsigned int hdmi_scl_pins[]	= { GPIOH_2 };
+ static const unsigned int hdmi_cec_0_pins[]	= { GPIOH_3 };
+ static const unsigned int eth_txd1_0_pins[]	= { GPIOH_5 };
+ static const unsigned int eth_txd0_0_pins[]	= { GPIOH_6 };
++static const unsigned int eth_rxd3_h_pins[]	= { GPIOH_5 };
++static const unsigned int eth_rxd2_h_pins[]	= { GPIOH_6 };
+ static const unsigned int clk_24m_out_pins[]	= { GPIOH_9 };
+ 
+ static const unsigned int spi_ss1_pins[]	= { GPIOH_0 };
+@@ -535,6 +537,8 @@ static struct meson_pmx_group meson8b_cbus_groups[] = {
+ 	GROUP(spi_miso_1,	9,	12),
+ 	GROUP(spi_mosi_1,	9,	11),
+ 	GROUP(spi_sclk_1,	9,	10),
++	GROUP(eth_rxd3_h,	6,	15),
++	GROUP(eth_rxd2_h,	6,	14),
+ 	GROUP(eth_txd3,		6,	13),
+ 	GROUP(eth_txd2,		6,	12),
+ 	GROUP(eth_tx_clk,	6,	11),
+@@ -746,7 +750,8 @@ static const char * const ethernet_groups[] = {
+ 	"eth_tx_clk", "eth_tx_en", "eth_txd1_0", "eth_txd1_1",
+ 	"eth_txd0_0", "eth_txd0_1", "eth_rx_clk", "eth_rx_dv",
+ 	"eth_rxd1", "eth_rxd0", "eth_mdio_en", "eth_mdc", "eth_ref_clk",
+-	"eth_txd2", "eth_txd3", "eth_rxd3", "eth_rxd2"
++	"eth_txd2", "eth_txd3", "eth_rxd3", "eth_rxd2",
++	"eth_rxd3_h", "eth_rxd2_h"
+ };
+ 
+ static const char * const i2c_a_groups[] = {
+-- 
+2.24.1
+
