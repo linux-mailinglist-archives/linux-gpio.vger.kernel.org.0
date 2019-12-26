@@ -2,134 +2,2044 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD97F12AC1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2019 13:13:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF10D12ACEF
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Dec 2019 15:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfLZMNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Dec 2019 07:13:02 -0500
-Received: from mail-mw2nam12on2045.outbound.protection.outlook.com ([40.107.244.45]:6119
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        id S1727047AbfLZOH7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Dec 2019 09:07:59 -0500
+Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:56993
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbfLZMNB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:13:01 -0500
+        id S1726450AbfLZOH6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 26 Dec 2019 09:07:58 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GikXGul16UYBHP97C5CqG3d0oCtowgo/sBG1t36Knu2JvN+QQCkX2LAb49StU2kJydZW6/6PXxhsnC+Hr76nM0gL5VoI8Xalk5eXeI6vrcxXC0SUSB7uhAXkB+TKceEaBh8KDzo6WXgGmFhDUkBwjXAk6blZjdY5GpiXbl4PCzGlYDyXy+O03WjYcA93rQdN0C7pO1VOLxjJCCY6x+z9Ma5Eyu0Al+Q6wkW6N3tu6eITTyEJ8naBd4bK3aDHFAgA4OFycooMuTFvtvOAhMKrYjYYdWPXq0uFdmullAyrNOgd4gn5LVZwz7VITkr+4qpptIoe2qixCCJMyQO/yBsitw==
+ b=dMRyW+8/2J1UuQlVesS22sNYCar6SWIw1ab2CWAKY30BgJ7T5Myt1YWI9hO+QdrDQx6FblJpVrrmZBF5n+mVSKk1QKTAGxE5t4lQPqztSJgSsTLqsdEEZzyhLGNgMzZv18ADelRJMVCxqDVMbeC84L+4s8f5k7lIUALj0UhXZb8DS6qdE8yKVR7rBZOZnIqzFNC4ZtRuUaRld3BqU0LS3rqOhBUI5fn1Axxsu8P4E0FakRXrQh+9I8ccjHWJSLaVDwmGYpYMx2WCLEZa2VBoKDN3qiOpPkDDlPeViEWVmcgrSAFpEUoWZ/zK9R2hDM5jkAL7R5EARqEdyppIH0Dh9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C80INEPOh0KiSJI5jBIGOd5W8d7nrzZhfC8uBqlQQ/I=;
- b=Fe3uTO3uETcvhwvH/n0vgVPAFV1WRZiRJfPjB6z2YsJ6pcVZOQ52aBrTJilphxuBJXRAei667gnvaNdvL6WO3v3Nc76TFJ3QhKxDxmZdfqzLKFIJQK8kcoAtofjZI4VwM8FD18Q1LQgzxn3ajvY9/Nfp0xZojDBdGtHv/TNyR2KqBEErFndyxzpawEqZmXBVvA9dty4vHmAMa+MsxYrhvpyyLjiUiLVXIpB4IvMFx2oh5uu8ieRJdKOpHlrnynbrgDQxD8ob8o8OFSB5vCS39ddiucPoVxcCFVA/rgN0fF8MO+0u0+IWpRBWkcgGLFt/SxCv1mAz4hR5VKlBeOwOzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=ozIJpuB9WaUlePVLy1KjdY7OgldHaBADGLey/whimhw=;
+ b=j6iEHHrUZ3p3H/maCIwCApqEZHBa1mXi4GBru+62/dwOZN7vGOIT+JVB9mPpTp47N5/WntZiPsw5pw9I5DShTHmU53fAdbbYya11R870K8SNKUgQn+mW6LdBj1rRIXoqFrQnsnybskckgVs7lmcYpw06EFKk1b3ECKM4Lw19gGybIZvbZsJDFBhlrutNeyPplUAAEJHoVMYuZEF8Ggun+WiQYO/Lg3glJVcw1HJVOyyrzQpGk8e30kKE+jR/SNgZAi4b17OfXF5l9xt6vySDW/g0GKoL8+HvXOFzuN52LgsvHJsbJMhoiL7xR/vrqNcWhwBwtJoN/HDg1yOd7lhYqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C80INEPOh0KiSJI5jBIGOd5W8d7nrzZhfC8uBqlQQ/I=;
- b=VI8TPE3GH4JtHNbZukMs8P8p8hrsqtEOu1WgOWsE0rHhpLHMVSuyXGNlNPGy9wH2f+r9mzBSpZefvE6FZNMAq/wm4IlECFcj4YqhDXMWKI+dI+VOcnBYFvzfjW8ZPkMyIryZT/bSnSzf3flOJiZ1Trq96IoBs3LQ9mW35bqp1xo=
-Received: from SN4PR0201CA0046.namprd02.prod.outlook.com
- (2603:10b6:803:2e::32) by BYAPR02MB4263.namprd02.prod.outlook.com
- (2603:10b6:a03:5b::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14; Thu, 26 Dec
- 2019 12:12:58 +0000
-Received: from SN1NAM02FT019.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::203) by SN4PR0201CA0046.outlook.office365.com
- (2603:10b6:803:2e::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend
- Transport; Thu, 26 Dec 2019 12:12:58 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT019.mail.protection.outlook.com (10.152.72.130) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2559.14
- via Frontend Transport; Thu, 26 Dec 2019 12:12:57 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1ikS0f-0003Kz-BW; Thu, 26 Dec 2019 04:12:57 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1ikS0a-0007zm-8E; Thu, 26 Dec 2019 04:12:52 -0800
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xBQCCgbA003185;
-        Thu, 26 Dec 2019 04:12:42 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1ikS0P-0007v9-IH; Thu, 26 Dec 2019 04:12:42 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH 8/8] gpio: zynq: Remove error prints in EPROBE_DEFER
-Date:   Thu, 26 Dec 2019 17:42:18 +0530
-Message-Id: <1577362338-28744-9-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577362338-28744-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1577362338-28744-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(199004)(189003)(2616005)(26005)(186003)(4744005)(70586007)(70206006)(7696005)(336012)(426003)(4326008)(8936002)(316002)(107886003)(9786002)(5660300002)(8676002)(36756003)(2906002)(81166006)(44832011)(478600001)(6666004)(356004)(81156014)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4263;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+ bh=ozIJpuB9WaUlePVLy1KjdY7OgldHaBADGLey/whimhw=;
+ b=EIU1UmbzMsLlnrunaLvWkv036sFO/lT++sfaqXeM3uizY8fSJV4vXHcPNgyneHh0LYcDEFc2g9wRZql98lt+61c+bH2mbACdf2JUJGc4Lm9LKi5L7t+/0E4LMEPK4Fztds3gRlhY2YnKjWiYCsUy8/CgNV3NhnD+cQSZWsoJ0ms=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB6739.eurprd04.prod.outlook.com (20.179.254.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.11; Thu, 26 Dec 2019 14:07:41 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::6d52:5678:e02f:95f4]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::6d52:5678:e02f:95f4%3]) with mapi id 15.20.2581.007; Thu, 26 Dec 2019
+ 14:07:41 +0000
+Received: from localhost (89.37.124.34) by LO2P265CA0390.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:f::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2581.11 via Frontend Transport; Thu, 26 Dec 2019 14:07:40 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 1/3] dt-bindings: imx: Add pinctrl binding doc for
+ i.MX8MP
+Thread-Topic: [PATCH V2 1/3] dt-bindings: imx: Add pinctrl binding doc for
+ i.MX8MP
+Thread-Index: AQHVu7iXlAfj/YuqiUytqgV3FhvvHKfMdDiA
+Date:   Thu, 26 Dec 2019 14:07:41 +0000
+Message-ID: <20191226140739.yhkzpvkqojw5i7ed@fsr-ub1664-175>
+References: <1577342743-25885-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1577342743-25885-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0390.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:f::18) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d4b66a26-7514-431f-e012-08d78a0cf853
+x-ms-traffictypediagnostic: AM0PR04MB6739:|AM0PR04MB6739:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6739EA2467A1646D8990E3D4F62B0@AM0PR04MB6739.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 02638D901B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(366004)(136003)(346002)(396003)(376002)(189003)(199004)(66476007)(66556008)(66446008)(71200400001)(7416002)(44832011)(86362001)(2906002)(66946007)(52116002)(186003)(16526019)(956004)(6496006)(64756008)(26005)(53546011)(33716001)(54906003)(316002)(6486002)(6636002)(30864003)(1076003)(6862004)(8676002)(4326008)(81156014)(478600001)(8936002)(81166006)(9686003)(5660300002)(569006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6739;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oOUaxo0tNRZIAoHOEw32CXOUdxL6Onuxs6Y1tURbKY6ocmUcJuv1q10SoPdR5UCLGH9ARiUXN4sBTTHCgGuuwxh7aaa2dVkT0R7IJKQU2IbM9z95XEDlqwADDAJvObD5sXbewS6YpMqC5pdRx/IsZEXgWkAhS/qZX5e/IrmcdJDtAQ8k9EXXHNZ6tPmbvoD0EdO9hW5VX3NZZ9YUQtZc+QLWJvXC9PMsj+CGhQcdpUkFI/qbqddSJFTiR5j+EknSDAnkYYnHnjNmW9w6s5obwRY1aeLKv4gR1oSWTjRGGQxAza5OUPFVCL8feN2CPml+vdCe0C3DXsJ1yFu50bSEscFqXo6AWC8NR0oJYgzfAb0k/+hocKHwxpsat6Urw70V178K/+1UuPyNIp3ra+4SD5nlPz90KhpMnOvJyCBKoy4tpXX0xBgio7QIOshxWKSlWWp4SqSi7CpCqr0dnZ6V7AiDlBHTQ4qzep0ZhtvxrNE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8577BBB8FEC0A442ADC76D12BE80B1BD@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: de43c026-8d49-47de-e930-08d789fcf1d9
-X-MS-TrafficTypeDiagnostic: BYAPR02MB4263:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB42638E2D7C5BFCD938A5B499AF2B0@BYAPR02MB4263.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:274;
-X-Forefront-PRVS: 02638D901B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +n6QE4O1ZD2rA0EZR43mcVknVns/XUriJzeR8PYAfI1zD8o+ZkXa09jpI/8gCugiAUQnhTkt64yoijehxABciinbh6CKLlA8B1kjuVs7DY1Zmx96NnbAVUvyl5gj6Val2+aongS2jmokXpIjETJyNusTbIsHSuUBeMTd0CvhDz88/c6HFUDkb2FFF8XW+1CPxP5dCKCSOErkIVMWah1kE2Gwyg4dvmXsYgIv5cPhAAdRuyVEk8aeRgfP8Azr8NyFVedsGOAPywIwPR2M4/va5gp030RkSGkn8tl0oh3jIe9X5NIZuCNu5l45IQJQR3BgIhM7zW9M/wV+q9PzuPxloF9k6cfMpSW2RiNzaFA7xzdkCaNDKk6hYTr2BMq3/M9H/tYJjiy/TGiIKUOfhH77bLvxnAk9bV3UzgAVCiTMbIUPiiy6T0GaLR2SwJJCxHES
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Dec 2019 12:12:57.7447
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4b66a26-7514-431f-e012-08d78a0cf853
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Dec 2019 14:07:41.0849
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de43c026-8d49-47de-e930-08d789fcf1d9
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4263
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JhfoqchhvgUUGe8dMwIoWVS35PSvOCRuX6T5fGEq/ClP7AlvS1JCikFsUCwGAd0DABMltrvN3gh5HiNA+V3g0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6739
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On 19-12-26 14:45:41, Anson Huang wrote:
+> Add binding doc for i.MX8MP pinctrl driver.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-In case of probe is deferred do not print the errors.
+Great job sending this upstream so early.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+For the entire series:
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 674416a40117..fa6093db30ee 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk)) {
--		dev_err(&pdev->dev, "input clock not found.\n");
-+		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "input clock not found.\n");
- 		return PTR_ERR(gpio->clk);
- 	}
- 	ret = clk_prepare_enable(gpio->clk);
--- 
-2.7.4
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
+> ---
+> No changes.
+> ---
+>  .../bindings/pinctrl/fsl,imx8mp-pinctrl.txt        |  38 +
+>  arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h     | 931 +++++++++++++++=
+++++++
+>  2 files changed, 969 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-=
+pinctrl.txt
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl=
+.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.txt
+> new file mode 100644
+> index 0000000..619104b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.txt
+> @@ -0,0 +1,38 @@
+> +* Freescale IMX8MP IOMUX Controller
+> +
+> +Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this dir=
+ectory
+> +for common binding part and usage.
+> +
+> +Required properties:
+> +- compatible: "fsl,imx8mp-iomuxc"
+> +- reg: should contain the base physical address and size of the iomuxc
+> +  registers.
+> +
+> +Required properties in sub-nodes:
+> +- fsl,pins: each entry consists of 6 integers and represents the mux and=
+ config
+> +  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg=
+ mux_val
+> +  input_val> are specified using a PIN_FUNC_ID macro, which can be found=
+ in
+> +  <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>. The last integer CON=
+FIG is
+> +  the pad setting value like pull-up on this pin. Please refer to i.MX8M=
+ Plus
+> +  Reference Manual for detailed CONFIG settings.
+> +
+> +Examples:
+> +
+> +&uart1 {
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_uart1>;
+> +};
+> +
+> +iomuxc: pinctrl@30330000 {
+> +        compatible =3D "fsl,imx8mp-iomuxc";
+> +        reg =3D <0x30330000 0x10000>;
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins =3D <
+> +			MX8MP_IOMUXC_UART1_RXD__UART1_DCE_RX    0x140
+> +			MX8MP_IOMUXC_UART1_TXD__UART1_DCE_TX    0x140
+> +			MX8MP_IOMUXC_UART3_RXD__UART1_DCE_CTS   0x140
+> +			MX8MP_IOMUXC_UART3_TXD__UART1_DCE_RTS   0x140
+> +		>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h b/arch/arm64/=
+boot/dts/freescale/imx8mp-pinfunc.h
+> new file mode 100644
+> index 0000000..da78f89
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+> @@ -0,0 +1,931 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright 2019 NXP
+> + */
+> +
+> +#ifndef __DTS_IMX8MP_PINFUNC_H
+> +#define __DTS_IMX8MP_PINFUNC_H
+> +
+> +/*
+> + * The pin function ID is a tuple of
+> + * <mux_reg conf_reg input_reg mux_mode input_val>
+> + */
+> +#define MX8MP_IOMUXC_GPIO1_IO00__GPIO1_IO00                          0x0=
+14 0x274 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO00__CCMSRCGPCMIX_ENET_PHY_REF_CLK_ROOT  0x0=
+14 0x274 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO00__MEDIAMIX_ISP_FL_TRIG_0              0x0=
+14 0x274 0x5D4 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO00__ANAMIX_REF_CLK_32K                  0x0=
+14 0x274 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO00__CCMSRCGPCMIX_EXT_CLK1               0x0=
+14 0x274 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO00__SJC_FAIL                            0x0=
+14 0x274 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__GPIO1_IO01                          0x0=
+18 0x278 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__PWM1_OUT                            0x0=
+18 0x278 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__MEDIAMIX_ISP_SHUTTER_TRIG_0         0x0=
+18 0x278 0x5DC 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__ANAMIX_REF_CLK_24M                  0x0=
+18 0x278 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__CCMSRCGPCMIX_EXT_CLK2               0x0=
+18 0x278 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO01__SJC_ACTIVE                          0x0=
+18 0x278 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO02__GPIO1_IO02                          0x0=
+1C 0x27C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO02__WDOG1_WDOG_B                        0x0=
+1C 0x27C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO02__MEDIAMIX_ISP_FLASH_TRIG_0           0x0=
+1C 0x27C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO02__WDOG1_WDOG_ANY                      0x0=
+1C 0x27C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO02__SJC_DE_B                            0x0=
+1C 0x27C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03                          0x0=
+20 0x280 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__USDHC1_VSELECT                      0x0=
+20 0x280 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__MEDIAMIX_ISP_PRELIGHT_TRIG_0        0x0=
+20 0x280 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__SDMA1_EXT_EVENT00                   0x0=
+20 0x280 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__ANAMIX_XTAL_OK                      0x0=
+20 0x280 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO03__SJC_DONE                            0x0=
+20 0x280 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__GPIO1_IO04                          0x0=
+24 0x284 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__USDHC2_VSELECT                      0x0=
+24 0x284 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__MEDIAMIX_ISP_SHUTTER_OPEN_0         0x0=
+24 0x284 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__SDMA1_EXT_EVENT01                   0x0=
+24 0x284 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__ANAMIX_XTAL_OK_LV                   0x0=
+24 0x284 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO04__USDHC1_TEST_TRIG                    0x0=
+24 0x284 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__GPIO1_IO05                          0x0=
+28 0x288 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__M7_NMI                              0x0=
+28 0x288 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__MEDIAMIX_ISP_FL_TRIG_1              0x0=
+28 0x288 0x5D8 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__CCMSRCGPCMIX_PMIC_READY             0x0=
+28 0x288 0x554 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__CCMSRCGPCMIX_INT_BOOT               0x0=
+28 0x288 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO05__USDHC2_TEST_TRIG                    0x0=
+28 0x288 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__GPIO1_IO06                          0x0=
+2C 0x28C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__ENET_QOS_MDC                        0x0=
+2C 0x28C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__MEDIAMIX_ISP_SHUTTER_TRIG_1         0x0=
+2C 0x28C 0x5E0 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__USDHC1_CD_B                         0x0=
+2C 0x28C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__CCMSRCGPCMIX_EXT_CLK3               0x0=
+2C 0x28C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO06__ECSPI1_TEST_TRIG                    0x0=
+2C 0x28C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__GPIO1_IO07                          0x0=
+30 0x290 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__ENET_QOS_MDIO                       0x0=
+30 0x290 0x590 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__MEDIAMIX_ISP_FLASH_TRIG_1           0x0=
+30 0x290 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__USDHC1_WP                           0x0=
+30 0x290 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__CCMSRCGPCMIX_EXT_CLK4               0x0=
+30 0x290 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO07__ECSPI2_TEST_TRIG                    0x0=
+30 0x290 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__GPIO1_IO08                          0x0=
+34 0x294 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__ENET_QOS_1588_EVENT0_IN             0x0=
+34 0x294 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__PWM1_OUT                            0x0=
+34 0x294 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__MEDIAMIX_ISP_PRELIGHT_TRIG_1        0x0=
+34 0x294 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__ENET_QOS_1588_EVENT0_AUX_IN         0x0=
+34 0x294 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__USDHC2_RESET_B                      0x0=
+34 0x294 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__CCMSRCGPCMIX_WAIT                   0x0=
+34 0x294 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO08__FLEXSPI_TEST_TRIG                   0x0=
+34 0x294 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__GPIO1_IO09                          0x0=
+38 0x298 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__ENET_QOS_1588_EVENT0_OUT            0x0=
+38 0x298 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__PWM2_OUT                            0x0=
+38 0x298 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__MEDIAMIX_ISP_SHUTTER_OPEN_1         0x0=
+38 0x298 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__USDHC3_RESET_B                      0x0=
+38 0x298 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__AUDIOMIX_EXT_EVENT00                0x0=
+38 0x298 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__CCMSRCGPCMIX_STOP                   0x0=
+38 0x298 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO09__RAWNAND_TEST_TRIG                   0x0=
+38 0x298 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10                          0x0=
+3C 0x29C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO10__HSIOMIX_usb1_OTG_ID                 0x0=
+3C 0x29C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO10__PWM3_OUT                            0x0=
+3C 0x29C 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO10__OCOTP_FUSE_LATCHED                  0x0=
+3C 0x29C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11                          0x0=
+40 0x2A0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__HSIOMIX_usb2_OTG_ID                 0x0=
+40 0x2A0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__PWM2_OUT                            0x0=
+40 0x2A0 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__USDHC3_VSELECT                      0x0=
+40 0x2A0 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__CCMSRCGPCMIX_PMIC_READY             0x0=
+40 0x2A0 0x554 0x5 0x1
+> +#define MX8MP_IOMUXC_GPIO1_IO11__CCMSRCGPCMIX_OUT0                   0x0=
+40 0x2A0 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO11__CAAM_RNG_OSC_OBS                    0x0=
+40 0x2A0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12                          0x0=
+44 0x2A4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO12__HSIOMIX_usb1_OTG_PWR                0x0=
+44 0x2A4 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO12__AUDIOMIX_EXT_EVENT01                0x0=
+44 0x2A4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO12__CCMSRCGPCMIX_OUT1                   0x0=
+44 0x2A4 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO12__CSU_CSU_ALARM_AUT00                 0x0=
+44 0x2A4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13                          0x0=
+48 0x2A8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO13__HSIOMIX_usb1_OTG_OC                 0x0=
+48 0x2A8 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO13__PWM2_OUT                            0x0=
+48 0x2A8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO13__CCMSRCGPCMIX_OUT2                   0x0=
+48 0x2A8 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO13__CSU_CSU_ALARM_AUT01                 0x0=
+48 0x2A8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14                          0x0=
+4C 0x2AC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__HSIOMIX_usb2_OTG_PWR                0x0=
+4C 0x2AC 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__USDHC3_CD_B                         0x0=
+4C 0x2AC 0x608 0x4 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__PWM3_OUT                            0x0=
+4C 0x2AC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__CCMSRCGPCMIX_CLKO1                  0x0=
+4C 0x2AC 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO14__CSU_CSU_ALARM_AUT02                 0x0=
+4C 0x2AC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__GPIO1_IO15                          0x0=
+50 0x2B0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__HSIOMIX_usb2_OTG_OC                 0x0=
+50 0x2B0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__USDHC3_WP                           0x0=
+50 0x2B0 0x634 0x4 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__PWM4_OUT                            0x0=
+50 0x2B0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__CCMSRCGPCMIX_CLKO2                  0x0=
+50 0x2B0 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_GPIO1_IO15__CSU_CSU_INT_DEB                     0x0=
+50 0x2B0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC                          0x0=
+54 0x2B4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_MDC__AUDIOMIX_SAI6_TX_DATA00               0x0=
+54 0x2B4 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_MDC__GPIO1_IO16                            0x0=
+54 0x2B4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_MDC__USDHC3_STROBE                         0x0=
+54 0x2B4 0x630 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_MDC__SIM_M_HADDR15                         0x0=
+54 0x2B4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO                        0x0=
+58 0x2B8 0x590 0x0 0x1
+> +#define MX8MP_IOMUXC_ENET_MDIO__AUDIOMIX_SAI6_TX_SYNC                0x0=
+58 0x2B8 0x528 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_MDIO__GPIO1_IO17                           0x0=
+58 0x2B8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_MDIO__USDHC3_DATA5                         0x0=
+58 0x2B8 0x624 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_MDIO__SIM_M_HADDR16                        0x0=
+58 0x2B8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TD3__ENET_QOS_RGMII_TD3                    0x0=
+5C 0x2BC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TD3__AUDIOMIX_SAI6_TX_BCLK                 0x0=
+5C 0x2BC 0x524 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TD3__GPIO1_IO18                            0x0=
+5C 0x2BC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TD3__USDHC3_DATA6                          0x0=
+5C 0x2BC 0x628 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_TD3__SIM_M_HADDR17                         0x0=
+5C 0x2BC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__ENET_QOS_RGMII_TD2                    0x0=
+60 0x2C0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__CCM_ENET_QOS_CLOCK_GENERATE_REF_CLK   0x0=
+60 0x2C0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__AUDIOMIX_SAI6_RX_DATA00               0x0=
+60 0x2C0 0x51C 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__GPIO1_IO19                            0x0=
+60 0x2C0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__USDHC3_DATA7                          0x0=
+60 0x2C0 0x62C 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_TD2__SIM_M_HADDR18                         0x0=
+60 0x2C0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TD1__ENET_QOS_RGMII_TD1                    0x0=
+64 0x2C4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TD1__AUDIOMIX_SAI6_RX_SYNC                 0x0=
+64 0x2C4 0x520 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TD1__GPIO1_IO20                            0x0=
+64 0x2C4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TD1__USDHC3_CD_B                           0x0=
+64 0x2C4 0x608 0x6 0x1
+> +#define MX8MP_IOMUXC_ENET_TD1__SIM_M_HADDR19                         0x0=
+64 0x2C4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TD0__ENET_QOS_RGMII_TD0                    0x0=
+68 0x2C8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TD0__AUDIOMIX_SAI6_RX_BCLK                 0x0=
+68 0x2C8 0x518 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TD0__GPIO1_IO21                            0x0=
+68 0x2C8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TD0__USDHC3_WP                             0x0=
+68 0x2C8 0x634 0x6 0x1
+> +#define MX8MP_IOMUXC_ENET_TD0__SIM_M_HADDR20                         0x0=
+68 0x2C8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__ENET_QOS_RGMII_TX_CTL              0x0=
+6C 0x2CC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__AUDIOMIX_SAI6_MCLK                 0x0=
+6C 0x2CC 0x514 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__AUDIOMIX_SPDIF_OUT                 0x0=
+6C 0x2CC 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__GPIO1_IO22                         0x0=
+6C 0x2CC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__USDHC3_DATA0                       0x0=
+6C 0x2CC 0x610 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_TX_CTL__SIM_M_HADDR21                      0x0=
+6C 0x2CC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__CCM_ENET_QOS_CLOCK_GENERATE_TX_CLK    0x0=
+70 0x2D0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__ENET_QOS_TX_ER                        0x0=
+70 0x2D0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__AUDIOMIX_SAI7_TX_DATA00               0x0=
+70 0x2D0 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__GPIO1_IO23                            0x0=
+70 0x2D0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__USDHC3_DATA1                          0x0=
+70 0x2D0 0x614 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_TXC__SIM_M_HADDR22                         0x0=
+70 0x2D0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__ENET_QOS_RGMII_RX_CTL              0x0=
+74 0x2D4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__AUDIOMIX_SAI7_TX_SYNC              0x0=
+74 0x2D4 0x540 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__AUDIOMIX_BIT_STREAM03              0x0=
+74 0x2D4 0x4CC 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__GPIO1_IO24                         0x0=
+74 0x2D4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__USDHC3_DATA2                       0x0=
+74 0x2D4 0x618 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RX_CTL__SIM_M_HADDR23                      0x0=
+74 0x2D4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__CCM_ENET_QOS_CLOCK_GENERATE_RX_CLK    0x0=
+78 0x2D8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__ENET_QOS_RX_ER                        0x0=
+78 0x2D8 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__AUDIOMIX_SAI7_TX_BCLK                 0x0=
+78 0x2D8 0x53C 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__AUDIOMIX_BIT_STREAM02                 0x0=
+78 0x2D8 0x4C8 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__GPIO1_IO25                            0x0=
+78 0x2D8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__USDHC3_DATA3                          0x0=
+78 0x2D8 0x61C 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RXC__SIM_M_HADDR24                         0x0=
+78 0x2D8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__ENET_QOS_RGMII_RD0                    0x0=
+7C 0x2DC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__AUDIOMIX_SAI7_RX_DATA00               0x0=
+7C 0x2DC 0x534 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__AUDIOMIX_BIT_STREAM01                 0x0=
+7C 0x2DC 0x4C4 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__GPIO1_IO26                            0x0=
+7C 0x2DC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__USDHC3_DATA4                          0x0=
+7C 0x2DC 0x620 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RD0__SIM_M_HADDR25                         0x0=
+7C 0x2DC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__ENET_QOS_RGMII_RD1                    0x0=
+80 0x2E0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__AUDIOMIX_SAI7_RX_SYNC                 0x0=
+80 0x2E0 0x538 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__AUDIOMIX_BIT_STREAM00                 0x0=
+80 0x2E0 0x4C0 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__GPIO1_IO27                            0x0=
+80 0x2E0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__USDHC3_RESET_B                        0x0=
+80 0x2E0 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RD1__SIM_M_HADDR26                         0x0=
+80 0x2E0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__ENET_QOS_RGMII_RD2                    0x0=
+84 0x2E4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__AUDIOMIX_SAI7_RX_BCLK                 0x0=
+84 0x2E4 0x530 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__AUDIOMIX_CLK                          0x0=
+84 0x2E4 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__GPIO1_IO28                            0x0=
+84 0x2E4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__USDHC3_CLK                            0x0=
+84 0x2E4 0x604 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RD2__SIM_M_HADDR27                         0x0=
+84 0x2E4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__ENET_QOS_RGMII_RD3                    0x0=
+88 0x2E8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__AUDIOMIX_SAI7_MCLK                    0x0=
+88 0x2E8 0x52C 0x2 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__AUDIOMIX_SPDIF_IN                     0x0=
+88 0x2E8 0x544 0x3 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__GPIO1_IO29                            0x0=
+88 0x2E8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__USDHC3_CMD                            0x0=
+88 0x2E8 0x60C 0x6 0x0
+> +#define MX8MP_IOMUXC_ENET_RD3__SIM_M_HADDR28                         0x0=
+88 0x2E8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__USDHC1_CLK                             0x0=
+8C 0x2EC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__ENET1_MDC                              0x0=
+8C 0x2EC 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__I2C5_SCL                               0x0=
+8C 0x2EC 0x5C4 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__UART1_DCE_TX                           0x0=
+8C 0x2EC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__UART1_DTE_RX                           0x0=
+8C 0x2EC 0x5E8 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__GPIO2_IO00                             0x0=
+8C 0x2EC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_CLK__SIM_M_HADDR29                          0x0=
+8C 0x2EC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__USDHC1_CMD                             0x0=
+90 0x2F0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__ENET1_MDIO                             0x0=
+90 0x2F0 0x57C 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__I2C5_SDA                               0x0=
+90 0x2F0 0x5C8 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__UART1_DCE_RX                           0x0=
+90 0x2F0 0x5E8 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_CMD__UART1_DTE_TX                           0x0=
+90 0x2F0 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__GPIO2_IO01                             0x0=
+90 0x2F0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_CMD__SIM_M_HADDR30                          0x0=
+90 0x2F0 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__USDHC1_DATA0                         0x0=
+94 0x2F4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__ENET1_RGMII_TD1                      0x0=
+94 0x2F4 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__I2C6_SCL                             0x0=
+94 0x2F4 0x5CC 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__UART1_DCE_RTS                        0x0=
+94 0x2F4 0x5E4 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__UART1_DTE_CTS                        0x0=
+94 0x2F4 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__GPIO2_IO02                           0x0=
+94 0x2F4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA0__SIM_M_HADDR31                        0x0=
+94 0x2F4 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__USDHC1_DATA1                         0x0=
+98 0x2F8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__ENET1_RGMII_TD0                      0x0=
+98 0x2F8 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__I2C6_SDA                             0x0=
+98 0x2F8 0x5D0 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__UART1_DCE_CTS                        0x0=
+98 0x2F8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__UART1_DTE_RTS                        0x0=
+98 0x2F8 0x5E4 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_DATA1__GPIO2_IO03                           0x0=
+98 0x2F8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA1__SIM_M_HBURST00                       0x0=
+98 0x2F8 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__USDHC1_DATA2                         0x0=
+9C 0x2FC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__ENET1_RGMII_RD0                      0x0=
+9C 0x2FC 0x580 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__I2C4_SCL                             0x0=
+9C 0x2FC 0x5BC 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__UART2_DCE_TX                         0x0=
+9C 0x2FC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__UART2_DTE_RX                         0x0=
+9C 0x2FC 0x5F0 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__GPIO2_IO04                           0x0=
+9C 0x2FC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA2__SIM_M_HBURST01                       0x0=
+9C 0x2FC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__USDHC1_DATA3                         0x0=
+A0 0x300 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__ENET1_RGMII_RD1                      0x0=
+A0 0x300 0x584 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__I2C4_SDA                             0x0=
+A0 0x300 0x5C0 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__UART2_DCE_RX                         0x0=
+A0 0x300 0x5F0 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_DATA3__UART2_DTE_TX                         0x0=
+A0 0x300 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__GPIO2_IO05                           0x0=
+A0 0x300 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA3__SIM_M_HBURST02                       0x0=
+A0 0x300 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__USDHC1_DATA4                         0x0=
+A4 0x304 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__ENET1_RGMII_TX_CTL                   0x0=
+A4 0x304 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__I2C1_SCL                             0x0=
+A4 0x304 0x5A4 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__UART2_DCE_RTS                        0x0=
+A4 0x304 0x5EC 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__UART2_DTE_CTS                        0x0=
+A4 0x304 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__GPIO2_IO06                           0x0=
+A4 0x304 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA4__SIM_M_HRESP                          0x0=
+A4 0x304 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__USDHC1_DATA5                         0x0=
+A8 0x308 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__ENET1_TX_ER                          0x0=
+A8 0x308 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__I2C1_SDA                             0x0=
+A8 0x308 0x5A8 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__UART2_DCE_CTS                        0x0=
+A8 0x308 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__UART2_DTE_RTS                        0x0=
+A8 0x308 0x5EC 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_DATA5__GPIO2_IO07                           0x0=
+A8 0x308 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA5__TPSMP_HDATA05                        0x0=
+A8 0x308 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__USDHC1_DATA6                         0x0=
+AC 0x30C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__ENET1_RGMII_RX_CTL                   0x0=
+AC 0x30C 0x588 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__I2C2_SCL                             0x0=
+AC 0x30C 0x5AC 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__UART3_DCE_TX                         0x0=
+AC 0x30C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__UART3_DTE_RX                         0x0=
+AC 0x30C 0x5F8 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__GPIO2_IO08                           0x0=
+AC 0x30C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA6__TPSMP_HDATA06                        0x0=
+AC 0x30C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__USDHC1_DATA7                         0x0=
+B0 0x310 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__ENET1_RX_ER                          0x0=
+B0 0x310 0x58C 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__I2C2_SDA                             0x0=
+B0 0x310 0x5B0 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__UART3_DCE_RX                         0x0=
+B0 0x310 0x5F8 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_DATA7__UART3_DTE_TX                         0x0=
+B0 0x310 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__GPIO2_IO09                           0x0=
+B0 0x310 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_DATA7__TPSMP_HDATA07                        0x0=
+B0 0x310 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__USDHC1_RESET_B                     0x0=
+B4 0x314 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__ENET1_TX_CLK                       0x0=
+B4 0x314 0x578 0x1 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__I2C3_SCL                           0x0=
+B4 0x314 0x5B4 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__UART3_DCE_RTS                      0x0=
+B4 0x314 0x5F4 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__UART3_DTE_CTS                      0x0=
+B4 0x314 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__GPIO2_IO10                         0x0=
+B4 0x314 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_RESET_B__ECSPI3_TEST_TRIG                   0x0=
+B4 0x314 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD1_STROBE__USDHC1_STROBE                       0x0=
+B8 0x318 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD1_STROBE__I2C3_SDA                            0x0=
+B8 0x318 0x5B8 0x3 0x0
+> +#define MX8MP_IOMUXC_SD1_STROBE__UART3_DCE_CTS                       0x0=
+B8 0x318 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD1_STROBE__UART3_DTE_RTS                       0x0=
+B8 0x318 0x5F4 0x4 0x1
+> +#define MX8MP_IOMUXC_SD1_STROBE__GPIO2_IO11                          0x0=
+B8 0x318 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD1_STROBE__USDHC3_TEST_TRIG                    0x0=
+B8 0x318 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_CD_B__USDHC2_CD_B                           0x0=
+BC 0x31C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_CD_B__GPIO2_IO12                            0x0=
+BC 0x31C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_CD_B__CCMSRCGPCMIX_TESTER_ACK               0x0=
+BC 0x31C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK                             0x0=
+C0 0x320 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__ECSPI2_SCLK                            0x0=
+C0 0x320 0x568 0x2 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__UART4_DCE_RX                           0x0=
+C0 0x320 0x600 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__UART4_DTE_TX                           0x0=
+C0 0x320 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__GPIO2_IO13                             0x0=
+C0 0x320 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__CCMSRCGPCMIX_OBSERVE0                  0x0=
+C0 0x320 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_CLK__OBSERVE_MUX_OUT00                      0x0=
+C0 0x320 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD                             0x0=
+C4 0x324 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__ECSPI2_MOSI                            0x0=
+C4 0x324 0x570 0x2 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__UART4_DCE_TX                           0x0=
+C4 0x324 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__UART4_DTE_RX                           0x0=
+C4 0x324 0x600 0x3 0x1
+> +#define MX8MP_IOMUXC_SD2_CMD__AUDIOMIX_CLK                           0x0=
+C4 0x324 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__GPIO2_IO14                             0x0=
+C4 0x324 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__CCMSRCGPCMIX_OBSERVE1                  0x0=
+C4 0x324 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_CMD__OBSERVE_MUX_OUT01                      0x0=
+C4 0x324 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0                         0x0=
+C8 0x328 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA0__I2C4_SDA                             0x0=
+C8 0x328 0x5C0 0x2 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA0__UART2_DCE_RX                         0x0=
+C8 0x328 0x5F0 0x3 0x2
+> +#define MX8MP_IOMUXC_SD2_DATA0__UART2_DTE_TX                         0x0=
+C8 0x328 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA0__AUDIOMIX_BIT_STREAM00                0x0=
+C8 0x328 0x4C0 0x4 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA0__GPIO2_IO15                           0x0=
+C8 0x328 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA0__CCMSRCGPCMIX_OBSERVE2                0x0=
+C8 0x328 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA0__OBSERVE_MUX_OUT02                    0x0=
+C8 0x328 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1                         0x0=
+CC 0x32C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA1__I2C4_SCL                             0x0=
+CC 0x32C 0x5BC 0x2 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA1__UART2_DCE_TX                         0x0=
+CC 0x32C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA1__UART2_DTE_RX                         0x0=
+CC 0x32C 0x5F0 0x3 0x3
+> +#define MX8MP_IOMUXC_SD2_DATA1__AUDIOMIX_BIT_STREAM01                0x0=
+CC 0x32C 0x4C4 0x4 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA1__GPIO2_IO16                           0x0=
+CC 0x32C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA1__CCMSRCGPCMIX_WAIT                    0x0=
+CC 0x32C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA1__OBSERVE_MUX_OUT03                    0x0=
+CC 0x32C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2                         0x0=
+D0 0x330 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__ECSPI2_SS0                           0x0=
+D0 0x330 0x574 0x2 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__AUDIOMIX_SPDIF_OUT                   0x0=
+D0 0x330 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__AUDIOMIX_BIT_STREAM02                0x0=
+D0 0x330 0x4C8 0x4 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA2__GPIO2_IO17                           0x0=
+D0 0x330 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__CCMSRCGPCMIX_STOP                    0x0=
+D0 0x330 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA2__OBSERVE_MUX_OUT04                    0x0=
+D0 0x330 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3                         0x0=
+D4 0x334 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA3__ECSPI2_MISO                          0x0=
+D4 0x334 0x56C 0x2 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA3__AUDIOMIX_SPDIF_IN                    0x0=
+D4 0x334 0x544 0x3 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA3__AUDIOMIX_BIT_STREAM03                0x0=
+D4 0x334 0x4CC 0x4 0x1
+> +#define MX8MP_IOMUXC_SD2_DATA3__GPIO2_IO18                           0x0=
+D4 0x334 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_DATA3__CCMSRCGPCMIX_EARLY_RESET             0x0=
+D4 0x334 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_RESET_B__USDHC2_RESET_B                     0x0=
+D8 0x338 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19                         0x0=
+D8 0x338 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_RESET_B__CCMSRCGPCMIX_SYSTEM_RESET          0x0=
+D8 0x338 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_WP__USDHC2_WP                               0x0=
+DC 0x33C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SD2_WP__GPIO2_IO20                              0x0=
+DC 0x33C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SD2_WP__CORESIGHT_EVENTI                        0x0=
+DC 0x33C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SD2_WP__SIM_M_HMASTLOCK                         0x0=
+DC 0x33C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__RAWNAND_ALE                           0x0=
+E0 0x340 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__FLEXSPI_A_SCLK                        0x0=
+E0 0x340 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__AUDIOMIX_SAI3_TX_BCLK                 0x0=
+E0 0x340 0x4E8 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__MEDIAMIX_ISP_FL_TRIG_0                0x0=
+E0 0x340 0x5D4 0x3 0x1
+> +#define MX8MP_IOMUXC_NAND_ALE__UART3_DCE_RX                          0x0=
+E0 0x340 0x5F8 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_ALE__UART3_DTE_TX                          0x0=
+E0 0x340 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__GPIO3_IO00                            0x0=
+E0 0x340 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__CORESIGHT_TRACE_CLK                   0x0=
+E0 0x340 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_ALE__SIM_M_HPROT00                         0x0=
+E0 0x340 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__RAWNAND_CE0_B                       0x0=
+E4 0x344 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__FLEXSPI_A_SS0_B                     0x0=
+E4 0x344 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__AUDIOMIX_SAI3_TX_DATA00             0x0=
+E4 0x344 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__MEDIAMIX_ISP_SHUTTER_TRIG_0         0x0=
+E4 0x344 0x5DC 0x3 0x1
+> +#define MX8MP_IOMUXC_NAND_CE0_B__UART3_DCE_TX                        0x0=
+E4 0x344 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__UART3_DTE_RX                        0x0=
+E4 0x344 0x5F8 0x4 0x3
+> +#define MX8MP_IOMUXC_NAND_CE0_B__GPIO3_IO01                          0x0=
+E4 0x344 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__CORESIGHT_TRACE_CTL                 0x0=
+E4 0x344 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_CE0_B__SIM_M_HPROT01                       0x0=
+E4 0x344 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_CE1_B__RAWNAND_CE1_B                       0x0=
+E8 0x348 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_CE1_B__FLEXSPI_A_SS1_B                     0x0=
+E8 0x348 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE                       0x0=
+E8 0x348 0x630 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_CE1_B__I2C4_SCL                            0x0=
+E8 0x348 0x5BC 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_CE1_B__GPIO3_IO02                          0x0=
+E8 0x348 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_CE1_B__CORESIGHT_TRACE00                   0x0=
+E8 0x348 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_CE1_B__SIM_M_HPROT02                       0x0=
+E8 0x348 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_CE2_B__RAWNAND_CE2_B                       0x0=
+EC 0x34C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_CE2_B__FLEXSPI_B_SS0_B                     0x0=
+EC 0x34C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5                        0x0=
+EC 0x34C 0x624 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_CE2_B__I2C4_SDA                            0x0=
+EC 0x34C 0x5C0 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_CE2_B__GPIO3_IO03                          0x0=
+EC 0x34C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_CE2_B__CORESIGHT_TRACE01                   0x0=
+EC 0x34C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_CE2_B__SIM_M_HPROT03                       0x0=
+EC 0x34C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_CE3_B__RAWNAND_CE3_B                       0x0=
+F0 0x350 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_CE3_B__FLEXSPI_B_SS1_B                     0x0=
+F0 0x350 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6                        0x0=
+F0 0x350 0x628 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_CE3_B__I2C3_SDA                            0x0=
+F0 0x350 0x5B8 0x4 0x1
+> +#define MX8MP_IOMUXC_NAND_CE3_B__GPIO3_IO04                          0x0=
+F0 0x350 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_CE3_B__CORESIGHT_TRACE02                   0x0=
+F0 0x350 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_CE3_B__SIM_M_HADDR00                       0x0=
+F0 0x350 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__RAWNAND_CLE                           0x0=
+F4 0x354 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__FLEXSPI_B_SCLK                        0x0=
+F4 0x354 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7                          0x0=
+F4 0x354 0x62C 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_CLE__UART4_DCE_RX                          0x0=
+F4 0x354 0x600 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_CLE__UART4_DTE_TX                          0x0=
+F4 0x354 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__GPIO3_IO05                            0x0=
+F4 0x354 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__CORESIGHT_TRACE03                     0x0=
+F4 0x354 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_CLE__SIM_M_HADDR01                         0x0=
+F4 0x354 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__RAWNAND_DATA00                     0x0=
+F8 0x358 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__FLEXSPI_A_DATA00                   0x0=
+F8 0x358 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__AUDIOMIX_SAI3_RX_DATA00            0x0=
+F8 0x358 0x4E4 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__MEDIAMIX_ISP_FLASH_TRIG_0          0x0=
+F8 0x358 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__UART4_DCE_RX                       0x0=
+F8 0x358 0x600 0x4 0x3
+> +#define MX8MP_IOMUXC_NAND_DATA00__UART4_DTE_TX                       0x0=
+F8 0x358 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__GPIO3_IO06                         0x0=
+F8 0x358 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__CORESIGHT_TRACE04                  0x0=
+F8 0x358 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA00__SIM_M_HADDR02                      0x0=
+F8 0x358 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__RAWNAND_DATA01                     0x0=
+FC 0x35C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__FLEXSPI_A_DATA01                   0x0=
+FC 0x35C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__AUDIOMIX_SAI3_TX_SYNC              0x0=
+FC 0x35C 0x4EC 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__MEDIAMIX_ISP_PRELIGHT_TRIG_0       0x0=
+FC 0x35C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__UART4_DCE_TX                       0x0=
+FC 0x35C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__UART4_DTE_RX                       0x0=
+FC 0x35C 0x600 0x4 0x4
+> +#define MX8MP_IOMUXC_NAND_DATA01__GPIO3_IO07                         0x0=
+FC 0x35C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__CORESIGHT_TRACE05                  0x0=
+FC 0x35C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA01__SIM_M_HADDR03                      0x0=
+FC 0x35C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__RAWNAND_DATA02                     0x1=
+00 0x360 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__FLEXSPI_A_DATA02                   0x1=
+00 0x360 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__USDHC3_CD_B                        0x1=
+00 0x360 0x608 0x2 0x2
+> +#define MX8MP_IOMUXC_NAND_DATA02__UART4_DCE_CTS                      0x1=
+00 0x360 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__UART4_DTE_RTS                      0x1=
+00 0x360 0x5FC 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__I2C4_SDA                           0x1=
+00 0x360 0x5C0 0x4 0x3
+> +#define MX8MP_IOMUXC_NAND_DATA02__GPIO3_IO08                         0x1=
+00 0x360 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__CORESIGHT_TRACE06                  0x1=
+00 0x360 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA02__SIM_M_HADDR04                      0x1=
+00 0x360 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__RAWNAND_DATA03                     0x1=
+04 0x364 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__FLEXSPI_A_DATA03                   0x1=
+04 0x364 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__USDHC3_WP                          0x1=
+04 0x364 0x634 0x2 0x2
+> +#define MX8MP_IOMUXC_NAND_DATA03__UART4_DCE_RTS                      0x1=
+04 0x364 0x5FC 0x3 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA03__UART4_DTE_CTS                      0x1=
+04 0x364 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__MEDIAMIX_ISP_FL_TRIG_1             0x1=
+04 0x364 0x5D8 0x4 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA03__GPIO3_IO09                         0x1=
+04 0x364 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__CORESIGHT_TRACE07                  0x1=
+04 0x364 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA03__SIM_M_HADDR05                      0x1=
+04 0x364 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__RAWNAND_DATA04                     0x1=
+08 0x368 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__FLEXSPI_B_DATA00                   0x1=
+08 0x368 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0                       0x1=
+08 0x368 0x610 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA04__FLEXSPI_A_DATA04                   0x1=
+08 0x368 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__MEDIAMIX_ISP_SHUTTER_TRIG_1        0x1=
+08 0x368 0x5E0 0x4 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA04__GPIO3_IO10                         0x1=
+08 0x368 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__CORESIGHT_TRACE08                  0x1=
+08 0x368 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA04__SIM_M_HADDR06                      0x1=
+08 0x368 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__RAWNAND_DATA05                     0x1=
+0C 0x36C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__FLEXSPI_B_DATA01                   0x1=
+0C 0x36C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1                       0x1=
+0C 0x36C 0x614 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA05__FLEXSPI_A_DATA05                   0x1=
+0C 0x36C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__MEDIAMIX_ISP_FLASH_TRIG_1          0x1=
+0C 0x36C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__GPIO3_IO11                         0x1=
+0C 0x36C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__CORESIGHT_TRACE09                  0x1=
+0C 0x36C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA05__SIM_M_HADDR07                      0x1=
+0C 0x36C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__RAWNAND_DATA06                     0x1=
+10 0x370 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__FLEXSPI_B_DATA02                   0x1=
+10 0x370 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2                       0x1=
+10 0x370 0x618 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA06__FLEXSPI_A_DATA06                   0x1=
+10 0x370 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__MEDIAMIX_ISP_PRELIGHT_TRIG_1       0x1=
+10 0x370 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__GPIO3_IO12                         0x1=
+10 0x370 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__CORESIGHT_TRACE10                  0x1=
+10 0x370 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA06__SIM_M_HADDR08                      0x1=
+10 0x370 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__RAWNAND_DATA07                     0x1=
+14 0x374 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__FLEXSPI_B_DATA03                   0x1=
+14 0x374 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3                       0x1=
+14 0x374 0x61C 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_DATA07__FLEXSPI_A_DATA07                   0x1=
+14 0x374 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__MEDIAMIX_ISP_SHUTTER_OPEN_1        0x1=
+14 0x374 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__GPIO3_IO13                         0x1=
+14 0x374 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__CORESIGHT_TRACE11                  0x1=
+14 0x374 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DATA07__SIM_M_HADDR09                      0x1=
+14 0x374 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__RAWNAND_DQS                           0x1=
+18 0x378 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__FLEXSPI_A_DQS                         0x1=
+18 0x378 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__AUDIOMIX_SAI3_MCLK                    0x1=
+18 0x378 0x4E0 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__MEDIAMIX_ISP_SHUTTER_OPEN_0           0x1=
+18 0x378 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__I2C3_SCL                              0x1=
+18 0x378 0x5B4 0x4 0x1
+> +#define MX8MP_IOMUXC_NAND_DQS__GPIO3_IO14                            0x1=
+18 0x378 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__CORESIGHT_TRACE12                     0x1=
+18 0x378 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_DQS__SIM_M_HADDR10                         0x1=
+18 0x378 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__RAWNAND_RE_B                         0x1=
+1C 0x37C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__FLEXSPI_B_DQS                        0x1=
+1C 0x37C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4                         0x1=
+1C 0x37C 0x620 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_RE_B__UART4_DCE_TX                         0x1=
+1C 0x37C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__UART4_DTE_RX                         0x1=
+1C 0x37C 0x600 0x4 0x5
+> +#define MX8MP_IOMUXC_NAND_RE_B__GPIO3_IO15                           0x1=
+1C 0x37C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__CORESIGHT_TRACE13                    0x1=
+1C 0x37C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_RE_B__SIM_M_HADDR11                        0x1=
+1C 0x37C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_READY_B__RAWNAND_READY_B                   0x1=
+20 0x380 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_READY_B__USDHC3_RESET_B                    0x1=
+20 0x380 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_NAND_READY_B__I2C3_SCL                          0x1=
+20 0x380 0x5B4 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_READY_B__GPIO3_IO16                        0x1=
+20 0x380 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_READY_B__CORESIGHT_TRACE14                 0x1=
+20 0x380 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_READY_B__SIM_M_HADDR12                     0x1=
+20 0x380 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_WE_B__RAWNAND_WE_B                         0x1=
+24 0x384 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK                           0x1=
+24 0x384 0x604 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_WE_B__I2C3_SDA                             0x1=
+24 0x384 0x5B8 0x4 0x2
+> +#define MX8MP_IOMUXC_NAND_WE_B__GPIO3_IO17                           0x1=
+24 0x384 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_WE_B__CORESIGHT_TRACE15                    0x1=
+24 0x384 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_WE_B__SIM_M_HADDR13                        0x1=
+24 0x384 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_NAND_WP_B__RAWNAND_WP_B                         0x1=
+28 0x388 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD                           0x1=
+28 0x388 0x60C 0x2 0x1
+> +#define MX8MP_IOMUXC_NAND_WP_B__I2C4_SCL                             0x1=
+28 0x388 0x5BC 0x4 0x3
+> +#define MX8MP_IOMUXC_NAND_WP_B__GPIO3_IO18                           0x1=
+28 0x388 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_NAND_WP_B__CORESIGHT_EVENTO                     0x1=
+28 0x388 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_NAND_WP_B__SIM_M_HADDR14                        0x1=
+28 0x388 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXFS__AUDIOMIX_SAI5_RX_SYNC                0x1=
+2C 0x38C 0x508 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXFS__AUDIOMIX_SAI1_TX_DATA00              0x1=
+2C 0x38C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXFS__PWM4_OUT                             0x1=
+2C 0x38C 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXFS__I2C6_SCL                             0x1=
+2C 0x38C 0x5CC 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI5_RXFS__GPIO3_IO19                           0x1=
+2C 0x38C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXC__AUDIOMIX_SAI5_RX_BCLK                 0x1=
+30 0x390 0x4F4 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXC__AUDIOMIX_SAI1_TX_DATA01               0x1=
+30 0x390 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXC__PWM3_OUT                              0x1=
+30 0x390 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXC__I2C6_SDA                              0x1=
+30 0x390 0x5D0 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI5_RXC__AUDIOMIX_CLK                          0x1=
+30 0x390 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXC__GPIO3_IO20                            0x1=
+30 0x390 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD0__AUDIOMIX_SAI5_RX_DATA00              0x1=
+34 0x394 0x4F8 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD0__AUDIOMIX_SAI1_TX_DATA02              0x1=
+34 0x394 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD0__PWM2_OUT                             0x1=
+34 0x394 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD0__I2C5_SCL                             0x1=
+34 0x394 0x5C4 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI5_RXD0__AUDIOMIX_BIT_STREAM00                0x1=
+34 0x394 0x4C0 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI5_RXD0__GPIO3_IO21                           0x1=
+34 0x394 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_SAI5_RX_DATA01              0x1=
+38 0x398 0x4FC 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_SAI1_TX_DATA03              0x1=
+38 0x398 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_SAI1_TX_SYNC                0x1=
+38 0x398 0x4D8 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_SAI5_TX_SYNC                0x1=
+38 0x398 0x510 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__AUDIOMIX_BIT_STREAM01                0x1=
+38 0x398 0x4C4 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI5_RXD1__GPIO3_IO22                           0x1=
+38 0x398 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD1__CAN1_TX                              0x1=
+38 0x398 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_SAI5_RX_DATA02              0x1=
+3C 0x39C 0x500 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_SAI1_TX_DATA04              0x1=
+3C 0x39C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_SAI1_TX_SYNC                0x1=
+3C 0x39C 0x4D8 0x2 0x1
+> +#define MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_SAI5_TX_BCLK                0x1=
+3C 0x39C 0x50C 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD2__AUDIOMIX_BIT_STREAM02                0x1=
+3C 0x39C 0x4C8 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI5_RXD2__GPIO3_IO23                           0x1=
+3C 0x39C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD2__CAN1_RX                              0x1=
+3C 0x39C 0x54C 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_SAI5_RX_DATA03              0x1=
+40 0x3A0 0x504 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_SAI1_TX_DATA05              0x1=
+40 0x3A0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_SAI1_TX_SYNC                0x1=
+40 0x3A0 0x4D8 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_SAI5_TX_DATA00              0x1=
+40 0x3A0 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD3__AUDIOMIX_BIT_STREAM03                0x1=
+40 0x3A0 0x4CC 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI5_RXD3__GPIO3_IO24                           0x1=
+40 0x3A0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_RXD3__CAN2_TX                              0x1=
+40 0x3A0 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI5_MCLK__AUDIOMIX_SAI5_MCLK                   0x1=
+44 0x3A4 0x4F0 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI5_MCLK__AUDIOMIX_SAI1_TX_BCLK                0x1=
+44 0x3A4 0x4D4 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI5_MCLK__PWM1_OUT                             0x1=
+44 0x3A4 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI5_MCLK__I2C5_SDA                             0x1=
+44 0x3A4 0x5C8 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI5_MCLK__GPIO3_IO25                           0x1=
+44 0x3A4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI5_MCLK__CAN2_RX                              0x1=
+44 0x3A4 0x550 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXFS__AUDIOMIX_SAI1_RX_SYNC                0x1=
+48 0x3A8 0x4D0 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXFS__AUDIOMIX_SAI5_RX_SYNC                0x1=
+48 0x3A8 0x508 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXFS__ENET1_1588_EVENT0_IN                 0x1=
+48 0x3A8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXFS__GPIO4_IO00                           0x1=
+48 0x3A8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXC__AUDIOMIX_SAI1_RX_BCLK                 0x1=
+4C 0x3AC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXC__AUDIOMIX_SAI5_RX_BCLK                 0x1=
+4C 0x3AC 0x4F4 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXC__AUDIOMIX_CLK                          0x1=
+4C 0x3AC 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXC__ENET1_1588_EVENT0_OUT                 0x1=
+4C 0x3AC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXC__GPIO4_IO01                            0x1=
+4C 0x3AC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD0__AUDIOMIX_SAI1_RX_DATA00              0x1=
+50 0x3B0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD0__AUDIOMIX_SAI5_RX_DATA00              0x1=
+50 0x3B0 0x4F8 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD0__AUDIOMIX_SAI1_TX_DATA01              0x1=
+50 0x3B0 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD0__AUDIOMIX_BIT_STREAM00                0x1=
+50 0x3B0 0x4C0 0x3 0x3
+> +#define MX8MP_IOMUXC_SAI1_RXD0__ENET1_1588_EVENT1_IN                 0x1=
+50 0x3B0 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD0__GPIO4_IO02                           0x1=
+50 0x3B0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD1__AUDIOMIX_SAI1_RX_DATA01              0x1=
+54 0x3B4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD1__AUDIOMIX_SAI5_RX_DATA01              0x1=
+54 0x3B4 0x4FC 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD1__AUDIOMIX_BIT_STREAM01                0x1=
+54 0x3B4 0x4C4 0x3 0x3
+> +#define MX8MP_IOMUXC_SAI1_RXD1__ENET1_1588_EVENT1_OUT                0x1=
+54 0x3B4 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD1__GPIO4_IO03                           0x1=
+54 0x3B4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD2__AUDIOMIX_SAI1_RX_DATA02              0x1=
+58 0x3B8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD2__AUDIOMIX_SAI5_RX_DATA02              0x1=
+58 0x3B8 0x500 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD2__AUDIOMIX_BIT_STREAM02                0x1=
+58 0x3B8 0x4C8 0x3 0x3
+> +#define MX8MP_IOMUXC_SAI1_RXD2__ENET1_MDC                            0x1=
+58 0x3B8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD2__GPIO4_IO04                           0x1=
+58 0x3B8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD3__AUDIOMIX_SAI1_RX_DATA03              0x1=
+5C 0x3BC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD3__AUDIOMIX_SAI5_RX_DATA03              0x1=
+5C 0x3BC 0x504 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD3__AUDIOMIX_BIT_STREAM03                0x1=
+5C 0x3BC 0x4CC 0x3 0x3
+> +#define MX8MP_IOMUXC_SAI1_RXD3__ENET1_MDIO                           0x1=
+5C 0x3BC 0x57C 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD3__GPIO4_IO05                           0x1=
+5C 0x3BC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD4__AUDIOMIX_SAI1_RX_DATA04              0x1=
+60 0x3C0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD4__AUDIOMIX_SAI6_TX_BCLK                0x1=
+60 0x3C0 0x524 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD4__AUDIOMIX_SAI6_RX_BCLK                0x1=
+60 0x3C0 0x518 0x2 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD4__ENET1_RGMII_RD0                      0x1=
+60 0x3C0 0x580 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD4__GPIO4_IO06                           0x1=
+60 0x3C0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI1_RX_DATA05              0x1=
+64 0x3C4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI6_TX_DATA00              0x1=
+64 0x3C4 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI6_RX_DATA00              0x1=
+64 0x3C4 0x51C 0x2 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI1_RX_SYNC                0x1=
+64 0x3C4 0x4D0 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD5__ENET1_RGMII_RD1                      0x1=
+64 0x3C4 0x584 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD5__GPIO4_IO07                           0x1=
+64 0x3C4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD6__AUDIOMIX_SAI1_RX_DATA06              0x1=
+68 0x3C8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD6__AUDIOMIX_SAI6_TX_SYNC                0x1=
+68 0x3C8 0x528 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD6__AUDIOMIX_SAI6_RX_SYNC                0x1=
+68 0x3C8 0x520 0x2 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD6__ENET1_RGMII_RD2                      0x1=
+68 0x3C8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD6__GPIO4_IO08                           0x1=
+68 0x3C8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD7__AUDIOMIX_SAI1_RX_DATA07              0x1=
+6C 0x3CC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD7__AUDIOMIX_SAI6_MCLK                   0x1=
+6C 0x3CC 0x514 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_RXD7__AUDIOMIX_SAI1_TX_SYNC                0x1=
+6C 0x3CC 0x4D8 0x2 0x3
+> +#define MX8MP_IOMUXC_SAI1_RXD7__AUDIOMIX_SAI1_TX_DATA04              0x1=
+6C 0x3CC 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD7__ENET1_RGMII_RD3                      0x1=
+6C 0x3CC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_RXD7__GPIO4_IO09                           0x1=
+6C 0x3CC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXFS__AUDIOMIX_SAI1_TX_SYNC                0x1=
+70 0x3D0 0x4D8 0x0 0x4
+> +#define MX8MP_IOMUXC_SAI1_TXFS__AUDIOMIX_SAI5_TX_SYNC                0x1=
+70 0x3D0 0x510 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_TXFS__ENET1_RGMII_RX_CTL                   0x1=
+70 0x3D0 0x588 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_TXFS__GPIO4_IO10                           0x1=
+70 0x3D0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXC__AUDIOMIX_SAI1_TX_BCLK                 0x1=
+74 0x3D4 0x4D4 0x0 0x1
+> +#define MX8MP_IOMUXC_SAI1_TXC__AUDIOMIX_SAI5_TX_BCLK                 0x1=
+74 0x3D4 0x50C 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_TXC__ENET1_RGMII_RXC                       0x1=
+74 0x3D4 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXC__GPIO4_IO11                            0x1=
+74 0x3D4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD0__AUDIOMIX_SAI1_TX_DATA00              0x1=
+78 0x3D8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD0__AUDIOMIX_SAI5_TX_DATA00              0x1=
+78 0x3D8 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD0__ENET1_RGMII_TD0                      0x1=
+78 0x3D8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD0__GPIO4_IO12                           0x1=
+78 0x3D8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD1__AUDIOMIX_SAI1_TX_DATA01              0x1=
+7C 0x3DC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD1__AUDIOMIX_SAI5_TX_DATA01              0x1=
+7C 0x3DC 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD1__ENET1_RGMII_TD1                      0x1=
+7C 0x3DC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD1__GPIO4_IO13                           0x1=
+7C 0x3DC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD2__AUDIOMIX_SAI1_TX_DATA02              0x1=
+80 0x3E0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD2__AUDIOMIX_SAI5_TX_DATA02              0x1=
+80 0x3E0 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD2__ENET1_RGMII_TD2                      0x1=
+80 0x3E0 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD2__GPIO4_IO14                           0x1=
+80 0x3E0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD3__AUDIOMIX_SAI1_TX_DATA03              0x1=
+84 0x3E4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD3__AUDIOMIX_SAI5_TX_DATA03              0x1=
+84 0x3E4 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD3__ENET1_RGMII_TD3                      0x1=
+84 0x3E4 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD3__GPIO4_IO15                           0x1=
+84 0x3E4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD4__AUDIOMIX_SAI1_TX_DATA04              0x1=
+88 0x3E8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD4__AUDIOMIX_SAI6_RX_BCLK                0x1=
+88 0x3E8 0x518 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD4__AUDIOMIX_SAI6_TX_BCLK                0x1=
+88 0x3E8 0x524 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD4__ENET1_RGMII_TX_CTL                   0x1=
+88 0x3E8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD4__GPIO4_IO16                           0x1=
+88 0x3E8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD5__AUDIOMIX_SAI1_TX_DATA05              0x1=
+8C 0x3EC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD5__AUDIOMIX_SAI6_RX_DATA00              0x1=
+8C 0x3EC 0x51C 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD5__AUDIOMIX_SAI6_TX_DATA00              0x1=
+8C 0x3EC 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD5__ENET1_RGMII_TXC                      0x1=
+8C 0x3EC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD5__GPIO4_IO17                           0x1=
+8C 0x3EC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD6__AUDIOMIX_SAI1_TX_DATA06              0x1=
+90 0x3F0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD6__AUDIOMIX_SAI6_RX_SYNC                0x1=
+90 0x3F0 0x520 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD6__AUDIOMIX_SAI6_TX_SYNC                0x1=
+90 0x3F0 0x528 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD6__ENET1_RX_ER                          0x1=
+90 0x3F0 0x58C 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_TXD6__GPIO4_IO18                           0x1=
+90 0x3F0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD7__AUDIOMIX_SAI1_TX_DATA07              0x1=
+94 0x3F4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD7__AUDIOMIX_SAI6_MCLK                   0x1=
+94 0x3F4 0x514 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI1_TXD7__AUDIOMIX_CLK                         0x1=
+94 0x3F4 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD7__ENET1_TX_ER                          0x1=
+94 0x3F4 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI1_TXD7__GPIO4_IO19                           0x1=
+94 0x3F4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI1_MCLK__AUDIOMIX_SAI1_MCLK                   0x1=
+98 0x3F8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI1_MCLK__AUDIOMIX_SAI5_MCLK                   0x1=
+98 0x3F8 0x4F0 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI1_MCLK__AUDIOMIX_SAI1_TX_BCLK                0x1=
+98 0x3F8 0x4D4 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI1_MCLK__ENET1_TX_CLK                         0x1=
+98 0x3F8 0x578 0x4 0x1
+> +#define MX8MP_IOMUXC_SAI1_MCLK__GPIO4_IO20                           0x1=
+98 0x3F8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__AUDIOMIX_SAI2_RX_SYNC                0x1=
+9C 0x3FC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__AUDIOMIX_SAI5_TX_SYNC                0x1=
+9C 0x3FC 0x510 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI2_RXFS__AUDIOMIX_SAI5_TX_DATA01              0x1=
+9C 0x3FC 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__AUDIOMIX_SAI2_RX_DATA01              0x1=
+9C 0x3FC 0x4DC 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__UART1_DCE_TX                         0x1=
+9C 0x3FC 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__UART1_DTE_RX                         0x1=
+9C 0x3FC 0x5E8 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI2_RXFS__GPIO4_IO21                           0x1=
+9C 0x3FC 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXFS__AUDIOMIX_BIT_STREAM02                0x1=
+9C 0x3FC 0x4C8 0x6 0x4
+> +#define MX8MP_IOMUXC_SAI2_RXFS__SIM_M_HSIZE00                        0x1=
+9C 0x3FC 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXC__AUDIOMIX_SAI2_RX_BCLK                 0x1=
+A0 0x400 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXC__AUDIOMIX_SAI5_TX_BCLK                 0x1=
+A0 0x400 0x50C 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI2_RXC__CAN1_TX                               0x1=
+A0 0x400 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXC__UART1_DCE_RX                          0x1=
+A0 0x400 0x5E8 0x4 0x3
+> +#define MX8MP_IOMUXC_SAI2_RXC__UART1_DTE_TX                          0x1=
+A0 0x400 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXC__GPIO4_IO22                            0x1=
+A0 0x400 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXC__AUDIOMIX_BIT_STREAM01                 0x1=
+A0 0x400 0x4C4 0x6 0x4
+> +#define MX8MP_IOMUXC_SAI2_RXC__SIM_M_HSIZE01                         0x1=
+A0 0x400 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__AUDIOMIX_SAI2_RX_DATA00              0x1=
+A4 0x404 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__AUDIOMIX_SAI5_TX_DATA00              0x1=
+A4 0x404 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__ENET_QOS_1588_EVENT2_OUT             0x1=
+A4 0x404 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__AUDIOMIX_SAI2_TX_DATA01              0x1=
+A4 0x404 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__UART1_DCE_RTS                        0x1=
+A4 0x404 0x5E4 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI2_RXD0__UART1_DTE_CTS                        0x1=
+A4 0x404 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__GPIO4_IO23                           0x1=
+A4 0x404 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_RXD0__AUDIOMIX_BIT_STREAM03                0x1=
+A4 0x404 0x4CC 0x6 0x4
+> +#define MX8MP_IOMUXC_SAI2_RXD0__SIM_M_HSIZE02                        0x1=
+A4 0x404 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__AUDIOMIX_SAI2_TX_SYNC                0x1=
+A8 0x408 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__AUDIOMIX_SAI5_TX_DATA01              0x1=
+A8 0x408 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__ENET_QOS_1588_EVENT3_OUT             0x1=
+A8 0x408 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__AUDIOMIX_SAI2_TX_DATA01              0x1=
+A8 0x408 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__UART1_DCE_CTS                        0x1=
+A8 0x408 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__UART1_DTE_RTS                        0x1=
+A8 0x408 0x5E4 0x4 0x3
+> +#define MX8MP_IOMUXC_SAI2_TXFS__GPIO4_IO24                           0x1=
+A8 0x408 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXFS__AUDIOMIX_BIT_STREAM02                0x1=
+A8 0x408 0x4C8 0x6 0x5
+> +#define MX8MP_IOMUXC_SAI2_TXFS__SIM_M_HWRITE                         0x1=
+A8 0x408 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXC__AUDIOMIX_SAI2_TX_BCLK                 0x1=
+AC 0x40C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXC__AUDIOMIX_SAI5_TX_DATA02               0x1=
+AC 0x40C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXC__CAN1_RX                               0x1=
+AC 0x40C 0x54C 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI2_TXC__GPIO4_IO25                            0x1=
+AC 0x40C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXC__AUDIOMIX_BIT_STREAM01                 0x1=
+AC 0x40C 0x4C4 0x6 0x5
+> +#define MX8MP_IOMUXC_SAI2_TXC__SIM_M_HREADYOUT                       0x1=
+AC 0x40C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__AUDIOMIX_SAI2_TX_DATA00              0x1=
+B0 0x410 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__AUDIOMIX_SAI5_TX_DATA03              0x1=
+B0 0x410 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__ENET_QOS_1588_EVENT2_IN              0x1=
+B0 0x410 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__CAN2_TX                              0x1=
+B0 0x410 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__ENET_QOS_1588_EVENT2_AUX_IN          0x1=
+B0 0x410 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__GPIO4_IO26                           0x1=
+B0 0x410 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__CCMSRCGPCMIX_BOOT_MODE04             0x1=
+B0 0x410 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI2_TXD0__TPSMP_CLK                            0x1=
+B0 0x410 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI2_MCLK__AUDIOMIX_SAI2_MCLK                   0x1=
+B4 0x414 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI2_MCLK__AUDIOMIX_SAI5_MCLK                   0x1=
+B4 0x414 0x4F0 0x1 0x2
+> +#define MX8MP_IOMUXC_SAI2_MCLK__ENET_QOS_1588_EVENT3_IN              0x1=
+B4 0x414 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_SAI2_MCLK__CAN2_RX                              0x1=
+B4 0x414 0x550 0x3 0x1
+> +#define MX8MP_IOMUXC_SAI2_MCLK__ENET_QOS_1588_EVENT3_AUX_IN          0x1=
+B4 0x414 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI2_MCLK__GPIO4_IO27                           0x1=
+B4 0x414 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI2_MCLK__AUDIOMIX_SAI3_MCLK                   0x1=
+B4 0x414 0x4E0 0x6 0x1
+> +#define MX8MP_IOMUXC_SAI2_MCLK__TPSMP_HDATA_DIR                      0x1=
+B4 0x414 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_SAI3_RX_SYNC                0x1=
+B8 0x418 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_SAI2_RX_DATA01              0x1=
+B8 0x418 0x4DC 0x1 0x1
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_SAI5_RX_SYNC                0x1=
+B8 0x418 0x508 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_SAI3_RX_DATA01              0x1=
+B8 0x418 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_SPDIF_IN                    0x1=
+B8 0x418 0x544 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI3_RXFS__GPIO4_IO28                           0x1=
+B8 0x418 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXFS__AUDIOMIX_BIT_STREAM00                0x1=
+B8 0x418 0x4C0 0x6 0x4
+> +#define MX8MP_IOMUXC_SAI3_RXFS__TPSMP_HTRANS00                       0x1=
+B8 0x418 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__AUDIOMIX_SAI3_RX_BCLK                 0x1=
+BC 0x41C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__AUDIOMIX_SAI2_RX_DATA02               0x1=
+BC 0x41C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__AUDIOMIX_SAI5_RX_BCLK                 0x1=
+BC 0x41C 0x4F4 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_RXC__GPT1_CLK                              0x1=
+BC 0x41C 0x59C 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__UART2_DCE_CTS                         0x1=
+BC 0x41C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__UART2_DTE_RTS                         0x1=
+BC 0x41C 0x5EC 0x4 0x2
+> +#define MX8MP_IOMUXC_SAI3_RXC__GPIO4_IO29                            0x1=
+BC 0x41C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__AUDIOMIX_CLK                          0x1=
+BC 0x41C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXC__TPSMP_HTRANS01                        0x1=
+BC 0x41C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXD__AUDIOMIX_SAI3_RX_DATA00               0x1=
+C0 0x420 0x4E4 0x0 0x1
+> +#define MX8MP_IOMUXC_SAI3_RXD__AUDIOMIX_SAI2_RX_DATA03               0x1=
+C0 0x420 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXD__AUDIOMIX_SAI5_RX_DATA00               0x1=
+C0 0x420 0x4F8 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_RXD__UART2_DCE_RTS                         0x1=
+C0 0x420 0x5EC 0x4 0x3
+> +#define MX8MP_IOMUXC_SAI3_RXD__UART2_DTE_CTS                         0x1=
+C0 0x420 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXD__GPIO4_IO30                            0x1=
+C0 0x420 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_RXD__AUDIOMIX_BIT_STREAM01                 0x1=
+C0 0x420 0x4C4 0x6 0x6
+> +#define MX8MP_IOMUXC_SAI3_RXD__TPSMP_HDATA00                         0x1=
+C0 0x420 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI3_TX_SYNC                0x1=
+C4 0x424 0x4EC 0x0 0x1
+> +#define MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI2_TX_DATA01              0x1=
+C4 0x424 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI5_RX_DATA01              0x1=
+C4 0x424 0x4FC 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI3_TX_DATA01              0x1=
+C4 0x424 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXFS__UART2_DCE_RX                         0x1=
+C4 0x424 0x5F0 0x4 0x4
+> +#define MX8MP_IOMUXC_SAI3_TXFS__UART2_DTE_TX                         0x1=
+C4 0x424 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXFS__GPIO4_IO31                           0x1=
+C4 0x424 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_BIT_STREAM03                0x1=
+C4 0x424 0x4CC 0x6 0x5
+> +#define MX8MP_IOMUXC_SAI3_TXFS__TPSMP_HDATA01                        0x1=
+C4 0x424 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXC__AUDIOMIX_SAI3_TX_BCLK                 0x1=
+C8 0x428 0x4E8 0x0 0x1
+> +#define MX8MP_IOMUXC_SAI3_TXC__AUDIOMIX_SAI2_TX_DATA02               0x1=
+C8 0x428 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXC__AUDIOMIX_SAI5_RX_DATA02               0x1=
+C8 0x428 0x500 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_TXC__GPT1_CAPTURE1                         0x1=
+C8 0x428 0x594 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXC__UART2_DCE_TX                          0x1=
+C8 0x428 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXC__UART2_DTE_RX                          0x1=
+C8 0x428 0x5F0 0x4 0x5
+> +#define MX8MP_IOMUXC_SAI3_TXC__GPIO5_IO00                            0x1=
+C8 0x428 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXC__AUDIOMIX_BIT_STREAM02                 0x1=
+C8 0x428 0x4C8 0x6 0x6
+> +#define MX8MP_IOMUXC_SAI3_TXC__TPSMP_HDATA02                         0x1=
+C8 0x428 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__AUDIOMIX_SAI3_TX_DATA00               0x1=
+CC 0x42C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__AUDIOMIX_SAI2_TX_DATA03               0x1=
+CC 0x42C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__AUDIOMIX_SAI5_RX_DATA03               0x1=
+CC 0x42C 0x504 0x2 0x2
+> +#define MX8MP_IOMUXC_SAI3_TXD__GPT1_CAPTURE2                         0x1=
+CC 0x42C 0x598 0x3 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__AUDIOMIX_SPDIF_EXT_CLK                0x1=
+CC 0x42C 0x548 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__GPIO5_IO01                            0x1=
+CC 0x42C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__CCMSRCGPCMIX_BOOT_MODE05              0x1=
+CC 0x42C 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_SAI3_TXD__TPSMP_HDATA03                         0x1=
+CC 0x42C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SAI3_MCLK__AUDIOMIX_SAI3_MCLK                   0x1=
+D0 0x430 0x4E0 0x0 0x2
+> +#define MX8MP_IOMUXC_SAI3_MCLK__PWM4_OUT                             0x1=
+D0 0x430 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SAI3_MCLK__AUDIOMIX_SAI5_MCLK                   0x1=
+D0 0x430 0x4F0 0x2 0x3
+> +#define MX8MP_IOMUXC_SAI3_MCLK__AUDIOMIX_SPDIF_OUT                   0x1=
+D0 0x430 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SAI3_MCLK__GPIO5_IO02                           0x1=
+D0 0x430 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SAI3_MCLK__AUDIOMIX_SPDIF_IN                    0x1=
+D0 0x430 0x544 0x6 0x3
+> +#define MX8MP_IOMUXC_SAI3_MCLK__TPSMP_HDATA04                        0x1=
+D0 0x430 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_SPDIF_TX__AUDIOMIX_SPDIF_OUT                    0x1=
+D4 0x434 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_SPDIF_TX__PWM3_OUT                              0x1=
+D4 0x434 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SPDIF_TX__I2C5_SCL                              0x1=
+D4 0x434 0x5C4 0x2 0x2
+> +#define MX8MP_IOMUXC_SPDIF_TX__GPT1_COMPARE1                         0x1=
+D4 0x434 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SPDIF_TX__CAN1_TX                               0x1=
+D4 0x434 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_SPDIF_TX__GPIO5_IO03                            0x1=
+D4 0x434 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SPDIF_RX__AUDIOMIX_SPDIF_IN                     0x1=
+D8 0x438 0x544 0x0 0x4
+> +#define MX8MP_IOMUXC_SPDIF_RX__PWM2_OUT                              0x1=
+D8 0x438 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_SPDIF_RX__I2C5_SDA                              0x1=
+D8 0x438 0x5C8 0x2 0x2
+> +#define MX8MP_IOMUXC_SPDIF_RX__GPT1_COMPARE2                         0x1=
+D8 0x438 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SPDIF_RX__CAN1_RX                               0x1=
+D8 0x438 0x54C 0x4 0x2
+> +#define MX8MP_IOMUXC_SPDIF_RX__GPIO5_IO04                            0x1=
+D8 0x438 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SPDIF_EXT_CLK__GPT1_COMPARE3                    0x1=
+DC 0x43C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_SPDIF_EXT_CLK__GPIO5_IO05                       0x1=
+DC 0x43C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_SPDIF_EXT_CLK__AUDIOMIX_SPDIF_EXT_CLK           0x1=
+DC 0x43C 0x548 0x0 0x1
+> +#define MX8MP_IOMUXC_SPDIF_EXT_CLK__PWM1_OUT                         0x1=
+DC 0x43C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__ECSPI1_SCLK                        0x1=
+E0 0x440 0x558 0x0 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__UART3_DCE_RX                       0x1=
+E0 0x440 0x5F8 0x1 0x4
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__UART3_DTE_TX                       0x1=
+E0 0x440 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__I2C1_SCL                           0x1=
+E0 0x440 0x5A4 0x2 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__AUDIOMIX_SAI7_RX_SYNC              0x1=
+E0 0x440 0x538 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__GPIO5_IO06                         0x1=
+E0 0x440 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SCLK__TPSMP_HDATA08                      0x1=
+E0 0x440 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__ECSPI1_MOSI                        0x1=
+E4 0x444 0x560 0x0 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__UART3_DCE_TX                       0x1=
+E4 0x444 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__UART3_DTE_RX                       0x1=
+E4 0x444 0x5F8 0x1 0x5
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__I2C1_SDA                           0x1=
+E4 0x444 0x5A8 0x2 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__AUDIOMIX_SAI7_RX_BCLK              0x1=
+E4 0x444 0x530 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__GPIO5_IO07                         0x1=
+E4 0x444 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MOSI__TPSMP_HDATA09                      0x1=
+E4 0x444 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__ECSPI1_MISO                        0x1=
+E8 0x448 0x55C 0x0 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__UART3_DCE_CTS                      0x1=
+E8 0x448 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__UART3_DTE_RTS                      0x1=
+E8 0x448 0x5F4 0x1 0x2
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__I2C2_SCL                           0x1=
+E8 0x448 0x5AC 0x2 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__AUDIOMIX_SAI7_RX_DATA00            0x1=
+E8 0x448 0x534 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__GPIO5_IO08                         0x1=
+E8 0x448 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_MISO__TPSMP_HDATA10                      0x1=
+E8 0x448 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__ECSPI1_SS0                          0x1=
+EC 0x44C 0x564 0x0 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__UART3_DCE_RTS                       0x1=
+EC 0x44C 0x5F4 0x1 0x3
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__UART3_DTE_CTS                       0x1=
+EC 0x44C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__I2C2_SDA                            0x1=
+EC 0x44C 0x5B0 0x2 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__AUDIOMIX_SAI7_TX_SYNC               0x1=
+EC 0x44C 0x540 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__GPIO5_IO09                          0x1=
+EC 0x44C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI1_SS0__TPSMP_HDATA11                       0x1=
+EC 0x44C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__ECSPI2_SCLK                        0x1=
+F0 0x450 0x568 0x0 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__UART4_DCE_RX                       0x1=
+F0 0x450 0x600 0x1 0x6
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__UART4_DTE_TX                       0x1=
+F0 0x450 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__I2C3_SCL                           0x1=
+F0 0x450 0x5B4 0x2 0x3
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__AUDIOMIX_SAI7_TX_BCLK              0x1=
+F0 0x450 0x53C 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__GPIO5_IO10                         0x1=
+F0 0x450 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SCLK__TPSMP_HDATA12                      0x1=
+F0 0x450 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__ECSPI2_MOSI                        0x1=
+F4 0x454 0x570 0x0 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__UART4_DCE_TX                       0x1=
+F4 0x454 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__UART4_DTE_RX                       0x1=
+F4 0x454 0x600 0x1 0x7
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__I2C3_SDA                           0x1=
+F4 0x454 0x5B8 0x2 0x3
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__AUDIOMIX_SAI7_TX_DATA00            0x1=
+F4 0x454 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__GPIO5_IO11                         0x1=
+F4 0x454 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MOSI__TPSMP_HDATA13                      0x1=
+F4 0x454 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__GPIO5_IO12                         0x1=
+F8 0x458 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__TPSMP_HDATA14                      0x1=
+F8 0x458 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__ECSPI2_MISO                        0x1=
+F8 0x458 0x56C 0x0 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__UART4_DCE_CTS                      0x1=
+F8 0x458 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__UART4_DTE_RTS                      0x1=
+F8 0x458 0x5FC 0x1 0x2
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__I2C4_SCL                           0x1=
+F8 0x458 0x5BC 0x2 0x4
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__AUDIOMIX_SAI7_MCLK                 0x1=
+F8 0x458 0x52C 0x3 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_MISO__CCMSRCGPCMIX_CLKO1                 0x1=
+F8 0x458 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__ECSPI2_SS0                          0x1=
+FC 0x45C 0x574 0x0 0x1
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__UART4_DCE_RTS                       0x1=
+FC 0x45C 0x5FC 0x1 0x3
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__UART4_DTE_CTS                       0x1=
+FC 0x45C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__I2C4_SDA                            0x1=
+FC 0x45C 0x5C0 0x2 0x4
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__CCMSRCGPCMIX_CLKO2                  0x1=
+FC 0x45C 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__GPIO5_IO13                          0x1=
+FC 0x45C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_ECSPI2_SS0__TPSMP_HDATA15                       0x1=
+FC 0x45C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL                              0x2=
+00 0x460 0x5A4 0x0 0x2
+> +#define MX8MP_IOMUXC_I2C1_SCL__ENET_QOS_MDC                          0x2=
+00 0x460 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C1_SCL__ECSPI1_SCLK                           0x2=
+00 0x460 0x558 0x3 0x1
+> +#define MX8MP_IOMUXC_I2C1_SCL__GPIO5_IO14                            0x2=
+00 0x460 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C1_SCL__TPSMP_HDATA16                         0x2=
+00 0x460 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C1_SDA__I2C1_SDA                              0x2=
+04 0x464 0x5A8 0x0 0x2
+> +#define MX8MP_IOMUXC_I2C1_SDA__ENET_QOS_MDIO                         0x2=
+04 0x464 0x590 0x1 0x2
+> +#define MX8MP_IOMUXC_I2C1_SDA__ECSPI1_MOSI                           0x2=
+04 0x464 0x560 0x3 0x1
+> +#define MX8MP_IOMUXC_I2C1_SDA__GPIO5_IO15                            0x2=
+04 0x464 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C1_SDA__TPSMP_HDATA17                         0x2=
+04 0x464 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL                              0x2=
+08 0x468 0x5AC 0x0 0x2
+> +#define MX8MP_IOMUXC_I2C2_SCL__ENET_QOS_1588_EVENT1_IN               0x2=
+08 0x468 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C2_SCL__USDHC3_CD_B                           0x2=
+08 0x468 0x608 0x2 0x3
+> +#define MX8MP_IOMUXC_I2C2_SCL__ECSPI1_MISO                           0x2=
+08 0x468 0x55C 0x3 0x1
+> +#define MX8MP_IOMUXC_I2C2_SCL__ENET_QOS_1588_EVENT1_AUX_IN           0x2=
+08 0x468 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_I2C2_SCL__GPIO5_IO16                            0x2=
+08 0x468 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C2_SCL__TPSMP_HDATA18                         0x2=
+08 0x468 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C2_SDA__I2C2_SDA                              0x2=
+0C 0x46C 0x5B0 0x0 0x2
+> +#define MX8MP_IOMUXC_I2C2_SDA__ENET_QOS_1588_EVENT1_OUT              0x2=
+0C 0x46C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C2_SDA__USDHC3_WP                             0x2=
+0C 0x46C 0x634 0x2 0x3
+> +#define MX8MP_IOMUXC_I2C2_SDA__ECSPI1_SS0                            0x2=
+0C 0x46C 0x564 0x3 0x1
+> +#define MX8MP_IOMUXC_I2C2_SDA__GPIO5_IO17                            0x2=
+0C 0x46C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C2_SDA__TPSMP_HDATA19                         0x2=
+0C 0x46C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C3_SCL__I2C3_SCL                              0x2=
+10 0x470 0x5B4 0x0 0x4
+> +#define MX8MP_IOMUXC_I2C3_SCL__PWM4_OUT                              0x2=
+10 0x470 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C3_SCL__GPT2_CLK                              0x2=
+10 0x470 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_I2C3_SCL__ECSPI2_SCLK                           0x2=
+10 0x470 0x568 0x3 0x2
+> +#define MX8MP_IOMUXC_I2C3_SCL__GPIO5_IO18                            0x2=
+10 0x470 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C3_SCL__TPSMP_HDATA20                         0x2=
+10 0x470 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C3_SDA__I2C3_SDA                              0x2=
+14 0x474 0x5B8 0x0 0x4
+> +#define MX8MP_IOMUXC_I2C3_SDA__PWM3_OUT                              0x2=
+14 0x474 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C3_SDA__GPT3_CLK                              0x2=
+14 0x474 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_I2C3_SDA__ECSPI2_MOSI                           0x2=
+14 0x474 0x570 0x3 0x2
+> +#define MX8MP_IOMUXC_I2C3_SDA__GPIO5_IO19                            0x2=
+14 0x474 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C3_SDA__TPSMP_HDATA21                         0x2=
+14 0x474 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C4_SCL__I2C4_SCL                              0x2=
+18 0x478 0x5BC 0x0 0x5
+> +#define MX8MP_IOMUXC_I2C4_SCL__PWM2_OUT                              0x2=
+18 0x478 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C4_SCL__HSIOMIX_PCIE_CLKREQ_B                 0x2=
+18 0x478 0x5A0 0x2 0x0
+> +#define MX8MP_IOMUXC_I2C4_SCL__ECSPI2_MISO                           0x2=
+18 0x478 0x56C 0x3 0x2
+> +#define MX8MP_IOMUXC_I2C4_SCL__GPIO5_IO20                            0x2=
+18 0x478 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C4_SCL__TPSMP_HDATA22                         0x2=
+18 0x478 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_I2C4_SDA__I2C4_SDA                              0x2=
+1C 0x47C 0x5C0 0x0 0x5
+> +#define MX8MP_IOMUXC_I2C4_SDA__PWM1_OUT                              0x2=
+1C 0x47C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_I2C4_SDA__ECSPI2_SS0                            0x2=
+1C 0x47C 0x574 0x3 0x2
+> +#define MX8MP_IOMUXC_I2C4_SDA__GPIO5_IO21                            0x2=
+1C 0x47C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_I2C4_SDA__TPSMP_HDATA23                         0x2=
+1C 0x47C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART1_RXD__UART1_DCE_RX                         0x2=
+20 0x480 0x5E8 0x0 0x4
+> +#define MX8MP_IOMUXC_UART1_RXD__UART1_DTE_TX                         0x2=
+20 0x480 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART1_RXD__ECSPI3_SCLK                          0x2=
+20 0x480 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART1_RXD__GPIO5_IO22                           0x2=
+20 0x480 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART1_RXD__TPSMP_HDATA24                        0x2=
+20 0x480 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART1_TXD__UART1_DCE_TX                         0x2=
+24 0x484 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART1_TXD__UART1_DTE_RX                         0x2=
+24 0x484 0x5E8 0x0 0x5
+> +#define MX8MP_IOMUXC_UART1_TXD__ECSPI3_MOSI                          0x2=
+24 0x484 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART1_TXD__GPIO5_IO23                           0x2=
+24 0x484 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART1_TXD__TPSMP_HDATA25                        0x2=
+24 0x484 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX                         0x2=
+28 0x488 0x5F0 0x0 0x6
+> +#define MX8MP_IOMUXC_UART2_RXD__UART2_DTE_TX                         0x2=
+28 0x488 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART2_RXD__ECSPI3_MISO                          0x2=
+28 0x488 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART2_RXD__GPT1_COMPARE3                        0x2=
+28 0x488 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_UART2_RXD__GPIO5_IO24                           0x2=
+28 0x488 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART2_RXD__TPSMP_HDATA26                        0x2=
+28 0x488 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX                         0x2=
+2C 0x48C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART2_TXD__UART2_DTE_RX                         0x2=
+2C 0x48C 0x5F0 0x0 0x7
+> +#define MX8MP_IOMUXC_UART2_TXD__ECSPI3_SS0                           0x2=
+2C 0x48C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART2_TXD__GPT1_COMPARE2                        0x2=
+2C 0x48C 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_UART2_TXD__GPIO5_IO25                           0x2=
+2C 0x48C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART2_TXD__TPSMP_HDATA27                        0x2=
+2C 0x48C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__UART3_DCE_RX                         0x2=
+30 0x490 0x5F8 0x0 0x6
+> +#define MX8MP_IOMUXC_UART3_RXD__UART3_DTE_TX                         0x2=
+30 0x490 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__UART1_DCE_CTS                        0x2=
+30 0x490 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__UART1_DTE_RTS                        0x2=
+30 0x490 0x5E4 0x1 0x4
+> +#define MX8MP_IOMUXC_UART3_RXD__USDHC3_RESET_B                       0x2=
+30 0x490 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__GPT1_CAPTURE2                        0x2=
+30 0x490 0x598 0x3 0x1
+> +#define MX8MP_IOMUXC_UART3_RXD__CAN2_TX                              0x2=
+30 0x490 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__GPIO5_IO26                           0x2=
+30 0x490 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART3_RXD__TPSMP_HDATA28                        0x2=
+30 0x490 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART3_TXD__UART3_DCE_TX                         0x2=
+34 0x494 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART3_TXD__UART3_DTE_RX                         0x2=
+34 0x494 0x5F8 0x0 0x7
+> +#define MX8MP_IOMUXC_UART3_TXD__UART1_DCE_RTS                        0x2=
+34 0x494 0x5E4 0x1 0x5
+> +#define MX8MP_IOMUXC_UART3_TXD__UART1_DTE_CTS                        0x2=
+34 0x494 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART3_TXD__USDHC3_VSELECT                       0x2=
+34 0x494 0x000 0x2 0x0
+> +#define MX8MP_IOMUXC_UART3_TXD__GPT1_CLK                             0x2=
+34 0x494 0x59C 0x3 0x1
+> +#define MX8MP_IOMUXC_UART3_TXD__CAN2_RX                              0x2=
+34 0x494 0x550 0x4 0x2
+> +#define MX8MP_IOMUXC_UART3_TXD__GPIO5_IO27                           0x2=
+34 0x494 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART3_TXD__TPSMP_HDATA29                        0x2=
+34 0x494 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART4_RXD__UART4_DCE_RX                         0x2=
+38 0x498 0x600 0x0 0x8
+> +#define MX8MP_IOMUXC_UART4_RXD__UART4_DTE_TX                         0x2=
+38 0x498 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART4_RXD__UART2_DCE_CTS                        0x2=
+38 0x498 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART4_RXD__UART2_DTE_RTS                        0x2=
+38 0x498 0x5EC 0x1 0x4
+> +#define MX8MP_IOMUXC_UART4_RXD__HSIOMIX_PCIE_CLKREQ_B                0x2=
+38 0x498 0x5A0 0x2 0x1
+> +#define MX8MP_IOMUXC_UART4_RXD__GPT1_COMPARE1                        0x2=
+38 0x498 0x000 0x3 0x0
+> +#define MX8MP_IOMUXC_UART4_RXD__I2C6_SCL                             0x2=
+38 0x498 0x5CC 0x4 0x2
+> +#define MX8MP_IOMUXC_UART4_RXD__GPIO5_IO28                           0x2=
+38 0x498 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART4_RXD__TPSMP_HDATA30                        0x2=
+38 0x498 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_UART4_TXD__UART4_DCE_TX                         0x2=
+3C 0x49C 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_UART4_TXD__UART4_DTE_RX                         0x2=
+3C 0x49C 0x600 0x0 0x9
+> +#define MX8MP_IOMUXC_UART4_TXD__UART2_DCE_RTS                        0x2=
+3C 0x49C 0x5EC 0x1 0x5
+> +#define MX8MP_IOMUXC_UART4_TXD__UART2_DTE_CTS                        0x2=
+3C 0x49C 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_UART4_TXD__GPT1_CAPTURE1                        0x2=
+3C 0x49C 0x594 0x3 0x1
+> +#define MX8MP_IOMUXC_UART4_TXD__I2C6_SDA                             0x2=
+3C 0x49C 0x5D0 0x4 0x2
+> +#define MX8MP_IOMUXC_UART4_TXD__GPIO5_IO29                           0x2=
+3C 0x49C 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_UART4_TXD__TPSMP_HDATA31                        0x2=
+3C 0x49C 0x000 0x7 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SCL__HDMIMIX_EARC_SCL                  0x2=
+40 0x4A0 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SCL__I2C5_SCL                          0x2=
+40 0x4A0 0x5C4 0x3 0x3
+> +#define MX8MP_IOMUXC_HDMI_DDC_SCL__CAN1_TX                           0x2=
+40 0x4A0 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SCL__GPIO3_IO26                        0x2=
+40 0x4A0 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SCL__AUDIOMIX_test_out00               0x2=
+40 0x4A0 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SDA__HDMIMIX_EARC_SDA                  0x2=
+44 0x4A4 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SDA__I2C5_SDA                          0x2=
+44 0x4A4 0x5C8 0x3 0x3
+> +#define MX8MP_IOMUXC_HDMI_DDC_SDA__CAN1_RX                           0x2=
+44 0x4A4 0x54C 0x4 0x3
+> +#define MX8MP_IOMUXC_HDMI_DDC_SDA__GPIO3_IO27                        0x2=
+44 0x4A4 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_HDMI_DDC_SDA__AUDIOMIX_test_out01               0x2=
+44 0x4A4 0x000 0x6 0x0
+> +#define MX8MP_IOMUXC_HDMI_CEC__HDMIMIX_EARC_CEC                      0x2=
+48 0x4A8 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_HDMI_CEC__I2C6_SCL                              0x2=
+48 0x4A8 0x5CC 0x3 0x3
+> +#define MX8MP_IOMUXC_HDMI_CEC__CAN2_TX                               0x2=
+48 0x4A8 0x000 0x4 0x0
+> +#define MX8MP_IOMUXC_HDMI_CEC__GPIO3_IO28                            0x2=
+48 0x4A8 0x000 0x5 0x0
+> +#define MX8MP_IOMUXC_HDMI_HPD__HDMIMIX_EARC_DC_HPD                   0x2=
+4C 0x4AC 0x000 0x0 0x0
+> +#define MX8MP_IOMUXC_HDMI_HPD__AUDIOMIX_EARC_HDMI_HPD_O              0x2=
+4C 0x4AC 0x000 0x1 0x0
+> +#define MX8MP_IOMUXC_HDMI_HPD__I2C6_SDA                              0x2=
+4C 0x4AC 0x5D0 0x3 0x3
+> +#define MX8MP_IOMUXC_HDMI_HPD__CAN2_RX                               0x2=
+4C 0x4AC 0x550 0x4 0x3
+> +#define MX8MP_IOMUXC_HDMI_HPD__GPIO3_IO29                            0x2=
+4C 0x4AC 0x000 0x5 0x0
+> +
+> +#endif /* __DTS_IMX8MP_PINFUNC_H */
+> --=20
+> 2.7.4
+>=20
