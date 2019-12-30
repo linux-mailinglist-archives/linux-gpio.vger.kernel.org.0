@@ -2,113 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 558AB12CEAE
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2019 11:20:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A88E112D04A
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Dec 2019 14:31:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfL3KUZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Dec 2019 05:20:25 -0500
-Received: from mga05.intel.com ([192.55.52.43]:5937 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfL3KUZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 30 Dec 2019 05:20:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Dec 2019 02:20:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,374,1571727600"; 
-   d="scan'208";a="224203949"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 30 Dec 2019 02:20:21 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 30 Dec 2019 12:20:21 +0200
-Date:   Mon, 30 Dec 2019 12:20:21 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20191230102021.GF2628@lahna.fi.intel.com>
-References: <20191229013059.495767-1-linus.walleij@linaro.org>
+        id S1727397AbfL3Nbe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Dec 2019 08:31:34 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:38472 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727454AbfL3Nbe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Dec 2019 08:31:34 -0500
+Received: by mail-vk1-f193.google.com with SMTP id d17so8284475vke.5
+        for <linux-gpio@vger.kernel.org>; Mon, 30 Dec 2019 05:31:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oNV29BbOxXflnyWwf2B0CxiU+GnStWQ9JexGoMU2XlI=;
+        b=Qr8gscKlr0x3QNw5/UG6H6605ovPfe83GBn13tR7j85Yiotg6vbGAc1/tYVxW65w0L
+         3xl6SGCq8hQeq6d7jVn4qp1kIrjC8SkkiXZFfcbKzWAaWEjzfo8yGnqrEnJcJYiM+y+i
+         us4nfaGrq0lxpSiObbP+DPDDLtAUNSsUJn09U15Fci3PnTJR8ci02QxipCMwiT6GjX2N
+         i3xkh3nQXNM9sVBkVc3H52Gu+FjKxaWE7ZoeNrANH8TMk4JCUjzVVyXtS0xbalYg9luG
+         iQSHCzMwwHJNQORoT1anC7Mi3ybsVxNdecXs2n2wNnLcwqOqx9nfJoj9YAbKGj/k7rsm
+         gY2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oNV29BbOxXflnyWwf2B0CxiU+GnStWQ9JexGoMU2XlI=;
+        b=o87M8/40iIORwEhrN5Q+mJbdXYtkndtKUbHKMUgdOc8sKPGQB6tVeST3e2CmpCDaiw
+         FuUIpJzWhQro2edadBmOEZbgKrhDzlDlnD80J00gk1bG/kKR/sSqu7+QW9GDo8LKNhJ8
+         l4YjOFausYNiGW5EOZPoSe9D86kavku8aNhJL0rHh9r261lubESrESbAGC6fGAq0umVq
+         k1K6zNiBahcKd0RoI+bfBfdl6tSgXtwPruQWHmeuxxQiFx6qTWupwGutcYbijtoN1gLE
+         5U3TJ+W7OfJokoREk67SqQscjiLF5mIC1yjjW0am+ZJJE8iGk5jhBhMSIiRhCrQK7VQ9
+         RWfQ==
+X-Gm-Message-State: APjAAAUjbzS53l9cv9m4d7JLDfWGK7iQd5hQD6wALp/POoocKAoFL17B
+        eTseFiNF5uGEneW0Zlox/GpouSpBqrMbTciaBb39sg==
+X-Google-Smtp-Source: APXvYqxFag2CvxhfF9l68e0E6H1HTPVbDP+2WETnXmzv5qTwFtUcF8TJWRh54oESNBk460c12mL7WeiqbGkL+w36S/8=
+X-Received: by 2002:a05:6122:1065:: with SMTP id k5mr38200538vko.14.1577712693691;
+ Mon, 30 Dec 2019 05:31:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229013059.495767-1-linus.walleij@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191216205122.1850923-1-hdegoede@redhat.com> <20191216205122.1850923-2-hdegoede@redhat.com>
+In-Reply-To: <20191216205122.1850923-2-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 30 Dec 2019 14:31:22 +0100
+Message-ID: <CACRpkdaXFSJVkWJGzsVcvbUA9gpgP0Vbkwf1H-HWw8s35R9XYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: Allow modules to use pinctrl_[un]register_mappings
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> We need to convert all old gpio irqchips to pass the irqchip
-> setup along when adding the gpio_chip. For more info see
-> drivers/gpio/TODO.
-> 
-> Set up the pin ranges using the new callback.
+On Mon, Dec 16, 2019 at 9:51 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-Maybe have this one split as a separate patch? Same what we do for
-Baytrail and Cherryview.
+> Currently only the drivers/pinctrl/devicetree.c code allows registering
+> pinctrl-mappings which may later be unregistered, all other mappings
+> are assumed to be permanent.
+>
+> Non-dt platforms may also want to register pinctrl mappings from code which
+> is build as a module, which requires being able to unregister the mapping
+> when the module is unloaded to avoid dangling pointers.
+>
+> To allow unregistering the mappings the devicetree code uses 2 internal
+> functions: pinctrl_register_map and pinctrl_unregister_map.
+>
+> pinctrl_register_map allows the devicetree code to tell the core to
+> not memdup the mappings as it retains ownership of them and
+> pinctrl_unregister_map does the unregistering, note this only works
+> when the mappings where not memdupped.
+>
+> The only code relying on the memdup/shallow-copy done by
+> pinctrl_register_mappings is arch/arm/mach-u300/core.c this commit
+> replaces the __initdata with const, so that the shallow-copy is no
+> longer necessary.
+>
+> After that we can get rid of the internal pinctrl_unregister_map function
+> and just use pinctrl_register_mappings directly everywhere.
+>
+> This commit also renames pinctrl_unregister_map to
+> pinctrl_unregister_mappings so that its naming matches its
+> pinctrl_register_mappings counter-part and exports it.
+>
+> Together these 2 changes will allow non-dt platform code to
+> register pinctrl-mappings from modules without breaking things on
+> module unload (as they can now unregister the mapping on unload).
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/intel/pinctrl-intel.c | 61 +++++++++++++++------------
->  1 file changed, 35 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-> index 4860bc9a4e48..ffacd77861f7 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -1160,8 +1160,8 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
->  	return ret;
->  }
->  
-> -static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
-> -				     const struct intel_community *community)
-> +static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
-> +				const struct intel_community *community)
->  {
->  	int ret = 0, i;
->  
-> @@ -1181,6 +1181,24 @@ static int intel_gpio_add_pin_ranges(struct intel_pinctrl *pctrl,
->  	return ret;
->  }
->  
-> +static int intel_gpio_add_pin_ranges(struct gpio_chip *gc)
-> +{
-> +	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
-> +	int ret, i;
-> +
-> +	for (i = 0; i < pctrl->ncommunities; i++) {
-> +		struct intel_community *community = &pctrl->communities[i];
-> +
-> +		ret = intel_gpio_add_community_ranges(pctrl, community);
-> +		if (ret) {
-> +			dev_err(pctrl->dev, "failed to add GPIO pin range\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
->  {
->  	const struct intel_community *community;
-> @@ -1205,7 +1223,8 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
->  
->  static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
->  {
-> -	int ret, i;
-> +	int ret;
-> +	struct gpio_irq_chip *girq;
+This v2 works fine for me, I applied it to this immutable branch in the
+pinctrl tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-pinctrl-unreg-mappings
 
-Nit:
+And pulled that into the pinctrl "devel" branch for v5.6.
 
-Can you order these in "reverse christmas tree" like,
+Please pull this immutable branch into the Intel DRM tree and apply
+the rest of the stuff on top!
 
-	struct gpio_irq_chip *girq;
-	int ret;
-
-Otherwise looks good to me, thanks!
+Yours,
+Linus Walleij
