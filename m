@@ -2,137 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D292312D926
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2019 14:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6486012DA5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Dec 2019 17:32:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLaNmC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Dec 2019 08:42:02 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:3222 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726229AbfLaNmB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Dec 2019 08:42:01 -0500
-X-UUID: 5c1b16cc26e54592b41cf2855c0e0db4-20191231
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=z3pZFT+6t8ylWCp7AMGBvI067vp4npjbNdsiLxU09zM=;
-        b=SuPrK7A2wsSKEWknPVXkflkhacOSI812EAZI2Kh6yIHY+5xTpgeK1eUTUUgYrz9PA2Lcem1yvryAcst20y2Ndc4zPOwe/I1mniO/JhUfO0Zv2oE689ulPiS5AB7CKLzKeozMCGrkvEyVTlugDsR08a4vvSRZGE51Qw3ogCAaImM=;
-X-UUID: 5c1b16cc26e54592b41cf2855c0e0db4-20191231
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1506906342; Tue, 31 Dec 2019 21:41:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 31 Dec 2019 21:41:05 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 31 Dec 2019 21:41:17 +0800
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v7 6/6] Add support for pin configuration dump via debugfs.
-Date:   Tue, 31 Dec 2019 21:41:47 +0800
-Message-ID: <1577799707-11855-6-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
-References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
+        id S1727093AbfLaQcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Dec 2019 11:32:01 -0500
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:51837 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfLaQcB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Dec 2019 11:32:01 -0500
+Received: by mail-wm1-f46.google.com with SMTP id d73so2201234wmd.1
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Dec 2019 08:32:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=1oqQs1hQRY6bMa26iWvxFMOYHCoSORFw3rmCMTg30gY=;
+        b=ipaxJaQQHYqTyKIMQgpbHdVuG2S4ZSUgDkUPk4uyOFinZBD84dAN3JFHq/RLCuocnp
+         dBGmTs67iDIGz/PAUub1cyVPKoTEXDXXqiFU12jnownX8DSkWmzY07jiiRQVsWcA4MXT
+         ZxCM21TUvYLPwop/skBScyaOftmqoy+Wtrn39g6GnJZtA+YagpdlIqqLUVGBS6EzjUbi
+         0SoDpVigrgRBTEJu869DcPwU0rq5wlbrZ4HaLgiu2FmjwKtY0FSqCi9rsK0QUKBDXiFB
+         h2fKbVrOKNws2q1EJQsreowMqG/o+ES26aWpMhby0nlHMim9+p66BqNUzxU793IlQsGS
+         HW2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=1oqQs1hQRY6bMa26iWvxFMOYHCoSORFw3rmCMTg30gY=;
+        b=T4kxmivroIiBH8QUIPGXRLD38RCz4vyYAXxpQGEqjtLq0RTy7fcsZEiMs4T1awu8zx
+         YlpW6ohfn8qQX44gV5tA1rKXSGwmehXLRClDZ8xISKXkGWspaZpnUkWvDvKQGkdIJ3H6
+         cD+Zd6fEeuCrkhAZ6sGyEzBp47JS8WHTwBzh2kWnfwcoZbkXfRpm4xcBohMyc0hsqNT+
+         W8HfKLskNVfbjlygyXQzFfG8MZoI0Qd/QLc8+GXWiJhH4z4b22d18H5qN49vTm9yj+85
+         VeJxgVdGezdPz6kEv/V2xY2OQyGjXsCAgQT7uxay7RjnkvPB4iTPPZ0zip+5BMZpEhr8
+         N/zg==
+X-Gm-Message-State: APjAAAXiDHBS8UXjn3sZQBjcj6R34nGJmIb5a1E9DJzZzN2JPAMqDtcy
+        dvmhQ5TiWhEI6VViaaaPJ6SBcvv4YSOlgA==
+X-Google-Smtp-Source: APXvYqz2tgRqYWiWhDL7oBwBhrkiwh6hzn/WXkI3AKTAwOOlrn+C8O7rli5pFMRownbwnyB/VDepoA==
+X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr4861865wmj.177.1577809919187;
+        Tue, 31 Dec 2019 08:31:59 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id f127sm2967814wma.4.2019.12.31.08.31.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 08:31:58 -0800 (PST)
+Message-ID: <5e0b77fe.1c69fb81.8ae8.d6f4@mx.google.com>
+Date:   Tue, 31 Dec 2019 08:31:58 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 32219F344A537A986D604800AECCF3AE49384A06C2C055A05C0A4F98DFB81C412000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.5-rc4
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: fixes
+Subject: linusw/fixes build: 5 builds: 0 failed, 5 passed, 1 warning (v5.5-rc4)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIHBpbiBjb25maWd1cmF0aW9uIGR1bXAgdmlhIGNhdHRpbmcNCi9zeXMv
-a2VybmVsL2RlYnVnL3BpbmN0cmwvJHBsYXRmb3JtX2RlcGVuZGVudF9wYXRoL3BpbmNvbmYtcGlu
-cy4NCnBpbmN0cmwgZnJhbWV3b3JrIGhhZCBhbHJlYWR5IHN1cHBvcnQgc3VjaCBkdW1wLiBUaGlz
-IHBhdGNoIGltcGxlbWVudCB0aGUNCm9wZXJhdGlvbiBmdW5jdGlvbiBwb2ludGVyIHRvIGZ1bGxm
-aWxsIHRoaXMgZHVtcC4NCg0KQ2hhbmdlLUlkOiBJODIzNjQyNTYxYWRhZWRiODQ3ZTc3ZjlhOGJh
-ZWExODI5MTNkNjE2Mw0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFy
-aXMuYyB8IDEwOSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuaCB8ICAgMyArDQogMiBmaWxlcyBjaGFuZ2VkLCAx
-MTIgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVr
-L3BpbmN0cmwtcGFyaXMuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlz
-LmMNCmluZGV4IDExNWViYzEuLjgzYmYyOWMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwv
-bWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-cGluY3RybC1wYXJpcy5jDQpAQCAtNTM5LDEyICs1MzksMTIwIEBAIHN0YXRpYyBpbnQgbXRrX3Bj
-dHJsX2dldF9ncm91cF9waW5zKHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCiAJcmV0dXJu
-IDA7DQogfQ0KIA0KK3N0YXRpYyBpbnQgbXRrX2h3X2dldF92YWx1ZV93cmFwKHN0cnVjdCBtdGtf
-cGluY3RybCAqaHcsIHVuc2lnbmVkIGludCBncGlvLCBpbnQgZmllbGQpDQorew0KKwljb25zdCBz
-dHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjOw0KKwlpbnQgdmFsdWUsIGVycjsNCisNCisJaWYgKGdw
-aW8gPiBody0+c29jLT5ucGlucykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlkZXNjID0gKGNv
-bnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvXTsNCisNCisJZXJy
-ID0gbXRrX2h3X2dldF92YWx1ZShodywgZGVzYywgZmllbGQsICZ2YWx1ZSk7DQorCWlmIChlcnIp
-DQorCQlyZXR1cm4gZXJyOw0KKw0KKwlyZXR1cm4gdmFsdWU7DQorfQ0KKw0KKyNkZWZpbmUgbXRr
-X3BjdHJsX2dldF9waW5tdXgoaHcsIGdwaW8pCQkJXA0KKwltdGtfaHdfZ2V0X3ZhbHVlX3dyYXAo
-aHcsIGdwaW8sIFBJTkNUUkxfUElOX1JFR19NT0RFKQ0KKw0KKyNkZWZpbmUgbXRrX3BjdHJsX2dl
-dF9kaXJlY3Rpb24oaHcsIGdwaW8pCQlcDQorCW10a19od19nZXRfdmFsdWVfd3JhcChodywgZ3Bp
-bywgUElOQ1RSTF9QSU5fUkVHX0RJUikNCisNCisjZGVmaW5lIG10a19wY3RybF9nZXRfb3V0KGh3
-LCBncGlvKQkJCVwNCisJbXRrX2h3X2dldF92YWx1ZV93cmFwKGh3LCBncGlvLCBQSU5DVFJMX1BJ
-Tl9SRUdfRE8pDQorDQorI2RlZmluZSBtdGtfcGN0cmxfZ2V0X2luKGh3LCBncGlvKQkJCVwNCisJ
-bXRrX2h3X2dldF92YWx1ZV93cmFwKGh3LCBncGlvLCBQSU5DVFJMX1BJTl9SRUdfREkpDQorDQor
-I2RlZmluZSBtdGtfcGN0cmxfZ2V0X3NtdChodywgZ3BpbykJCQlcDQorCW10a19od19nZXRfdmFs
-dWVfd3JhcChodywgZ3BpbywgUElOQ1RSTF9QSU5fUkVHX1NNVCkNCisNCisjZGVmaW5lIG10a19w
-Y3RybF9nZXRfaWVzKGh3LCBncGlvKQkJCVwNCisJbXRrX2h3X2dldF92YWx1ZV93cmFwKGh3LCBn
-cGlvLCBQSU5DVFJMX1BJTl9SRUdfSUVTKQ0KKw0KKyNkZWZpbmUgbXRrX3BjdHJsX2dldF9kcml2
-aW5nKGh3LCBncGlvKQkJCVwNCisJbXRrX2h3X2dldF92YWx1ZV93cmFwKGh3LCBncGlvLCBQSU5D
-VFJMX1BJTl9SRUdfRFJWKQ0KKw0KK3NzaXplX3QgbXRrX3BjdHJsX3Nob3dfb25lX3BpbihzdHJ1
-Y3QgbXRrX3BpbmN0cmwgKmh3LA0KKwl1bnNpZ25lZCBpbnQgZ3BpbywgY2hhciAqYnVmLCB1bnNp
-Z25lZCBpbnQgYnVmTGVuKQ0KK3sNCisJaW50IHBpbm11eCwgcHVsbHVwLCBwdWxsZW4sIGxlbiA9
-IDAsIHIxID0gLTEsIHIwID0gLTE7DQorCWNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2M7
-DQorDQorCWlmIChncGlvID4gaHctPnNvYy0+bnBpbnMpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisN
-CisJZGVzYyA9IChjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICopJmh3LT5zb2MtPnBpbnNbZ3Bp
-b107DQorCXBpbm11eCA9IG10a19wY3RybF9nZXRfcGlubXV4KGh3LCBncGlvKTsNCisJaWYgKHBp
-bm11eCA+PSBody0+c29jLT5uZnVuY3MpDQorCQlwaW5tdXggLT0gaHctPnNvYy0+bmZ1bmNzOw0K
-Kw0KKwltdGtfcGluY29uZl9iaWFzX2dldF9jb21ibyhodywgZGVzYywgJnB1bGx1cCwgJnB1bGxl
-bik7DQorCWlmIChwdWxsZW4gPT0gTVRLX1BVUERfU0VUX1IxUjBfMDApIHsNCisJCXB1bGxlbiA9
-IDA7DQorCQlyMSA9IDA7DQorCQlyMCA9IDA7DQorCX0gZWxzZSBpZiAocHVsbGVuID09IE1US19Q
-VVBEX1NFVF9SMVIwXzAxKSB7DQorCQlwdWxsZW4gPSAxOw0KKwkJcjEgPSAwOw0KKwkJcjAgPSAx
-Ow0KKwl9IGVsc2UgaWYgKHB1bGxlbiA9PSBNVEtfUFVQRF9TRVRfUjFSMF8xMCkgew0KKwkJcHVs
-bGVuID0gMTsNCisJCXIxID0gMTsNCisJCXIwID0gMDsNCisJfSBlbHNlIGlmIChwdWxsZW4gPT0g
-TVRLX1BVUERfU0VUX1IxUjBfMTEpIHsNCisJCXB1bGxlbiA9IDE7DQorCQlyMSA9IDE7DQorCQly
-MCA9IDE7DQorCX0gZWxzZSBpZiAocHVsbGVuICE9IE1US19ESVNBQkxFICYmIHB1bGxlbiAhPSBN
-VEtfRU5BQkxFKSB7DQorCQlwdWxsZW4gPSAwOw0KKwl9DQorCWxlbiArPSBzbnByaW50ZihidWYg
-KyBsZW4sIGJ1ZkxlbiAtIGxlbiwNCisJCQkiJTAzZDogJTFkJTFkJTFkJTFkJTAyZCUxZCUxZCUx
-ZCUxZCIsDQorCQkJZ3BpbywNCisJCQlwaW5tdXgsDQorCQkJbXRrX3BjdHJsX2dldF9kaXJlY3Rp
-b24oaHcsIGdwaW8pLA0KKwkJCW10a19wY3RybF9nZXRfb3V0KGh3LCBncGlvKSwNCisJCQltdGtf
-cGN0cmxfZ2V0X2luKGh3LCBncGlvKSwNCisJCQltdGtfcGN0cmxfZ2V0X2RyaXZpbmcoaHcsIGdw
-aW8pLA0KKwkJCW10a19wY3RybF9nZXRfc210KGh3LCBncGlvKSwNCisJCQltdGtfcGN0cmxfZ2V0
-X2llcyhodywgZ3BpbyksDQorCQkJcHVsbGVuLA0KKwkJCXB1bGx1cCk7DQorDQorCWlmIChyMSAh
-PSAtMSkgew0KKwkJbGVuICs9IHNucHJpbnRmKGJ1ZiArIGxlbiwgYnVmTGVuIC0gbGVuLCAiICgl
-MWQgJTFkKVxuIiwNCisJCQlyMSwgcjApOw0KKwl9IGVsc2Ugew0KKwkJbGVuICs9IHNucHJpbnRm
-KGJ1ZiArIGxlbiwgYnVmTGVuIC0gbGVuLCAiXG4iKTsNCisJfQ0KKw0KKwlyZXR1cm4gbGVuOw0K
-K30NCisNCisjZGVmaW5lIFBJTl9EQkdfQlVGX1NaIDk2DQorc3RhdGljIHZvaWQgbXRrX3BjdHJs
-X2RiZ19zaG93KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgc3RydWN0IHNlcV9maWxlICpz
-LA0KKwkJCSAgdW5zaWduZWQgaW50IGdwaW8pDQorew0KKwlzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3
-ID0gcGluY3RybF9kZXZfZ2V0X2RydmRhdGEocGN0bGRldik7DQorCWNoYXIgYnVmW1BJTl9EQkdf
-QlVGX1NaXTsNCisNCisJKHZvaWQpbXRrX3BjdHJsX3Nob3dfb25lX3BpbihodywgZ3BpbywgYnVm
-LCBQSU5fREJHX0JVRl9TWik7DQorDQorCXNlcV9wcmludGYocywgIiVzIiwgYnVmKTsNCit9DQor
-DQogc3RhdGljIGNvbnN0IHN0cnVjdCBwaW5jdHJsX29wcyBtdGtfcGN0bG9wcyA9IHsNCiAJLmR0
-X25vZGVfdG9fbWFwCQk9IG10a19wY3RybF9kdF9ub2RlX3RvX21hcCwNCiAJLmR0X2ZyZWVfbWFw
-CQk9IHBpbmN0cmxfdXRpbHNfZnJlZV9tYXAsDQogCS5nZXRfZ3JvdXBzX2NvdW50CT0gbXRrX3Bj
-dHJsX2dldF9ncm91cHNfY291bnQsDQogCS5nZXRfZ3JvdXBfbmFtZQkJPSBtdGtfcGN0cmxfZ2V0
-X2dyb3VwX25hbWUsDQogCS5nZXRfZ3JvdXBfcGlucwkJPSBtdGtfcGN0cmxfZ2V0X2dyb3VwX3Bp
-bnMsDQorCS5waW5fZGJnX3Nob3cgICAgICAgICAgID0gbXRrX3BjdHJsX2RiZ19zaG93LA0KIH07
-DQogDQogc3RhdGljIGludCBtdGtfcG14X2dldF9mdW5jc19jbnQoc3RydWN0IHBpbmN0cmxfZGV2
-ICpwY3RsZGV2KQ0KQEAgLTY0MSw2ICs3NDksNyBAQCBzdGF0aWMgaW50IG10a19wY29uZl9ncm91
-cF9zZXQoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LCB1bnNpZ25lZCBncm91cCwNCiAJLnBp
-bl9jb25maWdfZ2V0ID0gbXRrX3BpbmNvbmZfZ2V0LA0KIAkucGluX2NvbmZpZ19ncm91cF9nZXQJ
-PSBtdGtfcGNvbmZfZ3JvdXBfZ2V0LA0KIAkucGluX2NvbmZpZ19ncm91cF9zZXQJPSBtdGtfcGNv
-bmZfZ3JvdXBfc2V0LA0KKwkuaXNfZ2VuZXJpYyA9IHRydWUsDQogfTsNCiANCiBzdGF0aWMgc3Ry
-dWN0IHBpbmN0cmxfZGVzYyBtdGtfZGVzYyA9IHsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5oIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3Bp
-bmN0cmwtcGFyaXMuaA0KaW5kZXggM2Q0Mzc3MS4uYWZiNzY1MCAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmgNCisrKyBiL2RyaXZlcnMvcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmgNCkBAIC02MCw2ICs2MCw5IEBADQogaW50IG10a19w
-YXJpc19waW5jdHJsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQogCQkJICAg
-IGNvbnN0IHN0cnVjdCBtdGtfcGluX3NvYyAqc29jKTsNCiANCitzc2l6ZV90IG10a19wY3RybF9z
-aG93X29uZV9waW4oc3RydWN0IG10a19waW5jdHJsICpodywNCisJdW5zaWduZWQgaW50IGdwaW8s
-IGNoYXIgKmJ1ZiwgdW5zaWduZWQgaW50IGJ1Zkxlbik7DQorDQogZXh0ZXJuIGNvbnN0IHN0cnVj
-dCBkZXZfcG1fb3BzIG10a19wYXJpc19waW5jdHJsX3BtX29wczsNCiANCiAjZW5kaWYgLyogX19Q
-SU5DVFJMX1BBUklTX0ggKi8NCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+linusw/fixes build: 5 builds: 0 failed, 5 passed, 1 warning (v5.5-rc4)
 
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.5-rc4/
+
+Tree: linusw
+Branch: fixes
+Git Describe: v5.5-rc4
+Git Commit: fd6988496e79a6a4bdb514a4655d2920209eb85d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
+
+Warnings Detected:
+
+arm64:
+
+arm:
+
+mips:
+
+riscv:
+
+x86_64:
+    x86_64_defconfig (gcc-8): 1 warning
+
+
+Warnings summary:
+
+    1    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_=
+is_phy=E2=80=99 defined but not used [-Wunused-function]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sec=
+tion mismatches
+
+Warnings:
+    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_is_ph=
+y=E2=80=99 defined but not used [-Wunused-function]
+
+---
+For more info write to <info@kernelci.org>
