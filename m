@@ -2,109 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E07F712DF34
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jan 2020 15:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F03B12E066
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jan 2020 21:41:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgAAOwv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jan 2020 09:52:51 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59662 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726659AbgAAOwu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jan 2020 09:52:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1577890370;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+WIBYQKmfgWPDIKqBy8YnivVDbGmqODUzJykzABmCSA=;
-        b=fWSN2tT2p8QyzjBYuDj4bCBURdx21Lqm6zdvgyZi21mhzyI2LOj0+ZF/89LGUtyUjnE8PB
-        qY5hfXvZuFPcmzRGSNyPH6GECXDSm6F3DwkAQLoPc0e+VuM6yuMg5QL6ZL6ELopD6cLYqf
-        ysxv8mQxJsn4BCLYu9OcR277I3JvRYU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-_ZXRW92xMTSDI3SGT91b_Q-1; Wed, 01 Jan 2020 09:52:48 -0500
-X-MC-Unique: _ZXRW92xMTSDI3SGT91b_Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24D8B1005516;
-        Wed,  1 Jan 2020 14:52:47 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-55.ams2.redhat.com [10.36.116.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FF825C1B2;
-        Wed,  1 Jan 2020 14:52:44 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Mastykin <mastichi@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v3] pinctrl: baytrail: Replace WARN with dev_info_once when setting direct-irq pin to output
-Date:   Wed,  1 Jan 2020 15:52:43 +0100
-Message-Id: <20200101145243.15912-1-hdegoede@redhat.com>
+        id S1727265AbgAAUlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jan 2020 15:41:03 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33305 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgAAUlD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jan 2020 15:41:03 -0500
+Received: by mail-pl1-f196.google.com with SMTP id c13so17069434pls.0;
+        Wed, 01 Jan 2020 12:41:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x6s2wGBJpY7IwC8muBci3cdYeb7ZCd4x+NJXrfy+/w0=;
+        b=U0wWfO8Mnvu6j2ImmRM6oPgBDtFB/lxDQpQKLcihHbFiBil/IW5o3et25Hd9c16OTL
+         ki4IatTPzDJv+1lS3u742cOhJKUDkvdEOr3KZdXZwd3xBmPp+4IXK0ngABcxj2ahTQ7t
+         gf+sEkEDA4A0nvzSpUQq21sUCMXG9fZ+4rC+76gAN6vyvlE5LVTNcEkoxvGIZeHxBi6x
+         hMctrHvQS1yZDkOUo6p1BDZ6+TOXoMn4/KEMnJIhsxttlvd38xHZKz6C//k5wjo8SbrK
+         AfddODoDb5wsulkU1YH4sYMpZ7J7iIa/IFv9YNMTzCfjUuMOM/1VkRPnWeAPT+sfaIm7
+         CvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x6s2wGBJpY7IwC8muBci3cdYeb7ZCd4x+NJXrfy+/w0=;
+        b=n3SMVHEDcQzfWTx0bi/mFnJ8PBVclhaSuZ9UvIpefO4DYSRsTshx4Go4cO2cUDITWz
+         GCG3AtTzKRrKrB+upgU3agy1EZuXz7nfaInNr6I3sqE1lfgm/VRTzfVygizP7M+zo9n8
+         c2sTUhYH+yflCHI+x/si7vxrYoFtU0Z1Qb3lGMJ47EevIP4CZIwHxOeRrglVNN7T+Ep8
+         EBmw29ItrVkOSYLck0IYi3aVFFLxGFEb1DgxNzh61AKm54aJd2eiEcTsOqQLSzhp+p+D
+         9DybuGyTSyxnAxDwY0MNhIJO64xB6Tvl+or7VLjnjF55Sp6LP/2NKy2ora6Tarw+QQL5
+         tvcw==
+X-Gm-Message-State: APjAAAV/ZRF29PxsfoCQbYEzvzikveeJD8d7Z9cYjHJsuvSWEi8PkqnX
+        cnPnpsTN8ybB46QbTZKqhqRo+2rAkcg=
+X-Google-Smtp-Source: APXvYqxya1GkOO+wy+zHyqk7ZUt5UdoTTGaVoVD03dnjVqN9FvQOJ8CTj+9kTEgLJOW6mRAG5p7Ezw==
+X-Received: by 2002:a17:902:5a85:: with SMTP id r5mr82561148pli.222.1577911262811;
+        Wed, 01 Jan 2020 12:41:02 -0800 (PST)
+Received: from john-aspire.resnet.ucla.edu (s-149-142-223-238.resnet.ucla.edu. [149.142.223.238])
+        by smtp.gmail.com with ESMTPSA id n188sm57234743pga.84.2020.01.01.12.41.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 12:41:02 -0800 (PST)
+From:   Boyan Ding <boyan.j.ding@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Boyan Ding <boyan.j.ding@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] pinctrl: sunrisepoint: Add missing Interrupt Status register offset
+Date:   Wed,  1 Jan 2020 12:41:20 -0800
+Message-Id: <20200101204120.5873-1-boyan.j.ding@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Suspending Goodix touchscreens requires changing the interrupt pin to
-output before sending them a power-down command. Followed by wiggling
-the interrupt pin to wake the device up, after which it is put back
-in input mode.
+Commit 179e5a6114cc ("pinctrl: intel: Remove default Interrupt Status
+offset") removes default interrupt status offset of GPIO controllers, 
+with previous commits explicitly providing the previously default
+offsets. However, the is_offset value in SPTH_COMMUNITY is missing,
+preventing related irq from being properly detected and handled.
 
-On Cherry Trail device the interrupt pin is listed as a GpioInt ACPI
-resource so we can do this without problems as long as we release the
-irq before changing the pin to output mode.
-
-On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-in combination with listing the pin as a normal GpioIo resource. This
-works fine, but this triggers the WARN in byt_gpio_set_direction-s output
-path because direct-irq support is enabled on the pin.
-
-This commit replaces the WARN call with a dev_info_once call, fixing a
-bunch of WARN splats in dmesg on each suspend/resume cycle.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: f702e0b93cdb ("pinctrl: sunrisepoint: Provide Interrupt Status register offset")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205745
+Cc: stable@vger.kernel.org
+Signed-off-by: Boyan Ding <boyan.j.ding@gmail.com>
 ---
-Changes in v3:
-- Replace WARN with a dev_info_once call, instead of dropping it
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-- Drop now unused conf_ref local variable
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/i=
-ntel/pinctrl-baytrail.c
-index c6f53ed626c9..17e6740a36c5 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -811,15 +811,15 @@ static int byt_gpio_set_direction(struct pinctrl_de=
-v *pctl_dev,
- 	value &=3D ~BYT_DIR_MASK;
- 	if (input)
- 		value |=3D BYT_OUTPUT_EN;
--	else
-+	else if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
- 		/*
- 		 * Before making any direction modifications, do a check if gpio
- 		 * is set for direct IRQ.  On baytrail, setting GPIO to output
- 		 * does not make sense, so let's at least warn the caller before
- 		 * they shoot themselves in the foot.
- 		 */
--		WARN(readl(conf_reg) & BYT_DIRECT_IRQ_EN,
--		     "Potential Error: Setting GPIO with direct_irq_en to output");
-+		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_=
-en to output");
-+
- 	writel(value, val_reg);
-=20
- 	raw_spin_unlock_irqrestore(&byt_lock, flags);
---=20
-2.24.1
+diff --git a/drivers/pinctrl/intel/pinctrl-sunrisepoint.c b/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
+index 44d7f50bbc82..d936e7aa74c4 100644
+--- a/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
++++ b/drivers/pinctrl/intel/pinctrl-sunrisepoint.c
+@@ -49,6 +49,7 @@
+ 		.padown_offset = SPT_PAD_OWN,		\
+ 		.padcfglock_offset = SPT_PADCFGLOCK,	\
+ 		.hostown_offset = SPT_HOSTSW_OWN,	\
++		.is_offset = SPT_GPI_IS,		\
+ 		.ie_offset = SPT_GPI_IE,		\
+ 		.pin_base = (s),			\
+ 		.npins = ((e) - (s) + 1),		\
+-- 
+2.24.0
 
