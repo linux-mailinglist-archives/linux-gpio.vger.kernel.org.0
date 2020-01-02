@@ -2,66 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7035212E486
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2020 10:44:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D751712E48E
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jan 2020 10:47:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgABJoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Jan 2020 04:44:17 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64504 "EHLO mga11.intel.com"
+        id S1727959AbgABJri (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Jan 2020 04:47:38 -0500
+Received: from mga09.intel.com ([134.134.136.24]:28471 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgABJoQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Jan 2020 04:44:16 -0500
+        id S1727924AbgABJrh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:47:37 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:44:15 -0800
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 01:47:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,386,1571727600"; 
-   d="scan'208";a="224733668"
+   d="scan'208";a="224734068"
 Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 02 Jan 2020 01:44:12 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 02 Jan 2020 11:44:11 +0200
-Date:   Thu, 2 Jan 2020 11:44:11 +0200
+  by fmsmga001.fm.intel.com with SMTP; 02 Jan 2020 01:47:34 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 02 Jan 2020 11:47:34 +0200
+Date:   Thu, 2 Jan 2020 11:47:34 +0200
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Boyan Ding <boyan.j.ding@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Mastykin <mastichi@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: baytrail: Replace WARN with dev_info_once
- when setting direct-irq pin to output
-Message-ID: <20200102094411.GB465886@lahna.fi.intel.com>
-References: <20200101145243.15912-1-hdegoede@redhat.com>
+        linux-gpio@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: sunrisepoint: Add missing Interrupt Status
+ register offset
+Message-ID: <20200102094734.GD465886@lahna.fi.intel.com>
+References: <20200101204120.5873-1-boyan.j.ding@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200101145243.15912-1-hdegoede@redhat.com>
+In-Reply-To: <20200101204120.5873-1-boyan.j.ding@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 01, 2020 at 03:52:43PM +0100, Hans de Goede wrote:
-> Suspending Goodix touchscreens requires changing the interrupt pin to
-> output before sending them a power-down command. Followed by wiggling
-> the interrupt pin to wake the device up, after which it is put back
-> in input mode.
+On Wed, Jan 01, 2020 at 12:41:20PM -0800, Boyan Ding wrote:
+> Commit 179e5a6114cc ("pinctrl: intel: Remove default Interrupt Status
+> offset") removes default interrupt status offset of GPIO controllers, 
+> with previous commits explicitly providing the previously default
+> offsets. However, the is_offset value in SPTH_COMMUNITY is missing,
+> preventing related irq from being properly detected and handled.
 > 
-> On Cherry Trail device the interrupt pin is listed as a GpioInt ACPI
-> resource so we can do this without problems as long as we release the
-> irq before changing the pin to output mode.
-> 
-> On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-> in combination with listing the pin as a normal GpioIo resource. This
-> works fine, but this triggers the WARN in byt_gpio_set_direction-s output
-> path because direct-irq support is enabled on the pin.
-> 
-> This commit replaces the WARN call with a dev_info_once call, fixing a
-> bunch of WARN splats in dmesg on each suspend/resume cycle.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Fixes: f702e0b93cdb ("pinctrl: sunrisepoint: Provide Interrupt Status register offset")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205745
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Boyan Ding <boyan.j.ding@gmail.com>
 
 Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
