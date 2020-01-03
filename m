@@ -2,96 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1750812F669
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2020 10:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09DE912F720
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jan 2020 12:26:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbgACJv0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jan 2020 04:51:26 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35420 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbgACJvV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jan 2020 04:51:21 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z76so33695625qka.2
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2020 01:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m2l4ZP00y1MciphnLaoZDMF/+IkQks5KZaGyrGhDRiA=;
-        b=cG4ow4LHRj767jnNAQOpyl17Q+p40TAAcPfpSpHHXDGlrwj62Hpbce+n9FDrk+qkc/
-         hF5ZyqmmFsJTtYTiw79voWF6jUJzD3jMMLxaKlR24Yfx0wH19vRA84WzFpBPdLB301Wn
-         oDHYiFn+x4VsG0+cQjGtKP+AgiFhJEl2gny+42Vv2QuoSuDmtZTYXxHfkb2SYQSXio5l
-         4izdl3cbPeqe/fUEgmo7jINRJHhXeZzjP7rcRM1zIfCdONmAYkusOFVw3KH4tD5KGrsX
-         B2TTgSy+6TGCiaGzC+uIdpJ7YevNhC6HmCAOCMdMswOZwgLLOkvTEExLz90pSslcmLhv
-         3Jtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m2l4ZP00y1MciphnLaoZDMF/+IkQks5KZaGyrGhDRiA=;
-        b=fYjhQYkmwEKjQZxRb33USpkkYqyM9LsHnc8FwQcQ2hNClDhYHT/97712KGxJwbU3HS
-         o0FntFwT1nXD6j4dpBbYVe9JSYwQbyISh+PEe39rnWjvvI0jygBcMzBoS/blslqLnSCe
-         ZwX4sh0zD5yP9KF6rDO7NNhvR1S/VGHeC95AJNVAnQPok2N6ztvCa3RaZzb4iZ2e0k37
-         Jk3v4fb7n53FaK0YLcoBJSzkh1l1GLnzcFD18I1qXqDBrZNAh0X+iQRJ1+Gawu3u5czh
-         RaDyPxDF4hsOR/roCUKmCbqaqc8Ji2OxpokY+LiF53ztsx/LVacTu2j7gatyLbsWELKA
-         9GXA==
-X-Gm-Message-State: APjAAAWdHWYfRF6xhKEAlw4HbPmnqUp9+0qdz4KNK4Lhtdi7athqTvJu
-        xG+2r+mY83tZWU/ce/gz4mO7p9JWw1GxM7c1EH2zDA==
-X-Google-Smtp-Source: APXvYqzAZelvEL1bp9L+Dip8BtcvxrfIeDBmaKGivW0X8lJb2LdaJs31IH9b2gpMP+zcFkudxHBKRdWDiyhDv4QqwCw=
-X-Received: by 2002:a37:6255:: with SMTP id w82mr71281142qkb.330.1578045080489;
- Fri, 03 Jan 2020 01:51:20 -0800 (PST)
+        id S1727494AbgACL0B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jan 2020 06:26:01 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:49545 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727457AbgACL0A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jan 2020 06:26:00 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578050759; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: To: From: Sender;
+ bh=WE57pxSUJyR+L5tsiqVz5w7Z/BAF2j86LaPJYplaCc0=; b=Bzh68sSTdZpEuEMty18/wKGYJn8NYa03a3WRJrD2zWDkXSdvRKUurlMOL1hcLZgzjmyC51Ou
+ 852/kiKCqMwrxDQB3DC/BLBmwF7bmWS18UVhbdtKVnOuv2QVnL1H89scwPj3cYR5S7dJA04l
+ Fh/wGEHakanS2tbdulfQsWmUOQw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0f24c3.7f4dc728f378-smtp-out-n02;
+ Fri, 03 Jan 2020 11:25:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EF909C447AE; Fri,  3 Jan 2020 11:25:54 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 980C9C447B2;
+        Fri,  3 Jan 2020 11:25:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 980C9C447B2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     sricharan@codeaurora.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
+        sivaprak@codeaurora.org
+Subject: [PATCH 0/2] Add Global clock controller support for IPQ6018
+Date:   Fri,  3 Jan 2020 16:55:42 +0530
+Message-Id: <1578050744-3761-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
-In-Reply-To: <20191230133852.5890-1-geert+renesas@glider.be>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 3 Jan 2020 10:51:09 +0100
-Message-ID: <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 30 gru 2019 o 14:38 Geert Uytterhoeven <geert+renesas@glider.be>
-napisa=C5=82(a):
->
->         Hi all,
->
-> As GPIO hogs are configured at GPIO controller initialization time,
-> adding/removing GPIO hogs in Device Tree overlays currently does not
-> work.  Hence this patch series adds support for that, by registering an
-> of_reconfig notifier, as is already done for platform, i2c, and SPI
-> devices.
->
-> Perhaps this would be better served through a pinctrl-gpio driver?
-> Pinctrl is already working fine with DT overlays, as the pinctrl-*
-> properties are part of the slave device node, and thus looked up at
-> slave device node attachment time, not at pin controller initialization
-> time.
->
-> In my particular use case (talking to SPI devices connected to a PMOD
-> connector on the RSK+RZA1 development board), the GPIO performs board
-> level muxing of a.o. the SPI MOSI/MISO/SCK signals.  Hence the hog
-> really needs to be active only while talking to the SPI device, so the
-> muxing could (in theory) be done upon demand.
-> But how to describe that in DT, and implement it (using Runtime PM?)?
->
+The IPQ6018 is Qualcomm’s 802.11ax SoC for Routers,
+Gateways and Access Points.
 
-I may be missing the whole picture, but from your description this
-sounds like a job for the mux framework. Maybe we could make runtime
-PM aware of muxing for this type of use-cases?
+This series adds Global clock controller support for ipq6018.
 
-Bart
+The patches were a part of https://patchwork.kernel.org/cover/11303075/,
+now moved it outside based on Stephen's suggestion.
+
+Sricharan R (2):
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
+ drivers/clk/qcom/Kconfig                           |    8 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 4643 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
+ include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
+ 6 files changed, 5073 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
+
+-- 
+1.9.1
