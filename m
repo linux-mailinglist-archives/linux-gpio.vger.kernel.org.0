@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EC4312FF7F
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2020 01:21:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C63AB12FFB5
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jan 2020 01:38:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgADAVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Jan 2020 19:21:40 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46126 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgADAVk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jan 2020 19:21:40 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m26so42947376ljc.13
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2020 16:21:39 -0800 (PST)
+        id S1727133AbgADAiu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Jan 2020 19:38:50 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33211 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727093AbgADAiu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Jan 2020 19:38:50 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so32938230lfl.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Jan 2020 16:38:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
-        b=gRnVfA7FDAgs73jNy22XumTxemh0aYDjK9B1YAV7aDhmr0DazAVJiMp4WVw1bkv31/
-         bcATx1sRwYkcsu4O0LQVmlmjSHW5VtsN8kArTfZitHm7x//5M6K3YcSNLlNrU4k2nXBM
-         yt6DH6rszExsqnVul0yZCOGTl1phucIVvqvK/Gcklh4kjZC6VQ1xu9ZmRNx0Ik5oj39W
-         PUCHY1sxyw3q0Pr498xt9akwnDTU17FpPWdhZ0+b30zgWzvbnxDXRO1SyZ+eSC73LL7M
-         4bTSAi5L7Qao6/+sTppkChYPciZ16A05vGdttDOmIm7Rn2KAj85O40F9gtCbP1HMl69m
-         XGZg==
+        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
+        b=MuL59PMNVVu75FiAbIkclAny8nz760/4Z2GfHF30DCsopTe93BZOBYrLPjR6gD61X2
+         Ia+4C7u+qJ4p2FyZtfAjId1AXzKlKxic1WMzqQg3NK3gBNXV+ez2toaBlaN1/drja0og
+         tIKURSFgHmO9j4DdW9Kg1qqGdU8X4KroveTVqF1A7gOlP2tT27bciMW13pYilBQg6pZn
+         a+2PY4wz/bporm9hUJNRMPypAoDIa3/U2adVPtQMJv9LEO7KBcF8N+TWsqrpBnJmw+aM
+         gkmDtXdZ7UfMFin1mBsGFfPqu0VvKDX866NlPztG0aOz3SZpNjkSJgcIgQz5IArawDNs
+         HyBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
-        b=oAhddxCom5bdhXvjteE4WMz0AKuylGZzmnx1aDtjNyNUqiYruy3qy50P5XgckBJV12
-         me4KrJj5KkLwkJ3fm8ENG1FlkjdCG3rw+RtLC2JNPqNVtb6E4obWrcRbfyg6R1Q9PeAp
-         39nvGsXL0IgxHNTpTWFkndsUzdEsUfLcEGbvKa5dU1yB0eaVEgGSKSLI3ggXR3to2aNZ
-         X8iw3SxfLk4VMxBFKO6UnMEvELIYIc6Q3+BL18cC7jWskdgfZAEU8J8Y23cdP2DOcaJs
-         v/qp41sjiXyxRAtPLtF58gclaK1Rf9e3Wfd7mII6OYK2X7SUsgDQ8WBqdyeihNA5Em5k
-         BrVQ==
-X-Gm-Message-State: APjAAAUpncyQeA9ilKPeMAMo9yg7F7+c0Jy4LIm2eLRgHnyJT2L+ypGO
-        l4UbPweNj5pXmXJRhBKMZpOqFPae3Sb8N2iE2fFTUg==
-X-Google-Smtp-Source: APXvYqxHT5NBcGXP7l31r/rUzGwxDXqF6xPcQ35bsC0BAshJRd7O7pJFod6OutyDNvKjGim9p9LsFYX1ulkLOKLmCGs=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr51946653ljj.191.1578097298469;
- Fri, 03 Jan 2020 16:21:38 -0800 (PST)
+        bh=7uC7JWFx9OYNnl310U+ygwv67SYyeHmDQsyNae/VGhA=;
+        b=UAxfhvEpsRa5YYU8Hytart3l13GKVRGIao+A8KU1op6aXGOj0nM5eWpOYt4wjgSfo7
+         DRkMcRfHJPLBUqU5qCA0EFjiqdkOf0FgAf/2SGFA9IviTTOXm3yu52JZ3Y8YUn0oZB9R
+         DhsDSVhu3j/m47combMbRsdNG42UUXNb16hx6tfCi2vjeVsn/8lpi7pP3rMWwWDDPdHp
+         p0SqLannngckG8n1NZd9VHD7thMETcKB2nGxelG8bFu5SDlNUiu+o18iIK8m2+JWRrMm
+         /2UgOnzZH2Nh3TY/1IlKSeC2btpULoaWWbjk0aObz1j27SHRqkYlKO1Rmc/iw77fNFhl
+         feZA==
+X-Gm-Message-State: APjAAAXcRVepTIL24/MuBoQWOOBPjDlqkZeAu1WxoXg6O9CRKhi5Dokk
+        HZ7MObEJ85LmdOqttgplHiMHVAnHwsXH6GXPzH+bMA==
+X-Google-Smtp-Source: APXvYqx7qnNmzEGHh3l0ybIURRNlv3h+0jMWrPNsddLXYBAWaFoIfBU2PrBmBZ6fwZizOYviRGZkOY/zqCQGjuwVAnQ=
+X-Received: by 2002:a19:c0b:: with SMTP id 11mr52456055lfm.135.1578098329258;
+ Fri, 03 Jan 2020 16:38:49 -0800 (PST)
 MIME-Version: 1.0
 References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
- <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
-In-Reply-To: <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
+ <20191127084253.16356-6-geert+renesas@glider.be> <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
+ <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVbk5S__8OK-zNXmiW66=WVA8Jzyc=hUvf_hJSU=u9TFg@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 4 Jan 2020 01:21:27 +0100
-Message-ID: <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
+Date:   Sat, 4 Jan 2020 01:38:38 +0100
+Message-ID: <CACRpkda8QD_tDA=YVDRNVnHd8QHs-yHBTzZuJHsnocgMdxv9cA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -77,64 +77,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 3:48 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-> > <geert+renesas@glider.be> wrote:
-> > > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-> > > +them into a new gpio_chip, which can be assigned to a group or user using
-> > > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> > > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> > > +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> > > +which not, reducing the attack surface.
-> > > +
-> > > +Aggregated GPIO controllers are instantiated and destroyed by writing to
-> > > +write-only attribute files in sysfs.
+Sorry for slowness... christmas.
+
+On Thu, Dec 12, 2019 at 4:24 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Dec 12, 2019 at 3:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> > > +         This can serve the following purposes:
+> > > +           1. Assign a collection of GPIOs to a user, or export them to a
+> > > +              virtual machine,
 > >
-> > I suppose virtual machines will have a lengthy config file where
-> > they specify which GPIO lines to pick and use for their GPIO
-> > aggregator, and that will all be fine, the VM starts and the aggregator
-> > is there and we can start executing.
+> > This is ambiguous. What is a "user"? A process calling from
+> > userspace? A device tree node?
+>
+> A user is an entity with a UID, typically listed in /etc/passwd.
+> This is similar to letting some, not all, people on the machine access
+> the CD-ROM drive.
+
+Ah I get it. Maybe we can say "assign permissions for a collection
+of GPIOs to a user".
+
+> > I would write "assign a collection of GPIO lines from any lines on
+> > existing physical GPIO chips to form a new virtual GPIO chip"
 > >
-> > I would perhaps point out a weakness as with all sysfs and with the current
-> > gpio sysfs: if a process creates an aggregator device, and then that
-> > process crashes, what happens when you try to restart the process and
-> > run e.g. your VM again?
+> > That should be to the point, right?
+>
+> Yes, that's WHAT it does. The WHY is the granular access control.
+
+So I guess we can write both?
+
+> > > +           3. Provide a generic driver for a GPIO-operated device, to be
+> > > +               controlled from userspace using the GPIO chardev interface.
 > >
-> > Time for a hard reboot? Or should we add some design guidelines for
-> > these machines so that they can cleanly tear down aggregators
-> > previously created by the crashed VM?
+> > I don't understand this, it needs to be elaborated. What is meant
+> > by a "GPIO-operated device" in this context? Example?
 >
-> No, the VM does not create the aggregator.
+> E.g. a motor. Or a door opener.
 >
-> The idea is for the user to create one or more aggregators, set up
-> permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
-> /dev/gpiochipX as parameters.
-> If the VM crashes, just launch it again.
+>         door-opener {
+>                 compatible = "mydoor,opener";
 >
-> Destroying the aggregators is a manual and independent process, after
-> the VM has exited.
+>                 gpios = <&gpio2 19 GPIO_ACTIVE_HIGH>;
+>         };
+>
+> You don't need a full-featured kernel driver for that, so just bind the
+> gpio-aggregator to the door-opener, and control it through libgpiod.
 
-I'm thinking about someone making some industrial application for some
-control of a machinery say a robotic arm.
+Yep it's a perfect industrial control example, I get it.
 
-And do make sure this VM is only controlling these GPIOs related to
-this robotic arm, they create a GPIO aggregator. And we care about
-cases like that since we provide this security argument.
+Maybe we should blurb something about industrial control?
 
-Surely that machine will be rebooted.
-
-Surely they don't have a printed paper with all the commands lying
-at the console, and asking whoever powers it back on to manually
-type it all in again. That feels a bit 1981.
-
-So they will have a script for this I suppose. Possibly in some
-initscript so it is set up on boot. And this script echos stuff
-all over the place to set up the aggregator.
-
-Is this the use case you're thinking of?
-
-I just like to have the whole picture here.
+The rest I think we cleared out else I will see it when I review again.
 
 Yours,
 Linus Walleij
