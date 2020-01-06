@@ -2,64 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F48130F9C
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 10:38:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CEE130FA6
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 10:39:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgAFJiR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jan 2020 04:38:17 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36749 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFJiR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jan 2020 04:38:17 -0500
-Received: by mail-io1-f66.google.com with SMTP id d15so4511942iog.3
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2020 01:38:16 -0800 (PST)
+        id S1726296AbgAFJjw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jan 2020 04:39:52 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34321 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgAFJjw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jan 2020 04:39:52 -0500
+Received: by mail-qk1-f196.google.com with SMTP id j9so39287176qkk.1
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2020 01:39:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=k2+obkL6rebOtdriVSVT+QmM5oPrNk9dBLg/jYY+wfo=;
-        b=D1o966MxyHxQctJ7rWTwJMt3NjGv7Dvvox7er9lgSNNvWFHHGJwcWONCfWtZi6gN+G
-         sRs4vR0DB2EcpFyAOnNBrO6Ga7QtFeR72FBTF9427T+497Qzcfm+8pl2pbBszlc9JvVQ
-         5lkYYgLVWA+odDpMbgsGqK5RaUIs7BmqtrPT75mjcq5Cps8QL2hw57ZZN4r24h+9vHFL
-         a+0FUA2QZ2/EndxTc3PDJardW9IZ7lhDOn+2+dkqYDe/IvqXD733Uy0eoMyHFCObNslD
-         T6Kj74zvZbASdqOn7QT7jqwZ2Hbx2etpk6CtUIx5rIfvpbv2lv5teqA/qj36BoqxsUw4
-         LIzg==
+        bh=0IMrJL31KOKRhcpikoW9p4q5BiNsVCEDs6+PkVchk4A=;
+        b=zDoGTfDZ7XzgIAthgq84UNg7kChkVHrVGfOH6NDLEcxLGdjVwtnx+WMxNJ8Us6eKt/
+         n2BtOTZMfLesf81vo9eBoNyJIe+5sXdyOjjeQqylWzPYO+n3O0yxB4NXAAkZdyA0IKyu
+         zv6ekCgxVf6FQhRd4d0uDlYKbdQYVij7K4HAOhK4zj2Nq4PZLZFaSU99SKh5xuuzh1/o
+         GB9N6ad/sL6xNHL2ddLi+Al9b7dXBYxeH6FYrWAs7NKk6ZpcDJLeq1eNeoqNpFnnj3PK
+         ck+mUibdBpoGGNL1slT/0h/WLpWAHuQ6GmDPivQE4fzADhoupSULHHpZKKh3KSFwoc43
+         I/Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k2+obkL6rebOtdriVSVT+QmM5oPrNk9dBLg/jYY+wfo=;
-        b=rvgqZaiTyCPRXu0LUP/leNjo7MIA6vTC7+caLSGa82DO+RonZvSHSowlrVTrkuDh/g
-         NDTLJR7SEJp6COB0h/Rr63fjFySjQ6nKtRtUnTL4Xi9josPRxDdOCt+2k+GKW9vKFm4Q
-         fAaq28R3Fqj2LnwLOrRcYKOVe8U7hb/C+i2GCnB6wEdCrl0Bxnjvf5UqFOVW+onLrThD
-         cXysQOQFmpJyBS2hLPeY2wZNpu+PQBuPeRCxRdE3usvW1gZUH9eYEB/PbJmBCf3BSbDt
-         9RSKqRhyKrOJNrurvhnaNEytbGw1+nvJgLbYzncKsVLisNdnmA5nfkumkC7xDuXOMT01
-         +Txg==
-X-Gm-Message-State: APjAAAX6ey2kYLhXOtd65L7X9kqFXSYGiMyhpqb+ZhrCkK8uIDPag4lS
-        KjkHnN3ffHd5PyRiIZOG5aJyjr8AoM7tf9JPVD+wnw==
-X-Google-Smtp-Source: APXvYqzE32XYz3+At4KghXnJsLBu7odv7vp28Pnk5lZat2Vp4MBrZzHnDvUV6gAXMdReOEfzJCGFp0QdxKmkLf29OSM=
-X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr58696986ioo.287.1578303496369;
- Mon, 06 Jan 2020 01:38:16 -0800 (PST)
+        bh=0IMrJL31KOKRhcpikoW9p4q5BiNsVCEDs6+PkVchk4A=;
+        b=oXdQ9C54Ho2eaiEH4F5E14s3JWukKUk7YCk7y9uKrAF+CFSMWd4zfi1AIaWNMRCxoL
+         4s+wDPORfi6B7NIFPfyfGrCnf4YLid63H00I8nwv1hpaOA2BTxuCw7b6LjJA0H5en2lY
+         2836YhRfNVt+YbcsWRI8WzcZFRnlEz+6j5M7bik03kzCmbBiB/epKjGywsDonIbfcP0H
+         OOitX/3Dtbt8Wz1HmBxljq2ZQJWouV7PmHSHXUBiuUbbbrsjizUabLimMN6K29lJ/4pT
+         2uxodmVmpO+ElAfKslr5VDrbagnJm+RbhlzosCWkrFX8Ba1lK2r4ubK8DCmr8BVH75vF
+         0CXQ==
+X-Gm-Message-State: APjAAAXxf/e/Y8fdMVlp7xx/Tt8vwnK6GtYJ3jKeQ7Nd5m10esBO4Snk
+        AYLtRhitZwIO0dx3R8syGoai9/K35jFDCfqfndI8PpXx
+X-Google-Smtp-Source: APXvYqya1aUi/UEsgS/VKm7A15ONk5Amnry1GpUD58kY7ihGHkOTtlyichZgXhPln8+W/xva2fcjeozl6/S+aDUIF7k=
+X-Received: by 2002:a37:6255:: with SMTP id w82mr83028232qkb.330.1578303590820;
+ Mon, 06 Jan 2020 01:39:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200106045833.1725-1-masahiroy@kernel.org>
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Jan 2020 10:38:05 +0100
-Message-ID: <CAMRc=MeTC8X9wDV7bowEvjPxjUNH8hXSJC79iy9s9W9Yn6Fh8A@mail.gmail.com>
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code check
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        alsa-devel@alsa-project.org, linux-acpi@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        linux-crypto@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+References: <20200104194334.12237-1-info@metux.net>
+In-Reply-To: <20200104194334.12237-1-info@metux.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 6 Jan 2020 10:39:39 +0100
+Message-ID: <CAMpxmJXSrF6sDQgCGy+j0NiFVN7NTcxNC9Et4KZxvNbOXRd01w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpiolib: fix confusing indention
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -67,25 +58,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 6 sty 2020 o 06:00 Masahiro Yamada <masahiroy@kernel.org> napisa=C5=
-=82(a):
+sob., 4 sty 2020 o 20:49 Enrico Weigelt, metux IT consult
+<info@metux.net> napisa=C5=82(a):
 >
-> 'PTR_ERR(p) =3D=3D -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
+> There's a confusing indention in gpiochip_add_data_with_key(), which
+> could be misinterpreted on a quick walkthrough. Fixing this in order
+> to improve code readability a bit.
 >
-> The semantic patch that generates this commit is as follows:
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/gpio/gpiolib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) =3D=3D - error_code)
-> +PTR_ERR(ptr) =3D=3D - error_code
-> // </smpl>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 3fa2f4d3cdce..d77695cc82ef 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1447,7 +1447,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *ch=
+ip, void *data,
 >
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+>         if (chip->ngpio > FASTPATH_NGPIO)
+>                 chip_warn(chip, "line cnt %u is greater than fast path cn=
+t %u\n",
+> -               chip->ngpio, FASTPATH_NGPIO);
+> +                         chip->ngpio, FASTPATH_NGPIO);
+>
+>         gdev->label =3D kstrdup_const(chip->label ?: "unknown", GFP_KERNE=
+L);
+>         if (!gdev->label) {
+> --
+> 2.11.0
+>
 
-For GPIO:
+Patch applied, thanks!
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Bart
