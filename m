@@ -2,205 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58E0E130E7B
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 09:13:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E653130E93
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 09:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgAFIMv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jan 2020 03:12:51 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40219 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFIMv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jan 2020 03:12:51 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w21so62870207otj.7;
-        Mon, 06 Jan 2020 00:12:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dM6755OiAVxNNT/EGnm6GG38dRM8wbwsdCcOva50lrs=;
-        b=IEIOyi3XR0Jg2+UNFDUwTo2b0HKfSd3KRh4XmECpCeyLQFyiwlFS8LQSc3GyyEX+sN
-         o1hnzHuulSxw2dNRZFueVNJelWo5277dB2FutRhIlGpYVGFIfZfhFIDteepgsVwuOSLY
-         wHZmY89zMaVu7rDZmLqHjNe1ipt7/+RuLj/H5TrBV9khrBRM80u7gHpo2dCytnC482bW
-         1paPBoXnF1R/Mso0yjo/5dDiM/4QbNwlvkNpCOZRqe85eGkiVVTeFO3klyAS26Vx5oMi
-         +wfOA+PQUhrZlOVJpjOr1PvnlkdUazJp/Pk3a9q03QoFKWFJ2ctHtqtybKLgOWwnjfCV
-         iBdA==
-X-Gm-Message-State: APjAAAURtreuF5c5xJZ+/9EWIwIIWrSeswtZzaa0TX0PT5TuuNGrQ7WP
-        ui7LDm1wgvM6j5I1AQrgdv1WdTWzokg9Z67Wpdc=
-X-Google-Smtp-Source: APXvYqwcqgRqO0qXcQwJ8Pd4YYfDxrBjR3JlJCO+GW3JjxN2hl8WLdecJWnREVA5bFyZERrdDquJZt6zjdqazPmx9A0=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr116794369otm.297.1578298370564;
- Mon, 06 Jan 2020 00:12:50 -0800 (PST)
+        id S1725843AbgAFIUG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jan 2020 03:20:06 -0500
+Received: from mail-eopbgr1410124.outbound.protection.outlook.com ([40.107.141.124]:47840
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725821AbgAFIUF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Jan 2020 03:20:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TaFeGqoZglNsKoByT9+3FnvcEsYEeHQQFPjiwnDLJnw4PjPPhn/eQohuVVxgS7CcGga92+Xwitq/kQyVJRHQ32IucVXwTRx5VPB+fnreiN/dDzY7Udp+6mC30bQL8YNlsHJ9IEj5R0qPIwvyAG5X909a7FuXZ1008i0tHipe5CREtMl7g+Kp8OsP+2xLjiT1IihONnneRFp70IU9x1kzBeFlZVhBDY145ik0oRZbW5mo69FYjJV5cbNSCt+scJAkRMdYZ84FB1/OYsKlWX6pfMyS68e1+OgYXLF8LYhL91z6FfwCgDbDZzdnJGITrtxS718Ne0sjQZB1+M7VBpf0VA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n/oJMseG49HRdN8nqpA3yt5/XFKwyz0Lj7dR+PTKxA8=;
+ b=eU1heFs08V8mWSMQ93TcrF+Hoap+qcXEeJ5+KTyszxDRdDbWXP3K4QUT/BlpPtG7N8VtaiAP+dNtuwwuvyTw1Hakov4si5+wYE49shCA/yKVezxZ418jYc7CHs9+FHyACof5g5PaXilEfMDKGMkuGCXnFPAkJt29Xs/P88W5TiCqfvoOkrRuxc9mYay6os8WxqtP0ZoGlhRJLL6lA4QhS9ennFKkZgX6dxrm7JniLtlqBfwDYNvFdEy0L7B7WKny7vo6WVrk754ZDxGwKJ9/HowE43kREqnftNVcByF3B7ADr0Q6jCxJ6DTUVBc+jVASwzJUTB2C8qXjtRsA/WOPBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n/oJMseG49HRdN8nqpA3yt5/XFKwyz0Lj7dR+PTKxA8=;
+ b=h5SklsmioSxDPyLEBNTdF/XIUDPkta2BeVzUk2t5T5oq5iBQX+aFO3He3+oOam5xMj35ROEBYCvzoT48RUy01ekByZfFAC8M1JkJlAn6vL+wmpvXUdGZFVuTWfM79EtRsGB9f24UW6gd63cIaxMw8Nd8CljFdbELEhtSMHnD8ac=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2941.jpnprd01.prod.outlook.com (20.177.104.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Mon, 6 Jan 2020 08:20:01 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 08:20:01 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] pinctrl: sh-pfc: Split R-Car H3 support in two
+ independent drivers
+Thread-Topic: [PATCH] pinctrl: sh-pfc: Split R-Car H3 support in two
+ independent drivers
+Thread-Index: AQHVtQnJr1qU3YwjV02Rx/j9qo44qqfKotuQgAHmJICAEN6W0A==
+Date:   Mon, 6 Jan 2020 08:20:01 +0000
+Message-ID: <TYAPR01MB4544C1FDB2791246DBDF46F7D83C0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20191217184242.827-1-geert+renesas@glider.be>
+ <TYAPR01MB4544936355182F4091F89EECD8280@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CAMuHMdVnoGpBvU5hH1dBHo6QXFS5voy6SmEDZKyu1JWqLfwhGQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVnoGpBvU5hH1dBHo6QXFS5voy6SmEDZKyu1JWqLfwhGQ@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a4280ec3-560b-42d9-6abc-08d7928139cb
+x-ms-traffictypediagnostic: TYAPR01MB2941:
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-microsoft-antispam-prvs: <TYAPR01MB29418580456C0A9695B917BAD83C0@TYAPR01MB2941.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(346002)(39850400004)(136003)(376002)(51914003)(199004)(189003)(9686003)(86362001)(26005)(2906002)(4326008)(54906003)(316002)(186003)(71200400001)(7696005)(8676002)(81156014)(81166006)(52536014)(66476007)(66946007)(76116006)(6506007)(4744005)(8936002)(66446008)(64756008)(66556008)(5660300002)(966005)(55016002)(33656002)(6916009)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2941;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: drPicp9XVFGkHHoQ5pUWwbQGnMtb37ZuutgSTNrd9gIWiDn/FdYoltrP9sOy1x8EXuUyvp4awqUTLilGHkxemJkUipB/GvGJU+Iuh1RhZb6dS3W8k1WtRcy9lzX7klrXuWtf53Nf9SIq5FnCYPointDd71gL8OzAZ1hug5PFfcra0UIKvbnxu5BiG9Ik1vCg/cGzW06tZqLSenhnpLvG/4NOqmvIZPYiS2gqRDCu9QvI9za5h0hTPsy0BwrAza6/X9Br/Et6oweolcbAYIurn6ouxJBUiWx9OHroNst35eYsHoU9lmu1+ROJ8qriDgVgAyjM/Ro+yoiHhwkD3Wgfgo5iQE33qCv7N/xIVCZC33Am6VLyh1iTSXsyUpcdGho56GDemHhIWcTbJjFCQwVBXZ25m+j/+fwRV6n1AXaBr2nbAJUqND9J01BKZiLtsT/1lsilBu5HWiJPJsU87s/L8HTz4YWxgYKhEf995hgVoPACiykFPRPgqxC5Eskq6k5ukzvBGjDnhd3SPLPOuwMZ1rliED24chPX/VW0dJfKxS8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be> <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com> <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Jan 2020 09:12:39 +0100
-Message-ID: <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4280ec3-560b-42d9-6abc-08d7928139cb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 08:20:01.3174
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nsmeWmtWR2YusPuKLBKoGA5B/dbaVlYNHSABLGQa4i3GXMXqE/1upJyX+2MFUyypjgz3G6YtCpNrUoVJ9FJEYnvj5MHX6bTMu/pfY/YUjqCfjTBUuJxyddlw4jMqhXbR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2941
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
-> > > On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
-> > > > Add Device Tree bindings for a GPIO repeater, with optional translation
-> > > > of physical signal properties.  This is useful for describing explicitly
-> > > > the presence of e.g. an inverter on a GPIO line, and was inspired by the
-> > > > non-YAML gpio-inverter bindings by Harish Jenny K N
-> > > > <harish_kandiga@mentor.com>[1].
-> > > >
-> > > > Note that this is different from a GPIO Nexus Node[2], which cannot do
-> > > > physical signal property translation.
-> > >
-> > > It can't? Why not? The point of the passthru mask is to not do
-> > > translation of flags, but without it you are always doing translation of
-> > > cells.
-> >
-> > Thanks for pushing me deeper into nexuses!
-> > You're right, you can map from one type to another.
-> > However, you cannot handle the "double inversion" of an ACTIVE_LOW
-> > signal with a physical inverter added:
-> >
-> >         nexus: led-nexus {
-> >                 #gpio-cells = <2>;
-> >                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
-> >                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
-> >                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
-> >                 gpio-map-mask = <3 0>;
-> >                 // default gpio-map-pass-thru = <0 0>;
-> >         };
-> >
-> >         leds {
-> >                 compatible = "gpio-leds";
-> >                 led6-inverted {
-> >                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
-> >                 };
-> >                 led7-noninverted {
-> >                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
-> >                 };
-> >                 led8-double-inverted {  // FAILS: still inverted
-> >                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
-> >                 };
-> >         };
-> >
-> > It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
-> > Still, the consumer would see the final translated polarity, and not the
-> > actual one it needs to program the consumer for.
->
-> I'm not really following. Why isn't a double inversion just the same
-> as no inversion?
-
-Because the nexus can only mask and/or substitute bits.
-It cannot do a XOR operation on the GPIO flags.
-
-> > > > While an inverter can be described implicitly by exchanging the
-> > > > GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
-> > > > Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
-> > > > th provider and consumer sides:
-> > > >   1. The GPIO provider (controller) looks at the flags to know the
-> > > >      polarity, so it can translate between logical (active/not active)
-> > > >      and physical (high/low) signal levels.
-> > > >   2. While the signal polarity is usually fixed on the GPIO consumer
-> > > >      side (e.g. an LED is tied to either the supply voltage or GND),
-> > > >      it may be configurable on some devices, and both sides need to
-> > > >      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
-> > > >      match the actual polarity.
-> > > >      There exists a similar issue with interrupt flags, where both the
-> > > >      interrupt controller and the device generating the interrupt need
-> > > >      to agree, which breaks in the presence of a physical inverter not
-> > > >      described in DT (see e.g. [3]).
-> > >
-> > > Adding an inverted flag as I've suggested would also solve this issue.
-> >
-> > As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
-> > the inverter bindings"?
-> > https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
-> >
-> > Oh, now I understand. I was misguided by Harish' interpretation
-> > https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
-> > which assumed an "inverted" property, e.g.
-> >
-> >     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
-> >
-> > But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
-> > cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
-> >
-> >     /* Bit 6 expresses the presence of a physical inverter */
-> >     #define GPIO_INVERTED 64
->
-> Exactly.
-
-OK, makes sense.
-
-> > We need to be very careful in defining to which side the GPIO_ACTIVE_*
-> > applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
-> > Still, this doesn't help if e.g. a FET is used instead of a push-pull
-> > inverter, as the former needs translation of other flags (which the
-> > nexus can do, the caveats above still applies, though).
->
-> Yes. Historically the cells values are meaningful to the provider and
-> opaque to the consumer. Standardized cell values changes that
-> somewhat. I think we want the active flag to be from the provider's
-> prospective because the provider always needs to know. The consumer
-> often doesn't need to know. That also means things work without the
-> GPIO_INVERTED flag if the consumer doesn't care which is what we have
-> today already and we can't go back in time.
->
->
-> > Same for adding IRQ_TYPE_INVERTED.
->
-> I suppose so, yes.
->
-> > Related issue: how to handle physical inverters on SPI chip select lines,
-> > if the SPI slave can be configured for both polarities?
->
-> Good question. Perhaps in a different way because we have to handle
-> both h/w controlled and gpio chip selects.
->
-> However, how would one configure the polarity in the device in the
-> first place? You have to assert the CS first to give a command to
-> reprogram it.
-
-That's indeed true for a simple SPI slave.
-But if it is a smarter device (e.g. a generic micro controller), it may use the
-system's DTB to configure itself.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVGh1cnNk
+YXksIERlY2VtYmVyIDI2LCAyMDE5IDExOjM0IFBNDQo8c25pcD4NCj4gPiA+IFN1Z2dlc3Rpb25z
+IGZvciBzaW1wbGlmeWluZyBzaF9wZmNfcXVpcmtfbWF0Y2goKSwgb3IgZm9yIGFsdGVybmF0aXZl
+DQo+ID4gPiBzb2x1dGlvbnMgYXJlIHdlbGNvbWUhDQo+ID4NCj4gPiBJIHdvbmRlcmVkIGlmIHVz
+aW5nIHdlYWsgYXR0cmlidXRlIG9uIGJvdGggaW5mbyB2YXJpYWJsZXMgY291bGQNCj4gPiBzaW1w
+bGlmeSBzaF9wZmNfcXVpcmtfbWF0Y2goKSwgYnV0IHN1Y2ggYSBjb2RlIFsxXSBkb2Vzbid0IHNl
+ZW0gYmV0dGVyDQo+ID4gdGhhbiB1c2luZyAjaWZkZWYuIEFsc28sIHVzaW5nIHdlYWsgYXR0cmli
+dXRlcyB3YXN0ZSBkYXRhIHNpemUNCj4gPiBpZiBSOEE3Nzk1MD1uIGFuZCBSOEE3Nzk1MT15IGZv
+ciBpbnN0YW5jZS4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIGdyZWF0IHN1Z2dlc3Rpb24hDQo+IA0K
+PiBUaGUgdHJpY2sgaXMgdG8gYWRkIF9fd2VhayB0byB0aGUgZXhpc3RpbmcgZXh0ZXJuIGRlY2xh
+cmF0aW9ucyBpbiBzaF9wZmMuaCwNCj4gaW5zdGVhZCBvZiBhZGRpbmcgd2VhayBlbXB0eSBzdHJ1
+Y3RzLg0KPiBXaGVuIHRoZSBzdHJ1Y3RzIGRvbid0IGV4aXN0LCB0aGVpciBhZGRyZXNzZXMganVz
+dCBiZWNvbWUgemVyby4NCg0KSSdtIGhhcHB5IG15IHN1Z2dlc3Rpb24gaXMgdXNlZnVsIQ0KIyBJ
+IGRpZG4ndCBrbm93IHRoZSB0cmljayB0aG91Z2ggOikNCg0KPiBTbyBJIGNhbWUgdXAgd2l0aCB0
+aGUgZm9sbG93aW5nICh3aGl0ZXNwYWNlLWRhbWFnZWQpIHBhdGNoLCB3aGljaCBJIGludGVuZA0K
+PiB0byBmb2xkIGludG8gdGhlIG9yaWdpbmFsLCBpZiBubyBvbmUgb2JqZWN0cy4NCg0KVGhlIHYy
+IHBhdGNoIFsxXSBpcyBiZXR0ZXIgdGhhbiB2MSENCg0KWzFdDQpodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzExMzEyNzMzLw0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hp
+bW9kYQ0KDQo=
