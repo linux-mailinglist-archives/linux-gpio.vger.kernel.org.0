@@ -2,163 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 309201308F2
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jan 2020 17:04:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A47C130BE7
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 02:52:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgAEQEL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Jan 2020 11:04:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27812 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726385AbgAEQEL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Jan 2020 11:04:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578240250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0949pnRMfVEMOsmz9w7+euue4V+BXtAsSOKyd1WMVz4=;
-        b=FAB17OJY/n+oE1NsvkZieRdsrNNvqeyIbCKWZMJII15PIc00uQNy3plj4x3HP9edeiXWHK
-        A5zDV7fcTXZv62tTOpbZ1n7SVyxYRaGE7Psmjqmjfenjd8aFKIcNi1HMKqSAmwv2wwezdd
-        HQ+IBoIFPW+Fwm9/s2JZ5I6f5yp8acw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-7uUyjDCTP--8Re8hyDJqeg-1; Sun, 05 Jan 2020 11:04:05 -0500
-X-MC-Unique: 7uUyjDCTP--8Re8hyDJqeg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F06041800D42;
-        Sun,  5 Jan 2020 16:04:03 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-82.ams2.redhat.com [10.36.116.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63ABC60C63;
-        Sun,  5 Jan 2020 16:04:02 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH resend v2 2/2] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
-Date:   Sun,  5 Jan 2020 17:03:57 +0100
-Message-Id: <20200105160357.97154-3-hdegoede@redhat.com>
-In-Reply-To: <20200105160357.97154-1-hdegoede@redhat.com>
-References: <20200105160357.97154-1-hdegoede@redhat.com>
+        id S1727321AbgAFBwf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Jan 2020 20:52:35 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38827 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAFBwf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Jan 2020 20:52:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so27367002ljh.5;
+        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
+        b=Jn8RXgrbA0x9c7VxoOnXr3F3Z7b0MDtzYYOElpNEWf3fMQTAoINw3ErXHyBmBI9B/f
+         ctqk1W2N357i0AjDIZY3b2NPliWisTvtPSDSh5QBhpzT00IG2XpOD0ziLuW7qa9m4c75
+         tdn4kN4brFKB6kjbwindIp1xczKU0ObDzsT5pSP7zgzb0hXyj+S0n9QtoGEm4s65DfHu
+         IXadbATsaE6O7M0sBU4KsRmZhEtMzpbMcQIMSHqpjpnyfzZAsJLQ+2wpNYMsTKEv4WhX
+         Kwu0hcyH6WiMu3/xrNpSEXdIv2iGyWvx0mxtGnsNLvhxuPfeCgMBqW1R3P6rtUxd42rX
+         pHsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+WKDbV/B1whMsFkARIuj+xVMPqzn++Ge3NWQ5oVlVNI=;
+        b=R9h0Tof1W7/oCJARktTZpFviQGl6jBYeohvzZn8VnIMNY5DI4Tr72IQRS5x/PhX88s
+         oVIOrIrEV8pxIoplAEVhgQv5TYcup7VS3D2kZKEsVSlfpPxnRkRkv0W72rmSJo4J9hfW
+         Ql455Y9ACggqGclNPGYQajbGPMSyyQPz5BZkOc+UARvVobWmdVxcnAyETLMDT1hyDu5a
+         pzd9I01GCxm3K/5M+5tMlz4tLD1xkSjZfJdE4dGwvA1+lkycisUpCab0UAYk3Bu99pCz
+         z6ptM61MvlNsiLAexKDgK5z1wcu8vCEr+Btid51AHa3oruzgxehh/Tgl8MJDayMCrW8I
+         Tsrw==
+X-Gm-Message-State: APjAAAV18RHAQhI+tU7WPSf5uBsndXZ1qdHoop/AXB/sf7dzzXhyqUaI
+        161L68Y4gT6k4vt12nraCBw=
+X-Google-Smtp-Source: APXvYqyRELmENNsXGyiNlWWLXXV9nzG/DrG1gI0e4jsLV5xffbexDIkmohhIwDBJagerlHbfX18vKg==
+X-Received: by 2002:a2e:580c:: with SMTP id m12mr58842955ljb.150.1578275553133;
+        Sun, 05 Jan 2020 17:52:33 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id y25sm28131951lfy.59.2020.01.05.17.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 17:52:32 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] gpio: max77620: Add missing dependency on GPIOLIB_IRQCHIP
+Date:   Mon,  6 Jan 2020 04:51:54 +0300
+Message-Id: <20200106015154.12040-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
-event handling causes spurious wakeups.
+Driver fails to compile in a minimized kernel's configuration because of
+the missing dependency on GPIOLIB_IRQCHIP.
 
-This commit adds a new honor_wakeup option, defaulting to true (our curre=
-nt
-behavior), which can be used to disable wakeup on troublesome hardware
-to avoid these spurious wakeups.
+ error: ‘struct gpio_chip’ has no member named ‘irq’
+   44 |   virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
 
-This is a workaround for an architectural problem with s2idle under Linux
-where we do not have any mechanism to immediately go back to sleep after
-wakeup events, other then for embedded-controller events using the standa=
-rd
-ACPI EC interface, for details see:
-https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@r=
-edhat.com/
-
-One series of laptops which is not able to suspend without this workaroun=
-d
-is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
-which makes sets honor_wakeup to false on these models.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
-Changes in v2:
-- Use honor_wakeup && ... instead of if (honor_wakeup) ...
-- Fix some typos in the comment explaining the need for the quirk
----
- drivers/gpio/gpiolib-acpi.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ drivers/gpio/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 2b47d906d536..31fee5e918b7 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -22,12 +22,18 @@
- #include "gpiolib-acpi.h"
-=20
- #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
-+#define QUIRK_NO_WAKEUP				0x02l
-=20
- static int run_edge_events_on_boot =3D -1;
- module_param(run_edge_events_on_boot, int, 0444);
- MODULE_PARM_DESC(run_edge_events_on_boot,
- 		 "Run edge _AEI event-handlers at boot: 0=3Dno, 1=3Dyes, -1=3Dauto");
-=20
-+static int honor_wakeup =3D -1;
-+module_param(honor_wakeup, int, 0444);
-+MODULE_PARM_DESC(honor_wakeup,
-+		 "Honor the ACPI wake-capable flag: 0=3Dno, 1=3Dyes, -1=3Dauto");
-+
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -283,7 +289,7 @@ static acpi_status acpi_gpiochip_alloc_event(struct a=
-cpi_resource *ares,
- 	event->handle =3D evt_handle;
- 	event->handler =3D handler;
- 	event->irq =3D irq;
--	event->irq_is_wake =3D agpio->wake_capable =3D=3D ACPI_WAKE_CAPABLE;
-+	event->irq_is_wake =3D honor_wakeup && agpio->wake_capable =3D=3D ACPI_=
-WAKE_CAPABLE;
- 	event->pin =3D pin;
- 	event->desc =3D desc;
-=20
-@@ -1337,6 +1343,23 @@ static const struct dmi_system_id gpiolib_acpi_qui=
-rks[] =3D {
- 		},
- 		.driver_data =3D (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
-+	{
-+		/*
-+		 * Various HP X2 10 Cherry Trail models use an external
-+		 * embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler. The embedded controller generates various
-+		 * spurious wakeup events when suspended. So disable wakeup
-+		 * for its handler (it uses the only ACPI GPIO event handler).
-+		 * This breaks wakeup when opening the lid, the user needs
-+		 * to press the power-button to wakeup the system. The
-+		 * alternative is suspend simply not working, which is worse.
-+		 */
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
-+		},
-+		.driver_data =3D (void *)QUIRK_NO_WAKEUP,
-+	},
- 	{} /* Terminating entry */
- };
-=20
-@@ -1356,6 +1379,13 @@ static int acpi_gpio_setup_params(void)
- 			run_edge_events_on_boot =3D 1;
- 	}
-=20
-+	if (honor_wakeup < 0) {
-+		if (quirks & QUIRK_NO_WAKEUP)
-+			honor_wakeup =3D 0;
-+		else
-+			honor_wakeup =3D 1;
-+	}
-+
- 	return 0;
- }
-=20
---=20
-2.24.1
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 29689c7384ee..9e99d09a64c6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1146,6 +1146,7 @@ config GPIO_MADERA
+ config GPIO_MAX77620
+ 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
+ 	depends on MFD_MAX77620
++	select GPIOLIB_IRQCHIP
+ 	help
+ 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
+ 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
+-- 
+2.24.0
 
