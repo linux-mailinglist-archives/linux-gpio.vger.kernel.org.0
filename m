@@ -2,237 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89F35131332
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 14:44:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BEA513142D
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jan 2020 15:56:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgAFNom convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 6 Jan 2020 08:44:42 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:38561 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgAFNol (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jan 2020 08:44:41 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0EE02E000B;
-        Mon,  6 Jan 2020 13:44:38 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 14:44:37 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200106144437.615698c1@xps13>
-In-Reply-To: <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
-References: <20191129191023.2209-1-miquel.raynal@bootlin.com>
-        <CAHp75VeJNZWz_Cv=dozAwt74OBu8TgyYe5bNU3sHreRMdqxR8A@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726422AbgAFO4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jan 2020 09:56:36 -0500
+Received: from mail-il1-f175.google.com ([209.85.166.175]:33749 "EHLO
+        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFO4g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jan 2020 09:56:36 -0500
+Received: by mail-il1-f175.google.com with SMTP id v15so42816322iln.0
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jan 2020 06:56:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=qsEWGebuFqIxIYVSQSrceXFGueRPmXvrIfpIRluyTdg=;
+        b=TNCrkAs44wVOWbU7IR6izjh/e2dN0B2UY4pQaxlE8T7xalEU1N7H6BGqHDXsw5/Qxv
+         URiCfCe5KxDZaVhGs2A0sP+TCg02BrjsNSQRVlOdBoC05v4OMnXPtviboR7IKqXloQ7S
+         LgOCjPRrqlWGb3yrUJA9QetQu+lTKOMQK3D7DNMSDH+utSSdbAv1TBXqa3mjunfXPfsH
+         nbyuxYBtUXhCsufDaHPNMVpvBc3XaVBJE1TVymvcdoewnUVIhJ0dcfAFcd53EtwdF2gp
+         rcTVBMtqRqa75iMkGlVF/brZV8m7+JyiEsH/BmIr/vZvTvfLFyA7VftfNYokKgwDv4xc
+         sEQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=qsEWGebuFqIxIYVSQSrceXFGueRPmXvrIfpIRluyTdg=;
+        b=L5dM/pT/pGawoJbXRoxdXzSJKu/p5BSB5GepVlJzCeZqhNy6QcQbeIBCkQ0XYdvUwE
+         x080OjL5+TJgoF6bqwH/kTHg5OBDrUGwklgB4HKNXymEMNLpLblkGAavKAJJuy8In6y1
+         l04NSnYDnu6s3KY9BME3KP3Hp6Zd/+uRIM9in1WWS5SWbKz98v22vRqVsFs/mxodoTBb
+         a2IyC/xBsCcqwni0XQoGO7g1AxxSlnCTRFVUiMV1wr2VdOWD4yrotZP9/QTQi5XIbFHT
+         OzNURbgJ9tAN3zkhP/81yRn5X9sIFgnIB/RyAtKlYT5V6pKKzF1j7PgFeEUko21FsP0U
+         7NMw==
+X-Gm-Message-State: APjAAAXvASX4eTbdX4WOE0gGPLB5y3ZMu7Ngsb7lYK5WE3mNmVI5GGX1
+        JelZIrZYv/RLXAknvNh1ca75h1UXfZ/tcfxv0JEp9RcuTLo=
+X-Google-Smtp-Source: APXvYqyy4UgO6Ut/mYqFzYXQe/D3fnupt0j9fKIHU2hrpnBteooV/kCfhDdPWfsphjn8TXZCtnmPKhQ+Q28RMlrtl/c=
+X-Received: by 2002:a92:3b98:: with SMTP id n24mr82891564ilh.189.1578322595177;
+ Mon, 06 Jan 2020 06:56:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 6 Jan 2020 15:56:24 +0100
+Message-ID: <CAMRc=MeZm0Ohja23y-CONnk7S-dgPRJiqYKN1FrAxH2ijtGfcA@mail.gmail.com>
+Subject: [ANNOUNCE] libgpiod v1.5-rc1
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Drew Fustini <drew@pdp7.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Hi!
 
-> >  #define PCA_INT                        BIT(8)
-> >  #define PCA_PCAL               BIT(9)  
-> 
-> > +#define MAX_PWM                        BIT(10)  
-> 
-> Use same prefix.
+v1.5 will be a big release for libgpiod adding support for several new
+features merged for linux v5.5 so I decided to make an rc for the
+first time before we do the final release together with linux v5.5.
 
-I am not sure it is relevant here, I think showing the specificity of
-the MAXIM PWM is okay.
+The changelog for v1.5 is below. Any testing is appreciated.
 
-> 
-> ...
-> 
-> > +#define PWM_MAX_COUNT 16
-> > +#define PWM_PER_REG 2  
-> 
-> > +#define PWM_BITS_PER_REG (8 / PWM_PER_REG)  
-> 
-> Can we simple put 4 here?
-> 
+The sources are available at:
 
-Fine
+    git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
 
-> ...
-> 
-> > +#define PWM_INTENSITY_MASK GENMASK(PWM_BITS_PER_REG - 1, 0)  
-> 
-> Please use plain numbers for the GENMASK() arguments.
+The release tarballs can be downloaded from:
 
-Ok
+    https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
 
-> 
-> ...
-> 
-> > +struct max7313_pwm_data {
-> > +       struct gpio_desc *desc;
-> > +};  
-> 
-> Are you plan to extend this? Can we directly use struct gpio_desc pointer?
+Best regards,
+Bartosz Golaszewski
 
-I'm not a fan of this method at all, I think it is better practice to
-keep a container in this case, which can be easily extended when needed.
+---
 
-> 
-> ...
-> 
-> > +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> > +           chip->driver_data & MAX_PWM) {  
-> 
-> Can't we simple check only for a flag for now?
+libgpiod v1.5
+=============
 
-I don't get it. You just want the driver_data & MAX_PWM check?
+New features:
+- switched to using the GLib testing framework for core library tests and BATS
+  (Bash Automated Testing System) for command-line tools
+- used Catch2 C++ testing framework to implement a proper test-suite for C++
+  bindings while also reusing the API provided by libgpiomockup
+- used Python's unittest package to implement a proper test suite for Python
+  bindings and reused libgpiockup again
+- provided line::update() and Line.update() routines for C++ and Python
+  bindings respectively allowing to update the line info from bindings as well
+- added support for bias flags which are a new functionality first available in
+  linux v5.5; subsequently the library now requires v5.5 kernel headers to
+  build; the new flags are supported in the core library, C++ and Python
+  bindings as well as the command-line tools
+- added support for the new SET_CONFIG ioctl(): this too is a new functionality
+  added in linux v5.5; both features have been implemented in the library by
+  Kent Gibson
+- added routines for reading multiple line events at once to the core library,
+  C++ and Python bindings
 
-> 
-> > +               if (reg >= MAX7313_MASTER &&
-> > +                   reg < (MAX7313_INTENSITY + bank_sz))
-> > +                       return true;
-> > +       }  
-> 
-> ...
-> 
-> > +       if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE &&
-> > +           chip->driver_data & MAX_PWM) {
-> > +               if (reg >= MAX7313_MASTER &&
-> > +                   reg < (MAX7313_INTENSITY + bank_sz))
-> > +                       return true;
-> > +       }  
-> 
-> This is a duplicate from above. Need a helper?
+Improvements:
+- constified function arguments where applicable in libgpiomockup
+- fixed the name of the test exeucutable displayed at build time
+- improved the function pointer casting in Python bindings to avoid warnings
+  emitted by GCC8
+- switched to using the KERNEL_VERSION() macro in tests instead of handcoded
+  version parsing
+- improved the setup ordering in tests (setup libgpiomockup before checking
+  the kernel version
+- add 'extern "c"' to the libgpiomockup header to make it usable from C++
+- add chip index validation to libgpiomockup functions
+- check if the debugfs directory used by libgpiomockup is writable before
+  using it to set the pull of dummy lines
+- add several new test cases
+- improved Python example programs (made gpiomon's output similar to the
+  original tool, make gpioset wait for an ENTER pres by default)
+- fixed the major:minor number comparison between the device and sysfs
+- deprecated the gpiod_line_needs_update() function and removed the logic
+  behind it from the library
+- shrank the Python bindings a bit by directly returning the value from
+  PyErr_SetFromErrno()
+- dropped noexcept from methods which can throw in C++ bindings
+- switched to initializing the bitset with integers instead of strings in C++
+  bindings
+- allowed gpiod_line_set_value_bulk() to accept null pointers
+- when building Python bindings: check for the existence of python-config
+- improved the readability of help text messages for command-line tools
+- reworked the .gitignore file: added libtool scripts generated during
+  cross-compilation and split the main .gitignore into several fine-grained
+  files
+- fixed several misspellings
+- other minor tweaks and improvements
 
-Perhaps!
-
-> 
-> ...
-> 
-> > +/*
-> > + * Max7313 PWM specific methods
-> > + *
-> > + * Limitations:
-> > + * - Does not support a disabled state
-> > + * - Period fixed to 31.25ms
-> > + * - Only supports normal polarity
-> > + * - Some glitches cannot be prevented
-> > + */  
-> 
-> Can we have below in a separate file and attach it to the gpio-pca953x
-> code iff CONFIG_PWM != n?
-
-I'll check, why not.
-
-> 
-> ...
-> 
-> > +       mutex_lock(&pca_chip->i2c_lock);  
-> 
-> > +       regmap_read(pca_chip->regmap, reg, &val);  
-> 
-> No error check?
-> 
-> > +       mutex_unlock(&pca_chip->i2c_lock);  
-> 
-> ...
-> 
-> > +       if (shift)  
-> 
-> Redundant.
-
-Ok
-
-> 
-> > +               val >>= shift;  
-> 
-> ...
-> 
-> > +       mutex_lock(&pca_chip->i2c_lock);
-> > +       regmap_read(pca_chip->regmap, reg, &output);
-> > +       mutex_unlock(&pca_chip->i2c_lock);  
-> 
-> No error check?
-> 
-> ...
-> 
-> > +       mutex_lock(&pca_chip->i2c_lock);
-> > +       regmap_read(pca_chip->regmap, reg, &output);
-> > +       mutex_unlock(&pca_chip->i2c_lock);  
-> 
-> No error check?
-> 
-> ...
-> 
-> > +static int max7313_pwm_request(struct pwm_chip *chip,
-> > +                              struct pwm_device *pwm)
-> > +{
-> > +       struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
-> > +       struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
-> > +       struct max7313_pwm_data *data;
-> > +       struct gpio_desc *desc;
-> > +
-> > +       desc = gpiochip_request_own_desc(&pca_chip->gpio_chip, pwm->hwpwm,
-> > +                                        "max7313-pwm", GPIO_ACTIVE_HIGH, 0);
-> > +       if (IS_ERR(desc)) {  
-> 
-> > +               dev_err(&pca_chip->client->dev,  
-> 
-> Can't we get to struct device easily?
-> If it's possible maybe we could move next line to this one?
-
-I'll try.
-
-> 
-> > +                       "pin already in use (probably as GPIO): %ld\n",
-> > +                       PTR_ERR(desc));
-> > +               return PTR_ERR(desc);
-> > +       }  
-> 
-> > +       return 0;
-> > +}  
-> 
-> ...
-> 
-> > +       if (intensity)
-> > +               set_bit(pwm->hwpwm, max_pwm->active_pwm);
-> > +       else
-> > +               clear_bit(pwm->hwpwm, max_pwm->active_pwm);  
-> 
-> assign_bit()
-
-Nice!
-
-> 
-> By the way, do you really need it to be atomic? Perhaps __asign_bit()?
-
-Maybe not, indeed.
-
-> 
-> ...
-> 
-> > +       active = bitmap_weight(max_pwm->active_pwm, PWM_MAX_COUNT);  
-> 
-> > +       if (!active)  
-> 
-> In this case more readable will be active == 0 since you compare this
-> to the exact value.
-> 
-
-"if (!active)" is read "if not active" which is IMHO very descriptive!
-
-I'll correct most of your comments and send a v5.
-
-Thanks,
-Miquèl
+Bug fixes:
+- fixed memory leaks in libgpiomockup
+- fixed memory leaks in the testing framework
+- fixed a segfault in error path in tests
+- make gpioinfo show lines claimed by the kernel as used even if they have no
+  named consumer
+- fixed the test cases validating the '--active-low' switch in gpiomon and
+  the GPIOHANDLE_REQUEST_ACTIVE_LOW flag in the core library after a fix
+  for incorrect behavior was merged in linux v5.2.7
+- stopped failing at init-time of libgpiomockup if gpio-mockup is already
+  loaded
+- added a missing throw keyword in error path in C++ bindings
+- fixed a segfault in Python bindings when calling Line.request() without
+  the consumer argument
