@@ -2,86 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3223613265B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:38:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F59D132664
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:39:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgAGMic (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:38:32 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46865 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgAGMic (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:38:32 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f15so38729999lfl.13
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:38:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
-        b=IBgA2Em6iQG71nytT7MVKkAkSpchm34hogp9nrPDVFD2uq6bE3RLvT5EC2lmzO6J6c
-         Dbg1dYo4ATLwVPgn2RytyJdEgTF84i4p/VdfrHVBASGlIo/MAWHtdDIDJErP4DFAXMh3
-         aN4WgMRJ1rLGHzDYNjfegkvyLIlgRMuRRr2IftbxWokVUQTvks65sqQ/2lcGa1brrus0
-         50pN1du3FO+emJhqwhHyfYqrCvhVETASPAVhymc1hEnaXzq3JRmoVXDN00dq1VCT5laB
-         Q+0jWOsP1P9M4W9EabnTv4RrlSWAniEilZ7hgrBtP5rtkEooAK4qRb4b+dGg2y2mIqYi
-         dXiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
-        b=eVFNLTgyu78r+z9MoQv28bS7rW9dcHSczmrhE3D2ttTMuHyXjtk2ghQafYm2ZtJQOC
-         qROGsUXF815wymvCbuMimXaorDh+gC+6mSEN/Oi5dpR7l1KgV6CgJ81hhfklw/cjYfbW
-         9BoRNt7WPiCe5x6ivndiajlXzlyJbEyM5L6WJvPY8nZScBDivE/c+e1J1+h7SihK5PI0
-         shs8PiQcGQJCWwz/wdtTqHtmRsPTnc14W40Bb25KtVCufgOZx6ZCQ8Sk3gFfFoTkP79F
-         TznYwu2gBnDLuD7G7jjn+TDTT3EXLkWthSN2m/IBvUZ9phXuaK6OASROn+9VXhOkdtWN
-         kclw==
-X-Gm-Message-State: APjAAAUOQhNe8HcJ1STU/GblIE0mmhx4Mk7d1fSAvp8FMs0zzWa2tANc
-        sDG/pi55AxGYqEBIsaMcCWYR5OyJkJGvAH1bwMizDA==
-X-Google-Smtp-Source: APXvYqyjy7HCbuFJZMBW/ujChvDuspmEEyJbLXUF8TFZisyKZFmn1M7N7wpY7pWWtfq9hM2MIuNebIt0EKDUy/5fjNI=
-X-Received: by 2002:a19:8a41:: with SMTP id m62mr59247202lfd.5.1578400710421;
- Tue, 07 Jan 2020 04:38:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20191215183047.9414-1-digetx@gmail.com> <CACRpkdYAKS50-CNmE0nRNQanFxKejoHrwxho3fZXROoLZUb4+Q@mail.gmail.com>
- <CAMpxmJVi1hy6a72M7rAHP0AXW1Z4cGp8H0O6ayLMwFm9UL3WPQ@mail.gmail.com>
- <CACRpkdaNAzpDu6uxETnuDGxnXTJTh0LhcE=9DL9-Kwi4butZLA@mail.gmail.com> <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
-In-Reply-To: <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 13:38:19 +0100
-Message-ID: <CACRpkdZZc2z9_9tjwOEYCuv1fzrqJ7Eb5UK-T9GA+6BqBYe_LQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        id S1728039AbgAGMix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:38:53 -0500
+Received: from mga12.intel.com ([192.55.52.136]:28578 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727834AbgAGMix (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Jan 2020 07:38:53 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 04:38:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="253741871"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jan 2020 04:38:41 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ioo89-0005zu-PZ; Tue, 07 Jan 2020 14:38:41 +0200
+Date:   Tue, 7 Jan 2020 14:38:41 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Mastykin <mastichi@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: baytrail: Do not clear IRQ flags on direct-irq
+ enabled pins
+Message-ID: <20200107123841.GE32742@smile.fi.intel.com>
+References: <20191227230447.32458-1-hdegoede@redhat.com>
+ <CACRpkdaR4vFp=huuqvsnZTFnAmKNJmjpwM8sPpVX2aERp-LogA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaR4vFp=huuqvsnZTFnAmKNJmjpwM8sPpVX2aERp-LogA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 10:31 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 7 sty 2020 o 10:29 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-
-> > > Ugh, I now noticed I responded to Thierry only after applying this to=
- my tree.
-> > >
-> > > Anyway, it shouldn't be a problem. I'll take more care next time.
+On Tue, Jan 07, 2020 at 11:35:17AM +0100, Linus Walleij wrote:
+> On Sat, Dec 28, 2019 at 12:04 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> > Suspending Goodix touchscreens requires changing the interrupt pin to
+> > output before sending them a power-down command. Followed by wiggling
+> > the interrupt pin to wake the device up, after which it is put back
+> > in input mode.
 > >
-> > OK shall I drop the patches from my tree then? No big deal.
+> > On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+> > in combination with listing the pin as a normal GpioIo resource.
 > >
->
-> If you're fine with this, sure!
+> > This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+> > again. In this case byt_gpio_disable_free() calls
+> > byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+> > (direct) IRQ no longer triggers.
+> >
+> > This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+> > to byt_gpio_clear_triggering().
+> >
+> > Note that byt_gpio_clear_triggering() only gets called from
+> > byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+> > from the irq_valid mask by byt_init_irq_valid_mask().
+> >
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Patch applied as non-critical fix for v5.6 with Mika's ACK.
+> (Tell me if it's critical.)
 
-OK dropped them, hadn't even pushed the branch out yet.
+Can we collect it in our tree (what we are consider a proper for this) and
+submit a PR?
 
-Soon reaching the top of my mailbox so I will be pushing the branches
-for the autobuilders and later tonight for-next.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
