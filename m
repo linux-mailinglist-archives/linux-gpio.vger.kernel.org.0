@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7806F132327
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:04:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F229132328
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgAGKEN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:04:13 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41396 "EHLO
+        id S1727720AbgAGKE0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:04:26 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42978 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgAGKEJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:04:09 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so38432406lfp.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:04:08 -0800 (PST)
+        with ESMTP id S1727154AbgAGKE0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:04:26 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so38420566lfl.9
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:04:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x2i9D0Ihitkev4ht4FSFiTVw1ZbJ3RS0U3X+Z21+sD0=;
-        b=Kujj5nAsF/McaOhQh4QC/ZrO+uigeQKBkK1y6VnnbagQPt38lsaATNnpWZ44kW3Eup
-         LYeSOwaKJxE5OXfOWa6OYbwpBxD6bdvzNDIhmrPKq2icgV4OD9OLencx+lGj1n8ke29V
-         rFzdLzuQ/dz+ArrxHdcF1YHhgkzAiGrXYot51k7aWbpOcHFSmiqXa+aBDcnKQl/tKfp8
-         pAUXIBM5IUQ4groRh2LWmayWsQ+reuh6Tz3kwPuh4/kLTVwTlgAIoaITz7NU0AZLNvcD
-         a8hanYYcp5ZlGomDzh3uAHWKRIP/Vmgtc1eNdyL35GRLM5Chn3inD0gN6gjmGvlzbShS
-         dPXw==
+        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
+        b=C/TMqDRfkoUuJ0f7T7D+O5oR+b6o4w0FNo/T1F+R1AHCSi74QZrP0ulqX/mlk/yMb3
+         CgBbnBDXHH3RQbFfjeIBmDCMxBgBJoWMyfSinbTkTKu7+eAqlL4UQ+G6Qu9e8sGULoAW
+         scPPSgM5ky8Dgu+u+57Yj0r+9bLeLU5VTQ5mngb2qRSIofjffwJo8cHE39XF1zC55KbR
+         sBdWKaMBlfnmYRjXkQ6NzWwAl4XoASa4PfrvonyU+r6J1Kj88we/W4tZT4yErxsOgisP
+         oDj7YGWcd/AGmfR3FZQWc7Lz9Z+TBcTUrOnS7BUoLmif98Q98aJ28tRnBC4luasznBue
+         V+Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x2i9D0Ihitkev4ht4FSFiTVw1ZbJ3RS0U3X+Z21+sD0=;
-        b=HODLzpV29WXFx886rw4lBpGZK9OJNDF4hw6BAFqZT7i7VN7kfVlcpCY4rtuTpOCa2n
-         Q0T/FpCb4hXiQPkJ9eiI6k5ov4jyvf3QnLUxJRH0A/40HNdcqWwDSt34FwJX7FUt6ubr
-         CaEJNtXHS8qZyh4ztwqVxAsi1D11Me+fzYe3GC8t8vb2Ob4s160CGDIatW9I1hstHO+t
-         99lvfYxXwiU/CLY2MIDajDsTbTtP0eFDoJgX1XbEQQPIsNynusZp4D3vBhYzULIZVoeV
-         pEAFgSPrP+N8p2Etl0Mpzsbj571PbkbzzXgp3oM9vhJn/HTZn2PclzAAsntUGf7tgop0
-         QzJA==
-X-Gm-Message-State: APjAAAW4Vsb6a4oADQrG070PVHDgrrac2NfacRWArHUWLnK5owOBrewf
-        9LG4qkUjrSWz5sjCbVS1nfA9EgGpSSXvm5evZbr3DA==
-X-Google-Smtp-Source: APXvYqzw07li0joRnv19MMgwtPGOY2q0x9rVIibcmal6BmQL0ylqnZ3awHBmzcLvX9uirEHXIJmwvppn5akTDicF4Ss=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr58360297lfp.133.1578391447708;
- Tue, 07 Jan 2020 02:04:07 -0800 (PST)
+        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
+        b=BkNjlQg7k81oZqQCEgmYE+El0qKgomOCRgEAIHmSOo18o/ztnnIsekpfgZUA6B8XF9
+         vRbinyYejsdpPNBMB6oW4wRJCR46xSEhNuQn0jDdKIdVHV7qX/XJjCTI/P3OnWFXwUip
+         df01fBPJVtftWXaeOx2eJoN9Ah+M+F0Ss1+B5WN/eUMJvNMQSSOneXbCUO6mmdVSGFk2
+         aBAmCimH7rpZlAXeMTP2If1exQqLUoVaxPEpBlEwu7Ju+J3CYVqxZ7hDJO6goF8CKszW
+         KtpgieddT1BscG68BszAwld3lAGz/KUv+hahNiGDUgHko2CPnf38quSA1Uy3ojk0A7JR
+         kVQA==
+X-Gm-Message-State: APjAAAUgCNlCOX0URUP80Ln2l6OkbjhECLAdTEdWdCnjZPuOAYelx72u
+        eU3Iafw2PoQ4WB7BwSsAuixwbFLyohUSgSWYFzFhhw==
+X-Google-Smtp-Source: APXvYqzIqvdiEJyuN737lKRaPRJmxancOJCuQ7zjFMf8BOpiiEvcoUI8UR/icK9L/Hp7tnD+upUM0vg9QbSylxpdyTQ=
+X-Received: by 2002:a19:2389:: with SMTP id j131mr56672702lfj.86.1578391464246;
+ Tue, 07 Jan 2020 02:04:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-4-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-4-brgl@bgdev.pl>
+References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-5-brgl@bgdev.pl>
+In-Reply-To: <20191224120709.18247-5-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:03:57 +0100
-Message-ID: <CACRpkdY6mUsydabXJDNZC2Wyu0Hx0Ut8xhqpYO5Rcr+FBHwMJg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/13] gpiolib: convert the type of hwnum to unsigned
- int in gpiochip_get_desc()
+Date:   Tue, 7 Jan 2020 11:04:13 +0100
+Message-ID: <CACRpkdb7Hvn6pYF_3W9tUQfbZ8NJBTymeHFgrgNi+tKLa6YTgA@mail.gmail.com>
+Subject: Re: [PATCH v4 04/13] gpiolib: use gpiochip_get_desc() in linehandle_create()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -66,14 +65,8 @@ On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> gpiochip_get_desc() takes a u16 hwnum, but it turns out most users don't
-> respect that and usually pass an unsigned int. Since implicit casting to
-> a smaller type is dangerous - let's change the type of hwnum to unsigned
-> int in gpiochip_get_desc() and in gpiochip_request_own_desc() where the
-> size of hwnum is not respected either and who's a user of the former.
->
-> This is safe as we then check the hwnum against the number of lines
-> before proceeding in gpiochip_get_desc().
+> Unduplicate the ngpio check by simply calling gpiochip_get_desc() and
+> checking its return value.
 >
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
