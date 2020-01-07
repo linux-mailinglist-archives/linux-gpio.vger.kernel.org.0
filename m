@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3866913232C
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:05:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A641713232F
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAGKEq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:04:46 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41712 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgAGKEp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:04:45 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so54094705ljc.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:04:43 -0800 (PST)
+        id S1726558AbgAGKFE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:05:04 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43483 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbgAGKFD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:05:03 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 9so38448224lfq.10
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:05:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
-        b=KUF5X57AU3DbtjYe/SJSlIXKHq/AW+fspiJQdDmQh/3dgRJPXClQ0RhUBWo9mjC35Y
-         TWzWkhOYzLFoaQG127Wp8MjTvoh3hvfXSUa21dDfDpqVaNW4JsYoln5yh35extFkPx3G
-         FnOyXNGTVm9AgshgMy9yoAlgHpEOl+A9GCNX/VCNxe3X+F7b6WI14t1vF0oBS3wq3QOA
-         x380OnTuk0a/troAVSJmd060TG6m3MyVupFUqe+BDIU7HcZAajhURX7NjX0hQTexcfJg
-         4UAyVX0uW5MhfwD8a3KLRzF+X946f1PQMoHET3DsaEknPSbCejmajjWomMsKn4f+aNV7
-         5bxg==
+        bh=awClw5OAQIwoGJ1RZz6WGsXMCWNAAQaZn8rQr6h6O5s=;
+        b=x5KxWlGe7nbe02Q9as2w62MXuN/BIWWDnrFUKqM2bPddubzze64XtDbRYCeyDm6rm2
+         qi8wSDPT1ADgriXyfveliTg+kLK9wl2nA2natoUTp7Vz1aMtCjtkfVOQZsI2oIrTzs/Y
+         u+Ssk63d3rThpDc3d7NekeZWAHe6VxuaExN4gw5bpiHDM3ScGcQnr+aL3ZB9/y9QyztF
+         k9KAajHdQXFlj1F9/3YBkmp50in8DKYhFWiL2WRI7eCHceWKtbDHQs85UQoDOIZpw2jz
+         j9aCHM2u7r97AS9b++W1qiREBX7/RzZeT8D21s4TYx8uTUqV9QlpjqDnlubbqfc/EkEI
+         fSwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IaT+HGrfAbav44v71XZlSNd1URgNRj4zIy7n7ZKUqH4=;
-        b=dPhQxHMIsY8DgnlPpgBJsFWUKHjw+NmuBBpu+IkOrwHOFFiGXOyRmFgUaP/Enp/rf9
-         jStPDgOJBwXkJJvhhmADKHOonXV9kKG3B7SYVKq9aOzKVG88L7W751dpLE25MNHNLs1/
-         +xAJn4O1mw4+PRzdHQoP5kgGbeh4zBYuB2eQGasr6hyrW1L9fLxAc8V0WK0odSXOhqqG
-         EQDvZwafend1P1EjY7RZY0ubo799RHbRowCGz1SPpVbIaAvQa5ZN/sPqK19uloqyGfTc
-         s/eYXDN/DZF/t7ydkJS0qdLKEBZ+V8bhuTNNYbtFMvETU8NPOs1YWLKL6K9FrIjYrrLM
-         y0oQ==
-X-Gm-Message-State: APjAAAUjyZyldLSLnqUsedwWUFe4tgCcrqAkEcxGGI95F1xF1yahf6tV
-        8CABfgXX6L/+yVBZmVj75OexT0AjWv4Da8XigureBQ==
-X-Google-Smtp-Source: APXvYqwhP3VEPWnGeEz/Hc9rMS1FTioxd80K5vd1QR8JwE74xEVc6SMpiOX950msPkXRl8zkspdirMkWDQZTZq+eHfk=
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr51901307ljj.77.1578391482661;
- Tue, 07 Jan 2020 02:04:42 -0800 (PST)
+        bh=awClw5OAQIwoGJ1RZz6WGsXMCWNAAQaZn8rQr6h6O5s=;
+        b=KOVSM+R8/n2uJxKfFoW077SHPGWlWwnUS9oVDpit3GneD6BGx7rU/+JAcDm66dVj+O
+         8MYmi8Tzb79e5rYMKSPbG2UVGvdjR/POwH1D9Wb18jD7dPXx5iEfukzo8Tsfw25KIwtB
+         zKStC+F4GH/hY3mZVtIlXTioG33NW6Ojeo/OB7FVMm6NmbbWygLtTLOkoXR2xmPRn7e3
+         U35eWdHyM1jJgmAlmj4a2vX5D0hwIGLhK9ufJUKfw04k3jKvWv/KrbHU/b1HxgosC7T6
+         RTA739cNb1RMDJ7BpU3AUAJlT4AcoPGURFma0F/2hYrFGnHk5Z0JANSWg0Ij6HZyrEhA
+         8Phg==
+X-Gm-Message-State: APjAAAVpFQRz2m9DV7tx0FQyvzsOUtrVQIfEN5KBDCiWRKO5VVYw4Szp
+        Ibyk/1K4otNiBJnSQghldm+Ag8bNZNOwwS2TvFqaoA==
+X-Google-Smtp-Source: APXvYqw0j/84MKECKcv0/Q78CRciq/3n0s13Yasvj4qWuUXq74vhfWWyeCyqp/+mpqyYZnb4UfHpt8+hrdDc7TszrfA=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58196144lfi.93.1578391499976;
+ Tue, 07 Jan 2020 02:04:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-6-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-6-brgl@bgdev.pl>
+References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-7-brgl@bgdev.pl>
+In-Reply-To: <20191224120709.18247-7-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:04:31 +0100
-Message-ID: <CACRpkdb71=HkE-f=8_XJCvfE+wqMYAOMah=4ceMhyWeMNVF+zA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/13] gpiolib: use gpiochip_get_desc() in lineevent_create()
+Date:   Tue, 7 Jan 2020 11:04:48 +0100
+Message-ID: <CACRpkdb3kE3Pkzgb0tg03BW-hggbDFez7ZWt5XZAuMZsqGO0xQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/13] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -65,7 +65,7 @@ On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Unduplicate the ngpio check by simply calling gpiochip_get_desc() and
+> Unduplicate the offset check by simply calling gpiochip_get_desc() and
 > checking its return value.
 >
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
