@@ -2,105 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91B88132650
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:36:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3223613265B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:38:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgAGMgg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:36:36 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39374 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgAGMgg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:36:36 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 20so19177492wmj.4
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:36:35 -0800 (PST)
+        id S1727903AbgAGMic (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:38:32 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46865 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbgAGMic (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:38:32 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f15so38729999lfl.13
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:38:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZigGWyR5dA/rlmY5eQN1DFgU3TyM5dNJj4wuZim4lMg=;
-        b=v1vH5ppfwwaQyU0557PdvzkzfgSmt8Qdg6In7lDLwtorTe1YQxwgrSRGTR5HVqP9vs
-         vlx8AHphmwSmzv1+rEga+lsE7Vd2hsCizbJj2B4tf8xsJZ7uJuQtemgVOHWPPV0gKk6x
-         +vAOeFTOnUCSdvEd17cltbU2Ik5HqO293wNSuEyTaYl8hUuUpRUwWgfR0ci9RMjUTcyd
-         oknu0+e6xNYP+Ispe8wDu+NASM46j93S1pyqp7bXmvjBGxs89hAedp2RdiSxBa60Mzm0
-         pb+gbmV+0HdEsjBsFQ3LYy7EZeOEYECZ/Y1UWbJ7+ur+0r+VfYvk69jdDmlHRRmP6N7E
-         WVtA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
+        b=IBgA2Em6iQG71nytT7MVKkAkSpchm34hogp9nrPDVFD2uq6bE3RLvT5EC2lmzO6J6c
+         Dbg1dYo4ATLwVPgn2RytyJdEgTF84i4p/VdfrHVBASGlIo/MAWHtdDIDJErP4DFAXMh3
+         aN4WgMRJ1rLGHzDYNjfegkvyLIlgRMuRRr2IftbxWokVUQTvks65sqQ/2lcGa1brrus0
+         50pN1du3FO+emJhqwhHyfYqrCvhVETASPAVhymc1hEnaXzq3JRmoVXDN00dq1VCT5laB
+         Q+0jWOsP1P9M4W9EabnTv4RrlSWAniEilZ7hgrBtP5rtkEooAK4qRb4b+dGg2y2mIqYi
+         dXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZigGWyR5dA/rlmY5eQN1DFgU3TyM5dNJj4wuZim4lMg=;
-        b=kt1KujBXZfTIuDX41vEXuUsIH2QtmUsDqSxB8d8vEG6sMEySfxbFjm++Hpqolx9mvR
-         PebAk9v5/f6bFteUqtqnSzwYe0MJUJUtQQJQiNfMdHtHhTBQcHVCoOSNuJ2olcJgMDVq
-         OKUNOVuOaGOUvRxhZbZnDBms9GPDTYCDY+v7GRUWyeH3l1Kl3Tt971zLwV+vuLGkUKcy
-         HZ7+xE3mzFP+Kvr9pE7JFufjKQJ+5wX4SZkKDPAxM1dExJZSiHearFwkTDnvvCFk1l13
-         s/LH39AHsV2xOKP5zS2Rl8A8yHH2jDlTPW0mwQxer/833kgb2hFLBFQoUlh4krYfl/Nw
-         zIvA==
-X-Gm-Message-State: APjAAAUzO7BbVlDZsKdJ5Sm0BTSUakBgXkmd1EiVw2Drz3cL7btHhvP3
-        sbgk48DiwZT/QC9A464NBiGImQ==
-X-Google-Smtp-Source: APXvYqx8hyPUO/+s6KqblUDY9P6qWopaZFPmK+OaNZfoX/P2gCtwCPDOS87mnKX8JiJIT/d3LpZ01g==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr40496323wmg.110.1578400594309;
-        Tue, 07 Jan 2020 04:36:34 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id e18sm76983844wrw.70.2020.01.07.04.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:36:33 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:36:47 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v8 04/12] mfd: bd718x7: Add compatible for BD71850
-Message-ID: <20200107123647.GH14821@dell>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <bd5009357c16d73d9bad52be68db74a2cfa6328f.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xNdg/eGe2spHZF8Ar7NLXHqFtzVzxyf+teERuO/bVjc=;
+        b=eVFNLTgyu78r+z9MoQv28bS7rW9dcHSczmrhE3D2ttTMuHyXjtk2ghQafYm2ZtJQOC
+         qROGsUXF815wymvCbuMimXaorDh+gC+6mSEN/Oi5dpR7l1KgV6CgJ81hhfklw/cjYfbW
+         9BoRNt7WPiCe5x6ivndiajlXzlyJbEyM5L6WJvPY8nZScBDivE/c+e1J1+h7SihK5PI0
+         shs8PiQcGQJCWwz/wdtTqHtmRsPTnc14W40Bb25KtVCufgOZx6ZCQ8Sk3gFfFoTkP79F
+         TznYwu2gBnDLuD7G7jjn+TDTT3EXLkWthSN2m/IBvUZ9phXuaK6OASROn+9VXhOkdtWN
+         kclw==
+X-Gm-Message-State: APjAAAUOQhNe8HcJ1STU/GblIE0mmhx4Mk7d1fSAvp8FMs0zzWa2tANc
+        sDG/pi55AxGYqEBIsaMcCWYR5OyJkJGvAH1bwMizDA==
+X-Google-Smtp-Source: APXvYqyjy7HCbuFJZMBW/ujChvDuspmEEyJbLXUF8TFZisyKZFmn1M7N7wpY7pWWtfq9hM2MIuNebIt0EKDUy/5fjNI=
+X-Received: by 2002:a19:8a41:: with SMTP id m62mr59247202lfd.5.1578400710421;
+ Tue, 07 Jan 2020 04:38:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd5009357c16d73d9bad52be68db74a2cfa6328f.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191215183047.9414-1-digetx@gmail.com> <CACRpkdYAKS50-CNmE0nRNQanFxKejoHrwxho3fZXROoLZUb4+Q@mail.gmail.com>
+ <CAMpxmJVi1hy6a72M7rAHP0AXW1Z4cGp8H0O6ayLMwFm9UL3WPQ@mail.gmail.com>
+ <CACRpkdaNAzpDu6uxETnuDGxnXTJTh0LhcE=9DL9-Kwi4butZLA@mail.gmail.com> <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
+In-Reply-To: <CAMpxmJXbR8=esuKhMKzD8LGFC6_Rz4uQXJ2egCXGLj_eauxS5g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 13:38:19 +0100
+Message-ID: <CACRpkdZZc2z9_9tjwOEYCuv1fzrqJ7Eb5UK-T9GA+6BqBYe_LQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Tegra GPIO: Minor code clean up
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+On Tue, Jan 7, 2020 at 10:31 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> wt., 7 sty 2020 o 10:29 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
 
-> ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
-> initial voltage values for regulators. The BD71850 can be handled by
-> BD71847 driver but adding own compatible makes it clearer for one who
-> creates the DT for board containing this PMIC and allows SW to be
-> differentiating PMICs if needed.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes from v7 - no changes
-> 
->  drivers/mfd/rohm-bd718x7.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> > > Ugh, I now noticed I responded to Thierry only after applying this to=
+ my tree.
+> > >
+> > > Anyway, it shouldn't be a problem. I'll take more care next time.
+> >
+> > OK shall I drop the patches from my tree then? No big deal.
+> >
+>
+> If you're fine with this, sure!
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+OK dropped them, hadn't even pushed the branch out yet.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Soon reaching the top of my mailbox so I will be pushing the branches
+for the autobuilders and later tonight for-next.
+
+Yours,
+Linus Walleij
