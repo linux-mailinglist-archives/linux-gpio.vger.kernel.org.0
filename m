@@ -2,106 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA67513271F
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:09:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE631327F8
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:42:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgAGNJP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 08:09:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:57516 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgAGNJO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:09:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F226631B;
-        Tue,  7 Jan 2020 05:09:13 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571BF3F703;
-        Tue,  7 Jan 2020 05:09:13 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:09:11 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107130911.GD4877@sirena.org.uk>
-References: <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
+        id S1727880AbgAGNmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 08:42:09 -0500
+Received: from www84.your-server.de ([213.133.104.84]:53176 "EHLO
+        www84.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgAGNmJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:42:09 -0500
+X-Greylist: delayed 1564 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 08:42:08 EST
+Received: from [188.192.102.182] (helo=[192.168.0.7])
+        by www84.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <stefani@seibold.net>)
+        id 1iooiI-0003xj-OC; Tue, 07 Jan 2020 14:16:02 +0100
+Message-ID: <10721bebc81144c25e53b55c8cd086a34d4fd1f8.camel@seibold.net>
+Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
+ status changes
+From:   Stefani Seibold <stefani@seibold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 07 Jan 2020 14:15:59 +0100
+In-Reply-To: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+         <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+         <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
+         <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
-Content-Disposition: inline
-In-Reply-To: <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
-X-Cookie: Will Rogers never met you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: stefani@seibold.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25687/Tue Jan  7 10:56:22 2020)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Am Dienstag, den 07.01.2020, 13:50 +0100 schrieb Linus Walleij:
+> On Tue, Jan 7, 2020 at 11:38 AM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > wt., 7 sty 2020 o 11:07 Linus Walleij <linus.walleij@linaro.org>
+> > napisał(a):
+> > > The patch set overall looks good to me, I don't understand the
+> > > kfifo
+> > > parts but I trust you on this, though we need review from a FIFO
+> > > maintainer.
+> > 
+> > Ha! This may be a problem - there doesn't seem to be one. This is
+> > why
+> > I Cc'd Greg.
+> 
+> I was under the impression that KFIFO was part of the driver core.
+> Let's try to CC the actual author (Stefani Seibold) and see if the
+> mail
+> address works and if he can look at it. Or did you already talk to
+> Stefani?
+> 
+> (git blame is always my best friend in cases like this, hehe)
+> 
+> Yours,
+> Linus Walleij
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I have looked around for the patches and I found the following patches 
 
-On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
-> On 19-12-17 12:58, Mark Brown wrote:
+[PATCH v4 07/13] kfifo: provide noirqsave variants of spinlocked in and out helpers
+[PATCH v4 08/13] kfifo: provide kfifo_is_empty_spinlocked()
 
-> > This doesn't say anything about how the GPIO input is expected to be
-> > controlled, for voltage setting any runtime control would need to be
-> > done by the driver and it sounds like that's all that can be controlled.
-> > The way this reads I'd expect one use of this to be for fast voltage
-> > setting for example (you could even combine that with suspend sequencing
-> > using the internal sequencer if you mux back to the sequencer during
-> > suspend).
+dated on 24 Dec 2019.
 
-> The input signal is routed trough the da9062 gpio block to the
-> regualtors. You can't set any voltage value using a gpio instead you
-> decide which voltage setting is applied. The voltage values for
-> runtime/suspend comes from the dt-data. No it's not just a fast
-> switching option imagine the system suspend case where the cpu and soc
-> voltage can be reduced to a very low value. Older soc's like the imx6
-> signaling this state by a hard wired gpio line because the soc and
-> cpu cores don't work properly on such low voltage values. This is
-> my use case and I can't use the sequencer.
+Both seems to be okay. The patch is non intrusive to KFIFO adding only
+spinlock wrapper functions for the contemporary kfifo functions.
 
-My point is that I can't tell any of this from the description.
+So...
 
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature; name="signature.asc"
+Acked by Stefani Seibold <stefani@seibold.net>
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4UgvYACgkQJNaLcl1U
-h9AmOwf/dQI3hnspOymA8BdYOaCtzXhoiVJeMde8RKleUyfpqEoLvele7bnhJvxP
-66E8RM0aDJk6N+Jc5KzXO1mb1JWFhiGQM92q3NXPczpOyvgl/zl0UwKMnqHnj4nd
-/vDVfa60zDKTbUCS12us1kwgJNtHVRiFb8DX+9W3zSONqE5QIeNjmMMoL4EaPwJb
-clCtLm7jBckZinNOefKS6M2eElpRFFhtRON7EsaDqObH2xTP9aSNb9PEYCBy3nHq
-Cr6gYbC0cwgXL29ayf/aRtx3o9/DTC4LIAfAPZvGjDMN5vgYm3bznZKWmVzgR2Pd
-1fQ0J3Dh032Q/8ZTkaceklgsT1uGJg==
-=uLVS
------END PGP SIGNATURE-----
-
---mSxgbZZZvrAyzONB--
