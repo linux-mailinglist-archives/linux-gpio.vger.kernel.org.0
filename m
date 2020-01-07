@@ -2,90 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 510A113252E
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 12:50:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2087132555
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 12:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgAGLuu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 06:50:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39043 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgAGLuu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 06:50:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id l2so54393071lja.6
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 03:50:49 -0800 (PST)
+        id S1727806AbgAGLzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 06:55:32 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43829 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727963AbgAGLzc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 06:55:32 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so54405960ljm.10
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 03:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iFsSM6vxEydUs02gD1XbE7gcNfWrUkov42GXmL/B/g4=;
-        b=UgZQmucPLWkmL6jVn+2bdRf8+0/tT1LQC8SCfASVMPN3ceCLoNrSJE96uAaxDXt/Zu
-         0Hbo5G+pbUeUM6GbbhF1YlxQarR7l4+JqZEmF5905YYykk8rHxtLD58wHt+ShBjRK912
-         LJZivrqsEFdbg4bAnOqjO2Q5Dkrwywm8kzc8yTsjFMVi37R8wmbW/DYGysjNHy4SK2V1
-         6E88aVpieRgKBp+RpdgjcTtmatxzcC+kMjHuHNsH36cRdiq/F2czCfYVTCL1xfJ+lsG+
-         W0ATtxjMQzJWiHW7Ex0twfEwGwjoh2cACHL5CRlSeBOncj4WUca2GyKrhrx05SE6vl80
-         dRmQ==
+        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
+        b=x4W09e6W3tYzPFUA5L3cocu4C28m1vu8wvfPIVtcJZVrttySIpPpOBOxScCKjuNNRn
+         OyhMcUwnM45j1nxRiN5G0bCuRyxa4OO8QJEjgJm87+mAfYD5ZXWyADDY2k/7fKinA+yq
+         x46qgZYWT1cXuXTxyoTLqtgueith2idAaQl0QpKpm9DWWQXeyE7d7v7jS/oNr2UiSKNN
+         m6C7X0ok2d1rKs8X7I64wx/UnFvv/rjXO0HEkKEWuEkCZIwA3EBJDQUcZWPjo67sFJae
+         VO0hAUkUiwdg8Mxsg7FFAMxrzsisTkn3tAyhmQKML6FQVwKQY2O4oh24yPneCrUoCJYv
+         UMaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iFsSM6vxEydUs02gD1XbE7gcNfWrUkov42GXmL/B/g4=;
-        b=KzR1jb+BPrwJbuxGKp3JUW0DEWZynC0RoBuhIUwYWMiISXwoen7Tbdiabu0AhTFm7u
-         7WY/S4gvjzYMJ/zvvX9tx127ceQraAtXdxJFLkHAweEkRfuCH+eszwFBeZNslkt2WbBM
-         QDQmQzq1cuv3dObNUIJM/qZwXYDcVjlVpsd/ianxdz05nxZsq2WjqV9tcWdkqIG6AmwB
-         +9AzugzNz9f2GjcCBv2cBdxx+4taYhb1uGjCqfI3H/92rGIUjk1GpfsRc9EU0ftI7k2z
-         5QTfLQ/ngvla95acF0mRZtnWKviWeEXeI/bUwNvJ9ta1wCs4LTKWPSb2HpwRtPNMVwTd
-         HGZQ==
-X-Gm-Message-State: APjAAAXL8o1mnj+E/lHdt9ynk4gplVeocWm4WDOoKxmZv8pf4Npk25q1
-        NYLVOZfzF1UE4K0P4V4xKHA37QFCVUByNFQ9er7+OQ==
-X-Google-Smtp-Source: APXvYqzqbaKvZ9Puh8J+kZVQvq2lpgj8PQt1Pkad+wgIKlI0vpiAAtUqurvSdYL9m9Fvp0HSudCVCKDTbQrmH6PpsH8=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr64319128ljm.218.1578397848306;
- Tue, 07 Jan 2020 03:50:48 -0800 (PST)
+        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
+        b=epLqCGN5iZiExmSMFEM1hMENj3WW4oyIROquK4XoBHdXSo1aCBpOZw6JdIEmsJyNHT
+         Yo+pPlYP5NtJ3MRd5v0zzI53RkUrhq2h+VaZVayqsZKo7EgakjzLpp4KUNbY79quCTGn
+         YURPG6Ms3QGofFpAr5ZiJDkWEUXhBTq0BFUkymslVhvmVppM2qs4EZG7383Go/2vQgyz
+         RKECMaQZVOzUHUTsob2fph8RWbSy6mIZqxgRMsB1ibXGlTjOd8BHyvFxgLbjbzLDD8qh
+         eUOJtjv1RFIYdjlQ08uQCFHLrDpkG9f0SZHXrdx91fcZAFYmmVIYz97L3y7Kyc5l9S9J
+         CZbw==
+X-Gm-Message-State: APjAAAXrzhh4ibFwdTvFpTlpGe/qsu62vcgdzwFdCp9ONMlHXOdZr5wK
+        YL9D2/HwyIyqacNq22ipo5GAaeWm8P9BtWObtAHhbA==
+X-Google-Smtp-Source: APXvYqzkyD6g7/9CDAlHtA5mKWWnMz52PVnTB6MFjhAOLT8GCecy17Mok8VzpbjzK10JRhbJp55ZQJQKlRcjb1WeUVc=
+X-Received: by 2002:a2e:9587:: with SMTP id w7mr60523035ljh.42.1578398130000;
+ Tue, 07 Jan 2020 03:55:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200101145243.15912-1-hdegoede@redhat.com>
-In-Reply-To: <20200101145243.15912-1-hdegoede@redhat.com>
+References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org> <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 12:50:36 +0100
-Message-ID: <CACRpkdbTunsVtgGw5=ksn=cn+ZwYT_F7OhVqucaQjA1-5D8BfQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: baytrail: Replace WARN with dev_info_once
- when setting direct-irq pin to output
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Mastykin <mastichi@gmail.com>,
+Date:   Tue, 7 Jan 2020 12:55:19 +0100
+Message-ID: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
+Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 1, 2020 at 3:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
 
-> Suspending Goodix touchscreens requires changing the interrupt pin to
-> output before sending them a power-down command. Followed by wiggling
-> the interrupt pin to wake the device up, after which it is put back
-> in input mode.
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
 >
-> On Cherry Trail device the interrupt pin is listed as a GpioInt ACPI
-> resource so we can do this without problems as long as we release the
-> irq before changing the pin to output mode.
->
-> On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-> in combination with listing the pin as a normal GpioIo resource. This
-> works fine, but this triggers the WARN in byt_gpio_set_direction-s output
-> path because direct-irq support is enabled on the pin.
->
-> This commit replaces the WARN call with a dev_info_once call, fixing a
-> bunch of WARN splats in dmesg on each suspend/resume cycle.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 > ---
-> Changes in v3:
-> - Replace WARN with a dev_info_once call, instead of dropping it
+>  [v3] Fixed the example dt node, inherited properties
 
-Patch applied with Mika's ACK!
+Once you are done with patches 1 & 2, can I merge these
+separately to the pinctrl tree?
 
 Yours,
 Linus Walleij
