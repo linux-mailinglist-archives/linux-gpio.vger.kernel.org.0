@@ -2,81 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A92C51323A2
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:33:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 974221323B3
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:35:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgAGKdI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:33:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36613 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGKdI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:33:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id r19so54165076ljg.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:33:06 -0800 (PST)
+        id S1727559AbgAGKfa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:35:30 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35403 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGKfa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:35:30 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 15so38527534lfr.2
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:35:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xC5eckw6LeHTQNvUicysdWSevFLO+gQO55vJ3inC8GY=;
-        b=bgo00NBNQ7QeyKuZRI5207V4LPSEALLJbm+Qn8vuLgkKgv9K+TOeYbAKoo0prDns7G
-         Jo+GtUnSf8YRyZD439tshC0l3HXLYNCzZaABHf4/caPDYRbEBVMGZxBbYdK8dkfJ3nVw
-         VrP0iudXFKJQRttAp1ZGziwLfB7y0if/JUc6vRi01i5kcyNjW6GRIhwsU0ATWv6YooWL
-         htma5HJh7LVrwR9jQnh/+I1KnCsSmRH310YNZ8sJSZX9C0nKa97voMLY9cwlEej0YtwC
-         r7QkfHmPzfG4HBCqluj4LpxzlkZgrteCAf3zUUEDWFuw5wn0bQ+yld5e/FpGL/NUsdzH
-         RBAQ==
+        bh=9L6amKhoYyOrux9bnk+af4N4r2mBmGPfOuS8aRLMwhg=;
+        b=b3uBNQ9bL0Rm0U0fYnJKypGOuWiZl+gYV3Zab1iuTg+6OVZlBzuFugeCNw1MQTCFkN
+         3g54n3ju0EKUXogzFtXgt9xSBLz2zNbeoKAx7o3LzBdhmnQIVQ7fXB1R3MJlsbbnIpEc
+         Td0NHo20vQ6szBG2bWBCkJx9rt/WUX30CqdQKpxw53+edrtwryaUWeFUnCACCEhUolaJ
+         MtPBNVNqkqD+OGmtWv9INMWt6bRyGteMhAYtku/o8/bPQy0quOn5PE1P4MJeiTIbPHPj
+         ALu3+vvLSEQPa4knxZt8cB4DuXmTgFK6kdL50DcdLKBE1qJMpj6gWXbJUQjLUKNQdr9O
+         2ViQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xC5eckw6LeHTQNvUicysdWSevFLO+gQO55vJ3inC8GY=;
-        b=J3BaFzXCLNEJwFoZpDuincuzZBv2w8QKcjF0a/ciH8RNgRdGOMIV93YqUj1Z09HY+6
-         PDbM4myeFJcCdP0VYqwGCxyIDHyJepEKx2fYpkY1WYGtQsL8esR6UhwK3cOSOVlrmMut
-         w5JlXFZq/LZ8nwbQFfd0Z1orQfhUzJZ5OLCDDjDp+9gQjU6hn/3kvxclHSb6EQe0qFu0
-         fDo1ShsGOw0dqbIWDINPX/X97uH0icA2UmVKMxU/u3+dZzSoKd8V6RPItfwCtpkofwkA
-         VoxlJSpoYG1S3xryhy9TOpZ1GEu1159hBRZwAqv4ikhvWER1CPr4THoD3za5hwDR735k
-         DxPg==
-X-Gm-Message-State: APjAAAUK0guLdwDGZXTY6SX+pDUEUifpsjyEuC4OU0PMDkwmcSZjesHl
-        D/tviG5QNOJPKi02psqXhDeFsLxXzo0wDXEEQBuo3vCzHzM=
-X-Google-Smtp-Source: APXvYqzCDMEvzHlBYQDhP4F32AbSocRmoqo2rsOS+sKUN52oJaPqCY7ScGRgE9GJ3dyK1pDScgA8Sz7BOyh2aT/z3qg=
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr64129889ljm.218.1578393185295;
- Tue, 07 Jan 2020 02:33:05 -0800 (PST)
+        bh=9L6amKhoYyOrux9bnk+af4N4r2mBmGPfOuS8aRLMwhg=;
+        b=FmapWobLmWPBVpKohLdEDZAVFNWtMZZcjCUYSvEQGOzpovyFR31ger177AO8girzr5
+         d1fzjnbB9cwjH+1qbLYYuEe4LlxaCMPfavwxLkSqxnINk/+WzFQHCp3kqvCCNAYl15nf
+         nc0wETJrsHDtdbsXKjQQw5TAIuwRGRQt+orw2RD8DT4BztPrPOxOPypIbSN2GQ46ktPw
+         HDRQbpiVKNbqozF0h6t2AswtGaomq5Tm8wH/Mw1dsJtIuvNdCDK/UAFBEX0dlpZ6Na2t
+         1U7dxnUHuE9rR+kp4LuOT3PXHEG2Sz+h8jFdW5OwcPPuWdEw6B4k+AynZy6itMHdnY1e
+         uZSw==
+X-Gm-Message-State: APjAAAXN0d8+QoW1YVVredm5f4xslZ1VOm+9OSYKB/M1wN/wJY3a8aMa
+        c1/lVVkgzGJs4wRtTnkw70eL9246LkTvvaIP5lEIww==
+X-Google-Smtp-Source: APXvYqwnBmZ4C+qwBklDTAQj/VsW+ZK44EVkNgdlyTwnOhfThUt0pp3AtFsnFlSbQJX3beIx2opfQ6TrxZqyuOD8rVs=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr58975631lff.44.1578393328640;
+ Tue, 07 Jan 2020 02:35:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20191229013059.495767-1-linus.walleij@linaro.org> <20191230102021.GF2628@lahna.fi.intel.com>
-In-Reply-To: <20191230102021.GF2628@lahna.fi.intel.com>
+References: <20191227230447.32458-1-hdegoede@redhat.com>
+In-Reply-To: <20191227230447.32458-1-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:32:54 +0100
-Message-ID: <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Tue, 7 Jan 2020 11:35:17 +0100
+Message-ID: <CACRpkdaR4vFp=huuqvsnZTFnAmKNJmjpwM8sPpVX2aERp-LogA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: baytrail: Do not clear IRQ flags on direct-irq
+ enabled pins
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Mastykin <mastichi@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> > We need to convert all old gpio irqchips to pass the irqchip
-> > setup along when adding the gpio_chip. For more info see
-> > drivers/gpio/TODO.
-> >
-> > Set up the pin ranges using the new callback.
+On Sat, Dec 28, 2019 at 12:04 AM Hans de Goede <hdegoede@redhat.com> wrote:
+
+> Suspending Goodix touchscreens requires changing the interrupt pin to
+> output before sending them a power-down command. Followed by wiggling
+> the interrupt pin to wake the device up, after which it is put back
+> in input mode.
 >
-> Maybe have this one split as a separate patch? Same what we do for
-> Baytrail and Cherryview.
+> On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+> in combination with listing the pin as a normal GpioIo resource.
+>
+> This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+> again. In this case byt_gpio_disable_free() calls
+> byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+> (direct) IRQ no longer triggers.
+>
+> This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+> to byt_gpio_clear_triggering().
+>
+> Note that byt_gpio_clear_triggering() only gets called from
+> byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+> from the irq_valid mask by byt_init_irq_valid_mask().
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-I'm afraid to do that since splitting the semantic ordering was
-something that broke a lot of times already, I was under the
-impression that doing the two things (moving to the callback
-and adding along with the gpio_chip) at the same time was
-the only way to preserve the semantic ordering.
-
-But more than anything I want someone to test it ...
+Patch applied as non-critical fix for v5.6 with Mika's ACK.
+(Tell me if it's critical.)
 
 Yours,
 Linus Walleij
