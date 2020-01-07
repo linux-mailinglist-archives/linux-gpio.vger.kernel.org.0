@@ -2,61 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D7871328C8
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 15:23:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBE4713292B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 15:44:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgAGOXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 09:23:21 -0500
-Received: from out28-196.mail.aliyun.com ([115.124.28.196]:42637 "EHLO
-        out28-196.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbgAGOXV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 09:23:21 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.10155|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.143375-0.00537265-0.851253;DS=CONTINUE|ham_social|0.0139022-0.000757724-0.98534;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.GXyhNcU_1578406987;
-Received: from 192.168.1.7(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GXyhNcU_1578406987)
-          by smtp.aliyun-inc.com(10.147.41.199);
-          Tue, 07 Jan 2020 22:23:08 +0800
-Subject: Re: [PATCH 0/5] pinctrl: ingenic: cleanups
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>
-References: <20200106232711.559727-1-paul@crapouillou.net>
- <CACRpkdYo0dniDAq12WG=KWmJPjnuYEtDn=pvHRoRGRhzQUX58w@mail.gmail.com>
-Cc:     od@zcrc.me,
+        id S1728052AbgAGOo6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 09:44:58 -0500
+Received: from mga11.intel.com ([192.55.52.93]:62763 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbgAGOo6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:44:58 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:44:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="303213737"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 07 Jan 2020 06:44:55 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ioq6J-0005qn-VF; Tue, 07 Jan 2020 16:44:55 +0200
+Date:   Tue, 7 Jan 2020 16:44:55 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefani Seibold <stefani@seibold.net>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E14944B.4060405@wanyeetech.com>
-Date:   Tue, 7 Jan 2020 22:23:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
+ status changes
+Message-ID: <20200107144455.GF32742@smile.fi.intel.com>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+ <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+ <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
+ <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYo0dniDAq12WG=KWmJPjnuYEtDn=pvHRoRGRhzQUX58w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
 
-On 2020年01月07日 20:35, Linus Walleij wrote:
-> On Tue, Jan 7, 2020 at 12:27 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
->> I saw you merged Zhou's patchset, here are some cleanup patches for
->> pinctrl-ingenic that should be applied on top of his commits.
-> All five patches applied!
->
-> Zhou can you test the result? I am pushing the devel branch
-> out and as soon as it builds cleanly I will push it for-next.
+...
 
-I tested it on JZ4760 and JZ4780. The hardware of X1000 and X1830 is not 
-in my hand right now, I can test them tomorrow, but from the view of the 
-code, it should work fine. You can add:
-Tested-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> Let's try to CC the actual author (Stefani Seibold) and see if the mail
+> address works and if he can look at it. Or did you already talk to
+> Stefani?
+> 
+> (git blame is always my best friend in cases like this, hehe)
 
-Thanks and best regards!
+Recently I started to be smarted in such cases, i.e. I run also
+`git log --author='$AUTHOR'` to see if they are still active and
+what address had been used lately.
 
->
-> Yours,
-> Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
