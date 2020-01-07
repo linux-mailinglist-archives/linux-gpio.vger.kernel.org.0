@@ -2,87 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE631327F8
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:42:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4AFD132788
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:26:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgAGNmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 08:42:09 -0500
-Received: from www84.your-server.de ([213.133.104.84]:53176 "EHLO
-        www84.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgAGNmJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:42:09 -0500
-X-Greylist: delayed 1564 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Jan 2020 08:42:08 EST
-Received: from [188.192.102.182] (helo=[192.168.0.7])
-        by www84.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <stefani@seibold.net>)
-        id 1iooiI-0003xj-OC; Tue, 07 Jan 2020 14:16:02 +0100
-Message-ID: <10721bebc81144c25e53b55c8cd086a34d4fd1f8.camel@seibold.net>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-From:   Stefani Seibold <stefani@seibold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 07 Jan 2020 14:15:59 +0100
-In-Reply-To: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
-         <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
-         <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
-         <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 
+        id S1727658AbgAGN0U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 08:26:20 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46641 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgAGN0T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:26:19 -0500
+Received: by mail-lf1-f68.google.com with SMTP id f15so38829224lfl.13
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 05:26:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9djqwGIJf2I22OzfnRj3IuEtZ6zVvwdwNk4Hj6ZFA70=;
+        b=qehfjqnlIKGhemdvcDzaHIWgPnMIKeEq9JYcoVJcdsSy8Wat4sbe4iABBcAk+56lCq
+         n/niykJ5zW3gXIkUyKPDN2QY7xguV1vGofNnIaCmEItNPGFPAFKzl6aFKSLFUfGlhEBc
+         h83Je2A3rbiMS+3FWD3mF39kdkdMn9H0hF4C91J4sYY3P9vSbioZkYKUH/HwI8hRXNdg
+         dUWKMOcIYgJ6ExKWgP4K1ESqWNneUFp7hc00BfWmQzYO9XUdON/YZbPX4w2Ecr6ckL1J
+         j+Q4ONZ5p8qiSABW176nzeVQOcpfF9kkhO5Kr12axgHB4S9HbTwYXs7drtn3eD4Heeu/
+         UmIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9djqwGIJf2I22OzfnRj3IuEtZ6zVvwdwNk4Hj6ZFA70=;
+        b=WJqsO4smt9di29RPfo1VrDAhEG11Kiqdh4xGY/pBrZ4ijHMTf2GLbcnh9/KJt2KG4K
+         niuMVFbC+kgIt86c7BsA7JKPwdaDYMCRcykcKt5cmG5ypEZ72RDxVv+VcMvQD/iF1iZo
+         Fp4OTKBFJEQ/0mDKgTUhvW8H3J8oCopvCd+8teqTlqcYi9SVxFQBhbRs9eFt1vHc+fcd
+         IwUIisM9kVhWy80cUW+aeifrlhmbC6AdRPDjAbgsn/WrVkYdToz+7uVxQguSRa7eMMrD
+         gxdNGUk0yof/gMDXd4Nm6XRuKf/63GIKLLUfd/UiskS9ae4Q3xyQyDrPG7/ZDliTJzdC
+         142w==
+X-Gm-Message-State: APjAAAWp4TuHOVHAIrEAnWlKhnYdRY5eawHwurt+Zc37EczpXYzpt58q
+        3TKlojPpT/SMYUpcY8vFbTKO13tL7b71yjCrZfPDbQ==
+X-Google-Smtp-Source: APXvYqzkfn0LApP777P/NTsWuXQs9WqemFpwgDX6Y8xe92X1MAhfleO+4i8GW0Pi/uidnD4K7AZauJF4tdGd9SZmZZc=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr58785651lfp.133.1578403577691;
+ Tue, 07 Jan 2020 05:26:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: stefani@seibold.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25687/Tue Jan  7 10:56:22 2020)
+References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
+ <1577799707-11855-5-git-send-email-light.hsieh@mediatek.com>
+ <CACRpkdbto2goahTjzozi_LXXo1QNUTV1wm_rwoFOTcb36w0jkw@mail.gmail.com> <1578399400.16092.14.camel@mtkswgap22>
+In-Reply-To: <1578399400.16092.14.camel@mtkswgap22>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 14:26:06 +0100
+Message-ID: <CACRpkdYEq4FR07LyUSXRzPuQ=HXox7FJm+ABww0hvCYbHmQGkA@mail.gmail.com>
+Subject: Re: [PATCH v7 5/6] Backward compatible to previous Mediatek's
+ bias-pull usage
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, kuohong.wang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Dienstag, den 07.01.2020, 13:50 +0100 schrieb Linus Walleij:
-> On Tue, Jan 7, 2020 at 11:38 AM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > wt., 7 sty 2020 o 11:07 Linus Walleij <linus.walleij@linaro.org>
-> > napisał(a):
-> > > The patch set overall looks good to me, I don't understand the
-> > > kfifo
-> > > parts but I trust you on this, though we need review from a FIFO
-> > > maintainer.
-> > 
-> > Ha! This may be a problem - there doesn't seem to be one. This is
-> > why
-> > I Cc'd Greg.
-> 
-> I was under the impression that KFIFO was part of the driver core.
-> Let's try to CC the actual author (Stefani Seibold) and see if the
-> mail
-> address works and if he can look at it. Or did you already talk to
-> Stefani?
-> 
-> (git blame is always my best friend in cases like this, hehe)
-> 
-> Yours,
-> Linus Walleij
+On Tue, Jan 7, 2020 at 1:16 PM Light Hsieh <light.hsieh@mediatek.com> wrote:
 
-I have looked around for the patches and I found the following patches 
+> Use of "bias-pull-down = <MTK_PUPD_SET_R1R0_XX>" had already been
+> described in
+> Documentation/devicetree/binding/pinctrl/pinctrl-mt65xx.txt.
+> Previous MediaTek chips using pinctrl-mtk-common.c had already use such
+> binding. This is so-called backward compatibility.
+>
+> Besides, according to
+> Documentation/devicetree/binding/pinctrl/pincfg-node.yaml, bias-pull-up
+> and bias-pull-down can have an optional argument to select pull strength
+> when supported by hardware.
 
-[PATCH v4 07/13] kfifo: provide noirqsave variants of spinlocked in and out helpers
-[PATCH v4 08/13] kfifo: provide kfifo_is_empty_spinlocked()
+That's right, I was wrong about this. This should be fine to use.
 
-dated on 24 Dec 2019.
+> So, I think the propose of using "mediatek,pull-up-adv" and
+> "mediatek,pull-down-adv" is not necessary. However, I fail to stop
+> upstream of using "mediatek,pull-up-adv" and "mediatek,pull-down-adv" in
+> pinctrl-mtk-common-v2.c.
 
-Both seems to be okay. The patch is non intrusive to KFIFO adding only
-spinlock wrapper functions for the contemporary kfifo functions.
+Let's see what Sean says, I am fine with the patch set in general.
 
-So...
-
-Acked by Stefani Seibold <stefani@seibold.net>
-
-
+Yours,
+Linus Walleij
