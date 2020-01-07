@@ -2,71 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A80B13281A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:52:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC500132881
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 15:11:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgAGNwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 08:52:20 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13439 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbgAGNwU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Jan 2020 08:52:20 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 05:52:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="225675047"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 07 Jan 2020 05:52:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 07 Jan 2020 15:52:16 +0200
-Date:   Tue, 7 Jan 2020 15:52:16 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20200107135216.GR465886@lahna.fi.intel.com>
-References: <20191229013059.495767-1-linus.walleij@linaro.org>
- <20191230102021.GF2628@lahna.fi.intel.com>
- <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
+        id S1727806AbgAGOLo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 09:11:44 -0500
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:40631 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGOLn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 09:11:43 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2630506|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0462607-0.000847061-0.952892;DS=CONTINUE|ham_enroll_verification|0.0179212-0.000885296-0.981194;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.GXyTd0B_1578406289;
+Received: from 192.168.1.7(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GXyTd0B_1578406289)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Tue, 07 Jan 2020 22:11:30 +0800
+Subject: Re: [PATCH 0/5] pinctrl: ingenic: cleanups
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20200106232711.559727-1-paul@crapouillou.net>
+Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E149191.9020905@wanyeetech.com>
+Date:   Tue, 7 Jan 2020 22:11:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200106232711.559727-1-paul@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 11:32:54AM +0100, Linus Walleij wrote:
-> On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> > > We need to convert all old gpio irqchips to pass the irqchip
-> > > setup along when adding the gpio_chip. For more info see
-> > > drivers/gpio/TODO.
-> > >
-> > > Set up the pin ranges using the new callback.
-> >
-> > Maybe have this one split as a separate patch? Same what we do for
-> > Baytrail and Cherryview.
-> 
-> I'm afraid to do that since splitting the semantic ordering was
-> something that broke a lot of times already, I was under the
-> impression that doing the two things (moving to the callback
-> and adding along with the gpio_chip) at the same time was
-> the only way to preserve the semantic ordering.
+Hi Linus,
 
-Well at least we do the same for others (add the callback in another
-patch and then pass irqchip in another) but no strong feelings. I'm fine
-with this one as well :)
+On 2020年01月07日 07:27, Paul Cercueil wrote:
+> Hi Linus,
+>
+> I saw you merged Zhou's patchset, here are some cleanup patches for
+> pinctrl-ingenic that should be applied on top of his commits.
 
-> But more than anything I want someone to test it ...
+I agree with Paul, these cleanups look pretty good.
 
-I quickly tested this on Whiskey Lake and SD card detection interrupt
-still works fine after this patch.
+>
+> Cheers,
+> -Paul
+>
+
