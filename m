@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86E58132323
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:03:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7806F132327
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:04:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgAGKDH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:03:07 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40372 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgAGKDH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:03:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id i23so38452989lfo.7
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:03:06 -0800 (PST)
+        id S1727427AbgAGKEN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:04:13 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41396 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbgAGKEJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:04:09 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so38432406lfp.8
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:04:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oKol1E5uFe81KlR9aKnDvrtZf1SzxED4CQaA/7Xrzzg=;
-        b=tuhkkljaIaiJJmUSutuX9s49tqJJqqkeBY1ys9QSuul3nan94u8dWFgVt3mkhvDSL7
-         EDUhKOUpqXWFMEnWjZbKjyfAI8UqHcUtDKq3ouBGxUTnWwieRa+yRkYhErpu/llu5eaN
-         qkxjtVsp6ULjQmqaFBeFW9JN5YjEysKwOSox7x1yzuJZsuZSW19h6N2LLqtFBO3gf71a
-         Fwb5Eq+c4UZ/4V64JiipmIfK4IO0154Od9v/4lGOP8UtsjUOAd/bT2TG+8JfueUtuaAe
-         yFVZMyYKJ0Lm5NhUomnxkSePElrk45XMm5qnowkk175wim6tQxv6HsSpy3+OVK40ciyL
-         XmgQ==
+        bh=x2i9D0Ihitkev4ht4FSFiTVw1ZbJ3RS0U3X+Z21+sD0=;
+        b=Kujj5nAsF/McaOhQh4QC/ZrO+uigeQKBkK1y6VnnbagQPt38lsaATNnpWZ44kW3Eup
+         LYeSOwaKJxE5OXfOWa6OYbwpBxD6bdvzNDIhmrPKq2icgV4OD9OLencx+lGj1n8ke29V
+         rFzdLzuQ/dz+ArrxHdcF1YHhgkzAiGrXYot51k7aWbpOcHFSmiqXa+aBDcnKQl/tKfp8
+         pAUXIBM5IUQ4groRh2LWmayWsQ+reuh6Tz3kwPuh4/kLTVwTlgAIoaITz7NU0AZLNvcD
+         a8hanYYcp5ZlGomDzh3uAHWKRIP/Vmgtc1eNdyL35GRLM5Chn3inD0gN6gjmGvlzbShS
+         dPXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oKol1E5uFe81KlR9aKnDvrtZf1SzxED4CQaA/7Xrzzg=;
-        b=ngimgHdl9LcaOp/kTzCjmeYR27qaPpHVn+gKyWx2W5xgJ/U4HAY6gUuKYbnd12H7j8
-         PKrUbrer1sUVBqsS9/pAvJlyOPZ3wZ28Z0ZiIyBquisy3voX3rdkmvuIzSytQk8Y6DzX
-         +Gf3t9jxIQS7eWv74ZLI+yhm1ouLlfu+4Ukw73O2OUU/t/8vg/TbmLge/+E93q6L0+rX
-         rraNVUAD7LrZluC9ByONTKJn3ej1vVnYEzicOdZi8DYEfoPyTnXC2ridEBKvsV02ZdA1
-         NaCC5s9xEuys2SPevDdx3mpaim88r+prtsaxZBcoaihWhfHBN7SnvLtYVkXBCkup/yFm
-         bBVA==
-X-Gm-Message-State: APjAAAVmqDXE8T52XbqFsXanY9bKN7nKT/R/DOwtjFh3ZqLnnVqafPTw
-        DI8lhWXhnQkY+jnpHaqlcoZd4ylSjhWCpe5CVnmvGg==
-X-Google-Smtp-Source: APXvYqyflFfe/fxFM4BmLdYxturyk1PQjv7lTfOtfJH89YmeXjrRU3ac0vEpHAQ+sVYd5gKsJQSyt7VB6pvdJtKdvNE=
-X-Received: by 2002:ac2:55a8:: with SMTP id y8mr58521415lfg.117.1578391385288;
- Tue, 07 Jan 2020 02:03:05 -0800 (PST)
+        bh=x2i9D0Ihitkev4ht4FSFiTVw1ZbJ3RS0U3X+Z21+sD0=;
+        b=HODLzpV29WXFx886rw4lBpGZK9OJNDF4hw6BAFqZT7i7VN7kfVlcpCY4rtuTpOCa2n
+         Q0T/FpCb4hXiQPkJ9eiI6k5ov4jyvf3QnLUxJRH0A/40HNdcqWwDSt34FwJX7FUt6ubr
+         CaEJNtXHS8qZyh4ztwqVxAsi1D11Me+fzYe3GC8t8vb2Ob4s160CGDIatW9I1hstHO+t
+         99lvfYxXwiU/CLY2MIDajDsTbTtP0eFDoJgX1XbEQQPIsNynusZp4D3vBhYzULIZVoeV
+         pEAFgSPrP+N8p2Etl0Mpzsbj571PbkbzzXgp3oM9vhJn/HTZn2PclzAAsntUGf7tgop0
+         QzJA==
+X-Gm-Message-State: APjAAAW4Vsb6a4oADQrG070PVHDgrrac2NfacRWArHUWLnK5owOBrewf
+        9LG4qkUjrSWz5sjCbVS1nfA9EgGpSSXvm5evZbr3DA==
+X-Google-Smtp-Source: APXvYqzw07li0joRnv19MMgwtPGOY2q0x9rVIibcmal6BmQL0ylqnZ3awHBmzcLvX9uirEHXIJmwvppn5akTDicF4Ss=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr58360297lfp.133.1578391447708;
+ Tue, 07 Jan 2020 02:04:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-3-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-3-brgl@bgdev.pl>
+References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-4-brgl@bgdev.pl>
+In-Reply-To: <20191224120709.18247-4-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:02:54 +0100
-Message-ID: <CACRpkdZbehdStd2O_MKFLTWjfPaqCyM+Nimr16ZN9-UQOd+peA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
+Date:   Tue, 7 Jan 2020 11:03:57 +0100
+Message-ID: <CACRpkdY6mUsydabXJDNZC2Wyu0Hx0Ut8xhqpYO5Rcr+FBHwMJg@mail.gmail.com>
+Subject: Re: [PATCH v4 03/13] gpiolib: convert the type of hwnum to unsigned
+ int in gpiochip_get_desc()
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -65,11 +66,14 @@ On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Instead of calling the gpiochip's set_config() callback directly and
-> checking its existence every time - just add a new routine that performs
-> this check internally. Call it in gpio_set_config() and
-> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> the check for chip->set() as it's irrelevant to this config option.
+> gpiochip_get_desc() takes a u16 hwnum, but it turns out most users don't
+> respect that and usually pass an unsigned int. Since implicit casting to
+> a smaller type is dangerous - let's change the type of hwnum to unsigned
+> int in gpiochip_get_desc() and in gpiochip_request_own_desc() where the
+> size of hwnum is not respected either and who's a user of the former.
+>
+> This is safe as we then check the hwnum against the number of lines
+> before proceeding in gpiochip_get_desc().
 >
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
