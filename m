@@ -2,92 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 307401326EB
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:01:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB55132714
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgAGNBb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 08:01:31 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37731 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgAGNBa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:01:30 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o13so43207884ljg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 05:01:28 -0800 (PST)
+        id S1727903AbgAGNJG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 08:09:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43173 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGNJF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:09:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so53840190wre.10
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 05:09:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vZDJ0Z3KTFuC9+XlVjxg702wKwgGzFZIhEmKFnvf86g=;
-        b=MjzY/BAuEKZAcNNT+oRqdDHKYqnzMWjORiGocCmWFgViO0SQorMl9uOkA0kY+tZ5Sf
-         IoTtuA+3nKp9JAnTq+dM35A7eZyRt3zsIiuz6kXFuQI9Ai9DqHxdA/e+oPjVCKE/LGV8
-         GCfAZEJ39bHDDiijwQlnzJcB2cvL4Z9i+ClziGxKcVYXv2hYsLNCj90lDyr76xNw2NHD
-         V0MkHG+RXhSDDecDp02bTaaMV6Pi2i+T4MBzXqROZyFTeVqDnyLFB+OBTT9MAF9Kcj/H
-         GBi6H7Ca6DShJRTARhq4gIXuZg6nq2v4GiCIl1uOFX20TAS6Oexu9LTG08NoYLPAqA9v
-         4QRQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iz352BxuGbNcIztke1mPgtWeM92kMtEgll1IObizsfo=;
+        b=mh0np/XSsz+h4CoB38HETauJmkbz8BR6FmKGypqqOtcnNzw7u0JHU+rG8g+IuVrB3T
+         YC0UU4aDQQE8m3zagVnJMXDnO18NcI3ySxEPagHAkbOXr+KyYC9WKn9l3vgnk9fLoGBt
+         yYXzfW2u6rTKVa6Ii0nqRHruIC+8JiV2NMBGtxPwop0glq3FlMPTyxSMCAs8Plk3M6Y8
+         huiqjx2dS3pSH3+pU86kwN7yGkKjVGVG3U773NeU3HIBSzEm1U7OEkfhV+P/Q/KnZ3IG
+         Vb+h3q5bop0U7ImfGrNvU5pQV40e/N7CvKVRsBkpEa4pQaQa+CQX+ONTFykH/UylPIYM
+         xCMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vZDJ0Z3KTFuC9+XlVjxg702wKwgGzFZIhEmKFnvf86g=;
-        b=rDMO4r4QJ4VfbSSLrcSgp0FaGPJ3sBxXCOnX/U8aAcMOOCO2nuuK8xDpxEXjBzmeiW
-         XX0D9ZLsloNu5pNgVOPSprORBIZ18JkTzz/zunxu4HS0NbsvDd+mBh5MmESgcWOqwqFj
-         AHDW+7rafXyb0J7mL4zKS/7JuFOmfIHPqYamkDdGysNTSgl+Agh7/LoKUmV9rIPD197M
-         yS0F+S3n32vMQ2I5zhOMAf2sr8mbDJ2QZuhvzEDmCaJTngKBG6bjtO8LexQ5YTGhohJG
-         B5pNmVtMVfoOntzxi1eaBN/pIBuOaJAscF7l5oJtzCcEgcknZolcYDWDOEvhT8wmEZyX
-         y9jg==
-X-Gm-Message-State: APjAAAX6dk8cTNKf5tH3RWHWJ+SSFNDB5imbaiaqkUSYPQdN7IcQ1edE
-        ip6O6+nOQ7PcZVu/b2FCZNX9uY38q9qQru8Yw0cQVQ==
-X-Google-Smtp-Source: APXvYqzfa9fyHLZiKNwulHXqjCb8J6xujMZt5bBYtglre/yN1M6166N2+u+zxthTNv8KgR4tjFQhinxWumnRvskeLf8=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61608991ljj.191.1578402087989;
- Tue, 07 Jan 2020 05:01:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iz352BxuGbNcIztke1mPgtWeM92kMtEgll1IObizsfo=;
+        b=Gdx+eREVTrfjt+A/mHoKKZVYSz0oc93x8oNcwXyqWsWVXfC/FNqJZYNUzvF9dshpeS
+         CDAzLwS8HZRzsdbl4a1xcwpUn7JUmcGtZPGFucBeKPVuL9+MsFjje3hXat+g6e8o8xZ7
+         dvPqsq/xYJuB1/ua2SV9oq9XWRTK7swhvFeUYedYtmlcItsCC/86IHI5NrHfglXxv1K6
+         hPGSGk9a6ChDAGItH6vnvODKf3JaP6GWP4UROwpbtOqvjBPOZniBQdD9WfWgLet+DBrC
+         ZWGNvy77+YsLzZsdnzzEyDhrLLpJ7eDpi6JnvfFFjkRcr0s8W4KIm5WgbtLC/e9Ch7E/
+         scIg==
+X-Gm-Message-State: APjAAAVfKppHaFAfMKApAdkmpLFBMh282ouY7kqlMCP3Hvfd6I4Kw8Y2
+        EoCgqZjYV9I/lo2HC6tL8z+inw==
+X-Google-Smtp-Source: APXvYqzva1xlPiPPlyDupp/or7rh5j3PKMzL2qSijT1KHNdr4CPcPjMT6cjFSkIdDmHoOWHjWka4iQ==
+X-Received: by 2002:adf:d0c1:: with SMTP id z1mr112621130wrh.371.1578402544210;
+        Tue, 07 Jan 2020 05:09:04 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id b18sm7287035wru.50.2020.01.07.05.09.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 05:09:03 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Cc:     robh@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, spapothi@codeaurora.org,
+        bgoswami@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v7 0/2] gpio: wcd934x: Add support to wcd934x gpio controller
+Date:   Tue,  7 Jan 2020 13:08:42 +0000
+Message-Id: <20200107130844.20763-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20191218163701.171914-1-arnd@arndb.de> <CACRpkdbqzLUNUjx_kt3-7JLZym2RZ47edW5qp0MgXmpW4-Xf9Q@mail.gmail.com>
- <CAK8P3a2BoVcdgRZqYutA=_SVHLtJwQzP3mKKN-q8n1ROj_iPgw@mail.gmail.com>
- <322b5fbe-e9ca-99cd-80d0-000a5464b37a@opensource.cirrus.com> <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
-In-Reply-To: <CAK8P3a12NievRVGgcyuPaFC3eKr9c7Y3KiTnFxEaLkDyzCCj1Q@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 14:01:16 +0100
-Message-ID: <CACRpkdYWbHS1ZwRhCPyfncXyCyhFrmxOz1OzZR3Ui1toNHh60A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: lochnagar: select GPIOLIB
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, patches@opensource.cirrus.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 1:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tue, Jan 7, 2020 at 12:58 PM Richard Fitzgerald
-> <rf@opensource.cirrus.com> wrote:
-> > On 07/01/2020 10:39, Arnd Bergmann wrote:
-> > > On Tue, Jan 7, 2020 at 10:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >> On Wed, Dec 18, 2019 at 5:37 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >>> I wonder if GPIOLIB should just become mandatory when enabling the pinctrl
-> > >>> subsystem, or if there are still good reasons for leaving it disabled
-> > >>> on any machine that uses CONFIG_PINCTRL.
-> > >>
-> > >> Hm that is a tricky question, they almost always come in pair but are
-> > >> technically speaking separate subsystems.
-> > >
-> > > I think there are a number of use cases for GPIOLIB drivers without PINCTRL, but
-> > > are there any examples of the reverse?
-> >
-> > You could have muxable pins that aren't gpios. For example muxing
-> > between i2c/spi signals. So a pinctrl driver doesn't imply gpio.
->
-> I understand that this is the case in theory, but what I was wondering about
-> is whether there are any such users, or at least any that also want to
-> save a few kilobytes of kernel size for gpiolib.
+This patchset adds support to gpio controller found in Qualcomm
+WCD9340/WCD9341 Codec.
+This two patches are split of bigger patch series at https://lwn.net/Articles/807737/
+Audio codec is already merged as part of ASoC tree. 
+There is no compile time dependency on this series, can go via gpio tree.
 
-I don't think so. In any case what we need to do at all times is
-put gpiolib on lowcarb diet as it gets compiled into pretty much
-everything (at least everything embedded), so I am working a bit on that.
+Thanks,
+srini
 
-Yours,
-Linus Walleij
+Changes since v6:
+- Removed dependency on GPIO_GENERIC as suggested by Linus W.
+- added support to get_direction()
+
+Srinivas Kandagatla (2):
+  dt-bindings: gpio: wcd934x: Add bindings for gpio
+  gpio: wcd934x: Add support to wcd934x gpio controller
+
+ .../bindings/gpio/qcom,wcd934x-gpio.yaml      |  47 +++++++
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-wcd934x.c                   | 121 ++++++++++++++++++
+ 4 files changed, 176 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-wcd934x.c
+
+-- 
+2.21.0
+
