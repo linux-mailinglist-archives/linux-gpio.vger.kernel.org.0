@@ -2,86 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2087132555
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 12:55:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C414813256E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 12:58:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgAGLzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 06:55:32 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43829 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727963AbgAGLzc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 06:55:32 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so54405960ljm.10
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 03:55:30 -0800 (PST)
+        id S1727884AbgAGL6E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 06:58:04 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37479 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGL6E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 06:58:04 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so38688262lfc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 03:58:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
-        b=x4W09e6W3tYzPFUA5L3cocu4C28m1vu8wvfPIVtcJZVrttySIpPpOBOxScCKjuNNRn
-         OyhMcUwnM45j1nxRiN5G0bCuRyxa4OO8QJEjgJm87+mAfYD5ZXWyADDY2k/7fKinA+yq
-         x46qgZYWT1cXuXTxyoTLqtgueith2idAaQl0QpKpm9DWWQXeyE7d7v7jS/oNr2UiSKNN
-         m6C7X0ok2d1rKs8X7I64wx/UnFvv/rjXO0HEkKEWuEkCZIwA3EBJDQUcZWPjo67sFJae
-         VO0hAUkUiwdg8Mxsg7FFAMxrzsisTkn3tAyhmQKML6FQVwKQY2O4oh24yPneCrUoCJYv
-         UMaA==
+        bh=xDan+NrzXoxR0IPHrL1TDLZarGAclLuRifX+nstdyLs=;
+        b=ZPMn1nE42pxSFIb1/Jg5EmMBDBWfpJQgc8kIHzd/wnsIg2z055kAeJe7IZ2lGrc4VL
+         5iOir8/YoGZBNkqMWNXaOcbg+N/r6+fBoQT6km2FvUpMk7pcIVvr8jxVeX0JbAzzGCZN
+         iI49xWxMtMPuXPX0jJ2HosEiAOgGCEvLEVp4WJzyqu0yjdtWOLNiu7F8F7TIV++LYAZr
+         uOhFfo5Xoefp+qWIgsAz4DVWy6WFyiBlgFZ5gTi7lZacYbdFEhKD6rb0esbk/bVgt7Kh
+         ds63EIcLrBWwiztHDjS82JL3nJTbkG9Wgjt4BDhKFhlUtUkb1ZapxVFO3gsFt5mE4e6D
+         w8sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=srVCYWN5C5Eufk05htqMAJUHJORyKr0Vlz9Det0daS4=;
-        b=epLqCGN5iZiExmSMFEM1hMENj3WW4oyIROquK4XoBHdXSo1aCBpOZw6JdIEmsJyNHT
-         Yo+pPlYP5NtJ3MRd5v0zzI53RkUrhq2h+VaZVayqsZKo7EgakjzLpp4KUNbY79quCTGn
-         YURPG6Ms3QGofFpAr5ZiJDkWEUXhBTq0BFUkymslVhvmVppM2qs4EZG7383Go/2vQgyz
-         RKECMaQZVOzUHUTsob2fph8RWbSy6mIZqxgRMsB1ibXGlTjOd8BHyvFxgLbjbzLDD8qh
-         eUOJtjv1RFIYdjlQ08uQCFHLrDpkG9f0SZHXrdx91fcZAFYmmVIYz97L3y7Kyc5l9S9J
-         CZbw==
-X-Gm-Message-State: APjAAAXrzhh4ibFwdTvFpTlpGe/qsu62vcgdzwFdCp9ONMlHXOdZr5wK
-        YL9D2/HwyIyqacNq22ipo5GAaeWm8P9BtWObtAHhbA==
-X-Google-Smtp-Source: APXvYqzkyD6g7/9CDAlHtA5mKWWnMz52PVnTB6MFjhAOLT8GCecy17Mok8VzpbjzK10JRhbJp55ZQJQKlRcjb1WeUVc=
-X-Received: by 2002:a2e:9587:: with SMTP id w7mr60523035ljh.42.1578398130000;
- Tue, 07 Jan 2020 03:55:30 -0800 (PST)
+        bh=xDan+NrzXoxR0IPHrL1TDLZarGAclLuRifX+nstdyLs=;
+        b=X5oyVVBFUfacac5zGS/3vQUVmhC0ghX2Oc4g+++Xxj+HHxKpwKRMvQzVYI2Mq57o4+
+         vlkzcJzEXkCtwpMAopggTHNdLR8cmqHbuYT9AgCkIeWhBz9XFOeXiAA+lXjPobg3NTuO
+         M4gRRxoA2XaW16B0yx4Xae0qEuvLdQcPopIWUPaS/ORUjCoC+czvK62uVVz7hfwNqxYX
+         dN//kHXdvcGV+1w5Y8qXVpOEetv3zpw06Jbs6VQuhVzqYBUziV0qYKgPzkh4M+r9md2D
+         xVQ6YLl6NUsh8Nk698gW8L4EqGufJ1co93XwmS4DtBbksxgJ55Q/ViW5jdcgwZX7Sx8V
+         za3A==
+X-Gm-Message-State: APjAAAVh2XDEyMzKOAPb2HaSfyv0dPf3eEbjXA6wKXV0MIaR4m/xK5tk
+        9NoH7yeW0jdmNzTdkyM/nNSS/kcCQm65J6f+UeXEJA==
+X-Google-Smtp-Source: APXvYqwBV7Ee1u2/FkNJ0D4MbpRQIHVF3KeTSLqGk3g7UjA/Un7cz14I6dnnOSlGcQuSrKdeuZpBbnhTEHw44fEXAz0=
+X-Received: by 2002:a19:8a41:: with SMTP id m62mr59154614lfd.5.1578398282446;
+ Tue, 07 Jan 2020 03:58:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org> <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
-In-Reply-To: <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+References: <20200105160357.97154-1-hdegoede@redhat.com> <20200105160357.97154-2-hdegoede@redhat.com>
+In-Reply-To: <20200105160357.97154-2-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 12:55:19 +0100
-Message-ID: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
-Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+Date:   Tue, 7 Jan 2020 12:57:51 +0100
+Message-ID: <CACRpkdYx864UEo9-Bpiian4evJMrrCN-kp61s+Y1gc7BZ88KZA@mail.gmail.com>
+Subject: Re: [PATCH resend v2 1/2] gpiolib: acpi: Turn dmi_system_id table
+ into a generic quirk table
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
+On Sun, Jan 5, 2020 at 5:04 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> Add device tree binding Documentation details for ipq6018
-> pinctrl driver.
+> Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
+> into a generic quirk table, storing the quirks in the driver_data ptr.
 >
-> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
-> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> ---
->  [v3] Fixed the example dt node, inherited properties
+> This is a preparation patch for adding other types of (DMI based) quirks.
+>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Once you are done with patches 1 & 2, can I merge these
-separately to the pinctrl tree?
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
