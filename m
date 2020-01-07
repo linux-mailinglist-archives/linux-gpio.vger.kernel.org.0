@@ -2,86 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 375FB132945
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 15:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2290A13296A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 15:57:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgAGOs6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 09:48:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:18792 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbgAGOs6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:48:58 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:48:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="215574314"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Jan 2020 06:48:55 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ioqAC-0005tX-Lo; Tue, 07 Jan 2020 16:48:56 +0200
-Date:   Tue, 7 Jan 2020 16:48:56 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
-Message-ID: <20200107144856.GI32742@smile.fi.intel.com>
-References: <20191229013059.495767-1-linus.walleij@linaro.org>
- <20191230102021.GF2628@lahna.fi.intel.com>
- <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
- <20200107135216.GR465886@lahna.fi.intel.com>
+        id S1727994AbgAGO5F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 09:57:05 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:40110 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728171AbgAGO5F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 09:57:05 -0500
+Received: by mail-wm1-f54.google.com with SMTP id t14so19721675wmi.5
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 06:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=f4qAp04JRlFjCJzNkD6Kd3Rawquh4ZovJj5O83qElgU=;
+        b=U27U4I+kqGShaKLTt4BpDGcWM0iDSATiqdOQAM1VgFLo5Flglq67MEoDa5qm+aekeX
+         6SJk5+GnpFCoBTuXS188KMLgvA7fx5U9oJR/FO8wBdZLM+DrJTNcvYNDXIyVh1uMHyyf
+         2Kk4VfOYUV6HFR1xUsjRIB6IQyUMGnMwsYT+8RavyyKIp4eCVEQdzC2hPPTD/iJ2OZjc
+         x1IauBs7We8ddt887eot67Lmz5W7/Q/va7bkwMivUDM0HtsCYt9a8lGV67LboV+3a1bV
+         iZ8hbCZ3BXqdmwMaFluVoDbbbpKyLbribKVPeAX/DZnUtwVo5kIZx21WmIxNT+phPiLe
+         iq+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=f4qAp04JRlFjCJzNkD6Kd3Rawquh4ZovJj5O83qElgU=;
+        b=BlVFQf/0lx107AbzWwzziYRty6R8TeLHtkurIjkvWV4H37BxxCQnRI0yEH+2nBH9n1
+         a+vQBXaoShqtywE5HCmV5KdSauyrQ/c0/xkPQ3ncpTUhsd6eCojlr+T2GhDVqLlXzleZ
+         KdmrnTHX61uoGAXv4h1AnAtAtcNMpJ0SJrJzYmVnDOceZ7HSQ3A2BqINuvqtt2NitU70
+         taOdFdekpEU7kFuuUu0r3I6eIDdJjDAWjv768sttIGNEHG8J84QTj9/A7QzCFPT3towh
+         11/5JrzzgOhLj/cHX+vP4ABU/yOpdOAO2bpnvKOS5nyBL39D98pv1L/rTeamJ5KhTkRG
+         Gazw==
+X-Gm-Message-State: APjAAAVueFtSj21ESXycIc7vb7xUg6tOud2zKz8+a9wKhG4GUPcAqy4y
+        4u6SSvJUwB8VcuL+XXNIBA1RpMxcsyy8OQ==
+X-Google-Smtp-Source: APXvYqyPXc7NSyVKvRVt9MPhVG1r/OLDsrW7ixrLennaY48peRA4r40eChLe0G84OA3AYXn1EyqFug==
+X-Received: by 2002:a1c:628b:: with SMTP id w133mr39868423wmb.25.1578409023362;
+        Tue, 07 Jan 2020 06:57:03 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id 2sm94983wrq.31.2020.01.07.06.57.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 06:57:02 -0800 (PST)
+Message-ID: <5e149c3e.1c69fb81.4ebeb.06da@mx.google.com>
+Date:   Tue, 07 Jan 2020 06:57:02 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107135216.GR465886@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.5-rc4-6-gaa23ca3d98f7
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: fixes
+Subject: linusw/fixes build: 5 builds: 0 failed, 5 passed,
+ 1 warning (v5.5-rc4-6-gaa23ca3d98f7)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 03:52:16PM +0200, Mika Westerberg wrote:
-> On Tue, Jan 07, 2020 at 11:32:54AM +0100, Linus Walleij wrote:
-> > On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
-> > > > We need to convert all old gpio irqchips to pass the irqchip
-> > > > setup along when adding the gpio_chip. For more info see
-> > > > drivers/gpio/TODO.
-> > > >
-> > > > Set up the pin ranges using the new callback.
-> > >
-> > > Maybe have this one split as a separate patch? Same what we do for
-> > > Baytrail and Cherryview.
-> > 
-> > I'm afraid to do that since splitting the semantic ordering was
-> > something that broke a lot of times already, I was under the
-> > impression that doing the two things (moving to the callback
-> > and adding along with the gpio_chip) at the same time was
-> > the only way to preserve the semantic ordering.
-> 
-> Well at least we do the same for others (add the callback in another
-> patch and then pass irqchip in another) but no strong feelings. I'm fine
-> with this one as well :)
-> 
-> > But more than anything I want someone to test it ...
-> 
-> I quickly tested this on Whiskey Lake and SD card detection interrupt
-> still works fine after this patch.
+linusw/fixes build: 5 builds: 0 failed, 5 passed, 1 warning (v5.5-rc4-6-gaa=
+23ca3d98f7)
 
-My understanding that Linus asked to test a proposed (two patch) series...
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.5-rc4-6-gaa23ca3d98f7/
 
-Linus, can you send v2 as series of two patches as Mika suggested?
+Tree: linusw
+Branch: fixes
+Git Describe: v5.5-rc4-6-gaa23ca3d98f7
+Git Commit: aa23ca3d98f756d5b1e503fb140665fb24a41a38
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
 
--- 
-With Best Regards,
-Andy Shevchenko
+Warnings Detected:
+
+arm64:
+
+arm:
+
+mips:
+
+riscv:
+
+x86_64:
+    x86_64_defconfig (gcc-8): 1 warning
 
 
+Warnings summary:
+
+    1    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_=
+is_phy=E2=80=99 defined but not used [-Wunused-function]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sec=
+tion mismatches
+
+Warnings:
+    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_is_ph=
+y=E2=80=99 defined but not used [-Wunused-function]
+
+---
+For more info write to <info@kernelci.org>
