@@ -2,103 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5CB1327DC
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A80B13281A
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 14:52:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgAGNid (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 08:38:33 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58519 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbgAGNic (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 08:38:32 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iop3l-0007Jd-RU; Tue, 07 Jan 2020 14:38:13 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iop3j-0005N2-6B; Tue, 07 Jan 2020 14:38:11 +0100
-Date:   Tue, 7 Jan 2020 14:38:11 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
-References: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
- <20200107130911.GD4877@sirena.org.uk>
+        id S1727880AbgAGNwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 08:52:20 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13439 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbgAGNwU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Jan 2020 08:52:20 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 05:52:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
+   d="scan'208";a="225675047"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 07 Jan 2020 05:52:17 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 07 Jan 2020 15:52:16 +0200
+Date:   Tue, 7 Jan 2020 15:52:16 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH] pinctrl: intel: Pass irqchip when adding gpiochip
+Message-ID: <20200107135216.GR465886@lahna.fi.intel.com>
+References: <20191229013059.495767-1-linus.walleij@linaro.org>
+ <20191230102021.GF2628@lahna.fi.intel.com>
+ <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107130911.GD4877@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:32:28 up 53 days,  4:51, 47 users,  load average: 0.02, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <CACRpkdZONfNCPwTn=Ou7LU=+fPjDXeGGN8jkCzgRLkK2stKeNw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 20-01-07 13:09, Mark Brown wrote:
-> On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
-> > On 19-12-17 12:58, Mark Brown wrote:
+On Tue, Jan 07, 2020 at 11:32:54AM +0100, Linus Walleij wrote:
+> On Mon, Dec 30, 2019 at 11:20 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > On Sun, Dec 29, 2019 at 02:30:59AM +0100, Linus Walleij wrote:
+> > > We need to convert all old gpio irqchips to pass the irqchip
+> > > setup along when adding the gpio_chip. For more info see
+> > > drivers/gpio/TODO.
+> > >
+> > > Set up the pin ranges using the new callback.
+> >
+> > Maybe have this one split as a separate patch? Same what we do for
+> > Baytrail and Cherryview.
 > 
-> > > This doesn't say anything about how the GPIO input is expected to be
-> > > controlled, for voltage setting any runtime control would need to be
-> > > done by the driver and it sounds like that's all that can be controlled.
-> > > The way this reads I'd expect one use of this to be for fast voltage
-> > > setting for example (you could even combine that with suspend sequencing
-> > > using the internal sequencer if you mux back to the sequencer during
-> > > suspend).
-> 
-> > The input signal is routed trough the da9062 gpio block to the
-> > regualtors. You can't set any voltage value using a gpio instead you
-> > decide which voltage setting is applied. The voltage values for
-> > runtime/suspend comes from the dt-data. No it's not just a fast
-> > switching option imagine the system suspend case where the cpu and soc
-> > voltage can be reduced to a very low value. Older soc's like the imx6
-> > signaling this state by a hard wired gpio line because the soc and
-> > cpu cores don't work properly on such low voltage values. This is
-> > my use case and I can't use the sequencer.
-> 
-> My point is that I can't tell any of this from the description.
+> I'm afraid to do that since splitting the semantic ordering was
+> something that broke a lot of times already, I was under the
+> impression that doing the two things (moving to the callback
+> and adding along with the gpio_chip) at the same time was
+> the only way to preserve the semantic ordering.
 
-Therefore I want to discuss the dt-binding documentation with you and
-the others to get this done. Is the above description better to
-understand the dt-binding?
+Well at least we do the same for others (add the callback in another
+patch and then pass irqchip in another) but no strong feelings. I'm fine
+with this one as well :)
 
-Regards,
-  Marco
+> But more than anything I want someone to test it ...
+
+I quickly tested this on Whiskey Lake and SD card detection interrupt
+still works fine after this patch.
