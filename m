@@ -2,86 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07E421326C0
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:52:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06EBE1326C4
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:54:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgAGMwz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:52:55 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37763 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgAGMwz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:52:55 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b15so38801153lfc.4
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:52:53 -0800 (PST)
+        id S1727814AbgAGMyj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:54:39 -0500
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:47064 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbgAGMyj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:54:39 -0500
+Received: by mail-lj1-f171.google.com with SMTP id m26so52136576ljc.13
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:54:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L8QAs8mXhglioLsPrlc/f2d1DW6plEBLWoC91qHtQLU=;
-        b=Yn2TyRB1A6iQIcJmRjrzeaQqGvJOWo7XoWbfKsG+WVNnyHmbbqAm3wws8axVbSrvx8
-         OYAvdEREwIT61Jq7XS24FPZabB6NFf6CBMS+nk0infpFkx8TMso1GTjbUKZSWQSBei5w
-         HeMofh8JjZTxSuMRQYKXswWZEJVsyKirJsdh84VnRNEDBHVnCQmLzMcMRmtA3ydGNgfa
-         5L30k/tpjPghGC26xYQZDChA/vk1hkf75dK9VaZF9Qi9vccEh9vpmh4STE4jsKJj/QfX
-         RrhfavmoM0fIfBpoXr4XH95IpmY9v05ug4VeNSkEk9IJolXbtwHfYdXRZEAMEgz3UTAB
-         nZ/g==
+        bh=dLQehnIGTRtzNAywjRs5kFO6zHUUUI3tTZN21RU/D7A=;
+        b=JWTdHwJQQlZJKVXrfGbinu7miD5f1KdVZThrff5wDW+WEpHv+Up1KIgHsn6Wn3Bba/
+         X82P7+td1gsCfwirNWEzipP9oR5wHgwlQNczBPE0/2clI+a5kKKi2v/dakUlmQBnkmS8
+         M8a3QoF5I0eCef9vcPI8Uin7BwM0/oOOj0ZrSP22/xnJYcgqoR7ypYwOqy5ayYFD3CH0
+         du9p5nSkD81FEgwy0Px1d8yi4rQfIb93c4wqkpHwKaLW1xPDyonsorbF4x14jjD7EVP8
+         KyPyndSEUUVWA2OGxGTqEpRYaYBcFn5amf2ZYTqGCJy2s8E258UZZ0xp/54WWT/D3N62
+         32qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L8QAs8mXhglioLsPrlc/f2d1DW6plEBLWoC91qHtQLU=;
-        b=I7qcsgWgzZj7KEVDgJmoZLY04Nli7KMAsPm/33U4KYbHFbCDroC3IR7bcPcHCizZ7a
-         9HMo1BqDs96tXU+LSkRhT1U/2tL8aaCnju4S6g5VKk8BCtjRWwyMuP3B0DnJd2EbJsXa
-         RypWWhU4Fzz6z1Nko8go0hCMAglKITmBhrttGBQiOby5A0sZjuIra2ulDfgfS7KauUxw
-         b9iCyl+slFgjbKR+h/GtNP6Gmnxrhv3jerYi0SeQsi3I+fpydIizJnj31PsH2bpXdSsx
-         WQSLVrCXoFg3LXCTjnXL4+hlS0zIdOZ3LZo1hzfU0W6Y0+cyg7ZjygKuPuElVB9H1+VX
-         afVQ==
-X-Gm-Message-State: APjAAAWHN5txjAUsIhEP2FnXjYOf+ZxDOakK+E7CMyUNHLm/X921wkne
-        8WYJoz9F17jIDULGpqjXDKLwHd2kAFsSCsnUa2w7sg==
-X-Google-Smtp-Source: APXvYqzkwnIC5nKfdjXTDBBv2eSE257wx56BzcThYlaspGGuetJJ+vOHhNKo0xsogQPtM2m4KtEFsYSOjhMxMQYb2yo=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr58545952lfi.93.1578401572910;
- Tue, 07 Jan 2020 04:52:52 -0800 (PST)
+        bh=dLQehnIGTRtzNAywjRs5kFO6zHUUUI3tTZN21RU/D7A=;
+        b=Z9Aoh9jQn75Tjitn0intNOXLil7TVMTNfB8xdTBLaAhcYSyXh3gpAGGWL4H8ElVuzH
+         2fU1XJ/nTTdQm2yTb7b2/N+6LsAMgfiSSOgwzJooFBHmDszRRZwMC6AD7ljsZFFRBPQI
+         aJwPQfwbZ5GtqsjtKVNqlQgJHu9QjqDux1HQHATYYEeOSloBWpNug3xF3yDHmaUTy9z4
+         X+G1Qvpf2MNCdtXeJkC8fXXPag/POFAj/j+Hrgh3lq1f1Kc+8NK061pz1QijQyagzZjO
+         fZkWT2CgdiAJOkIP5lUKxDbTCL20Wrs3PIrRNOA3gL0Q1jdC+c9Iq+Tix+B0Rs6PmaW4
+         7J8Q==
+X-Gm-Message-State: APjAAAUWL2c2JSkfh5h3Xqa7B75UylLT7GG306kPvEfHA1uhT4/Y3mVl
+        HeUkOngzJHuNtk42QSFO4B5d1w/9SGuSSl2wiy3rK93HXTQ=
+X-Google-Smtp-Source: APXvYqxVLk2ecsyGowfmnTL78wYC4MFpZZbsVLEtojp/57eiRcLuq5kHJN8I+Gav/9y1t2EjG16W7XG17KgQMlKK99o=
+X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr26298721ljm.251.1578401676846;
+ Tue, 07 Jan 2020 04:54:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
- <20191218162616.qsxsltfsrxotzqhb@axis.com> <048c9653-114b-f726-44b2-9eb1d460b5b5@codethink.co.uk>
- <CACRpkdYFzHCMLj5oU5JMCkQkMZyOvM5351tpO6iEsE8e5nBZWQ@mail.gmail.com> <20200107111836.uzvja6m4nb5hh56j@axis.com>
-In-Reply-To: <20200107111836.uzvja6m4nb5hh56j@axis.com>
+References: <20200107120553.5620-1-brgl@bgdev.pl>
+In-Reply-To: <20200107120553.5620-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 13:52:41 +0100
-Message-ID: <CACRpkdau_eTe7xgSCMeE=6dv_M5Ef+Opy6EzymxewuU6aecKHQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
-To:     Jesper Nilsson <jesper.nilsson@axis.com>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jesper Nilsson <jespern@axis.com>,
-        Lars Persson <larper@axis.com>,
-        linux-arm-kernel <linux-arm-kernel@axis.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 7 Jan 2020 13:54:26 +0100
+Message-ID: <CACRpkdYYepw3dJU8Pz+KdptPB+Ok+n=b7KYDrVbq3p7DCL=LKA@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: updates for v5.6
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:18 PM Jesper Nilsson <jesper.nilsson@axis.com> wrote:
-> On Tue, Jan 07, 2020 at 10:39:34AM +0100, Linus Walleij wrote:
-> > On Wed, Dec 18, 2019 at 6:32 PM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> > > On 18/12/2019 16:26, Jesper Nilsson wrote:
-> > > > On Wed, Dec 18, 2019 at 11:16:02AM +0100, Ben Dooks (Codethink) wrote:
-> >
-> > > >> -    unsigned int *reg;
-> > > >> +    unsigned int __iomem *reg;
-> > > >
-> > > >       void __iomem *reg;
-> > > >
-> > > > We're using as an argument to readl()?
-> > >
-> > > yes, readl() shoud take an __iomem attributed pointer.
-> >
-> > Shall I change it to void as well when applying?
->
-> Please do, sorry that my comment wasn't clear above.
+On Tue, Jan 7, 2020 at 1:05 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-OK I did that and applied, let's see if it works :)
+> as discussed: this is the PR that contains the cleanup patches submitted
+> as part of my series adding support for watching GPIO line status. Several
+> other patches picked up into my tree since the merge window are in here as
+> well.
+
+Pulled in, thanks a lot! Now it's time for the autobuilders to play with it.
 
 Yours,
 Linus Walleij
