@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A641713232F
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:05:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 651B013233B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:07:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgAGKFE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:05:04 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43483 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgAGKFD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:05:03 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 9so38448224lfq.10
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:05:00 -0800 (PST)
+        id S1726565AbgAGKHr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:07:47 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33098 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAGKHr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:07:47 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so38476515lfl.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:07:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=awClw5OAQIwoGJ1RZz6WGsXMCWNAAQaZn8rQr6h6O5s=;
-        b=x5KxWlGe7nbe02Q9as2w62MXuN/BIWWDnrFUKqM2bPddubzze64XtDbRYCeyDm6rm2
-         qi8wSDPT1ADgriXyfveliTg+kLK9wl2nA2natoUTp7Vz1aMtCjtkfVOQZsI2oIrTzs/Y
-         u+Ssk63d3rThpDc3d7NekeZWAHe6VxuaExN4gw5bpiHDM3ScGcQnr+aL3ZB9/y9QyztF
-         k9KAajHdQXFlj1F9/3YBkmp50in8DKYhFWiL2WRI7eCHceWKtbDHQs85UQoDOIZpw2jz
-         j9aCHM2u7r97AS9b++W1qiREBX7/RzZeT8D21s4TYx8uTUqV9QlpjqDnlubbqfc/EkEI
-         fSwg==
+        bh=tnOEaQ6thA4ioA5fxD6hDNCp7KpKg8s6CWqPnu7C3t0=;
+        b=bp/ha09pbJrjB7BfANNxqqk3vHg3IP21d2kXPcv77A4mSWqgk2ke/gOOZTBXAlz/gb
+         pTAhLv3rOCvPTejETypGgKa+/QP4wgruXTfVLzOMi01tl/2YgPFPRYXAnW88esB17cpy
+         K5x9/macduUx3QzXsw8okSc7l3uRlhCmkzwXhyPUyhpI+7CLbRPsex6jxMVjyXpQhYud
+         IJ0lO8Ynk2602TZYwaJvJQjE+CVslg7mINTxtzl9IxpbFpYuxMsll8VqCq6btmEMv5nu
+         3PLKJCk01mCMtkN++X4bQ3pP3Zj8KY/d44XHSLpoSuQ6J64ay46C+Pff3DyVWYLOHZtc
+         oB0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=awClw5OAQIwoGJ1RZz6WGsXMCWNAAQaZn8rQr6h6O5s=;
-        b=KOVSM+R8/n2uJxKfFoW077SHPGWlWwnUS9oVDpit3GneD6BGx7rU/+JAcDm66dVj+O
-         8MYmi8Tzb79e5rYMKSPbG2UVGvdjR/POwH1D9Wb18jD7dPXx5iEfukzo8Tsfw25KIwtB
-         zKStC+F4GH/hY3mZVtIlXTioG33NW6Ojeo/OB7FVMm6NmbbWygLtTLOkoXR2xmPRn7e3
-         U35eWdHyM1jJgmAlmj4a2vX5D0hwIGLhK9ufJUKfw04k3jKvWv/KrbHU/b1HxgosC7T6
-         RTA739cNb1RMDJ7BpU3AUAJlT4AcoPGURFma0F/2hYrFGnHk5Z0JANSWg0Ij6HZyrEhA
-         8Phg==
-X-Gm-Message-State: APjAAAVpFQRz2m9DV7tx0FQyvzsOUtrVQIfEN5KBDCiWRKO5VVYw4Szp
-        Ibyk/1K4otNiBJnSQghldm+Ag8bNZNOwwS2TvFqaoA==
-X-Google-Smtp-Source: APXvYqw0j/84MKECKcv0/Q78CRciq/3n0s13Yasvj4qWuUXq74vhfWWyeCyqp/+mpqyYZnb4UfHpt8+hrdDc7TszrfA=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr58196144lfi.93.1578391499976;
- Tue, 07 Jan 2020 02:04:59 -0800 (PST)
+        bh=tnOEaQ6thA4ioA5fxD6hDNCp7KpKg8s6CWqPnu7C3t0=;
+        b=Umb59dr/6aSfoeiKjADX7TsBLVBfUNi7zxx8Z7rAQTFOhRqVEiy5T4y+Zki9UICmn0
+         sOZgjqeF8J9QGV2Il5uY4wgwzYNoqhJ3r85qN40KxhrU1ZhnXD3/Z8C/rm5GAOtXpPjZ
+         fjJygmzhw6mC5ip16GUF163z/BjwbA4nPeCH5xCRWICMPrrXf82+VgxR8EbZLSodSmVj
+         2tpqdbBNAN1IlSosGVVosobE8wp7uSvRPdnBqBXawDuRcJXFesSA7e0YUeen43LFBTfN
+         SGA6Ur8eBuG0JeLNisVF3n+PpI4wpR0OjTqfulvKLxpUOZnFBdmH6Brv6gYaWkCehiMh
+         uwZw==
+X-Gm-Message-State: APjAAAVx1Snd7wZukUAnP6UltMi5I4BrDSWEASOJeZvIkO84nBQkdstu
+        +7HysQxgmhEcY84GFegWQ6LqUx9avEd8auuWkWQJ3Q==
+X-Google-Smtp-Source: APXvYqzdeOAXksQUt5Y17xj72qs0uTE490uWOGE17jXJDnVJYINdeEKt+rQpU3ji82kT6R4BsNfbCCFK/SErQF9ux+I=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58202112lfi.93.1578391665090;
+ Tue, 07 Jan 2020 02:07:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-7-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-7-brgl@bgdev.pl>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+In-Reply-To: <20191224120709.18247-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:04:48 +0100
-Message-ID: <CACRpkdb3kE3Pkzgb0tg03BW-hggbDFez7ZWt5XZAuMZsqGO0xQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/13] gpiolib: use gpiochip_get_desc() in gpio_ioctl()
+Date:   Tue, 7 Jan 2020 11:07:34 +0100
+Message-ID: <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
+Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
+ status changes
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -65,13 +65,29 @@ On Tue, Dec 24, 2019 at 1:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> Unduplicate the offset check by simply calling gpiochip_get_desc() and
-> checking its return value.
+> When discussing the recent user-space changes with Kent and while working
+> on dbus API for libgpiod I noticed that we really don't have any way of
+> keeping the line info synchronized between the kernel and user-space
+> processes. We can of course periodically re-read the line information or
+> even do it every time we want to read a property but this isn't optimal.
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> This series adds a new ioctl() that allows user-space to set up a watch on
+> the GPIO chardev file-descriptor which can then be polled for events
+> emitted by the kernel when the line is requested, released or its status
+> changed. This of course doesn't require the line to be requested. Multiple
+> user-space processes can watch the same lines.
+>
+> This series also includes a variety of minor tweaks & fixes for problems
+> discovered during development. For instance it addresses a race-condition
+> in current line event fifo.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+The patch set overall looks good to me, I don't understand the kfifo
+parts but I trust you on this, though we need review from a FIFO
+maintainer.
+
+Could you send me a pull request of the first patches before the
+FIFO changes start, they are good cleanups on their own, also
+it brings down the size of your patch stack.
 
 Yours,
 Linus Walleij
