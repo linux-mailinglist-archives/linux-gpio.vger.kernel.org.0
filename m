@@ -2,86 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3DA1326B2
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:50:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07E421326C0
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:52:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgAGMul (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:50:41 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36469 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGMul (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:50:41 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so38789117lfe.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:50:40 -0800 (PST)
+        id S1727858AbgAGMwz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:52:55 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37763 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbgAGMwz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:52:55 -0500
+Received: by mail-lf1-f65.google.com with SMTP id b15so38801153lfc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:52:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qMXhXLoLeVvu5/KYc9JCl6rH4kjAJAtUCGbVA3bRuPs=;
-        b=paHxzlrVDhvmFYeN1JGQwt2RwNg4fYmXZskPhFpHB3VCz1uJBigeHzwAv3aET5bv66
-         25q2+0DyIkpyxS6j91qo5s9cKu6uckc+sNnqV9/5GG/SknHh7lJRgxJYlQfXIEN9PsAf
-         +2HLTcKYN97TqviPUtqfs9qQWyjdbo8lg4R+k1XuJxkxlJ71gfJvjZMhIXBemRffD9XY
-         89rcRqRZk1QW21k/VTCD7nCpH9B08Dem2GE3C1KIbg8aOulLbfrtb1R1YqpAU12q3aRW
-         WBYntYA07sAdZOyekyHdoPm8s8BVUMPrlz5EQGLidmsr7sq1UrIWeOeEmT8Wc6z+CDfQ
-         eTDA==
+         :cc;
+        bh=L8QAs8mXhglioLsPrlc/f2d1DW6plEBLWoC91qHtQLU=;
+        b=Yn2TyRB1A6iQIcJmRjrzeaQqGvJOWo7XoWbfKsG+WVNnyHmbbqAm3wws8axVbSrvx8
+         OYAvdEREwIT61Jq7XS24FPZabB6NFf6CBMS+nk0infpFkx8TMso1GTjbUKZSWQSBei5w
+         HeMofh8JjZTxSuMRQYKXswWZEJVsyKirJsdh84VnRNEDBHVnCQmLzMcMRmtA3ydGNgfa
+         5L30k/tpjPghGC26xYQZDChA/vk1hkf75dK9VaZF9Qi9vccEh9vpmh4STE4jsKJj/QfX
+         RrhfavmoM0fIfBpoXr4XH95IpmY9v05ug4VeNSkEk9IJolXbtwHfYdXRZEAMEgz3UTAB
+         nZ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qMXhXLoLeVvu5/KYc9JCl6rH4kjAJAtUCGbVA3bRuPs=;
-        b=capsWbsHXlI7r6QzaKM1MNyAcJylS3mIFtuqaZAIKdhkzJyu1tq036TolyhwB1+Hoj
-         CX+n4VuPwvPFtKYLQNP+wFj95WTs22/17UYgu5LsUDPp/vdTca+jtHke8+yNFlUhrYP0
-         od0HmFPxlfX/dMKrS7R18U7iHvcK650UHeoNx/5467KQpX7qKxLdi2mwNTpE+aj8VSPC
-         VDHo4FuUPj/RxRutJFwMD+gg5d9059kNbqTc4EGFY7ylfxqPnYDJWIgIpE8wYWQN/vo+
-         Dl65PSvCnd3RVkx8vDbBH64Nh0g4YeKiI0bsdQpYenTdNfxAQYEjsQPRk2oBFk8ULpoX
-         xQOg==
-X-Gm-Message-State: APjAAAUcKXIPm9L0hTmNUIOwbbmQGloLIy/levHhTOi76gK3Punj4uuS
-        BtBdn87eJ71zgI1G9PiEn3yYEpQEzsrC767JJ+U3Ew==
-X-Google-Smtp-Source: APXvYqxktsFdjUU+MPfexe9Q+wp4ek2hQ056LJObVZR3yFINNyTkjkuQciwpvjnY63x1130vLWSj+yy7dPiIs6Siioc=
-X-Received: by 2002:a19:8a41:: with SMTP id m62mr59272175lfd.5.1578401439549;
- Tue, 07 Jan 2020 04:50:39 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=L8QAs8mXhglioLsPrlc/f2d1DW6plEBLWoC91qHtQLU=;
+        b=I7qcsgWgzZj7KEVDgJmoZLY04Nli7KMAsPm/33U4KYbHFbCDroC3IR7bcPcHCizZ7a
+         9HMo1BqDs96tXU+LSkRhT1U/2tL8aaCnju4S6g5VKk8BCtjRWwyMuP3B0DnJd2EbJsXa
+         RypWWhU4Fzz6z1Nko8go0hCMAglKITmBhrttGBQiOby5A0sZjuIra2ulDfgfS7KauUxw
+         b9iCyl+slFgjbKR+h/GtNP6Gmnxrhv3jerYi0SeQsi3I+fpydIizJnj31PsH2bpXdSsx
+         WQSLVrCXoFg3LXCTjnXL4+hlS0zIdOZ3LZo1hzfU0W6Y0+cyg7ZjygKuPuElVB9H1+VX
+         afVQ==
+X-Gm-Message-State: APjAAAWHN5txjAUsIhEP2FnXjYOf+ZxDOakK+E7CMyUNHLm/X921wkne
+        8WYJoz9F17jIDULGpqjXDKLwHd2kAFsSCsnUa2w7sg==
+X-Google-Smtp-Source: APXvYqzkwnIC5nKfdjXTDBBv2eSE257wx56BzcThYlaspGGuetJJ+vOHhNKo0xsogQPtM2m4KtEFsYSOjhMxMQYb2yo=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr58545952lfi.93.1578401572910;
+ Tue, 07 Jan 2020 04:52:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
- <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
-In-Reply-To: <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
+References: <20191218101602.2442868-1-ben.dooks@codethink.co.uk>
+ <20191218162616.qsxsltfsrxotzqhb@axis.com> <048c9653-114b-f726-44b2-9eb1d460b5b5@codethink.co.uk>
+ <CACRpkdYFzHCMLj5oU5JMCkQkMZyOvM5351tpO6iEsE8e5nBZWQ@mail.gmail.com> <20200107111836.uzvja6m4nb5hh56j@axis.com>
+In-Reply-To: <20200107111836.uzvja6m4nb5hh56j@axis.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 13:50:28 +0100
-Message-ID: <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefani Seibold <stefani@seibold.net>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Tue, 7 Jan 2020 13:52:41 +0100
+Message-ID: <CACRpkdau_eTe7xgSCMeE=6dv_M5Ef+Opy6EzymxewuU6aecKHQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: artpec6: fix __iomem on reg in set
+To:     Jesper Nilsson <jesper.nilsson@axis.com>
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Jesper Nilsson <jespern@axis.com>,
+        Lars Persson <larper@axis.com>,
+        linux-arm-kernel <linux-arm-kernel@axis.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:38 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 7 sty 2020 o 11:07 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-
-> > The patch set overall looks good to me, I don't understand the kfifo
-> > parts but I trust you on this, though we need review from a FIFO
-> > maintainer.
+On Tue, Jan 7, 2020 at 12:18 PM Jesper Nilsson <jesper.nilsson@axis.com> wrote:
+> On Tue, Jan 07, 2020 at 10:39:34AM +0100, Linus Walleij wrote:
+> > On Wed, Dec 18, 2019 at 6:32 PM Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> > > On 18/12/2019 16:26, Jesper Nilsson wrote:
+> > > > On Wed, Dec 18, 2019 at 11:16:02AM +0100, Ben Dooks (Codethink) wrote:
+> >
+> > > >> -    unsigned int *reg;
+> > > >> +    unsigned int __iomem *reg;
+> > > >
+> > > >       void __iomem *reg;
+> > > >
+> > > > We're using as an argument to readl()?
+> > >
+> > > yes, readl() shoud take an __iomem attributed pointer.
+> >
+> > Shall I change it to void as well when applying?
 >
-> Ha! This may be a problem - there doesn't seem to be one. This is why
-> I Cc'd Greg.
+> Please do, sorry that my comment wasn't clear above.
 
-I was under the impression that KFIFO was part of the driver core.
-Let's try to CC the actual author (Stefani Seibold) and see if the mail
-address works and if he can look at it. Or did you already talk to
-Stefani?
-
-(git blame is always my best friend in cases like this, hehe)
+OK I did that and applied, let's see if it works :)
 
 Yours,
 Linus Walleij
