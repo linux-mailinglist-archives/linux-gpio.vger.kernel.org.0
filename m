@@ -2,70 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95DCF132646
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:36:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91B88132650
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:36:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbgAGMgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:36:03 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36370 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbgAGMgD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:36:03 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so38759895lfe.3
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:36:02 -0800 (PST)
+        id S1728087AbgAGMgg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:36:36 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39374 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgAGMgg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:36:36 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 20so19177492wmj.4
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:36:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PEoORwEbsUG1Ph5wXGdlUAhRRrmp+B4iCncPMoayctA=;
-        b=xDkHw1xoDyT1+NKE4FAkLZOcOipCNbmSuHLUXq6ZMzyhAKZj4lPa7kOVeCGAgloCkb
-         RWuWt39XtVe0z8vGnakEPRQnc1bLL5UhOYqRQe2zB0txSM5iVA9aD6nD/GRae74CYPbN
-         QZEFC1ydPS/zGiJUssgC4Oy3Jg+KI2dxrW33XAcz++CngbHnag3fWk1HRVfiXFuDK2WC
-         uVCE1gv3rUmS3H+bHy+QBtu6j0z/eAG+uLCH8m6dlj+94rIrSJPFv2tUkanHspR987YU
-         XmpcQPo1IP/GVKPBBrxxIQHSxfX8OmX4eBAGQ6xr3w0gr06skG4T0KS9ajnSLB73bO0x
-         dLqA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ZigGWyR5dA/rlmY5eQN1DFgU3TyM5dNJj4wuZim4lMg=;
+        b=v1vH5ppfwwaQyU0557PdvzkzfgSmt8Qdg6In7lDLwtorTe1YQxwgrSRGTR5HVqP9vs
+         vlx8AHphmwSmzv1+rEga+lsE7Vd2hsCizbJj2B4tf8xsJZ7uJuQtemgVOHWPPV0gKk6x
+         +vAOeFTOnUCSdvEd17cltbU2Ik5HqO293wNSuEyTaYl8hUuUpRUwWgfR0ci9RMjUTcyd
+         oknu0+e6xNYP+Ispe8wDu+NASM46j93S1pyqp7bXmvjBGxs89hAedp2RdiSxBa60Mzm0
+         pb+gbmV+0HdEsjBsFQ3LYy7EZeOEYECZ/Y1UWbJ7+ur+0r+VfYvk69jdDmlHRRmP6N7E
+         WVtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PEoORwEbsUG1Ph5wXGdlUAhRRrmp+B4iCncPMoayctA=;
-        b=unTLsmpz/6o+7l8q6lthl4xWhOGfcx8seO3Gyn9T1/2r+wvDw424VOGpgIoiOED+a/
-         oiEvZWGjiMOU01GqAvpVzKJzJ/VFx8lCnjKtTiqGzb6VjM/BgAQIQ2whUx3r2zmGfj5N
-         7+WwskO5utCAGkXigGWKj3WoYn00lvlhJMUa2tunrZ7EklDf/rmHSLyCGhULSgrfFR+A
-         nVR+X23g+AEQrBsMt7e70U7B57EtxLOpuX1rfh0LeOFqQUrPyj9o8LYbY2ljiqJzRDhW
-         cMU/eAGYaUeriRWo2qaNh7a5vpSe6Fwof2STMMPxZQXvx7u8W5sB6FBN1tPFzJ5ulaSy
-         /90Q==
-X-Gm-Message-State: APjAAAVjzWni6qOY7zVkjkMXuvx2FSr26624vv7vijfBOOjlwz0MXKM8
-        ng9TetJc0yCzai3pg0xoJVqG2HVVQXJUyvw48GM0PsjA92c=
-X-Google-Smtp-Source: APXvYqzQqj/JBGr6OJKJAmXaRApKrKP4NLNTitBufrrGzAHgS1IC+s4VGVolDF8FaQakj9vICEx/+KMnmbO4wDB8q/E=
-X-Received: by 2002:a19:2389:: with SMTP id j131mr56980841lfj.86.1578400561366;
- Tue, 07 Jan 2020 04:36:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ZigGWyR5dA/rlmY5eQN1DFgU3TyM5dNJj4wuZim4lMg=;
+        b=kt1KujBXZfTIuDX41vEXuUsIH2QtmUsDqSxB8d8vEG6sMEySfxbFjm++Hpqolx9mvR
+         PebAk9v5/f6bFteUqtqnSzwYe0MJUJUtQQJQiNfMdHtHhTBQcHVCoOSNuJ2olcJgMDVq
+         OKUNOVuOaGOUvRxhZbZnDBms9GPDTYCDY+v7GRUWyeH3l1Kl3Tt971zLwV+vuLGkUKcy
+         HZ7+xE3mzFP+Kvr9pE7JFufjKQJ+5wX4SZkKDPAxM1dExJZSiHearFwkTDnvvCFk1l13
+         s/LH39AHsV2xOKP5zS2Rl8A8yHH2jDlTPW0mwQxer/833kgb2hFLBFQoUlh4krYfl/Nw
+         zIvA==
+X-Gm-Message-State: APjAAAUzO7BbVlDZsKdJ5Sm0BTSUakBgXkmd1EiVw2Drz3cL7btHhvP3
+        sbgk48DiwZT/QC9A464NBiGImQ==
+X-Google-Smtp-Source: APXvYqx8hyPUO/+s6KqblUDY9P6qWopaZFPmK+OaNZfoX/P2gCtwCPDOS87mnKX8JiJIT/d3LpZ01g==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr40496323wmg.110.1578400594309;
+        Tue, 07 Jan 2020 04:36:34 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id e18sm76983844wrw.70.2020.01.07.04.36.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 04:36:33 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:36:47 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v8 04/12] mfd: bd718x7: Add compatible for BD71850
+Message-ID: <20200107123647.GH14821@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <bd5009357c16d73d9bad52be68db74a2cfa6328f.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20200106232711.559727-1-paul@crapouillou.net>
-In-Reply-To: <20200106232711.559727-1-paul@crapouillou.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 13:35:50 +0100
-Message-ID: <CACRpkdYo0dniDAq12WG=KWmJPjnuYEtDn=pvHRoRGRhzQUX58w@mail.gmail.com>
-Subject: Re: [PATCH 0/5] pinctrl: ingenic: cleanups
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     =?UTF-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bd5009357c16d73d9bad52be68db74a2cfa6328f.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:27 AM Paul Cercueil <paul@crapouillou.net> wrote:
+On Mon, 30 Dec 2019, Matti Vaittinen wrote:
 
-> I saw you merged Zhou's patchset, here are some cleanup patches for
-> pinctrl-ingenic that should be applied on top of his commits.
+> ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
+> initial voltage values for regulators. The BD71850 can be handled by
+> BD71847 driver but adding own compatible makes it clearer for one who
+> creates the DT for board containing this PMIC and allows SW to be
+> differentiating PMICs if needed.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> Changes from v7 - no changes
+> 
+>  drivers/mfd/rohm-bd718x7.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-All five patches applied!
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Zhou can you test the result? I am pushing the devel branch
-out and as soon as it builds cleanly I will push it for-next.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
