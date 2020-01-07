@@ -2,82 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80428132376
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:22:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 662F9132381
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 11:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgAGKWC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 05:22:02 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41623 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgAGKWB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:22:01 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so54148587ljc.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:22:00 -0800 (PST)
+        id S1727154AbgAGKZZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 05:25:25 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43114 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgAGKZZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 05:25:25 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so54126198ljm.10
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 02:25:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=feoOXtnj/48eID5q4+nHQx+NhKQCedVmAZE1CGkwypE=;
-        b=VtGCkan5np3byUChW4aFxnm5yaN4zsovrbrrNL2pV3TXPJ8ug9aSzneEr0kuM1Tj0P
-         edzvWeTniw0GUWQofo54Pp1v4q8dV8I68CAwW2CuiGggie2uyBCFnBJNFXABB/wFknWN
-         aHv6ds9bHX7S8mm+0nC+ZNjKMsuF0rQ+cVM+sSOHXBaIob0AVlMAA6GpBALgkvTJfIbP
-         jJ285SLdjWpvbeYjQ4VK8HZgyKPdySbY5rr5DSjF4q8dsImHeDow2p8j7M6s6Hs0VnAe
-         tmf4/r7N14nCP0rjiRyD6k3uq9pQJBEracEo9Mz1Q/jiJXL0gQbJtosbb02O2M+Zk3rP
-         K2dg==
+        bh=izkQdpFTUaZ8mivzHGq4ICUrxmuFazGHcwlx1NAdeSc=;
+        b=qnJZFP7xmmTFBd6vI+/32Kl5V8BNirWnSab5gFzZceh0IoY+v2Gns93cnzy4CPzYWg
+         doaAdXZ1LTsoTH4XmVA0+6hZJPu4DiGtCoR5/oR+SxfT8Qwi6AthJEEfWDvI2xj17OAr
+         oVluVMO1xHctozp33EYg1FTeYjsobbPMuLZlDKOHmjVxycPvRiT+/9NkCstUg0k59Ixg
+         u6K8QWf4S6s1VdN7Ns3a3xt/HPVv0f95sKkZTk91U8+4UX7dVVB28FyIvzD3xrrn24Tv
+         PfiMS5lmbQ03otYuDdM4yS7Rw37XtrfsHgynTQxS3zpLEtSbe79k+FX/FBa1K7SRI8sN
+         JhvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=feoOXtnj/48eID5q4+nHQx+NhKQCedVmAZE1CGkwypE=;
-        b=laR+Jj0USumGiZd88mOwu4vxpggg2i2HseD3dzhCZq6NSEl8+0zWVbdzcqlnO5OpVt
-         cZ3cDOWYZaq2lZT818LxkViAsXTjpbdo9I1hxw3g0Rlam3m0xEPj82BumISs5XIGe57L
-         sPs253XJJggRzzPeLs1bMiZLrVdJRt8jF+16O1MrfQpfLmWCoYMe0fv/Kw7N3W6Vv77/
-         eVzMODKqiTzgYUt4JA3aogoW2nUIIAZgohOnZBvq0yGn4rCc/m46AjfPMv/4qEmTGm7q
-         IkPYn9WtdDEzwv5i16bYr/mrZo+K425HxTRt79EpOkEzpmQDrs4ZrsEI3Ah3HjejDnYd
-         8Lsw==
-X-Gm-Message-State: APjAAAVkUAU/enxPaQOlMJ4A8znhEeKr6ZoZjGtwrOlN3LSiE30c84oB
-        xGkD6WWix+6H7jmgdVGPQiMGKfHhDxuyvo/a6FWpPg==
-X-Google-Smtp-Source: APXvYqxXuZipIZnMlieWvK5RQa1ocYuWDkqnEH6fOTVKgMsnd3pBbW5G5g/YQfew1w9JZF43RyZBTUs4rRB/hKpVxec=
-X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr61861878ljm.233.1578392519784;
- Tue, 07 Jan 2020 02:21:59 -0800 (PST)
+        bh=izkQdpFTUaZ8mivzHGq4ICUrxmuFazGHcwlx1NAdeSc=;
+        b=Uy+i0e8SfQF4DtteTSnx07rVFfcsIWBlVPf3JYrA3WAv1qIdQCJEhiugY8xRoqPW4q
+         1O3z9qpOsX/0Rs2nIli07Tg9O6SkaK5Y6o70PtW6s2ixfqlzbH9w0k6vyMzYDAyk/gr3
+         Yu9zge/L/jUaLWGgLzBvN5UU8KBsaGr/UJpzk+r/jM29yEOWMScDhvx/WbVPxgUDNI/j
+         EW1k7PUdeq21jBrg0Bmao24pO+VzLM4fKATEfD+riY/Ida242HhwCDYKo9CXDWkyMKRc
+         kUB42yanJD6ef4iLnmz6IG0VMW1INpzAOZ3HW2/EvNhEawySVI4i4WIueqbg+bNx3Fo1
+         Lk4A==
+X-Gm-Message-State: APjAAAXJVQwrtF0JA2atClSN0wPNZPPg4tIEhbp41w0TLm2V62RJFcKy
+        33kPNVIiqT9AlmeXRDrUqSixIm7zcVGQSFFlDkM2LQ==
+X-Google-Smtp-Source: APXvYqxf447vgBZ6Ekf31Ne3QDBNnbDxra2GBTMOfyXxg/zNohD7uD4phbH7VRO5zCLqP2dAWg+gaYiElNCf9+fF5OI=
+X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr25923166ljm.251.1578392723253;
+ Tue, 07 Jan 2020 02:25:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20191226023734.9631-1-qianggui.song@amlogic.com>
-In-Reply-To: <20191226023734.9631-1-qianggui.song@amlogic.com>
+References: <1577362338-28744-1-git-send-email-srinivas.neeli@xilinx.com> <1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1577362338-28744-2-git-send-email-srinivas.neeli@xilinx.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 11:21:48 +0100
-Message-ID: <CACRpkdYCGcUNuDOG2qSjRhZm-3c8eTUE4ib-tVAxsaCzU-RqfQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: meson: Fix wrong shift value when get drive-strength
-To:     Qianggui Song <qianggui.song@amlogic.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
+Date:   Tue, 7 Jan 2020 11:25:12 +0100
+Message-ID: <CACRpkdYTz7hFiU-JfopNBVzfpaYBj86DF1w0=6egdBY2fY8Mzg@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpio: zynq: Fix for bug in zynq_gpio_restore_context API
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git@xilinx.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 3:37 AM Qianggui Song <qianggui.song@amlogic.com> wrote:
+On Thu, Dec 26, 2019 at 1:12 PM Srinivas Neeli
+<srinivas.neeli@xilinx.com> wrote:
 
-> In meson_pinconf_get_drive_strength, variable bit is calculated by
-> meson_calc_reg_and_bit, this value is the offset from the first pin of a
-> certain bank to current pin, while Meson SoCs use two bits for each pin
-> to depict drive-strength. So a left shift by 1 should be done or node
-> pinconf-pins shows wrong message.
+> From: Swapna Manupati <swapna.manupati@xilinx.com>
 >
-> Fixes: 6ea3e3bbef37 ("pinctrl: meson: add support of drive-strength-microamp")
+> This patch writes the inverse value of Interrupt Mask Status
+> register into the Interrupt Enable register in
+> zynq_gpio_restore_context API to fix the bug.
 >
-> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+> Fixes: e11de4de28c0 ("gpio: zynq: Add support for suspend resume")
+> Signed-off-by: Swapna Manupati <swapna.manupati@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 
-Patch applied.
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
