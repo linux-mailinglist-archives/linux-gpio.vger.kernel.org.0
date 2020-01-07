@@ -2,68 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06EBE1326C4
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:54:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 098EA1326C7
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 13:55:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgAGMyj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 07:54:39 -0500
-Received: from mail-lj1-f171.google.com ([209.85.208.171]:47064 "EHLO
-        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727730AbgAGMyj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:54:39 -0500
-Received: by mail-lj1-f171.google.com with SMTP id m26so52136576ljc.13
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:54:37 -0800 (PST)
+        id S1727814AbgAGMzk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 07:55:40 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33245 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbgAGMzk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 07:55:40 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so38817256lfl.0
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 04:55:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dLQehnIGTRtzNAywjRs5kFO6zHUUUI3tTZN21RU/D7A=;
-        b=JWTdHwJQQlZJKVXrfGbinu7miD5f1KdVZThrff5wDW+WEpHv+Up1KIgHsn6Wn3Bba/
-         X82P7+td1gsCfwirNWEzipP9oR5wHgwlQNczBPE0/2clI+a5kKKi2v/dakUlmQBnkmS8
-         M8a3QoF5I0eCef9vcPI8Uin7BwM0/oOOj0ZrSP22/xnJYcgqoR7ypYwOqy5ayYFD3CH0
-         du9p5nSkD81FEgwy0Px1d8yi4rQfIb93c4wqkpHwKaLW1xPDyonsorbF4x14jjD7EVP8
-         KyPyndSEUUVWA2OGxGTqEpRYaYBcFn5amf2ZYTqGCJy2s8E258UZZ0xp/54WWT/D3N62
-         32qA==
+        bh=/5M/Ch2CKDQ814/TnFy5fo83NcxCpktzh+5pz++zFSA=;
+        b=AEgy7ABR047DoLjVm1VO0WwndfqDMR7kB3D+0j8w9A6HDCfcOm51PX/oqmApgcFxD3
+         PzDu3j2hDWa7nH3TzAI517R6JqnBHA52XvUN2mmJjhEfVTU06u7/K76rmzjQoGqKOT1w
+         Cppn6/Y6kCgDnYae6PKPxT7a64fF9aEcAyvXIcx9q6Fc73emY3ZpIRrxApElzeX7qX2B
+         Yfjz/EWvd8PkFd/7F4Mvv5eFqxG4t4eonMSAVE7GXnEtV6u4Z0MjRNWbXXTA8tB4UIlg
+         +PGKIr1r+Ay4fZQov/DS0z6MzKi61kxcpE3KtW7XSMGyl1gj0nPhISsArIhce5H1nJux
+         aTgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dLQehnIGTRtzNAywjRs5kFO6zHUUUI3tTZN21RU/D7A=;
-        b=Z9Aoh9jQn75Tjitn0intNOXLil7TVMTNfB8xdTBLaAhcYSyXh3gpAGGWL4H8ElVuzH
-         2fU1XJ/nTTdQm2yTb7b2/N+6LsAMgfiSSOgwzJooFBHmDszRRZwMC6AD7ljsZFFRBPQI
-         aJwPQfwbZ5GtqsjtKVNqlQgJHu9QjqDux1HQHATYYEeOSloBWpNug3xF3yDHmaUTy9z4
-         X+G1Qvpf2MNCdtXeJkC8fXXPag/POFAj/j+Hrgh3lq1f1Kc+8NK061pz1QijQyagzZjO
-         fZkWT2CgdiAJOkIP5lUKxDbTCL20Wrs3PIrRNOA3gL0Q1jdC+c9Iq+Tix+B0Rs6PmaW4
-         7J8Q==
-X-Gm-Message-State: APjAAAUWL2c2JSkfh5h3Xqa7B75UylLT7GG306kPvEfHA1uhT4/Y3mVl
-        HeUkOngzJHuNtk42QSFO4B5d1w/9SGuSSl2wiy3rK93HXTQ=
-X-Google-Smtp-Source: APXvYqxVLk2ecsyGowfmnTL78wYC4MFpZZbsVLEtojp/57eiRcLuq5kHJN8I+Gav/9y1t2EjG16W7XG17KgQMlKK99o=
-X-Received: by 2002:a2e:a0cd:: with SMTP id f13mr26298721ljm.251.1578401676846;
- Tue, 07 Jan 2020 04:54:36 -0800 (PST)
+        bh=/5M/Ch2CKDQ814/TnFy5fo83NcxCpktzh+5pz++zFSA=;
+        b=pTdWUAHyD2I8yJymhDI1dMASJEyGViEoY5ebLLKtFC8JZlMq7YKEEusfqvJW2UtMS9
+         51v/3wqodG18jqLkXh6FRbylm7tLsN18nHoKyoLVjzu4XPFXOeA5ma/0TofKAR02OtUz
+         V5wdBeRlTfGnknoMZlzVrXUCLzz+8hZAtFEUMRlRfmcKRcSVbbD2nw7qvxxMCdvPUse6
+         5F+kA8hQTcLgJQN1yNpOtN0xlm8qtphm1Bk1Jm6n81HfqJTvORkK/Jidkta6MtkHkfUW
+         Zetc8Wh6uPtiydgEmj+20zrWyr7mLS4RJIcoEOV7Pe+UZQsH+i0lrhSIotTffuefBI7b
+         KmaQ==
+X-Gm-Message-State: APjAAAVaoX0kf60GVUQutffhAdZhqXdDNR37wZuXD88uR26+BE3enZf8
+        bOOYUWjvi7SVK4KLjckw3CGLKPXVB3GYTQ2vLQS1Ig==
+X-Google-Smtp-Source: APXvYqywW+1cO2Qz4LzNkTfh2xOv5aLJq+BCzv7q5D/XXcrloWHW/cXsbAUd1IJYb+6RnSPN6O161babyzIRRq1xBFE=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr58716304lfp.133.1578401738382;
+ Tue, 07 Jan 2020 04:55:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107120553.5620-1-brgl@bgdev.pl>
-In-Reply-To: <20200107120553.5620-1-brgl@bgdev.pl>
+References: <20191227230447.32458-1-hdegoede@redhat.com> <CACRpkdaR4vFp=huuqvsnZTFnAmKNJmjpwM8sPpVX2aERp-LogA@mail.gmail.com>
+ <20200107123841.GE32742@smile.fi.intel.com>
+In-Reply-To: <20200107123841.GE32742@smile.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 13:54:26 +0100
-Message-ID: <CACRpkdYYepw3dJU8Pz+KdptPB+Ok+n=b7KYDrVbq3p7DCL=LKA@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.6
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 7 Jan 2020 13:55:27 +0100
+Message-ID: <CACRpkdb5viFXj9S9nVU-p9ZFva1bFns83FrpXdFJHsnJMtomuA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: baytrail: Do not clear IRQ flags on direct-irq
+ enabled pins
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Mastykin <mastichi@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 1:05 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Tue, Jan 7, 2020 at 1:38 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Tue, Jan 07, 2020 at 11:35:17AM +0100, Linus Walleij wrote:
 
-> as discussed: this is the PR that contains the cleanup patches submitted
-> as part of my series adding support for watching GPIO line status. Several
-> other patches picked up into my tree since the merge window are in here as
-> well.
+> > Patch applied as non-critical fix for v5.6 with Mika's ACK.
+> > (Tell me if it's critical.)
+>
+> Can we collect it in our tree (what we are consider a proper for this) and
+> submit a PR?
 
-Pulled in, thanks a lot! Now it's time for the autobuilders to play with it.
+Sure that's true, I dropped the patch from my tree.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
