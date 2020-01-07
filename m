@@ -2,111 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF780132B6A
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 17:51:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAB8D132E9D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 19:41:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgAGQvk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 11:51:40 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44725 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgAGQvj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 11:51:39 -0500
-Received: by mail-io1-f68.google.com with SMTP id b10so53306129iof.11
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 08:51:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=O9KthzSBlV2h+WxdbZIT5o9+mFIwnqBIvXtaw9MUgzg=;
-        b=LKOp8zdmoSum2UR+j4KJocdvPfwPzYAUWFgx40En05B55RlN2LgDg43eJLuLapRLmK
-         jqrNDxbw2trUmEtrDNai+RkVQgpKizgdoa4rfhwfthH/qs7bhaVMvkZUw2S7yKbGk1BD
-         3dIJc9t415O6oAKL1r4bKCgQAKdoXr+NZiV6BvFNYVFSpfHVs+VDdhjiineOgb8Hdi89
-         d1jpo17hiVg9EhFt32rXBXwtRpzviOxZhOvs90q29oVgZ5RzC5CrYh9JOyS75lGq/fUf
-         nfAQnhU+VyMc3zGWa/kRQYj9z8/v5yrMj7fJncIYFlNgxwuoQsfLWdkmMPq/lmMx3mhf
-         Ohog==
+        id S1728358AbgAGSl1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 13:41:27 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58641 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728391AbgAGSl1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 13:41:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578422485;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=knBeTJdr3SvBDPuzW2zcs7LXSnmpROU43VYWYEPvPPQ=;
+        b=jQbsDc/xg6+SgakQwU53H7m2Do4SvyXVWvk54WNupD/4E4VeSlbpK7F8973yMDIL8KKIy1
+        sNMW4wt526yUnokp4SM3yFJUtx4CjhTmiNwcZQH3bqob2AHZOkTSBVPLzVyKbWkkm4mc3F
+        kRITueS8w9BmoKQsrthGVwiW/bFbUTI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-_-kag4fvOgGhfYOYSWiGwA-1; Tue, 07 Jan 2020 13:41:22 -0500
+X-MC-Unique: _-kag4fvOgGhfYOYSWiGwA-1
+Received: by mail-wr1-f71.google.com with SMTP id u18so314022wrn.11
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 10:41:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=O9KthzSBlV2h+WxdbZIT5o9+mFIwnqBIvXtaw9MUgzg=;
-        b=dLaUHY7+Qy8S/5OIhTW5XC2LFxFUWg6kB6UwWanvBgx0t6bNyS6tWzdIs9TnlIQ9o7
-         97gUMLLaWjdnDiLLBubKc6Ljop5rBIMwkQJau8LB93TOEpO2xynDZKidII1yFMv1kw9Z
-         KL8NQYoELlZfWroNZhjJ3ZKv+gbzJcmogtTxV3TYD+r+2CQXtiEvlW5EotURgDur2aSW
-         kXPc2GMGOFBclU2DsrcxCzHybqBLT0QZGsDemPpS+IbhhsuiYOECEDQ2aKVZmr8yxkyR
-         SnLUNkOPvsVBlhweHenvzgoYTfWSlTbE0FtPcMLptIVngj09LnVCUpGwT1dD5Jb9cVkU
-         qbzQ==
-X-Gm-Message-State: APjAAAVc52aiLTKVIKPNrV368LLyfuzesQvYrDXQgr44Y1iwf01wm/Cp
-        R0R9mn7cs4v70douPh6s4L0slmHioonGaF01HNuXYg==
-X-Google-Smtp-Source: APXvYqw6U32nWtNm+ttH4lxWAxYmZl94/E5Y2ndD4ZwTAE5serAfv2V2aHN5sspi0BBZhQYntyqX6V2MPHXIxjXT0oI=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr416220jad.136.1578415897577;
- Tue, 07 Jan 2020 08:51:37 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=knBeTJdr3SvBDPuzW2zcs7LXSnmpROU43VYWYEPvPPQ=;
+        b=ocDnHY4xz90oZla1v4UW27JvhKOYtB8mlg4uTLJN6lH83pjE2ekmUH3qgylM3POTdN
+         Fvpb9MmI27KAbTmMadiI4FOY96qkcbMb92aw34zezcvUAPVzvPNXQda1nb069zmzur7J
+         mzdOr8od8FVzbaUxdSX9FOICpkdZqiCyKCNDI8nTA8FuBjPnLmqmPKj4Q7YzkrbQGwnG
+         gGEOTGCph8FZBa5ICTIqyAqImHaRi86U7Ib6TaoqhEtur2TGBas8yLnAkIwRv16atPJ4
+         V9eNyhwRBTtIut8+Ax/thpjgNP1T7KMj9LvaxNLjKi1i1J3zBQlo7yZy7A+YV1f5VNOq
+         BB3Q==
+X-Gm-Message-State: APjAAAVwIJrEdFqOZf1q2EBb1nBEUjeBC+boMXUBcNduAgxhcP27UBWM
+        8OwI3SzpsFOIiSIYK5kwFWX0iDfAd9X+HkSlNnal19afufGMHg7NSDJXH07M1MXnQIVeWgOOgCn
+        Dt4IlZzONSIc0j5FN77Napg==
+X-Received: by 2002:adf:90e1:: with SMTP id i88mr433554wri.95.1578422481518;
+        Tue, 07 Jan 2020 10:41:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwvrhw6gY9CY1qKjVtotCC9mZKXWExcALQZtc+XkU2ySqa6u42+f3wB/Xj0BYkkhIV7NgyDUg==
+X-Received: by 2002:adf:90e1:: with SMTP id i88mr433539wri.95.1578422481350;
+        Tue, 07 Jan 2020 10:41:21 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id c5sm641724wmb.9.2020.01.07.10.41.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 10:41:20 -0800 (PST)
+Subject: Re: [PATCH resend v2 1/2] gpiolib: acpi: Turn dmi_system_id table
+ into a generic quirk table
+To:     Sasha Levin <sashal@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, stable@vger.kernel.org
+References: <20200105160357.97154-2-hdegoede@redhat.com>
+ <20200107183314.875AE222D9@mail.kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b876a7f7-bdf4-8389-559b-d27390b3f38d@redhat.com>
+Date:   Tue, 7 Jan 2020 19:41:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
- <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
- <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
- <20200107144455.GF32742@smile.fi.intel.com> <20200107144548.GG32742@smile.fi.intel.com>
- <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com> <20200107155854.GK32742@smile.fi.intel.com>
-In-Reply-To: <20200107155854.GK32742@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 7 Jan 2020 17:51:26 +0100
-Message-ID: <CAMRc=MeFOeXxy=L0i1ckxnDJESTJAdgrP7t3sqR81zKxbMPGxA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefani Seibold <stefani@seibold.net>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200107183314.875AE222D9@mail.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 7 sty 2020 o 16:58 Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
->
-> On Tue, Jan 07, 2020 at 04:19:59PM +0100, Bartosz Golaszewski wrote:
-> > wt., 7 sty 2020 o 15:45 Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
-> > >
-> > > On Tue, Jan 07, 2020 at 04:44:55PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > Let's try to CC the actual author (Stefani Seibold) and see if th=
-e mail
-> > > > > address works and if he can look at it. Or did you already talk t=
-o
-> > > > > Stefani?
-> > > > >
-> > > > > (git blame is always my best friend in cases like this, hehe)
-> > > >
-> > > > Recently I started to be smarted in such cases, i.e. I run also
-> > > > `git log --author=3D'$AUTHOR'` to see if they are still active and
-> > > > what address had been used lately.
-> > >
-> > > ...and another possibility to `git log --grep '$AUTHOR'`.
->
-> > So if some module doesn't have an official maintainer listed in
-> > MAINTAINERS, we should still get a review from the original author?
->
-> If you asking me, I do it in a way of playing good citizen. It's not requ=
-ired,
-> but may give a good feedback.
->
-> > KFIFO lives in lib/ - is there even an official maintainer for all
-> > library helpers?
->
-> lib/ is (in most cases) under akpm@ realm.
->
+Hi,
 
-Once the first part of the series is in Linus' branch, I'll resend the
-remaining patches with akpm in Cc.
+On 07-01-2020 19:33, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.4.8, v4.19.93, v4.14.162, v4.9.208, v4.4.208.
+> 
+> v5.4.8: Build OK!
+> v4.19.93: Build OK!
+> v4.14.162: Build OK!
 
-Bart
+Adding this to 4.14 and later, leaving the others behind should be fine.
+
+Thanks,
+
+Hans
+
+> v4.9.208: Failed to apply! Possible dependencies:
+>      25e3ef894eef ("gpio: acpi: Split out acpi_gpio_get_irq_resource() helper")
+>      2727315df3f5 ("gpiolib: acpi: Add Terra Pad 1061 to the run_edge_events_on_boot_blacklist")
+>      61f7f7c8f978 ("gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist")
+>      78d3a92edbfb ("gpiolib-acpi: Register GpioInt ACPI event handlers from a late_initcall")
+>      85c73d50e57e ("gpio: acpi: Add managed variant of acpi_dev_add_driver_gpios()")
+>      8a146fbe1f14 ("gpio: acpi: Call enable_irq_wake for _IAE GpioInts with Wake set")
+>      993b9bc5c47f ("gpiolib: acpi: Switch to cansleep version of GPIO library call")
+>      ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
+>      e59f5e08ece1 ("gpiolib-acpi: Only defer request_irq for GpioInt ACPI event handlers")
+> 
+> v4.4.208: Failed to apply! Possible dependencies:
+>      10cf4899f8af ("gpiolib: tighten up ACPI legacy gpio lookups")
+>      25e3ef894eef ("gpio: acpi: Split out acpi_gpio_get_irq_resource() helper")
+>      58383c78425e ("gpio: change member .dev to .parent")
+>      61f7f7c8f978 ("gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist")
+>      78d3a92edbfb ("gpiolib-acpi: Register GpioInt ACPI event handlers from a late_initcall")
+>      85c73d50e57e ("gpio: acpi: Add managed variant of acpi_dev_add_driver_gpios()")
+>      8a146fbe1f14 ("gpio: acpi: Call enable_irq_wake for _IAE GpioInts with Wake set")
+>      993b9bc5c47f ("gpiolib: acpi: Switch to cansleep version of GPIO library call")
+>      ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
+>      e59f5e08ece1 ("gpiolib-acpi: Only defer request_irq for GpioInt ACPI event handlers")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
+> 
+
