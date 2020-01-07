@@ -2,93 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11499132A92
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 16:58:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F01C0132AB1
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jan 2020 17:04:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgAGP65 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 10:58:57 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26224 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbgAGP65 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Jan 2020 10:58:57 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 07:58:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="370629795"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 07 Jan 2020 07:58:54 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iorFu-0006gd-RA; Tue, 07 Jan 2020 17:58:54 +0200
-Date:   Tue, 7 Jan 2020 17:58:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefani Seibold <stefani@seibold.net>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 00/13] gpiolib: add an ioctl() for monitoring line
- status changes
-Message-ID: <20200107155854.GK32742@smile.fi.intel.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <CACRpkdZ_TroKCAnDWiY-jPbe0NL+ingm1pMLQLPxT1Uh78kx8g@mail.gmail.com>
- <CAMpxmJXikLw0d1e1Eq7vVzoORz3utEBxfG6nRmkngLqezVqtuA@mail.gmail.com>
- <CACRpkdY2NXNrAk9VY18YDeQ2WDfDfAyi4mgW26JuTPHdEOE-uQ@mail.gmail.com>
- <20200107144455.GF32742@smile.fi.intel.com>
- <20200107144548.GG32742@smile.fi.intel.com>
- <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com>
+        id S1728173AbgAGQEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 11:04:07 -0500
+Received: from mail-wm1-f52.google.com ([209.85.128.52]:36940 "EHLO
+        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727974AbgAGQEH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 11:04:07 -0500
+Received: by mail-wm1-f52.google.com with SMTP id f129so56351wmf.2
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 08:04:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=NakVZPGJlWhxii3UPm2H0oZg+mCztzm4qyXLYerDbeI=;
+        b=j3czuYCU0JV9vBnaXOnXn4d5WEWhBVGvvuPZL1O+54o40RH4V3/oUfz7LnEq5Vu66C
+         7fac3FUCfcfRh82zZMcBMj9UXO/v4Ft496R9Dg+78a97iwysMgpVEupqAsElGrrQ9Eph
+         lLbs8kTsOUAZpEKDAxAfwydFE9eTmrP9FpXmY1O9y2WRMVFSDyD7lFXxPs3fxrZZokF6
+         GUbmo1F1U7G0UKaVfKkzeRRa4zfislJ1+TDU6vpptDVF450F6JPmY9CYu9H5ibZln9qC
+         A/3gCD11UCfU92xmorlTPZ/a1F6EOWJe14oPFuXo+MVXjJJGIgd2B+8rJBfwBF/Scmy8
+         ONaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=NakVZPGJlWhxii3UPm2H0oZg+mCztzm4qyXLYerDbeI=;
+        b=DhG1lgGFx0Xppx06TQxxFdykreNha3HBierufpcmU3IWtxrbZ254t+guSMDwQSiwgL
+         Naog87z7en0KbtdEkQ3HtGOFDAM4E55gf0b9x1WD/Txqb+1QME3VRU1NHCFrirF8u5+e
+         eJhcrwhDZefPF1DEdSGWAdeGnsZBw/Xz112ypnupIVcNyAG2EitOwhSK3iA3pSs3fW2g
+         VIWEB88uCbReFznacPoWjsvE3nGRA+OxETzRrq2SQrhLUBazptEmvtS04qaF3lxmwPgW
+         Vh3pUMBQNebV/Un3HN4tUxvs2hcV1aGT4X0uRo4YV+RdWLeoOWTIkz4Ut9JMi2+paB+c
+         asNQ==
+X-Gm-Message-State: APjAAAUEYXHEGv1wFRbMYrKI5PTB3dXJK13OMY7wgabxd2Kh7yd0xMfk
+        BHS3J31g2R2mEVZ1548JeQIP+nnjR09p1w==
+X-Google-Smtp-Source: APXvYqzlfKvCDemwFqflzSViDHxjQ2BNhPRVs+Io+1lkqsZCjvlYMh3ID0tcLnKVgANP4OUa7ilD4Q==
+X-Received: by 2002:a1c:7d92:: with SMTP id y140mr38066808wmc.145.1578413045137;
+        Tue, 07 Jan 2020 08:04:05 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c2sm329703wrp.46.2020.01.07.08.04.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 08:04:03 -0800 (PST)
+Message-ID: <5e14abf3.1c69fb81.7cbeb.1a10@mx.google.com>
+Date:   Tue, 07 Jan 2020 08:04:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJWkKPQYAE3_JdWVkdtSZLeky=bouOyyJ+c2ySMc+1LFyw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.5-rc1-28-g2cb81261a967
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: devel
+Subject: linusw/devel build: 5 builds: 0 failed,
+ 5 passed (v5.5-rc1-28-g2cb81261a967)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 04:19:59PM +0100, Bartosz Golaszewski wrote:
-> wt., 7 sty 2020 o 15:45 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisał(a):
-> >
-> > On Tue, Jan 07, 2020 at 04:44:55PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Jan 07, 2020 at 01:50:28PM +0100, Linus Walleij wrote:
-> > >
-> > > ...
-> > >
-> > > > Let's try to CC the actual author (Stefani Seibold) and see if the mail
-> > > > address works and if he can look at it. Or did you already talk to
-> > > > Stefani?
-> > > >
-> > > > (git blame is always my best friend in cases like this, hehe)
-> > >
-> > > Recently I started to be smarted in such cases, i.e. I run also
-> > > `git log --author='$AUTHOR'` to see if they are still active and
-> > > what address had been used lately.
-> >
-> > ...and another possibility to `git log --grep '$AUTHOR'`.
+linusw/devel build: 5 builds: 0 failed, 5 passed (v5.5-rc1-28-g2cb81261a967)
 
-> So if some module doesn't have an official maintainer listed in
-> MAINTAINERS, we should still get a review from the original author?
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.5-rc1-28-g2cb81261a967/
 
-If you asking me, I do it in a way of playing good citizen. It's not required,
-but may give a good feedback.
+Tree: linusw
+Branch: devel
+Git Describe: v5.5-rc1-28-g2cb81261a967
+Git Commit: 2cb81261a967ee93825efc9af591d346eca51112
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
 
-> KFIFO lives in lib/ - is there even an official maintainer for all
-> library helpers?
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-lib/ is (in most cases) under akpm@ realm.
+Detailed per-defconfig build reports:
 
--- 
-With Best Regards,
-Andy Shevchenko
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
 
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
 
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
