@@ -2,435 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCD01337BB
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2020 00:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F701337E5
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2020 01:19:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgAGXwC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jan 2020 18:52:02 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43336 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727091AbgAGXwC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 18:52:02 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 9so1024733lfq.10
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 15:52:00 -0800 (PST)
+        id S1727150AbgAHATS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jan 2020 19:19:18 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44530 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgAHATR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jan 2020 19:19:17 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so1053600lfa.11
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jan 2020 16:19:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=he0D2W1ydjsWVzB7tv2sGhN1kd69y35QXDm3LVmjQ8Q=;
-        b=maqxRz5Vfu2Rqu5nCsCVAHLHwE/A1KMfqJAgUQPK48IJ/PNEe+VRub8Vj5SbW1KqaG
-         BbK1lrrDTnnHSL4siX5i6I8ylYJXwLBNN/ShbSAJVtDUKNvp/cRFam/c44lkp09mopSD
-         e+bHO6ti5OqN9q5chm49BBa349ZUIBWLTKZRLatx3ZAFF61zNUCO6JRv2elSNcB4JcRp
-         vU1iNEOwyH4F8S9De219vHYB5fBKaxdLZAALFxG2tIbcvmQgQVeR0fLdOljvOLR0sCp0
-         9ytgZynXN2bKFUE9ogix5BhUcPWrZQ7uvV1AwGnkfPsmELbPRahRPduHZ0q5yB1ExspR
-         iOWg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=udeufZ4m3fi/VKR8q6J9hhk7263MJ2QGYBcHYNX3pdI=;
+        b=UKPmUtMWaqJZOjp891KRXMND5hcx9sTAkPhdiZIqb1wD0i8uw5SzYEVi7ZaGOERyCV
+         Va7IQ46zF5UmQkTigeMkmWquaJb0z+17t39ZCkOmYRFbydGpImSmuCqeQZswY9YJQJ1d
+         tjMlr9G0us1lGv/+qwcxJT5+T59rwFmO8p0+ML5I60b/yPrXu1Z/Nl+Uv+LXR+hTVPsT
+         +TPAcDO24kIUhPOamgYFY2tu/8P/3nObCNjAX4gEgcbaGu/1cqjNATr3ouC+ZVmNyzQm
+         5j4SwI1MlfFKnCVinEz3G8kzEVeTFV6m//8RhMy/kq2Lr8ugS24i4tmvByI19H8dyDDw
+         T6Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=he0D2W1ydjsWVzB7tv2sGhN1kd69y35QXDm3LVmjQ8Q=;
-        b=cM2zW4s4AIPkmzdw+eTZ8sDpsZNp3G/NXnUpze2J8hD7tNCvi5p+RPByphZ0CxsUGC
-         5wCrukKzs4gYgbeswGw7i8z51dmTTPNTTxORv2HwOixPv3pYDNwDAUSNJxwN6KhKEVW2
-         VR7vaaxVNkJoCGzyxKkJTbzgg3Y/sAYR0u0MQYC1MA3IP5sFVJSmCmAmXwoOGi3lTZ2f
-         nmhR8YVimc66Rul4m71KDMUG3Emg9sOxhKhkjZ4n6GRVqJJ5/IaDgRvEEW++VCm84QQ3
-         9Kss4QdQu1dk2HHpCFjO5QFvpgwPcRUiVGQbOcfdFOPp2Ydwjl/1LH7bZBgcLa6J09+s
-         2Ulg==
-X-Gm-Message-State: APjAAAWYaegdtMqNu2nZiVua0+H913+t/YJ32ZJvF0Xh4TSd9pm22wbQ
-        corbJJlZLxAg9Nj1CN7tblaeYw==
-X-Google-Smtp-Source: APXvYqxb3R40Pxt6Z1JVoqswszZ8HgYDOsJH4BjMbtk2ScMJo4lRbViRrnmc8V1yfENPGK7Y6GiAdw==
-X-Received: by 2002:ac2:44a3:: with SMTP id c3mr1135700lfm.1.1578441119345;
-        Tue, 07 Jan 2020 15:51:59 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id u3sm482003lfm.37.2020.01.07.15.51.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=udeufZ4m3fi/VKR8q6J9hhk7263MJ2QGYBcHYNX3pdI=;
+        b=owbcSg41wyxT1gKE8248yUnKzqXi++j6s1gD3W63RV1v0nNiunitVanlCOfftYMzvo
+         A4srZh1heqCctUIeqtO5qV4KSb/g9WGY1tsKyfCtCoiFCvVIAhDaR4sPV3+/t+LB3aNC
+         qY9/PBB6cQ9ZXpYMgj9aBf7Quk8npcGWhNE7s9rc2+WVTVgh0WJOhS65Qr7WSrvqsEkE
+         n9Jw+0AbaHmxHYTTa7bZTI9Y3xjzjg7EaRD9Kq9/WBzqCXgBA3y/JyMh0jVBktLxU4N6
+         jtIluR7NRDGwU69dUPsAz/JGupxl7fuxRAOZNf9rgoeGjoTbJ6UlPs//TMiLQYy8KVCE
+         pnUw==
+X-Gm-Message-State: APjAAAUb0P3wusJBNz3gUMagT/IFamnbNIjhBl+vuMoyxQpQLNYLfOEd
+        rmWqAToL4mJoi9klgQ+JAqD9wa9VkgnkZg==
+X-Google-Smtp-Source: APXvYqwuBTtVHZU9zcHcLAW1Bo+Gm1RIN+pIejV7bwF524R9MOTyq/tj0Vw9utujTdwr3MzZnQi4wQ==
+X-Received: by 2002:a19:7701:: with SMTP id s1mr1202424lfc.180.1578442755538;
+        Tue, 07 Jan 2020 16:19:15 -0800 (PST)
+Received: from localhost.localdomain (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
+        by smtp.gmail.com with ESMTPSA id b190sm502121lfd.39.2020.01.07.16.19.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 15:51:58 -0800 (PST)
-Date:   Wed, 8 Jan 2020 00:51:57 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: Split R-Car H3 support in two
- independent drivers
-Message-ID: <20200107235157.GT533370@oden.dyn.berto.se>
-References: <20191230083156.19191-1-geert+renesas@glider.be>
+        Tue, 07 Jan 2020 16:19:14 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: Add use guidance documentation
+Date:   Wed,  8 Jan 2020 01:17:12 +0100
+Message-Id: <20200108001712.47500-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191230083156.19191-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+The text in this new document is a response to recurring questions
+about the GPIO in-kernel API vs the userspace ABI. When do you use
+one or the other? It can be a bit intuitive, but I tried to sum it
+all up.
 
-Thanks for your patch.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../driver-api/gpio/drivers-on-gpio.rst       |  8 +--
+ Documentation/driver-api/gpio/index.rst       |  1 +
+ Documentation/driver-api/gpio/using-gpio.rst  | 50 +++++++++++++++++++
+ 3 files changed, 55 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/driver-api/gpio/using-gpio.rst
 
-On 2019-12-30 09:31:56 +0100, Geert Uytterhoeven wrote:
-> Despite using the same compatible values ("r8a7795"-based) because of
-> historical reasons, R-Car H3 ES1.x (R8A77950) and R-Car H3 ES2.0+
-> (R8A77951) are really different SoCs, with different part numbers, and
-> with different Pin Function Controller blocks.
-> 
-> Reflect this in the pinctrl configuration, by replacing the existing
-> CONFIG_PINCTRL_PFC_R8A7795 symbol by two new config symbols:
-> CONFIG_PINCTRL_PFC_R8A77950 and CONFIG_PINCTRL_PFC_R8A77951.  The latter
-> are selected automatically, depending on the soon-to-be-introduced
-> corresponding SoC-specific config options, and on the current common
-> config option, to relax dependencies.
-> 
-> Rename the individual pin control driver source files from
-> pfc-r8a7795-es1.c to pfc-r8a77950.c, and from pfc-r8a7795.c to
-> pfc-r8a77951.c, and make them truly independent.
-> As both SoCs share the same compatible value, special care must be taken
-> to match them to the correct pin control driver, if support for it is
-> included in the running kernel.
-> 
-> This will allow making support for early R-Car H3 revisions optional,
-> the largest share of which is taken by the pin control driver.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
-> To be queued in sh-pfc-for-v5.6.
-> 
-> This complements, but has no dependencies on "[PATCH 0/5] arm64:
-> renesas: Split/rename R-Car H3 support"
-> https://lore.kernel.org/linux-renesas-soc/20191217183841.432-1-geert+renesas@glider.be
-> 
-> v2:
->   - Add Reviewed-by, Tested-by,
->   - Reduce #ifdef clutter by marking r8a7795[01]_pinmux_info __weak, at
->     the expense of adding an extra runtime check, increasing kernel size
->     by 8 bytes.
-> ---
->  drivers/pinctrl/sh-pfc/Kconfig                | 10 +++-
->  drivers/pinctrl/sh-pfc/Makefile               |  4 +-
->  drivers/pinctrl/sh-pfc/core.c                 | 57 ++++++++++++++-----
->  .../{pfc-r8a7795-es1.c => pfc-r8a77950.c}     | 26 ++++-----
->  .../sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c}  | 39 +++++--------
->  drivers/pinctrl/sh-pfc/sh_pfc.h               |  4 +-
->  6 files changed, 81 insertions(+), 59 deletions(-)
->  rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c => pfc-r8a77950.c} (99%)
->  rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c} (99%)
-> 
-> diff --git a/drivers/pinctrl/sh-pfc/Kconfig b/drivers/pinctrl/sh-pfc/Kconfig
-> index ecf3b045bf755008..cf0e0dc42b84c06f 100644
-> --- a/drivers/pinctrl/sh-pfc/Kconfig
-> +++ b/drivers/pinctrl/sh-pfc/Kconfig
-> @@ -26,7 +26,8 @@ config PINCTRL_SH_PFC
->  	select PINCTRL_PFC_R8A7792 if ARCH_R8A7792
->  	select PINCTRL_PFC_R8A7793 if ARCH_R8A7793
->  	select PINCTRL_PFC_R8A7794 if ARCH_R8A7794
-> -	select PINCTRL_PFC_R8A7795 if ARCH_R8A7795
-> +	select PINCTRL_PFC_R8A77950 if ARCH_R8A77950 || ARCH_R8A7795
-> +	select PINCTRL_PFC_R8A77951 if ARCH_R8A77951 || ARCH_R8A7795
->  	select PINCTRL_PFC_R8A77960 if ARCH_R8A77960
->  	select PINCTRL_PFC_R8A77961 if ARCH_R8A77961
->  	select PINCTRL_PFC_R8A77965 if ARCH_R8A77965
-> @@ -115,8 +116,11 @@ config PINCTRL_PFC_R8A7793
->  config PINCTRL_PFC_R8A7794
->  	bool "R-Car E2 pin control support" if COMPILE_TEST
->  
-> -config PINCTRL_PFC_R8A7795
-> -	bool "R-Car H3 pin control support" if COMPILE_TEST
-> +config PINCTRL_PFC_R8A77950
-> +	bool "R-Car H3 ES1.x pin control support" if COMPILE_TEST
-> +
-> +config PINCTRL_PFC_R8A77951
-> +	bool "R-Car H3 ES2.0+ pin control support" if COMPILE_TEST
->  
->  config PINCTRL_PFC_R8A77960
->  	bool "R-Car M3-W pin control support" if COMPILE_TEST
-> diff --git a/drivers/pinctrl/sh-pfc/Makefile b/drivers/pinctrl/sh-pfc/Makefile
-> index 3bc05666e1a6652e..9ebe321d24c488b0 100644
-> --- a/drivers/pinctrl/sh-pfc/Makefile
-> +++ b/drivers/pinctrl/sh-pfc/Makefile
-> @@ -18,8 +18,8 @@ obj-$(CONFIG_PINCTRL_PFC_R8A7791)	+= pfc-r8a7791.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A7792)	+= pfc-r8a7792.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A7793)	+= pfc-r8a7791.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A7794)	+= pfc-r8a7794.o
-> -obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795.o
-> -obj-$(CONFIG_PINCTRL_PFC_R8A7795)	+= pfc-r8a7795-es1.o
-> +obj-$(CONFIG_PINCTRL_PFC_R8A77950)	+= pfc-r8a77950.o
-> +obj-$(CONFIG_PINCTRL_PFC_R8A77951)	+= pfc-r8a77951.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A77960)	+= pfc-r8a7796.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A77961)	+= pfc-r8a7796.o
->  obj-$(CONFIG_PINCTRL_PFC_R8A77965)	+= pfc-r8a77965.o
-> diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-> index 65e52688f0916cbf..82209116955b153a 100644
-> --- a/drivers/pinctrl/sh-pfc/core.c
-> +++ b/drivers/pinctrl/sh-pfc/core.c
-> @@ -23,6 +23,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/psci.h>
->  #include <linux/slab.h>
-> +#include <linux/sys_soc.h>
->  
->  #include "core.h"
->  
-> @@ -568,18 +569,18 @@ static const struct of_device_id sh_pfc_of_table[] = {
->  		.data = &r8a7794_pinmux_info,
->  	},
->  #endif
-> -#ifdef CONFIG_PINCTRL_PFC_R8A7795
-> +/* Both r8a7795 entries must be present to make sanity checks work */
-> +#ifdef CONFIG_PINCTRL_PFC_R8A77950
->  	{
->  		.compatible = "renesas,pfc-r8a7795",
-> -		.data = &r8a7795_pinmux_info,
-> +		.data = &r8a77950_pinmux_info,
->  	},
-> -#ifdef DEBUG
-> +#endif
-> +#ifdef CONFIG_PINCTRL_PFC_R8A77951
->  	{
-> -		/* For sanity checks only (nothing matches against this) */
-> -		.compatible = "renesas,pfc-r8a77950",	/* R-Car H3 ES1.0 */
-> -		.data = &r8a7795es1_pinmux_info,
-> +		.compatible = "renesas,pfc-r8a7795",
-> +		.data = &r8a77951_pinmux_info,
->  	},
-> -#endif /* DEBUG */
->  #endif
->  #ifdef CONFIG_PINCTRL_PFC_R8A77960
->  	{
-> @@ -886,19 +887,49 @@ static void __init sh_pfc_check_driver(const struct platform_driver *pdrv)
->  static inline void sh_pfc_check_driver(struct platform_driver *pdrv) {}
->  #endif /* !DEBUG */
->  
-> +#ifdef CONFIG_OF
-> +static const void *sh_pfc_quirk_match(void)
-> +{
-> +#if defined(CONFIG_PINCTRL_PFC_R8A77950) || \
-> +    defined(CONFIG_PINCTRL_PFC_R8A77951)
-> +	const struct soc_device_attribute *match;
-> +	static const struct soc_device_attribute quirks[] = {
-> +		{
-> +			.soc_id = "r8a7795", .revision = "ES1.*",
-> +			.data = &r8a77950_pinmux_info,
-> +		},
-> +		{
-> +			.soc_id = "r8a7795",
-> +			.data = &r8a77951_pinmux_info,
-> +		},
-> +
-> +		{ /* sentinel */ }
-> +	};
-> +
-> +	match = soc_device_match(quirks);
-> +	if (match)
-> +		return match->data ?: ERR_PTR(-ENODEV);
-> +#endif /* CONFIG_PINCTRL_PFC_R8A77950 || CONFIG_PINCTRL_PFC_R8A77951 */
-> +
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_OF */
-> +
->  static int sh_pfc_probe(struct platform_device *pdev)
->  {
-> -#ifdef CONFIG_OF
-> -	struct device_node *np = pdev->dev.of_node;
-> -#endif
->  	const struct sh_pfc_soc_info *info;
->  	struct sh_pfc *pfc;
->  	int ret;
->  
->  #ifdef CONFIG_OF
-> -	if (np)
-> -		info = of_device_get_match_data(&pdev->dev);
-> -	else
-> +	if (pdev->dev.of_node) {
-> +		info = sh_pfc_quirk_match();
-> +		if (IS_ERR(info))
-> +			return PTR_ERR(info);
-> +
-> +		if (!info)
-> +			info = of_device_get_match_data(&pdev->dev);
-> +	} else
->  #endif
->  		info = (const void *)platform_get_device_id(pdev)->driver_data;
->  
-> diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c b/drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-> similarity index 99%
-> rename from drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-> rename to drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-> index ad05da8f65161c3d..04812e62f3a476a8 100644
-> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7795-es1.c
-> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77950.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * R8A7795 ES1.x processor support - PFC hardware block.
-> + * R8A77950 processor support - PFC hardware block.
->   *
->   * Copyright (C) 2015-2017  Renesas Electronics Corporation
->   */
-> @@ -5562,8 +5562,8 @@ static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
->  	{ /* sentinel */ },
->  };
->  
-> -static int r8a7795es1_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
-> -				     u32 *pocctrl)
-> +static int r8a77950_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
-> +				   u32 *pocctrl)
->  {
->  	int bit = -EINVAL;
->  
-> @@ -5820,8 +5820,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
->  	{ /* sentinel */ },
->  };
->  
-> -static unsigned int r8a7795es1_pinmux_get_bias(struct sh_pfc *pfc,
-> -					       unsigned int pin)
-> +static unsigned int r8a77950_pinmux_get_bias(struct sh_pfc *pfc,
-> +					     unsigned int pin)
->  {
->  	const struct pinmux_bias_reg *reg;
->  	unsigned int bit;
-> @@ -5838,8 +5838,8 @@ static unsigned int r8a7795es1_pinmux_get_bias(struct sh_pfc *pfc,
->  		return PIN_CONFIG_BIAS_PULL_DOWN;
->  }
->  
-> -static void r8a7795es1_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-> -				       unsigned int bias)
-> +static void r8a77950_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-> +				     unsigned int bias)
->  {
->  	const struct pinmux_bias_reg *reg;
->  	u32 enable, updown;
-> @@ -5861,15 +5861,15 @@ static void r8a7795es1_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
->  	sh_pfc_write(pfc, reg->puen, enable);
->  }
->  
-> -static const struct sh_pfc_soc_operations r8a7795es1_pinmux_ops = {
-> -	.pin_to_pocctrl = r8a7795es1_pin_to_pocctrl,
-> -	.get_bias = r8a7795es1_pinmux_get_bias,
-> -	.set_bias = r8a7795es1_pinmux_set_bias,
-> +static const struct sh_pfc_soc_operations r8a77950_pinmux_ops = {
-> +	.pin_to_pocctrl = r8a77950_pin_to_pocctrl,
-> +	.get_bias = r8a77950_pinmux_get_bias,
-> +	.set_bias = r8a77950_pinmux_set_bias,
->  };
->  
-> -const struct sh_pfc_soc_info r8a7795es1_pinmux_info = {
-> +const struct sh_pfc_soc_info r8a77950_pinmux_info = {
->  	.name = "r8a77950_pfc",
-> -	.ops = &r8a7795es1_pinmux_ops,
-> +	.ops = &r8a77950_pinmux_ops,
->  	.unlock_reg = 0xe6060000, /* PMMR */
->  
->  	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-> diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c b/drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-> similarity index 99%
-> rename from drivers/pinctrl/sh-pfc/pfc-r8a7795.c
-> rename to drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-> index d3145aa135d0fdcd..256fab4b03d35621 100644
-> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7795.c
-> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77951.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * R8A7795 ES2.0+ processor support - PFC hardware block.
-> + * R8A77951 processor support - PFC hardware block.
->   *
->   * Copyright (C) 2015-2019 Renesas Electronics Corporation
->   */
-> @@ -5915,7 +5915,8 @@ static const struct pinmux_ioctrl_reg pinmux_ioctrl_regs[] = {
->  	{ /* sentinel */ },
->  };
->  
-> -static int r8a7795_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin, u32 *pocctrl)
-> +static int r8a77951_pin_to_pocctrl(struct sh_pfc *pfc,
-> +				   unsigned int pin, u32 *pocctrl)
->  {
->  	int bit = -EINVAL;
->  
-> @@ -6172,8 +6173,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
->  	{ /* sentinel */ },
->  };
->  
-> -static unsigned int r8a7795_pinmux_get_bias(struct sh_pfc *pfc,
-> -					    unsigned int pin)
-> +static unsigned int r8a77951_pinmux_get_bias(struct sh_pfc *pfc,
-> +					     unsigned int pin)
->  {
->  	const struct pinmux_bias_reg *reg;
->  	unsigned int bit;
-> @@ -6190,8 +6191,8 @@ static unsigned int r8a7795_pinmux_get_bias(struct sh_pfc *pfc,
->  		return PIN_CONFIG_BIAS_PULL_DOWN;
->  }
->  
-> -static void r8a7795_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-> -				   unsigned int bias)
-> +static void r8a77951_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
-> +				     unsigned int bias)
->  {
->  	const struct pinmux_bias_reg *reg;
->  	u32 enable, updown;
-> @@ -6213,29 +6214,15 @@ static void r8a7795_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
->  	sh_pfc_write(pfc, reg->puen, enable);
->  }
->  
-> -static const struct soc_device_attribute r8a7795es1[] = {
-> -	{ .soc_id = "r8a7795", .revision = "ES1.*" },
-> -	{ /* sentinel */ }
-> +static const struct sh_pfc_soc_operations r8a77951_pinmux_ops = {
-> +	.pin_to_pocctrl = r8a77951_pin_to_pocctrl,
-> +	.get_bias = r8a77951_pinmux_get_bias,
-> +	.set_bias = r8a77951_pinmux_set_bias,
->  };
->  
-> -static int r8a7795_pinmux_init(struct sh_pfc *pfc)
-> -{
-> -	if (soc_device_match(r8a7795es1))
-> -		pfc->info = &r8a7795es1_pinmux_info;
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct sh_pfc_soc_operations r8a7795_pinmux_ops = {
-> -	.init = r8a7795_pinmux_init,
-> -	.pin_to_pocctrl = r8a7795_pin_to_pocctrl,
-> -	.get_bias = r8a7795_pinmux_get_bias,
-> -	.set_bias = r8a7795_pinmux_set_bias,
-> -};
-> -
-> -const struct sh_pfc_soc_info r8a7795_pinmux_info = {
-> +const struct sh_pfc_soc_info r8a77951_pinmux_info = {
->  	.name = "r8a77951_pfc",
-> -	.ops = &r8a7795_pinmux_ops,
-> +	.ops = &r8a77951_pinmux_ops,
->  	.unlock_reg = 0xe6060000, /* PMMR */
->  
->  	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-> diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
-> index 640d2a4cb838804f..d57e633e99c0ce66 100644
-> --- a/drivers/pinctrl/sh-pfc/sh_pfc.h
-> +++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
-> @@ -318,8 +318,8 @@ extern const struct sh_pfc_soc_info r8a7791_pinmux_info;
->  extern const struct sh_pfc_soc_info r8a7792_pinmux_info;
->  extern const struct sh_pfc_soc_info r8a7793_pinmux_info;
->  extern const struct sh_pfc_soc_info r8a7794_pinmux_info;
-> -extern const struct sh_pfc_soc_info r8a7795_pinmux_info;
-> -extern const struct sh_pfc_soc_info r8a7795es1_pinmux_info;
-> +extern const struct sh_pfc_soc_info r8a77950_pinmux_info __weak;
-> +extern const struct sh_pfc_soc_info r8a77951_pinmux_info __weak;
->  extern const struct sh_pfc_soc_info r8a77960_pinmux_info;
->  extern const struct sh_pfc_soc_info r8a77961_pinmux_info;
->  extern const struct sh_pfc_soc_info r8a77965_pinmux_info;
-> -- 
-> 2.17.1
-> 
-
+diff --git a/Documentation/driver-api/gpio/drivers-on-gpio.rst b/Documentation/driver-api/gpio/drivers-on-gpio.rst
+index f3a189320e11..820b403d50f6 100644
+--- a/Documentation/driver-api/gpio/drivers-on-gpio.rst
++++ b/Documentation/driver-api/gpio/drivers-on-gpio.rst
+@@ -95,7 +95,7 @@ to emulate MCTRL (modem control) signals CTS/RTS by using two GPIO lines. The
+ MTD NOR flash has add-ons for extra GPIO lines too, though the address bus is
+ usually connected directly to the flash.
+ 
+-Use those instead of talking directly to the GPIOs using sysfs; they integrate
+-with kernel frameworks better than your userspace code could. Needless to say,
+-just using the appropriate kernel drivers will simplify and speed up your
+-embedded hacking in particular by providing ready-made components.
++Use those instead of talking directly to the GPIOs from userspace; they
++integrate with kernel frameworks better than your userspace code could.
++Needless to say, just using the appropriate kernel drivers will simplify and
++speed up your embedded hacking in particular by providing ready-made components.
+diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
+index 5b61032aa4ea..1d48fe248f05 100644
+--- a/Documentation/driver-api/gpio/index.rst
++++ b/Documentation/driver-api/gpio/index.rst
+@@ -8,6 +8,7 @@ Contents:
+    :maxdepth: 2
+ 
+    intro
++   using-gpio
+    driver
+    consumer
+    board
+diff --git a/Documentation/driver-api/gpio/using-gpio.rst b/Documentation/driver-api/gpio/using-gpio.rst
+new file mode 100644
+index 000000000000..dda069444032
+--- /dev/null
++++ b/Documentation/driver-api/gpio/using-gpio.rst
+@@ -0,0 +1,50 @@
++=========================
++Using GPIO Lines in Linux
++=========================
++
++The Linux kernel exists to abstract and present hardware to users. GPIO lines
++as such are normally not user facing abstractions. The most obvious, natural
++and preferred way to use GPIO lines is to let kernel hardware drivers deal
++with them.
++
++For examples of already existing generic drivers that will also be good
++examples for any other kernel drivers you want to author, refer to
++:doc:`drivers-on-gpio`
++
++For any kind of mass produced system you want to support, such as servers,
++laptops, phones, tablets, routers, and any consumer or office or business goods
++using appropriate kernel drivers is paramount. Submit your code for inclusion
++in the upstream Linux kernel when you feel it is mature enough and you will get
++help to refine it, see :doc:`../../process/submitting-patches`.
++
++In Linux GPIO lines also have a userspace ABI.
++
++The userspace ABI is intended for one-off deployments. Examples are prototypes,
++factory lines, maker community projects, workshop specimen, production tools,
++industrial automation, PLC-type use cases, door controllers, in short a piece
++of specialized equipment that is not produced by the numbers, requiring
++operators to have a deep knowledge of the equipment and knows about the
++software-hardware interface to be set up. They should not have a natural fit
++to any existing kernel subsystem and not be a good fit for an operating system,
++because of not being reusable or abstract enough, or involving a lot of non
++computer hardware related policy.
++
++Applications that have a good reason to use the industrial I/O (IIO) subsystem
++from userspace will likely be a good fit for using GPIO lines from userspace as
++well.
++
++Do not under any circumstances abuse the GPIO userspace ABI to cut corners in
++any product development projects. If you use it for prototyping, then do not
++productify the prototype: rewrite it using proper kernel drivers. Do not under
++any circumstances deploy any uniform products using GPIO from userspace.
++
++The userspace ABI is a character device for each GPIO hardware unit (GPIO chip).
++These devices will appear on the system as ``/dev/gpiochip0`` thru
++``/dev/gpiochipN``. Examples of how to directly use the userspace ABI can be
++found in the kernel tree ``tools/gpio`` subdirectory.
++
++For structured and managed applications, we recommend that you make use of the
++libgpiod_ library. This provides helper abstractions, command line utlities
++and arbitration for multiple simultaneous consumers on the same GPIO chip.
++
++.. _libgpiod: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
 -- 
-Regards,
-Niklas Söderlund
+2.23.0
+
