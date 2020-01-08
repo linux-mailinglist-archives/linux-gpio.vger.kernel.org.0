@@ -2,115 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70160134D04
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2020 21:18:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47BE3134E33
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jan 2020 21:58:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgAHUSC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jan 2020 15:18:02 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38541 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgAHUSC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jan 2020 15:18:02 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l9so3844432oii.5
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2020 12:18:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UM9Yhyyn+nTPYkkQGog0oC/YJwVnBTJCjtlyMYqJ2Ow=;
-        b=gcYHUOcJrqFyeZStcvjS744ybD6WIPp5We2fntX+2Dp80A1B7Pbcbso50KPcscE/l9
-         HbLHyo0q+br5jCHLPtt9jF2mSkiPWe7FZkJNZuw5FPWw4AZv9eM9QVcpJL1XwQ/3cRSo
-         VmK0T+R97/zTs9ZS6mnOk+Fvi3TeVdrqmCZJ1tkp5GR9t8veE9DA+a0y8oRNVnIgHINE
-         uX3zTddXIl7zwfRmjvHLrjzEy8532jmOLk6I+PxhQfIDaA+0BMUTxIR/E2wWQRAijpmO
-         XbYWw18MD8yEobjzMrNtQ2ZwxjI4lphC1jc52KQONg2hrHXhvlqEGdhNj9sm9oJeOZln
-         im4w==
-X-Gm-Message-State: APjAAAUVi+xnCoiULnoQNCfvdLwlo00ZyibeKgX1H0mCdiMJX3kd2L9O
-        nkKF1xHS1b3HrzqnzGhOcvhniYs=
-X-Google-Smtp-Source: APXvYqzJ2MhRMwjlO4BxVF0u2t0kgDa3rTf/YSLmzscPeuZnHkhdgDkLLLtao+3VQ3ZSdUdFNtNCWw==
-X-Received: by 2002:aca:ed57:: with SMTP id l84mr360631oih.8.1578514681438;
-        Wed, 08 Jan 2020 12:18:01 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a6sm863321otd.81.2020.01.08.12.18.00
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 12:18:00 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2208fa
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 14:17:59 -0600
-Date:   Wed, 8 Jan 2020 14:17:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
-        linux-mtd@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code
- check
-Message-ID: <20200108201759.GA28519@bogus>
-References: <20200106045833.1725-1-masahiroy@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726155AbgAHU6g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jan 2020 15:58:36 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:40230 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgAHU6g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jan 2020 15:58:36 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id nwyZ2100K5USYZQ01wyZAn; Wed, 08 Jan 2020 21:58:34 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ipIPR-0001fS-Pv; Wed, 08 Jan 2020 21:58:33 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ipIPR-0005Zu-Ns; Wed, 08 Jan 2020 21:58:33 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: sh-pfc: Updates for v5.6
+Date:   Wed,  8 Jan 2020 21:58:30 +0100
+Message-Id: <20200108205830.21401-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon,  6 Jan 2020 13:58:33 +0900, Masahiro Yamada wrote:
-> 'PTR_ERR(p) == -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
-> 
-> The semantic patch that generates this commit is as follows:
-> 
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) == - error_code)
-> +PTR_ERR(ptr) == - error_code
-> // </smpl>
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  crypto/af_alg.c                      | 2 +-
->  drivers/acpi/scan.c                  | 2 +-
->  drivers/char/hw_random/bcm2835-rng.c | 2 +-
->  drivers/char/hw_random/omap-rng.c    | 4 ++--
->  drivers/clk/clk.c                    | 2 +-
->  drivers/dma/mv_xor_v2.c              | 2 +-
->  drivers/gpio/gpiolib-devres.c        | 2 +-
->  drivers/gpio/gpiolib-of.c            | 8 ++++----
->  drivers/gpio/gpiolib.c               | 2 +-
->  drivers/i2c/busses/i2c-mv64xxx.c     | 5 ++---
->  drivers/i2c/busses/i2c-synquacer.c   | 2 +-
->  drivers/mtd/ubi/build.c              | 2 +-
->  drivers/of/device.c                  | 2 +-
->  drivers/pci/controller/pci-tegra.c   | 2 +-
->  drivers/phy/phy-core.c               | 4 ++--
->  drivers/spi/spi-orion.c              | 3 +--
->  drivers/video/fbdev/imxfb.c          | 2 +-
->  fs/ext4/super.c                      | 2 +-
->  fs/f2fs/node.c                       | 2 +-
->  fs/ocfs2/suballoc.c                  | 2 +-
->  fs/sysfs/group.c                     | 2 +-
->  net/core/dev.c                       | 2 +-
->  net/core/filter.c                    | 2 +-
->  net/xfrm/xfrm_policy.c               | 2 +-
->  sound/soc/codecs/ak4104.c            | 3 +--
->  sound/soc/codecs/cs4270.c            | 3 +--
->  sound/soc/codecs/tlv320aic32x4.c     | 6 ++----
->  sound/soc/sunxi/sun4i-spdif.c        | 2 +-
->  28 files changed, 35 insertions(+), 41 deletions(-)
-> 
+	Hi Linus,
 
-Acked-by: Rob Herring <robh@kernel.org>
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.6-tag1
+
+for you to fetch changes up to f2bc07562748c23609743ded0630ec965f9e4fec:
+
+  pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers (2020-01-08 09:56:28 +0100)
+
+----------------------------------------------------------------
+pinctrl: sh-pfc: Updates for v5.5
+
+  - Split R-Car H3 support in two independent drivers,
+  - Miscellaneous fixes and cleanups.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Chris Brandt (1):
+      pinctrl: rza1: Reduce printed messages
+
+Geert Uytterhoeven (10):
+      pinctrl: sh-pfc: Make legacy function GPIO handling less fragile
+      pinctrl: sh-pfc: Remove use of ARCH_R8A7796
+      pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
+      pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+      pinctrl: sh-pfc: sh7264: Fix Port K I/O Register 0 definition
+      pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+      pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
+      sh: sh7264: Remove bogus SSU GPIO function definitions
+      sh: sh7269: Remove bogus SSU GPIO function definitions
+      pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers
+
+ arch/sh/include/cpu-sh2a/cpu/sh7264.h              |  6 ---
+ arch/sh/include/cpu-sh2a/cpu/sh7269.h              | 17 ++++---
+ drivers/pinctrl/pinctrl-rza1.c                     |  4 +-
+ drivers/pinctrl/sh-pfc/Kconfig                     | 12 +++--
+ drivers/pinctrl/sh-pfc/Makefile                    |  4 +-
+ drivers/pinctrl/sh-pfc/core.c                      | 57 +++++++++++++++++-----
+ drivers/pinctrl/sh-pfc/gpio.c                      | 11 ++---
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |  4 +-
+ .../sh-pfc/{pfc-r8a7795-es1.c => pfc-r8a77950.c}   | 26 +++++-----
+ .../sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c}       | 39 +++++----------
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |  6 +--
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                | 33 ++++++-------
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                | 39 ++++++++++-----
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |  4 +-
+ 14 files changed, 146 insertions(+), 116 deletions(-)
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c => pfc-r8a77950.c} (99%)
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c => pfc-r8a77951.c} (99%)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
