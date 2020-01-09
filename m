@@ -2,83 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4901357C4
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 12:19:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0313135864
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 12:50:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgAILTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 06:19:06 -0500
-Received: from mga07.intel.com ([134.134.136.100]:52131 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728918AbgAILTG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Jan 2020 06:19:06 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 03:19:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="227113705"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Jan 2020 03:19:04 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 368A614B; Thu,  9 Jan 2020 13:19:02 +0200 (EET)
-Date:   Thu, 9 Jan 2020 13:19:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.5-3
-Message-ID: <20200109111902.GA47863@black.fi.intel.com>
+        id S1728930AbgAILuR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 06:50:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40078 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728926AbgAILuQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 06:50:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so2485119wmi.5
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2020 03:50:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T6PnzdI9idiu6EFezuzKl56feV8FHs3zBjQKARno6vk=;
+        b=iXCmz/GD6icV6BUwR+s8NejDWtJHyipKyfpsBNVv3tbhIX6h902CLFDjMgx/gAXdvm
+         um4I8Llh/994qVWQB2Gn5270SBrX9/e3lAYxdBNfghKBf98YnWC+hq8F6wXSTBP9LNlR
+         lEv982AYR+8gBXC5z6oEori2KQiGR8Top14rUUf34l8FEMeZuJEBbfLSDlGvF+dOHceG
+         Q283N4yfmm/3HQNtbML4qaQBiRb1/9VInnEkKP4uFPQFFxupYzAf0lhQ4uy5yM+Xc8YN
+         /gRlUWJ7R1Htpv8+KhC+76pFkUAHItrvqq6nzrXp34WoHorKhwvJgfGtgJCqV02MoToh
+         Wk8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T6PnzdI9idiu6EFezuzKl56feV8FHs3zBjQKARno6vk=;
+        b=A3x0O+D/V14/Bzqo+jBU1ox9WP3qW8f3kN87xdS0Y0oRXrgj9dzftGbPniqWa8F2Cs
+         29sNmZEQSP3d25wpCJhgftn0hXUDKbzO3zU2m4kR2Qkc0BR2jnlEaD+/moTh8sJFNYKN
+         9XA3Kq1H/Ewn1BkqN+C7vn2b0acLg8HFjOC6pLZfi0U7BLFluzWBeWpDAZ17fp0kqbrz
+         Y0BkM2k8ZUsJd8TkPNzT2+O5wBfvVRAdKAPab/8BuHTMi/4C1TpQYdXALBBMxp+ujpJN
+         L/QVmUtUFcmnPJw9qXe9juENLn/LSdJqDRBAyonS23R+nAWhtXQ71AFXAdy4AP/DWPT2
+         nSTQ==
+X-Gm-Message-State: APjAAAWR1NXhvorYGEpg6NA9uUxuOeumAjTaqNufi78jiGQ84Gk9jYPd
+        o4G8Yizc+FfkIM0KpDuNR3q+EA==
+X-Google-Smtp-Source: APXvYqyiNTMVFMIidZLuqR91uJGVJNBraA/eWD7B18OGosvc/XDhPkAAP6W2HFvjlD02EkkOB8M0aQ==
+X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr4516162wmf.100.1578570615400;
+        Thu, 09 Jan 2020 03:50:15 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
+        by smtp.gmail.com with ESMTPSA id u16sm2574979wmj.41.2020.01.09.03.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 03:50:14 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line status changes
+Date:   Thu,  9 Jan 2020 12:50:03 +0100
+Message-Id: <20200109115010.27814-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-One patch for current (v5.5!) cycle.
+When discussing the recent user-space changes with Kent and while working
+on dbus API for libgpiod I noticed that we really don't have any way of
+keeping the line info synchronized between the kernel and user-space
+processes. We can of course periodically re-read the line information or
+even do it every time we want to read a property but this isn't optimal.
 
-Thanks,
+This series adds a new ioctl() that allows user-space to set up a watch on
+the GPIO chardev file-descriptor which can then be polled for events
+emitted by the kernel when the line is requested, released or its status
+changed. This of course doesn't require the line to be requested. Multiple
+user-space processes can watch the same lines.
 
-With Best Regards,
-Andy Shevchenko
+This series also includes a variety of minor tweaks & fixes for problems
+discovered during development. For instance it addresses a race-condition
+in current line event fifo.
 
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+First two patches add new helpers to kfifo, that are used in the later
+parts of the series.
 
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+v1: https://lkml.org/lkml/2019/11/27/327
 
-are available in the Git repository at:
+v1 -> v2:
+- rework the main patch of the series: re-use the existing file-descriptor
+  associated with an open character device
+- add a patch adding a debug message when the line event kfifo is full and
+  we're discarding another event
+- rework the locking mechanism for lineevent kfifo: reuse the spinlock
+  from the waitqueue structure
+- other minor changes
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.5-3
+v2 -> v3:
+- added patches providing new implementation for some kfifo macros
+- fixed a regression in the patch reworking the line event fifo: reading
+  multiple events is now still possible
+- reworked the structure for new ioctl: it's now padded such that there
+  be no alignment issues if running a 64-bit kernel on 32-bit userspace
+- fixed a bug where one process could disable the status watch of another
+- use kstrtoul() instead of atoi() in gpio-watch for string validation
 
-for you to fetch changes up to 9608ea6c6613ced75b2c41703d99f44e6f8849f1:
+v3 -> v4:
+- removed a binary file checked in by mistake
+- drop __func__ from debug messages
+- restructure the code in the notifier call
+- add comments about the alignment of the new uAPI structure
+- remove a stray new line that doesn't belong in this series
+- tested the series on 32-bit user-space with 64-bit kernel
 
-  pinctrl: sunrisepoint: Add missing Interrupt Status register offset (2020-01-09 13:15:35 +0200)
+v4 -> v5:
+- dropped patches already merged upstream
+- collected review tags
 
-----------------------------------------------------------------
-intel-pinctrl for v5.5-3
+Bartosz Golaszewski (7):
+  kfifo: provide noirqsave variants of spinlocked in and out helpers
+  kfifo: provide kfifo_is_empty_spinlocked()
+  gpiolib: rework the locking mechanism for lineevent kfifo
+  gpiolib: emit a debug message when adding events to a full kfifo
+  gpiolib: provide a dedicated function for setting lineinfo
+  gpiolib: add new ioctl() for monitoring changes in line info
+  tools: gpio: implement gpio-watch
 
-* Fix Interrupt Status register offset for Intel Sunrisepoint PCH-H.
-
-The following is an automated git shortlog grouped by driver:
-
-sunrisepoint:
- -  Add missing Interrupt Status register offset
-
-----------------------------------------------------------------
-Boyan Ding (1):
-      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
-
- drivers/pinctrl/intel/pinctrl-sunrisepoint.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpiolib.c    | 351 +++++++++++++++++++++++++++++---------
+ drivers/gpio/gpiolib.h    |   1 +
+ include/linux/kfifo.h     |  73 ++++++++
+ include/uapi/linux/gpio.h |  30 ++++
+ tools/gpio/.gitignore     |   1 +
+ tools/gpio/Build          |   1 +
+ tools/gpio/Makefile       |  11 +-
+ tools/gpio/gpio-watch.c   |  99 +++++++++++
+ 8 files changed, 486 insertions(+), 81 deletions(-)
+ create mode 100644 tools/gpio/gpio-watch.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.23.0
 
