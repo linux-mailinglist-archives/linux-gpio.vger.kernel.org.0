@@ -2,86 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B84AC1356BE
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 11:21:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B641356C3
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 11:21:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgAIKVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 05:21:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:56730 "EHLO mga05.intel.com"
+        id S1728991AbgAIKVt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 05:21:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:45313 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729118AbgAIKVD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:21:03 -0500
+        id S1728946AbgAIKVt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:21:49 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 02:21:02 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 02:21:48 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,413,1571727600"; 
-   d="scan'208";a="272076267"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jan 2020 02:21:00 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ipUw0-0006bc-PX; Thu, 09 Jan 2020 12:21:00 +0200
-Date:   Thu, 9 Jan 2020 12:21:00 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Dmitry Mastykin <mastichi@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: baytrail: Replace WARN with dev_info_once
- when setting direct-irq pin to output
-Message-ID: <20200109102100.GK32742@smile.fi.intel.com>
-References: <20200101145243.15912-1-hdegoede@redhat.com>
- <20200108174745.GG32742@smile.fi.intel.com>
- <f1ace666-1c57-0688-9737-d3ab2f5a1073@redhat.com>
+   d="scan'208";a="226944327"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 09 Jan 2020 02:21:46 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 09 Jan 2020 12:21:45 +0200
+Date:   Thu, 9 Jan 2020 12:21:45 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] pinctrl: intel: Add GPIO <-> pin mapping ranges via
+ callback
+Message-ID: <20200109102145.GC2838@lahna.fi.intel.com>
+References: <20200109075329.398347-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f1ace666-1c57-0688-9737-d3ab2f5a1073@redhat.com>
+In-Reply-To: <20200109075329.398347-1-linus.walleij@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:05:47AM +0100, Hans de Goede wrote:
-> On 08-01-2020 18:47, Andy Shevchenko wrote:
-> > On Wed, Jan 01, 2020 at 03:52:43PM +0100, Hans de Goede wrote:
-
-...
-
-> > >   		/*
-> > >   		 * Before making any direction modifications, do a check if gpio
-> > >   		 * is set for direct IRQ.  On baytrail, setting GPIO to output
-> > >   		 * does not make sense, so let's at least warn the caller before
-> > 
-> > ...if it's a warning, perhaps do a warning instead of info?
-> > Otherwise, we probably need to change a comment here.
+On Thu, Jan 09, 2020 at 08:53:28AM +0100, Linus Walleij wrote:
+> When IRQ chip is instantiated via GPIO library flow, the few functions,
+> in particular the ACPI event registration mechanism, on some of ACPI based
+> platforms expect that the pin ranges are initialized to that point.
 > 
-> I went with info on purpose since this will trigger on all BYT devices with
-> a Goodix touchscreens of which we have quite a few, so my vote goes to maybe
-> the comment. Note that although the log level is info (because it is somewhat
-> expected to happen), the content of the log msg is still warning-ish.
+> Add GPIO <-> pin mapping ranges via callback in the GPIO library flow.
 > 
-> I guess we could replace "let's at least warn the caller before" with
-> "let's at least let the caller know before"
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-What about simple 'warn -> inform' ?
-(I can update myself)
-
-> > >   		 * they shoot themselves in the foot.
-> > >   		 */
-> > > -		WARN(readl(conf_reg) & BYT_DIRECT_IRQ_EN,
-> > > -		     "Potential Error: Setting GPIO with direct_irq_en to output");
-> > > +		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
