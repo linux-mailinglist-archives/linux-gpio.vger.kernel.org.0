@@ -2,139 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3250F1353EF
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 08:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4A7135405
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 09:05:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgAIH4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 02:56:41 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35152 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbgAIH4l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 02:56:41 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j1so6172369lja.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2020 23:56:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=av7HcYUDPVtq744dD/jQrW74iw2JEPAQcG8TalAj878=;
-        b=PVj20/v8nJEgW8x/2ffVvBamuKf2e+R62LDvNuEA454AhRrfVxNT28PWF8j2eQFFY3
-         wJ8tb2Hs7uEgaYoY4eAJsTmm4YmKiPqlLdmp6NB+kXVzgV/eqpsWGNL0Isg0RISvjH5T
-         ly3S+sjE4shGQ1/XEy8Xyp69P2w+g857mH7FKOg6LyVltln+Zd3YI3H/gnHpM76KzYqK
-         feM4TmqZc2L6BKecEskzhScWfisE6zCR5roB7Bt3C1vl922bUsPdmJxniwmpHHQkaqp/
-         lSgwHCFFgC4qzCrogLsAURnjxaAXsc5DkPpX6Ljioxkslb8zVny8T67CtgG6NXSJSkKH
-         Zmfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=av7HcYUDPVtq744dD/jQrW74iw2JEPAQcG8TalAj878=;
-        b=Az53h6pzI4fxVtanBeFHzU3Gr7aaVQeTFz122ssOMMA99BTuheP+K3UF6Nbo5Twzfp
-         FMcNkfJs86J2fuFsQBjgU6nZPNLkE/UyMuijGyVbndHbH1O7DkKbmczav+A4KyV85tBx
-         iDwQvS7bg2sOCV25/JnjNMtVEwag8ugs+vdbjnXwCub1Jggu5wkYMqFMiDYJ4zroJyfY
-         0B4KSmYVp6rwfsoh0Fog16dPi5mT0ez4TMf/y8aUN7FqrdyPMR1wqrEzke0Tt061AWs3
-         875kuNHmOl449obLeqv81PHqGdY9s5Tyl3bSt0AdVVKmJcMWeNkLRnTfJ5mfy4KvuchH
-         Ahmg==
-X-Gm-Message-State: APjAAAX8GtyiGlPRxIWlqbaErY/9E1MdgSjNxFk9gzvTT0nNOOAJZPAn
-        9qIPnNdfkaUEI3TPU3xoTPvp/w==
-X-Google-Smtp-Source: APXvYqym0Tv71bG9Gm071smIw2DYk3olyayzv//M2eg9LEq/S8Kd10Rbhgbgeqz0ZdYKOuQLGwmx+A==
-X-Received: by 2002:a2e:8942:: with SMTP id b2mr5478293ljk.162.1578556599344;
-        Wed, 08 Jan 2020 23:56:39 -0800 (PST)
-Received: from localhost.localdomain (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id d9sm2452745lja.73.2020.01.08.23.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 23:56:38 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/2] pinctrl: intel: Pass irqchip when adding gpiochip
-Date:   Thu,  9 Jan 2020 08:53:29 +0100
-Message-Id: <20200109075329.398347-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200109075329.398347-1-linus.walleij@linaro.org>
-References: <20200109075329.398347-1-linus.walleij@linaro.org>
+        id S1728349AbgAIIFj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 03:05:39 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:41831 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728267AbgAIIFj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 03:05:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578557138; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: To: From: Sender;
+ bh=BuUdAvhMRovZFUB4BJ0UiwY2Y6k8o8mctzHNiqvFTHc=; b=lbOEo8d05OJctLkz2OWU9xi2YTyFxYUfbsBe8T3vnk72WZ9zAW8b5mF074hRHEjEHQo0aO7L
+ 60VXy1gPJu25P9vAd3fcR0bt3R2+/KRrQIwCo/voFGnGk5oS7z+dLZ7C66nQYrub+kTXWnJH
+ geVXR0RCXZJt7n/QdtrXOQ3JMmQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e16ded1.7fc6d05c2148-smtp-out-n01;
+ Thu, 09 Jan 2020 08:05:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E44E8C447A5; Thu,  9 Jan 2020 08:05:35 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD78EC4479C;
+        Thu,  9 Jan 2020 08:05:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD78EC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org,
+        sivaprak@codeaurora.org, sricharan@codeaurora.org, sboyd@kernel.org
+Subject: [PATCH V2 0/2] Add Global clock controller support for IPQ6018
+Date:   Thu,  9 Jan 2020 13:35:19 +0530
+Message-Id: <1578557121-423-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We need to convert all old gpio irqchips to pass the irqchip
-setup along when adding the gpio_chip. For more info see
-drivers/gpio/TODO.
+The IPQ6018 is Qualcomm’s 802.11ax/u2019s SoC for Routers,
+Gateways and Access Points.
 
-For chained irqchips this is a pretty straight-forward conversion.
+[V2]
+ * Addressed sparse warnings reported by Kbuild test robot.
 
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-Please apply this to the Intel pinctrl tree when you are
-happy with the result!
----
- drivers/pinctrl/intel/pinctrl-intel.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+This series adds Global clock controller support for ipq6018.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index b479bcf1e246..ffacd77861f7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1224,6 +1224,7 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
- static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- {
- 	int ret;
-+	struct gpio_irq_chip *girq;
- 
- 	pctrl->chip = intel_gpio_chip;
- 
-@@ -1244,16 +1245,9 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	pctrl->irqchip.irq_set_wake = intel_gpio_irq_wake;
- 	pctrl->irqchip.flags = IRQCHIP_MASK_ON_SUSPEND;
- 
--	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
--	if (ret) {
--		dev_err(pctrl->dev, "failed to register gpiochip\n");
--		return ret;
--	}
--
- 	/*
--	 * We need to request the interrupt here (instead of providing chip
--	 * to the irq directly) because on some platforms several GPIO
--	 * controllers share the same interrupt line.
-+	 * On some platforms several GPIO controllers share the same interrupt
-+	 * line.
- 	 */
- 	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
- 			       IRQF_SHARED | IRQF_NO_THREAD,
-@@ -1263,14 +1257,20 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 		return ret;
- 	}
- 
--	ret = gpiochip_irqchip_add(&pctrl->chip, &pctrl->irqchip, 0,
--				   handle_bad_irq, IRQ_TYPE_NONE);
-+	girq = &pctrl->chip.irq;
-+	girq->chip = &pctrl->irqchip;
-+	/* This will let us handle the IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_bad_irq;
-+
-+	ret = devm_gpiochip_add_data(pctrl->dev, &pctrl->chip, pctrl);
- 	if (ret) {
--		dev_err(pctrl->dev, "failed to add irqchip\n");
-+		dev_err(pctrl->dev, "failed to register gpiochip\n");
- 		return ret;
- 	}
- 
--	gpiochip_set_chained_irqchip(&pctrl->chip, &pctrl->irqchip, irq, NULL);
- 	return 0;
- }
- 
+Sricharan R (2):
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
+ drivers/clk/qcom/Kconfig                           |    8 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 4643 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
+ include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
+ 6 files changed, 5073 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
+
 -- 
-2.23.0
-
+1.9.1
