@@ -2,100 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7092F13559E
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 10:22:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E116B1355EF
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 10:38:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgAIJVi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 04:21:38 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43041 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729375AbgAIJVi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 04:21:38 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578561697; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=HENFk0Bwme4xX25T8XYjrsnqX3dO66gOl56uwR9piXs=; b=S1Slievj2qko2Fc//+wVOdtjw7S77e/95jqfZOszrHklliuX9EJxqxOnkAXPQ+ZSHWW2sBXY
- WKERJj3ZH7+3X8JtOukuF6jo/WqFZLK89DWg8yT4j6gTugrhggRyIvgfqBwCi9zwqMCfMefi
- MGjaJ8hDNXTxaLsUaA6NbR3hkPE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e16f09f.7f01651f0e30-smtp-out-n02;
- Thu, 09 Jan 2020 09:21:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CC6B8C4479F; Thu,  9 Jan 2020 09:21:33 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A050C433A2;
-        Thu,  9 Jan 2020 09:21:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A050C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
-References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
- <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
- <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <ca9baad3-8065-4647-c6c5-7449b96f4f71@codeaurora.org>
-Date:   Thu, 9 Jan 2020 14:51:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1729750AbgAIJiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 04:38:51 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41887 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729749AbgAIJiv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 04:38:51 -0500
+Received: by mail-qt1-f196.google.com with SMTP id k40so5314015qtk.8
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2020 01:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2u8yX/6m8ka023+i3ocnOCOzpKH3BIMDen/cmCWdkZM=;
+        b=1PwuSuSkQeo2awFeIpunataRcqxxnosFO8ylwONKpCfiRdEv2cMuQs1iPcpN39ve9e
+         uVjH/aPbvGPFq8OavOOFJllWZHYTgp1MhtC8XftSjaXWezfpXGdWK5I844c8mx2xYCiI
+         p7mugL6HvWl94X8/igMXHg4xsHF7undgc0pNCXTEBGCu6pRD472FMHh4BUXYkRTKJbMm
+         KCkp8A17IH9xEnwOvI2pE1MNzKMo4RmJUZu148DpYF6hRQ1NDw4lLdbg7cdHcEksf+it
+         JjPpkS5/lhlcQKNJ9Jjd0WoJCUdrPuZshMhwrF8bm7mi1HvxYCvaZjV7y2JvGSuRy2ir
+         ADRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2u8yX/6m8ka023+i3ocnOCOzpKH3BIMDen/cmCWdkZM=;
+        b=PgCJuOBF+VUohxtfj9lDx3m1krZvgCSEgfAym/1y8fw0iOm2Drr6CpdCulsdrzofoO
+         aHcp2Xkdq0uYfbe8q2WBOd0LaM9evkqM1cxAuhnrQYBY9peq7FDdyjOISdiI0yHp1XK6
+         gmtUm4Uuhh9tZzw6ReuTZh4Qfl3YrFqMZqk6Q+pCZWDpfIaFYzdO8DrhCqg8QIxl8WAy
+         wwfxUvIGex+ksoTF0W02ZZQAOxC3HHuKv4+vC8zBV71uh2pt0VqFiqtOQpbsI1OAQX3B
+         W0xxvVeO9s3q5LvKTfo+yPDg16xQOCv++jTnIFcMhfqL7JnUP4vpwZOvzS4FTXarKbOE
+         77pg==
+X-Gm-Message-State: APjAAAV4TzZAxHxx5ttvcqVHouxWe7RhibgpTV52slXvT6uitnxhBOPq
+        ohFU1tdi1a5AvF6TbvpZpn/xkphohRlLCjDqTvihdg==
+X-Google-Smtp-Source: APXvYqz2yXGoSQ7sbAosHgrWq7wGGl6W6TxGeK5uEo27I6GnFOmxS2ckbw/hoaEc3ak4D0wM+n9dhiGnP62y3LgUTHY=
+X-Received: by 2002:aed:3b6e:: with SMTP id q43mr7032621qte.57.1578562730145;
+ Thu, 09 Jan 2020 01:38:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200108161620.80105-1-joyce.ooi@intel.com>
+In-Reply-To: <20200108161620.80105-1-joyce.ooi@intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jan 2020 10:38:39 +0100
+Message-ID: <CAMpxmJUMhDeZ=EjjfNJnF+ikAfNq_hh2LP_TTnpoTb3oDMCCow@mail.gmail.com>
+Subject: Re: [PATCH] gpio: altera: change to platform_get_irq_optional to
+ avoid false-positive error
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+=C5=9Br., 8 sty 2020 o 17:16 Ooi, Joyce <joyce.ooi@intel.com> napisa=C5=82(=
+a):
+>
+> This patch switches to platform_get_irq_optional() from
+> platform_get_irq() as it causes a false-positive error such as 'IRQ
+> index 0 not found' when IRQ is not used. The IRQ usage is optional in
+> this gpio-altera driver, so the error log is undesirable.
+>
+> Signed-off-by: Ooi, Joyce <joyce.ooi@intel.com>
 
-On 1/7/2020 5:25 PM, Linus Walleij wrote:
-> On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
-> 
->> Add device tree binding Documentation details for ipq6018
->> pinctrl driver.
->>
->> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  [v3] Fixed the example dt node, inherited properties
-> 
-> Once you are done with patches 1 & 2, can I merge these
-> separately to the pinctrl tree?
+Patch applied, thanks!
 
-Yeah, that should be fine. Posted a V4 and waiting for approval
-from Rob on the pinctrl bindings for Patch 1.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Bartosz
