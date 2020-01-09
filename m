@@ -2,236 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59C6D13586C
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 12:50:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38226135A3B
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 14:35:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgAILu1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 06:50:27 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42410 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729272AbgAILu0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 06:50:26 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so7043311wro.9
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2020 03:50:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f+1d4FRlTWDoZyLvhcrUylaJhZuzCdWZutZr0QUDHa4=;
-        b=hvOb/G4h+MUW2efFDhfU93ZBRKZySYeLGQPiGx5PfYqNO/cq7g/8dNfTuxFDcOyM/E
-         tTr7RoWNeNEWjFgTxs4No/PzNgbw9+nW1wW1yRLFeNpRVQC6h/h7kRY5rLTDkXp5G8U2
-         PrQF7Keqy7RCn0/LsQtMLgKmCNQas8DT/+Dbu8EP6fWTWeaWXR5n1LkUF7CmU4FfnAzV
-         ZhKpk7yyAGR8Hby5bEHRSZTFZGFcFHJ/M2izAMG7Kd6lIF9G/LvQXMTQp3vqcuyuSauQ
-         SVCSYQiXXqAR31TsS2k2H6QH+1EqC0Py0bLPNxGq5yaRIf0bI6/YWjmu0wwKbB9mfyIu
-         I1aQ==
+        id S1731117AbgAINfY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 08:35:24 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:32975 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728974AbgAINfY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 08:35:24 -0500
+Received: by mail-qk1-f194.google.com with SMTP id d71so5980868qkc.0;
+        Thu, 09 Jan 2020 05:35:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f+1d4FRlTWDoZyLvhcrUylaJhZuzCdWZutZr0QUDHa4=;
-        b=SikPOBlz867GekLreDScERqbsqkLKLlLfn9JoabrBmw8bVRSulVqHnswXq+F0YBWGv
-         CpAR3/13Zqzrdbe3uRxPP1SFJQUZWG/065uZlKvTAEJO5QPkWAynNd7Z4ShfKXg/N4e0
-         oJ5H8ZZCLGNaK1ttmm3l0hFSXlue7mpOB6wfm6hqkfLGD9dSQ2Tv45x8+8hhELpg32xa
-         PdkzP/WLoAtFTI/ZuIH92aQWdWW6rmrWxyP4wx1Fe3FzDRadWDOtTYZMibzebyj42IHF
-         ipssLyk9gHN/+qfo6sGuYQs3AAR32/ElqXXTArVU2cDYRcG1iWyEIqp2zdE5DT+U9kra
-         YVQg==
-X-Gm-Message-State: APjAAAVZvSZMgplU51EcHUtOHueAjPm2N+mva5a6Dzq1F/fjqx1oSMSK
-        xdEInU7Xj/RWvICXJLZ2S62WC8EdmQ4=
-X-Google-Smtp-Source: APXvYqy6+RrRXs2rydzgpYBlRlaMLhIzVNqwK3r2MwYghbynCBI01joCgzLPKyEEc40H5snquoeJVw==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr9941938wrk.53.1578570623717;
-        Thu, 09 Jan 2020 03:50:23 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id u16sm2574979wmj.41.2020.01.09.03.50.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 03:50:23 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v5 7/7] tools: gpio: implement gpio-watch
-Date:   Thu,  9 Jan 2020 12:50:10 +0100
-Message-Id: <20200109115010.27814-8-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200109115010.27814-1-brgl@bgdev.pl>
-References: <20200109115010.27814-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vK5UxuBrViNaXxuMZEsGhiSGSEMvZsYzv98RipTZfGg=;
+        b=s1UNeLX8809o92ijYT5HikWwRFLcu3yDQDRjnyKAI3ebjg2fw+tfkA63SKrKZ4oBFL
+         NIAGPKWgDpMm/V/drl8ia7BooYxzmGsh0P61Ngn5+cI33GRhHTq7p3YNe1O7rqu06t8I
+         BrTAjNLP/CXJoN79JWAh9ZFmZl9UzyAMP1oqYg4Zinish8Dj+TawkkuwJqxsF9tshQKy
+         qJTwa8sTmtqNz5RiNLSl/sP+yIfrjDtvlqCS+cPwZxBtnUXL1Kj73Hm01HAsUpGB6LRj
+         G6tnHxD7Qn6GOVF2BezCUyTbQrH0u5QggPci7aK+P3AWfkY7S2UKNkasHuMiXyHI/6B+
+         CwcA==
+X-Gm-Message-State: APjAAAVS5wq1mKhWdJbXO+NZrAucozVXb5UecaIWxEAiAwEq8xnGIt1n
+        dHA/FkrW/xvc5RsM7mc28c+qhG6e1MqbfRvD8KQ=
+X-Google-Smtp-Source: APXvYqyRXgYk8j5kdfM4/WS8TEs831mjz2YcxqkRufdK/tyDKS85bDKPS8c3TecGMtuEwZvySvABfGqCivPuJ6qeC0Q=
+X-Received: by 2002:a05:620a:134f:: with SMTP id c15mr9195003qkl.115.1578576923178;
+ Thu, 09 Jan 2020 05:35:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be> <20191203105103.GA20470@x230>
+In-Reply-To: <20191203105103.GA20470@x230>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 9 Jan 2020 14:35:10 +0100
+Message-ID: <CAMuHMdVLaGt5GTXzUbUHrBHn5q--t3JfxO6P_j0GnnhixV+UfA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Eugeniu,
 
-Add a simple program that allows to test the new LINECHANGED_FD ioctl().
+On Tue, Dec 3, 2019 at 11:51 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
+> On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
+> > +static int gpio_aggregator_probe(struct platform_device *pdev)
+> > +{
+> > +     struct device *dev = &pdev->dev;
+> > +     struct gpio_desc **descs;
+> > +     struct gpiochip_fwd *fwd;
+> > +     int i, n;
+>
+> FWIW/FTR, doing some blind creation and deletion of gpio aggregator
+> chips [1] on R-Car H3ULCB overnight, kmemleak reported once [2]. Not
+> sure this is something 100% reproducible.
+>
+> [1] while true; do \
+>    echo e6055400.gpio 12,13 > /sys/bus/platform/drivers/gpio-aggregator/new_device; \
+>    echo gpio-aggregator.0 > /sys/bus/platform/drivers/gpio-aggregator/delete_device; \
+>    done
+>
+> [2] unreferenced object 0xffff0006d2c2e000 (size 128):
+>   comm "kworker/3:1", pid 55, jiffies 4294676978 (age 38546.676s)
+>   hex dump (first 32 bytes):
+>     00 d9 d2 d3 06 00 ff ff 0c 00 e0 0f ff ff ff ff  ................
+>     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000a8e18c13>] slab_post_alloc_hook+0x8c/0x94
+>     [<000000006f419a4f>] __kmalloc+0x170/0x218
+>     [<0000000060d185ea>] kobj_map+0x78/0x1c0
+>     [<00000000c96645f3>] cdev_add+0x68/0x94
+>     [<00000000a7a5a8ac>] cdev_device_add+0x74/0x90
+>     [<00000000497871d3>] gpiochip_setup_dev+0x84/0x1f0
+>     [<00000000b993f95f>] gpiochip_add_data_with_key+0xbcc/0x11f0
+>     [<00000000fd728c0e>] devm_gpiochip_add_data+0x60/0xa8
+>     [<00000000442e34c1>] gpio_aggregator_probe+0x210/0x3c8
+>     [<00000000076e13fb>] platform_drv_probe+0x70/0xe4
+>     [<00000000de84b58b>] really_probe+0x2d8/0x434
+>     [<00000000c95c9784>] driver_probe_device+0x15c/0x16c
+>     [<00000000afb7dd4f>] __device_attach_driver+0xdc/0x120
+>     [<00000000efa40cae>] bus_for_each_drv+0x12c/0x154
+>     [<00000000c149acef>] __device_attach+0x148/0x1e0
+>     [<00000000a74fd158>] device_initial_probe+0x24/0x30
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- tools/gpio/.gitignore   |  1 +
- tools/gpio/Build        |  1 +
- tools/gpio/Makefile     | 11 ++++-
- tools/gpio/gpio-watch.c | 99 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 1 deletion(-)
- create mode 100644 tools/gpio/gpio-watch.c
+This is the allocation of the GPIO character device, which is allocated
+in response to the creation of the GPIO chip, from .probe().
+As that is done using devm_gpiochip_add_data(), the chardev should be
+deallocated automatically by devm_gpio_chip_release() when
+platform_device_unregister() is called.
 
-diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-index a94c0e83b209..eab36c6d7751 100644
---- a/tools/gpio/.gitignore
-+++ b/tools/gpio/.gitignore
-@@ -1,4 +1,5 @@
- gpio-event-mon
- gpio-hammer
-+gpio-watch
- lsgpio
- include/linux/gpio.h
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 4141f35837db..67c7b7f6a717 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
-+gpio-watch-y += gpio-watch.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 6080de58861f..842287e42c83 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -18,7 +18,7 @@ MAKEFLAGS += -r
- 
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
- 
--ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
-+ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- all: $(ALL_PROGRAMS)
-@@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
-+#
-+# gpio-watch
-+#
-+GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
-+$(GPIO_WATCH_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-watch
-+$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
- clean:
- 	rm -f $(ALL_PROGRAMS)
- 	rm -f $(OUTPUT)include/linux/gpio.h
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-new file mode 100644
-index 000000000000..5cea24fddfa7
---- /dev/null
-+++ b/tools/gpio/gpio-watch.c
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * gpio-watch - monitor unrequested lines for property changes using the
-+ *              character device
-+ *
-+ * Copyright (C) 2019 BayLibre SAS
-+ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+ */
-+
-+#include <ctype.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/gpio.h>
-+#include <poll.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+
-+int main(int argc, char **argv)
-+{
-+	struct gpioline_info_changed chg;
-+	struct gpioline_info req;
-+	struct pollfd pfd;
-+	int fd, i, j, ret;
-+	char *event, *end;
-+	ssize_t rd;
-+
-+	if (argc < 3)
-+		goto err_usage;
-+
-+	fd = open(argv[1], O_RDWR | O_CLOEXEC);
-+	if (fd < 0) {
-+		perror("unable to open gpiochip");
-+		return EXIT_FAILURE;
-+	}
-+
-+	for (i = 0, j = 2; i < argc - 2; i++, j++) {
-+		memset(&req, 0, sizeof(req));
-+
-+		req.line_offset = strtoul(argv[j], &end, 0);
-+		if (*end != '\0')
-+			goto err_usage;
-+
-+		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-+		if (ret) {
-+			perror("unable to set up line watch");
-+			return EXIT_FAILURE;
-+		}
-+	}
-+
-+	pfd.fd = fd;
-+	pfd.events = POLLIN | POLLPRI;
-+
-+	for (;;) {
-+		ret = poll(&pfd, 1, 5000);
-+		if (ret < 0) {
-+			perror("error polling the linechanged fd");
-+			return EXIT_FAILURE;
-+		} else if (ret > 0) {
-+			memset(&chg, 0, sizeof(chg));
-+			rd = read(pfd.fd, &chg, sizeof(chg));
-+			if (rd < 0 || rd != sizeof(chg)) {
-+				if (rd != sizeof(chg))
-+					errno = EIO;
-+
-+				perror("error reading line change event");
-+				return EXIT_FAILURE;
-+			}
-+
-+			switch (chg.event_type) {
-+			case GPIOLINE_CHANGED_REQUESTED:
-+				event = "requested";
-+				break;
-+			case GPIOLINE_CHANGED_RELEASED:
-+				event = "released";
-+				break;
-+			case GPIOLINE_CHANGED_CONFIG:
-+				event = "config changed";
-+				break;
-+			default:
-+				fprintf(stderr,
-+					"invalid event type received from the kernel\n");
-+				return EXIT_FAILURE;
-+			}
-+
-+			printf("line %u: %s at %llu\n",
-+			       chg.info.line_offset, event, chg.timestamp);
-+		}
-+	}
-+
-+	return 0;
-+
-+err_usage:
-+	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-+	return EXIT_FAILURE;
-+}
+Weird...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.23.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
