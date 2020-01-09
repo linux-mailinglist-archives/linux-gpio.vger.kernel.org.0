@@ -2,78 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0AF135131
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 03:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA6D135224
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jan 2020 05:23:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgAICCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jan 2020 21:02:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36638 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726913AbgAICCg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jan 2020 21:02:36 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so5453601ljg.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2020 18:02:35 -0800 (PST)
+        id S1727417AbgAIEXA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jan 2020 23:23:00 -0500
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:35954 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAIEXA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jan 2020 23:23:00 -0500
+Received: by mail-wr1-f42.google.com with SMTP id z3so5857076wru.3
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jan 2020 20:22:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fvCKXeC9sdlzORfj+q066OKqVIfxycI4K4fCnGeIty4=;
-        b=Xbkm+94ETCfWyCcAUN7E7HtVpmAWx0TCuDffKDKuu1/tdVtzZQ3DIFHkiY8bPUw3mT
-         g1VxV1gUubYMTPmSdFBnHQM+3eF4qxy2welOWJ28ZcFhl1VY6rAwjTgDJMTuc99+bsVe
-         i/SIcBALDS68nC5SEZ1HaZG7IVuElnir1f0RJnl/C1UIRhgIcp7hCizWE+A3IVUR9LPu
-         59FyRs/+2lh3Igo9laqLBuLrN1C7El7rCQBIjPlU3q6734Xg4rNoM8+SJemhdOkA7a7g
-         VWjqzBv0QSlebYl/do+PUVFmtXun9nvnhR/uOxwxxm7ni4pJddLrzgo6A4th3CrKm/ZF
-         jDnA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=V8ogbUZo74of1kfuO8AhpWIPYMdGub7NOwVUaPKbIs0=;
+        b=ktxOOqAcrYEIQdLZ4amNQDWvvFRw9A3GaPDFcRW3q5c7PDGh+0Wqvt/xeOHLXhqVJG
+         zgywzDZg/grmAl13wbbS+eiTq5+S+ntdCjOTj1OEHmFYucNBlSFmzfQGdJy8rZDcIRfJ
+         HlXk95dUdEw/De0rdOADu2Al4ooqkhG3LGLOVqFe4sgfd+229527OVnneQR3DqijXagR
+         FexZwrTt4LAY9K/T8MsoHUBldigd1Mx78hMaH2YBo3eOVXNw+z9b7C2agn+s/Xuu7LSp
+         nL1w6EWvnz+A1B1qPCOfzc6cxjC3ajUEjqfX4NOaWuMo4HYUyN7zACyWSbV0+gsjso/p
+         T7xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fvCKXeC9sdlzORfj+q066OKqVIfxycI4K4fCnGeIty4=;
-        b=pfoHrMiUf+AziUPaOurQJ5dAqwGNHQ1whMGDYFQs2W+/b49insxxZB/uxEC6/KbPF7
-         J4balZsW8pzWyat/LnoIzds9//c/N7x71k5Qa0u0QdjH8lfsO/SHV2EzbrBURmHv8D3x
-         WDOp44GDUjIA1Ra04QT17QTH76AA0bbg+pDE94UQzT/ks+zcTDjdAo9TvOqNHgh1yI2H
-         pauSm5c+ZwQQZOJ12XhJCBXcfE7w0yO4RCtTDGm5QoX+0r1P4siDH+1kzJK8pXmBmzyY
-         2Pfovi+QL5R/hNL4LmZi+jXXJcclPr/h8qOzCPgi3piZPtpFYsTal+Ee5G5e9tZLkl9z
-         GKmg==
-X-Gm-Message-State: APjAAAXMJRnnSWjcCdKCqDkQ+cD1KfHX8KBRGJY4orgCNNI5PpLwMFde
-        1TaXiLsCRkNtQipt0gXh6qIvX31PbbVK6mYvOOV1/w==
-X-Google-Smtp-Source: APXvYqxZ08HhWiEqTSsfeYkThwFIVkKIVbbxklN/iSrg+yEE/ocnYT6XLihLCofxIG/dH8RYgvZH70JqaHOPzkFsKLg=
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr4817754ljj.77.1578535354611;
- Wed, 08 Jan 2020 18:02:34 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=V8ogbUZo74of1kfuO8AhpWIPYMdGub7NOwVUaPKbIs0=;
+        b=Skwf/gR+SNk4t8sr2S3pSU/boQ9gDCqhnmYKDReMDjmokzhaCjomFBYMLqvF5G9tTn
+         8M1ssDVdcwlXEuZVy0OeswYkKIryu0ZVYOgKzPb3UfH91MTxd37b78OKdIht3Nuymjz/
+         jpobo4eeGN4pIa0mu3zWdGty/chL1T5VEI/wwExyNev0pGrRVp6ap1pWQeY++mt0ALU0
+         DHvkEqoCVSsH7JIHJ1lYphYvWXkx5sWwa8W8C02bZoIy2TU48fAvGVmvpp+STVJsktqz
+         kFj7MfL2Xp/sZ+XPlqCXGlk4b83ws99+LLqhRuYpIwcywvDkMrN/aFfQ4aWW8syhZxNs
+         fUMw==
+X-Gm-Message-State: APjAAAW2sMmwmL/k9nEoxfO2PhQQdJTjy+uBwIQBqSKqnYcGEGHKyn9d
+        hxaidExlsOWYL/fhRDLZV4Z0/CBWXWnrnw==
+X-Google-Smtp-Source: APXvYqzorPADTVTxwwEQ0dV9GLOj7TEN620Dqn9y3sKxGADlu4ScsgChOnGbOWV+pFfSa81bX0qUWg==
+X-Received: by 2002:adf:cd0a:: with SMTP id w10mr8106981wrm.107.1578543777922;
+        Wed, 08 Jan 2020 20:22:57 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id c5sm1510045wmb.9.2020.01.08.20.22.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 20:22:57 -0800 (PST)
+Message-ID: <5e16aaa1.1c69fb81.bcb0d.77a6@mx.google.com>
+Date:   Wed, 08 Jan 2020 20:22:57 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200107212432.27587-1-linus.walleij@linaro.org> <CAMpxmJVrJaXy3rraT2jydMyXbfUTRKXfAKtazkeuQcnxAg396A@mail.gmail.com>
-In-Reply-To: <CAMpxmJVrJaXy3rraT2jydMyXbfUTRKXfAKtazkeuQcnxAg396A@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Jan 2020 03:02:21 +0100
-Message-ID: <CACRpkdbc_Do5tjk3c1n_U6T4AnF1Y19Nnf=uJyQQTL5GntN2LQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Update TODO
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.5-rc4-35-g0dc4997ef739
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 5 builds: 0 failed, 5 passed,
+ 1 warning (v5.5-rc4-35-g0dc4997ef739)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 9:50 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 7 sty 2020 o 22:26 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> >
-> > Drop the completed item: hierarchical irqchip helpers. Add
-> > motivation for gpio descriptor refactoring. Extend the list of
-> > stuff to do. Minor fixups.
-> >
-> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Hi,
->
-> thanks for doing this, I'm seeing just a couple typos here and there.
-> They're probably not important anyway as it's a "temporary" (right...)
-> TODO item.
+linusw/for-next build: 5 builds: 0 failed, 5 passed, 1 warning (v5.5-rc4-35=
+-g0dc4997ef739)
 
-Thanks, I fixed up the typos when applying.
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.5-rc4-35-g0dc4997ef739/
 
-Yours,
-Linus Walleij
+Tree: linusw
+Branch: for-next
+Git Describe: v5.5-rc4-35-g0dc4997ef739
+Git Commit: 0dc4997ef7396b1dc78ee36b5e4b6939c2ae0026
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
+
+Warnings Detected:
+
+arm64:
+
+arm:
+
+mips:
+
+riscv:
+
+x86_64:
+    x86_64_defconfig (gcc-8): 1 warning
+
+
+Warnings summary:
+
+    1    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_=
+is_phy=E2=80=99 defined but not used [-Wunused-function]
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sec=
+tion mismatches
+
+Warnings:
+    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_is_ph=
+y=E2=80=99 defined but not used [-Wunused-function]
+
+---
+For more info write to <info@kernelci.org>
