@@ -2,71 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 720D3136BE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2020 12:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C283136DA9
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2020 14:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgAJL0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jan 2020 06:26:44 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46052 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbgAJL0o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jan 2020 06:26:44 -0500
-Received: by mail-qk1-f193.google.com with SMTP id x1so1428147qkl.12
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jan 2020 03:26:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hUroiuU3Fp/xQGIWCTChUVUm4YHTnlSYbmeov1Mp7wU=;
-        b=ec9/C3/xxUH5dasOB3ivG/xAk5dmSSCQsxGZf/SSmo4h8munTVjv/vgqrHX5JiiFlc
-         Hcjkr5xbDF1S9RRZZJB2ia/E4Fihoy5XuvAejiBoZM3lF5Yu2X62Chywsm4kXCbeaY/e
-         kYS6PO3sykma+bRDAPXrBTlYWH/Sa9EzPMFB6osBM9hJn9B+rUDDkSGRC1h8xZSzB0ky
-         kUoAYKWkmv4SkeY26hVNpgGdYz9wZBr4+hIl1+iJNqScPEZ54nq3wM1fOkjnbB1+fy2O
-         zReKmc8CqM6funBVHMcECA1bDki21/mp9sObNqwyxDSRhZOrseA0FFgMGJs/fLv8HcvB
-         CFTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hUroiuU3Fp/xQGIWCTChUVUm4YHTnlSYbmeov1Mp7wU=;
-        b=pNpJcGIohmJrZdyGHozhaiqot1wf3YjMEvzAto+ttiRyu6zc1n1wvTiUAEbfR7mc5K
-         cNWmik+lXhQJmivD93GH46pvqYhgcrOyuDecrdr6Q3XRnAHH9muAbEup6q4RExkJutlU
-         l0iF7t97zeI/POvIbDuS225fFUnX+MBY8IHucIG1TBXAM9lzsAbAtc0Ex1hZc25AXz4r
-         fGxXhBt3Y0QSE1FvwcECf0F6BChJ0eH8Iwl7wN+qeWDhTc58E16SbVfpK0mmjHfT40eI
-         DXJDVUHMYWxEWuOO+XJ4h9wMSrRzBJGN8PAtbkd75YCHFcn6eVbWiVirY7w91MYIPQYG
-         dtWA==
-X-Gm-Message-State: APjAAAWhDfQKYCFnTliGOyLHZLZCf9wq3MRzk/sZn/XlemTvDzoZaoLJ
-        IDvf8KBbKlauf6aVOXNAQ/1rkVFKvrSQG+Jo/0Dfjg==
-X-Google-Smtp-Source: APXvYqw5UxC86K015mhQJmke4TUdcIbMdsHE/9kZw6fi4x3O4x4/LVc8Y1PwdK9+KSVdAS8pIOJifZdke9kmjei2l9k=
-X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr2692700qkl.120.1578655603387;
- Fri, 10 Jan 2020 03:26:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20200108001712.47500-1-linus.walleij@linaro.org>
-In-Reply-To: <20200108001712.47500-1-linus.walleij@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 10 Jan 2020 12:26:32 +0100
-Message-ID: <CAMpxmJVwGUQyJa2XvCanzxyZ_VK+EcU_aU69eDYbxJNCDb3NOA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Add use guidance documentation
+        id S1727753AbgAJNTa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jan 2020 08:19:30 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:51716 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgAJNTa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jan 2020 08:19:30 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id odKU210085USYZQ01dKUuP; Fri, 10 Jan 2020 14:19:28 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ipuCG-0007Wm-93; Fri, 10 Jan 2020 14:19:28 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1ipuCG-0000Hi-7A; Fri, 10 Jan 2020 14:19:28 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-sh@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/13] pinctrl: sh-pfc: checker: Various improvements
+Date:   Fri, 10 Jan 2020 14:19:14 +0100
+Message-Id: <20200110131927.1029-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 8 sty 2020 o 01:19 Linus Walleij <linus.walleij@linaro.org> napis=
-a=C5=82(a):
->
-> The text in this new document is a response to recurring questions
-> about the GPIO in-kernel API vs the userspace ABI. When do you use
-> one or the other? It can be a bit intuitive, but I tried to sum it
-> all up.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+	Hi all,
 
+This patch series contains various improvements for the builtin pin
+control table runtime checks of the Renesas Pin Function Controller
+driver.  These checks are enabled with CONFIG_DEBUG_PINCTRL=y, which can
+be combined with CONFIG_COMPILE_TEST=y to increase coverage to all
+Renesas ARM and SuperH SoCs..
 
-Looks good to me.
+Note that all issues detected by this have already been fixed in "[PATCH
+0/6] pinctrl: sh-pfc: More miscellenaous fixes"[1], and are now part of
+linux-next.
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+I plan to queue this in sh-pfc-for-v5.7.
+
+Thanks for your comments!
+
+[1] https://lore.kernel.org/linux-renesas-soc/20191218194812.12741-1-geert+renesas@glider.be/
+
+Geert Uytterhoeven (13):
+  pinctrl: sh-pfc: checker: Move data before code
+  pinctrl: sh-pfc: checker: Add helpers for reporting
+  pinctrl: sh-pfc: checker: Add helper for safe name comparison
+  pinctrl: sh-pfc: checker: Add check for config register conflicts
+  pinctrl: sh-pfc: checker: Add check for enum ID conflicts
+  pinctrl: sh-pfc: checker: Improve pin checks
+  pinctrl: sh-pfc: checker: Improve pin function checks
+  pinctrl: sh-pfc: checker: Improve pin group checks
+  pinctrl: sh-pfc: checker: Add drive strength register checks
+  pinctrl: sh-pfc: checker: Add bias register checks
+  pinctrl: sh-pfc: checker: Add ioctrl register checks
+  pinctrl: sh-pfc: checker: Add data register checks
+  pinctrl: sh-pfc: checker: Add function GPIO checks
+
+ drivers/pinctrl/sh-pfc/core.c | 312 +++++++++++++++++++++++++++-------
+ 1 file changed, 250 insertions(+), 62 deletions(-)
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
