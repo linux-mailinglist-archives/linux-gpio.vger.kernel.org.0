@@ -2,171 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC536136548
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2020 03:17:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D09CB1365E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jan 2020 04:55:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbgAJCRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jan 2020 21:17:15 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:51534 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgAJCRP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:17:15 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC0620005C;
-        Fri, 10 Jan 2020 03:17:13 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F15372016AF;
-        Fri, 10 Jan 2020 03:17:05 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81285402D7;
-        Fri, 10 Jan 2020 10:16:57 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        id S1731186AbgAJDzj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jan 2020 22:55:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45965 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731184AbgAJDzj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jan 2020 22:55:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so409561wrj.12
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jan 2020 19:55:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=kxV5SqlkFgP5zhfbsJuuWIogZXN6mvLl8MHissFHHxg=;
+        b=PIFFStt4M2Cz2Rebcs6yKg3KO/1NffcQ2nsyYGiF3v14UXaVwoRU1JK1x+PnCqCias
+         74Zj31cQwCO/1M+d7BTwBRHAB4EfVm5qDSnqowwCT+NfnBPsorCxstjYNi4FZ+X5BcOm
+         3aYiA/2X+XiQCNOGr+aouB2NYaezcDRqlSh3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kxV5SqlkFgP5zhfbsJuuWIogZXN6mvLl8MHissFHHxg=;
+        b=fslaZfXGGVgcG4zPp5w2i8Ua6ThjcIS+ezBViuT7v+mHZ7DGl3mNw6eeTOIsc44OXP
+         hjprHcRYnnmCz1AHhyrtm+ByNaSDfNgzaeWpDC6i5gBLqS27MXYxey6GGvcpqFcF8h4+
+         WGu0GFoaDsAxCPPTvP6KE2cTZGsEGoA5ZsDZq24di8AVseXrQw7ZNE+g0UWOGSh2UlQ/
+         iszf1Try1TetdWb1ns7C/aC5jCl+5E/v3MQa/v0RghGm5bNWSLLql193OB2ZcrAKtNMy
+         5x4WjB9kev3Be8YIaqVmmLrh/i96txXW4T5nlSwNzT4dMhmE+GUgwfxxjk27sDnkGlxh
+         +Z7A==
+X-Gm-Message-State: APjAAAVcLfNd/S2Ohfy43AdEixplY5MokloHQ5nc2mA6Rb13MLTaelp3
+        AlyccEyMlqUdEhbHQqM4mTG3Zg==
+X-Google-Smtp-Source: APXvYqwhH4tu3jlKFGUg12Tzi7qWJWfnfZa+c/G1dxcpt5oyAFIOPeAhb3CJjIDnMMTvI/n6+5g50w==
+X-Received: by 2002:a5d:6748:: with SMTP id l8mr952505wrw.188.1578628537787;
+        Thu, 09 Jan 2020 19:55:37 -0800 (PST)
+Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
+        by smtp.gmail.com with ESMTPSA id e18sm674999wrw.70.2020.01.09.19.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 19:55:37 -0800 (PST)
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Li Jin <li.jin@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: pinctrl: Convert i.MX8MN to json-schema
-Date:   Fri, 10 Jan 2020 10:13:08 +0800
-Message-Id: <1578622388-23370-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
-References: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional() to avoid error message
+Date:   Fri, 10 Jan 2020 09:25:24 +0530
+Message-Id: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the i.MX8MN pinctrl binding to DT schema format using json-schema
+Use platform_get_irq_optional() instead of platform_get_irq() to avoid
+below error message during probe:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+[ 0.589121] iproc-gpio 66424800.gpio: IRQ index 0 not found
+
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 ---
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.txt        | 39 -------------
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml       | 67 ++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
-deleted file mode 100644
-index 330716c..0000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--* Freescale IMX8MN IOMUX Controller
--
--Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
--for common binding part and usage.
--
--Required properties:
--- compatible: "fsl,imx8mn-iomuxc"
--- reg: should contain the base physical address and size of the iomuxc
--  registers.
--
--Required properties in sub-nodes:
--- fsl,pins: each entry consists of 6 integers and represents the mux and config
--  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
--  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last integer CONFIG is
--  the pad setting value like pull-up on this pin. Please refer to i.MX8M Nano
--  Reference Manual for detailed CONFIG settings.
--
--Examples:
--
--&uart1 {
--       pinctrl-names = "default";
--       pinctrl-0 = <&pinctrl_uart1>;
--};
--
--iomuxc: pinctrl@30330000 {
--        compatible = "fsl,imx8mn-iomuxc";
--        reg = <0x0 0x30330000 0x0 0x10000>;
--
--        pinctrl_uart1: uart1grp {
--                fsl,pins = <
--			MX8MN_IOMUXC_UART1_RXD_UART1_DCE_RX	0x140
--			MX8MN_IOMUXC_UART1_TXD_UART1_DCE_TX	0x140
--			MX8MN_IOMUXC_UART3_RXD_UART1_DCE_CTS_B	0x140
--			MX8MN_IOMUXC_UART3_TXD_UART1_DCE_RTS_B	0x140
--			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6	0x19
--                >;
--        };
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
-new file mode 100644
-index 0000000..44bf4e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mn-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IMX8MN IOMUX Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx8mn-iomuxc
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      fsl,pins:
-+        allOf:
-+	  - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        maxItems: 6
-+        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last
-+          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Nano Reference Manual for detailed CONFIG settings.
-+
-+    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mn-iomuxc";
-+        reg = <0x30330000 0x10000>;
-+
-+        pinctrl_uart2: uart2grp {
-+            fsl,pins = <
-+                0x23C 0x4A4 0x4FC 0x0 0x0	0x140
-+                0x240 0x4A8 0x000 0x0 0x0	0x140
-+            >;
-+        };
-+    };
-+
-+...
+diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+index 831a9318c384..0d2bdb818d41 100644
+--- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+@@ -843,7 +843,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+ 							"gpio-ranges");
+ 
+ 	/* optional GPIO interrupt support */
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0) {
+ 		struct irq_chip *irqc;
+ 		struct gpio_irq_chip *girq;
 -- 
-2.7.4
+2.17.1
 
