@@ -2,86 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0E4C1386CB
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jan 2020 15:33:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8211413881D
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jan 2020 21:00:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732923AbgALOdZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Jan 2020 09:33:25 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45159 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732841AbgALOdY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Jan 2020 09:33:24 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so2783166pls.12;
-        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
-        b=KEEn1sRjtTmXw5h+uBGaJmzi+EsGLLNHvw4zux4GqzAHSDN8+GkM/qO09wTHBjxTT2
-         k0Ai5OophxVwOmtczeMSnie7Nxnr66oyZMatSN14dxQtEiY9jMUYfIXEzL3PEW4b1T1f
-         Z7dffQN9cxipKaVhC0eMtnnrBw8Vf3HqYBfFtvNX1alySxeNxkeXJsdj8VVED4OB9enF
-         d/sOK3HFYGEXmTiPyQS1vIbbYYKxnz+XcKEcNFZUdL1l8/j0EJrWeoejl/Blhv95g0To
-         D7FRAp2UKYLbr+eLBW/3EROjnJsb71EGyZoD3xrcsM8MQKX63/H2Yjxk0wjeM8+b4UHn
-         Z/FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
-        b=FfgY9mvEdaV1c4E9wPufHN8MF5PYtoT2wFBfw2u2Y1YOEDIoPLCCKHpnEZPzZho/aV
-         uay9bE3cmRmjywtzG7SHV9WZ1pRhjprSAtz4qC2yZ3rR0ay0SUTarZkpe+UuLxrJsYmk
-         vaYErPGqFuSsoFr8Qm1YyKd+IPIt0Ma2sCJCWZ6shJOQkRnvODF7m0nylLhhE/xUE3Yr
-         S6Qi+PW0xmH/kNZAE9rGD9QBXA/WPs7JtJCZU3FRAZzIykwQyjfeZBYBQYg9nQ6Tr8m/
-         jceZ5C0CXNy/Y7lUOQ9K/aUVOl98z8sVams/b1OZfnQjOjGEa15zBDDZD1TOe8V8x8CA
-         eTKA==
-X-Gm-Message-State: APjAAAUWrGxa8pjbh4Max7UWM7CULdUZ5N85BXZcl7xoFbCbt7g71Wco
-        0wZ6O2L4bHGORBIgf251mUc=
-X-Google-Smtp-Source: APXvYqzG4NH4BoSyqQj+gBN4li8QAnYRWgGx9+iZvgxidRhEmKte0t5pq+i6/vrc580B9MqEeyBJnQ==
-X-Received: by 2002:a17:90a:1a14:: with SMTP id 20mr17451826pjk.33.1578839604114;
-        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
-Received: from localhost.localdomain ([183.82.121.105])
-        by smtp.gmail.com with ESMTPSA id w187sm10738921pfw.62.2020.01.12.06.33.21
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 12 Jan 2020 06:33:23 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sachin agarwal <asachin591@gmail.com>
-Subject: [PATCH] GPIO: vx855: fixed a typo
-Date:   Sun, 12 Jan 2020 20:03:12 +0530
-Message-Id: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        id S1733212AbgALUA6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Jan 2020 15:00:58 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46912 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728659AbgALUA6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Jan 2020 15:00:58 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2B141886BF;
+        Mon, 13 Jan 2020 09:00:55 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1578859255;
+        bh=IL1PdJcKPjwwEdc8J7wiAsXAM3GoztCVHbvafOTX1zQ=;
+        h=From:To:Subject:Date:References:In-Reply-To;
+        b=CSIf8zzef7dEYp1DL6QhYthfJZu/dlT6Ctgg0s6NR4HbVeIvHatiwZ7die+7XNVjr
+         CC4+GikPKHqO+1pvUroGu/Qon2OI/M3TVNyl91GckDt2Qc3Jmfzx4j9cGizptbPJmd
+         9avqT1OeHSxnUw1ll+it/3j9/K0MQ7eGBsC4SDHND/YPUQKAmftd4T4mg4TE1BW/9h
+         5F910XTXZ9/Ax+tO+Y+jaj9GMkZo0JaW81jUje+JrntmyqWXOBPRfjdOUVURJ3oSDe
+         SljtZkXPv7N2ZWVSTBlyPdzbrAMK51cpYCEOR7lW2hNLLQOczvRuBt6q+iXE5478dy
+         QHhZ6xQRLO0LA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e1b7af70001>; Mon, 13 Jan 2020 09:00:55 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan 2020 09:00:54 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1473.005; Mon, 13 Jan 2020 09:00:54 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "li.jin@broadcom.com" <li.jin@broadcom.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional() to
+ avoid error message
+Thread-Topic: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional()
+ to avoid error message
+Thread-Index: AQHVx2nXfGk87Uyk9UmbQT0PK/pn36fmnTwA
+Date:   Sun, 12 Jan 2020 20:00:54 +0000
+Message-ID: <f9ea8a877194fb0a928ab4f41171a5a7ef3233f0.camel@alliedtelesis.co.nz>
+References: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d1a1:ea74:6baa:5aa3]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B700B6FD4109D04A82F8CC6910E30027@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Sachin agarwal <asachin591@gmail.com>
-
-we had written "betwee" rather than "between".
-
-Signed-off-by: Sachin agarwal <asachin591@gmail.com>
----
- drivers/gpio/gpio-vx855.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-index 4ff146ca32fe..3bf397b8dfbc 100644
---- a/drivers/gpio/gpio-vx855.c
-+++ b/drivers/gpio/gpio-vx855.c
-@@ -71,7 +71,7 @@ static inline u_int32_t gpio_o_bit(int i)
- 		return 1 << (i + 13);
- }
- 
--/* Mapping betwee numeric GPIO ID and the actual GPIO hardware numbering:
-+/* Mapping between numeric GPIO ID and the actual GPIO hardware numbering:
-  * 0..13	GPI 0..13
-  * 14..26	GPO 0..12
-  * 27..41	GPIO 0..14
--- 
-2.24.0
-
+T24gRnJpLCAyMDIwLTAxLTEwIGF0IDA5OjI1ICswNTMwLCBSYXlhZ29uZGEgS29rYXRhbnVyIHdy
+b3RlOg0KPiBVc2UgcGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbCgpIGluc3RlYWQgb2YgcGxhdGZv
+cm1fZ2V0X2lycSgpIHRvIGF2b2lkDQo+IGJlbG93IGVycm9yIG1lc3NhZ2UgZHVyaW5nIHByb2Jl
+Og0KPiANCj4gWyAwLjU4OTEyMV0gaXByb2MtZ3BpbyA2NjQyNDgwMC5ncGlvOiBJUlEgaW5kZXgg
+MCBub3QgZm91bmQNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJheWFnb25kYSBLb2thdGFudXIgPHJh
+eWFnb25kYS5rb2thdGFudXJAYnJvYWRjb20uY29tPg0KDQpSZXZpZXdlZC1ieTogQ2hyaXMgUGFj
+a2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KDQo+IC0tLQ0KPiAgZHJp
+dmVycy9waW5jdHJsL2JjbS9waW5jdHJsLWlwcm9jLWdwaW8uYyB8IDIgKy0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGluY3RybC9iY20vcGluY3RybC1pcHJvYy1ncGlvLmMgYi9kcml2ZXJzL3BpbmN0
+cmwvYmNtL3BpbmN0cmwtaXByb2MtZ3Bpby5jDQo+IGluZGV4IDgzMWE5MzE4YzM4NC4uMGQyYmRi
+ODE4ZDQxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvYmNtL3BpbmN0cmwtaXByb2Mt
+Z3Bpby5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9iY20vcGluY3RybC1pcHJvYy1ncGlvLmMN
+Cj4gQEAgLTg0Myw3ICs4NDMsNyBAQCBzdGF0aWMgaW50IGlwcm9jX2dwaW9fcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJCQkJCQkiZ3Bpby1yYW5nZXMiKTsNCj4gIA0K
+PiAgCS8qIG9wdGlvbmFsIEdQSU8gaW50ZXJydXB0IHN1cHBvcnQgKi8NCj4gLQlpcnEgPSBwbGF0
+Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnFfb3B0aW9u
+YWwocGRldiwgMCk7DQo+ICAJaWYgKGlycSA+IDApIHsNCj4gIAkJc3RydWN0IGlycV9jaGlwICpp
+cnFjOw0KPiAgCQlzdHJ1Y3QgZ3Bpb19pcnFfY2hpcCAqZ2lycTsNCg==
