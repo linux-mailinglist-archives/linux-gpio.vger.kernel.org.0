@@ -2,184 +2,264 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2229A139C2F
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 23:10:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2485139CE3
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 23:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAMWKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jan 2020 17:10:06 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34691 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgAMWKG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 17:10:06 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so8141048lfc.1
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 14:10:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j+d0ZXMIpYXrlgjUrFyUdt5fCPQEAcWCJkzfepiMfNA=;
-        b=lVA7m/E9cOcScg+TDKxXd+nJ20pDSOLtVBKfMDX8rjHqTQ4kKpY7uIxDLqmwJDhAQF
-         MR16L2qq+Rg5P4wgU9NLnxrxhkr6Pl0HGPB36leMpOEJqlOEO/hgBTaMaYdWVRzxFRek
-         Go30sCHa7v8lwUaxaGktBGe1FUrEiH9ElQDcr1gbuegby82OEMSt6k3Gxwx6f+Wg1TNQ
-         Y55q9bO2tyS51pEIE0CsNtQ1SMk/fv30m6NKEBUJ6zVdk66RnpJ4FNzGBHGoJfTV5YrL
-         ppIAOkt82YKQzIO7r2zvB87rBAN4saM+cQy66KX4I3SaI0p3tlgJpyDYOHxXSUzno4Wv
-         aYBQ==
+        id S1728956AbgAMWtf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jan 2020 17:49:35 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37070 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728733AbgAMWtf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 17:49:35 -0500
+Received: by mail-ot1-f67.google.com with SMTP id k14so10664825otn.4
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 14:49:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=j+d0ZXMIpYXrlgjUrFyUdt5fCPQEAcWCJkzfepiMfNA=;
-        b=nzHwLCArKu5b4/N7Il1DmX3rqcwW1iP6EBNX5BSDdlZ6YExIgYS3/tR4K3rLp0XlO+
-         30R0Lx/8IdUl0V/v72KlfEDpQpiwLzMePOj/XqizSWsbZLpZeqV/MGKHZviPsQGY0N1c
-         XNi+IQ9kwxBiUPOhkIo99jaUae8/VCuZOc1Vg3wNiC75ZcwO90kpzuS1kQOb2G/04mLw
-         s8VOP69clJp1ZlzAj+3Ja3LEbz9P7lJEoWh8uPiydoW+TnBs0QMbPdFVeOtD3gttiN9V
-         FcjPbGfsKPYSBDm5u5DS6oW/KH94GWAUUgVafTrRr1qh6V2T7xbJGx4DHh0QMW8nyKLV
-         o0Tg==
-X-Gm-Message-State: APjAAAUGtsENQcWg+5r9b1ylZUaD6lmvggnGSJuAeZxTXvU8ZAMCkskn
-        nGwwV5TTs9sCgH4pes8bmcxALvEo8NhKFMMr
-X-Google-Smtp-Source: APXvYqyvE17Ktf90q//5caEB52GUMD+k1a+Mf7evBAzlL7BJUQsHnJxHH7v1XEs5TIEVebT6Jl56MQ==
-X-Received: by 2002:a19:ae04:: with SMTP id f4mr10756577lfc.64.1578953404088;
-        Mon, 13 Jan 2020 14:10:04 -0800 (PST)
-Received: from localhost.localdomain (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id y29sm6468141ljd.88.2020.01.13.14.10.03
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d92edK8gFTbOFbSb35yOpvJiXQiIjLwjdCA40NY3Mdo=;
+        b=Z7sJ7BeU5XxZpIqrl2sTYFH9yRphbqMsE93gQSYwJ0Pqf9bJ5frjT1z5EgMKEXylWb
+         abgXdZ/KmPs6hFo1dNwJ5dqahALfmrUVBTVee7JaljXOHf6zM3Uim9N3C22SamXUCs2P
+         vrkds68K3WipYae9uH+X096dmRyDactTB2bpTQoySdpqDBHsoXPHaqirlz6JOdLHnpRW
+         hgXaRp/767jqQ7aQ/OdKW6nArE2H/vqkAsv9pAoO/s39ulyXugdWUePSrZXmhyqBmSXi
+         08U/LXnqhAjS1BHCMTRArjJgd2wubVkzZc8BRelVZhJKKjh4UspKEidw5/DxcKbiWuOI
+         rWuw==
+X-Gm-Message-State: APjAAAUkLcft0G2MRB3KpM3Ubv3MQPZhgAeZ5uRF16OnqJg0o+nzCGz1
+        Yv5U+cfkH4MlXmjB8Z07GVWF9Ww=
+X-Google-Smtp-Source: APXvYqzL87yvVBk7DRGVc9C8ZNXhptKH2E22e7Rvt19LRV+KH6DJmQyZo8s3e3cRX74dRNMM6omqFA==
+X-Received: by 2002:a9d:198b:: with SMTP id k11mr15341333otk.295.1578955773442;
+        Mon, 13 Jan 2020 14:49:33 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t203sm3992520oig.39.2020.01.13.14.49.31
+        for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 14:10:03 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH] gpio: Drop the chained IRQ handler assign function
-Date:   Mon, 13 Jan 2020 23:08:00 +0100
-Message-Id: <20200113220800.77817-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 13 Jan 2020 14:49:32 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 22198d
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 16:49:31 -0600
+Date:   Mon, 13 Jan 2020 16:49:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        sivaprak@codeaurora.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: Re: [PATCH V4 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+Message-ID: <20200113224931.GA1297@bogus>
+References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+ <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpiochip_set_chained_irqchip() would assign a chained handler
-to a GPIO chip. We now populate struct gpio_irq_chip for all
-chained GPIO irqchips so drop this function.
+On Thu, Jan 09, 2020 at 02:48:59PM +0530, Sricharan R wrote:
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
+> 
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+> [V4]
+>   * cleaned-up schema as per Rob's comments.
+>   * Ran make dt_binding_check and no issues.
+> 
+>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 140 +++++++++++++++++++++
+>  1 file changed, 140 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> new file mode 100644
+> index 0000000..68c3c8c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-This requires me to pull in the Intel pinctrl changes that
-are pending first, but once there we can do this.
----
- Documentation/driver-api/gpio/driver.rst |  5 -----
- drivers/gpio/gpio-mt7621.c               |  3 +--
- drivers/gpio/gpio-xgs-iproc.c            |  3 +--
- drivers/gpio/gpiolib.c                   | 25 +-----------------------
- include/linux/gpio/driver.h              |  5 -----
- 5 files changed, 3 insertions(+), 38 deletions(-)
+Dual license please.
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 2ff743105927..871922529332 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -507,11 +507,6 @@ available but we try to move away from this:
-   cascaded irq has to be handled by a threaded interrupt handler.
-   Apart from that it works exactly like the chained irqchip.
- 
--- DEPRECATED: gpiochip_set_chained_irqchip(): sets up a chained cascaded irq
--  handler for a gpio_chip from a parent IRQ and passes the struct gpio_chip*
--  as handler data. Notice that we pass is as the handler data, since the
--  irqchip data is likely used by the parent irqchip.
--
- - gpiochip_set_nested_irqchip(): sets up a nested cascaded irq handler for a
-   gpio_chip from a parent IRQ. As the parent IRQ has usually been
-   explicitly requested by the driver, this does very little more than
-diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-index d1d785f983a7..b992321bb852 100644
---- a/drivers/gpio/gpio-mt7621.c
-+++ b/drivers/gpio/gpio-mt7621.c
-@@ -253,8 +253,7 @@ mediatek_gpio_bank_probe(struct device *dev,
- 
- 		/*
- 		 * Directly request the irq here instead of passing
--		 * a flow-handler to gpiochip_set_chained_irqchip,
--		 * because the irq is shared.
-+		 * a flow-handler because the irq is shared.
- 		 */
- 		ret = devm_request_irq(dev, mtk->gpio_irq,
- 				       mediatek_gpio_irq_handler, IRQF_SHARED,
-diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
-index b21c2e436b61..ad5489a65d54 100644
---- a/drivers/gpio/gpio-xgs-iproc.c
-+++ b/drivers/gpio/gpio-xgs-iproc.c
-@@ -251,8 +251,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
- 
- 		/*
- 		 * Directly request the irq here instead of passing
--		 * a flow-handler to gpiochip_set_chained_irqchip,
--		 * because the irq is shared.
-+		 * a flow-handler because the irq is shared.
- 		 */
- 		ret = devm_request_irq(dev, irq, iproc_gpio_irq_handler,
- 				       IRQF_SHARED, chip->gc.label, &chip->gc);
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 967371377a9d..ce9724d341f5 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1800,7 +1800,7 @@ EXPORT_SYMBOL_GPL(gpiochip_irqchip_irq_valid);
-  * gpiochip_set_cascaded_irqchip() - connects a cascaded irqchip to a gpiochip
-  * @gc: the gpiochip to set the irqchip chain to
-  * @parent_irq: the irq number corresponding to the parent IRQ for this
-- * chained irqchip
-+ * cascaded irqchip
-  * @parent_handler: the parent interrupt handler for the accumulated IRQ
-  * coming out of the gpiochip. If the interrupt is nested rather than
-  * cascaded, pass NULL in this handler argument
-@@ -1842,29 +1842,6 @@ static void gpiochip_set_cascaded_irqchip(struct gpio_chip *gc,
- 	}
- }
- 
--/**
-- * gpiochip_set_chained_irqchip() - connects a chained irqchip to a gpiochip
-- * @gpiochip: the gpiochip to set the irqchip chain to
-- * @irqchip: the irqchip to chain to the gpiochip
-- * @parent_irq: the irq number corresponding to the parent IRQ for this
-- * chained irqchip
-- * @parent_handler: the parent interrupt handler for the accumulated IRQ
-- * coming out of the gpiochip.
-- */
--void gpiochip_set_chained_irqchip(struct gpio_chip *gpiochip,
--				  struct irq_chip *irqchip,
--				  unsigned int parent_irq,
--				  irq_flow_handler_t parent_handler)
--{
--	if (gpiochip->irq.threaded) {
--		chip_err(gpiochip, "tried to chain a threaded gpiochip\n");
--		return;
--	}
--
--	gpiochip_set_cascaded_irqchip(gpiochip, parent_irq, parent_handler);
--}
--EXPORT_SYMBOL_GPL(gpiochip_set_chained_irqchip);
--
- /**
-  * gpiochip_set_nested_irqchip() - connects a nested irqchip to a gpiochip
-  * @gpiochip: the gpiochip to set the irqchip nested handler to
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 4f032de10bae..e829ad788987 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -585,11 +585,6 @@ int gpiochip_irq_domain_activate(struct irq_domain *domain,
- void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
- 				    struct irq_data *data);
- 
--void gpiochip_set_chained_irqchip(struct gpio_chip *gpiochip,
--		struct irq_chip *irqchip,
--		unsigned int parent_irq,
--		irq_flow_handler_t parent_handler);
--
- void gpiochip_set_nested_irqchip(struct gpio_chip *gpiochip,
- 		struct irq_chip *irqchip,
- 		unsigned int parent_irq);
--- 
-2.23.0
+(GPL-2.0-only or BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
+> +
+> +maintainers:
+> +  - Sricharan R <sricharan@codeaurora.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  IPQ6018 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq6018-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    description: Documentation/devicetree/bindings/gpio/gpio.txt
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    allOf:
+> +      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/string"
+
+No need for type ref as the common binding does this.
+
+> +          - enum: ['gpio$', sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
+> +            sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
+> +            qdsd_data3]
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/string"
+
+Same here.
+
+> +          - enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
+> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
+> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
+> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
+> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
+> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
+> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
+> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
+> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
+> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
+> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
+> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
+> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
+> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
+> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
+> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
+> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
+> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
+> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
+> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
+> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
+> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
+> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
+> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
+> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
+> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
+> +
+> +      drive-strength:
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
+
+Same here.
+
+> +          - enum: [2, 4, 6, 8, 10, 12, 14, 16]
+
+default?
+
+> +        description:
+> +          Selects the drive strength for the specified pins, in mA.
+
+> +
+> +    required:
+> +      - pins
+> +      - function
+
+       additionalProperties: false
+
+You'll need to list any other properties you use. Based 
+on the example, you'll need 'bias-pull-down: true'.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        tlmm: pinctrl@1000000 {
+> +              compatible = "qcom,ipq6018-pinctrl";
+> +              reg = <0x01000000 0x300000>;
+> +              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +              gpio-controller;
+> +              #gpio-cells = <2>;
+> +              gpio-ranges = <&tlmm 0 80>;
+> +              interrupt-controller;
+> +              #interrupt-cells = <2>;
+> +
+> +              serial3-pinmux {
+
+Doesn't match the schema.
+
+> +                      pins = "gpio44", "gpio45";
+> +                      function = "blsp2_uart";
+> +                      drive-strength = <8>;
+> +                      bias-pull-down;
+> +              };
+> +        };
+> -- 
+> 2.7.4
+> 
