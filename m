@@ -2,79 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AC1139AC7
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 21:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E18EF139B5C
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 22:25:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgAMUeT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jan 2020 15:34:19 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36104 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgAMUeT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 15:34:19 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so11671797ljg.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 12:34:18 -0800 (PST)
+        id S1728766AbgAMVZf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jan 2020 16:25:35 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39992 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728757AbgAMVZe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 16:25:34 -0500
+Received: by mail-lj1-f193.google.com with SMTP id u1so11802455ljk.7
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 13:25:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=L5btG8+rDtVkHFSsWTVsc0YN5eY7jgmCtlCqNwE1Iys=;
-        b=N2PrwOAdsbaBW3XZzD4fjuiU0y1qsP6DSHHfbXBeiVSodYZAmT4Pj+fQBtVT0bgt+Z
-         YeA1QyTXs0lKv5AcCOtdvCsLoI1bxHcPYIh+qNvvaohu4ga5ktE/YhmQq3umz+b+RPgd
-         yFmcIw+Mc/fyLDB5qabO+mtE6exPsL3D2t4m513tZbEz6u8nvVj48gxyLWv/uVK92R1I
-         lgnBlrkSLTKceAD3xy6fBfpSk7hoDseJA1OHaSHJMS0lR6TPNwq4Q0JCZf7NfKtexs5v
-         tlBoXN+i5VEOeEQURjIjx8i2Zil8UTf2L/L0QKC2jTZahnS7FkTr6tJMDRRB1qSBN8UO
-         92VQ==
+        bh=2ADbsyh1UnrFaJzN4/5ee9XK8MuVx4vuWzhJdbRNFOc=;
+        b=gHmKwf/1P5072vi4YjvtTnpBXeLlOOrhasMBORZykUjtiG4jqt91oyWhDSiZK5Gy9e
+         yaquTq+dwvwcA7zI5OtuwMlgVuCkGwEFmzBZndA004gBbuTPd8+2z5aVh1vDwiscMtHr
+         O5ytAkMYoaTVaCkv8gNbavXV9Mn0DS6pI1PfocvsFf8igE5cUKMyMMKHGkciWUJ0y8P3
+         AOGw0MH0C12/rXuYD1ES/QG8qtBPfKsM4tu49YG44LAfUZQ+0myj5RGOo2rhBq6BANAk
+         3so7c21y3XSuzLYwZLB+QLkKpk1qJD1tU+Cu/b63YgqKsbwoYzfPaQi0cnC5PqUsY7eC
+         E+lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L5btG8+rDtVkHFSsWTVsc0YN5eY7jgmCtlCqNwE1Iys=;
-        b=MUzHrpw8rqTDj0GoIfPENshfPlhAn3eeZ9CQqpxiKvx2zSWNDofY11aDvjagqS4+Ub
-         sXORZtdZZP1jkKpzkgMx6rMLqjROmnTOw3aJpHbG72/Jhkdi2spETaU+Po2M/WDb+yDJ
-         iZArSvNV1Yh9c0HT1xRxCa7GjwEIaWIsTt1EUV3YeO5BgW+Zo/2ElfjPUb/3R9AFqIlk
-         0ardklq4rAvQO3eogpreLpRVkj1ZwoeqlDxydFUYAe5RVd4spdwka+9c3gNakw6PNN78
-         8EwadIMYEk3Ljk+MTGCoxzgItx8u05npotoR6UIRw5E0KGNxw/FkCf76MerDzh6Vsc9n
-         zVEw==
-X-Gm-Message-State: APjAAAV+NsooN82y/VL+LmLwfYJW6YpxsLs/GGAz7wPWs9Ui2BoYe2LJ
-        wiDpxbWSjv0CslT1LJ3t/wC4BLx5MhehdGmWZdS+QA==
-X-Google-Smtp-Source: APXvYqy+h3uYVoEzWBBQzoSiJFi+QF3mEdOYnavTCKS59kG2E1X+rTKCRiOgNC7GE/c0qcOMwRXUKAR5syrQRB9414g=
-X-Received: by 2002:a2e:3609:: with SMTP id d9mr11389552lja.188.1578947657486;
- Mon, 13 Jan 2020 12:34:17 -0800 (PST)
+        bh=2ADbsyh1UnrFaJzN4/5ee9XK8MuVx4vuWzhJdbRNFOc=;
+        b=NFeqw3T9781Yif+y90+9tGhrz6pmq0rU+FhFQGIbouCiXYWB0Jqd0SBZsR2yLRb8QH
+         GExMowaSaAAgPGYQQV8TWAwbdhFyvsR/OO0y273biiQ6oaklwoCnU7hWRkb0/n+H7z/T
+         PC+VwnGjKJX92/lwrWWiHNa1Jj16aA5sz+0lajSqyR0q+AtUW6zahsXeOtMlfXM6QNPs
+         heORyE5kLyJk5HsoAsaCQDV96po3Wvi8XRpnMPhVSG3oDNXQRM3dB/MMtoReb4kMN+d4
+         2tlxB8EKnrXOJWdWHXDRv4ahJ/iJf6xv5S79jqX7V8+vWCTeoeJEQG69d8o68XpTzu/6
+         J2LQ==
+X-Gm-Message-State: APjAAAUr5hgO2L+Ubf/5h767SgYhjN8PziBRjqda860kQiU5FnChljIX
+        ogfOBkbY8VUS9z8iikCItvuiGWLUMxifU19V9N5AQQ==
+X-Google-Smtp-Source: APXvYqzXPXquLXu1k8hh0TF9TeiEj+3fhK8Czmzi2b7bpKfGC8iT8Bhser0vePXTE+uaVWW9XMuYNzfpn/c3cOfMqAo=
+X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr12600380ljo.32.1578950732136;
+ Mon, 13 Jan 2020 13:25:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108104746.1765-1-m.felsch@pengutronix.de> <20200108104746.1765-2-m.felsch@pengutronix.de>
-In-Reply-To: <20200108104746.1765-2-m.felsch@pengutronix.de>
+References: <20191218062024.25475-1-rahul.tanwar@linux.intel.com> <CAL_JsqKi0K5Db5CGk7AKqwHML3J8uD5AK8mjoGtiTupr41K_fQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqKi0K5Db5CGk7AKqwHML3J8uD5AK8mjoGtiTupr41K_fQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 13 Jan 2020 21:34:05 +0100
-Message-ID: <CACRpkdZYzjcq3+NwSHL3pFVjo4ZugJjDKcjVGePUtmZ3OqCw9g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: da9062: add gpio bindings
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+Date:   Mon, 13 Jan 2020 22:25:20 +0100
+Message-ID: <CACRpkdZZYVXQ5MpStaWnYrV-L9wJGFqLm4ohuEJ=du9W=-Z5hQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: intel: Update to use generic bindings
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
+        yixin zhu <yixin.zhu@linux.intel.com>, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 11:48 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+On Mon, Jan 13, 2020 at 6:38 PM Rob Herring <robh+dt@kernel.org> wrote:
 
-> Add gpio device documentation to make the da9062 gpios available for
-> users.
+> > +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-io.yaml#
 >
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> Drop 'bindings' from the path.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I fixed this.
+
+> > +allOf:
+> > +  - $ref: pincfg-node.yaml#
+> > +  - $ref: pinmux-node.yaml#
+>
+> This 'allOf' is at the wrong level...
+(...)
+> > +# Client device subnode's properties
+> > +patternProperties:
+> > +  '-pins$':
+> > +    type: object
+>
+> ...It should be here.
+
+I moved this.
+
+> > +    properties:
+> > +      function: true
+> > +      group: true
+
+This should have both groups and group.
+
+> > +      pins: true
+> > +      pinmux: true
+> > +      bias-pull-up: true
+> > +      bias-pull-down: true
+> > +      drive-strength: true
+> > +      slew-rate: true
+> > +      drive-open-drain: true
+> > +      output-enable: true
+> > +
+> > +    required:
+> > +      - function
+> > +      - group
+
+This should have groups as compulsory.
+
+> > +        uart0-pins {
+> > +             pins = <64>, /* UART_RX0 */
+> > +                    <65>; /* UART_TX0 */
+> > +             function = "CONSOLE_UART0";
+> > +             pinmux = <1>,
+> > +                      <1>;
+> > +             groups = "CONSOLE_UART0";
+>
+> 'groups' is not a defined property. Should be 'group'.
+
+Actually not in this case.
+
+There was an error in commit 3af50e548019f6ee26d0ed4340f4ab980f884696
+"dt-bindings: pinctrl: Convert generic pin mux and config properties to schema"
+
+A function has a 1-to-many relationship to groups so it should be "groups"
+for the multiplexing (pluralis).
+
+A pin config on the other hand, such as "set slewrate for all the pins in
+this pin group" has a 1-to-1 relationship to a group (singularis).
+
+I am trying to fix it all up in one patch.
 
 Yours,
 Linus Walleij
