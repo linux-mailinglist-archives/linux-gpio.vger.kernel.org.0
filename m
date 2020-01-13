@@ -2,151 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00218138FA1
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 11:52:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24EBC139064
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jan 2020 12:49:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgAMKwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jan 2020 05:52:43 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52285 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAMKwn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 05:52:43 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so9109918wmc.2
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 02:52:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
-        b=woLsoFo8w6H55+I2zLR2KHGqFepzum+orJMMrLzKCgk1ZJK212giD75NsNz8DNfjlP
-         vodvnf5v+e7GXZsYfps9azChJyoplTYXHzTXHM6oJ8gDA7ltgi33YYzABGb6l8CIE9c5
-         hMv3K6ZPvkOFnsDgXeVZqXsNofOaN8AiM2PHq7+IHOIDZdKR7nbPDShmz6x3+Mf3CWix
-         bYGxSqk6ZFO9B7Icj1OsAaDdjqD8AaCjk+XeSlKSNfEIGojIYHc/p9hLrJ9fOIcRGaJF
-         i8L4nWE354nw10ZeJTDo5wwrjCjl7fJ905rU03Czk/VeCDLFgkEzPkWz1mCBWhND4DST
-         82BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
-        b=ubWGj7H8SQzVzviVXAPjy3sM7nOmGH/E2PNQ226aXIwpMzNJe0URKpdicWyKOBmLJN
-         qmhnCd0QHwvhd7rEw0w9RU0ejnzbgMUWYQVHIoKPhJQgh9drg9SRHua/jne1kwE6sXST
-         1kEdukIJ32gaUprFdUkuw2zqBOL406ztYF/uvA0wMNf5tt2/ZtJfbc7GnJy5jEqThOAW
-         3zMLqbM8T9qtHPcVRNqWowJz8UyTf4Uxn8sy7R+/FASGN7vwySUqVXnweoSGqGJjErVW
-         HWHQOGllXJrUppyPHmdkjd6CczKYF6VvX3Y1ZCkb5xAv16vNP6a8lb02gHTFcGmQk0l9
-         jhXw==
-X-Gm-Message-State: APjAAAVx2CXbBuydecKtNW5M1beIzakP6OcXZ4rqKc5tohswmFwo8873
-        Ua1NNgZpyi0Fs+1gmE+3Br+Dkw==
-X-Google-Smtp-Source: APXvYqx8Vm7CK6+Z+RiNNpP0t0i/mmfam2P7FFBzWOE/l3fKY62yfP75eVxj2Ys8ub0l0x8bGFfDQQ==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr19619532wmg.110.1578912761970;
-        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
-Received: from dell ([95.147.198.95])
-        by smtp.gmail.com with ESMTPSA id x14sm13574924wmj.42.2020.01.13.02.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:53:01 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
+        id S1726878AbgAMLtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jan 2020 06:49:43 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62732 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgAMLtn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 06:49:43 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-ba-5e1c595373c1
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 16.5F.08102.3595C1E5; Mon, 13 Jan 2020 12:49:39 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 13 Jan 2020 12:49:27 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
         "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
         "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
         "broonie@kernel.org" <broonie@kernel.org>
 Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
  bd718x7 specific parts
-Message-ID: <20200113105301.GF5414@dell>
+Thread-Topic: [PATCH v8 08/12] regulator: bd718x7: Split driver to common
+ and bd718x7 specific parts
+Thread-Index: AQHVvvUCH6xbXbWt3UKhkzpPOHFEqKffIN0AgAFNNwCACAJ9gIAAD8yA
+Date:   Mon, 13 Jan 2020 11:49:26 +0000
+Message-ID: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
 References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <20200107124124.GI14821@dell>
- <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+         <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200107124124.GI14821@dell>
+         <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+         <20200113105301.GF5414@dell>
+In-Reply-To: <20200113105301.GF5414@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <558A385D28CECC4E84770D5C5B7DB969@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTSRjHM7vb7VBdXSvItKLGPY0viS8kGsYc5/FFXGNiVCLnaQRXWWgV
+        WrJtDWjuwkU5oWiCr2gjVUkRgpxIhaAG1FTQWowGabGKqMSXqJhyFz2NuR6666LwZeaZ+c/v
+        +f8/PANJ/QBthGaLXZQsQi5H66hrtf81zkv7NSFj4d6WH7GnK6TFeyNntPh9ZYDCR/qf0/hk
+        +x0NLuts0uDe5vMUfvJvB8AfgiUEPhytIfA/+x5r8IWTUYC7L5+gcfPbcwDfOBukcfX9LgKf
+        qPZTuCuwDPcFOmhc3NauxUM9jVRKHF/vrgf8YLhYy7vrd/GXXH1a3ltXSvOPelpp/ma4heAr
+        3J8IvvbsRy3/zjt1tW7DmOQtgn1HmjnHsmDp5jGmob/va/MjhgLXwSVF4JjBCWIgYhehe6Fz
+        GifQQT0bAuhVZ9nwwQ9QSThIOwGENJuMnA+0ChDLJiKP/wWl1CTrgaj5j23Kk4msiHo/ZKtP
+        slFJ5Cqt1qmobXf715piZ6KmaPBrG4ZdhW7/v59UreoI5Pf1AUWIYeeglkAFodSAnYJKiyKE
+        6hWPvC8/atTQLPK03iXVOg69fjY0fM+htk/9lJKHlPs0XF6goinoyJ/u4cjT0eGy/uEME9Ct
+        48+pcjDJNcrBNUK7RtGuUbRrFH0KaOoAyhPMuTmCXUycL4mO+ZLVlCdvW615XqAOzPuL4LNv
+        hQ8QEPiAARJcHNOzbnKGftwWa1ahSbCZMiVHrmjzAQRJLpbx3jFm6JksoXCnKFm/SZMhxcUz
+        s/oPbNKzitd2UcwXpW9qAoQcYgZ+ScjQT5DEHLEg25xrH5EJGKM01xljbaIlS5QEh92UqUxH
+        pk0eD0UaK/u+XC/jjC1fyJNvVTQAkmD568oqEl7qcMvrrTqPvLZXVleRespitYjGeOZuuoyx
+        CmZyWL6bvgHxEHATmdlKprHyD/re841sR8h2um6DYmcXRiRjERAetEz7yWH/a62w9uGTow3p
+        L7rO3DiwcuPq07Rw2otaHaHOigZz0wrNHsn1w3iLYOr2NQ4M9nqjS2rvpf4Wty/VyS186pkG
+        3pH+YEgTuR4GNcYavjCltWTTMcPu6OJxVxwMLF5z6NRgUkHlLgBnEOW/b+eelS7fmZT8c/pK
+        W5ijbCYhcS4p2YQvO4W4lP4DAAA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
-
-> Hello Lee,
-> 
-> On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
-> > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
-> > 
-> > > Few ROHM PMICs allow setting the voltage states for different
-> > > system states
-> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
-> > > specific
-> > > mechanisms. bd718x7 driver implemented device-tree parsing
-> > > functions for
-> > > these state specific voltages. The parsing functions can be re-used 
-> > > by
-> > > other ROHM chip drivers like bd71828. Split the generic functions
-> > > from
-> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
-> > > modules
-> > > to use.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Acked-by: Mark Brown <broonie@kernel.org>
-> > > ---
-
-[...]
-
-> > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
-> > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
-> > > *dvs,
-> > > +				  struct device_node *np,
-> > > +				  const struct regulator_desc *desc,
-> > > +				  struct regmap *regmap);
-> > 
-> > Does these really need to live in the parent's header file?
-> 
-> I don't know what would be a better place?
-
-You don't have a regulator header file?
-
-It seems over-kill to create one for this, so leave it as is.
-
-> > What other call-sites are there?
-> 
-> After this series the bd718x7-regulator.c and bd71828-regulator.c are
-> the in-tree drivers using these. rohm-regulator.c is implementing them.
-> And I hope we see yet another driver landing in later this year. 
-> 
-> Anyways, I will investigate if I can switch this to some common (not
-> rohm specific) DT bindings at some point (I've scheduled this study to
-> March) - If I can then they should live in regulator core headers.
-> 
-> But changing the existing properties should again be own set of patches
-> and I'd prefer doing that work independently of this series and not
-> delaying the BD71828 due to not-yet-evaluated bd718x7 property changes.
-
-That's fine.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMjAtMDEtMTMgYXQgMTA6NTMgKzAwMDAsIExlZSBKb25l
+cyB3cm90ZToNCj4gT24gV2VkLCAwOCBKYW4gMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToN
+Cj4gDQo+ID4gSGVsbG8gTGVlLA0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAyMC0wMS0wNyBhdCAxMjo0
+MSArMDAwMCwgTGVlIEpvbmVzIHdyb3RlOg0KPiA+ID4gT24gTW9uLCAzMCBEZWMgMjAxOSwgTWF0
+dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZldyBST0hNIFBNSUNzIGFsbG93
+IHNldHRpbmcgdGhlIHZvbHRhZ2Ugc3RhdGVzIGZvciBkaWZmZXJlbnQNCj4gPiA+ID4gc3lzdGVt
+IHN0YXRlcw0KPiA+ID4gPiBsaWtlIFJVTiwgSURMRSwgU1VTUEVORCBhbmQgTFBTUi4gU3RhdGVz
+IGFyZSB0aGVuIGNoYW5nZWQgdmlhDQo+ID4gPiA+IFNvQw0KPiA+ID4gPiBzcGVjaWZpYw0KPiA+
+ID4gPiBtZWNoYW5pc21zLiBiZDcxOHg3IGRyaXZlciBpbXBsZW1lbnRlZCBkZXZpY2UtdHJlZSBw
+YXJzaW5nDQo+ID4gPiA+IGZ1bmN0aW9ucyBmb3INCj4gPiA+ID4gdGhlc2Ugc3RhdGUgc3BlY2lm
+aWMgdm9sdGFnZXMuIFRoZSBwYXJzaW5nIGZ1bmN0aW9ucyBjYW4gYmUgcmUtDQo+ID4gPiA+IHVz
+ZWQgDQo+ID4gPiA+IGJ5DQo+ID4gPiA+IG90aGVyIFJPSE0gY2hpcCBkcml2ZXJzIGxpa2UgYmQ3
+MTgyOC4gU3BsaXQgdGhlIGdlbmVyaWMNCj4gPiA+ID4gZnVuY3Rpb25zDQo+ID4gPiA+IGZyb20N
+Cj4gPiA+ID4gYmQ3MTh4Ny1yZWd1bGF0b3IuYyB0byByb2htLXJlZ3VsYXRvci5jIGFuZCBleHBv
+cnQgdGhlbSBmb3INCj4gPiA+ID4gb3RoZXINCj4gPiA+ID4gbW9kdWxlcw0KPiA+ID4gPiB0byB1
+c2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPA0K
+PiA+ID4gPiBtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gPiA+IEFja2Vk
+LWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+ID4gPiA+IC0tLQ0KPiANCj4g
+Wy4uLl0NCj4gDQo+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUkVHVUxBVE9SX1JPSE0p
+DQo+ID4gPiA+ICtpbnQgcm9obV9yZWd1bGF0b3Jfc2V0X2R2c19sZXZlbHMoY29uc3Qgc3RydWN0
+IHJvaG1fZHZzX2NvbmZpZw0KPiA+ID4gPiAqZHZzLA0KPiA+ID4gPiArCQkJCSAgc3RydWN0IGRl
+dmljZV9ub2RlICpucCwNCj4gPiA+ID4gKwkJCQkgIGNvbnN0IHN0cnVjdCByZWd1bGF0b3JfZGVz
+Yw0KPiA+ID4gPiAqZGVzYywNCj4gPiA+ID4gKwkJCQkgIHN0cnVjdCByZWdtYXAgKnJlZ21hcCk7
+DQo+ID4gPiANCj4gPiA+IERvZXMgdGhlc2UgcmVhbGx5IG5lZWQgdG8gbGl2ZSBpbiB0aGUgcGFy
+ZW50J3MgaGVhZGVyIGZpbGU/DQo+ID4gDQo+ID4gSSBkb24ndCBrbm93IHdoYXQgd291bGQgYmUg
+YSBiZXR0ZXIgcGxhY2U/DQo+IA0KPiBZb3UgZG9uJ3QgaGF2ZSBhIHJlZ3VsYXRvciBoZWFkZXIg
+ZmlsZT8NCj4gDQo+IEl0IHNlZW1zIG92ZXIta2lsbCB0byBjcmVhdGUgb25lIGZvciB0aGlzLCBz
+byBsZWF2ZSBpdCBhcyBpcy4NCj4gDQo+ID4gPiBXaGF0IG90aGVyIGNhbGwtc2l0ZXMgYXJlIHRo
+ZXJlPw0KPiA+IA0KPiA+IEFmdGVyIHRoaXMgc2VyaWVzIHRoZSBiZDcxOHg3LXJlZ3VsYXRvci5j
+IGFuZCBiZDcxODI4LXJlZ3VsYXRvci5jDQo+ID4gYXJlDQo+ID4gdGhlIGluLXRyZWUgZHJpdmVy
+cyB1c2luZyB0aGVzZS4gcm9obS1yZWd1bGF0b3IuYyBpcyBpbXBsZW1lbnRpbmcNCj4gPiB0aGVt
+Lg0KPiA+IEFuZCBJIGhvcGUgd2Ugc2VlIHlldCBhbm90aGVyIGRyaXZlciBsYW5kaW5nIGluIGxh
+dGVyIHRoaXMgeWVhci4gDQo+ID4gDQo+ID4gQW55d2F5cywgSSB3aWxsIGludmVzdGlnYXRlIGlm
+IEkgY2FuIHN3aXRjaCB0aGlzIHRvIHNvbWUgY29tbW9uDQo+ID4gKG5vdA0KPiA+IHJvaG0gc3Bl
+Y2lmaWMpIERUIGJpbmRpbmdzIGF0IHNvbWUgcG9pbnQgKEkndmUgc2NoZWR1bGVkIHRoaXMgc3R1
+ZHkNCj4gPiB0bw0KPiA+IE1hcmNoKSAtIElmIEkgY2FuIHRoZW4gdGhleSBzaG91bGQgbGl2ZSBp
+biByZWd1bGF0b3IgY29yZSBoZWFkZXJzLg0KPiA+IA0KPiA+IEJ1dCBjaGFuZ2luZyB0aGUgZXhp
+c3RpbmcgcHJvcGVydGllcyBzaG91bGQgYWdhaW4gYmUgb3duIHNldCBvZg0KPiA+IHBhdGNoZXMN
+Cj4gPiBhbmQgSSdkIHByZWZlciBkb2luZyB0aGF0IHdvcmsgaW5kZXBlbmRlbnRseSBvZiB0aGlz
+IHNlcmllcyBhbmQgbm90DQo+ID4gZGVsYXlpbmcgdGhlIEJENzE4MjggZHVlIHRvIG5vdC15ZXQt
+ZXZhbHVhdGVkIGJkNzE4eDcgcHJvcGVydHkNCj4gPiBjaGFuZ2VzLg0KPiANCj4gVGhhdCdzIGZp
+bmUuDQoNCg0KR2xhZCB0byBoZWFyIDopIEJ5IHRoZSB3YXksIEkgYWxyZWFkeSBzZW50IHRoZSB2
+OSA7KQ0KDQpCciwNCglNYXR0aQ0KDQo=
