@@ -2,56 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60D5813A313
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 09:40:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B7A713A317
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 09:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgANIkD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jan 2020 03:40:03 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41554 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgANIkD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jan 2020 03:40:03 -0500
-Received: by mail-pl1-f194.google.com with SMTP id bd4so4953315plb.8
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2020 00:40:02 -0800 (PST)
+        id S1728810AbgANIkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jan 2020 03:40:14 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40243 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbgANIkO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jan 2020 03:40:14 -0500
+Received: by mail-pj1-f65.google.com with SMTP id bg7so5538813pjb.5
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Jan 2020 00:40:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cmRHW7xaszw0z6LuO2XN1PiyQlaOyRn78JrJJ835zUo=;
-        b=lqRJaG4F68zMDE8katwfrw4uiIH3fHDrp3sIgQju+KkYIUfU33GbhifajwwGHR/aVH
-         4iJzfJOJrY1v1VPTaSz2kjl80JJyzrAS/IDMPkMtMnqHa+t0hgDUZLODWobwOZncufJ9
-         9bL/kAAKeYbsICmR5mn8z4LAGsISK3pY5DtUgHkHdXnqC9pW1s87A8Qq8A0nTYphQTJl
-         4GC+nFmsy2Hfk7vGDCwOYOT95FKPy6IV005QAbCQSZjeNDbnw0h7x1roe36ix0M5MbZN
-         uY2pAjq8rA9VSFvWN25J4UjH+TgUds43IA8ECe1d92rCOyCu7D5X+0yFLidMsN7NMkAq
-         nRAQ==
+        bh=d88RijQwAj4cV7alegR9skygE3HHGfexf/vhPhy3XvA=;
+        b=oo06eeV7Y3kT0c0QKn1DoVFrD+y5tWdVf3G9Jh43CFR0LGkfmi+fKOqiQfK44137UG
+         mqxUVHt4LJTbhmLLo7rfwnl/BQYfN8Y7wd4huShXZleGj59FHcIXn3KKUE7XQZqX5nRz
+         09bHKWmS/fX2Sd7uN3rrH+UNf49WX5jVSj5pC/F8XQv10Erode21JnDmeHEfo2Gpd09A
+         /Ausz0DnbtKo3GTh48BnoSeB2uHNC5x+Cgh51irBolNIUNrplbIZyOb8dKy8UiPL+LvO
+         2Qgf5UfLfAFMLOJ4NX/lShc37+jl8YI+6u6jG+n5YmrUIkiFxyzX0bOYxu21x51r9teW
+         /lww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=cmRHW7xaszw0z6LuO2XN1PiyQlaOyRn78JrJJ835zUo=;
-        b=Uyw+7hvMMAKUKwK+k0Xi6dZ091FmtVZYPq58tmNAxYjJ3sM6VZcnCTgA/1FjM+hNcb
-         2moGQpWTiO3VYJSEWHjupeo1t/k4eiHTD7/17OqQIAesSALd0izbNSP8epSdzx5YjBD4
-         v4Ta5RBxl6l7j6aAIaTedWeGRWxPzdNucKEggsItcw9yueSLreuCUpOAux97UXFQ49DI
-         YxW3i6QEKYR3quNGkO8YBGw6k4Rph5tjjoL3OO4OLVptPAIcopi06KZwdW6QzkIZE4DB
-         MoWnnE3zp9DmPI28GIMnWhVg17IDxBnLneO7OX+7HTMDfo73VOzCONaKdGj7AyYSAQxa
-         mLDA==
-X-Gm-Message-State: APjAAAWR9mG74UG/B4al+psl1ydZ9jdCzZo2WOcRcH3TT8GepvcugN9s
-        MDClY6g17TBB2sbi21/h8eX5FpjlEro=
-X-Google-Smtp-Source: APXvYqw1hy+uiU8UrFNPl6vMUcamBwna3jCkdBTxilevbU1LYMqAIB0IGzaygRvqTGTpRESZR0ZRdA==
-X-Received: by 2002:a17:90a:db48:: with SMTP id u8mr27409045pjx.54.1578991202066;
-        Tue, 14 Jan 2020 00:40:02 -0800 (PST)
+        bh=d88RijQwAj4cV7alegR9skygE3HHGfexf/vhPhy3XvA=;
+        b=ugrInYo9EeO1345wsooZPgO4pRwXU8k8RStbQxqpyEBHdGb6dn0XwKoIyWxwCmymV4
+         d+FvHgV2LsURjwCpPxwtVu3efrj+kN5nv8W16fSCOkNhC9nJiXNOR269pKn+WS7ReHkW
+         4zUJGqFp5oM5hSkhshNsMWx3vdZ9XJ/0UoxInPpPVXtgA37Qtfm6jP3OtJzxlqclsnwS
+         B0a8dLXIkDHc1+bqpbsjeusvPhPUvkhd9LlvCbhq2il0vwa17wt+B4t3cTg+Ui8F2LMM
+         xsim2eNSo3EHPAfDyPQ8S2FGPCrUkyt7QmfmaEDrMU0norYwe1Dfw2EHMFSEYj+QTVt8
+         Ei8A==
+X-Gm-Message-State: APjAAAXHmtE68WjNVkwDLdNESSYlNJ08x32S8SZK7oWBQ1+fRsKBqrgj
+        DbaLb4VWsDoChztHdAQG0f50HmJqLmI=
+X-Google-Smtp-Source: APXvYqw7KMvmtm8HoeXSTl0dwE0rcxf37G1C41rq3dQ4aCTLup0Ap2e/DCttMB6g7QjETC5qTrw4vQ==
+X-Received: by 2002:a17:902:7c95:: with SMTP id y21mr24809942pll.150.1578991213239;
+        Tue, 14 Jan 2020 00:40:13 -0800 (PST)
 Received: from pek-lpggp6.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
-        by smtp.gmail.com with ESMTPSA id o16sm16284910pgl.58.2020.01.14.00.39.56
+        by smtp.gmail.com with ESMTPSA id o16sm16284910pgl.58.2020.01.14.00.40.06
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 00:40:01 -0800 (PST)
+        Tue, 14 Jan 2020 00:40:12 -0800 (PST)
 From:   Kevin Hao <haokexin@gmail.com>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Robert Richter <rrichter@marvell.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Kevin Hao <haokexin@gmail.com>
-Subject: [PATCH 1/4] Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
-Date:   Tue, 14 Jan 2020 16:28:18 +0800
-Message-Id: <20200114082821.14015-2-haokexin@gmail.com>
+Subject: [PATCH 2/4] gpiolib: Add support for the irqdomain which doesn't use irq_fwspec as arg
+Date:   Tue, 14 Jan 2020 16:28:19 +0800
+Message-Id: <20200114082821.14015-3-haokexin@gmail.com>
 X-Mailer: git-send-email 2.14.4
 In-Reply-To: <20200114082821.14015-1-haokexin@gmail.com>
 References: <20200114082821.14015-1-haokexin@gmail.com>
@@ -60,306 +63,245 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This reverts commit a7fc89f9d5fcc10a5474cfe555f5a9e5df8b0f1f because
-there are some bugs in this commit, and we don't have a simple way to
-fix these bugs. So revert this commit to make the thunderx gpio work
-on the stable kernel at least. We will switch to GPIOLIB_IRQCHIP
-for thunderx gpio by following patches.
+Some gpio's parent irqdomain may not use the struct irq_fwspec as
+argument, such as msi irqdomain. So rename the callback
+populate_parent_fwspec() to populate_parent_alloc_arg() and make it
+allocate and populate the specific struct which is needed by the
+parent irqdomain.
 
-Fixes: a7fc89f9d5fc ("gpio: thunderx: Switch to GPIOLIB_IRQCHIP")
 Signed-off-by: Kevin Hao <haokexin@gmail.com>
 ---
- drivers/gpio/Kconfig         |   1 -
- drivers/gpio/gpio-thunderx.c | 163 ++++++++++++++++++++++++++++---------------
- 2 files changed, 107 insertions(+), 57 deletions(-)
+ drivers/gpio/gpio-tegra186.c             | 13 ++++++---
+ drivers/gpio/gpiolib.c                   | 45 ++++++++++++++++++++------------
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c |  2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  2 +-
+ include/linux/gpio/driver.h              | 21 ++++++---------
+ 5 files changed, 49 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 9e99d09a64c6..ce65919dee12 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -571,7 +571,6 @@ config GPIO_THUNDERX
- 	tristate "Cavium ThunderX/OCTEON-TX GPIO"
- 	depends on ARCH_THUNDER || (64BIT && COMPILE_TEST)
- 	depends on PCI_MSI
--	select GPIOLIB_IRQCHIP
- 	select IRQ_DOMAIN_HIERARCHY
- 	select IRQ_FASTEOI_HIERARCHY_HANDLERS
- 	help
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index d08d86a22b1f..462770479045 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -53,6 +53,7 @@ struct thunderx_line {
- struct thunderx_gpio {
- 	struct gpio_chip	chip;
- 	u8 __iomem		*register_base;
-+	struct irq_domain	*irqd;
- 	struct msix_entry	*msix_entries;	/* per line MSI-X */
- 	struct thunderx_line	*line_entries;	/* per line irq info */
- 	raw_spinlock_t		lock;
-@@ -285,60 +286,54 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
- 	}
- }
- 
--static void thunderx_gpio_irq_ack(struct irq_data *d)
-+static void thunderx_gpio_irq_ack(struct irq_data *data)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 
- 	writeq(GPIO_INTR_INTR,
--	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
-+	       txline->txgpio->register_base + intr_reg(txline->line));
- }
- 
--static void thunderx_gpio_irq_mask(struct irq_data *d)
-+static void thunderx_gpio_irq_mask(struct irq_data *data)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 
- 	writeq(GPIO_INTR_ENA_W1C,
--	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
-+	       txline->txgpio->register_base + intr_reg(txline->line));
- }
- 
--static void thunderx_gpio_irq_mask_ack(struct irq_data *d)
-+static void thunderx_gpio_irq_mask_ack(struct irq_data *data)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 
- 	writeq(GPIO_INTR_ENA_W1C | GPIO_INTR_INTR,
--	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
-+	       txline->txgpio->register_base + intr_reg(txline->line));
- }
- 
--static void thunderx_gpio_irq_unmask(struct irq_data *d)
-+static void thunderx_gpio_irq_unmask(struct irq_data *data)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
- 
- 	writeq(GPIO_INTR_ENA_W1S,
--	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
-+	       txline->txgpio->register_base + intr_reg(txline->line));
- }
- 
--static int thunderx_gpio_irq_set_type(struct irq_data *d,
-+static int thunderx_gpio_irq_set_type(struct irq_data *data,
- 				      unsigned int flow_type)
- {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
--	struct thunderx_line *txline =
--		&txgpio->line_entries[irqd_to_hwirq(d)];
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *txgpio = txline->txgpio;
- 	u64 bit_cfg;
- 
--	irqd_set_trigger_type(d, flow_type);
-+	irqd_set_trigger_type(data, flow_type);
- 
- 	bit_cfg = txline->fil_bits | GPIO_BIT_CFG_INT_EN;
- 
- 	if (flow_type & IRQ_TYPE_EDGE_BOTH) {
--		irq_set_handler_locked(d, handle_fasteoi_ack_irq);
-+		irq_set_handler_locked(data, handle_fasteoi_ack_irq);
- 		bit_cfg |= GPIO_BIT_CFG_INT_TYPE;
- 	} else {
--		irq_set_handler_locked(d, handle_fasteoi_mask_irq);
-+		irq_set_handler_locked(data, handle_fasteoi_mask_irq);
- 	}
- 
- 	raw_spin_lock(&txgpio->lock);
-@@ -367,6 +362,33 @@ static void thunderx_gpio_irq_disable(struct irq_data *data)
- 	irq_chip_disable_parent(data);
- }
- 
-+static int thunderx_gpio_irq_request_resources(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *txgpio = txline->txgpio;
-+	int r;
-+
-+	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
-+	if (r)
-+		return r;
-+
-+	r = irq_chip_request_resources_parent(data);
-+	if (r)
-+		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-+
-+	return r;
-+}
-+
-+static void thunderx_gpio_irq_release_resources(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *txgpio = txline->txgpio;
-+
-+	irq_chip_release_resources_parent(data);
-+
-+	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
-+}
-+
- /*
-  * Interrupts are chained from underlying MSI-X vectors.  We have
-  * these irq_chip functions to be able to handle level triggering
-@@ -383,24 +405,50 @@ static struct irq_chip thunderx_gpio_irq_chip = {
- 	.irq_unmask		= thunderx_gpio_irq_unmask,
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_request_resources	= thunderx_gpio_irq_request_resources,
-+	.irq_release_resources	= thunderx_gpio_irq_release_resources,
- 	.irq_set_type		= thunderx_gpio_irq_set_type,
- 
- 	.flags			= IRQCHIP_SET_TYPE_MASKED
- };
- 
--static int thunderx_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
--					       unsigned int child,
--					       unsigned int child_type,
--					       unsigned int *parent,
--					       unsigned int *parent_type)
-+static int thunderx_gpio_irq_translate(struct irq_domain *d,
-+				       struct irq_fwspec *fwspec,
-+				       irq_hw_number_t *hwirq,
-+				       unsigned int *type)
- {
--	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
--
--	*parent = txgpio->base_msi + (2 * child);
--	*parent_type = IRQ_TYPE_LEVEL_HIGH;
-+	struct thunderx_gpio *txgpio = d->host_data;
-+
-+	if (WARN_ON(fwspec->param_count < 2))
-+		return -EINVAL;
-+	if (fwspec->param[0] >= txgpio->chip.ngpio)
-+		return -EINVAL;
-+	*hwirq = fwspec->param[0];
-+	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index 55b43b7ce88d..de241263d4be 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -448,17 +448,24 @@ static int tegra186_gpio_irq_domain_translate(struct irq_domain *domain,
  	return 0;
  }
  
-+static int thunderx_gpio_irq_alloc(struct irq_domain *d, unsigned int virq,
-+				   unsigned int nr_irqs, void *arg)
-+{
-+	struct thunderx_line *txline = arg;
-+
-+	return irq_domain_set_hwirq_and_chip(d, virq, txline->line,
-+					     &thunderx_gpio_irq_chip, txline);
-+}
-+
-+static const struct irq_domain_ops thunderx_gpio_irqd_ops = {
-+	.alloc		= thunderx_gpio_irq_alloc,
-+	.translate	= thunderx_gpio_irq_translate
-+};
-+
-+static int thunderx_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+
-+	return irq_find_mapping(txgpio->irqd, offset);
-+}
-+
- static int thunderx_gpio_probe(struct pci_dev *pdev,
- 			       const struct pci_device_id *id)
+-static void tegra186_gpio_populate_parent_fwspec(struct gpio_chip *chip,
+-						 struct irq_fwspec *fwspec,
++static void *tegra186_gpio_populate_parent_fwspec(struct gpio_chip *chip,
+ 						 unsigned int parent_hwirq,
+ 						 unsigned int parent_type)
  {
-@@ -408,7 +456,6 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
- 	struct device *dev = &pdev->dev;
- 	struct thunderx_gpio *txgpio;
- 	struct gpio_chip *chip;
--	struct gpio_irq_chip *girq;
- 	int ngpio, i;
- 	int err = 0;
+ 	struct tegra_gpio *gpio = gpiochip_get_data(chip);
++	struct irq_fwspec *fwspec;
  
-@@ -453,8 +500,8 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
- 	}
- 
- 	txgpio->msix_entries = devm_kcalloc(dev,
--					    ngpio, sizeof(struct msix_entry),
--					    GFP_KERNEL);
-+					  ngpio, sizeof(struct msix_entry),
-+					  GFP_KERNEL);
- 	if (!txgpio->msix_entries) {
- 		err = -ENOMEM;
- 		goto out;
-@@ -495,6 +542,27 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
- 	if (err < 0)
- 		goto out;
- 
-+	/*
-+	 * Push GPIO specific irqdomain on hierarchy created as a side
-+	 * effect of the pci_enable_msix()
-+	 */
-+	txgpio->irqd = irq_domain_create_hierarchy(irq_get_irq_data(txgpio->msix_entries[0].vector)->domain,
-+						   0, 0, of_node_to_fwnode(dev->of_node),
-+						   &thunderx_gpio_irqd_ops, txgpio);
-+	if (!txgpio->irqd) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
++	fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
++	if (!fwspec)
++		return NULL;
 +
-+	/* Push on irq_data and the domain for each line. */
-+	for (i = 0; i < ngpio; i++) {
-+		err = irq_domain_push_irq(txgpio->irqd,
-+					  txgpio->msix_entries[i].vector,
-+					  &txgpio->line_entries[i]);
-+		if (err < 0)
-+			dev_err(dev, "irq_domain_push_irq: %d\n", err);
-+	}
++	fwspec->fwnode = chip->irq.parent_domain->fwnode;
+ 	fwspec->param_count = 3;
+ 	fwspec->param[0] = gpio->soc->instance;
+ 	fwspec->param[1] = parent_hwirq;
+ 	fwspec->param[2] = parent_type;
 +
- 	chip->label = KBUILD_MODNAME;
- 	chip->parent = dev;
- 	chip->owner = THIS_MODULE;
-@@ -509,28 +577,11 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
- 	chip->set = thunderx_gpio_set;
- 	chip->set_multiple = thunderx_gpio_set_multiple;
- 	chip->set_config = thunderx_gpio_set_config;
--	girq = &chip->irq;
--	girq->chip = &thunderx_gpio_irq_chip;
--	girq->fwnode = of_node_to_fwnode(dev->of_node);
--	girq->parent_domain =
--		irq_get_irq_data(txgpio->msix_entries[0].vector)->domain;
--	girq->child_to_parent_hwirq = thunderx_gpio_child_to_parent_hwirq;
--	girq->handler = handle_bad_irq;
--	girq->default_type = IRQ_TYPE_NONE;
--
-+	chip->to_irq = thunderx_gpio_to_irq;
- 	err = devm_gpiochip_add_data(dev, chip, txgpio);
- 	if (err)
- 		goto out;
- 
--	/* Push on irq_data and the domain for each line. */
--	for (i = 0; i < ngpio; i++) {
--		err = irq_domain_push_irq(chip->irq.domain,
--					  txgpio->msix_entries[i].vector,
--					  chip);
--		if (err < 0)
--			dev_err(dev, "irq_domain_push_irq: %d\n", err);
--	}
--
- 	dev_info(dev, "ThunderX GPIO: %d lines with base %d.\n",
- 		 ngpio, chip->base);
- 	return 0;
-@@ -545,10 +596,10 @@ static void thunderx_gpio_remove(struct pci_dev *pdev)
- 	struct thunderx_gpio *txgpio = pci_get_drvdata(pdev);
- 
- 	for (i = 0; i < txgpio->chip.ngpio; i++)
--		irq_domain_pop_irq(txgpio->chip.irq.domain,
-+		irq_domain_pop_irq(txgpio->irqd,
- 				   txgpio->msix_entries[i].vector);
- 
--	irq_domain_remove(txgpio->chip.irq.domain);
-+	irq_domain_remove(txgpio->irqd);
- 
- 	pci_set_drvdata(pdev, NULL);
++	return fwspec;
  }
+ 
+ static int tegra186_gpio_child_to_parent_hwirq(struct gpio_chip *chip,
+@@ -621,7 +628,7 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
+ 	irq->chip = &gpio->intc;
+ 	irq->fwnode = of_node_to_fwnode(pdev->dev.of_node);
+ 	irq->child_to_parent_hwirq = tegra186_gpio_child_to_parent_hwirq;
+-	irq->populate_parent_fwspec = tegra186_gpio_populate_parent_fwspec;
++	irq->populate_parent_alloc_arg = tegra186_gpio_populate_parent_fwspec;
+ 	irq->child_offset_to_irq = tegra186_gpio_child_offset_to_irq;
+ 	irq->child_irq_domain_ops.translate = tegra186_gpio_irq_domain_translate;
+ 	irq->handler = handle_simple_irq;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 967371377a9d..bedf611a7c9e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1990,7 +1990,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 	irq_hw_number_t hwirq;
+ 	unsigned int type = IRQ_TYPE_NONE;
+ 	struct irq_fwspec *fwspec = data;
+-	struct irq_fwspec parent_fwspec;
++	void *parent_arg;
+ 	unsigned int parent_hwirq;
+ 	unsigned int parent_type;
+ 	struct gpio_irq_chip *girq = &gc->irq;
+@@ -2029,23 +2029,20 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 			    NULL, NULL);
+ 	irq_set_probe(irq);
+ 
+-	/*
+-	 * Create a IRQ fwspec to send up to the parent irqdomain:
+-	 * specify the hwirq we address on the parent and tie it
+-	 * all together up the chain.
+-	 */
+-	parent_fwspec.fwnode = d->parent->fwnode;
+ 	/* This parent only handles asserted level IRQs */
+-	girq->populate_parent_fwspec(gc, &parent_fwspec, parent_hwirq,
+-				     parent_type);
++	parent_arg = girq->populate_parent_alloc_arg(gc, parent_hwirq, parent_type);
++	if (!parent_arg)
++		return -ENOMEM;
++
+ 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
+ 		  irq, parent_hwirq);
+-	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
++	ret = irq_domain_alloc_irqs_parent(d, irq, 1, parent_arg);
+ 	if (ret)
+ 		chip_err(gc,
+ 			 "failed to allocate parent hwirq %d for hwirq %lu\n",
+ 			 parent_hwirq, hwirq);
+ 
++	kfree(parent_arg);
+ 	return ret;
+ }
+ 
+@@ -2082,8 +2079,8 @@ static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
+ 	if (!gc->irq.child_offset_to_irq)
+ 		gc->irq.child_offset_to_irq = gpiochip_child_offset_to_irq_noop;
+ 
+-	if (!gc->irq.populate_parent_fwspec)
+-		gc->irq.populate_parent_fwspec =
++	if (!gc->irq.populate_parent_alloc_arg)
++		gc->irq.populate_parent_alloc_arg =
+ 			gpiochip_populate_parent_fwspec_twocell;
+ 
+ 	gpiochip_hierarchy_setup_domain_ops(&gc->irq.child_irq_domain_ops);
+@@ -2109,27 +2106,43 @@ static bool gpiochip_hierarchy_is_hierarchical(struct gpio_chip *gc)
+ 	return !!gc->irq.parent_domain;
+ }
+ 
+-void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+-					     struct irq_fwspec *fwspec,
++void *gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+ 					     unsigned int parent_hwirq,
+ 					     unsigned int parent_type)
+ {
++	struct irq_fwspec *fwspec;
++
++	fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
++	if (!fwspec)
++		return NULL;
++
++	fwspec->fwnode = chip->irq.parent_domain->fwnode;
+ 	fwspec->param_count = 2;
+ 	fwspec->param[0] = parent_hwirq;
+ 	fwspec->param[1] = parent_type;
++
++	return fwspec;
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_populate_parent_fwspec_twocell);
+ 
+-void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+-					      struct irq_fwspec *fwspec,
++void *gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+ 					      unsigned int parent_hwirq,
+ 					      unsigned int parent_type)
+ {
++	struct irq_fwspec *fwspec;
++
++	fwspec = kmalloc(sizeof(*fwspec), GFP_KERNEL);
++	if (!fwspec)
++		return NULL;
++
++	fwspec->fwnode = chip->irq.parent_domain->fwnode;
+ 	fwspec->param_count = 4;
+ 	fwspec->param[0] = 0;
+ 	fwspec->param[1] = parent_hwirq;
+ 	fwspec->param[2] = 0;
+ 	fwspec->param[3] = parent_type;
++
++	return fwspec;
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_populate_parent_fwspec_fourcell);
+ 
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 653d1095bfea..fe0be8a6ebb7 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -1060,7 +1060,7 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
+ 	girq->parent_domain = parent_domain;
+ 	girq->child_to_parent_hwirq = pmic_gpio_child_to_parent_hwirq;
+-	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
++	girq->populate_parent_alloc_arg = gpiochip_populate_parent_fwspec_fourcell;
+ 	girq->child_offset_to_irq = pmic_gpio_child_offset_to_irq;
+ 	girq->child_irq_domain_ops.translate = pmic_gpio_domain_translate;
+ 
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index c7912135bbfb..fba1d41d20ec 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -794,7 +794,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
+ 	girq->fwnode = of_node_to_fwnode(pctrl->dev->of_node);
+ 	girq->parent_domain = parent_domain;
+ 	girq->child_to_parent_hwirq = pm8xxx_child_to_parent_hwirq;
+-	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
++	girq->populate_parent_alloc_arg = gpiochip_populate_parent_fwspec_fourcell;
+ 	girq->child_offset_to_irq = pm8xxx_child_offset_to_irq;
+ 	girq->child_irq_domain_ops.translate = pm8xxx_domain_translate;
+ 
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 4f032de10bae..ea6e615ad7fc 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -94,16 +94,15 @@ struct gpio_irq_chip {
+ 				     unsigned int *parent_type);
+ 
+ 	/**
+-	 * @populate_parent_fwspec:
++	 * @populate_parent_alloc_arg :
+ 	 *
+-	 * This optional callback populates the &struct irq_fwspec for the
+-	 * parent's IRQ domain. If this is not specified, then
++	 * This optional callback allocates and populates the specific struct
++	 * for the parent's IRQ domain. If this is not specified, then
+ 	 * &gpiochip_populate_parent_fwspec_twocell will be used. A four-cell
+ 	 * variant named &gpiochip_populate_parent_fwspec_fourcell is also
+ 	 * available.
+ 	 */
+-	void (*populate_parent_fwspec)(struct gpio_chip *chip,
+-				       struct irq_fwspec *fwspec,
++	void *(*populate_parent_alloc_arg)(struct gpio_chip *chip,
+ 				       unsigned int parent_hwirq,
+ 				       unsigned int parent_type);
+ 
+@@ -537,26 +536,22 @@ struct bgpio_pdata {
+ 
+ #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+ 
+-void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+-					     struct irq_fwspec *fwspec,
++void *gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+ 					     unsigned int parent_hwirq,
+ 					     unsigned int parent_type);
+-void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+-					      struct irq_fwspec *fwspec,
++void *gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+ 					      unsigned int parent_hwirq,
+ 					      unsigned int parent_type);
+ 
+ #else
+ 
+-static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+-						    struct irq_fwspec *fwspec,
++static inline void *gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chip,
+ 						    unsigned int parent_hwirq,
+ 						    unsigned int parent_type)
+ {
+ }
+ 
+-static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+-						     struct irq_fwspec *fwspec,
++static inline void *gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+ 						     unsigned int parent_hwirq,
+ 						     unsigned int parent_type)
+ {
 -- 
 2.14.4
 
