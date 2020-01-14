@@ -2,134 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F07B139F46
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 03:00:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84429139F87
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 03:33:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgANCAp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jan 2020 21:00:45 -0500
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:35878 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729459AbgANCAp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 21:00:45 -0500
-Received: by mail-wm1-f48.google.com with SMTP id p17so11926618wma.1
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 18:00:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=6IhEFegKVWXfW5muW6QTFKoLqtRw7Aqo47YId3amXMU=;
-        b=wf1lEgU44GGbBr7ftjr1epAYamGalMJ1dGD1xyjA1ZL4m6nHQO8bgT+hbtipP77m+P
-         UHyPBV92AzneBbIW58n97jm8IXF1u4aDkwsumdkLS25KS9QG9LjwJo40Dy6oVMgqGFYi
-         thRH4RX31sk/7ghAxET5AVB5zYdjw4DITxkE9ZWJHHeSIQ1HG0Ddaf3Ultx6QJEZWnY5
-         EMucU/Jx2cKrWJTZnfaS1+8D9vglQpN8D8DqcewtEjJJ3VM8xG4C5gAQISRsRqxXEYdY
-         MF34khbwKRCX4IQ0KyfXCsFTXNKFe6csPMMJShvZPhZX25gYnEE5VI/CS7fPYTB/y3bs
-         CyFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=6IhEFegKVWXfW5muW6QTFKoLqtRw7Aqo47YId3amXMU=;
-        b=fKDJdn9hf8lPh1+q4M4vfHondZQfGf+MuAwUr6GbHAiPydp5urVcXpmIb6Ap7YW6AM
-         PXNK9TKC+5RaUOicMJ+FLcdzKIr+4TCJ1qTVp85V0x7LnshkyPX+RjVgCM0DPD5dBSSp
-         7UTbJtceI+L/HLlaRQxTxbhKmvJ1WvdyPHomkpnYynAuH3jSFb9DyeET5vtQogZCow3d
-         dLiERfqvMqaLsGcLrTSx1EGzYGdQHpLTLJvGie9IVM2JMr6KPqvoUUi2SaEN8P03QUau
-         A+3EIB0raWAQrPlQ14xagdf8nHe9J5BoJ2fmw5EaDWI8uo0p6ueR5ViwV77DQWESzZRu
-         3m0w==
-X-Gm-Message-State: APjAAAV5njMpc0AHc3uO9LdXoluu3eTN9bOzdTIkwHm32ZQlrCcLnrls
-        d0IPL3K7cAznvduqTOoJu6UXv7GscvCXfg==
-X-Google-Smtp-Source: APXvYqx1OCgn8IJlF8IoLLJWrAX0ln1qk5Jx8UXVGi79fiPQ8TmAYEtdPIum6IqYmQWnKKfOClw6gg==
-X-Received: by 2002:a7b:c847:: with SMTP id c7mr23598134wml.3.1578967243738;
-        Mon, 13 Jan 2020 18:00:43 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id v83sm16759174wmg.16.2020.01.13.18.00.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 18:00:43 -0800 (PST)
-Message-ID: <5e1d20cb.1c69fb81.d8fff.6819@mx.google.com>
-Date:   Mon, 13 Jan 2020 18:00:43 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1729190AbgANCdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jan 2020 21:33:33 -0500
+Received: from mga06.intel.com ([134.134.136.31]:56613 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729074AbgANCdd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Jan 2020 21:33:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 18:33:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
+   d="scan'208";a="219456993"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Jan 2020 18:33:31 -0800
+Received: from [10.226.38.63] (unknown [10.226.38.63])
+        by linux.intel.com (Postfix) with ESMTP id 8856C5803F0;
+        Mon, 13 Jan 2020 18:33:31 -0800 (PST)
+Subject: Re: [PATCH] pinctrl: dt-bindings: Fix some errors in the lgm and
+ pinmux schema
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>
+References: <20200113213458.74175-1-linus.walleij@linaro.org>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <c05327e6-f5e1-6b7b-3d56-5a780e20dcaf@linux.intel.com>
+Date:   Tue, 14 Jan 2020 10:33:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: build
-X-Kernelci-Kernel: gpio-v5.5-3-31-g4e4ade156406
-Subject: linusw/for-next build: 5 builds: 0 failed, 5 passed,
- 1 warning (gpio-v5.5-3-31-g4e4ade156406)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+In-Reply-To: <20200113213458.74175-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 5 builds: 0 failed, 5 passed, 1 warning (gpio-v5.5-3=
--31-g4e4ade156406)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/gpio-v5.5-3-31-g4e4ade156406/
+Thanks a lot Linus. Sorry for the inconvenience.
 
-Tree: linusw
-Branch: for-next
-Git Describe: gpio-v5.5-3-31-g4e4ade156406
-Git Commit: 4e4ade15640646ddff45d1235d6c08086b98c645
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 5 unique architectures
+Hi Rob,
 
-Warnings Detected:
+Sorry about the mistake. FWIW, i did run make dt_binding_check and ensured
+that CHKDT step passes. But its obvious that i missed something. Let me
+figureout what i missed to avoid making same mistakes in future.
 
-arm64:
-
-arm:
-
-mips:
-
-riscv:
-
-x86_64:
-    x86_64_defconfig (gcc-8): 1 warning
+Regards,
+Rahul
 
 
-Warnings summary:
+On 14/1/2020 5:34 AM, Linus Walleij wrote:
+> This fixes some problems that caused build errors in the
+> lgm-io schema file:
+>
+> - No "bindings" infix in the schema id
+> - Move the allOf inclusion for pinconf and pinmux nodes into
+>   the patternProperties for the -pins node
+> - We want "groups" not "group" to be compulsory for a pinmux
+>   node blended with a pin config node.
+> - Fix the generic pinmux-schema to list "groups" rather than
+>   "group" for a pinmux node, this might have led to some confusion.
+>
+> This is a first user of the generic schema so a bit of a bumpy
+> road.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> This was applied directly to fix compile errors in -next
+> so please advice quickly if I added further bugs...
+> ---
+>  .../devicetree/bindings/pinctrl/intel,lgm-io.yaml   | 13 ++++++-------
+>  .../devicetree/bindings/pinctrl/pinmux-node.yaml    |  2 +-
+>  2 files changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> index a386fb520510..cd2b436350ef 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-io.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-io.yaml#
+> +$id: http://devicetree.org/schemas/pinctrl/intel,lgm-io.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+>  title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
+> @@ -13,10 +13,6 @@ description: |
+>    Pinmux & GPIO controller controls pin multiplexing & configuration including
+>    GPIO function selection & GPIO attributes configuration.
+>  
+> -allOf:
+> -  - $ref: pincfg-node.yaml#
+> -  - $ref: pinmux-node.yaml#
+> -
+>  properties:
+>    compatible:
+>      const: intel,lgm-io
+> @@ -28,13 +24,16 @@ properties:
+>  patternProperties:
+>    '-pins$':
+>      type: object
+> +    allOf:
+> +      - $ref: pincfg-node.yaml#
+> +      - $ref: pinmux-node.yaml#
+>      description:
+>        Pinctrl node's client devices use subnodes for desired pin configuration.
+>        Client device subnodes use below standard properties.
+>  
+>      properties:
+>        function: true
+> -      group: true
+> +      groups: true
+>        pins: true
+>        pinmux: true
+>        bias-pull-up: true
+> @@ -46,7 +45,7 @@ patternProperties:
+>  
+>      required:
+>        - function
+> -      - group
+> +      - groups
+>  
+>      additionalProperties: false
+>  
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> index 777623a57fd5..732d9075560b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> @@ -114,7 +114,7 @@ properties:
+>        specific binding for the hardware defines whether the entries are integers
+>        or strings, and their meaning.
+>  
+> -  group:
+> +  groups:
+>      $ref: /schemas/types.yaml#/definitions/string-array
+>      description:
+>        the group to apply the properties to, if the driver supports
 
-    1    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_=
-is_phy=E2=80=99 defined but not used [-Wunused-function]
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 sec=
-tion mismatches
-
-Warnings:
-    include/linux/of_mdio.h:58:13: warning: =E2=80=98of_mdiobus_child_is_ph=
-y=E2=80=99 defined but not used [-Wunused-function]
-
----
-For more info write to <info@kernelci.org>
