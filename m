@@ -2,118 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDBC0139F98
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 03:45:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E3BA13A239
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jan 2020 08:45:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbgANCpd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jan 2020 21:45:33 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42193 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgANCpc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jan 2020 21:45:32 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so10601140wro.9
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 18:45:31 -0800 (PST)
+        id S1729140AbgANHpE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jan 2020 02:45:04 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42047 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbgANHpE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jan 2020 02:45:04 -0500
+Received: by mail-io1-f67.google.com with SMTP id n11so12765782iom.9
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jan 2020 23:45:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=Lahyd23BtnU9tUHt8bOBwkYz012b5IkiYZ3NPKLZKic=;
-        b=MM2vCJtoCDkGZI/ZpdImcjuHrmOngeWEkkTrfsPDS/kqke3BZV9SMTFzP3o85c+QmZ
-         88BdRMua17WJS5Vp+wtvpBEKm7BQF2fdvGZh8eq/LHbtBiFNct1aKY+spSCt58nNIK4F
-         Fz+2zWKW9q+xP3zZA6WCGRyfFevqZGqTdExqR7VogQkmmYhrjNK7rzQvNsvnvDNNje7G
-         fjlIhxLiti7aS/HL8zUvEgU0HAN2PrtrR1zuytxYyJ+c++0+aaqP4P1QeBcBb1w2OS/e
-         qrS6AXNvOOQ4vwtbLWa1QPUd7Sv04OaNUSOMt1v98MOzpSPfL713Bc1ADrQmQ1ThnF+q
-         P/hw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
+        b=mA7N7Op7kUYgfpqMfsIfTlX26LjxQVJpfur8Qz8Am9Fdl58faZZCbRNKYDT8QW+gu+
+         uFfp00SRawjC1/hrMV4gbk9M0o/fhjbTP60+MehfuI/f0xSBQeHCSaRsrldNW7IDQbHl
+         8ELO4afCsPg5Y6+uWRzqCWDGYWIFcU5guMdwaUZdCQq/45OnfNap2ex8+zlC+q3ejZIc
+         CqeoPo2QkT7v21V4x11CnD8ID1WNywo+1J6GM0uyi22KyTrMCAJvo5HPnNhP8KmhKHmg
+         e31nceuhNOrDr34Q7W98Dz+yllEak1r8Ge5/RC9/EcLNFz++oPcj7ZLOM/5PJPQa/mrp
+         F3wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=Lahyd23BtnU9tUHt8bOBwkYz012b5IkiYZ3NPKLZKic=;
-        b=AT/xWfVoOuh20VvjPmV3QVxH9wUq18myQ4u7uIawzhbShS+rYQ9vBXBiRWyLTCJoZp
-         eKuTPGl1nQp/h/b4F850OogXTs50/xVv1OEcfEE3ZWfKUcjOVMUn0210biHf+El92QH1
-         jQ4i/5BimGX37DLqPZXMpIGa/DQ2ahHyr4se7Qw3OgfYX/WaCagXMtCnYJHLx0RKbacZ
-         ERxewvR6SIHghmVLxBXGG+zNG5RH0GikQ7NaAV8wtZysliFpL4Mar7lYm5yVDLD6/u3s
-         xzlcSrDaybYFbEEyxzGDgPLh4WllY8OByBMot3FsQtdc9hJPnK6y6GaJOgv0DZD7CPEr
-         alXQ==
-X-Gm-Message-State: APjAAAUqngVQDitiVbUgr59A0Mq+HVoxzXJDfnCvW6Q/bIlMXWsPJaaJ
-        rmBlIQfJAwbbXmFmi15v3fA0nzZ6N5p9Qw==
-X-Google-Smtp-Source: APXvYqzoAGSYJu7lAZpkv29GsAJrDqoc5KtnBHmIYl+1rJVKoORnWxbk7Elpbf92Dyp1OKVrVX8cYw==
-X-Received: by 2002:adf:ee92:: with SMTP id b18mr22967358wro.281.1578969930464;
-        Mon, 13 Jan 2020 18:45:30 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id x14sm16315440wmj.42.2020.01.13.18.45.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 18:45:29 -0800 (PST)
-Message-ID: <5e1d2b49.1c69fb81.d3464.436e@mx.google.com>
-Date:   Mon, 13 Jan 2020 18:45:29 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hoU6RssdMpUOFqr8G6xUtx2/zFnAaDEKzQqZ2pDk/9g=;
+        b=CeZytgrD3MIK2OsS9+YeB2wHM6WeclZT+gxemF3QBCUTAmC+4B5vwRz5EenCQh5vM2
+         FnAUinJmXI420YcnpB4ePcaszQghGbgXpyq6EaW1HLXxNT7Wg+Qx3+gNbI2JWoYlq3PF
+         uJPSXmImN++zRgaKRSS/vq6nL4ypfXJIAPCIWvSRbzQz3YiQG05dxIMsK46fGwgEe/Lp
+         2jzKPNS1XIr3Bk7tN7g9FZGnYHcbjZjPGU2kKWUZAopQvrGM5vAI2oRrOIsdEtuZ5koJ
+         CWBN6oFNrG4tjsVBE94A6T1AfbzqYbxKV+6gALRYz4jGXigySJG2A6DX4V6FeIb6dNRR
+         CmwA==
+X-Gm-Message-State: APjAAAUQ1hT1fn0sG5kVT3xikgxg7At8ygnHczG5/kdyfxkeaBGqH04l
+        Vw8HHKQjbtHZPfDhQ0VB5UIjLDCnAwCdW3+Pu9s48Xcm
+X-Google-Smtp-Source: APXvYqzAh2T2cAKb3Cs79hOXveFHjbvjhUfIyQdCCAoBmuB7aXLxMczzgL7HSLXmWyrIPcGsg4iXgsEzHnFBDxb1JV4=
+X-Received: by 2002:a05:6602:220b:: with SMTP id n11mr16743494ion.6.1578987903228;
+ Mon, 13 Jan 2020 23:45:03 -0800 (PST)
 MIME-Version: 1.0
+References: <20200109115010.27814-1-brgl@bgdev.pl>
+In-Reply-To: <20200109115010.27814-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 14 Jan 2020 08:44:52 +0100
+Message-ID: <CAMRc=Mf34JTo-mCCb-ubdY9=YsGQp-YrkhQMp811_wXyVtW-=Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] gpiolib: add an ioctl() for monitoring line status changes
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: gpio-v5.5-3-31-g4e4ade156406
-Subject: linusw/for-next boot: 53 boots: 3 failed,
- 49 passed with 1 untried/unknown (gpio-v5.5-3-31-g4e4ade156406)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 53 boots: 3 failed, 49 passed with 1 untried/unknown =
-(gpio-v5.5-3-31-g4e4ade156406)
+czw., 9 sty 2020 o 12:50 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> When discussing the recent user-space changes with Kent and while working
+> on dbus API for libgpiod I noticed that we really don't have any way of
+> keeping the line info synchronized between the kernel and user-space
+> processes. We can of course periodically re-read the line information or
+> even do it every time we want to read a property but this isn't optimal.
+>
+> This series adds a new ioctl() that allows user-space to set up a watch o=
+n
+> the GPIO chardev file-descriptor which can then be polled for events
+> emitted by the kernel when the line is requested, released or its status
+> changed. This of course doesn't require the line to be requested. Multipl=
+e
+> user-space processes can watch the same lines.
+>
+> This series also includes a variety of minor tweaks & fixes for problems
+> discovered during development. For instance it addresses a race-condition
+> in current line event fifo.
+>
+> First two patches add new helpers to kfifo, that are used in the later
+> parts of the series.
+>
+> v1: https://lkml.org/lkml/2019/11/27/327
+>
+> v1 -> v2:
+> - rework the main patch of the series: re-use the existing file-descripto=
+r
+>   associated with an open character device
+> - add a patch adding a debug message when the line event kfifo is full an=
+d
+>   we're discarding another event
+> - rework the locking mechanism for lineevent kfifo: reuse the spinlock
+>   from the waitqueue structure
+> - other minor changes
+>
+> v2 -> v3:
+> - added patches providing new implementation for some kfifo macros
+> - fixed a regression in the patch reworking the line event fifo: reading
+>   multiple events is now still possible
+> - reworked the structure for new ioctl: it's now padded such that there
+>   be no alignment issues if running a 64-bit kernel on 32-bit userspace
+> - fixed a bug where one process could disable the status watch of another
+> - use kstrtoul() instead of atoi() in gpio-watch for string validation
+>
+> v3 -> v4:
+> - removed a binary file checked in by mistake
+> - drop __func__ from debug messages
+> - restructure the code in the notifier call
+> - add comments about the alignment of the new uAPI structure
+> - remove a stray new line that doesn't belong in this series
+> - tested the series on 32-bit user-space with 64-bit kernel
+>
+> v4 -> v5:
+> - dropped patches already merged upstream
+> - collected review tags
+>
+> Bartosz Golaszewski (7):
+>   kfifo: provide noirqsave variants of spinlocked in and out helpers
+>   kfifo: provide kfifo_is_empty_spinlocked()
+>   gpiolib: rework the locking mechanism for lineevent kfifo
+>   gpiolib: emit a debug message when adding events to a full kfifo
+>   gpiolib: provide a dedicated function for setting lineinfo
+>   gpiolib: add new ioctl() for monitoring changes in line info
+>   tools: gpio: implement gpio-watch
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/gpio-v5.5-3-31-g4e4ade156406/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/gpio-v5.5-3-31-g4e4ade156406/
+Hi Andrew,
 
-Tree: linusw
-Branch: for-next
-Git Describe: gpio-v5.5-3-31-g4e4ade156406
-Git Commit: 4e4ade15640646ddff45d1235d6c08086b98c645
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 46 unique boards, 14 SoC families, 3 builds out of 5
+could you Ack the first two patches in this series if you're fine with
+them? The code they modify lives in lib/ and doesn't have an assigned
+maintainer, so I've been told to Cc you on this series. It would be
+great if we could get it in for v5.6 merge window.
 
-Boot Regressions Detected:
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8:
-          rk3288-rock2-square:
-              lab-collabora: failing since 13 days (last pass: v5.5-rc1-20-=
-g06c4fc5eda6b - first fail: v5.5-rc4-9-g331d7ae3fa15)
-          sun4i-a10-olinuxino-lime:
-              lab-baylibre: new failure (last pass: v5.5-rc4-35-g0dc4997ef7=
-39)
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s805x-p241:
-              lab-baylibre: new failure (last pass: v5.5-rc4-35-g0dc4997ef7=
-39)
-          meson-gxl-s905x-khadas-vim:
-              lab-baylibre: new failure (last pass: v5.5-rc4-35-g0dc4997ef7=
-39)
-
-Boot Failures Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxl-s805x-p241: 1 failed lab
-            meson-gxl-s905x-khadas-vim: 1 failed lab
-
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            rk3288-rock2-square: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+Best regards,
+Bartosz Golaszewski
