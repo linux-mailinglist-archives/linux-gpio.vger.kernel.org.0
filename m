@@ -2,58 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D93C413C2B9
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 14:26:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74F4313C355
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 14:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgAON05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jan 2020 08:26:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34956 "EHLO
+        id S1726501AbgAONjt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jan 2020 08:39:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35725 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbgAON04 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 08:26:56 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j1so18548235lja.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2020 05:26:54 -0800 (PST)
+        with ESMTP id S1726088AbgAONjs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 08:39:48 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j1so18595175lja.2
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2020 05:39:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IveF9K9ZvQHL0XCm0NhMK8V0t0Mh/Q+IVIFeaL32PDg=;
-        b=Vid4ORIFzRzRLvESZpBs3Ah4aXP8I9dQvIMEoJ2abQEipxzFgRbq9cgs9qV9tZo8dG
-         r+ALUOnRFW2hAYj80mACUV0tm2AUq+uiOJAz+mpLJtu+HvdKUdsgrIMqP81AttT6bPAo
-         1iHOwyHySY/4v/351X1jQCrAfvgaejUZBV4oWitZ86TuNguKyKPqrdRsNH9EEYJIu+ke
-         53zqhsRIr0ZRuBjgFtn1h2jzcpYaaDdvzuXzBv5EnJgleDjRzLUmBMOFTxPgCbwigVIN
-         P4Fga4cDvP8gNm3KESwycpE4VyKfdY23u3ZtYMFvsV+t2rXJZt0ViTH6zsxGQsNoh/A/
-         pmPg==
+        bh=pnFqhhxBgQQrOJG9VMdTSVWlyDTWq02NzG7Ll7SsmRU=;
+        b=swXiWY6KtW6USAXgEF0BKmbRj8LNW2I0j8lCKzuFISPOymqu0FzmXNJs5VC4vllHNJ
+         5SS/9bDE/mXoEUeZVvqCUd2O3WPwH4GNxMuw+graItXIG3VM+lH03nQH81uZuOBgOBo1
+         /lX4qIrezmOEb4dOV2tWHyesD68BpcYKeA5lrGEalqR2YFsjMNAtXVpDz7jYy7mdeRK1
+         g4ocSnJvWJ13IUcdDr9dobxgGb1pG667VzZgrU13mTg2V+yYgxSupC3KOofzQ7RZNJhh
+         4EQ2/WlLxQttVJuIoTekn5pf4p5YpPHcc89VnzzV3x6284yplbJ40lJw2MVkVKqqxI8X
+         m3Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IveF9K9ZvQHL0XCm0NhMK8V0t0Mh/Q+IVIFeaL32PDg=;
-        b=L8/e2awhudreSTbOLQQsdFO2T+XNUNH1uNbQ2SO6MP3Mt0C2lJO89oc82+6Pn9Pn6Z
-         ByWF33fRz/7dmhhg4fAOe5KLVVD+0R4+AE+Xdux0DGEvy+hfEgUzLJnFZ3Mz3fCYFDPs
-         iiNs7O3W7dPsoIHAYFmiFhFrCgJKqdXJ8SclEYzdl5lW3BkdFcPVhxuEYM1eGG4gENFB
-         mIyquJKV+9iN0vxPEmrq0uxAHO7kxyoNiZVn3YMpxWt7vQraorb3Z1Q0bBH7FkRw4qkN
-         fHBU6E7pvbwFejLZce7M3C1ffPxikS5Da0MW2hDu/UaCk1S6xhMtLx8dBcQJi9w1Rma+
-         9d5Q==
-X-Gm-Message-State: APjAAAVBN+xM2JxQkchmkjiTYcRmZRttJFl3IQBTliB/qaJrSZ5/d3Vh
-        plkF3IbGFrSdrN8JtmKki/j32u0D1enoCShPtPc7Ww==
-X-Google-Smtp-Source: APXvYqzEhjenLEHzG+AYX+BQqoKY2hyu8eJGNOhb1pcFBkrZR5Ijv0RrNHTx/pnJ+SIgH09JhG4jxqIioUO98aLqqnc=
-X-Received: by 2002:a2e:3609:: with SMTP id d9mr1649272lja.188.1579094814272;
- Wed, 15 Jan 2020 05:26:54 -0800 (PST)
+        bh=pnFqhhxBgQQrOJG9VMdTSVWlyDTWq02NzG7Ll7SsmRU=;
+        b=W6EBTpjMWyPaWKEWqcxv1bhwc6g17JjKa/7YUd9tbkRF+2gv9bno7efqkohanQWXoM
+         aX+aRCFbG80jaQa+gb+24dwc178p7GYg25gCK8uHag+15uXnv7/sPsAFzJz5URAIpN63
+         nc3sKbgLrmLJlCn2xsf0dnJOHj/6q8Eoj1XSZBJaODRYXDZ5EyD6U0Hgf2zqBPzMOPYh
+         4syUu+Bu4sJEcUONSVPytr/G0V96Y3M/Rg/s/yI36/M89zIbPwyRd3JwxkzhAGynCigM
+         pokOj7i+D7UQVkfEvhXbnWaFVUkAHt1HOUCvirQOhZwnEAeqwC5zWWS9o+5sRHkegtqe
+         s7WQ==
+X-Gm-Message-State: APjAAAWYqsE/+a5aJWWCMTUjmc8sbysrVS6SI71K3PY9xtX4cuKzJz7+
+        FGqcWCp0WKnYg6Z0WPlZ0Pcj+WtTVVzzfS/sFtLPvA==
+X-Google-Smtp-Source: APXvYqz9duMnYhOhVoTHoDmR2ennOQ8ot3KTXdINAT2gaDQVsmk8rQh2KItxvjbbdVC7xLJ1Lvjbw6id0ZXwkJ2LKXI=
+X-Received: by 2002:a2e:9143:: with SMTP id q3mr1765334ljg.199.1579095586705;
+ Wed, 15 Jan 2020 05:39:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20200115073811.24438-1-bigunclemax@gmail.com>
-In-Reply-To: <20200115073811.24438-1-bigunclemax@gmail.com>
+References: <20200108121117.45060-1-yuehaibing@huawei.com>
+In-Reply-To: <20200108121117.45060-1-yuehaibing@huawei.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 14:26:43 +0100
-Message-ID: <CACRpkdbefJsH2km3p433NN2koNck7hgNqLWpD3q4r=Um75GZEw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mvebu: clear irq in edge cause register before
- unmask edge irq
-To:     Maxim <bigunclemax@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-pwm@vger.kernel.org,
+Date:   Wed, 15 Jan 2020 14:39:35 +0100
+Message-ID: <CACRpkdYzKmbx55h0G=fLRMat7CBOKgLScCdvH+T=heebx4asAw@mail.gmail.com>
+Subject: Re: [PATCH -next] gpiolib: remove set but not used variable 'config'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -62,30 +57,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 8:40 AM Maxim <bigunclemax@gmail.com> wrote:
+On Wed, Jan 8, 2020 at 1:11 PM YueHaibing <yuehaibing@huawei.com> wrote:
 
-> From: Maxim Kiselev <bigunclemax@gmail.com>
+> drivers/gpio/gpiolib.c: In function gpio_set_config:
+> drivers/gpio/gpiolib.c:3053:16: warning:
+>  variable config set but not used [-Wunused-but-set-variable]
 >
-> When input GPIO set from 0 to 1, the interrupt bit asserted in the GPIO
-> Interrupt Cause Register (ICR) even if the corresponding interrupt
-> masked in the GPIO Interrupt Mask Register.
+> commit d90f36851d65 ("gpiolib: have a single place
+> of calling set_config()") left behind this unused variable.
 >
-> Because interrupt mask register only affects assertion of the interrupt
-> bits in Main Interrupt Cause Register and it does not affect the
-> setting of bits in the GPIO ICR.
->
-> So, there is problem, when we unmask interrupt with already
-> asserted bit in the GPIO ICR, then false interrupt immediately occurs
-> even if GPIO don't change their value since last unmask.
->
-> Signed-off-by: Maxim Kiselev <bigunclemax@gmail.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-This looks correct to me, a review from the MVEBU maintainers
-would be appreciated.
+Patch applied with Bartosz' review tag.
 
-- Should it be applied to fixes as a regression fix?
-
-- Should it be tagged for stable?
-
-Yours.
+Yours,
 Linus Walleij
