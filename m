@@ -2,79 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4E2013BD2F
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 11:13:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A9013BD41
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 11:20:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbgAOKNe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jan 2020 05:13:34 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44618 "EHLO
+        id S1729690AbgAOKUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jan 2020 05:20:36 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37101 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729613AbgAOKNd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 05:13:33 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so12243341lfa.11
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2020 02:13:32 -0800 (PST)
+        with ESMTP id S1729631AbgAOKUf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 05:20:35 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so12265322lfc.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2020 02:20:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vO4qe02zao/A+ruoIXV88YhdBiNPhMumkEGKgg4RymM=;
-        b=i0Kvn+Ey9/+U8pQ6/uBTFMH5I8IA+l8DqIupDU57PCn5oW+xM8FTvK9P7H8tLqGF5D
-         cRk7hsCmntfXi0iXXggSozStVld6pLWOkD2y/Yqs4VSnXLYA2zx4an1gTT/j/30F7Enm
-         hMmu7rUyi/ywMOG/7JsdqwIpD1sGfVL2aN9EHANJ+yWlIKA6x3J+iuOFXzqAE1ziZWQS
-         goLWInYuXbPP6FAUWz9ROEzeW9jgydpzRLd82aBT9AQSx2NvCpCSGbaJmJnk97vFA/s/
-         mKm3nQBzK4XkJYSohl7AB6oERKp8mwXOFi9brhB15oJluvGQw+MUkEhLZdqD6EtMEO3x
-         tQoA==
+        bh=OSYI2xZp6moj18vJWopRU+GyEjnAAPir0aPbuO2xATs=;
+        b=xonQ/OIMfW8ijywfRBm1tFBfH2+jjE990GUtkQ1ZR9g7yGqPs7uUn1XEdYoaIZUoYM
+         Zx7c2C7r8k0vhbnGjQrz+tZsLIjGhYi0MUi9kvbNsvq+ZOnnZqDmFV+He+UUYWRPhuFl
+         3+h8iJAsnfLd8gUoLEsfMUUEGKheU2ojYJ6Co2BhygNAPJAWzenrii6I/cyMiabN5xlv
+         NcJwERf+XiwFt2SZwpr2ALA5IxvaOrKuTuvsYJuQ3A9TN0kdrpwrxK2N5veuXHdktSZc
+         t5vA/Fpd0Ep0/HNzdXcb799TJHdFRZ6orVhxyO+cORlrjg7PigP8f1EnN/RM51X9LgQZ
+         JRKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vO4qe02zao/A+ruoIXV88YhdBiNPhMumkEGKgg4RymM=;
-        b=ERnpE2offDL6tElUXhXDXM14Wy0MzyLqb37R5FWAi0yOmHVR1d/zs8wHLYCDoXbuqa
-         PK3ClHe+gnyOJSKpu9/xHMK9s310J/+IxznAneG5cluAH4VX20J98oownwuhn4xAVZ2S
-         ei/4bsPbhy3XFfqHjPu2aT6ZJwmiZ5ULKAbFK1saKp4yOH1ocSjzG+h5TW2mZGsanr0f
-         US00MKDj11qaYbTp6qIhNjyAvy6ZmeS/Q72jZsPe8FICmKGuWHUKJcKkXKjbktO9pbfg
-         3Y6RHHGv37QNOYEscTTRx27yxuHeDQYQAi/ackZniPVSyLJ463gGvbtYobSzsArnhOEY
-         2XKg==
-X-Gm-Message-State: APjAAAVkzbvuGmFAz75Q4x7FrNvGyvOhJNdnb9nwyEHUsHBGrL2o7xlV
-        75/AlKmavLM5xd11G/I4oMyarHr5lOZrkUM9MNZPVQ==
-X-Google-Smtp-Source: APXvYqyjpPJG2PlBkvker2pjrEMpaojUIm0M1qm4uQATc9Ei5oB+Qf3k1pXdKzW50LZY13BsnF1kUP4nXB8QRKn3Zq0=
-X-Received: by 2002:ac2:465e:: with SMTP id s30mr4450440lfo.134.1579083211682;
- Wed, 15 Jan 2020 02:13:31 -0800 (PST)
+        bh=OSYI2xZp6moj18vJWopRU+GyEjnAAPir0aPbuO2xATs=;
+        b=QMWeCRqt0NEKrctsjGjImC1O8v6rwbWJPvsPcV+jJC3+VqO3c8W2QbRpwgrqy/udQj
+         Oi5q2smf/RvNQSfyuaP3+H88sB84NDnty3vE99KJaxuMZ4CYjplwACfaC8gSO+ozAwW+
+         tRsmLPiGvNa3fryWMcOsK+XYccydYAcrrPysGCnG5IX4yR97SopgB6Ksq8KqGaAD2BNr
+         ulPOYTC8oM37YQeL0l+f+mRUDyygW0xHZlhlayjM/hg3CyIOUUUBvpMfyIgCkvLd886L
+         Wfr7fb0OA/1jMz/eui5wI1zqfJZ8cJ8Evjc9V20A5tDL4d37wKPrip7EZ2+fG9NUUyvs
+         /qLQ==
+X-Gm-Message-State: APjAAAXvQ91ECi85EMvGPEhnjmMSsdxClJRmusNMojBHZT0rwFDmqraU
+        Tw61ys+MVV942g8FC2+P6Clo0XqRGLrR9642meKl/g==
+X-Google-Smtp-Source: APXvYqzbu66rhpiW8Wtdm3l5NbV6GsB7o/UI+DDrcuAArim166YJj884QRtDnfcTnYrqFD7mFG1FqjdFtc9behO+w04=
+X-Received: by 2002:ac2:44a2:: with SMTP id c2mr3963101lfm.105.1579083633798;
+ Wed, 15 Jan 2020 02:20:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110174426.5463-1-krzk@kernel.org>
-In-Reply-To: <20200110174426.5463-1-krzk@kernel.org>
+References: <20200114082821.14015-1-haokexin@gmail.com>
+In-Reply-To: <20200114082821.14015-1-haokexin@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 11:13:20 +0100
-Message-ID: <CACRpkdY+wC3xx9r-4rsCeV3xJQbDoV8u9+9UGJ_9Kg9Swn87jg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: Pull for v5.6
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Wed, 15 Jan 2020 11:20:22 +0100
+Message-ID: <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Fix the regression for the thunderx gpio
+To:     Kevin Hao <haokexin@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 6:44 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Tue, Jan 14, 2020 at 9:39 AM Kevin Hao <haokexin@gmail.com> wrote:
 
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
->
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.6
->
-> for you to fetch changes up to 225a2ec19aac426ef29f0e4accfc890c87d38bdc:
->
->   pinctrl: samsung: Fix missing OF and GPIOLIB dependency on S3C24xx and S3C64xx (2019-12-15 12:47:52 +0100)
+> Since the commit a7fc89f9d5fc ("gpio: thunderx: Switch to
+> GPIOLIB_IRQCHIP"), the thunderx gpio doesn't work anymore. I noticed
+> that you have submitted a patch [1] to fix the " irq_domain_push_irq: -22"
+> error, but the kernel would panic after applying that fix because the hwirq
+> passed to the msi irqdomain is still not correct. It seems that we need
+> more codes to make the thunderx gpio work with the GPIOLIB_IRQCHIP. So I
+> would prefer to revert the commit a7fc89f9d5fc first to make the thunderx
+> gpio to work on the 5.4.x and 5.5 at least. We can then do more test for
+> GPIOLIB_IRQCHIP switching (which the patch 2 ~ 4 do) before merging
+> them.
 
-Pulled in to my "devel" branch, thanks!
+Thanks a LOT Kevin, and I'm sorry for open coding and breaking this
+driver so much :/
+
+I have applied all four patches for fixes.
 
 Yours,
 Linus Walleij
