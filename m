@@ -2,85 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1EFC13C841
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 16:44:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F68813C953
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 17:29:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgAOPou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jan 2020 10:44:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36910 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgAOPou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 10:44:50 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so19067136ljg.4;
-        Wed, 15 Jan 2020 07:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
-        b=n+Pzcz1+IOcutRo3c4azf501upOdSlYmce/1ymEaSU6taxHi624WfiWl9E/PkPeU+W
-         zmoCV4mhSe/ekbBTOH9rK0ZM6b9XJX3eVDFdg+Ib26+TKokfrxEk7nwKpqs1Vh/p9lV2
-         zkfUyZfCadMpObcqAzsGxLv5D6KHqplT+ajemtqeJm0NFLAKjAsOfBTna07EQGagbaks
-         7k7sN0jXSpeS6WXYZ+hSlGl4ZcnQ8+cJRknLwrE/fUyhbFZuNRTlfYkRlC26VFWGooM7
-         yO/2VPpkq7lN9T6KED6EN9smTRVKCdSFW9sGphDnN4R8oSFXQS5n7Ljxist1ok/Lzam7
-         kQ8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
-        b=XDKMSVbsXkUTudcl60Yvu7vj2rvHuHFlj4LZm9CQMk4dFAoOhBITzEFtnxRXBWc7iL
-         /MEZktUNQy2VoEECSFgEWzbZx8eqNMfhO8bilwktz8HFpK8tzJxseiieKYPgxgQ2UUdu
-         8yasJcQS4GEJmxFm2ZgYfLGSElRtdpfRW62hyoxExfVKLXTAMD9FMt62vknwIDCTRFFB
-         nu9fRRbDE1KI+5DkpG6/n8vC10hPY2IS6wPT3LukMiKfAnqLEn57hMMzhjnURSy+7xuq
-         GDWctsO6YOpDKBDv4PonGHmuK9961xuRidLremZoo+hQiePNeCY1mQGFQtGgeutc/INQ
-         CIPA==
-X-Gm-Message-State: APjAAAX8p9Ohonb3yHYwyoTOpzfsl2UbAAJk59jCxUibiOAewbVi92oC
-        cF8DFxVydfdqEB4ob11U/wYAPYK+Ospr022nVLQ=
-X-Google-Smtp-Source: APXvYqySLu2yqOOpQ0eFNaIf6kY20xHX68+A3EN+yMINPWehdz7Nm1bbK7aAWTU/lZY/OfC9pZD+rINYCV6EB0c4GDk=
-X-Received: by 2002:a2e:8197:: with SMTP id e23mr2177769ljg.250.1579103088404;
- Wed, 15 Jan 2020 07:44:48 -0800 (PST)
+        id S1728939AbgAOQ3V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jan 2020 11:29:21 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35761 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbgAOQ3V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 11:29:21 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXg-0004mW-B5; Wed, 15 Jan 2020 17:29:16 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXf-0003Us-Nz; Wed, 15 Jan 2020 17:29:15 +0100
+Date:   Wed, 15 Jan 2020 17:29:15 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
+Message-ID: <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
+References: <20200108104746.1765-1-m.felsch@pengutronix.de>
+ <20200108104746.1765-4-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 15 Jan 2020 12:44:35 -0300
-Message-ID: <CAOMZO5C7wKF8ojMBPuQZYtBK8W+vwXe8PaL5n-Mo74gF1HD6Tg@mail.gmail.com>
-Subject: Re: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        marcin.juszkiewicz@linaro.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108104746.1765-4-m.felsch@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:28:40 up 61 days,  7:47, 54 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:43 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> Add the pinctrl driver support for i.MX8MP.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+Hi Linus,
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On 20-01-08 11:47, Marco Felsch wrote:
+> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> be used as input, output or have a special use-case.
+> 
+> The patch adds the support for the normal input/output use-case.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+
+Is it possible to get this into 5.6?
+
+Regards,
+  Marco
+
