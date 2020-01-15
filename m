@@ -2,73 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8122713C36E
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 14:45:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1EFC13C841
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 16:44:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAONnl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jan 2020 08:43:41 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38926 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728977AbgAONnk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 08:43:40 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y1so12724801lfb.6
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jan 2020 05:43:39 -0800 (PST)
+        id S1726248AbgAOPou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jan 2020 10:44:50 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36910 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPou (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 10:44:50 -0500
+Received: by mail-lj1-f196.google.com with SMTP id o13so19067136ljg.4;
+        Wed, 15 Jan 2020 07:44:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WvJ5Z2/T47boGkRXpaAdhYTTXCERv6l9eGQZW9r3OWc=;
-        b=u/1h9zyZVZCZ/6ksq1jbCZZKjRZ63wlH2fdCVMcRZcXO70PEfEV2gJRYoZdyeFRmkh
-         2KUZwgBgfWwTGeEgxBz7cRPYeXaaoGAlViUmc6Vpp6QWpEwDamCjSNVhn3KthgVs+esX
-         tboPn2fe718uW6PcV5wx0WY2cDhCZQ71FFPAZ8c6aJ58NcgOj0aN8k5Rh6kGitDYPLjc
-         3ZDCnRLLB/ewgkphzVhq+k6/B12KxjkCdN1lb8TW4LYuwH38xMmweWhBe0zNne0vpgC8
-         alJ0vMCC2Vj6mEuBpwnuuiNxUHjvV8RauPDRSTXtwkZ3QS4J6s4uo19+oeAcfkyzjqvG
-         YduA==
+        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
+        b=n+Pzcz1+IOcutRo3c4azf501upOdSlYmce/1ymEaSU6taxHi624WfiWl9E/PkPeU+W
+         zmoCV4mhSe/ekbBTOH9rK0ZM6b9XJX3eVDFdg+Ib26+TKokfrxEk7nwKpqs1Vh/p9lV2
+         zkfUyZfCadMpObcqAzsGxLv5D6KHqplT+ajemtqeJm0NFLAKjAsOfBTna07EQGagbaks
+         7k7sN0jXSpeS6WXYZ+hSlGl4ZcnQ8+cJRknLwrE/fUyhbFZuNRTlfYkRlC26VFWGooM7
+         yO/2VPpkq7lN9T6KED6EN9smTRVKCdSFW9sGphDnN4R8oSFXQS5n7Ljxist1ok/Lzam7
+         kQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WvJ5Z2/T47boGkRXpaAdhYTTXCERv6l9eGQZW9r3OWc=;
-        b=noY6PkIOJOzFVqJ8XZj/mGB7TWMgZaDhZhlwZjCzaYxnzBSWQH5JmpHFeTI+9LsFNc
-         Xz1sibVrbMIdKZ3cnzA2c9aoxiRzeo0tztS1L6naP1s/gR8n18obr6nH1GOoisRtWkE1
-         PEDZAc9CxHVlAaUskj0vVU9jL0LzyGcvz7iD+n9RwNz0ql9LjE1LV4VOVPzboBo8587X
-         zjDLQJdYjog6s3vGe+hldCJgpB3NmrU51kiWlqBzB7VUOId3GjYN/2m8GsTKJNHke/G5
-         Fs8tme8vN6+PM6i22lwXbrNga+PSTEcCztloLzZZalVbdwClArBPeaxYQo0guaj8n3id
-         dPPA==
-X-Gm-Message-State: APjAAAWZ9Gv4mCB8cdiVGPJmC2oIrTY3WSPCZK4uTipBzXxaCBTEoYFq
-        WnzkeiO3AImigyz3Co/y4+l3ZZnYzubxYfuvU5rw1g==
-X-Google-Smtp-Source: APXvYqyeqzw7+mkef4toWLPOG9ScY8IGBiGsqM8QFNp+MnRkQwffusMdPKSsMsfAreTyonArF9swtJ+riGPcqc9f8uk=
-X-Received: by 2002:ac2:465e:: with SMTP id s30mr4899362lfo.134.1579095818725;
- Wed, 15 Jan 2020 05:43:38 -0800 (PST)
+        bh=j6qO9VzKyk7Z93B4IKp3Dn6tsqDnHK6bXBO21eqtHYE=;
+        b=XDKMSVbsXkUTudcl60Yvu7vj2rvHuHFlj4LZm9CQMk4dFAoOhBITzEFtnxRXBWc7iL
+         /MEZktUNQy2VoEECSFgEWzbZx8eqNMfhO8bilwktz8HFpK8tzJxseiieKYPgxgQ2UUdu
+         8yasJcQS4GEJmxFm2ZgYfLGSElRtdpfRW62hyoxExfVKLXTAMD9FMt62vknwIDCTRFFB
+         nu9fRRbDE1KI+5DkpG6/n8vC10hPY2IS6wPT3LukMiKfAnqLEn57hMMzhjnURSy+7xuq
+         GDWctsO6YOpDKBDv4PonGHmuK9961xuRidLremZoo+hQiePNeCY1mQGFQtGgeutc/INQ
+         CIPA==
+X-Gm-Message-State: APjAAAX8p9Ohonb3yHYwyoTOpzfsl2UbAAJk59jCxUibiOAewbVi92oC
+        cF8DFxVydfdqEB4ob11U/wYAPYK+Ospr022nVLQ=
+X-Google-Smtp-Source: APXvYqySLu2yqOOpQ0eFNaIf6kY20xHX68+A3EN+yMINPWehdz7Nm1bbK7aAWTU/lZY/OfC9pZD+rINYCV6EB0c4GDk=
+X-Received: by 2002:a2e:8197:: with SMTP id e23mr2177769ljg.250.1579103088404;
+ Wed, 15 Jan 2020 07:44:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20200107130844.20763-1-srinivas.kandagatla@linaro.org> <20200107130844.20763-3-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200107130844.20763-3-srinivas.kandagatla@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Jan 2020 14:43:27 +0100
-Message-ID: <CACRpkdaFfNDuUkChNeVcrL2TUJ3Qc62Fk7nfa0qnK5eh2YYPhA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] gpio: wcd934x: Add support to wcd934x gpio controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 15 Jan 2020 12:44:35 -0300
+Message-ID: <CAOMZO5C7wKF8ojMBPuQZYtBK8W+vwXe8PaL5n-Mo74gF1HD6Tg@mail.gmail.com>
+Subject: Re: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver support
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        marcin.juszkiewicz@linaro.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 2:09 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
-
-> This patch adds support to wcd934x gpio block found in
-> WCD9340/WC9341 Audio codecs.
+On Tue, Jan 14, 2020 at 10:43 PM Anson Huang <Anson.Huang@nxp.com> wrote:
 >
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Add the pinctrl driver support for i.MX8MP.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Patch applied. (I applied the bindings earlier.)
-
-Yours,
-Linus Walleij
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
