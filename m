@@ -2,109 +2,325 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6C6213BB4C
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 09:41:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF34913BBC4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jan 2020 10:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgAOIli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jan 2020 03:41:38 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49080 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726472AbgAOIli (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 03:41:38 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-4b-5e1ed03f6ebe
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id DB.3C.08102.F30DE1E5; Wed, 15 Jan 2020 09:41:35 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 15 Jan 2020 09:41:31 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v9 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Topic: [PATCH v9 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Index: AQHVyGRfelgxjt7dUUiwtNLQXcjh4KfrW4mAgAACGQA=
-Date:   Wed, 15 Jan 2020 08:41:30 +0000
-Message-ID: <5fd2c53ed4943f47e1c38902c3e8782d25363773.camel@fi.rohmeurope.com>
-References: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
-         <b58952aedd1cce08aa4d7f346007a24923bb2b64.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200115083403.GE325@dell>
-In-Reply-To: <20200115083403.GE325@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5DF6E6B2751CBC468BB5D38AE91BB94F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1729152AbgAOJB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jan 2020 04:01:59 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38032 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgAOJB7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jan 2020 04:01:59 -0500
+Received: by mail-lf1-f67.google.com with SMTP id r14so12098923lfm.5;
+        Wed, 15 Jan 2020 01:01:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZmVZUizKR/ZqbN+vZMkdIIhdl1VZHALM11tkpLax1GA=;
+        b=nejJJfe/gdECr/ZIPMNedl6DB34rbFQ7jFThRgD/eC4sVJg+v+afJGBHoSxgNnzFlt
+         lADiQszOQtgAzPWGSU60qH5nQC/WnFLu6HhxXCBIs+eQQbYjkQKDl8vH+MiK4gVyDslD
+         j+C7hcRXMf1FkU5tSSIqh5Ax2aBK43+2yxsG+lJ5bd3ZFVERzHo89hTbRUN0gqvy7VNE
+         7JkQK0pNSD35aVlQcoD7M0k/Q1klAzUqPIjSvBsTIzXJaiBNpxKGIO+8UtK2TuZ8wUAq
+         QwjdgroTkoTEszgdeVK1vq+iNZVmCVB7jKo/CrkwLW7rJ3sf6/2zKccRr6ocawZW9gYA
+         lTlQ==
+X-Gm-Message-State: APjAAAXfHoIc9BV5u0JdI6NFEFFksT/PPTy8HewD7TJWj27isKw0WOor
+        2NVL+wfa25BIWbN2h9F2QU0=
+X-Google-Smtp-Source: APXvYqzp6a++2gwDAJG3wygKGQmRFzvS49O+7FM7GQW3BAkT8a79H68mEnpEHd0azz8NN11TxiDsJg==
+X-Received: by 2002:a19:40d8:: with SMTP id n207mr4079608lfa.4.1579078914645;
+        Wed, 15 Jan 2020 01:01:54 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id k12sm8517803lfc.33.2020.01.15.01.01.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 01:01:53 -0800 (PST)
+Date:   Wed, 15 Jan 2020 11:01:45 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [RESEND PATCH v9 00/12] Support ROHM BD71828 PMIC
+Message-ID: <cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0gTcRznd3e7naurX2u2X5qCI8mMfIDQj5CSIjghyugFQa4rL2fNTW6z
-        siiW0MMlZNlDh48emqHSYynVMDLTXFMySe1lj9EqXNmDXlhm3W2W/nUfvp/Xlx/fY0i1lw5j
-        skxWQTTxRh2toprP/3LOXXg/Mj2h9nsCruruVeIDH84p8ddyD4WPe300rmy9p8CHOhoU+Gnj
-        JQq/+NYG8PeegwQ+NlxD4M+FzxX4SuUwwA9cZTRufH8B4Dt1PTSufthN4LJqN4W7PUvwM08b
-        jffdaFXikb7LVEooV19RD7iPj/YpuYr6Xdx1xzMl56wtoLn+viaaa390leBOVgwR3Pm6H0ru
-        izMyTbVuQvJG3rptZVamKX7BhgkG/9thIicf7tj7pl9hA52T7SCEQTAJ9biclIzVsBeg4ltb
-        7EAlYTdAr5r/ADtgGBomI/tjpazRwERU5X5NyRoSVjGo2PMcyMRUmIYGS94TQdEK9Kng6Khh
-        PrL3nVXImILRyD9kD8xZuAzd/PmTCJa1ANRw8kmACIExyG/zBYIAjEAFtg8BTEItcr75oQhu
-        DVFVUxcZxKFo4NXI6FyHbgx5KXlpEs5GF13xQWsKah9+PRoThY4d8o7uMAXdLfVRRWCaY1yD
-        Y8ztGOd2jHM7xrlPAUUtQNl8ljGTtwqJcaKQGyeaDdnSZ5M52wmCJ/P1GvjTktoCCAa0gOkM
-        oQtlNU0R6epJG80ZeQbeYtCLuUbBIj0EQ+o07N0SiWMz+Lydgmj+R4UzlE7LzvIeWa+GctdW
-        QcgRxH/sDIbRITapKzJdPUUUMoUdm7OM1jGaYELkcFWYxiKYMgSRz7Ua9PJ96C3SgcjURKn3
-        imxnLTl8tjQNWj1gDlM0UH6GZFrLq8+QaspkNglhWvaSLIWy1JBr+l/kB1oG6Kay9nsSO1H6
-        b/7n+KUKQqooWhyosPJjVJgNZK5+F7fIq6JKo6NaRwZFOHDi4i9YfHtEn947ubDLx5YaO8u2
-        ry5sWHnZdvhlUvvyvhCnqc4d09aYH5V6AZ7e7Qpv8+dNm5Xmzj/euPSFJqUkddNM/mhlRy+0
-        LMhbNG9dbM27/t97Dq9xkdGRpWkrzOG+mOT7q9bu10cM1mhTKlQ6ymLgE2NJ0cL/BbbN66H0
-        AwAA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpPbiBXZWQsIDIwMjAtMDEtMTUgYXQgMDg6MzQgKzAwMDAsIExlZSBKb25l
-cyB3cm90ZToNCj4gT24gU2F0LCAxMSBKYW4gMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
-PiANCj4gPiBST0hNIEJENzE4MjggUG93ZXIgbWFuYWdlbWVudCBJQyBpbnRlZ3JhdGVzIDcgYnVj
-ayBjb252ZXJ0ZXJzLCA3DQo+ID4gTERPcywNCj4gPiBhIHJlYWwtdGltZSBjbG9jayAoUlRDKSwg
-MyBHUE8vcmVndWxhdG9yIGNvbnRyb2wgcGlucywgSEFMTCBpbnB1dA0KPiA+IGFuZCBhIDMyLjc2
-OCBrSHogY2xvY2sgZ2F0ZS4NCj4gPiANCj4gPiBEb2N1bWVudCB0aGUgZHQgYmluZGluZ3MgZHJp
-dmVycyBhcmUgdXNpbmcuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVu
-IDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFJv
-YiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcyBzaW5j
-ZSB2OCAgDQo+ID4gDQo+ID4gIC4uLi9iaW5kaW5ncy9tZmQvcm9obSxiZDcxODI4LXBtaWMueWFt
-bCAgICAgICB8IDE5Mw0KPiA+ICsrKysrKysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMTkzIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9yb2htLGJkNzE4MjgtcG1pYy55YW1sDQo+
-IA0KPiBJIG9ubHkgaGF2ZSBwYXRjaGVzIDItNiwgc28gSSBjYW5ub3QgaGVscCB3aXRoIG1lcmdp
-bmcuDQo+IA0KPiBNeSBndWVzcyBpcyB0aGF0IHNvbWUgb2YgdGhlIG90aGVyIHBhdGNoZXMgd2ls
-bCBoYXZlIGRlcGVuZGVuY2llcyBvcg0KPiBiZSBkZXBlbmRhbnRzIG9mIHRoZSBNRkQgY2hhbmdl
-cywgdGh1cyBzb21lb25lIGVsc2Ugd2lsbCBlaXRoZXIgaGF2ZQ0KPiB0byBtZXJnZSB0aGUgc2V0
-IGFuZCBzZW5kIG91dCBhIHB1bGwtcmVxdWVzdCBmb3IgdGhlIG90aGVyDQo+IG1haW50YWluZXJz
-DQo+IHRvIGNvbnN1bWUsIG9yIHlvdSB3aWxsIGhhdmUgdG8gc2VuZCB0aGUgd2hvbGUgc2V0IG91
-dCBhZ2Fpbi4gDQoNCkkgaGF2ZSB0aGUgcGF0Y2hlcy4gSSdsbCBqdXN0IHNlZSBJIGhhdmUgbm90
-IGFjY2lkZW50YWxseSBkcm9wcGVkIG91dA0KYW55IG90aGVyIHBlb3BsZSBhbmQgZG8gcmVzZW5k
-IHRoZSBzZXJpZXMuIFNob3VsZG4ndCB0YWtlIGxvbmcuDQoNCkkgaGF2ZW4ndCByZWNlaXZlZCBh
-Y2sgZnJvbSBQYXZlbCBmb3IgTEVEIGNoYW5nZXMgKHBhdGNoZXMgMTEgYW5kIDEyKSAtDQpzbyBw
-ZXJoYXBzIHRob3NlIHNob3VsZCBzdGlsbCBiZSBsZWZ0IG91dC4gSSBndWVzcyByZXN0IG9mIHRo
-ZSBwYXRjaGVzDQphcmUgT2sgdG8gZ28gaW4gLSB1bmxlc3MgeW91IHN0aWxsIGhhdmUgc29tZSBz
-dWdnZXN0aW9ucy4gTEVEIHBhcnQgY2FuDQpiZSBhZGRlZCBsYXRlci4NCg0KQnIsDQoJTWF0dGkg
-VmFpdHRpbmVuDQoNCg0K
+Patch series introducing support for ROHM BD71828 PMIC
+
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
+
+This patch series brings only the basic support for controlling
+regulators individually via I2C.
+
+In addition to the bucks and LDOs there are:
+
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
+
+This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
+
+Power-supply driver for charger is not included in this series.
+
+The series also adds LED DT-node lookup based on node name or given
+property name/value pair in LED core. It also adds generic default-state
+and default-trigger property handling to LED core. Follow-up patches
+simplifying few other LED drivers should follow.
+
+Changelog v9: (Changes suggested by Lee)
+  - Added kerneldoc to struct rohm_dvs_config
+  - cleaned few comments
+  - updated copyright date
+  - renamed variable 'mfd' to 'parent'.
+
+Changelog v8:
+  LEDs:
+    - Fixed bunch of typos.
+    - Corrected the commit message which errorneously contained the
+      'leds-compatible' which I dropped in favour of match_property.
+    - use max_brightness instead of LED_FULL if it is given when
+      handling the default_state, "on".
+    - clean fwnode_owned at the end of unsuccessfull registration or
+      at the end of deregistration.
+    - fix the accidental linuxdoc comment.
+    - rename led_find_fwnode to led_get_fwnode as it increases refcount.
+
+Changelog v7:
+  - Rebased on top of v5.5-rc2
+  - Dropped already applied patches
+    - basic regulator support (in regulator tree now)
+    - regulator dt-bindings (in regulator tree now)
+    - gpio devm function documentation (in GPIO tree now)
+  - Dropped new devm-variant of gpio_array getting for MFD sub-devices who
+    have consumer information in parent DT node as gpio consumer was
+    dropped from the series
+  - removed extra line-breaks from MFD driver and Makefile
+  - fixed RTC patch subject line (added missing colon)
+  - included a patch which adds compatible for ROHM BD71850 PMIC
+
+Changelog v6:
+  Rebased on top of v5.5-rc1
+  LED core:
+    - Do new fw-node look-up only if the new match data is given. That
+      way behaviour for existing drivers is not changed
+    - Handle generic LED properties by core only if explisitly requested
+      in init-data. That way behaviour for existing drivers is not changed
+      until they are verified to work.
+  BD71828 LEDs:
+    - Fix module loading by adding "dummy" of_device_id table.
+  DT bindings:
+    All:
+    - Remove regulator run-level properties as run-level support was
+      dropped for now.
+    - Change SPDX to dual lisence
+    LED:
+    - added select: false
+    - replace oneOf + const by enum
+    Regulator:
+    - remove forgotten comments
+    - comment indenting
+    MFD:
+    - remove unnecessary descriptions
+  Regulators:
+    - Dropped patch 12 with run-level controls
+    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
+      already only filled for DVS bucks.
+  GPIO:
+    - rename internal function.
+  RTC:
+    - Added missing blank line
+  
+Changelog v5:
+  Only LED patch (patch 15) changed, rest as in v4.
+  LED:
+    - Fixed issues reported by Dan Carpenter and kbuild-bot static
+      analysis.
+Changelog v4 (first non RFC):
+  General:
+    - Changed subdevice loading and chip version identification to use
+      platform ID.
+    - License identifiers changed to GPL-2.0-only
+  MFD:
+    - Styling fixes mostly
+  DT-Bindings:
+    - a few more checks as suggested by Rob Herring.
+    - Order of DT patches changed.
+    - me as maintainer
+    - standard units to new properties (microvolts, ohms)
+    - runlevel values in an array
+  LED:
+    - BD71828 driver added (back)
+      - Added DT support
+    - Added LED DT node lookup in led framework when init_data is given
+      with DT node match information.
+    - Added common property parsing for default-state and
+      default-trigger.
+  Regulators:
+    - dropped sysfs interfaces
+    - fixed module unload/reload by binding gpio consumer information to
+      regulator device not to MFD.
+  GPIO:
+    - Added devm_gpiod_get_parent_array
+    - added few missing devm functions to documentation
+
+Changelog v3:
+  DT-Bindings:
+    - yamlify
+    - add LED binding doc
+  CLK:
+    - Move clk register definitions from MFD headers to clk driver
+  GPIO:
+    - Add generic direction define and use it.
+  LED:
+    - Drop LED driver from the series (for now).
+
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
+  General:
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
+
+Patch 1:
+        dt-bindings for LEDs on BD71828 PMIC
+Patch 2:
+	dt-bindings for BD71828 PMIC
+Patch 3:
+	Convert rohm PMICs with common sub-devices to use platform_
+	device_id to match MFD sub-devices
+Patch 4:
+	Add compatible for BD71850
+Patch 5:
+        BD71828 MFD core.
+Patch 6:
+	Power button support using GPIO keys.
+Patch 7:
+        CLK gate support using existing clk-bd718x7
+Patch 8:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 9:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 10:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 11:
+	Add LED node lookup and common LED binding parsing support
+	to LED class/core
+Patch 12:
+        Support toggling the LEDs on BD71828.
+
+---
+
+
+Matti Vaittinen (12):
+  dt-bindings: leds: ROHM BD71282 PMIC LED driver
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
+  mfd: bd718x7: Add compatible for BD71850
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  rtc: bd70528: add BD71828 support
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+  leds: Add common LED binding parsing support to LED class/core
+  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
+
+ .../bindings/leds/rohm,bd71828-leds.yaml      |  52 +++
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++
+ drivers/clk/Kconfig                           |   6 +-
+ drivers/clk/clk-bd718x7.c                     |  50 ++-
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-bd71828.c                   | 159 +++++++
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/led-class.c                      | 115 ++++-
+ drivers/leds/led-core.c                       | 258 +++++++++--
+ drivers/leds/leds-bd71828.c                   | 118 +++++
+ drivers/mfd/Kconfig                           |  15 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rohm-bd70528.c                    |   3 +-
+ drivers/mfd/rohm-bd71828.c                    | 344 ++++++++++++++
+ drivers/mfd/rohm-bd718x7.c                    |  43 +-
+ drivers/regulator/Kconfig                     |   4 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/bd718x7-regulator.c         | 200 +++------
+ drivers/regulator/rohm-regulator.c            |  95 ++++
+ drivers/rtc/Kconfig                           |   3 +-
+ drivers/rtc/rtc-bd70528.c                     | 220 +++++++--
+ include/linux/leds.h                          |  94 +++-
+ include/linux/mfd/rohm-bd70528.h              |  19 +-
+ include/linux/mfd/rohm-bd71828.h              | 423 ++++++++++++++++++
+ include/linux/mfd/rohm-bd718x7.h              |   6 -
+ include/linux/mfd/rohm-generic.h              |  70 ++-
+ include/linux/mfd/rohm-shared.h               |  21 +
+ 29 files changed, 2248 insertions(+), 289 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/leds/leds-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
+
+
+base-commit: commit d1eef1c61974 ("Linux 5.5-rc2")
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
