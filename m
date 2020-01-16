@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FCF213F7B4
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 20:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ACA913F7AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 20:13:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733300AbgAPQ4z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:56:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43514 "EHLO mail.kernel.org"
+        id S1733312AbgAPQ47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 11:56:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733299AbgAPQ4z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:55 -0500
+        id S1733307AbgAPQ45 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE312051A;
-        Thu, 16 Jan 2020 16:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29AF52467E;
+        Thu, 16 Jan 2020 16:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193814;
-        bh=0JjqsHQF+v6lqic0Hv75qSHw8WQM8B6vzqVxnEFjj8c=;
+        s=default; t=1579193817;
+        bh=o9D02xT1OERTo13eksDUa5Rx6rszZDH9yPUsA+RIBYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dgp44EMxBvRrn6e9QFnnIi+R4dCDR/Xl7EuEPBWY9Mqooz0KvK+aehJmiKLDFn4TN
-         O1RbyGR3+jPxm+0BsRgx4EuUuckLLy64go5vlC3/2QnuD36SbeUtbSRV+w+oqUp11T
-         K4ZXV6bVt038a6tEaeqknMqnkUxDNw7Q4/AoqUJ0=
+        b=pQwnD516Ug8e6PtVP1gsQnBta7eDMZKBWY3j4ar0jQADGCMZkn/1e0lXc68PZeEdX
+         8SEOfZPwUYMnan4AIPHC7VPbmR7ssbtCNyM8pgoJkKh/8hXIzlbY7W8Ht9s2uM6XGP
+         LSgdGRDP2W0ZLrq4gNtjH36qv+IemmwVPnR2xWSQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 075/671] pinctrl: sh-pfc: r8a77980: Add missing MOD_SEL0 field
-Date:   Thu, 16 Jan 2020 11:45:06 -0500
-Message-Id: <20200116165502.8838-75-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 077/671] pinctrl: sh-pfc: r8a77995: Remove bogus SEL_PWM[0-3]_3 configurations
+Date:   Thu, 16 Jan 2020 11:45:08 -0500
+Message-Id: <20200116165502.8838-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -46,33 +46,41 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit b0f77269f6bba385f1f4dce44e7756cf8fbc0176 ]
+[ Upstream commit e28dc3f09c9d2555a9bd982f0847988591052226 ]
 
-The Module Select Register 0 contains 20 (= 5 x 4) reserved bits, and 12
-single-bit fields, but the variable field descriptor lacks a field of 4
-reserved bits.
+While the SEL_PWM[0-3] fields in the Module Select Register 0 support 4
+possible configurations per PWM pin, only the first 3 are valid.
 
-Fixes: f59125248a691dfe ("pinctrl: sh-pfc: Add R8A77980 PFC support")
+Replace the invalid and unused configurations for SEL_PWM[0-3]_3 by
+dummies.
+
+Fixes: 794a6711764658a1 ("pinctrl: sh-pfc: Initial R8A77995 PFC support")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77980.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-index 3f6967331f64..81a710bb8555 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
-@@ -2751,7 +2751,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- #define F_(x, y)	x,
- #define FM(x)		FN_##x,
- 	{ PINMUX_CFG_REG_VAR("MOD_SEL0", 0xe6060500, 32,
--			     4, 4, 4, 4,
-+			     4, 4, 4, 4, 4,
- 			     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) {
- 		/* RESERVED 31, 30, 29, 28 */
- 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+index adade5b7ffbc..337c80bde8f9 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+@@ -391,10 +391,10 @@ FM(IP12_31_28)	IP12_31_28 \
+ #define MOD_SEL0_27		FM(SEL_MSIOF3_0)	FM(SEL_MSIOF3_1)
+ #define MOD_SEL0_26		FM(SEL_HSCIF3_0)	FM(SEL_HSCIF3_1)
+ #define MOD_SEL0_25		FM(SEL_SCIF4_0)		FM(SEL_SCIF4_1)
+-#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		FM(SEL_PWM0_3)
+-#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		FM(SEL_PWM1_3)
+-#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		FM(SEL_PWM2_3)
+-#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		FM(SEL_PWM3_3)
++#define MOD_SEL0_24_23		FM(SEL_PWM0_0)		FM(SEL_PWM0_1)		FM(SEL_PWM0_2)		F_(0, 0)
++#define MOD_SEL0_22_21		FM(SEL_PWM1_0)		FM(SEL_PWM1_1)		FM(SEL_PWM1_2)		F_(0, 0)
++#define MOD_SEL0_20_19		FM(SEL_PWM2_0)		FM(SEL_PWM2_1)		FM(SEL_PWM2_2)		F_(0, 0)
++#define MOD_SEL0_18_17		FM(SEL_PWM3_0)		FM(SEL_PWM3_1)		FM(SEL_PWM3_2)		F_(0, 0)
+ #define MOD_SEL0_15		FM(SEL_IRQ_0_0)		FM(SEL_IRQ_0_1)
+ #define MOD_SEL0_14		FM(SEL_IRQ_1_0)		FM(SEL_IRQ_1_1)
+ #define MOD_SEL0_13		FM(SEL_IRQ_2_0)		FM(SEL_IRQ_2_1)
 -- 
 2.20.1
 
