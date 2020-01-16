@@ -2,86 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 085CB13D71F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 10:42:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AEDD13D767
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 11:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbgAPJmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 04:42:22 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:39489 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgAPJmV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jan 2020 04:42:21 -0500
-Received: by mail-lf1-f54.google.com with SMTP id y1so15055404lfb.6
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jan 2020 01:42:20 -0800 (PST)
+        id S1726883AbgAPKB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 05:01:57 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35057 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730518AbgAPKBX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jan 2020 05:01:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i23so9987952pfo.2
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jan 2020 02:01:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t85fzickz+CI0K4w663KdrCMgZJXm73AsUTA4aBM0x0=;
-        b=QC8evsov/nCDvYb+KRjlkRbILmoZetrJB1NefNB+NBiuqhc9Eh26mmTCObtVccC8YH
-         mnvIDgZfjAoaYCU3fVTLi8NsuUaOQtuQ7Fxj/20MaBZntnzrEdXLgt6Lp4U8VlGu87cW
-         pkaLzTtWEEODn5tKePyfS/dKKuM/chNx5llcmtdlwMxZKDmwjF3HqvvjMYmimNPg71go
-         AUeqhXDPtURw1WAa1l3PN7CfGXX2Nir4IZnurMClHD/hEx07dpqSUx5rU/5kQkyns9xA
-         dul05O5Wj9SMgA7Iv6i0u7VYIDYuEC2vGeP9v6eeTTzxHBI3QlTVT6Hb+2yrldjwA6Tg
-         Bbtg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=w38YpiVMecFRcMjnk+D1XqhxUgiIiJbDMpdeVpVEDZc=;
+        b=HTgu4ltMdofbmGG75MD52dOdjx2Ez2VmQzR0pQ0L1Xb39DsU0oAeXHF1gCgLqdzer3
+         xNSdUBlI5Dm8pWBZ0JKzCKOKz537JQy23iad6gGbM2bU4LIfp+jtUWon4YHgYfMFblVx
+         lx2wG1nH3gpQWDwMfxkVDwKgaBAyEZP5TQdrsuI3KTL/bSryvDDxtQX9wQwl4Uxt+EQY
+         aal0NDwP/6MIjrDG9bFajVp67YISQAXiSo4PSnhi9wd+tNKcUJBIZycCXVc1XRdYjVQx
+         w8hsK4fYeBYBgK7QbC0WCAfJwoaphpI40wj0cY6qngvwbzlnQJAmrIJF+/zGcQEe4sV1
+         nT7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t85fzickz+CI0K4w663KdrCMgZJXm73AsUTA4aBM0x0=;
-        b=q+OW1o84IzQFM1kwrjV3AFdxZhquZ/jqpgCljtA24tBJtehU0oFToHkDLMT0DZLAqb
-         lPdYx29o2fuaTbwaQQ7aMfVocgzBIlbkZ0+qk0dwcl0n1XWRADk41/uSU5lJhNwZFi3N
-         HhxN0rT9MNoeI2gQ2BDK/JH+EPNOKvflIgfK8Yb6w7U1jBzz5B+CUtNGZWOhuvxAAddR
-         44JPw1bjJKqH9rEyqhXHL3IkMY0wK8Qpoyf+NkmcjnqJ40A/i6sOj5tovBVgfSbbh/1T
-         SilgsJliznFni/88jHZTRCjJsKM4aRdx8hBrakqc0jQPVz79+LIVa390W80VrAAOP8U3
-         0NMg==
-X-Gm-Message-State: APjAAAXztP7vZRJr3hXHxSYRZlozyrncbcK94O+Dyx6sneIJRGxS/fzM
-        ty2Roep4r/XZ6u5YMJcfEdx7QiuDp/n2TvqnROzA2xpXi3RJrw==
-X-Google-Smtp-Source: APXvYqxDtBr4rY116sQL75p5vtGMrsqeHaEJGb+f9M3b2dQJfW3Lvnjbmt+8ntS5/KnGvAF7/sH897WGbuTIjia37Ao=
-X-Received: by 2002:ac2:531b:: with SMTP id c27mr1899870lfh.91.1579167739571;
- Thu, 16 Jan 2020 01:42:19 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHCN7xLuCqSFVnVQ-7ZWH-Dkd+w-_bJLnbSDyUip_8orhTwzZw@mail.gmail.com>
-In-Reply-To: <CAHCN7xLuCqSFVnVQ-7ZWH-Dkd+w-_bJLnbSDyUip_8orhTwzZw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jan 2020 10:42:08 +0100
-Message-ID: <CACRpkdayE023wfdJxHDVNtSF08kqGG6kfW7vkZhnq7OpcnmuEg@mail.gmail.com>
-Subject: Re: Using Pull-up resistors on gpio-pca953x expander
-To:     Adam Ford <aford173@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=w38YpiVMecFRcMjnk+D1XqhxUgiIiJbDMpdeVpVEDZc=;
+        b=paPS6+kyzs2xRSCvCirJGzjsrf9stkBNQCpEOpMfEP2sl76glMyrsN2HZJHPgGrphe
+         5U2D5d1P9TNkhz5jd0KAbrETyZInQiUblgzYVHycSFqS2l9sb/MDvmXbT7gP3zA/HAm9
+         bIe3qrali8qzMqjKPh5LfLZQ+2krrAcrLmodYrmqzFwfL5J/I9H+TYQQc/jlRdRdvIzV
+         jQ50Nlw3GXaE5sFF2X62PXXt+a+6j7ODJ6p9e3C4ZpgcFpjVyZ96YzYoTFkEWmPeRTev
+         BVNGkD7ed5kgK8z8rBpP0O8kE7DAh9uqfR3+R/R7SKt9zpDPtC8FRLay+432jd4yYBuP
+         yJYQ==
+X-Gm-Message-State: APjAAAUQvkIbwIl5/szhXQBY9qD+x7jBzScU5BKdaP/kKBABzL92Y1W1
+        71fhtLC1MMa1wSWKmrCYxzbXq306H34=
+X-Google-Smtp-Source: APXvYqxqkdIKYNykTxDzfgdsPY6BlgoSBSx/AHeHh20gIfM6A7F3PBnwKIdt+GdEkIuyCiWkzpK1Gw==
+X-Received: by 2002:a62:2a49:: with SMTP id q70mr35214346pfq.170.1579168882819;
+        Thu, 16 Jan 2020 02:01:22 -0800 (PST)
+Received: from pek-lpggp6.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
+        by smtp.gmail.com with ESMTPSA id s22sm2882791pji.30.2020.01.16.02.01.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 Jan 2020 02:01:22 -0800 (PST)
+From:   Kevin Hao <haokexin@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: Fix the no return statement warning for gpiochip_populate_parent_fwspec_twocell/fourcell()
+Date:   Thu, 16 Jan 2020 17:50:03 +0800
+Message-Id: <20200116095003.30324-1-haokexin@gmail.com>
+X-Mailer: git-send-email 2.14.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 9:26 PM Adam Ford <aford173@gmail.com> wrote:
+In commit 242587616710 ("gpiolib: Add support for the irqdomain which
+doesn't use irq_fwspec as arg") we have changed the return type of
+gpiochip_populate_parent_fwspec_twocell/fourcell() from void to void *,
+but forgot to add a return statement for these two dummy functions.
+Add "return NULL" to fix the build warnings.
 
-> The pca953x can support pull-up resistors, and I have a pcal6416 that
-> I'd like to enable them.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+---
+ include/linux/gpio/driver.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-OK this is supported in the driver since
-commit 15add06841a3b0b4734a72847a73c71fd09ebe52
-"gpio: pca953x: add ->set_config implementation"
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index ea6e615ad7fc..18350f274905 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -549,12 +549,14 @@ static inline void *gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *ch
+ 						    unsigned int parent_hwirq,
+ 						    unsigned int parent_type)
+ {
++	return NULL;
+ }
+ 
+ static inline void *gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+ 						     unsigned int parent_hwirq,
+ 						     unsigned int parent_type)
+ {
++	return NULL;
+ }
+ 
+ #endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
+-- 
+2.14.4
 
-> Ideally, I was hoping there would be a way to add enable to the device
-> tree, because the expander is connected to some buttons which are
-> grounded when pressed.  Without pull-up resistors enabled, the buttons
-> always appear to be pressed.
->
-> Is there some way to enable them?  I see the functionality is
-> available and called through gc->set_config = pca953x_gpio_set_config;
-(...)
-> Would you entertain my adding some device tree hooks to enable them?
-
-Have you tried something like this in your DTS:
-
-#include <dt-bindings/gpio/gpio.h>
-(...)
-gpios = <&gpio 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-
-Yours,
-Linus Walleij
