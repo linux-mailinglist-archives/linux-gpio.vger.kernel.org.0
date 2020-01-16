@@ -2,183 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 654BC13E03F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9E8913E0B9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:45:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgAPQh3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:37:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:57366 "EHLO mga17.intel.com"
+        id S1729153AbgAPQpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 11:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgAPQh2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:37:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 08:37:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="219737066"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Jan 2020 08:37:27 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1is898-0000vI-Md; Fri, 17 Jan 2020 00:37:26 +0800
-Date:   Fri, 17 Jan 2020 00:36:50 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 783e998653b430a159f83552fa263f57bf8e2055
-Message-ID: <5e209122.t/xvnSr4m6NhhOTe%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726706AbgAPQpQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:45:16 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E834B2073A;
+        Thu, 16 Jan 2020 16:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193115;
+        bh=E7LdTDXRcMDIR9XTPRTisJS7cMCBikPmWuoa6iCKbk8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PzUeK30yKKt48KSPR7dTZ0ZtZwvk2z2XQ2v8/WJDUQu3b1Cs7TMRhmd5nxDfxHARJ
+         J0niG+YMzetaMQ5Fl1ndXpY9Ea7uxAX6fZTo/QGMIyvInrIDm2BjUDIjZuPxtWwdBF
+         x5QxZci35Vo8KGHwikizpehvmj8Knp1tcgdbtVfM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 027/205] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Thu, 16 Jan 2020 11:40:02 -0500
+Message-Id: <20200116164300.6705-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 783e998653b430a159f83552fa263f57bf8e2055  pinctrl: iproc: Use platform_get_irq_optional() to avoid error message
+From: Colin Ian King <colin.king@canonical.com>
 
-elapsed time: 554m
+[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
 
-configs tested: 128
-configs skipped: 0
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-x86_64               randconfig-c001-20200116
-x86_64               randconfig-c002-20200116
-x86_64               randconfig-c003-20200116
-i386                 randconfig-c001-20200116
-i386                 randconfig-c002-20200116
-i386                 randconfig-c003-20200116
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-m68k                             allmodconfig
-alpha                randconfig-a001-20200116
-m68k                 randconfig-a001-20200116
-mips                 randconfig-a001-20200116
-nds32                randconfig-a001-20200116
-parisc               randconfig-a001-20200116
-riscv                randconfig-a001-20200116
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                               rhel-7.6
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-s390                             alldefconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-x86_64               randconfig-d001-20200116
-x86_64               randconfig-d002-20200116
-x86_64               randconfig-d003-20200116
-i386                 randconfig-d001-20200116
-i386                 randconfig-d002-20200116
-i386                 randconfig-d003-20200116
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-arc                  randconfig-a001-20200116
-arm                  randconfig-a001-20200116
-arm64                randconfig-a001-20200116
-ia64                 randconfig-a001-20200116
-powerpc              randconfig-a001-20200116
-sparc                randconfig-a001-20200116
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                                defconfig
-x86_64               randconfig-b001-20200116
-x86_64               randconfig-b002-20200116
-x86_64               randconfig-b003-20200116
-i386                 randconfig-b001-20200116
-i386                 randconfig-b002-20200116
-i386                 randconfig-b003-20200116
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-ia64                             allyesconfig
-x86_64               randconfig-e001-20200116
-x86_64               randconfig-e002-20200116
-x86_64               randconfig-e003-20200116
-i386                 randconfig-e001-20200116
-i386                 randconfig-e002-20200116
-i386                 randconfig-e003-20200116
-
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+index e5e7f1f22813..b522ca010332 100644
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
+ 
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
+-- 
+2.20.1
+
