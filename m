@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C47413E677
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 18:20:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 642CA13E8A7
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 18:33:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgAPRU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 12:20:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
+        id S2404447AbgAPRda (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 12:33:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391363AbgAPRSF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:05 -0500
+        id S2404245AbgAPRa1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:30:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565B1246B2;
-        Thu, 16 Jan 2020 17:18:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE90224726;
+        Thu, 16 Jan 2020 17:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195085;
-        bh=rTDm/veJoLoQMJHrPCBBDxWNnrNUsb4DdzTNHkeOL3g=;
+        s=default; t=1579195826;
+        bh=D4koUEZyoEWnZ7PH6TZzuDnLbMuD8YMIatB3LvF3vQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rVRClOPcQHMt8Dyg1DiWX6kGuwy9GGk6FQJjOUjN25Qo/W6yovcaV01+NNTE/9LCR
-         n7ejbXyu073z5C3BAqdauc9yXSF5wvMhYZG7CiguBG9Yl6GpSLI2zdZjRK67phkXuA
-         ptqwuIhyU0IObiehjCZNhg5UpA2XOUgoLcniCgrY=
+        b=Wezxv6d3p8dF3sAolIjNA+iX49Sw8FWf4SUEFLIr0YIYOdCR1V40twa0V32wkVOaZ
+         ht4msTpWOY8LK8aEj9Qtj4YR48xswkovGZO0r8Cqv2/tijOO4yTYie5G0GDTRd9elM
+         /vLZa7DY3U7HGuAby9dIh0iYA0k8r0z0PuIaZ7os=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 033/371] pinctrl: sh-pfc: sh7734: Remove bogus IPSR10 value
-Date:   Thu, 16 Jan 2020 12:11:41 -0500
-Message-Id: <20200116171719.16965-33-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 334/371] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Thu, 16 Jan 2020 12:23:26 -0500
+Message-Id: <20200116172403.18149-277-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116171719.16965-1-sashal@kernel.org>
-References: <20200116171719.16965-1-sashal@kernel.org>
+In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
+References: <20200116172403.18149-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,40 +44,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 4d374bacd7c9665179f9752a52d5d602c45d8190 ]
+[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
 
-The IP10[5:3] field in Peripheral Function Select Register 10 has a
-width of 3 bits, i.e. it allows programming one out of 8 different
-configurations.
-However, 9 values are provided instead of 8, overflowing into the
-subsequent field in the register, and thus breaking the configuration of
-the latter.
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-Fix this by dropping a bogus zero value.
-
-Fixes: ac1ebc2190f575fc ("sh-pfc: Add sh7734 pinmux support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 05ccb27f7781..c691e5e9d9de 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2231,7 +2231,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_CL1_B, 0, 0,
- 	    /* IP10_5_3 [3] */
- 		FN_SSI_WS23, FN_VI1_5_B, FN_TX1_D, FN_HSCK0_C, FN_FALE_B,
--		FN_LCD_DON_B, 0, 0, 0,
-+		FN_LCD_DON_B, 0, 0,
- 	    /* IP10_2_0 [3] */
- 		FN_SSI_SCK23, FN_VI1_4_B, FN_RX1_D, FN_FCLE_B,
- 		FN_LCD_DATA15_B, 0, 0, 0 }
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+index 5c1b6325d80d..8ac1f1ce4442 100644
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
+ 
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 -- 
 2.20.1
 
