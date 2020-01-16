@@ -2,44 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44CC713E1DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B1E813E273
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:56:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgAPQvv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:51:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34712 "EHLO mail.kernel.org"
+        id S1733159AbgAPQ4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 11:56:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbgAPQvv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:51:51 -0500
+        id S1733153AbgAPQ4F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A76420730;
-        Thu, 16 Jan 2020 16:51:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B9324656;
+        Thu, 16 Jan 2020 16:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193510;
-        bh=W4bmo0XoLxtIi+BLTG5NtjsIrm85yVa7XtYFfNDdbvQ=;
+        s=default; t=1579193765;
+        bh=c2hNHnL4TNS07Aetuk3vCqWMT2ZbIifbwtjjzl9FM2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y3EG3l1cMY7e2a8f+wOLbSHbPHQdS0K80r3T6lHOC3zWEzAMXXlbK0p7JQAL/mVjB
-         YZOpwHMPcTtavGn+69eaKFLS4eyPQaX0gOvm6z2f+Y+WtWt0ChI7rtmiDi/MilroZj
-         ST7l+sV8GOa8Lk1Sk3CfC8TnJ1EaPQXzAsIZ5u8E=
+        b=1C8lG9D62BdViRON1E6J6XNHGF7VYJwOQ7Do9kbTUu/fSpkY6E2IzaOdgJJ2vGLyn
+         BNllSazXEy77aYWt3SMEXCnvV/5pH9KMotgsepQF+SKYfu6DPJevoGBZ2kgcee3w6W
+         aGYf5JA0qTJRCoI5xz4dFPbA/1XrSXjCm2bzytFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 093/205] pinctrl: sh-pfc: Do not use platform_get_irq() to count interrupts
-Date:   Thu, 16 Jan 2020 11:41:08 -0500
-Message-Id: <20200116164300.6705-93-sashal@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 050/671] pinctrl: meson-gxl: remove invalid GPIOX tsin_a pins
+Date:   Thu, 16 Jan 2020 11:44:41 -0500
+Message-Id: <20200116165502.8838-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
+References: <20200116165502.8838-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -48,71 +45,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit ad7fe1a1a35994a201497443b5140bf54b074cca ]
+[ Upstream commit d801064cb871806e6843738ecad38993646f53f7 ]
 
-As platform_get_irq() now prints an error when the interrupt does not
-exist, counting interrupts by looping until failure causes the printing
-of scary messages like:
+The GPIOX tsin_a pins wrongly uses the SDCard pinctrl bits, this
+patch completely removes these pins entries until we find out what
+are the correct bits and registers to be used instead.
 
-    sh-pfc e6060000.pin-controller: IRQ index 0 not found
-
-Fix this by using the platform_irq_count() helper instead.
-
-Fixes: 7723f4c5ecdb8d83 ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/20191016142601.28255-1-geert+renesas@glider.be
+Fixes: 5a6ae9b80139 ("pinctrl: meson-gxl: add tsin_a pins")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/core.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-index b8640ad41bef..ce983247c9e2 100644
---- a/drivers/pinctrl/sh-pfc/core.c
-+++ b/drivers/pinctrl/sh-pfc/core.c
-@@ -29,12 +29,12 @@
- static int sh_pfc_map_resources(struct sh_pfc *pfc,
- 				struct platform_device *pdev)
- {
--	unsigned int num_windows, num_irqs;
- 	struct sh_pfc_window *windows;
- 	unsigned int *irqs = NULL;
-+	unsigned int num_windows;
- 	struct resource *res;
- 	unsigned int i;
--	int irq;
-+	int num_irqs;
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 158f618f1695..0c0a5018102b 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -239,13 +239,9 @@ static const unsigned int eth_link_led_pins[]	= { GPIOZ_14 };
+ static const unsigned int eth_act_led_pins[]	= { GPIOZ_15 };
  
- 	/* Count the MEM and IRQ resources. */
- 	for (num_windows = 0;; num_windows++) {
-@@ -42,17 +42,13 @@ static int sh_pfc_map_resources(struct sh_pfc *pfc,
- 		if (!res)
- 			break;
- 	}
--	for (num_irqs = 0;; num_irqs++) {
--		irq = platform_get_irq(pdev, num_irqs);
--		if (irq == -EPROBE_DEFER)
--			return irq;
--		if (irq < 0)
--			break;
--	}
--
- 	if (num_windows == 0)
- 		return -EINVAL;
+ static const unsigned int tsin_a_d0_pins[]	= { GPIODV_0 };
+-static const unsigned int tsin_a_d0_x_pins[]	= { GPIOX_10 };
+ static const unsigned int tsin_a_clk_pins[]	= { GPIODV_8 };
+-static const unsigned int tsin_a_clk_x_pins[]	= { GPIOX_11 };
+ static const unsigned int tsin_a_sop_pins[]	= { GPIODV_9 };
+-static const unsigned int tsin_a_sop_x_pins[]	= { GPIOX_8 };
+ static const unsigned int tsin_a_d_valid_pins[] = { GPIODV_10 };
+-static const unsigned int tsin_a_d_valid_x_pins[] = { GPIOX_9 };
+ static const unsigned int tsin_a_fail_pins[]	= { GPIODV_11 };
+ static const unsigned int tsin_a_dp_pins[] = {
+ 	GPIODV_1, GPIODV_2, GPIODV_3, GPIODV_4, GPIODV_5, GPIODV_6, GPIODV_7,
+@@ -432,10 +428,6 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
+ 	GROUP(spi_miso,		5,	2),
+ 	GROUP(spi_ss0,		5,	1),
+ 	GROUP(spi_sclk,		5,	0),
+-	GROUP(tsin_a_sop_x,	6,	3),
+-	GROUP(tsin_a_d_valid_x,	6,	2),
+-	GROUP(tsin_a_d0_x,	6,	1),
+-	GROUP(tsin_a_clk_x,	6,	0),
  
-+	num_irqs = platform_irq_count(pdev);
-+	if (num_irqs < 0)
-+		return num_irqs;
-+
- 	/* Allocate memory windows and IRQs arrays. */
- 	windows = devm_kcalloc(pfc->dev, num_windows, sizeof(*windows),
- 			       GFP_KERNEL);
+ 	/* Bank Z */
+ 	GROUP(eth_mdio,		4,	23),
+@@ -698,8 +690,8 @@ static const char * const eth_led_groups[] = {
+ };
+ 
+ static const char * const tsin_a_groups[] = {
+-	"tsin_a_clk", "tsin_a_clk_x", "tsin_a_sop", "tsin_a_sop_x",
+-	"tsin_a_d_valid", "tsin_a_d_valid_x", "tsin_a_d0", "tsin_a_d0_x",
++	"tsin_a_clk", "tsin_a_sop",
++	"tsin_a_d_valid", "tsin_a_d0",
+ 	"tsin_a_dp", "tsin_a_fail",
+ };
+ 
 -- 
 2.20.1
 
