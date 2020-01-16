@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C4B213E290
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:57:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A576313E6EF
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 18:22:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733304AbgAPQ45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:56:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
+        id S2390181AbgAPRWe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 12:22:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbgAPQ44 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:56 -0500
+        id S2390764AbgAPRNb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E866F21D56;
-        Thu, 16 Jan 2020 16:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F145F246AA;
+        Thu, 16 Jan 2020 17:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193815;
-        bh=gy4N+1wZV5eV3/+8RCugN+8K0/4YRGCghnyX+ih/VPg=;
+        s=default; t=1579194811;
+        bh=QGsiU+u5Ni+a2mgblIM6INl9p21+IYQkMFGB7cMcRf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlGa9atcEt0/63vWI7H7jasNCFwcgeMwyAH+dahOfqz1HLMDfb0JIkpPSY/N+xzd3
-         c9hJILLktl+FtCv7shGu7a0qgpdFD98XqnHFCQruU2+sWHjaFsUkeh+C99x8kK1Fap
-         GqmbrHaoxPuhC4gMycKaIH6RtFdMor6R5pIioePg=
+        b=fjUq/BIw48N8Yk1Zk4rxe0/4rOSqDZ72IySqsRLbibKe6B4sUC/3Mv4h6wVvRhPJc
+         qc84L3cvNV5ctaRb4bvOlzFCTZd2APwy+ocnmPME/YyZneAgSyX8q3wFsnh6wT8LT0
+         gtDLdbRjUbLYnzoQ39/vFJP5Hi7Eyb/k6rDNjd3I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 076/671] pinctrl: sh-pfc: sh7734: Add missing IPSR11 field
-Date:   Thu, 16 Jan 2020 11:45:07 -0500
-Message-Id: <20200116165502.8838-76-sashal@kernel.org>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 618/671] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
+Date:   Thu, 16 Jan 2020 12:04:16 -0500
+Message-Id: <20200116170509.12787-355-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,35 +44,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 94482af7055e1ffa211c1135256b85590ebcac99 ]
+[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
 
-The Peripheral Function Select Register 11 contains 3 reserved bits and
-15 variable-width fields, but the variable field descriptor does not
-contain the 3-bit field IP11[25:23].
+The call to pinctrl_count_index_with_args checks for a -EINVAL return
+however this function calls pinctrl_get_list_and_count and this can
+return -ENOENT. Rather than check for a specific error, fix this by
+checking for any error return to catch the -ENOENT case.
 
-Fixes: 856cb4bb337ee504 ("sh: Add support pinmux for SH7734")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Addresses-Coverity: ("Improper use of negative")
+Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-sh7734.c | 2 +-
+ drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7734.c b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-index 3eccc9b3ca84..05ccb27f7781 100644
---- a/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-sh7734.c
-@@ -2237,7 +2237,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		FN_LCD_DATA15_B, 0, 0, 0 }
- 	},
- 	{ PINMUX_CFG_REG_VAR("IPSR11", 0xFFFC0048, 32,
--			3, 1, 2, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
-+			3, 1, 2, 3, 2, 2, 3, 3, 1, 2, 3, 3, 1, 1, 1, 1) {
- 	    /* IP11_31_29 [3] */
- 	    0, 0, 0, 0, 0, 0, 0, 0,
- 	    /* IP11_28 [1] */
+diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+index 8782c348ebe9..4eda888b4d04 100644
+--- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
++++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
+@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		return -EINVAL;
+ 
+ 	rows = pinctrl_count_index_with_args(np, name);
+-	if (rows == -EINVAL)
++	if (rows < 0)
+ 		return rows;
+ 
+ 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
 -- 
 2.20.1
 
