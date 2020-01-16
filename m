@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E8913E0B9
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:45:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 164B813E0E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgAPQpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:45:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        id S1729751AbgAPQqS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 11:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726706AbgAPQpQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:45:16 -0500
+        id S1729417AbgAPQqR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:46:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E834B2073A;
-        Thu, 16 Jan 2020 16:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F5192081E;
+        Thu, 16 Jan 2020 16:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193115;
-        bh=E7LdTDXRcMDIR9XTPRTisJS7cMCBikPmWuoa6iCKbk8=;
+        s=default; t=1579193176;
+        bh=YmxviQcphLBR8NzYcPvIJ0lX4oXrzkF5P80tAiVe/KA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzUeK30yKKt48KSPR7dTZ0ZtZwvk2z2XQ2v8/WJDUQu3b1Cs7TMRhmd5nxDfxHARJ
-         J0niG+YMzetaMQ5Fl1ndXpY9Ea7uxAX6fZTo/QGMIyvInrIDm2BjUDIjZuPxtWwdBF
-         x5QxZci35Vo8KGHwikizpehvmj8Knp1tcgdbtVfM=
+        b=0RwXK2fXEr3SYtdQ9PxPW9iX9hUypyW8L+myzThA8yKgw9fH5IQEg3OD2jK+MAtg5
+         QMygQAXuNTvLweR6CKTmsWFlwMu305MgVdsQfCRCZWCteNuWZarDrHWSyX5IMTH7we
+         8fHherEr3Zrgvrz0M9Sv94zSNqgWsGoyA/UrUGlY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 027/205] pinctl: ti: iodelay: fix error checking on pinctrl_count_index_with_args call
-Date:   Thu, 16 Jan 2020 11:40:02 -0500
-Message-Id: <20200116164300.6705-27-sashal@kernel.org>
+Cc:     Keiya Nobuta <nobuta.keiya@fujitsu.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 040/205] pinctrl: sh-pfc: Fix PINMUX_IPSR_PHYS() to set GPSR
+Date:   Thu, 16 Jan 2020 11:40:15 -0500
+Message-Id: <20200116164300.6705-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -44,39 +44,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Keiya Nobuta <nobuta.keiya@fujitsu.com>
 
-[ Upstream commit 5ff8aca906f3a7a7db79fad92f2a4401107ef50d ]
+[ Upstream commit d30710b8cce3a581c170d69002e311cc18ed47d3 ]
 
-The call to pinctrl_count_index_with_args checks for a -EINVAL return
-however this function calls pinctrl_get_list_and_count and this can
-return -ENOENT. Rather than check for a specific error, fix this by
-checking for any error return to catch the -ENOENT case.
+This patch allows PINMUX_IPSR_PHYS() to set bits in GPSR.
+When assigning function to pin, GPSR should be set to peripheral
+function.
+For example when using SCL3, GPSR2 bit7 (PWM1_A pin) should be set to
+peripheral function.
 
-Addresses-Coverity: ("Improper use of negative")
-Fixes: 003910ebc83b ("pinctrl: Introduce TI IOdelay configuration driver")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20190920122030.14340-1-colin.king@canonical.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Keiya Nobuta <nobuta.keiya@fujitsu.com>
+Link: https://lore.kernel.org/r/20191008060112.29819-1-nobuta.keiya@fujitsu.com
+Fixes: 50d1ba1764b3e00a ("pinctrl: sh-pfc: Add physical pin multiplexing helper macros")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/ti/pinctrl-ti-iodelay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/sh_pfc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-index e5e7f1f22813..b522ca010332 100644
---- a/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-+++ b/drivers/pinctrl/ti/pinctrl-ti-iodelay.c
-@@ -496,7 +496,7 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
+diff --git a/drivers/pinctrl/sh-pfc/sh_pfc.h b/drivers/pinctrl/sh-pfc/sh_pfc.h
+index 835148fc0f28..cab7da130925 100644
+--- a/drivers/pinctrl/sh-pfc/sh_pfc.h
++++ b/drivers/pinctrl/sh-pfc/sh_pfc.h
+@@ -422,12 +422,12 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ /*
+  * Describe a pinmux configuration in which a pin is physically multiplexed
+  * with other pins.
+- *   - ipsr: IPSR field (unused, for documentation purposes only)
++ *   - ipsr: IPSR field
+  *   - fn: Function name
+  *   - psel: Physical multiplexing selector
+  */
+ #define PINMUX_IPSR_PHYS(ipsr, fn, psel) \
+-	PINMUX_DATA(fn##_MARK, FN_##psel)
++	PINMUX_DATA(fn##_MARK, FN_##psel, FN_##ipsr)
  
- 	rows = pinctrl_count_index_with_args(np, name);
--	if (rows == -EINVAL)
-+	if (rows < 0)
- 		return rows;
- 
- 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);
+ /*
+  * Describe a pinmux configuration for a single-function pin with GPIO
 -- 
 2.20.1
 
