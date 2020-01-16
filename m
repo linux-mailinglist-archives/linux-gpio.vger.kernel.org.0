@@ -2,34 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E084213E03E
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:37:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 654BC13E03F
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:37:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgAPQh3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1726440AbgAPQh3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 16 Jan 2020 11:37:29 -0500
-Received: from mga11.intel.com ([192.55.52.93]:32911 "EHLO mga11.intel.com"
+Received: from mga17.intel.com ([192.55.52.151]:57366 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgAPQh2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1726785AbgAPQh2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Thu, 16 Jan 2020 11:37:28 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 08:37:28 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 08:37:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,326,1574150400"; 
-   d="scan'208";a="274055809"
+   d="scan'208";a="219737066"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 Jan 2020 08:37:27 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jan 2020 08:37:27 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1is898-0000uA-F9; Fri, 17 Jan 2020 00:37:26 +0800
-Date:   Fri, 17 Jan 2020 00:36:26 +0800
+        id 1is898-0000vI-Md; Fri, 17 Jan 2020 00:37:26 +0800
+Date:   Fri, 17 Jan 2020 00:36:50 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 1c6fa93ac56fff8385feee62c0a68dbeee212445
-Message-ID: <5e20910a.soO1pVB0nSfOVw3S%lkp@intel.com>
+Subject: [pinctrl:devel] BUILD SUCCESS
+ 783e998653b430a159f83552fa263f57bf8e2055
+Message-ID: <5e209122.t/xvnSr4m6NhhOTe%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,8 +39,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
-branch HEAD: 1c6fa93ac56fff8385feee62c0a68dbeee212445  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: 783e998653b430a159f83552fa263f57bf8e2055  pinctrl: iproc: Use platform_get_irq_optional() to avoid error message
 
 elapsed time: 554m
 
