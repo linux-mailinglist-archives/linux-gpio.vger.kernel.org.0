@@ -2,37 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1E813E273
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:56:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C69DB13E28B
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jan 2020 17:56:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbgAPQ4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jan 2020 11:56:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        id S1733289AbgAPQ4w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jan 2020 11:56:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733153AbgAPQ4F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:05 -0500
+        id S1729093AbgAPQ4w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2B9324656;
-        Thu, 16 Jan 2020 16:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88ADA21D56;
+        Thu, 16 Jan 2020 16:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193765;
-        bh=c2hNHnL4TNS07Aetuk3vCqWMT2ZbIifbwtjjzl9FM2c=;
+        s=default; t=1579193811;
+        bh=is0VhQVqYE0DCdIwWOioa+NP7VecCQJeK4r3yg8YdHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1C8lG9D62BdViRON1E6J6XNHGF7VYJwOQ7Do9kbTUu/fSpkY6E2IzaOdgJJ2vGLyn
-         BNllSazXEy77aYWt3SMEXCnvV/5pH9KMotgsepQF+SKYfu6DPJevoGBZ2kgcee3w6W
-         aGYf5JA0qTJRCoI5xz4dFPbA/1XrSXjCm2bzytFo=
+        b=vL2sohggzjEfwKMsBuFUcZaANTuiIYtuiKNaomC1inHzV3ulpGAyx8rEAIrOG2Qjx
+         vnSabm5h+sL5ffuod+E8py3oAVzGlqTldEOys1K6lwin4I6u0BoSAhWu+4vxAz+lk+
+         ULjBjBgwCfPDErrGUhhK4tl/4kBku1LJHZP2Txwo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 050/671] pinctrl: meson-gxl: remove invalid GPIOX tsin_a pins
-Date:   Thu, 16 Jan 2020 11:44:41 -0500
-Message-Id: <20200116165502.8838-50-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 073/671] pinctrl: sh-pfc: r8a7794: Remove bogus IPSR9 field
+Date:   Thu, 16 Jan 2020 11:45:04 -0500
+Message-Id: <20200116165502.8838-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -45,62 +44,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit d801064cb871806e6843738ecad38993646f53f7 ]
+[ Upstream commit 6a6c195d98a1a5e70faa87f594d7564af1dd1bed ]
 
-The GPIOX tsin_a pins wrongly uses the SDCard pinctrl bits, this
-patch completely removes these pins entries until we find out what
-are the correct bits and registers to be used instead.
+The Peripheral Function Select Register 9 contains 12 fields, but the
+variable field descriptor contains a 13th bogus field of 3 bits.
 
-Fixes: 5a6ae9b80139 ("pinctrl: meson-gxl: add tsin_a pins")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 43c4436e2f1890a7 ("pinctrl: sh-pfc: add R8A7794 PFC support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxl.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 158f618f1695..0c0a5018102b 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -239,13 +239,9 @@ static const unsigned int eth_link_led_pins[]	= { GPIOZ_14 };
- static const unsigned int eth_act_led_pins[]	= { GPIOZ_15 };
- 
- static const unsigned int tsin_a_d0_pins[]	= { GPIODV_0 };
--static const unsigned int tsin_a_d0_x_pins[]	= { GPIOX_10 };
- static const unsigned int tsin_a_clk_pins[]	= { GPIODV_8 };
--static const unsigned int tsin_a_clk_x_pins[]	= { GPIOX_11 };
- static const unsigned int tsin_a_sop_pins[]	= { GPIODV_9 };
--static const unsigned int tsin_a_sop_x_pins[]	= { GPIOX_8 };
- static const unsigned int tsin_a_d_valid_pins[] = { GPIODV_10 };
--static const unsigned int tsin_a_d_valid_x_pins[] = { GPIOX_9 };
- static const unsigned int tsin_a_fail_pins[]	= { GPIODV_11 };
- static const unsigned int tsin_a_dp_pins[] = {
- 	GPIODV_1, GPIODV_2, GPIODV_3, GPIODV_4, GPIODV_5, GPIODV_6, GPIODV_7,
-@@ -432,10 +428,6 @@ static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GROUP(spi_miso,		5,	2),
- 	GROUP(spi_ss0,		5,	1),
- 	GROUP(spi_sclk,		5,	0),
--	GROUP(tsin_a_sop_x,	6,	3),
--	GROUP(tsin_a_d_valid_x,	6,	2),
--	GROUP(tsin_a_d0_x,	6,	1),
--	GROUP(tsin_a_clk_x,	6,	0),
- 
- 	/* Bank Z */
- 	GROUP(eth_mdio,		4,	23),
-@@ -698,8 +690,8 @@ static const char * const eth_led_groups[] = {
- };
- 
- static const char * const tsin_a_groups[] = {
--	"tsin_a_clk", "tsin_a_clk_x", "tsin_a_sop", "tsin_a_sop_x",
--	"tsin_a_d_valid", "tsin_a_d_valid_x", "tsin_a_d0", "tsin_a_d0_x",
-+	"tsin_a_clk", "tsin_a_sop",
-+	"tsin_a_d_valid", "tsin_a_d0",
- 	"tsin_a_dp", "tsin_a_fail",
- };
- 
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7794.c b/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+index 164002437594..24b9bb1ee1fe 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7794.c
+@@ -5215,7 +5215,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_AVB_MDC, FN_SSI_SDATA6_B, 0, 0, }
+ 	},
+ 	{ PINMUX_CFG_REG_VAR("IPSR9", 0xE6060044, 32,
+-			     1, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3, 3) {
++			     1, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 3) {
+ 		/* IP9_31 [1] */
+ 		0, 0,
+ 		/* IP9_30_28 [3] */
 -- 
 2.20.1
 
