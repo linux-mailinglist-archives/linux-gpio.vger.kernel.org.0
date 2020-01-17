@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 306471407D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 11:21:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D6791407EC
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 11:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbgAQKVp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jan 2020 05:21:45 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53327 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAQKVm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 05:21:42 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m24so6860192wmc.3
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2020 02:21:40 -0800 (PST)
+        id S1727047AbgAQK2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jan 2020 05:28:45 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37889 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQK2p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 05:28:45 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so22171858wrh.5
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2020 02:28:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=oIMnoa3sbVn/rSlDZkNhieTQX0bAIPs2g8BvjBAAJYw=;
-        b=uWT/LKHFB9KJAzcvqgQA2YPyMRp+0vG3uJZJyC3ZOr8OoMycE8q+vQ3sCqK9hRMWk8
-         CfPK8HfmmypEvmovpHkBAuOmFommCtZrSL3YGxaKtIy3C3wGjROaOrRNZRZF/IbwZ6/N
-         uFv0OCYryACBEzIU3GMggHYVxRB8XhctMuMY3RQ8xEyZFJ+Gu+v8KtV0SrU0pAbLQKw9
-         aBK0/A/HOC8i4J4FHvzXI7LIUlYeWICcyQgPkVOMFQpN/HRBb9n7nDdCMeaD06aXcIHA
-         pbdfSXj7+3zrtJ7O9sTCzn6iP4wsSNRAQDeSozArMrOTT3pTX/KgJkrI/TVLv78bVqaz
-         +I9w==
+        bh=HM8k535bB4Zqi0GfEwiVkH65Q1Hx/nKHz6GT9gtlJK8=;
+        b=tCMW61FmdGXdIuVJCSqzhkwiTfYOiBEraLBbZak05Sydy8wmfz0edGWG5HrRIsuJLG
+         XThNvBabfIFmMR1OhH9jUJ9a0fcI5ii9eWn6NkqJZRwdHAJ3+zYROsw4UuYiIJWdnmXD
+         G1w6KXRhriSabWcDZiOnERZQQRRcebgZ6MUzd4euNcxa2i81NB6ftT3PyJ4H6EF6F7EM
+         3hMaklaXVx2Vjb8mhoE8oTea1xrJL7bAOUnYD2pTShBwNKq1q6OyTiOo+X/982WAKlqe
+         mB689VYvqjIUZpOwAG3fGg2ss4aqyI3S4KO6NDGqNK3PqDbctNcqrdhGIDHnjitMPoTb
+         bbkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=oIMnoa3sbVn/rSlDZkNhieTQX0bAIPs2g8BvjBAAJYw=;
-        b=DTtvZZFJsGuZiWGf1nIayjQxyN8bmDdqMHRQOtHCN8Yr4LsSg837Oov/q/S5Aba4n2
-         LoDnu9W+ZCZhm0BgGvsTWqqFiqM4tWRKSJzDmqXHQjmYX+uzyT7yjxGWfX8AkpZfNZ6P
-         qHFy/V1AIFiplR+mLf25kftbrtAcO0XU5wX2OXT+e/adnNkZHl+RsuJUuCW32zL62SfS
-         lQNPp2SCgnZGz5/SpFaWYqVuaoKxwCo8gZ7Nz8HUAXmevheAcd63eD4sF9oxK1D75cpJ
-         rMQ5A0+VoirkILLxz9U9UGLMncbfyMZF3K3xTSqG89Rf8EGFIZ2XFUKk1C3S3EJg/fLL
-         m8yQ==
-X-Gm-Message-State: APjAAAVIbEtcWMN95EP8aXP05jQG3V0hwMMn5QIwwsneIrJyINNH34/b
-        Omh89lV06MXuBng+KbN02sJmAQ==
-X-Google-Smtp-Source: APXvYqyjoao5W4ukyHmbDLvlRKQ3NULe0P7hwKt2aT/kXMKOsmfbWd9tvncJKeQZdv+1I5pJSDFudA==
-X-Received: by 2002:a05:600c:2c50:: with SMTP id r16mr3747778wmg.74.1579256500001;
-        Fri, 17 Jan 2020 02:21:40 -0800 (PST)
+        bh=HM8k535bB4Zqi0GfEwiVkH65Q1Hx/nKHz6GT9gtlJK8=;
+        b=fhFIZ+PIZsVcZt6kqtxfXr9KCsEXfPtCRBwz2vfdNgo1h5xEBh7MXTHlsKu6WLMVit
+         OMZApTKZYXjgenohf5m4IQWIFIavLOOHHuMTdIlkoBG/28ixvy/7Y/Ewm130ndkwFpzI
+         KGwO2VCVwIMNIA5jVzM6u7dZSEqvnqgBA6v6aqZVBjOCrcfgk9UrB36ZTVcrnJfmSWYA
+         rX3ejOTRr/4Ne9qtPoI2DlgOruudeRieYALL3EARhRqUITUUSlhvFpzkV/zC27AZOFgK
+         si5+HIzex/slUq0s8/a9zgSrOc+tN1WKWX3dIgleT6fmjN1zEwgxeIUYraEhE3Vw+gCQ
+         ubnw==
+X-Gm-Message-State: APjAAAU85TFmkiTV2VOlgn14x7izGu/+KEPZS8GjD0rcI8mU/BsyLtGf
+        9+L0t7x+lEdyc801L8J0ar1PBQ==
+X-Google-Smtp-Source: APXvYqwDd77HblT/audWRHo3+KrxugU1EyNDv8T/9d4EkPqm8mp6uRaVfV41S/do8ghBL1uvF/IRNQ==
+X-Received: by 2002:a5d:67c7:: with SMTP id n7mr2234575wrw.319.1579256923293;
+        Fri, 17 Jan 2020 02:28:43 -0800 (PST)
 Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id h66sm9780563wme.41.2020.01.17.02.21.38
+        by smtp.gmail.com with ESMTPSA id l7sm33815710wrq.61.2020.01.17.02.28.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:21:39 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:21:57 +0000
+        Fri, 17 Jan 2020 02:28:42 -0800 (PST)
+Date:   Fri, 17 Jan 2020 10:28:54 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     mazziesaccount@gmail.com,
@@ -65,15 +65,16 @@ Cc:     mazziesaccount@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v10 09/13] mfd: bd70528: Fix hour register mask
-Message-ID: <20200117102157.GE15507@dell>
+Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200117102854.GF15507@dell>
 References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <8609d42822a6ce3755e2166b8c1246b3b04eeb78.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8609d42822a6ce3755e2166b8c1246b3b04eeb78.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -82,23 +83,60 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Fri, 17 Jan 2020, Matti Vaittinen wrote:
 
-> When RTC is used in 24H mode (and it is by this driver) the maximum
-> hour value is 24 in BCD. This occupies bits [5:0] - which means
-> correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
-> 
-> Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+> Few ROHM PMICs allow setting the voltage states for different system states
+> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
+> mechanisms. bd718x7 driver implemented device-tree parsing functions for
+> these state specific voltages. The parsing functions can be re-used by
+> other ROHM chip drivers like bd71828. Split the generic functions from
+> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
+> to use.
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
 > ---
-> Changes: Splitted this fix into separate patch which can be applied to
-> 5.4 too
+> no changes since v9
 > 
->  include/linux/mfd/rohm-bd70528.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/regulator/Kconfig             |   4 +
+>  drivers/regulator/Makefile            |   1 +
+>  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
+>  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
+>  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
+>  5 files changed, 221 insertions(+), 128 deletions(-)
+>  create mode 100644 drivers/regulator/rohm-regulator.c
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+[...]
+
+> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+> index ff3dd7578fd3..6cc5a0819959 100644
+> --- a/include/linux/mfd/rohm-generic.h
+> +++ b/include/linux/mfd/rohm-generic.h
+> @@ -4,6 +4,9 @@
+>  #ifndef __LINUX_MFD_ROHM_H__
+>  #define __LINUX_MFD_ROHM_H__
+>  
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +
+>  enum rohm_chip_type {
+>  	ROHM_CHIP_TYPE_BD71837 = 0,
+>  	ROHM_CHIP_TYPE_BD71847,
+> @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
+>  	struct regmap *regmap;
+>  };
+>  
+> +enum {
+> +	ROHM_DVS_LEVEL_UNKNOWN,
+> +	ROHM_DVS_LEVEL_RUN,
+> +	ROHM_DVS_LEVEL_IDLE,
+> +	ROHM_DVS_LEVEL_SUSPEND,
+> +	ROHM_DVS_LEVEL_LPSR,
+> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
+
+Haven't seen this before.  Is it legit?
+
+What about:
+
+     ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
 
 -- 
 Lee Jones [李琼斯]
