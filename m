@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 319B4140B19
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 14:40:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54532140B50
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 14:45:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgAQNkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jan 2020 08:40:14 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36473 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgAQNkO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 08:40:14 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so7688102wma.1
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2020 05:40:12 -0800 (PST)
+        id S1727162AbgAQNoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jan 2020 08:44:17 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:47039 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbgAQNoQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 08:44:16 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so22720133wrl.13
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2020 05:44:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
-        b=poWzvnimT8QTMy+z+ojdYjNwWKCfVW89Yxmci6IP1hOwVnknCtXaCr8i8dPxqfj1c6
-         6NHh9Vy22UuVjsdvRslMJxmzZ2r72OldpIzBGyTPzKMTdk2Z9oSf67RccUHaMNaQhd+k
-         lm/c63jSCsXUx2RU7tiHMS5C5Y2FizJpTWV+bQFZk8UuOie9JPNvsSkh5+vGRPhAp0aq
-         HK0OQ1Srf/D3qXPwbVceBBawRHCIp88uRHmu2HP+uHbb1PD3am4Blq1K6Lz24AmMxi2p
-         OWYnjJ/q+UHi4g8eny5q5ITFQpVAiYSQZTcj7rH44ZY1d2LCEmOKY9qNl6Wk1issBSPO
-         JpLg==
+        bh=LhpCR5vDcuxmC13Hf7ge2eVs5JUiFOiL0U5Ba9egRMw=;
+        b=zceCobLh0fkMReC9xfFdXwldcPtVuv28toduajHElpblXk9BO8nsAonZJU4d4ZYwys
+         /jAk1UpPld0R+1uL1xkA85I5lfqc60s0ccLfjIWBz8kZUMUxTDfcOATaEzJmNElqL6uZ
+         PdGim4iiP/O9ixXknzFJu8o2V5T3elLHj0HTdovMQi1TLRvHYUZdYLN4QjvJKz8tHgyR
+         rl0n3Qu6eat1AqcvapQfUbpu9jgvixKlq99w26Q3cl57QLclNJbC7ON4reh1enfe6VGE
+         ZiE4TP+DXXMHrOBpwjdNTY/QELGcU9jHKkyyIXyj9X64yyjD2CSiqjFYDmDKCQpA3Sa6
+         elUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
-        b=lLWD8OzitmVCQHV6fVM6zz5OCpjAgx11JC22MZuU+0QuEU14nalziPcEG9LweU6Uhf
-         k3mnovvfvjVOpS36HBGFL3jbV6CyAvv+gWy6R3jxRuHMvTOefJQeoOzdFuvmxmfxL1z6
-         2/TnfkJVbDXhrzPnzXw2zxbtbHRdFjK0UO+QCasIbQrivUqbNeniwwGDMtKI48vSU/JA
-         SWKLWsWeK3KpmfsHsN2RV9jxnkOGzACr5zsqO82DLBY3Dvqn0dpYEcDSYJiO/CF9eEoT
-         VN1rvmTk+aIlgmGcsfmxIgt1oQ2pzeqoKuPT66DyVdL8gqjTEplJ8LdSFbKAugYMYO4c
-         eaqA==
-X-Gm-Message-State: APjAAAXu269PLeivKaILi18ske5m0t6VxprNGMrp7+lgct1Qs0lXBK6N
-        xPQjlN4ogZhES+/oyrZVbSBtjw==
-X-Google-Smtp-Source: APXvYqxGyR41SDvj5mCeLz1WXPpVshSUQyPXa3ccVTn3jG4GO+EYu0SQxB8cs1Dtg2CXlW/4Esj78Q==
-X-Received: by 2002:a7b:c764:: with SMTP id x4mr4598002wmk.116.1579268411354;
-        Fri, 17 Jan 2020 05:40:11 -0800 (PST)
+        bh=LhpCR5vDcuxmC13Hf7ge2eVs5JUiFOiL0U5Ba9egRMw=;
+        b=IH2OOs6i8BOiDfO0KPQjq32Gp24G/JLemIhrfCbF4ZMokdJQ6aPXbpAKfcXQnBvKIn
+         q6TtabAAK/piCPqpdaSbTk5uAefuJW0TBGJC68WSSqRIB21dU3UCNuZSPvGxbv/xbxAp
+         xNR4IHKjT9pKrMJLj6xGxxButR2aArfFZ3/GCuCDyAYzo9R15PPESHpbw7niVTKQt1iE
+         CpHz9cWuDh0r2IORHFMbuFhaSRIZMl3dQcBVYTWVLQoSh72mb5I2+a3ZJo8BsQW6BgGZ
+         lbdiRf7crrocmnA+af9yy1nib7QM/2DIxK2f9ZwSTX0cQ6hOoacziz936tDnAab6aoFU
+         uhVA==
+X-Gm-Message-State: APjAAAVRHVVLAw1HFvQJAgg6M42FrYmPbCi803E1M43Q6X8fAKBwl8ej
+        JHQ+UaTR6xPFjyvrek+RKvRQTg==
+X-Google-Smtp-Source: APXvYqyTu5Tky5NAfYjiXymO2Th58H5BnDHWlmZTL0ub+zBth+sD7V3P+A22iVD9kpySPXrScKf+VA==
+X-Received: by 2002:adf:ee88:: with SMTP id b8mr3261159wro.249.1579268654624;
+        Fri, 17 Jan 2020 05:44:14 -0800 (PST)
 Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id s8sm32993260wrt.57.2020.01.17.05.40.09
+        by smtp.gmail.com with ESMTPSA id t1sm9338897wma.43.2020.01.17.05.44.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:40:10 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:40:26 +0000
+        Fri, 17 Jan 2020 05:44:14 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:44:32 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
 Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
@@ -69,18 +69,16 @@ Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
         "pavel@ucw.cz" <pavel@ucw.cz>,
         "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200117134026.GM15507@dell>
+Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
+Message-ID: <20200117134432.GO15507@dell>
 References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <20200117102854.GF15507@dell>
- <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+ <20200117103000.GG15507@dell>
+ <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+In-Reply-To: <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -89,109 +87,65 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Fri, 17 Jan 2020, Vaittinen, Matti wrote:
 
-> Hello Lee,
 > 
-> On Fri, 2020-01-17 at 10:28 +0000, Lee Jones wrote:
+> On Fri, 2020-01-17 at 10:30 +0000, Lee Jones wrote:
 > > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
 > > 
-> > > Few ROHM PMICs allow setting the voltage states for different
-> > > system states
-> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
-> > > specific
-> > > mechanisms. bd718x7 driver implemented device-tree parsing
-> > > functions for
-> > > these state specific voltages. The parsing functions can be re-used 
-> > > by
-> > > other ROHM chip drivers like bd71828. Split the generic functions
-> > > from
-> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
-> > > modules
-> > > to use.
+> > > Patch series introducing support for ROHM BD71828 PMIC
 > > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Acked-by: Mark Brown <broonie@kernel.org>
-> > > ---
-> > > no changes since v9
+> > > ROHM BD71828 is a power management IC containing 7 bucks and 7
+> > > LDOs. All
+> > > regulators can be controlled individually via I2C. Bucks 1,2,6 and
+> > > 7 can also be assigned to a "regulator group" controlled by run-
+> > > levels.
+> > > Eg. Run level specific voltages and enable/disable statuses for
+> > > each of
+> > > these bucks can be set via register interface. The buck run-level
+> > > group
+> > > assignment (selection if buck is to be controlled individually or
+> > > via
+> > > run-levels) can be changed at run-time via I2C.
 > > > 
-> > >  drivers/regulator/Kconfig             |   4 +
-> > >  drivers/regulator/Makefile            |   1 +
-> > >  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------
-> > > ------
-> > >  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
-> > >  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
-> > >  5 files changed, 221 insertions(+), 128 deletions(-)
-> > >  create mode 100644 drivers/regulator/rohm-regulator.c
+> > > This patch series brings only the basic support for controlling
+> > > regulators individually via I2C.
+> > > 
+> > > In addition to the bucks and LDOs there are:
+> > > 
+> > > - The usual clk gate
+> > > - 4 IO pins (mostly usable as GPO or tied to specific purpose)
+> > > - power button support
+> > > - RTC
+> > > - two LEDs
+> > > - battery charger
+> > > - HALL sensor input
+> > > 
+> > > This patch series adds support to regulators, clk, RTC, GPIOs and
+> > > LEDs.
+> > > 
+> > > Power-supply driver for charger is not included in this series.
+> > > 
+> > > The series also adds LED DT-node lookup based on node name or given
+> > > property name/value pair in LED core. It also adds generic default-
+> > > state
+> > > and default-trigger property handling to LED core. Follow-up
+> > > patches
+> > > simplifying few other LED drivers should follow.
+> > > 
+> > > Changelog v10:
+> > >   - Split RTC patch to a BD70528 fix (which hopefully goes to 5.4)
+> > > and to
+> > >     BD71828 support
 > > 
-> > [...]
-> > 
-> > > diff --git a/include/linux/mfd/rohm-generic.h
-> > > b/include/linux/mfd/rohm-generic.h
-> > > index ff3dd7578fd3..6cc5a0819959 100644
-> > > --- a/include/linux/mfd/rohm-generic.h
-> > > +++ b/include/linux/mfd/rohm-generic.h
-> > > @@ -4,6 +4,9 @@
-> > >  #ifndef __LINUX_MFD_ROHM_H__
-> > >  #define __LINUX_MFD_ROHM_H__
-> > >  
-> > > +#include <linux/regmap.h>
-> > > +#include <linux/regulator/driver.h>
-> > > +
-> > >  enum rohm_chip_type {
-> > >  	ROHM_CHIP_TYPE_BD71837 = 0,
-> > >  	ROHM_CHIP_TYPE_BD71847,
-> > > @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
-> > >  	struct regmap *regmap;
-> > >  };
-> > >  
-> > > +enum {
-> > > +	ROHM_DVS_LEVEL_UNKNOWN,
-> > > +	ROHM_DVS_LEVEL_RUN,
-> > > +	ROHM_DVS_LEVEL_IDLE,
-> > > +	ROHM_DVS_LEVEL_SUSPEND,
-> > > +	ROHM_DVS_LEVEL_LPSR,
-> > > +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-> > 
-> > Haven't seen this before.  Is it legit?
+> > Still missing LED Acks.
 > > 
 > 
-> I don't know why it wouldn't be :) I kind of grew used to that when I
-> still did some networking stuff.
+> Yep. I know. I haven't heard from Pavel recently and the patch 12
+> definitely requires his ack. Can you take the other patches in and
+> leave 12 and 13 out for now? I can continue work on LEDs with Pavel but
+> I would really like to have the regulators working and BD70528 RTC
+> fixed in next release...
 
-Networking it not a good example.
-
-It's full of odd little quirks to the standard styling.
-
-> It doesn't really matter in this case but for example the netlink
-> headers do:
-> 
-> enum {
->    foo,
-> #define foo foo
->    bar,
-> #define bar bar
-> ...
-> };
-> 
-> https://elixir.bootlin.com/linux/v5.5-rc6/source/include/uapi/linux/rtnetlink.h
-> 
-> What is the good here is that this allows one to nicely exclude
-> unsupported stuff using preprocessor:
-> 
-> #include <header_with_or_without_foo_dependng_on_version.h>
-> 
-> #ifdef foo
-> use_foo(foo);
-> #endif
-> 
-> What about:
-> > 
-> >      ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
-> 
-> Anyways, I don't see why define wouldn't be Ok here - but sure it can
-> be changed if you insist ;) Just let me know if you can accept the
-> define or not :)
-
-Let's go for not in this instance. :D
+Sure.  Give me a few days though.
 
 -- 
 Lee Jones [李琼斯]
