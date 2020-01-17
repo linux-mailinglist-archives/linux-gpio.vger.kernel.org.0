@@ -2,105 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43404141329
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 22:33:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64F031413C8
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 22:57:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgAQVdo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jan 2020 16:33:44 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35509 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727504AbgAQVdn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jan 2020 16:33:43 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 777C8600;
-        Fri, 17 Jan 2020 16:33:42 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 17 Jan 2020 16:33:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=W569kOUG9Jg4u
-        fvUVlvaDUcPU/rpbROxxV7I6tE2DMU=; b=JvIdapIhf1PQ0pRxH7UCvK7t44Lbf
-        LABB5VlyC1GktUBq5umdIIizzmBTkHHfPhfDHBISW4PAh2iJUJ+7zO98NnXJsU00
-        Ey83KG/Q5zSzXlA5PK0TaF3wrTdjDS81YsQkzO+59pKGtmJVcyyGSo06xSoevIzS
-        h1JnjKgbMv0vuLhVqEKyB0XNMYlNBc68iUcsImoU6GIyoitc60zpOaavBgdcti/9
-        7NKFZklCnzhlUzRq0737f8d1u9hn0glwmq5BqUUt83NVqCR6uizIrPAi4GwTar4E
-        CPwSZzPGjQSUnERY7zNMF7A/DXCTPw5rLcIaIBCtObwsWCcQb+ESbEECw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=W569kOUG9Jg4ufvUVlvaDUcPU/rpbROxxV7I6tE2DMU=; b=jYXvSdN6
-        WrGmVN4Fdy1s0cGSqWusNtkGsjmcV8ZR286tt/NGrKG7YqiE1LEUrh+QgiwQ5CNE
-        Ogb97ruw/5rlRTFumaz73Fa+Zw6jp0haAKsx0TfvMF44aMV9f1JlT26udrvH7YXi
-        t7idtc2mnhkKuJHZbRcNB9QFBBNkimSHCXzf7QVXf+wJAA74PHljzkQKu7aQ1MdD
-        r6lhj/O2QHMrleUGe6qLPIlxrHT6gEkpuan2N4m1nH3sxyGBlgTqlCJmnqB27i6N
-        H9dTE47lkJUEUwqLQ2Lfajki9rfUbliKmQsmQPilvOa3SMB9eLmRAJrcfuO/x4CV
-        l6fc5X2MR6QonA==
-X-ME-Sender: <xms:NSgiXpfkIybxSwl0zX0HkxfywgfJ375v4nRWUJZ1Ssu8tPSQG6XO4Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdekgdehiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukfhppe
-    ejtddrudefhedrudegkedrudehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhu
-    vghlsehshhholhhlrghnugdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:NSgiXlhAyq22NPKdoZ7Pjm4roHvCkcfrKmHg2KUq6oRsTRhJxgzg6w>
-    <xmx:NSgiXjJur8gvwdlC-9x0Dt1nUqRI47gZ5eQmW8il6aruv7aXEwtq2w>
-    <xmx:NSgiXi5f2UJUbn4ONVNqF0DBaLwvGaOoOJN8RmlXsPbDwm_v1M1P6w>
-    <xmx:NigiXomkNZ81FQQGPIhMxR7kgWs2iRrlv4F5ADujXVlZQ0xdbxrt1Q>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6376980059;
-        Fri, 17 Jan 2020 16:33:41 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 2/2] pinctrl: sunxi: Mask non-wakeup IRQs on suspend
-Date:   Fri, 17 Jan 2020 15:33:40 -0600
-Message-Id: <20200117213340.47714-2-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200117213340.47714-1-samuel@sholland.org>
-References: <20200117213340.47714-1-samuel@sholland.org>
+        id S1729928AbgAQV5b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jan 2020 16:57:31 -0500
+Received: from mga18.intel.com ([134.134.136.126]:29365 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729047AbgAQV5b (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jan 2020 16:57:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 13:54:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,331,1574150400"; 
+   d="scan'208";a="226480000"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 17 Jan 2020 13:54:02 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1isZZ4-000AFs-4i; Sat, 18 Jan 2020 05:54:02 +0800
+Date:   Sat, 18 Jan 2020 05:53:19 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:ib-da9062] BUILD SUCCESS
+ b3496db521413576c6cdf6373abab453e0c24757
+Message-ID: <5e222ccf.E+L5ctXNk+D8LkHa%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pin controller hardware does not distinguish IRQs intended for
-wakeup from other IRQs, so we must mask non-wakeup IRQs in software to
-prevent inadvertent wakeups. This is accomplished at the irqchip level
-via the IRQCHIP_MASK_ON_SUSPEND flag.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  ib-da9062
+branch HEAD: b3496db521413576c6cdf6373abab453e0c24757  pinctrl: da9062: Add driver support
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+elapsed time: 474m
+
+configs tested: 158
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+csky                 randconfig-a001-20200118
+openrisc             randconfig-a001-20200118
+s390                 randconfig-a001-20200118
+sh                   randconfig-a001-20200118
+xtensa               randconfig-a001-20200118
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+arm                              allmodconfig
+arm                         at91_dt_defconfig
+arm64                               defconfig
+arm                        multi_v5_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                           sunxi_defconfig
+arm64                             allnoconfig
+arm64                            allmodconfig
+arm                          exynos_defconfig
+arm                        shmobile_defconfig
+arm                        multi_v7_defconfig
+x86_64               randconfig-e001-20200118
+x86_64               randconfig-e002-20200118
+x86_64               randconfig-e003-20200118
+i386                 randconfig-e001-20200118
+i386                 randconfig-e002-20200118
+i386                 randconfig-e003-20200118
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+c6x                  randconfig-a001-20200118
+h8300                randconfig-a001-20200118
+microblaze           randconfig-a001-20200118
+nios2                randconfig-a001-20200118
+sparc64              randconfig-a001-20200118
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+x86_64               randconfig-c001-20200118
+x86_64               randconfig-c002-20200118
+x86_64               randconfig-c003-20200118
+i386                 randconfig-c001-20200118
+i386                 randconfig-c002-20200118
+i386                 randconfig-c003-20200118
+x86_64               randconfig-f001-20200118
+x86_64               randconfig-f002-20200118
+x86_64               randconfig-f003-20200118
+i386                 randconfig-f001-20200118
+i386                 randconfig-f002-20200118
+i386                 randconfig-f003-20200118
+x86_64               randconfig-d001-20200118
+x86_64               randconfig-d002-20200118
+x86_64               randconfig-d003-20200118
+i386                 randconfig-d001-20200118
+i386                 randconfig-d002-20200118
+i386                 randconfig-d003-20200118
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+arc                  randconfig-a001-20200118
+arm                  randconfig-a001-20200118
+arm64                randconfig-a001-20200118
+ia64                 randconfig-a001-20200118
+powerpc              randconfig-a001-20200118
+sparc                randconfig-a001-20200118
+alpha                randconfig-a001-20200118
+m68k                 randconfig-a001-20200118
+mips                 randconfig-a001-20200118
+nds32                randconfig-a001-20200118
+parisc               randconfig-a001-20200118
+riscv                randconfig-a001-20200118
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+x86_64               randconfig-h001-20200118
+x86_64               randconfig-h002-20200118
+x86_64               randconfig-h003-20200118
+i386                 randconfig-h001-20200118
+i386                 randconfig-h002-20200118
+i386                 randconfig-h003-20200118
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+parisc                        c3000_defconfig
+parisc                         b180_defconfig
+parisc                              defconfig
+parisc                            allnoconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+x86_64               randconfig-g001-20200118
+x86_64               randconfig-g002-20200118
+x86_64               randconfig-g003-20200118
+i386                 randconfig-g001-20200118
+i386                 randconfig-g002-20200118
+i386                 randconfig-g003-20200118
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+x86_64               randconfig-b001-20200118
+x86_64               randconfig-b002-20200118
+x86_64               randconfig-b003-20200118
+i386                 randconfig-b001-20200118
+i386                 randconfig-b002-20200118
+i386                 randconfig-b003-20200118
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                               rhel-7.6
+parisc                            allyesonfig
+
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index df79da76321e..24ff591efded 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1076,6 +1076,7 @@ static struct irq_chip sunxi_pinctrl_edge_irq_chip = {
- 	.irq_release_resources = sunxi_pinctrl_irq_release_resources,
- 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
- 	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
-+	.flags		= IRQCHIP_MASK_ON_SUSPEND,
- };
- 
- static struct irq_chip sunxi_pinctrl_level_irq_chip = {
-@@ -1092,6 +1093,7 @@ static struct irq_chip sunxi_pinctrl_level_irq_chip = {
- 	.irq_set_type	= sunxi_pinctrl_irq_set_type,
- 	.irq_set_wake	= sunxi_pinctrl_irq_set_wake,
- 	.flags		= IRQCHIP_EOI_THREADED |
-+			  IRQCHIP_MASK_ON_SUSPEND |
- 			  IRQCHIP_EOI_IF_HANDLED,
- };
- 
--- 
-2.23.0
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
