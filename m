@@ -2,69 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9349A1404E9
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 09:12:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1677914051D
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jan 2020 09:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgAQIMW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jan 2020 03:12:22 -0500
-Received: from mail-lf1-f52.google.com ([209.85.167.52]:42798 "EHLO
-        mail-lf1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728986AbgAQIMW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 03:12:22 -0500
-Received: by mail-lf1-f52.google.com with SMTP id y19so17652493lfl.9
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jan 2020 00:12:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uxTtS/PAyYu4PhY4731eluF8s7eyQqI9JZGrr1rS1gQ=;
-        b=SJglOkpFfLGWso6JXxp8TVd9mBPLE/eyxasneimQbQAVPow3Ff5F9sMXAiZ6xjRtOq
-         teqkgdFTNtOj130NNo3fxCVjqQRUocxq3rem1kT+7EXYwVbM9QDL6osexKS5WO58aIq8
-         Bnlgu/urUeXdGfqHz2k2yBP4lumbDurARlHjrGFo0aLsmucK8LvSPiA9fSQQlZA4GbYN
-         JplUsgekZ+upgunt139DFbsyZzKJKkn0BCKTUBXivr2DUroqxiKJPtQy2I2ZxgPI21rB
-         V8WpBqkvkUZK/IE5WurqkgIe/ik4jGrYc3sQNqwG6XJ8fkKvV4CIvyI+TLT/L32Kl4L8
-         Ls7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uxTtS/PAyYu4PhY4731eluF8s7eyQqI9JZGrr1rS1gQ=;
-        b=cUVvAQFt/2ainkxNDXPq1dESLStqPCDIbtEOLW7lJDYJ1Iqab5xr00PZzN0YTS/b9d
-         bhbpVvDVJUd6nxgeCAlU/DvaafY6halKBOhaUQebqp2/IaGjE85MmI5ecPMeRQGdTvRA
-         DiTtkJqMJucJ9vAwIZ7wLGtWoPyB8b2h5DDTjYVSoa74sEaxV23lpFYQzyqSqlwMwdyW
-         wbGT1USHZnx14Zk8M3kROBen1681mfORMzmvj9ys+ZkC3KaQuCqQMMo6SAPPfinyLW+A
-         KNWwAbuvJyhs4nA83/gEin5wDkzwxLVo/OXlmUSZVSzaahbfnh/6jgpmSlOfyDbufNG0
-         6rOw==
-X-Gm-Message-State: APjAAAUzgw3iEP3IQazwrsTvRmyuyelF42W3F7zr+aiSfuNVpCW0IN8s
-        cZK/cm8yNPSHSwY4TEBee/LFUfKMRnqJcGIa8+qd0d4Lsfs=
-X-Google-Smtp-Source: APXvYqwCoFlwaX9pa3RlM+pU/7sFZuE1VmJHQPiIfhyj1SSU/TjNQuX90/vXu+jBdalB0tDwuHviahRMlO+f+K/nWLA=
-X-Received: by 2002:a19:40d8:: with SMTP id n207mr4522802lfa.4.1579248740306;
- Fri, 17 Jan 2020 00:12:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200116142927.58908-1-yuehaibing@huawei.com>
-In-Reply-To: <20200116142927.58908-1-yuehaibing@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Jan 2020 09:12:09 +0100
-Message-ID: <CACRpkdbO14QeTBX0C5X5B3tH9x5QvahaAkW2_bVx5bfRiCzgOQ@mail.gmail.com>
-Subject: Re: [PATCH -next] gpiolib: Remove duplicated function gpio_do_set_config()
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1729196AbgAQIOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jan 2020 03:14:08 -0500
+Received: from lucky1.263xmail.com ([211.157.147.132]:33044 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbgAQIOI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jan 2020 03:14:08 -0500
+Received: from localhost (unknown [192.168.167.69])
+        by lucky1.263xmail.com (Postfix) with ESMTP id F072E8BF33;
+        Fri, 17 Jan 2020 16:14:00 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P20995T139699247118080S1579248839183075_;
+        Fri, 17 Jan 2020 16:14:00 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <5ec44f345caa1a6dbf50f637c1b15412>
+X-RL-SENDER: jay.xu@rock-chips.com
+X-SENDER: xjq@rock-chips.com
+X-LOGIN-NAME: jay.xu@rock-chips.com
+X-FST-TO: linus.walleij@linaro.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     linus.walleij@linaro.org, heiko@sntech.de, david.wu@rock-chips.com,
+        kever.yang@rock-chips.com
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, jay.xu@rock-chips.com
+Subject: [PATCH 0/2] pinctrl: rockchip: codingstyle for pinctrl-rockchip
+Date:   Fri, 17 Jan 2020 16:13:56 +0800
+Message-Id: <20200117081358.5772-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <c4ec95a7-aaf1-2331-352f-2def319a1c7d@rock-chips.com>
+References: <c4ec95a7-aaf1-2331-352f-2def319a1c7d@rock-chips.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 3:29 PM YueHaibing <yuehaibing@huawei.com> wrote:
+Do codingstyle for pinctrl-rockchip by spliting driver by SoC types.
 
-> gpio_set_config() simply call gpio_do_set_config(),
-> so remove the duplicated function.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Convenienty for reviewing, the first patch only moving
+pinctrl-rockchip.c from driver/pinctrl to driver/pinctrl/rockchip/ .
 
-Patch applied.
+Jianqun Xu (2):
+  pinctrl: rockchip: new rockchip dir for pinctrl-rockchip
+  pinctrl: rockchip: split rockchip pinctrl driver by SoC type
 
-Yours,
-Linus Walleij
+ drivers/pinctrl/Kconfig                     |    7 -
+ drivers/pinctrl/pinctrl-rockchip.c          | 4254 -------------------
+ drivers/pinctrl/rockchip/Kconfig            |  126 +
+ drivers/pinctrl/rockchip/Makefile           |   16 +
+ drivers/pinctrl/rockchip/pinctrl-px30.c     |  224 +
+ drivers/pinctrl/rockchip/pinctrl-rk2928.c   |   70 +
+ drivers/pinctrl/rockchip/pinctrl-rk3036.c   |   69 +
+ drivers/pinctrl/rockchip/pinctrl-rk3066a.c  |   72 +
+ drivers/pinctrl/rockchip/pinctrl-rk3066b.c  |   51 +
+ drivers/pinctrl/rockchip/pinctrl-rk3128.c   |  161 +
+ drivers/pinctrl/rockchip/pinctrl-rk3188.c   |  147 +
+ drivers/pinctrl/rockchip/pinctrl-rk3228.c   |  225 +
+ drivers/pinctrl/rockchip/pinctrl-rk3288.c   |  210 +
+ drivers/pinctrl/rockchip/pinctrl-rk3308.c   |  420 ++
+ drivers/pinctrl/rockchip/pinctrl-rk3328.c   |  272 ++
+ drivers/pinctrl/rockchip/pinctrl-rk3368.c   |  125 +
+ drivers/pinctrl/rockchip/pinctrl-rk3399.c   |  195 +
+ drivers/pinctrl/rockchip/pinctrl-rockchip.c | 2063 +++++++++
+ drivers/pinctrl/rockchip/pinctrl-rockchip.h |  388 ++
+ drivers/pinctrl/rockchip/pinctrl-rv1108.c   |  214 +
+ 20 files changed, 5048 insertions(+), 4261 deletions(-)
+ delete mode 100644 drivers/pinctrl/pinctrl-rockchip.c
+ create mode 100644 drivers/pinctrl/rockchip/Kconfig
+ create mode 100644 drivers/pinctrl/rockchip/Makefile
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-px30.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk2928.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3036.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3066a.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3066b.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3128.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3188.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3228.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3288.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3308.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3328.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3368.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rk3399.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rockchip.c
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rockchip.h
+ create mode 100644 drivers/pinctrl/rockchip/pinctrl-rv1108.c
+
+-- 
+2.17.1
+
+
+
