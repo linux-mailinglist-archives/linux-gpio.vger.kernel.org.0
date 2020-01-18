@@ -2,94 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F01141775
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2020 13:27:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D1191418C9
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2020 18:35:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgARM1a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Jan 2020 07:27:30 -0500
-Received: from mail-wm1-f49.google.com ([209.85.128.49]:32873 "EHLO
-        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgARM1a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jan 2020 07:27:30 -0500
-Received: by mail-wm1-f49.google.com with SMTP id d139so11329352wmd.0
-        for <linux-gpio@vger.kernel.org>; Sat, 18 Jan 2020 04:27:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=r1U+cZtttBdamaYOyTv9rNOZWfLt30q2FDYbnmbtHqA=;
-        b=hXhK+UeivKou6GFhUg+qpgYmEJbqyyCf4SSpEL4PCdNI0f9wa9vWO4e9+A1r88MVCj
-         4ZqjIlhzAhCOMl0M4V1GihuTZV2RQlBRY7Xt1ZYnQoJapXP2ZcG0NheOJ3DCwiaE7/FE
-         1DnM0zZRSAiOdyFw5RKWIsKU9uWGA+h/CVawxjRN3nVSAZVFIiNdFuutdI2WKOA3/LWX
-         229+taTH0Qeku121uTSyXY5ijdLi/3uaAjyZt4yRuLOsjyiKzi3bMvJ/+0YzopdNvEL5
-         lyfP9EEN/pEk90kYjrVl23/VvOI1oBoUNJQWkMHT+xdth2gi8RI97GDOKl4G2XJvtcTj
-         c4GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=r1U+cZtttBdamaYOyTv9rNOZWfLt30q2FDYbnmbtHqA=;
-        b=TMQl8SGReokuFxykbZy9N1qQ3Y7+XsKuQCLxCL914ky2veDSbHi7gpj62tqnw0k+JU
-         /wktJ3g50VWU//AiheCndrX51ucVMrI6OferAoz7voNYPFsgWkXSokMHzk9/+svl32om
-         hXSG7ahyWbEFnOU5ZJIdxfk4VqH8aEu4vU/+NcXEqCYiCzXpBKW10fmr8MS7AMbztLE7
-         nfCr8QTlCYtA48sRRJ6W5yK8M4zTNBPbk4w5p6gmeEg74TZD/M+7IhMqfn6xJb5492zX
-         HHzyVeCEveAoCaHk+ip8dMb6Gi6XtUCvwyWhViqb4yoqxfRBLoNNp8IlT/VD3+r4Cd99
-         xmiw==
-X-Gm-Message-State: APjAAAVvxCNUrJsGniQdIvYYg+ohNihE3ovO5hbwCHWIj+plSkG9LsoE
-        s4m6S4NHy7a7Ec6YmDc+ygL02w6Nd9+oDw==
-X-Google-Smtp-Source: APXvYqxPGswYamaSF12VZNJ/E4dZS+3vC9lgNF/nlyPWejU7qWni8vKFLFTgcEXy9Hr/1gIyaxbaEQ==
-X-Received: by 2002:a1c:720a:: with SMTP id n10mr9495512wmc.74.1579350448542;
-        Sat, 18 Jan 2020 04:27:28 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id r6sm39528012wrq.92.2020.01.18.04.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jan 2020 04:27:28 -0800 (PST)
-Message-ID: <5e22f9b0.1c69fb81.70277.0504@mx.google.com>
-Date:   Sat, 18 Jan 2020 04:27:28 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        id S1726490AbgARRfo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Jan 2020 12:35:44 -0500
+Received: from smtprelay0130.hostedemail.com ([216.40.44.130]:34088 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726614AbgARRfo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 18 Jan 2020 12:35:44 -0500
+X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Jan 2020 12:35:43 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 775DF180036EF
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Jan 2020 17:30:28 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id AEB62182CED5B;
+        Sat, 18 Jan 2020 17:30:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1431:1437:1515:1516:1518:1534:1540:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3872:3874:4321:5007:7514:7576:10004:10400:10848:11026:11232:11658:11914:12043:12296:12297:12438:12740:12760:12895:13069:13311:13357:13439:14181:14659:14721:21080:21451:21627:21990:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
+X-HE-Tag: uncle83_5b0aae334862c
+X-Filterd-Recvd-Size: 1758
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 18 Jan 2020 17:30:25 +0000 (UTC)
+Message-ID: <d7010f3bc07d2666e6bbde3140d51acd539cb55b.camel@perches.com>
+Subject: Re: [PATCH 4/4] GPIO: creg-snps: fixed a typo
+From:   Joe Perches <joe@perches.com>
+To:     sachin agarwal <asachin591@gmail.com>, Eugeniy.Paltsev@synopsys.com
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 18 Jan 2020 09:29:26 -0800
+In-Reply-To: <20200118104506.68524-1-sachinagarwal@sachins-MacBook-2.local>
+References: <20200118104506.68524-1-sachinagarwal@sachins-MacBook-2.local>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: gpio-v5.5-4-45-gd18fddff061d
-Subject: linusw/devel boot: 58 boots: 0 failed,
- 58 passed (gpio-v5.5-4-45-gd18fddff061d)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 58 boots: 0 failed, 58 passed (gpio-v5.5-4-45-gd18fddff0=
-61d)
+On Sat, 2020-01-18 at 16:15 +0530, sachin agarwal wrote:
+> From: Sachin agarwal <asachin591@gmail.com>
+> 
+> we had written "valiue" rather than "value".
+[]
+> diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c
+[]
+> @@ -64,11 +64,11 @@ static int creg_gpio_validate_pg(struct device *dev, struct creg_gpio *hcg,
+>  	if (layout->bit_per_gpio[i] < 1 || layout->bit_per_gpio[i] > 8)
+>  		return -EINVAL;
+>  
+> -	/* Check that on valiue fits it's placeholder */
+> +	/* Check that on value fits it's placeholder */
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/gpio-v5.5-4-45-gd18fddff061d/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/g=
-pio-v5.5-4-45-gd18fddff061d/
+Might as well fix the it's/its usages too.
 
-Tree: linusw
-Branch: devel
-Git Describe: gpio-v5.5-4-45-gd18fddff061d
-Git Commit: d18fddff061d2796525e6d4a958cb3d30aed8efd
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 50 unique boards, 15 SoC families, 3 builds out of 5
+>  	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->on[i])
+>  		return -EINVAL;
+> 
+> -	/* Check that off valiue fits it's placeholder */
+> +	/* Check that off value fits it's placeholder */
+>  	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->off[i])
+>  		return -EINVAL;
+>  
 
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s805x-p241:
-              lab-baylibre: new failure (last pass: v5.5-rc6-44-g158a4056fd=
-63)
-          meson-gxm-q200:
-              lab-baylibre: new failure (last pass: v5.5-rc6-44-g158a4056fd=
-63)
-
----
-For more info write to <info@kernelci.org>
