@@ -2,86 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CAA1E141710
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2020 11:54:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD1C7141734
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Jan 2020 12:24:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgARKxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Jan 2020 05:53:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36523 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgARKxb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jan 2020 05:53:31 -0500
-Received: by mail-pg1-f194.google.com with SMTP id k3so12972623pgc.3;
-        Sat, 18 Jan 2020 02:53:30 -0800 (PST)
+        id S1727071AbgARLYB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Jan 2020 06:24:01 -0500
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:33747 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgARLYB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Jan 2020 06:24:01 -0500
+Received: by mail-wr1-f42.google.com with SMTP id b6so25070639wrq.0
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Jan 2020 03:23:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cvf9Z00ABjd5lUk64l+9yaVPvJO8yX8K2hg04kUeIGY=;
-        b=NGORnijwqclwE0DljZwE2ahbwmtqS7aYEzuFsWrGjpUrBEKbZcj6FTSRPSkXIPA4jh
-         3Puppftqo46UXJRtkEQhgKdTb354zSAOObwe5SqVqmTx9B7CPN5zW7o3MgoMBa6fQ3g6
-         n29lP9el05iXfEUeOiS4RjjyCkv5in8wnYDp20d2zI8uberTGD7kA0tMLpjbUaQdemG5
-         0sQmr7aStdBa3MBhyl9htanFcLeAUX0s50OEpIu1/svS9ohUOZDlT/LKEt/TQ3+TBn+Q
-         RhFLtHtzLlKJ1aGzpdmE/JgaNJ50f3Rly6cX8Qs/tqRQxoWoyQ2L0raqHFAW1X7fQpxb
-         JBFQ==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=0dmcZ+3lPZmBbzbYCtzXnSAwmohJBXcw26dzEUB0Pts=;
+        b=z/OcWgJwuYAeO7okCYUzJTmd7YH+7bJJgAZbqwhjjcjaoXC0f8cZOQ3rRG2WEkQtbq
+         oyM8Eg4ayqRKg9JJOKlWpGJazqbHsjASyQEwkp/jbabsDx1qUWnjpxlGdim4oXBL8vef
+         bV44fMUo/XxOS+6gdKL35jTkTxOjINswekKoAICsaktywXKAyJ2q93i9AnKl+Bm08HcN
+         8pq3jq2rXxiaFkxIIb+I9te822qHzyodUuwhb+PETjjxklSFCRWQka+gTlSBO9UhFPHi
+         r08fSEP3ANWd5G5oaB6gXfjwJ+WLSSrVlCSFP4t1eRCx/jlJmoYT2UJ8Vv+60IvIAXzl
+         KAtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Cvf9Z00ABjd5lUk64l+9yaVPvJO8yX8K2hg04kUeIGY=;
-        b=rHbXwOwm51/c4HbpnlNyumnZRrr+IKD3l1UCcYU3LFZ3NCrg6dKDlQjO6JTK8QFve0
-         PKVlkHPXMqznSSqVPZdR1Y/9L0CUM/Ah6YOzzha+9UDtnRGFnGiauLYVrIxUH9dIISGP
-         W8Ko5yGxVY9k+LzNGpL/VEEdlfieRXZPqkmozRG2PfW4FlSSGOYTSWrccHs5Z/En8VfI
-         RnkJv29qO1aU83Q/u8OgjXNRfYc5sETbj4WUZY/03Ss7AL0gH5lBQObKIRJGLnUYnQAC
-         xF7q9HEEwzGtbLwwETPrbUYZfV/i9ztSIY0fqVb65/7Op8x+ZzDwkrVtqO/AQm+aVVNi
-         3RLg==
-X-Gm-Message-State: APjAAAUWO409drdywisJCFOMV0k0Hl9DeANozoAhb9c1XMLFIWy4Wxh4
-        dLpB5g6O9pO2w8K6ICZAL7s+ThXJl+0ukA==
-X-Google-Smtp-Source: APXvYqzbBQTgciy+UHgzE3b/iQQrxrptWHgt5ehrszyhzNh3vmEzB1NqUG0LrGUITXflSceHK/JMiA==
-X-Received: by 2002:aa7:9edd:: with SMTP id r29mr7458632pfq.14.1579344810316;
-        Sat, 18 Jan 2020 02:53:30 -0800 (PST)
-Received: from localhost.localdomain ([183.82.121.105])
-        by smtp.gmail.com with ESMTPSA id a1sm32043258pfo.68.2020.01.18.02.53.27
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sat, 18 Jan 2020 02:53:29 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     linus.walleij@linaro.org
-Cc:     bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, asachin591@gmail.com
-Subject: [PATCH 2/4] GPIO: aspeed-sgpio: fixed a typo
-Date:   Sat, 18 Jan 2020 16:23:19 +0530
-Message-Id: <20200118105319.68637-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=0dmcZ+3lPZmBbzbYCtzXnSAwmohJBXcw26dzEUB0Pts=;
+        b=LM7LBs/+kkB1UTceEWmLMS7614rKZ6DHQZFs99eJqQ8xZaRjM9w92l1GcDYqUjiBXf
+         1Zd4uLOBV8Xm0AKPRa9flDDMxG5exJLT2bGymU5qNhfF09Tm/67UCDEOzy0SEx5Ii6jO
+         upEKpoLUMc8QExBdh8rsYTJgL7i5e/xC3ovKOuXeuG8PSK3fLErZ5D/wkoQRpAAOi5WW
+         3pc0n73P2bWr3XtVjkmtvgDmUqMuXkbhStqongNyJvtOvgPqWhvAIt+CQKB3ABMZN6K6
+         ukHrPk2MPL2lA6/ZU6LaMYnSjyqM5fWNk0Akh4l+tjFUnuzaDOqEIzz5FtUxzyBBPhz0
+         WDKw==
+X-Gm-Message-State: APjAAAVGEmmwOBnccS1YBRGU0EBF8AvcdrWPn/29TLZV6XXC1H0RVDz2
+        DIpGyYkLOTTrIRYXHNDxl7L9gHWoqDA51A==
+X-Google-Smtp-Source: APXvYqy5q9N9ywlheZ3l7qj088kLv+rEXMV3kna9eYMMnVzzetD9Wr62+HPv9oCusSwb7WSO9ZF4IQ==
+X-Received: by 2002:adf:f382:: with SMTP id m2mr8009230wro.163.1579346638400;
+        Sat, 18 Jan 2020 03:23:58 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t5sm37373330wrr.35.2020.01.18.03.23.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jan 2020 03:23:57 -0800 (PST)
+Message-ID: <5e22eacd.1c69fb81.faac6.7d48@mx.google.com>
+Date:   Sat, 18 Jan 2020 03:23:57 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: gpio-v5.5-4-45-gd18fddff061d
+Subject: linusw/for-next build: 5 builds: 0 failed,
+ 5 passed (gpio-v5.5-4-45-gd18fddff061d)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Sachin agarwal <asachin591@gmail.com>
+linusw/for-next build: 5 builds: 0 failed, 5 passed (gpio-v5.5-4-45-gd18fdd=
+ff061d)
 
-we had written "SPGIO" rather than "SGPIO".
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/gpio-v5.5-4-45-gd18fddff061d/
 
-Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+Tree: linusw
+Branch: for-next
+Git Describe: gpio-v5.5-4-45-gd18fddff061d
+Git Commit: d18fddff061d2796525e6d4a958cb3d30aed8efd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
 ---
- drivers/gpio/gpio-aspeed-sgpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-index 8319812593e3..d16645c1d8d9 100644
---- a/drivers/gpio/gpio-aspeed-sgpio.c
-+++ b/drivers/gpio/gpio-aspeed-sgpio.c
-@@ -391,7 +391,7 @@ static int aspeed_sgpio_setup_irqs(struct aspeed_sgpio *gpio,
- 
- 	gpio->irq = rc;
- 
--	/* Disable IRQ and clear Interrupt status registers for all SPGIO Pins. */
-+	/* Disable IRQ and clear Interrupt status registers for all SGPIO Pins. */
- 	for (i = 0; i < ARRAY_SIZE(aspeed_sgpio_banks); i++) {
- 		bank =  &aspeed_sgpio_banks[i];
- 		/* disable irq enable bits */
--- 
-2.24.1
-
+For more info write to <info@kernelci.org>
