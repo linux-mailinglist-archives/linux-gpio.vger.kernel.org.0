@@ -2,112 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11E7E14240F
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 08:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 830531424B4
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 09:02:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726019AbgATHGb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 02:06:31 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:56428 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725851AbgATHGa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 02:06:30 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-fc-5e25517479ff
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id C9.B8.08102.471552E5; Mon, 20 Jan 2020 08:06:28 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 20 Jan 2020 08:06:17 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        id S1726970AbgATICI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 03:02:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34080 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbgATICI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 03:02:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so28433252wrr.1
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2020 00:02:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
+        b=jN6OaO3LImWPZHkie+o9NYbPcksaQwt6VefqX5klIn/3qVibfBq4ZSEimQWad5KD+6
+         L0xrCWnJoG/MuPnZsGfzr3bRE8XHIIM+vG0z47GvgrzqTDe482Jya/1aN0fr8MXvzsfO
+         OMt4ZrLpJH5Aex8tX99XrKSqUlXB8vtEyX4armTD5fYVwYEDuuyDE6cC31BSsDiVpRx0
+         HFTAplyQVE8ZvEYKS256eR3a15jU3780jrVE9yTXKAIcDSt4x2w5mcmTEX0Oed7S78No
+         mjPQ9/Zflrzc4wIpTuWX3ckETiSe6kHu6B3SPHw8Uy37A6oJCAy3mNL9IqadAXQ+A69u
+         BbOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e6dkf7g0PlBYzajwREklnNmjXK94Sc+HZYUhtk+5LdM=;
+        b=CUPz+4x6Y8Jt+uVPrjOkGTnjoK4A3mWkwpipv3v78tvGmM2aRT2UF/O+GGFbB7D2lY
+         Hqz2VlytSjq7k4jKpSFv2BPKuSh/V3EFLB6ChkD354s/iNwfAFnOxoBqvkkiFw8P/FQS
+         q3UyrqPhJdYgDvqTGlr6Ss4OwYLWmPp0rawwOjj25EQvKdK60MMo4sr8JyL3mgr5OkCL
+         FT82qsekdLZpslDzkXAMSdmkTIeX1F9UbX3QjAajRtxmKiCkzKts9YizUO0yGHjMDden
+         vstsUL9G0caK0RJ/qRGswElBRW2RBd0L9J1D+tfhTbo1fMinwLaViEfub92HjXLLimWC
+         SKUw==
+X-Gm-Message-State: APjAAAXD1vIsIbJGQpVBi8RsFh2QuDjkT34eLJc9DVOdhe9ZfBiCF0Vm
+        9QrIyh4gSviyu+bXqjixt4YBTQ==
+X-Google-Smtp-Source: APXvYqzcaJJackorcPd9DC4Xa5AIzUt/tljBZ9+GLzsPMBa1EJ3AAs42EkOtT5IjuvRGZDmfO5jhmQ==
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr16874910wrq.206.1579507326451;
+        Mon, 20 Jan 2020 00:02:06 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id f16sm46604581wrm.65.2020.01.20.00.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:02:05 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:02:20 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
         "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
         "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
         "sboyd@kernel.org" <sboyd@kernel.org>,
         "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
         "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Topic: [PATCH v10 08/13] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Index: AQHVzRntgaf9+M1fgkumSvjxkUTUjqfult4AgAAELYCAADFWAIAESOoA
-Date:   Mon, 20 Jan 2020 07:06:16 +0000
-Message-ID: <11054d0ec82b0dc0fd07970db86c596ba137c0ef.camel@fi.rohmeurope.com>
+Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
+ BD71828 PMIC GPIOs
+Message-ID: <20200120080220.GQ15507@dell>
 References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200117102854.GF15507@dell>
-         <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
-         <20200117134026.GM15507@dell>
-In-Reply-To: <20200117134026.GM15507@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FE3AB21D709C864C99B2324519915313@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+ <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117102127.GD15507@dell>
+ <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGJsWRmVeSWpSXmKPExsVyYMXvjbolgapxBm2zOC2WXLzKbtH+bhm7
-        xZe5p1gspj58wmYx/8g5Vovu01tYLW5v3cBicf/rUUaLb1c6mCym/FnOZPGx5x6rxeb5fxgt
-        Lu+aw2ax9c06Rotjq6+wWSy9fpHJYs7SEywWF0+5Wtw9dZTNonXvEXaLf9c2sjiIeqyZt4bR
-        4/2NVnaPeWuqPXbOusvusWlVJ5vHnWt72DyO39jO5DF93k8mjxWrv7N7fN4kF8AVxW2TlFhS
-        FpyZnqdvl8CdsXtnJ1PBCYGKVYufszUwThDoYuTgkBAwkXi0N76LkYtDSOAqo8SNX8cZIZwT
-        jBJLJq9hAiliE7CR6LrJ3sXIySEiYCix5MRTFhCbWWAJh8TWxiwQW1ggTeL/jUVMEDXpEh9b
-        lrFA2G4Se793MILYLAKqEtuaboDN4RXwk7j07DcLxK7VTBLtbXvAijgFtCQuPv8GVsQoICvR
-        2fCOCWKZuMSmZ99ZQWwJAQGJJXvOM0PYohIvH/+DiitJ7P35kAXkZmYBTYn1u/QhWh0kLt2f
-        yAZhK0pM6X4IdYOgxMmZT1gmMIrNQrJhFkL3LCTds5B0z0LSvYCRdRWjRG5iZk56YkmqoV5R
-        aqleUX5GLpBKzs/dxAhJMV92MP4/5HmIkYmD8RCjJAeTkigve5ZSnBBfUn5KZUZicUZ8UWlO
-        avEhRgkOZiUR3ru9inFCvCmJlVWpRfkwKWkOFiVxXvWHE2OFBEB2ZaemFqQWwWRlODiUJHiv
-        +avGCQkWpaanVqRl5pQgpJk4OEGGc0mJFKfmpaQWJZaWZMSDkkd8MTB9gKR4gPa6BQC18xYX
-        JOYCRSFaTzEackx4OXcRM8fOo/OA5JG5SxcxC7Hk5eelSonzWlgBNQiANGSU5sGte8UozsGo
-        JMxbDjKOB5h54Ka9AlrEBLToqrkSyKKSRISUVAOj5krDvdMT5tgpHy3gTa96HbHn7oyjs10m
-        LtjA0/EqY9LDn+tEasSC8xWufxD50v6XRT6msvSMX996+YlmN24v1pMMf3X/zy4L6+hcs319
-        t4s2t/jXNHDNXDc/W+PfwuctLzbUnEn79nBdqyaPxmQ+1/J6x+hXq31Whz6arO/uclpln1nt
-        d7P7SizFGYmGWsxFxYkAq2Caz/kDAAA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f405dfc4c7e56e32f4eb2f9cb6e87c05aea1ac9.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8sDQoNCk9uIEZyaSwgMjAyMC0wMS0xNyBhdCAxMzo0MCArMDAwMCwgTGVlIEpvbmVzIHdy
-b3RlOg0KPiBPbiBGcmksIDE3IEphbiAyMDIwLCBWYWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiA+
-ID4gPiAgDQo+ID4gPiA+ICtlbnVtIHsNCj4gPiA+ID4gKwlST0hNX0RWU19MRVZFTF9VTktOT1dO
-LA0KPiA+ID4gPiArCVJPSE1fRFZTX0xFVkVMX1JVTiwNCj4gPiA+ID4gKwlST0hNX0RWU19MRVZF
-TF9JRExFLA0KPiA+ID4gPiArCVJPSE1fRFZTX0xFVkVMX1NVU1BFTkQsDQo+ID4gPiA+ICsJUk9I
-TV9EVlNfTEVWRUxfTFBTUiwNCj4gPiA+ID4gKyNkZWZpbmUgUk9ITV9EVlNfTEVWRUxfTUFYIFJP
-SE1fRFZTX0xFVkVMX0xQU1INCj4gPiA+IA0KPiA+ID4gSGF2ZW4ndCBzZWVuIHRoaXMgYmVmb3Jl
-LiAgSXMgaXQgbGVnaXQ/DQo+ID4gPiANCj4gPiANCj4gPiBJIGRvbid0IGtub3cgd2h5IGl0IHdv
-dWxkbid0IGJlIDopIEkga2luZCBvZiBncmV3IHVzZWQgdG8gdGhhdCB3aGVuDQo+ID4gSQ0KPiA+
-IHN0aWxsIGRpZCBzb21lIG5ldHdvcmtpbmcgc3R1ZmYuDQo+IA0KPiBOZXR3b3JraW5nIGl0IG5v
-dCBhIGdvb2QgZXhhbXBsZS4NCj4gDQo+IEl0J3MgZnVsbCBvZiBvZGQgbGl0dGxlIHF1aXJrcyB0
-byB0aGUgc3RhbmRhcmQgc3R5bGluZy4NCg0KVGhhdCB3YXMgcXVpdGUgYSBzdHJvbmcgd29yZGlu
-Zy4uLiBTb21lIHBlb3BsZSBtaWdodCBkaXNhZ3JlZSA6KQ0KDQpBbnl3YXlzLCBhcyBmYXIgYXMg
-SSBrbm93IHRoZSBwcmVwcm9jZXNzb3IgZG9lcyBub3QgY2FyZSBhYm91dCB3aGVyZQ0KdGhlIHBy
-ZXByb2Nlc3NvciBkaXJlY3RpdmVzIGFyZSBwbGFjZWQuIEl0IGp1c3QgZ29lcyB0aHJvdWdoIHRo
-ZSBmaWxlDQpzZXF1ZW50aWFsbHkgYW5kIG1hY3JvIGRlZmluaXRpb25zIHRha2UgZWZmZWN0IGF0
-IHRoZSBwbGFjZSB5b3Ugd3JpdGUNCnRoZW0uIEFuZCBhY3R1YWwgY29tcGlsZXIgZG9lcyBub3Qg
-c2VlIHRoZSBkaXJlY3RpdmUgLSBqdXN0IGNvZGUgd2hpY2gNCmhhcyBiZWVuIHJlcGxhY2VkLiBT
-byBmcm9tIEMgcG9pbnQgb2YgdmlldyBJIHNlZSBubyBwcm9ibGVtIGhlcmUuIEZyb20NCmNvZGlu
-ZyBjb252ZW50aW9ucyBvciBndWlkZWxpbmVzIHBvaW50IG9mIHZpZXcgLSB3ZWxsLCB0aGF0J3Mg
-bW9yZSBvZg0KeW91ciB0ZXJyaXRvcnkgOykNCg0KPiA+IFdoYXQgYWJvdXQ6DQo+ID4gPiAgICAg
-IFJPSE1fRFZTX0xFVkVMX01BWCA9IFJPSE1fRFZTX0xFVkVMX0xQU1INCj4gPiANCj4gPiBBbnl3
-YXlzLCBJIGRvbid0IHNlZSB3aHkgZGVmaW5lIHdvdWxkbid0IGJlIE9rIGhlcmUgLSBidXQgc3Vy
-ZSBpdA0KPiA+IGNhbg0KPiA+IGJlIGNoYW5nZWQgaWYgeW91IGluc2lzdCA7KSBKdXN0IGxldCBt
-ZSBrbm93IGlmIHlvdSBjYW4gYWNjZXB0IHRoZQ0KPiA+IGRlZmluZSBvciBub3QgOikNCj4gDQo+
-IExldCdzIGdvIGZvciBub3QgaW4gdGhpcyBpbnN0YW5jZS4gOkQNCg0KT2suIEkgc2VudCB2MTEg
-d2hlcmUgdGhpcyBoYXMgYmVlbiBjaGFuZ2VkIGFzIHlvdSBzdWdnZXN0ZWQgOikNCg0KQnIsDQoJ
-LS1NYXR0aQ0K
+On Mon, 20 Jan 2020, Vaittinen, Matti wrote:
+
+> Hello,
+> 
+> On Fri, 2020-01-17 at 10:21 +0000, Lee Jones wrote:
+> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+> > 
+> > > ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+> > > to be used for general purposes. First 3 can be used as outputs
+> > > and 4.th pin can be used as input. Allow them to be controlled
+> > > via GPIO framework.
+> > > 
+> > > The driver assumes all of the pins are configured as GPIOs and
+> > > trusts that the reserved pins in other OTP configurations are
+> > > excluded from control using "gpio-reserved-ranges" device tree
+> > > property (or left untouched by GPIO users).
+> > > 
+> > > Typical use for 4.th pin (input) is to use it as HALL sensor
+> > > input so that this pin state is toggled when HALL sensor detects
+> > > LID position change (from close to open or open to close). PMIC
+> > > HW implements some extra logic which allows PMIC to power-up the
+> > > system when this pin is toggled. Please see the data sheet for
+> > > details of GPIO options which can be selected by OTP settings.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> > Linus, Is that an Ack?
+> I have always thought that reviewed-by implies that reviewer is Ok with
+> the patch (imples Ack). Maybe I have mistaken?
+
+I would rather not assume.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
