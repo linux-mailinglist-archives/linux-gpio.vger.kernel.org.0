@@ -2,148 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 466F7142752
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 10:34:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F09AF1427AF
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 10:54:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgATJeF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 04:34:05 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41769 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgATJeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 04:34:05 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so27950956oie.8;
-        Mon, 20 Jan 2020 01:34:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4UGZULGX+YbThMmtUsP+6rz+ppDz5uP2ldQfl/P5Icg=;
-        b=r9BsWJI3/T3ZajffuGYjSoUFTwBkinpE6cXRPJHgDYA9/V+s95oNwuxSMPkQ/4cWRj
-         ZaO1SmpOmS3irAImPnfWNoPnAvu+Rowsz/IfJmN/ZmJ2BhOYckAckM4YIRTPmFDO0uGp
-         EU5jhrVSxHGkBAGYOnbK1WxS3RANycKdJex8Ezu+w7bGXf8G0OmXRp8KiQBpQ/KtgPlT
-         uXP6z8GZhTZOFtZQ698I5XmxKeYh3vQkn2ExZYvB8By/iq6oVezMqNWAXL51HDdCD/QX
-         AMxtTqoUDTIVRBXkFyOKnbPk7rN8QXKlqjSHJZ2ByGxrg+Xn91wVGS5WoYc+2bnY3QwS
-         u0SQ==
-X-Gm-Message-State: APjAAAXpFc9fimVSH61Kcc6KZFG+NkCsZ4PaHNdcQH3O6dAAoU8e46Qr
-        Xv5RMuH+KdUh5QESUmpq0WKAqYtag6xEkDlPQ7k=
-X-Google-Smtp-Source: APXvYqzKSRFvw6ji0gpORenZnjRNgTgsQRPZg2pYUM0CIPBoLJXTQJmTGSvG1PbarmgxudUhQ+JfoPFk+YrYJBaAPTE=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr11682717oia.148.1579512844618;
- Mon, 20 Jan 2020 01:34:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be> <20200118014632.GA14644@lxhi-065.adit-jv.com>
-In-Reply-To: <20200118014632.GA14644@lxhi-065.adit-jv.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jan 2020 10:33:53 +0100
-Message-ID: <CAMuHMdUUc17n0TxOrtQNby+ZiHDpz-aEh-ncnkz50vcwQe6z6w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        id S1726075AbgATJya (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 04:54:30 -0500
+Received: from mga11.intel.com ([192.55.52.93]:60863 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726039AbgATJy3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:54:29 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 01:54:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
+   d="scan'208";a="274969721"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 01:54:26 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1itTlL-0008P3-Qm; Mon, 20 Jan 2020 11:54:27 +0200
+Date:   Mon, 20 Jan 2020 11:54:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling
+ set_config()
+Message-ID: <20200120095427.GE32742@smile.fi.intel.com>
+References: <20191224120709.18247-1-brgl@bgdev.pl>
+ <20191224120709.18247-3-brgl@bgdev.pl>
+ <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Eugeniu,
-
-On Sat, Jan 18, 2020 at 2:46 AM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Wed, Nov 27, 2019 at 09:42:46AM +0100, Geert Uytterhoeven wrote:
-> >   - Create aggregators:
+On Mon, Jan 20, 2020 at 09:44:43AM +0100, Geert Uytterhoeven wrote:
+> On Tue, Dec 24, 2019 at 1:08 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> >     $ echo e6052000.gpio 19,20 \
-> >         > /sys/bus/platform/drivers/gpio-aggregator/new_device
+> > Instead of calling the gpiochip's set_config() callback directly and
+> > checking its existence every time - just add a new routine that performs
+> > this check internally. Call it in gpio_set_config() and
+> > gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
+> > the check for chip->set() as it's irrelevant to this config option.
 
-> The only unexpected thing is seeing below messages (where gpiochip99 and
-> gpiochip22 are inexisting gpiochip names, mistakenly provided on command
-> line prior to passing the correct name):
->
-> root@rcar-gen3:~# echo gpiochip6 12-13 > /sys/bus/platform/drivers/gpio-aggregator/new_device
-> [  915.572905] gpio-aggregator gpio-aggregator.0: cannot find GPIO chip gpiochip99, deferring
-> [  915.584224] gpio-aggregator gpio-aggregator.2: cannot find GPIO chip gpiochip99, deferring
-> [  915.865281] gpio-aggregator gpio-aggregator.29: cannot find GPIO chip gpiochip22, deferring
->
-> Obviously, in the above case, due to a typo in the names, the gpio
-> chips will never be found, no matter how long gpio-aggregator defers
+...
 
-Indeed, that is expected behavior: you have created platform devices
-referring to resources that are not available.
+> >         config = PIN_CONF_PACKED(mode, arg);
+> > -       return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
+> > +       return gpio_do_set_config(gc, offset, mode);
+> 
+> These two lines are not equivalent: the new code no longer uses the
+> packed value of mode and arg!
 
-> their probing. Unfortunately, the driver will continuously emit those
-> messages, upon each successfully created/aggregated gpiochip. I built
+Good catch!
+It's a regression (pin control drivers expects arg to be 1 in case it has been
+called thru GPIO framework to set "default" values in terms of certain driver)
+and below mentioned commits must be reverted. This one seems has a typo which
+must be fixed.
 
-That is expected behavior, too: every time the driver core manages to
-bind a device to a driver, it will retry all previously deferred probes,
-in the hope they can be satisfied by the just bound device.
+> Hence this leads to subsequent cleanups in commits e5e42ad224a040f9
+> ("gpiolib: remove set but not used variable 'config'") and d18fddff061d2796
+> ("gpiolib: Remove duplicated function gpio_do_set_config()").
 
-Note that you can destroy these bogus devices, using e.g.
-
-    # echo gpio-aggregator.0 > \
-    /sys/bus/platform/drivers/gpio-aggregator/delete_device
-
-> gpio-aggregator as a loadable module, if that's relevant.
-
-Modular or non-modular shouldn't matter w.r.t. this behavior.
-Although unloading the module should get rid of the cruft.
-
-> Another comment is that, while the series _does_ allow specifying
-> gpio lines in the DTS (this would require a common compatible string
-> in gpio_aggregator_dt_ids[] and in the DTS node) and while those lines
-> are indeed exposed to userspace, based on my testing, these same gpio
-> lines are marked as "used/reserved" by the kernel. This means that
-> operating on those gpio pins from userspace will not be possible.
-> For instance, gpioget/gpioset return "Device or resource busy":
->
-> gpioget: error reading GPIO values: Device or resource busy
-> gpioset: error setting the GPIO line values: Device or resource busy
->
-> I guess Harish will be unhappy about that, as his expectation was that
-> upon merging gpio-aggregator with gpio-inverter, he will be able to
-> describe GPIO polarity and names in DTS without "hogging" the pins.
-> Perhaps this can be supplemented via an add-on patch later on?
-
-When aggregating GPIO lines, the original GPIO lines are indeed marked
-used/reserved, so you cannot use them from userspace.
-However, you are expected to use them through the newly created virtual
-gpiochip representing the aggregated GPIO lines.
-
-You can try this using the "door" example in
-Documentation/admin-guide/gpio/gpio-aggregator.rst, after replacing
-gpio2 {19,20} by gpio6 {12,13} to suit your H3ULCB.
-
-> For the whole series (leaving the above findings to your discretion):
->
-> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> However, what was the purpose of the PIN_CONF_PACKED() translation?
+> Why is it no longer needed?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
