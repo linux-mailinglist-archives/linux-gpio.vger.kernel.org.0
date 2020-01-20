@@ -2,112 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84626142609
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 09:44:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6148F142625
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 09:54:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgATIoz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 03:44:55 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34007 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgATIoz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 03:44:55 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so27990025otf.1;
-        Mon, 20 Jan 2020 00:44:55 -0800 (PST)
+        id S1726897AbgATIyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 03:54:22 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38957 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgATIyW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 03:54:22 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so28576260wrt.6
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2020 00:54:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
+        b=we/6y6edkk3YpKlsBXl/AgdVTKspovJ98gF9DwytZxXRdKu2lf0yHGZ9cqG+OHNl43
+         1D3wAY7FLKrkB72RdPqnamX5YdLo51GRCa74KmSY6GD35joffcxpIlx05IcZqarzXOP6
+         +x+WZdL8Gs45yw6pNJWCoKrxJUIpW0Icot9uVJGDAki8AJAjxn9VczF5OAkFpdczph4B
+         RkCNnyR+3vU+CuNo9xNEbZOrEsQFIuCf9xPQu0wKKvvAO/Bx0ch6NjL4QHxAd+wfp2yG
+         0v3gxZaqF1zpen8HTiUQZ68tg3+k1M5szuubctad3xbmDv0AW6NzZw39zcETHvk5c+cj
+         kz9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kdjFDmHpK9XF0winpVoDYfPnYppvi92C4n7zVPl2Zp0=;
-        b=Iysi9HCj2N98Hk3fWUHzYwuRHmIwoeXmlrRsY5GvEQ+LR1RQaJgyIZQ6U4dj/9ktAs
-         Ig8CsgC5GgIcMxy03L+HRx09nzP5xlVCYTFLSbs0IaaqpOzWKBZ8sU8NmhfV7w7/GZ3a
-         g7utZI0GkaG88IK+koYv4HDxnCdxD78Ftv/8GDoyseSKhw7AgpneOOk2kZHY2OOuX8f0
-         cQGH+XMWxg5W41xfyI9CyYk1ufBCNJdstDlCVKMfN/T+BiFy94zQhVYMyjU/23Ltwoiy
-         uVJsYKgnJvI+IbnzVqJ+vQ1/BDtztzl9Wa/pNHEL41xJdCvlqK5mo2sLIfUmFeTRubnK
-         bHRg==
-X-Gm-Message-State: APjAAAVxdZ8EFMLlpVsF8pne6ktHQ51RVi8SeJHtfY1NBairpTJsVEWT
-        Lrndl+gZPZeIBIfJ2rQOta4ilytbTLNccKIZrxo=
-X-Google-Smtp-Source: APXvYqy/30Y6RSrNBaAzSlxodfDb5Ph0XzdHPJUcUAO6HeXVBIyWvrHlP0eVPtLEofVgH2U4+d71oxhBLNJ2ZndvgxM=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr15192738otd.39.1579509894895;
- Mon, 20 Jan 2020 00:44:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-3-brgl@bgdev.pl>
-In-Reply-To: <20191224120709.18247-3-brgl@bgdev.pl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jan 2020 09:44:43 +0100
-Message-ID: <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kioLvgS74f9sJjCTsbx/ZLFmZG4mkGnzw8r1w1WYA/4=;
+        b=c/xYgpclBFgG9OqOyWs8ZMiBsANvmkGDdMudW3tWeNkJ4rLWKloAXSH776dFjVrPgx
+         l0wetKmSEHYvAH87xuTzYoxAQ6uOirJEPh9B05cz0x7GJ5XIFk9uaFrMnZrhU+JIudqA
+         UNqO7i9sGjbj1AHS1fcuZAtpAH2uZExjuPAKw9WnPS1jVeJF7cT/D3lrgo8+eAXqu3D7
+         ts8mpSdYQ1SL++eKowM+rd/WVWVLiO3GDhzCUkc+fNellVWU1UCkyjyjtcnfi9PLEDoS
+         wV4BT38DcaNGl+wKl6gHNYKpmZDdxMcb1GMHVTrjhNb9v71t6SqAK9wmAQFWl3DyEI1v
+         qY+Q==
+X-Gm-Message-State: APjAAAVoIQ17j2ISwVJ1KDD76jnCnIAiJgRs7qHe7GfdsXPaOGFVubZN
+        HfVUUmqAiyazyU/lnqWYOBbpDA==
+X-Google-Smtp-Source: APXvYqxCEa3WXWluxoJWVXwFldWEGwXwSD1xXL7D/5WNmT4sWEkYFaFe3u9dMJfoNyljA8GfrAY9CA==
+X-Received: by 2002:a5d:5304:: with SMTP id e4mr17084301wrv.426.1579510460638;
+        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id b21sm11998wmd.37.2020.01.20.00.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 00:54:20 -0800 (PST)
+Date:   Mon, 20 Jan 2020 08:54:35 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v11 03/13] mfd: rohm PMICs - use platform_device_id to
+ match MFD sub-devices
+Message-ID: <20200120085435.GA15507@dell>
+References: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+ <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13994480cab6d5d6376c8f5228572e55ca06e479.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Mon, 20 Jan 2020, Matti Vaittinen wrote:
 
-On Tue, Dec 24, 2019 at 1:08 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Instead of calling the gpiochip's set_config() callback directly and
-> checking its existence every time - just add a new routine that performs
-> this check internally. Call it in gpio_set_config() and
-> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> the check for chip->set() as it's irrelevant to this config option.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Thanks to Stephen Boyd I today learned we can use platform_device_id
+> to do device and module matching for MFD sub-devices!
+> 
+> Do device matching using the platform_device_id instead of using
+> explicit module_aliases to load modules and custom parent-data field
+> to do module loading and sub-device matching.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> No changes since v10
+> 
+>  drivers/clk/clk-bd718x7.c             | 12 ++++++++-
+>  drivers/mfd/rohm-bd70528.c            |  3 +--
+>  drivers/mfd/rohm-bd718x7.c            | 39 ++++++++++++++++++++++-----
+>  drivers/regulator/bd718x7-regulator.c | 17 +++++++++---
+>  include/linux/mfd/rohm-generic.h      |  3 +--
+>  5 files changed, 58 insertions(+), 16 deletions(-)
 
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
->   * rely on gpio_request() having been called beforehand.
->   */
->
-> +static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
-> +                             enum pin_config_param mode)
-> +{
-> +       if (!gc->set_config)
-> +               return -ENOTSUPP;
-> +
-> +       return gc->set_config(gc, offset, mode);
-> +}
-> +
->  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->                            enum pin_config_param mode)
->  {
-> @@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->         }
->
->         config = PIN_CONF_PACKED(mode, arg);
-> -       return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
-> +       return gpio_do_set_config(gc, offset, mode);
-
-These two lines are not equivalent: the new code no longer uses the
-packed value of mode and arg!
-Hence this leads to subsequent cleanups in commits e5e42ad224a040f9
-("gpiolib: remove set but not used variable 'config'") and d18fddff061d2796
-("gpiolib: Remove duplicated function gpio_do_set_config()").
-
-However, what was the purpose of the PIN_CONF_PACKED() translation?
-Why is it no longer needed?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Still needs Clk and Regulator Acks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
