@@ -2,71 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 401031427F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 11:14:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80436142868
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 11:46:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgATKOg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 05:14:36 -0500
-Received: from mga12.intel.com ([192.55.52.136]:39185 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgATKOg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Jan 2020 05:14:36 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 02:14:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="215195988"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 20 Jan 2020 02:14:34 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1itU4p-0000C0-Na; Mon, 20 Jan 2020 12:14:35 +0200
-Date:   Mon, 20 Jan 2020 12:14:35 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v1] pinctrl: sunrisepoint: Add Coffee Lake-S ACPI ID
-Message-ID: <20200120101435.GF32742@smile.fi.intel.com>
-References: <20200116110951.31644-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYVDggtFhfmNfk4soU--s9Dg=gPmUtEpxKCpKLdRcNJFw@mail.gmail.com>
+        id S1726465AbgATKqx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 05:46:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35469 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgATKqx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 05:46:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s7so7000116pjc.0;
+        Mon, 20 Jan 2020 02:46:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JKQd08QDFRtvTj1ZwdqX1fz4cEVtWxEffFD2wFMazAQ=;
+        b=VBmmPkLlsDnv1RuzEOTwTbhpAtnQ18ML5ejXF7Ua4r204fKO6OK871CoKSb2R/KvFJ
+         vyy9OIe9n+KWIvvbIpgD1SDKiF9FCfbYWm48ElhtzDt+5N0JNQfUMiHIp0B+SewJ/WnQ
+         aDOZsC2nhtcqQm6olu00E+Rv3YaJMKAkjNkTdaVCxZIIcGtviCs5dRqmj+J9A49Cjo1U
+         8+O+o/zQX7r9Q46YJ++nkTNlglZEmZVqfi4HrK2OC8zoZe0YVv8fYoPFJMi/ZtwHFxjH
+         Y8JZ1T/a8lQ3ogFI826bd3rQPE2DGcMfoXidEicEDYwBUOWArxnwFgZ1V4AkqNLbJhmX
+         P6+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JKQd08QDFRtvTj1ZwdqX1fz4cEVtWxEffFD2wFMazAQ=;
+        b=FrjiKsuLNxc0g04+Ox9DOkyg50dIxFfqKSPzf1Q9sGMz5lnoZPT5RmF/bqgAJrDISI
+         SlwgfbADTnFlsiIge05qIcVdG1QF7eGVdy5Sl3NTeSgl0LuVMyLgdOMrKddKh9IW8bO/
+         9xiBxC7kneL36hf7jDP88oc1XQKUcbCoZoKQ1+IVMjNedUsG81JxrNhMqbN3jasnG/C6
+         nOYLMro3jcAHgwlzQGXyxAxYC+MunvSrLxU2S0pqzT15vqJRs2/AahzE3C/nIYeEDPP7
+         nAtZDxVM8TPWx2YiXcya3R9llTxOL+Dw3IZOnIEmsJMkGfx/eyIcwwi+t2Zq1/1uTJuo
+         pfMw==
+X-Gm-Message-State: APjAAAX1Ibk9XrR9FALyTUvZLhmdQAVUxXiw7+KknXKeR3LWDQoHZdnO
+        n2Dx0+cGUd/07urf1z8EyglpG133
+X-Google-Smtp-Source: APXvYqwdtxa+6QbNdzRmdFDcJYkOSnikPgB0mblZVQ7Un9nKI1Jyfhjs7Vlm7VRJQljp8lJ5uf34DA==
+X-Received: by 2002:a17:902:26a:: with SMTP id 97mr13945149plc.74.1579517212463;
+        Mon, 20 Jan 2020 02:46:52 -0800 (PST)
+Received: from sol.lan (220-235-85-249.dyn.iinet.net.au. [220.235.85.249])
+        by smtp.gmail.com with ESMTPSA id d14sm40564927pfq.117.2020.01.20.02.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jan 2020 02:46:51 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpiolib: remove unnecessary argument from set_config call
+Date:   Mon, 20 Jan 2020 18:46:26 +0800
+Message-Id: <20200120104626.30518-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYVDggtFhfmNfk4soU--s9Dg=gPmUtEpxKCpKLdRcNJFw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 09:10:43AM +0100, Linus Walleij wrote:
-> On Thu, Jan 16, 2020 at 12:09 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > Intel Coffee Lake-S PCH has the same GPIO hardware than Sunrisepoint-H
-> > PCH but the ACPI ID is different. Add this new ACPI ID to the list of
-> > supported devices.
-> >
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Just because I understand it:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Remove unnecessary argument when setting PIN_CONFIG_BIAS_DISABLE.
 
-Thanks! Sorry, it was a bit late and final commit misses this tag.
+Fixes: 2148ad7790ea ("gpiolib: add support for disabling line bias")
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-> Expecting a pull request for some v5.6 material soon!
+No argument is expected by pinctrl, so removing it should be harmless.
 
-Had been just sent.
+ drivers/gpio/gpiolib.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 78a16e42f222..93d12fc9f82d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3057,7 +3057,6 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned offset,
+ 	unsigned arg;
+ 
+ 	switch (mode) {
+-	case PIN_CONFIG_BIAS_DISABLE:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 		arg = 1;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.24.1
 
