@@ -2,109 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8ED3142B09
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 13:41:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DFC142B0F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 13:41:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgATMla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 07:41:30 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:43708 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgATMla (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 07:41:30 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-ca-5e259ff60110
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 0A.AA.08102.6FF952E5; Mon, 20 Jan 2020 13:41:26 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Mon, 20 Jan 2020 13:41:14 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v12 00/10] Support ROHM BD71828 PMIC
-Thread-Topic: [PATCH v12 00/10] Support ROHM BD71828 PMIC
-Thread-Index: AQHVz3GxRarqEI+FJkC62zSkifitkKfzbi0A
-Date:   Mon, 20 Jan 2020 12:41:14 +0000
-Message-ID: <ecc8ab43dfdb78c7bcab82311f608f6d4e12dc5c.camel@fi.rohmeurope.com>
-References: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <cover.1579511114.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1A3D109FBE7D05489C91039926E23B72@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1726619AbgATMll convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 20 Jan 2020 07:41:41 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57615 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgATMll (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 07:41:41 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 80D38FF802;
+        Mon, 20 Jan 2020 12:41:38 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 13:41:37 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200120134137.54dc307e@xps13>
+In-Reply-To: <20200120121329.GC206171@ulmo>
+References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
+        <20200120121329.GC206171@ulmo>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf1AUZRjH593d211+bPNygryRNrUjUo1CNEav5TQ2Sb415Thj9YcVuMbK
-        kcfdzd7RgNZEMGicDAr4A0/uTpJTwPPQC4b4NTGEhKdjHYLglDAow4yMgoXiGGrtcir88+73
-        fZ7n8/3uH8/L0/p6Lo7PMtlkxSQZRTac6ayd9a+cccenvTpctxrXBAc4vHvyOIcflvdw+I4z
-        wOADo2MsHuvcDbC7+6IO7znfqMOFxxpY/GfTaQaP3D0L8Ez/DxTe/+AEhf8uGdbh6l01DP7J
-        /QDgS61VLG666QO452Q/iz2DQQpXeXoZPPVPMYWDgVR8IDDJ4auBsywuDA7RuKijm8OPLp9h
-        cOnF9WuXEq/LC8jsv+WATA0VccTl3UlaHFc54q8vZslfl9tZ8ovTy5FjpRU6MnOhjCHj1Q0M
-        +W2omSKHXPcp0lDSDUjtyXscmfY/vxFujlizVbJ9vSkr05T09pYIw/G+vZylUsi9Nn2LzQc3
-        I+0gjEdwFbpV8StlB+G8Hg4A1FjeyoQuvQD11p9m7YDnWbgG2a9wmoyGq9GZYJQ2QsNABHLV
-        lnCa0SKI0aFL93Sa1mb+OFhFhfRraLjaSWssA+NRUbNFKwtwA5qqu05rWg/Xoba+ibnxMJiK
-        2tsCcxrApag4f3JO0zAW+cdD9ghCVNP+Ox3SMejG9UeP6yLquD/KaFE0fBk1tCaF0LWoxd34
-        2OZFtH/PKBf6hSh07vAYsw8sdixIcMzTjgW0YwHtWEAfBbp6gLKlLGOmZJOTExU5J1ExG7LV
-        z5fmbD8Ibd2dn8F/Xe93AYoHXeBZnhJjBO4rMU3/zFZzRp5BshrSlRyjbO0CiKfFaOFoQXya
-        XsiQ8nbIivlJ6zmeEWOFhNGyL/RQy9ouyxZZedJdwvMiEh5WqWCUImfKuduyjLb5NsWHaebh
-        cdFW2ZQhK1KOzZCubUe6VV0PrRWp5h5xablWi5StVkNoACTz+244f6T5bqdHPQenOjy0njGZ
-        TXJcrIDfVAGoAYYc09O4CRDLA3GRoGh2keoDfOo2oQZRatDAG6IWZJPmW3H5YPHns4c/u3Aq
-        pfluQeLrlh353m+b6FP2IwWZ68Dg8iUp7/R/2PlCwvrAyJaVm26/+1EeO1KTK99mIs5t3vVB
-        4rLKl86n9u28EvQVruK2rYjXfeLbnlrstV8rrfv4LdDigx6j8N7y8aS9ZfwKQ8KyysH2PvJd
-        64m2b3qmY6Yrv3f7Pk2pEBmrQUp+hVas0v+4eIqdPQQAAA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8sDQoNCkRvIHlvdSBrbm93IHRob3NlIGRheXMgd2hlbiBub3RoaW5nLCBfbm90aGluZ18g
-anVzdCB3b3JrcyBvdXQgYXMNCmludGVuZGVkPyBUb2RheSBpcyBvbmUgb2YgdGhvc2UuDQoNCk9u
-IE1vbiwgMjAyMC0wMS0yMCBhdCAxMToxMiArMDIwMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
-PiBQYXRjaCBzZXJpZXMgaW50cm9kdWNpbmcgc3VwcG9ydCBmb3IgUk9ITSBCRDcxODI4IFBNSUMN
-Cj4gDQo+IFJPSE0gQkQ3MTgyOCBpcyBhIHBvd2VyIG1hbmFnZW1lbnQgSUMgY29udGFpbmluZyA3
-IGJ1Y2tzIGFuZCA3IExET3MuDQo+IEFsbA0KPiByZWd1bGF0b3JzIGNhbiBiZSBjb250cm9sbGVk
-IGluZGl2aWR1YWxseSB2aWEgSTJDLiBCdWNrcyAxLDIsNiBhbmQNCj4gNyBjYW4gYWxzbyBiZSBh
-c3NpZ25lZCB0byBhICJyZWd1bGF0b3IgZ3JvdXAiIGNvbnRyb2xsZWQgYnkgcnVuLQ0KPiBsZXZl
-bHMuDQo+IEVnLiBSdW4gbGV2ZWwgc3BlY2lmaWMgdm9sdGFnZXMgYW5kIGVuYWJsZS9kaXNhYmxl
-IHN0YXR1c2VzIGZvciBlYWNoDQo+IG9mDQo+IHRoZXNlIGJ1Y2tzIGNhbiBiZSBzZXQgdmlhIHJl
-Z2lzdGVyIGludGVyZmFjZS4gVGhlIGJ1Y2sgcnVuLWxldmVsDQo+IGdyb3VwDQo+IGFzc2lnbm1l
-bnQgKHNlbGVjdGlvbiBpZiBidWNrIGlzIHRvIGJlIGNvbnRyb2xsZWQgaW5kaXZpZHVhbGx5IG9y
-IHZpYQ0KPiBydW4tbGV2ZWxzKSBjYW4gYmUgY2hhbmdlZCBhdCBydW4tdGltZSB2aWEgSTJDLg0K
-PiANCj4gVGhpcyBwYXRjaCBzZXJpZXMgYnJpbmdzIG9ubHkgdGhlIGJhc2ljIHN1cHBvcnQgZm9y
-IGNvbnRyb2xsaW5nDQo+IHJlZ3VsYXRvcnMgaW5kaXZpZHVhbGx5IHZpYSBJMkMuDQoNCi8vc25p
-cA0KDQo+IFBhdGNoIDExOg0KPiAgICAgICAgIEFsbG93IGNvbnRyb2wgb2YgR1AoSSlPIHBpbnMg
-b24gQkQ3MTgyOCB2aWEgR1BJTyBzdWJzeXN0ZW0NCj4gDQoNCkkgYWNjaWRlbnRhbGx5IHJlYmFz
-ZWQgdG8gd3JvbmcgY29tbWl0IGFuZCBjcm9wcGVkIHRoZSBHUElPIHBhdGNoIG91dA0Kb2YgdGhl
-IHNlcmllcy4gTGVlIC0gY2FuIHlvdSB0YWtlIHRoZSBHUElPIHBhcnQgZnJvbSB2MTEgKHBhdGNo
-IDExLzEzDQp0aGVyZSkuIEl0IHNob3VsZCBhcHBseSBjbGVhbmx5IGFuZCBJIGhhdmUgbm8gY2hh
-bmdlcyB0byBpdC4gT3Igc2hvdWxkDQpJIGp1c3QgcmVzZW5kIHRoZSB3aG9sZSBzZXJpZXMgKGFn
-YWluKT8NCg0KQnIsDQogICAgTWF0dGkgVmFpdHRpbmVuDQo=
+Hi Thierry,
+
+Thanks for reviewing,
+
+> > +static bool max7313_pwm_reg_is_accessible(struct device *dev, unsigned int reg)
+> > +{
+> > +	struct pca953x_chip *chip = dev_get_drvdata(dev);
+> > +	unsigned int bank_sz = chip->driver_data & PCA_GPIO_MASK;
+> > +
+> > +	if (reg >= MAX7313_MASTER && reg < (MAX7313_INTENSITY + bank_sz))
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  static bool pca953x_readable_register(struct device *dev, unsigned int reg)
+> >  {
+> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
+> >  	u32 bank;
+> >  
+> > +	if ((chip->driver_data & MAX_PWM) &&
+> > +	    max7313_pwm_reg_is_accessible(dev, reg))
+> > +		return true;  
+> 
+> This doesn't look correct. The MAX_PWM flag doesn't signify that all
+> GPIOs are used in PWM mode, right? So the above check would return true
+> even if you're trying to access GPIO registers on a chip that has PWM
+> support.
+
+Not exactly: this part returns true only if we are using a chip with
+PWM and we are accessing PWM registers.
+
+Otherwise, for instance if we are accessing GPIO registers, this will
+not return anything.
+
+> 
+> I think you still want to proceed with the checks below if reg doesn't
+> match any of the PWM related registers.
+
+This is precisely what we do here. See the
+max7313_pwm_reg_is_accessible helper above: only the PWM registers are
+checked, I suppose this is the part you missed.
+
+> So it'd be something more along
+> these lines:
+> 
+> 	if ((chip->driver_data & MAX_PWM) &&
+> 	    !max7313_pwm_reg_is_accessible(dev, reg))
+> 		return false;
+> 
+> > +
+> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+> >  		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
+> >  		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
+> > @@ -267,6 +318,10 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
+> >  	struct pca953x_chip *chip = dev_get_drvdata(dev);
+> >  	u32 bank;
+> >  
+> > +	if ((chip->driver_data & MAX_PWM) &&
+> > +	    max7313_pwm_reg_is_accessible(dev, reg))
+> > +		return true;  
+> 
+> Same here.
+> 
+> > +
+> >  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+> >  		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
+> >  			PCA953x_BANK_CONFIG;
+> > @@ -855,6 +910,335 @@ static int device_pca957x_init(struct pca953x_chip *chip, u32 invert)
+> >  	return ret;
+> >  }
+> >  
+
+[...]
+
+> > +static void max7313_pwm_free(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm)
+> > +{
+> > +	struct max7313_pwm_data *data = pwm_get_chip_data(pwm);
+> > +
+> > +	gpiochip_free_own_desc(data->desc);
+> > +	kfree(data);
+> > +}
+> > +
+> > +static int max7313_pwm_apply(struct pwm_chip *chip,
+> > +			     struct pwm_device *pwm,
+> > +			     const struct pwm_state *state)
+> > +{
+> > +	struct max7313_pwm *max_pwm = to_max7313_pwm(chip);
+> > +	struct pca953x_chip *pca_chip = to_pca953x(max_pwm);
+> > +	unsigned int intensity, active;
+> > +	int ret = 0;
+> > +
+> > +	if (!state->enabled ||
+> > +	    state->period < PWM_PERIOD_NS ||  
+> 
+> I think you should actually make this a != so that you refuse any
+> attempt to change the period, since you can't do it anyway.
+
+Actually we discussed this with Uwe, see the below snippet:
+
+---8<---
+> > > +	if (state->period != PWM_PERIOD_NS ||
+> > > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > > +		return -EINVAL;    
+> > 
+> > The check for period is too strong. Anything bigger than PWM_PERIOD_NS
+> > is acceptable, too. (The policy I'd like to see is: Provide the biggest
+> > period possible not bigger than the requested policy.)  
+> 
+> I don't understand, what is this parameter supposed to mean? the period
+> cannot be changed, it is ruled by an internal oscillator. In this case
+> any period bigger than the actual period cannot be physically achieved.
+> If we derive ratios with a bigger period than possible, why not
+> allowing it for lower periods too?  
+
+Yes, I understood that the period is fixed for your PWM. However
+consider a consumer who would prefer a different period. If you decline
+all requests unless state->period == PWM_PERIOD_NS the consumer has no
+guide to determine that unless all periods are tested. If however asking
+for period = 2s results in getting 31.25 ms this allows the consumer to
+assume that no period setting between 2s and 31.25 ms is possible. And
+so the usual policy to implement is as stated in my previous mail.
+--->8---
+
+> 
+> > +	    state->polarity != PWM_POLARITY_NORMAL)
+> > +		return -EINVAL;
+> > +
+> > +	/* Convert the duty-cycle to be in the [0;16] range */
+> > +	intensity = max7313_pwm_duty_to_intensity(state->duty_cycle);
+> > +
+
+[...]
+
+> > @@ -1130,7 +1522,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
+> >  
+> >  	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
+> >  	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
+> > -	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT), },
+> > +	{ .compatible = "maxim,max7313", .data = OF_953X(16, PCA_INT | MAX_PWM), },
+> >  	{ .compatible = "maxim,max7315", .data = OF_953X( 8, PCA_INT), },
+> >  	{ .compatible = "maxim,max7318", .data = OF_953X(16, PCA_INT), },  
+> 
+> Aren't you missing a call to pwmchip_remove() somewhere? Otherwise once
+> you unload the driver, the PWM chip will become dangling and any attempt
+> to access its PWMs will crash.
+
+That's true, I'll correct.
+
+
+Thanks,
+Miquèl
