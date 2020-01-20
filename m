@@ -2,92 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 530C9143230
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 20:31:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 978C0143243
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 20:32:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgATTbX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 14:31:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56299 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgATTbX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 14:31:23 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itclc-0005rx-4z; Mon, 20 Jan 2020 20:31:20 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1itclb-0001lC-0P; Mon, 20 Jan 2020 20:31:19 +0100
-Date:   Mon, 20 Jan 2020 20:31:18 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200120193118.3vzwy5uxnsy2w4sv@pengutronix.de>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
- <20200120121329.GC206171@ulmo>
- <20200120134137.54dc307e@xps13>
- <20200120141944.GD206171@ulmo>
- <20200120144457.eznywc423ehw6kuc@pengutronix.de>
- <20200120163822.232b1410@xps13>
+        id S1727009AbgATTcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 14:32:04 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36366 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727766AbgATTcC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 14:32:02 -0500
+Received: by mail-ed1-f67.google.com with SMTP id j17so619527edp.3
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2020 11:32:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=kLfnsSTIjE2YEe6HI6GtqXd6cMnhTRLMcstoRngEtLrpsW8Des52P9cJGak3H8TgGi
+         7pI7x0ReUsZVA5020Qw65cEVulbgAqf7PV7Yj5z98jIQHYXuhdjNseji1wTJmoRk9owd
+         jH0nw85bxKb6JNDbbMZz77rTtrhB/lrp1T9+1Yzp1e0fAmiYnPF2y/wqE3N2vxlEpqDg
+         Q62+v45VGQo8fprIjkXGYdl8n0+0lt4RTeTWLmEirmHeh05e1zsbOQ1RyEmjVmqN0eJc
+         PRg9w7tG3wGqyiL8Rgrtjody799fKx6nbHvtMQHhCmcCncWFfzoetJS1edNfQP320vCH
+         Vilg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=F5/W8p6u7zE1Zd+Be35vTEvCl0RZTJ1Br8KX0JU9r+CkpjoOWpAFK98eeLxg2Evyh2
+         lwBfv0HUkpAkCQbYv5pZ3jawuXAxhib2gMTBOevfYPEoCBQlabjWPPI8dYeypufxIS6J
+         yVuwP9dbxXZJrPixkv3zFvW8DT2fmSud5/1j9JaGRJmVuJRBn6sxQcq7loprQ5BahJ6E
+         Y95xh8wqUse7xb3kFKmLdJkYQjXj+u+4jWPNFy10KoJQBfVs3dMRSUAXqVPezI25MaZY
+         r9gAKsxeD1PfW6PGscZ6aI/Lrroda+jjcMIMwyCu/YrAtRB8I2oXAoOnOZnRkQ7EKpuQ
+         7pnA==
+X-Gm-Message-State: APjAAAUFztZzosqIV5d0ITSBa4v5bC5de/lVu6sZvc7vAa07xcRebSSM
+        H3xCo2VSUAGZBq+aSt7pq0zbNrhFLIgPzZ5WA3U=
+X-Google-Smtp-Source: APXvYqwPh6D8ihOXjaVWGs/0GLulEekGPU0xOOyxhr7PagnLX+E8xWeQy/UQ09ZNp2jZFCCt0xVGiodDu+D5No4niKg=
+X-Received: by 2002:a05:6402:505:: with SMTP id m5mr609398edv.15.1579548719077;
+ Mon, 20 Jan 2020 11:31:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200120163822.232b1410@xps13>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:31:57
+ -0800 (PST)
+Reply-To: mcclainejohn.13@gmail.com
+From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
+Date:   Mon, 20 Jan 2020 20:31:57 +0100
+Message-ID: <CAOE+jAB9Cv76tHqc-hO92yWjVshCsALoX=zT1ruNmX+0-Bjyxw@mail.gmail.com>
+Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
+ valued the sum of $12.8Million United States Dollars
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Miquèl,
+Attn: Dear Beneficiary,
 
-On Mon, Jan 20, 2020 at 04:38:22PM +0100, Miquel Raynal wrote:
-> One dumb question that I still have is: besides any backward
-> compatibility aspects, do we really care about the period/frequency of
-> the PWM? Why do we enforce a period and an active duration, while
-> we could limit ourselves to a ratio and let the driver use the most
-> suitable frequency if the hardware supports it?
+I wish to inform you that the diplomatic agent conveying your ATM CARD
+valued the sum of $12.8Million United States Dollars has misplaced
+your address and he is currently stranded at (George Bush
+International Airport) Houston Texas USA now
+We required you to reconfirm the following information's below to him
+so that he can deliver your Payment CARD to you today or tomorrow
+morning as information provided with open communications via email and
+telephone for security reasons.
+HERE IS THE DETAILS  HE NEED FROM YOU URGENT
+YOUR FULL NAME:========
+ADDRESS:========
+MOBILE NO:========
+NAME OF YOUR NEAREST AIRPORT:========
+A COPY OF YOUR IDENTIFICATION :========
 
-There are situations where just fixing the ratio would (nearly) be good
-enough. For example if you drive an LED just requesting a ratio might
-look fine at first glance. But 
+Note; do contact the diplomatic agent immediately through the
+information's listed below
+Contact Person: Diplomatic Agent, Mr. Mcclaine John
+EMAIL: mcclainejohn.13@gmail.com
+Tel:(223) 777-7518
 
-	.period = 5000 ms, .duty_cycle = 2500 ms
+Contact the diplomatic agent immediately
+because he is waiting to hear from you today with the needed information's.
 
-has quite a different effect than
+NOTE: The Diplomatic agent does not know that the content of the
+consignment box is $12.800,000,00 Million United States Dollars and on
+no circumstances should you let him know the content. The consignment
+was moved from here as family treasures, so never allow him to open
+the box. Please I have paid delivery fees for you but the only money
+you must send to Mcclaine John is your ATM CARD delivery fee $25.00
+only. text Him as you contact Him Immediately
 
-	.period = 500 ns, .duty_cycle = 250 ns
-
-while both are valid if you requested 50%.
-
-Having said that I think the lowlevel API (i.e. what a device driver has
-to implement) is sane, as it allows to implement all possible requests,
-even if there might be a consumer that cares more about the absolute
-value of duty-cycle than the duty-cycle/period ratio; and it matches
-what most hardware models implement. There is usually a register to
-specify the period and one to specify the duty-cycle.
-
-And on top of that (at least once there is pwm_round_state()) you can
-implement all sort of helper functions that implement for example "best
-effort 50% with a period < 2ms".
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Thanks,
+with Regards.
+Prof, William Roberts
+Director DHL COURIER SERVICES-Benin
