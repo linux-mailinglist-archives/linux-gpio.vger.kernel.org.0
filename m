@@ -2,103 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FFE14267A
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 10:00:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 816ED1426A8
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 10:09:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgATI7x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 03:59:53 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:60150 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgATI7w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 03:59:52 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-52-5e256c0684b1
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 87.69.08102.60C652E5; Mon, 20 Jan 2020 09:59:50 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 20 Jan 2020 09:59:38 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "noralf@tronnes.org" <noralf@tronnes.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH v11 06/13] mfd: input: bd71828: Add power-key support
-Thread-Topic: [PATCH v11 06/13] mfd: input: bd71828: Add power-key support
-Thread-Index: AQHVz1wGrQEGyJ5fD0SaA4XlttGe5qfzLygAgAABRYA=
-Date:   Mon, 20 Jan 2020 08:59:37 +0000
-Message-ID: <ad1d57cd3025cf9205240f23a3558728087d7c6b.camel@fi.rohmeurope.com>
-References: <cover.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
-         <aa965067acfbdaa862f5f5de8b66e2c161f276a0.1579501711.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200120085510.GB15507@dell>
-In-Reply-To: <20200120085510.GB15507@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0DE9CF02669805478756659A339F3AAD@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        id S1726451AbgATJJy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 04:09:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgATJJy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 20 Jan 2020 04:09:54 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A67020684;
+        Mon, 20 Jan 2020 09:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579511393;
+        bh=vbAaO1LjWMydY+UDit/LOlD+QdhAMjmRUBC6/xTciUI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Z8JoobvHuhNgmbrbIoqg/RNLpNLhodMK2TnkhVzBAaozj7wRwet84iBLCdbKiu68V
+         JTPENT7TvgZv0pRxV3YVp4G79sL4cu+peo64P9DRY6axIzHnliS19t4ctptG/k6BU0
+         Ae//fG/4yViRpu4zaXyfma5rNZ92GppC49HKsues=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1itT4B-000DhL-KB; Mon, 20 Jan 2020 09:09:51 +0000
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxzG995d715+dDlbXN/VscXL0PhjImYZ75Q4k4XsNGqWQPxjZmXn
-        erbF0pK2bLIfxkSBUcAIQ4mVFkWYCA0dnUbsSiBYGNZFg5PKAmiYSAbbYHMiYzrc3W4Kf71P
-        3ud5vp+75PtCUtPK6KHF5hIdNsHK0fFUV9Ojttdoa4ph/dmrCbihf4DBJVNfMfifql4GP/BG
-        KXxsdIzGY10lANdFrqlw2dXzKnzoTIDGQxe+pvCdmR6AH978gsDVj88S+I/y2yp8uriBwt/U
-        PQb4h1AtjS/82gpwb8tNGjfe6idwbWMfhafvlxK4P5qJj0WnGDwS7aHxof5BEhd1RBg8H2uj
-        8JFr72xJ5v0+P+Af/V0F+OnBIob3+T/lL3lGGD7YXErzw7EwzXd6/Qx/5siXKv7h95UUP346
-        QPHfDV4k+BrfHMEHyiOAb2qZZfg/gy+/y76XkLFHcH2UZTHZUjd/kGB+MnEgPwL3T3bFyIOg
-        CbpBHETs6+jb38sIWWvYAYCCLQfcIF7SfQBNXbmjcgMIaTYDuX9k5EwSm4Ya+u5RsibZUxBV
-        hlk5/xwbJNHF+WGVbGjZraio+D6lFLahmYpZUtEb0b1AjJY1xaag1lg7kLWa3YlmPBFGAUcA
-        OtlW/x84jl2NJnzpcgawyaj04BShgHUoOD6rUn6ARQ3h66Sil6KJu/P/33OoY26UkseQ7CoU
-        CKUqcgvyVWcpU5aj6rJRRvmCJejKiTHqKNB5FgE8C2XPQtmzqOxZVD4FVM0A5QkWq0lwiWnr
-        HGLBOofdnCcdH9rzgkDZvwft4En31m5AQNANXoQEt1TN5HIGzfN77MZCs+A05zgKrKKzGyBI
-        cknqkYrlBo3aKBR+IjrsT61lkOJ06pWjle9rWJm1TxTzRcdT9yUIOaTeti/FoFniEE3i/r0W
-        q2vBJmCcPDxen+QUbUbRIRS4zDnynuQ4pUWRrUSJWyHX1c58IU+6VapRsAYenfDWkzDibawn
-        NZTNbhP1OjXeKEVZOWousD0DTQIdBJxWvTZXchOlR/hszqSEICTEQDonI1zCgqWX9vKFt9j4
-        G4dXdhizY5//tOFunc+2I+WchdK/8ar21todw9m/+UvCQ4bQ9ln3yPTxmozAX1WbQjBrYHNn
-        sy9k8v4894vx3PXdYznZQ7XFexNrzjcWpq6Y77t88m1VyY2du+qz1u/6eFWu781L48vKfZ2b
-        tr9yODm9/bid6w1rez7LzNSaOMppFtJWkw6n8C8q2mnkQQQAAA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 20 Jan 2020 10:09:51 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com,
+        atish.patra@wdc.com, sagar.kadam@sifive.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
+In-Reply-To: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+References: <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
+Message-ID: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMjAtMDEtMjAgYXQgMDg6NTUgKzAwMDAsIExlZSBKb25l
-cyB3cm90ZToNCj4gT24gTW9uLCAyMCBKYW4gMjAyMCwgTWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0K
-PiANCj4gPiBVc2UgZ3Bpb19rZXlzIHRvIHNlbmQgcG93ZXIgaW5wdXQtZXZlbnQgdG8gdXNlci1z
-cGFjZSB3aGVuIHBvd2VyDQo+ID4gYnV0dG9uIChzaG9ydCkgcHJlc3MgaXMgZGV0ZWN0ZWQuDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWF0dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5A
-Zmkucm9obWV1cm9wZS5jb20+DQo+ID4gQWNrZWQtZm9yLU1GRC1ieTogTGVlIEpvbmVzIDxsZWUu
-am9uZXNAbGluYXJvLm9yZz4NCj4gPiAtLS0NCj4gPiBObyBjaGFuZ2VzIHNpbmNlIHYxMA0KPiA+
-IA0KPiA+ICBkcml2ZXJzL21mZC9yb2htLWJkNzE4MjguYyB8IDI2ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+IA0KPiBE
-cm9wIHRoZSAiaW5wdXQ6IiB0YWcgZnJvbSB0aGUgc3ViamVjdCBsaW5lIHBsZWFzZS4NCj4gDQpJ
-J2xsIGRvLiBBbmQgSSdsbCBhbHNvIGRyb3AgdGhlIExFRCBwYXRjaGVzICgxMiBhbmQgMTMpIGFz
-IEkgbm90aWNlZA0KdGhlIHBhdGNoIDEyIGhhcyBzb21lIGlzc3VlcyAoYmVzaWRlcyBMRURzIC0g
-b3RoZXIgdGhhbiBiaW5kaW5ncyAtDQpzdGlsbCBsYWNrIGFjayBmcm9tIFBhdmVsKS4NCg0KSSds
-bCBzZW5kIHYxMiBhZnRlciBhIHdoaWxlLg0KDQpCciwNCiAgICBNYXR0aSBWYWl0dGluZW4NCg==
+On 2019-12-10 12:11, Yash Shah wrote:
+> This patch series adds GPIO drivers, DT documentation and DT nodes for
+> HiFive Unleashed board. The gpio patches are mostly based on Wesley's 
+> patch.
+> The patchset also adds hierarchy irq domain support as it is required 
+> by this
+> gpio driver. It also includes the irqdomain patch to introduce
+> irq_domain_translate_onecell() and irq-nvic driver patch to use this 
+> newly
+> introduced function.
+> 
+> This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed 
+> board
+> 
+> Changes:
+> v4 vs v3:
+> - Rename the DT yaml document to more standard naming 
+> (sifive,gpio.yaml)
+> - Drop "clock-names" property from yaml document
+> - Add "minItems" to "interrupts" node in yaml
+> 
+> v3 vs v2:
+> - Include patch for irq-nvic driver to use irq_domain_translate_onecell
+> - Remove unnecessary inclusion of header files
+> - Use a single prefix for all symbols in this driver
+> - Rename the "enabled" field of struct sifive_gpio to "irq_state"
+> - Remove unused variables and locking from probe()
+> - Other minor changes
+> 
+> v2 vs v1:
+> - Add patch to introduce irq_domain_translate_onecell() and use it in
+>   the sifive PLIC driver
+> - Drop the usage of own locks, instead use internal bgpio_locks
+> - Consistently use regmap for register access throughout the gpio code
+> - Convert the GPIO DT documentation into a json schema
+> - Other minor changes based upon feedback received on v1
+> 
+> v1 vs RFC:
+> Incorporated below changes as suggested by Linus Walleij on RFC version 
+> of this
+> patchset[0]
+> - Dropped PWM patches as they are already merged.
+> - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
+> - Remove unwanted inclusion of header files
+> - Use regmap MMIO instead of customised sifive_assign_bit()
+> - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
+> - Use hierarchical irqdomain
+> 
+> [0]
+> https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
+> 
+> Yash Shah (6):
+>   genirq: introduce irq_domain_translate_onecell
+>   irqchip: nvic: Use irq_domain_translate_onecell instead of custom 
+> func
+>   irqchip: sifive: Support hierarchy irq domain
+>   gpio: sifive: Add DT documentation for SiFive GPIO
+>   gpio: sifive: Add GPIO driver for SiFive SoCs
+>   riscv: dts: Add DT support for SiFive FU540 GPIO driver
+
+I've queued the first 5 patches. The last one should go via the
+corresponding platform tree.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
