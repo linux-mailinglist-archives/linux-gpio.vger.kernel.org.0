@@ -2,89 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F09AF1427AF
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 10:54:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B09D1427DC
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Jan 2020 11:07:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbgATJya (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Jan 2020 04:54:30 -0500
-Received: from mga11.intel.com ([192.55.52.93]:60863 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgATJy3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Jan 2020 04:54:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jan 2020 01:54:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,341,1574150400"; 
-   d="scan'208";a="274969721"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jan 2020 01:54:26 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1itTlL-0008P3-Qm; Mon, 20 Jan 2020 11:54:27 +0200
-Date:   Mon, 20 Jan 2020 11:54:27 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1726130AbgATKHi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Jan 2020 05:07:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46555 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbgATKHi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Jan 2020 05:07:38 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z124so15295510pgb.13
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Jan 2020 02:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QwVSy/UlBenHYnwE7D59Ph9sGDgV6/MJ0VlCaFhejaA=;
+        b=VenjqfgfoUrBSjMaGcA3oRKfSYbtWkih4nqyfu/uyy6/oIw8k/5nIKgquzoiJMYdYT
+         ZPESfraMcFQQ3gugum2zfEsMs+ToV9DP7LBR7IeyaU1kYl8OIrb/9bTS1SYSrSYqo5he
+         C3az+BeogxEjXv9FQoNoH+NlBIDwQYW62LCW92ugmLC9GFIJRCt17Nsspcs/uSjJjHoc
+         fiI4kdXv3hom8BRFbi+Q+1zmNhjj4vGPbUnwgQgyu4yUmIlP7VeBkRiZqQAwrFnrmnes
+         EWm/RN1oEgDwOtbAA+Wb5KtiD4lMc0HtVlSO2fWq3gT749fnk0Wip0N+dVpD/xCEZp40
+         dIDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QwVSy/UlBenHYnwE7D59Ph9sGDgV6/MJ0VlCaFhejaA=;
+        b=iErYrtDHcfyF9F++aBvixrSYdEzgHmDuLWZbnOoF5XJ1jbjEQmD2BQAmc7Kd9wb9Zm
+         DJ1oRnQ47jUAOLfNO7azHmaEt3Tyw22H3DKtyfbFC2YZJ3p0RxOfnJHtgL7somEHjXip
+         AaoIcxYEzWNGrn1uPyhgHOU/I+xURQr9b1LReUowC9RP5DvI6ijQ373R/dbdTnLvSwAU
+         AhQX05MXrcD09GL2H59iko923IIP9SSlJg+qD1aH4q0qsFzy0vGHBtUFegQQCeQ8f9Sj
+         +/Jq19uqwOtTQY7nLJcB6XZk5xmSw6S2HMTL4SLhYIHqOCBFnWnpsxrb/9l5LlXiSvan
+         DwBQ==
+X-Gm-Message-State: APjAAAWkzkppshvQ99jVwtkQ9n3MwYAHgAo0s63mZJbWLOcYH8R/wzLf
+        OzDRGS+polyUSncye/PVjBq5TBHEe9s=
+X-Google-Smtp-Source: APXvYqzpinmuP/2/5rq6vCseDNyvQXgP+tqNIs7HvmbKQVUEekMEvkLQFnbjTJRxEAFYmip4Bx9rmA==
+X-Received: by 2002:a63:447:: with SMTP id 68mr61190979pge.364.1579514857959;
+        Mon, 20 Jan 2020 02:07:37 -0800 (PST)
+Received: from pek-lpggp6.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
+        by smtp.gmail.com with ESMTPSA id o184sm36246860pgo.62.2020.01.20.02.07.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 20 Jan 2020 02:07:37 -0800 (PST)
+From:   Kevin Hao <haokexin@gmail.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling
- set_config()
-Message-ID: <20200120095427.GE32742@smile.fi.intel.com>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <20191224120709.18247-3-brgl@bgdev.pl>
- <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWigj9_CDdDD49qU-y7r+he53v1NEKE9_0RBQCFUrY-Qw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [PATCH] gpiolib: Lower verbosity when allocating hierarchy irq
+Date:   Mon, 20 Jan 2020 17:56:25 +0800
+Message-Id: <20200120095625.25164-1-haokexin@gmail.com>
+X-Mailer: git-send-email 2.14.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 09:44:43AM +0100, Geert Uytterhoeven wrote:
-> On Tue, Dec 24, 2019 at 1:08 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Instead of calling the gpiochip's set_config() callback directly and
-> > checking its existence every time - just add a new routine that performs
-> > this check internally. Call it in gpio_set_config() and
-> > gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> > the check for chip->set() as it's irrelevant to this config option.
+In the current codes, the following 3 lines would be output to
+the console for each irq line.
+  gpio gpiochip0: (gpio_thunderx): allocate IRQ 10, hwirq 0
+  gpio gpiochip0: (gpio_thunderx): found parent hwirq 245784
+  gpio gpiochip0: (gpio_thunderx): alloc_irqs_parent for 10 parent hwirq 245784
 
-...
+In general, there are about tens of irq lines for each gpio chip,
+and then it would emit so many insignificant log in the boot process.
+These infos are more suitable for the dbg purpose. So change these
+to the dbg level. With this change, about 200 lines are suppressed
+on my Marvell cn96xx board.
 
-> >         config = PIN_CONF_PACKED(mode, arg);
-> > -       return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
-> > +       return gpio_do_set_config(gc, offset, mode);
-> 
-> These two lines are not equivalent: the new code no longer uses the
-> packed value of mode and arg!
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+---
+ drivers/gpio/gpiolib.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Good catch!
-It's a regression (pin control drivers expects arg to be 1 in case it has been
-called thru GPIO framework to set "default" values in terms of certain driver)
-and below mentioned commits must be reverted. This one seems has a typo which
-must be fixed.
-
-> Hence this leads to subsequent cleanups in commits e5e42ad224a040f9
-> ("gpiolib: remove set but not used variable 'config'") and d18fddff061d2796
-> ("gpiolib: Remove duplicated function gpio_do_set_config()").
-
-> However, what was the purpose of the PIN_CONF_PACKED() translation?
-> Why is it no longer needed?
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e9f168b276ad..66e66c141fe8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2006,7 +2006,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 	if (ret)
+ 		return ret;
+ 
+-	chip_info(gc, "allocate IRQ %d, hwirq %lu\n", irq,  hwirq);
++	chip_dbg(gc, "allocate IRQ %d, hwirq %lu\n", irq,  hwirq);
+ 
+ 	ret = girq->child_to_parent_hwirq(gc, hwirq, type,
+ 					  &parent_hwirq, &parent_type);
+@@ -2014,7 +2014,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 		chip_err(gc, "can't look up hwirq %lu\n", hwirq);
+ 		return ret;
+ 	}
+-	chip_info(gc, "found parent hwirq %u\n", parent_hwirq);
++	chip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
+ 
+ 	/*
+ 	 * We set handle_bad_irq because the .set_type() should
+@@ -2034,7 +2034,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 	if (!parent_arg)
+ 		return -ENOMEM;
+ 
+-	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
++	chip_dbg(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
+ 		  irq, parent_hwirq);
+ 	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
+ 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, parent_arg);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.14.4
 
