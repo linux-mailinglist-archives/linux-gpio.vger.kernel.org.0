@@ -2,141 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE560143F63
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2020 15:23:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 644F0144407
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2020 19:09:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgAUOXD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jan 2020 09:23:03 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54795 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbgAUOXD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jan 2020 09:23:03 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ituQm-0007TS-GA; Tue, 21 Jan 2020 15:23:00 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ituQl-0008Sh-BZ; Tue, 21 Jan 2020 15:22:59 +0100
-Date:   Tue, 21 Jan 2020 15:22:59 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: About rounding in the PWM framework [Was: Re: [PATCH v5] gpio:
- pca953x: Add Maxim MAX7313 PWM support]
-Message-ID: <20200121142259.c56h2dpxtiha6xp6@pengutronix.de>
-References: <20200107133130.1338-1-miquel.raynal@bootlin.com>
- <20200120121329.GC206171@ulmo>
- <20200120134137.54dc307e@xps13>
- <20200120141944.GD206171@ulmo>
- <20200120144457.eznywc423ehw6kuc@pengutronix.de>
- <20200121125607.GA899558@ulmo>
+        id S1729080AbgAUSJw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Jan 2020 13:09:52 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42423 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728901AbgAUSJw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jan 2020 13:09:52 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p9so1661980plk.9
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Jan 2020 10:09:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EH1XhKHweKZm1qt/YkQUqWJniFdYwz0fW4qgVOl66fI=;
+        b=B8/lGSiO0lgQrhN0fvWf+dwD02G694b7a6WLkZSWklgWoQJhnRIU7O79Ks15f7KHHn
+         J0WSRN2kKyx1k4/x79uu2Ds3K829n1L+rch56RKVzm0q5GU/REM+aWGhOKSLkgbp3obm
+         KKPMcMrhJG2TVQpOAhM1AqP7dym4sF8zqjikA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EH1XhKHweKZm1qt/YkQUqWJniFdYwz0fW4qgVOl66fI=;
+        b=gKHgmbllx5l4nlns4y81TGdy+L39VTWmrZCigf4S7qsPvV4W0LDW8dL0nq9HnS58QP
+         lMUlx++SsdJl+j7jXRcSRm1W0IiRJ2sZZNcomp2V0m3wmmeehojSiX+9+VXlDQpqyNYd
+         R4s4FXP2FZ7FY3DgrfslfSOKQ2JNocmafGmisR5FU8AK9+SsEhJ3Cc2KvqD0IFH/3cCX
+         RVHQ4NepySYH9N68MhuXUcwqk6m7euUWV/yn+imMsQC7vmin8ZH2awHwDLIHix6FDHn5
+         iLjvc9jp788+CErwsWsONIvJuoosQvVJsBEtLm/l5PT4ctIw95c8x03AuXuCqP2Ewi4J
+         N3EA==
+X-Gm-Message-State: APjAAAVobJHdmTvd5jbT52YZDYxCeERlIEQq42GJN2flT950sLWB2gwf
+        c5VtHOIMokk8+56Mygjywa7QDg==
+X-Google-Smtp-Source: APXvYqztU4jLIKUa7KoTfYL8ZQxCHagt5sn8qt1lFvrFfIeAeTUxJtTHrItPzQlMjhthuXJ+PkOOUw==
+X-Received: by 2002:a17:90a:660d:: with SMTP id l13mr6676756pjj.23.1579630191887;
+        Tue, 21 Jan 2020 10:09:51 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id r62sm45504446pfc.89.2020.01.21.10.09.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2020 10:09:51 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] pinctrl: qcom: Don't lock around irq_set_irq_wake()
+Date:   Tue, 21 Jan 2020 10:09:50 -0800
+Message-Id: <20200121180950.36959-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200121125607.GA899558@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Thierry,
+We don't need to hold the local pinctrl lock here to set irq wake on the
+summary irq line. Doing so only leads to lockdep warnings instead of
+protecting us from anything. Remove the locking.
 
-On Tue, Jan 21, 2020 at 01:56:07PM +0100, Thierry Reding wrote:
-> On Mon, Jan 20, 2020 at 03:44:57PM +0100, Uwe Kleine-König wrote:
-> > Yeah, it's something like clk_round_rate that I want in the end. And to
-> > make it actually workable the IMHO only sane approach is to allow
-> > rounding in one direction without limit. And as pwm_apply_state() should
-> > be consistent with pwm_round_state() the former must round without
-> > limit, too.
-> 
-> Agreed on the point that both pwm_round_state() and pwm_apply_state()
-> should do the same rounding. In fact, in most cases I'd expect drivers
-> to implement the bulk of ->apply() and ->round() in the same function
-> that basically constructs the new state that will be applied to the
-> hardware in ->apply() but will be returned from ->round().
-> 
-> I'm not so sure about rounding without limit, though. I think it makes
-> sense to allow rounding to happen if you can match things closely enough
-> for it not to matter in most cases.
+ WARNING: possible circular locking dependency detected
+ 5.4.11 #2 Tainted: G        W
+ ------------------------------------------------------
+ cat/3083 is trying to acquire lock:
+ ffffff81f4fa58c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
 
-The problem is to define "close enough". And if we can agree on some
-definition, I wouldn't want to implement this policy in each and every
-driver. That's why I think implementing something easy like "always
-round down" is the right way for the lowlevel drivers. Allowing to round
-in both directions makes working with pwm_round_rate quite a bit more
-difficult, as does imposing a limit.
+ but task is already holding lock:
+ ffffff81f4880c18 (&pctrl->lock){-.-.}, at: msm_gpio_irq_set_wake+0x48/0x7c
 
-With that the PWM core could implement a policy uniformly for all
-lowlevel drivers in a single place. You could even implement an API
-function that picks the available period that is nearest to the
-requested value.
+ which lock already depends on the new lock.
 
-> Strictly speaking we're already breaking use-cases that require a
-> fixed period because there's currently no way for consumers to
-> determine what the exact state is that is going to get applied.
-> Consumers could read back the state, but we already know that that
-> doesn't yield the correct result for some drivers.
+ the existing dependency chain (in reverse order) is:
 
-Currently this is true for all drivers as the core caches the value that
-was last set and a driver cannot give any feedback.
+ -> #1 (&pctrl->lock){-.-.}:
+        _raw_spin_lock_irqsave+0x64/0x80
+        msm_gpio_irq_ack+0x68/0xf4
+        __irq_do_set_handler+0xe0/0x180
+        __irq_set_handler+0x60/0x9c
+        irq_domain_set_info+0x90/0xb4
+        gpiochip_hierarchy_irq_domain_alloc+0x110/0x200
+        __irq_domain_alloc_irqs+0x130/0x29c
+        irq_create_fwspec_mapping+0x1f0/0x300
+        irq_create_of_mapping+0x70/0x98
+        of_irq_get+0xa4/0xd4
+        spi_drv_probe+0x4c/0xb0
+        really_probe+0x138/0x3f0
+        driver_probe_device+0x70/0x140
+        __device_attach_driver+0x9c/0x110
+        bus_for_each_drv+0x88/0xd0
+        __device_attach+0xb0/0x160
+        device_initial_probe+0x20/0x2c
+        bus_probe_device+0x34/0x94
+        device_add+0x35c/0x3f0
+        spi_add_device+0xbc/0x194
+        of_register_spi_devices+0x2c8/0x408
+        spi_register_controller+0x57c/0x6fc
+        spi_geni_probe+0x260/0x328
+        platform_drv_probe+0x90/0xb0
+        really_probe+0x138/0x3f0
+        driver_probe_device+0x70/0x140
+        device_driver_attach+0x4c/0x6c
+        __driver_attach+0xcc/0x154
+        bus_for_each_dev+0x84/0xcc
+        driver_attach+0x2c/0x38
+        bus_add_driver+0x108/0x1fc
+        driver_register+0x64/0xf8
+        __platform_driver_register+0x4c/0x58
+        spi_geni_driver_init+0x1c/0x24
+        do_one_initcall+0x1a4/0x3e8
+        do_initcall_level+0xb4/0xcc
+        do_basic_setup+0x30/0x48
+        kernel_init_freeable+0x124/0x1a8
+        kernel_init+0x14/0x100
+        ret_from_fork+0x10/0x18
 
-> Also, in practice, for the large majority of use-cases the exact period
-> doesn't matter as long as the actual numbers are close enough to the
-> requested values and the duty cycle/period ratio is about the same as
-> what was requested.
+ -> #0 (&irq_desc_lock_class){-.-.}:
+        __lock_acquire+0xeb4/0x2388
+        lock_acquire+0x1cc/0x210
+        _raw_spin_lock_irqsave+0x64/0x80
+        __irq_get_desc_lock+0x64/0x94
+        irq_set_irq_wake+0x40/0x144
+        msm_gpio_irq_set_wake+0x5c/0x7c
+        set_irq_wake_real+0x40/0x5c
+        irq_set_irq_wake+0x70/0x144
+        cros_ec_rtc_suspend+0x38/0x4c
+        platform_pm_suspend+0x34/0x60
+        dpm_run_callback+0x64/0xcc
+        __device_suspend+0x310/0x41c
+        dpm_suspend+0xf8/0x298
+        dpm_suspend_start+0x84/0xb4
+        suspend_devices_and_enter+0xbc/0x620
+        pm_suspend+0x210/0x348
+        state_store+0xb0/0x108
+        kobj_attr_store+0x14/0x24
+        sysfs_kf_write+0x4c/0x64
+        kernfs_fop_write+0x15c/0x1fc
+        __vfs_write+0x54/0x18c
+        vfs_write+0xe4/0x1a4
+        ksys_write+0x7c/0xe4
+        __arm64_sys_write+0x20/0x2c
+        el0_svc_common+0xa8/0x160
+        el0_svc_handler+0x7c/0x98
+        el0_svc+0x8/0xc
 
-Can you describe which policy you think should be implemented in
-pwm_apply_state()?
+ other info that might help us debug this:
 
-> [...]
-> That still means that we'll be ignoring mismatches between fixed-period
-> producers and variable-period consumers. Allowing producers to overwrite
-> whatever is passed in (without potentially being able to get anywhere
-> near the requested values) is making it too easy to get things wrong,
-> don't you think?
+  Possible unsafe locking scenario:
 
-A sharp knife is a great tool. Of course you can hurt yourself or others
-with it. But does that convince you to cut your vegetables with a
-dull-edged knife?
+        CPU0                    CPU1
+        ----                    ----
+   lock(&pctrl->lock);
+                                lock(&irq_desc_lock_class);
+                                lock(&pctrl->lock);
+   lock(&irq_desc_lock_class);
 
-> > > However, ignoring period settings because the controller supports only a
-> > > fixed period seems a bit of an extreme.
-> > 
-> > So the setting I want is:
-> > 
-> > 	if (request.period < HW_PERIOD)
-> > 		fail();
-> > 		
-> > and with the reasoning above, that's the only sensible thing (apart from
-> > the revered policy of rounding up and so failing for requested periods
-> > that are bigger than the implementable period).
-> 
-> But that's just as arbitrary as anything else. request.period ==
-> HW_PERIOD - 1 might be an entirely fine setting in many cases.
+  *** DEADLOCK ***
 
-Ack. Technically it's arbitrary as anything else, exactly my point. But
-among the many arbitrary policies it is I think one of the very few that
-can easily be worked with and allows to let a consumer make an informed
-choice without jumping through more hoops than necessary.
+ 7 locks held by cat/3083:
+  #0: ffffff81f06d1420 (sb_writers#7){.+.+}, at: vfs_write+0xd0/0x1a4
+  #1: ffffff81c8935680 (&of->mutex){+.+.}, at: kernfs_fop_write+0x12c/0x1fc
+  #2: ffffff81f4c322f0 (kn->count#337){.+.+}, at: kernfs_fop_write+0x134/0x1fc
+  #3: ffffffe89a641d60 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x348
+  #4: ffffff81f190e970 (&dev->mutex){....}, at: __device_suspend+0x168/0x41c
+  #5: ffffff81f183d8c0 (lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+  #6: ffffff81f4880c18 (&pctrl->lock){-.-.}, at: msm_gpio_irq_set_wake+0x48/0x7c
 
-Best regards
-Uwe
+ stack backtrace:
+ CPU: 4 PID: 3083 Comm: cat Tainted: G        W         5.4.11 #2
+ Hardware name: Google Cheza (rev3+) (DT)
+ Call trace:
+  dump_backtrace+0x0/0x174
+  show_stack+0x20/0x2c
+  dump_stack+0xc8/0x124
+  print_circular_bug+0x2ac/0x2c4
+  check_noncircular+0x1a0/0x1a8
+  __lock_acquire+0xeb4/0x2388
+  lock_acquire+0x1cc/0x210
+  _raw_spin_lock_irqsave+0x64/0x80
+  __irq_get_desc_lock+0x64/0x94
+  irq_set_irq_wake+0x40/0x144
+  msm_gpio_irq_set_wake+0x5c/0x7c
+  set_irq_wake_real+0x40/0x5c
+  irq_set_irq_wake+0x70/0x144
+  cros_ec_rtc_suspend+0x38/0x4c
+  platform_pm_suspend+0x34/0x60
+  dpm_run_callback+0x64/0xcc
+  __device_suspend+0x310/0x41c
+  dpm_suspend+0xf8/0x298
+  dpm_suspend_start+0x84/0xb4
+  suspend_devices_and_enter+0xbc/0x620
+  pm_suspend+0x210/0x348
+  state_store+0xb0/0x108
+  kobj_attr_store+0x14/0x24
+  sysfs_kf_write+0x4c/0x64
+  kernfs_fop_write+0x15c/0x1fc
+  __vfs_write+0x54/0x18c
+  vfs_write+0xe4/0x1a4
+  ksys_write+0x7c/0xe4
+  __arm64_sys_write+0x20/0x2c
+  el0_svc_common+0xa8/0x160
+  el0_svc_handler+0x7c/0x98
+  el0_svc+0x8/0xc
 
+Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 5d6f9f61ce02..9a8daa256a32 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -960,7 +960,6 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+-	unsigned long flags;
+ 
+ 	/*
+ 	 * While they may not wake up when the TLMM is powered off,
+@@ -971,12 +970,8 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+ 	if (d->parent_data)
+ 		irq_chip_set_wake_parent(d, on);
+ 
+-	raw_spin_lock_irqsave(&pctrl->lock, flags);
+-
+ 	irq_set_irq_wake(pctrl->irq, on);
+ 
+-	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+-
+ 	return 0;
+ }
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Sent by a computer, using git, on the internet
+
