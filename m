@@ -2,210 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 358D61447CF
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Jan 2020 23:38:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1AF144C07
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Jan 2020 07:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgAUWiK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Jan 2020 17:38:10 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37864 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgAUWiK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Jan 2020 17:38:10 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k14so4529103otn.4;
-        Tue, 21 Jan 2020 14:38:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rCPpFo01LA0ufFxgslJygDyMKU7n29hE5cPSJPV/Tis=;
-        b=OxUKNe9V7GuLMJ0jqODlCKNtsA1gBvm4xIaDzrrDODo3yfg/ATfFb4PDr973Isi+XZ
-         1LWH5kbzYdjN3mHicl433V/TWgoM9+ywFjrLvQ3+9dyF81D8e4iKeWWBL/TrL6mj+3w/
-         35EmkOGwVJG/LAdeJpnxl1WI8HIngXsF2Iv/EQRegFw/mCZXGE6w8uHXFq3GKXghR9JK
-         agiUkFanhMzQMJc1cRm8f+kedvL4OrhdPJ1fXfCgnbE3Gu1HUMtBBlpbZBek/JmmlCLT
-         Lz/Wh6Nqfqp8RXX/TaKy3V46dp+qUNJa7EtD6c37IuEgJvJN/nbT+QALhrFA+ZAY0jfP
-         uXxg==
-X-Gm-Message-State: APjAAAVxkno8VKFSimet1VUoQ8Z2MzhKiKeym3GjORch6mZy7yoDSkoL
-        q105lOZMgDjWat7P9V1bPw==
-X-Google-Smtp-Source: APXvYqxaMwA5tZhskkLIJL7NCltuCFOMNVxEM744Gs29VLJijpUh//35TuSNy4uUL26HFT1N/gjOsw==
-X-Received: by 2002:a05:6830:1481:: with SMTP id s1mr5259732otq.66.1579646288799;
-        Tue, 21 Jan 2020 14:38:08 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v14sm13967733oto.16.2020.01.21.14.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jan 2020 14:38:08 -0800 (PST)
-Received: (nullmailer pid 1428 invoked by uid 1000);
-        Tue, 21 Jan 2020 22:38:07 -0000
-Date:   Tue, 21 Jan 2020 16:38:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to
- json-schema
-Message-ID: <20200121223807.GA24850@bogus>
-References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
+        id S1726103AbgAVGxY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Jan 2020 01:53:24 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7754 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725884AbgAVGxY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Jan 2020 01:53:24 -0500
+X-UUID: 7ea6983bb9d9486785d06bcd5b84f0db-20200122
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Bkkv2SlP/58V7+P3Bi8i3ZC64d86zcDO203xGyHiNBg=;
+        b=lFTMEXVlMJsyXXM9Pka6P0VqG6juX++DUWU+D3/25oO25OqA2jQgoRA+zsaekCDW/etkHGAkwXvqTqnyCg1tgKwH0tfoYzfryc1kGrCPeycSRSlDOs9Cqkworb8FtYi4HKwkSwM1Oofb2O6QyFkkEQBZvNRcG46Co+iCorZKc/o=;
+X-UUID: 7ea6983bb9d9486785d06bcd5b84f0db-20200122
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2060551540; Wed, 22 Jan 2020 14:53:17 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 22 Jan 2020 14:52:13 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 22 Jan 2020 14:51:57 +0800
+From:   <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v8 1/6] pinctrl: mediatek: Check gpio pin number and use binary search in mtk_hw_pin_field_lookup()
+Date:   Wed, 22 Jan 2020 14:53:09 +0800
+Message-ID: <1579675994-7001-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 660429F95FABC97ED3652C11CAB95C6BF2D0D521B77C9A655959A16674A913DA2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 09:30:43AM +0800, Anson Huang wrote:
-> Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- the lisence should be GPL-2.0.
-> ---
->  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 -----------
->  .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 69 ++++++++++++++++++++++
->  2 files changed, 69 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> deleted file mode 100644
-> index 66de750..0000000
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -* Freescale IMX8MQ IOMUX Controller
-> -
-> -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> -for common binding part and usage.
-> -
-> -Required properties:
-> -- compatible: "fsl,imx8mq-iomuxc"
-> -- reg: should contain the base physical address and size of the iomuxc
-> -  registers.
-> -
-> -Required properties in sub-nodes:
-> -- fsl,pins: each entry consists of 6 integers and represents the mux and config
-> -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
-> -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-> -  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
-> -  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
-> -  Reference Manual for detailed CONFIG settings.
-> -
-> -Examples:
-> -
-> -&uart1 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_uart1>;
-> -};
-> -
-> -iomuxc: pinctrl@30330000 {
-> -        compatible = "fsl,imx8mq-iomuxc";
-> -        reg = <0x0 0x30330000 0x0 0x10000>;
-> -
-> -        pinctrl_uart1: uart1grp {
-> -                fsl,pins = <
-> -                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
-> -                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
-> -                >;
-> -        };
-> -};
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> new file mode 100644
-> index 0000000..e010808
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale IMX8MQ IOMUX Controller
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +description:
-> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> +  for common binding part and usage.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mq-iomuxc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  'grp$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      fsl,pins:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          each entry consists of 6 integers and represents the mux and config
-> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-> +          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
-> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
-> +          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KMS4gQ2hlY2sg
+aWYgZ3BpbyBwaW4gbnVtYmVyIGlzIGluIHZhbGlkIHJhbmdlIHRvIHByZXZlbnQgZnJvbSBnZXQg
+aW52YWxpZA0KICAgcG9pbnRlciAnZGVzYycgaW4gdGhlIGZvbGxvd2luZyBjb2RlOg0KCWRlc2Mg
+PSAoY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqKSZody0+c29jLT5waW5zW2dwaW9dOw0KDQoy
+LiBJbXByb3ZlICBtdGtfaHdfcGluX2ZpZWxkX2xvb2t1cCgpDQoyLjEgTW9kaWZ5IG10a19od19w
+aW5fZmllbGRfbG9va3VwKCkgdG8gdXNlIGJpbmFyeSBzZWFyY2ggZm9yIGFjY2VsZXJhdGluZw0K
+ICAgICBzZWFyY2guDQoyLjIgQ29ycmVjdCBtZXNzYWdlIGFmdGVyIHRoZSBmb2xsb3dpbmcgY2hl
+Y2sgZmFpbDoNCiAgICBpZiAoaHctPnNvYy0+cmVnX2NhbCAmJiBody0+c29jLT5yZWdfY2FsW2Zp
+ZWxkXS5yYW5nZSkgew0KCQlyYyA9ICZody0+c29jLT5yZWdfY2FsW2ZpZWxkXTsNCiAgICBUaGUg
+b3JpZ2luYWwgbWVzc2FnZSBpczoNCiAgICAJIk5vdCBzdXBwb3J0IGZpZWxkICVkIGZvciBwaW4g
+JWQgKCVzKVxuIg0KICAgIEhvd2V2ZXIsIHRoZSBjaGVjayBpcyBvbiBzb2MgY2hpcCBsZXZlbCwg
+bm90IG9uIHBpbiBsZXZlbCB5ZXQuDQogICAgU28gdGhlIG1lc3NhZ2UgaXMgY29ycmVjdGVkIGFz
+Og0KICAgIAkiTm90IHN1cHBvcnQgZmllbGQgJWQgZm9yIHRoaXMgc29jXG4iDQoNClNpZ25lZC1v
+ZmYtYnk6IExpZ2h0IEhzaWVoIDxsaWdodC5oc2llaEBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2
+ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCAyNyArKysrKysr
+KysrKysrKysrKystLS0tLS0NCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJp
+cy5jICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysrKysrKysrDQogMiBmaWxlcyBjaGFuZ2Vk
+LCA0NiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIGIvZHJpdmVycy9waW5j
+dHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQppbmRleCAyMGUxYzg5Li5kNjNl
+MDVlIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
+bW1vbi12Mi5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
+bW9uLXYyLmMNCkBAIC02OCwzMiArNjgsNDQgQEAgc3RhdGljIGludCBtdGtfaHdfcGluX2ZpZWxk
+X2xvb2t1cChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIHsNCiAJY29uc3Qgc3RydWN0IG10a19w
+aW5fZmllbGRfY2FsYyAqYywgKmU7DQogCWNvbnN0IHN0cnVjdCBtdGtfcGluX3JlZ19jYWxjICpy
+YzsNCisJaW50IHN0YXJ0ID0gMCwgZW5kLCBjaGVjazsNCisJYm9vbCBmb3VuZCA9IGZhbHNlOw0K
+IAl1MzIgYml0czsNCiANCiAJaWYgKGh3LT5zb2MtPnJlZ19jYWwgJiYgaHctPnNvYy0+cmVnX2Nh
+bFtmaWVsZF0ucmFuZ2UpIHsNCiAJCXJjID0gJmh3LT5zb2MtPnJlZ19jYWxbZmllbGRdOw0KIAl9
+IGVsc2Ugew0KIAkJZGV2X2RiZyhody0+ZGV2LA0KLQkJCSJOb3Qgc3VwcG9ydCBmaWVsZCAlZCBm
+b3IgcGluICVkICglcylcbiIsDQotCQkJZmllbGQsIGRlc2MtPm51bWJlciwgZGVzYy0+bmFtZSk7
+DQorCQkJIk5vdCBzdXBwb3J0IGZpZWxkICVkIGZvciB0aGlzIHNvY1xuIiwgZmllbGQpOw0KIAkJ
+cmV0dXJuIC1FTk9UU1VQUDsNCiAJfQ0KIA0KKwllbmQgPSByYy0+bnJhbmdlcyAtIDE7DQogCWMg
+PSByYy0+cmFuZ2U7DQogCWUgPSBjICsgcmMtPm5yYW5nZXM7DQogDQotCXdoaWxlIChjIDwgZSkg
+ew0KLQkJaWYgKGRlc2MtPm51bWJlciA+PSBjLT5zX3BpbiAmJiBkZXNjLT5udW1iZXIgPD0gYy0+
+ZV9waW4pDQorCXdoaWxlIChzdGFydCA8PSBlbmQpIHsNCisJCWNoZWNrID0gKHN0YXJ0ICsgZW5k
+KSA+PiAxOw0KKwkJaWYgKGRlc2MtPm51bWJlciA+PSByYy0+cmFuZ2VbY2hlY2tdLnNfcGluDQor
+CQkgJiYgZGVzYy0+bnVtYmVyIDw9IHJjLT5yYW5nZVtjaGVja10uZV9waW4pIHsNCisJCQlmb3Vu
+ZCA9IHRydWU7DQorCQkJYnJlYWs7DQorCQl9IGVsc2UgaWYgKHN0YXJ0ID09IGVuZCkNCiAJCQli
+cmVhazsNCi0JCWMrKzsNCisJCWVsc2UgaWYgKGRlc2MtPm51bWJlciA8IHJjLT5yYW5nZVtjaGVj
+a10uc19waW4pDQorCQkJZW5kID0gY2hlY2sgLSAxOw0KKwkJZWxzZQ0KKwkJCXN0YXJ0ID0gY2hl
+Y2sgKyAxOw0KIAl9DQogDQotCWlmIChjID49IGUpIHsNCisJaWYgKCFmb3VuZCkgew0KIAkJZGV2
+X2RiZyhody0+ZGV2LCAiTm90IHN1cHBvcnQgZmllbGQgJWQgZm9yIHBpbiA9ICVkICglcylcbiIs
+DQogCQkJZmllbGQsIGRlc2MtPm51bWJlciwgZGVzYy0+bmFtZSk7DQogCQlyZXR1cm4gLUVOT1RT
+VVBQOw0KIAl9DQogDQorCWMgPSByYy0+cmFuZ2UgKyBjaGVjazsNCisNCiAJaWYgKGMtPmlfYmFz
+ZSA+IGh3LT5uYmFzZSAtIDEpIHsNCiAJCWRldl9lcnIoaHctPmRldiwNCiAJCQkiSW52YWxpZCBi
+YXNlIGZvciBmaWVsZCAlZCBmb3IgcGluID0gJWQgKCVzKVxuIiwNCkBAIC0xODIsNiArMTk0LDkg
+QEAgaW50IG10a19od19zZXRfdmFsdWUoc3RydWN0IG10a19waW5jdHJsICpodywgY29uc3Qgc3Ry
+dWN0IG10a19waW5fZGVzYyAqZGVzYywNCiAJaWYgKGVycikNCiAJCXJldHVybiBlcnI7DQogDQor
+CWlmICh2YWx1ZSA8IDAgfHwgdmFsdWUgPiBwZi5tYXNrKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQor
+DQogCWlmICghcGYubmV4dCkNCiAJCW10a19ybXcoaHcsIHBmLmluZGV4LCBwZi5vZmZzZXQsIHBm
+Lm1hc2sgPDwgcGYuYml0cG9zLA0KIAkJCSh2YWx1ZSAmIHBmLm1hc2spIDw8IHBmLmJpdHBvcyk7
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYyBi
+L2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMNCmluZGV4IDkyMzI2NGQu
+LjNlMTNhZTcgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1w
+YXJpcy5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQpA
+QCAtODEsNiArODEsOCBAQCBzdGF0aWMgaW50IG10a19waW5jb25mX2dldChzdHJ1Y3QgcGluY3Ry
+bF9kZXYgKnBjdGxkZXYsDQogCWludCB2YWwsIHZhbDIsIGVyciwgcmVnLCByZXQgPSAxOw0KIAlj
+b25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjOw0KIA0KKwlpZiAocGluID49IGh3LT5zb2Mt
+Pm5waW5zKQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQogCWRlc2MgPSAoY29uc3Qgc3RydWN0IG10a19w
+aW5fZGVzYyAqKSZody0+c29jLT5waW5zW3Bpbl07DQogDQogCXN3aXRjaCAocGFyYW0pIHsNCkBA
+IC0yMDYsNiArMjA4LDEwIEBAIHN0YXRpYyBpbnQgbXRrX3BpbmNvbmZfc2V0KHN0cnVjdCBwaW5j
+dHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQgaW50IHBpbiwNCiAJaW50IGVyciA9IDA7DQogCXUz
+MiByZWc7DQogDQorCWlmIChwaW4gPj0gaHctPnNvYy0+bnBpbnMpIHsNCisJCWVyciA9IC1FSU5W
+QUw7DQorCQlnb3RvIGVycjsNCisJfQ0KIAlkZXNjID0gKGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rl
+c2MgKikmaHctPnNvYy0+cGluc1twaW5dOw0KIA0KIAlzd2l0Y2ggKCh1MzIpcGFyYW0pIHsNCkBA
+IC02OTMsNiArNjk5LDkgQEAgc3RhdGljIGludCBtdGtfZ3Bpb19nZXRfZGlyZWN0aW9uKHN0cnVj
+dCBncGlvX2NoaXAgKmNoaXAsIHVuc2lnbmVkIGludCBncGlvKQ0KIAljb25zdCBzdHJ1Y3QgbXRr
+X3Bpbl9kZXNjICpkZXNjOw0KIAlpbnQgdmFsdWUsIGVycjsNCiANCisJaWYgKGdwaW8gPiBody0+
+c29jLT5ucGlucykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KIAlkZXNjID0gKGNvbnN0IHN0cnVj
+dCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvXTsNCiANCiAJZXJyID0gbXRrX2h3
+X2dldF92YWx1ZShodywgZGVzYywgUElOQ1RSTF9QSU5fUkVHX0RJUiwgJnZhbHVlKTsNCkBAIC03
+MDgsNiArNzE3LDkgQEAgc3RhdGljIGludCBtdGtfZ3Bpb19nZXQoc3RydWN0IGdwaW9fY2hpcCAq
+Y2hpcCwgdW5zaWduZWQgaW50IGdwaW8pDQogCWNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRl
+c2M7DQogCWludCB2YWx1ZSwgZXJyOw0KIA0KKwlpZiAoZ3BpbyA+IGh3LT5zb2MtPm5waW5zKQ0K
+KwkJcmV0dXJuIC1FSU5WQUw7DQorDQogCWRlc2MgPSAoY29uc3Qgc3RydWN0IG10a19waW5fZGVz
+YyAqKSZody0+c29jLT5waW5zW2dwaW9dOw0KIA0KIAllcnIgPSBtdGtfaHdfZ2V0X3ZhbHVlKGh3
+LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfREksICZ2YWx1ZSk7DQpAQCAtNzIyLDYgKzczNCw5IEBA
+IHN0YXRpYyB2b2lkIG10a19ncGlvX3NldChzdHJ1Y3QgZ3Bpb19jaGlwICpjaGlwLCB1bnNpZ25l
+ZCBpbnQgZ3BpbywgaW50IHZhbHVlKQ0KIAlzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3ID0gZ3Bpb2No
+aXBfZ2V0X2RhdGEoY2hpcCk7DQogCWNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2M7DQog
+DQorCWlmIChncGlvID4gaHctPnNvYy0+bnBpbnMpDQorCQlyZXR1cm47DQorDQogCWRlc2MgPSAo
+Y29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqKSZody0+c29jLT5waW5zW2dwaW9dOw0KIA0KIAlt
+dGtfaHdfc2V0X3ZhbHVlKGh3LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfRE8sICEhdmFsdWUpOw0K
+QEAgLTcyOSwxMiArNzQ0LDIyIEBAIHN0YXRpYyB2b2lkIG10a19ncGlvX3NldChzdHJ1Y3QgZ3Bp
+b19jaGlwICpjaGlwLCB1bnNpZ25lZCBpbnQgZ3BpbywgaW50IHZhbHVlKQ0KIA0KIHN0YXRpYyBp
+bnQgbXRrX2dwaW9fZGlyZWN0aW9uX2lucHV0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2ln
+bmVkIGludCBncGlvKQ0KIHsNCisJc3RydWN0IG10a19waW5jdHJsICpodyA9IGdwaW9jaGlwX2dl
+dF9kYXRhKGNoaXApOw0KKw0KKwlpZiAoZ3BpbyA+IGh3LT5zb2MtPm5waW5zKQ0KKwkJcmV0dXJu
+IC1FSU5WQUw7DQorDQogCXJldHVybiBwaW5jdHJsX2dwaW9fZGlyZWN0aW9uX2lucHV0KGNoaXAt
+PmJhc2UgKyBncGlvKTsNCiB9DQogDQogc3RhdGljIGludCBtdGtfZ3Bpb19kaXJlY3Rpb25fb3V0
+cHV0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2lnbmVkIGludCBncGlvLA0KIAkJCQkgICAg
+IGludCB2YWx1ZSkNCiB7DQorCXN0cnVjdCBtdGtfcGluY3RybCAqaHcgPSBncGlvY2hpcF9nZXRf
+ZGF0YShjaGlwKTsNCisNCisJaWYgKGdwaW8gPiBody0+c29jLT5ucGlucykNCisJCXJldHVybiAt
+RUlOVkFMOw0KKw0KIAltdGtfZ3Bpb19zZXQoY2hpcCwgZ3BpbywgdmFsdWUpOw0KIA0KIAlyZXR1
+cm4gcGluY3RybF9ncGlvX2RpcmVjdGlvbl9vdXRwdXQoY2hpcC0+YmFzZSArIGdwaW8pOw0KLS0g
+DQoxLjguMS4xLmRpcnR5DQo=
 
-Based on the description, I think this should be an uint32-matrix type 
-instead with a schema like this:
-
-items:
-  items:
-    - description: mux_reg
-    - description: conf_reg
-    - description: input_reg
-    - description: mux_val
-    - description: input_val
-    - description: pad setting
-
-(With better descriptions preferrably)
-
-The dts files should then be bracketed accordingly.
-   
-> +
-> +    required:
-> +      - fsl,pins
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    iomuxc: pinctrl@30330000 {
-> +        compatible = "fsl,imx8mq-iomuxc";
-> +        reg = <0x30330000 0x10000>;
-> +
-> +        pinctrl_uart1: uart1grp {
-> +            fsl,pins = <
-> +                0x234 0x49C 0x4F4 0x0 0x0	0x49
-> +                0x238 0x4A0 0x4F4 0x0 0x0	0x49
-> +            >;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
-> 
