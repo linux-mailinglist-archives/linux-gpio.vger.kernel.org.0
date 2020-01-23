@@ -2,92 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA434146BCC
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2020 15:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1FA8146BE6
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2020 15:53:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgAWOvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jan 2020 09:51:48 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41645 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgAWOvs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jan 2020 09:51:48 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so3737184ljc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2020 06:51:47 -0800 (PST)
+        id S1729017AbgAWOxq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jan 2020 09:53:46 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44996 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729186AbgAWOxq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jan 2020 09:53:46 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so3721727ljj.11
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2020 06:53:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wpQpzwBJizxiZM4AGXXfpA6ecY69PSZfjTnWJHiGDa8=;
-        b=zHHe+/KcMiM2OVqtuB66pI12fZZ+m42MLWk7c4e0dwk+4PVcDAQRQGkH2bom2snRGQ
-         s+BsUvWWCWn/MTDjvUDExBq6c17YH5kx0F4CyCRcPZrbl/ZMpiu+YXXREZiuP9fjopAh
-         6nzwPYR7jzYP/oLmPaeeXd80oppKKn5v+bFxr+JOdkrzoxP4QoNZX3OSQRYmjxTLSpIN
-         yUkUlNtjQoav+EWcGkkpcxkEmCFm0rUVno0+e+/fbqaGdQVmakXRyM+6XPcgkluEwF6X
-         h2FXrOfSJ2GEh5c6vvNjJv0+7qB0BJ5/fpXc/LPTa+mWWKNODEoyiZzCO5tRzLTQrV18
-         FARA==
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=IoZ+hHh9hNTkHT2YdnouTrYjcsSt8gBQuva/8HSDudsOjNdpBl4/AY6qjsAHBlriLV
+         nTHyHpV+MwD85kPFu8T95GN+dtKdP69SnHaFGu9mMcuxKzDrxWNde1TNydE3OP+B1pDi
+         YdKXnPtMUKfYQz+qEHDPX1SXImBIn5SKSC5ld3HA4mRE8mwoPRm2KAblSga8TJUt8lEV
+         HUCMahOwnl0Qgb5YsPjJK+Uf3STpWDbV5hPuSUlPye0aJKEqyc5myrXRWOe/3odRhFVy
+         gF8bxp2wwGmuv/sSJ77ptgBBO+GfpuXC/w9pS0s942Qk6Q5hbrRW5/BrbI+px+OdoBA5
+         ddQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wpQpzwBJizxiZM4AGXXfpA6ecY69PSZfjTnWJHiGDa8=;
-        b=ijiRxII0OspSTciS5Sth/ZkHjh+oLXUvTJHAA9TXDuGziyRpe+XgxWA1Vmw6KMbMN3
-         O1xvjYCN+knOP+0X6Pe9saBhbJ3iMG4YAMQXxw8KpamtmryihRc6+57NZhdccgygiaz6
-         VBTiiNg2E8NLbSqwzSnHeirMukgVmQssAhZkBj+ta+Jm7Tbp95UJIMtIlL789LXGPJaT
-         9P/aEMNi8QooRxIdlStFXgFZ723K1y5mEVH7JngrwBASqK3s8Zp3gDCp2gMvPp+ySDCG
-         XwauTZPXczk6/j0/czUoftymtDIfzGFgtMOMkAmS9C9BFyitpAR1h5n33U76ZqLuDHzK
-         Havg==
-X-Gm-Message-State: APjAAAWDLLdGXlILVjzPhhUDxNS1krXCYs7eOIANDJNOZeFD6lSKT1G9
-        nZbY7NmnUG6HLyYIf75NiCghlMEXAPxQVOWyT30MeA==
-X-Google-Smtp-Source: APXvYqyoaYqckC3ntGOF9x1FJqnlzYv1mgmrXUtrx2aG4vyVoA1H0f/fn7kbACbF5D4nDS8JX1hzZHSRQ8oee+Zg/Dg=
-X-Received: by 2002:a2e:9143:: with SMTP id q3mr23150980ljg.199.1579791106444;
- Thu, 23 Jan 2020 06:51:46 -0800 (PST)
+        bh=tP2rc3sKgqYT9el7f1WHPuLRZRmFlraniNcLzRTh1pc=;
+        b=hZRu0pDPeUojecKFeaKVLGRAJIiCjlfJaJHC7Tf8AdMjnR3YkEMdawJf9LKc9vf5FI
+         LFJYqzf1DFeDnx6gq+nArHfr1MZkGKsp+1afdOjrl/A3SGaNTwLLn7jW8cZ01jqN5t2J
+         ir1NGqHBCCrwhXmPe6y0DzCf5ytIrEhCDYyrgb1i3y+HYvkGuetJudmu5l51SsZuQA07
+         2DAKgdoBNk51KR9FjILGjZuX/PxBFX7TWvFE0WnsTCwW6HQYOZXmbQ2AiWk9Paf2rs/y
+         EGNy/SwgS+XxUB0UIxKahecLb3Di3098qZqhDVHNiMtn6mGG5Z2rUJ/sLDnU7nHnK8CJ
+         GoeA==
+X-Gm-Message-State: APjAAAUf0aABoKzjttVw/gkXuFSTJCPvpiWcMZFDMw1MNjd/kFaDQVLr
+        /bmY4Iv4Ki2esziVHoa+cXQiGm7zLT+2mshu9ktTDdFUanc=
+X-Google-Smtp-Source: APXvYqwfj7WWn0juBVOB8AF0fnjeeNkmI+4iRvbuJD3XjPlxz72XbJT6NEb8X5O+9ai22dAUSazBreWyIu9u9mNdGqM=
+X-Received: by 2002:a2e:98c4:: with SMTP id s4mr23335397ljj.102.1579791224055;
+ Thu, 23 Jan 2020 06:53:44 -0800 (PST)
 MIME-Version: 1.0
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com> <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
+References: <20200115073811.24438-1-bigunclemax@gmail.com>
+In-Reply-To: <20200115073811.24438-1-bigunclemax@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 15:51:35 +0100
-Message-ID: <CACRpkdb5JEBqncC9gfPxM_TL4Prmiu5ZSn0kXt9mHBBp49p4Aw@mail.gmail.com>
-Subject: Re: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by default
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>, maxime@cerno.tech,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+Date:   Thu, 23 Jan 2020 15:53:33 +0100
+Message-ID: <CACRpkdYqTCmG1=HM0QphPou43HFSXBNB5HH1R8xH0KEb=zxC1Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: clear irq in edge cause register before
+ unmask edge irq
+To:     Maxim <bigunclemax@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-pwm@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:43 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+On Wed, Jan 15, 2020 at 8:40 AM Maxim <bigunclemax@gmail.com> wrote:
 
-> Enable CONFIG_PINCTRL_IMX8MP by default to support i.MX8MP
-> pinctrl driver.
+> From: Maxim Kiselev <bigunclemax@gmail.com>
 >
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> When input GPIO set from 0 to 1, the interrupt bit asserted in the GPIO
+> Interrupt Cause Register (ICR) even if the corresponding interrupt
+> masked in the GPIO Interrupt Mask Register.
+>
+> Because interrupt mask register only affects assertion of the interrupt
+> bits in Main Interrupt Cause Register and it does not affect the
+> setting of bits in the GPIO ICR.
+>
+> So, there is problem, when we unmask interrupt with already
+> asserted bit in the GPIO ICR, then false interrupt immediately occurs
+> even if GPIO don't change their value since last unmask.
+>
+> Signed-off-by: Maxim Kiselev <bigunclemax@gmail.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Please merge this one patch through the ARM SoC tree.
-If don't know who collects the Freescale/iMX patches for
-ARM SoC right now....
+Since there is no feedback from the MVEBU maintainers I have
+tentatively applied the patch for v5.6 so it gets some testing.
 
 Yours,
 Linus Walleij
