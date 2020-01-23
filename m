@@ -2,66 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D3ED146D58
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2020 16:51:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0488D146F42
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Jan 2020 18:12:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbgAWPvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Jan 2020 10:51:32 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45494 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgAWPvc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jan 2020 10:51:32 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j26so3975477ljc.12
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2020 07:51:31 -0800 (PST)
+        id S1727590AbgAWRMM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Jan 2020 12:12:12 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36988 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgAWRMM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Jan 2020 12:12:12 -0500
+Received: by mail-io1-f66.google.com with SMTP id k24so3708366ioc.4
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Jan 2020 09:12:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vdAmR20VKvZny3ZCIFF+8ow8IttknFIdrlHdXv4O28M=;
-        b=ZUaQSZhHeaVvpK2bCqQh60+ZfTgbtx+VYEG3EhCHqaCZcJbcrvlvXlBvtasmJOoFUL
-         Jo4QZUYkDAmGljhwgZtDlVPJOMiPRCUFcaKxHLSvGwEUT/Z+TxFC0CwY6IkEDozF6o1d
-         /DzPl9LRnD9QmYxZmi82YrjYsb70/6C6uqhNmjaabeZbA3dlA3p/96XKmz9lFq2fXRlt
-         fjCaOtICXGwzr7aj+OqHk7febBXpvWD0wUnm/NWcgahVX/8XgZm0jaoOb1iSdDPJa5za
-         QrB8K2eqHFy/vh7iSw84qgCRvem4jtLvaPzEhK+QduS9EDUaSnoVa1nuImkRu4za9VB8
-         hQXQ==
+         :cc:content-transfer-encoding;
+        bh=mIIAYeW/67RwaR6brLjqtohs/0zFHmgUmZs9vUDZr54=;
+        b=r4Ye6viez3DYwVBjXsMGsvM7dvT8Ap+7yndgw1/hH+P7hHP81aLCg5X+2xK6WFtpTN
+         c/fiZgrEA126YnUmeLMESslAV0+wYbbJod3HpoVPBgV9sq5dnZs0TZr5Yyrhmi3mR2Xl
+         S27R62Tj7WpwNF+XYc5lMFbu21+5ZBySxvFvw2AKOqH4MSo5zuMN4yf22Afm1reS7zWY
+         KhSkQmnOajFUEQ/mO7NNDNRp18LKT0eAhbPj7J3g0dKsDlgVqUQ1UwVsxQuDQiNsDDQe
+         oOKzIa58+ZUn0zijbZQhXiPeSt07PpkoUthZmJzPQ+VXPVFZNWWQIMJXq/6solOWkQZI
+         6c/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vdAmR20VKvZny3ZCIFF+8ow8IttknFIdrlHdXv4O28M=;
-        b=lwjhD2lQP7rn0pD9t6ZSMuK+WSAu2c5nqAPLeHFfPqVSAl7JDlF4IgKVIRJCZzbRUD
-         rXKXjvlIiQB5EJA4Tc6xKHf/UNxTkm1nbHpDu4cnFYarmihvWutxxXBIXj+GCqp0zz1X
-         56eQJ7QNIxYstgxD4QVqpMMdv8oHIf31vrRz5gMhK7Y9316m1tTcoxApmELEcrgiTPvy
-         HtPI3vpT9gcoYB2ZPr5k/LEDxaFhX6wc0co4X7yEfU5A+Sp+fEr6GPazWEkKCjma/hBr
-         nHA3rXJqq9KdKv6Xmz8S7oxrqE500bc3DUeng6TGhC9EM1d05rHYs2L1XERCCu25a0my
-         cQtQ==
-X-Gm-Message-State: APjAAAVnpD0ulIlL08sqi4/IuC3FCzzuIrV+C2K2CFSu8J9zBXPQz3zV
-        Uehfw3gMMYGlt0B/BdDjjnrQQp3Sa44o0Z9mANqoTJNDClM=
-X-Google-Smtp-Source: APXvYqzTHx+ynAsEM3L5T+RMVEEf8yY0spWvfMCmhdiNnfrTvup7WbG3O3MVDgMO5KvY8Z8ciMWP+fctDWYL4bnsaGA=
-X-Received: by 2002:a2e:9143:: with SMTP id q3mr23314797ljg.199.1579794690614;
- Thu, 23 Jan 2020 07:51:30 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mIIAYeW/67RwaR6brLjqtohs/0zFHmgUmZs9vUDZr54=;
+        b=IraX68Y9Qwt5CLeV5DHaIL7pbxSocifMtDSI3e/Q4UtkKabmcyRhaayvCgV7H/U+C1
+         3Ke/rYwdoEntL8tMXK5bEkigG7uUeKlxP4PXlBpxvDLN7l8kiaVrtG3HB7dGNeadF3Kr
+         bLUYI3h/gsv5UlI04HLf2rsaMWlDdo9l45ib5GoQ2mblx2k+MdPCKqfFvh37uqvy1lFo
+         WQvFh6S49GtDi0iIvYNIyODtdy2xaBbDFcCf4lnmcenit2EO4FIPE2HM6nyjsA4bfOJL
+         J8Huw7EMyzNOP+ytC5YoVYmCQTW6fdyWYtYsm/r+B1TGTODRDjMzNXvWjRxljw1Yk9e6
+         R6ZA==
+X-Gm-Message-State: APjAAAWb3t+jxFnpfP+oRqPCroEpCPEOk57q7bjlo4mVyl7U5UaZr2KX
+        HhvDafKFctbeH57Y7VA509IZM2p9FZm8lL1plLOiPI4q
+X-Google-Smtp-Source: APXvYqwGBXYpREym3Z6WcuMzwqCsLxxUkcVtE06O/GBE6mfgh+bUxG5rSWh4AiA9wHCNecuCckBcUCjUJF7fgF2v2Yo=
+X-Received: by 2002:a02:c85b:: with SMTP id r27mr20530jao.57.1579799531598;
+ Thu, 23 Jan 2020 09:12:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20200122111150.11033-1-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20200122111150.11033-1-ckeepax@opensource.cirrus.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Jan 2020 16:51:19 +0100
-Message-ID: <CACRpkdZR==orQwXzOe9LitS6WYiPKKJRXR5b=F5s4NBAx4j7fQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: madera: Remove extra blank line
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        patches@opensource.cirrus.com
+References: <92120a07-6945-1be9-15de-9e9a461c45bc@nisbet.kiwi.nz>
+In-Reply-To: <92120a07-6945-1be9-15de-9e9a461c45bc@nisbet.kiwi.nz>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 23 Jan 2020 18:12:00 +0100
+Message-ID: <CAMRc=MdGSEbN3hD36E9npc8KjM3oxp-oE89OJqcEgsVc1Nbrnw@mail.gmail.com>
+Subject: Re: [libgpiod] [PATCH] iter: remove unnecessary indirection in free_dirs
+To:     "Nisbet, Chris" <chris@nisbet.kiwi.nz>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 12:11 PM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+sob., 18 sty 2020 o 02:30 Nisbet, Chris <chris@nisbet.kiwi.nz> napisa=C5=82=
+(a):
+>
+> It is not necessary to pass the address of the 'dirs' variable to
+> dirs_free(), so this commit removes the unnecessary indirection.
+>
+> Signed-off-by: Chris Nisbet <chris@nisbet.kiwi.nz>
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Hi Chris,
 
-Patch applied.
+this looks good but it doesn't apply on top of current master. Can you
+rebase it and resend?
 
-Yours,
-Linus Walleij
+Bartosz
