@@ -2,234 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 457C3148CEF
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 18:27:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A04149094
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 22:58:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390526AbgAXR11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jan 2020 12:27:27 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38058 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389900AbgAXR11 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jan 2020 12:27:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so2944561wrh.5
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jan 2020 09:27:24 -0800 (PST)
+        id S1726454AbgAXV57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jan 2020 16:57:59 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:35644 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAXV57 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jan 2020 16:57:59 -0500
+Received: by mail-yb1-f196.google.com with SMTP id q190so1717441ybq.2;
+        Fri, 24 Jan 2020 13:57:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f+1d4FRlTWDoZyLvhcrUylaJhZuzCdWZutZr0QUDHa4=;
-        b=EN4LDKx/+A9m19kIQgSzjf/5W2brwuUtJOdaMfXpXtsI/gW4HTHPkgH/876NIReTWJ
-         Tg5zHVO1XjuDF6TEMLMxIg9OXXU3QWUKi/kKngRSDqLKubZoL5N2LIV62IwcAIc1ZmpG
-         GBnFtBL1WvKoupCVFusdAZTPGRQ9sUsz2nMutTlKf5XiupASZZPBebK9FLG7+pWbRuhv
-         aNtNRUbCj3AIvvZSbsBQ5jp5ZQTo8RQXTRamPTM4hfpmHCNjtpxZBiKzhCc+RUV/If1H
-         aqQW6MJD/2+N4c5nvr3pHAsPuZXxQsAeFAfaduH96DJBxRYncQttVajyX2i3jYi1Ffgg
-         EExQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=VpCxTbGcQ0V0/R3sS4OeSE6EGkbPL0lOUOIzs42gE48xq633Q1/8Tnf4c35lP/BQGK
+         pasXqcFCk7obZOD8f5MLzdSZ6GrKGkXJjSfNSxxi0DPwtXyIUXKDpz0nbq3xxL+/h7TV
+         59KHVYvQGAhY1u44szVqcpvsr/k43DABswn5ipfFXiWtRjnjBNneIosq3POD0l59rSWA
+         gDWMNI7byCHb5kGgvuvJgCXXkTXYpIWqP+JfHQ8StWJZzyLCRyqN8VBdXi3ow57w9m57
+         Q/Ne5VUTkno/kRIM7qeEgx0Wklq2KnsHUoypgkY249y+spvoMcOauYJPwn2HZHdHN2GN
+         Felg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f+1d4FRlTWDoZyLvhcrUylaJhZuzCdWZutZr0QUDHa4=;
-        b=lY9n6Afks2FPsSdWrhChzKwEm7T5tDCABLQRwIe5DulxdnTV0oAREQTLn0i7LkCXaJ
-         oSh1Wd8SzOkx6W++mde10tqKxeqx3I3uuXPwr6ADxtNRfgc53GO/nBCiN07p3G5AiGJm
-         fYApxY+GTpxwGvrDNCtin76qquCrfakDnRrzbtvA6wG2O6OnZ0sGU2hClmLVPo/xvBt/
-         XVweETXUwWfCS6fgs2ctDZAlrAbw1m6kfZObPoQUe11uzEUDwK3YwwUxNvbUPRH/Wvkk
-         yk7ebd9p9VZB0ZYDocPBT1PICAzlPG++8OyRkvdeibyhlXzCol2pt/spPyNByyYAr2sq
-         wk6A==
-X-Gm-Message-State: APjAAAXCHn+JbAr2pyYUA4GrRKO0odz+//ktEAUB5Q4N4ZBr78k/r/Zx
-        TQUQjVoaqCw9kfktS+9WK61nCQ==
-X-Google-Smtp-Source: APXvYqx+Aw4+S8K8xNHG+vqpELNQADUOde9Hp1Z9eCweohf4RJ+sIspUEpwop5ZEDkU7U92gy1pzVQ==
-X-Received: by 2002:adf:edd0:: with SMTP id v16mr5339423wro.310.1579886844037;
-        Fri, 24 Jan 2020 09:27:24 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id t8sm8358585wrp.69.2020.01.24.09.27.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 09:27:23 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FAgORkqjjQWplSt9zJQeczIU9aNbThp1xcMsMJfyq+Y=;
+        b=N8kJm/t5PofOGQaU/wfM/ah2+4lhnjNBts5mNdgZs0P05eXffprOWAf3mImKTTcoZo
+         tXroWh8yUduOD/ycm9XMWE3iQ1oVtU3coYEJdBDz++dVGzp9ercZWrNeo2xkRZLpHKXd
+         C8ZYzwhkH+uZ2X/wBmexKh6epWv2AgIQn8+MGzhk2hIo8cM8UjoH7MNXOsMQ8dL9tbij
+         SzTw5JacvPMaEyno4p2O0kCoozS6KjevXjltXo9cDzBWahLcHCNcjT8l+uAg8DZhcnCD
+         GMyxvAzwcDTSkI0nf4ACPELmasSe7uEseCukO1i+LT+yTgWUx5wQVdxUilh+xXyWFVSe
+         JwAQ==
+X-Gm-Message-State: APjAAAUMixYV5xDQRTcTCmlI9KYLng70am1kq5IbC6C9eNdxHPI/E+zI
+        4IX5EqxRwMClZKHam2C9pLQ=
+X-Google-Smtp-Source: APXvYqzVbEeZtHr5DuKQ0VnGjzr5Ff6DvzTWn142G41ZVqDxUi8S4qU+GYb2P4b40NsfZ0LeXkx0kw==
+X-Received: by 2002:a25:e696:: with SMTP id d144mr4150569ybh.316.1579903077801;
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a12sm2935604ywa.95.2020.01.24.13.57.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 24 Jan 2020 13:57:57 -0800 (PST)
+Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 7/7] tools: gpio: implement gpio-watch
-Date:   Fri, 24 Jan 2020 18:27:10 +0100
-Message-Id: <20200124172710.20776-8-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200124172710.20776-1-brgl@bgdev.pl>
-References: <20200124172710.20776-1-brgl@bgdev.pl>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <20191230133852.5890-3-geert+renesas@glider.be>
+ <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
+ <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+ <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a58d8d75-00b3-dcbf-8cdf-0b774bbf5be0@gmail.com>
+Date:   Fri, 24 Jan 2020 15:57:56 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 1/7/20 2:11 AM, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Tue, Jan 7, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 1/6/20 5:34 PM, Frank Rowand wrote:
+>>> On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
+>>>> As GPIO hogs are configured at GPIO controller initialization time,
+>>>> adding/removing GPIO hogs in DT overlays does not work.
+>>>>
+>>>> Add support for GPIO hogs described in DT overlays by registering an OF
+>>>> reconfiguration notifier, to handle the addition and removal of GPIO hog
+>>>> subnodes to/from a GPIO controller device node.
+>>>>
+>>>> Note that when a GPIO hog device node is being removed, its "gpios"
+>>>> properties is no longer available, so we have to keep track of which
+>>>> node a hog belongs to, which is done by adding a pointer to the hog's
+>>>> device node to struct gpio_desc.
+>>>
+>>> If I have read the patches and the existing overlay source correctly,
+>>> then some observations:
+>>>
+>>> - A gpio hog node added in an overlay will be properly processed.
+>>>
+>>> - A gpio hog node already existing in the live devicetree, but with a
+>>>   non-active status will be properly processed if the status of the
+>>>   gpio hog node is changed to "ok" in the overlay.
 
-Add a simple program that allows to test the new LINECHANGED_FD ioctl().
+Verified by testing.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- tools/gpio/.gitignore   |  1 +
- tools/gpio/Build        |  1 +
- tools/gpio/Makefile     | 11 ++++-
- tools/gpio/gpio-watch.c | 99 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 1 deletion(-)
- create mode 100644 tools/gpio/gpio-watch.c
 
-diff --git a/tools/gpio/.gitignore b/tools/gpio/.gitignore
-index a94c0e83b209..eab36c6d7751 100644
---- a/tools/gpio/.gitignore
-+++ b/tools/gpio/.gitignore
-@@ -1,4 +1,5 @@
- gpio-event-mon
- gpio-hammer
-+gpio-watch
- lsgpio
- include/linux/gpio.h
-diff --git a/tools/gpio/Build b/tools/gpio/Build
-index 4141f35837db..67c7b7f6a717 100644
---- a/tools/gpio/Build
-+++ b/tools/gpio/Build
-@@ -2,3 +2,4 @@ gpio-utils-y += gpio-utils.o
- lsgpio-y += lsgpio.o gpio-utils.o
- gpio-hammer-y += gpio-hammer.o gpio-utils.o
- gpio-event-mon-y += gpio-event-mon.o gpio-utils.o
-+gpio-watch-y += gpio-watch.o
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 6080de58861f..842287e42c83 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -18,7 +18,7 @@ MAKEFLAGS += -r
- 
- override CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
- 
--ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon
-+ALL_TARGETS := lsgpio gpio-hammer gpio-event-mon gpio-watch
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- all: $(ALL_PROGRAMS)
-@@ -66,6 +66,15 @@ $(GPIO_EVENT_MON_IN): prepare FORCE $(OUTPUT)gpio-utils-in.o
- $(OUTPUT)gpio-event-mon: $(GPIO_EVENT_MON_IN)
- 	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
- 
-+#
-+# gpio-watch
-+#
-+GPIO_WATCH_IN := $(OUTPUT)gpio-watch-in.o
-+$(GPIO_WATCH_IN): prepare FORCE
-+	$(Q)$(MAKE) $(build)=gpio-watch
-+$(OUTPUT)gpio-watch: $(GPIO_WATCH_IN)
-+	$(QUIET_LINK)$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
-+
- clean:
- 	rm -f $(ALL_PROGRAMS)
- 	rm -f $(OUTPUT)include/linux/gpio.h
-diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
-new file mode 100644
-index 000000000000..5cea24fddfa7
---- /dev/null
-+++ b/tools/gpio/gpio-watch.c
-@@ -0,0 +1,99 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * gpio-watch - monitor unrequested lines for property changes using the
-+ *              character device
-+ *
-+ * Copyright (C) 2019 BayLibre SAS
-+ * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+ */
-+
-+#include <ctype.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <linux/gpio.h>
-+#include <poll.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+
-+int main(int argc, char **argv)
-+{
-+	struct gpioline_info_changed chg;
-+	struct gpioline_info req;
-+	struct pollfd pfd;
-+	int fd, i, j, ret;
-+	char *event, *end;
-+	ssize_t rd;
-+
-+	if (argc < 3)
-+		goto err_usage;
-+
-+	fd = open(argv[1], O_RDWR | O_CLOEXEC);
-+	if (fd < 0) {
-+		perror("unable to open gpiochip");
-+		return EXIT_FAILURE;
-+	}
-+
-+	for (i = 0, j = 2; i < argc - 2; i++, j++) {
-+		memset(&req, 0, sizeof(req));
-+
-+		req.line_offset = strtoul(argv[j], &end, 0);
-+		if (*end != '\0')
-+			goto err_usage;
-+
-+		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
-+		if (ret) {
-+			perror("unable to set up line watch");
-+			return EXIT_FAILURE;
-+		}
-+	}
-+
-+	pfd.fd = fd;
-+	pfd.events = POLLIN | POLLPRI;
-+
-+	for (;;) {
-+		ret = poll(&pfd, 1, 5000);
-+		if (ret < 0) {
-+			perror("error polling the linechanged fd");
-+			return EXIT_FAILURE;
-+		} else if (ret > 0) {
-+			memset(&chg, 0, sizeof(chg));
-+			rd = read(pfd.fd, &chg, sizeof(chg));
-+			if (rd < 0 || rd != sizeof(chg)) {
-+				if (rd != sizeof(chg))
-+					errno = EIO;
-+
-+				perror("error reading line change event");
-+				return EXIT_FAILURE;
-+			}
-+
-+			switch (chg.event_type) {
-+			case GPIOLINE_CHANGED_REQUESTED:
-+				event = "requested";
-+				break;
-+			case GPIOLINE_CHANGED_RELEASED:
-+				event = "released";
-+				break;
-+			case GPIOLINE_CHANGED_CONFIG:
-+				event = "config changed";
-+				break;
-+			default:
-+				fprintf(stderr,
-+					"invalid event type received from the kernel\n");
-+				return EXIT_FAILURE;
-+			}
-+
-+			printf("line %u: %s at %llu\n",
-+			       chg.info.line_offset, event, chg.timestamp);
-+		}
-+	}
-+
-+	return 0;
-+
-+err_usage:
-+	printf("%s: <gpiochip> <line0> <line1> ...\n", argv[0]);
-+	return EXIT_FAILURE;
-+}
--- 
-2.23.0
+>>> - If a gpio hog node already exists in the live devicetree with an
+>>>   active status, then any updated or added properties in that gpio
+>>>   hog node in the overlay will have no effect.
+
+Should be documented.
+
+
+>>>   There is a scenario where the updated property would have an effect:
+>>>   apply a second overlay that sets the status to inactive, then apply
+>>>   a third overlay that sets the status back to active.  This is a
+>>>   rather contrived example and I think it should be documented as
+>>>   not supported and the result undefined.
+
+I was wrong in this case.
+
+of_reconfig_get_state_change() does not simply report whether a node
+is added or removed, which confused me because it returns
+OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE (as well as
+no change), which I was incorrectly translating to node added or
+node removed.   OF_RECONFIG_CHANGE_ADD and OF_RECONFIG_CHANGE_REMOVE
+properly report a node becoming available or available due to changes
+in the "status" property, as well as accounting for a node being
+added or removed.
+
+So the case that I was worried about is handled correctly.
+
+
+>> I went back and double checked the related code.  For gpio hog nodes
+>> that are in a non-overlay, the status property is checked because
+>> of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
+>> to search for gpio hog nodes, and for_each_available_child_of_node()
+>> checks the status property.  But in the case of a gpio hog node
+>> added by an overlay, of_gpio_notify() does not check the status
+>> property in the gpio hog node.  The check for the status property
+>> should be added to of_gpio_notify().
+> 
+> Right.  of_device_is_available() should be called to check this.
+> Note that of_i2c_notify() and of_spi_notify() also lack such a check.
+> of_platform_notify() calls of_platform_device_create_pdata(), which does
+> have the check.
+
+And thus I was wrong about this also, so of_gpio_notify() does not need to
+check the status property, since of_reconfig_get_state_change() already
+implicitly incorporates this check.
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
