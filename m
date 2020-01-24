@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ADDF148CE8
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 18:27:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A883148CF7
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 18:27:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389765AbgAXR1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jan 2020 12:27:18 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44944 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389720AbgAXR1S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jan 2020 12:27:18 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so2928562wrm.11
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jan 2020 09:27:16 -0800 (PST)
+        id S2388758AbgAXR1p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jan 2020 12:27:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51699 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389758AbgAXR1T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Jan 2020 12:27:19 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t23so237076wmi.1
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Jan 2020 09:27:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vbia6IDYlH56gJUFZ5L/cJKg2RLQ/ATShKmM2t7DzWY=;
-        b=dEaY3fuzTabPsONlANzp1GSPYi/5/LjgDjk0AKSQS8FuLbbLrJW9ZdUQYklgP+NAvT
-         Pn46jOV81MMMja0Z56zBAa3VgM+5mCpaZvNxiyLdmmrNbCcBpJ7qOkYbjwrRrqYSnF+C
-         ctx921q0CS+MItQqe5ISOn+r8eOosIWIsEaUn/g+6yATNE3C6T/hk3bLQ2AbO7NdVsvh
-         nV4xrssPrgj0Vxcaz+kvS1N3oEPh3rEr+2J2HqnTSTLxqkzaL5lthW2+IC4Dzo7jj2EG
-         HXToiUXvcohZUCd7+mblCtoWtkUX1xTEjKoZb1ql18oWuROhyslphHPxjnxMX5DNzQjs
-         tNxA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aJjGrvg3mOwAKVCibupA56dSZoCmNQpaCvrxwBxCbkI=;
+        b=mFbbTkusJM1h2k2a+IS4yzllB9ot90bMcuamF2QcPW9Pvlgh3nARvTHgSw8CSQdPsI
+         NPXQ1vPyIGLafpGSyt+zZiJiGF5FYtqP9GeWFDbHlvVCdsZkqsyB1Xr2iyu62V+xece/
+         KXKv6Ty/a7F3RiYjm1yvjYxdRDuGKtBhaqcA5yr2zwKdNYpn8TsidQX5Egj/2/p1uWYA
+         iE4gd6oP6UElJgUa9RvSVfPGydB22yLGDviG5bztfywAXjpH8otc4kXzy6kaWW4PGixz
+         nDNKiTWdQ/6p5so/wKHvMTsq17NHHPqtK4y0fVmNHQ4nGfuWfKZ25KH6Tjs5dFBq0iBB
+         EKkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vbia6IDYlH56gJUFZ5L/cJKg2RLQ/ATShKmM2t7DzWY=;
-        b=Uh9+mqXvD7ufZjXG6vCvpL31Egxfr1u/ptxKkaYGr9F99DX9ehuV4uIApSz0Vo0+fm
-         mrl9BqtrPEnJTx01O/iUWaqHAqwyNWS8Semg9nZDA+d/nS2bSgp9eYGgy9vzA+xQpuia
-         CzU+yeCaeyN+uAt8QrQGqsEMy3vAi7w74AjW3EDe7cv6hR/lL1nrbQD/5hnh4qpTAXsg
-         7wyQlS3wa0zKAopRz336CLtcqCSI1yvj//MDaPPfmqRnR4WnQz1UQdrGt8gRfyY7ZA3J
-         MneeoIP3vHPoRk7aD3U6Kyxgp/611LvEdUZ69qaCA5/ewmnzVz0rsZv7BXomDjDokkN6
-         u8Hw==
-X-Gm-Message-State: APjAAAXHAQ2Oic2ImZCdvl17z/eGQ9cjOVafz+4AxDEA4A1h7G08FOu1
-        zouRKIF87nwNgJhkAotkaaOWHA==
-X-Google-Smtp-Source: APXvYqxlK2FjSrFQUrgEAxbvtDmP5WCiYjgLtSMjI/AJ/6pZlt90Qwrg/dn9KroO+X2QPYT1QKgW8A==
-X-Received: by 2002:a5d:44ca:: with SMTP id z10mr5492587wrr.266.1579886836214;
-        Fri, 24 Jan 2020 09:27:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aJjGrvg3mOwAKVCibupA56dSZoCmNQpaCvrxwBxCbkI=;
+        b=HTeRVy3ig0skdFRJ8KYhy5WzdV4FzdKiCf+A+CTzMvdxtevuWliKw9oiVINH4vIV+g
+         uSrxWLbVjPX2RFRVR/xUnAQgpg1y17NAgTcYrk36RsBi4myI7rhy3KM57b4LTOLxK86q
+         VKu3Petrz3ang15HWTmadTj+5I2d+qaa86txYK3wwTEM4PKw2AsAMVk5hA5r7pUP9Wru
+         Qrne8XulHe8u9bUxVp37mDzdvuJqYiINuAZ+5kus5HJszB+hcqNVWFK57n9wIZG2T7GY
+         ZS/c+5o4FQZW5B7zs3w5x2gfJwZ2iOwfICOVH5OE4EsKixdJTI1jyV4xfpfk7NMWQjkm
+         dK7g==
+X-Gm-Message-State: APjAAAVNzWG1q0v1+Bx2BnFXymoh10BY/26e5zjv+WX5d1RZNgCj/pp5
+        +HHtcrGP88fwPnxa+rELvUL45A==
+X-Google-Smtp-Source: APXvYqxAAhN/LBVU89VSmwcW1dRuEvPfLVB1wwzNte3lzf/a9AR7CI7QWj6jF1hiJ438so/l2mgvrA==
+X-Received: by 2002:a1c:1d16:: with SMTP id d22mr249273wmd.158.1579886837536;
+        Fri, 24 Jan 2020 09:27:17 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:6d6c:8493:1ab5:dad7])
-        by smtp.gmail.com with ESMTPSA id t8sm8358585wrp.69.2020.01.24.09.27.15
+        by smtp.gmail.com with ESMTPSA id t8sm8358585wrp.69.2020.01.24.09.27.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2020 09:27:15 -0800 (PST)
+        Fri, 24 Jan 2020 09:27:16 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 0/7] gpiolib: add an ioctl() for monitoring line status changes
-Date:   Fri, 24 Jan 2020 18:27:03 +0100
-Message-Id: <20200124172710.20776-1-brgl@bgdev.pl>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Stefani Seibold <stefani@seibold.net>
+Subject: [PATCH v6 1/7] kfifo: provide noirqsave variants of spinlocked in and out helpers
+Date:   Fri, 24 Jan 2020 18:27:04 +0100
+Message-Id: <20200124172710.20776-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200124172710.20776-1-brgl@bgdev.pl>
+References: <20200124172710.20776-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,91 +66,75 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I was about to queue those when I realised I'm using the wrong function
-for the timestamp value - we should be using monotonic time provided by
-ktime_get_ns(). I fixed this in this version.
+Provide variants of spinlocked kfifo_in() and kfifo_out() routines which
+don't disable interrupts.
 
-===
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Stefani Seibold <stefani@seibold.net>
+---
+ include/linux/kfifo.h | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-When discussing the recent user-space changes with Kent and while working
-on dbus API for libgpiod I noticed that we really don't have any way of
-keeping the line info synchronized between the kernel and user-space
-processes. We can of course periodically re-read the line information or
-even do it every time we want to read a property but this isn't optimal.
-
-This series adds a new ioctl() that allows user-space to set up a watch on
-the GPIO chardev file-descriptor which can then be polled for events
-emitted by the kernel when the line is requested, released or its status
-changed. This of course doesn't require the line to be requested. Multiple
-user-space processes can watch the same lines.
-
-This series also includes a variety of minor tweaks & fixes for problems
-discovered during development. For instance it addresses a race-condition
-in current line event fifo.
-
-First two patches add new helpers to kfifo, that are used in the later
-parts of the series.
-
-v1: https://lkml.org/lkml/2019/11/27/327
-
-v1 -> v2:
-- rework the main patch of the series: re-use the existing file-descriptor
-  associated with an open character device
-- add a patch adding a debug message when the line event kfifo is full and
-  we're discarding another event
-- rework the locking mechanism for lineevent kfifo: reuse the spinlock
-  from the waitqueue structure
-- other minor changes
-
-v2 -> v3:
-- added patches providing new implementation for some kfifo macros
-- fixed a regression in the patch reworking the line event fifo: reading
-  multiple events is now still possible
-- reworked the structure for new ioctl: it's now padded such that there
-  be no alignment issues if running a 64-bit kernel on 32-bit userspace
-- fixed a bug where one process could disable the status watch of another
-- use kstrtoul() instead of atoi() in gpio-watch for string validation
-
-v3 -> v4:
-- removed a binary file checked in by mistake
-- drop __func__ from debug messages
-- restructure the code in the notifier call
-- add comments about the alignment of the new uAPI structure
-- remove a stray new line that doesn't belong in this series
-- tested the series on 32-bit user-space with 64-bit kernel
-
-v4 -> v5:
-- dropped patches already merged upstream
-- collected review tags
-
-v5 -> v6:
-- coding style tweak as pointed out by Andy
-- fixed a wrong comment in the uapi header
-- switch to using ktime_get_ns() for the GPIO line change timestamps
-  as discussed with Arnd[1]
-
-[1] https://lore.kernel.org/linux-gpio/CAK8P3a1t3MquLPuZqgds4osrTNTOG494s4fk_nhdn+N=B3qdhg@mail.gmail.com/
-
-Bartosz Golaszewski (7):
-  kfifo: provide noirqsave variants of spinlocked in and out helpers
-  kfifo: provide kfifo_is_empty_spinlocked()
-  gpiolib: rework the locking mechanism for lineevent kfifo
-  gpiolib: emit a debug message when adding events to a full kfifo
-  gpiolib: provide a dedicated function for setting lineinfo
-  gpiolib: add new ioctl() for monitoring changes in line info
-  tools: gpio: implement gpio-watch
-
- drivers/gpio/gpiolib.c    | 350 +++++++++++++++++++++++++++++---------
- drivers/gpio/gpiolib.h    |   1 +
- include/linux/kfifo.h     |  73 ++++++++
- include/uapi/linux/gpio.h |  30 ++++
- tools/gpio/.gitignore     |   1 +
- tools/gpio/Build          |   1 +
- tools/gpio/Makefile       |  11 +-
- tools/gpio/gpio-watch.c   |  99 +++++++++++
- 8 files changed, 485 insertions(+), 81 deletions(-)
- create mode 100644 tools/gpio/gpio-watch.c
-
+diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
+index fc4b0b10210f..123c200ed7cb 100644
+--- a/include/linux/kfifo.h
++++ b/include/linux/kfifo.h
+@@ -517,6 +517,26 @@ __kfifo_uint_must_check_helper( \
+ 	__ret; \
+ })
+ 
++/**
++ * kfifo_in_spinlocked_noirqsave - put data into fifo using a spinlock for
++ * locking, don't disable interrupts
++ * @fifo: address of the fifo to be used
++ * @buf: the data to be added
++ * @n: number of elements to be added
++ * @lock: pointer to the spinlock to use for locking
++ *
++ * This is a variant of kfifo_in_spinlocked() but uses spin_lock/unlock()
++ * for locking and doesn't disable interrupts.
++ */
++#define kfifo_in_spinlocked_noirqsave(fifo, buf, n, lock) \
++({ \
++	unsigned int __ret; \
++	spin_lock(lock); \
++	__ret = kfifo_in(fifo, buf, n); \
++	spin_unlock(lock); \
++	__ret; \
++})
++
+ /* alias for kfifo_in_spinlocked, will be removed in a future release */
+ #define kfifo_in_locked(fifo, buf, n, lock) \
+ 		kfifo_in_spinlocked(fifo, buf, n, lock)
+@@ -569,6 +589,28 @@ __kfifo_uint_must_check_helper( \
+ }) \
+ )
+ 
++/**
++ * kfifo_out_spinlocked_noirqsave - get data from the fifo using a spinlock
++ * for locking, don't disable interrupts
++ * @fifo: address of the fifo to be used
++ * @buf: pointer to the storage buffer
++ * @n: max. number of elements to get
++ * @lock: pointer to the spinlock to use for locking
++ *
++ * This is a variant of kfifo_out_spinlocked() which uses spin_lock/unlock()
++ * for locking and doesn't disable interrupts.
++ */
++#define kfifo_out_spinlocked_noirqsave(fifo, buf, n, lock) \
++__kfifo_uint_must_check_helper( \
++({ \
++	unsigned int __ret; \
++	spin_lock(lock); \
++	__ret = kfifo_out(fifo, buf, n); \
++	spin_unlock(lock); \
++	__ret; \
++}) \
++)
++
+ /* alias for kfifo_out_spinlocked, will be removed in a future release */
+ #define kfifo_out_locked(fifo, buf, n, lock) \
+ 		kfifo_out_spinlocked(fifo, buf, n, lock)
 -- 
 2.23.0
 
