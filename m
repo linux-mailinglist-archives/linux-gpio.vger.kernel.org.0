@@ -2,755 +2,354 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC20148674
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 15:01:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24E6D14896E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Jan 2020 15:35:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387812AbgAXOBc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Jan 2020 09:01:32 -0500
-Received: from gateway31.websitewelcome.com ([192.185.143.46]:41346 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387698AbgAXOBc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:01:32 -0500
-X-Greylist: delayed 1380 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Jan 2020 09:01:31 EST
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id E113542DF7
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Jan 2020 07:38:30 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id uzAMivNGkuRkOuzAMiFgIk; Fri, 24 Jan 2020 07:38:30 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=2ESHlfUk1YPAaaP5eCFIsAA5k7Z2I03MC1vfUKAhQ84=; b=fisX44RcOpHbujUNCNrAzI/Q3E
-        e08PerdGS7HoctdYxInAxTIUjdGrkqd3+59r7kfn74Fk0Cyer2gwYXAF3K3FomqVOmfgvfUj7qT/b
-        nb0590t63nxUzwVsryTz0v7AskdTw/vK3RNDjgVnHoz+vdXjPryd5cCbUXkC8DPKgtgeQR3nch6F5
-        VeHJ/zvSf+y4vPmL6uwkYWsyq26udXCdNs55qdWJuXpA+9rigrPFKHrcK2MdOKpqs3wIsP5TfJ0Vi
-        o1TWvTu43BGN5G/huAIAN2h+1v1F+BJh8T40UVazJqMGX10wV4mK6qkXHrz8qVJsHlcBJ2xvIwKx2
-        va5c+y1g==;
-Received: from [191.31.193.140] (port=56866 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iuzAM-003SCA-4a; Fri, 24 Jan 2020 10:38:30 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     pn@denx.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v2] pinctrl: actions: Fix functions groups names
-Date:   Fri, 24 Jan 2020 10:37:58 -0300
-Message-Id: <20200124133758.10089-1-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <838d8378-1a6a-11c4-fad8-aeb4b861478b@castello.eng.br>
-References: <838d8378-1a6a-11c4-fad8-aeb4b861478b@castello.eng.br>
+        id S1730086AbgAXOei (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Jan 2020 09:34:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391922AbgAXOTp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:19:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C25DC2077C;
+        Fri, 24 Jan 2020 14:19:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579875583;
+        bh=+uGDckXAX36NT4qbLa/lLE/b8W+14HDi+rzSH0CXCYA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VxiEdC7tLjDF6ZT4elBiNj0+Kplz1ZAXQu94K1jG9LQ6E7W+MegsS1ViDtZcv0aeU
+         pXu5xKo+EQh4iKEqRwsy5AK+N8ZbmioNCcvUvSgJr0zl+WuQ25fTqDRkE9hYkKapx+
+         mAKQrzAewBgqGYBmMzmRW8gjIqiD7u2P5iG+lrg4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kevin Hao <haokexin@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 074/107] Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
+Date:   Fri, 24 Jan 2020 09:17:44 -0500
+Message-Id: <20200124141817.28793-74-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
+References: <20200124141817.28793-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.193.140
-X-Source-L: No
-X-Exim-ID: 1iuzAM-003SCA-4a
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.193.140]:56866
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 11
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Group names by function do not match their respective structures and
-documentation defined names.
+From: Kevin Hao <haokexin@gmail.com>
 
-This fixes following errors when groups names defined on documentation are used:
-[    4.262778] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d1_mfp" for function "sd0"
-[    4.271394] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d2_d3_mfp" for function "sd0"
-[    4.280248] pinctrl-s700 e01b0000.pinctrl: invalid group "sd1_d0_d3_mfp" for function "sd0"
-[    4.289122] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_cmd_mfp" for function "sd0"
+[ Upstream commit a564ac35d60564dd5b509e32afdc04e7aafee40e ]
 
-Fixes: 81c9d563cc74 (pinctrl: actions: Add Actions Semi S700 pinctrl driver)
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+This reverts commit a7fc89f9d5fcc10a5474cfe555f5a9e5df8b0f1f because
+there are some bugs in this commit, and we don't have a simple way to
+fix these bugs. So revert this commit to make the thunderx gpio work
+on the stable kernel at least. We will switch to GPIOLIB_IRQCHIP
+for thunderx gpio by following patches.
+
+Fixes: a7fc89f9d5fc ("gpio: thunderx: Switch to GPIOLIB_IRQCHIP")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Link: https://lore.kernel.org/r/20200114082821.14015-2-haokexin@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/actions/pinctrl-s700.c | 510 ++++++++++++-------------
- 1 file changed, 255 insertions(+), 255 deletions(-)
+ drivers/gpio/Kconfig         |   1 -
+ drivers/gpio/gpio-thunderx.c | 163 +++++++++++++++++++++++------------
+ 2 files changed, 107 insertions(+), 57 deletions(-)
 
-diff --git a/drivers/pinctrl/actions/pinctrl-s700.c b/drivers/pinctrl/actions/pinctrl-s700.c
-index 8b8121e35edb..1182b38ff4dc 100644
---- a/drivers/pinctrl/actions/pinctrl-s700.c
-+++ b/drivers/pinctrl/actions/pinctrl-s700.c
-@@ -1125,317 +1125,317 @@ static const struct owl_pingroup s700_groups[] = {
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 38e096e6925fa..ceb908f7dbe51 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -546,7 +546,6 @@ config GPIO_THUNDERX
+ 	tristate "Cavium ThunderX/OCTEON-TX GPIO"
+ 	depends on ARCH_THUNDER || (64BIT && COMPILE_TEST)
+ 	depends on PCI_MSI
+-	select GPIOLIB_IRQCHIP
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	select IRQ_FASTEOI_HIERARCHY_HANDLERS
+ 	help
+diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+index ddad5c7ea6176..715371b5102a5 100644
+--- a/drivers/gpio/gpio-thunderx.c
++++ b/drivers/gpio/gpio-thunderx.c
+@@ -53,6 +53,7 @@ struct thunderx_line {
+ struct thunderx_gpio {
+ 	struct gpio_chip	chip;
+ 	u8 __iomem		*register_base;
++	struct irq_domain	*irqd;
+ 	struct msix_entry	*msix_entries;	/* per line MSI-X */
+ 	struct thunderx_line	*line_entries;	/* per line irq info */
+ 	raw_spinlock_t		lock;
+@@ -282,60 +283,54 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
+ 	}
+ }
+ 
+-static void thunderx_gpio_irq_ack(struct irq_data *d)
++static void thunderx_gpio_irq_ack(struct irq_data *data)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 
+ 	writeq(GPIO_INTR_INTR,
+-	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
++	       txline->txgpio->register_base + intr_reg(txline->line));
+ }
+ 
+-static void thunderx_gpio_irq_mask(struct irq_data *d)
++static void thunderx_gpio_irq_mask(struct irq_data *data)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 
+ 	writeq(GPIO_INTR_ENA_W1C,
+-	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
++	       txline->txgpio->register_base + intr_reg(txline->line));
+ }
+ 
+-static void thunderx_gpio_irq_mask_ack(struct irq_data *d)
++static void thunderx_gpio_irq_mask_ack(struct irq_data *data)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 
+ 	writeq(GPIO_INTR_ENA_W1C | GPIO_INTR_INTR,
+-	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
++	       txline->txgpio->register_base + intr_reg(txline->line));
+ }
+ 
+-static void thunderx_gpio_irq_unmask(struct irq_data *d)
++static void thunderx_gpio_irq_unmask(struct irq_data *data)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+ 
+ 	writeq(GPIO_INTR_ENA_W1S,
+-	       txgpio->register_base + intr_reg(irqd_to_hwirq(d)));
++	       txline->txgpio->register_base + intr_reg(txline->line));
+ }
+ 
+-static int thunderx_gpio_irq_set_type(struct irq_data *d,
++static int thunderx_gpio_irq_set_type(struct irq_data *data,
+ 				      unsigned int flow_type)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
+-	struct thunderx_line *txline =
+-		&txgpio->line_entries[irqd_to_hwirq(d)];
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
++	struct thunderx_gpio *txgpio = txline->txgpio;
+ 	u64 bit_cfg;
+ 
+-	irqd_set_trigger_type(d, flow_type);
++	irqd_set_trigger_type(data, flow_type);
+ 
+ 	bit_cfg = txline->fil_bits | GPIO_BIT_CFG_INT_EN;
+ 
+ 	if (flow_type & IRQ_TYPE_EDGE_BOTH) {
+-		irq_set_handler_locked(d, handle_fasteoi_ack_irq);
++		irq_set_handler_locked(data, handle_fasteoi_ack_irq);
+ 		bit_cfg |= GPIO_BIT_CFG_INT_TYPE;
+ 	} else {
+-		irq_set_handler_locked(d, handle_fasteoi_mask_irq);
++		irq_set_handler_locked(data, handle_fasteoi_mask_irq);
+ 	}
+ 
+ 	raw_spin_lock(&txgpio->lock);
+@@ -364,6 +359,33 @@ static void thunderx_gpio_irq_disable(struct irq_data *data)
+ 	irq_chip_disable_parent(data);
+ }
+ 
++static int thunderx_gpio_irq_request_resources(struct irq_data *data)
++{
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
++	struct thunderx_gpio *txgpio = txline->txgpio;
++	int r;
++
++	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
++	if (r)
++		return r;
++
++	r = irq_chip_request_resources_parent(data);
++	if (r)
++		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
++
++	return r;
++}
++
++static void thunderx_gpio_irq_release_resources(struct irq_data *data)
++{
++	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
++	struct thunderx_gpio *txgpio = txline->txgpio;
++
++	irq_chip_release_resources_parent(data);
++
++	gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
++}
++
+ /*
+  * Interrupts are chained from underlying MSI-X vectors.  We have
+  * these irq_chip functions to be able to handle level triggering
+@@ -380,24 +402,50 @@ static struct irq_chip thunderx_gpio_irq_chip = {
+ 	.irq_unmask		= thunderx_gpio_irq_unmask,
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
++	.irq_request_resources	= thunderx_gpio_irq_request_resources,
++	.irq_release_resources	= thunderx_gpio_irq_release_resources,
+ 	.irq_set_type		= thunderx_gpio_irq_set_type,
+ 
+ 	.flags			= IRQCHIP_SET_TYPE_MASKED
  };
  
- static const char * const nor_groups[] = {
--	"lcd0_d18",
--	"i2s_d0",
--	"i2s0_pcm0",
--	"i2s1_pcm0",
--	"i2s_d1",
--	"ks_in2",
--	"ks_in1",
--	"ks_in0",
--	"ks_in3",
--	"ks_out0",
--	"ks_out1",
--	"ks_out2",
--	"lcd0_d2",
--	"lvds_ee_pn",
--	"uart2_rx_tx",
--	"spi0_i2c_pcm",
--	"lvds_e_pn",
--	"sd0_d0",
--	"sd0_d1",
--	"sd0_d2_d3",
--	"sd1_d0_d3",
--	"sd0_cmd",
--	"sd1_cmd",
--	"sens0_ckout",
--	"sen0_pclk",
-+	"lcd0_d18_mfp",
-+	"i2s_d0_mfp",
-+	"i2s0_pcm0_mfp",
-+	"i2s1_pcm0_mfp",
-+	"i2s_d1_mfp",
-+	"ks_in2_mfp",
-+	"ks_in1_mfp",
-+	"ks_in0_mfp",
-+	"ks_in3_mfp",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
-+	"ks_out2_mfp",
-+	"lcd0_d2_mfp",
-+	"lvds_ee_pn_mfp",
-+	"uart2_rx_tx_mfp",
-+	"spi0_i2c_pcm_mfp",
-+	"lvds_e_pn_mfp",
-+	"sd0_d0_mfp",
-+	"sd0_d1_mfp",
-+	"sd0_d2_d3_mfp",
-+	"sd1_d0_d3_mfp",
-+	"sd0_cmd_mfp",
-+	"sd1_cmd_mfp",
-+	"sens0_ckout_mfp",
-+	"sen0_pclk_mfp",
- };
+-static int thunderx_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+-					       unsigned int child,
+-					       unsigned int child_type,
+-					       unsigned int *parent,
+-					       unsigned int *parent_type)
++static int thunderx_gpio_irq_translate(struct irq_domain *d,
++				       struct irq_fwspec *fwspec,
++				       irq_hw_number_t *hwirq,
++				       unsigned int *type)
+ {
+-	struct thunderx_gpio *txgpio = gpiochip_get_data(gc);
+-
+-	*parent = txgpio->base_msi + (2 * child);
+-	*parent_type = IRQ_TYPE_LEVEL_HIGH;
++	struct thunderx_gpio *txgpio = d->host_data;
++
++	if (WARN_ON(fwspec->param_count < 2))
++		return -EINVAL;
++	if (fwspec->param[0] >= txgpio->chip.ngpio)
++		return -EINVAL;
++	*hwirq = fwspec->param[0];
++	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	return 0;
+ }
  
- static const char * const eth_rmii_groups[] = {
--	"rgmii_txd23",
--	"rgmii_rxd2",
--	"rgmii_rxd3",
--	"rgmii_txd01",
--	"rgmii_txd0",
--	"rgmii_txd1",
--	"rgmii_txen",
--	"rgmii_rxen",
--	"rgmii_rxd1",
--	"rgmii_rxd0",
--	"rgmii_ref_clk",
-+	"rgmii_txd23_mfp",
-+	"rgmii_rxd2_mfp",
-+	"rgmii_rxd3_mfp",
-+	"rgmii_txd01_mfp",
-+	"rgmii_txd0_mfp",
-+	"rgmii_txd1_mfp",
-+	"rgmii_txen_mfp",
-+	"rgmii_rxen_mfp",
-+	"rgmii_rxd1_mfp",
-+	"rgmii_rxd0_mfp",
-+	"rgmii_ref_clk_mfp",
- 	"eth_smi_dummy",
- };
++static int thunderx_gpio_irq_alloc(struct irq_domain *d, unsigned int virq,
++				   unsigned int nr_irqs, void *arg)
++{
++	struct thunderx_line *txline = arg;
++
++	return irq_domain_set_hwirq_and_chip(d, virq, txline->line,
++					     &thunderx_gpio_irq_chip, txline);
++}
++
++static const struct irq_domain_ops thunderx_gpio_irqd_ops = {
++	.alloc		= thunderx_gpio_irq_alloc,
++	.translate	= thunderx_gpio_irq_translate
++};
++
++static int thunderx_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
++
++	return irq_find_mapping(txgpio->irqd, offset);
++}
++
+ static int thunderx_gpio_probe(struct pci_dev *pdev,
+ 			       const struct pci_device_id *id)
+ {
+@@ -405,7 +453,6 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
+ 	struct device *dev = &pdev->dev;
+ 	struct thunderx_gpio *txgpio;
+ 	struct gpio_chip *chip;
+-	struct gpio_irq_chip *girq;
+ 	int ngpio, i;
+ 	int err = 0;
  
- static const char * const eth_smii_groups[] = {
--	"rgmii_txd0",
--	"rgmii_txd1",
--	"rgmii_rxd0",
--	"rgmii_rxd1",
--	"rgmii_ref_clk",
-+	"rgmii_txd0_mfp",
-+	"rgmii_txd1_mfp",
-+	"rgmii_rxd0_mfp",
-+	"rgmii_rxd1_mfp",
-+	"rgmii_ref_clk_mfp",
- 	"eth_smi_dummy",
- };
+@@ -450,8 +497,8 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
+ 	}
  
- static const char * const spi0_groups[] = {
--	"dsi_dn0",
--	"dsi_dp2",
--	"dsi_dp0",
--	"uart2_rx_tx",
--	"spi0_i2c_pcm",
--	"dsi_dn2",
-+	"dsi_dn0_mfp",
-+	"dsi_dp2_mfp",
-+	"dsi_dp0_mfp",
-+	"uart2_rx_tx_mfp",
-+	"spi0_i2c_pcm_mfp",
-+	"dsi_dn2_mfp",
- };
+ 	txgpio->msix_entries = devm_kcalloc(dev,
+-					    ngpio, sizeof(struct msix_entry),
+-					    GFP_KERNEL);
++					  ngpio, sizeof(struct msix_entry),
++					  GFP_KERNEL);
+ 	if (!txgpio->msix_entries) {
+ 		err = -ENOMEM;
+ 		goto out;
+@@ -492,6 +539,27 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
+ 	if (err < 0)
+ 		goto out;
  
- static const char * const spi1_groups[] = {
--	"uart0_rx",
--	"uart0_tx",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
- 	"i2c0_mfp",
- };
++	/*
++	 * Push GPIO specific irqdomain on hierarchy created as a side
++	 * effect of the pci_enable_msix()
++	 */
++	txgpio->irqd = irq_domain_create_hierarchy(irq_get_irq_data(txgpio->msix_entries[0].vector)->domain,
++						   0, 0, of_node_to_fwnode(dev->of_node),
++						   &thunderx_gpio_irqd_ops, txgpio);
++	if (!txgpio->irqd) {
++		err = -ENOMEM;
++		goto out;
++	}
++
++	/* Push on irq_data and the domain for each line. */
++	for (i = 0; i < ngpio; i++) {
++		err = irq_domain_push_irq(txgpio->irqd,
++					  txgpio->msix_entries[i].vector,
++					  &txgpio->line_entries[i]);
++		if (err < 0)
++			dev_err(dev, "irq_domain_push_irq: %d\n", err);
++	}
++
+ 	chip->label = KBUILD_MODNAME;
+ 	chip->parent = dev;
+ 	chip->owner = THIS_MODULE;
+@@ -506,28 +574,11 @@ static int thunderx_gpio_probe(struct pci_dev *pdev,
+ 	chip->set = thunderx_gpio_set;
+ 	chip->set_multiple = thunderx_gpio_set_multiple;
+ 	chip->set_config = thunderx_gpio_set_config;
+-	girq = &chip->irq;
+-	girq->chip = &thunderx_gpio_irq_chip;
+-	girq->fwnode = of_node_to_fwnode(dev->of_node);
+-	girq->parent_domain =
+-		irq_get_irq_data(txgpio->msix_entries[0].vector)->domain;
+-	girq->child_to_parent_hwirq = thunderx_gpio_child_to_parent_hwirq;
+-	girq->handler = handle_bad_irq;
+-	girq->default_type = IRQ_TYPE_NONE;
+-
++	chip->to_irq = thunderx_gpio_to_irq;
+ 	err = devm_gpiochip_add_data(dev, chip, txgpio);
+ 	if (err)
+ 		goto out;
  
- static const char * const spi2_groups[] = {
--	"rgmii_txd01",
--	"rgmii_txd0",
--	"rgmii_txd1",
--	"rgmii_ref_clk",
--	"dnand_acle_ce0",
-+	"rgmii_txd01_mfp",
-+	"rgmii_txd0_mfp",
-+	"rgmii_txd1_mfp",
-+	"rgmii_ref_clk_mfp",
-+	"dnand_acle_ce0_mfp",
- };
+-	/* Push on irq_data and the domain for each line. */
+-	for (i = 0; i < ngpio; i++) {
+-		err = irq_domain_push_irq(chip->irq.domain,
+-					  txgpio->msix_entries[i].vector,
+-					  chip);
+-		if (err < 0)
+-			dev_err(dev, "irq_domain_push_irq: %d\n", err);
+-	}
+-
+ 	dev_info(dev, "ThunderX GPIO: %d lines with base %d.\n",
+ 		 ngpio, chip->base);
+ 	return 0;
+@@ -542,10 +593,10 @@ static void thunderx_gpio_remove(struct pci_dev *pdev)
+ 	struct thunderx_gpio *txgpio = pci_get_drvdata(pdev);
  
- static const char * const spi3_groups[] = {
--	"rgmii_txen",
--	"rgmii_rxen",
--	"rgmii_rxd1",
--	"rgmii_rxd0",
-+	"rgmii_txen_mfp",
-+	"rgmii_rxen_mfp",
-+	"rgmii_rxd1_mfp",
-+	"rgmii_rxd0_mfp",
- };
+ 	for (i = 0; i < txgpio->chip.ngpio; i++)
+-		irq_domain_pop_irq(txgpio->chip.irq.domain,
++		irq_domain_pop_irq(txgpio->irqd,
+ 				   txgpio->msix_entries[i].vector);
  
- static const char * const sens0_groups[] = {
--	"csi_cn_cp",
--	"sens0_ckout",
--	"csi_dn_dp",
--	"sen0_pclk",
-+	"csi_cn_cp_mfp",
-+	"sens0_ckout_mfp",
-+	"csi_dn_dp_mfp",
-+	"sen0_pclk_mfp",
- };
+-	irq_domain_remove(txgpio->chip.irq.domain);
++	irq_domain_remove(txgpio->irqd);
  
- static const char * const sens1_groups[] = {
--	"lcd0_d18",
--	"ks_in2",
--	"ks_in1",
--	"ks_in0",
--	"ks_in3",
--	"ks_out0",
--	"ks_out1",
--	"ks_out2",
--	"sens0_ckout",
--	"pcm1_in",
--	"pcm1_clk",
--	"pcm1_sync",
--	"pcm1_out",
-+	"lcd0_d18_mfp",
-+	"ks_in2_mfp",
-+	"ks_in1_mfp",
-+	"ks_in0_mfp",
-+	"ks_in3_mfp",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
-+	"ks_out2_mfp",
-+	"sens0_ckout_mfp",
-+	"pcm1_in_mfp",
-+	"pcm1_clk_mfp",
-+	"pcm1_sync_mfp",
-+	"pcm1_out_mfp",
- };
- 
- static const char * const uart0_groups[] = {
--	"uart2_rtsb",
--	"uart2_ctsb",
--	"uart0_rx",
--	"uart0_tx",
-+	"uart2_rtsb_mfp",
-+	"uart2_ctsb_mfp",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
- };
- 
- static const char * const uart1_groups[] = {
--	"sd0_d2_d3",
-+	"sd0_d2_d3_mfp",
- 	"i2c0_mfp",
- };
- 
- static const char * const uart2_groups[] = {
--	"rgmii_txen",
--	"rgmii_rxen",
--	"rgmii_rxd1",
--	"rgmii_rxd0",
--	"dsi_dn0",
--	"dsi_dp2",
--	"dsi_dp0",
--	"uart2_rx_tx",
--	"dsi_dn2",
--	"uart2_rtsb",
--	"uart2_ctsb",
--	"sd0_d0",
--	"sd0_d1",
--	"sd0_d2_d3",
--	"uart0_rx",
--	"uart0_tx",
-+	"rgmii_txen_mfp",
-+	"rgmii_rxen_mfp",
-+	"rgmii_rxd1_mfp",
-+	"rgmii_rxd0_mfp",
-+	"dsi_dn0_mfp",
-+	"dsi_dp2_mfp",
-+	"dsi_dp0_mfp",
-+	"uart2_rx_tx_mfp",
-+	"dsi_dn2_mfp",
-+	"uart2_rtsb_mfp",
-+	"uart2_ctsb_mfp",
-+	"sd0_d0_mfp",
-+	"sd0_d1_mfp",
-+	"sd0_d2_d3_mfp",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
- 	"i2c0_mfp",
- 	"uart2_dummy"
- };
- 
- static const char * const uart3_groups[] = {
--	"rgmii_txd23",
--	"rgmii_rxd2",
--	"rgmii_rxd3",
--	"uart3_rtsb",
--	"uart3_ctsb",
-+	"rgmii_txd23_mfp",
-+	"rgmii_rxd2_mfp",
-+	"rgmii_rxd3_mfp",
-+	"uart3_rtsb_mfp",
-+	"uart3_ctsb_mfp",
- 	"uart3_dummy"
- };
- 
- static const char * const uart4_groups[] = {
--	"rgmii_txd01",
--	"rgmii_ref_clk",
--	"ks_out0",
--	"ks_out1",
-+	"rgmii_txd01_mfp",
-+	"rgmii_ref_clk_mfp",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
- };
- 
- static const char * const uart5_groups[] = {
--	"rgmii_rxd1",
--	"rgmii_rxd0",
--	"ks_out0",
--	"ks_out2",
--	"uart3_rtsb",
--	"uart3_ctsb",
--	"sd0_d0",
--	"sd0_d1",
-+	"rgmii_rxd1_mfp",
-+	"rgmii_rxd0_mfp",
-+	"ks_out0_mfp",
-+	"ks_out2_mfp",
-+	"uart3_rtsb_mfp",
-+	"uart3_ctsb_mfp",
-+	"sd0_d0_mfp",
-+	"sd0_d1_mfp",
- };
- 
- static const char * const uart6_groups[] = {
--	"rgmii_txd0",
--	"rgmii_txd1",
-+	"rgmii_txd0_mfp",
-+	"rgmii_txd1_mfp",
- };
- 
- static const char * const i2s0_groups[] = {
--	"i2s_d0",
--	"i2s_pcm1",
--	"i2s0_pcm0",
-+	"i2s_d0_mfp",
-+	"i2s_pcm1_mfp",
-+	"i2s0_pcm0_mfp",
- };
- 
- static const char * const i2s1_groups[] = {
--	"i2s1_pcm0",
--	"i2s_d1",
-+	"i2s1_pcm0_mfp",
-+	"i2s_d1_mfp",
- 	"i2s1_dummy",
--	"spi0_i2c_pcm",
--	"uart0_rx",
--	"uart0_tx",
-+	"spi0_i2c_pcm_mfp",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
- };
- 
- static const char * const pcm1_groups[] = {
--	"i2s_pcm1",
--	"spi0_i2c_pcm",
--	"uart0_rx",
--	"uart0_tx",
--	"pcm1_in",
--	"pcm1_clk",
--	"pcm1_sync",
--	"pcm1_out",
-+	"i2s_pcm1_mfp",
-+	"spi0_i2c_pcm_mfp",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
-+	"pcm1_in_mfp",
-+	"pcm1_clk_mfp",
-+	"pcm1_sync_mfp",
-+	"pcm1_out_mfp",
- };
- 
- static const char * const pcm0_groups[] = {
--	"i2s0_pcm0",
--	"i2s1_pcm0",
--	"uart2_rx_tx",
--	"spi0_i2c_pcm",
-+	"i2s0_pcm0_mfp",
-+	"i2s1_pcm0_mfp",
-+	"uart2_rx_tx_mfp",
-+	"spi0_i2c_pcm_mfp",
- };
- 
- static const char * const ks_groups[] = {
--	"ks_in2",
--	"ks_in1",
--	"ks_in0",
--	"ks_in3",
--	"ks_out0",
--	"ks_out1",
--	"ks_out2",
-+	"ks_in2_mfp",
-+	"ks_in1_mfp",
-+	"ks_in0_mfp",
-+	"ks_in3_mfp",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
-+	"ks_out2_mfp",
- };
- 
- static const char * const jtag_groups[] = {
--	"ks_in2",
--	"ks_in1",
--	"ks_in0",
--	"ks_in3",
--	"ks_out1",
--	"sd0_d0",
--	"sd0_d2_d3",
--	"sd0_cmd",
--	"sd0_clk",
-+	"ks_in2_mfp",
-+	"ks_in1_mfp",
-+	"ks_in0_mfp",
-+	"ks_in3_mfp",
-+	"ks_out1_mfp",
-+	"sd0_d0_mfp",
-+	"sd0_d2_d3_mfp",
-+	"sd0_cmd_mfp",
-+	"sd0_clk_mfp",
- };
- 
- static const char * const pwm0_groups[] = {
--	"rgmii_rxd2",
--	"rgmii_txen",
--	"ks_in2",
--	"sen0_pclk",
-+	"rgmii_rxd2_mfp",
-+	"rgmii_txen_mfp",
-+	"ks_in2_mfp",
-+	"sen0_pclk_mfp",
- };
- 
- static const char * const pwm1_groups[] = {
--	"rgmii_rxen",
--	"ks_in1",
--	"ks_in3",
--	"sens0_ckout",
-+	"rgmii_rxen_mfp",
-+	"ks_in1_mfp",
-+	"ks_in3_mfp",
-+	"sens0_ckout_mfp",
- };
- 
- static const char * const pwm2_groups[] = {
--	"lcd0_d18",
--	"rgmii_rxd3",
--	"rgmii_rxd1",
--	"ks_out0",
--	"ks_out2",
-+	"lcd0_d18_mfp",
-+	"rgmii_rxd3_mfp",
-+	"rgmii_rxd1_mfp",
-+	"ks_out0_mfp",
-+	"ks_out2_mfp",
- };
- 
- static const char * const pwm3_groups[] = {
--	"rgmii_rxd0",
--	"ks_out1",
--	"lcd0_d2",
-+	"rgmii_rxd0_mfp",
-+	"ks_out1_mfp",
-+	"lcd0_d2_mfp",
- };
- 
- static const char * const pwm4_groups[] = {
--	"lcd0_d18",
--	"rgmii_txd01",
--	"rgmii_txd0",
--	"ks_in0",
--	"pcm1_in",
--	"nand_ceb3",
-+	"lcd0_d18_mfp",
-+	"rgmii_txd01_mfp",
-+	"rgmii_txd0_mfp",
-+	"ks_in0_mfp",
-+	"pcm1_in_mfp",
-+	"nand_ceb3_mfp",
- };
- 
- static const char * const pwm5_groups[] = {
--	"rgmii_txd1",
--	"ks_in1",
--	"pcm1_clk",
--	"nand_ceb2",
-+	"rgmii_txd1_mfp",
-+	"ks_in1_mfp",
-+	"pcm1_clk_mfp",
-+	"nand_ceb2_mfp",
- };
- 
- static const char * const p0_groups[] = {
--	"ks_in2",
--	"ks_in0",
-+	"ks_in2_mfp",
-+	"ks_in0_mfp",
- };
- 
- static const char * const sd0_groups[] = {
--	"ks_out0",
--	"ks_out1",
--	"ks_out2",
--	"lcd0_d2",
--	"dsi_dp3",
--	"dsi_dp0",
--	"sd0_d0",
--	"sd0_d1",
--	"sd0_d2_d3",
--	"sd1_d0_d3",
--	"sd0_cmd",
--	"sd0_clk",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
-+	"ks_out2_mfp",
-+	"lcd0_d2_mfp",
-+	"dsi_dp3_mfp",
-+	"dsi_dp0_mfp",
-+	"sd0_d0_mfp",
-+	"sd0_d1_mfp",
-+	"sd0_d2_d3_mfp",
-+	"sd1_d0_d3_mfp",
-+	"sd0_cmd_mfp",
-+	"sd0_clk_mfp",
- };
- 
- static const char * const sd1_groups[] = {
--	"dsi_dp2",
--	"mfp1_16_14",
--	"lcd0_d2",
--	"mfp1_16_14_d17",
--	"dsi_dp3",
--	"dsi_dn3",
--	"dsi_dnp1_cp_d2",
--	"dsi_dnp1_cp_d17",
--	"dsi_dn2",
--	"sd1_d0_d3",
--	"sd1_cmd",
-+	"dsi_dp2_mfp",
-+	"mfp1_16_14_mfp",
-+	"lcd0_d2_mfp",
-+	"mfp1_16_14_d17_mfp",
-+	"dsi_dp3_mfp",
-+	"dsi_dn3_mfp",
-+	"dsi_dnp1_cp_d2_mfp",
-+	"dsi_dnp1_cp_d17_mfp",
-+	"dsi_dn2_mfp",
-+	"sd1_d0_d3_mfp",
-+	"sd1_cmd_mfp",
- 	"sd1_dummy",
- };
- 
- static const char * const sd2_groups[] = {
--	"dnand_data_wr",
-+	"dnand_data_wr_mfp",
- };
- 
- static const char * const i2c0_groups[] = {
--	"uart0_rx",
--	"uart0_tx",
--	"i2c0_mfp",
-+	"uart0_rx_mfp",
-+	"uart0_tx_mfp",
-+	"i2c0_mfp_mfp",
- };
- 
- static const char * const i2c1_groups[] = {
-@@ -1448,85 +1448,85 @@ static const char * const i2c2_groups[] = {
- };
- 
- static const char * const i2c3_groups[] = {
--	"uart2_rx_tx",
--	"pcm1_sync",
--	"pcm1_out",
-+	"uart2_rx_tx_mfp",
-+	"pcm1_sync_mfp",
-+	"pcm1_out_mfp",
- };
- 
- static const char * const lvds_groups[] = {
--	"lvds_o_pn",
--	"lvds_ee_pn",
--	"lvds_e_pn",
-+	"lvds_o_pn_mfp",
-+	"lvds_ee_pn_mfp",
-+	"lvds_e_pn_mfp",
- };
- 
- static const char * const bt_groups[] = {
--	"i2s_pcm1",
--	"i2s0_pcm0",
--	"i2s1_pcm0",
--	"ks_in2",
--	"ks_in1",
--	"ks_in0",
--	"ks_in3",
--	"ks_out0",
--	"ks_out1",
--	"ks_out2",
--	"lvds_o_pn",
--	"lvds_ee_pn",
--	"pcm1_in",
--	"pcm1_clk",
--	"pcm1_sync",
--	"pcm1_out",
-+	"i2s_pcm1_mfp",
-+	"i2s0_pcm0_mfp",
-+	"i2s1_pcm0_mfp",
-+	"ks_in2_mfp",
-+	"ks_in1_mfp",
-+	"ks_in0_mfp",
-+	"ks_in3_mfp",
-+	"ks_out0_mfp",
-+	"ks_out1_mfp",
-+	"ks_out2_mfp",
-+	"lvds_o_pn_mfp",
-+	"lvds_ee_pn_mfp",
-+	"pcm1_in_mfp",
-+	"pcm1_clk_mfp",
-+	"pcm1_sync_mfp",
-+	"pcm1_out_mfp",
- };
- 
- static const char * const lcd0_groups[] = {
--	"lcd0_d18",
--	"lcd0_d2",
--	"mfp1_16_14_d17",
--	"lvds_o_pn",
--	"dsi_dp3",
--	"dsi_dn3",
--	"lvds_ee_pn",
--	"dsi_dnp1_cp_d2",
--	"dsi_dnp1_cp_d17",
--	"lvds_e_pn",
-+	"lcd0_d18_mfp",
-+	"lcd0_d2_mfp",
-+	"mfp1_16_14_d17_mfp",
-+	"lvds_o_pn_mfp",
-+	"dsi_dp3_mfp",
-+	"dsi_dn3_mfp",
-+	"lvds_ee_pn_mfp",
-+	"dsi_dnp1_cp_d2_mfp",
-+	"dsi_dnp1_cp_d17_mfp",
-+	"lvds_e_pn_mfp",
- };
- 
- 
- static const char * const usb30_groups[] = {
--	"ks_in1",
-+	"ks_in1_mfp",
- };
- 
- static const char * const clko_25m_groups[] = {
--	"clko_25m",
-+	"clko_25m_mfp",
- };
- 
- static const char * const mipi_csi_groups[] = {
--	"csi_cn_cp",
--	"csi_dn_dp",
-+	"csi_cn_cp_mfp",
-+	"csi_dn_dp_mfp",
- };
- 
- static const char * const dsi_groups[] = {
--	"dsi_dn0",
--	"dsi_dp2",
--	"dsi_dp3",
--	"dsi_dn3",
--	"dsi_dp0",
--	"dsi_dnp1_cp_d2",
--	"dsi_dnp1_cp_d17",
--	"dsi_dn2",
-+	"dsi_dn0_mfp",
-+	"dsi_dp2_mfp",
-+	"dsi_dp3_mfp",
-+	"dsi_dn3_mfp",
-+	"dsi_dp0_mfp",
-+	"dsi_dnp1_cp_d2_mfp",
-+	"dsi_dnp1_cp_d17_mfp",
-+	"dsi_dn2_mfp",
- 	"dsi_dummy",
- };
- 
- static const char * const nand_groups[] = {
--	"dnand_data_wr",
--	"dnand_acle_ce0",
--	"nand_ceb2",
--	"nand_ceb3",
-+	"dnand_data_wr_mfp",
-+	"dnand_acle_ce0_mfp",
-+	"nand_ceb2_mfp",
-+	"nand_ceb3_mfp",
- 	"nand_dummy",
- };
- 
- static const char * const spdif_groups[] = {
--	"uart0_tx",
-+	"uart0_tx_mfp",
- };
- 
- static const char * const sirq0_groups[] = {
+ 	pci_set_drvdata(pdev, NULL);
+ }
 -- 
-2.25.0
+2.20.1
 
