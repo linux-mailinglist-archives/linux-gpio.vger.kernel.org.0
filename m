@@ -2,34 +2,34 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29E5E149BE4
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Jan 2020 17:32:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E36149BE3
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Jan 2020 17:32:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgAZQcG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 26 Jan 2020 11:32:06 -0500
+        id S1726079AbgAZQcF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Jan 2020 11:32:05 -0500
 Received: from mga14.intel.com ([192.55.52.115]:27311 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgAZQcG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 26 Jan 2020 11:32:06 -0500
+        id S1725838AbgAZQcF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 26 Jan 2020 11:32:05 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 08:32:06 -0800
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Jan 2020 08:32:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,366,1574150400"; 
-   d="scan'208";a="246195922"
+   d="scan'208";a="251749054"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jan 2020 08:32:04 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 26 Jan 2020 08:32:02 -0800
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1ivkpQ-000H2Z-7i; Mon, 27 Jan 2020 00:32:04 +0800
-Date:   Mon, 27 Jan 2020 00:31:23 +0800
+        id 1ivkpO-000GW5-F5; Mon, 27 Jan 2020 00:32:02 +0800
+Date:   Mon, 27 Jan 2020 00:31:25 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 122ce22cb37b087e7e28ebb16044a622b0a22233
-Message-ID: <5e2dbedb.MJPVvbzEm0lb0iQ7%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 319d5cce728cd70897a1306591a252258fc1428d
+Message-ID: <5e2dbedd.7LZAxCOpl5Yj6rHM%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,8 +39,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 122ce22cb37b087e7e28ebb16044a622b0a22233  pinctrl: madera: Remove extra blank line
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
+branch HEAD: 319d5cce728cd70897a1306591a252258fc1428d  Merge tag 'intel-pinctrl-v5.5-3' of git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into fixes
 
 elapsed time: 2896m
 
@@ -122,7 +122,6 @@ x86_64               randconfig-g003-20200126
 i386                 randconfig-g001-20200126
 i386                 randconfig-g002-20200126
 i386                 randconfig-g003-20200126
-arm64                               defconfig
 x86_64               randconfig-h001-20200126
 x86_64               randconfig-h002-20200126
 x86_64               randconfig-h003-20200126
@@ -130,20 +129,6 @@ i386                 randconfig-h001-20200126
 i386                 randconfig-h002-20200126
 i386                 randconfig-h003-20200126
 mips                      fuloong2e_defconfig
-x86_64               randconfig-a001-20200126
-x86_64               randconfig-a002-20200126
-x86_64               randconfig-a003-20200126
-i386                 randconfig-a001-20200126
-i386                 randconfig-a002-20200126
-i386                 randconfig-a003-20200126
-x86_64               randconfig-c001-20200126
-x86_64               randconfig-c002-20200126
-x86_64               randconfig-c003-20200126
-i386                 randconfig-c001-20200126
-i386                 randconfig-c002-20200126
-i386                 randconfig-c003-20200126
-arm                              allmodconfig
-arm64                            allmodconfig
 alpha                randconfig-a001-20200125
 m68k                 randconfig-a001-20200125
 mips                 randconfig-a001-20200125
@@ -156,18 +141,14 @@ mips                             allmodconfig
 mips                              allnoconfig
 mips                             allyesconfig
 mips                      malta_kvm_defconfig
-x86_64               randconfig-f001-20200126
-x86_64               randconfig-f002-20200126
-x86_64               randconfig-f003-20200126
-i386                 randconfig-f001-20200126
-i386                 randconfig-f002-20200126
-i386                 randconfig-f003-20200126
 x86_64               randconfig-b001-20200125
 x86_64               randconfig-b002-20200125
 x86_64               randconfig-b003-20200125
 i386                 randconfig-b001-20200125
 i386                 randconfig-b002-20200125
 i386                 randconfig-b003-20200125
+arm                              allmodconfig
+arm64                            allmodconfig
 c6x                              allyesconfig
 c6x                        evmc6678_defconfig
 nios2                         10m50_defconfig
@@ -192,6 +173,7 @@ arm                        shmobile_defconfig
 arm                           sunxi_defconfig
 arm64                             allnoconfig
 arm64                            allyesconfig
+arm64                               defconfig
 x86_64               randconfig-e001-20200125
 x86_64               randconfig-e002-20200125
 x86_64               randconfig-e003-20200125
@@ -238,12 +220,12 @@ ia64                             allmodconfig
 ia64                              allnoconfig
 ia64                             allyesconfig
 ia64                                defconfig
-arc                  randconfig-a001-20200126
-arm                  randconfig-a001-20200126
-arm64                randconfig-a001-20200126
-ia64                 randconfig-a001-20200126
-powerpc              randconfig-a001-20200126
-sparc                randconfig-a001-20200126
+x86_64               randconfig-a001-20200126
+x86_64               randconfig-a002-20200126
+x86_64               randconfig-a003-20200126
+i386                 randconfig-a001-20200126
+i386                 randconfig-a002-20200126
+i386                 randconfig-a003-20200126
 x86_64               randconfig-g001-20200125
 x86_64               randconfig-g002-20200125
 x86_64               randconfig-g003-20200125
@@ -273,18 +255,36 @@ x86_64               randconfig-e003-20200126
 i386                 randconfig-e001-20200126
 i386                 randconfig-e002-20200126
 i386                 randconfig-e003-20200126
+x86_64               randconfig-c001-20200126
+x86_64               randconfig-c002-20200126
+x86_64               randconfig-c003-20200126
+i386                 randconfig-c001-20200126
+i386                 randconfig-c002-20200126
+i386                 randconfig-c003-20200126
+c6x                  randconfig-a001-20200125
+h8300                randconfig-a001-20200125
+microblaze           randconfig-a001-20200125
+nios2                randconfig-a001-20200125
+sparc64              randconfig-a001-20200125
+arc                  randconfig-a001-20200126
+arm                  randconfig-a001-20200126
+arm64                randconfig-a001-20200126
+ia64                 randconfig-a001-20200126
+powerpc              randconfig-a001-20200126
+sparc                randconfig-a001-20200126
+x86_64               randconfig-f001-20200126
+x86_64               randconfig-f002-20200126
+x86_64               randconfig-f003-20200126
+i386                 randconfig-f001-20200126
+i386                 randconfig-f002-20200126
+i386                 randconfig-f003-20200126
+sh                   randconfig-a001-20200125
 x86_64               randconfig-d001-20200126
 x86_64               randconfig-d002-20200126
 x86_64               randconfig-d003-20200126
 i386                 randconfig-d001-20200126
 i386                 randconfig-d002-20200126
 i386                 randconfig-d003-20200126
-c6x                  randconfig-a001-20200125
-h8300                randconfig-a001-20200125
-microblaze           randconfig-a001-20200125
-nios2                randconfig-a001-20200125
-sparc64              randconfig-a001-20200125
-sh                   randconfig-a001-20200125
 
 ---
 0-DAY kernel test infrastructure                 Open Source Technology Center
