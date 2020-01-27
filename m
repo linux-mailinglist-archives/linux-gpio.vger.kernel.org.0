@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CF0614A994
+	by mail.lfdr.de (Postfix) with ESMTP id CA6E614A999
 	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2020 19:15:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgA0SPu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jan 2020 13:15:50 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:54839 "EHLO
+        id S1726049AbgA0SPv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jan 2020 13:15:51 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:46227 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbgA0SPt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jan 2020 13:15:49 -0500
+        with ESMTP id S1725893AbgA0SPu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jan 2020 13:15:50 -0500
 Received: from localhost.localdomain ([37.4.249.152]) by
  mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MdvVu-1jTpmM3Tfy-00b6tv; Mon, 27 Jan 2020 19:15:40 +0100
+ id 1MIxFi-1jB3PL0sMU-00KPSh; Mon, 27 Jan 2020 19:15:41 +0100
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -23,161 +23,200 @@ To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [RFC PATCH 2/4] pinctrl: bcm2835: Refactor platform data
-Date:   Mon, 27 Jan 2020 19:15:06 +0100
-Message-Id: <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
+Subject: [RFC PATCH 3/4] pinctrl: bcm2835: Add support for all GPIOs on BCM2711
+Date:   Mon, 27 Jan 2020 19:15:07 +0100
+Message-Id: <1580148908-4863-4-git-send-email-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
 References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-X-Provags-ID: V03:K1:VruPCfmk9mM3xiAf4DG/6aoXzCy4UDEsxr5SC+GDP4iRdgXZX29
- MFCNoD27qBqcSq1LjDl1+NGtNJ3+c1twK3aKoFUdWC05HKxzJPuizB6xDkWYoCIsLzUx75H
- HiA0SBUlw/LN+bHlzoczcUQzu+qFL0N3XAwKX9HxzpPzSFwl1lRDgLB6suBZjq4VTFrw6QP
- xptjL6VDFkgqBb05XjOfA==
+X-Provags-ID: V03:K1:X6IS1XjHy4cJfxjoudVoDX/cZvMR/vfdQSMdLzkgWq1irgCvB38
+ RaAG8s5bLq+gwxv7sq4OOzzzIjMwUf3oUytVqdip8Emtgr3GiNEl2vBd272/sh3B1OJanK8
+ goehy07Y9M/B0RMRS8QYkknz5PIlSimkZBJKjNE686UdoJg1We/vhXibKmf8z5kreTjrWe3
+ q1JcyYfqP1itQAVjziUtQ==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f2Tec5CMQUc=:niiLUGM7C+e//7RIjf+wMq
- wLFHtqjv1ynGaEgrTEwtjnWYqI/r72m4A6fdxd06jGD2Uyp8tpT//zGZgAMatxGP2tJCKPrs8
- H50QvZYrkhyeWT1e/b/43xnEBFcJ26c6kKbSdwNEaPpeQ2pSXrJ+fWFg4rgyr2kyb0a6fODwi
- glMJlRcbMvRam6bDw57BliG4DhkYgMl0WB+vE3ztB/xJo+NhTzPKfEpK10WVhz1N+MdOE8gPM
- Ed3HaUcq1KYSZvZRKVS8rOnqLfx2aLsXvrn+YKEvs5xzV1w8QpRWEIYZcLOwKvY23kJzQG9eq
- MIIG4Or4qhijuBXiW2q6mwUPh2z1lLVKOHwzEHdCAb+4bDlzo8dAxIoc40B0H6ZxVg4/5LHFJ
- La0bD0qwfKTemPRPvdCrUGRjVY38hB0RBGSXLrWBfL0PkTsuaEeRZvCVEY80YYfxmOaIKNCZI
- KTZTGrVvZWUrz2smObUJlIIzYVznL4L5rWMZjNaLpWxwyNpAg0eDTqVYFmDT+qIxNN4PgQhRy
- tSUqMKFEgm7xT/YoZD4jdOe5rJJ0dEmy9DgnlvjmjzCBjXAGdPFrFO9kKivLmdSPaubJ7DdcC
- tcrGiqydtDkturFJvTsQYH+PmTQvbe4oBqgNIRZo8f1X5RgRS0fFLp3LA8/+FKUufNNqrLMao
- +41TZ2JeFAJBnB9x8z5VMa7EVYvu5Vv7a6UPbF0i7yUPlzFy4OB0vDTMzjH7rW414iarBNvIy
- QDypz6a5PwveJ4Fe9ATD7LILVISmcIjM7r29JF4LAmFeYo0lVn6a4kM0PnIwd/wQsax1Rp9/Y
- J1/TI8TQICVBl0N9CsxgAPc+X49YqHbFXpoqbsqqK9BIb3Bj+cJJ6Owe9HtjZLb6ifZLnyA
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LyL94am3zLA=:BmnKGYucrjNaj35BCZWbP5
+ JzGddQvqDkhH/CCngNEO2dMwjvlnPKHh/PEbdrGp6m9QHAmq4UkqMbHYKp4XqoYGKvPoozwfP
+ FP1S21DqEh5BYA0hhWgk2maxuudk085Kg/UXpitwP437bovAei4bfR+gXu53083PnNenJAm4p
+ xAhXuwmTwnWKv+qAem9IrQUBQtWZqTLIoviS/rBI58lKIF9owSsmboh1lagz+7EGkpnXhcae1
+ 0MbckaZUNlfNjiRnq4V+VHRLEiPKWNxiGYMIefuH9JuPr6WXJPFk7fJo8OZ45VvNntUoYSSpc
+ j0n6iO9I7UbYvyi7+SAmts7a4bZF+1qLxOl9S9cCBKPRGH2Z3kUCuTwNYlPjcUQyn6uqO0Mlx
+ c+13a6OSMjdDPVRDOntBqI0l4rsK062Ig/ZwiteVVX/T7ZtOdNR2v9sRVAnh/w8iyF4VHZ0GC
+ ULTnZeoeqfXKRaXEz7sGaOev/A5I1h35g02J5m9TlwjHQiNzKPNc45U2Rab8osp5QUPpRpD1N
+ 4TUS9baKQp8dfAHyEkc1gBlk0cb1zDcQJMX7bQVUSSxSFx0otQCiojOcWf2PP2Hf1NREQw+82
+ UV3Z09N/3ny3u6Qu0dI11Kin/x4ZubPCk2Z9H663jrHUxQP4afxI/ZCeRjqTIpU8chYef1IHT
+ v3ZX4UpNi6S2kossS/nmFNqzdzxsOnNFseX4lA9Pp5DREJwDVh4t9UFpY49YOKaWkmqBFAAh4
+ O7NlyceEWWYXkJh8pRPkdftSVQVKKjtoc+mmNdZ6A/MFCjlN4hQ4NzpeCvIGk1Jp/tUXAyMDV
+ jBtNPE8cgg54eLvhAbGLfFWVNbu8UAkmntw7HjfU+o9g9ylEQ02IihlbByt5l+e7GdgBJm5
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This prepares the platform data to be easier to extend for more GPIOs.
-Except of this there is no functional change.
+The BCM2711 supports 58 GPIOs. So extend pinctrl and GPIOs accordingly.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 57 +++++++++++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 13 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 54 +++++++++++++++++++++++++++--------
+ 1 file changed, 42 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 3fc2638..ffd069a 100644
+index ffd069a..41e7bf9 100644
 --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
 +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -82,6 +82,7 @@ struct bcm2835_pinctrl {
+@@ -37,6 +37,7 @@
+ 
+ #define MODULE_NAME "pinctrl-bcm2835"
+ #define BCM2835_NUM_GPIOS 54
++#define BCM2711_NUM_GPIOS 58
+ #define BCM2835_NUM_BANKS 2
+ #define BCM2835_NUM_IRQS  3
+ 
+@@ -78,7 +79,7 @@ struct bcm2835_pinctrl {
+ 
+ 	/* note: locking assumes each bank will have its own unsigned long */
+ 	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
+-	unsigned int irq_type[BCM2835_NUM_GPIOS];
++	unsigned int irq_type[BCM2711_NUM_GPIOS];
  
  	struct pinctrl_dev *pctl_dev;
  	struct gpio_chip gpio_chip;
-+	struct pinctrl_desc pctl_desc;
- 	struct pinctrl_gpio_range gpio_range;
- 
- 	raw_spinlock_t irq_lock[BCM2835_NUM_BANKS];
-@@ -1051,7 +1052,7 @@ static const struct pinconf_ops bcm2711_pinconf_ops = {
- 	.pin_config_set = bcm2711_pinconf_set,
+@@ -145,6 +146,10 @@ static struct pinctrl_pin_desc bcm2835_gpio_pins[] = {
+ 	BCM2835_GPIO_PIN(51),
+ 	BCM2835_GPIO_PIN(52),
+ 	BCM2835_GPIO_PIN(53),
++	BCM2835_GPIO_PIN(54),
++	BCM2835_GPIO_PIN(55),
++	BCM2835_GPIO_PIN(56),
++	BCM2835_GPIO_PIN(57),
  };
  
--static struct pinctrl_desc bcm2835_pinctrl_desc = {
-+static const struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.name = MODULE_NAME,
- 	.pins = bcm2835_gpio_pins,
- 	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
-@@ -1061,19 +1062,47 @@ static struct pinctrl_desc bcm2835_pinctrl_desc = {
- 	.owner = THIS_MODULE,
+ /* one pin per group */
+@@ -203,6 +208,10 @@ static const char * const bcm2835_gpio_groups[] = {
+ 	"gpio51",
+ 	"gpio52",
+ 	"gpio53",
++	"gpio54",
++	"gpio55",
++	"gpio56",
++	"gpio57",
  };
  
--static struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
-+static const struct pinctrl_desc bcm2711_pinctrl_desc = {
-+	.name = MODULE_NAME,
-+	.pins = bcm2835_gpio_pins,
-+	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
-+	.pctlops = &bcm2835_pctl_ops,
-+	.pmxops = &bcm2835_pmx_ops,
-+	.confops = &bcm2711_pinconf_ops,
+ enum bcm2835_fsel {
+@@ -353,6 +362,22 @@ static const struct gpio_chip bcm2835_gpio_chip = {
+ 	.can_sleep = false,
+ };
+ 
++static const struct gpio_chip bcm2711_gpio_chip = {
++	.label = "pinctrl-bcm2711",
 +	.owner = THIS_MODULE,
++	.request = gpiochip_generic_request,
++	.free = gpiochip_generic_free,
++	.direction_input = bcm2835_gpio_direction_input,
++	.direction_output = bcm2835_gpio_direction_output,
++	.get_direction = bcm2835_gpio_get_direction,
++	.get = bcm2835_gpio_get,
++	.set = bcm2835_gpio_set,
++	.set_config = gpiochip_generic_config,
++	.base = -1,
++	.ngpio = BCM2711_NUM_GPIOS,
++	.can_sleep = false,
 +};
 +
-+static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
+ static void bcm2835_gpio_irq_handle_bank(struct bcm2835_pinctrl *pc,
+ 					 unsigned int bank, u32 mask)
+ {
+@@ -399,7 +424,7 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
+ 		bcm2835_gpio_irq_handle_bank(pc, 0, 0xf0000000);
+ 		bcm2835_gpio_irq_handle_bank(pc, 1, 0x00003fff);
+ 		break;
+-	case 2: /* IRQ2 covers GPIOs 46-53 */
++	case 2: /* IRQ2 covers GPIOs 46-57 */
+ 		bcm2835_gpio_irq_handle_bank(pc, 1, 0x003fc000);
+ 		break;
+ 	}
+@@ -618,7 +643,7 @@ static struct irq_chip bcm2835_gpio_irq_chip = {
+ 
+ static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+-	return ARRAY_SIZE(bcm2835_gpio_groups);
++	return BCM2835_NUM_GPIOS;
+ }
+ 
+ static const char *bcm2835_pctl_get_group_name(struct pinctrl_dev *pctldev,
+@@ -776,7 +801,7 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 		err = of_property_read_u32_index(np, "brcm,pins", i, &pin);
+ 		if (err)
+ 			goto out;
+-		if (pin >= ARRAY_SIZE(bcm2835_gpio_pins)) {
++		if (pin >= pc->pctl_desc.npins) {
+ 			dev_err(pc->dev, "%pOF: invalid brcm,pins value %d\n",
+ 				np, pin);
+ 			err = -EINVAL;
+@@ -852,7 +877,7 @@ static int bcm2835_pmx_get_function_groups(struct pinctrl_dev *pctldev,
+ {
+ 	/* every pin can do every function */
+ 	*groups = bcm2835_gpio_groups;
+-	*num_groups = ARRAY_SIZE(bcm2835_gpio_groups);
++	*num_groups = BCM2835_NUM_GPIOS;
+ 
+ 	return 0;
+ }
+@@ -1055,7 +1080,7 @@ static const struct pinconf_ops bcm2711_pinconf_ops = {
+ static const struct pinctrl_desc bcm2835_pinctrl_desc = {
  	.name = MODULE_NAME,
+ 	.pins = bcm2835_gpio_pins,
+-	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
++	.npins = BCM2835_NUM_GPIOS,
+ 	.pctlops = &bcm2835_pctl_ops,
+ 	.pmxops = &bcm2835_pmx_ops,
+ 	.confops = &bcm2835_pinconf_ops,
+@@ -1063,9 +1088,9 @@ static const struct pinctrl_desc bcm2835_pinctrl_desc = {
+ };
+ 
+ static const struct pinctrl_desc bcm2711_pinctrl_desc = {
+-	.name = MODULE_NAME,
++	.name = "pinctrl-bcm2711",
+ 	.pins = bcm2835_gpio_pins,
+-	.npins = ARRAY_SIZE(bcm2835_gpio_pins),
++	.npins = BCM2711_NUM_GPIOS,
+ 	.pctlops = &bcm2835_pctl_ops,
+ 	.pmxops = &bcm2835_pmx_ops,
+ 	.confops = &bcm2711_pinconf_ops,
+@@ -1077,6 +1102,11 @@ static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
  	.npins = BCM2835_NUM_GPIOS,
  };
  
-+struct bcm_plat_data {
-+	const struct gpio_chip *gpio_chip;
-+	const struct pinctrl_desc *pctl_desc;
-+	const struct pinctrl_gpio_range *gpio_range;
++static const struct pinctrl_gpio_range bcm2711_pinctrl_gpio_range = {
++	.name = "pinctrl-bcm2711",
++	.npins = BCM2711_NUM_GPIOS,
 +};
 +
-+static const struct bcm_plat_data bcm2835_plat_data = {
-+	.gpio_chip = &bcm2835_gpio_chip,
-+	.pctl_desc = &bcm2835_pinctrl_desc,
-+	.gpio_range = &bcm2835_pinctrl_gpio_range,
-+};
-+
-+static const struct bcm_plat_data bcm2711_plat_data = {
-+	.gpio_chip = &bcm2835_gpio_chip,
-+	.pctl_desc = &bcm2711_pinctrl_desc,
-+	.gpio_range = &bcm2835_pinctrl_gpio_range,
-+};
-+
- static const struct of_device_id bcm2835_pinctrl_match[] = {
- 	{
- 		.compatible = "brcm,bcm2835-gpio",
--		.data = &bcm2835_pinconf_ops,
-+		.data = &bcm2835_plat_data,
- 	},
- 	{
- 		.compatible = "brcm,bcm2711-gpio",
--		.data = &bcm2711_pinconf_ops,
-+		.data = &bcm2711_plat_data,
- 	},
- 	{}
+ struct bcm_plat_data {
+ 	const struct gpio_chip *gpio_chip;
+ 	const struct pinctrl_desc *pctl_desc;
+@@ -1090,9 +1120,9 @@ static const struct bcm_plat_data bcm2835_plat_data = {
  };
-@@ -1083,6 +1112,7 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct bcm2835_pinctrl *pc;
-+	struct bcm_plat_data *pdata;
- 	struct gpio_irq_chip *girq;
- 	struct resource iomem;
+ 
+ static const struct bcm_plat_data bcm2711_plat_data = {
+-	.gpio_chip = &bcm2835_gpio_chip,
++	.gpio_chip = &bcm2711_gpio_chip,
+ 	.pctl_desc = &bcm2711_pinctrl_desc,
+-	.gpio_range = &bcm2835_pinctrl_gpio_range,
++	.gpio_range = &bcm2711_pinctrl_gpio_range,
+ };
+ 
+ static const struct of_device_id bcm2835_pinctrl_match[] = {
+@@ -1118,8 +1148,8 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
  	int err, i;
-@@ -1108,7 +1138,13 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(pc->base))
- 		return PTR_ERR(pc->base);
+ 	const struct of_device_id *match;
  
--	pc->gpio_chip = bcm2835_gpio_chip;
-+	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-+	if (!match)
-+		return -EINVAL;
-+
-+	pdata = (struct bcm_plat_data *)match->data;
-+
-+	memcpy(&pc->gpio_chip, pdata->gpio_chip, sizeof(pc->gpio_chip));
- 	pc->gpio_chip.parent = dev;
- 	pc->gpio_chip.of_node = np;
+-	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2835_NUM_GPIOS);
+-	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2835_NUM_GPIOS);
++	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_pins) != BCM2711_NUM_GPIOS);
++	BUILD_BUG_ON(ARRAY_SIZE(bcm2835_gpio_groups) != BCM2711_NUM_GPIOS);
  
-@@ -1159,19 +1195,14 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	match = of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
--	if (match) {
--		bcm2835_pinctrl_desc.confops =
--			(const struct pinconf_ops *)match->data;
--	}
--
--	pc->pctl_dev = devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
-+	memcpy(&pc->pctl_desc, pdata->pctl_desc, sizeof(pc->pctl_desc));
-+	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
- 	if (IS_ERR(pc->pctl_dev)) {
- 		gpiochip_remove(&pc->gpio_chip);
- 		return PTR_ERR(pc->pctl_dev);
- 	}
- 
--	pc->gpio_range = bcm2835_pinctrl_gpio_range;
-+	memcpy(&pc->gpio_range, pdata->gpio_range, sizeof(pc->gpio_range));
- 	pc->gpio_range.base = pc->gpio_chip.base;
- 	pc->gpio_range.gc = &pc->gpio_chip;
- 	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+ 	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
 -- 
 2.7.4
 
