@@ -2,144 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCBC314A8D3
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2020 18:18:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C283114A992
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Jan 2020 19:15:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgA0RSY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jan 2020 12:18:24 -0500
-Received: from mail-il1-f170.google.com ([209.85.166.170]:43480 "EHLO
-        mail-il1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgA0RSX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jan 2020 12:18:23 -0500
-Received: by mail-il1-f170.google.com with SMTP id o13so7475355ilg.10
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Jan 2020 09:18:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=7iIzPWpmQyJWSR2R5TWvstPbb4a+HYx4eAah/vh85Qg=;
-        b=mBA/pVl3Z3gq7ERKlY640uulSjGFHE/W2YJqztbCWCQcoBr5nThLCPqOteoMhDzzb/
-         qJmgWL+1Rf269tHvbIIKL9RLYHPbvQJYXeEZKI6YjDjPAHzwF26/Z5zYbr6Nx4xF2WTJ
-         X0fvuOYvP3PYMgVMmc5FrbZiDmh1ooo+D1yNWAVYDddF8rGAHI3YJtuumUmojzKsrozK
-         SY+OqhyyEo1Y7mcEVBVH1+vZ9dWEQOoNgEDBT0DE74zgS2z6a6g4+Hq9cdC+PLAOWrdN
-         ATYN5gVXt7I2swqtZp+bKRxXSv/BhnfrREtQ4PrMsKQScL1XhzA84jjPEV2HftXDMv/n
-         osrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=7iIzPWpmQyJWSR2R5TWvstPbb4a+HYx4eAah/vh85Qg=;
-        b=tQbLu+8RCQ0ec7LxottZa98QtuD5L9S95Cvm39L6nC8r6PZB44CKMlr1cHpzv/xFmx
-         A6JD3WO4OZVVvnazuClDXxnUwaukFnKDPMvt+EzxMDd1B3PjW95zvZezcZd9d2P1G+y5
-         ltKGguVRISJtiSW3+xW2ICGIo4FhAUNAE49X9Yk0EQP8+UW2mMvFtX3q08JNUmXSf+Id
-         i3Rh9pSQmxZSuvF3xhnwsE+R3yB1eXgBDyiNFvdWqTfGjnd07kMpIUxvkj8AQeVWgY2y
-         0zyZR+2la3GN3bt71b0vpQ0ILPeupzWUCMTywtOf21R/KEnGkuZ0z1YecLq7pDo0mDqd
-         TuHg==
-X-Gm-Message-State: APjAAAXHRGMQBM2CSTCZ7S5dSwrP82RhiSI9VRUUVsIryKIAuK+nvLg/
-        56VXcP8y3fpdEJZ6la/Wm6nSumrOnjkvjr+fn1frWC9WEHw=
-X-Google-Smtp-Source: APXvYqwG4OihMcVutoQeuOnXy/+X91A7V1e7f2Nb+AZIFSlPURWF1BcgC687OXubCDcdwN7D+c+PbWujfz9DF7fHfIA=
-X-Received: by 2002:a92:9c1c:: with SMTP id h28mr14987230ili.189.1580145502787;
- Mon, 27 Jan 2020 09:18:22 -0800 (PST)
-MIME-Version: 1.0
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 27 Jan 2020 18:18:12 +0100
-Message-ID: <CAMRc=MenRimgW=1X93gh-pyuKbLhRir1rBUPYaLOXTT1v2SE8g@mail.gmail.com>
-Subject: [ANNOUNCE] libgpiod v1.5
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     Drew Fustini <drew@pdp7.com>, Kent Gibson <warthog618@gmail.com>,
+        id S1726026AbgA0SPs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jan 2020 13:15:48 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:42579 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgA0SPs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Jan 2020 13:15:48 -0500
+Received: from localhost.localdomain ([37.4.249.152]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1Mvs2R-1jlEAl0Ixr-00suja; Mon, 27 Jan 2020 19:15:40 +0100
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [RFC PATCH 0/4] pinctrl: bcm2835: Add support for all BCM2711 GPIOs
+Date:   Mon, 27 Jan 2020 19:15:04 +0100
+Message-Id: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:yg/rb5wFqWdXj81dOcYj28x9Nt0riCHuDWx9306t0g0mf3IueD2
+ uizd9G/+uVDXYWmIGnORMVPQmXYPlJXE9Wf+2H9FqFAmDXZewNCVUYtJhIpAxL3wwzisGXn
+ m5pWiDAL5AFhnCxhXNMHoKtYE0xDj0Yb4ewhQ02Zij986KKCtKd6zffB0ebGiWzGbLHw7Au
+ 2IVOQAFWeuXw2VtlMpHqQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aKF8x4iqoY0=:9uBiIsisJ6lNO1jewQmFmR
+ L5YZJPkXOqZn2cu9arXDiuLsXqQpWc8sa44MTl611OCZgD1nQQ2znlss/ub+ooNaDDdtUSok8
+ BvBk9BTkVoRSvLwvkwS04p325ncEk8w39vHXwAq4uyG+B+o+wXuS8Qd1u78j7d+89WywSQ2gk
+ A8wLmmZ9cIyS0d436/S7rxxK+OR6BIbJ2bOi0JCbW4vzBAkdQzsvGqY51bbEMNB9ZptSpJ9Ws
+ RcNjs+ILuQy0pcBit8vCxAeiO86FrayGXp9CVMucwIPVqoz8UwJFHZQjHiK6xsfiJaeX6Yioo
+ jra/rbGmAPhtpn5oYdzjPr/SzTtFQNgW4eYtNS/SzXchPkqZwmavTMrV+8drNfH7fhT/Od9tP
+ G6kCVIqgec1rpwy/g09DjkcBqifzgr6vKnXPd5ILGDMG5vpGwvZkAm0XFnrGwxYa/cfOEuLeh
+ QXJasanJHX4AmSGOWbdEUqslUeKyhzoBCBG6dAOkKK/n2jyThf5ON+lfRUPY2PZHvuGqctFTN
+ jZsxE2B2ARlFjsNNezJQD1+3K5WGocqKkHJWmurhW3IgLwq8UzKmMPs/FGIWbFKOhJmprrp4R
+ OiXIAQhjHvvkdmwlGzb7mYDsrPLVkNTQ1ASSWkIQvs2it7dRlVXNIoUtTG3y/ekAlr+6P9jId
+ hxU9yUu47d4QwbA0hLDd6pPbWO4MiT+6faut/LySNrn1UjsH8wADsraNamTjy26aHW6vDzwt7
+ xacbJod8O+urUArV0jkO9/dUXzvv4Xl2oWWCJilgc4vVOknZqIYCAPvW3nAJ2GGl6RGlaF55r
+ hGSXgYkdGDByZTZUCymfE8iMGn+a7kDyxqGFR4p3gqnVrKZCYFTsJfY/H2AwFuFCKE9Rp5T
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello!
+The BCM2711 supports 58 GPIOs [1] by using the existing BCM2835 GPIO registers
+completely. So there is no need to change the binding.
 
-libgpiod v1.5 is now released with just a couple fixes on top of
-v1.5-rc1. Final changelog is below.
+Patch 1 and 2 prepare the pinctrl driver to be extended to 58 GPIOs in Patch 3.
+I didn't want to squash them in order to make review as easy as possible.
+The final patch 4 assigns all SoC GPIOs a label as we already did for
+the older Raspberry Pi boards.
 
-The sources are available at:
+[1] - https://github.com/raspberrypi/linux/issues/3101#issuecomment-573092294
 
-    git://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
+Stefan Wahren (4):
+  pinctrl: bcm2835: Drop unused define
+  pinctrl: bcm2835: Refactor platform data
+  pinctrl: bcm2835: Add support for all GPIOs on BCM2711
+  ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
 
-The release tarballs can be downloaded from:
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  74 ++++++++++++++++++++++++
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 106 ++++++++++++++++++++++++++--------
+ 2 files changed, 156 insertions(+), 24 deletions(-)
 
-    https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/
+-- 
+2.7.4
 
-I'm also making a bug-fix release for the v1.4.x series because v1.5
-will be unavailable in yocto until it integrates linux v5.5.
-
-Best regards,
-Bartosz Golaszewski
-
----
-
-libgpiod v1.5
-=============
-
-New features:
-- switched to using the GLib testing framework for core library tests and BATS
-  (Bash Automated Testing System) for command-line tools
-- used Catch2 C++ testing framework to implement a proper test-suite for C++
-  bindings while also reusing the API provided by libgpiomockup
-- used Python's unittest package to implement a proper test suite for Python
-  bindings and reused libgpiockup again
-- provided line::update() and Line.update() routines for C++ and Python
-  bindings respectively allowing to update the line info from bindings as well
-- added support for bias flags which are a new functionality first available in
-  linux v5.5; subsequently the library now requires v5.5 kernel headers to
-  build; the new flags are supported in the core library, C++ and Python
-  bindings as well as the command-line tools
-- added support for the new SET_CONFIG ioctl(): this too is a new functionality
-  added in linux v5.5; both features have been implemented in the library by
-  Kent Gibson
-- added routines for reading multiple line events at once to the core library,
-  C++ and Python bindings
-
-Improvements:
-- constified function arguments where applicable in libgpiomockup
-- fixed the name of the test exeucutable displayed at build time
-- improved the function pointer casting in Python bindings to avoid warnings
-  emitted by GCC8
-- switched to using the KERNEL_VERSION() macro in tests instead of handcoded
-  version parsing
-- improved the setup ordering in tests (setup libgpiomockup before checking
-  the kernel version
-- add 'extern "c"' to the libgpiomockup header to make it usable from C++
-- add chip index validation to libgpiomockup functions
-- check if the debugfs directory used by libgpiomockup is writable before
-  using it to set the pull of dummy lines
-- add several new test cases
-- improved Python example programs (made gpiomon's output similar to the
-  original tool, make gpioset wait for an ENTER pres by default)
-- fixed the major:minor number comparison between the device and sysfs
-- deprecated the gpiod_line_needs_update() function and removed the logic
-  behind it from the library
-- shrank the Python bindings a bit by directly returning the value from
-  PyErr_SetFromErrno()
-- dropped noexcept from methods which can throw in C++ bindings
-- switched to initializing the bitset with integers instead of strings in C++
-  bindings
-- allowed gpiod_line_set_value_bulk() to accept null pointers
-- when building Python bindings: check for the existence of python-config
-- improved the readability of help text messages for command-line tools
-- reworked the .gitignore file: added libtool scripts generated during
-  cross-compilation and split the main .gitignore into several fine-grained
-  files
-- fixed several misspellings
-- other minor tweaks and improvements
-
-Bug fixes:
-- fixed memory leaks in libgpiomockup
-- fixed memory leaks in the testing framework
-- fixed a segfault in error path in tests
-- make gpioinfo show lines claimed by the kernel as used even if they have no
-  named consumer
-- fixed the test cases validating the '--active-low' switch in gpiomon and
-  the GPIOHANDLE_REQUEST_ACTIVE_LOW flag in the core library after a fix
-  for incorrect behavior was merged in linux v5.2.7
-- stopped failing at init-time of libgpiomockup if gpio-mockup is already
-  loaded
-- added a missing throw keyword in error path in C++ bindings
-- fixed a segfault in Python bindings when calling Line.request() without
-  the consumer argument
