@@ -2,66 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EA6B14BE9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2020 18:31:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 723B214C1E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2020 22:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgA1Rb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Jan 2020 12:31:58 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44670 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgA1Rb6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Jan 2020 12:31:58 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so11058466oia.11
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Jan 2020 09:31:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VSfDTSEm+H+4Pg0k7vb8ON7kDpWb9AFq3yti6hpGphw=;
-        b=nCLusG01fDnEN+0DQqipdtIzTFqGHOYP7NHeNPGIbUAv1DpCkamTzi6NVTQZMHN7Me
-         iiyGEiCRdKtxYj6p/XV0v3LrJyq3haEwwOb2BDjWqM1DKhcUErEla1v/yh4EBhSxRFP8
-         pArEzkdzekORs1meHMO+n7TLxxsBiRgEUc36UvNxDp9y2BbRjBczEHUc319ElQ1qauld
-         7NK2Um1WzPxBF9p6M3LeUk/OShyhU+JWHBaXw93QjOT0sdItTdM9sjwAhoVGt9aSueAb
-         K4icnZlRIevKB+CJhkx3wwovSumLCWexrUxeMQ3lTZu7nLu4QjPHUACtmlhS3tzigdbo
-         z9RA==
-X-Gm-Message-State: APjAAAUtB9JioYMsL2h11Sph7IwDYBmU3V6oynVJqPxAvM/5dTFkI8f3
-        ZYT/PH4pAIr/KzWC9HyKDQIN0uquiOuF5EE9pdU=
-X-Google-Smtp-Source: APXvYqzBjYff7ahmr5iot6x5tsg16r4dSKEj7LesuRNQIx9uWyORQ7Xc+YJzpgfbELxYZo9Kd0e5jud6spqWI2Neork=
-X-Received: by 2002:aca:b4c3:: with SMTP id d186mr3446070oif.131.1580232717886;
- Tue, 28 Jan 2020 09:31:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20200128154949.66521-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200128154949.66521-1-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Jan 2020 18:31:46 +0100
-Message-ID: <CAMuHMdXwJp+L22Eg6AG_v6++FWjNxW_EBUne3ZnQ6LynykNh6g@mail.gmail.com>
-Subject: Re: [PATCH v1] MAINTAINERS: Sort entries in database for PIN CONTROLLER
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726211AbgA1VIw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Jan 2020 16:08:52 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:58046 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726143AbgA1VIw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Jan 2020 16:08:52 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 80912DED6C;
+        Tue, 28 Jan 2020 21:09:01 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id oAgxOuU78ZEH; Tue, 28 Jan 2020 21:09:01 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id DD262DF353;
+        Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id hjAfGRws14eA; Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 72A40DED6C;
+        Tue, 28 Jan 2020 21:09:00 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Robert Jarzmik <robert.jarzmik@free.fr>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are not there
+Date:   Tue, 28 Jan 2020 22:08:45 +0100
+Message-Id: <20200128210845.332679-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 28, 2020 at 4:50 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> Run parse-maintainers.pl and choose PIN CONTROLLER records.
-> Fix them accordingly.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Not all platforms use those. Let's use
+platform_get_irq_byname_optional() instead platform_get_irq_byname() so
+that we avoid a useless warning:
 
-For the Renesas entry:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+  [    1.359455] pxa-gpio d4019000.gpio: IRQ gpio0 not found
+  [    1.359583] pxa-gpio d4019000.gpio: IRQ gpio1 not found
 
-Gr{oetje,eeting}s,
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/gpio/gpio-pxa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-                        Geert
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index 9888b62f37afb..567742d962aef 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -652,8 +652,8 @@ static int pxa_gpio_probe(struct platform_device *pde=
+v)
+ 	if (!pchip->irqdomain)
+ 		return -ENOMEM;
+=20
+-	irq0 =3D platform_get_irq_byname(pdev, "gpio0");
+-	irq1 =3D platform_get_irq_byname(pdev, "gpio1");
++	irq0 =3D platform_get_irq_byname_optional(pdev, "gpio0");
++	irq1 =3D platform_get_irq_byname_optional(pdev, "gpio1");
+ 	irq_mux =3D platform_get_irq_byname(pdev, "gpio_mux");
+ 	if ((irq0 > 0 && irq1 <=3D 0) || (irq0 <=3D 0 && irq1 > 0)
+ 		|| (irq_mux <=3D 0))
+--=20
+2.24.1
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
