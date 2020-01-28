@@ -2,164 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF5F514AEA8
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2020 05:29:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9E7014AEB0
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Jan 2020 05:37:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgA1E3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Jan 2020 23:29:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10920 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgA1E3J (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Jan 2020 23:29:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Jan 2020 20:29:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,372,1574150400"; 
-   d="scan'208";a="252162437"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jan 2020 20:29:07 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iwIUt-000GQt-EB; Tue, 28 Jan 2020 12:29:07 +0800
-Date:   Tue, 28 Jan 2020 12:28:29 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD INCOMPLETE
- 0282c72d30d32913d641dc81f3f38607ace98802
-Message-ID: <5e2fb86d.KnrXmIMlEnwjpDWH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726518AbgA1Ehn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Jan 2020 23:37:43 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:22541 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgA1Ehn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 27 Jan 2020 23:37:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580186262; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=EMyuxGTBTqb30uThFFXytXZbzDR4BNQzD4LZIR4IaFo=; b=uBKveEqUAi3Ca6dMXo5pEmzi6FUbM1rfrH2KVlT2vhG5gLT+PGyxdJqkEMjiajs3mZyCPQ2t
+ xIncIITWgMamd2r2cQXRq+Bu0k85I+PJWVnIqz4T+scSzSDGKrwgEn/s+9aN0i4QSObYmZQ1
+ EdQacGwmlPwP6ymde/MUPyEQG4Q=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e2fba96.7f32b04147d8-smtp-out-n03;
+ Tue, 28 Jan 2020 04:37:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 16A18C433CB; Tue, 28 Jan 2020 04:37:41 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 71116C43383;
+        Tue, 28 Jan 2020 04:37:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 71116C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+ <20200127154113.GA6904@bogus>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+Date:   Tue, 28 Jan 2020 10:07:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200127154113.GA6904@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 0282c72d30d32913d641dc81f3f38607ace98802  Merge tag 'gpio-updates-for-v5.6-part2' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
+Hi,
 
-TIMEOUT after 2885m
+On 1/27/2020 9:11 PM, Rob Herring wrote:
+> On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+>> Add device tree binding Documentation details for ipq6018
+>> pinctrl driver.
+>>
+>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>> [V6] 
+>>   * Addressed review comments form Rob.
+>>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>>  1 file changed, 153 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks Rob.
 
+Hi Linus,
+   The pinctrl driver can now be pulled in.
 
-Sorry we cannot finish the testset for your branch within a reasonable time.
-It's our fault -- either some build server is down or some build worker is busy
-doing bisects for _other_ trees. The branch will get more complete coverage and
-possible error reports when our build infrastructure is restored or catches up.
-There will be no more build success notification for this branch head, but you
-can expect reasonably good test coverage after waiting for 1 day.
+Regards,
+ Sricharan
 
-configs timed out: 80
-
-alpha                               defconfig
-arc                              allyesconfig
-arc                                 defconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-csky                                defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
-configs tested: 21
-configs skipped: 0
-
-sparc                randconfig-a001-20200126
-arm64                randconfig-a001-20200126
-powerpc              randconfig-a001-20200126
-ia64                 randconfig-a001-20200126
-arm                  randconfig-a001-20200126
-arc                  randconfig-a001-20200126
-xtensa                       common_defconfig
-openrisc                    or1ksim_defconfig
-nios2                         3c120_defconfig
-xtensa                          iss_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-openrisc                 simple_smp_defconfig
-m68k                          multi_defconfig
-m68k                       m5475evb_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                           sun3_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
