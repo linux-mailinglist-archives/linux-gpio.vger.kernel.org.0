@@ -2,52 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9617B14C73B
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 09:08:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B44414C78E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 09:33:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgA2IIT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 03:08:19 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38998 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgA2IIP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 03:08:15 -0500
-Received: by mail-lf1-f68.google.com with SMTP id t23so11205072lfk.6
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 00:08:12 -0800 (PST)
+        id S1726091AbgA2Idi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 03:33:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37552 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726068AbgA2Idi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 03:33:38 -0500
+Received: by mail-lj1-f193.google.com with SMTP id v17so17496352ljg.4
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 00:33:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
-        b=dVRV084tz91H08y/W1Rz55YPretevnrzU6jwSmA9j90Ssgjd4CkAgldxJ6Py1fjutk
-         Xw3HxmIbEUYx5qg8WgWm9bFXWvnx42unvmMFgr9y549uuZvcoUSrkwbclnXtxxlOM3x3
-         HpByR+smBdAeeItsd9z1zU5gThYR/iprm4QdmkCMOeT5/Hwmto4D+Sk2TwOtc8XVkoKM
-         ghXVCW62zQh6IVJHciCsT1e/oYHPRZSz3bOeuly527ZKQFaR/Z2SwO1YBeY+GuuVF34n
-         zSlzd8NnMapPlwSYfiC/ABlDdWHKYJ80mB7LA0rg+Q98NM83s+Y8HS6u1XCU8Bz0qRwX
-         1Igg==
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
+        b=R/u9azcTl+DGupC8/CjwKz3v5x01jxH6uTAtggx+wjukx1boRoZhdgDiN35HjCVB3k
+         yKR1MWYHP5I352RVe9+L8IiOcW7EirEyAj5i8R+bOcqWc5lbrgzqzwPSp5ocxO+067m4
+         ktsLi5JH0H7DivSWNoDP++bOHD3Fyk+GRVOTzgoQXYNUW0yIJFp0svAo/JmO6bFGMAo6
+         inYZJjtEUV5dozDWl0wfm8EhDX4rEd2yrwyU1o0KiCp97SVpIFKTc/yeLBGoHR/i3opX
+         VvqIKSCf/cFbMxB1L1NtkSmrr2gMEvC8x3Qqh8l+V4IWVK2ZJZSijGoM+yRZp00Cb9FL
+         OySw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=XkRdMVwKv/9KvUzFxwYg0W2hfH/t4UqORS36m4RBOac=;
-        b=n7QByoW44IsRdESY2Vnih0MeElUste7ZBsOM6CvWPNxWxEadjFSzM5SdtD2FZb/N+s
-         XgHWJX2WVNh3gkkWcymg3PrltVw2wuQVIXPNQMp5uw8GJpIQQsH8Q3bLZ+OWqn/8FzOe
-         jVWs78MBSL5tX1i5213D4CMUCrLHMwGxtVImfl1ZWJai7MqZJTFIIB787XigApp3j3xD
-         sInn82pMV6+2Tgnidp3M1rr+P35uyrxukbQBxwsZx0urlj5aESiuUfeKlmETRLDu7R/I
-         OLRsRpKDd74+VVOFZz7F7WPUiFj+uV5qRbfnto8m0Y1xqBNIkInBkmBSuOE+f74h+XCc
-         ZaAw==
-X-Gm-Message-State: APjAAAWDJxTV/YabhW18BapbnkGLV6gNof6I+5v3gNBE103/jJ0Rx1PP
-        HNOR8tUlEMlpRQXw79OMmqwws+juJU94ZFqwPFtvtg==
-X-Google-Smtp-Source: APXvYqzIR86t4QWIzXBIDieiwUq/COanEmng+XNaKE9Ear4DeQ+gsxM6/wz45xd6QZueJT54KTxAjPCevfSlK0/QLKI=
-X-Received: by 2002:a19:dc14:: with SMTP id t20mr4855539lfg.47.1580285291932;
- Wed, 29 Jan 2020 00:08:11 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=uF89ZOVbSUW69p7B6m8WJR/8cWtmTHd1PrtCuMBzdXI=;
+        b=r9P/TAFxwwMYNsa/foxHuM/eiPE59sDVFc3HVm7zxJxgPUaaDSz46uaWhZ+Sc9N05x
+         Pb/HBSGBFae6mdI4U8zGhI02YR2yDV8uFS9M7YoUOA8cL/1aSPS2yC+f4fTaxkQlrYjs
+         VyztDX7hRwfBP7I8RUud+BBJg394Bh5dTOTPO2JpIDkJnrQ8s2877M7Ve9zY7OnB2v4J
+         mr8NOsahRJeOUQRgmqM9Qg42angsZB6xlNpJhav0yR4UfIeYUth2BQSfDUG+QScd0iMD
+         g5wSiJcCHpDapJFifhdKlcjtPHi6iKzrc6VNqKTXXk1soYds6g+k1H7PZ+SPbh2VUWvH
+         yjZw==
+X-Gm-Message-State: APjAAAWTVo/M97ZXMnK9ErDV3tQv9DNLap0luL1QYreezimVlhiXoYpF
+        po4+71pKSbYzDrNSmv1vO++2/eAbXVXjkrw6AoDLk6OQawXbcQ==
+X-Google-Smtp-Source: APXvYqzkKtapc1PfWAsmDSzwPAtKNZyY44hIqed2cgRqMIp40xGMdpTevktjiH8FbZPtB7g+4X0SX/4edadlgM6fWEA=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr16351913ljc.39.1580286815112;
+ Wed, 29 Jan 2020 00:33:35 -0800 (PST)
 MIME-Version: 1.0
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Jan 2020 09:08:01 +0100
-Message-ID: <CACRpkdYYKS0jMOUu77cudjzOFnHPm3K3aOnmGgUkdVFHz=RSmQ@mail.gmail.com>
-Subject: [GIT PULL] GPIO changes for v5.6
+Date:   Wed, 29 Jan 2020 09:33:24 +0100
+Message-ID: <CACRpkdYOsqTh51Ta4UR1c77zpu2Vstri5wCQRVYb1iV9Kkt5Aw@mail.gmail.com>
+Subject: [GIT PULL] Pin control bulk changes for the v5.6 kernel cycle
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -55,219 +57,324 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi Linus,
 
-here is the bulk of the GPIO changes for v5.6.
-This is a pretty calm cycle so far, nothing special going
-on really. Some more changes will come in from the
-irqchip and pin control trees.
+here is the bulk of pin control changes for v5.6, nothing too
+exciting about this.
 
-I also delete an orphan include file for FMC that was
-dangling since I deleted that subsystem through the
-GPIO tree it comes here again.
+Some changes hit arch/sh and arch/arm but are well isolated
+and acknowledged by the respective arch maintainers.
+
+The major details are in the signed tag as usual.
 
 Please pull it in!
 
 Yours,
 Linus Walleij
 
-The following changes since commit b3a987b0264d3ddbb24293ebff10eddfc472f653:
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46=
+:
 
-  Linux 5.5-rc6 (2020-01-12 16:55:08 -0800)
+  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.6-1
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.6-1
 
-for you to fetch changes up to 0282c72d30d32913d641dc81f3f38607ace98802:
+for you to fetch changes up to 122ce22cb37b087e7e28ebb16044a622b0a22233:
 
-  Merge tag 'gpio-updates-for-v5.6-part2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
-(2020-01-26 01:01:55 +0100)
+  pinctrl: madera: Remove extra blank line (2020-01-24 00:31:41 +0100)
 
 ----------------------------------------------------------------
-This is the bulk of GPIO changes for the v5.6 kernel cycle
+This is the bulk of pin control changes for the v5.6 kernel cycle:
 
 Core changes:
 
-- Document the usecases for the kernelspace vs userspace
-  handling of GPIOs.
-
-- Handle MSI (message signalled interrupts) properly in the
-  core hierarchical irqdomain code.
-
-- Fix a rare race condition while initializing the descriptor
-  array.
+- Dropped the chained IRQ setup callback into GPIOLIB as we
+  got rid of the last users of that in this changeset.
 
 New drivers:
 
-- Xylon LogiCVC GPIO driver.
+- New driver for Ingenic X1830.
 
-- WDC934x GPIO controller driver.
+- New driver for Freescale i.MX8MP.
 
-Driver improvements:
+Driver enhancements:
 
-- Implemented suspend/resume in the Tegra driver.
+- Fix all remaining Intel drivers to pass their IRQ chips
+  along with the GPIO chips.
 
-- MPC8xx edge detection fixup.
+- Intel Baytrail allocates its irqchip dynamically.
 
-- Properly convert ThunderX to use hierarchical irqdomain
-  with GPIOLIB_IRQCHIP on top of the revert of the previous
-  buggy switchover. This time it works (hopefully).
+- Intel Lynxpoint is thoroughly rewritten and modernized.
 
-Misc:
+- Aspeed AST2600 pin muxing and configuration is much
+  improved.
 
-- Drop a FMC remnant file <linux/ipmi-fru.h>
+- Qualcomm SC7180 functions are updated and wakeup interrupt
+  map is provided.
 
-- A slew of fixes.
+- A whole slew of Renesas SH-PFC cleanups and improvements.
+
+- Fix up the Intel DT bindings to use the generic YAML
+  DT bindings schema. (A first user of this.)
 
 ----------------------------------------------------------------
-Andy Shevchenko (2):
-      gpio: pca953x: Remove redundant forward declaration
-      gpiolib: Make use of assign_bit() API
+Andrew Jeffery (1):
+      dt-bindings: pinctrl: aspeed-g6: Add USB functions and groups
 
-Bartosz Golaszewski (8):
-      gpiolib: use 'unsigned int' instead of 'unsigned' in gpio_set_config()
-      gpiolib: have a single place of calling set_config()
-      gpiolib: convert the type of hwnum to unsigned int in gpiochip_get_desc()
-      gpiolib: use gpiochip_get_desc() in linehandle_create()
-      gpiolib: use gpiochip_get_desc() in lineevent_create()
-      gpiolib: use gpiochip_get_desc() in gpio_ioctl()
-      gpio: mockup: update the license tag
-      gpio: mockup: sort headers alphabetically
+Andy Shevchenko (31):
+      pinctrl: baytrail: Allocate IRQ chip dynamic
+      pinctrl: baytrail: Group GPIO IRQ chip initialization
+      pinctrl: baytrail: Move IRQ valid mask initialization to a
+dedicated callback
+      pinctrl: intel: Share struct intel_pinctrl for wider use
+      pinctrl: baytrail: Keep pointer to struct device instead of its conta=
+iner
+      pinctrl: baytrail: Use local variable to keep device pointer
+      pinctrl: baytrail: Reuse struct intel_pinctrl in the driver
+      pinctrl: lynxpoint: Move GPIO driver to pin controller folder
+      pinctrl: lynxpoint: Use raw_spinlock for locking
+      pinctrl: lynxpoint: Correct amount of pins
+      pinctrl: lynxpoint: Drop useless assignment
+      pinctrl: lynxpoint: Use %pR to print IO resource
+      pinctrl: lynxpoint: Use standard pattern for memory allocation
+      pinctrl: lynxpoint: Assume 2 bits for mode selector
+      pinctrl: lynxpoint: Relax GPIO request rules
+      pinctrl: lynxpoint: Keep pointer to struct device instead of its cont=
+ainer
+      pinctrl: lynxpoint: Switch to memory mapped IO accessors
+      pinctrl: lynxpoint: Convert unsigned to unsigned int
+      pinctrl: lynxpoint: Extract lp_gpio_acpi_use() for future use
+      pinctrl: lynxpoint: Move ->remove closer to ->probe()
+      pinctrl: lynxpoint: Move lp_irq_type() closer to IRQ related routines
+      pinctrl: lynxpoint: Move ownership check to IRQ chip
+      pinctrl: lynxpoint: Implement ->irq_ack() callback
+      pinctrl: lynxpoint: Implement intel_gpio_get_direction callback
+      pinctrl: lynxpoint: Add pin control data structures
+      pinctrl: lynxpoint: Reuse struct intel_pinctrl in the driver
+      pinctrl: lynxpoint: Add pin control operations
+      pinctrl: lynxpoint: Implement ->pin_dbg_show()
+      pinctrl: lynxpoint: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: lynxpoint: Switch to pin control API
+      pinctrl: lynxpoint: Update summary in the driver
 
-Dan Callaghan (1):
-      gpiolib: hold gpio devices lock until ->descs array is initialised
+Anson Huang (2):
+      dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
+      pinctrl: freescale: Add i.MX8MP pinctrl driver support
 
-Dmitry Osipenko (3):
-      gpio: tegra: Use generic readl_relaxed/writel_relaxed accessors
-      gpio: tegra: Properly handle irq_set_irq_wake() error
-      gpio: tegra: Use NOIRQ phase for suspend/resume
+Ben Dooks (Codethink) (4):
+      pinctrl: tegra: fix missing __iomem in suspend/resume
+      pinctrl: actions: remove duplicate dsi entry
+      pinctrl: qcom: make 'm_voc_groups' static
+      pinctrl: artpec6: fix __iomem on reg in set
 
-Enrico Weigelt, metux IT consult (2):
-      gpio: remove unneeded MODULE_VERSION() usage
-      gpio: gpiolib: fix confusing indention
+Boyan Ding (1):
+      pinctrl: sunrisepoint: Add missing Interrupt Status register offset
 
-Geert Uytterhoeven (2):
-      gpiolib: Add GPIOCHIP_NAME definition
-      dt-bindings: gpio: rcar: Document r8a77961 support
+Charles Keepax (1):
+      pinctrl: madera: Remove extra blank line
 
-Jia-Ju Bai (2):
-      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
-grgpio_remove()
-      gpio: gpio-grgpio: fix possible sleep-in-atomic-context bugs in
-grgpio_irq_map/unmap()
+Chris Brandt (1):
+      pinctrl: rza1: Reduce printed messages
 
-Kevin Hao (6):
-      Revert "gpio: thunderx: Switch to GPIOLIB_IRQCHIP"
-      gpiolib: Add support for the irqdomain which doesn't use irq_fwspec as arg
-      gpiolib: Add the support for the msi parent domain
-      gpio: thunderx: Switch to GPIOLIB_IRQCHIP
-      gpio: Fix the no return statement warning
-      gpiolib: Lower verbosity when allocating hierarchy irq
+Geert Uytterhoeven (10):
+      pinctrl: sh-pfc: Make legacy function GPIO handling less fragile
+      pinctrl: sh-pfc: Remove use of ARCH_R8A7796
+      pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
+      pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+      pinctrl: sh-pfc: sh7264: Fix Port K I/O Register 0 definition
+      pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+      pinctrl: sh-pfc: sh7269: Fix CAN function GPIOs
+      sh: sh7264: Remove bogus SSU GPIO function definitions
+      sh: sh7269: Remove bogus SSU GPIO function definitions
+      pinctrl: sh-pfc: Split R-Car H3 support in two independent drivers
 
-Linus Walleij (6):
-      Merge tag 'gpio-updates-for-v5.6-part1' of
-git://git.kernel.org/.../brgl/linux into devel
-      gpio: Update TODO
-      gpio: Add use guidance documentation
-      Merge tag 'v5.5-rc6' into devel
-      Merge branch 'fixup-thunderx-hierarchy' into devel
-      Merge tag 'gpio-updates-for-v5.6-part2' of
-git://git.kernel.org/.../brgl/linux into devel
+Hamish Martin (1):
+      pinctrl: iproc: Set irq handler based on trig type
 
-Lukas Bulwahn (1):
-      fmc: remove left-over ipmi-fru.h after fmc deletion
+Hans de Goede (3):
+      pinctrl: Allow modules to use pinctrl_[un]register_mappings
+      pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+      pinctrl: baytrail: Replace WARN with dev_info_once when setting
+direct-irq pin to output
 
-Matti Vaittinen (1):
-      docs: driver-model: Add missing managed GPIO array get functions
+Johnny Huang (6):
+      pinctrl: aspeed-g6: Add AST2600 I3C1 and I3C2 pinmux config
+      pinctrl: aspeed-g6: Add support for the AST2600 USB pinmux
+      pinctrl: aspeed: Add ASPEED_SB_PINCONF() helper
+      pinctrl: aspeed: Move aspeed_pin_config_map to separate source file
+      pinctrl: aspeed: Use masks to describe pinconf bitfields
+      pinctrl: aspeed-g6: Add AST2600 pinconf support
 
-Maxim Kiselev (1):
-      gpio: mvebu: clear irq in edge cause register before unmask edge irq
+Julia Lawall (3):
+      pinctrl: ssbi-mpp: constify copied structure
+      pinctrl: qcom: ssbi-gpio: constify copied structure
+      pinctrl: nuvoton: npcm7xx: constify copied structure
 
-Ooi, Joyce (2):
-      gpio: altera: change to platform_get_irq_optional to avoid
-false-positive error
-      MAINTAINERS: Replace Tien Hock Loh as Altera PIO maintainer
+Krzysztof Kozlowski (3):
+      pinctrl: samsung: Enable compile test for build coverage
+      pinctrl: samsung: Clarify the option titles/names
+      pinctrl: samsung: Fix missing OF and GPIOLIB dependency on
+S3C24xx and S3C64xx
 
-Paul Kocialkowski (4):
-      dt-bindings: Add Xylon vendor prefix
-      dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-      dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
-      gpio: Add support for the Xylon LogiCVC GPIOs
+Linus Walleij (10):
+      Merge branch 'ib-pinctrl-default-state' into devel
+      Merge tag 'v5.5-rc3' into devel
+      Merge branch 'ib-pinctrl-unreg-mappings' into devel
+      Merge tag 'sh-pfc-for-v5.6-tag1' of
+git://git.kernel.org/.../geert/renesas-drivers into devel
+      pinctrl: intel: Add GPIO <-> pin mapping ranges via callback
+      pinctrl: intel: Pass irqchip when adding gpiochip
+      pinctrl: dt-bindings: Fix some errors in the lgm and pinmux schema
+      Merge tag 'samsung-pinctrl-5.6' of
+https://git.kernel.org/.../pinctrl/samsung into devel
+      Merge tag 'intel-pinctrl-v5.6-1' of
+git://git.kernel.org/.../pinctrl/intel into devel
+      gpio: Drop the chained IRQ handler assign function
+
+Ma Feng (1):
+      pinctrl: armada-37xx: Remove unneeded semicolon
+
+Martin Blumenstingl (1):
+      pinctrl: meson: meson8b: add the GPIOH pinmux settings for ETH_RXD{2,=
+3}
+
+Matti Vaittinen (3):
+      pinctrl: baytrail: Use GPIO direction definitions
+      pinctrl: cherryview: Use GPIO direction definitions
+      pinctrl: intel: Use GPIO direction definitions
+
+Maulik Shah (1):
+      pinctrl: qcom: sc7180: Add GPIO wakeup interrupt map
+
+Mika Westerberg (2):
+      pinctrl: sunrisepoint: Add Coffee Lake-S ACPI ID
+      pinctrl: tigerlake: Tiger Lake uses _HID enumeration
+
+Nishad Kamdar (3):
+      pinctrl: mediatek: Use the correct style for SPDX License Identifier
+      pinctrl: meson-axg: Use the correct style for SPDX License Identifier
+      pinctrl: stm32: Use the correct style for SPDX License Identifier
+
+Paul Cercueil (5):
+      pinctrl: ingenic: Remove platform ID table
+      pinctrl: ingenic: Put ingenic_chip_info pointer in match data
+      pinctrl: ingenic: Remove duplicated ingenic_chip_info structures
+      pinctrl: ingenic: Factorize irq_set_type function
+      pinctrl: ingenic: Use devm_platform_ioremap_resource()
 
 Peng Fan (2):
-      gpio: mvebu: use platform_irq_count
-      gpio: bcm-kona: use platform_irq_count
+      pinctrl: sunxi: sun50i-h5 use platform_irq_count
+      pinctrl: mvebu: armada-37xx: use use platform api
 
-Sachin agarwal (2):
-      gpio: vx855: fixed a typo
-      gpio: aspeed-sgpio: fixed typos
+Rahul Tanwar (1):
+      dt-bindings: pinctrl: intel: Update to use generic bindings
 
-Shaokun Zhang (1):
-      gpio: Remove the unused flags
+Rajendra Nayak (2):
+      dt-bindings: pinctrl: qcom: Add new qup functions for sc7180
+      pinctrl: qcom: sc7180: Add new qup functions
 
-Song Hui (1):
-      gpio: mpc8xxx: ls1088a/ls1028a edge detection mode bug fixs.
-
-Srinivas Kandagatla (2):
-      dt-bindings: gpio: wcd934x: Add bindings for gpio
-      gpio: wcd934x: Add support to wcd934x gpio controller
+Rayagonda Kokatanur (1):
+      pinctrl: iproc: Use platform_get_irq_optional() to avoid error messag=
+e
 
 Stephen Boyd (1):
-      gpiolib: Set lockdep class for hierarchical irq domains
+      pinctrl: qcom: Don't lock around irq_set_irq_wake()
 
-Vignesh Raghavendra (1):
-      gpio: pca953x: Don't hardcode irq trigger type
+Ulf Hansson (1):
+      pinctrl: core: Add pinctrl_select_default_state() and export it
 
-YueHaibing (2):
-      gpiolib: remove set but not used variable 'config'
-      gpiolib: Remove duplicated function gpio_do_set_config()
+=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) (5):
+      pinctrl: Ingenic: Fix bugs in X1000 and X1500.
+      pinctrl: Ingenic: Add missing parts for X1000 and X1500.
+      pinctrl: Ingenic: Introduce reg_offset and use it instead hard code.
+      dt-bindings: pinctrl: Add bindings for Ingenic X1830.
+      pinctrl: Ingenic: Add pinctrl driver for X1830.
 
- .../bindings/gpio/qcom,wcd934x-gpio.yaml           |  47 ++++++
- .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   3 +-
- .../bindings/gpio/xylon,logicvc-gpio.yaml          |  69 ++++++++
- .../devicetree/bindings/mfd/xylon,logicvc.yaml     |  50 ++++++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- Documentation/driver-api/driver-model/devres.rst   |   2 +
- Documentation/driver-api/gpio/drivers-on-gpio.rst  |   8 +-
- Documentation/driver-api/gpio/index.rst            |   1 +
- Documentation/driver-api/gpio/using-gpio.rst       |  50 ++++++
- MAINTAINERS                                        |   2 +-
- drivers/gpio/Kconfig                               |  13 ++
- drivers/gpio/Makefile                              |   2 +
- drivers/gpio/TODO                                  |  46 +++++-
- drivers/gpio/gpio-altera.c                         |   2 +-
- drivers/gpio/gpio-aspeed-sgpio.c                   |   2 +-
- drivers/gpio/gpio-aspeed.c                         |   2 +-
- drivers/gpio/gpio-bcm-kona.c                       |  12 +-
- drivers/gpio/gpio-creg-snps.c                      |   4 +-
- drivers/gpio/gpio-grgpio.c                         |  15 +-
- drivers/gpio/gpio-logicvc.c                        | 170 +++++++++++++++++++
- drivers/gpio/gpio-mockup.c                         |  16 +-
- drivers/gpio/gpio-mpc8xxx.c                        |   1 +
- drivers/gpio/gpio-mvebu.c                          |   8 +-
- drivers/gpio/gpio-pca953x.c                        |   5 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |   1 -
- drivers/gpio/gpio-tb10x.c                          |   1 -
- drivers/gpio/gpio-tegra.c                          |  21 ++-
- drivers/gpio/gpio-tegra186.c                       |  13 +-
- drivers/gpio/gpio-thunderx.c                       |  36 +++-
- drivers/gpio/gpio-vx855.c                          |   2 +-
- drivers/gpio/gpio-wcd934x.c                        | 121 ++++++++++++++
- drivers/gpio/gpiolib-sysfs.c                       |   7 +-
- drivers/gpio/gpiolib.c                             | 182 ++++++++++-----------
- drivers/gpio/gpiolib.h                             |   5 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |   2 +-
+ .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   |   9 +-
+ .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |  69 ++
+ .../bindings/pinctrl/ingenic,pinctrl.txt           |   8 +-
+ .../devicetree/bindings/pinctrl/intel,lgm-io.yaml  |  75 ++
+ .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 116 ---
+ .../devicetree/bindings/pinctrl/pinmux-node.yaml   |   2 +-
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.txt       |   5 +-
+ Documentation/driver-api/gpio/driver.rst           |   5 -
+ MAINTAINERS                                        |   1 -
+ arch/arm/mach-u300/core.c                          |   2 +-
+ arch/sh/include/cpu-sh2a/cpu/sh7264.h              |   6 -
+ arch/sh/include/cpu-sh2a/cpu/sh7269.h              |  17 +-
+ drivers/gpio/Kconfig                               |   8 -
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/gpio-lynxpoint.c                      | 471 ----------
+ drivers/gpio/gpio-mt7621.c                         |   3 +-
+ drivers/gpio/gpio-xgs-iproc.c                      |   3 +-
+ drivers/gpio/gpiolib.c                             |  25 +-
+ drivers/pinctrl/actions/pinctrl-s700.c             |   1 -
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 170 ++--
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 212 ++---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         | 387 +++++++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  50 +-
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  38 +-
+ drivers/pinctrl/aspeed/pinmux-aspeed.h             |   1 +
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c           |  10 +-
+ drivers/pinctrl/cirrus/pinctrl-madera-core.c       |   1 -
+ drivers/pinctrl/core.c                             |  74 +-
+ drivers/pinctrl/core.h                             |   4 -
+ drivers/pinctrl/devicetree.c                       |   4 +-
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c         | 345 ++++++++
+ drivers/pinctrl/intel/Kconfig                      |  13 +
+ drivers/pinctrl/intel/Makefile                     |   1 +
+ drivers/pinctrl/intel/pinctrl-baytrail.c           | 311 ++++---
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |   5 +-
+ drivers/pinctrl/intel/pinctrl-intel.c              | 101 +--
+ drivers/pinctrl/intel/pinctrl-intel.h              |  44 +
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c          | 975 +++++++++++++++++=
+++++
+ drivers/pinctrl/intel/pinctrl-sunrisepoint.c       |   2 +
+ drivers/pinctrl/intel/pinctrl-tigerlake.c          | 547 ++++++------
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h      |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson-axg-pmx.h      |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson8b.c            |   7 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c        |  16 +-
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |   2 +-
+ drivers/pinctrl/pinctrl-artpec6.c                  |   2 +-
+ drivers/pinctrl/pinctrl-ingenic.c                  | 637 +++++++++-----
+ drivers/pinctrl/pinctrl-rza1.c                     |   4 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |   5 -
+ drivers/pinctrl/qcom/pinctrl-msm8976.c             |   2 +-
+ drivers/pinctrl/qcom/pinctrl-sc7180.c              |  78 +-
  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
- include/linux/gpio/driver.h                        |  26 ++-
- include/linux/ipmi-fru.h                           | 134 ---------------
- 38 files changed, 768 insertions(+), 317 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |   2 +-
+ drivers/pinctrl/samsung/Kconfig                    |  16 +-
+ drivers/pinctrl/sh-pfc/Kconfig                     |  12 +-
+ drivers/pinctrl/sh-pfc/Makefile                    |   4 +-
+ drivers/pinctrl/sh-pfc/core.c                      |  57 +-
+ drivers/pinctrl/sh-pfc/gpio.c                      |  11 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c               |   4 +-
+ .../sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c}   |  26 +-
+ .../sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c}       |  39 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              |   6 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c                |  33 +-
+ drivers/pinctrl/sh-pfc/pfc-sh7269.c                |  39 +-
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   4 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.h              |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c          |  13 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |   4 +-
+ include/linux/gpio/driver.h                        |   5 -
+ include/linux/pinctrl/consumer.h                   |   6 +
+ include/linux/pinctrl/machine.h                    |   5 +
+ 73 files changed, 3379 insertions(+), 1798 deletions(-)
  create mode 100644
-Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
- create mode 100644
-Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
- create mode 100644 Documentation/driver-api/gpio/using-gpio.rst
- create mode 100644 drivers/gpio/gpio-logicvc.c
- create mode 100644 drivers/gpio/gpio-wcd934x.c
- delete mode 100644 include/linux/ipmi-fru.h
+Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-io.=
+yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
+ delete mode 100644 drivers/gpio/gpio-lynxpoint.c
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mp.c
+ create mode 100644 drivers/pinctrl/intel/pinctrl-lynxpoint.c
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795-es1.c =3D> pfc-r8a77950.c} (99%=
+)
+ rename drivers/pinctrl/sh-pfc/{pfc-r8a7795.c =3D> pfc-r8a77951.c} (99%)
