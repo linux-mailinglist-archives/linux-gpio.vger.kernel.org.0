@@ -2,98 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 841B314C96F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 12:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E08714CADF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 13:30:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726178AbgA2LSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 06:18:48 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40259 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbgA2LSs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 06:18:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j104so3826251wrj.7
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 03:18:47 -0800 (PST)
+        id S1726271AbgA2Mab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 07:30:31 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46048 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgA2Mab (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 07:30:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so8745930pgk.12
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 04:30:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=WdEwvXuf/f1ew5arKRFGjQIWnawCPhuYtVKO7QPsc9Y=;
-        b=Sw3HgBhFTNZBQ36hs9fAypBBY7Fa4Sh5OhqWXeKEPKx1kmSDHDG26lN9LA8NuPw2qF
-         p1DHCrsJ8EOijNoxlSKupI7Zxp/jNH8T5E9VvGgDRaqOitPqAwUS74HmiAa2e9jQLPbv
-         89Du9baS80tY7ud1v+dhJl/UHWfb1rsw6BinQLgP7jPdxm3FsWERhB7LLxEIdmcc48pv
-         IvpJw07fjov6WMjVtkzx0qF2RvIxiyEMBsvtYuAZEu6G6dxXDSHBPJDgjeuZ9nxRC4Vq
-         xKwuGm14d1NEDJdCQHvkh2GjoQQsU1G/gsuEuT6g11JkYEZpLnLFNMDd8mOBL+N7a+4f
-         yEnw==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnCaoPKjD2/R/bx2gchlCXdcq08yj4Bbof75NeNjicI=;
+        b=bQJu9jtmwTGnXDvE/HY2F7ayL8BYWR43Z2ZHHlKWn8pTzkpvCJHHk8AcPOFzQ4vZA/
+         LwmGSbXmkqyoy9KZN7B8chTnfNImSmyTSVP6LhQ8TDbhZMYuC/whPq8C8Le+Twmz+D2L
+         ApjgLC3zSvfZ/MzWMIdjXo71VCm/VS7pwBRMPI5SfCEPv9xmF5lB6Df0/ersVsL7fdK2
+         2gcc8BclKPjXEKNj49iIeDKToFCLjIOMpcn0YH5n9kKgbiPfKOU6ppwhNomx+CSsr74n
+         KEwCjL5lUDDmYplacUbYxR9hsrrK1cyZR1+6GTXulLNGYPzYI2RDhvoPQjGrEjkiOg0/
+         TVyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WdEwvXuf/f1ew5arKRFGjQIWnawCPhuYtVKO7QPsc9Y=;
-        b=AS/iZDtUm1earVQWIGlUQsdcyv+vy25O6xPu56hEL9MvqEs2QXvWi2XGB0tuBOmozZ
-         hcgaRGjeaYlvs28iVKu7xNJRLlfecQD9roDzipxTphfqX1W2clKj49ZM76v++nY9HI1z
-         k3nS9E2vsHbmRp+rvCXzTO5uOcTknbVgQC4mn77it8o9ojZ+K0dwSBzQt8vwtvpVk3ws
-         CNlSdb4tEOsu9lrH0P+EKqHTEt3xRqiSkpdNAiI+zSQVtOtzTp9PfsI9HF9Yo0j+xmyA
-         CEPwb8f/QnyCoL+9rZUc1Xje8lPc3ViR033DtEb5RpmNv2K6K/WT/n8tcp3LW94M/N2l
-         bzkw==
-X-Gm-Message-State: APjAAAUKCPx4ssitP0O5yPbMMcEJMjE2DV7LzgaV93EEO/L+wgbEow/t
-        /i97lPo5wprsBQmZ80gwxwwoeA==
-X-Google-Smtp-Source: APXvYqyMoIcsyaEqYxxW6ffIc7cM/EHFn0b6ThBfRh9LHZ4nCf4C8TEqE1Hf1HzIgoqg9YnSyuDr8A==
-X-Received: by 2002:adf:a109:: with SMTP id o9mr35424484wro.189.1580296726681;
-        Wed, 29 Jan 2020 03:18:46 -0800 (PST)
-Received: from dell ([2.27.35.227])
-        by smtp.gmail.com with ESMTPSA id b17sm2448180wrx.15.2020.01.29.03.18.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EnCaoPKjD2/R/bx2gchlCXdcq08yj4Bbof75NeNjicI=;
+        b=mL5YTT93ojlc6SlSF61iAJOW5qOr3UIXWFIxCDJl67SdKq6JoTTgYQ38mMxzdWmFxd
+         S3BCftWONwoVV7d0qMZyIMm+4zN/ijHMLlZAxsxbsaQGnX+jDA4nuaCcjvfgM7BvKlkw
+         XHjOqYizjeY9/YSRK2W1LCaefiGCf5otwynIzRqtpHX4xwjvgls35rpLnfiqm/peffMI
+         3EJJ1YNt1Wg+PRhYkOE++hQpnvGyO3Tyq31/sAQZieBRK0p3q+Ya1vFbyAcTij5QIQfV
+         V9hsRCnUcQsZrqT6gn2mkr7b43Rjnfqb/ANyUXfc61ZkBUrAJHUhVOg++S2fYZ0zCkzA
+         Y4pw==
+X-Gm-Message-State: APjAAAV315a4uYtwdFi4aIXXZAiORmej0mIV6B84Rdaz7/NNJQmwjxbL
+        A5KKmC7fpymZpvx3VZMLVPyslw==
+X-Google-Smtp-Source: APXvYqyQAfd0qbIupqRcE39B6CvO/X3RxjqWhV6OxT8ZDIUAzGT9AWmTtFMn2Nn+9i1ZqsnlLdhodw==
+X-Received: by 2002:aa7:9dde:: with SMTP id g30mr6890390pfq.91.1580301030095;
+        Wed, 29 Jan 2020 04:30:30 -0800 (PST)
+Received: from localhost.localdomain (118-171-135-189.dynamic-ip.hinet.net. [118.171.135.189])
+        by smtp.gmail.com with ESMTPSA id 136sm2558825pgg.74.2020.01.29.04.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 03:18:45 -0800 (PST)
-Date:   Wed, 29 Jan 2020 11:18:58 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, linus.walleij@linaro.org, robh@kernel.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v6 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
- codec
-Message-ID: <20200129111858.GC3548@dell>
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+        Wed, 29 Jan 2020 04:30:29 -0800 (PST)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] gpio: bd71828: Remove unneeded defines for GPIO_LINE_DIRECTION_IN/OUT
+Date:   Wed, 29 Jan 2020 20:30:21 +0800
+Message-Id: <20200129123021.26200-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 19 Dec 2019, Srinivas Kandagatla wrote:
+They are defined in gpio/driver.h now.
 
-> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-> 
-> This codec has integrated SoundWire controller, pin controller and
-> interrupt controller.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/Kconfig                   |  12 +
->  drivers/mfd/Makefile                  |   1 +
->  drivers/mfd/wcd934x.c                 | 306 +++++++++++++++
->  include/linux/mfd/wcd934x/registers.h | 531 ++++++++++++++++++++++++++
->  include/linux/mfd/wcd934x/wcd934x.h   |  31 ++
->  5 files changed, 881 insertions(+)
->  create mode 100644 drivers/mfd/wcd934x.c
->  create mode 100644 include/linux/mfd/wcd934x/registers.h
->  create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/gpio/gpio-bd71828.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-Applied, thanks.
-
+diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
+index 04aade9e0a4d..3dbbc638e9a9 100644
+--- a/drivers/gpio/gpio-bd71828.c
++++ b/drivers/gpio/gpio-bd71828.c
+@@ -10,16 +10,6 @@
+ #define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
+ #define HALL_GPIO_OFFSET 3
+ 
+-/*
+- * These defines can be removed when
+- * "gpio: Add definition for GPIO direction"
+- * (9208b1e77d6e8e9776f34f46ef4079ecac9c3c25 in GPIO tree) gets merged,
+- */
+-#ifndef GPIO_LINE_DIRECTION_IN
+-	#define GPIO_LINE_DIRECTION_IN 1
+-	#define GPIO_LINE_DIRECTION_OUT 0
+-#endif
+-
+ struct bd71828_gpio {
+ 	struct rohm_regmap_dev chip;
+ 	struct gpio_chip gpio;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
+
