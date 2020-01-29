@@ -2,75 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E98214C918
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 11:56:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 841B314C96F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 12:18:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgA2K4B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 05:56:01 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42691 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgA2K4A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 05:56:00 -0500
-Received: by mail-qk1-f196.google.com with SMTP id q15so16530915qke.9
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 02:56:00 -0800 (PST)
+        id S1726178AbgA2LSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 06:18:48 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40259 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgA2LSs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 06:18:48 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j104so3826251wrj.7
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 03:18:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=R2GfLE1YBPy2zxLc6xgpWp5jwd9zTP6iHYDWoWRsFu0=;
-        b=doI1v6YMwfdi9cRvhIFdzf7HUa1YU4MrhdiNjQCdEPbWbLksGPj2h+Rc0l6/VQ1pGV
-         hmYV6/b8jlR/u5kQkTsh5Eohr5oXCQTGPY0xbBECFnAR56vZYd2SzfkFpbDcHmo8dZHy
-         GV9SJGYOEj9lNdahm6/dTl478+a9XSkBTnIwQLyrO7B0PUC5gcGLRmgHxMvvvBitp5ca
-         l8Zkfk9UQPTmN2h29+lLwxxr4L61h9rSK7Yu7o0PrjzRKuYt7YIGZAva4Z64ATrmpUj5
-         OaF19XHq1cwdmR7gWqqtngPNYHPWQ+j7Rii4Ps0/jCVZbMnOzVPkBlI6vUgJtoX7NK3y
-         5R7Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WdEwvXuf/f1ew5arKRFGjQIWnawCPhuYtVKO7QPsc9Y=;
+        b=Sw3HgBhFTNZBQ36hs9fAypBBY7Fa4Sh5OhqWXeKEPKx1kmSDHDG26lN9LA8NuPw2qF
+         p1DHCrsJ8EOijNoxlSKupI7Zxp/jNH8T5E9VvGgDRaqOitPqAwUS74HmiAa2e9jQLPbv
+         89Du9baS80tY7ud1v+dhJl/UHWfb1rsw6BinQLgP7jPdxm3FsWERhB7LLxEIdmcc48pv
+         IvpJw07fjov6WMjVtkzx0qF2RvIxiyEMBsvtYuAZEu6G6dxXDSHBPJDgjeuZ9nxRC4Vq
+         xKwuGm14d1NEDJdCQHvkh2GjoQQsU1G/gsuEuT6g11JkYEZpLnLFNMDd8mOBL+N7a+4f
+         yEnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=R2GfLE1YBPy2zxLc6xgpWp5jwd9zTP6iHYDWoWRsFu0=;
-        b=MmRr6rbyVOJLzNFc2n8tKhmaDvULQIxKU6lnGuaqUs0wVEuUQOvBQls/wxUNNqSS6U
-         +5hnnaVRSEiDITC0kB2vbEjy9jU0zLYIEzruNR+AjxkTi/ZrLVlOmw902DQk/VyS8u85
-         0prLibTLxsMYYQVqiNq2G90gSuMvfHYnGGY1nOuPay9GGl7NsdlPy3B3K0nXMZCva+PU
-         LUDNmaitng7v92MdTGeH6c2Qb6ioauXFBnKui4hmzp18Oe7gxicCObGLJjvjM8KfqRZm
-         C6fW+mwOrPnSgtEcO2EoQZLMrDnEdVMAO66Mw3FSYZARuMqnXN0hZNo7WRKorwMW8m5L
-         tmEA==
-X-Gm-Message-State: APjAAAXR/px5iRoGwmEIPVifoB6eHv+ZkU6keHDRbsY26/Sp85/G0M7M
-        ppUG3xwzpfYoE5hKVaaLdttxHku/pK0lR6nG9dmKpA==
-X-Google-Smtp-Source: APXvYqxjw5pzYeGQTcVIqA7M2WTCWfxESWh8wOs2gTBNL2Ml2I9qClgT2H4h8+alnweWKSpamykEjDKmbAS29n/vhj8=
-X-Received: by 2002:a05:620a:12cf:: with SMTP id e15mr27629723qkl.120.1580295360011;
- Wed, 29 Jan 2020 02:56:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WdEwvXuf/f1ew5arKRFGjQIWnawCPhuYtVKO7QPsc9Y=;
+        b=AS/iZDtUm1earVQWIGlUQsdcyv+vy25O6xPu56hEL9MvqEs2QXvWi2XGB0tuBOmozZ
+         hcgaRGjeaYlvs28iVKu7xNJRLlfecQD9roDzipxTphfqX1W2clKj49ZM76v++nY9HI1z
+         k3nS9E2vsHbmRp+rvCXzTO5uOcTknbVgQC4mn77it8o9ojZ+K0dwSBzQt8vwtvpVk3ws
+         CNlSdb4tEOsu9lrH0P+EKqHTEt3xRqiSkpdNAiI+zSQVtOtzTp9PfsI9HF9Yo0j+xmyA
+         CEPwb8f/QnyCoL+9rZUc1Xje8lPc3ViR033DtEb5RpmNv2K6K/WT/n8tcp3LW94M/N2l
+         bzkw==
+X-Gm-Message-State: APjAAAUKCPx4ssitP0O5yPbMMcEJMjE2DV7LzgaV93EEO/L+wgbEow/t
+        /i97lPo5wprsBQmZ80gwxwwoeA==
+X-Google-Smtp-Source: APXvYqyMoIcsyaEqYxxW6ffIc7cM/EHFn0b6ThBfRh9LHZ4nCf4C8TEqE1Hf1HzIgoqg9YnSyuDr8A==
+X-Received: by 2002:adf:a109:: with SMTP id o9mr35424484wro.189.1580296726681;
+        Wed, 29 Jan 2020 03:18:46 -0800 (PST)
+Received: from dell ([2.27.35.227])
+        by smtp.gmail.com with ESMTPSA id b17sm2448180wrx.15.2020.01.29.03.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 03:18:45 -0800 (PST)
+Date:   Wed, 29 Jan 2020 11:18:58 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     broonie@kernel.org, linus.walleij@linaro.org, robh@kernel.org,
+        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v6 02/11] mfd: wcd934x: add support to wcd9340/wcd9341
+ codec
+Message-ID: <20200129111858.GC3548@dell>
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-References: <20200120104626.30518-1-warthog618@gmail.com>
-In-Reply-To: <20200120104626.30518-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 29 Jan 2020 11:55:49 +0100
-Message-ID: <CAMpxmJWCwtnuB4T3_no59cVvPS5gy6QwOBV3i4FU4N6hmYugEw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: remove unnecessary argument from set_config call
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 20 sty 2020 o 11:46 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
-):
->
-> Remove unnecessary argument when setting PIN_CONFIG_BIAS_DISABLE.
->
-> Fixes: 2148ad7790ea ("gpiolib: add support for disabling line bias")
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+On Thu, 19 Dec 2019, Srinivas Kandagatla wrote:
+
+> Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
+> 
+> This codec has integrated SoundWire controller, pin controller and
+> interrupt controller.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
->
-> No argument is expected by pinctrl, so removing it should be harmless.
->
+>  drivers/mfd/Kconfig                   |  12 +
+>  drivers/mfd/Makefile                  |   1 +
+>  drivers/mfd/wcd934x.c                 | 306 +++++++++++++++
+>  include/linux/mfd/wcd934x/registers.h | 531 ++++++++++++++++++++++++++
+>  include/linux/mfd/wcd934x/wcd934x.h   |  31 ++
+>  5 files changed, 881 insertions(+)
+>  create mode 100644 drivers/mfd/wcd934x.c
+>  create mode 100644 include/linux/mfd/wcd934x/registers.h
+>  create mode 100644 include/linux/mfd/wcd934x/wcd934x.h
 
-This doesn't really fix any bug, does it? If not, then I'll just take
-it for v5.7 after the merge window.
+Applied, thanks.
 
-Bart
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
