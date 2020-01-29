@@ -2,98 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1416C14CBED
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 14:56:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1D314CCC7
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 15:52:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgA2N4S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 08:56:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40766 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgA2N4S (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:56:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 29963AD85;
-        Wed, 29 Jan 2020 13:56:16 +0000 (UTC)
-Message-ID: <1aca11e7f66c0ebfc9499097d7c40a1835a80224.camel@suse.de>
-Subject: Re: [RFC PATCH 0/4] pinctrl: bcm2835: Add support for all BCM2711
- GPIOs
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 29 Jan 2020 14:56:14 +0100
-In-Reply-To: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-paFAbKmIJx8fhqD6d+ZI"
-User-Agent: Evolution 3.34.3 
+        id S1726314AbgA2Ow0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 09:52:26 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43729 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgA2OwZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 09:52:25 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d18so13394689qtj.10
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 06:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pepq9Fwj7iOLvacHkqH96ILFGnT39BOdCUezBU3lPeY=;
+        b=1Nyr4tTQQLDy+yChx0gBW0ZWxT4kvseFdi6bC9WuIUJyxV+JG7C6VUX14i1oGkV/6g
+         /YDaAFHokGGsKcMw8Eqo8+qq7Qv5ZpoQe5rWDshkx9uPHjKfklYjfk5gkHYPN+AhbEze
+         0L8z3y87fBrOD0JdXFsxNVIiKdX8kuqA4Vp7MjuSOHFAeTqdWN/GHhrCbNG/XnNW33+J
+         xwsg04YPd6S+/zwm8tdfCanTd0N52LYQXf2h46vNLpfjXggo7sSVzvX1aXYgkiCVLvs0
+         0Afsr7xbjltCzwqinYq/hc8m+Oq0veH1SHvrHs3BCTfdJjoPbDJfXkKh3s85tdeRxZYN
+         qfGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pepq9Fwj7iOLvacHkqH96ILFGnT39BOdCUezBU3lPeY=;
+        b=WOHoNzQJx6GAd4Unoedt51hELdSPG4wnb9th+M/vAEZgiCCf4HagBm0N1hMGaFUDyx
+         VFV/fPN+nnXWDL/ljdoi8RLIJ/fnSTtYQN5/2zPLBS9+fdzObGxO/n5YuifcTyTVKAvU
+         GUbqOScsKUl6PxKMqChJURb+UkabF6fQuc4ZgC+2t/WkxHydfUvfslfWa5fehqAqszRF
+         3YEQsERce+jdwIYjlpOrLtsbVOEppp1VviQ8U/jGPeI+iWXnnPXwaO6FTg6c2kwapBjK
+         Gm+A5W0JXY1jEKQXTkOl9pIbTNluALQOuCpjwyW9tNTDG2SEAz75mQM4pjWX5arcrE+t
+         QTZg==
+X-Gm-Message-State: APjAAAVaDApBcItGNHJy3CDkP+cYRVsvCqxut2Oir9A2Q2T/T5uI3dhG
+        W5TsGkizDbyfI4eGzXI16vyGmWREJtBzJA456BoU0Q==
+X-Google-Smtp-Source: APXvYqz2PH4gTWG6LdFyLnOIGUt8WKmizd52veq8sbenx4NpySJwECL+9WveVY8926t919RqRpo0J71GDTMDF2+rtI8=
+X-Received: by 2002:ac8:3676:: with SMTP id n51mr27120845qtb.208.1580309544928;
+ Wed, 29 Jan 2020 06:52:24 -0800 (PST)
 MIME-Version: 1.0
+References: <20200118200607.68830-1-sachinagarwal@sachins-MacBook-2.local>
+In-Reply-To: <20200118200607.68830-1-sachinagarwal@sachins-MacBook-2.local>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 29 Jan 2020 15:52:14 +0100
+Message-ID: <CAMpxmJUrRooRRdo6oBUMj+a=OxdtjcUs6tUac7ro92m1c9UJOQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] GPIO: creg-snps: fixed a typo
+To:     sachin agarwal <asachin591@gmail.com>
+Cc:     Eugeniy.Paltsev@synopsys.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        sachin agarwal <sachinagarwal@sachins-macbook-2.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+sob., 18 sty 2020 o 21:06 sachin agarwal <asachin591@gmail.com> napisa=C5=
+=82(a):
+>
+> we had written "valiue" rather than "value" and "it's" rather than "its".
+>
+> Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+> ---
+>  drivers/gpio/gpio-creg-snps.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.=
+c
+> index ff19a8ad5663..1d0827e79703 100644
+> --- a/drivers/gpio/gpio-creg-snps.c
+> +++ b/drivers/gpio/gpio-creg-snps.c
+> @@ -64,11 +64,11 @@ static int creg_gpio_validate_pg(struct device *dev, =
+struct creg_gpio *hcg,
+>         if (layout->bit_per_gpio[i] < 1 || layout->bit_per_gpio[i] > 8)
+>                 return -EINVAL;
+>
+> -       /* Check that on valiue fits it's placeholder */
+> +       /* Check that on value fits its placeholder */
+>         if (GENMASK(31, layout->bit_per_gpio[i]) & layout->on[i])
+>                 return -EINVAL;
+>
+> -       /* Check that off valiue fits it's placeholder */
+> +       /* Check that off value fits its placeholder */
+>         if (GENMASK(31, layout->bit_per_gpio[i]) & layout->off[i])
+>                 return -EINVAL;
+>
+> --
+> 2.24.1
+>
 
---=-paFAbKmIJx8fhqD6d+ZI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The subject should be 'gpio: <driver name: ...' and this looks like a
+new version of the series, so please mark it as such and describe the
+differences between versions.
 
-On Mon, 2020-01-27 at 19:15 +0100, Stefan Wahren wrote:
-> The BCM2711 supports 58 GPIOs [1] by using the existing BCM2835 GPIO regi=
-sters
-> completely. So there is no need to change the binding.
->=20
-> Patch 1 and 2 prepare the pinctrl driver to be extended to 58 GPIOs in Pa=
-tch
-> 3.
-> I didn't want to squash them in order to make review as easy as possible.
-> The final patch 4 assigns all SoC GPIOs a label as we already did for
-> the older Raspberry Pi boards.
->=20
-> [1] - https://github.com/raspberrypi/linux/issues/3101#issuecomment-57309=
-2294
->=20
-> Stefan Wahren (4):
->   pinctrl: bcm2835: Drop unused define
->   pinctrl: bcm2835: Refactor platform data
->   pinctrl: bcm2835: Add support for all GPIOs on BCM2711
->   ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
->=20
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  74 ++++++++++++++++++++++++
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 106 ++++++++++++++++++++++++++--=
------
-> -
->  2 files changed, 156 insertions(+), 24 deletions(-)
+Please refer to Documentation/process/development-process.rst on how
+to submit patches.
 
-Overall this looks good to me (modulo the small comments). I also gave it a=
- go
-on RPi4 and RPi3b without issues.
-
-Regards,
-Nicolas
-
-
---=-paFAbKmIJx8fhqD6d+ZI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4xjv4ACgkQlfZmHno8
-x/7yugf5AWxKTdxdP/JzIcOGAX2fJIvWc9lWYEAIxvcQqDsO5+HAuYMj9ehOQXrc
-HAI3r/UAS5EQGaotd2OuLj/UkkZRwyukoc4baF2xvARRWCyTFxbRX0XOdy0x7BOb
-e4ZeMCI12sb0xZXNzsC+qlIidQ5At66CIdrn64vrDvtyrtkjR4/bYW8M3evTj+4x
-CGIF+P8J9ZWVsbRyKohYnsj33Ggi6pwwHXzGAxbOgdJyToF9l10LnEW0WrmieKov
-84UleM5Exg4ic23NbxSBpTdQzM83ht0d5yLW/gZf7e4gaI/Hy3yn1Wnu8nEJwnHa
-xSUxIt7nyLcMLMHrwoKIi0QSvnSFqA==
-=pB/z
------END PGP SIGNATURE-----
-
---=-paFAbKmIJx8fhqD6d+ZI--
-
+Bartosz
