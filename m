@@ -2,141 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C770C14CCE0
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 16:00:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A80D14CCF3
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 16:06:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgA2PAX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 10:00:23 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43547 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgA2PAW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 10:00:22 -0500
-Received: by mail-wr1-f68.google.com with SMTP id d16so20547144wre.10
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Jan 2020 07:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=izVbuVQfKjxlDiWpU3YFz1uZ6NyAhFYTQIwypULO3vE=;
-        b=jAOCJDy7b+3jbarX0d8qXICDRSDylbN3qzBXUI8v23ZGpTQVbn6DyL60cgqzP/sHRD
-         jHENIlTIZmK/3bANbEVuZjD519GTMC7EdKqOK7/jBPh2VK3lPyXLv4at1yR9S1YqsXnT
-         s9MmDg/bDWEr9Zg6zBfgON7qHLaoDf9T47ZNmGVLM3RaGDcPBDKQ3Nwu59ZUI36uLYly
-         CIP5g0MNuiIg9rOTNdLkXEkXddsnxaQf7gdgfZ+wqDFpFB2HCwfkL0axKLMHPpOAnaK8
-         mzU1EecrudoQCDTi6RNmkSVmWI2/fXACqKsi+oMSTLYvKJfGWHfympKi6x9fFzhJ38Id
-         AdZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=izVbuVQfKjxlDiWpU3YFz1uZ6NyAhFYTQIwypULO3vE=;
-        b=s2VssXjZsrDYdQt6xi+elF+5dX75cHxUaa5uKmbBb9ugN9UIBvBis/WhPaqrFxl6c6
-         N3RN7OfiZtKCUrZ9qywGW/CC2kyDIYtdJ7kXQZNQP0vJXWSPjFPYfSsYOUkLe3So+isj
-         oErsn7hSqti//JkyfwZKdyq3PWwGTjgHlWJHhPLkTTcuwOw3eCIHUEcFEc8T4SozDltL
-         8KHi+0hZU2eTQAVtGXxoGn5G3FMTsuiqPbgu8x/A8icJiQi+OYRt1oRdv8AyrsS79reb
-         no4x4/lb/SY3GpfrraZ1HiUtSWD5WqbkOvCfGi3x7cImAovrphD5IWG39fCy43Kj4L7U
-         /jrg==
-X-Gm-Message-State: APjAAAUP2KNmwFxdj1T1qFIj4WX/YVlxdPfJ4zeUMlefnwl9x/t6nLbB
-        zBhGKQd53BKiT+buNYW5mapB6Q==
-X-Google-Smtp-Source: APXvYqwb5lM57o59SrwocyymNrtibeNLU9G8DkQ5nCCDlcJxe1cbV84jEra110J+DHdFaEONXPuKYA==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr37387337wrj.357.1580310020461;
-        Wed, 29 Jan 2020 07:00:20 -0800 (PST)
-Received: from localhost ([2a00:79e0:d:11:1da2:3fd4:a302:4fff])
-        by smtp.gmail.com with ESMTPSA id 18sm2492646wmf.1.2020.01.29.07.00.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jan 2020 07:00:19 -0800 (PST)
-Date:   Wed, 29 Jan 2020 07:00:19 -0800 (PST)
-X-Google-Original-Date: Wed, 29 Jan 2020 15:00:18 GMT (+0000)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v4 0/6] GPIO & Hierarchy IRQ support for HiFive Unleashed
-CC:     yash.shah@sifive.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net,
-        bmeng.cn@gmail.com, Atish Patra <Atish.Patra@wdc.com>,
-        sagar.kadam@sifive.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
-To:     maz@kernel.org
-In-Reply-To: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
-References: <8dcb52c94eb5a585f6cf052c18571805@kernel.org>
-  <1575976274-13487-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <mhng-cb360722-bdb6-4cf7-9fa7-1d92f6b6bbfa@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1726358AbgA2PGi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 10:06:38 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62296 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgA2PGi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Jan 2020 10:06:38 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-b3-5e319f7cc725
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 09.B1.08102.C7F913E5; Wed, 29 Jan 2020 16:06:36 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 29 Jan 2020 16:06:30 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "axel.lin@ingics.com" <axel.lin@ingics.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] gpio: bd71828: Remove unneeded defines for
+ GPIO_LINE_DIRECTION_IN/OUT
+Thread-Topic: [PATCH] gpio: bd71828: Remove unneeded defines for
+ GPIO_LINE_DIRECTION_IN/OUT
+Thread-Index: AQHV1p/jX3p7ayVbYkiYZZSqwgrgHqgBrWAA
+Date:   Wed, 29 Jan 2020 15:06:29 +0000
+Message-ID: <ff66b882b9eba908d3293854ac1535b13b0b4c51.camel@fi.rohmeurope.com>
+References: <20200129123021.26200-1-axel.lin@ingics.com>
+In-Reply-To: <20200129123021.26200-1-axel.lin@ingics.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <73376F426636D245BC2C11812378194F@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTURzn7N7NO+eN45x6MjMciWilTiJmSIk9mB/KoBALH13dzQ3dg7tp
+        WkJKZWgfMhtJS1M0SdK0Zg9zYrpEUiTrQ6VglmTJhDTREk1m97h8fLq/+3t+OH+KkE4KAyit
+        3sxyeiZHLvIkuxv/2vYU1ijSolo7gpW9Vb8J5Xz1AKm0LD8QKNtqlkEcqZoZvuqhKlnMU41+
+        7BSp5mxBJ8gzktgMxpx3UpuljzxwVqJ5VtkkNLrE+c6qT2QRGBWXAYpCcC8aLQ4qA56UFH4A
+        6MvPJYH75w1AXcWLQmwSwVhUNuKBoQxq0LydKQNiioD5qKe2SYixD0xBdc8rCLclFc2O6TEt
+        g9Hotf29CNMkDEF35sIwpOFx1DPrgR1SqESVVc0ijMUwBjVOWVZ5ALej0qJpgXvIH9l+LKwO
+        IQjR/c4hwo19kfOb6z8fjF4stJC4noBhqLUj0g3jkHNwv7slGFmuj6+209Ab9d+ZIMuBn3XT
+        gHUjbN0IWzeFrZvCtUD4ECAdo83JYsysIoJjcyM4g0bHfzINOhtwP9x8O1hxJDiAgAIOsJUS
+        yH3paK0iTbolw6Au0DAmTTqXm8OaHABRhFxG+x7hNVrNFFxgOcOatI0i5f506PjNVCnEW9ks
+        a2S5NTWQouSIHr7HB705NovNP6fNMW/IAkqMyz0DZCZWr2Y5JtesScd3kW7iDwNLXvxuEo7T
+        JiOj41l3dADsosqd1XUE1VvdUEdISb1Bzwb409ewFWKrJle/PjQF/Ckg96EXq3nVi7/e9Z4p
+        fkLAT/xhovCEmdmQAopAycH2J9P1zSEJxorJ/sdMy9KrUzMWNjBZlWjf5wyvyP760pakM+70
+        sAuejigiJmzHvh8111+56Bpr7ksxevYldP1akPm9a7icagw5fLutdOXz5NvMWzeSD6mHJPZH
+        Y5bQ7tL4HUx8dHlhYkJMr658uOH04NRuR7qsVuI6r7h0t1ROmjSMIpzgTMw/KzItnXoDAAA=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Jan 2020 09:09:51 GMT (+0000), maz@kernel.org wrote:
-> On 2019-12-10 12:11, Yash Shah wrote:
->> This patch series adds GPIO drivers, DT documentation and DT nodes for
->> HiFive Unleashed board. The gpio patches are mostly based on Wesley's
->> patch.
->> The patchset also adds hierarchy irq domain support as it is required
->> by this
->> gpio driver. It also includes the irqdomain patch to introduce
->> irq_domain_translate_onecell() and irq-nvic driver patch to use this
->> newly
->> introduced function.
->>
->> This patchset is based on Linux 5.4-rc6 and tested on HiFive Unleashed
->> board
->>
->> Changes:
->> v4 vs v3:
->> - Rename the DT yaml document to more standard naming
->> (sifive,gpio.yaml)
->> - Drop "clock-names" property from yaml document
->> - Add "minItems" to "interrupts" node in yaml
->>
->> v3 vs v2:
->> - Include patch for irq-nvic driver to use irq_domain_translate_onecell
->> - Remove unnecessary inclusion of header files
->> - Use a single prefix for all symbols in this driver
->> - Rename the "enabled" field of struct sifive_gpio to "irq_state"
->> - Remove unused variables and locking from probe()
->> - Other minor changes
->>
->> v2 vs v1:
->> - Add patch to introduce irq_domain_translate_onecell() and use it in
->>   the sifive PLIC driver
->> - Drop the usage of own locks, instead use internal bgpio_locks
->> - Consistently use regmap for register access throughout the gpio code
->> - Convert the GPIO DT documentation into a json schema
->> - Other minor changes based upon feedback received on v1
->>
->> v1 vs RFC:
->> Incorporated below changes as suggested by Linus Walleij on RFC version
->> of this
->> patchset[0]
->> - Dropped PWM patches as they are already merged.
->> - Include "GPIO_GENERIC" and "REGMAP_MMIO" in Kconfig select option
->> - Remove unwanted inclusion of header files
->> - Use regmap MMIO instead of customised sifive_assign_bit()
->> - Use GPIOLIB_GENERIC and bgpio_init() to set up the accessors
->> - Use hierarchical irqdomain
->>
->> [0]
->> https://lore.kernel.org/linux-riscv/20181010123519.RVexDppaPFpIWl7QU_hpP8tc5qqWPJgeuLYn0FaGbeQ@z/
->>
->> Yash Shah (6):
->>   genirq: introduce irq_domain_translate_onecell
->>   irqchip: nvic: Use irq_domain_translate_onecell instead of custom
->> func
->>   irqchip: sifive: Support hierarchy irq domain
->>   gpio: sifive: Add DT documentation for SiFive GPIO
->>   gpio: sifive: Add GPIO driver for SiFive SoCs
->>   riscv: dts: Add DT support for SiFive FU540 GPIO driver
->
-> I've queued the first 5 patches. The last one should go via the
-> corresponding platform tree.
-
-Thanks, I'd missed this one.
-
->
-> Thanks,
->
->          M.
+DQpPbiBXZWQsIDIwMjAtMDEtMjkgYXQgMjA6MzAgKzA4MDAsIEF4ZWwgTGluIHdyb3RlOg0KPiBU
+aGV5IGFyZSBkZWZpbmVkIGluIGdwaW8vZHJpdmVyLmggbm93Lg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQXhlbCBMaW4gPGF4ZWwubGluQGluZ2ljcy5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncGlv
+L2dwaW8tYmQ3MTgyOC5jIHwgMTAgLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEwIGRl
+bGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLWJkNzE4Mjgu
+YyBiL2RyaXZlcnMvZ3Bpby9ncGlvLQ0KPiBiZDcxODI4LmMNCj4gaW5kZXggMDRhYWRlOWUwYTRk
+Li4zZGJiYzYzOGU5YTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvLWJkNzE4Mjgu
+Yw0KPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1iZDcxODI4LmMNCj4gQEAgLTEwLDE2ICsxMCw2
+IEBADQo+ICAjZGVmaW5lIEdQSU9fT1VUX1JFRyhvZmYpIChCRDcxODI4X1JFR19HUElPX0NUUkwx
+ICsgKG9mZikpDQo+ICAjZGVmaW5lIEhBTExfR1BJT19PRkZTRVQgMw0KPiAgDQo+IC0vKg0KPiAt
+ICogVGhlc2UgZGVmaW5lcyBjYW4gYmUgcmVtb3ZlZCB3aGVuDQo+IC0gKiAiZ3BpbzogQWRkIGRl
+ZmluaXRpb24gZm9yIEdQSU8gZGlyZWN0aW9uIg0KPiAtICogKDkyMDhiMWU3N2Q2ZThlOTc3NmYz
+NGY0NmVmNDA3OWVjYWM5YzNjMjUgaW4gR1BJTyB0cmVlKSBnZXRzDQo+IG1lcmdlZCwNCj4gLSAq
+Lw0KPiAtI2lmbmRlZiBHUElPX0xJTkVfRElSRUNUSU9OX0lODQo+IC0JI2RlZmluZSBHUElPX0xJ
+TkVfRElSRUNUSU9OX0lOIDENCj4gLQkjZGVmaW5lIEdQSU9fTElORV9ESVJFQ1RJT05fT1VUIDAN
+Cj4gLSNlbmRpZg0KPiANCg0KVGhhbmtzIG9uY2UgYWdhaW4gZm9yIGRvaW5nIHRoZSBjbGVhbnVw
+ISA6KQ0KDQpCciwNCglNYXR0aQ0K
