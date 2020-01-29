@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE5414CBBD
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 14:52:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC5114CBDD
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Jan 2020 14:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgA2NwJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Jan 2020 08:52:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38712 "EHLO mx2.suse.de"
+        id S1726271AbgA2NxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Jan 2020 08:53:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39322 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgA2NwI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Jan 2020 08:52:08 -0500
+        id S1726358AbgA2NxP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 Jan 2020 08:53:15 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 75568AD85;
-        Wed, 29 Jan 2020 13:52:05 +0000 (UTC)
-Message-ID: <b4c4b18eabe845e4cc3e0e1d5af2f3aa7b9091c7.camel@suse.de>
-Subject: Re: [RFC PATCH 2/4] pinctrl: bcm2835: Refactor platform data
+        by mx2.suse.de (Postfix) with ESMTP id 85AC3AD3A;
+        Wed, 29 Jan 2020 13:53:13 +0000 (UTC)
+Message-ID: <e4c0ba6eb4b3282c5b2c08f9bd11b1bf109b646b.camel@suse.de>
+Subject: Re: [RFC PATCH 4/4] ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     Stefan Wahren <stefan.wahren@i2se.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -25,12 +25,12 @@ To:     Stefan Wahren <stefan.wahren@i2se.com>,
         Scott Branden <sbranden@broadcom.com>
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 29 Jan 2020 14:52:03 +0100
-In-Reply-To: <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
+Date:   Wed, 29 Jan 2020 14:53:12 +0100
+In-Reply-To: <1580148908-4863-5-git-send-email-stefan.wahren@i2se.com>
 References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com>
-         <1580148908-4863-3-git-send-email-stefan.wahren@i2se.com>
+         <1580148908-4863-5-git-send-email-stefan.wahren@i2se.com>
 Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-d10hOAw7/iXklX9kAd3Z"
+        protocol="application/pgp-signature"; boundary="=-W7Z0xkNoSi4WzK5KufDN"
 User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
 Sender: linux-gpio-owner@vger.kernel.org
@@ -39,105 +39,126 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---=-d10hOAw7/iXklX9kAd3Z
+--=-W7Z0xkNoSi4WzK5KufDN
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Stefan,
-thanks for the series!
-
 On Mon, 2020-01-27 at 19:15 +0100, Stefan Wahren wrote:
-> This prepares the platform data to be easier to extend for more GPIOs.
-> Except of this there is no functional change.
+> This adds the labels for all the SoC GPIOs on the Raspberry Pi 4.
 >=20
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
-
-[...]
-
-> @@ -1083,6 +1112,7 @@ static int bcm2835_pinctrl_probe(struct platform_de=
-vice
-> *pdev)
->  	struct device *dev =3D &pdev->dev;
->  	struct device_node *np =3D dev->of_node;
->  	struct bcm2835_pinctrl *pc;
-> +	struct bcm_plat_data *pdata;
-
-You could define this as const...
-
->  	struct gpio_irq_chip *girq;
->  	struct resource iomem;
->  	int err, i;
-> @@ -1108,7 +1138,13 @@ static int bcm2835_pinctrl_probe(struct platform_d=
-evice
-> *pdev)
->  	if (IS_ERR(pc->base))
->  		return PTR_ERR(pc->base);
+>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 74
+> +++++++++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> index 1b5a835..6607e2e 100644
+> --- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> +++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+> @@ -71,6 +71,80 @@
+>  	};
+>  };
 > =20
-> -	pc->gpio_chip =3D bcm2835_gpio_chip;
-> +	match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-> +	if (!match)
-> +		return -EINVAL;
+> +&gpio {
+> +	/*
+> +	 * Parts taken from rpi_SCH_4b_4p0_reduced.pdf and
+> +	 * the official GPU firmware DT blob.
+> +	 *
+> +	 * Legend:
+> +	 * "NC" =3D not connected (no rail from the SoC)
+
+May be drop this from the legend, as it's not used.
+
+> +	 * "FOO" =3D GPIO line named "FOO" on the schematic
+> +	 * "FOO_N" =3D GPIO line named "FOO" on schematic, active low
+> +	 */
+> +	gpio-line-names =3D "ID_SDA",
+> +			  "ID_SCL",
+> +			  "SDA1",
+> +			  "SCL1",
+> +			  "GPIO_GCLK",
+> +			  "GPIO5",
+> +			  "GPIO6",
+> +			  "SPI_CE1_N",
+> +			  "SPI_CE0_N",
+> +			  "SPI_MISO",
+> +			  "SPI_MOSI",
+> +			  "SPI_SCLK",
+> +			  "GPIO12",
+> +			  "GPIO13",
+> +			  /* Serial port */
+> +			  "TXD1",
+> +			  "RXD1",
+> +			  "GPIO16",
+> +			  "GPIO17",
+> +			  "GPIO18",
+> +			  "GPIO19",
+> +			  "GPIO20",
+> +			  "GPIO21",
+> +			  "GPIO22",
+> +			  "GPIO23",
+> +			  "GPIO24",
+> +			  "GPIO25",
+> +			  "GPIO26",
+> +			  "GPIO27",
+> +			  "RGMII_MDIO",
+> +			  "RGMIO_MDC",
+> +			  /* Used by BT module */
+> +			  "CTS0",
+> +			  "RTS0",
+> +			  "TXD0",
+> +			  "RXD0",
+> +			  /* Used by Wifi */
+> +			  "SD1_CLK",
+> +			  "SD1_CMD",
+> +			  "SD1_DATA0",
+> +			  "SD1_DATA1",
+> +			  "SD1_DATA2",
+> +			  "SD1_DATA3",
+> +			  /* Shared with SPI flash */
+> +			  "PWM0_MISO",
+> +			  "PWM1_MOSI",
+> +			  "STATUS_LED_G_CLK",
+> +			  "SPIFLASH_CE_N",
+> +			  "SDA0",
+> +			  "SCL0",
+> +			  "RGMII_RXCLK",
+> +			  "RGMII_RXCTL",
+> +			  "RGMII_RXD0",
+> +			  "RGMII_RXD1",
+> +			  "RGMII_RXD2",
+> +			  "RGMII_RXD3",
+> +			  "RGMII_TXCLK",
+> +			  "RGMII_TXCTL",
+> +			  "RGMII_TXD0",
+> +			  "RGMII_TXD1",
+> +			  "RGMII_TXD2",
+> +			  "RGMII_TXD3";
+> +};
 > +
-> +	pdata =3D (struct bcm_plat_data *)match->data;
-
-...and drop this cast.
-
-> +
-> +	memcpy(&pc->gpio_chip, pdata->gpio_chip, sizeof(pc->gpio_chip));
->  	pc->gpio_chip.parent =3D dev;
->  	pc->gpio_chip.of_node =3D np;
-> =20
-> @@ -1159,19 +1195,14 @@ static int bcm2835_pinctrl_probe(struct
-> platform_device *pdev)
->  		return err;
->  	}
-> =20
-> -	match =3D of_match_node(bcm2835_pinctrl_match, pdev->dev.of_node);
-> -	if (match) {
-> -		bcm2835_pinctrl_desc.confops =3D
-> -			(const struct pinconf_ops *)match->data;
-> -	}
-> -
-> -	pc->pctl_dev =3D devm_pinctrl_register(dev, &bcm2835_pinctrl_desc, pc);
-> +	memcpy(&pc->pctl_desc, pdata->pctl_desc, sizeof(pc->pctl_desc));
-
-I suggest doing (here and below):
-
-	pc->pctl_desc =3D *pdata->pctl_desc;
-
-> +	pc->pctl_dev =3D devm_pinctrl_register(dev, &pc->pctl_desc, pc);
->  	if (IS_ERR(pc->pctl_dev)) {
->  		gpiochip_remove(&pc->gpio_chip);
->  		return PTR_ERR(pc->pctl_dev);
->  	}
-> =20
-> -	pc->gpio_range =3D bcm2835_pinctrl_gpio_range;
-> +	memcpy(&pc->gpio_range, pdata->gpio_range, sizeof(pc->gpio_range));
->  	pc->gpio_range.base =3D pc->gpio_chip.base;
->  	pc->gpio_range.gc =3D &pc->gpio_chip;
->  	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
-
-Regards,
-Nicolas
+>  &pwm1 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pwm1_0_gpio40 &pwm1_1_gpio41>;
 
 
---=-d10hOAw7/iXklX9kAd3Z
+--=-W7Z0xkNoSi4WzK5KufDN
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4xjgMACgkQlfZmHno8
-x/5JwAf9FcQOs7WwV7QJ+nt29U48mXMjZhtcYmyn6DKR1pMZjkiT0bDey6lFCqFw
-/GO7cinvI0n8LWSSTlqcfTNfSx8i4/S3HVBwwsH89e5aiXqjNsOhJVvjjZJapVcC
-V9oMmxsstrTuQJXFFyufCcOTOxrZDIy93J1bu+4/UTITv9DuvmV74YDAi42880u+
-41/ZgmJJkAgcirVoODK4lrbocd1ilh2mUFYcu9Of2oA3/MA0XSz50EpS1iHhZtSP
-u6bZFQhOlT/nT2d+WfB9aem95yg+XWcMCA/OHkRgpFWNlFoTOxRrZWRBrOP/Toa3
-+HAulEAOla3nDKnnaVFYAAbFncB5kA==
-=B3Z4
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4xjkgACgkQlfZmHno8
+x/4RxAf+Po8dJxuJatdJG3Apbg1cwwn5IV+bD4rK9TBFtotXR+sCSId44VQV5SqA
+G/8uB2Qu8U7HgAE/60TOUBBIRlyHFoLPthhrgC4Y9KWj7F3rWPbUfg878XHhk8Fg
+64XJ9WD2UZ3d9lqfmPmnzjm0+Fj+Frk8bPZHTwUKrmIe6l0wD+DfCtBeN3yToSnh
+4/g1FfzwueRY92Rtz2vDWl+jHxU0IiRC5LUbOOS1EdKS7XefAyjpetc0Yf19Qmsv
+VbNRa0Kqh60aqWjZ5KLSkxf/nRDDddexhmDzmtfmjUhZ7pnzbR4uBcCteOWuUrpm
+2DoNaiKIiNNRgmNbzwAC9dqg8tfe4Q==
+=9DtJ
 -----END PGP SIGNATURE-----
 
---=-d10hOAw7/iXklX9kAd3Z--
+--=-W7Z0xkNoSi4WzK5KufDN--
 
