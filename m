@@ -2,66 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B4614DCD0
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Jan 2020 15:31:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F27414EC45
+	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2020 13:06:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgA3ObC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Jan 2020 09:31:02 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52553 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbgA3ObC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Jan 2020 09:31:02 -0500
-Received: by mail-pj1-f67.google.com with SMTP id ep11so1402769pjb.2
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Jan 2020 06:31:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=EqeNuPCh2EscwVWwyfmdlBnc1Jo/GS7LeqzNO4LEAkE=;
-        b=rrZoAqEL+L29Qz/Z9Ln9VNpkDUQuxzoPHfR0+wPtotUTlP5IlWgGfvafY3xAjIe3pH
-         vIw63XvTk5EOAUp58cK54embBSOJFuIZlci0dhiXGssfQjUAHd76UtFS1wG4gA5SSyC2
-         uf2cPF9n7ThtOg56uHDjb+T+G7EMM8SK68DeUVji3GlzObPgiaqO/sy+ZguWRNZUZsNW
-         +QxStUWxSuoTY97SjfAppV70g3zzHrhAn/VWikMnMQnv4Y3tY1OFm596FmvZYta0fMhZ
-         UAh3RhLnnqFmT/+H21H/P/dVstxSoes4NEZvWIkIkn7qnLQ/hxque384TI/Mh/4WGw4r
-         2ZaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=EqeNuPCh2EscwVWwyfmdlBnc1Jo/GS7LeqzNO4LEAkE=;
-        b=PdQ0CH+EKVbvWOfUyBDM75q1wS/1XjFYZPGVhG1TQefd6saGy+iX7hJddthGJW6UeI
-         HUM3kEP+AyNth2oJxprjzacfEyQrny0F3RfGjWt2pxSdSOd610jDT/id/44V4AcbqPNR
-         Dvv1YaHl6e3s0k6tVeLDXy1hQzrP9MUkXy1FN4Ni9qc1VEi2j2kSlu3tW0vP0AI5yy9z
-         8Y+db/mVTsWmw9a9DuUdz934l01d+RsV/sWfBUCHNY7kHBMCiUC4InH9JNN6VCRBMU4M
-         A5YujEGaVSrbmYFasiQF7hZirrsL+mFJCZNZlMW9tPcCBdd3SR8gKjmcB2GHodf6E2l3
-         WY0w==
-X-Gm-Message-State: APjAAAWes8sn0RqAA9gON6tz6hXucIQFUjYZSWzwrfe4FKOfRxoPbHxT
-        SARJ5gX6ZkAsV3je0FgNaTwCght1FCPqJv0zkUs=
-X-Google-Smtp-Source: APXvYqwQSq/4+ksyqMJg/5sZ3A/CiVqnrT3LLHKkqwOnCIaagZtJpgAF4lC1sl21oSJfHOEELdGwx2CDiPHOuxAWW58=
-X-Received: by 2002:a17:902:7244:: with SMTP id c4mr4963937pll.49.1580394661822;
- Thu, 30 Jan 2020 06:31:01 -0800 (PST)
+        id S1728428AbgAaMGB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 31 Jan 2020 07:06:01 -0500
+Received: from sonic304-9.consmr.mail.bf2.yahoo.com ([74.6.128.32]:39413 "EHLO
+        sonic304-9.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728374AbgAaMGB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 31 Jan 2020 07:06:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1580472360; bh=xdKFKwXhZBMMCl04ee9fGA+BedEzlr47CXgVbSDWzkY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=ahX1z4pBautTLek09eNnGQ/k0oGsjSzk5H10Kndv0nPQtb/O4u9amDzrhBcyPxra4llwCbJum/wgOLXJYPujjm4qrOmqRggKnj64pWf+LouAv8aYV5P5ZasVpvANVuhIIBW+agdibt8JzWOKO6DlJQJsrCjnTOUwIrOaOOwEd1UJeGnpsyPrJkxZBCG9f/IqeVH+JPCLRr5n3hcmk4z1zhHUyF9MrVXFateCbQD9xD5p+j/w277ihm8tbnmlO8Hn8NCZOkbp/cqMTt662OPst2KFMqHU8xeJlc2UeDlvsDLDunNf2GX8fgmIuJNihzkfCcIXy5ZDmXVd/pgHviEYOw==
+X-YMail-OSG: 8b4M730VM1kBi_V88gIN9BDr.aralQHRbzLanscVHWTGAMOXgHwGf74RU6Lfeb0
+ fgFBsABXH8h__VXSwpVE7LFG0xHghSitJnGmulnDRuB7Ov1mwC2E__SCrgf3g9U6tMC.kPexk.F3
+ qTaAktk7Ad5dmiYRWMAa7lpEH60P.1LTXY6NLsfGC9MYIPjL63xKBY2c6TKzVk8JomlAKNRCcJ4A
+ NNaM_.yP2ikMXfP8uUELlmur9RGkc7r0xTFannfmNMNocIyswUeWeBxMD_Kcbf38M0P8UT_7E7ul
+ rxIMg4bY5oByzEEtbovm0TiQAT0wXaAa0vK0DJeQsrHyEinxRq9v4h7FzmTp0O60cwMgmQbSiEX7
+ 1aQ4NHR0xtTvzO78O3vLoFCAReLCEJt7I2GHbwDq57LmZPpSMlw1ue.cqX1GA.p_ug812STUAXfg
+ 3pcm4tiSxAwM7T3FjiUGp5agooy0GjXvDBQa1jevtN.Q487vpktVAz0Af2oDxtfcfirMVqoZj0y1
+ yd42Uv_NazgeNeFtqG_6XWZ7DCqjUsQ3ihtKHn_QAL3fiEDek6ayzv_9qST7A6pTWUPiP8dQcHbv
+ NNKKChLs5575IIXo8wvRWR_P8R2Oi0MlrwQ_xs9kiP2nqfLivQhNJzgLcq4brJxxi2olfHsXYNTq
+ oNT0o6QmdO2NyqrbE9udKwPKp8wQcEvXJrFj.VwEdddubhwhagdCfUZpI_inXGI3_gloQ1D1QsOa
+ OP_RjJNRyuFIQQOPbqenbW7lb5fpq1prHbqvYTt28C._GE_eWUzw2pRHmb.hgQk3sjONP50wTTNR
+ 1.CUF6sMFvtS4ST_GB17ZFUSOAj66ug5stF8EqPxZGHxYgPDeXJaCmxKnPHJSVzsY52BdzneLSe0
+ hNz6RO9tDZqhzmTwC_u8ROs0DCQiovdmFBf_A75fkaKQwPN1CbwQlfOkDmn1cOXFuskRRGa0Kvcf
+ GyhDSuGX_x2z8qfoWBjMBVq6tth6o8zc_hHE8T71pJU.yilm.XFIaHV2B5Y5hDrm4fryBub5IfnV
+ .BhSxgr2_e7NCLKBVhrrZu8GQepQfyOlvF.ioAxW8pnYJsB_YwK32.yY_rfRtnVzLtjEpugyOs1k
+ j3q4_lgXplbzsgL9zqwmzyaPTm9h96hgD4M67JTiWICSAA.6OWGiQuZO0zAMqmC.pv0MgNYqRdTl
+ BxcoeBpAl6DOu3h_JWvaBLnj26.7x1BgqSfviSDASOy8scXx7WwmMJpyz4Q7q3uMU20FkaEoF8gS
+ _qy9wJQmEoRpirWQ_n.pSoxVI.a.jNAh7jsWxiseHhljT2c.lVNFC3U_oiDeULDw.XYQi7dn3.P4
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.bf2.yahoo.com with HTTP; Fri, 31 Jan 2020 12:06:00 +0000
+Date:   Fri, 31 Jan 2020 12:05:56 +0000 (UTC)
+From:   ABDUL MAJID <majidabdul55@aol.com>
+Reply-To: majidabdul70@aol.com
+Message-ID: <1120265110.602395.1580472356791@mail.yahoo.com>
+Subject: Hello Dear.
 MIME-Version: 1.0
-Received: by 2002:a17:90a:332f:0:0:0:0 with HTTP; Thu, 30 Jan 2020 06:31:01
- -0800 (PST)
-From:   Ganbatar Azzanayaj <ganbatarazzanayajg@gmail.com>
-Date:   Thu, 30 Jan 2020 14:31:01 +0000
-Message-ID: <CAM7Kmtkjpai4D5GdBZ+xK78KFeDvYtrDmJ8Z4GssWo1epQJHZA@mail.gmail.com>
-Subject: hope
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1120265110.602395.1580472356791.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15113 YMailNodin Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Good day , i write to inform you as auditor onbehalf of ORABANK.
-
-Transaction number 000399577OBK have been approved for release
-through VISA ELECTRON ATM Card.
-
-Note that you are required to reconfirm your complete mailing address
-for delivery.
-
-Reconfirm code 000399577OBK to the Director Mr. Patrick Masrellet on ( (
-atm.orabank@iname.com )) for further action.
-
-Regards.
-ganbatar azzanayajg( Esq)
+DR.ABDUL MAJID
+AUDITING AND ACCOUNTING MANAGER,
+AFRICAN DEVELOPMENT BANK
+50-54 RUE DE THOMPSON,
+OUAGADOUGOU, BURKINA FASO, WEST AFRICA
+ 
+Dear Friend,
+ 
+Greetings and how are you doing?
+ 
+I want you to be my partner in the transfer of the sum of $23.6
+Million dollars discovered in my department in a Bank here in West
+Africa and I will give you more details on this when I get your reply
+but be rest assured that I will give you 40% of the total sum once the
+transfer is completed but you have to maintain secrecy of this deal if
+you are ready to work with me.
+ 
+Yours Sincerely,
+ 
+Dr.Abdul Majid
+Auditing and Accounting Manager.
