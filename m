@@ -2,93 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8BDE14EC81
-	for <lists+linux-gpio@lfdr.de>; Fri, 31 Jan 2020 13:29:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD51F14F8F0
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Feb 2020 17:37:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgAaM3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 31 Jan 2020 07:29:38 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:53298 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728484AbgAaM3i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 31 Jan 2020 07:29:38 -0500
-Received: by mail-pj1-f68.google.com with SMTP id n96so2754269pjc.3
-        for <linux-gpio@vger.kernel.org>; Fri, 31 Jan 2020 04:29:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mZgAZqbd/45dU5A0ct1fKMrQ98x0sfUmGu1qOa70gxg=;
-        b=Aa3v3WVsnWkTePS4WJIJqBD5YAbm3MZa/5bpi+CgG++5hev75c4ZNr55emztLt6W48
-         MVfmvQjTkgyIw/WU/yrSZwiPl0EYYo8p9tvlYGglCs/c9MzOqcmrEQWDszvgwpKnkHPV
-         fqTzOzafdi0hMtB8haWPRUw6xlvMz4M4EKX39OCfQOqBHwsE7TxZSPfYNLrefxv4fwsN
-         V2uMP60mFPYB7I6Y5Yx0jcDc1Nk9KQbmGtzy91Bu26r6rFAe/x9m2Cuz4Tk6vckSDPWq
-         kYQlBYoKmhlmnoy24XtUNo6B46XDtxQ1vtct9V3IHQHJC8pYbctfZ5RK7o4egv9nWQgI
-         MG6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mZgAZqbd/45dU5A0ct1fKMrQ98x0sfUmGu1qOa70gxg=;
-        b=WfeCcOSANvCWleuRlS4oCUeMY80tWGzX2i8ZWjbk1iiGGSken1I65lUzcfUhwzTJUo
-         TqmicWYEOK37TyZPoFxXg/jWghsbrK4zN1t5AimlJOvx2d90ErwTvJcbb5MYYD92yp09
-         u7mMGxH+6EvFvgCMSkY15rt/SCszI9ckTySnfS5yuec7ItydYFYDIjGi/UFxE1TpGv7l
-         bru74/WxNPDnxIDPUygYW8KuK+9wzRmIKaHd5oIJlP09mScq071xTYjwOjaaN/U47DUx
-         15s2/Q2zhm0MxTtJyAZnCiGmQMoVIUwT2FNbXOhBnWSf6CiFJipd2DPzP3QZfY+lZdjC
-         JT2g==
-X-Gm-Message-State: APjAAAVQxG4nKlqvAJcZnYsqh+5nDBH1p6eRPeWLJ7jj522YOU4A6Xbf
-        y/glDsH4T0VGD2r521BUbX7PqQ==
-X-Google-Smtp-Source: APXvYqx9B3qhyHQqFHQjyJX/0jf/B6c36Y1S+jEvCiGUxju3zJIcAgw1DHI9supsJbjk/39NrlFaOQ==
-X-Received: by 2002:a17:90a:a115:: with SMTP id s21mr11791095pjp.23.1580473777526;
-        Fri, 31 Jan 2020 04:29:37 -0800 (PST)
-Received: from localhost.localdomain (36-239-237-206.dynamic-ip.hinet.net. [36.239.237.206])
-        by smtp.gmail.com with ESMTPSA id d14sm10551187pjz.12.2020.01.31.04.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jan 2020 04:29:37 -0800 (PST)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] gpio: wcd934x: Fix logic of wcd_gpio_get
-Date:   Fri, 31 Jan 2020 20:29:18 +0800
-Message-Id: <20200131122918.7127-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200131122918.7127-1-axel.lin@ingics.com>
-References: <20200131122918.7127-1-axel.lin@ingics.com>
+        id S1726677AbgBAQhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Feb 2020 11:37:05 -0500
+Received: from sonic316-53.consmr.mail.ne1.yahoo.com ([66.163.187.179]:39696
+        "EHLO sonic316-53.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726669AbgBAQhE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Feb 2020 11:37:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580575023; bh=VxFSqOLnoyhxZXWK73TPGK3hr8yutZ4yWmLQa/jSY/I=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Jhu+rinusv8yrO7P+uj9ivOFAjdRsMBmPFc+4IysZP3e42txtiMOS1Ozpd88qtzPDsY7Ry4DTkeFVzuwutwTvuB2SK6jtwnz+e+CV9LD3b7tXVlbuxj0SQCculj/VDgqZbX27+Ef28W/VMCAjI3bUGhbR7zkObIRB9i/4QSUD75FrSIbePMHMqeYH0iRDH93qV5+vpa8I0KTXt8X1xUbiVcSEgY0ezcs/HZwhRIlytkr3tXmf0Eq0BNrIM51cyXxir8X6vAxWcftEFCuWMjb6fuYtRt8Nr1tFEoqkK23t4nGnEiVBfIUCHOg8aYH/SgqjmQ7qSnALaelCJ5naFT5xg==
+X-YMail-OSG: Oiyj.kAVM1n9p7QAwa6TtksRrzjtHbreTj7n.RjcuU6rKCqwcfIKYmMj67_qYGo
+ 50yTBpoZktKs6JI1busMmYqgFQC4mGzsqhpK5haoVlNENBtDgC8f6a8gtgtF3PZJnmsu5_75HMRJ
+ 7YA46Jghe4INcyn1h5KO_7aYAscKpbF1P9.m2EZgGU72tjGLT8fimkIpwFKpUnj2earMHE_v2TsQ
+ MKxYclls27P5vvmnIMV6FrcEeuIn5_DJLmp_uIQ7oDGxO_P0OVuCbdqTtnp.oskGBxMAaLXYfARC
+ 4snjv_yE5eAJrwfxkzoB7hrAAYXJozbpASvQf2QZ_UbbbcNJ0JhEzOCUykboiCT64k5af0oehUin
+ Twv918CXUpToQeByosgu98y4qNOttRZ1NKp5.mGTFZzXnxYsx9Nt5QpGF.2fhQ9saiFU2.uj6fX1
+ fb6swLpUJal48d1jGhfb.XL7IJZ5JQWJoW..NomOUa3Sn8H0lR1E4REfVP33hooYS9inYmNxN9VO
+ zODMWKYbM05xw7AM8NYUBQcko5zdCCw.ZIN4GGyZTJ5MjZXTQwee8HfSIZsn5dXJK90FgBUkQDZF
+ hfiDy9UgkHyeFXTW.wgINim87rwfdlpPKC9cCePMq6AhzTCR9U5_IhxUVj_oM5OLTAy2BB.wU0kU
+ FdtXyxTW9tOMf9ZBC3PGRoiINOUJydKyeov_ZKT5mShpKYiWqyP2NIB1h5wGrYPQm8.NIf4g.3jZ
+ hwJe6OvdF8DQSZJneWdcvzRhXbKwWpI_6Fbl_OVTiwy8QAWeGcl9fTpuTtthLNT2GHx30h6fFCT2
+ i6NadkPFwW6KGcliefTOTNO03jp_.cOeM4_OFYvsOpY_Ql_xFX_jiMtMjdk5qJdJLnOpXkT971pZ
+ rpdK9T6Xbje1MU4FU7PbXhrNDLxv06GO8jQ2VHfHFNXKuzl3wJHjzcsoC8dBSaoIb5FzNPdmJYpU
+ bXHnFy1MMsn_UU6lw9IrcYtlFnRUwqAIyVv70EYZVYE4Ti_WVF8IOU9gj2iA4jqdFRNxUlrbeMDK
+ XCc.yxjw3lylmFEf85twkP0NJLYKliou8KpJ6bFeLN0wtqeMyPoHvt0kLACIwBKlifIbIpwRXDSY
+ Op1MyZfP_EEjDmN5RsrfQ7LI4MsB17EonxqqawHioomWeYVCrSYB1Pa1fmwSLa7ohCQwJ6YNSoMZ
+ DYSugR9RYMCoGhmhT0YlZHTQvzfMXhqV6xnn_zOWOiTfbnmKgLZuLzydgbr6LYBWVQke_PaeZA3t
+ 4vi5C89maj4hpe._H0Zcy8QpEWZ8KWCVHnxqxG2jI_UF1mlmdATy.ATd_8JXmaYVEmGJeCQEvXRF
+ FxmjvPVhnxhZEcXpIBqfsP_vNXbXRMV3RWjs-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Sat, 1 Feb 2020 16:37:03 +0000
+Date:   Sat, 1 Feb 2020 16:35:02 +0000 (UTC)
+From:   "Mrs. Maureen Hinckley" <zz13@gczao.com>
+Reply-To: maurhinck6@gmail.com
+Message-ID: <1187667350.235001.1580574902701@mail.yahoo.com>
+Subject: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <1187667350.235001.1580574902701.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15149 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36 OPR/66.0.3515.44
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The check with register value and mask should be & rather than &&.
-While at it, also use "unsigned int" for value variable because
-regmap_read() takes unsigned int *val argument.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/gpio/gpio-wcd934x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
-index 9d4ec8941b9b..1cbce5990855 100644
---- a/drivers/gpio/gpio-wcd934x.c
-+++ b/drivers/gpio/gpio-wcd934x.c
-@@ -57,11 +57,11 @@ static int wcd_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
- static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
- {
- 	struct wcd_gpio_data *data = gpiochip_get_data(chip);
--	int value;
-+	unsigned int value;
- 
- 	regmap_read(data->map, WCD_REG_VAL_CTL_OFFSET, &value);
- 
--	return !!(value && WCD_PIN_MASK(pin));
-+	return !!(value & WCD_PIN_MASK(pin));
- }
- 
- static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int val)
--- 
-2.20.1
+I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
+ thousand USD) to you. Contact us via my email at (maurhinck6@gmail.com) fo=
+r further details.
 
+Best Regards,
+Mrs. Maureen Hinckley,
+Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
