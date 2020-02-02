@@ -2,148 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06B0B14FA6F
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Feb 2020 20:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A2C514FEF0
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Feb 2020 20:36:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgBATwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Feb 2020 14:52:37 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36247 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbgBATwg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Feb 2020 14:52:36 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so4191003plm.3;
-        Sat, 01 Feb 2020 11:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nEFNNblRqNpKNPo8t2U8tuWeN09OcfldVwvSHwZN258=;
-        b=Py6xERYcgrEQ0+UOFqTKxqkRbxm4BWMvKqC1AUuwiW7UzcVX9pzLHsqDdovZdkoZid
-         wD6kUbAs/PQEj96s3eUjbquhlNY4diSqMWoBAyxVtYBkOxRAcoQ7a2CRkSpkk+UgqRG9
-         Kw1VMmf+73rRUnGHgPu8/W362IRS1lWZgqlcOfoGcSmtmHAvuOtRg+F9tEZKiNLFcyky
-         Y3CAQ2bhFEYQceMLcFH9ervOTNSFH78Zmcvsi/ZwE1Zt0GMYTji6viri+0nI3G2qGK4r
-         30S96itKsi+lAysQhpoGKjSdWjr980V6mQyf1qqQSDrbU44yKoqE6xlysidta3E2E5oJ
-         rAyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nEFNNblRqNpKNPo8t2U8tuWeN09OcfldVwvSHwZN258=;
-        b=TlJSUs/p7k6eK0S74/tTtFYcXI2Ebk3NilXcM3Va+TF+eccc60UkPKLxXF1RAKTFb/
-         A4vpQvMA0ZNQtgn86YnjRLJxmBGU2s3/HxjmdfQ9KNXfXDD5Qae/knQoPvwLGlIbkzdU
-         +d1vf7Z5jf+XFxcK4vUI9jGusk22W0CaA9vaKexMXI8i6V+Z9lJBpO7XHJ3weDKZNpHI
-         00PO4J39n4yMTo60y4lzv9P3K3EM+7RsUMjo+va9Ko0h2P5TOG7C7RMkCdqwA1tDcWML
-         jkHEIi1cwOYSDET16pty2VOmxg49XYM9NAL2iSkMUZkuQHAfiOZZTQthjvfzG5koeLv9
-         IKyA==
-X-Gm-Message-State: APjAAAWrLreYw8WAVq4Xf4RvmWzGoQu9j9R85sqB99zSXZatciEZ0UqS
-        YlY4tfhad8XUe3bbYZ2soWA=
-X-Google-Smtp-Source: APXvYqzCM3uWw5SVuutahEAugjcnROlQqItwLliiieP4i6E/BALocpEjNvhe7tx1KRCV8JtpGPIwhw==
-X-Received: by 2002:a17:902:a617:: with SMTP id u23mr16064477plq.20.1580586754578;
-        Sat, 01 Feb 2020 11:52:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q8sm14623513pgg.92.2020.02.01.11.52.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Feb 2020 11:52:33 -0800 (PST)
-Date:   Sat, 1 Feb 2020 11:52:32 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling
- set_config()
-Message-ID: <20200201195232.GA17364@roeck-us.net>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <20191224120709.18247-3-brgl@bgdev.pl>
+        id S1726943AbgBBTgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Feb 2020 14:36:22 -0500
+Received: from sonic306-20.consmr.mail.ir2.yahoo.com ([77.238.176.206]:38868
+        "EHLO sonic306-20.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726947AbgBBTgW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Feb 2020 14:36:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580672179; bh=KEQQEuZy9xz1bHJWn+5Og9qtrVRgDE49SeSj/EC+QRY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=n5IQrJiD8VR3iYe2ejLa5BfUXEJjRJnHu6yw8oA2osUK1G4UU/tUQ1vHxjtjmBwTbC9gRSl4PkAygGRIzJM/SibAGiaQhoftf2L0s9qVmlX2ulwuybQ+lyrqwC1nHgDVD3zwNGDPqmCPtbqQB9b20nO2/I3oBPlcoKkVreYMay7i2JlCMH9EDwJ0AkKFOq5aGcfgYPcW9dZjY3C8p/ecgK/g24NT9cZkihPJ0sKaSo1N77dKEr5dkXFXmwEUpv6VNqBipYqo/kWvYts+YDrj3CKWrgFPkqh03iML1oz/ZU+fVS6fPXrIZhB5SHPvj3jS+kwamyVV7VvlOUD1trtkAA==
+X-YMail-OSG: 55k6oEoVM1kByroeJ9TWz5LFQLaXvIGWUQzQuGf18y7nui4EmG4sX.i68aEdBbf
+ S61G5cfpypjQ7dyonQjuBmWY6tfrLHT8_OmBAheajSmG4Di4dTEfaDFmxlPfB9SqqamJ0CUZcUxz
+ k60w3tZAhvR0VJfsukIIZdLqaMlSy6DAIl4h_aebf9sNM15DgEznwMQIl9ej7wOziEjlUn.gsXp.
+ Lm7fEdlg2sZlyhTr9sBHsp7E2T1YIPa81QdV8L1qjv72SwT5oV5jqFKBRnAe1J8AYdKPTkwv2fMl
+ VLXZNlMBjM5ATHz0Lrp9mDbtV9wld7s4V4xbUjDTiCMbm0xV8E7yjR8BHpDtgtzzu2MYkM79xYKc
+ ccAyb6sK2_vmq2y_o0fbfH6Pl.SG.ITE_kQCQ7NyGahwOaD72q7qd5oPzuPl3MP6MB8c15J6b9Ll
+ KpHOCYE9DeY3erYOi31kBmk5QpPr6193mdrYW9P2wqF9jgo6EcZMCOABQQN39MdS8IzIEuH2BPNs
+ W6weU5lId1DtKUysR5euDaaeEi7YyZguSl4oWC3wxMfR45nJQ11oAQ5Uh7bySl3DLhMP7toD7PWs
+ G1.W7bAfyAfw6GO2jMLba1cvf2PZdKQUWBcV7rZhoH564l9ctdz0t1lluGyuNO4REfZ6Tc.x4OWE
+ XuWHE.GedddBNKG61LtOLwpYL.YuTi5vami2iXzVmQbjSxfvzELA3O7jKvTwyZyiJpMZY_G1RvEA
+ X.Oe6jUuSDxBom8EnGHpknbjMDEXJAY1LyDMYzsXvFeC3bdlatbQ1fxNIXWGoC.TeuXlA66Ahy5z
+ vKMYcZP_AvdlYEmHO8pqZPzMvCJyXypCpxFeuVgLZd.2pB4LBdxnL7P612wE_7i77lPVg1S1g9rv
+ IbIQfb77DMV45u_fdGbRo.cdaLbxej9LVSYdNgifDrr1fU1nYf0ZiYP2nYx3WFWERskHWF.8kjZ.
+ Qtk3icJtIXCHsZZh5P6UVbdaOieEnqxbKPzR7B_gGK5i7A60qM6OQN.PYlx2hvnhAGfBovbirXx7
+ wM0aynoeDfMMyragvky2aENzEmkP.7az2T3bXUnXWqlCoLyurcbw1eJzciX2ykfmZaqTXvZjB6va
+ 1yxmoJnyn7UcwCiAz2sQCUU9lEv16a06JOmNs8X0PpZiwTzacLVqrI2IX9R3ENzYMFvt9tTxo3Xm
+ YYooDa36czJi0op.FIWowc4Zc83FK.0lQnSkdVG7_NZkMbWPTKp3mxYXFJUIuX7BlXsm32B5kram
+ f1OnB6uHQXyOY_Nbzwl3Ep5oGc36wYcHcKCfnwjV79dNFFMY6h4kzJRny7LJnAlDM087KzDj2uU8
+ K3_jJVoXKLaLLfYRIEZW5AtmhzEJVpnnPzXXphtQ-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ir2.yahoo.com with HTTP; Sun, 2 Feb 2020 19:36:19 +0000
+Date:   Sun, 2 Feb 2020 19:36:15 +0000 (UTC)
+From:   JULIAN WORKER <julian.m.worker122@gmail.com>
+Reply-To: julian.m.worker122@gmail.com
+Message-ID: <840165969.945225.1580672175778@mail.yahoo.com>
+Subject: =?UTF-8?Q?FROM:_Mrs._Julian_M._Wo?= =?UTF-8?Q?rker_=EF=BC=88?=
+ =?UTF-8?Q?=E3=83=81=E3=83=A3=E3=83=AA=E3=83=86=E3=82=A3=E3=83=BB?=
+ =?UTF-8?Q?=E3=83=89=E3=83=8D=E3=83=BC=E3=82=B7=E3=83=A7=E3=83=B3?=
+ =?UTF-8?Q?=E3=83=BB=E3=83=95=E3=82=A1=E3=83=B3=E3=83=89=EF=BC=89?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224120709.18247-3-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+References: <840165969.945225.1580672175778.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15149 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:72.0) Gecko/20100101 Firefox/72.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 01:06:58PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Instead of calling the gpiochip's set_config() callback directly and
-> checking its existence every time - just add a new routine that performs
-> this check internally. Call it in gpio_set_config() and
-> gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> the check for chip->set() as it's irrelevant to this config option.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-This patch made it into mainline, even though a regression was reported
-against it by Geert. Please note that it is not just a theoretic problem
-but _does_ indeed cause regressions.
-
-Guenter
-
-> ---
->  drivers/gpio/gpiolib.c | 21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index e5d101ee9ada..616e431039fc 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3042,6 +3042,15 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
->   * rely on gpio_request() having been called beforehand.
->   */
->  
-> +static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
-> +			      enum pin_config_param mode)
-> +{
-> +	if (!gc->set_config)
-> +		return -ENOTSUPP;
-> +
-> +	return gc->set_config(gc, offset, mode);
-> +}
-> +
->  static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->  			   enum pin_config_param mode)
->  {
-> @@ -3060,7 +3069,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
->  	}
->  
->  	config = PIN_CONF_PACKED(mode, arg);
-> -	return gc->set_config ? gc->set_config(gc, offset, config) : -ENOTSUPP;
-> +	return gpio_do_set_config(gc, offset, mode);
->  }
->  
->  static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-> @@ -3294,15 +3303,9 @@ int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce)
->  
->  	VALIDATE_DESC(desc);
->  	chip = desc->gdev->chip;
-> -	if (!chip->set || !chip->set_config) {
-> -		gpiod_dbg(desc,
-> -			  "%s: missing set() or set_config() operations\n",
-> -			  __func__);
-> -		return -ENOTSUPP;
-> -	}
->  
->  	config = pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, debounce);
-> -	return chip->set_config(chip, gpio_chip_hwgpio(desc), config);
-> +	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
->  }
->  EXPORT_SYMBOL_GPL(gpiod_set_debounce);
->  
-> @@ -3339,7 +3342,7 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory)
->  	packed = pinconf_to_config_packed(PIN_CONFIG_PERSIST_STATE,
->  					  !transitory);
->  	gpio = gpio_chip_hwgpio(desc);
-> -	rc = chip->set_config(chip, gpio, packed);
-> +	rc = gpio_do_set_config(chip, gpio, packed);
->  	if (rc == -ENOTSUPP) {
->  		dev_dbg(&desc->gdev->dev, "Persistence not supported for GPIO %d\n",
->  				gpio);
+DQroia/jgYTkuIDml6UNCg0K44GZ44G544Gm44Gu6Imv44GE44KC44Gu44KS5LiO44GI44KL5LiH
+6LuN44Gu5Li744Gu5ZCN44Gr44KI44Gj44Gm44CB44GC44Gq44Gf44KS6L+O44GI44G+44GZ44CC
+6Imv44GE5LiA5pel44Go5a2j56+A44Gu6LOb6L6e44CB56eB44Gv44Gd44KM44GM5pys5b2T44Gn
+44GC44KL44GT44Go44KS55+l44Gj44Gm44GE44KL44GT44Gu5omL57SZ44Gv44GC44Gq44Gf44Gr
+6ama44GN44Go44GX44Gm5p2l44KL44GL44KC44GX44KM44G+44Gb44KT44CCDQoNCuOBneOCjOOB
+q+OCguOBi+OBi+OCj+OCieOBmuOAgeengeOBr+OBguOBquOBn+OBq+azqOaEj+OCkuaJleOBhOOA
+geOCiOOBj+iBnuOBhOOBpuOBj+OCjOOCi+OBk+OBqOOCkuismeiZmuOBq+OBiumhmOOBhOOBl+OB
+vuOBmeOAguOBl+OBi+OBl+OAgeengeOBr+OAgeOBguOBquOBn+OBruaxuuWumuOBjOWwhuadpeOB
+ruWtmOWcqOOCkuaxuuWumuOBmeOCi+OBn+OCgeOBq+mBoOOBj+mbouOCjOOBpuOBhOOBj+OBruOB
+p+OAgeOBk+OBruODoeODg+OCu+ODvOOCuOOCkuaFjumHjeOBq+i+v+OCi+aZgumWk+OCkuWPluOC
+i+OBk+OBqOOCkumhmOOBo+OBpuOBhOOBvuOBmeOAguengeOBr+OCuOODpeODquOCouODs+ODr+OD
+vOOCq+ODvOWkq+S6uuOAgTU45q2z44Gu5pyq5Lqh5Lq644Gn44GZ44CC57Gz5Zu944Gu44Op44K5
+44OZ44Ks44K55Ye66Lqr44Gn44GZ44CC56eB44Gv6IK644GM44KT44Gr57255oKj44GX44Gm44GK
+44KK44CB54++5Zyo44Gv5LiA6Iis55eF6Zmi44OW44Or44Kt44OK44OV44Kh44K944Gn5YWl6Zmi
+44GX44Gm44GE44G+44GZ44CC56eB44Gv56eB44Gu5b6M5Y2K44Gu5aSr44GL44KJ57aZ5om/44GX
+44Gf6LOH6YeR44KS5oyB44Gj44Gm44GE44G+44GZ77yIJCAxNC41TeODieODq++8ieOBqOengeOB
+r+mdnuW4uOOBq+ato+ebtOOBp+elnuOBjOOBk+OBruizh+mHkeOCkuW8leOBjeWHuuOBmeOBk+OB
+qOOBjOOBp+OBjeOCi+S6uuOCkuaBkOOCjOOBpuOAgeaFiOWWhOa0u+WLleOBruizh+mHkeOCkuS9
+v+eUqOOBmeOCi+OBk+OBqOOBjOW/heimgeOBp+OBl+OBn+OAguengeOBr+aFiOWWhOa0u+WLleOB
+ruOBn+OCgeOBq+OBguOBquOBn+OBq+OBk+OCjOOCieOBruizh+mHkeOCkui0iOOCiuOBn+OBhOOA
+guengeOBr+OBguOBquOBn+OBruODoeODvOODq+OCouODieODrOOCueOCkuOAgeato+ebtOOBquel
+iOOCiuOBruW+jOOBq+WKqeaJi+OBqOengeOCkuOBpOOBquOBkOOBn+OCgeOBq+S4u+OBq+imi+OB
+pOOBkeOBvuOBl+OBn+OAguOBguOBquOBn+OBq+S9leOBi+OBjOi1t+OBk+OCi+WJjeOBq+OAgeOB
+k+OCjOOCieOBruS/oeiol+WfuumHkeOCkuiqoOWun+OBq+aJseOBhuOBk+OBqOOBq+WWnOOCk+OB
+p+iIiOWRs+OBjOOBguOCjOOBsOOAgeengeOBr+OBguOBquOBn+OBq+mAo+e1oeOBmeOCi+OBk+OB
+qOOBq+OBl+OBvuOBl+OBn+OAgg0KDQrnp4Hjga7nirbmhYvjgpLnn6XjgaPjgZ/jga7jgafjgIHn
+p4Hjga/jgZPjga7jgYrph5HjgpLjgIHnp4HjgYzjgZPjgZPjgafmjIflsI7jgZnjgovmlrnms5Xj
+gafjgZPjga7os4fph5HjgpLliKnnlKjjgZnjgovmlZnkvJrjgIHntYTnuZTjgIHjgb7jgZ/jga/l
+loToia/jgarkurrjgZ/jgaHjgavlr4Tku5jjgZnjgovjgZPjgajjgavmsbrjgoHjgb7jgZfjgZ/j
+gILmlZnkvJrjgIHmhYjlloTlm6PkvZPjgIHlraTlhZDpmaLjgIHlr6Hlqabjgarjganjga7jgZ/j
+goHjgavjgIHjgZPjga7os4fph5HjgpLkvb/jgYbjgZPjgajjgpLjgYrli6fjgoHjgZfjgb7jgZnj
+gILnp4Hjga/jgZPjga7jgYrph5HjgpLntpnmib/jgZnjgovlrZDkvpvjgYzjgYTjgarjgYTjga7j
+gafjgIHjgZPjga7msbrlrprjgpLjgZfjgb7jgZfjgZ/jgILjgZXjgonjgavjgIHnp4Hjga7lpKvj
+ga7opqrmiJrjga/np4HjgYzjgZPjga7nmYzjga7llY/poYzjgpLnmbrnl4fjgZfjgabku6XmnaXj
+gIHjgoLjga/jgoTnp4Hjgavov5HjgaXjgYTjgabjgYrjgonjgZrjgIHnp4HjgZ/jgaHjga/lrZDk
+vpvjgYzjgYTjgarjgYTjga7jgafoh6rliIbjga7lr4zjgpLntpnmib/jgZnjgovjgZ/jgoHjgavn
+p4HjgYzmrbvjgpPjgaDjga7jgpLopovjgZ/jgYTjgajmgJ3jgaPjgabjgYTjgb7jgZfjgZ/jgILj
+gZPjgozjgonjga7kurrjgIXjga/jgZPjga7pgbrnlKPjgavjgbXjgZXjgo/jgZfjgY/jgYLjgorj
+gb7jgZvjgpPjgILjgZPjgozjgYznp4HjgYzjgZPjga7msbrlrprjgpLjgZnjgovnkIbnlLHjgafj
+gZnjgIINCg0K44GC44Gq44Gf44Gu57eK5oCl44Gu6L+U5L+h44GM5b+F6KaB44Gn44GZ44CC56eB
+44Gv5byB6K235aOr44Go44GC44Gq44Gf44Gu5Zu944Gu44GC44Gq44Gf44Gu5Y+j5bqn44G444Gu
+44GK6YeR44Gu5Y2z5bqn44Gu56e76Lui44Gu44Gf44KB44Gr6YqA6KGM44GM56eB44Gf44Gh44Gr
+55m66KGM44GX44Gf6aCQ6YeR6aCY5Y+O5pu444KS44GC44Gq44Gf44Gr5rih44GX44Gm44CB56We
+44Gu6Imv44GE5LuV5LqL44KS6ZaL5aeL44GX44G+44GZ56eB44Gv44GC44Gq44Gf44Gu5o+05Yqp
+44KS5b+F5q2744Gr44GX44Gm44GK44KK44CB56eB44Gv44GC44Gq44Gf44Gu44Gf44KB44Gr6YCj
+57Wh44GZ44KL5YuH5rCX44KS5Y+s5Zaa44GX44G+44GX44Gf44CC56eB44Go44GC44Gq44Gf44Gu
+5ZGo44KK44Gu6LKn44GX44GE5Lq644CF44Gu5L2V55m+5LiH5Lq644KC5aSx5pWX44GX44Gm44Gv
+44GE44GR44G+44Gb44KT44CC44GT44KM44Gv55uX44G+44KM44Gf44GK6YeR44Gn44Gv44Gq44GP
+44CB5Y2x6Zm65oCn44Gv44GC44KK44G+44Gb44KT44CC5a6M5YWo44Gq5rOV55qE6Ki85oug44GM
+44GC44KM44GwMTAw77yF5Y2x6Zm644Gn44GZ44CC5oWI5ZaE5LqL5qWt44Gu44Gf44KB44Gr6LOH
+6YeR44KS5L2/55So44Gn44GN44KL44Gu44Gn44GC44KM44Gw44CB44OV44Kh44Oz44OJ44Gu44GC
+44KL6YqA6KGM44Gr44GC44Gq44Gf44KS6YCj57Wh44GZ44KL44Gf44KB44Gr44GZ44GQ44Gr56eB
+44Gr55+l44KJ44Gb44Gm44GP44Gg44GV44GE44CC56eB44Gv44CB56eB44Gu5pyA5b6M44Gu6aGY
+44GE44KS5Y2x6Zm644Gr44GV44KJ44GZ44KI44GG44Gq44GT44Go44Gv5pyb44KT44Gn44GE44Gq
+44GE44Gu44Gn44CB56eB44Gu5b+D44Gu5qyy5pyb44KS6YGU5oiQ44GZ44KL44Gf44KB44Gr44CB
+44GC44Gq44Gf44Gu5pyA44KC5a6I56eY576p5YuZ44Go5L+h6aC844Gr5oSf6Kyd44GX44G+44GZ
+44CC56eB44Gv44GC44Gq44Gf44Gu5YCL5Lq655qE44Gq5L2/55So44Gu44Gf44KB44Gr57eP6aGN
+44GuNDDvvIXjgpLmiZXjgYTjgIHjgYrph5Hjga42MO+8heOBr+aFiOWWhOWbo+S9k+OBq+ihjOOB
+j+OBk+OBqOOCkuacm+OBv+OBvuOBmeOAgg0KDQrjgYLjgarjgZ/jga7ov5Tkv6HjgYzpgYXjgozj
+govjgajjgIHlkIzjgZjnm67nmoTjga7jgZ/jgoHjgavliKXjga7oia/jgYTkurrjgpLmjqLjgZnk
+vZnlnLDjgYzjgYLjgorjgb7jgZnjgILnp4HjgYzjgZPjgZPjgavov7DjgbnjgZ/jgojjgYbjgavo
+oYzli5XjgZnjgovjgZPjgajjgpLnp4Hjgavkv53oqLzjgZfjgabjgY/jgaDjgZXjgYTjgILljLvo
+gIXjga7mjIfnpLrjganjgYrjgorjgavnp4Hjga7lgaXlurfjga7jgZ/jgoHjgavnp4Hjga/jgZPj
+ga7ngrnjgafpm7voqbHpgJrkv6Hjga/lv4XopoHjgYLjgorjgb7jgZvjgpPjgIINCg0K56eB44Gu
+5YCL5Lq644GuReODoeODvOODq+OCouODieODrOOCueOBp+OBmeOBkOOBq+OBguOBquOBn+OBruWb
+nuetlOOCkuWPl+OBkeWPluOCjeOBhuOBqOiAg+OBiOOBpuOBhOOBvuOBme+8mu+8iGp1bGlhbi5t
+LndvcmtlcjEyMkBnbWFpbC5jb23vvIkNCg0K44GC44KK44GM44Go44GG44GU44GW44GE44G+44GX
+44Gf44CCDQrjgYLjgarjgZ/jga7lprnjgIHkuLvjga7kuK3jgavjgIENCuOCuOODpeODquOCouOD
+s+ODr+ODvOOCq+ODvOWkq+S6ug0K
