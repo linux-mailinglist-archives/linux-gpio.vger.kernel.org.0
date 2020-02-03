@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA46150663
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2020 13:53:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3C7215066E
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2020 13:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgBCMxe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Feb 2020 07:53:34 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42260 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbgBCMxe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Feb 2020 07:53:34 -0500
-Received: by mail-pl1-f195.google.com with SMTP id e8so3217447plt.9;
-        Mon, 03 Feb 2020 04:53:34 -0800 (PST)
+        id S1727973AbgBCM4H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Feb 2020 07:56:07 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53940 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbgBCM4H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Feb 2020 07:56:07 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so6311631pjc.3;
+        Mon, 03 Feb 2020 04:56:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
-        b=Rb2qXbEoBWs7d+Nii1uAAhEC5ATNVcKqnSsAQ57yKx/Nes3NssuIoBMh81ho9c+hyG
-         0clFIPoVcUMCnxRq1yLQHno2dmmwyzVwP04QJbj2T3EJKGSL6cJ5nfxCEhPtX2LX15WN
-         QIWF9Jtht9xDHrZ+2kVrCq+VmYKgRrRub1M5okBag25cbJrkPnfAFRAqiNHmXQurlAPq
-         /tO6OH9LHJZSL4iSvpFCW2i7ZwMf4GpkFBGP5NZT3HpH0Ok0a+4TkTYTIfU4AQweMBaF
-         3cIdB7btebTX7sANEqzlbAA2SqMC0f6Jww15MPqYq6RZJ5b9buhzaTk/0Re4h85dflhU
-         Of4g==
+        bh=wwQg80xGz2lOdnpP3qB15WfTcQFWbRLekpggKB7uAVo=;
+        b=FmkR43QFzWlvuGQsXZv/HeuXhfVsKTW2ePq3sWmBa6MfUDnrAfXmmTm1UYJjeQwysl
+         FdHgZ7UztBe9F4uAp4wQ1yHgH2StIF8OUxy7mJ5VNXnO4S8YAyrU1cOW329J819DPW4K
+         0q7Keg1SFrSMF2XH83K53b8+K5BQQoXZN7UEF191PAaozTfR6IZje2UjMqdnuI89H3ha
+         h/YvUks2ICLr4RlXGBj31b81xqJrQD/xcUm3/plma6bJlDzKp53FqVetqtx9yJiY4gnQ
+         xKFva4T7Xloq4MR2ZdjS765pPYBVguklbRytodTbOYavTqHY7lH2O396FC/Tpdji2NOE
+         8bjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
-        b=oD6XY0WJ2d0sJFdOPZ73IFm1C+L1M+RzTIfDMirs6Ir1UFA13JXDjryczbhS9oqRch
-         2yj8cnD8hpkOyhoM3b3j6Tmg7j6Wuvekc/TzE348NIBgfCR9AwwGFCLd8nc2tX/LZCxT
-         gUsfyvsFJtfBuREm+8vzvXS83xy5s4Yl0ngqh0ZkCK9NkOuE8voxED61fs+nVFNOfU49
-         PVsezk2URLvtRrz6ut76nU30gveUKt2R+C7l0BccfFNDZAeCIoJVd/XlLkRnzbH/fYYE
-         oeXipfZjlChhwecFLfLC1Vc7xH6PiTVpxNZWJ01t38qtx+EmF6+wZlL5rwcuOBZpkD53
-         Wldg==
-X-Gm-Message-State: APjAAAVZWiiYQghmD52ZUEk/LuvkErNlHsZX8WNcPeOto7vqF3o5KdnN
-        Lab+aLPDfEFhCzhtnJNPitc=
-X-Google-Smtp-Source: APXvYqxxwozPvOlt7D3pUmlPv7ZHqnNAe5uYIAMEgCjobqoM7le5Sish89wfUBjG1egNCN7Cfc4bDA==
-X-Received: by 2002:a17:902:104:: with SMTP id 4mr1436768plb.24.1580734413877;
-        Mon, 03 Feb 2020 04:53:33 -0800 (PST)
+        bh=wwQg80xGz2lOdnpP3qB15WfTcQFWbRLekpggKB7uAVo=;
+        b=YmCFwrx0JD6iRqFWrfEwbUSunHu8HRLKXD4AER2p/TDbEhztT8zw2DjKlrutGumgVX
+         en6qy8+QxS3K7uSGhO7ONGBBuGQhcvHAqZsP3eJccuhXu0E6o/Fge+w+8tHNrh8nwwb3
+         mnTQsHwurlWmROECAkBAmrT6JIZKZC6yDwmwHEseFikekKPMBA850T0nNnShZ4vVldu7
+         ylrMRsFcDbcmaeosQekWZl4tCkTa4XuXulwLck3OU0RyPfwYIFJEHP0XO5Bq7MYjSyJn
+         GvSMUggaTovdPflLuZDxkcHAfI4REYXgPM7X5wowfs/cE0FWuckNI4hQB1dpYjt59cpe
+         3N1g==
+X-Gm-Message-State: APjAAAVbavBW5WLN4cXZMSXAJF/k3waEOmSNKdI/elj56mBJIGhY9b+2
+        uAebMJb6l2t1J6+fjPsXCdw=
+X-Google-Smtp-Source: APXvYqzf387HOU7SZD8zCQtXi6rSqqJaz23t9qWvrRgRb9Xmf15JEh9ADcM5w7T11OtPywY62+bp6w==
+X-Received: by 2002:a17:90a:3603:: with SMTP id s3mr29582527pjb.61.1580734566613;
+        Mon, 03 Feb 2020 04:56:06 -0800 (PST)
 Received: from localhost.localdomain ([27.59.202.234])
-        by smtp.gmail.com with ESMTPSA id 26sm12723577pjk.3.2020.02.03.04.53.29
+        by smtp.gmail.com with ESMTPSA id r9sm1406979pfl.136.2020.02.03.04.56.03
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Mon, 03 Feb 2020 04:53:32 -0800 (PST)
+        Mon, 03 Feb 2020 04:56:05 -0800 (PST)
 From:   sachin agarwal <asachin591@gmail.com>
 X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        andy@kernel.org, asachin591@gmail.com
-Subject: [PATCH 5/6] gpio: ich: fixed a typo
-Date:   Mon,  3 Feb 2020 18:22:55 +0530
-Message-Id: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
+        bgolaszewski@baylibre.com, asachin591@gmail.com
+Subject: [PATCH 6/6] GPIO: it87: fixed a typo
+Date:   Mon,  3 Feb 2020 18:25:51 +0530
+Message-Id: <20200203125551.84769-1-sachinagarwal@sachins-MacBook-2.local>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -62,26 +62,26 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: sachin agarwal <asachin591@gmail.com>
 
-we had written "Mangagment" rather than "Management".
+we had written "IO" rather than "I/O".
 
 Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
 ---
- drivers/gpio/gpio-ich.c | 2 +-
+ drivers/gpio/gpio-it87.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
-index 2f086d0aa1f4..9960bb8b0f5b 100644
---- a/drivers/gpio/gpio-ich.c
-+++ b/drivers/gpio/gpio-ich.c
-@@ -89,7 +89,7 @@ static struct {
- 	struct device *dev;
- 	struct gpio_chip chip;
- 	struct resource *gpio_base;	/* GPIO IO base */
--	struct resource *pm_base;	/* Power Mangagment IO base */
-+	struct resource *pm_base;	/* Power Management IO base */
- 	struct ichx_desc *desc;	/* Pointer to chipset-specific description */
- 	u32 orig_gpio_ctrl;	/* Orig CTRL value, used to restore on exit */
- 	u8 use_gpio;		/* Which GPIO groups are usable */
+diff --git a/drivers/gpio/gpio-it87.c b/drivers/gpio/gpio-it87.c
+index b497a1d18ca9..79b688e9cd2a 100644
+--- a/drivers/gpio/gpio-it87.c
++++ b/drivers/gpio/gpio-it87.c
+@@ -53,7 +53,7 @@
+  * @io_size size of the port rage starting from io_base.
+  * @output_base Super I/O register address for Output Enable register
+  * @simple_base Super I/O 'Simple I/O' Enable register
+- * @simple_size Super IO 'Simple I/O' Enable register size; this is
++ * @simple_size Super I/O 'Simple I/O' Enable register size; this is
+  *	required because IT87xx chips might only provide Simple I/O
+  *	switches on a subset of lines, whereas the others keep the
+  *	same status all time.
 -- 
 2.24.1
 
