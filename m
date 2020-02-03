@@ -2,96 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8625C1504DC
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2020 12:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA46150663
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2020 13:53:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBCLFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Feb 2020 06:05:11 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40111 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgBCLFL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Feb 2020 06:05:11 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so6569685qvb.7
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Feb 2020 03:05:09 -0800 (PST)
+        id S1727723AbgBCMxe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Feb 2020 07:53:34 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42260 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgBCMxe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Feb 2020 07:53:34 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e8so3217447plt.9;
+        Mon, 03 Feb 2020 04:53:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OEJ+A4YOxXmg2doai7LuIU0V5wHQ//U/Mj3H+TVAh7c=;
-        b=WpgPJuW5nI3+4Rfo01VjSKn6FJqckk1o757wWJDFicvI916HMhqZyF7IBM881Jn9r3
-         ZlVLnmX3QUdGQxJWOE5TUldYoB4vfnvXnFbcdZ+cy1KhVd2mKDeSWluSRjHSmvoHjgoi
-         wIvQRbDI0reAW4dvZqzgw3TmFKeH/9nqnUkiu3kyP0Mzyah0qLxEkDV1rl2kjAq6pzu3
-         kFKOtL2ipKcSGe5AF7JCzJ8VklLxPsMpgAs/PchKxc3yAWhY1k/KWeZgDJWWJMVal572
-         mWzqhEYgl15mncWY7lzOzzTmVCnJ6Q4ZYSKp64Jvns8ygRzFqq86NzQ4BVvsidxR/tnp
-         EZkg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
+        b=Rb2qXbEoBWs7d+Nii1uAAhEC5ATNVcKqnSsAQ57yKx/Nes3NssuIoBMh81ho9c+hyG
+         0clFIPoVcUMCnxRq1yLQHno2dmmwyzVwP04QJbj2T3EJKGSL6cJ5nfxCEhPtX2LX15WN
+         QIWF9Jtht9xDHrZ+2kVrCq+VmYKgRrRub1M5okBag25cbJrkPnfAFRAqiNHmXQurlAPq
+         /tO6OH9LHJZSL4iSvpFCW2i7ZwMf4GpkFBGP5NZT3HpH0Ok0a+4TkTYTIfU4AQweMBaF
+         3cIdB7btebTX7sANEqzlbAA2SqMC0f6Jww15MPqYq6RZJ5b9buhzaTk/0Re4h85dflhU
+         Of4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OEJ+A4YOxXmg2doai7LuIU0V5wHQ//U/Mj3H+TVAh7c=;
-        b=pSNDSOcgWdUnQVeS8gJQswU86uMTeQv63WjkFMLuJVaz87vjUPutGOi7nXc+v9hLpr
-         gJQyNR67s4seWtZYlzoqQEMn24ibLJwpjmYLB977/nBqNHsAJ62rWuPq2KEUCCzU/Aq9
-         VyT5qK4XPntCiSLgetJBrYeUpDA/mMnWCaMoSIG/90gD5WpXVpWncAvcrqITOXSNOT/s
-         6y6EwWNfr0UGcWUA/lHejyAZbv1Lv218SG6Bgm8IIqsVYb1CTiXUAeNy1A4jEOc3/iQb
-         wgN68YPmDr+VwwQJDqgqApJhFV0ga+cKG2ykptw6kgbQWzQLD/CJk+PEP/Uchspq4LoM
-         Cb5g==
-X-Gm-Message-State: APjAAAX/8AXKnmardzigI6qIqMDMfCXxeSbYxkzYPajzbkbkQUVd+M+D
-        67VES8nq7Prwp3KijWgN409dQFm5xqQmY8Xw4cYV2g==
-X-Google-Smtp-Source: APXvYqy6eCOVQtmeClQ9s6Ork9hSmBPuNbq/dE8XHtgI6t13zQY19ElP+2IDJ5qdx3sh2GvUzHF40upVwXeHyLkdQJU=
-X-Received: by 2002:a0c:f28f:: with SMTP id k15mr5153632qvl.76.1580727908949;
- Mon, 03 Feb 2020 03:05:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d1PUOvezlc86nnJ2EdYIPACzogxXlrOQENYR7d2+L4M=;
+        b=oD6XY0WJ2d0sJFdOPZ73IFm1C+L1M+RzTIfDMirs6Ir1UFA13JXDjryczbhS9oqRch
+         2yj8cnD8hpkOyhoM3b3j6Tmg7j6Wuvekc/TzE348NIBgfCR9AwwGFCLd8nc2tX/LZCxT
+         gUsfyvsFJtfBuREm+8vzvXS83xy5s4Yl0ngqh0ZkCK9NkOuE8voxED61fs+nVFNOfU49
+         PVsezk2URLvtRrz6ut76nU30gveUKt2R+C7l0BccfFNDZAeCIoJVd/XlLkRnzbH/fYYE
+         oeXipfZjlChhwecFLfLC1Vc7xH6PiTVpxNZWJ01t38qtx+EmF6+wZlL5rwcuOBZpkD53
+         Wldg==
+X-Gm-Message-State: APjAAAVZWiiYQghmD52ZUEk/LuvkErNlHsZX8WNcPeOto7vqF3o5KdnN
+        Lab+aLPDfEFhCzhtnJNPitc=
+X-Google-Smtp-Source: APXvYqxxwozPvOlt7D3pUmlPv7ZHqnNAe5uYIAMEgCjobqoM7le5Sish89wfUBjG1egNCN7Cfc4bDA==
+X-Received: by 2002:a17:902:104:: with SMTP id 4mr1436768plb.24.1580734413877;
+        Mon, 03 Feb 2020 04:53:33 -0800 (PST)
+Received: from localhost.localdomain ([27.59.202.234])
+        by smtp.gmail.com with ESMTPSA id 26sm12723577pjk.3.2020.02.03.04.53.29
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 03 Feb 2020 04:53:32 -0800 (PST)
+From:   sachin agarwal <asachin591@gmail.com>
+X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
+To:     linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        andy@kernel.org, asachin591@gmail.com
+Subject: [PATCH 5/6] gpio: ich: fixed a typo
+Date:   Mon,  3 Feb 2020 18:22:55 +0530
+Message-Id: <20200203125255.84705-1-sachinagarwal@sachins-MacBook-2.local>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-3-brgl@bgdev.pl>
- <20200201195232.GA17364@roeck-us.net>
-In-Reply-To: <20200201195232.GA17364@roeck-us.net>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 3 Feb 2020 12:04:57 +0100
-Message-ID: <CAMpxmJU=wvONwure-MS9vb=0fuRgnf+wVshBQn2N=uwcZUG3Bw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/13] gpiolib: have a single place of calling set_config()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sob., 1 lut 2020 o 20:52 Guenter Roeck <linux@roeck-us.net> napisa=C5=82(a)=
-:
->
-> On Tue, Dec 24, 2019 at 01:06:58PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Instead of calling the gpiochip's set_config() callback directly and
-> > checking its existence every time - just add a new routine that perform=
-s
-> > this check internally. Call it in gpio_set_config() and
-> > gpiod_set_transitory(). Also call it in gpiod_set_debounce() and drop
-> > the check for chip->set() as it's irrelevant to this config option.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> This patch made it into mainline, even though a regression was reported
-> against it by Geert. Please note that it is not just a theoretic problem
-> but _does_ indeed cause regressions.
->
-> Guenter
->
+From: sachin agarwal <asachin591@gmail.com>
 
-Hi Guenter,
+we had written "Mangagment" rather than "Management".
 
-I'm sorry for this, I was still largely unavailable for the past two
-weeks. I'll address it today, this time for real.
+Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+---
+ drivers/gpio/gpio-ich.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Bartosz Golaszewski
+diff --git a/drivers/gpio/gpio-ich.c b/drivers/gpio/gpio-ich.c
+index 2f086d0aa1f4..9960bb8b0f5b 100644
+--- a/drivers/gpio/gpio-ich.c
++++ b/drivers/gpio/gpio-ich.c
+@@ -89,7 +89,7 @@ static struct {
+ 	struct device *dev;
+ 	struct gpio_chip chip;
+ 	struct resource *gpio_base;	/* GPIO IO base */
+-	struct resource *pm_base;	/* Power Mangagment IO base */
++	struct resource *pm_base;	/* Power Management IO base */
+ 	struct ichx_desc *desc;	/* Pointer to chipset-specific description */
+ 	u32 orig_gpio_ctrl;	/* Orig CTRL value, used to restore on exit */
+ 	u8 use_gpio;		/* Which GPIO groups are usable */
+-- 
+2.24.1
+
