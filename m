@@ -2,156 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5E101520C1
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 20:07:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF021522FE
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2020 00:23:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBDTHj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Feb 2020 14:07:39 -0500
-Received: from mga04.intel.com ([192.55.52.120]:45671 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727331AbgBDTHi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 4 Feb 2020 14:07:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Feb 2020 11:07:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,402,1574150400"; 
-   d="scan'208";a="231471235"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 04 Feb 2020 11:07:34 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A7481F8; Tue,  4 Feb 2020 21:07:33 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] gpio: Avoid kernel.h inclusion where it's possible
-Date:   Tue,  4 Feb 2020 21:07:33 +0200
-Message-Id: <20200204190733.56783-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
+        id S1727468AbgBDXXj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Feb 2020 18:23:39 -0500
+Received: from sonic303-21.consmr.mail.ir2.yahoo.com ([77.238.178.202]:42256
+        "EHLO sonic303-21.consmr.mail.ir2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727412AbgBDXXj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 18:23:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1580858617; bh=eg3qZapD09VJqj25AUJW5s1BYxWsWc1QdQQ9ZvAlPmk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=PJ1zQCsa0B0ZHr2X9UHAvaWMGTJ6gGAz1PPbVoZgCKRncT1P2LGWmIbFbMnlz3Zsa9XZyEirpU4aDk9cGdFAuUbgULY3ylXvbYwtDL6PSEb0J38qAaxNo1TpAWp9DJtKeNL0DnEBGejWd0IqyAgceiT0zKZuZmdUdXlu61g7i8R3T7Q+wzyAvI8e+huyAgpaa8treTyokdY8cWXkO1YtTHr7lUN29C5jcz+ubm6nVWpDTosB0jHOSZ/mlebBn3F0TM7WZWpX/UB4w9ili4ZMokEbvbG11yY8pBu5zeeYZrXwMAYqsxB5Ho83LZPnb8X6E1RJFlNxfX/g80f1DVhp9g==
+X-YMail-OSG: tl7B3uEVM1mlxULk6H7bhWnm_4iL3SL6Yfcieuz1atqoyWoI9xPNp2ayBBhsyqv
+ NK2SDampif2eGJFJmoYKWflWn4v8jvqaG0gF4pCaVAHkXVbAcocEybR6u.fk1JFZxNyfTDERn_5E
+ 3k23v3pcIrsSVgkxoYPXaTruwXLYZvEQZNq3oVBugWYbJMPTNCpbsfOfzcS.S42F2QBB49YgaFS7
+ tzM.dXpftyqSnU4l4Cl4fqQ5rRce9wwojHL1dy5TAJJgajc7rVemoQu8._kU5IkmRvKkuxRJAzbp
+ QfsyaakIFzEXXRFmxlww1A0meOOcgYDvVSWF2WlzsTN48MppCsP7fYo3yUMJRLUaA7487Lodihul
+ NX8On.ltVtp9CbhF0l56tH5RqSb9yLOmkTZRRPLMJ9deqy.uZAJdw5.GQJoKJvAQNmVMB4dRexwO
+ g0tWMh_n3ztQYi6Z9VIM6LT4cjR2N5Yjkzk4Nt.P0eVrLlSL.cijSCJcui_ayvHjPUbiu0ireUZ8
+ I5FHzw6ezRvpw.1PJQ1hRv9zHp_DMI.WOTMB4RDqMjhDcqKuCgdQXzo8JGowcEGZhiI8Ub9iBJnY
+ 5PAepPAEyKaa.tCUwcjAgi9.Q5Eateu4mVjPBNtBu6NZDs7Wu9TLZHkJPmAMaFJ03BHIO3CwVQeA
+ uPCNkLMe4fZ0btsEb9o3SP5QIA.VJTGWZk8.PMsWGFq2FjYtBawi7BZFpbD_04oX0CjK.AsIF4nF
+ 7b3MLCFcNgqAeBs_wCeoZFUuqcVOEeW4tPG5SeoZalQBIXrctmWB8_Tb9A72EVSWbTBQE9xiyuds
+ 1Ye6swoqS2gG22o9FsoH_Omizi6i72b08Jzuu6oc1q3O3YmOnFxfzIgmeioDpurD3ihbMfmjRG3A
+ 9V6arcbM0M0sOOCsxZ3mWlv0AHEEXsUGLhZ2dF4fwdZxGxhP.sIxFlHavlRpsrHTkxCVhzIcoW2L
+ askf_kJc8vhQ8jFWK9goT27TqEdvVnh3vzK25tyVKJPFqkJ0ICNYK9MgNzHm6aAWsSTFS7pgt3df
+ zfQOCGEMzawGdSruLN1tA._84sC1liBME9t1K6lg.XsG01VZLq7CiK0VBzmqCu6qCUmkhObp2ZYS
+ WdIRllDsFUjseqgavlO4OuFkWaTb4g4r6kR_xhCSoJFaGgyejBsjvzPoE2P6Kl0mC2llHROXGIau
+ wAg.Ldrl0Pi7CwVWjlcuiNTPYGO8pn1vVXpm34dWbvvwgKHOYnL.PLj0UCUxgi1LIgLiWGThcLNp
+ W7nYUojoawfz4tAW92QiookWbjlTOfKKK7TVZUi2alMjBTDm5sN0Ba3D7mdZbkvcDIekXJTHsMuB
+ RHec-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Tue, 4 Feb 2020 23:23:37 +0000
+Date:   Tue, 4 Feb 2020 23:23:36 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <599962984.986743.1580858616932@mail.yahoo.com>
+Subject: BUSINESS TRANSFER CO-OPERATION.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <599962984.986743.1580858616932.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15158 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:72.0) Gecko/20100101 Firefox/72.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Inclusion of kernel.h increases the mess with the header dependencies.
-Avoid kernel.h inclusion where it's possible.
 
-Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/asm-generic/gpio.h    | 4 ++--
- include/linux/gpio.h          | 2 --
- include/linux/gpio/consumer.h | 5 ++++-
- include/linux/of_gpio.h       | 9 ++++++---
- 4 files changed, 12 insertions(+), 8 deletions(-)
+Dear Friend,
 
-diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-index 19eadac415c4..aea9aee1f3e9 100644
---- a/include/asm-generic/gpio.h
-+++ b/include/asm-generic/gpio.h
-@@ -2,10 +2,8 @@
- #ifndef _ASM_GENERIC_GPIO_H
- #define _ASM_GENERIC_GPIO_H
- 
--#include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/errno.h>
--#include <linux/of.h>
- 
- #ifdef CONFIG_GPIOLIB
- 
-@@ -140,6 +138,8 @@ static inline void gpio_unexport(unsigned gpio)
- 
- #else	/* !CONFIG_GPIOLIB */
- 
-+#include <linux/kernel.h>
-+
- static inline bool gpio_is_valid(int number)
- {
- 	/* only non-negative numbers are valid */
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 2157717c2136..008ad3ee56b7 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -102,11 +102,9 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/bug.h>
--#include <linux/pinctrl/pinctrl.h>
- 
- struct device;
- struct gpio_chip;
--struct pinctrl_dev;
- 
- static inline bool gpio_is_valid(int number)
- {
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index bf2d017dd7b7..0a72fccf60ff 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -2,9 +2,10 @@
- #ifndef __LINUX_GPIO_CONSUMER_H
- #define __LINUX_GPIO_CONSUMER_H
- 
-+#include <linux/bits.h>
- #include <linux/bug.h>
-+#include <linux/compiler_types.h>
- #include <linux/err.h>
--#include <linux/kernel.h>
- 
- struct device;
- 
-@@ -189,6 +190,8 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #else /* CONFIG_GPIOLIB */
- 
-+#include <linux/kernel.h>
-+
- static inline int gpiod_count(struct device *dev, const char *con_id)
- {
- 	return 0;
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index 16967390a3fe..f821095218b0 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -11,9 +11,8 @@
- #define __LINUX_OF_GPIO_H
- 
- #include <linux/compiler.h>
--#include <linux/kernel.h>
--#include <linux/errno.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/gpio.h>		/* FIXME: Shouldn't be here */
- #include <linux/of.h>
- 
- struct device_node;
-@@ -34,6 +33,8 @@ enum of_gpio_flags {
- 
- #ifdef CONFIG_OF_GPIO
- 
-+#include <linux/kernel.h>
-+
- /*
-  * OF GPIO chip for memory mapped banks
-  */
-@@ -63,6 +64,8 @@ extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
- 
- #else /* CONFIG_OF_GPIO */
- 
-+#include <linux/errno.h>
-+
- /* Drivers may not strictly depend on the GPIO support, so let them link. */
- static inline int of_get_named_gpio_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags)
--- 
-2.24.1
+I am Ms Lisa Hugh work with the department of Audit and accounting manager here in the Bank,
 
+Please i need your assistance for the transferring of this abandon (US$4.5M DOLLARS) to your bank account for both of us benefit.
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me after success.
+
+Below information that is needed from you.
+
+1)Private telephone number...
+2)Age...
+3)Nationality...
+4)Occupation ...
+5)Full Name....
+Thanks.
+
+
+Ms Lisa Hugh
