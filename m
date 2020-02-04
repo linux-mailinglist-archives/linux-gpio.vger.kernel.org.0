@@ -2,98 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1003E1518A3
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 11:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6D8F1518D9
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 11:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgBDKN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Feb 2020 05:13:56 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38336 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbgBDKN4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 05:13:56 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 21so240463qki.5
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2020 02:13:55 -0800 (PST)
+        id S1726965AbgBDKct (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Feb 2020 05:32:49 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39043 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgBDKct (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 05:32:49 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c84so2892723wme.4
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2020 02:32:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/OmUGIvaQb9Uv8wXS+U/nOoZbtIeQjrWvcPoE8LQKys=;
-        b=lE90fGNeNZlYffihiymjp+CIVPE140qXhzVNDlD4CY96NdUDGVla63HH1RTMeVSPOt
-         zdGxZy2fYPolO84vJF4pkzKp6qFU8ePFuemyyhHq0eBXtFQTXw3va7tniDmy6WRySrnk
-         /J2Ll36rovMpTkJamgbEMjqyR5vjeh2N+tQU3xiMqtqZW68LLdOm/bQSax4VsVuflzxc
-         JstrrJqs3ajDW2A4Cwq/73VhrU0SvZyrdxiY9sk+EZhcCd54XkddB8ODe5g5ohcf3SRm
-         7N/e2uBo7CAT6b0TGfOIBJ7zjZeS86AKmwyh3FE2V1Q6dRe/XL0GJYqrdG16wiRUpidx
-         T8hQ==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zdJKTowxArhHEkmwUy9N44C1J4/7uJ6nWxYZYEU6+kM=;
+        b=GAfqQAiKAuc2NeQ4/Nepj0lF/6GVTkLD0X+wFMOj4E+uJwd31ZuUBwTUoM7+q+4aHp
+         0Kx8mMyLh02oNVtPv4qwJZpE7pjppLMwoqa72qvOR7kqoQGSttKFyhQlOst+wVbaFd5N
+         g2ltDIT4doZwUbg2pXKZuUfkYPyEJq9wDEaIDCsCKN060Y7B+YKdF3Xt8fnG051Xfqwl
+         by2q1/Xy9GZrRUqX8M9ERBlK8w8F6UdeSNsFt1mu6PiOMMrMvqKyVzHBOOyw65uEsns3
+         UkzVXr7/085E7iGanjA5RARyv9WyyBGQbR9ZuU9SMbX3bbII3xYSw+I/S/CqV3ApDJkp
+         AdcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/OmUGIvaQb9Uv8wXS+U/nOoZbtIeQjrWvcPoE8LQKys=;
-        b=sIejTd8csPwkgvnzK0NXlDwhGTj4aVJr6siNmShn4zMErWZCwHgCviQ17Es7N6VVVo
-         vGwGWevA6TT1h/JdvCtfMemqBj35ZtqKcC1eYTY+kmzE7JCor5QkLZJcN5l72J9MWIZZ
-         7xM+YkPjGiNRB4Lvb4SFpQyn+QofWVejmVf5u4S4kbFcimRcss6f0ufa9QBr+MwRpJwR
-         WHr4CwakzIUCweVLxnavUuM6fj5IcWZ/58g3aRRjXyXbSeBwZRwXULAlYD8dNRunmXCG
-         PrBMrL1jl4Y5l7/rFgq9YPF42FqBpeHwjrIt0pmRRxsKemN+R7qMjBubjyNVLLme5wFm
-         eJDg==
-X-Gm-Message-State: APjAAAV/Vuynqacg6GyacSk/ILU4ovABlXDwmsMhe7VqB/u3qnhNOcWZ
-        5X07hn/mp0Ml7p6fCVPgopFnGUOCesbGvUsdPm6gQg==
-X-Google-Smtp-Source: APXvYqxusDUOGf7EAio/6WaiWOL3Jwf0uUKX6apnrP03VDouhia9JSFw1LetFwos8sSaTee5LhWyUxO1JiXRmzVyW1g=
-X-Received: by 2002:a05:620a:11ba:: with SMTP id c26mr27339140qkk.323.1580811235278;
- Tue, 04 Feb 2020 02:13:55 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zdJKTowxArhHEkmwUy9N44C1J4/7uJ6nWxYZYEU6+kM=;
+        b=s6VetFf5ye8LgapAVqqQn3bnZvJU/m9WleTjpWLPWK0hB5riCE0q3vOl16eyZGVcrW
+         XsgJ/G7Hp5Ibs31cfLQ2wBFwagKP8rxBf8vLDc56kkE0WYJQOykj0jXIzgxmW0gShNmp
+         /3n4PZPgxqlDJhOwiXODcCxetpb5LXxS+X59Rc4NFR0s0fQ8Ro9JLbzUv8p1e8vUBQIc
+         md/85Dvz1n5RRGdBCqNBIrTb5RL8Fpc5dCl/eR+/rxwNo4Thr5cyfQ0uY7fO+VMUAOGP
+         We7XFBO5/znfRu6c1mJz720LBv++VDPO7zvG4BTivzyAkpXBjwsbBSA84QOLB+2emzFl
+         reGQ==
+X-Gm-Message-State: APjAAAW2p/CHza6k6sPnWejMglGaduRQ/xLDfQQq0amvVsJoL0A7YLdN
+        R5k0j+5bbECiwYym8cydHG8oQ/Jt5Ek=
+X-Google-Smtp-Source: APXvYqxnoI8qVuETbiQGCitWD+UjiK//iokRrC9tJR5r3LzxmUla0cTrdpHYaOtO9X1PYqaQbBRtbw==
+X-Received: by 2002:a1c:6755:: with SMTP id b82mr5243404wmc.126.1580812365761;
+        Tue, 04 Feb 2020 02:32:45 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id t9sm19512394wrv.63.2020.02.04.02.32.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 02:32:44 -0800 (PST)
+Subject: Re: [PATCH 1/2] gpio: wcd934x: Don't change gpio direction in
+ wcd_gpio_set
+To:     Axel Lin <axel.lin@ingics.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+References: <20200131122918.7127-1-axel.lin@ingics.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6ca9f838-cca1-c168-334e-59c3e13ec43e@linaro.org>
+Date:   Tue, 4 Feb 2020 10:32:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200128210845.332679-1-lkundrak@v3.sk>
-In-Reply-To: <20200128210845.332679-1-lkundrak@v3.sk>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 4 Feb 2020 11:13:44 +0100
-Message-ID: <CAMpxmJUPcackGYLfX83TT1V9x2=iHgnw3cZ=KufuHn9FeKOn_A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are
- not there
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200131122918.7127-1-axel.lin@ingics.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 28 sty 2020 o 22:08 Lubomir Rintel <lkundrak@v3.sk> napisa=C5=82(a):
->
-> Not all platforms use those. Let's use
-> platform_get_irq_byname_optional() instead platform_get_irq_byname() so
-> that we avoid a useless warning:
->
->   [    1.359455] pxa-gpio d4019000.gpio: IRQ gpio0 not found
->   [    1.359583] pxa-gpio d4019000.gpio: IRQ gpio1 not found
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Thanks for the patch!
+
+On 31/01/2020 12:29, Axel Lin wrote:
+> The .set callback should just set output value.
+> 
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
 > ---
->  drivers/gpio/gpio-pxa.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-> index 9888b62f37afb..567742d962aef 100644
-> --- a/drivers/gpio/gpio-pxa.c
-> +++ b/drivers/gpio/gpio-pxa.c
-> @@ -652,8 +652,8 @@ static int pxa_gpio_probe(struct platform_device *pde=
-v)
->         if (!pchip->irqdomain)
->                 return -ENOMEM;
->
-> -       irq0 =3D platform_get_irq_byname(pdev, "gpio0");
-> -       irq1 =3D platform_get_irq_byname(pdev, "gpio1");
-> +       irq0 =3D platform_get_irq_byname_optional(pdev, "gpio0");
-> +       irq1 =3D platform_get_irq_byname_optional(pdev, "gpio1");
->         irq_mux =3D platform_get_irq_byname(pdev, "gpio_mux");
->         if ((irq0 > 0 && irq1 <=3D 0) || (irq0 <=3D 0 && irq1 > 0)
->                 || (irq_mux <=3D 0))
-> --
-> 2.24.1
->
-
-Patch applied. Thanks!
-
-Bartosz
+> Hi Srinivas,
+> I don't have this h/w to test, so please help to review and test the patchs.
+> Thanks,
+> Axel
+>   drivers/gpio/gpio-wcd934x.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+> index 74913f2e5697..9d4ec8941b9b 100644
+> --- a/drivers/gpio/gpio-wcd934x.c
+> +++ b/drivers/gpio/gpio-wcd934x.c
+> @@ -66,7 +66,10 @@ static int wcd_gpio_get(struct gpio_chip *chip, unsigned int pin)
+>   
+>   static void wcd_gpio_set(struct gpio_chip *chip, unsigned int pin, int val)
+>   {
+> -	wcd_gpio_direction_output(chip, pin, val);
+> +	struct wcd_gpio_data *data = gpiochip_get_data(chip);
+> +
+> +	regmap_update_bits(data->map, WCD_REG_VAL_CTL_OFFSET,
+> +			   WCD_PIN_MASK(pin), val ? WCD_PIN_MASK(pin) : 0);
+>   }
+>   
+>   static int wcd_gpio_probe(struct platform_device *pdev)
+> 
