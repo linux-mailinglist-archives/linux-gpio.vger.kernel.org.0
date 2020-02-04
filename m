@@ -2,92 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B1BE151029
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Feb 2020 20:14:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8336B1517E9
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 10:34:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbgBCTOy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Feb 2020 14:14:54 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45738 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgBCTOy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Feb 2020 14:14:54 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so8285407pgk.12;
-        Mon, 03 Feb 2020 11:14:54 -0800 (PST)
+        id S1726688AbgBDJea (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Feb 2020 04:34:30 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43772 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgBDJea (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 04:34:30 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so13768973qtj.10
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2020 01:34:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=67RUo5VAnS1jBw3z4FN37Al3dch59aGvRyUe85Cv560=;
-        b=TBnue5Xkro016MiGvqjzc0hHNwZWXwY+MgkHMb3vOaVAfkNYCa5JhYLLleLaESeOCz
-         QQ083Bb3X1OLPoK/dBvnNvVx8QD3a/Rm+/xSguDzgQ2kYSa8cCb0KCLb2QVcoLl5IwYw
-         jf/S+OtHSwsrJHvykAWYBQNLXFbVOC0vd8XNaYhcXFGfBphFJjs9R3SKiFFNOd/68PBU
-         TpS3UcGnIKHuIE76P/Omr6GS2pkUdkzX6bLcBMyjL8HxmLpIarzZYwhs1LpucEmyEGhu
-         jsJjdchFuHKTPgn/mf/c4njdF/CdcHW056D8Ht4IRexYYhQGAOlPHEZdQnkjJ22Cqx/r
-         aG/g==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qpsKRCqtVgfj8tu6tU10wGF0V1/J4SqlhXKuSnenORM=;
+        b=UX3nLFOHi3gIGKvTdXHJbFxYnvRnisObk0J3+wW2vTMQUOrIqhaWXQvhFg3/Zh1KVF
+         ROu3c+tBy6SiaZWBOgVA7ubUPghwIq/emYPlFUytA8jV5nhaSr7gt7qx4UIZuo9IDCMx
+         MckjYiQ97F4ATDnwoLQv/+EdJogrc94SwBlFk+IHPhMoSwhgwSH0XS62q4MLPrAlqxAv
+         Jg7fbXUwmUQZkbWFljgkkPR3sMFfW2WfTb4LZqdGIs73ZYfnOZGavmFuNxqs1NFtmXOc
+         bgc53w3AcSO1jqA38rrkQNe4WxbH/kDxcjJghdjiqweuGV9DDjAjh4LqGE8BxlQ+dh7J
+         AWaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=67RUo5VAnS1jBw3z4FN37Al3dch59aGvRyUe85Cv560=;
-        b=oWcNZE5njVTdgGD6EP7FIEMcB+VQdkFzXQpnmX5es/4dnEQosWsd5HLdyE7gcmrM2A
-         HVeD81m1+ouhOnbWCMcW5gRcvyQtkFCtfkwmf+2JWgAtWv/f28FvwiVmyRVfO3rgdP1w
-         glO/inx2jDX6AZsUUaWlU/uoNkQYpHrdes7S2bmOyLZYUub6UBAtVtQmwzOhtEi1vSyt
-         /HYpyVZkUcWl2bb+GIV1wuQC7t5Ue9lNnatHYZEoxa7F5KKf9qUtNd78Vq20Hwv3p/iX
-         /O8qYdd3SHzzTnEhKWS01UFqG/it4NxfhHgquRxamWvg6NzsOHIfTbKkgpDQR+4SqmVj
-         MaMQ==
-X-Gm-Message-State: APjAAAWHqiq4KggHSj6qld8Xu60fcxdpJ4FjIKL7ALfs7f1WfzGNtc5w
-        4thgFf4NPrFFefRTXgDIzd8=
-X-Google-Smtp-Source: APXvYqzEPul7LL5SneMmOTU8FN7i4ZYHUNJ4hG6G22GrjI1FlxrIf7P50Kydlnzx8BmmP6zBK+y9aA==
-X-Received: by 2002:aa7:86c2:: with SMTP id h2mr7490957pfo.45.1580757293734;
-        Mon, 03 Feb 2020 11:14:53 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f3sm5820108pgs.36.2020.02.03.11.14.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Feb 2020 11:14:53 -0800 (PST)
-Date:   Mon, 3 Feb 2020 11:14:51 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 0/3] gpiolib: fix a regression introduced by
- gpio_do_set_config()
-Message-ID: <20200203191451.GA19076@roeck-us.net>
-References: <20200203133026.22930-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qpsKRCqtVgfj8tu6tU10wGF0V1/J4SqlhXKuSnenORM=;
+        b=QBYuCHe5NR71TkPYQn/ewq1SJiIKTJkuf0YqDy0/2YMJ4N4WVuZ3nfmdE7STZHp7Qq
+         c9w0dPAwv+YCgH8K2tmTnUhjm5VwT2gOdu7fq5R+ElXSGM97rC3HobDWWHGivhvw0OsR
+         Q7X1Z78hBTVcIpmMMhvXRvwvkzwo7tGsJAA0hjK9iZo7KOsQ5CLcmvR+mkCeIqVaqfCu
+         1jyX7QXZSgW8jSTgw5L2uY3eWhP/jVcyB2JGQkSgRpiefDZJG/Q/K3Vs8+y/c4otzB4t
+         dDMndC3dEPvKfa/zPRolFZ9kW+qyucBJL7SaYQfRhDXc7at5VeW8JPqfRbgkt9TxqhUS
+         l/DA==
+X-Gm-Message-State: APjAAAXcC0D1nJgNBXsOFzyAw6nFoD9nCKQCmhH/oZDIo32eby69Cbrx
+        deZkKvY23BGaZcRJooWjtLOgD2tbkPeqSEYydOqx9g==
+X-Google-Smtp-Source: APXvYqyaC+88MpAySDesiNwLBufJcQEB/bABzBOCHTb3qij+8VwlxK2t9pFZcvefw7EuG7b9hgeV4sanl8A6Q+vWg2A=
+X-Received: by 2002:ac8:3676:: with SMTP id n51mr27397583qtb.208.1580808868098;
+ Tue, 04 Feb 2020 01:34:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203133026.22930-1-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200203125551.84769-1-sachinagarwal@sachins-MacBook-2.local>
+In-Reply-To: <20200203125551.84769-1-sachinagarwal@sachins-MacBook-2.local>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 4 Feb 2020 10:34:17 +0100
+Message-ID: <CAMpxmJWBAx=_4=xPU9STN04tYficUrpKSu7B6qZ=Tu3-xta__w@mail.gmail.com>
+Subject: Re: [PATCH 6/6] GPIO: it87: fixed a typo
+To:     sachin agarwal <asachin591@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 02:30:23PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> These three patches fix a regression introduced by commit d90f36851d65
-> ("gpiolib: have a single place of calling set_config()"). We first need
-> to revert patches that came on top of it, then apply the actual fix.
-> 
-> Bartosz Golaszewski (3):
->   Revert "gpiolib: Remove duplicated function gpio_do_set_config()"
->   Revert "gpiolib: remove set but not used variable 'config'"
->   gpiolib: fix gpio_do_set_config()
-> 
+pon., 3 lut 2020 o 13:56 sachin agarwal <asachin591@gmail.com> napisa=C5=82=
+(a):
+>
+> From: sachin agarwal <asachin591@gmail.com>
+>
+> we had written "IO" rather than "I/O".
+>
+> Signed-off-by: Sachin Agarwal <asachin591@gmail.com>
+> ---
+>  drivers/gpio/gpio-it87.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-it87.c b/drivers/gpio/gpio-it87.c
+> index b497a1d18ca9..79b688e9cd2a 100644
+> --- a/drivers/gpio/gpio-it87.c
+> +++ b/drivers/gpio/gpio-it87.c
+> @@ -53,7 +53,7 @@
+>   * @io_size size of the port rage starting from io_base.
+>   * @output_base Super I/O register address for Output Enable register
+>   * @simple_base Super I/O 'Simple I/O' Enable register
+> - * @simple_size Super IO 'Simple I/O' Enable register size; this is
+> + * @simple_size Super I/O 'Simple I/O' Enable register size; this is
+>   *     required because IT87xx chips might only provide Simple I/O
+>   *     switches on a subset of lines, whereas the others keep the
+>   *     same status all time.
+> --
+> 2.24.1
+>
 
-For the series:
+Patchwork seems to be confused by this series - or maybe you just sent
+another iteration without a version number? Anyway - please see other
+patches on the list, adjust your subject message and send the entire
+series at once using git send-email.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-
->  drivers/gpio/gpiolib.c | 31 ++++++++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+Bart
