@@ -2,100 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00094151B1E
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 14:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0911151BD2
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Feb 2020 15:04:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgBDNUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Feb 2020 08:20:41 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45205 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbgBDNUl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 08:20:41 -0500
-Received: by mail-wr1-f68.google.com with SMTP id a6so22981146wrx.12
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Feb 2020 05:20:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=XaOtnSmzwpqADcl/kwe3o8mbid0WESYZNWMYyEuDIjM=;
-        b=KHoP5KecYifpzizq0LyKJkI7pjf2kWbuenRWZGJiBDwgkUZc31ziPNB6nqwLjG9npc
-         KAX0XDURZf36xyreQaiyQe6xOuQJsC1SDk0JQtGkWDS555cvo9S5ME02I2cjsu6CDCtm
-         ROx7aeI2JPFsA2cgLJOK9MSkxM5MaXZn8XiLuaSs8AeGcE/pqgrUcCDheP7k0GRMFNbt
-         GfxPb60iivqDbN2z/Q9tn9bZQNsZwXs3xJVjpBAdpDSkrgPYMWON8s1gR5Ojbx6smAQR
-         le0wO0VNYgA2QnWV+ou+Hcqq63sKZb+EtLRaHOP4DYyUdL5pcG9HsrBWppR3b8gN2fqq
-         h4hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=XaOtnSmzwpqADcl/kwe3o8mbid0WESYZNWMYyEuDIjM=;
-        b=KRfxquQt8FuRSAex3YAkhYRVBEhSsxKyH17GYnAdB/YAO0RSYGj9BirV3H634jCr9W
-         szf6ybxxEtAshojSPP2gd6OQPsBgpNcF43X1gkY9W/8AEW8XVNo2Og3+yotMnleN822F
-         el5QGza4SxgSlrImbCW8xVu9In08Io2FMfKCMbmmQ88gT7ZqJQtG+Xat0YKEY1S2FH2Z
-         nKuHjprr/qQkMAMxzj2q4PmyjtL/S3O27o7m4OFfP9kRtCYIptINa+/pDWpvtobuJckI
-         dBIywbR8NyLmwwM5/eLBgxFdIXVT9apL3WYvyqBpR+nkDOGyxUMpHBQe0bez8B172Hi2
-         yt5w==
-X-Gm-Message-State: APjAAAXJ58Y6dE/c7RV0x/GlIstT+QLtCQno8AEu0tIetKLzc358/acC
-        ycpYhofvpSqFNWh+yXRU6p/NxI5kVLzC5+xd4YtdZQ==
-X-Google-Smtp-Source: APXvYqxFk3kRy1ZQP2QQwPqXFpYok0EQTah2rU0DNhlQkZuqvsIg5ncZU+CUvzF2Ie9OldR3RU0ZUH77xYFip2lzHrc=
-X-Received: by 2002:a5d:538e:: with SMTP id d14mr23301124wrv.358.1580822438982;
- Tue, 04 Feb 2020 05:20:38 -0800 (PST)
+        id S1727303AbgBDOEp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Feb 2020 09:04:45 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28435 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727207AbgBDOEp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Feb 2020 09:04:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1580825084; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=AYVm5lWqfJDQUHSM0JeCo9evaNtbla9UOu0fjh+4k6g=; b=H8/oPni/iuZELovygPbVqbgBuRD8/CqxYC/Dcr6GZoZtHy0tQyEecHFhxwYr+3QVTb6uDMZX
+ ybWaWW7V3UO+TgBNqK/CRt4jSbzpm2ae1Tv0rR+RtCKKDzclt1M0aQn+sYcoJnAfrp2hzXGG
+ 0G7nYgcKgcwS3WCsfSKyPtvmYyI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3979f9.7f4c1731c340-smtp-out-n02;
+ Tue, 04 Feb 2020 14:04:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9CFD0C447A2; Tue,  4 Feb 2020 14:04:40 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.1.5] (unknown [122.164.174.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AD5AC433CB;
+        Tue,  4 Feb 2020 14:04:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AD5AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V6 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1579439601-14810-1-git-send-email-sricharan@codeaurora.org>
+ <1579439601-14810-2-git-send-email-sricharan@codeaurora.org>
+ <20200127154113.GA6904@bogus>
+ <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+Message-ID: <9acb9b69-fd44-57db-e974-9fee5a1d871f@codeaurora.org>
+Date:   Tue, 4 Feb 2020 19:34:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-From:   Jack Winch <sunt.un.morcov@gmail.com>
-Date:   Tue, 4 Feb 2020 13:20:27 +0000
-Message-ID: <CAFhCfDYzej7qixOtnL8Lvm0+JnSaOrE3UmDm7rGo3eM+Co6Aag@mail.gmail.com>
-Subject: New Mailing List Member w/ Queries
-To:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <422e31d0-f67f-3b10-5d8f-ccc9d6f7dc70@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hey Folks,
+Hi Rob,
 
-New to the mailing list and looking to get involved in the development
-of the GPIO Subsystem and libgpiod.  I am new to the Linux Kernel
-project, although I am a user of Linux within 'real-time' applications
-and have previously had some experience on the embedded side too.  I
-am looking to get involved in a personal capacity at the moment, as I
-feel that doing so will be highly educational and a worth while
-investment of my time.  I am likely to ask questions on the design
-intent of some aspects of this subsystem as I increase my familiarity
-of the internals, but only after RTFM, source code and consulting what
-other material I can find on the internet.  I won't pollute this space
-with basic generic questions - Kernel Newbies is for that.
+On 1/28/2020 10:07 AM, Sricharan R wrote:
+> Hi,
+> 
+> On 1/27/2020 9:11 PM, Rob Herring wrote:
+>> On Sun, 19 Jan 2020 18:43:17 +0530, Sricharan R wrote:
+>>> Add device tree binding Documentation details for ipq6018
+>>> pinctrl driver.
+>>>
+>>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>>> ---
+>>> [V6] 
+>>>   * Addressed review comments form Rob.
+>>>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 153 +++++++++++++++++++++
+>>>  1 file changed, 153 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+>>>
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> Thanks Rob.
+> 
+> Hi Linus,
+>    The pinctrl driver can now be pulled in.
 
-I will also be looking to invest in some representative hardware for
-development and testing.  If we are short of certain hardware within
-the mailing list (for testing), then let me know and I can investigate
-further.
+Any chance this can be taken for 5.6 ?
 
-I have a few queries:-
+Regards,
+ Sricharan
 
-1.  Documentation/ABI/obsolete/sysfs-gpio states that the 'ABI is
-deprecated and will be removed after 2020'.  This intention has been
-made very clear since 2008.  Any idea of when this feature will be
-removed from the mainline kernel (e.g., target version)?  Will it be
-removed during this year?
-
-2. I see that within libgpiod, a TODO task was raised to implement a
-dbus API and system daemon for controlling GPIOs on 03-APR-19.  This
-task is something that I would be happy to get involved with,
-depending on the current priority of the task.  Bartosz and Kent, is
-this something I could get involved with?  From recent patches to
-libgpiod, I can see that development of the dbus interface is further
-underway.  I will have to get up to speed with the dbus implementation
-being used, but that should not be a major bar of entry.
-
-I look forward to collaborating and learning from you all.
-
-Many Thanks,
-Jack W.
-
---------------------------------------------------------------------------------
-'Against stupidity the gods themselves contend in vain'.
-~ Friedrich von Schiller
-
-'A common mistake that people make when trying to design something completely
-foolproof is to underestimate the ingenuity of complete fools'.
-~ Douglas Adams
---------------------------------------------------------------------------------
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
