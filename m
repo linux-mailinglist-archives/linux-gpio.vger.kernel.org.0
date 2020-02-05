@@ -2,71 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8679F1528AA
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2020 10:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4D431529C9
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2020 12:22:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgBEJuV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Feb 2020 04:50:21 -0500
-Received: from mga09.intel.com ([134.134.136.24]:54130 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbgBEJuV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 Feb 2020 04:50:21 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 01:50:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
-   d="scan'208";a="378686508"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 05 Feb 2020 01:50:18 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1izHK8-0000R8-E9; Wed, 05 Feb 2020 11:50:20 +0200
-Date:   Wed, 5 Feb 2020 11:50:20 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1] gpio: Avoid kernel.h inclusion where it's possible
-Message-ID: <20200205095020.GU10400@smile.fi.intel.com>
-References: <20200204190733.56783-1-andriy.shevchenko@linux.intel.com>
- <CAMpxmJXh_1kUGgW57H=YohR1nkP8fWdaCcrmuM-yhOy4wZ_WTw@mail.gmail.com>
+        id S1728289AbgBELWl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Feb 2020 06:22:41 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44807 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBELWk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Feb 2020 06:22:40 -0500
+Received: by mail-il1-f196.google.com with SMTP id s85so1527877ill.11
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Feb 2020 03:22:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=pgwocbE6mhkA+OKhecgcAoXn10XYW3UASVoDr7OU9dI=;
+        b=wI13iTubTuBMBiK5CXbDSnV98whJDiMVXtwTTvmUaPOouESwx7uSl+JRcgxKUj+5eT
+         kJMfS4c0Wfmp0CUmxUH/AAmuoXPMshDoAXSsbdkRrl41dw5zes7AuPiBnqIb0t/heFqj
+         vDL96yT5Z4hxVyycq/s0PPzY9Bpv1i0SR066Sd+d5Qk3fr8dxdqoiX3sg5oX36Ww6RiV
+         JlYudq4/zIx+rlzxMBX20EwN224Ii5I9NfpFGhTTI+RSLmTnqzEfrOh9eyvUfI+QSbQD
+         MppFNlKOlfnjy+btwdiXoyT+3vHlqJdVUHfXWn+ZXcT1KOv7iM+crNqzTlM/PYC5e39C
+         aDtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=pgwocbE6mhkA+OKhecgcAoXn10XYW3UASVoDr7OU9dI=;
+        b=taiM2G+ftnab9t69NF8im+UfwDnqYA0f/v+VPNS77mKUitam588bfyp5gApwSPNf8m
+         YrfyOb2fozhT/sRR3FDcFMOXcUpQREiM4MPW9Dd5RvBhRE5JkifgeJ4Yi0Jt+gMfWPyH
+         llUmNv/bHJpvF33/MTMD9Hbs66IhrITkR0Fkaec8aNZsoNvQXs6P4m5hChwAAbgvMF7F
+         NHJ2WvVup7VkYLra0yrmcGGOzhO0b8d3DEDdIYLYriI4PiWk2PEa5L4E6o014tkiMm31
+         O9wzCTTJ3MnMDJp0oNpd9fnUuPGFPntefjOQWgdvNxAlSs0Yo7Kd0gHnwzj3UiyMdQYH
+         LVIg==
+X-Gm-Message-State: APjAAAU6s5W0Bvulx158eNVh0kd2/hwb6QEdYynw0zxMrSFqHA4N0Q2W
+        cQL3WT4eoJSIyp4GFhxUSdISg35uwU9knrGo7QWnexvOVCw=
+X-Google-Smtp-Source: APXvYqy/kucw9v8LMt0yJ4yjVyQ+82M1lz79DGqFguBC4nALluWsrP7cO1udl64OTrIrvtxDczxczFGsY1Y1pVHmmiE=
+X-Received: by 2002:a92:990b:: with SMTP id p11mr11299858ili.254.1580901758511;
+ Wed, 05 Feb 2020 03:22:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJXh_1kUGgW57H=YohR1nkP8fWdaCcrmuM-yhOy4wZ_WTw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From:   Nicolas Belin <nbelin@baylibre.com>
+Date:   Wed, 5 Feb 2020 12:22:27 +0100
+Message-ID: <CAJZgTGF2ihuu_bSzQ93iBTf1YQ4_NM29S4iBFM8Fhd_RUaw2vQ@mail.gmail.com>
+Subject: [PATCH] pinctrl: meson-gxl: fix GPIOX sdio pins
+To:     linus.walleij@linaro.org
+Cc:     Kevin Hilman <khilman@baylibre.com>, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 10:34:06AM +0100, Bartosz Golaszewski wrote:
-> wt., 4 lut 2020 o 20:07 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisał(a):
-> >
-> > Inclusion of kernel.h increases the mess with the header dependencies.
-> > Avoid kernel.h inclusion where it's possible.
-> >
-> > Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
+In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
+any issue so far because devices using these pins always take both pins
+so the resulting configuration is OK.
 
-> > -struct pinctrl_dev;
-> 
-> If this forward declaration is removed because it's no longer needed
-> after removing the pinctrl include, then please mention it in the
-> commit message. If it's unrelated then please put it in a different
-> patch.
+Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
+Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+---
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Will do, thanks for review!
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 72c5373c8dc1..e8d1f3050487 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]    = { GPIOX_0 };
+ static const unsigned int sdio_d1_pins[]       = { GPIOX_1 };
+ static const unsigned int sdio_d2_pins[]       = { GPIOX_2 };
+ static const unsigned int sdio_d3_pins[]       = { GPIOX_3 };
+-static const unsigned int sdio_cmd_pins[]      = { GPIOX_4 };
+-static const unsigned int sdio_clk_pins[]      = { GPIOX_5 };
++static const unsigned int sdio_clk_pins[]      = { GPIOX_4 };
++static const unsigned int sdio_cmd_pins[]      = { GPIOX_5 };
+ static const unsigned int sdio_irq_pins[]      = { GPIOX_7 };
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+ static const unsigned int nand_ce0_pins[]      = { BOOT_8 };
+--
