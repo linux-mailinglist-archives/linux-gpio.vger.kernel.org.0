@@ -2,95 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3BBF153077
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2020 13:18:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFB5153213
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Feb 2020 14:43:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgBEMS1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Feb 2020 07:18:27 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39437 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgBEMS0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Feb 2020 07:18:26 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so2491239wme.4
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Feb 2020 04:18:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=voMdPtqTu9Je6ipNUTsS1dof90qK0VWTr6b+FpuYAkw=;
-        b=rbYxnd3Uix7LvN8ZvaV0sEul0n8FVzPXwHi7sHxmLtOpmfZGdBtWi+TVgWzW5dKARR
-         6A5yOT4I3hYP7jhJmEzkNzdZoIo9QUZ5eKrl/CrxN+bpQkrNx+7UHuSCkWjanxeK8/zF
-         PlKx3mHY3WdKj7TmWrM3JCpP/+DtEWP/2pUfTvEusUpDPaSrEzobnG9zQrOACe3LywVB
-         Xh7JJYtulg4YpAs7zkDo8D/uYt+pEawWL9RDV4qaRaG3hVDd1uNSuFZ5a6ueXc0C0ojS
-         LDgmedeSLNDaJUrtpI7t3t72nkeETwNSQQCbkuAjPJ0rqKV34c+/wi9U9HQ7vjNcV6EC
-         /fyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=voMdPtqTu9Je6ipNUTsS1dof90qK0VWTr6b+FpuYAkw=;
-        b=KqHudJUI/JrO6gfZcumdqz0XwLezvgGNkMkK4OWLHpsnS2CRfweagUdE/yUpwENRix
-         UPPlg5cIsuRikc2zFZhmC47C4m+lVY3aiUdIqxtKWl4nfBqqvBjNKZyhChy0QG7ShP0j
-         yrfZE6L6DKhV0a4nOct6ek2/DIiUsr0kB1pHg0hKaK0VUywKmaOvCuhFMJ5JjRIu8PDD
-         rMgaxUb8XLaEylkBUfdpPSao98bW2qf4Rh5p3FzgPQrRxa3SEQSVtMRgsKyu+H6OFgzF
-         XKKcfohyyeI5b5v1h0uVWu47OEHF9KhFrdj1NewU7MBRggMNWPxQycigNpDyfP1LLpBB
-         N6OA==
-X-Gm-Message-State: APjAAAUTZXJHmmXM1LXSt2oThH0bFLKTZi+cItyI1H6W2LVv5dRIGSrR
-        tuw565vGeXDxyqEhqyB/CiHjkA==
-X-Google-Smtp-Source: APXvYqyDoDPihMTOysPRfqs269bKMj5DhpyROGO1P5iqEr8w+Aqy9iE+RcMqTgaKG2uVbVB/PT73+Q==
-X-Received: by 2002:a1c:4d08:: with SMTP id o8mr5620521wmh.86.1580905104558;
-        Wed, 05 Feb 2020 04:18:24 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y20sm7513220wmi.25.2020.02.05.04.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Feb 2020 04:18:23 -0800 (PST)
-References: <CAJZgTGF2ihuu_bSzQ93iBTf1YQ4_NM29S4iBFM8Fhd_RUaw2vQ@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Nicolas Belin <nbelin@baylibre.com>, linus.walleij@linaro.org
-Cc:     Kevin Hilman <khilman@baylibre.com>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: meson-gxl: fix GPIOX sdio pins
-In-reply-to: <CAJZgTGF2ihuu_bSzQ93iBTf1YQ4_NM29S4iBFM8Fhd_RUaw2vQ@mail.gmail.com>
-Date:   Wed, 05 Feb 2020 13:18:22 +0100
-Message-ID: <1ja75x6xdd.fsf@starbuckisacylon.baylibre.com>
+        id S1726960AbgBENnl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Feb 2020 08:43:41 -0500
+Received: from mga06.intel.com ([134.134.136.31]:44008 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbgBENnl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 Feb 2020 08:43:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 05:43:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,405,1574150400"; 
+   d="scan'208";a="220105346"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 05 Feb 2020 05:43:37 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 161F0101; Wed,  5 Feb 2020 15:43:36 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2] gpio: Avoid kernel.h inclusion where it's possible
+Date:   Wed,  5 Feb 2020 15:43:36 +0200
+Message-Id: <20200205134336.20197-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Inclusion of kernel.h increases the mess with the header dependencies.
+Avoid kernel.h inclusion where it's possible.
 
-On Wed 05 Feb 2020 at 12:22, Nicolas Belin <nbelin@baylibre.com> wrote:
+Besides that, clean up a bit other inclusions inside GPIO subsystem headers.
+It includes:
+ - removal pin control bits (forward declaration and header) from linux/gpio.h
+ - removal of.h from asm-generic/gpio.h
+ - use of explicit headers in gpio/consumer.h
+ - add FIXME note with regard to gpio.h inclusion in of_gpio,h
 
-> In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
-> any issue so far because devices using these pins always take both pins
-> so the resulting configuration is OK.
->
-> Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
-> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: Elaborate changes in the commit message (Bartosz)
+ include/asm-generic/gpio.h    | 4 ++--
+ include/linux/gpio.h          | 2 --
+ include/linux/gpio/consumer.h | 5 ++++-
+ include/linux/of_gpio.h       | 9 ++++++---
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-> ---
->  drivers/pinctrl/meson/pinctrl-meson-gxl.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> index 72c5373c8dc1..e8d1f3050487 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> @@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]    = { GPIOX_0 };
->  static const unsigned int sdio_d1_pins[]       = { GPIOX_1 };
->  static const unsigned int sdio_d2_pins[]       = { GPIOX_2 };
->  static const unsigned int sdio_d3_pins[]       = { GPIOX_3 };
-> -static const unsigned int sdio_cmd_pins[]      = { GPIOX_4 };
-> -static const unsigned int sdio_clk_pins[]      = { GPIOX_5 };
-> +static const unsigned int sdio_clk_pins[]      = { GPIOX_4 };
-> +static const unsigned int sdio_cmd_pins[]      = { GPIOX_5 };
->  static const unsigned int sdio_irq_pins[]      = { GPIOX_7 };
->
->  static const unsigned int nand_ce0_pins[]      = { BOOT_8 };
+diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+index 19eadac415c4..aea9aee1f3e9 100644
+--- a/include/asm-generic/gpio.h
++++ b/include/asm-generic/gpio.h
+@@ -2,10 +2,8 @@
+ #ifndef _ASM_GENERIC_GPIO_H
+ #define _ASM_GENERIC_GPIO_H
+ 
+-#include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/errno.h>
+-#include <linux/of.h>
+ 
+ #ifdef CONFIG_GPIOLIB
+ 
+@@ -140,6 +138,8 @@ static inline void gpio_unexport(unsigned gpio)
+ 
+ #else	/* !CONFIG_GPIOLIB */
+ 
++#include <linux/kernel.h>
++
+ static inline bool gpio_is_valid(int number)
+ {
+ 	/* only non-negative numbers are valid */
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index 2157717c2136..008ad3ee56b7 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -102,11 +102,9 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/bug.h>
+-#include <linux/pinctrl/pinctrl.h>
+ 
+ struct device;
+ struct gpio_chip;
+-struct pinctrl_dev;
+ 
+ static inline bool gpio_is_valid(int number)
+ {
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index bf2d017dd7b7..0a72fccf60ff 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -2,9 +2,10 @@
+ #ifndef __LINUX_GPIO_CONSUMER_H
+ #define __LINUX_GPIO_CONSUMER_H
+ 
++#include <linux/bits.h>
+ #include <linux/bug.h>
++#include <linux/compiler_types.h>
+ #include <linux/err.h>
+-#include <linux/kernel.h>
+ 
+ struct device;
+ 
+@@ -189,6 +190,8 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 
+ #else /* CONFIG_GPIOLIB */
+ 
++#include <linux/kernel.h>
++
+ static inline int gpiod_count(struct device *dev, const char *con_id)
+ {
+ 	return 0;
+diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+index 16967390a3fe..f821095218b0 100644
+--- a/include/linux/of_gpio.h
++++ b/include/linux/of_gpio.h
+@@ -11,9 +11,8 @@
+ #define __LINUX_OF_GPIO_H
+ 
+ #include <linux/compiler.h>
+-#include <linux/kernel.h>
+-#include <linux/errno.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio.h>		/* FIXME: Shouldn't be here */
+ #include <linux/of.h>
+ 
+ struct device_node;
+@@ -34,6 +33,8 @@ enum of_gpio_flags {
+ 
+ #ifdef CONFIG_OF_GPIO
+ 
++#include <linux/kernel.h>
++
+ /*
+  * OF GPIO chip for memory mapped banks
+  */
+@@ -63,6 +64,8 @@ extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
+ 
+ #else /* CONFIG_OF_GPIO */
+ 
++#include <linux/errno.h>
++
+ /* Drivers may not strictly depend on the GPIO support, so let them link. */
+ static inline int of_get_named_gpio_flags(struct device_node *np,
+ 		const char *list_name, int index, enum of_gpio_flags *flags)
+-- 
+2.24.1
 
