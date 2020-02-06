@@ -2,59 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E46681549E3
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2020 18:03:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA019154ADA
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Feb 2020 19:14:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgBFRDJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Feb 2020 12:03:09 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34108 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgBFRDJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Feb 2020 12:03:09 -0500
-Received: by mail-ot1-f66.google.com with SMTP id a15so6180275otf.1;
-        Thu, 06 Feb 2020 09:03:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IeTZrdBP9Hf13GH1UBDM8f5f9+rl1pL1drtOnzJSoEE=;
-        b=Au6nzfnD9JbIjuoL9LmDt9DO926XEvDDHsqD3l/D5SC7ZozTSJ+f4XOnJpbkDsYtG0
-         eg5KT4+bF59pq5e9sDR4TQE74ywJzQpYY37KE8FlsTyf6aeunElkQ4SgL9N8tMkYsaN8
-         ZVG5x3SZdso7y0fWUJMwFfL6OpB/8UCT8soltYwM1BXWAfWoFR9hg0bJZFTN6HjibXSp
-         c95t2C/tXP1ot8+8xJOO4Q2koHI0WlH3RQ7wV5EWwZF6PE2qWyXqLDyz6EArzslT8yK7
-         5+rBsMTNPoW/clqZnguEvtTjFDjVm3rHrfJRNuGsT3bcY/y/L1PKgxGhrMeJap+HJcZ5
-         IFBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IeTZrdBP9Hf13GH1UBDM8f5f9+rl1pL1drtOnzJSoEE=;
-        b=HDo2Hr3aYY1asMGaag14y/KQSHDd07Mrg/fiZn/p1I/+/k2EraL1iBm02fxDL+JUH7
-         4VnaMsYlNqvmlPp20fgclQbkboS7Oz0vCoyzvcYhOoeFVMjp7641mWJa1/73v3QoVDU6
-         x9wU8sbE+6pNlKLOaSbIWyyj9QTY2bMucJVbhSWYGcOftcv3GEQCObd/JyDV1vg+IRkR
-         igDlUe4arLgbPLiyrKjo1Y2GxQUExLN0VQFPeElivLt6KC+SwRmTIGg1SJXrlXHeP2wj
-         GeHj08qEMqn4Qz32VzXLNVF0HE8WOFeWfV03ffcnTvMcIlEd82T3fCVRf0dPO/9l4ZJ5
-         TW5Q==
-X-Gm-Message-State: APjAAAX77D0+WpnrdU1leKLbm/yvAO/vKZC+aYFR/yQDjqWr49yLZ4pp
-        /0j8JzpEsbsZYQrOnaO6qDPCWNQfA19Qvw==
-X-Google-Smtp-Source: APXvYqzojO5LxaWz5TmWr0czHWvxHCGQ25CU390Jrs7j5DnAUB0SRjmiKdacElgXeHOX8NXFZ1Dt6w==
-X-Received: by 2002:a05:6830:50:: with SMTP id d16mr24338717otp.166.1581008586834;
-        Thu, 06 Feb 2020 09:03:06 -0800 (PST)
-Received: from Andrews-MBP-2.attlocal.com (45-18-127-186.lightspeed.austtx.sbcglobal.net. [45.18.127.186])
-        by smtp.gmail.com with ESMTPSA id m68sm55687oig.50.2020.02.06.09.03.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 09:03:06 -0800 (PST)
-From:   Andrew Geissler <geissonator@gmail.com>
-To:     openbmc@lists.ozlabs.org, joel@jms.id.au,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Geissler <geissonator@yahoo.com>, linux-gpio@vger.kernel.org
-Subject: [PATCH v3] ARM: dts: aspeed: witherspoon: Add gpio line names
-Date:   Thu,  6 Feb 2020 11:02:34 -0600
-Message-Id: <20200206170234.84288-1-geissonator@gmail.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
-In-Reply-To: <FMfcgxwGDDpcbrVbWGfkMRbZCLSZqpMM>
-References: <FMfcgxwGDDpcbrVbWGfkMRbZCLSZqpMM>
+        id S1727703AbgBFSOO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Feb 2020 13:14:14 -0500
+Received: from mga02.intel.com ([134.134.136.20]:13114 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFSON (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 6 Feb 2020 13:14:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 10:14:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="236056737"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 06 Feb 2020 10:14:04 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1izlfC-0003Li-1G; Thu, 06 Feb 2020 20:14:06 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bartekgola@gmail.com>
+Subject: [PATCH v1] core: Relax gpiod_chip_open() for symbolic links
+Date:   Thu,  6 Feb 2020 20:13:58 +0200
+Message-Id: <20200206181358.12805-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,73 +42,112 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Andrew Geissler <geissonator@yahoo.com>
+User may ask device helper tool, for example, udev, to create a specific
+symbolic link to a device node. GPIO chip character device node is not
+exceptional. However, libgpiod in the commit d9b1c1f14c6b
+("core: harden gpiod_chip_open()") went way too far in the hardening device
+node check.
 
-Name the GPIOs to help userspace work with them. The names describe the
-functionality the lines provide, not the net or ball name. This makes it
-easier to share userspace code across different systems and makes the
-use of the lines more obvious.
+Relax that hardening for symbolic link to fix the regression.
 
-Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+Reproducer:
+
+  % gpioinfo /dev/gpiochip5
+  gpiochip5 - 16 lines:
+      line   0:  "MUX33_DIR" "uart1-rx-oe" output active-high [used]
+      ...
+
+  % ln -sf /dev/gpiochip5 /dev/MyGPIO_5
+
+  % gpioinfo /dev/MyGPIO_5
+  gpioinfo: looking up chip /dev/MyGPIO_5: Inappropriate ioctl for device
+
+Link: https://stackoverflow.com/questions/60057494/gpio-issue-with-sym-link
+Fixes: d9b1c1f14c6b ("core: harden gpiod_chip_open()")
+Cc: Bartosz Golaszewski <bartekgola@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v3: added more detail to commit message
-    removed linux dev-5.4 from PATCH header
-    removed redundant status from gpio
-    removed blank line
-v2: added upstream to patch
-    prepended fsi- on fsi related gpios
-    prepended led- on led related gpios
-    prepended presence on presence related gpios
-    dropped pin_gpio_a1 definition
----
- .../boot/dts/aspeed-bmc-opp-witherspoon.dts   | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ lib/core.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-index 515f0f208ee6..2269c73b8987 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-@@ -193,6 +193,40 @@
+diff --git a/lib/core.c b/lib/core.c
+index 8352e18..32476ee 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -8,6 +8,7 @@
+ /* Low-level, core library code. */
  
- };
+ #include <errno.h>
++#include <limits.h>
+ #include <fcntl.h>
+ #include <gpiod.h>
+ #include <linux/gpio.h>
+@@ -75,7 +76,7 @@ struct gpiod_chip {
  
-+&gpio {
-+	gpio-line-names =
-+	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
-+	/*B0-B7*/	"","","","","","air-water","","",
-+	/*C0-C7*/	"","","","","","","","",
-+	/*D0-D7*/	"fsi-enable","","","","","","","",
-+	/*E0-E7*/	"fsi-data","","","","","","","",
-+	/*F0-F7*/	"","","","","","","","",
-+	/*G0-G7*/	"","","","","","","","",
-+	/*H0-H7*/	"","","","","","","","",
-+	/*I0-I7*/	"","","","","","","","",
-+	/*J0-J7*/	"","","checkstop","","","","","",
-+	/*K0-K7*/	"","","","","","","","",
-+	/*L0-L7*/	"","","","","","","","",
-+	/*M0-M7*/	"","","","","","","","",
-+	/*N0-N7*/	"presence-ps1","","led-rear-fault","led-rear-power",
-+		        "led-rear-id","","","",
-+	/*O0-O7*/	"","","","","","","","",
-+	/*P0-P7*/	"","","","","","","","presence-ps0",
-+	/*Q0-Q7*/	"","","","","","","","",
-+	/*R0-R7*/	"","","fsi-trans","","","power-button","","",
-+	/*S0-S7*/	"","","","","","","","",
-+	/*T0-T7*/	"","","","","","","","",
-+	/*U0-U7*/	"","","","","","","","",
-+	/*V0-V7*/	"","","","","","","","",
-+	/*W0-W7*/	"","","","","","","","",
-+	/*X0-X7*/	"","","","","","","","",
-+	/*Y0-Y7*/	"","","","","","","","",
-+	/*Z0-Z7*/	"","","","","","","","",
-+	/*AA0-AA7*/	"fsi-clock","","","","","","","",
-+	/*AB0-AB7*/	"","","","","","","","",
-+	/*AC0-AC7*/	"","","","","","","","";
-+};
+ static bool is_gpiochip_cdev(const char *path)
+ {
+-	char *name, *pathcpy, *sysfsp, sysfsdev[16], devstr[16];
++	char *name, *realname, *sysfsp, sysfsdev[16], devstr[16];
+ 	struct stat statbuf;
+ 	bool ret = false;
+ 	int rv, fd;
+@@ -85,6 +86,21 @@ static bool is_gpiochip_cdev(const char *path)
+ 	if (rv)
+ 		goto out;
+ 
++	/*
++	 * Is it a symbolic link?
++	 * We have to resolve symbolic link before checking the rest.
++	 */
++	if (S_ISLNK(statbuf.st_mode))
++		realname = realpath(path, NULL);
++	else
++		realname = strdup(path);
++	if (realname == NULL)
++		goto out;
 +
- &fmc {
- 	status = "okay";
++	rv = stat(realname, &statbuf);
++	if (rv)
++		goto out_free_realname;
++
+ 	/* Is it a character device? */
+ 	if (!S_ISCHR(statbuf.st_mode)) {
+ 		/*
+@@ -94,20 +110,16 @@ static bool is_gpiochip_cdev(const char *path)
+ 		 * libgpiod from before the introduction of this routine.
+ 		 */
+ 		errno = ENOTTY;
+-		goto out;
++		goto out_free_realname;
+ 	}
  
+ 	/* Get the basename. */
+-	pathcpy = strdup(path);
+-	if (!pathcpy)
+-		goto out;
+-
+-	name = basename(pathcpy);
++	name = basename(realname);
+ 
+ 	/* Do we have a corresponding sysfs attribute? */
+ 	rv = asprintf(&sysfsp, "/sys/bus/gpio/devices/%s/dev", name);
+ 	if (rv < 0)
+-		goto out_free_pathcpy;
++		goto out_free_realname;
+ 
+ 	if (access(sysfsp, R_OK) != 0) {
+ 		/*
+@@ -149,8 +161,8 @@ static bool is_gpiochip_cdev(const char *path)
+ 
+ out_free_sysfsp:
+ 	free(sysfsp);
+-out_free_pathcpy:
+-	free(pathcpy);
++out_free_realname:
++	free(realname);
+ out:
+ 	return ret;
+ }
 -- 
-2.21.0 (Apple Git-122)
+2.25.0
 
