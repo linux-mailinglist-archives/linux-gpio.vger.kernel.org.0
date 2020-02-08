@@ -2,147 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 061FA15645F
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2020 14:03:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADA9A15672C
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Feb 2020 19:43:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgBHNDg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 8 Feb 2020 08:03:36 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:51007 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbgBHNDf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Feb 2020 08:03:35 -0500
-Received: from localhost.localdomain ([37.4.249.150]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mk1BG-1jORvL3bXk-00kOXK; Sat, 08 Feb 2020 14:03:20 +0100
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        id S1727471AbgBHSnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Feb 2020 13:43:39 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51711 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbgBHSnj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 8 Feb 2020 13:43:39 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t23so5756721wmi.1
+        for <linux-gpio@vger.kernel.org>; Sat, 08 Feb 2020 10:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
+        b=ms+A/tTuvVz3HZCbAlRinLVe0SmeiI3IuRip/0uQPzHbS9mUbtBNFcgeSke7bLaLSp
+         p5pgxVUFVWi2o+JvDU/dCAkNUKIwrCe5x+XurkivpcLK+ONpQm0aNnwLePtsKr2qGk0F
+         PIUqpCV4OgxB5Clg78ul1dEnBJQqlb+Wm/dVlpVgInHGrWnynXzHG5xdBFivNhc1a4y+
+         pWbLAE5x3LdoSNIyrCnG8Uq/2rd4rELIqEg8m69IeDmeAv1okYOMcgkjrScZ/bjfwNoT
+         BCQffulbka/25ZR/6d1EvPDrVwadiuJbkfmlKsw9jN9iVuThDkS/FMsdAa4OKYi0zKAQ
+         H/Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
+        b=mYt/Luvx4zdMfXgPD2DjumzVnbBjp1XZvf9zZxWeEYTZS1QzPNlkK+HC3n6erVb+ZI
+         KC03W0OJJ00eyX7v5kWq26L4+Gx4g2XwphevCyYQzGCaJxOZ5i/C/K0oSCGk8/nI+nFN
+         M1kNacC7AYWgfiB+P09aOs6Jdm5kPRDGgydpLsT5eF8RSwAAOhzCXVDvZYy7l7SLTIT5
+         kDEi2ihkKBeTfFpvJRDGyFlejQ565lQGA7G+gTIsSyGu9FNNxUvk8uwEFWpZXl7QAHtf
+         kQU5Taq30utbAlqk11Yrt7U2Zu1X2ChWkSd+Xh5c9zVNnUbQiXBZijrW4KuKSCyZl22q
+         Os2Q==
+X-Gm-Message-State: APjAAAWAv5yafUW+CkHs3XhUYXuV2//+ncxq9ILTjPcocrUGqCpLKWnl
+        3Y0clZ8K8sbP1FjH8tP2sWcftL5neR9XstJhCNeTOzZavHU=
+X-Google-Smtp-Source: APXvYqxtmrVmPK8v7/hnwsOr9LLRPCmhswgHaA017VNaGV7/DhRBF2VBSd/TMopxN856SckCGc/G/zrwkCk+G1ht4Fw=
+X-Received: by 2002:a1c:9dce:: with SMTP id g197mr5128787wme.23.1581187416790;
+ Sat, 08 Feb 2020 10:43:36 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com> <20200207075654.GB2667@lahna.fi.intel.com>
+In-Reply-To: <20200207075654.GB2667@lahna.fi.intel.com>
+From:   =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>
+Date:   Sat, 8 Feb 2020 19:43:24 +0100
+Message-ID: <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
+ ACPI GPIO numbers
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 4/4] ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
-Date:   Sat,  8 Feb 2020 14:02:55 +0100
-Message-Id: <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-X-Provags-ID: V03:K1:Uf6ddeH+Q5wU3A4iBHbQL6kw6jhHXupWbDnedDbnjV6Sm0OvoL+
- 0aiJDtkaX9pxbPkeBOuQ4JmMWw+XD7KZ+F9sU+5aHuZy/6fLbFudCprCJMvvJnOtiIJ3jr1
- B+7BL9xVHLGsFROXiW9Wgi09sxB0wh34pzksdAQ5hvcm5AvKiM6t8b0dPd+vOjkjeVl+PHy
- W7Rl7txfWj9h4O4xX6r8w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:L6KhevTF5eo=:kVi0/hnHVHoDdWEm8JG5c0
- Whuq8qda1JXLC+G8nGXZ0o2IeeNV0wpBLvxYUbfUAh44CRunuZK3v12klyoBZ9dJCpxy70Ul7
- 41EMdotulajfRWzLx+j6ZCwCEbgMIU6h5C28XzmsC9PMPs/z4kOu8m75gC1Y+lgdk4x3umLyp
- L2SVF3lPNukgvVUkaWhSR90Obf8pKKhJ2sH7awlWJOodxEaotOlApZW1eB1jpqw0rKgbgIG2E
- BBnC16WnCNdydLgJp1UzokVFUpfW72K8fwdj/SFFuhcWkzGxludPEDZP7y8g+gUhWEebp5OaB
- /69pIBlKi4z8izFZ52Y4uG5ZVGD6JrqNqwJu1RO5xMkJ577S3n9BorpNKnGfCeSuuxRW96pSr
- /cCsVIF0E79Rk2g80Q3sYdaYzyAKElDrR6fSBIPrEDAhMXdyhNu3xMrt5GXGVYdrNisg7WzBB
- qTIpRWxduGLpQvE37HOs88QP6At6sNGaIDS1mCpmSIaskusgw64djCS7h6OwrJh3pmkw1UdpA
- PavqlbmlEhm+j9N3lkG3PS8iKnfC6VOrpQ5V66a+/urmqLuUlJc9VFWeLNXjZeIqWbmaGHHvY
- HYby8QaW+oIPhaxUXDaMVYLpvN4IBqXL+5RvnCu/OnBR6T0Gn+DuDONHIR2HhJjWREIvAUF8I
- /+Nvo3VCQZSg2ErAb53uAP0+x3Q5u5XaAbGIpr55Ko6WqQqZW7dft59cXqElK6iL4eFEP4kB5
- HbLPEGKLbOZRbabRcgrvnUxLkX2/NSUsuUMW+rcWLtvxzRbSFDfsXTDDvpewjJJ83p/DdQx0t
- YUeC4OM5/bf+3g5l4A8wprQrNyXylHtrxfar4+5h7VDbfIzUorTk5wroQy3I8fOz+2+nfpE
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds the labels for all the SoC GPIOs on the Raspberry Pi 4.
+> >
+> > Hi Mika,
+> >
+> > The previous patches from Dmitry handled IRQ numbering, here we have a
+> > similar issue with GPIO to pin translation - hardcoded values in FW
+> > which do not agree with the (non-consecutive) numbering in newer
+> > kernels.
+>
+> Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+> firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+> able to share the exact firmware description where this happens?
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 73 +++++++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+Actually it is a GPIO offset in ACPI tables for Braswell that was
+hardcoded in the old firmware to match the previous (consecutive)
+Linux GPIO numbering.
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1b5a835..cb33852 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -71,6 +71,79 @@
- 	};
- };
- 
-+&gpio {
-+	/*
-+	 * Parts taken from rpi_SCH_4b_4p0_reduced.pdf and
-+	 * the official GPU firmware DT blob.
-+	 *
-+	 * Legend:
-+	 * "FOO" = GPIO line named "FOO" on the schematic
-+	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
-+	 */
-+	gpio-line-names = "ID_SDA",
-+			  "ID_SCL",
-+			  "SDA1",
-+			  "SCL1",
-+			  "GPIO_GCLK",
-+			  "GPIO5",
-+			  "GPIO6",
-+			  "SPI_CE1_N",
-+			  "SPI_CE0_N",
-+			  "SPI_MISO",
-+			  "SPI_MOSI",
-+			  "SPI_SCLK",
-+			  "GPIO12",
-+			  "GPIO13",
-+			  /* Serial port */
-+			  "TXD1",
-+			  "RXD1",
-+			  "GPIO16",
-+			  "GPIO17",
-+			  "GPIO18",
-+			  "GPIO19",
-+			  "GPIO20",
-+			  "GPIO21",
-+			  "GPIO22",
-+			  "GPIO23",
-+			  "GPIO24",
-+			  "GPIO25",
-+			  "GPIO26",
-+			  "GPIO27",
-+			  "RGMII_MDIO",
-+			  "RGMIO_MDC",
-+			  /* Used by BT module */
-+			  "CTS0",
-+			  "RTS0",
-+			  "TXD0",
-+			  "RXD0",
-+			  /* Used by Wifi */
-+			  "SD1_CLK",
-+			  "SD1_CMD",
-+			  "SD1_DATA0",
-+			  "SD1_DATA1",
-+			  "SD1_DATA2",
-+			  "SD1_DATA3",
-+			  /* Shared with SPI flash */
-+			  "PWM0_MISO",
-+			  "PWM1_MOSI",
-+			  "STATUS_LED_G_CLK",
-+			  "SPIFLASH_CE_N",
-+			  "SDA0",
-+			  "SCL0",
-+			  "RGMII_RXCLK",
-+			  "RGMII_RXCTL",
-+			  "RGMII_RXD0",
-+			  "RGMII_RXD1",
-+			  "RGMII_RXD2",
-+			  "RGMII_RXD3",
-+			  "RGMII_TXCLK",
-+			  "RGMII_TXCTL",
-+			  "RGMII_TXD0",
-+			  "RGMII_TXD1",
-+			  "RGMII_TXD2",
-+			  "RGMII_TXD3";
-+};
-+
- &pwm1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pwm1_0_gpio40 &pwm1_1_gpio41>;
--- 
-2.7.4
+> > > What GPIO(s) we are talking about and how does it show up to the user?
+> >
+> > As an example, the issue manifests itself when you run 'crossystem
+> > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
+> > of 0 when the write protect screw is removed.
+>
+> Is it poking GPIOs directly through sysfs relying the Linux GPIO
+> numbering (which can change and is fragile anyway)?
 
+I believe so, yes.
