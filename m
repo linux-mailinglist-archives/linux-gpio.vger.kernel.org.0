@@ -2,67 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA2715729E
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:13:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9501572A5
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgBJKNZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Feb 2020 05:13:25 -0500
-Received: from mga02.intel.com ([134.134.136.20]:58079 "EHLO mga02.intel.com"
+        id S1727003AbgBJKOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Feb 2020 05:14:20 -0500
+Received: from mga07.intel.com ([134.134.136.100]:44766 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgBJKNY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:13:24 -0500
+        id S1726792AbgBJKOU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:14:20 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 02:13:24 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 02:14:19 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
-   d="scan'208";a="431556779"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Feb 2020 02:13:22 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j164B-000XJR-O1; Mon, 10 Feb 2020 12:13:23 +0200
-Date:   Mon, 10 Feb 2020 12:13:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     sachin agarwal <asachin591@gmail.com>,
+   d="scan'208";a="347020341"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 10 Feb 2020 02:14:15 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 10 Feb 2020 12:14:14 +0200
+Date:   Mon, 10 Feb 2020 12:14:14 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        andy@kernel.org
-Subject: Re: [PATCH v2] gpio: ich: fix a typo
-Message-ID: <20200210101323.GS10400@smile.fi.intel.com>
-References: <20200209111620.97423-1-sachinagarwal@sachins-MacBook-2.local>
- <CAMRc=Md9gsrm3OXcMgxd7DuiuZUovBB=Bcqfs7zCLApmgV6A8Q@mail.gmail.com>
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200210101414.GN2667@lahna.fi.intel.com>
+References: <20200205194804.1647-1-mst@semihalf.com>
+ <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com>
+ <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md9gsrm3OXcMgxd7DuiuZUovBB=Bcqfs7zCLApmgV6A8Q@mail.gmail.com>
+In-Reply-To: <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:54:37AM +0100, Bartosz Golaszewski wrote:
-> niedz., 9 lut 2020 o 12:16 sachin agarwal <asachin591@gmail.com> napisał(a):
-
-> I'm seeing that you have been sending a lot of these single typo
-> fixes. This is polluting the history and I'm not a fan of that.
+On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
+> > >
+> > > Hi Mika,
+> > >
+> > > The previous patches from Dmitry handled IRQ numbering, here we have a
+> > > similar issue with GPIO to pin translation - hardcoded values in FW
+> > > which do not agree with the (non-consecutive) numbering in newer
+> > > kernels.
+> >
+> > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+> > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+> > able to share the exact firmware description where this happens?
 > 
-> Linus: what is your policy on this?
+> Actually it is a GPIO offset in ACPI tables for Braswell that was
+> hardcoded in the old firmware to match the previous (consecutive)
+> Linux GPIO numbering.
 
-Side note from Intel developer(s):
-Whatever you decide I would like to have Intel GPIO patches to be seen
-separately, so, we handle them thru our trees.
+Can you share the ACPI tables and point me to the GPIO that is using
+Linux number?
 
-Since it's only one patch now for me, I'll take it.
+> > > > What GPIO(s) we are talking about and how does it show up to the user?
+> > >
+> > > As an example, the issue manifests itself when you run 'crossystem
+> > > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
+> > > of 0 when the write protect screw is removed.
+> >
+> > Is it poking GPIOs directly through sysfs relying the Linux GPIO
+> > numbering (which can change and is fragile anyway)?
+> 
+> I believe so, yes.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+This is something that should be fixed in userspace. Using global Linux
+GPIO or IRQ numbers is fragile and source of issues like this. There are
+correct ways of using GPIOs from userspace: in case of sysfs, you can
+find the base of the chip and then user relative numbering against it or
+switch to use libgpiod that does the same but uses the newer char
+device. Both cases the GPIO number are relative against the GPIO chip so
+they work even if global Linux GPIO numbering changes.
