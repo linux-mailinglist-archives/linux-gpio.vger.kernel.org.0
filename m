@@ -2,87 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92FBF157CB5
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 14:46:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AE8D157CBB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 14:49:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgBJNqw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 10 Feb 2020 08:46:52 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35618 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgBJNqv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Feb 2020 08:46:51 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r16so6374429otd.2;
-        Mon, 10 Feb 2020 05:46:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/ZFbzfC90P2KHFmW6waI4OosS69JRy2/8RNnTux9U2U=;
-        b=BJY/HMijW+Go5RQBoazfpraTYXHuKKRb4gwA46mDuaNpDD+NoB1mcNDOubH1dz3dl9
-         hd8MyR9zj0J9a5ASddelUBkr4M13hjtvp8JhExn6fUTAzO3fbbm9fltCypRGOoDQ/Y11
-         AsMsljEgkW3q+bBP5f/DyiZ58S9QPIcQZkp07Go0x4krUc+ACZN3ZzYweW4VqHZGdqFT
-         39sNvr4/xrqIMb59JKKqr5BGTTTFzVND7kS4wk8L3C5xK5W/lac5tcCOzgTb1VM9mAgx
-         jSluAfscHbkTbkcK6T+OpRiXkY1WT0T16oY6C/JKL5oyx3WvzrulGDXthOyxT8NYGOqs
-         dMtg==
-X-Gm-Message-State: APjAAAXekLQqbXxzvOyPAbvelezZ1JJogr3KMh7Am3qhwPZLNXHW8gmc
-        YCQ89mj4QTOwO8vFVtGYQzYhm81sNSkDTbPnquh6HQ==
-X-Google-Smtp-Source: APXvYqzkRHhAOxHdiqT2ZVWU53eMoYFCCS7FiEnmMlCth4Rg8ZlPe5+gc+7kpKQ8/k7RbWYlTIobp30xib8aZYPnurI=
-X-Received: by 2002:a9d:7602:: with SMTP id k2mr1121914otl.39.1581342410947;
- Mon, 10 Feb 2020 05:46:50 -0800 (PST)
+        id S1727827AbgBJNt0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Feb 2020 08:49:26 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41346 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727632AbgBJNt0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:49:26 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ADkXk1030772;
+        Mon, 10 Feb 2020 14:49:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=cITEAYl7nEAOFwC8GIedkKHGxNjOkyc26Tp0ZsiHXd4=;
+ b=EjcdUPpUjsFQTV8YUurJssgFINbtJhZ3CYUac/XmxMlMwxRDQVd8auSjASVPCiFATJdT
+ gMZRU1DDYhfGs0El2czpDnTL0clsDaG0qaim81DGDdeqXMCNXBYlByoWz8Pw83TFm4uC
+ Y8yXjJakVCB4a+BFKM9qbZYNPiEWSYIKvoKA11FHZEjSY1u7D7lwlSLVtu5iTnP0pNJc
+ MJHyP7NXyQbdOZ4DFHi6pKRI15VgFH13y9oXRiqnSInSTDAq6OnVVWVKe7QH2z9xYjtD
+ mVLBWKKSt8Pc2ENxQV8tm1/egsKcfp45YJPaWFQTgg2aPPxzwvWbgdRkR8djEOO2SAlA XA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9av50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 14:49:09 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2703100034;
+        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8AA2A2BD418;
+        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 14:49:04
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <marex@denx.de>
+Subject: [PATCH 0/2] Add GPIO level-sensitive interrupt support
+Date:   Mon, 10 Feb 2020 14:48:59 +0100
+Message-ID: <20200210134901.1939-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200110131927.1029-1-geert+renesas@glider.be> <20200110202950.GA695049@oden.dyn.berto.se>
-In-Reply-To: <20200110202950.GA695049@oden.dyn.berto.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Feb 2020 14:46:39 +0100
-Message-ID: <CAMuHMdVCwkwobX=LTx3Oz6Jq3orZ9j6VjdfbZTXAREZTWM3Mgw@mail.gmail.com>
-Subject: Re: [PATCH 00/13] pinctrl: sh-pfc: checker: Various improvements
-To:     =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_04:2020-02-10,2020-02-10 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 9:29 PM Niklas Söderlund
-<niklas.soderlund@ragnatech.se> wrote:
-> Neat series. I always worry when my eyes start to cross each other when
-> looking at the big tables I will make mistakes like this ;-)
->
-> On 2020-01-10 14:19:14 +0100, Geert Uytterhoeven wrote:
-> > This patch series contains various improvements for the builtin pin
-> > control table runtime checks of the Renesas Pin Function Controller
-> > driver.  These checks are enabled with CONFIG_DEBUG_PINCTRL=y, which can
-> > be combined with CONFIG_COMPILE_TEST=y to increase coverage to all
-> > Renesas ARM and SuperH SoCs..
-> >
-> > Note that all issues detected by this have already been fixed in "[PATCH
-> > 0/6] pinctrl: sh-pfc: More miscellenaous fixes"[1], and are now part of
-> > linux-next.
-> >
-> > I plan to queue this in sh-pfc-for-v5.7.
->
-> With the fix you point out yourself in 13/13 for
-> CONFIG_PINCTRL_SH_FUNC_GPIO=n feel free to add
->
-> Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->
-> For the whole series.
+This series adds the possibility to handle gpio interrupts on level.
 
-Thanks, queue in sh-pfc-for-v5.7.
+GPIO hardware block is directly linked to EXTI block but EXTI handles
+external interrupts only on edge. To be able to handle GPIO interrupt on
+level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+is retriggered following interrupt type and gpio line value.
 
-Gr{oetje,eeting}s,
+In exti irq chip, retrigger ops function is added.
 
-                        Geert
+Regards
+Alex
+
+Alexandre Torgue (2):
+  irqchip/stm32: Add irq retrigger support
+  pinctrl: stm32: Add level interrupt support to gpio irq chip
+
+ drivers/irqchip/irq-stm32-exti.c      | 14 +++++++-
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 47 +++++++++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 3 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
