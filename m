@@ -2,90 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9501572A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FF921572DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgBJKOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Feb 2020 05:14:20 -0500
-Received: from mga07.intel.com ([134.134.136.100]:44766 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgBJKOU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:14:20 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 02:14:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
-   d="scan'208";a="347020341"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 10 Feb 2020 02:14:15 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 10 Feb 2020 12:14:14 +0200
-Date:   Mon, 10 Feb 2020 12:14:14 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
- of ACPI GPIO numbers
-Message-ID: <20200210101414.GN2667@lahna.fi.intel.com>
-References: <20200205194804.1647-1-mst@semihalf.com>
- <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com>
- <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+        id S1727121AbgBJKal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Feb 2020 05:30:41 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51942 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgBJKal (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Feb 2020 05:30:41 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t23so9293009wmi.1
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2020 02:30:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QjCT7DGcknRZr660o4Tl2Ax7WhSF9Ik0datfUyTdHpY=;
+        b=tz62J9x3mFQtm2Nc/aAgnxL7BjYIu7nStxJVlPRQyfNOelVB3VuZP5DO87L0m+mT8+
+         fSOjQi9Rdwnp4qBrT66hAGOSpGlJ56WYt38aubGvJG6lQnAC8ha/5UPF7Yc5+LiBt0nc
+         gDmCvjRocnayOTzzAGHXiVckvJK6zbLzUqSltr4rMiEG4d7pP4LkTWS2xJOHmkbnud6D
+         Y99zfaP+dvmwoBKwnBrdwuKRxl+jNmLlKLUCIoOzia7QG9vsRPFg7GFc2Kd9801A4sCv
+         JVsvpWug/+AJWZWYukqf1VBGZ4ICBP3fm7ZxZsVoy6n4TUv3OPRryO8ApTBFjmY7DMFT
+         FCzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QjCT7DGcknRZr660o4Tl2Ax7WhSF9Ik0datfUyTdHpY=;
+        b=gv7agr0etS/lsAXhxXA6rT4BkuH/yK8uvtpiNtGxQW0TzuD/6dvpu1AIiWvzuB4IW1
+         9X7z5HCS+UszgdBFipOrjKnheHqXE6m52h1vuDF4pb1MUYYwV6ESyvLy3zxyc3vvlzAL
+         xGywLsh970LteLNda6Ska56ok0C/fpboL2koVUifqNYCHLbuhB4zJBValcv8IVygC7RI
+         vDTnjCqpGPdgzdS7lHcKOPJIvF6vnODERoo4Ztp4O8IBbe7ZXBK3kZL9z+Ik6xgCp1sm
+         Hv4DUK3JN6Jr/oCkKsZITECKowG5HTm7+ZRuXewmRzdHTnaRMM4amaeaOffjLVm1C5n2
+         eisQ==
+X-Gm-Message-State: APjAAAWSwDeh3LtxQoCmcQcWwf6iNaQ/ykVwhsFtCZEt1HGaKQbAOh9Y
+        HyVmCOlpTeRw3o5OpEndeFwp7w==
+X-Google-Smtp-Source: APXvYqxzpLLPYkGAYETVLr8MLz4P96Jxel0uBUKZ77P3N1+hsWLbsq0MXvj09Tp1WHNJDzrCeIRIjQ==
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr15360060wmc.9.1581330638075;
+        Mon, 10 Feb 2020 02:30:38 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id f11sm33443wml.3.2020.02.10.02.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 02:30:37 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.6-rc2
+Date:   Mon, 10 Feb 2020 11:30:35 +0100
+Message-Id: <20200210103035.16406-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
-> > >
-> > > Hi Mika,
-> > >
-> > > The previous patches from Dmitry handled IRQ numbering, here we have a
-> > > similar issue with GPIO to pin translation - hardcoded values in FW
-> > > which do not agree with the (non-consecutive) numbering in newer
-> > > kernels.
-> >
-> > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
-> > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
-> > able to share the exact firmware description where this happens?
-> 
-> Actually it is a GPIO offset in ACPI tables for Braswell that was
-> hardcoded in the old firmware to match the previous (consecutive)
-> Linux GPIO numbering.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Can you share the ACPI tables and point me to the GPIO that is using
-Linux number?
+Linus,
 
-> > > > What GPIO(s) we are talking about and how does it show up to the user?
-> > >
-> > > As an example, the issue manifests itself when you run 'crossystem
-> > > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
-> > > of 0 when the write protect screw is removed.
-> >
-> > Is it poking GPIOs directly through sysfs relying the Linux GPIO
-> > numbering (which can change and is fragile anyway)?
-> 
-> I believe so, yes.
+these are fixes I picked up during the merge window. Details are in the
+signed tag. Please pull.
 
-This is something that should be fixed in userspace. Using global Linux
-GPIO or IRQ numbers is fragile and source of issues like this. There are
-correct ways of using GPIOs from userspace: in case of sysfs, you can
-find the base of the chip and then user relative numbering against it or
-switch to use libgpiod that does the same but uses the newer char
-device. Both cases the GPIO number are relative against the GPIO chip so
-they work even if global Linux GPIO numbering changes.
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.6-rc2
+
+for you to fetch changes up to 8131b73b22c25e57e926874bb284f61cc3f8ac5e:
+
+  gpiolib: remove unnecessary argument from set_config call (2020-02-10 10:55:18 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v5.6-rc2
+
+- fix a regression introduced by gpio_do_set_config()
+- sort GPIO entries in MAINTAINERS
+- remove leftover defines in gpio-bd71828
+- remove an redundant switch case in gpio_set_config()
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      MAINTAINERS: Sort entries in database for GPIO
+
+Axel Lin (1):
+      gpio: bd71828: Remove unneeded defines for GPIO_LINE_DIRECTION_IN/OUT
+
+Bartosz Golaszewski (3):
+      Revert "gpiolib: Remove duplicated function gpio_do_set_config()"
+      Revert "gpiolib: remove set but not used variable 'config'"
+      gpiolib: fix gpio_do_set_config()
+
+Kent Gibson (1):
+      gpiolib: remove unnecessary argument from set_config call
+
+ MAINTAINERS                 | 28 ++++++++++++++--------------
+ drivers/gpio/gpio-bd71828.c | 10 ----------
+ drivers/gpio/gpiolib.c      | 30 +++++++++++++++++++++++++-----
+ 3 files changed, 39 insertions(+), 29 deletions(-)
