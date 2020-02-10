@@ -2,106 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF921572DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C35481572FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Feb 2020 11:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgBJKal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Feb 2020 05:30:41 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51942 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJKal (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Feb 2020 05:30:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so9293009wmi.1
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2020 02:30:38 -0800 (PST)
+        id S1726961AbgBJKqP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Feb 2020 05:46:15 -0500
+Received: from mail-io1-f46.google.com ([209.85.166.46]:33205 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJKqP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Feb 2020 05:46:15 -0500
+Received: by mail-io1-f46.google.com with SMTP id z8so7059583ioh.0
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Feb 2020 02:46:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QjCT7DGcknRZr660o4Tl2Ax7WhSF9Ik0datfUyTdHpY=;
-        b=tz62J9x3mFQtm2Nc/aAgnxL7BjYIu7nStxJVlPRQyfNOelVB3VuZP5DO87L0m+mT8+
-         fSOjQi9Rdwnp4qBrT66hAGOSpGlJ56WYt38aubGvJG6lQnAC8ha/5UPF7Yc5+LiBt0nc
-         gDmCvjRocnayOTzzAGHXiVckvJK6zbLzUqSltr4rMiEG4d7pP4LkTWS2xJOHmkbnud6D
-         Y99zfaP+dvmwoBKwnBrdwuKRxl+jNmLlKLUCIoOzia7QG9vsRPFg7GFc2Kd9801A4sCv
-         JVsvpWug/+AJWZWYukqf1VBGZ4ICBP3fm7ZxZsVoy6n4TUv3OPRryO8ApTBFjmY7DMFT
-         FCzA==
+        d=geoffrey-id-au.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=rQ1woM9fN4yRdu06zIzaO5A5l2NLePrcaBZqjTl2Vu0=;
+        b=XDRBr+V551p8L4jBMsagLZN7awO464tnqdGQEtHMiiUBO+PWgu3aP+z5s++qLhlxEF
+         FNNvWrlXy6GQozNuMJcTRRcdBUCWN15hHrbGaWbapTwaUgDkLh8rxZJv6zsrqTF0SJw4
+         hjZI3q+SxaFZ31IjPUTAmwY76KyhWdIOnKN4WN1EKPhZ82CLSBAbmilOJG2GbTbF/fVG
+         aBOL7XHgtZriKbeLKzeyy+dKqWXPYpYjcIGvjXbZQiJxvbloxIMgEmCkvshEpGo2teKG
+         mFGBqP0oUm/hhQV7IUFqU0ys5Uodem0C0yDgmIkbDyScZ+Ptsct9V8AvMm+RY9+QeTTT
+         W2HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QjCT7DGcknRZr660o4Tl2Ax7WhSF9Ik0datfUyTdHpY=;
-        b=gv7agr0etS/lsAXhxXA6rT4BkuH/yK8uvtpiNtGxQW0TzuD/6dvpu1AIiWvzuB4IW1
-         9X7z5HCS+UszgdBFipOrjKnheHqXE6m52h1vuDF4pb1MUYYwV6ESyvLy3zxyc3vvlzAL
-         xGywLsh970LteLNda6Ska56ok0C/fpboL2koVUifqNYCHLbuhB4zJBValcv8IVygC7RI
-         vDTnjCqpGPdgzdS7lHcKOPJIvF6vnODERoo4Ztp4O8IBbe7ZXBK3kZL9z+Ik6xgCp1sm
-         Hv4DUK3JN6Jr/oCkKsZITECKowG5HTm7+ZRuXewmRzdHTnaRMM4amaeaOffjLVm1C5n2
-         eisQ==
-X-Gm-Message-State: APjAAAWSwDeh3LtxQoCmcQcWwf6iNaQ/ykVwhsFtCZEt1HGaKQbAOh9Y
-        HyVmCOlpTeRw3o5OpEndeFwp7w==
-X-Google-Smtp-Source: APXvYqxzpLLPYkGAYETVLr8MLz4P96Jxel0uBUKZ77P3N1+hsWLbsq0MXvj09Tp1WHNJDzrCeIRIjQ==
-X-Received: by 2002:a1c:7205:: with SMTP id n5mr15360060wmc.9.1581330638075;
-        Mon, 10 Feb 2020 02:30:38 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id f11sm33443wml.3.2020.02.10.02.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 02:30:37 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.6-rc2
-Date:   Mon, 10 Feb 2020 11:30:35 +0100
-Message-Id: <20200210103035.16406-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=rQ1woM9fN4yRdu06zIzaO5A5l2NLePrcaBZqjTl2Vu0=;
+        b=LTgvTdet1SDBwN+MRviqfJetJNZmhbmSBG4PaSZpzYqMVrSGggEQdUu8CCjvw/8xaB
+         Ur6J+Pv+lzxJE/wUVbSOk+NDp9NlDchiGWLmCfdyzv3UgTw2nJYv+Rtyw230wizY51zJ
+         ntGNjbjVywCj6T918h4fHyHR+KGWyjtutnzwOmi/LmR3m24eN4yHRnWMy0GEw9SZ68A/
+         xkCgb5iWMNqr7R6xr1rqeW1NFiwLjGL7sHdNxL90I85zOhTnqVMFMPSmlXPzrGxJ994a
+         wtAqXDMIKRM0CRGatEwQ8xSh8TLejhtN4/RxXRf2HRRAGsxgqXiHnKd8WB4QM3JYtKE0
+         Sx+g==
+X-Gm-Message-State: APjAAAV/cRD1DG+KCBQmYAcOPFWrkBZG85WfV8wgB9DuQpMQvz+5pqSY
+        EzbEOR4fzFxxxCJv27jBB4JrvABVH1J3SLSKoDtLTaLu
+X-Google-Smtp-Source: APXvYqw3NsedqLMyru+4Qqbb3idUn9cTPCcsmdKwGjhiz/8PYGnMiw3pZ6YJhQnaW7Hk4eeMeufQOKVnM6KE+4cD76U=
+X-Received: by 2002:a05:6638:a2c:: with SMTP id 12mr9598341jao.60.1581331574729;
+ Mon, 10 Feb 2020 02:46:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CADn0hExOJHS0OhU41sToXxqnqpyWjmCPrsVwXE-OKBLg-0dsRQ@mail.gmail.com>
+In-Reply-To: <CADn0hExOJHS0OhU41sToXxqnqpyWjmCPrsVwXE-OKBLg-0dsRQ@mail.gmail.com>
+From:   Geoffrey White <geoffrey@geoffrey.id.au>
+Date:   Mon, 10 Feb 2020 21:46:03 +1100
+Message-ID: <CADn0hEwXv1eyqMvPLshkPBOFukjza2nvScNNXw4U4L-K7dLHCw@mail.gmail.com>
+Subject: Re: [libgpiod]
+To:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello,
 
-Linus,
+What a great library gpiod is. I am trying to port over my robot
+software from WiringPi to it at the moment.  I am running Ubuntu 18.04
+on both a development laptop and a Raspbery Pi 3 A+. I cross compile
+version 1.4.2 and can run on the Pi and iterate over the detected
+devices fine. However I'm not able to detect the correct chipset on
+the device.
 
-these are fixes I picked up during the merge window. Details are in the
-signed tag. Please pull.
+The Pi v3a+ uses the Broadcom chipset BCM2837B0, however the chip is
+detected as a bcm2835 which is from the original Pi v1. Further, none
+of the lines are labelled with a description. They all appear as
+"unnamed" instead of labels such as  "GPIO_GCLK" or "GPIO17"
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+I heard the stock Kernel. on 18.04 (4.15) did have some issues,
+however I have since upgraded to the 5.3.0 Kernal on both my dev
+laptop and Pi.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+I would personally like to keep to using the Ubuntu distribution for
+the Pi, however perhaps it is better i revert back to Raspbian.
 
-are available in the Git repository at:
+My future work I hope to integrate the DMA timing for a simple PWM
+control using the gpiod, i'd like to help out with the project if I
+can, sorry if I have approached the wrong email list.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.6-rc2
+ Regards,
 
-for you to fetch changes up to 8131b73b22c25e57e926874bb284f61cc3f8ac5e:
-
-  gpiolib: remove unnecessary argument from set_config call (2020-02-10 10:55:18 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v5.6-rc2
-
-- fix a regression introduced by gpio_do_set_config()
-- sort GPIO entries in MAINTAINERS
-- remove leftover defines in gpio-bd71828
-- remove an redundant switch case in gpio_set_config()
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      MAINTAINERS: Sort entries in database for GPIO
-
-Axel Lin (1):
-      gpio: bd71828: Remove unneeded defines for GPIO_LINE_DIRECTION_IN/OUT
-
-Bartosz Golaszewski (3):
-      Revert "gpiolib: Remove duplicated function gpio_do_set_config()"
-      Revert "gpiolib: remove set but not used variable 'config'"
-      gpiolib: fix gpio_do_set_config()
-
-Kent Gibson (1):
-      gpiolib: remove unnecessary argument from set_config call
-
- MAINTAINERS                 | 28 ++++++++++++++--------------
- drivers/gpio/gpio-bd71828.c | 10 ----------
- drivers/gpio/gpiolib.c      | 30 +++++++++++++++++++++++++-----
- 3 files changed, 39 insertions(+), 29 deletions(-)
+Geoffrey.
