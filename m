@@ -2,128 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 059BB1593C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 16:51:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0430159B0A
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 22:24:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgBKPu7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Feb 2020 10:50:59 -0500
-Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:20459
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727838AbgBKPu6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:50:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UGDdcPtxf16g30YplOm05rWqa3P+RcKH5irlf9EnjJnPZHw/PFhe/GC6ipjGKYLd04swV9VmFCPRv6Zd5yz7/AdQBQjDA2VwxidMdrJxa8RMT+Gwugru5v9jp5AbzTpbXdW7CqItWv5MmIuUV6rVu3W+CKhsErRj2FFEuGlH/7e9hb5TpIInvKrmIcAO+dScAom1/nop/Ug+y9q5u5oW4cygmGannv02R9Ril9uzaG9CRaUvbMQN15hpR6N0mLhn02N8J5WgivHCJqTl8Z7p/7aMlNdKEBpf6hlbGbIF+7iRgYHecFY+gIAIPLlGAh86XGyLLCeBhnrawDIO7oTWTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=526Tr9fCTrWKI5KCzToC0sONXWzISJI9Lci+Js+fXUU=;
- b=TFRwM/L4eem/mWMMUt3pdlRFX+Km8gW+6UU0WJtUZEsmTUgFh7Ehngmp3fecNdrvoTJ7FJZ74AQRwfS6oH8xWZxNJwNvR8E51g7WwG1HYOx2ITc+8llU4+38gVQlfyW7laBNKvixsKJi1b/MagtKnVisI8ZIV1OpYId48GTrZ7FlnYv6CK2b97wva7/5KaphhmjeZ0ta44Cp/db4+uLIs0FL1rz/zbCcV1Izdo0fxCiVwJjPWJJUejNGHsUR7nTOmJvXn2if3g7tYbqqiyk5tg/3cXijROQMJ3twHz4cN8gbLQS6zjpLrvjDT2P8+WTr/XK4KGtzlHxxsB+iXNFhkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=526Tr9fCTrWKI5KCzToC0sONXWzISJI9Lci+Js+fXUU=;
- b=RRQyzsMNtDtd+MIfmcMKKVMU+i9vKsMUylvdU1rn+6FexpmCK5GaUne2VC6pPeiMIa5znbX+4zqoCBdRsFDiUODFOeKa/Rq8PVWkdEEMsEgKo1u976ur8RztqxzxZyzcnMFyu3b71PqNoF7Cn+oiwwMLDbAHL6E2xzKntIvcpxQ=
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com (10.172.225.17) by
- DB6PR0501MB2502.eurprd05.prod.outlook.com (10.168.74.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Tue, 11 Feb 2020 15:50:54 +0000
-Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::455f:a056:2abe:6217]) by DB6PR0501MB2712.eurprd05.prod.outlook.com
- ([fe80::455f:a056:2abe:6217%11]) with mapi id 15.20.2707.030; Tue, 11 Feb
- 2020 15:50:54 +0000
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: GPIO Interrupt question
-Thread-Topic: GPIO Interrupt question
-Thread-Index: AdXg8vtgt636deM1TV2ZlRcCpIdB8A==
-Date:   Tue, 11 Feb 2020 15:50:54 +0000
-Message-ID: <DB6PR0501MB2712A3D898BD22E55F65532FDA180@DB6PR0501MB2712.eurprd05.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Asmaa@mellanox.com; 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d346da18-167e-4fa4-f963-08d7af0a2dca
-x-ms-traffictypediagnostic: DB6PR0501MB2502:
-x-microsoft-antispam-prvs: <DB6PR0501MB25029794A98B8D6F8273AD39DA180@DB6PR0501MB2502.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0310C78181
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(26005)(186003)(55016002)(9686003)(7696005)(3480700007)(478600001)(76116006)(81166006)(2906002)(8936002)(6916009)(5660300002)(81156014)(8676002)(66476007)(66556008)(64756008)(66446008)(66946007)(86362001)(52536014)(71200400001)(33656002)(316002)(6506007)(7116003)(554374003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2502;H:DB6PR0501MB2712.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /yBr/aobkK0B1hZkbomeNqg0XnfCtZ6zZou4OCzB0TQIsr0eo7rOE0L71NSMcQLnUEciMrjPYg+214/PTX3/h2oO2x1OJiF5rY9TD7U16216bKpC+BhZgohdaV2O+qaZI5Jkcjysu+tUG6jjkyyQiwt5CNmP7AodIXxBa2G0D/gec6OGaVgQNG0zA2sLydJJcy0pgZiiqvi28LurRyVf/9X07tjcpq4IUiL/v/elQ2f4Tebk4JTTuNtwm5HmgIuED8k4CUQbiXTUYMMk0ArB5H7n0Ac86mHrbI1qqjDS9k0z71Y8vMRc39i5jgkm9z3SNV4yLkaYbSLhuNOFWTRxSGkBntlgbx2N6RuRqiTT/zbJj4nr/WgMUgyWyfLPnjNk0yLcmHMlL9HZe6L+13m2QdxVSrhdEkDX3dwb1sWlym4dYALFeocsrw/aUJ/+N8foZGRj1JfO3bBNRSFRDi+50yGVZ6etNUEaksAckP8fk1mVY68OtM+Q8NAQL+oJKB8E
-x-ms-exchange-antispam-messagedata: tPHE5FJ6Uq0OZ+mFyEJFzZUAZTAOsBppib4hdN7+6WDOx+6sJBrpqPUstO4LvmylnXeSIWyreuXyCwchmOylG+caVs3vj4WRrVKDnZEiXbI9BV6HhfI3iGKH5ojiuENF+JD4lKabKefmKmsvAFNAEw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727573AbgBKVYQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Feb 2020 16:24:16 -0500
+Received: from gateway36.websitewelcome.com ([192.185.188.18]:41595 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726968AbgBKVYQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Feb 2020 16:24:16 -0500
+X-Greylist: delayed 1230 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Feb 2020 16:24:15 EST
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 91DE2414FE1AD
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2020 14:17:45 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 1ch7jHoD5vBMd1ch7jbPwB; Tue, 11 Feb 2020 15:03:45 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Y7FMQ3aFcSbTB8cXSN/10Y25Q6I9Sqxro0ixjLvyexk=; b=NVUjzx89ff02Y0550Cc9HR4fAV
+        y8xgLLMBqHAJcRuoYH/4vdjQlwmneVydHsfxguYwcJemWBAIPTaH5ACThZNw/j9YPPszQTd3icsx7
+        U+v8QkoMqssJf+0DLG7bz90E+KHjnEEjbCAcF7/fMJV0CS+I9YjRTsjTeSau8ZIvWL0QO5RZmkBH5
+        Mo9HA971WK+zi4licGrT47AWMX8GavgfO5a7EaL3XONr0IgFVBS2Fx+Bnk5oVh9pOOh52jbY5YMpW
+        bY4JaEdAmrd6n3YBDyb0tJMBYkMJS4rHr6EFQLvL5BVmnVdN9WDD5iCxqHzkn+aXLokWXCTaEqr5U
+        VKHDlH5A==;
+Received: from [200.68.140.36] (port=15247 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j1ch5-0026gU-VR; Tue, 11 Feb 2020 15:03:44 -0600
+Date:   Tue, 11 Feb 2020 15:06:18 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] gpio: uniphier: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200211210618.GA29823@embeddedor>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d346da18-167e-4fa4-f963-08d7af0a2dca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Feb 2020 15:50:54.7545
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C/BzFGB59oWFbJp+7O/FgNYmMxODaV+2znAuxc6j1wZgGg3Ht+JPh4nrvBX0x9SsP4rIOBALAsHB8fIOvv2tLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2502
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.36
+X-Source-L: No
+X-Exim-ID: 1j1ch5-0026gU-VR
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.36]:15247
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-I am new to the mailing list and I have a question related to gpio interrup=
-t support in linux.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-In my system, I have a shared IRQ which could be indicative of a GPIO inter=
-rupt among other things (I2C events for example).
-The GPIO interrupt is a power down event triggered by a push button. Once l=
-inux gets notice of that interrupt (via ACPI) it will interact with acpid p=
-rogram to handle it accordingly.
-So I would like to support that ACPI event handling in my gpio driver. I co=
-uld call acpi_gpiochip_request_interrupts(gpiochip) from my probe but the i=
-ssue is that I need a "first"=20
-handler before actually executing the handler. That first handler would hel=
-p determine if that's a GPIO interrupt.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertenly introduced[3] to the codebase from now on.
 
-acpi_gpiochip_request_interrupts eventually calls:
-ret =3D request_threaded_irq(event->irq, NULL, event->handler, event->irqfl=
-ags, "ACPI:Event", event);
+This issue was found with the help of Coccinelle.
 
-So a trivial solution would be to pass my "first" handler instead of NULL h=
-ere. But that would be very messy and would change too many lines of codes.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-I looked at other drivers like gpio-stmpe.c which does the following from t=
-he probe:
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpio/gpio-uniphier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
-                               stmpe_gpio_irq, IRQF_ONESHOT,
-                               "stmpe-gpio", stmpe_gpio);
-       =20
-ret =3D  gpiochip_irqchip_add_nested(&stmpe_gpio->chip,
-                                                 &stmpe_gpio_irq_chip,
-                                                 0,
-                                                 handle_simple_irq,
-                                                 IRQ_TYPE_NONE);
-       =20
+diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+index 0f662b297a95..9843638d99d0 100644
+--- a/drivers/gpio/gpio-uniphier.c
++++ b/drivers/gpio/gpio-uniphier.c
+@@ -33,7 +33,7 @@ struct uniphier_gpio_priv {
+ 	struct irq_domain *domain;
+ 	void __iomem *regs;
+ 	spinlock_t lock;
+-	u32 saved_vals[0];
++	u32 saved_vals[];
+ };
+ 
+ static unsigned int uniphier_gpio_bank_to_reg(unsigned int bank)
+-- 
+2.25.0
 
-gpiochip_set_nested_irqchip(&stmpe_gpio->chip,&stmpe_gpio_irq_chip,irq);
-
-But I am not sure if it does what I want it to do since it does not create =
-that dependency of second handler on first handler.
-
-Your input would greatly be appreciated.
-
-Thank you.
-Asmaa Mnebhi
