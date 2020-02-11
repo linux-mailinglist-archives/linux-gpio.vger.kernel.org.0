@@ -2,236 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95243159B0D
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 22:24:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C84159B8E
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 22:47:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbgBKVYj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Feb 2020 16:24:39 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:35658 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgBKVYj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Feb 2020 16:24:39 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B86E1C5C1B;
-        Tue, 11 Feb 2020 22:24:36 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8E74D1A11E6;
-        Tue, 11 Feb 2020 22:24:36 +0100 (CET)
-Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D8D4F20567;
-        Tue, 11 Feb 2020 22:24:35 +0100 (CET)
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>
-Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
+        id S1727347AbgBKVri (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Feb 2020 16:47:38 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:8477 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgBKVrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Feb 2020 16:47:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581457655;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=EBfn4aNTLC4vcAvpYGu7o+g5GHVcJfaycvr27j3NIl8=;
+        b=AqUtzdIgT59TofA08IG5WnXUoFaYAX7Zy1RM2oIrtj3MtNHPZLd01+6Gl3JKBCIjXT
+        oZr8MaHM5bJMzF+j3HACYogO48lYK7HBwukZrOhuYuO76dcKbMhNJuttN5FJJ+RTgcS3
+        zcpJHoZIzheYJF3MVgkn6C8owV3i1XVn6ghjcx6LtBO15iH6XPv3UGeVCg9b/Cs9nH6r
+        C1t2ibb5sGilu0bul6q7t6fcVrG74z/NvYRix3vzDtyRlI/7wpZp5p6xq/9JJtvgM8xY
+        yf4gmzWNn8V3kKF/gvVN5NfBMbf48uev9zdTNg+6mxTHvrXaUVM4KYqkistg8XANBUJ/
+        Y70A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M0P2mp10IM"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1BLfW0EG
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 11 Feb 2020 22:41:32 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-gpio@vger.kernel.org (open list:PIN CONTROLLER - FREESCALE),
-        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
-Subject: [PATCH] firmware: imx: Align imx SC msg structs to 4
-Date:   Tue, 11 Feb 2020 23:24:33 +0200
-Message-Id: <3a8b6772a1edffdd7cdb54d6d50030b03ba0bebb.1581455751.git.leonard.crestez@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [PATCH 00/14] MIPS: Fixes and improvements for CI20 board (JZ4780)
+Date:   Tue, 11 Feb 2020 22:41:17 +0100
+Message-Id: <cover.1581457290.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have sizeof "6" and "7".
+This patch set provides several improvements for the CI20 board:
 
-This produces many oopses with CONFIG_KASAN=y:
+* suppress warnings from i2c if device is not responding
+* make ingenic-drm found through DT
+* allow davicom dm9000 ethernet controller to use MAC address provided by U-Boot
+* fix #include in jz4780.dtsi
+* configure for loadable kernel modules
+* add DTS for IR sensor and SW1 button
+* configure so that LEDs, IR sensor, SW1 button have drivers
+* fix DTS for ACT8600 PMU and configure driver
+* fix interrupt of nxp,pcf8563
 
-	BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
+There is another patch set in our queue to add HDMI support on top of this work.
 
-It shouldn't cause an issues in normal use because these structs are
-always allocated on the stack.
+Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reported-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- drivers/clk/imx/clk-scu.c               | 8 ++++----
- drivers/firmware/imx/misc.c             | 8 ++++----
- drivers/firmware/imx/scu-pd.c           | 2 +-
- drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
- drivers/rtc/rtc-imx-sc.c                | 2 +-
- drivers/soc/imx/soc-imx-scu.c           | 2 +-
- 6 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-index fbef740704d0..b8b2072742a5 100644
---- a/drivers/clk/imx/clk-scu.c
-+++ b/drivers/clk/imx/clk-scu.c
-@@ -41,16 +41,16 @@ struct clk_scu {
- struct imx_sc_msg_req_set_clock_rate {
- 	struct imx_sc_rpc_msg hdr;
- 	__le32 rate;
- 	__le16 resource;
- 	u8 clk;
--} __packed;
-+} __packed __aligned(4);
- 
- struct req_get_clock_rate {
- 	__le16 resource;
- 	u8 clk;
--} __packed;
-+} __packed __aligned(4);
- 
- struct resp_get_clock_rate {
- 	__le32 rate;
- };
- 
-@@ -82,11 +82,11 @@ struct imx_sc_msg_get_clock_parent {
- 	struct imx_sc_rpc_msg hdr;
- 	union {
- 		struct req_get_clock_parent {
- 			__le16 resource;
- 			u8 clk;
--		} __packed req;
-+		} __packed __aligned(4) req;
- 		struct resp_get_clock_parent {
- 			u8 parent;
- 		} resp;
- 	} data;
- };
-@@ -119,11 +119,11 @@ struct imx_sc_msg_req_clock_enable {
- 	struct imx_sc_rpc_msg hdr;
- 	__le16 resource;
- 	u8 clk;
- 	u8 enable;
- 	u8 autog;
--} __packed;
-+} __packed __aligned(4);
- 
- static inline struct clk_scu *to_clk_scu(struct clk_hw *hw)
- {
- 	return container_of(hw, struct clk_scu, hw);
- }
-diff --git a/drivers/firmware/imx/misc.c b/drivers/firmware/imx/misc.c
-index 4b56a587dacd..d073cb3ce699 100644
---- a/drivers/firmware/imx/misc.c
-+++ b/drivers/firmware/imx/misc.c
-@@ -14,30 +14,30 @@
- struct imx_sc_msg_req_misc_set_ctrl {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 ctrl;
- 	u32 val;
- 	u16 resource;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_req_cpu_start {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 address_hi;
- 	u32 address_lo;
- 	u16 resource;
- 	u8 enable;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_req_misc_get_ctrl {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 ctrl;
- 	u16 resource;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_resp_misc_get_ctrl {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
--} __packed;
-+} __packed __aligned(4);
- 
- /*
-  * This function sets a miscellaneous control value.
-  *
-  * @param[in]     ipc         IPC handle
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index b556612207e5..af3ae0087de4 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -59,11 +59,11 @@
- /* SCU Power Mode Protocol definition */
- struct imx_sc_msg_req_set_resource_power_mode {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 resource;
- 	u8 mode;
--} __packed;
-+} __packed __aligned(4);
- 
- #define IMX_SCU_PD_NAME_SIZE 20
- struct imx_sc_pm_domain {
- 	struct generic_pm_domain pd;
- 	char name[IMX_SCU_PD_NAME_SIZE];
-diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
-index 73bf1d9f9cc6..23cf04bdfc55 100644
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -21,16 +21,16 @@ enum pad_func_e {
- 
- struct imx_sc_msg_req_pad_set {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_req_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_resp_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- } __packed;
-diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
-index cf2c12107f2b..a5f59e6f862e 100644
---- a/drivers/rtc/rtc-imx-sc.c
-+++ b/drivers/rtc/rtc-imx-sc.c
-@@ -35,11 +35,11 @@ struct imx_sc_msg_timer_rtc_set_alarm {
- 	u8 mon;
- 	u8 day;
- 	u8 hour;
- 	u8 min;
- 	u8 sec;
--} __packed;
-+} __packed __aligned(4);
- 
- static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
- {
- 	struct imx_sc_msg_timer_get_rtc_time msg;
- 	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
-index fb70b8a3f7c5..20d37eaeb5f2 100644
---- a/drivers/soc/imx/soc-imx-scu.c
-+++ b/drivers/soc/imx/soc-imx-scu.c
-@@ -23,11 +23,11 @@ struct imx_sc_msg_misc_get_soc_id {
- 		} __packed req;
- 		struct {
- 			u32 id;
- 		} resp;
- 	} data;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_misc_get_soc_uid {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 uid_low;
- 	u32 uid_high;
+Alex Smith (1):
+  MIPS: DTS: CI20: add DT node for IR sensor
+
+H. Nikolaus Schaller (13):
+  i2c: jz4780: suppress txabrt reports for i2cdetect
+  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+  net: davicom: dm9000: allow to pass MAC address through mac_addr
+    module parameter
+  MIPS: DTS: jz4780: fix #includes for irq.h and gpio.h
+  MIPS: CI20: defconfig: configure for supporting modules
+  MIPS: CI20: defconfig: compile leds-gpio driver into the kernel and
+    configure for LED triggers
+  MIPS: DTS: CI20: fix PMU definitions for ACT8600
+  MIPS: CI20: defconfig: configure CONFIG_REGULATOR_ACT8865 for PMU
+  MIPS: DTS: CI20: give eth0_power a defined voltage.
+  MIPS: CI20: defconfig: compile gpio-ir driver
+  MIPS: DTS: CI20: add DT node for SW1 as Enter button
+  MIPS: CI20: defconfig: configure for CONFIG_KEYBOARD_GPIO=m
+  MIPS: DTS: CI20: fix interrupt for pcf8563 RTC
+
+ arch/mips/boot/dts/ingenic/ci20.dts    | 71 ++++++++++++++++++++------
+ arch/mips/boot/dts/ingenic/jz4780.dtsi |  2 +
+ arch/mips/configs/ci20_defconfig       | 21 ++++++++
+ drivers/gpu/drm/ingenic/ingenic-drm.c  |  2 +
+ drivers/i2c/busses/i2c-jz4780.c        |  3 ++
+ drivers/net/ethernet/davicom/dm9000.c  | 42 +++++++++++++++
+ 6 files changed, 125 insertions(+), 16 deletions(-)
+
 -- 
-2.17.1
+2.23.0
 
