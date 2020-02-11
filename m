@@ -2,107 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36EBA158E3B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 13:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BAF5158E87
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Feb 2020 13:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgBKMRx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Feb 2020 07:17:53 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56751 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbgBKMRx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Feb 2020 07:17:53 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1UU9-0002pN-Il; Tue, 11 Feb 2020 13:17:49 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j1UU8-0005ms-7J; Tue, 11 Feb 2020 13:17:48 +0100
-Date:   Tue, 11 Feb 2020 13:17:48 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: siox: potentially enabling IRQs too early
-Message-ID: <20200211121748.woeix5ovpeo3gfc7@pengutronix.de>
-References: <20200211073511.r24n3bygyjxrsuez@kili.mountain>
- <20200211080138.6bm5toge74wjncxw@pengutronix.de>
- <87r1z14hzh.fsf@nanos.tec.linutronix.de>
+        id S1728352AbgBKMbg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Feb 2020 07:31:36 -0500
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:36160 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728341AbgBKMbg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Feb 2020 07:31:36 -0500
+Received: by mail-wr1-f43.google.com with SMTP id z3so12177187wru.3
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Feb 2020 04:31:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=BGh75gij0YSq317IMTvibKY/hgc3EhP/91wNaQpFPys=;
+        b=JLbXsq8L/fVJ+TJfLIce8mektqJOfQxruc4wod4079L/x/W3VUqXszIEuadxQuN587
+         JXbd0jgdB3W8tuS9u3RUHc33XRBD22kegQ7fJvu+wEjMSMtC5Da9z/1IiOobqHNDZ+Dd
+         ixY9ivivM3nf28qy1eorIPxkfRRFw8SrCUP/ePXKYrFO4/XWgMY/Q01yW8S5otmFQ8zO
+         Dg08pneVQXvjnIQN5iIEAOo4h8UH+ldq1duL537adsA86sFYYE/NLMTRvLVRNlM9SNwz
+         psAGEMtH+9yqIz7YpHcJpLssnvTQM4vwkX3A9m3ULUlwOZ4f/Y32LQi0JEMR0wAvB76a
+         e/2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=BGh75gij0YSq317IMTvibKY/hgc3EhP/91wNaQpFPys=;
+        b=BbpxxDN5URK7n5btCFtcv0dxc6rSsu9zfPb3KkAKFuMIByrL0bEQJEYfLVnzU87L0u
+         x9+rH6aII8DOTS0K/mHzY18eeu6a3ioFEXF+ZduvR8R5nGIxd43eg+QTx6lg80GWVPfh
+         PlF23+FFCgyXUNirsfLrsDbj+t50kHDis2Cpc/t8ctPsb7tsSYVVumJIzH8iG9gkJekJ
+         vJaGsUi7uq6YIKCJa2FmNRfavAUwYw/CP7kw1FSW7xDyxFlb+Qm64sSp0slUoDeWY78G
+         M5ookALXSbGQIH4PVqN2C8Ss1dxJDqhRYjQq5h2WvHlkM0CcqPfDa6UkZ75fCbO3U+ll
+         dP2w==
+X-Gm-Message-State: APjAAAVRXIHIVWRKfrl0xfhV3b7ocrO8vcU0e21UB81xO1Xcf3FBETw9
+        b8f9LTRya9Sg9MSvusWeo24RHB4gMdoM6g==
+X-Google-Smtp-Source: APXvYqzSjn/7Plkj61prIBx/ZTUSmOD9j8RF6Po9McWiy7aKGU0mzne1zJoWCzXWhe5jAkjAUoOwJg==
+X-Received: by 2002:a5d:62d0:: with SMTP id o16mr8344691wrv.197.1581424294168;
+        Tue, 11 Feb 2020 04:31:34 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y6sm4953758wrl.17.2020.02.11.04.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2020 04:31:33 -0800 (PST)
+Message-ID: <5e429ea5.1c69fb81.cfa14.823f@mx.google.com>
+Date:   Tue, 11 Feb 2020 04:31:33 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r1z14hzh.fsf@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.6-rc1-12-g612e35e76ec8
+Subject: linusw/for-next boot: 53 boots: 2 failed,
+ 51 passed (v5.6-rc1-12-g612e35e76ec8)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 09:59:30AM +0100, Thomas Gleixner wrote:
-> Uwe Kleine-König <u.kleine-koenig@pengutronix.de> writes:
-> > On Tue, Feb 11, 2020 at 10:35:44AM +0300, Dan Carpenter wrote:
-> >> Smatch thinks that gpio_siox_irq_set_type() can be called from
-> >> probe_irq_on().  In that case the call to spin_unlock_irq() would
-> >> renable IRQs too early.
-> >> 
-> >> Fixes: be8c8facc707 ("gpio: new driver to work with a 8x12 siox")
-> >> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> >> ---
-> >>  drivers/gpio/gpio-siox.c | 5 +++--
-> >>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/drivers/gpio/gpio-siox.c b/drivers/gpio/gpio-siox.c
-> >> index 311f66757b92..578b71760939 100644
-> >> --- a/drivers/gpio/gpio-siox.c
-> >> +++ b/drivers/gpio/gpio-siox.c
-> >> @@ -133,10 +133,11 @@ static int gpio_siox_irq_set_type(struct irq_data *d, u32 type)
-> >>  	struct irq_chip *ic = irq_data_get_irq_chip(d);
-> >>  	struct gpio_siox_ddata *ddata =
-> >>  		container_of(ic, struct gpio_siox_ddata, ichip);
-> >> +	unsigned long flags;
-> >>  
-> >> -	spin_lock_irq(&ddata->irqlock);
-> >> +	spin_lock_irqsave(&ddata->irqlock, flags);
-> >>  	ddata->irq_type[d->hwirq] = type;
-> >> -	spin_unlock_irq(&ddata->irqlock);
-> >> +	spin_unlock_irqrestore(&ddata->irqlock, flags);
-> >
-> > "Normally" the .irq_set_type() callback is called from irq_set_irq_type.
-> > There desc->lock is taken with raw_spin_lock_irqsave (as part of
-> > irq_get_desc_buslock()), so I assume irqs are always disabled when the
-> > type changes? tglx?
-> >
-> > If so, the better fix would be to change to spin_lock/spin_unlock
-> > instead. Also given that a raw spinlock is taken, the irqlock here
-> > should be changed to a raw one, too?
-> 
-> Indeed. Looking at the driver, all of the spin_lock_irq() usage in the
-> irqchip callbacks is broken.
-> 
-> So this needs two changes:
-> 
->    1) Convert to raw spin lock, as this won't work on RT otherwise
-> 
->    2) s/lock_irq/lock/ for all irqchip callbacks.
+linusw/for-next boot: 53 boots: 2 failed, 51 passed (v5.6-rc1-12-g612e35e76=
+ec8)
 
-Are you sure about the calls in gpio_siox_get_data()? This is only
-called by siox_poll() which doesn't disable irqs.
- 
-Best regards
-Uwe
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.6-rc1-12-g612e35e76ec8/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.6-rc1-12-g612e35e76ec8/
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Tree: linusw
+Branch: for-next
+Git Describe: v5.6-rc1-12-g612e35e76ec8
+Git Commit: 612e35e76ec85927bbafb00d594c58ea37e3e120
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 50 unique boards, 15 SoC families, 3 builds out of 5
+
+Boot Regressions Detected:
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8:
+          bcm2836-rpi-2-b:
+              lab-collabora: new failure (last pass: gpio-v5.5-4-45-gd18fdd=
+ff061d)
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          bcm2837-rpi-3-b:
+              lab-baylibre: new failure (last pass: gpio-v5.5-4-52-g0282c72=
+d30d3)
+
+Boot Failures Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm2836-rpi-2-b: 1 failed lab
+
+arm64:
+    defconfig:
+        gcc-8:
+            bcm2837-rpi-3-b: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
