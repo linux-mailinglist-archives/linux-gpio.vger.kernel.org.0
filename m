@@ -2,163 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9506615A53F
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 10:46:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E267115A588
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 11:01:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgBLJqc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 04:46:32 -0500
-Received: from sauhun.de ([88.99.104.3]:33658 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbgBLJqc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Feb 2020 04:46:32 -0500
-Received: from localhost (p54B335A7.dip0.t-ipconnect.de [84.179.53.167])
-        by pokefinder.org (Postfix) with ESMTPSA id 1A98E2C07EB;
-        Wed, 12 Feb 2020 10:46:29 +0100 (CET)
-Date:   Wed, 12 Feb 2020 10:46:28 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        Alex Smith <alex.smith@imgtec.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: i2c: jz4780: silence log flood on txabrt
-Message-ID: <20200212094628.GB1143@ninjato>
-References: <cover.1581457290.git.hns@goldelico.com>
- <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
+        id S1728952AbgBLKBI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 05:01:08 -0500
+Received: from mail-il1-f180.google.com ([209.85.166.180]:43694 "EHLO
+        mail-il1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728846AbgBLKBI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 05:01:08 -0500
+Received: by mail-il1-f180.google.com with SMTP id o13so1209060ilg.10
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 02:01:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8JyYrsalyFH17fGVZv52F133fCfa2PBO6XlMFKrguQw=;
+        b=ycEl0qBVms7ibkxw1apciR3g0v7rAmRSNJulzWiaIp3mN/xXVfzLJJ4xC/UkG8lGOh
+         gWJ/mwwxrqUTszOlhMSbEI0m+nx8sE4xJP5e50LCeOjJIUGH+g3PMlJXT9VPSAGAE63o
+         MKimlK+JSskMnxQmdMQGoZea88XqW4OqQZ6pprJoAABwHfrmTz2WZIAI7mblmXGXt9y8
+         HYrKTLfY1xjy8uxjf7YB/SXCDguDtogJS8BqcTBfIGNh5djqiqx7AFIqV6whpBw1RT6J
+         6soVnocmkaCP/HUydaTcJ1WpFE4a8QjVzANefvlO/G26Ez64TTXXLxV21AI2mzAqAV0j
+         mQBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8JyYrsalyFH17fGVZv52F133fCfa2PBO6XlMFKrguQw=;
+        b=YceM2gj4I2gTmLcm5+4Hru6CACUd38BCQCmfnGVPRqtKhg/s6gKapoD51S/Sx4wF89
+         IR80Vux8VKSWquQ3g5BRt7FfqREMsu2jE6TXOXLKHM1gTOR0rRImJosNsyDE1pApPnbq
+         iUpi1anoIA3RjnnCAK81o0fY3UH/BUyg4VDwV4rGQAT/FkyFKyAMUii/J+dsvARTW3vU
+         hhB48BppZxfvj+ZtilvNz5nyP2V1+gcSfv4QKJMSTFKokhceZfqTb/o2a0SJ7Y7Jjeej
+         2j/I5X3K2TVkk5uwn6Ha02/feV/LJoPzYC9Jea+2QXpmukGecl4O5+wGVdGeI5gVbdkr
+         Zs4g==
+X-Gm-Message-State: APjAAAVLxJxp3YevFm61KCbFZ7BVAMnJ8O0KAsd4qC1S4yptxfpEgnui
+        CTA9NMMJ7WrpDFMOTWV+1D/Vzxnts86ajLSx5vfoLQ==
+X-Google-Smtp-Source: APXvYqw1AZ8T2u2Ab0VolEC5Bc5GOIfuOUaTryXH2/yYIu9MfEKCQDx7QrxesdSWw93S26DKvQyF1qRYHkVKCEpqcp4=
+X-Received: by 2002:a92:3d9d:: with SMTP id k29mr10120783ilf.220.1581501667185;
+ Wed, 12 Feb 2020 02:01:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-In-Reply-To: <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200212074243.GA17928@laureti-dev>
+In-Reply-To: <20200212074243.GA17928@laureti-dev>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 12 Feb 2020 11:00:56 +0100
+Message-ID: <CAMRc=Mdj6whafFQ9KN+gi8HhKCSfkhGtqhO-+AM+3JEb5MCQPA@mail.gmail.com>
+Subject: Re: [libgpiod] consider changing the license of the C++ bindings
+To:     Helmut Grohne <helmut.grohne@intenta.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bartekgola@gmail.com>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+=C5=9Br., 12 lut 2020 o 08:48 Helmut Grohne <helmut.grohne@intenta.de> napi=
+sa=C5=82(a):
+>
+> Hi,
+>
+> I've recently encountered libgpiod and found that its API is nice to
+> work with. Thank you for this piece of software.
+>
+> IANAL
+>
+> The library is licensed LGPL, which makes it available to non-free uses
+> in principle. For the C library, I think this is a good license. For the
+> C++ bindings, LGPL poses a little problem as code can be generated from
+> the header. For instance, libgpiodcxx is using `ctor() =3D default;`.
+> Strict intepretation of the LGPL would mean that a downstream user
+> should be able to recompile the whole product using libgpiodcxx.
+> Effectively, libgpiodcxx can be considered GPL (not LGPL) licensed for
+> practical purposes. You can find more background at:
+>  * https://blogs.msmvps.com/gdicanio/2016/07/11/the-lgpl-and-libraries-ex=
+posing-a-c-interface/
+>  * Eigen was initially LGPL and was converted to MPL2:
+>    https://eigen.tuxfamily.org/index.php?title=3DNews:Relicensing_to_MPL2=
+!
+>  * QT4 has also encountred this:
+>    https://lwn.net/Articles/315251/
+> I think that the LGPL when applied to C++ results in an unclear
+> licensing situation at best and an effective GPL at a strict
+> interpretation. Varying license interpretation rarely results in
+> anything good.
+>
+> For these reasons, I ask you to consider changing the license for
+> libgpiodcxx only (and not for libgpiod nor for the Python bindings). I
+> propose following Eigen and switching to MPL2. If however, the intention
+> is the strict reading of the non-lesser GPL, consider switching to that
+> instead. Either change improves the clarity of the licensing and makes
+> the intention visible.
+>
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Helmut,
 
+thank you for this e-mail. I admit I'm not very well versed in
+software licensing. What you're saying makes sense and the links you
+posted seem to confirm it. I'll still try to get a second opinion on
+this. Anyway: my intention is to make the library available to
+non-free projects - including C++ bindings - so MPL2 makes sense.
 
-The printout for txabrt is way too talkative. Reduce it to the minimum,
-the rest can be gained by I2C core debugging and datasheet information.
-Also, make it a debug printout, it won't help the regular user.
+There's only one significant contributor (new features, not bug-fixes)
+to C++ bindings other than me (Cc'ed Kent Gibson) from whom I'd need
+an ack on relicensing, so it shouldn't be very difficult to do.
 
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
----
+While at it: LGPL is the only license used by all libgpiod components.
+Do you know if it makes sense to use regular GPL for programs that are
+part of the repo and LGPL for libraries only (except C++ bindings)?
 
-Sorry, normally I don't do counter patches. Yet, this time I realized
-that it would be faster to actually do what I envisioned than to
-describe it in words. I hope you don't feel offended. This driver has
-way too many dev_err anyhow, so this may be a start.
-
-Obviously, I can't test, does it work for you?
-
- drivers/i2c/busses/i2c-jz4780.c | 36 ++-------------------------------
- 1 file changed, 2 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz478=
-0.c
-index 16a67a64284a..b426fc956938 100644
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -78,25 +78,6 @@
-=20
- #define X1000_I2C_DC_STOP		BIT(9)
-=20
--static const char * const jz4780_i2c_abrt_src[] =3D {
--	"ABRT_7B_ADDR_NOACK",
--	"ABRT_10ADDR1_NOACK",
--	"ABRT_10ADDR2_NOACK",
--	"ABRT_XDATA_NOACK",
--	"ABRT_GCALL_NOACK",
--	"ABRT_GCALL_READ",
--	"ABRT_HS_ACKD",
--	"SBYTE_ACKDET",
--	"ABRT_HS_NORSTRT",
--	"SBYTE_NORSTRT",
--	"ABRT_10B_RD_NORSTRT",
--	"ABRT_MASTER_DIS",
--	"ARB_LOST",
--	"SLVFLUSH_TXFIFO",
--	"SLV_ARBLOST",
--	"SLVRD_INTX",
--};
--
- #define JZ4780_I2C_INTST_IGC		BIT(11)
- #define JZ4780_I2C_INTST_ISTT		BIT(10)
- #define JZ4780_I2C_INTST_ISTP		BIT(9)
-@@ -576,21 +557,8 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void *dev=
-_id)
-=20
- static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
- {
--	int i;
--
--	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
--	dev_err(&i2c->adap.dev, "device addr=3D%x\n",
--		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
--	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
--		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
--	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
--		i2c->cmd, i2c->data_buf[i2c->cmd]);
--
--	for (i =3D 0; i < 16; i++) {
--		if (src & BIT(i))
--			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=3D%s\n",
--				i, jz4780_i2c_abrt_src[i]);
--	}
-+	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, recv: %d\n",
-+		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], i2c->data_buf[i2c->cmd]);
- }
-=20
- static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
---=20
-2.20.1
-
-
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5DyXAACgkQFA3kzBSg
-KbYoahAAtIAAtnnBgAg6FGqt5JLhVswxcJnxfAzMxAk708tbDSluUzpyiEXWCa52
-d60BlamWi8++aJOMQ/iZ4k8wdvJX+9AN9JSyLtECMSFGhJVqDygeJGCA7N3qY33S
-XBcvEIf2/OjfaWiTH22XXH9Pt6Hyo7ykrfv0LCD9OQwI5B+OvTfaM4WjXiPMP+dT
-89R9yTKvQPIpV8G6hhj5BKF4TAbkmn2MKMNG+Z6vWlPToTQAGs732p470xXjSX+t
-Oc5fNIt6NchL2pySrVsqDY84+GTRJ6J8by4lKAK3jQUxB3fzYqgri2z+BPBsXUkQ
-IuaqB/a1gvmkAFl8JwfHvvgueeisXevGW5RdpPnWhvNPBDNg5BXgeSSjZDRLJCdA
-rRO+2IUDoRyCLAnu7hV43GtIqiKQSidH8t9WfjLbspxici/1MISwfJPivPvbTBx3
-AVFXKutTSBgR4r3Obtyb5cUZvQbYP+IvKArUHPTcFeVGZPFLhNF1OjgMAd6W/Q05
-uZqYud9prhC71Hk9t3jW6rsXvKUfZkMESrMGsCnH0NUayvBkGv89r+B/HqqurLLn
-5Hx1cO1AZpIxnO9QYaiQya6mCysTJZE7x3lpHznLBt6skM2JonKiqOUeTN8f3m86
-oDJgVd4tkF2kIOweXNSxBWP7K3Xh5tCVqCdeEPz5fG7WlkGdKoI=
-=LWAJ
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+Best regards,
+Bartosz Golaszewski
