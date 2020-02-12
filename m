@@ -2,121 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9389215A73C
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 12:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E976E15A93E
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 13:36:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgBLLAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 06:00:54 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41155 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgBLLAy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 06:00:54 -0500
-Received: by mail-io1-f68.google.com with SMTP id m25so1713521ioo.8
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 03:00:53 -0800 (PST)
+        id S1727041AbgBLMgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 07:36:50 -0500
+Received: from mail-pj1-f44.google.com ([209.85.216.44]:51728 "EHLO
+        mail-pj1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLMgu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 07:36:50 -0500
+Received: by mail-pj1-f44.google.com with SMTP id fa20so845665pjb.1
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 04:36:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aSKIxcntvsr3pmsKt/+cdMc3rZOnUjeZ84ryZ2jbHA4=;
-        b=tHTnYrBXaqIwYEvdyTiSUB0I6yuO+lN0+ySHkEToccoDe0rm+mTa+btszT1Ozsm2S9
-         L3gJsR9cboW4dDEKBptIbiKHyx+dUfn3uXZ196IzRJbhuf8ZznaXxAZS7L2FBFTTMEzg
-         5EX4G4uU4TDLWWR8+iEAzCdO9vF+lKDU1NMuBSxv0CH/CM33vZN7GB2fnyOBj74lwtdH
-         0bC05bKR+b3EiTFJGafxQxomSB5kahswKQu1aaQePKCYSD8ZPD/qxDPE9Cfl5+IrbA+A
-         gNTgdKA3qX0/+RFzJG8JS28E2cJNNRnKiIoXBpAxACQidWqrKJL3RBs18D9Ie23j1flG
-         G5Og==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=b2Uk1qiEkZiDpUOfdtFzuazPEIt5nLgJBn21yRCjOHw=;
+        b=l7IWMiSL2IrCx9jIQhe1qD9SHJB4JXzN9l02cUJDfHu28EZv+8FsgeLFzSvxyAAHyG
+         dzyoLc/hYQYU1SjxUnY7PfYN/TerCDV6HKmxshyWwTEgE8UVI+QXSec2HwOkw7jFDHwl
+         0ry4ZQR8eHThzA3M4uZqeoEbS3vAPssFLobDA2gfhFUTI5ReyJpnMlEpmFTkrtRC2CuW
+         mkLoz2EcrvwUB0QnZOPMxwJUAw7cUQJ9xEI0THsRPsffnzuMq61h8b5xTo7WTy12O47n
+         FYmnX/YdpwCHpduYCubTY/kKByQw74owGV/axLdBmmGt3sBMem8uuESBZ/YXkYHF6JWU
+         7ROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aSKIxcntvsr3pmsKt/+cdMc3rZOnUjeZ84ryZ2jbHA4=;
-        b=dpId5Bk3BdYC19htokT17lzHEP5tBGY/q37JlvRtsCKeIfNYTP10LWPn1IAITVFxCr
-         poUlqMPnr/S/oRpQn5KSKqk2f9Fs1Y7pxnrgPyskEwxSnBdbrutIvWrlMT6sROU2MmOy
-         AJDSJZHWPSLKbq6JfLBm5yZ2gMnF7rlBiVrkSi/kbIY6me0wa1LTRlzRTfKPomRqNTYU
-         IhWvZ4Sv7wE/9SBlT2Sqa19sm5zhUxwCQStStfgzco5gT3nCftIU1Gr+7nMn9x56ElOq
-         XyEWUzjJzBEt762gt1+Q9ROowZUi1c4uRx08P92UC9Zecu90iTAt89thn3d3z90iS7Y6
-         qnKg==
-X-Gm-Message-State: APjAAAWO4OIqb73A+7aanpViwTl6Te1Azxo90dxdIvkl7j7itlr1G/qA
-        BJRL8Wwa/NBcNwn/lH/8AxC9tHuJLwNj/kNtsNqeAw==
-X-Google-Smtp-Source: APXvYqzUscMtmWnRVXqD/RZwHPnQ0OM2Hl7YkBbT3HjYaydata0WGb6m01JGjeBVubE1qiVg+wZpciU/D3QVj1KRi78=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr18660353jad.136.1581505253344;
- Wed, 12 Feb 2020 03:00:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-7-brgl@bgdev.pl>
- <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
-In-Reply-To: <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 12 Feb 2020 12:00:42 +0100
-Message-ID: <CAMRc=MfkbJ=zTvgpaxFC7L7APEhfC7J_PcncGaQ_AQUA9uw2Fw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 6/7] gpiolib: add new ioctl() for monitoring
- changes in line info
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=b2Uk1qiEkZiDpUOfdtFzuazPEIt5nLgJBn21yRCjOHw=;
+        b=j4T/QlYkgUe8oaJhY9PxHTuK3R/t01Q+4u/uJdyhJI65Szm4zCB93QhsymHXPvI2aK
+         taCckVwykPNpBQhduMBCQ5Yny+g94diQJroCxJsZ9eTzYvy61pzwsZ3Qc6LJb7FMh/ko
+         G71dPayDs28GsEMC0CpKGA0eh8fgk/7X4RqDcqzEciSPPUB1Ee8tR9UM9yWqKNaeJBMo
+         HOCaCZvJU9jnO4KBSZ8q9wyPjR1jAchCsb3gnGnOH8v2IJ8f/oNDomPk53LJesUypyCu
+         bADlhtKsm0WKPx/TORzFazz62xI+D5fkQgVeZ3mocyjVqfxeCUP/P8EXH6xAgAQdavNl
+         2HMQ==
+X-Gm-Message-State: APjAAAX+YTa5yj7/68Hit678hr916kYf+jLx9sT3NYmVKYbF1HT3S2Gl
+        EoiJj/B6ETTRTK1WJL0yK9w=
+X-Google-Smtp-Source: APXvYqypXkVJOkeGgwurf3fODYJUCYqNnOD3WFJ4mZOO052vB2lTUZBDUUxKtRy8hX2UJugWSCIv2Q==
+X-Received: by 2002:a17:90a:b009:: with SMTP id x9mr9810375pjq.124.1581511009354;
+        Wed, 12 Feb 2020 04:36:49 -0800 (PST)
+Received: from sol (220-235-95-183.dyn.iinet.net.au. [220.235.95.183])
+        by smtp.gmail.com with ESMTPSA id u1sm761429pfn.133.2020.02.12.04.36.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 12 Feb 2020 04:36:48 -0800 (PST)
+Date:   Wed, 12 Feb 2020 20:36:43 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Helmut Grohne <helmut.grohne@intenta.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bartosz Golaszewski <bartekgola@gmail.com>
+Subject: Re: [libgpiod] consider changing the license of the C++ bindings
+Message-ID: <20200212123643.GA15507@sol>
+References: <20200212074243.GA17928@laureti-dev>
+ <CAMRc=Mdj6whafFQ9KN+gi8HhKCSfkhGtqhO-+AM+3JEb5MCQPA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mdj6whafFQ9KN+gi8HhKCSfkhGtqhO-+AM+3JEb5MCQPA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 12 lut 2020 o 11:47 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> On Tue, Feb 11, 2020 at 10:19 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
-e:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Wed, Feb 12, 2020 at 11:00:56AM +0100, Bartosz Golaszewski wrote:
+> śr., 12 lut 2020 o 08:48 Helmut Grohne <helmut.grohne@intenta.de> napisał(a):
 > >
-> > Currently there is no way for user-space to be informed about changes
-> > in status of GPIO lines e.g. when someone else requests the line or its
-> > config changes. We can only periodically re-read the line-info. This
-> > is fine for simple one-off user-space tools, but any daemon that provid=
-es
-> > a centralized access to GPIO chips would benefit hugely from an event
-> > driven line info synchronization.
+> > Hi,
 > >
-> > This patch adds a new ioctl() that allows user-space processes to reuse
-> > the file descriptor associated with the character device for watching
-> > any changes in line properties. Every such event contains the updated
-> > line information.
+> > I've recently encountered libgpiod and found that its API is nice to
+> > work with. Thank you for this piece of software.
 > >
-> > Currently the events are generated on three types of status changes: wh=
-en
-> > a line is requested, when it's released and when its config is changed.
-> > The first two are self-explanatory. For the third one: this will only
-> > happen when another user-space process calls the new SET_CONFIG ioctl()
-> > as any changes that can happen from within the kernel (i.e.
-> > set_transitory() or set_debounce()) are of no interest to user-space.
+> > IANAL
 > >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Looks good to me. This got really slim and clean after
-> the reviews, and I am of course also impressed by the kfifo
-> improvement this brings.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> A question:
->
-> Bartosz, since you know about possible impacts on userspace,
-> since this code use the preferred ktime_get_ns() rather than
-> ktime_get_ns_real(), what happens if we just patch the other
-> event timestamp to use ktime_get_ns() instead, so we use the
-> same everywhere?
->
-> If it's fine I'd like to just toss in a patch for that as well.
->
+> > The library is licensed LGPL, which makes it available to non-free uses
+> > in principle. For the C library, I think this is a good license. For the
+> > C++ bindings, LGPL poses a little problem as code can be generated from
+> > the header. For instance, libgpiodcxx is using `ctor() = default;`.
+> > Strict intepretation of the LGPL would mean that a downstream user
+> > should be able to recompile the whole product using libgpiodcxx.
+> > Effectively, libgpiodcxx can be considered GPL (not LGPL) licensed for
+> > practical purposes. You can find more background at:
+> >  * https://blogs.msmvps.com/gdicanio/2016/07/11/the-lgpl-and-libraries-exposing-a-c-interface/
+> >  * Eigen was initially LGPL and was converted to MPL2:
+> >    https://eigen.tuxfamily.org/index.php?title=News:Relicensing_to_MPL2!
+> >  * QT4 has also encountred this:
+> >    https://lwn.net/Articles/315251/
+> > I think that the LGPL when applied to C++ results in an unclear
+> > licensing situation at best and an effective GPL at a strict
+> > interpretation. Varying license interpretation rarely results in
+> > anything good.
+> >
+> > For these reasons, I ask you to consider changing the license for
+> > libgpiodcxx only (and not for libgpiod nor for the Python bindings). I
+> > propose following Eigen and switching to MPL2. If however, the intention
+> > is the strict reading of the non-lesser GPL, consider switching to that
+> > instead. Either change improves the clarity of the licensing and makes
+> > the intention visible.
+> >
+> 
+> Hi Helmut,
+> 
+> thank you for this e-mail. I admit I'm not very well versed in
+> software licensing. What you're saying makes sense and the links you
+> posted seem to confirm it. I'll still try to get a second opinion on
+> this. Anyway: my intention is to make the library available to
+> non-free projects - including C++ bindings - so MPL2 makes sense.
+> 
+> There's only one significant contributor (new features, not bug-fixes)
+> to C++ bindings other than me (Cc'ed Kent Gibson) from whom I'd need
+> an ack on relicensing, so it shouldn't be very difficult to do.
+> 
 
-Arnd pointed out it would be an incompatible ABI change[1].
+I agree with your intent, so feel free to relicense as you see fit.
 
-However - I asked Khouloud who's working on v2 of the line event
-interface to use ktime_get_ns().
+Kent.
 
-Cheers
-Bart
-
-[1] https://marc.info/?l=3Dlinux-gpio&m=3D151661955709074&w=3D2
+> While at it: LGPL is the only license used by all libgpiod components.
+> Do you know if it makes sense to use regular GPL for programs that are
+> part of the repo and LGPL for libraries only (except C++ bindings)?
+> 
+> Best regards,
+> Bartosz Golaszewski
