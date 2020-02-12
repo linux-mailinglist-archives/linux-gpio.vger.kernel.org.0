@@ -2,130 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A25915A990
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 13:58:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E629415AB3A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 15:46:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgBLM6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 07:58:52 -0500
-Received: from mail-io1-f46.google.com ([209.85.166.46]:41499 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBLM6w (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 07:58:52 -0500
-Received: by mail-io1-f46.google.com with SMTP id m25so2080659ioo.8
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 04:58:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ACkVsgfX2gOXQYvuAReL8sCvQZOjCfX32rYvRb0YgyI=;
-        b=NUdawpqttF9HKpF7HH6J62QVssHTm4QioM6mHReT7rqSo9/PF5pVsBZSHBheJsUo7X
-         Y1l4ErV5Mg3O8aaJjhXBUZTVnU92WXQI3tGLCv6mMStNPH4hOAUexUVQeQz1EwEkyWxR
-         zRXpvSehcb0aUxDHu4RJe4CYpLZPgb8ajxemiS1mjpldZWZi7BfPty/S+Tf/MxU2N8zu
-         10Xr9Aph6VcHLYJcCusVWAc+B324oF/ArcLoih7pHhVwPj7oRw9MQ33kjvCGktJIgONm
-         y/6i8OYo5sG4eQfdv/z/GCbws907dz46mSn6RdAdBeQuxyQ6qluHO86C5lMHH1HUKE+c
-         FizQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ACkVsgfX2gOXQYvuAReL8sCvQZOjCfX32rYvRb0YgyI=;
-        b=C/uwhfdpz54NKaQhL6Nf3u8r6TNJgunBj2DB6xTVxoHVZOC0V6/dsWWv3MRlESjPEZ
-         aPwkQT5oKNb5B9GmkyJ9oEGWrnS0YnkUBq9iDRhsJrIWiA9oqSmT0AghWAW8qDpl/1Ur
-         pGvcdzeQ7K6mtzvLbFJasRKWtlaiHEH/gghzX8HRlBL9ZAKNTMZwI25fIMmQ0gxp6z97
-         zlqSHcNuh8i0h2Jr1oqHkcAqr6O9m1Kq99jzuJ9zii9cDE+d0RVv+HZyWxO/CMJed213
-         y1IU8bWozDSqmN5ZTTILoaP2yXgyjj2rRHTTevt42qHKgbnNOgLEDTdC9s82eWB9tizv
-         nEMw==
-X-Gm-Message-State: APjAAAX/zv6teP/y3ipyZPlqwT3lA0Y7R8QVcNr158q2OcV62MHt/exH
-        VN3/+0Pcb/PVa7OYCatcysrIeuP1GK3wqGHgmiLIhw==
-X-Google-Smtp-Source: APXvYqyctxsLNZQ5FGRgsiyHtR0fcd0ID+VAievvUyFVO3apr+EAuVwOUZPIFA9+ahrIUeVAV2a0exUCwb3i4xXf0pA=
-X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr17717494ioo.287.1581512331308;
- Wed, 12 Feb 2020 04:58:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20200212074243.GA17928@laureti-dev> <CAMRc=Mdj6whafFQ9KN+gi8HhKCSfkhGtqhO-+AM+3JEb5MCQPA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mdj6whafFQ9KN+gi8HhKCSfkhGtqhO-+AM+3JEb5MCQPA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 12 Feb 2020 13:58:40 +0100
-Message-ID: <CAMRc=Mdcg2hp0VUsQHO2kW_uTiDAvDTCckad9D5Ja002wn1LAA@mail.gmail.com>
-Subject: Re: [libgpiod] consider changing the license of the C++ bindings
-To:     Helmut Grohne <helmut.grohne@intenta.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bartekgola@gmail.com>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728380AbgBLOqg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 09:46:36 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:12465 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbgBLOqf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 09:46:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581518792;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=eF0eU+wT6Jz3VQhXmG5csiS9c3rSC4Z9DeL2XQYqdFw=;
+        b=SCsGmzWDrloScq92rU+PXSYfAOu0RbAOZ7agPUad+rT+j1Pxyx3f5duf4L0nRwk5mq
+        Ms349kTulXSgOtFYrxgy9fRdKaWvGo0wMPOlBKgA/pdpUcHZWVOVcazrl+v76CBuSx6n
+        fqmnkzGxlu0fKPkrsui8bbTF7FagUzUESnORojltiAyJMRDel7TpT7MuBuRyfIbEc2sd
+        Bos3qm9owufelou5Uk9Ov8wjoATpYpUcoOtCJ6aB4JfFhJGFr9rztH/9K9rzw3OEKwXh
+        Jf83TygUD4bZ55MZBFg7838F0xDjroI2h4ynbVy5iGY/wF5aNlIa8aO6Y7EmCXVunOWf
+        KqIg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1CEkJ4uk
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 12 Feb 2020 15:46:19 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200212094628.GB1143@ninjato>
+Date:   Wed, 12 Feb 2020 15:46:19 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com>
+References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato>
+To:     Wolfram Sang <wsa@the-dreams.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 12 lut 2020 o 11:00 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
->
-> =C5=9Br., 12 lut 2020 o 08:48 Helmut Grohne <helmut.grohne@intenta.de> na=
-pisa=C5=82(a):
-> >
-> > Hi,
-> >
-> > I've recently encountered libgpiod and found that its API is nice to
-> > work with. Thank you for this piece of software.
-> >
-> > IANAL
-> >
-> > The library is licensed LGPL, which makes it available to non-free uses
-> > in principle. For the C library, I think this is a good license. For th=
-e
-> > C++ bindings, LGPL poses a little problem as code can be generated from
-> > the header. For instance, libgpiodcxx is using `ctor() =3D default;`.
-> > Strict intepretation of the LGPL would mean that a downstream user
-> > should be able to recompile the whole product using libgpiodcxx.
-> > Effectively, libgpiodcxx can be considered GPL (not LGPL) licensed for
-> > practical purposes. You can find more background at:
-> >  * https://blogs.msmvps.com/gdicanio/2016/07/11/the-lgpl-and-libraries-=
-exposing-a-c-interface/
-> >  * Eigen was initially LGPL and was converted to MPL2:
-> >    https://eigen.tuxfamily.org/index.php?title=3DNews:Relicensing_to_MP=
-L2!
-> >  * QT4 has also encountred this:
-> >    https://lwn.net/Articles/315251/
-> > I think that the LGPL when applied to C++ results in an unclear
-> > licensing situation at best and an effective GPL at a strict
-> > interpretation. Varying license interpretation rarely results in
-> > anything good.
-> >
-> > For these reasons, I ask you to consider changing the license for
-> > libgpiodcxx only (and not for libgpiod nor for the Python bindings). I
-> > propose following Eigen and switching to MPL2. If however, the intentio=
-n
-> > is the strict reading of the non-lesser GPL, consider switching to that
-> > instead. Either change improves the clarity of the licensing and makes
-> > the intention visible.
-> >
->
-> Hi Helmut,
->
-> thank you for this e-mail. I admit I'm not very well versed in
-> software licensing. What you're saying makes sense and the links you
-> posted seem to confirm it. I'll still try to get a second opinion on
-> this. Anyway: my intention is to make the library available to
-> non-free projects - including C++ bindings - so MPL2 makes sense.
->
-> There's only one significant contributor (new features, not bug-fixes)
-> to C++ bindings other than me (Cc'ed Kent Gibson) from whom I'd need
-> an ack on relicensing, so it shouldn't be very difficult to do.
->
-> While at it: LGPL is the only license used by all libgpiod components.
-> Do you know if it makes sense to use regular GPL for programs that are
-> part of the repo and LGPL for libraries only (except C++ bindings)?
->
-> Best regards,
-> Bartosz Golaszewski
+Hi,
 
-Helmut,
+> Am 12.02.2020 um 10:46 schrieb Wolfram Sang <wsa@the-dreams.de>:
+>=20
+>=20
+> The printout for txabrt is way too talkative. Reduce it to the =
+minimum,
+> the rest can be gained by I2C core debugging and datasheet =
+information.
+> Also, make it a debug printout, it won't help the regular user.
+>=20
+> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> ---
+>=20
+> Sorry, normally I don't do counter patches. Yet, this time I realized
+> that it would be faster to actually do what I envisioned than to
+> describe it in words. I hope you don't feel offended.
 
-one more thing that's unclear to me: I found this post[1] on the eigen
-mailing list and started wondering: what makes MPL2 better than LGPL3?
+No problem. I had thought a little about that myself, but did not
+dare to solve more than my problem...
 
-Bart
+> This driver has
+> way too many dev_err anyhow, so this may be a start.
+>=20
+> Obviously, I can't test, does it work for you?
 
-[1] https://listengine.tuxfamily.org/lists.tuxfamily.org/eigen/2008/02/msg0=
-0003.html
+Yes,it works.
+
+Do you want to push your patch yourself, or should I add it to my
+patch series and resubmit in a v2?
+
+BR and thanks,
+Nikolaus
+
+>=20
+> drivers/i2c/busses/i2c-jz4780.c | 36 ++-------------------------------
+> 1 file changed, 2 insertions(+), 34 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-jz4780.c =
+b/drivers/i2c/busses/i2c-jz4780.c
+> index 16a67a64284a..b426fc956938 100644
+> --- a/drivers/i2c/busses/i2c-jz4780.c
+> +++ b/drivers/i2c/busses/i2c-jz4780.c
+> @@ -78,25 +78,6 @@
+>=20
+> #define X1000_I2C_DC_STOP		BIT(9)
+>=20
+> -static const char * const jz4780_i2c_abrt_src[] =3D {
+> -	"ABRT_7B_ADDR_NOACK",
+> -	"ABRT_10ADDR1_NOACK",
+> -	"ABRT_10ADDR2_NOACK",
+> -	"ABRT_XDATA_NOACK",
+> -	"ABRT_GCALL_NOACK",
+> -	"ABRT_GCALL_READ",
+> -	"ABRT_HS_ACKD",
+> -	"SBYTE_ACKDET",
+> -	"ABRT_HS_NORSTRT",
+> -	"SBYTE_NORSTRT",
+> -	"ABRT_10B_RD_NORSTRT",
+> -	"ABRT_MASTER_DIS",
+> -	"ARB_LOST",
+> -	"SLVFLUSH_TXFIFO",
+> -	"SLV_ARBLOST",
+> -	"SLVRD_INTX",
+> -};
+> -
+> #define JZ4780_I2C_INTST_IGC		BIT(11)
+> #define JZ4780_I2C_INTST_ISTT		BIT(10)
+> #define JZ4780_I2C_INTST_ISTP		BIT(9)
+> @@ -576,21 +557,8 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void =
+*dev_id)
+>=20
+> static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+> {
+> -	int i;
+> -
+> -	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
+> -	dev_err(&i2c->adap.dev, "device addr=3D%x\n",
+> -		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
+> -	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
+> -		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
+> -	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
+> -		i2c->cmd, i2c->data_buf[i2c->cmd]);
+> -
+> -	for (i =3D 0; i < 16; i++) {
+> -		if (src & BIT(i))
+> -			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=3D%s\n",
+> -				i, jz4780_i2c_abrt_src[i]);
+> -	}
+> +	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, =
+recv: %d\n",
+> +		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], =
+i2c->data_buf[i2c->cmd]);
+> }
+>=20
+> static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+> --=20
+> 2.20.1
+>=20
+
