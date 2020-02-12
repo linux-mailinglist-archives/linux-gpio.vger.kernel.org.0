@@ -2,112 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBC9D15AB85
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 15:59:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD2B215AB96
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 16:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgBLO7p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 09:59:45 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39923 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgBLO7p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 09:59:45 -0500
-Received: by mail-lf1-f66.google.com with SMTP id t23so1822334lfk.6
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 06:59:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=IuHG2t7m6yf7uclIpWwT4vlCJ72ejFiqCDoerkzgElg=;
-        b=Ugzkd7ahdUR7l+pHF4e4FUE6T5t9Z+SA+glmQvvKQugojKfjVJ/OZS/idlpjQcwIVI
-         nHOc3GHBWMOznM0lu850Au6cFCIdNZF9APwihamx/AYk+Q1hNjOqu+cX0fAj1kA3UGly
-         i+/NQA6lpfjnzjIIbkyxsjc1u6G3IvDk23/X0m4/vRREAdVOBs2VMK6BZoyB44Vcx4fS
-         BqPHuKnP80Jg9DylDWgYPiD+BEbJIEOCfdgJpPUJASP1GdVibx2VsBD8UQAhfY3LQpb+
-         hmK1JhiJzreXk7ufIh5nvF9GNntxa684D02F5UO1WFniwTE0lxaGZmCJ8oImVu80a70W
-         ui0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=IuHG2t7m6yf7uclIpWwT4vlCJ72ejFiqCDoerkzgElg=;
-        b=UzyriRMKZBtsaGsArBfvPwFDp/3HBYx1cwkrxr0SF8HF3ghJzvqBtdKdezQafsvSgY
-         MJH3Cdz1wckCgIhztbKMxrf4w1R2FvRXt6c9N+16Ek3menM5c2e9NQGhUQLcaTb0X7a9
-         2SScG2ruOsjliEMZLC8pGRtxZmHot/RcNwxXGjd1FV08LGMUSevJKiUkTtXA8jPKJtS8
-         7uqLqYX7R33oLsAz4gnnCUT2z7l68SEEmPazq/RYXdaMhzsAiTXwON3iNsywHLe3rtYZ
-         SoSLS9lonXxTBcNN9Io8/Uv5yCV03HymUxA8cCW3xTmRlijFJCic+EAwfCGAl2PS28Jw
-         DF/Q==
-X-Gm-Message-State: APjAAAUSfh5qYoAdmSJCaT9QESIkN8NgL+tiHhJ2U8CO5Qs9UGARwEJR
-        GpWHyc8MP1dFNi/c4kdFhxzZr+GbPJw=
-X-Google-Smtp-Source: APXvYqway+Y1QUjA+1fPrqgdxjOw9a27iqer38HWOER8WW4dXi4bniSvyvxLCtpqhXYuJ/mpK05cGg==
-X-Received: by 2002:ac2:5e71:: with SMTP id a17mr6735043lfr.181.1581519582530;
-        Wed, 12 Feb 2020 06:59:42 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id t21sm428588ljh.14.2020.02.12.06.59.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2020 06:59:41 -0800 (PST)
-Date:   Wed, 12 Feb 2020 15:59:40 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: sh-pfc: gpio: Return early in gpio_pin_to_irq()
-Message-ID: <20200212145940.GA3013231@oden.dyn.berto.se>
-References: <20200212090200.11106-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200212090200.11106-1-geert+renesas@glider.be>
+        id S1728388AbgBLPAK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 10:00:10 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:27493 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgBLPAK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 10:00:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581519607;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3yrlgbwpWQZTwSSfMKPtb8XHqELW1Q2VHBhevB4Ahuo=;
+        b=n429HJfv3UUpI05fIeMj5pZySRovNjCWs/mlTHPY+2+mACKh0bhGjfxbGJrfUAshNP
+        9bR6+nSvSeKKjaLtITuNv/9MnO0ssUXjkmrHv2umT4GRSLLNvZeHudT7H4V5c+z6N6EL
+        zgMBehjnm4A9DyQ40ciyNiO86Z2ga3HJiv6siiI7WFVggOo0gWCoLBhDRnBXsrDRcjPe
+        j1vvF8xgtYRJx9oEvrjFeqCde/2rsitarfdvVILBiwNaUWmpQTYU0jtBjKuXr5XB+zvU
+        BV4CJjcngBim0w6cHTw9yxthudI2coByo3DVCOatFrz+dM+xWKM1gTbEucs67OCYn8ro
+        T80A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSbXAgODw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1CExt59j
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 12 Feb 2020 15:59:55 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: i2c: jz4780: silence log flood on txabrt
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200212145356.GB2492@ninjato>
+Date:   Wed, 12 Feb 2020 15:59:55 +0100
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        Alex Smith <alex.smith@imgtec.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        =?utf-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: 7bit
+Message-Id: <0C9F4243-159B-418C-B481-4B45B210F9F6@goldelico.com>
+References: <cover.1581457290.git.hns@goldelico.com> <7facef52af9cff6ebe26ff321a7fd4f1ac640f74.1581457290.git.hns@goldelico.com> <20200212094628.GB1143@ninjato> <213C52CC-E5DC-4641-BE68-3D5C4FEA1FB5@goldelico.com> <20200212145356.GB2492@ninjato>
+To:     Wolfram Sang <wsa@the-dreams.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
 
-Thanks for your patch.
-
-On 2020-02-12 10:02:00 +0100, Geert Uytterhoeven wrote:
-> As of commit 4adeabd042422cee ("pinctrl: sh-pfc: Remove hardcoded IRQ
-> numbers"), only a single operation needs to be performed after finding
-> the wanted pin.  Hence decrease the needed attention span of the casual
-> reader by replacing the goto by a direct return.
+> Am 12.02.2020 um 15:53 schrieb Wolfram Sang <wsa@the-dreams.de>:
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-
-> ---
-> To be queued in sh-pfc-for-v5.7.
-> ---
->  drivers/pinctrl/sh-pfc/gpio.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> Hi,
 > 
-> diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
-> index 8213e118aa408573..9c6e931ae766edf7 100644
-> --- a/drivers/pinctrl/sh-pfc/gpio.c
-> +++ b/drivers/pinctrl/sh-pfc/gpio.c
-> @@ -205,14 +205,11 @@ static int gpio_pin_to_irq(struct gpio_chip *gc, unsigned offset)
->  
->  		for (k = 0; gpios[k] >= 0; k++) {
->  			if (gpios[k] == offset)
-> -				goto found;
-> +				return pfc->irqs[i];
->  		}
->  	}
->  
->  	return 0;
-> -
-> -found:
-> -	return pfc->irqs[i];
->  }
->  
->  static int gpio_pin_setup(struct sh_pfc_chip *chip)
-> -- 
-> 2.17.1
+>>> Sorry, normally I don't do counter patches. Yet, this time I realized
+>>> that it would be faster to actually do what I envisioned than to
+>>> describe it in words. I hope you don't feel offended.
+>> 
+>> No problem. I had thought a little about that myself, but did not
+>> dare to solve more than my problem...
 > 
+> Glad you like it. Well, it still kinda solves your problem only, because
+> there are still too many dev_err in there, but I think this is good
+> enough for now.
+> 
+>>> Obviously, I can't test, does it work for you?
+>> 
+>> Yes,it works.
+> 
+> Good!
+> 
+>> Do you want to push your patch yourself, or should I add it to my
+>> patch series and resubmit in a v2?
+> 
+> I'll apply the patch to my tree directly as a bugfix for 5.6. You can
+> drop the I2C list from V2 then.
 
--- 
-Regards,
-Niklas Söderlund
+Ok, fine.
+
+BR and thanks,
+Nikolaus
+
