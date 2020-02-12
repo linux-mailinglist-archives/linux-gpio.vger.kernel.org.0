@@ -2,339 +2,613 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38D9115A5E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 11:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF1A15A64A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 11:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725812AbgBLKOE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 05:14:04 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:43010 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725710AbgBLKOE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 05:14:04 -0500
-X-UUID: 5c20761d031348018661c5204b72d460-20200212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=D/mpejxy7PKri91GVOJb+5nq2uEa8s34hdyJ8J5+Wtw=;
-        b=GUw/v7eWJ1xsl3lfxYOngnnhQxVWaQK7a+b0eYLnEogPgH68DAAlVLzYExWHHTH0Q5dPrmG2l6AEFw1b8XTkt0OmAbd5m62wFfAizdVXaWF2LLBM3jCxmB9D/PNsAgj4x3mREL82w2YhbhIyaU9+Z/MImuL6A8XEN0c20stOp/A=;
-X-UUID: 5c20761d031348018661c5204b72d460-20200212
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 249874273; Wed, 12 Feb 2020 18:13:55 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 12 Feb 2020 18:11:31 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 12 Feb 2020 18:12:06 +0800
-Message-ID: <1581502433.13475.3.camel@mtkswgap22>
+        id S1725710AbgBLK0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 05:26:30 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33430 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgBLK03 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 05:26:29 -0500
+Received: by mail-wr1-f68.google.com with SMTP id u6so1563526wrt.0;
+        Wed, 12 Feb 2020 02:26:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O+9c0oWV7Zw/r/pZxd9dAhxHX1PCY2DrHEoHLSk9QL8=;
+        b=EMB5gPqth9hjm+K5lAzjSe5ZVp2nrhCf35pPXEt6pMuzn9VrUSBsR7d15kljNp2Ifd
+         3GBHIe90TwtkyZ/PQai3Uhhpc9y5jin9Imh1QPQdyd/KnlphZ8ORqWu2G64Pn8K3wEIp
+         cg1dSwh9CsORaPnylUTbXNE6qQmaMRYYC3B8swER66FVkZ42Lv/FFYkytow/UQ2HHXgf
+         IlJjURUTW5gGgnmQSlsjFCTYE0Q1XCus+OG4AL83fKvWIfBzU233Y9Y1kFqUrzywjJ4B
+         UAag2Geg88iXcUfmfZv1toVautuFFPYGXJO0OLYWJI9R6FRIVyqp4NYHvime60u61K11
+         uF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=O+9c0oWV7Zw/r/pZxd9dAhxHX1PCY2DrHEoHLSk9QL8=;
+        b=WfgnwMVMFsu0ZMz47a3gG5GKiFhK4u6gQq+YdhPV1Ht6FvaI30UB2kIy3bkVfrfx5K
+         rjOw7MfEWSQg3guRr3DyxESGQujPHSx1+BMGJAGFHQzmYR3BRazgur0cTqOmqvCqqBSe
+         +bjhJ8OdxC0VVaBdyaFc9LDd4hVLRlHhSsYEc5iDGt6R3Y7B+L1hSypIVWYmWDfVB4Bo
+         WPwemhCbGpcsACAUAZroE+O9uB9qFQ6Rkbi9R/H+bc9ihpUWEJc5kAqf0e5b6+48LioF
+         W+ownXPw3VLgP2F35BPwBwen215fVMygKj4//U1gwhMwTAK7cpT7DwCSt5FFoDLstKFQ
+         zuRw==
+X-Gm-Message-State: APjAAAXlXu0wwIznj8LLnF3qEJduBOY2XJPoNlp32CVy8xtt+PB80j7B
+        PFki+0IxYCrIW/ms99R4etU=
+X-Google-Smtp-Source: APXvYqzN/rFnzFFP7e8tXj+GrJr295mLfqeTFCZW2miyj8bmmTu3BHxvK5msN/bp7aIJugAHyJRWnQ==
+X-Received: by 2002:adf:fcc4:: with SMTP id f4mr15240351wrs.247.1581503184598;
+        Wed, 12 Feb 2020 02:26:24 -0800 (PST)
+Received: from ziggy.stardust ([37.223.145.31])
+        by smtp.gmail.com with ESMTPSA id u14sm44039wrm.51.2020.02.12.02.26.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Feb 2020 02:26:23 -0800 (PST)
 Subject: Re: [PATCH v1 1/1] pinctrl: make MediaTek MT6765 pinctrl driver
  compatible to kernel module
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linus.walleij@linaro.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
-Date:   Wed, 12 Feb 2020 18:13:53 +0800
-In-Reply-To: <158e61b3-8f37-9467-081f-f266f71258ce@gmail.com>
+To:     Light Hsieh <light.hsieh@mediatek.com>
+Cc:     linus.walleij@linaro.org, sean.wang@kernel.org,
+        kuohong.wang@mediatek.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-mediatek@lists.infradead.org
 References: <1581485407-32393-1-git-send-email-light.hsieh@mediatek.com>
-         <158e61b3-8f37-9467-081f-f266f71258ce@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+ <158e61b3-8f37-9467-081f-f266f71258ce@gmail.com>
+ <1581502433.13475.3.camel@mtkswgap22>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ee86dac0-ae78-ccd0-4cca-be8fed3e5240@gmail.com>
+Date:   Wed, 12 Feb 2020 11:26:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 53255D585442C5831CA0D53E62166254D273853281CEBDACD86B9D598C2372F22000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1581502433.13475.3.camel@mtkswgap22>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RGVhciBNYXR0aGlhczoNCg0KR29vZ2xlIGFyZSB0cnlpbmcgdG8gYnVpbGQgbW9zdCBwbGF0Zm9y
-bSBkcml2ZXIgYXMga2VybmVsIG1vZHVsZSBmb3INCnRoZWlyIGZ1dHVyZSBBbmRyb2lkIGtlcm5l
-bCBwbGFuLg0KDQpUaGlzIGNoYW5nZSBpcyBwcmVwYXJpbmcgZm9yIHRoYXQgcHVycG9zZS4NCg0K
-TGlnaHQNCg0KT24gV2VkLCAyMDIwLTAyLTEyIGF0IDExOjA3ICswMTAwLCBNYXR0aGlhcyBCcnVn
-Z2VyIHdyb3RlOg0KPiANCj4gT24gMTIvMDIvMjAyMCAwNjozMCwgbGlnaHQuaHNpZWhAbWVkaWF0
-ZWsuY29tIHdyb3RlOg0KPiA+IEZyb206IExpZ2h0IEhzaWVoIDxsaWdodC5oc2llaEBtZWRpYXRl
-ay5jb20+DQo+ID4gDQo+ID4gVG8gbWFrZSBNZWRpYVRlayBNVDY3NjUgcGluY3RybCBkcml2ZXIg
-YW5kIHJlbGF0ZWQgTWVkaWFUZWsgcGluY3RybCBkcml2ZXINCj4gPiBmaWxlcyBiZSBib3RoIGNv
-bXBhdGlibGUgZm9yIGJ1aWxkaW5nIGtlcm5lbCBtb2R1bGUgb3IgYnVpbHQtaW4sIHRoZQ0KPiA+
-IGZvbGxvd2luZyBtb2RpZmljYXRpb24gYXJlIHBlcmZvcm1lZDoNCj4gPiANCj4gDQo+IEZyb20g
-d2hhdCBjYW4gSSBzZWUgeW91IGp1c3Qgd2FudCB0byBwcm92aWRlIGEgcG9zc2liaWxpdHkgdG8g
-YnVpbGQgbXQ2NzY1IGFzIGENCj4gbW9kdWxlLiBTbyB0aGUgcXVlc3Rpb24gaXMsIHdoeSB5b3Ug
-d2FudCB0aGF0Pw0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+ID4gMS4gZHJpdmVy
-cy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jOiBleHBvcnQgc29tZSBm
-dW5jdGlvbnMNCj4gPiANCj4gPiAyLiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1w
-YXJpcy5jOiBleHBvcnQgc29tZSBmdW5jdGlvbnMNCj4gPiANCj4gPiAzLiBkcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvbXRrLWVpbnQuYzogZXhwb3J0IHNvbWUgZnVuY3Rpb25zDQo+ID4gDQo+ID4g
-NC4gZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2VuZXJpYy5jOiBleHBvcnQNCj4gPiAgICAgICAg
-cGluY29uZl9nZW5lcmljX3BhcnNlX2R0X2NvbmZpZygpIGZvciB1c2FnZSBieSBwaW5jdHJsLXBh
-cmlzLmMNCj4gPiAgICAgICAgYnVpbHQgYXMga2VybmVsIG1vZHVsZS4NCj4gPiANCj4gPiA1LiBk
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZzoNCj4gPiA1LjEgUElOQ1RSTF9NVDY3NjU6
-IGNoYW5nZSBmcm9tIGJvb2wgdG8gdHJpc3RhdGUuIEl0IGlzIHNwZWNpZmllZCBpbg0KPiA+ICAg
-ICAgICAga2VybmVsIGNvbmZpZyBmaWxlLg0KPiA+IDUuMiBQSU5DVFJMX01US19QQVJJUzogY2hh
-bmdlIGZyb20gYm9vbCB0byB0cmlzdGF0ZSBhbmQgc2VsZWN0DQo+ID4gICAgICAgICBQSU5DVFJM
-X01US19WMi4NCj4gPiAgICAgICAqIFBJTkNUUkxfTVRLX1BBUklTIHdpbGwgYmUgeSBpZiBhbnkg
-UElOQ1RSTF9NVFhYWFggc2VsZWN0aW5nDQo+ID4gICAgICAgICBQSU5DVFJMX01US19QQVJJUyBp
-cyB5Lg0KPiA+ICAgICAgICogUElOQ1RSTF9NVEtfUEFSSVMgd2lsbCBiZSBuIGlmIGFsbCBQSU5D
-VFJMX01UWFhYWCBzZWxlY3RpbmcNCj4gPiAgICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGFyZSBu
-Lg0KPiA+ICAgICAgICogUElOQ1RSTF9NVEtfUEFSSVMgd2lsbCBiZSBtIGlmIGFsbCBQSU5DVFJM
-X01UWFhYWCBzZWxlY3RpbmcNCj4gPiAgICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGFyZSBtLg0K
-PiA+IDUuMyBQSU5DVFJMX01US19NT09SRTogc2VsZWN0IEVJTlRfTVRLIGFuZCBQSU5DVFJMX01U
-S19WMi4NCj4gPiA1LjMgUElOQ1RSTF9NVEtfVjI6IGFkZCB0aGlzIHRyaXN0YXRlIGNvbmZpZyB3
-aGljaCBkZXBlbmRzIG9uDQo+ID4gICAgICAgICBQSU5DVFJMX01US19QQVJJUyBhbmQgUElOQ1RS
-TF9NVEtfTU9PUkUuDQo+ID4gICAgICAgKiBQSU5DVFJMX01US19WMiB3aWxsIGJlIHkgaWYgZWl0
-aGVyIFBJTkNUUkxfTVRLX1BBUklTIG9yDQo+ID4gICAgICAgICBQSU5DVFJMX01US19NT09SRSBp
-cyB5Lg0KPiA+ICAgICAgICogUElOQ1RSTF9NVEtfVjIgd2lsbCBiZSBuIGlmIGJvdGggUElOQ1RS
-TF9NVEtfUEFSSVMgYW5kDQo+ID4gICAgICAgICBQSU5DVFJMX01US19NT09SRSBhcmUgbi4NCj4g
-PiAgICAgICAqIFBJTkNUUkxfTVRLX1YyIHdpbGwgYmUgbSBpZiBib3RoIFBJTkNUUkxfTVRLX1BB
-UklTIGlzIG0gYW5kDQo+ID4gICAgICAgICBQSU5DVFJMX01US19NT09SRSBpcyBuLg0KPiA+IDUu
-NCBFSU5UX01USzogY2hhbmdlIGZyb20gYm9vbCB0byB0cmlzdGF0ZSBhbmQgYWRkIHJ1bGUgZm9y
-IGRlZmF1bHQuDQo+ID4gICAgICAgKiBGaXJzdCBydWxlOiBkZXRlcm1pbmUgaWYgRUlOVF9NVEsg
-aXMgeSBvciBuIGFjY29yZGluZyB0bw0KPiA+ICAgICAgICAgc2VsZWN0aW9uIG9mIFBJTkNUUkxf
-TVRLIG9yIFBJTkNUUkxfTVRLX01PUkUuDQo+ID4gICAgICAgKiBTZWNvbmQgcnVsZTogZGV0ZXJt
-aW5lIGlmIEVJTlRfTVRLIGlzIHksIG0sIG9yIG4gYWNjb3JkaW5nIHRvDQo+ID4gICAgICAgICBz
-ZWxlY3Rpb24gb2YgUElOQ1RSTF9NVEtfUEFSSVMuDQo+ID4gDQo+ID4gNi4gZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL01ha2VmaWxlOiBVc2UgUElOQ1RSTF9NVEtfVjIgdG8gZGV0ZXJtaW5lDQo+
-ID4gICAgICAgICBpZiBwaW5jdHJsLW10ay1jb21tb24tdjIuYyBpcyBidWlsdCBhcyBrZXJuZWwg
-bW9kdWxlIG9yDQo+ID4gICAgICAgICBidWlsdC1pbi4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBMaWdodCBIc2llaCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBk
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAxNyArKysr
-KysrKysrKysrLS0tLQ0KPiA+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvTWFrZWZpbGUgICAg
-ICAgICAgICAgICAgfCAgNSArKystLQ0KPiA+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvbXRr
-LWVpbnQuYyAgICAgICAgICAgICAgfCAgOSArKysrKysrKysNCj4gPiAgZHJpdmVycy9waW5jdHJs
-L21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMgICAgICAgIHwgIDQgKysrKw0KPiA+ICBkcml2ZXJz
-L3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCAyNCArKysrKysrKysr
-KysrKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFy
-aXMuYyAgICAgICAgIHwgIDUgKysrKysNCj4gPiAgZHJpdmVycy9waW5jdHJsL3BpbmNvbmYtZ2Vu
-ZXJpYy5jICAgICAgICAgICAgICAgIHwgIDEgKw0KPiA+ICA3IGZpbGVzIGNoYW5nZWQsIDU5IGlu
-c2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
-b25maWcNCj4gPiBpbmRleCA3MDFmOWFmLi5kNDhjMzEzIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL0tjb25maWcNCj4gPiBAQCAtMywxMCArMywxMiBAQCBtZW51ICJNZWRpYVRlayBwaW5j
-dHJsIGRyaXZlcnMiDQo+ID4gIAlkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgfHwgQ09NUElMRV9U
-RVNUDQo+ID4gIA0KPiA+ICBjb25maWcgRUlOVF9NVEsNCj4gPiAtCWJvb2wgIk1lZGlhVGVrIEV4
-dGVybmFsIEludGVycnVwdCBTdXBwb3J0Ig0KPiA+ICsJdHJpc3RhdGUgIk1lZGlhVGVrIEV4dGVy
-bmFsIEludGVycnVwdCBTdXBwb3J0Ig0KPiA+ICAJZGVwZW5kcyBvbiBQSU5DVFJMX01USyB8fCBQ
-SU5DVFJMX01US19NT09SRSB8fCBQSU5DVFJMX01US19QQVJJUyB8fCBDT01QSUxFX1RFU1QNCj4g
-PiAgCXNlbGVjdCBHUElPTElCDQo+ID4gIAlzZWxlY3QgSVJRX0RPTUFJTg0KPiA+ICsJZGVmYXVs
-dCB5IGlmIFBJTkNUUkxfTVRLIHx8IFBJTkNUUkxfTVRLX01PT1JFDQo+ID4gKwlkZWZhdWx0IFBJ
-TkNUUkxfTVRLX1BBUklTDQo+ID4gIA0KPiA+ICBjb25maWcgUElOQ1RSTF9NVEsNCj4gPiAgCWJv
-b2wNCj4gPiBAQCAtMTcsMjMgKzE5LDMwIEBAIGNvbmZpZyBQSU5DVFJMX01USw0KPiA+ICAJc2Vs
-ZWN0IEVJTlRfTVRLDQo+ID4gIAlzZWxlY3QgT0ZfR1BJTw0KPiA+ICANCj4gPiArY29uZmlnIFBJ
-TkNUUkxfTVRLX1YyDQo+ID4gKwl0cmlzdGF0ZQ0KPiA+ICsJZGVwZW5kcyBvbiBQSU5DVFJMX01U
-S19NT09SRSB8fCBQSU5DVFJMX01US19QQVJJUw0KPiA+ICsNCj4gPiAgY29uZmlnIFBJTkNUUkxf
-TVRLX01PT1JFDQo+ID4gLQlib29sDQo+ID4gKwl0cmlzdGF0ZQ0KPiA+ICAJZGVwZW5kcyBvbiBP
-Rg0KPiA+ICAJc2VsZWN0IEdFTkVSSUNfUElOQ09ORg0KPiA+ICAJc2VsZWN0IEdFTkVSSUNfUElO
-Q1RSTF9HUk9VUFMNCj4gPiAgCXNlbGVjdCBHRU5FUklDX1BJTk1VWF9GVU5DVElPTlMNCj4gPiAr
-CXNlbGVjdCBFSU5UX01USw0KPiA+ICAJc2VsZWN0IEdQSU9MSUINCj4gPiAgCXNlbGVjdCBPRl9H
-UElPDQo+ID4gKwlzZWxlY3QgUElOQ1RSTF9NVEtfVjINCj4gPiAgDQo+ID4gIGNvbmZpZyBQSU5D
-VFJMX01US19QQVJJUw0KPiA+IC0JYm9vbA0KPiA+ICsJdHJpc3RhdGUNCj4gPiAgCWRlcGVuZHMg
-b24gT0YNCj4gPiAgCXNlbGVjdCBQSU5NVVgNCj4gPiAgCXNlbGVjdCBHRU5FUklDX1BJTkNPTkYN
-Cj4gPiAgCXNlbGVjdCBHUElPTElCDQo+ID4gIAlzZWxlY3QgRUlOVF9NVEsNCj4gPiAgCXNlbGVj
-dCBPRl9HUElPDQo+ID4gKwlzZWxlY3QgUElOQ1RSTF9NVEtfVjINCj4gPiAgDQo+ID4gICMgRm9y
-IEFSTXY3IFNvQ3MNCj4gPiAgY29uZmlnIFBJTkNUUkxfTVQyNzAxDQo+ID4gQEAgLTgwLDcgKzg5
-LDcgQEAgY29uZmlnIFBJTkNUUkxfTVQyNzEyDQo+ID4gIAlzZWxlY3QgUElOQ1RSTF9NVEsNCj4g
-PiAgDQo+ID4gIGNvbmZpZyBQSU5DVFJMX01UNjc2NQ0KPiA+IC0JYm9vbCAiTWVkaWF0ZWsgTVQ2
-NzY1IHBpbiBjb250cm9sIg0KPiA+ICsJdHJpc3RhdGUgIk1lZGlhdGVrIE1UNjc2NSBwaW4gY29u
-dHJvbCINCj4gPiAgCWRlcGVuZHMgb24gT0YNCj4gPiAgCWRlcGVuZHMgb24gQVJNNjQgfHwgQ09N
-UElMRV9URVNUDQo+ID4gIAlkZWZhdWx0IEFSTTY0ICYmIEFSQ0hfTUVESUFURUsNCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlIGIvZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL01ha2VmaWxlDQo+ID4gaW5kZXggYTc0MzI1YS4uNGI3MTMyOCAxMDA2NDQN
-Cj4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiArKysgYi9k
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiBAQCAtMiw4ICsyLDkgQEANCj4g
-PiAgIyBDb3JlDQo+ID4gIG9iai0kKENPTkZJR19FSU5UX01USykJCSs9IG10ay1laW50Lm8NCj4g
-PiAgb2JqLSQoQ09ORklHX1BJTkNUUkxfTVRLKQkrPSBwaW5jdHJsLW10ay1jb21tb24ubw0KPiA+
-IC1vYmotJChDT05GSUdfUElOQ1RSTF9NVEtfTU9PUkUpICs9IHBpbmN0cmwtbW9vcmUubyBwaW5j
-dHJsLW10ay1jb21tb24tdjIubw0KPiA+IC1vYmotJChDT05GSUdfUElOQ1RSTF9NVEtfUEFSSVMp
-ICs9IHBpbmN0cmwtcGFyaXMubyBwaW5jdHJsLW10ay1jb21tb24tdjIubw0KPiA+ICtvYmotJChD
-T05GSUdfUElOQ1RSTF9NVEtfVjIpCSs9IHBpbmN0cmwtbXRrLWNvbW1vbi12Mi5vDQo+ID4gK29i
-ai0kKENPTkZJR19QSU5DVFJMX01US19NT09SRSkgKz0gcGluY3RybC1tb29yZS5vDQo+ID4gK29i
-ai0kKENPTkZJR19QSU5DVFJMX01US19QQVJJUykgKz0gcGluY3RybC1wYXJpcy5vDQo+ID4gIA0K
-PiA+ICAjIFNvQyBEcml2ZXJzDQo+ID4gIG9iai0kKENPTkZJR19QSU5DVFJMX01UMjcwMSkJKz0g
-cGluY3RybC1tdDI3MDEubw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
-ZWsvbXRrLWVpbnQuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5jDQo+ID4g
-aW5kZXggN2U1MjZiY2YuLjk5NzAzYTggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJs
-L21lZGlhdGVrL210ay1laW50LmMNCj4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-bXRrLWVpbnQuYw0KPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ICAgKg0KPiA+ICAgKi8NCj4gPiAg
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Rl
-bGF5Lmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9lcnIuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4
-L2dwaW8vZHJpdmVyLmg+DQo+ID4gQEAgLTM3OSw2ICszODAsNyBAQCBpbnQgbXRrX2VpbnRfZG9f
-c3VzcGVuZChzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQpDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+
-ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfZG9fc3VzcGVuZCk7DQo+ID4g
-IA0KPiA+ICBpbnQgbXRrX2VpbnRfZG9fcmVzdW1lKHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4g
-PiAgew0KPiA+IEBAIC0zODYsNiArMzg4LDcgQEAgaW50IG10a19laW50X2RvX3Jlc3VtZShzdHJ1
-Y3QgbXRrX2VpbnQgKmVpbnQpDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4gPiAr
-RVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfZG9fcmVzdW1lKTsNCj4gPiAgDQo+ID4gIGludCBt
-dGtfZWludF9zZXRfZGVib3VuY2Uoc3RydWN0IG10a19laW50ICplaW50LCB1bnNpZ25lZCBsb25n
-IGVpbnRfbnVtLA0KPiA+ICAJCQkgIHVuc2lnbmVkIGludCBkZWJvdW5jZSkNCj4gPiBAQCAtNDQw
-LDYgKzQ0Myw3IEBAIGludCBtdGtfZWludF9zZXRfZGVib3VuY2Uoc3RydWN0IG10a19laW50ICpl
-aW50LCB1bnNpZ25lZCBsb25nIGVpbnRfbnVtLA0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+
-ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19laW50X3NldF9kZWJvdW5jZSk7DQo+ID4g
-IA0KPiA+ICBpbnQgbXRrX2VpbnRfZmluZF9pcnEoc3RydWN0IG10a19laW50ICplaW50LCB1bnNp
-Z25lZCBsb25nIGVpbnRfbikNCj4gPiAgew0KPiA+IEBAIC00NTEsNiArNDU1LDcgQEAgaW50IG10
-a19laW50X2ZpbmRfaXJxKHN0cnVjdCBtdGtfZWludCAqZWludCwgdW5zaWduZWQgbG9uZyBlaW50
-X24pDQo+ID4gIA0KPiA+ICAJcmV0dXJuIGlycTsNCj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9M
-X0dQTChtdGtfZWludF9maW5kX2lycSk7DQo+ID4gIA0KPiA+ICBpbnQgbXRrX2VpbnRfZG9faW5p
-dChzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQpDQo+ID4gIHsNCj4gPiBAQCAtNDk1LDMgKzUwMCw3IEBA
-IGludCBtdGtfZWludF9kb19pbml0KHN0cnVjdCBtdGtfZWludCAqZWludCkNCj4gPiAgDQo+ID4g
-IAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfZWludF9kb19p
-bml0KTsNCj4gPiArDQo+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsNCj4gPiArTU9EVUxF
-X0RFU0NSSVBUSU9OKCJNZWRpYVRlayBFSU5UIERyaXZlciIpOw0KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYyBiL2RyaXZlcnMvcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jDQo+ID4gaW5kZXggOTA1ZGFlOGMuLjJjNTlkMzkg
-MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1
-LmMNCj4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYw0K
-PiA+IEBAIC02LDYgKzYsNyBAQA0KPiA+ICAgKg0KPiA+ICAgKi8NCj4gPiAgDQo+ID4gKyNpbmNs
-dWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgInBpbmN0cmwtbXRrLW10Njc2NS5o
-Ig0KPiA+ICAjaW5jbHVkZSAicGluY3RybC1wYXJpcy5oIg0KPiA+ICANCj4gPiBAQCAtMTEwMywz
-ICsxMTA0LDYgQEAgc3RhdGljIGludCBfX2luaXQgbXQ2NzY1X3BpbmN0cmxfaW5pdCh2b2lkKQ0K
-PiA+ICAJcmV0dXJuIHBsYXRmb3JtX2RyaXZlcl9yZWdpc3RlcigmbXQ2NzY1X3BpbmN0cmxfZHJp
-dmVyKTsNCj4gPiAgfQ0KPiA+ICBhcmNoX2luaXRjYWxsKG10Njc2NV9waW5jdHJsX2luaXQpOw0K
-PiA+ICsNCj4gPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJ
-UFRJT04oIk1lZGlhVGVrIE1UNjc2NSBQaW5jdHJsIERyaXZlciIpOw0KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2
-ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCj4gPiBpbmRleCAx
-ZGE5NDI1Li5jZGYyZDY5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
-ay9waW5jdHJsLW10ay1jb21tb24tdjIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRp
-YXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYw0KPiA+IEBAIC02LDYgKzYsNyBAQA0KPiA+ICAg
-Kg0KPiA+ICAgKi8NCj4gPiAgDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAg
-I2luY2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2NXh4Lmg+DQo+ID4gICNpbmNsdWRlIDxs
-aW51eC9kZXZpY2UuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KPiA+IEBAIC0yMDYs
-NiArMjA3LDcgQEAgaW50IG10a19od19zZXRfdmFsdWUoc3RydWN0IG10a19waW5jdHJsICpodywg
-Y29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywNCj4gPiAgDQo+ID4gIAlyZXR1cm4gMDsN
-Cj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfaHdfc2V0X3ZhbHVlKTsNCj4gPiAg
-DQo+ID4gIGludCBtdGtfaHdfZ2V0X3ZhbHVlKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsIGNvbnN0
-IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsDQo+ID4gIAkJICAgICBpbnQgZmllbGQsIGludCAq
-dmFsdWUpDQo+ID4gQEAgLTIyNSw2ICsyMjcsNyBAQCBpbnQgbXRrX2h3X2dldF92YWx1ZShzdHJ1
-Y3QgbXRrX3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KPiA+
-ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19o
-d19nZXRfdmFsdWUpOw0KPiA+ICANCj4gPiAgc3RhdGljIGludCBtdGtfeHRfZmluZF9laW50X251
-bShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LCB1bnNpZ25lZCBsb25nIGVpbnRfbikNCj4gPiAgew0K
-PiA+IEBAIC0zNjMsNiArMzY2LDcgQEAgaW50IG10a19idWlsZF9laW50KHN0cnVjdCBtdGtfcGlu
-Y3RybCAqaHcsIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIA0KPiA+ICAJcmV0
-dXJuIG10a19laW50X2RvX2luaXQoaHctPmVpbnQpOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1C
-T0xfR1BMKG10a19idWlsZF9laW50KTsNCj4gPiAgDQo+ID4gIC8qIFJldmlzaW9uIDAgKi8NCj4g
-PiAgaW50IG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXQoc3RydWN0IG10a19waW5jdHJsICpo
-dywNCj4gPiBAQCAtMzgyLDYgKzM4Niw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVf
-c2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4g
-IH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX3NldCk7
-DQo+ID4gIA0KPiA+ICBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX2dldChzdHJ1Y3QgbXRr
-X3BpbmN0cmwgKmh3LA0KPiA+ICAJCQkJIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2Ms
-IGludCAqcmVzKQ0KPiA+IEBAIC00MDQsNiArNDA5LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNf
-ZGlzYWJsZV9nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgDQo+ID4gIAlyZXR1cm4g
-MDsNCj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX2Rpc2Fi
-bGVfZ2V0KTsNCj4gPiAgDQo+ID4gIGludCBtdGtfcGluY29uZl9iaWFzX3NldChzdHJ1Y3QgbXRr
-X3BpbmN0cmwgKmh3LA0KPiA+ICAJCQkgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywg
-Ym9vbCBwdWxsdXApDQo+ID4gQEAgLTQyMyw2ICs0MjksNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlh
-c19zZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgDQo+ID4gIAlyZXR1cm4gMDsNCj4g
-PiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX3NldCk7DQo+ID4g
-IA0KPiA+ICBpbnQgbXRrX3BpbmNvbmZfYmlhc19nZXQoc3RydWN0IG10a19waW5jdHJsICpodywN
-Cj4gPiAgCQkJIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGJvb2wgcHVsbHVwLCBp
-bnQgKnJlcykNCj4gPiBAQCAtNDQyLDYgKzQ0OSw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2dl
-dChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9
-DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfZ2V0KTsNCj4gPiAgDQo+
-ID4gIC8qIFJldmlzaW9uIDEgKi8NCj4gPiAgaW50IG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9z
-ZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+IEBAIC00NTYsNiArNDY0LDcgQEAg
-aW50IG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwg
-Kmh3LA0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xf
-R1BMKG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXRfcmV2MSk7DQo+ID4gIA0KPiA+ICBpbnQg
-bXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcs
-DQo+ID4gIAkJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBpbnQgKnJl
-cykNCj4gPiBAQCAtNDczLDYgKzQ4Miw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVf
-Z2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgDQo+ID4gIAlyZXR1cm4gMDsN
-Cj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVf
-Z2V0X3JldjEpOw0KPiA+ICANCj4gPiAgaW50IG10a19waW5jb25mX2JpYXNfc2V0X3JldjEoc3Ry
-dWN0IG10a19waW5jdHJsICpodywNCj4gPiAgCQkJICAgICAgY29uc3Qgc3RydWN0IG10a19waW5f
-ZGVzYyAqZGVzYywgYm9vbCBwdWxsdXApDQo+ID4gQEAgLTQ5Miw2ICs1MDIsNyBAQCBpbnQgbXRr
-X3BpbmNvbmZfYmlhc19zZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+ICANCj4g
-PiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25m
-X2JpYXNfc2V0X3JldjEpOw0KPiA+ICANCj4gPiAgaW50IG10a19waW5jb25mX2JpYXNfZ2V0X3Jl
-djEoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgCQkJICAgICAgY29uc3Qgc3RydWN0IG10
-a19waW5fZGVzYyAqZGVzYywgYm9vbCBwdWxsdXAsDQo+ID4gQEAgLTUxNyw2ICs1MjgsNyBAQCBp
-bnQgbXRrX3BpbmNvbmZfYmlhc19nZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+
-ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19w
-aW5jb25mX2JpYXNfc2V0X2dldjEpOw0KPiA+ICANCj4gPiAgLyogQ29tYm8gZm9yIHRoZSBmb2xs
-b3dpbmcgcHVsbCByZWdpc3RlciB0eXBlOg0KPiA+ICAgKiAxLiBQVSArIFBEDQo+ID4gQEAgLTcx
-Nyw2ICs3MjksNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19zZXRfY29tYm8oc3RydWN0IG10a19w
-aW5jdHJsICpodywNCj4gPiAgb3V0Og0KPiA+ICAJcmV0dXJuIGVycjsNCj4gPiAgfQ0KPiA+ICtF
-WFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX3NldF9jb21ibyk7DQo+ID4gIA0KPiA+
-ICBpbnQgbXRrX3BpbmNvbmZfYmlhc19nZXRfY29tYm8oc3RydWN0IG10a19waW5jdHJsICpodywN
-Cj4gPiAgCQkJICAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywNCj4gPiBAQCAt
-NzM3LDYgKzc1MCw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2dldF9jb21ibyhzdHJ1Y3QgbXRr
-X3BpbmN0cmwgKmh3LA0KPiA+ICBvdXQ6DQo+ID4gIAlyZXR1cm4gZXJyOw0KPiA+ICB9DQo+ID4g
-K0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfZ2V0X2NvbWJvKTsNCj4gPiAgDQo+
-ID4gIC8qIFJldmlzaW9uIDAgKi8NCj4gPiAgaW50IG10a19waW5jb25mX2RyaXZlX3NldChzdHJ1
-Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+IEBAIC03NjYsNiArNzgwLDcgQEAgaW50IG10a19waW5j
-b25mX2RyaXZlX3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+ICANCj4gPiAgCXJldHVy
-biBlcnI7DQo+ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfZHJpdmVf
-c2V0KTsNCj4gPiAgDQo+ID4gIGludCBtdGtfcGluY29uZl9kcml2ZV9nZXQoc3RydWN0IG10a19w
-aW5jdHJsICpodywNCj4gPiAgCQkJICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBp
-bnQgKnZhbCkNCj4gPiBAQCAtNzkwLDYgKzgwNSw3IEBAIGludCBtdGtfcGluY29uZl9kcml2ZV9n
-ZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAg
-fQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9nZXQpOw0KPiA+ICAN
-Cj4gPiAgLyogUmV2aXNpb24gMSAqLw0KPiA+ICBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfc2V0X3Jl
-djEoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiBAQCAtODExLDYgKzgyNyw3IEBAIGludCBt
-dGtfcGluY29uZl9kcml2ZV9zZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+ICAN
-Cj4gPiAgCXJldHVybiBlcnI7DQo+ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3Bp
-bmNvbmZfZHJpdmVfc2V0X3JldjEpOw0KPiA+ICANCj4gPiAgaW50IG10a19waW5jb25mX2RyaXZl
-X2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gIAkJCSAgICAgICBjb25zdCBz
-dHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBpbnQgKnZhbCkNCj4gPiBAQCAtODI4LDE4ICs4NDUs
-MjEgQEAgaW50IG10a19waW5jb25mX2RyaXZlX2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAq
-aHcsDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9H
-UEwobXRrX3BpbmNvbmZfZHJpdmVfZ2V0X3JldjEpOw0KPiA+ICANCj4gPiAgaW50IG10a19waW5j
-b25mX2RyaXZlX3NldF9yYXcoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgCQkJICAgICAg
-IGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIHUzMiBhcmcpDQo+ID4gIHsNCj4gPiAg
-CXJldHVybiBtdGtfaHdfc2V0X3ZhbHVlKGh3LCBkZXNjLCBQSU5DVFJMX1BJTl9SRUdfRFJWLCBh
-cmcpOw0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2RyaXZlX3Nl
-dF9yYXcpOw0KPiA+ICANCj4gPiAgaW50IG10a19waW5jb25mX2RyaXZlX2dldF9yYXcoc3RydWN0
-IG10a19waW5jdHJsICpodywNCj4gPiAgCQkJICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rl
-c2MgKmRlc2MsIGludCAqdmFsKQ0KPiA+ICB7DQo+ID4gIAlyZXR1cm4gbXRrX2h3X2dldF92YWx1
-ZShodywgZGVzYywgUElOQ1RSTF9QSU5fUkVHX0RSViwgdmFsKTsNCj4gPiAgfQ0KPiA+ICtFWFBP
-UlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9kcml2ZV9nZXRfcmF3KTsNCj4gPiAgDQo+ID4gIGlu
-dCBtdGtfcGluY29uZl9hZHZfcHVsbF9zZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAg
-CQkJICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBib29sIHB1bGx1cCwNCj4g
-PiBAQCAtODgwLDYgKzkwMCw3IEBAIGludCBtdGtfcGluY29uZl9hZHZfcHVsbF9zZXQoc3RydWN0
-IG10a19waW5jdHJsICpodywNCj4gPiAgDQo+ID4gIAlyZXR1cm4gZXJyOw0KPiA+ICB9DQo+ID4g
-K0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2Fkdl9wdWxsX3NldCk7DQo+ID4gIA0KPiA+
-ICBpbnQgbXRrX3BpbmNvbmZfYWR2X3B1bGxfZ2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+
-ID4gIAkJCSAgICAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgYm9vbCBwdWxsdXAs
-DQo+ID4gQEAgLTkyMiw2ICs5NDMsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYWR2X3B1bGxfZ2V0KHN0
-cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4gIH0NCj4g
-PiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYWR2X3B1bGxfZ2V0KTsNCj4gPiAgDQo+
-ID4gIGludCBtdGtfcGluY29uZl9hZHZfZHJpdmVfc2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcs
-DQo+ID4gIAkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIHUzMiBhcmcp
-DQo+ID4gQEAgLTk0OCw2ICs5NzAsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZlX3NldChz
-dHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KPiA+ICANCj4gPiAgCXJldHVybiBlcnI7DQo+ID4gIH0N
-Cj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYWR2X2RyaXZlX3NldCk7DQo+ID4g
-IA0KPiA+ICBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZlX2dldChzdHJ1Y3QgbXRrX3BpbmN0cmwg
-Kmh3LA0KPiA+ICAJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCB1MzIg
-KnZhbCkNCj4gPiBAQCAtOTcxLDMgKzk5NCw0IEBAIGludCBtdGtfcGluY29uZl9hZHZfZHJpdmVf
-Z2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4gIA0KPiA+ICAJcmV0dXJuIDA7DQo+ID4g
-IH0NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYWR2X2RyaXZlX2dldCk7DQo+
-ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMg
-Yi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQo+ID4gaW5kZXggODNi
-ZjI5Yy4uYWY5Nzc5NCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-cGluY3RybC1wYXJpcy5jDQo+ID4gKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0
-cmwtcGFyaXMuYw0KPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ICAgKgkgICBIb25nemhvdS5ZYW5n
-IDxob25nemhvdS55YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAgICovDQo+ID4gIA0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9ncGlvL2RyaXZlci5o
-Pg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGluY3RybC9tdDY1eHguaD4NCj4gPiAgI2lu
-Y2x1ZGUgInBpbmN0cmwtcGFyaXMuaCINCj4gPiBAQCAtMTAzNywzICsxMDM4LDcgQEAgc3RhdGlj
-IGludCBtdGtfcGFyaXNfcGluY3RybF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2aWNlKQ0KPiA+
-ICAJLnN1c3BlbmRfbm9pcnEgPSBtdGtfcGFyaXNfcGluY3RybF9zdXNwZW5kLA0KPiA+ICAJLnJl
-c3VtZV9ub2lycSA9IG10a19wYXJpc19waW5jdHJsX3Jlc3VtZSwNCj4gPiAgfTsNCj4gPiArRVhQ
-T1JUX1NZTUJPTF9HUEwobXRrX3BhcmlzX3BpbmN0cmxfcHJvYmUpOw0KPiA+ICsNCj4gPiArTU9E
-VUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lZGlhVGVr
-IFBpbmN0cmwgQ29tbW9uIERyaXZlciBWMiBQYXJpcyIpOw0KPiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL3BpbmN0cmwvcGluY29uZi1nZW5lcmljLmMgYi9kcml2ZXJzL3BpbmN0cmwvcGluY29uZi1n
-ZW5lcmljLmMNCj4gPiBpbmRleCA5ZWI4NjMwLi5kZmVmNDcxIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvcGluY3RybC9waW5jb25mLWdlbmVyaWMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGluY3Ry
-bC9waW5jb25mLWdlbmVyaWMuYw0KPiA+IEBAIC0yODYsNiArMjg2LDcgQEAgaW50IHBpbmNvbmZf
-Z2VuZXJpY19wYXJzZV9kdF9jb25maWcoc3RydWN0IGRldmljZV9ub2RlICpucCwNCj4gPiAgCWtm
-cmVlKGNmZyk7DQo+ID4gIAlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xf
-R1BMKHBpbmNvbmZfZ2VuZXJpY19wYXJzZV9kdF9jb25maWcpOw0KPiA+ICANCj4gPiAgaW50IHBp
-bmNvbmZfZ2VuZXJpY19kdF9zdWJub2RlX3RvX21hcChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxk
-ZXYsDQo+ID4gIAkJc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0IHBpbmN0cmxfbWFwICoq
-bWFwLA0KPiA+IA0KDQo=
 
+
+On 12/02/2020 11:13, Light Hsieh wrote:
+> Dear Matthias:
+> 
+
+Please try to write your answer below the lines you are refering to and don't do
+top-posting. :)
+
+> Google are trying to build most platform driver as kernel module for
+> their future Android kernel plan.
+> 
+> This change is preparing for that purpose.
+
+Ok, thanks for the answer.
+
+In any case you should split that series up in per-driver patches. Please try to
+make incremental patches, fixing one kconfig/export after the other. The last
+patch should be the mt6765 driver being build as a module.
+
+Also fix the commit message saying that you prepare to be able to build pinctrl
+drivers as modules or something like this. Only the last patch should mention
+mt6765.
+
+Regards,
+Matthias
+
+> 
+> Light
+> 
+> On Wed, 2020-02-12 at 11:07 +0100, Matthias Brugger wrote:
+>>
+>> On 12/02/2020 06:30, light.hsieh@mediatek.com wrote:
+>>> From: Light Hsieh <light.hsieh@mediatek.com>
+>>>
+>>> To make MediaTek MT6765 pinctrl driver and related MediaTek pinctrl driver
+>>> files be both compatible for building kernel module or built-in, the
+>>> following modification are performed:
+>>>
+>>
+>> From what can I see you just want to provide a possibility to build mt6765 as a
+>> module. So the question is, why you want that?
+>>
+>> Regards,
+>> Matthias
+>>
+>>> 1. drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c: export some functions
+>>>
+>>> 2. drivers/pinctrl/mediatek/pinctrl-paris.c: export some functions
+>>>
+>>> 3. drivers/pinctrl/mediatek/mtk-eint.c: export some functions
+>>>
+>>> 4. drivers/pinctrl/pinconf-generic.c: export
+>>>        pinconf_generic_parse_dt_config() for usage by pinctrl-paris.c
+>>>        built as kernel module.
+>>>
+>>> 5. drivers/pinctrl/mediatek/Kconfig:
+>>> 5.1 PINCTRL_MT6765: change from bool to tristate. It is specified in
+>>>         kernel config file.
+>>> 5.2 PINCTRL_MTK_PARIS: change from bool to tristate and select
+>>>         PINCTRL_MTK_V2.
+>>>       * PINCTRL_MTK_PARIS will be y if any PINCTRL_MTXXXX selecting
+>>>         PINCTRL_MTK_PARIS is y.
+>>>       * PINCTRL_MTK_PARIS will be n if all PINCTRL_MTXXXX selecting
+>>>         PINCTRL_MTK_PARIS are n.
+>>>       * PINCTRL_MTK_PARIS will be m if all PINCTRL_MTXXXX selecting
+>>>         PINCTRL_MTK_PARIS are m.
+>>> 5.3 PINCTRL_MTK_MOORE: select EINT_MTK and PINCTRL_MTK_V2.
+>>> 5.3 PINCTRL_MTK_V2: add this tristate config which depends on
+>>>         PINCTRL_MTK_PARIS and PINCTRL_MTK_MOORE.
+>>>       * PINCTRL_MTK_V2 will be y if either PINCTRL_MTK_PARIS or
+>>>         PINCTRL_MTK_MOORE is y.
+>>>       * PINCTRL_MTK_V2 will be n if both PINCTRL_MTK_PARIS and
+>>>         PINCTRL_MTK_MOORE are n.
+>>>       * PINCTRL_MTK_V2 will be m if both PINCTRL_MTK_PARIS is m and
+>>>         PINCTRL_MTK_MOORE is n.
+>>> 5.4 EINT_MTK: change from bool to tristate and add rule for default.
+>>>       * First rule: determine if EINT_MTK is y or n according to
+>>>         selection of PINCTRL_MTK or PINCTRL_MTK_MORE.
+>>>       * Second rule: determine if EINT_MTK is y, m, or n according to
+>>>         selection of PINCTRL_MTK_PARIS.
+>>>
+>>> 6. drivers/pinctrl/mediatek/Makefile: Use PINCTRL_MTK_V2 to determine
+>>>         if pinctrl-mtk-common-v2.c is built as kernel module or
+>>>         built-in.
+>>>
+>>> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+>>> ---
+>>>  drivers/pinctrl/mediatek/Kconfig                 | 17 +++++++++++++----
+>>>  drivers/pinctrl/mediatek/Makefile                |  5 +++--
+>>>  drivers/pinctrl/mediatek/mtk-eint.c              |  9 +++++++++
+>>>  drivers/pinctrl/mediatek/pinctrl-mt6765.c        |  4 ++++
+>>>  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 ++++++++++++++++++++++++
+>>>  drivers/pinctrl/mediatek/pinctrl-paris.c         |  5 +++++
+>>>  drivers/pinctrl/pinconf-generic.c                |  1 +
+>>>  7 files changed, 59 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+>>> index 701f9af..d48c313 100644
+>>> --- a/drivers/pinctrl/mediatek/Kconfig
+>>> +++ b/drivers/pinctrl/mediatek/Kconfig
+>>> @@ -3,10 +3,12 @@ menu "MediaTek pinctrl drivers"
+>>>  	depends on ARCH_MEDIATEK || COMPILE_TEST
+>>>  
+>>>  config EINT_MTK
+>>> -	bool "MediaTek External Interrupt Support"
+>>> +	tristate "MediaTek External Interrupt Support"
+>>>  	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
+>>>  	select GPIOLIB
+>>>  	select IRQ_DOMAIN
+>>> +	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
+>>> +	default PINCTRL_MTK_PARIS
+>>>  
+>>>  config PINCTRL_MTK
+>>>  	bool
+>>> @@ -17,23 +19,30 @@ config PINCTRL_MTK
+>>>  	select EINT_MTK
+>>>  	select OF_GPIO
+>>>  
+>>> +config PINCTRL_MTK_V2
+>>> +	tristate
+>>> +	depends on PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS
+>>> +
+>>>  config PINCTRL_MTK_MOORE
+>>> -	bool
+>>> +	tristate
+>>>  	depends on OF
+>>>  	select GENERIC_PINCONF
+>>>  	select GENERIC_PINCTRL_GROUPS
+>>>  	select GENERIC_PINMUX_FUNCTIONS
+>>> +	select EINT_MTK
+>>>  	select GPIOLIB
+>>>  	select OF_GPIO
+>>> +	select PINCTRL_MTK_V2
+>>>  
+>>>  config PINCTRL_MTK_PARIS
+>>> -	bool
+>>> +	tristate
+>>>  	depends on OF
+>>>  	select PINMUX
+>>>  	select GENERIC_PINCONF
+>>>  	select GPIOLIB
+>>>  	select EINT_MTK
+>>>  	select OF_GPIO
+>>> +	select PINCTRL_MTK_V2
+>>>  
+>>>  # For ARMv7 SoCs
+>>>  config PINCTRL_MT2701
+>>> @@ -80,7 +89,7 @@ config PINCTRL_MT2712
+>>>  	select PINCTRL_MTK
+>>>  
+>>>  config PINCTRL_MT6765
+>>> -	bool "Mediatek MT6765 pin control"
+>>> +	tristate "Mediatek MT6765 pin control"
+>>>  	depends on OF
+>>>  	depends on ARM64 || COMPILE_TEST
+>>>  	default ARM64 && ARCH_MEDIATEK
+>>> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
+>>> index a74325a..4b71328 100644
+>>> --- a/drivers/pinctrl/mediatek/Makefile
+>>> +++ b/drivers/pinctrl/mediatek/Makefile
+>>> @@ -2,8 +2,9 @@
+>>>  # Core
+>>>  obj-$(CONFIG_EINT_MTK)		+= mtk-eint.o
+>>>  obj-$(CONFIG_PINCTRL_MTK)	+= pinctrl-mtk-common.o
+>>> -obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o pinctrl-mtk-common-v2.o
+>>> -obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o pinctrl-mtk-common-v2.o
+>>> +obj-$(CONFIG_PINCTRL_MTK_V2)	+= pinctrl-mtk-common-v2.o
+>>> +obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o
+>>> +obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o
+>>>  
+>>>  # SoC Drivers
+>>>  obj-$(CONFIG_PINCTRL_MT2701)	+= pinctrl-mt2701.o
+>>> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+>>> index 7e526bcf..99703a8 100644
+>>> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+>>> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+>>> @@ -9,6 +9,7 @@
+>>>   *
+>>>   */
+>>>  
+>>> +#include <linux/module.h>
+>>>  #include <linux/delay.h>
+>>>  #include <linux/err.h>
+>>>  #include <linux/gpio/driver.h>
+>>> @@ -379,6 +380,7 @@ int mtk_eint_do_suspend(struct mtk_eint *eint)
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_suspend);
+>>>  
+>>>  int mtk_eint_do_resume(struct mtk_eint *eint)
+>>>  {
+>>> @@ -386,6 +388,7 @@ int mtk_eint_do_resume(struct mtk_eint *eint)
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_resume);
+>>>  
+>>>  int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
+>>>  			  unsigned int debounce)
+>>> @@ -440,6 +443,7 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_eint_set_debounce);
+>>>  
+>>>  int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+>>>  {
+>>> @@ -451,6 +455,7 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+>>>  
+>>>  	return irq;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+>>>  
+>>>  int mtk_eint_do_init(struct mtk_eint *eint)
+>>>  {
+>>> @@ -495,3 +500,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_eint_do_init);
+>>> +
+>>> +MODULE_LICENSE("GPL v2");
+>>> +MODULE_DESCRIPTION("MediaTek EINT Driver");
+>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+>>> index 905dae8c..2c59d39 100644
+>>> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+>>> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+>>> @@ -6,6 +6,7 @@
+>>>   *
+>>>   */
+>>>  
+>>> +#include <linux/module.h>
+>>>  #include "pinctrl-mtk-mt6765.h"
+>>>  #include "pinctrl-paris.h"
+>>>  
+>>> @@ -1103,3 +1104,6 @@ static int __init mt6765_pinctrl_init(void)
+>>>  	return platform_driver_register(&mt6765_pinctrl_driver);
+>>>  }
+>>>  arch_initcall(mt6765_pinctrl_init);
+>>> +
+>>> +MODULE_LICENSE("GPL v2");
+>>> +MODULE_DESCRIPTION("MediaTek MT6765 Pinctrl Driver");
+>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+>>> index 1da9425..cdf2d69 100644
+>>> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+>>> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+>>> @@ -6,6 +6,7 @@
+>>>   *
+>>>   */
+>>>  
+>>> +#include <linux/module.h>
+>>>  #include <dt-bindings/pinctrl/mt65xx.h>
+>>>  #include <linux/device.h>
+>>>  #include <linux/err.h>
+>>> @@ -206,6 +207,7 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_hw_set_value);
+>>>  
+>>>  int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>>>  		     int field, int *value)
+>>> @@ -225,6 +227,7 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_hw_get_value);
+>>>  
+>>>  static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
+>>>  {
+>>> @@ -363,6 +366,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+>>>  
+>>>  	return mtk_eint_do_init(hw->eint);
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_build_eint);
+>>>  
+>>>  /* Revision 0 */
+>>>  int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
+>>> @@ -382,6 +386,7 @@ int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set);
+>>>  
+>>>  int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
+>>>  				 const struct mtk_pin_desc *desc, int *res)
+>>> @@ -404,6 +409,7 @@ int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get);
+>>>  
+>>>  int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
+>>>  			 const struct mtk_pin_desc *desc, bool pullup)
+>>> @@ -423,6 +429,7 @@ int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set);
+>>>  
+>>>  int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
+>>>  			 const struct mtk_pin_desc *desc, bool pullup, int *res)
+>>> @@ -442,6 +449,7 @@ int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get);
+>>>  
+>>>  /* Revision 1 */
+>>>  int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
+>>> @@ -456,6 +464,7 @@ int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set_rev1);
+>>>  
+>>>  int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
+>>>  				      const struct mtk_pin_desc *desc, int *res)
+>>> @@ -473,6 +482,7 @@ int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get_rev1);
+>>>  
+>>>  int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
+>>>  			      const struct mtk_pin_desc *desc, bool pullup)
+>>> @@ -492,6 +502,7 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
+>>>  
+>>>  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
+>>>  			      const struct mtk_pin_desc *desc, bool pullup,
+>>> @@ -517,6 +528,7 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_gev1);
+>>>  
+>>>  /* Combo for the following pull register type:
+>>>   * 1. PU + PD
+>>> @@ -717,6 +729,7 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
+>>>  out:
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_combo);
+>>>  
+>>>  int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
+>>>  			      const struct mtk_pin_desc *desc,
+>>> @@ -737,6 +750,7 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
+>>>  out:
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get_combo);
+>>>  
+>>>  /* Revision 0 */
+>>>  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
+>>> @@ -766,6 +780,7 @@ int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set);
+>>>  
+>>>  int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
+>>>  			  const struct mtk_pin_desc *desc, int *val)
+>>> @@ -790,6 +805,7 @@ int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get);
+>>>  
+>>>  /* Revision 1 */
+>>>  int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+>>> @@ -811,6 +827,7 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_rev1);
+>>>  
+>>>  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>>>  			       const struct mtk_pin_desc *desc, int *val)
+>>> @@ -828,18 +845,21 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_rev1);
+>>>  
+>>>  int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
+>>>  			       const struct mtk_pin_desc *desc, u32 arg)
+>>>  {
+>>>  	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_raw);
+>>>  
+>>>  int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
+>>>  			       const struct mtk_pin_desc *desc, int *val)
+>>>  {
+>>>  	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_raw);
+>>>  
+>>>  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>>>  			     const struct mtk_pin_desc *desc, bool pullup,
+>>> @@ -880,6 +900,7 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_set);
+>>>  
+>>>  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
+>>>  			     const struct mtk_pin_desc *desc, bool pullup,
+>>> @@ -922,6 +943,7 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_get);
+>>>  
+>>>  int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+>>>  			      const struct mtk_pin_desc *desc, u32 arg)
+>>> @@ -948,6 +970,7 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return err;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_set);
+>>>  
+>>>  int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+>>>  			      const struct mtk_pin_desc *desc, u32 *val)
+>>> @@ -971,3 +994,4 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+>>>  
+>>>  	return 0;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get);
+>>> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+>>> index 83bf29c..af97794 100644
+>>> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+>>> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+>>> @@ -9,6 +9,7 @@
+>>>   *	   Hongzhou.Yang <hongzhou.yang@mediatek.com>
+>>>   */
+>>>  
+>>> +#include <linux/module.h>
+>>>  #include <linux/gpio/driver.h>
+>>>  #include <dt-bindings/pinctrl/mt65xx.h>
+>>>  #include "pinctrl-paris.h"
+>>> @@ -1037,3 +1038,7 @@ static int mtk_paris_pinctrl_resume(struct device *device)
+>>>  	.suspend_noirq = mtk_paris_pinctrl_suspend,
+>>>  	.resume_noirq = mtk_paris_pinctrl_resume,
+>>>  };
+>>> +EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe);
+>>> +
+>>> +MODULE_LICENSE("GPL v2");
+>>> +MODULE_DESCRIPTION("MediaTek Pinctrl Common Driver V2 Paris");
+>>> diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+>>> index 9eb8630..dfef471 100644
+>>> --- a/drivers/pinctrl/pinconf-generic.c
+>>> +++ b/drivers/pinctrl/pinconf-generic.c
+>>> @@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+>>>  	kfree(cfg);
+>>>  	return ret;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
+>>>  
+>>>  int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+>>>  		struct device_node *np, struct pinctrl_map **map,
+>>>
+> 
