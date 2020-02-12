@@ -2,71 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8729F15A6F6
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 11:49:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9389215A73C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Feb 2020 12:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgBLKtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Feb 2020 05:49:20 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44881 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgBLKtT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 05:49:19 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so1237686lfa.11
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 02:49:17 -0800 (PST)
+        id S1727163AbgBLLAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Feb 2020 06:00:54 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41155 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgBLLAy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Feb 2020 06:00:54 -0500
+Received: by mail-io1-f68.google.com with SMTP id m25so1713521ioo.8
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Feb 2020 03:00:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N0TeS2zfvRk35tG8WU847z+I2PJ7ZIUmWpoNJniHHpk=;
-        b=uTT6SXhPQOATzbU2laTg5XgknbfixaAFUhPiS5Db1hVmRYSGlw6QFiK15m46cn64ug
-         rhNQod9kPXcalmENQQJZxQQxdbMhfFx60l3Z/P9Q5LeLrffqXHSF5CwrdSxi1Yx1G4UM
-         iu4+3qs92C3FKHCGjDFAMnItO7ubJJyaP6LXkLrs28tXwk3N2+O/vSpC0Avq88muQ2Hq
-         eAY6sYdWobiaJaQfmu5htD14aDZ7H93f8YWAfOEvs0dS/JJRVMqIsFM1TO+39/n61PD+
-         hn/dz8gxd1H3a9mmvjlhgqpAuOhN3KpxW86G+ne2j6ooctn5ziZ6/U00BgEfOpx72R0S
-         fB6A==
+         :cc:content-transfer-encoding;
+        bh=aSKIxcntvsr3pmsKt/+cdMc3rZOnUjeZ84ryZ2jbHA4=;
+        b=tHTnYrBXaqIwYEvdyTiSUB0I6yuO+lN0+ySHkEToccoDe0rm+mTa+btszT1Ozsm2S9
+         L3gJsR9cboW4dDEKBptIbiKHyx+dUfn3uXZ196IzRJbhuf8ZznaXxAZS7L2FBFTTMEzg
+         5EX4G4uU4TDLWWR8+iEAzCdO9vF+lKDU1NMuBSxv0CH/CM33vZN7GB2fnyOBj74lwtdH
+         0bC05bKR+b3EiTFJGafxQxomSB5kahswKQu1aaQePKCYSD8ZPD/qxDPE9Cfl5+IrbA+A
+         gNTgdKA3qX0/+RFzJG8JS28E2cJNNRnKiIoXBpAxACQidWqrKJL3RBs18D9Ie23j1flG
+         G5Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N0TeS2zfvRk35tG8WU847z+I2PJ7ZIUmWpoNJniHHpk=;
-        b=SXzLJ0TZW0Gf7Jy8OZwrfpB3MkvXq9jQxL1jEJi8KmSGaliVLsdYTlZJeuv96SU8T4
-         ttiteeGNEa3prEJ3wQSVmumofMyKpcDYKhRd3JfmneA2HeHlB3DTLGK3Asoqrf5aFVUk
-         6sOk1Gy4kCII869OdsNHBP4nJMVZ5aCRBJNyMHCB2W9l+mY3HRv1tIFVXj8sqaoqSiM1
-         K2NtF3yNgvSVaVSvKW01H90MXRZYlvHbQfMzFUe2yc1vh1td+GnsEV6JUDAiVYflm0do
-         ry1BOTZcLoobTe4Ccwdq43o8WMv+RfWuizyPkf3IrMWJ/dXKxW8oEZXmeq63k93aLtAc
-         rqsA==
-X-Gm-Message-State: APjAAAUO6gCjFQWXjKeGo8jlO/cKhR/WiWAjFoJ5kD02fyN/YfVque3k
-        IIqeJ7a5Hxk98DWL4HAp4KWAdhskOTbp3hxhwGnOYw==
-X-Google-Smtp-Source: APXvYqz2rRuaqT3tJiOfxESNRIkjs6Uc7SYMQNr2EDOW/VHVelbskwwm6KbE431dhr+gJ1Ygk840ZhCa1gAddAh84a8=
-X-Received: by 2002:a19:850a:: with SMTP id h10mr6420997lfd.89.1581504556953;
- Wed, 12 Feb 2020 02:49:16 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=aSKIxcntvsr3pmsKt/+cdMc3rZOnUjeZ84ryZ2jbHA4=;
+        b=dpId5Bk3BdYC19htokT17lzHEP5tBGY/q37JlvRtsCKeIfNYTP10LWPn1IAITVFxCr
+         poUlqMPnr/S/oRpQn5KSKqk2f9Fs1Y7pxnrgPyskEwxSnBdbrutIvWrlMT6sROU2MmOy
+         AJDSJZHWPSLKbq6JfLBm5yZ2gMnF7rlBiVrkSi/kbIY6me0wa1LTRlzRTfKPomRqNTYU
+         IhWvZ4Sv7wE/9SBlT2Sqa19sm5zhUxwCQStStfgzco5gT3nCftIU1Gr+7nMn9x56ElOq
+         XyEWUzjJzBEt762gt1+Q9ROowZUi1c4uRx08P92UC9Zecu90iTAt89thn3d3z90iS7Y6
+         qnKg==
+X-Gm-Message-State: APjAAAWO4OIqb73A+7aanpViwTl6Te1Azxo90dxdIvkl7j7itlr1G/qA
+        BJRL8Wwa/NBcNwn/lH/8AxC9tHuJLwNj/kNtsNqeAw==
+X-Google-Smtp-Source: APXvYqzUscMtmWnRVXqD/RZwHPnQ0OM2Hl7YkBbT3HjYaydata0WGb6m01JGjeBVubE1qiVg+wZpciU/D3QVj1KRi78=
+X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr18660353jad.136.1581505253344;
+ Wed, 12 Feb 2020 03:00:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211091937.29558-1-brgl@bgdev.pl>
-In-Reply-To: <20200211091937.29558-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Feb 2020 11:49:05 +0100
-Message-ID: <CACRpkdZoRUzhPW+WbhV7RKt6x4zj=ihcM5Vm1JUgXiHiW2+ySQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v6 0/7] gpiolib: add an ioctl() for monitoring line
- status changes
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-7-brgl@bgdev.pl>
+ <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
+In-Reply-To: <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 12 Feb 2020 12:00:42 +0100
+Message-ID: <CAMRc=MfkbJ=zTvgpaxFC7L7APEhfC7J_PcncGaQ_AQUA9uw2Fw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 6/7] gpiolib: add new ioctl() for monitoring
+ changes in line info
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+=C5=9Br., 12 lut 2020 o 11:47 Linus Walleij <linus.walleij@linaro.org> napi=
+sa=C5=82(a):
+>
+> On Tue, Feb 11, 2020 at 10:19 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Currently there is no way for user-space to be informed about changes
+> > in status of GPIO lines e.g. when someone else requests the line or its
+> > config changes. We can only periodically re-read the line-info. This
+> > is fine for simple one-off user-space tools, but any daemon that provid=
+es
+> > a centralized access to GPIO chips would benefit hugely from an event
+> > driven line info synchronization.
+> >
+> > This patch adds a new ioctl() that allows user-space processes to reuse
+> > the file descriptor associated with the character device for watching
+> > any changes in line properties. Every such event contains the updated
+> > line information.
+> >
+> > Currently the events are generated on three types of status changes: wh=
+en
+> > a line is requested, when it's released and when its config is changed.
+> > The first two are self-explanatory. For the third one: this will only
+> > happen when another user-space process calls the new SET_CONFIG ioctl()
+> > as any changes that can happen from within the kernel (i.e.
+> > set_transitory() or set_debounce()) are of no interest to user-space.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Looks good to me. This got really slim and clean after
+> the reviews, and I am of course also impressed by the kfifo
+> improvement this brings.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> A question:
+>
+> Bartosz, since you know about possible impacts on userspace,
+> since this code use the preferred ktime_get_ns() rather than
+> ktime_get_ns_real(), what happens if we just patch the other
+> event timestamp to use ktime_get_ns() instead, so we use the
+> same everywhere?
+>
+> If it's fine I'd like to just toss in a patch for that as well.
+>
 
-I'm very happy with this version and any remaining nits can surely
-be ironed out in-tree.
+Arnd pointed out it would be an incompatible ABI change[1].
 
-Since we have ACKs from the kfifo maintainer, can you send me a
-pull request for this so we get it into -next early?
+However - I asked Khouloud who's working on v2 of the line event
+interface to use ktime_get_ns().
 
-Yours,
-Linus Walleij
+Cheers
+Bart
+
+[1] https://marc.info/?l=3Dlinux-gpio&m=3D151661955709074&w=3D2
