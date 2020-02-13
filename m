@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0B2315C976
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2020 18:34:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B0DC15C992
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Feb 2020 18:39:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgBMRel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Feb 2020 12:34:41 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:39612 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgBMRel (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Feb 2020 12:34:41 -0500
-Received: by mail-wr1-f51.google.com with SMTP id y11so7716619wrt.6
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2020 09:34:39 -0800 (PST)
+        id S1728122AbgBMRjt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Feb 2020 12:39:49 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:42518 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727966AbgBMRjt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Feb 2020 12:39:49 -0500
+Received: by mail-wr1-f52.google.com with SMTP id k11so7730777wrd.9
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Feb 2020 09:39:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=yPtPX/1UPX711YyU3v7hK2233QYDzVeXJ9wtO0ZwhKY=;
-        b=v99OUaxhkwXH9EH4iMAAfu7pZGbUoP7p0X9XkAYyOJ/4aXs1b3ptmzzZwJ7lfXgGxC
-         kjjP9HaisxERiNBHkxhA7ohP0KrV4Q6BB/yr865B66AB73gibHKl/HD3+Evz1lPEsvtR
-         pmTVtam6QKLzQyxLrLVNT90nV8AUgeXaknPe3FWb/HpBaFhcWC999PU7YrWYA1ELNoMU
-         g5e5Bd+f7yZXcb1FOySA7MzsFVZ+nDwwl470EBfHfAOrpd4N/O3NrO3OuJRjTQCPNgkg
-         7B3x4WvCta04fIOl/JHlB8f6u5V7arKNosHaSU8LzhTsFkZD4hk4F0LUW/sUN7HCHKpY
-         R4MA==
+        bh=4uPjJJCRp+SB0pozAFRGdWFgxk0Vn/KKHhu8gk6Ht+w=;
+        b=ixBGFwsO4Woj33a09OOScMxghG92yY418eBTKbumt+f33H8uQ37jUkN3FLfLzvDXuz
+         VnOYlSdUcZ6aHq1QO/002twWsO6ueKPMFTA0/f84E+LjQH9vz9sIjrHQA5kUC/UDT4Gm
+         X1CDTwCWUQxxE9Z1RrwdeqDKK9FQVp0Y816qLtCoxjsmRd53600CrovjIu/xS3QqVGcz
+         O7BEt4vqMJew9sIsXBG/JgaP3uioy79emZs1fipk4saFxaf8JBbVAW4LHAS5Wz6zHATn
+         ThC5hQi/gVqqvm7vIeWsIyhmVXqoAiFWiMbKZypiqvIl8jX8c7SmJsnhftG7YY3pEwTS
+         /NuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=yPtPX/1UPX711YyU3v7hK2233QYDzVeXJ9wtO0ZwhKY=;
-        b=JNZ9Yl5Ii4ycDPnsG+jt4LKFdKQ0T9oLGm1rv59TVuVzQhHxMOXTvKk8VWUwFvtHAD
-         Y71yHc7Jjz8exGAVJo5fUWe/3aAB0WMX5Tu5gRhK2BD1rZ2iTPx2rVEVqR1MA09/Mu6W
-         7MD9UE1Tfv+dOouKPkP06e0YjGjdKCJm8NUEbeYQh/77xhGcsAPY/6QaStPpYHEjJUtv
-         PQGrZthPvCqUcnM8R/VYtXGFKyGHUEGvQ2qoBMzhoH7MWcNX8USgU6H1XAt1hUW0ad89
-         9kTIoleODIq84gyGrUUvmIWT1NJ3GUFq2uhta5dR9rgGyUC8wQjyGP0yIujT6bZ6elkI
-         8TCA==
-X-Gm-Message-State: APjAAAUy9qUr9RIyGsQVKl7Vsm+YdfXSk6B5bcKKHtFw2voQ91ThaBcg
-        H55MDQEWPeooGSHjj6tSmYNPrmfQAo5nfg==
-X-Google-Smtp-Source: APXvYqzCJSBfi9jQZ88Fr3Hqd1Kd+Ol/g03jWth0ZGBbCwo/FZITTaJCDTYW5/TWJDnXX5xztDk/zA==
-X-Received: by 2002:adf:f401:: with SMTP id g1mr22281809wro.129.1581615278573;
-        Thu, 13 Feb 2020 09:34:38 -0800 (PST)
+        bh=4uPjJJCRp+SB0pozAFRGdWFgxk0Vn/KKHhu8gk6Ht+w=;
+        b=Za+SQiq+VzohonTKfZqzJ0qYQBYRa07lUi/2/ObDTttKBqjtSObzIoMtil2ox3xops
+         utZ0KggVhd6vzbkK5KeZf1Adcdqq7uXr1SSaBaDEXiV8xCFp8deiHLUMKCAtPd88Cd/C
+         ZeTpeUo8b4lSwDCkHns6rZ4+g4axZ66yILHSZYx/OJJS1I/OIEieWIYxVuyjmO4qZu8D
+         6Xjn9X6CsU47R8jfTy/kxTZhcBsBrdujo90/6WxiForBaBCYqB0zA2BCCcheZ2TApP44
+         NsvAJt7HkTOIhUgMri/ZAw09hXI21SSYTrP8MOfFLuMc56wsAlc+d31qbCPhxxGrgcEC
+         XuLw==
+X-Gm-Message-State: APjAAAWge5CX7nV2a5nUjB+QtOET0jUbVzjl6zkcbueEWbMS0j8fokYq
+        xjg1Xvnk/c8mMYQGWLxwKPKfQvrpm/z2UA==
+X-Google-Smtp-Source: APXvYqwcVj/MC2jRc86T2JbDNwZPU8IOwjte0g00TXYRYSmBbjYBJzyUYB9J/gIRednHT6MPuW4Pqg==
+X-Received: by 2002:a5d:6082:: with SMTP id w2mr22900886wrt.300.1581615586600;
+        Thu, 13 Feb 2020 09:39:46 -0800 (PST)
 Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id q14sm3683428wrj.81.2020.02.13.09.34.37
+        by smtp.gmail.com with ESMTPSA id l132sm3986190wmf.16.2020.02.13.09.39.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2020 09:34:37 -0800 (PST)
-Message-ID: <5e4588ad.1c69fb81.26a64.099d@mx.google.com>
-Date:   Thu, 13 Feb 2020 09:34:37 -0800 (PST)
+        Thu, 13 Feb 2020 09:39:46 -0800 (PST)
+Message-ID: <5e4589e2.1c69fb81.126f6.1962@mx.google.com>
+Date:   Thu, 13 Feb 2020 09:39:46 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Report-Type: build
-X-Kernelci-Branch: devel
+X-Kernelci-Branch: for-next
 X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.6-rc1-12-gb2929a9cb2fb
-Subject: linusw/devel build: 5 builds: 0 failed,
- 5 passed (v5.6-rc1-12-gb2929a9cb2fb)
+X-Kernelci-Kernel: gpio-v5.6-2-13-g53803ecac78b
+Subject: linusw/for-next build: 5 builds: 0 failed,
+ 5 passed (gpio-v5.6-2-13-g53803ecac78b)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,15 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 5 builds: 0 failed, 5 passed (v5.6-rc1-12-gb2929a9cb2fb)
+linusw/for-next build: 5 builds: 0 failed, 5 passed (gpio-v5.6-2-13-g53803e=
+cac78b)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.6-rc1-12-gb2929a9cb2fb/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/gpio-v5.6-2-13-g53803ecac78b/
 
 Tree: linusw
-Branch: devel
-Git Describe: v5.6-rc1-12-gb2929a9cb2fb
-Git Commit: b2929a9cb2fbfedf30c66033a865c8135a7c2184
+Branch: for-next
+Git Describe: gpio-v5.6-2-13-g53803ecac78b
+Git Commit: 53803ecac78bbabfdd65f5cb789e46660fa63900
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
 Built: 5 unique architectures
