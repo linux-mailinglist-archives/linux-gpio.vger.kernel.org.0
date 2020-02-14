@@ -2,125 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 729B815D97D
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 15:30:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EAED15DBC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 16:51:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgBNOaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 09:30:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46270 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729359AbgBNOaP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 09:30:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y8so3786110pll.13
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 06:30:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CR44xV8vqwg+Mfcv+E1ifpBEqvnkBOi3l2fT1rILObU=;
-        b=fbB2PP8fhvXbttw1yYlY8h0WEX5TskLvsJocf0xLhVLJrrTkvRRAcXepWTllJSPDCE
-         fxL9Db5EGN86xJzNTKDdAnaFeeoBvnjqlQfJU0hhcH4aLQJPdvkTlVPY86WkhywKFsC2
-         2Z/lKD3bTd39f8v88iTNSPEPJzrfzjeAkKLRl4SRcS4NFdtc3Hc10ZAuMX7+uU9QN8Gl
-         UhbvrV1gmrhmia8QJtpgp8rc1viM2NpFO7c4Pep6W7wB/oC4ZKIASibzAIFrAg6/cxLS
-         O9bHbMnhbKn3sSLb/heGN+Tf6XfXApyxak1e2Ufci+fucTZ5kDCYZ7h5AbyNFzD2ddvu
-         ZH7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CR44xV8vqwg+Mfcv+E1ifpBEqvnkBOi3l2fT1rILObU=;
-        b=HUoO22C2ocTs+jWPUEjAC+pSy1AQpKBWBBrm6libN0wWvQ/OVMwzr76xKQaGqlFzQl
-         R+j9bD9tgSJsB7olQnjzpqfv2mK/62ocJ1cMlxq8x0npML0fTFqoUM/EdE/i4wNumWDn
-         3liXAUaueB2Wewf7RFcWY+Uyk+yiTkrrWA3KP4aWNLJLw/VEpaGQfftXYvjeHdd1l7Bp
-         ZUfQQdFpgh9RB0O7vjP/3799Aa0ILwDJw2Rz4EUYbCo7W18WyLj8Gx/Kgarn9WCq3O2H
-         yJDu9s/ck6tAsreYpg3pBHm+DndOVeWOZx4pp48f6Y0qi8j7xFLJ4rK0NUsizxNp5BY8
-         oAig==
-X-Gm-Message-State: APjAAAVOEPhzy2TlKfMpEVBfoy094/j3gQLuMHyoZtszJWM+ipZgj2bn
-        5w9IxN42evH6xJwOddpxxzk=
-X-Google-Smtp-Source: APXvYqzYCel9zCRngGx5W2a1YUT0Dkng64u+Kxz0vRutH8o9yW9ecd24sk7t2hi4ZnbVnygVoGyT1w==
-X-Received: by 2002:a17:90a:928c:: with SMTP id n12mr4095437pjo.45.1581690614192;
-        Fri, 14 Feb 2020 06:30:14 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id g22sm7274741pgk.85.2020.02.14.06.30.13
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Fri, 14 Feb 2020 06:30:13 -0800 (PST)
-From:   qiwuchen55@gmail.com
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
-Subject: [PATCH] gpio: mmio: use devm_platform_ioremap_resource_byname()
-Date:   Fri, 14 Feb 2020 22:30:02 +0800
-Message-Id: <1581690602-345-1-git-send-email-qiwuchen55@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        id S1729678AbgBNPuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 10:50:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730399AbgBNPuO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:50:14 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F9A32467E;
+        Fri, 14 Feb 2020 15:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695413;
+        bh=CqNEsGGJ+joZE9+STxSSxsiHVjaZLJByQ0HUUaaZDEM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pD82pyog/JKm6nIRsFsdYk/3EbZZOqawzC6W6xP1gJReS5fXOx1Z/sdcAspzfqpD2
+         L3Q19NWWtG8RFBCR8dKDgzlvUNrxZ1syT4zT3x7annwdbvi+QTRt/NvxqG6jn55Qry
+         DQlcITwnJR9slMea73op9cefAbqXgMnAV7zWCYbA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 060/542] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
+Date:   Fri, 14 Feb 2020 10:40:52 -0500
+Message-Id: <20200214154854.6746-60-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: chenqiwu <chenqiwu@xiaomi.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Use devm_platform_ioremap_resource_byname() instead of calling
-platform_get_resource_byname() and devm_ioremap_resource() separately.
+[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
 
-Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Suspending Goodix touchscreens requires changing the interrupt pin to
+output before sending them a power-down command. Followed by wiggling
+the interrupt pin to wake the device up, after which it is put back
+in input mode.
+
+On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
+in combination with listing the pin as a normal GpioIo resource.
+
+This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
+again. In this case byt_gpio_disable_free() calls
+byt_gpio_clear_triggering() which clears the IRQ flags and after that the
+(direct) IRQ no longer triggers.
+
+This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
+to byt_gpio_clear_triggering().
+
+Note that byt_gpio_clear_triggering() only gets called from
+byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
+from the irq_valid mask by byt_init_irq_valid_mask().
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mmio.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index f729e3e..5cfef3c 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -655,21 +655,9 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- #if IS_ENABLED(CONFIG_GPIO_GENERIC_PLATFORM)
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 72ffd19448e50..ce9cf50121bd5 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -753,7 +753,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
  
- static void __iomem *bgpio_map(struct platform_device *pdev,
--			       const char *name,
--			       resource_size_t sane_sz)
-+			       const char *name)
- {
--	struct resource *r;
--	resource_size_t sz;
--
--	r = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
--	if (!r)
--		return NULL;
--
--	sz = resource_size(r);
--	if (sz != sane_sz)
--		return IOMEM_ERR_PTR(-EINVAL);
--
--	return devm_ioremap_resource(&pdev->dev, r);
-+	return devm_platform_ioremap_resource_byname(pdev, name);
+ 	raw_spin_lock_irqsave(&byt_lock, flags);
+ 	value = readl(reg);
+-	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
++	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
++	if (value & BYT_DIRECT_IRQ_EN)
++		/* nothing to do */ ;
++	else
++		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
++
+ 	writel(value, reg);
+ 	raw_spin_unlock_irqrestore(&byt_lock, flags);
  }
- 
- #ifdef CONFIG_OF
-@@ -742,23 +730,23 @@ static int bgpio_pdev_probe(struct platform_device *pdev)
- 
- 	sz = resource_size(r);
- 
--	dat = bgpio_map(pdev, "dat", sz);
-+	dat = bgpio_map(pdev, "dat");
- 	if (IS_ERR(dat))
- 		return PTR_ERR(dat);
- 
--	set = bgpio_map(pdev, "set", sz);
-+	set = bgpio_map(pdev, "set");
- 	if (IS_ERR(set))
- 		return PTR_ERR(set);
- 
--	clr = bgpio_map(pdev, "clr", sz);
-+	clr = bgpio_map(pdev, "clr");
- 	if (IS_ERR(clr))
- 		return PTR_ERR(clr);
- 
--	dirout = bgpio_map(pdev, "dirout", sz);
-+	dirout = bgpio_map(pdev, "dirout");
- 	if (IS_ERR(dirout))
- 		return PTR_ERR(dirout);
- 
--	dirin = bgpio_map(pdev, "dirin", sz);
-+	dirin = bgpio_map(pdev, "dirin");
- 	if (IS_ERR(dirin))
- 		return PTR_ERR(dirin);
- 
 -- 
-1.9.1
+2.20.1
 
