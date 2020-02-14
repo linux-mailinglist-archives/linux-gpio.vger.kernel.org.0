@@ -2,81 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6338F15D742
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 13:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E2715D81E
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 14:14:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgBNMUk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 07:20:40 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48879 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBNMUk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 07:20:40 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2ZxW-00022B-N5; Fri, 14 Feb 2020 13:20:38 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j2ZxU-0008Eb-NV; Fri, 14 Feb 2020 13:20:36 +0100
-Date:   Fri, 14 Feb 2020 13:20:36 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thorsten Scherer <thorsten.scherer@eckelmann.de>
-Cc:     linux-gpio@vger.kernel.org,
+        id S1729296AbgBNNOL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 08:14:11 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:36469 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729294AbgBNNOI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 08:14:08 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id EF3C2560;
+        Fri, 14 Feb 2020 08:14:06 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 14 Feb 2020 08:14:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=u9+v+4J9/zoOQI1Gm5b/NsSDu09
+        67fM20z6x//ZlrMU=; b=Uyq+gayX6zoz//j1EOgBpXzp2s2mD3qTcpXZMcC1JNu
+        G360zqbOsrQ6jRcELoDYCqszsvPEpWciAvrnylTXZ4Cj6v6UM9UIqM5LLAPgHMoR
+        8N1GdVaqoodh8Z4fDoPvk0iZWDNY0uwZbWYSemoMsO+SPOQ0tNeCH9X2oBEpPns/
+        siveeMny/h5Z81daAJpgguRtuHcOOduvKy0N5r89EK/c1qJ9PQuEnAGdIP3whepl
+        yvMbxsLOFAp3whkOhMZrvZtjv3wFCXgu0XLKqbKMRXwFfKS7gNWOXlkFJU3KkDuv
+        xeDbpyW8h3y1PK1Vld9epis5X20FWdkFEbwQlYh25KQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=u9+v+4
+        J9/zoOQI1Gm5b/NsSDu0967fM20z6x//ZlrMU=; b=syRUlCVu6E8wgHuFMeXidO
+        v5ps6/6Sz+L9nDIK0VlOke1tP8b2TBkczhxC8T2cExO0HFjsWu8EcWIlQBX4Gob4
+        hUjTuQVqHwqGa980FiUrcKPnaNa267Wm+RykyADXpoZhWI6iVLPHHM9+ycBswHyj
+        agFKQ99zb253giJaq7LEGFe3H939keOV83eLmdYppVcwMezbtAnKXSJX3AaaQCtn
+        DQA1CreM8xJQABXxCigS9EWt/D5xdAZGDwCsJiOecGCQYCJNb6S5mnH1VjBAJa5L
+        EuEroQwxuCoYF9p5dVlnLjkT1DfL+JMorJoAmvCoB4dpTzwFN+/XRBwXUAji+MGQ
+        ==
+X-ME-Sender: <xms:HZ1GXqmZN2wIS8mwfFKAu99J5yY6y1truSfo3k0nrsNzDSkozf99NA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjedtgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:HZ1GXtgZ09gcCFOb8pcVU-kROzfRoMnEN5iuI67UGNh3gRi0qA6atw>
+    <xmx:HZ1GXvgIrOq-iAwvQI9lm40eMsskM0nDDL7PldfMP6PVVyOP-vWS1Q>
+    <xmx:HZ1GXjZi2x1ISSqVcIxC27MuhEOQ-RNG45E6COTMLr5tJSz1hpYTLw>
+    <xmx:Hp1GXhN0uFsoo5GBKmSBIJaGBiUqIqS60Z7hLvOz563ZBI2bT2S6-Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E18583280065;
+        Fri, 14 Feb 2020 08:14:04 -0500 (EST)
+Date:   Fri, 14 Feb 2020 14:14:03 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] gpio: siox: use raw spinlock for irq related locking
-Message-ID: <20200214122036.n3zjx25b7kxqlr4o@pengutronix.de>
-References: <87d0al4600.fsf@nanos.tec.linutronix.de>
- <20200211135121.15752-1-uwe@kleine-koenig.org>
- <20200214110238.zkbfyzfjvkzipgjr@ws067.eckelmann.group>
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/2] pinctrl: sunxi: Forward calls to irq_set_irq_wake
+Message-ID: <20200214131403.uxx76djg34rugm55@gilmour.lan>
+References: <20200117213340.47714-1-samuel@sholland.org>
+ <9103f638-b733-5f4d-1a64-ee35cbfd8236@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mtvphatqxlrtxgdf"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214110238.zkbfyzfjvkzipgjr@ws067.eckelmann.group>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <9103f638-b733-5f4d-1a64-ee35cbfd8236@sholland.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Thorsten,
 
-On Fri, Feb 14, 2020 at 12:02:38PM +0100, Thorsten Scherer wrote:
-> AFAICT this is all good.
-> 
-> Unfortunately i don't have any idea on how to test out the difference
-> this patch makes on a real SIOX.
+--mtvphatqxlrtxgdf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When I started looking into the problem I expected that the lock
-debugging would catch these problems. But either I did something wrong
-or there is no mechanism that catches
+On Wed, Feb 12, 2020 at 07:45:50PM -0600, Samuel Holland wrote:
+> All,
+>
+> On 1/17/20 3:33 PM, Samuel Holland wrote:
+> > The pinctrl irqchip may be connected to an irqchip that implements the
+> > .irq_set_wake callback, such as the R_INTC on A31 and newer sunxi SoCs.
+> > In order for GPIOs to be able to trigger wakeup, the IRQ from the
+> > pinctrl to the upper irqchip must also be enabled for wakeup. Since the
+> > kernel's IRQ core already manages the "wake_depth" of each IRQ, no
+> > additional accounting is needed in the pinctrl driver.
+>
+> Ping. Any comments on these two patches?
 
- - a spinlock is taken when there is already a raw spinlock taken
- - spin_lock_irq is used with irqs already off
+For both,
 
-And I wonder if there are reasons I don't see that make these two tests
-a bad idea.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> Any hints? Is it necessary at all?
+Maxime
 
-Apart from "normal" testing that SIOX still works I have no good
-suggestion. Having said that I would be surprised if my patch breaked
-something. (But it wouldn't be the first time such a surprise happens
-:-)
+--mtvphatqxlrtxgdf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards
-Uwe
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXkadGwAKCRDj7w1vZxhR
+xUClAQCzO0MoH9wU1X+cfxcOBq2r51BL3eiLg+H/wLGJpk+FCAEAnP/9TmFQA1RX
+zlcfN9umBwF5ukT/ODhstmhVyG70yQc=
+=zvRk
+-----END PGP SIGNATURE-----
+
+--mtvphatqxlrtxgdf--
