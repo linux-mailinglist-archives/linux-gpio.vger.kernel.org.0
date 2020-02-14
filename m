@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9840E15D5FE
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 11:46:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD5615D602
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 11:49:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgBNKqg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 05:46:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44167 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgBNKqg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 05:46:36 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so10147581ljj.11
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 02:46:33 -0800 (PST)
+        id S1729020AbgBNKtE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 05:49:04 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41004 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728807AbgBNKtE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 05:49:04 -0500
+Received: by mail-lj1-f196.google.com with SMTP id h23so10199708ljc.8
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 02:49:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
-        b=RyOIgCO9rwzLHRMzkzF15r94Gm7EFLx/l5Ek2m+SmkOaLf8KCd29ymRKiQHGtHzMO+
-         SjWc4wnVuhLkn/tE6g+Z/HhOMKZurtEWt1CLOk97/vkVcPe0PeaE8DgE5s5IrYdeMT/y
-         4hTSz3PGbn6yUUAsH+FyMtrWL23Hz3EuJc1ud4MtkQakJp19MzGQOs0kLLLPD8HQOccQ
-         us9qWmU2bw2Km1qQjblxOgi5536a0XSIlPNm0UjAmRHkmSb8wdZixYiJuS9Sfl9qLRJK
-         idQFhEdYShZ8OgDA0e++q6hokttEToCeomtqf8+akpiJmuT4T/6x2heIyQ5WvMHpum7B
-         xFYA==
+        bh=1i4Q6/1RsyH8dGZF2vprm22L1oxGHlOcnNHReqoF9A0=;
+        b=Ts4DSDY7UpRHKDbUuCSly0SJGu9e3cuorS05YoXAWoiHfbT6gDZLHgtavc4t6uYro2
+         Jd8tKZgAGyBhN4SCSktaIRL6q1pQC6cNsNrG/hv0z/7DiwEjLZOuQG4ZMWSlDutuJMXz
+         odHlhJ6Gf6gUix4lqMvr+gIMmhodCE0+cEmdy8WwSmZUPu8Gy9rRYcvrduPsfERBkXcf
+         vgfVsRRfU6q7ad86bLwMrzpnaqLPKUpjHyb7QxWm8oLMUpszmFk2aq0scMy7Dc+yRMlb
+         TpmDpcBxPHLReyZNxloQ/XqdAjdMKu9wStXmE3ts8+fwSi/F52kjw6t1YMmk8mZ2MBUV
+         PRCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
-        b=Dnf8rR/d83KWm92vUueJHMJPhllBd7DVNcc2QLwLRaBY9rEamLy8Qu09qW9rjfw34q
-         0SruoM/4gBh++mI4/KfvIubq6fNeMuKyh4qGwVgdCyOF70yX/AYytkBlwscgEivElR4h
-         ELmbVnjtDz7Ejb1RAnA5nb0x4lYZjsIsM9Wkq3IlIVAXDI5VgqcJ5Z0KIFCpLanpOyET
-         VYQhpMmMAbM9rC9uqczpRfXNIn7WnyUr/NtLOBHsi8XmvpkIGBoGhFxdHHBHf0npHycR
-         k+gYYox0TerkfDo9HNCCiO/djkJdwKZHP6aMCLokK7LtaxwQ6tzMP3krJhUPqLNjVQvX
-         lVTw==
-X-Gm-Message-State: APjAAAXtDAX2O3Kshr+j8zGpxUO2LnIVKv+UBv5CR7bNZ6ZDDZu66H9S
-        s87yAbQxnN55Zo6+GxuE91FYpcdKPkUICvMVW25V5g==
-X-Google-Smtp-Source: APXvYqzmdLdE8Rx/NNo5kXSwKXXl3RzcxUAwmAthly7FtdF/BpafqywcjF0AbGsPfO06POTuomc507bYl1nJS4URe7E=
-X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr1767553ljn.277.1581677193251;
- Fri, 14 Feb 2020 02:46:33 -0800 (PST)
+        bh=1i4Q6/1RsyH8dGZF2vprm22L1oxGHlOcnNHReqoF9A0=;
+        b=ICxsyj2wNrzv4Wvv+qfbWU4L70ddfvn0FSDKIadYRiT87DqqDgpi7SXdPSFIzJIVe8
+         qMqs5NFxoXip4v6Uk9oMgYeY6Cik6bM+QrMx7dhMC5Gj1TIlk85hmC6NeTNQi4ae1nFU
+         6jaZL9hg/C3DtS5OS38Gv+rg5QPMA8CofGhASR1CxdKcoZ0H1Qcq5JuO3p7LfAnohIPJ
+         tB+rmu3uk0SLb6uKiQlzrx0bc+FBTT1MuNhhjSPIXIwCZsAnWSwKEl/LwtuzNk/Nfjo/
+         bn++oF9/mBCrU6KHwVE9OWnlLWSJhq+7bIMyoWGQi6MLezYFV5moFbgivW3RD49zNpW9
+         rwGQ==
+X-Gm-Message-State: APjAAAWEsVBWhDtBBL6Wvl5UocHFigiKamd4dvj0y6J5TNRXHeQylFNn
+        n6uT1hVABTRRpIMQlh8AZ4qNdPcH/YKayp9h+tG0wg==
+X-Google-Smtp-Source: APXvYqz+6XkhlYSkMAKGVhZEHaoBs4DSOaPtmDqULEN8Q7rW85h657r4NxLb6Kf9TtTlfZhQ2GV+rviqE3OrEyKx/q4=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr1665644ljo.125.1581677342094;
+ Fri, 14 Feb 2020 02:49:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com> <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
-In-Reply-To: <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
+References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com> <1581166975-22949-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1581166975-22949-3-git-send-email-stefan.wahren@i2se.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Feb 2020 11:46:21 +0100
-Message-ID: <CACRpkdbcJwmVkT5kcR-ga3ejT4n8wbKPDJhFs_3Jp0-ZLKEWzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] pinctrl: bcm2835: Drop unused define
+Date:   Fri, 14 Feb 2020 11:48:51 +0100
+Message-ID: <CACRpkdYKNYaLcy4T=CixZSkzP6wOvisFt_H_gqhEoANz2Bm4KA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: bcm2835: Refactor platform data
 To:     Stefan Wahren <stefan.wahren@i2se.com>
 Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -63,13 +63,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 7:15 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+On Sat, Feb 8, 2020 at 2:03 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
 
-> There is no usage for this define, so drop it.
+> This prepares the platform data to be easier to extend for more GPIOs.
+> Except of this there is no functional change.
 >
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Patch applied.
+Patch applied with Nicolas' Review tag.
 
 Yours,
 Linus Walleij
