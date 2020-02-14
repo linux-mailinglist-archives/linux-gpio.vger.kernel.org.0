@@ -2,91 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DA2B15D4C3
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 10:31:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2865515D537
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 11:07:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgBNJbq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 04:31:46 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:43968 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbgBNJbn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 04:31:43 -0500
-Received: by mail-io1-f68.google.com with SMTP id n21so9811011ioo.10
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 01:31:41 -0800 (PST)
+        id S1727965AbgBNKHE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 05:07:04 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44721 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbgBNKHE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 05:07:04 -0500
+Received: by mail-lf1-f66.google.com with SMTP id v201so6344819lfa.11
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 02:07:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tPGqxqvdQIhvmCHA0qJcJLxvA46GSGZbYEshxyswMHk=;
-        b=LAEzQUymZYHQzHIb9KLXBgTvu1GhHWdK3lcFClPuOFFxVz1/n00hEyHq+3Kg/WtJ6K
-         f2dxhdzI/4NhpY8t3E02STwh5tFXtLO3otX/IudN+uflSPxQP8qRdVGtoEIdH5fkjcR1
-         bzH544qsiZNyC3sqDcHyr0P0N/L+pM5Q1FDjzotlPO3ETr1nwOjV49sQdFbkqDWvw9Y+
-         WNKm0ztqCnktapqC1/0/6G3fYPs3EvSACT4q8cnA81ZeuL7ahQVELh3UMcgKYFJV1wc6
-         SIzyzoJTJ7Be4qbtHd/P52McOCwW2Qn/YZPpDf7pn9Lkvc1lpMz8Go1xhOgnOyR146qX
-         0isA==
+         :cc;
+        bh=PF0NRy8tZyvvpgLnBQvTlSYjFAcSskLV9npM91USJ0s=;
+        b=wqgfTzWWtdUB2tcvSjtus2pApE3NEoErHGmdjE8uqp7oNfwlkrgb4DdWCFnu72+KUX
+         soLifCCg7wB2r6O9j4Hwv64jtw23T/yr8J1zEv5BBFu+LoI8UdhQejWTF6Y++vwfcRJQ
+         kdLrBitmeLNwxXRSbLe4UWVQm3i1EbrG/QXzfaEryULXz35DXbF8DTEiE/I5UYOnaqGK
+         APHGGSEXLkWjQiDdtnywj+g/mVT0J3K8IFJqC4hdk3/2s5X2dMRC11oStFntUlJ+Yxq5
+         JDjHnsxvI1Z2qOAZyn68oFE6RdjCqZDXEA84i4QCQxOj23JytEAaX1cP5mNK2r0+EEC1
+         rrSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tPGqxqvdQIhvmCHA0qJcJLxvA46GSGZbYEshxyswMHk=;
-        b=ltQOqdIq6ri3mdRkVBOnt64tUrE82saZ+YWwurqQAYrmQk6RYqiGeQG1wFBGh8h5lA
-         CY6PqRUpmbyD1B4FjeYqAomiHlw16aWr/D26m7zRUeik4bH3cafoB0UFoMdwgY4wNx8a
-         TvecaFuCjIm1WZKMxnCLuZZiQYz7ajjNUV1rpihkCXHvVbMyP4+dRCTZx5026CyNFoAU
-         r7RwM8Yy0aSpP+NdT1BhfEGAhRlkivr/2+tpY7g+zt3C0me624YpTfr8q8aYxMxo8OFJ
-         tu7Vnylpn4LNT0zgDSBGb9HwXcQYcwpY/dlnohrLBMzY1fVzirpNXKuCSKmorLWB04+a
-         gEqA==
-X-Gm-Message-State: APjAAAUt7ZuFHGhaMY4xFmLdNNZRiWszxQCQRxGaO4DlHUXx4tvPWCwl
-        0QHA8ek6isaYuoqhYM8lUVqLFppAShjvCA0bO/rOGw==
-X-Google-Smtp-Source: APXvYqxgWJOyIbYagJnnKVzHLeqCoVORg5daCP/H8O5LA9jMWCkLYmTdfMLLEPEQlGIgJGX6ZnseQLN17UMD32HHcz0=
-X-Received: by 2002:a05:6602:220b:: with SMTP id n11mr1608407ion.6.1581672701495;
- Fri, 14 Feb 2020 01:31:41 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=PF0NRy8tZyvvpgLnBQvTlSYjFAcSskLV9npM91USJ0s=;
+        b=TlcT6yI337ynxM78D1Qn/P1KTNwilQHrm1d6S+Ua1spFxoFQF8eVB7TIr2F/zr8gbR
+         vgSe+vbj5ng+vwZ0/SUaN/QPaLQmuQTHZbHKGYpLtkxJeHhPpOu7FtVx9bSvwDjLcdBl
+         PAj1pWmCTSmGpBRZO1L6znshlrhIlbpwIFSKT/LQk7pL70nGVNG8REqG+w/yxaaN9ZKp
+         QwzmRI9kd14DJG+qkJ0rulkp6tvneWcNRsokO1fbutxEx60qNiVcmM4PKZ1oGA9DLUoQ
+         uVRcHHFCIv75b8cWaINUqRG0lSW8taZeJuf/S/LBI8QFxec7k7kgWrxb8rhQDJY5Jl0T
+         mH4w==
+X-Gm-Message-State: APjAAAVBJed6739bOXQya6VBXF1/dVMShew8UdAXFMZuMdxf0QbCKObp
+        tIVPP5EdMn1d4M+QIqijhlBPUho0+Z9+w/31WcGAlA==
+X-Google-Smtp-Source: APXvYqwE618D6QwS2Ce8nucFnlwDx6s7EvaNXbOiSXAXTaOfY+ikeQ/Ec+btsxjmHTDjr3We9CqYZ1Swq0N8vcABlGI=
+X-Received: by 2002:ac2:5499:: with SMTP id t25mr1304752lfk.194.1581674822115;
+ Fri, 14 Feb 2020 02:07:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-2-brgl@bgdev.pl>
- <87eeuxh789.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87eeuxh789.fsf@nanos.tec.linutronix.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 14 Feb 2020 10:31:30 +0100
-Message-ID: <CAMRc=Mfgq_HF8-uGxY0Qh6aN320CLBBX3gu-uXVSH6Y=ZvXOqw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] irq: make irq_domain_reset_irq_data() available
- even for non-V2 users
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+References: <20200213025930.27943-1-jaedon.shin@gmail.com> <20200213025930.27943-3-jaedon.shin@gmail.com>
+In-Reply-To: <20200213025930.27943-3-jaedon.shin@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 14 Feb 2020 11:06:51 +0100
+Message-ID: <CACRpkdZ9A_SJzxQ__f0oani+A97N3yLT3=oJ8z3vNJ5Ucyo8vA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: brcmstb: Add regulator support
+To:     Jaedon Shin <jaedon.shin@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pt., 14 lut 2020 o 10:02 Thomas Gleixner <tglx@linutronix.de> napisa=C5=82(=
-a):
->
-> Bartosz Golaszewski <brgl@bgdev.pl> writes:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > irq_domain_reset_irq_data() doesn't modify the parent data, so it can b=
-e
-> > made available even if irq domain hierarchy is not being built.
->
-> Yes, it can be made available, but WHY?
->
-> Thanks,
->
->         tglx
+Hi Jaedon,
 
-Duh, I forgot to clarify this. After my previous submission, Marc
-suggested I use irq_domain_reset_irq_data() in the unmap() callback
-for the simulator domain. I noticed I can't do this because I don't
-select the V2 irq domain API, so I added this patch.
+thanks for your patch!
 
-Bartosz
+On Thu, Feb 13, 2020 at 3:59 AM Jaedon Shin <jaedon.shin@gmail.com> wrote:
+
+> +#ifdef CONFIG_REGULATOR
+> +       int                     num_regs;
+> +       struct regulator        **regs;
+> +#endif
+
+Is this #ifdef:in necessary? Since the regulator framework provides
+stubs if compiled out, I think you can just include all code
+unconditionally and it will work fine anyway.
+
+> +static void brcm_pcie_regulator_enable(struct brcm_pcie *pcie)
+> +static void brcm_pcie_regulator_disable(struct brcm_pcie *pcie)
+> +static void brcm_pcie_regulator_init(struct brcm_pcie *pcie)
+
+I would replace the word "regulator" with "power" here to indicate
+what it is about (easier to read).
+
+> +       struct device_node *np = pcie->dev->of_node;
+> +       struct device *dev = pcie->dev;
+> +       const char *name;
+> +       struct regulator *reg;
+> +       int i;
+> +
+> +       pcie->num_regs = of_property_count_strings(np, "supply-names");
+> +       if (pcie->num_regs <= 0) {
+> +               pcie->num_regs = 0;
+> +               return;
+> +       }
+> +
+> +       pcie->regs = devm_kcalloc(dev, pcie->num_regs, sizeof(pcie->regs[0]),
+> +                                 GFP_KERNEL);
+> +       if (!pcie->regs) {
+> +               pcie->num_regs = 0;
+> +               return;
+> +       }
+> +
+> +       for (i = 0; i < pcie->num_regs; i++) {
+> +               if (of_property_read_string_index(np, "supply-names", i, &name))
+> +                       continue;
+> +
+> +               reg = devm_regulator_get_optional(dev, name);
+> +               if (IS_ERR(reg))
+> +                       continue;
+> +
+> +               pcie->regs[i] = reg;
+> +       }
+> +}
+
+So what this does is just grab any regulators, no matter what they are
+named, and enable them? The swiss army knife used is the raw
+of_* parsing functions.
+
+I don't think that is very good practice.
+
+First define very cleanly what regulators exist in the device tree bindings.
+If the set of regulators differ between variants, then key that with the
+compatible value.
+
+Then explicitly grab the resources by name, using the
+regulator_bulk_get() API, which will transparently grab the
+regulators for you from the device tree.
+
+Then use regulator_bulk_[enable|disable]
+ to enable/disable the regulators.
+
+git grep in the kernel tree for good examples!
+
+Also involve the regulator maintainer in the review. (I added
+him on the To: line.)
+
+Yours,
+Linus Walleij
