@@ -2,99 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F80615E502
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 17:39:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D3515EC53
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 18:27:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393913AbgBNQjP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 11:39:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55622 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2393907AbgBNQjP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 11:39:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581698353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ejjWyNnsQ4fYjfK0i4jU0/WTc3mIEUoKR3OpTBufYKo=;
-        b=Amj+zpwnEEXyPvBvI3Zqu+eNDggXcfDR/D8NLDJPKlIu1LVMjPNV7iMvEG2vrV4FQRQOGk
-        qmVmytk8q40svJnTvS9Nz+r+KQLETPrLmy+w2eQTkzv5vwotPjehI9jcjLzkGGgNdnbTH6
-        VRBEqYJYKJ9sGZxnaHro8LOFkHvqOVk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-vWas1kg9MGecCh9FP-ZwqQ-1; Fri, 14 Feb 2020 11:39:09 -0500
-X-MC-Unique: vWas1kg9MGecCh9FP-ZwqQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2390071AbgBNR0g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 12:26:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390996AbgBNQIe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:34 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F49F18B9FC2;
-        Fri, 14 Feb 2020 16:39:08 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 739ED10021B2;
-        Fri, 14 Feb 2020 16:39:07 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-Date:   Fri, 14 Feb 2020 10:37:40 -0600
-Message-Id: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 88F0E22314;
+        Fri, 14 Feb 2020 16:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696513;
+        bh=phf4HqE68XCKbFg1reAJJO/6GEjapnOI+S3Dadwzkvs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oSMNuxaOxVB9DmaWPCVNlo3ObBiz+thhPonAFOQQFXutV71+glrTuFpg9aYUIKxuy
+         0q7jsgtmXb7KV/zXTauIZ8idqgOBxK73QNlYm/TNDHKhf6NpQhA3tNgBh0bowwar3O
+         TbfdRD2MOfPZXw8jrr/K0NB6mvnCLTcuQC3Cbwd4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 315/459] gpiolib: Set lockdep class for hierarchical irq domains
+Date:   Fri, 14 Feb 2020 10:59:25 -0500
+Message-Id: <20200214160149.11681-315-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In the second loop of ingenic_pinconf_set(), it annotates the switch
-default case as unreachable().  The annotation is technically correct,
-because that same case would have resulted in an early return in the
-previous loop.
+From: Stephen Boyd <swboyd@chromium.org>
 
-However, if a bug were to get introduced later, for example if an
-additional case were added to the first loop without adjusting the
-second loop, it would result in nasty undefined behavior: most likely
-the function's generated code would fall through to the next function.
+[ Upstream commit c34f6dc8c9e6bbe9fba1d53acd6d9a3889599da3 ]
 
-Another issue is that, while objtool normally understands unreachable()
-annotations, there's one special case where it doesn't: when the
-annotation occurs immediately after a 'ret' instruction.  That happens
-to be the case here because unreachable() is immediately before the
-return.
+I see the following lockdep splat in the qcom pinctrl driver when
+attempting to suspend the device.
 
-So change the unreachable() to BUG() so that the unreachable code, if
-ever executed, would panic instead of introducing undefined behavior.
-This also makes objtool happy.
+ ============================================
+ WARNING: possible recursive locking detected
+ 5.4.2 #2 Tainted: G S
+ --------------------------------------------
+ cat/6536 is trying to acquire lock:
+ ffffff814787ccc0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
 
-This fixes the following objtool warning:
+ but task is already holding lock:
+ ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
 
-  drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_se=
-t() falls through to next function ingenic_pinconf_group_set()
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   lock(&irq_desc_lock_class);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+ 7 locks held by cat/6536:
+  #0: ffffff8140e0c420 (sb_writers#7){.+.+}, at: vfs_write+0xc8/0x19c
+  #1: ffffff8121eec480 (&of->mutex){+.+.}, at: kernfs_fop_write+0x128/0x1f4
+  #2: ffffff8147cad668 (kn->count#263){.+.+}, at: kernfs_fop_write+0x130/0x1f4
+  #3: ffffffd011446000 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x354
+  #4: ffffff814302b970 (&dev->mutex){....}, at: __device_suspend+0x16c/0x420
+  #5: ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+  #6: ffffff81479b8c10 (&pctrl->lock){....}, at: msm_gpio_irq_set_wake+0x48/0x7c
+
+ stack backtrace:
+ CPU: 4 PID: 6536 Comm: cat Tainted: G S                5.4.2 #2
+ Call trace:
+  dump_backtrace+0x0/0x174
+  show_stack+0x20/0x2c
+  dump_stack+0xdc/0x144
+  __lock_acquire+0x52c/0x2268
+  lock_acquire+0x1dc/0x220
+  _raw_spin_lock_irqsave+0x64/0x80
+  __irq_get_desc_lock+0x64/0x94
+  irq_set_irq_wake+0x40/0x144
+  msm_gpio_irq_set_wake+0x5c/0x7c
+  set_irq_wake_real+0x40/0x5c
+  irq_set_irq_wake+0x70/0x144
+  cros_ec_rtc_suspend+0x38/0x4c
+  platform_pm_suspend+0x34/0x60
+  dpm_run_callback+0x64/0xcc
+  __device_suspend+0x314/0x420
+  dpm_suspend+0xf8/0x298
+  dpm_suspend_start+0x84/0xb4
+  suspend_devices_and_enter+0xbc/0x628
+  pm_suspend+0x214/0x354
+  state_store+0xb0/0x108
+  kobj_attr_store+0x14/0x24
+  sysfs_kf_write+0x4c/0x64
+  kernfs_fop_write+0x158/0x1f4
+  __vfs_write+0x54/0x18c
+  vfs_write+0xdc/0x19c
+  ksys_write+0x7c/0xe4
+  __arm64_sys_write+0x20/0x2c
+  el0_svc_common+0xa8/0x160
+  el0_svc_compat_handler+0x2c/0x38
+  el0_svc_compat+0x8/0x10
+
+This is because the msm_gpio_irq_set_wake() function calls
+irq_set_irq_wake() as a backup in case the irq comes in during the path
+to idle. Given that we're calling irqchip functions from within an
+irqchip we need to set the lockdep class to be different for this child
+controller vs. the default one that the parent irqchip gets.
+
+This used to be done before this driver was converted to hierarchical
+irq domains in commit e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in
+hierarchy") via the gpiochip_irq_map() function. With hierarchical irq
+domains this function has been replaced by
+gpiochip_hierarchy_irq_domain_alloc(). Therefore, set the lockdep class
+like was done previously in the irq domain path so we can avoid this
+lockdep warning.
+
+Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
+Cc: Thierry Reding <treding@nvidia.com>
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/20200114231103.85641-1-swboyd@chromium.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-=
-ingenic.c
-index 96f04d121ebd..6b61ac6cd4d2 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct pinctrl_dev *=
-pctldev, unsigned int pin,
- 			break;
-=20
- 		default:
--			unreachable();
-+			BUG();
- 		}
- 	}
-=20
---=20
-2.21.1
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 2476306e7030e..4ab855df9048d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1924,6 +1924,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 				     parent_type);
+ 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
+ 		  irq, parent_hwirq);
++	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
+ 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
+ 	if (ret)
+ 		chip_err(gc,
+-- 
+2.20.1
 
