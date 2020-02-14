@@ -2,114 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC33315F525
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 19:39:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FFB315F64D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 20:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbgBNPtG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 10:49:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbgBNPtF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:05 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60093217F4;
-        Fri, 14 Feb 2020 15:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695345;
-        bh=3pIb4yfT4IjHSbrhI4mKZgerReA1bKjGWWVF/yKGFvU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjrOGllDdQ+j1+HGlpIkcCXtNfpCOQJJuj0ziaCxl3+/t0TjtU8TrAlac56mHVYtK
-         ybvzc69TDWXvCe/4tUnVn3jg6v2DxPISc8GQ0f6WapaS6oVWKNi8Z3eSS5airpT/eU
-         Tdp4RRlFIn4ld0dHaTnFPkxhneaDbCKHMrz9qjxQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 008/542] pinctrl: baytrail: Allocate IRQ chip dynamic
-Date:   Fri, 14 Feb 2020 10:40:00 -0500
-Message-Id: <20200214154854.6746-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S1726191AbgBNTCe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 14:02:34 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:51406 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbgBNTCe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 14:02:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581706951; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yvCOCg562GCkzsEcg5HQ6kirpT7S0uOjNf100aPmIzw=;
+        b=HmWCZB+seF4VoaFtudUXtxPcGvJyCFWed1h8dyYi0eEuCbC9s9gAehGzTtjNvxZ2VZvSaJ
+        FN5Tdx8kBJ37s66o65/yhtTGh1PvFQuzvuRsPgpThWEvo9UFbj2NnB5bz/mJDmXfDdA5jl
+        Eu+KOwTBwLPnD6C4oAnB/M5g4j9q8BA=
+Date:   Fri, 14 Feb 2020 16:02:18 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Message-Id: <1581706938.3.5@crapouillou.net>
+In-Reply-To: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi Josh,
 
-[ Upstream commit 539d8bde72c22d760013bf81436d6bb94eb67aed ]
 
-Keeping the IRQ chip definition static shares it with multiple instances
-of the GPIO chip in the system. This is bad and now we get this warning
-from GPIO library:
+Le ven., f=E9vr. 14, 2020 at 10:37, Josh Poimboeuf <jpoimboe@redhat.com>=20
+a =E9crit :
+> In the second loop of ingenic_pinconf_set(), it annotates the switch
+> default case as unreachable().  The annotation is technically correct,
+> because that same case would have resulted in an early return in the
+> previous loop.
+>=20
+> However, if a bug were to get introduced later, for example if an
+> additional case were added to the first loop without adjusting the
+> second loop, it would result in nasty undefined behavior: most likely
+> the function's generated code would fall through to the next function.
+>=20
+> Another issue is that, while objtool normally understands=20
+> unreachable()
+> annotations, there's one special case where it doesn't: when the
+> annotation occurs immediately after a 'ret' instruction.  That happens
+> to be the case here because unreachable() is immediately before the
+> return.
+>=20
+> So change the unreachable() to BUG() so that the unreachable code, if
+> ever executed, would panic instead of introducing undefined behavior.
+> This also makes objtool happy.
 
-"detected irqchip that is shared with multiple gpiochips: please fix the driver."
+I don't like the idea that you change this driver's code just to work=20
+around a bug in objtool, and I don't like the idea of working around a=20
+future bug that shouldn't be introduced in the first place.
 
-Hence, move the IRQ chip definition from being driver static into the struct
-intel_pinctrl. So a unique IRQ chip is used for each GPIO chip instance.
+-Paul
 
-Fixes: 9f573b98ca50 ("pinctrl: baytrail: Update irq chip operations")
-Depends-on: ca8a958e2acb ("pinctrl: baytrail: Pass irqchip when adding gpiochip")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+>=20
+> This fixes the following objtool warning:
+>=20
+>   drivers/pinctrl/pinctrl-ingenic.o: warning: objtool:=20
+> ingenic_pinconf_set() falls through to next function=20
+> ingenic_pinconf_group_set()
+>=20
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  drivers/pinctrl/pinctrl-ingenic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 96f04d121ebd..6b61ac6cd4d2 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -2158,7 +2158,7 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  			break;
+>=20
+>  		default:
+> -			unreachable();
+> +			BUG();
+>  		}
+>  	}
+>=20
+> --
+> 2.21.1
+>=20
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 55141d5de29e6..72ffd19448e50 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -107,6 +107,7 @@ struct byt_gpio_pin_context {
- 
- struct byt_gpio {
- 	struct gpio_chip chip;
-+	struct irq_chip irqchip;
- 	struct platform_device *pdev;
- 	struct pinctrl_dev *pctl_dev;
- 	struct pinctrl_desc pctl_desc;
-@@ -1395,15 +1396,6 @@ static int byt_irq_type(struct irq_data *d, unsigned int type)
- 	return 0;
- }
- 
--static struct irq_chip byt_irqchip = {
--	.name		= "BYT-GPIO",
--	.irq_ack	= byt_irq_ack,
--	.irq_mask	= byt_irq_mask,
--	.irq_unmask	= byt_irq_unmask,
--	.irq_set_type	= byt_irq_type,
--	.flags		= IRQCHIP_SKIP_SET_WAKE,
--};
--
- static void byt_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct irq_data *data = irq_desc_get_irq_data(desc);
-@@ -1551,8 +1543,15 @@ static int byt_gpio_probe(struct byt_gpio *vg)
- 	if (irq_rc && irq_rc->start) {
- 		struct gpio_irq_chip *girq;
- 
-+		vg->irqchip.name = "BYT-GPIO",
-+		vg->irqchip.irq_ack = byt_irq_ack,
-+		vg->irqchip.irq_mask = byt_irq_mask,
-+		vg->irqchip.irq_unmask = byt_irq_unmask,
-+		vg->irqchip.irq_set_type = byt_irq_type,
-+		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
-+
- 		girq = &gc->irq;
--		girq->chip = &byt_irqchip;
-+		girq->chip = &vg->irqchip;
- 		girq->init_hw = byt_gpio_irq_init_hw;
- 		girq->parent_handler = byt_gpio_irq_handler;
- 		girq->num_parents = 1;
--- 
-2.20.1
+=
 
