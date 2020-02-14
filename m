@@ -2,79 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EF3F15D5F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 11:45:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9840E15D5FE
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 11:46:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbgBNKpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 05:45:05 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43284 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387414AbgBNKpF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 05:45:05 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so6432836lfq.10
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 02:45:04 -0800 (PST)
+        id S1728807AbgBNKqg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 05:46:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44167 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727965AbgBNKqg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 05:46:36 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so10147581ljj.11
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 02:46:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cvXb6lwZjce3PLG/MA2XMSg4vriIBn550FVcP/H65XE=;
-        b=aFDyq4vu3uOf2uXlywW6qqw5sw0hsgKMMLwIvssQzEzgKkboCNOWJ1CXjmd0n8rtUL
-         R4Fw2Kf9jQ/VrkF7xqX+426GH7bS+WIOmC655a0Sy0tMVlbdovzSyde1lrWxffpgkPUi
-         ARRVuArlWlQ1oUkw8em5cZFmSZSVS8SmYZEcpMKEgLz2tmREUQy4ChyXuOaXOVi4zhmG
-         Wp1B2WHpwJBu5s5PhmDOPhP3QItxtc2Sicr/geLXj2l4IQLTvYnrz51xsM0/y+MmeJhB
-         IbB57deQrOeEeSzVyjZXCgEIJtTgtEsC8IZKeM1u5zX2zI8QNdPJgsXebwT1AuJmfnef
-         yrxw==
+        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
+        b=RyOIgCO9rwzLHRMzkzF15r94Gm7EFLx/l5Ek2m+SmkOaLf8KCd29ymRKiQHGtHzMO+
+         SjWc4wnVuhLkn/tE6g+Z/HhOMKZurtEWt1CLOk97/vkVcPe0PeaE8DgE5s5IrYdeMT/y
+         4hTSz3PGbn6yUUAsH+FyMtrWL23Hz3EuJc1ud4MtkQakJp19MzGQOs0kLLLPD8HQOccQ
+         us9qWmU2bw2Km1qQjblxOgi5536a0XSIlPNm0UjAmRHkmSb8wdZixYiJuS9Sfl9qLRJK
+         idQFhEdYShZ8OgDA0e++q6hokttEToCeomtqf8+akpiJmuT4T/6x2heIyQ5WvMHpum7B
+         xFYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cvXb6lwZjce3PLG/MA2XMSg4vriIBn550FVcP/H65XE=;
-        b=B6NXh/vQrcUDPeBYn5VA1tRxWJ7ZbkASmifJErAK6zbvQBtA48qJun5Gc5Nt4nU/+r
-         2tYHVMTDKQdta/QiLX2fhARZv324rnvr+VAo8WvN7jXupFFHN9IBTohVR+OXUA3NiVnj
-         INKF6PVzhnKWVwrx2HEobcnO0blbY5N6bZsyCW794MkjWDVAPGpJ0lvKGR6LSE/pcsmg
-         c7LXmqn5+6wNTkEgBSMaITu3Gww/0D1hdGe0YPxI1KaVsMYYlSWsq1MHoQrioT+mTOJf
-         BpLR4nyKRXMsUKNquyFKA1Zspj3aXQO4uUfCy/OBHcbBE+MsdbPaNGLKORGtHF5RPBLy
-         AEqg==
-X-Gm-Message-State: APjAAAVl4r9HH4+oApSAKjTNsIEwWhEtbzmXzvKX2oWX+9T/9Q4hbfxC
-        Nhz/FTeN/hMXhvYpGwkFiDQkLrZbKAfDXa0TnTsUmQ==
-X-Google-Smtp-Source: APXvYqzbavOHLFo0u6rpYEyH+TC6gjN1NBg1u/L6aiNTBOjJAVE43SE5VWcs0xtZh2jZ0iyBr5Mka2oROJIAqLxc8XE=
-X-Received: by 2002:a19:850a:: with SMTP id h10mr1403689lfd.89.1581677103410;
- Fri, 14 Feb 2020 02:45:03 -0800 (PST)
+        bh=NeXjnE7r2g7NW/QZCMY8eogb8019UjNBERpksRztscA=;
+        b=Dnf8rR/d83KWm92vUueJHMJPhllBd7DVNcc2QLwLRaBY9rEamLy8Qu09qW9rjfw34q
+         0SruoM/4gBh++mI4/KfvIubq6fNeMuKyh4qGwVgdCyOF70yX/AYytkBlwscgEivElR4h
+         ELmbVnjtDz7Ejb1RAnA5nb0x4lYZjsIsM9Wkq3IlIVAXDI5VgqcJ5Z0KIFCpLanpOyET
+         VYQhpMmMAbM9rC9uqczpRfXNIn7WnyUr/NtLOBHsi8XmvpkIGBoGhFxdHHBHf0npHycR
+         k+gYYox0TerkfDo9HNCCiO/djkJdwKZHP6aMCLokK7LtaxwQ6tzMP3krJhUPqLNjVQvX
+         lVTw==
+X-Gm-Message-State: APjAAAXtDAX2O3Kshr+j8zGpxUO2LnIVKv+UBv5CR7bNZ6ZDDZu66H9S
+        s87yAbQxnN55Zo6+GxuE91FYpcdKPkUICvMVW25V5g==
+X-Google-Smtp-Source: APXvYqzmdLdE8Rx/NNo5kXSwKXXl3RzcxUAwmAthly7FtdF/BpafqywcjF0AbGsPfO06POTuomc507bYl1nJS4URe7E=
+X-Received: by 2002:a05:651c:1bb:: with SMTP id c27mr1767553ljn.277.1581677193251;
+ Fri, 14 Feb 2020 02:46:33 -0800 (PST)
 MIME-Version: 1.0
-References: <838d8378-1a6a-11c4-fad8-aeb4b861478b@castello.eng.br> <20200124133758.10089-1-matheus@castello.eng.br>
-In-Reply-To: <20200124133758.10089-1-matheus@castello.eng.br>
+References: <1580148908-4863-1-git-send-email-stefan.wahren@i2se.com> <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1580148908-4863-2-git-send-email-stefan.wahren@i2se.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 14 Feb 2020 11:44:52 +0100
-Message-ID: <CACRpkdaniAko8rP1JxcoVqXV5KijAR3AnEdRv0H2_u51MH8Ycg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: actions: Fix functions groups names
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     pn@denx.de, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Fri, 14 Feb 2020 11:46:21 +0100
+Message-ID: <CACRpkdbcJwmVkT5kcR-ga3ejT4n8wbKPDJhFs_3Jp0-ZLKEWzQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] pinctrl: bcm2835: Drop unused define
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 2:38 PM Matheus Castello
-<matheus@castello.eng.br> wrote:
+On Mon, Jan 27, 2020 at 7:15 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
 
-> Group names by function do not match their respective structures and
-> documentation defined names.
+> There is no usage for this define, so drop it.
 >
-> This fixes following errors when groups names defined on documentation are used:
-> [    4.262778] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d1_mfp" for function "sd0"
-> [    4.271394] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d2_d3_mfp" for function "sd0"
-> [    4.280248] pinctrl-s700 e01b0000.pinctrl: invalid group "sd1_d0_d3_mfp" for function "sd0"
-> [    4.289122] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_cmd_mfp" for function "sd0"
->
-> Fixes: 81c9d563cc74 (pinctrl: actions: Add Actions Semi S700 pinctrl driver)
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Fixed up the subject as requested by Mani and applied!
+Patch applied.
 
 Yours,
 Linus Walleij
