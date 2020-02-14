@@ -2,134 +2,762 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D457115D2AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 08:16:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E605515D309
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 08:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgBNHQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 02:16:21 -0500
-Received: from mail-dm6nam12on2070.outbound.protection.outlook.com ([40.107.243.70]:8015
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728975AbgBNHQS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:16:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KEQ8eMlQyqPCZzhnB5zA+XiYW+lrIA8SX7AdVzraQzbcs+RUWG5IJOA82DkUZniacjvvvw2CVdeS2FBK/+Hw2Ze0koXFdtAqS1Vp35JkgpX3Sc6P5ou3yhuxkQGaTwDlT80CP+5mDAGlqrgsNNRVvlMKPRk6o+AQyLEmEed6pHEN8Td3q4hyDtaOqGa9XZHjza4QNSdbmyih9X+htUOe7FR1XaTVr8CSxK/TEPkxxbx1YN54002eWHfI+GgbncLM75Zqn7ifpaZj7xnK/GDa2Vd7QQzcYMFg25wvCWzBlevBjxxji+It9o7dGJj18G4QDYTUQDx59FzkwHC1iARc3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=iOxn+WmcrpBKDgZGX+mwachg3yO5NbIc6wrn6MDiU+T4Iq7Lm09nvl/sfIHW4mAGyRyP4ecn5CBTznB+CgXuziY9NnJJ5IcAHsbyuhnnblUTvKwZRrgS9oywvDGP2QUVteKuDGNL49hGzfUPihXf9ZEgAb0XTASCs9948L5HD1dBRCJXcCrRQlyVnWzQwdj0txNqUBoa2DiVKj3oQHITB6gS/dJ8WfZtZc0tqYlC4y2Q653OwXkm82inTX45yB4cFMWSF/4AQfqdEAiU5IbqzBdQXKVG8dy6jWrW2QfAqUNgEA0Q6MUXxjbhG/cojfFCAnuSpRuPND6ESyIPRL2MVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=TJ/S9n27P/N9tl9abAu2Z1s1SagbMmZ7ZzguIOWt0dN1mQlKG4xUFZ0bGJjOLG5GX9q2hzGk6vsUr0IZe4yyxVxb7uI7z6Zi3LpZaoxKkU+i8ZXfkK/Q8fZvfwwKi317AgSgZyfRxHN8LdGFWvyWDM07hGFgoUbjaNsasiWSsDA=
-Received: from DM6PR02CA0104.namprd02.prod.outlook.com (2603:10b6:5:1f4::45)
- by SN6PR02MB4750.namprd02.prod.outlook.com (2603:10b6:805:9c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Fri, 14 Feb
- 2020 07:16:15 +0000
-Received: from CY1NAM02FT039.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by DM6PR02CA0104.outlook.office365.com
- (2603:10b6:5:1f4::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend
- Transport; Fri, 14 Feb 2020 07:16:15 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT039.mail.protection.outlook.com (10.152.75.140) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Fri, 14 Feb 2020 07:16:14 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCw-0006Hx-1t; Thu, 13 Feb 2020 23:16:14 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCq-0000Um-Um; Thu, 13 Feb 2020 23:16:08 -0800
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01E7G1Ye015610;
-        Thu, 13 Feb 2020 23:16:01 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCi-0000OQ-Rs; Thu, 13 Feb 2020 23:16:01 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 7/7] gpio: zynq: Remove error prints in EPROBE_DEFER
-Date:   Fri, 14 Feb 2020 12:45:37 +0530
-Message-Id: <1581664537-14386-8-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(189003)(199004)(336012)(426003)(186003)(478600001)(2616005)(26005)(316002)(6666004)(356004)(8676002)(81166006)(44832011)(107886003)(81156014)(70586007)(7696005)(6636002)(4744005)(36756003)(8936002)(4326008)(9786002)(5660300002)(70206006)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4750;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        id S1728791AbgBNHno (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 02:43:44 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.168]:30231 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725897AbgBNHno (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:43:44 -0500
+X-Greylist: delayed 1403 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 02:43:42 EST
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id CC016F49E
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 01:20:18 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id 2VGsjcagPvBMd2VGsjaxVr; Fri, 14 Feb 2020 01:20:18 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DUpJhf+SssdEWiaVSFeNcxZ8bDRbKb/SNKSC+XmvbZ8=; b=0mvun1OFDGBZ4XojK7nL9Bw0bE
+        pjv9WD8iaFFT9M5+6X5ZU2zoemNR1c+KyeJ8p/bsRRu9XyyJajxBCqTpOjpSttN1IIufvu8jWKbQH
+        0PQSSMuODCkXraGRU7lO1Tzfk7MA8GSRwlibNfhkJGQ+KxJyp6Uc5GAbeHfir5FUWbDg6AlQzQWPx
+        YSMxOqDYPoHEdyaeWec0Arze6SyP2cq7Chqf09Gqd03tOFBlJrx3c4BAfZXVHUX7Wl5wK1XENzlHF
+        LaLJTCm31pEwDzL4Jpp+OYasRFx+X2H65AggZAoZlgenGCORNolqRHvkXX6Ukb7J3EETPoReB3mRM
+        eP0szSRQ==;
+Received: from [191.31.199.191] (port=35550 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1j2VGs-001Cj6-1b; Fri, 14 Feb 2020 04:20:18 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     pn@denx.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v3] pinctrl: actions: Fix functions groups names for S700 SoC
+Date:   Fri, 14 Feb 2020 04:18:56 -0300
+Message-Id: <20200214071856.197028-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200125113355.GA22220@Mani-XPS-13-9360>
+References: <20200125113355.GA22220@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e2de9c3e-80d5-4919-3398-08d7b11dc71e
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4750:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB4750F0A7B923E4E32A0B49ABAF150@SN6PR02MB4750.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:274;
-X-Forefront-PRVS: 03137AC81E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S9voFb1v4U6sAWG/n2PnbPm817u0TPWPkp/qa+XG8ScWtc9WtyL3THE8qFolXuH98Ty/NsYqIJzSQ7WE7RMVCqLC5qUbyRYyhxtB6lrfFcHlpC5NLpBU2lFHD6FsTxSxLdyMEG1llIpJRUQzUol+zoOp1PVjrpeCuTDObIjpxjr1KIe/RbuOv3mT0KL7ZkpYIOZT5KbMpuZghPEteMtVij4zMtvbTV+931pwxGltCGrLEL0CdNQCIZZQk0ddBCDpNhpvYf6J6r9SebVHykRmToHLDwRYwCBTtxT1mq/Uy6i37/QQxZe3V4rx622UcBXF50jfEkH4Wr9XktODbOQ0sL9flP7Kasq4QSO1wE+fnY8AsIrrF5D9dipnLECit9kz0lawJyJDcdNI0wD/mjVLWBdaY47NO7p/EifuPWF6BubQMqHzVaMF44PL8xE06IrC
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 07:16:14.7746
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2de9c3e-80d5-4919-3398-08d7b11dc71e
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4750
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.199.191
+X-Source-L: No
+X-Exim-ID: 1j2VGs-001Cj6-1b
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.199.191]:35550
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 2
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Group names by function do not match their respective structures and
+documentation defined names.
 
-In case of probe is deferred do not print the errors.
+This fixes following errors when groups names defined on documentation are used:
+[    4.262778] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d1_mfp" for function "sd0"
+[    4.271394] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_d2_d3_mfp" for function "sd0"
+[    4.280248] pinctrl-s700 e01b0000.pinctrl: invalid group "sd1_d0_d3_mfp" for function "sd0"
+[    4.289122] pinctrl-s700 e01b0000.pinctrl: invalid group "sd0_cmd_mfp" for function "sd0"
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Fixes: 81c9d563cc74 (pinctrl: actions: Add Actions Semi S700 pinctrl driver)
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/gpio/gpio-zynq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 2ddb59b242e7..53d1387592fd 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk)) {
--		dev_err(&pdev->dev, "input clock not found.\n");
-+		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "input clock not found.\n");
- 		return PTR_ERR(gpio->clk);
- 	}
- 	ret = clk_prepare_enable(gpio->clk);
--- 
-2.7.4
+Thanks Manivannan for the review.
+
+Changes since v2:
+- Mention s700 SoC on subject
+
+ drivers/pinctrl/actions/pinctrl-s700.c | 510 ++++++++++++-------------
+ 1 file changed, 255 insertions(+), 255 deletions(-)
+
+diff --git a/drivers/pinctrl/actions/pinctrl-s700.c b/drivers/pinctrl/actions/pinctrl-s700.c
+index 8b8121e35edb..1182b38ff4dc 100644
+--- a/drivers/pinctrl/actions/pinctrl-s700.c
++++ b/drivers/pinctrl/actions/pinctrl-s700.c
+@@ -1125,317 +1125,317 @@ static const struct owl_pingroup s700_groups[] = {
+ };
+
+ static const char * const nor_groups[] = {
+-	"lcd0_d18",
+-	"i2s_d0",
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"i2s_d1",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lcd0_d2",
+-	"lvds_ee_pn",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
+-	"lvds_e_pn",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"sd1_d0_d3",
+-	"sd0_cmd",
+-	"sd1_cmd",
+-	"sens0_ckout",
+-	"sen0_pclk",
++	"lcd0_d18_mfp",
++	"i2s_d0_mfp",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"i2s_d1_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lcd0_d2_mfp",
++	"lvds_ee_pn_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
++	"lvds_e_pn_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"sd1_d0_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd1_cmd_mfp",
++	"sens0_ckout_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const eth_rmii_groups[] = {
+-	"rgmii_txd23",
+-	"rgmii_rxd2",
+-	"rgmii_rxd3",
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"rgmii_ref_clk",
++	"rgmii_txd23_mfp",
++	"rgmii_rxd2_mfp",
++	"rgmii_rxd3_mfp",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"rgmii_ref_clk_mfp",
+ 	"eth_smi_dummy",
+ };
+
+ static const char * const eth_smii_groups[] = {
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_rxd0",
+-	"rgmii_rxd1",
+-	"rgmii_ref_clk",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_rxd0_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_ref_clk_mfp",
+ 	"eth_smi_dummy",
+ };
+
+ static const char * const spi0_groups[] = {
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp0",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
+-	"dsi_dn2",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp0_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
++	"dsi_dn2_mfp",
+ };
+
+ static const char * const spi1_groups[] = {
+-	"uart0_rx",
+-	"uart0_tx",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ 	"i2c0_mfp",
+ };
+
+ static const char * const spi2_groups[] = {
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"rgmii_txd1",
+-	"rgmii_ref_clk",
+-	"dnand_acle_ce0",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
++	"rgmii_ref_clk_mfp",
++	"dnand_acle_ce0_mfp",
+ };
+
+ static const char * const spi3_groups[] = {
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
+ };
+
+ static const char * const sens0_groups[] = {
+-	"csi_cn_cp",
+-	"sens0_ckout",
+-	"csi_dn_dp",
+-	"sen0_pclk",
++	"csi_cn_cp_mfp",
++	"sens0_ckout_mfp",
++	"csi_dn_dp_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const sens1_groups[] = {
+-	"lcd0_d18",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"sens0_ckout",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"lcd0_d18_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"sens0_ckout_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const uart0_groups[] = {
+-	"uart2_rtsb",
+-	"uart2_ctsb",
+-	"uart0_rx",
+-	"uart0_tx",
++	"uart2_rtsb_mfp",
++	"uart2_ctsb_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const uart1_groups[] = {
+-	"sd0_d2_d3",
++	"sd0_d2_d3_mfp",
+ 	"i2c0_mfp",
+ };
+
+ static const char * const uart2_groups[] = {
+-	"rgmii_txen",
+-	"rgmii_rxen",
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp0",
+-	"uart2_rx_tx",
+-	"dsi_dn2",
+-	"uart2_rtsb",
+-	"uart2_ctsb",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"uart0_rx",
+-	"uart0_tx",
++	"rgmii_txen_mfp",
++	"rgmii_rxen_mfp",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp0_mfp",
++	"uart2_rx_tx_mfp",
++	"dsi_dn2_mfp",
++	"uart2_rtsb_mfp",
++	"uart2_ctsb_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ 	"i2c0_mfp",
+ 	"uart2_dummy"
+ };
+
+ static const char * const uart3_groups[] = {
+-	"rgmii_txd23",
+-	"rgmii_rxd2",
+-	"rgmii_rxd3",
+-	"uart3_rtsb",
+-	"uart3_ctsb",
++	"rgmii_txd23_mfp",
++	"rgmii_rxd2_mfp",
++	"rgmii_rxd3_mfp",
++	"uart3_rtsb_mfp",
++	"uart3_ctsb_mfp",
+ 	"uart3_dummy"
+ };
+
+ static const char * const uart4_groups[] = {
+-	"rgmii_txd01",
+-	"rgmii_ref_clk",
+-	"ks_out0",
+-	"ks_out1",
++	"rgmii_txd01_mfp",
++	"rgmii_ref_clk_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
+ };
+
+ static const char * const uart5_groups[] = {
+-	"rgmii_rxd1",
+-	"rgmii_rxd0",
+-	"ks_out0",
+-	"ks_out2",
+-	"uart3_rtsb",
+-	"uart3_ctsb",
+-	"sd0_d0",
+-	"sd0_d1",
++	"rgmii_rxd1_mfp",
++	"rgmii_rxd0_mfp",
++	"ks_out0_mfp",
++	"ks_out2_mfp",
++	"uart3_rtsb_mfp",
++	"uart3_ctsb_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
+ };
+
+ static const char * const uart6_groups[] = {
+-	"rgmii_txd0",
+-	"rgmii_txd1",
++	"rgmii_txd0_mfp",
++	"rgmii_txd1_mfp",
+ };
+
+ static const char * const i2s0_groups[] = {
+-	"i2s_d0",
+-	"i2s_pcm1",
+-	"i2s0_pcm0",
++	"i2s_d0_mfp",
++	"i2s_pcm1_mfp",
++	"i2s0_pcm0_mfp",
+ };
+
+ static const char * const i2s1_groups[] = {
+-	"i2s1_pcm0",
+-	"i2s_d1",
++	"i2s1_pcm0_mfp",
++	"i2s_d1_mfp",
+ 	"i2s1_dummy",
+-	"spi0_i2c_pcm",
+-	"uart0_rx",
+-	"uart0_tx",
++	"spi0_i2c_pcm_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const pcm1_groups[] = {
+-	"i2s_pcm1",
+-	"spi0_i2c_pcm",
+-	"uart0_rx",
+-	"uart0_tx",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"i2s_pcm1_mfp",
++	"spi0_i2c_pcm_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const pcm0_groups[] = {
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"uart2_rx_tx",
+-	"spi0_i2c_pcm",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"uart2_rx_tx_mfp",
++	"spi0_i2c_pcm_mfp",
+ };
+
+ static const char * const ks_groups[] = {
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
+ };
+
+ static const char * const jtag_groups[] = {
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out1",
+-	"sd0_d0",
+-	"sd0_d2_d3",
+-	"sd0_cmd",
+-	"sd0_clk",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out1_mfp",
++	"sd0_d0_mfp",
++	"sd0_d2_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd0_clk_mfp",
+ };
+
+ static const char * const pwm0_groups[] = {
+-	"rgmii_rxd2",
+-	"rgmii_txen",
+-	"ks_in2",
+-	"sen0_pclk",
++	"rgmii_rxd2_mfp",
++	"rgmii_txen_mfp",
++	"ks_in2_mfp",
++	"sen0_pclk_mfp",
+ };
+
+ static const char * const pwm1_groups[] = {
+-	"rgmii_rxen",
+-	"ks_in1",
+-	"ks_in3",
+-	"sens0_ckout",
++	"rgmii_rxen_mfp",
++	"ks_in1_mfp",
++	"ks_in3_mfp",
++	"sens0_ckout_mfp",
+ };
+
+ static const char * const pwm2_groups[] = {
+-	"lcd0_d18",
+-	"rgmii_rxd3",
+-	"rgmii_rxd1",
+-	"ks_out0",
+-	"ks_out2",
++	"lcd0_d18_mfp",
++	"rgmii_rxd3_mfp",
++	"rgmii_rxd1_mfp",
++	"ks_out0_mfp",
++	"ks_out2_mfp",
+ };
+
+ static const char * const pwm3_groups[] = {
+-	"rgmii_rxd0",
+-	"ks_out1",
+-	"lcd0_d2",
++	"rgmii_rxd0_mfp",
++	"ks_out1_mfp",
++	"lcd0_d2_mfp",
+ };
+
+ static const char * const pwm4_groups[] = {
+-	"lcd0_d18",
+-	"rgmii_txd01",
+-	"rgmii_txd0",
+-	"ks_in0",
+-	"pcm1_in",
+-	"nand_ceb3",
++	"lcd0_d18_mfp",
++	"rgmii_txd01_mfp",
++	"rgmii_txd0_mfp",
++	"ks_in0_mfp",
++	"pcm1_in_mfp",
++	"nand_ceb3_mfp",
+ };
+
+ static const char * const pwm5_groups[] = {
+-	"rgmii_txd1",
+-	"ks_in1",
+-	"pcm1_clk",
+-	"nand_ceb2",
++	"rgmii_txd1_mfp",
++	"ks_in1_mfp",
++	"pcm1_clk_mfp",
++	"nand_ceb2_mfp",
+ };
+
+ static const char * const p0_groups[] = {
+-	"ks_in2",
+-	"ks_in0",
++	"ks_in2_mfp",
++	"ks_in0_mfp",
+ };
+
+ static const char * const sd0_groups[] = {
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lcd0_d2",
+-	"dsi_dp3",
+-	"dsi_dp0",
+-	"sd0_d0",
+-	"sd0_d1",
+-	"sd0_d2_d3",
+-	"sd1_d0_d3",
+-	"sd0_cmd",
+-	"sd0_clk",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lcd0_d2_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dp0_mfp",
++	"sd0_d0_mfp",
++	"sd0_d1_mfp",
++	"sd0_d2_d3_mfp",
++	"sd1_d0_d3_mfp",
++	"sd0_cmd_mfp",
++	"sd0_clk_mfp",
+ };
+
+ static const char * const sd1_groups[] = {
+-	"dsi_dp2",
+-	"mfp1_16_14",
+-	"lcd0_d2",
+-	"mfp1_16_14_d17",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"dsi_dn2",
+-	"sd1_d0_d3",
+-	"sd1_cmd",
++	"dsi_dp2_mfp",
++	"mfp1_16_14_mfp",
++	"lcd0_d2_mfp",
++	"mfp1_16_14_d17_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"dsi_dn2_mfp",
++	"sd1_d0_d3_mfp",
++	"sd1_cmd_mfp",
+ 	"sd1_dummy",
+ };
+
+ static const char * const sd2_groups[] = {
+-	"dnand_data_wr",
++	"dnand_data_wr_mfp",
+ };
+
+ static const char * const i2c0_groups[] = {
+-	"uart0_rx",
+-	"uart0_tx",
+-	"i2c0_mfp",
++	"uart0_rx_mfp",
++	"uart0_tx_mfp",
++	"i2c0_mfp_mfp",
+ };
+
+ static const char * const i2c1_groups[] = {
+@@ -1448,85 +1448,85 @@ static const char * const i2c2_groups[] = {
+ };
+
+ static const char * const i2c3_groups[] = {
+-	"uart2_rx_tx",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"uart2_rx_tx_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const lvds_groups[] = {
+-	"lvds_o_pn",
+-	"lvds_ee_pn",
+-	"lvds_e_pn",
++	"lvds_o_pn_mfp",
++	"lvds_ee_pn_mfp",
++	"lvds_e_pn_mfp",
+ };
+
+ static const char * const bt_groups[] = {
+-	"i2s_pcm1",
+-	"i2s0_pcm0",
+-	"i2s1_pcm0",
+-	"ks_in2",
+-	"ks_in1",
+-	"ks_in0",
+-	"ks_in3",
+-	"ks_out0",
+-	"ks_out1",
+-	"ks_out2",
+-	"lvds_o_pn",
+-	"lvds_ee_pn",
+-	"pcm1_in",
+-	"pcm1_clk",
+-	"pcm1_sync",
+-	"pcm1_out",
++	"i2s_pcm1_mfp",
++	"i2s0_pcm0_mfp",
++	"i2s1_pcm0_mfp",
++	"ks_in2_mfp",
++	"ks_in1_mfp",
++	"ks_in0_mfp",
++	"ks_in3_mfp",
++	"ks_out0_mfp",
++	"ks_out1_mfp",
++	"ks_out2_mfp",
++	"lvds_o_pn_mfp",
++	"lvds_ee_pn_mfp",
++	"pcm1_in_mfp",
++	"pcm1_clk_mfp",
++	"pcm1_sync_mfp",
++	"pcm1_out_mfp",
+ };
+
+ static const char * const lcd0_groups[] = {
+-	"lcd0_d18",
+-	"lcd0_d2",
+-	"mfp1_16_14_d17",
+-	"lvds_o_pn",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"lvds_ee_pn",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"lvds_e_pn",
++	"lcd0_d18_mfp",
++	"lcd0_d2_mfp",
++	"mfp1_16_14_d17_mfp",
++	"lvds_o_pn_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"lvds_ee_pn_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"lvds_e_pn_mfp",
+ };
+
+
+ static const char * const usb30_groups[] = {
+-	"ks_in1",
++	"ks_in1_mfp",
+ };
+
+ static const char * const clko_25m_groups[] = {
+-	"clko_25m",
++	"clko_25m_mfp",
+ };
+
+ static const char * const mipi_csi_groups[] = {
+-	"csi_cn_cp",
+-	"csi_dn_dp",
++	"csi_cn_cp_mfp",
++	"csi_dn_dp_mfp",
+ };
+
+ static const char * const dsi_groups[] = {
+-	"dsi_dn0",
+-	"dsi_dp2",
+-	"dsi_dp3",
+-	"dsi_dn3",
+-	"dsi_dp0",
+-	"dsi_dnp1_cp_d2",
+-	"dsi_dnp1_cp_d17",
+-	"dsi_dn2",
++	"dsi_dn0_mfp",
++	"dsi_dp2_mfp",
++	"dsi_dp3_mfp",
++	"dsi_dn3_mfp",
++	"dsi_dp0_mfp",
++	"dsi_dnp1_cp_d2_mfp",
++	"dsi_dnp1_cp_d17_mfp",
++	"dsi_dn2_mfp",
+ 	"dsi_dummy",
+ };
+
+ static const char * const nand_groups[] = {
+-	"dnand_data_wr",
+-	"dnand_acle_ce0",
+-	"nand_ceb2",
+-	"nand_ceb3",
++	"dnand_data_wr_mfp",
++	"dnand_acle_ce0_mfp",
++	"nand_ceb2_mfp",
++	"nand_ceb3_mfp",
+ 	"nand_dummy",
+ };
+
+ static const char * const spdif_groups[] = {
+-	"uart0_tx",
++	"uart0_tx_mfp",
+ };
+
+ static const char * const sirq0_groups[] = {
+--
+2.25.0
 
