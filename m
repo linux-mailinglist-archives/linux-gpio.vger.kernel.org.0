@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A0215D29E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 08:15:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C72215D2A4
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 08:16:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgBNHP5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 02:15:57 -0500
-Received: from mail-eopbgr700079.outbound.protection.outlook.com ([40.107.70.79]:1871
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        id S1728803AbgBNHP7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 02:15:59 -0500
+Received: from mail-dm6nam11on2089.outbound.protection.outlook.com ([40.107.223.89]:21222
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728740AbgBNHP5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 02:15:57 -0500
+        id S1728779AbgBNHP7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:15:59 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LnAAgjKDwZYaAw26/YwQ59xalMcGoILmI/MPw9sbasMlILR8r2UHRhryC6/tFM8VzphS79iJAaPAMt0PSoWZx1/g7MB2Xl2NJNRnKpxRJXfFdMCDzBuyjcagV8az03uLIAbl0edGqd26P0QBYvvANo/sKw78mV5JRjmHSV8d18X1IuT3tE9f9nTYgQvStKBGB1v05juF660dTSpDF/iHw7IRuCRr5JKxaClag6wKDFufCjTYDdA/EYVMVmJA5/CjA6K+5SUWltQ6GISJs1Sz5NVLiyQYK+l0lP0rnxpG5efg95UKF3eDExgewB/0CQu1+aVyd8nzAxlEce5rZPWW7g==
+ b=oWl1dRGYfA1Hi1e0/rPDoSEcKhG2C7vH1IOjuueVw/JUxm/HhozoqzbotW98fHPujln3J0T7a5354fzH9kMNKZdpa08wvVCpKJYgp45zckwEzVGD/Fxv148eyRBwOqLWzg4ScMQ1oYQCBT5Gw5J30yuYvTrO5ES0IT1YTIJVRKc8kIwOTE+JFItsLk6zx4JhCgZeUgtrIETdYbHe1CI82yUBbgYw0Hds5KenyHBfg+gUmKgrLVPFlxk3azgjAdeGhPZOhYd881gmjD0qS+kxawYpecrOHXPCUeyCG3SaSpcDJvXhOGJs5PZcEwcqyXQjZrLkpop36jsQxke2xctJ7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uKoUx41WvfZ5N/iJnFTwC8FTY1Xo2HIc61yAfSHkhxg=;
- b=PF0jwqlYik7Gz0SUhr8iLNwJKgz4qxSPwTeluvSkeExUHuUdH1R0mYpjY8e51O8ec+OuWFn4nT1xHD83FuzY4mMHVN6Nenlf6V5np/bTxv4W3jyJmaKuF4TUKDLD8Qeag/Az7oeziYbVj7xZo7uztzLEydrgbBPcOO5bYeQn7YGbxlU67YcFqTPqpmVupKi/bhc+CjDhcoJcazWvotuusLx4DmQq2x5K9Dkmd024oP4IuVnYA1RmzEzXvB6M4kpK34syNZMq3sO3ScyrYhFGzDAy8Dr8tJYsMW2dSHuHMYSN636+mAl1f2wdlaTXYNY73rPefQY6bp4ZeoBVaEjj/g==
+ bh=JlkvPKLZlVCp1T3bT2AIP17AbdcbrKF5ADlDc8Id6WM=;
+ b=luRsiszxws+1w7P57BM9/7KIcsBeXI2iibkZqyeW/iOgMKQ567Up2MlrdnSnMMPXrFE/uW2b4mTBJ/msH4wRfXEejUAw+l+fAggHjsJQHEse9cYjNgRXAhUVnt16C0gWnJTxfL6m/dNcwRcK1uzdIzNHtjUdckN/5OwH0UenOIS49nDAVGGb9EYJKVg4aL1LSDyf+XcE8FQ35JGZncIzW2O17jF5nChZ9klCwc6w4EwtHoFsBZkT0di6PH+uk0jQRsN1p1+JWDmBDUuo9aPhJGcXgXk5m7lDSdILblIDy1RzZVd6a17zLdVHvJHeY99AzTtFF77+ypToFmAr6+/kSw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -26,17 +26,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uKoUx41WvfZ5N/iJnFTwC8FTY1Xo2HIc61yAfSHkhxg=;
- b=f95AyzorjEEql+SNuomf5Wp7OMsQVNpwkXpB6pU+6epm4PLbqVP0lct78fcIJlWDh/bXt5x5ICixaJrfRwETLn0xOQB+WXr+p7LTbAZprPl4Mh9BW4aTGY18BcgfMbbzV6Vzeyai5KFTV/vlnNFGmDzJ2Vml03mJr3KRbbp4ogI=
-Received: from BL0PR02CA0116.namprd02.prod.outlook.com (2603:10b6:208:35::21)
- by DM6PR02MB3996.namprd02.prod.outlook.com (2603:10b6:5:9d::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Fri, 14 Feb
+ bh=JlkvPKLZlVCp1T3bT2AIP17AbdcbrKF5ADlDc8Id6WM=;
+ b=ctMxd94Pmf39pEePIL9DLRy9YTOiVQ9AZD1YqebceBbQVeoM9tgXt8ZazHUMQt8FDHWWwa7sKg+WuHWvYNQNu6CyGQg7HxazwO8wQZknMdD4WA3yab909HMGhtixgLFufwZEjErYfh8Lh4GL6oDQJITiXxA38w+IukGt6oZj9lQ=
+Received: from SN4PR0201CA0009.namprd02.prod.outlook.com
+ (2603:10b6:803:2b::19) by BYAPR02MB5494.namprd02.prod.outlook.com
+ (2603:10b6:a03:99::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.23; Fri, 14 Feb
  2020 07:15:55 +0000
-Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::209) by BL0PR02CA0116.outlook.office365.com
- (2603:10b6:208:35::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22 via Frontend
+Received: from CY1NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::209) by SN4PR0201CA0009.outlook.office365.com
+ (2603:10b6:803:2b::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23 via Frontend
  Transport; Fri, 14 Feb 2020 07:15:54 +0000
 Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
@@ -46,95 +46,161 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
+ CY1NAM02FT010.mail.protection.outlook.com (10.152.75.50) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
  via Frontend Transport; Fri, 14 Feb 2020 07:15:54 +0000
 Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCb-0006El-Ek; Thu, 13 Feb 2020 23:15:53 -0800
+        id 1j2VCb-0006Em-G0; Thu, 13 Feb 2020 23:15:53 -0800
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCW-0000Q7-B1; Thu, 13 Feb 2020 23:15:48 -0800
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01E7Fe3M018756;
-        Thu, 13 Feb 2020 23:15:41 -0800
+        id 1j2VCW-0000Q7-CV; Thu, 13 Feb 2020 23:15:48 -0800
+Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01E7FhRW015532;
+        Thu, 13 Feb 2020 23:15:44 -0800
 Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j2VCO-0000OQ-97; Thu, 13 Feb 2020 23:15:40 -0800
+        id 1j2VCR-0000OQ-9h; Thu, 13 Feb 2020 23:15:43 -0800
 From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V2 0/7] gpio: zynq: Update on gpio-zynq driver
-Date:   Fri, 14 Feb 2020 12:45:30 +0530
-Message-Id: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
+Subject: [PATCH V2 1/7] gpio: zynq: protect direction in/out with a spinlock
+Date:   Fri, 14 Feb 2020 12:45:31 +0530
+Message-Id: <1581664537-14386-2-git-send-email-srinivas.neeli@xilinx.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1581664537-14386-1-git-send-email-srinivas.neeli@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(199004)(189003)(2616005)(70586007)(336012)(4744005)(4326008)(107886003)(426003)(6636002)(36756003)(186003)(356004)(5660300002)(26005)(6666004)(7696005)(8676002)(9786002)(8936002)(2906002)(81166006)(81156014)(316002)(44832011)(478600001)(70206006)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB3996;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39850400004)(136003)(346002)(396003)(189003)(199004)(478600001)(356004)(2906002)(336012)(4326008)(6666004)(316002)(44832011)(36756003)(6636002)(70586007)(5660300002)(7696005)(2616005)(9786002)(426003)(8676002)(81166006)(26005)(70206006)(107886003)(8936002)(81156014)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5494;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a37be223-f5cc-4b0f-b5c4-08d7b11dbafe
-X-MS-TrafficTypeDiagnostic: DM6PR02MB3996:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB399612FF644E6E6623E3153CAF150@DM6PR02MB3996.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 12b25dff-19ed-415c-c530-08d7b11dbae6
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5494:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB54942AABE8383DE4B7027658AF150@BYAPR02MB5494.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-Forefront-PRVS: 03137AC81E
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +pIzQoiE8mX//SP3Q8cM1c4bLH5pWCwRnLz25XyRWWxgQacFEhbzzpUXDGxk62KnWIb2C3tNRrv2/eJzNO0+qzTK/7tDPPpLBJYC7cN93J+Igi7cfDP+puh04ci9WjXXOIO1c2ZiId9590A9fyQ4vPvOmhRgsHlol9apjwwcmdk3a7FN8FyMkVqY+qv8VaiOwDmA+QOBCgi3On/+VSBdcGDIPkTKXpmT9gxA9EnU3Z/tmpfAAxLwwioZcFAKcJE/p7c9yJDnOcqMbpa+7kz1U7DtD8DZKxuig9OUY/mlA0JNGiLitcF14gkLj0CZWHK2mB1lXONc6/c2yfkrzEQL8vZkjSEG9epGMu/D3vrvEnjLVbXMlgJkX0YNpb7UqGKbAZ8lDbKMXp+TXda9Uw4vGMcUQbvtIKw1uEU38UhfSiCaYAmKktAGSLhVaeOpnNUdBATxLb0aytWqeewgblM9SAmMxu+NC8OHAjlikp7WGSOj1v0CEWBguhj/PI4utbXi
+X-Microsoft-Antispam-Message-Info: 1Ru+vUIDh4eABMSf2GqOuqfF6mT+Xyrb3/veywOcBarSZta/NC27wsZO+v4HDtxR2wtC+Y2rPovuoUj/pYEU6D1nlrAiLowIfmNYOkXjOJv4LlrvARLKZ8BEFuUpAxxmygYHMkzbTGNqbPAtn1MddLYjT5YdVc8CDoaNf8M3B1w/rHQ6hV90aqLuftM7gziIjqaUR2lgMpiIkSOREsO+vlFT2ZtjU8ERjmad+J4X8xcv1PExhxV/yu+0tUqWP/4A219uJfhbDVc5e3JhOorvHDlBe9SltPRgA2/Ri290ltcOhLWWUhqM7gL5lTRNxFwbvtGl6Bur6+v8mj5+W9QWSR+w893P5gKml8iMN0BMAQDF9JxioE+OxSzzovI8WMa1NNOp79Th2zVl0yrm5dbRmxvxg0DywZaiVFbslHK6hwTL4LukHzXVrKN3Mq8PGlkm
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 07:15:54.3905
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2020 07:15:54.2337
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a37be223-f5cc-4b0f-b5c4-08d7b11dbafe
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12b25dff-19ed-415c-c530-08d7b11dbae6
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB3996
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5494
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch series does the following:
--protect direction in/out with a spinlock
--Add binding for Versal gpio
--Add binding for pmc gpio node
--Add Versal support
--Disable the irq if it is not a wakeup source
--Add pmc gpio support
--Remove error prints in EPROBE_DEFER
+From: Glenn Langedock <Glenn.Langedock@barco.com>
 
+Fix race condition when changing the direction (in/out) of the GPIO pin.
+The read-modify-write sequence (as coded in the driver) isn't atomic and
+requires synchronization (spinlock).
+
+Signed-off-by: Glenn Langedock <Glenn.Langedock@barco.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
 ---
 Changes in V2:
-- In previous series [PATCH 1/8] already applied on "linux-next".
-- Fixed checkpatch warning for spinlock description. 
-- Added description for Versal PS_GPIO and PMC_GPIO.
+-Updated spinlock comment message.
 ---
+ drivers/gpio/gpio-zynq.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Glenn Langedock (1):
-  gpio: zynq: protect direction in/out with a spinlock
-
-Shubhrajyoti Datta (6):
-  dt-bindings: gpio: Add binding for Versal gpio
-  devicetree-binding: Add pmc gpio node
-  gpio: zynq: Add Versal support
-  gpio: zynq: Disable the irq if it is not a wakeup source
-  gpio: zynq: Add pmc gpio support
-  gpio: zynq: Remove error prints in EPROBE_DEFER
-
- .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
- drivers/gpio/gpio-zynq.c                           | 66 +++++++++++++++++++++-
- 2 files changed, 67 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index 05ba16fffdad..fb93b35ab19e 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -10,6 +10,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/spinlock.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -116,6 +117,7 @@ struct gpio_regs {
+  * @irq:	interrupt for the GPIO device
+  * @p_data:	pointer to platform data
+  * @context:	context registers
++ * @dirlock:	lock used for direction in/out synchronization
+  */
+ struct zynq_gpio {
+ 	struct gpio_chip chip;
+@@ -124,6 +126,7 @@ struct zynq_gpio {
+ 	int irq;
+ 	const struct zynq_platform_data *p_data;
+ 	struct gpio_regs context;
++	spinlock_t dirlock; /* lock */
+ };
+ 
+ /**
+@@ -297,6 +300,7 @@ static int zynq_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
+ {
+ 	u32 reg;
+ 	unsigned int bank_num, bank_pin_num;
++	unsigned long flags;
+ 	struct zynq_gpio *gpio = gpiochip_get_data(chip);
+ 
+ 	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num, gpio);
+@@ -310,9 +314,11 @@ static int zynq_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
+ 		return -EINVAL;
+ 
+ 	/* clear the bit in direction mode reg to set the pin as input */
++	spin_lock_irqsave(&gpio->dirlock, flags);
+ 	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+ 	reg &= ~BIT(bank_pin_num);
+ 	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++	spin_unlock_irqrestore(&gpio->dirlock, flags);
+ 
+ 	return 0;
+ }
+@@ -334,11 +340,13 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
+ {
+ 	u32 reg;
+ 	unsigned int bank_num, bank_pin_num;
++	unsigned long flags;
+ 	struct zynq_gpio *gpio = gpiochip_get_data(chip);
+ 
+ 	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num, gpio);
+ 
+ 	/* set the GPIO pin as output */
++	spin_lock_irqsave(&gpio->dirlock, flags);
+ 	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+ 	reg |= BIT(bank_pin_num);
+ 	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+@@ -347,6 +355,7 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
+ 	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_OUTEN_OFFSET(bank_num));
+ 	reg |= BIT(bank_pin_num);
+ 	writel_relaxed(reg, gpio->base_addr + ZYNQ_GPIO_OUTEN_OFFSET(bank_num));
++	spin_unlock_irqrestore(&gpio->dirlock, flags);
+ 
+ 	/* set the state of the pin */
+ 	zynq_gpio_set_value(chip, pin, state);
+@@ -885,6 +894,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	spin_lock_init(&gpio->dirlock);
++
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	ret = pm_runtime_get_sync(&pdev->dev);
 -- 
 2.7.4
 
