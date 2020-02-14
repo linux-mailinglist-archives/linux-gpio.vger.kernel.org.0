@@ -2,37 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4D315EEED
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 18:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0F215ED1A
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 18:32:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389649AbgBNRod (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 12:44:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49852 "EHLO mail.kernel.org"
+        id S2390536AbgBNRb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 12:31:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389530AbgBNQDD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:03:03 -0500
+        id S2390534AbgBNQGy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:06:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDACC2187F;
-        Fri, 14 Feb 2020 16:03:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B36624676;
+        Fri, 14 Feb 2020 16:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696182;
-        bh=Ptu6GMFRDrGb22Ao6q2UrifXKbK8uk5mZ/S7nJG3Xkg=;
+        s=default; t=1581696413;
+        bh=c2FN921kY1CefLsiWaCjWz6K+vYQcvTloLawxS3AYGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuJO4ZK4QrJtrcAErRn2H5cl2GdaCdoumX3UCLq2jmEKVnDtEDtsm2URuI2+6L2cJ
-         nCTC4/6szGFmu3CAp9QQHy2IIcq2WFDk4d2teIEwEe2rBeY9/U0nVbf0YC+BxqC6kn
-         dUfPzYhcc2BUJjac+Xzd7JkBQCwmqfd9Y4en6teU=
+        b=uHTFnNG8cyHaFmEM9nJpRYZwBy9OPdOq5T2lWvOQnvbEF6za4W3o4yewGZR0x75Pk
+         +PnxVt1LiTgDFzFlTVE9Jh6S2ZbuRjYYVGLAobsuGCmnSHlkoAl4HTFS8dKXDb27SP
+         iQTmroX6DdzbX/WDGYLSlUAk6CH3y5dqh1fVzG4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 053/459] pinctrl: baytrail: Do not clear IRQ flags on direct-irq enabled pins
-Date:   Fri, 14 Feb 2020 10:55:03 -0500
-Message-Id: <20200214160149.11681-53-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 235/459] pinctrl: sh-pfc: r8a7778: Fix duplicate SDSELF_B and SD1_CLK_B
+Date:   Fri, 14 Feb 2020 10:58:05 -0500
+Message-Id: <20200214160149.11681-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -45,58 +43,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a23680594da7a9e2696dbcf4f023e9273e2fa40b ]
+[ Upstream commit 805f635703b2562b5ddd822c62fc9124087e5dd5 ]
 
-Suspending Goodix touchscreens requires changing the interrupt pin to
-output before sending them a power-down command. Followed by wiggling
-the interrupt pin to wake the device up, after which it is put back
-in input mode.
+The FN_SDSELF_B and FN_SD1_CLK_B enum IDs are used twice, which means
+one set of users must be wrong.  Replace them by the correct enum IDs.
 
-On Bay Trail devices with a Goodix touchscreen direct-irq mode is used
-in combination with listing the pin as a normal GpioIo resource.
-
-This works fine, until the goodix driver gets rmmod-ed and then insmod-ed
-again. In this case byt_gpio_disable_free() calls
-byt_gpio_clear_triggering() which clears the IRQ flags and after that the
-(direct) IRQ no longer triggers.
-
-This commit fixes this by adding a check for the BYT_DIRECT_IRQ_EN flag
-to byt_gpio_clear_triggering().
-
-Note that byt_gpio_clear_triggering() only gets called from
-byt_gpio_disable_free() for direct-irq enabled pins, as these are excluded
-from the irq_valid mask by byt_init_irq_valid_mask().
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 87f8c988636db0d4 ("sh-pfc: Add r8a7778 pinmux support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-2-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pinctrl/sh-pfc/pfc-r8a7778.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 7d658e6627e7a..606fe216f902a 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -752,7 +752,13 @@ static void byt_gpio_clear_triggering(struct byt_gpio *vg, unsigned int offset)
- 
- 	raw_spin_lock_irqsave(&byt_lock, flags);
- 	value = readl(reg);
--	value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
-+	/* Do not clear direct-irq enabled IRQs (from gpio_disable_free) */
-+	if (value & BYT_DIRECT_IRQ_EN)
-+		/* nothing to do */ ;
-+	else
-+		value &= ~(BYT_TRIG_POS | BYT_TRIG_NEG | BYT_TRIG_LVL);
-+
- 	writel(value, reg);
- 	raw_spin_unlock_irqrestore(&byt_lock, flags);
- }
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+index 24866a5958aee..a9875038ed9b6 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a7778.c
+@@ -2305,7 +2305,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_ATAG0_A,	0,		FN_REMOCON_B,	0,
+ 		/* IP0_11_8 [4] */
+ 		FN_SD1_DAT2_A,	FN_MMC_D2,	0,		FN_BS,
+-		FN_ATADIR0_A,	0,		FN_SDSELF_B,	0,
++		FN_ATADIR0_A,	0,		FN_SDSELF_A,	0,
+ 		FN_PWM4_B,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP0_7_5 [3] */
+@@ -2349,7 +2349,7 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 		FN_TS_SDAT0_A,	0,		0,		0,
+ 		0,		0,		0,		0,
+ 		/* IP1_10_8 [3] */
+-		FN_SD1_CLK_B,	FN_MMC_D6,	0,		FN_A24,
++		FN_SD1_CD_A,	FN_MMC_D6,	0,		FN_A24,
+ 		FN_DREQ1_A,	0,		FN_HRX0_B,	FN_TS_SPSYNC0_A,
+ 		/* IP1_7_5 [3] */
+ 		FN_A23,		FN_HTX0_B,	FN_TX2_B,	FN_DACK2_A,
 -- 
 2.20.1
 
