@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AE0D15F495
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 19:24:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 906B715F489
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 19:24:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgBNPtf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 10:49:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52610 "EHLO mail.kernel.org"
+        id S1730118AbgBNPtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 10:49:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgBNPte (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:49:34 -0500
+        id S1730082AbgBNPtk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:49:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E79324654;
-        Fri, 14 Feb 2020 15:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C98424680;
+        Fri, 14 Feb 2020 15:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695374;
-        bh=Wg6DfDmhJX8CmKYfKrG4vk4WEruzi4uSKrwmTAYfZMM=;
+        s=default; t=1581695380;
+        bh=9gELkEKIqQTEF6M71cntxk0dzqeNLlTlfil80CPMXSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYFqkP2GHBdiFlw0aKanFboibn5fMyeY3t64fxMUBycQ4t3g12V2tpLUCU9SXqSDw
-         wpzAhllkaeLaw4QD2gBVgYsr6sefmmmFykQhrdw196qjNPY70r4+218iDOehwIwoAc
-         gWDhdHslQeKqELmoYhsluO23BEjZvZ4PZvY8rN4s=
+        b=Ix8F8GbuRM86SjsvDEMe4wY5fIGAI9Ts3irKyUt36NeYFgMnWUpjygksKTN5NqPG6
+         hiCYqyMvWut/8zbatPKab/QHB9t8Hgo+r/CDyja9AnOkTRYV+cSUp1OXqWFDgoD0cy
+         OQf8pSgxi32xJXZS/O9+ek9lwBmvP7y6ONltbZtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 030/542] pinctrl: sh-pfc: r8a77965: Fix DU_DOTCLKIN3 drive/bias control
-Date:   Fri, 14 Feb 2020 10:40:22 -0500
-Message-Id: <20200214154854.6746-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 035/542] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+Date:   Fri, 14 Feb 2020 10:40:27 -0500
+Message-Id: <20200214154854.6746-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
 References: <20200214154854.6746-1-sashal@kernel.org>
@@ -45,49 +45,90 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a34cd9dfd03fa9ec380405969f1d638bc63b8d63 ]
+[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
 
-R-Car Gen3 Hardware Manual Errata for Rev. 2.00 of October 24, 2019
-changed the configuration bits for drive and bias control for the
-DU_DOTCLKIN3 pin on R-Car M3-N, to match the same pin on R-Car H3.
-Update the driver to reflect this.
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+two CAN outputs.
 
-After this, the handling of drive and bias control for the various
-DU_DOTCLKINx pins is consistent across all of the R-Car H3, M3-W,
-M3-W+, and M3-N SoCs.
+Fix this by:
+  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
+    configures the combined "CTX0&CTX1" output signal,
+  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
+    the shared "CRX0/CRX1" input signal, which is fed to both CAN
+    inputs,
+  - Adding the missing function GPIO definition for "CTX0&CTX1" to
+    pinmux_func_gpios[],
+  - Moving all CAN enums next to each other.
 
-Fixes: 86c045c2e4201e94 ("pinctrl: sh-pfc: r8a77965: Replace DU_DOTCLKIN2 by DU_DOTCLKIN3")
+See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
+  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
+      Version),
+  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
+      Version,
+  [3] Table 1.4 List of Pins,
+  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
+      Module (64 Mailboxes x 1 Channel),
+  [5] Table 32.10 Multiplexed Pins (Port J),
+  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
+
+Note that the last 2 disagree about PJ2MD[2:0], which is probably the
+root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
+be correct, and "CRx0&CRx1" in [6] must be wrong.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/20191113101653.28428-1-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-index 8bdf33c807f6c..6616f5210b9d9 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -5998,7 +5998,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
- 		{ PIN_DU_DOTCLKIN1,    0, 2 },	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_DRIVE_REG("DRVCTRL12", 0xe6060330) {
--		{ PIN_DU_DOTCLKIN3,   28, 2 },	/* DU_DOTCLKIN3 */
-+		{ PIN_DU_DOTCLKIN3,   24, 2 },	/* DU_DOTCLKIN3 */
- 		{ PIN_FSCLKST,        20, 2 },	/* FSCLKST */
- 		{ PIN_TMS,             4, 2 },	/* TMS */
- 	} },
-@@ -6254,8 +6254,8 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 		[31] = PIN_DU_DOTCLKIN1,	/* DU_DOTCLKIN1 */
- 	} },
- 	{ PINMUX_BIAS_REG("PUEN3", 0xe606040c, "PUD3", 0xe606044c) {
--		[ 0] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
--		[ 1] = SH_PFC_PIN_NONE,
-+		[ 0] = SH_PFC_PIN_NONE,
-+		[ 1] = PIN_DU_DOTCLKIN3,	/* DU_DOTCLKIN3 */
- 		[ 2] = PIN_FSCLKST,		/* FSCLKST */
- 		[ 3] = PIN_EXTALR,		/* EXTALR*/
- 		[ 4] = PIN_TRST_N,		/* TRST# */
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index 4a95867deb8af..5a026601d4f9a 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -497,17 +497,15 @@ enum {
+ 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
+ 	CRX0_MARK, CRX1_MARK,
+ 	CTX0_MARK, CTX1_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
+ 
+ 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
+ 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
+ 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
+ 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
+ 	IERXD_MARK, IETXD_MARK,
+-	CRX0_CRX1_MARK,
+ 	WDTOVF_MARK,
+ 
+-	CRX0X1_MARK,
+-
+ 	/* DMAC */
+ 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
+ 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
+@@ -995,12 +993,12 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
+ 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
+-	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
++	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ 
+ 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
+ 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
++	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
+ 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
+ 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
+ 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
+@@ -1245,6 +1243,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0),
+ 	GPIO_FN(CRX0_CRX1),
+ 
 -- 
 2.20.1
 
