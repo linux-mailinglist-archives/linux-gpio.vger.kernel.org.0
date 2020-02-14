@@ -2,43 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E3915DD2B
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 16:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1386715E2A1
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 17:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387950AbgBNP4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 10:56:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38670 "EHLO mail.kernel.org"
+        id S2405910AbgBNQYe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 11:24:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387941AbgBNP4m (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:56:42 -0500
+        id S2405899AbgBNQYd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6423222C4;
-        Fri, 14 Feb 2020 15:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F92124790;
+        Fri, 14 Feb 2020 16:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695801;
-        bh=BahF8te1RYAssLJXqN29Xd37PKdX5pcjbSGFsiGGhgk=;
+        s=default; t=1581697471;
+        bh=ZXhnpMrj5CaWrpKLVqIdetget1X44xH0z5FU1tXfW64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6yf8KD0+Ci0e3Atv8SaXMXK5Axbe0xA4h3d3Fy23llOwniAMP3+SsuIg8PNOJF7c
-         KLHkLqncpKScfpyLue4zB/e6fa3BRtwEyd7Yti/qplfStwnuYC+TKwBAUUSJpU7QHk
-         pv5NjvioEJUfWz012OanKP1BKkV2i/p6HNG1nNUI=
+        b=YWO/uyBLPoFpdcu64SVS1bNhotMuLTYROHDG63krmxVg2XbUyBEISVpN2Yv8ml2Xg
+         p3TUD36kRrS9/85f60qE2K0MXcpsaHs0rq4CB9nmQ5aGl0evne/jS7kfqqrU/bNVkv
+         mDCpXu0eR5quFFrOaDa9Gf1wtqp7cgmsiuJHHZSk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 361/542] gpiolib: Set lockdep class for hierarchical irq domains
-Date:   Fri, 14 Feb 2020 10:45:53 -0500
-Message-Id: <20200214154854.6746-361-sashal@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 005/100] pinctrl: sh-pfc: sh7264: Fix CAN function GPIOs
+Date:   Fri, 14 Feb 2020 11:22:49 -0500
+Message-Id: <20200214162425.21071-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -48,118 +43,92 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit c34f6dc8c9e6bbe9fba1d53acd6d9a3889599da3 ]
+[ Upstream commit 55b1cb1f03ad5eea39897d0c74035e02deddcff2 ]
 
-I see the following lockdep splat in the qcom pinctrl driver when
-attempting to suspend the device.
+pinmux_func_gpios[] contains a hole due to the missing function GPIO
+definition for the "CTX0&CTX1" signal, which is the logical "AND" of the
+two CAN outputs.
 
- ============================================
- WARNING: possible recursive locking detected
- 5.4.2 #2 Tainted: G S
- --------------------------------------------
- cat/6536 is trying to acquire lock:
- ffffff814787ccc0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+Fix this by:
+  - Renaming CRX0_CRX1_MARK to CTX0_CTX1_MARK, as PJ2MD[2:0]=010
+    configures the combined "CTX0&CTX1" output signal,
+  - Renaming CRX0X1_MARK to CRX0_CRX1_MARK, as PJ3MD[1:0]=10 configures
+    the shared "CRX0/CRX1" input signal, which is fed to both CAN
+    inputs,
+  - Adding the missing function GPIO definition for "CTX0&CTX1" to
+    pinmux_func_gpios[],
+  - Moving all CAN enums next to each other.
 
- but task is already holding lock:
- ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+See SH7262 Group, SH7264 Group User's Manual: Hardware, Rev. 4.00:
+  [1] Figure 1.2 (3) (Pin Assignment for the SH7264 Group (1-Mbyte
+      Version),
+  [2] Figure 1.2 (4) Pin Assignment for the SH7264 Group (640-Kbyte
+      Version,
+  [3] Table 1.4 List of Pins,
+  [4] Figure 20.29 Connection Example when Using This Module as 1-Channel
+      Module (64 Mailboxes x 1 Channel),
+  [5] Table 32.10 Multiplexed Pins (Port J),
+  [6] Section 32.2.30 (3) Port J Control Register 0 (PJCR0).
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+Note that the last 2 disagree about PJ2MD[2:0], which is probably the
+root cause of this bug.  But considering [4], "CTx0&CTx1" in [5] must
+be correct, and "CRx0&CRx1" in [6] must be wrong.
 
-        CPU0
-        ----
-   lock(&irq_desc_lock_class);
-   lock(&irq_desc_lock_class);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
- 7 locks held by cat/6536:
-  #0: ffffff8140e0c420 (sb_writers#7){.+.+}, at: vfs_write+0xc8/0x19c
-  #1: ffffff8121eec480 (&of->mutex){+.+.}, at: kernfs_fop_write+0x128/0x1f4
-  #2: ffffff8147cad668 (kn->count#263){.+.+}, at: kernfs_fop_write+0x130/0x1f4
-  #3: ffffffd011446000 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x354
-  #4: ffffff814302b970 (&dev->mutex){....}, at: __device_suspend+0x16c/0x420
-  #5: ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-  #6: ffffff81479b8c10 (&pctrl->lock){....}, at: msm_gpio_irq_set_wake+0x48/0x7c
-
- stack backtrace:
- CPU: 4 PID: 6536 Comm: cat Tainted: G S                5.4.2 #2
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  __lock_acquire+0x52c/0x2268
-  lock_acquire+0x1dc/0x220
-  _raw_spin_lock_irqsave+0x64/0x80
-  __irq_get_desc_lock+0x64/0x94
-  irq_set_irq_wake+0x40/0x144
-  msm_gpio_irq_set_wake+0x5c/0x7c
-  set_irq_wake_real+0x40/0x5c
-  irq_set_irq_wake+0x70/0x144
-  cros_ec_rtc_suspend+0x38/0x4c
-  platform_pm_suspend+0x34/0x60
-  dpm_run_callback+0x64/0xcc
-  __device_suspend+0x314/0x420
-  dpm_suspend+0xf8/0x298
-  dpm_suspend_start+0x84/0xb4
-  suspend_devices_and_enter+0xbc/0x628
-  pm_suspend+0x214/0x354
-  state_store+0xb0/0x108
-  kobj_attr_store+0x14/0x24
-  sysfs_kf_write+0x4c/0x64
-  kernfs_fop_write+0x158/0x1f4
-  __vfs_write+0x54/0x18c
-  vfs_write+0xdc/0x19c
-  ksys_write+0x7c/0xe4
-  __arm64_sys_write+0x20/0x2c
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
-
-This is because the msm_gpio_irq_set_wake() function calls
-irq_set_irq_wake() as a backup in case the irq comes in during the path
-to idle. Given that we're calling irqchip functions from within an
-irqchip we need to set the lockdep class to be different for this child
-controller vs. the default one that the parent irqchip gets.
-
-This used to be done before this driver was converted to hierarchical
-irq domains in commit e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in
-hierarchy") via the gpiochip_irq_map() function. With hierarchical irq
-domains this function has been replaced by
-gpiochip_hierarchy_irq_domain_alloc(). Therefore, set the lockdep class
-like was done previously in the irq domain path so we can avoid this
-lockdep warning.
-
-Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/20200114231103.85641-1-swboyd@chromium.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191218194812.12741-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/sh-pfc/pfc-sh7264.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 78a16e42f222e..0bfb4f9083993 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2053,6 +2053,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
- 				     parent_type);
- 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
- 		  irq, parent_hwirq);
-+	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
- 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
- 	if (ret)
- 		chip_err(gc,
+diff --git a/drivers/pinctrl/sh-pfc/pfc-sh7264.c b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+index e1c34e19222ee..3ddb9565ed804 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-sh7264.c
++++ b/drivers/pinctrl/sh-pfc/pfc-sh7264.c
+@@ -500,17 +500,15 @@ enum {
+ 	SD_WP_MARK, SD_CLK_MARK, SD_CMD_MARK,
+ 	CRX0_MARK, CRX1_MARK,
+ 	CTX0_MARK, CTX1_MARK,
++	CRX0_CRX1_MARK, CTX0_CTX1_MARK,
+ 
+ 	PWM1A_MARK, PWM1B_MARK, PWM1C_MARK, PWM1D_MARK,
+ 	PWM1E_MARK, PWM1F_MARK, PWM1G_MARK, PWM1H_MARK,
+ 	PWM2A_MARK, PWM2B_MARK, PWM2C_MARK, PWM2D_MARK,
+ 	PWM2E_MARK, PWM2F_MARK, PWM2G_MARK, PWM2H_MARK,
+ 	IERXD_MARK, IETXD_MARK,
+-	CRX0_CRX1_MARK,
+ 	WDTOVF_MARK,
+ 
+-	CRX0X1_MARK,
+-
+ 	/* DMAC */
+ 	TEND0_MARK, DACK0_MARK, DREQ0_MARK,
+ 	TEND1_MARK, DACK1_MARK, DREQ1_MARK,
+@@ -998,12 +996,12 @@ static const u16 pinmux_data[] = {
+ 
+ 	PINMUX_DATA(PJ3_DATA, PJ3MD_00),
+ 	PINMUX_DATA(CRX1_MARK, PJ3MD_01),
+-	PINMUX_DATA(CRX0X1_MARK, PJ3MD_10),
++	PINMUX_DATA(CRX0_CRX1_MARK, PJ3MD_10),
+ 	PINMUX_DATA(IRQ1_PJ_MARK, PJ3MD_11),
+ 
+ 	PINMUX_DATA(PJ2_DATA, PJ2MD_000),
+ 	PINMUX_DATA(CTX1_MARK, PJ2MD_001),
+-	PINMUX_DATA(CRX0_CRX1_MARK, PJ2MD_010),
++	PINMUX_DATA(CTX0_CTX1_MARK, PJ2MD_010),
+ 	PINMUX_DATA(CS2_MARK, PJ2MD_011),
+ 	PINMUX_DATA(SCK0_MARK, PJ2MD_100),
+ 	PINMUX_DATA(LCD_M_DISP_MARK, PJ2MD_101),
+@@ -1248,6 +1246,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
+ 	GPIO_FN(CTX1),
+ 	GPIO_FN(CRX1),
+ 	GPIO_FN(CTX0),
++	GPIO_FN(CTX0_CTX1),
+ 	GPIO_FN(CRX0),
+ 	GPIO_FN(CRX0_CRX1),
+ 
 -- 
 2.20.1
 
