@@ -2,40 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E6D3515EC53
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 18:27:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB32C15EC28
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Feb 2020 18:26:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390071AbgBNR0g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 12:26:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        id S2391118AbgBNRY6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Feb 2020 12:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390996AbgBNQIe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:08:34 -0500
+        id S2391111AbgBNQI4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:08:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88F0E22314;
-        Fri, 14 Feb 2020 16:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C55424650;
+        Fri, 14 Feb 2020 16:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581696513;
-        bh=phf4HqE68XCKbFg1reAJJO/6GEjapnOI+S3Dadwzkvs=;
+        s=default; t=1581696536;
+        bh=mYIjXR2TDwDD7rXhlHDJq22WjdivDPfHAdeOikRsJ7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oSMNuxaOxVB9DmaWPCVNlo3ObBiz+thhPonAFOQQFXutV71+glrTuFpg9aYUIKxuy
-         0q7jsgtmXb7KV/zXTauIZ8idqgOBxK73QNlYm/TNDHKhf6NpQhA3tNgBh0bowwar3O
-         TbfdRD2MOfPZXw8jrr/K0NB6mvnCLTcuQC3Cbwd4=
+        b=B6X4kNXK6U+e2eWB2DzUgXkCheFS80Tjt2YssGl5K1r1vz/UWjNPUyVzV0o+KouZW
+         ECrM0cSk6pwkL1e7b5VT2NBRUt/9ciV4+C7zHSjdO4xx/K/tl8ne6D5Og2gvUlkQOB
+         7P37+V0Q0MBDr+v3hWEI4/ZzsZ4T1wWIXw//prf8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
+Cc:     Kevin Hao <haokexin@gmail.com>, kbuild test robot <lkp@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 315/459] gpiolib: Set lockdep class for hierarchical irq domains
-Date:   Fri, 14 Feb 2020 10:59:25 -0500
-Message-Id: <20200214160149.11681-315-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 332/459] gpio: Fix the no return statement warning
+Date:   Fri, 14 Feb 2020 10:59:42 -0500
+Message-Id: <20200214160149.11681-332-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
 References: <20200214160149.11681-1-sashal@kernel.org>
@@ -48,118 +43,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Kevin Hao <haokexin@gmail.com>
 
-[ Upstream commit c34f6dc8c9e6bbe9fba1d53acd6d9a3889599da3 ]
+[ Upstream commit 9c6722d85e92233082da2b3623685bba54d6093e ]
 
-I see the following lockdep splat in the qcom pinctrl driver when
-attempting to suspend the device.
+In commit 242587616710 ("gpiolib: Add support for the irqdomain which
+doesn't use irq_fwspec as arg") we have changed the return type of
+gpiochip_populate_parent_fwspec_twocell/fourcell() from void to void *,
+but forgot to add a return statement for these two dummy functions.
+Add "return NULL" to fix the build warnings.
 
- ============================================
- WARNING: possible recursive locking detected
- 5.4.2 #2 Tainted: G S
- --------------------------------------------
- cat/6536 is trying to acquire lock:
- ffffff814787ccc0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-
- but task is already holding lock:
- ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-
- other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(&irq_desc_lock_class);
-   lock(&irq_desc_lock_class);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
- 7 locks held by cat/6536:
-  #0: ffffff8140e0c420 (sb_writers#7){.+.+}, at: vfs_write+0xc8/0x19c
-  #1: ffffff8121eec480 (&of->mutex){+.+.}, at: kernfs_fop_write+0x128/0x1f4
-  #2: ffffff8147cad668 (kn->count#263){.+.+}, at: kernfs_fop_write+0x130/0x1f4
-  #3: ffffffd011446000 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x354
-  #4: ffffff814302b970 (&dev->mutex){....}, at: __device_suspend+0x16c/0x420
-  #5: ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-  #6: ffffff81479b8c10 (&pctrl->lock){....}, at: msm_gpio_irq_set_wake+0x48/0x7c
-
- stack backtrace:
- CPU: 4 PID: 6536 Comm: cat Tainted: G S                5.4.2 #2
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  __lock_acquire+0x52c/0x2268
-  lock_acquire+0x1dc/0x220
-  _raw_spin_lock_irqsave+0x64/0x80
-  __irq_get_desc_lock+0x64/0x94
-  irq_set_irq_wake+0x40/0x144
-  msm_gpio_irq_set_wake+0x5c/0x7c
-  set_irq_wake_real+0x40/0x5c
-  irq_set_irq_wake+0x70/0x144
-  cros_ec_rtc_suspend+0x38/0x4c
-  platform_pm_suspend+0x34/0x60
-  dpm_run_callback+0x64/0xcc
-  __device_suspend+0x314/0x420
-  dpm_suspend+0xf8/0x298
-  dpm_suspend_start+0x84/0xb4
-  suspend_devices_and_enter+0xbc/0x628
-  pm_suspend+0x214/0x354
-  state_store+0xb0/0x108
-  kobj_attr_store+0x14/0x24
-  sysfs_kf_write+0x4c/0x64
-  kernfs_fop_write+0x158/0x1f4
-  __vfs_write+0x54/0x18c
-  vfs_write+0xdc/0x19c
-  ksys_write+0x7c/0xe4
-  __arm64_sys_write+0x20/0x2c
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
-
-This is because the msm_gpio_irq_set_wake() function calls
-irq_set_irq_wake() as a backup in case the irq comes in during the path
-to idle. Given that we're calling irqchip functions from within an
-irqchip we need to set the lockdep class to be different for this child
-controller vs. the default one that the parent irqchip gets.
-
-This used to be done before this driver was converted to hierarchical
-irq domains in commit e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in
-hierarchy") via the gpiochip_irq_map() function. With hierarchical irq
-domains this function has been replaced by
-gpiochip_hierarchy_irq_domain_alloc(). Therefore, set the lockdep class
-like was done previously in the irq domain path so we can avoid this
-lockdep warning.
-
-Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/20200114231103.85641-1-swboyd@chromium.org
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Link: https://lore.kernel.org/r/20200116095003.30324-1-haokexin@gmail.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/gpio/driver.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 2476306e7030e..4ab855df9048d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1924,6 +1924,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
- 				     parent_type);
- 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
- 		  irq, parent_hwirq);
-+	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
- 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
- 	if (ret)
- 		chip_err(gc,
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 5dd9c982e2cbe..d7dc2b425532e 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -545,6 +545,7 @@ static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chi
+ 						    unsigned int parent_hwirq,
+ 						    unsigned int parent_type)
+ {
++	return NULL;
+ }
+ 
+ static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *chip,
+@@ -552,6 +553,7 @@ static inline void gpiochip_populate_parent_fwspec_fourcell(struct gpio_chip *ch
+ 						     unsigned int parent_hwirq,
+ 						     unsigned int parent_type)
+ {
++	return NULL;
+ }
+ 
+ #endif /* CONFIG_IRQ_DOMAIN_HIERARCHY */
 -- 
 2.20.1
 
