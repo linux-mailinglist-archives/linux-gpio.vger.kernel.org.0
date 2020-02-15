@@ -2,107 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E58D15FC5E
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2020 03:37:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2D8915FCF0
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2020 06:36:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBOChW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Feb 2020 21:37:22 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:41108 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbgBOChV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Feb 2020 21:37:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581734239; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=p/ZgtT/EWlP8S07DoLu7mgPjnXJL5osG0o5D3ejyABU=;
-        b=iBnVhq6gFJF8sUysJqkAJION1gVPdQ5OzAGA5DCV0p7Z1f9lCftPfVMxqbojBwKthWRJhQ
-        NpnUx+YgKfRstx0V4B93oWoUxHRIQsd2ZSaCUlSmTcyhLnKrvSsVbDO93EMQ/dmEpoAdUI
-        daa4bk730Fs4eKlY0kp9gN7DKsi7TaA=
-Date:   Fri, 14 Feb 2020 23:37:04 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Message-Id: <1581734224.3.14@crapouillou.net>
-In-Reply-To: <20200214203738.af3y4gskukctvvum@treble>
-References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
-        <1581706938.3.5@crapouillou.net> <20200214203738.af3y4gskukctvvum@treble>
+        id S1725822AbgBOFgM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Feb 2020 00:36:12 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43544 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgBOFgM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Feb 2020 00:36:12 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so5757380pgb.10
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Feb 2020 21:36:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=umSLSqFdcTUcW15IlOni/Tuec1i7imfq7Q7J9RYYX4g=;
+        b=cIxrqNRp65WCtK+fiYn9g3PVPZKXWCeUB0uFKNIzbK215QX3Al36Ke7lSPKliczQPG
+         zRn7Bi6DqLKPjlqWNiNyIv1hfnOjroG9dJAo7zBVoxdcOscAu96nnIAHZ0M1KbXjm0Sl
+         ZR04ZlFB/h9Rx1G6+2XpmHZ6qc00E2hKTf9RBjGMhvM/S7iYiuAY2TTttm/rFAuLs3bq
+         Tl4EPCrQfsVTe0Oz0o9vN+XxWzhv+LiQ+CYz/xTgBuLMVClebtR7iuNxNAyHBtWlm0Wp
+         bHYgpgS19tzczImghBSGzs7yS4YbFHy+7+42F6gNr1Xyalax7P6gX0gNY6JBKTkCYKiJ
+         SqhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=umSLSqFdcTUcW15IlOni/Tuec1i7imfq7Q7J9RYYX4g=;
+        b=mChUr/ZalbDhgQpTeVD1e1Co6cIPk7eXCJ/Or/3FZAx6dErvo2qjCX3le8iZ1u9l+1
+         ikiw1JB1Grg9DPutkQS0NJhPSlvzF3w6XLqBFegJtlddZOCTPpO3rxpGbpovxFJiYVYD
+         XBu7iWUhrXWThYrB7bJlXQ48OYHxVq/irGUBtZM7DgTY/MC2fS/udQVcGx0rj8Y4qDbg
+         RVp3sKJonKp5Qj2E0HdRkmv9gj3xIkY4yz7bJjouto3+UivJQ5B1EMbWplPLbpV4XSHs
+         Ds8ccIfcA0YuiSxPMgRNwagefcP2rsARJEux2I0VqU7Z83qp/HwOtk0pA4iRHFHUGyHX
+         IlrQ==
+X-Gm-Message-State: APjAAAWKlBHxBXOOuYjcgymoqKXgI3uhh5bpaV0/j8oqTRvuSWMgjtZt
+        QTjxXgRqQDbYraWOJrwhjHlnUA==
+X-Google-Smtp-Source: APXvYqzk4mzSWnD3eisseNOAoKEFSWYJ3iXu/MnMV3x1ieUnd9jyOy7C/UGmCSr9X/1fRkBJKg6m3w==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr6945184pfc.113.1581744969478;
+        Fri, 14 Feb 2020 21:36:09 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q12sm8411743pfh.158.2020.02.14.21.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 21:36:08 -0800 (PST)
+Date:   Fri, 14 Feb 2020 21:35:17 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
+        linux-rockchip@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: Use new GPIO_LINE_DIRECTION
+Message-ID: <20200215053517.GN955802@ripper>
+References: <20191112141819.GA22076@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112141819.GA22076@localhost.localdomain>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue 12 Nov 06:18 PST 2019, Matti Vaittinen wrote:
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 763da0be10d6..8844ca1261d5 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -485,8 +485,8 @@ static int msm_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+>  
+>  	val = msm_readl_ctl(pctrl, g);
+>  
+> -	/* 0 = output, 1 = input */
+> -	return val & BIT(g->oe_bit) ? 0 : 1;
+> +	return val & BIT(g->oe_bit) ? GPIO_LINE_DIRECTION_OUT :
+> +				      GPIO_LINE_DIRECTION_IN;
 
+For pinctrl-msm:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Le ven., f=E9vr. 14, 2020 at 14:37, Josh Poimboeuf <jpoimboe@redhat.com>=20
-a =E9crit :
-> On Fri, Feb 14, 2020 at 04:02:18PM -0300, Paul Cercueil wrote:
->>  Hi Josh,
->>=20
->>=20
->>  Le ven., f=E9vr. 14, 2020 at 10:37, Josh Poimboeuf=20
->> <jpoimboe@redhat.com> a
->>  =E9crit :
->>  > In the second loop of ingenic_pinconf_set(), it annotates the=20
->> switch
->>  > default case as unreachable().  The annotation is technically=20
->> correct,
->>  > because that same case would have resulted in an early return in=20
->> the
->>  > previous loop.
->>  >
->>  > However, if a bug were to get introduced later, for example if an
->>  > additional case were added to the first loop without adjusting the
->>  > second loop, it would result in nasty undefined behavior: most=20
->> likely
->>  > the function's generated code would fall through to the next=20
->> function.
->>  >
->>  > Another issue is that, while objtool normally understands=20
->> unreachable()
->>  > annotations, there's one special case where it doesn't: when the
->>  > annotation occurs immediately after a 'ret' instruction.  That=20
->> happens
->>  > to be the case here because unreachable() is immediately before=20
->> the
->>  > return.
->>  >
->>  > So change the unreachable() to BUG() so that the unreachable=20
->> code, if
->>  > ever executed, would panic instead of introducing undefined=20
->> behavior.
->>  > This also makes objtool happy.
->>=20
->>  I don't like the idea that you change this driver's code just to=20
->> work around
->>  a bug in objtool, and I don't like the idea of working around a=20
->> future bug
->>  that shouldn't be introduced in the first place.
->=20
-> It's not an objtool bug.  It's a byproduct of the fact that GCC's
-> undefined behavior is inscrutable, and there's no way to determine=20
-> that
-> it actually *wants* to jump to a random function.
->=20
-> And anyway, regardless of objtool, the patch is meant to make the code
-> more robust.
->=20
-> Do you not agree that BUG (defined behavior) is more robust than
-> unreachable (undefined behavior)?
+>  }
 
-It's a dead code path. That would be an undefined behaviour, if it was=20
-taken, but it's not.
-
--Paul
-
-=
-
+Regards,
+Bjorn
