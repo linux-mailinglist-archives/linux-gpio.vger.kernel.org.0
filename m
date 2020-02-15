@@ -2,136 +2,281 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 11FE215FE16
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2020 12:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D59115FF7A
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Feb 2020 18:19:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgBOLLf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Feb 2020 06:11:35 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:36402 "EHLO gloria.sntech.de"
+        id S1726318AbgBORTP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Feb 2020 12:19:15 -0500
+Received: from mga07.intel.com ([134.134.136.100]:25774 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgBOLLe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 15 Feb 2020 06:11:34 -0500
-Received: from p508fda41.dip0.t-ipconnect.de ([80.143.218.65] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1j2vM0-0006YX-5X; Sat, 15 Feb 2020 12:11:20 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linus.walleij@linaro.org, david.wu@rock-chips.com,
-        kever.yang@rock-chips.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] pinctrl: rockchip: split rockchip pinctrl driver by SoC type
-Date:   Sat, 15 Feb 2020 12:11:19 +0100
-Message-ID: <6201612.znBgJCgWHB@phil>
-In-Reply-To: <20200117081358.5772-3-jay.xu@rock-chips.com>
-References: <c4ec95a7-aaf1-2331-352f-2def319a1c7d@rock-chips.com> <20200117081358.5772-1-jay.xu@rock-chips.com> <20200117081358.5772-3-jay.xu@rock-chips.com>
+        id S1726273AbgBORTP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 15 Feb 2020 12:19:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Feb 2020 09:19:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,445,1574150400"; 
+   d="scan'208";a="435128245"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Feb 2020 09:19:13 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j3160-000CoI-EX; Sun, 16 Feb 2020 01:19:12 +0800
+Date:   Sun, 16 Feb 2020 01:19:06 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ b2929a9cb2fbfedf30c66033a865c8135a7c2184
+Message-ID: <5e48280a.BLPu/QxD4xuSagkX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jay,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: b2929a9cb2fbfedf30c66033a865c8135a7c2184  Merge tag 'gpio-updates-for-v5.7-part1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
 
-Am Freitag, 17. Januar 2020, 09:13:58 CET schrieb Jianqun Xu:
-> The pinctrl-rockchip driver grows larger by adding support for
-> each new SoC, that make the kernel Image size too large since
-> it only under one config named PINCTRL_ROCKCHIP.
-> 
-> This patch split driver in the form of core driver + soc driver,
-> - pinctrl-rockchip.c defined an platform probe register function
-> - pinctrl-rkxxxx.c init module by matching compatible name
-> 
-> For rockchip_defconfig, it needs to select all PINCTRL_RKxxxx to
-> keep same with old driver.
-> 
-> For some special defconfig, it can only select one PINCTRL_RKxxxx.
-> 
-> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
-> changes since v3:
-> - add base patch with directory change only, suggested by Robin
-> - rebase patch
-> 
-> changes since v2:
-> - remove rockchip_pinctrl_remove
-> - rename rockchip_pinctrl_* to rockchip_pctrl_*
-> - redule arguments for get_soc_data
-> - add module author for each new driver files
-> - add copyright for new driver files
-> 
-> changes since v1:
-> - add rockchip_pinctrl_remove
-> - remove unused head files in pinctrl-rockchip.h
-> 
->  drivers/pinctrl/rockchip/Kconfig            |  114 +
->  drivers/pinctrl/rockchip/Makefile           |   14 +
->  drivers/pinctrl/rockchip/pinctrl-px30.c     |  224 ++
->  drivers/pinctrl/rockchip/pinctrl-rk2928.c   |   70 +
->  drivers/pinctrl/rockchip/pinctrl-rk3036.c   |   69 +
->  drivers/pinctrl/rockchip/pinctrl-rk3066a.c  |   72 +
->  drivers/pinctrl/rockchip/pinctrl-rk3066b.c  |   51 +
->  drivers/pinctrl/rockchip/pinctrl-rk3128.c   |  161 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3188.c   |  147 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3228.c   |  225 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3288.c   |  210 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3308.c   |  420 +++
->  drivers/pinctrl/rockchip/pinctrl-rk3328.c   |  272 ++
->  drivers/pinctrl/rockchip/pinctrl-rk3368.c   |  125 +
->  drivers/pinctrl/rockchip/pinctrl-rk3399.c   |  195 ++
->  drivers/pinctrl/rockchip/pinctrl-rockchip.c | 2547 ++-----------------
->  drivers/pinctrl/rockchip/pinctrl-rockchip.h |  388 +++
->  drivers/pinctrl/rockchip/pinctrl-rv1108.c   |  214 ++
->  18 files changed, 3149 insertions(+), 2369 deletions(-)
+elapsed time: 2883m
 
-What Robin suggested, was doing this incrementally. So keep your patch1
-but then do
-- patch2: split out px30-pinctrl
-- patch3: split out rk3288 pinctrl
-- etc
+configs tested: 226
+configs skipped: 0
 
-Because even my mail client chokes on this massive 6000 line patch, so a
-real review is actually very difficult.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+sparc                            allyesconfig
+nds32                               defconfig
+powerpc                           allnoconfig
+alpha                               defconfig
+csky                                defconfig
+arc                              allyesconfig
+m68k                           sun3_defconfig
+sparc64                           allnoconfig
+m68k                       m5475evb_defconfig
+microblaze                      mmu_defconfig
+s390                                defconfig
+parisc                           allyesconfig
+riscv                             allnoconfig
+mips                              allnoconfig
+nds32                             allnoconfig
+s390                             alldefconfig
+powerpc                             defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+sh                  sh7785lcr_32bit_defconfig
+ia64                             alldefconfig
+openrisc                    or1ksim_defconfig
+ia64                             allyesconfig
+riscv                            allyesconfig
+riscv                               defconfig
+s390                             allmodconfig
+s390                              allnoconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+microblaze                    nommu_defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a003-20200214
+i386                 randconfig-a001-20200214
+x86_64               randconfig-a003-20200214
+x86_64               randconfig-a002-20200214
+x86_64               randconfig-a001-20200214
+i386                 randconfig-a002-20200214
+x86_64               randconfig-a001-20200215
+x86_64               randconfig-a002-20200215
+x86_64               randconfig-a003-20200215
+i386                 randconfig-a001-20200215
+i386                 randconfig-a002-20200215
+i386                 randconfig-a003-20200215
+alpha                randconfig-a001-20200214
+m68k                 randconfig-a001-20200214
+mips                 randconfig-a001-20200214
+nds32                randconfig-a001-20200214
+parisc               randconfig-a001-20200214
+c6x                  randconfig-a001-20200215
+h8300                randconfig-a001-20200215
+microblaze           randconfig-a001-20200215
+nios2                randconfig-a001-20200215
+sparc64              randconfig-a001-20200215
+c6x                  randconfig-a001-20200213
+h8300                randconfig-a001-20200213
+microblaze           randconfig-a001-20200213
+nios2                randconfig-a001-20200213
+sparc64              randconfig-a001-20200213
+c6x                  randconfig-a001-20200214
+h8300                randconfig-a001-20200214
+microblaze           randconfig-a001-20200214
+nios2                randconfig-a001-20200214
+sparc64              randconfig-a001-20200214
+csky                 randconfig-a001-20200214
+openrisc             randconfig-a001-20200214
+s390                 randconfig-a001-20200214
+sh                   randconfig-a001-20200214
+xtensa               randconfig-a001-20200214
+csky                 randconfig-a001-20200215
+openrisc             randconfig-a001-20200215
+s390                 randconfig-a001-20200215
+sh                   randconfig-a001-20200215
+xtensa               randconfig-a001-20200215
+x86_64               randconfig-b001-20200213
+x86_64               randconfig-b002-20200213
+x86_64               randconfig-b003-20200213
+i386                 randconfig-b001-20200213
+i386                 randconfig-b002-20200213
+i386                 randconfig-b003-20200213
+x86_64               randconfig-b001-20200214
+x86_64               randconfig-b002-20200214
+x86_64               randconfig-b003-20200214
+i386                 randconfig-b001-20200214
+i386                 randconfig-b002-20200214
+i386                 randconfig-b003-20200214
+x86_64               randconfig-c001-20200214
+x86_64               randconfig-c002-20200214
+x86_64               randconfig-c003-20200214
+i386                 randconfig-c001-20200214
+i386                 randconfig-c002-20200214
+i386                 randconfig-c003-20200214
+x86_64               randconfig-d001-20200213
+x86_64               randconfig-d002-20200213
+x86_64               randconfig-d003-20200213
+i386                 randconfig-d001-20200213
+i386                 randconfig-d002-20200213
+i386                 randconfig-d003-20200213
+x86_64               randconfig-d001-20200214
+x86_64               randconfig-d002-20200214
+x86_64               randconfig-d003-20200214
+i386                 randconfig-d001-20200214
+i386                 randconfig-d002-20200214
+i386                 randconfig-d003-20200214
+i386                 randconfig-e001-20200213
+i386                 randconfig-e003-20200213
+x86_64               randconfig-e001-20200213
+x86_64               randconfig-e002-20200213
+i386                 randconfig-e002-20200213
+x86_64               randconfig-e003-20200213
+x86_64               randconfig-e001-20200214
+x86_64               randconfig-e002-20200214
+x86_64               randconfig-e003-20200214
+i386                 randconfig-e001-20200214
+i386                 randconfig-e002-20200214
+i386                 randconfig-e003-20200214
+x86_64               randconfig-f001-20200214
+x86_64               randconfig-f002-20200214
+x86_64               randconfig-f003-20200214
+i386                 randconfig-f001-20200214
+i386                 randconfig-f002-20200214
+i386                 randconfig-f003-20200214
+x86_64               randconfig-g001-20200214
+x86_64               randconfig-g002-20200214
+x86_64               randconfig-g003-20200214
+i386                 randconfig-g001-20200214
+i386                 randconfig-g002-20200214
+i386                 randconfig-g003-20200214
+i386                 randconfig-g001-20200213
+i386                 randconfig-g002-20200213
+x86_64               randconfig-g003-20200213
+x86_64               randconfig-g001-20200213
+i386                 randconfig-g003-20200213
+x86_64               randconfig-g002-20200213
+x86_64               randconfig-g001-20200215
+x86_64               randconfig-g002-20200215
+x86_64               randconfig-g003-20200215
+i386                 randconfig-g001-20200215
+i386                 randconfig-g002-20200215
+i386                 randconfig-g003-20200215
+x86_64               randconfig-h001-20200214
+x86_64               randconfig-h002-20200214
+x86_64               randconfig-h003-20200214
+i386                 randconfig-h001-20200214
+i386                 randconfig-h002-20200214
+i386                 randconfig-h003-20200214
+x86_64               randconfig-h001-20200213
+x86_64               randconfig-h002-20200213
+x86_64               randconfig-h003-20200213
+i386                 randconfig-h001-20200213
+i386                 randconfig-h002-20200213
+i386                 randconfig-h003-20200213
+arc                  randconfig-a001-20200215
+arm                  randconfig-a001-20200215
+arm64                randconfig-a001-20200215
+ia64                 randconfig-a001-20200215
+powerpc              randconfig-a001-20200215
+sparc                randconfig-a001-20200215
+arc                  randconfig-a001-20200214
+arm                  randconfig-a001-20200214
+arm64                randconfig-a001-20200214
+ia64                 randconfig-a001-20200214
+powerpc              randconfig-a001-20200214
+sparc                randconfig-a001-20200214
+riscv                            allmodconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-> diff --git a/drivers/pinctrl/rockchip/Kconfig b/drivers/pinctrl/rockchip/Kconfig
-> index 7a0077ca32dd..4873a05108f8 100644
-> --- a/drivers/pinctrl/rockchip/Kconfig
-> +++ b/drivers/pinctrl/rockchip/Kconfig
-> @@ -5,8 +5,122 @@ if (ARCH_ROCKCHIP || COMPILE_TEST)
->  config PINCTRL_ROCKCHIP
->  	bool
->  	select PINMUX
-> +	select PINCONF
->  	select GENERIC_PINCONF
-> +	select GPIOLIB_IRQCHIP
->  	select GENERIC_IRQ_CHIP
->  	select MFD_SYSCON
->  
-> +config PINCTRL_PX30
-> +	tristate "PX30 pin controller driver"
-> +	depends on GPIOLIB && OF
-> +	select PINCTRL_ROCKCHIP
-
-you might want to add a
-	default y if ARM64
-here
-(similar default y if ARM for arm32 pinctrl drivers)
-
-Because otherwise you're breaking peoples kernel configs and also
-the default is to build a somewhat unified kernel in the default defconfigs,
-so we want all matching pinctrl drivers by default and people then can
-disable drivers if they really want to build a slimmed down kernel.
-
-With the "if ARM" / "if ARM64" parts you even save some space by
-default as well, as you build only the relevant drivers.
-
-
-Heiko
-
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
