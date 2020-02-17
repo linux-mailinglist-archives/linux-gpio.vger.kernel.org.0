@@ -2,99 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28690161BFC
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2020 20:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B922161C09
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2020 20:57:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgBQTys (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Feb 2020 14:54:48 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32847 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729717AbgBQTys (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Feb 2020 14:54:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id u6so21269671wrt.0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2020 11:54:47 -0800 (PST)
+        id S1727332AbgBQT5I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Feb 2020 14:57:08 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39321 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729697AbgBQT5H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Feb 2020 14:57:07 -0500
+Received: by mail-io1-f65.google.com with SMTP id c16so19721538ioh.6
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Feb 2020 11:57:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nG7/CsSYEjJAJuvHDKY3X2jyLTeRabTAHO5K7wLe+ss=;
-        b=Wp87GGdFrmFk3U/BZkSkkgGt/sjUYCkspxOgsVivKDbqdAWSJuc3rEaXm43AIwdpUh
-         93/5GDxj8IWKuwTuMovC/U8+voqHbS69hKMSu8CWLA0CSi6JoeNJ2YECnBskVhYxIcuY
-         ZKQHYTBWYwuoGihOTyTMlODqMi6EPmIWLgE4JHAosyiowDpZhg5NH6f/vkb65poh/z9u
-         hKL5WylgKaKh07RqdR6+KOAHoEG4fqK7qxMzODPuA8luvcm/YUTmbNdv4/lIs1SHGUB8
-         xYuDDXwvN5DxbizuG5kcpyNG3m0ZKrI8wgnhhnhK+rvLpiUfoDOzVYsR4InsqRGAFxNU
-         sZyQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TkZflMcROFsesKUNZV7osOthh1cZ+d/gpsuqXa9C5l8=;
+        b=IomMbbbRUB6peFoBopVRcXZLp+v3pwqHiFwJ+zz3CgTCHpx/ai31KvJpxUqNFwEDFA
+         bnw2mKddqNteZD0xJFZhKEhKqOUEI8hZ/f5A1qNkzC4McjYBmk4xSXsiafGysyUT1uz7
+         4Zoy9khoSb8MKmU8VUUQUvpBwTn8voe//r0Lnt/GCwfaaqGQeQh5N15h24UyKQ9ThfKL
+         nAyJa3Vlu/E10SAXcfE4FLVgij+VgoHwNytOQM+DUDqiMw37E7wHDMHS0xonbidfmDAu
+         Me0t2Q6/lytOjYIvf5Q7gzefC/3D/szDoZh2yQvlXvLEL6R7pRLuQuXzN0kZDZG2KGiu
+         E7ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nG7/CsSYEjJAJuvHDKY3X2jyLTeRabTAHO5K7wLe+ss=;
-        b=LP7K1/6zI9PtmVBENER4xDKMyoWgUqDTtR1zO4ogdMNSDAXQvZzwRwsh5es9oXERe/
-         3paQtg+QZxTBjmkghzxm3GlDw6LAlGnFN+I8BsPQCFqEyOjG/qkrkLakElCgKynv+a2t
-         MlnTQKXmJe99ux0Dmt2OgFDxihr+ArpXXauWyGcK6bFakPhb2vwuFJhgY+BdHNKMMu6y
-         wd3RD8zWf4HPqirILQZ7zsHjJZRPjAV4vdrDqvzIW99jF205zPJuf2aWtbr0t9JPL0su
-         QIyoosocU8lv28hmn46gJIDYiGZh8cQUsnqc9U8tZtPY3Z3cb1F71d3kZ5eBdXhDbX21
-         50Ew==
-X-Gm-Message-State: APjAAAWKkLwDR2Ht7Q+J+FhNsV0hA3Gx80QL1pIlVIt2KNyrkGIdxchC
-        ybNyfuZ/3h8rNCEZYzDTDOscr4ssM+I=
-X-Google-Smtp-Source: APXvYqyDRdQYeKWizyeEAiB+mDqqQRWrstWkrMThxrx53IRWtzydHMBCpPOCbtyEP6VXja+uLFHrtA==
-X-Received: by 2002:a5d:510f:: with SMTP id s15mr23606937wrt.408.1581969287003;
-        Mon, 17 Feb 2020 11:54:47 -0800 (PST)
-Received: from debian-brgl.local (8.165.185.81.rev.sfr.net. [81.185.165.8])
-        by smtp.gmail.com with ESMTPSA id v5sm2679469wrv.86.2020.02.17.11.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2020 11:54:46 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TkZflMcROFsesKUNZV7osOthh1cZ+d/gpsuqXa9C5l8=;
+        b=V9R3LGDjOLAu0fsL8S9HQmilQ7mTAroc7sffvlSoYOVu+mh2KAz9Jt1OnJB7fyUSgW
+         n5tA77o6zwum4DJIYNYEsPh2wvXPkIWObrs5mLWCsdGfpODU36YGMU1wRFJRE8yk0kRm
+         KWoQ+b2oq64GKCmnpCXXg4gDvwevPvlvssxOe/Y3m/fE/mR038jeAHOVII126+E5ERtz
+         zaoJGRVdCPv05fMDC+U0JBDY0Yh0YdxihYVDsJFCXj3p0QFh2vW0SkfMEP72WgCdLdCp
+         VEceXHQ+kXCE477/RQCNS+EEcp8PlqKrHFDsXyo1uAJgLQiICC2gKPbsmpOzDjc3N5RQ
+         xIqw==
+X-Gm-Message-State: APjAAAWWL/5T2dVU7yCmNr6sO5rMzL32f6XC3ycWqZUJvw6I57crC3Ms
+        QkE6ttZ65rdCKxgRlvxaWOB9yf0CcL0XDMwzCuoK6KiP
+X-Google-Smtp-Source: APXvYqyM5+ZjQIP+Frd5tM0WY4D/8hw6MGjHQa/KvLPV8uqeUFW+t2W0F8RWioJmZyZM3fbUApvoNSAkAqqp6HvNLv4=
+X-Received: by 2002:a05:6602:2352:: with SMTP id r18mr12638053iot.220.1581969425784;
+ Mon, 17 Feb 2020 11:57:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20200217195435.9309-1-brgl@bgdev.pl>
+In-Reply-To: <20200217195435.9309-1-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 17 Feb 2020 20:56:55 +0100
+Message-ID: <CAMRc=Md-gw5ViK7qhH2pZ8RWf-V_7TPgJ2rnb=v6AC5wcxLdog@mail.gmail.com>
+Subject: Re: [PATCH 0/6] nvmem/gpio: fix resource management
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 6/6] nvmem: increase the reference count of a gpio passed over config
-Date:   Mon, 17 Feb 2020 20:54:35 +0100
-Message-Id: <20200217195435.9309-7-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200217195435.9309-1-brgl@bgdev.pl>
-References: <20200217195435.9309-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+pon., 17 lut 2020 o 20:54 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
+a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This series addresses a couple problems with memory management in nvmem
+> core. We fix an earlier memory leak in error path in patch 2/6. Patches
+> 1/6, 5/6 & 6/6 add reference counting to gpio_desc structure and use it
+> to correctly free the write-protect GPIO. Patches 3/6 & 4/6 fix newline
+> problems.
+>
+> Bartosz Golaszewski (5):
+>   gpiolib: use kref in gpio_desc
+>   nvmem: fix memory leak in error path
+>   nvmem: remove a stray newline in nvmem_register()
+>   nvmem: add a newline for readability
+>   nvmem: increase the reference count of a gpio passed over config
+>
+> Khouloud Touil (1):
+>   nvmem: release the write-protect pin
+>
+>  drivers/gpio/gpiolib.c        | 26 +++++++++++++++++++++++---
+>  drivers/gpio/gpiolib.h        |  1 +
+>  drivers/nvmem/core.c          | 14 ++++++++++----
+>  include/linux/gpio/consumer.h |  1 +
+>  4 files changed, 35 insertions(+), 7 deletions(-)
+>
+> --
+> 2.25.0
+>
 
-We can obtain the write-protect GPIO in nvmem_register() by requesting
-it ourselves or by storing the gpio_desc passed in nvmem_config. In the
-latter case we need to increase the reference count so that it gets
-freed correctly.
+Cc'ing Geert - sorry I forgot you when submitting this.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/nvmem/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 096c7bae9e74..b7b1e3194453 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -349,11 +349,13 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 		return ERR_PTR(rval);
- 	}
- 
--	if (config->wp_gpio)
-+	if (config->wp_gpio) {
- 		nvmem->wp_gpio = config->wp_gpio;
--	else
-+		gpiod_ref(config->wp_gpio);
-+	} else {
- 		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
- 						    GPIOD_OUT_HIGH);
-+	}
- 	if (IS_ERR(nvmem->wp_gpio))
- 		goto err_ida_remove;
- 
--- 
-2.25.0
-
+Bartosz
