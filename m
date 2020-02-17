@@ -2,134 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D2CE16121A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2020 13:34:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2EC1615F3
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Feb 2020 16:18:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbgBQMdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Feb 2020 07:33:51 -0500
-Received: from mail-dm6nam10on2051.outbound.protection.outlook.com ([40.107.93.51]:29280
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727513AbgBQMdu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:33:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dkuy/dtHcrFSPBkrw3IeUOGdoi58iluiBDt+nR5DkW+P3mmeIq+TBwbgroWpwEJPjwuLxzF6ZG2RycmnDBHFKxbyM3ofQLiq0uYIHeZg3Is/WEIhbAjX7RYNhoKX/HLOQYoA88mXt/eDgX2UJgiQZPtVbEFY0zJax/mczzez6yPV5hhnJZqqmnXpnC5KZ/NwQrdWqDqERC4o32j3sNSH+jcse9+hCy8d+J2kNOED71/u+uzQhBo2qkVItOWrW8LHw7Fqan8/9rFkY2rL08vb/VHr+Dme76vfiMEQsdV38+1acR0PhbFpRQPZEw65Ac56d78cXdBFKZ57IqbHLs4uuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=LLZvhsMHkt7CRVNCjgNymqUjGVwKb5ppDGDAxUCNktoPwZ2NCtUZTHo8VEfs0Vp/DoruF6/wTsSjvP5Z20vG1Zu+kbLkDetFEvfZh1dexSpNNgMg6bV0uryw/Bt2R8oEm98ROVAdBRLe1dQrb1fuxTuDTDEY6LGq1ZuDI3IkB+eHc8Af6o4CLpywtx6lMcYXr2XBNOzXmvGHwbpid/d4af0f/7sR5BJXAdcE7UYFmdKrUw51ARZjuHQPVkb4T5BEFvfZFq7xh7FSnGs7HsZR4Pf6nnry86XLxJEsUAEMjcroVzCKHBu1pQhu14ugJ67ZB1UWrDc5AwFEwAZtg/oHpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LQz9KqmcLaeruV4C2BriXBrjty1fuGu0xbZU8uSeooM=;
- b=X/d/Cig/nPSkxY2aYl+CWmvHyepvViVPiKwMExAPE3giZ30MYUbLNwEY5fsA+JMcfW1ku05Rh+gdYqNoRbI/dBIcggRrpZsu/rUfoIZG1cyOHEzpEAS/QqEVCoHZpTDqq1F7BNjs3l3LRUyeDz7X+iEt2VuWIbbQmZ75XYTWYL0=
-Received: from MWHPR02CA0016.namprd02.prod.outlook.com (2603:10b6:300:4b::26)
- by MN2PR02MB5759.namprd02.prod.outlook.com (2603:10b6:208:10d::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Mon, 17 Feb
- 2020 12:33:48 +0000
-Received: from CY1NAM02FT044.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by MWHPR02CA0016.outlook.office365.com
- (2603:10b6:300:4b::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend
- Transport; Mon, 17 Feb 2020 12:33:48 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT044.mail.protection.outlook.com (10.152.75.137) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2729.22
- via Frontend Transport; Mon, 17 Feb 2020 12:33:47 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fat-0000TO-BO; Mon, 17 Feb 2020 04:33:47 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fao-0001yh-8B; Mon, 17 Feb 2020 04:33:42 -0800
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 01HCXYt8026029;
-        Mon, 17 Feb 2020 04:33:35 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j3fag-0001uE-BM; Mon, 17 Feb 2020 04:33:34 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V3 7/7] gpio: zynq: Remove error prints in EPROBE_DEFER
-Date:   Mon, 17 Feb 2020 18:03:13 +0530
-Message-Id: <1581942793-19468-8-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
-References: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(136003)(346002)(376002)(189003)(199004)(8676002)(81156014)(81166006)(5660300002)(316002)(26005)(4326008)(70206006)(2906002)(7696005)(478600001)(4744005)(6666004)(356004)(6636002)(9786002)(8936002)(2616005)(336012)(70586007)(36756003)(107886003)(186003)(44832011)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB5759;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        id S1727283AbgBQPSO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Feb 2020 10:18:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37345 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727469AbgBQPSN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Feb 2020 10:18:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581952692;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oApQbLrzVVhu1jd7qefxCRV4mfxdoYPT/JD7M+EYzVc=;
+        b=dbq0K6gEAly8RwjerJJ+KVI46yWYNYxXunO7P8ny0Mx9Q4j54/GryR/ArBupKALRRhx9ZN
+        vVkpom5lQ81lImPlXyCeiAmXxOyIuIojkgN9DoFO0LkAd/Ef8jE3nowRmWCLrG3+WgiKhO
+        uDln+i/6iREdSjuVO13Ptg0hc+0Bysk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-6_f05MjcO6e7fPTJl3sKMg-1; Mon, 17 Feb 2020 10:18:08 -0500
+X-MC-Unique: 6_f05MjcO6e7fPTJl3sKMg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84C2913E6;
+        Mon, 17 Feb 2020 15:18:07 +0000 (UTC)
+Received: from treble (ovpn-121-12.rdu2.redhat.com [10.10.121.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A85BD60BE1;
+        Mon, 17 Feb 2020 15:18:06 +0000 (UTC)
+Date:   Mon, 17 Feb 2020 09:18:04 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+Message-ID: <20200217151804.yymflofpbiqjqnnz@treble>
+References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+ <1581706938.3.5@crapouillou.net>
+ <20200214203738.af3y4gskukctvvum@treble>
+ <1581734224.3.14@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 05eec5a2-b76a-4353-a5bf-08d7b3a5a2d3
-X-MS-TrafficTypeDiagnostic: MN2PR02MB5759:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB57590C6043D290E2EDBEC233AF160@MN2PR02MB5759.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:274;
-X-Forefront-PRVS: 0316567485
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hy+HwPWnTdXm3MOocHnsmkS0AnoIrVl6uo6qLmySxd8HOLQyx30e/0Fk8ugAlITxIxy/nLhBR2QOtby8KWZ7ze8EW80U6Czm4w6kqwZW5Yns8CLmo1i/vT1NjHOBoNa5vFhpc/oLspmCL4TlpcUIofmtANRNV5BOPSzsYG3sYQFyIwqeROvppTRIuML0PuOMJlTNEcfATW/NVoWQe9VhpuYI+APMxmOFrlB1zUWy/iqF2nqvzolLXdBdp4K/OhdeMhPsfq8BG4hj9MqDRnAVhiXBr8OoGJMWIfmOqZR2eUQCxTHGsWxXn1OJUo5fcSvKLz2JWEWAvpskdSStLdlNmb08Vub1OYubKnub1fCG0gObmg0VpTRe4+tyZe1ODHdIHAgGJgrU+eGlFrDeoQWHidmSfMz3Tga95t8fyfakX4tzBICObB1MYuDiM9JfadOL
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2020 12:33:47.7688
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05eec5a2-b76a-4353-a5bf-08d7b3a5a2d3
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB5759
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1581734224.3.14@crapouillou.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Fri, Feb 14, 2020 at 11:37:04PM -0300, Paul Cercueil wrote:
+> > >  I don't like the idea that you change this driver's code just to
+> > > work around
+> > >  a bug in objtool, and I don't like the idea of working around a
+> > > future bug
+> > >  that shouldn't be introduced in the first place.
+> > 
+> > It's not an objtool bug.  It's a byproduct of the fact that GCC's
+> > undefined behavior is inscrutable, and there's no way to determine that
+> > it actually *wants* to jump to a random function.
+> > 
+> > And anyway, regardless of objtool, the patch is meant to make the code
+> > more robust.
+> > 
+> > Do you not agree that BUG (defined behavior) is more robust than
+> > unreachable (undefined behavior)?
+> 
+> It's a dead code path. That would be an undefined behaviour, if it was
+> taken, but it's not.
 
-In case of probe is deferred do not print the errors.
+Given your confidence that humans don't introduce bugs, would you
+recommend that we
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/gpio/gpio-zynq.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+  s/BUG()/unreachable()/
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 2ddb59b242e7..53d1387592fd 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -930,7 +930,8 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(gpio->clk)) {
--		dev_err(&pdev->dev, "input clock not found.\n");
-+		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "input clock not found.\n");
- 		return PTR_ERR(gpio->clk);
+tree-wide?
+
+Another option would be to remove the unreachable() statement, which
+would actually improve the generated code by making it more compact (16
+bytes of i-cache savings), on top of removing the "fallthrough to next
+function" nastiness.
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 96f04d121ebd..13c7d3351ed5 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -2158,7 +2158,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 			break;
+ 
+ 		default:
+-			unreachable();
++			/* unreachable */
++			break;
+ 		}
  	}
- 	ret = clk_prepare_enable(gpio->clk);
--- 
-2.7.4
+ 
 
