@@ -2,150 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D15C1626E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 14:13:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1847216293C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 16:19:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgBRNNB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 08:13:01 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4430 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726347AbgBRNNB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:13:01 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ID7uvk024883;
-        Tue, 18 Feb 2020 14:12:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=QAPr4g8qtXzIzwQ0+UU8DK904BMIYhSCsGi/2L2SFsE=;
- b=wyjmfUzlPJmxLz7ZJq+ggBA8gLIEZaRuqY0tuhgU/GrrvBAF59XDBJCK7cVE7pKNglPq
- 70GjZDBsePa8Xy5mb5IllABJV5U7UVIlFXVqdzKqH5yp9gSPs3pOAiHPapP7NFMycTBa
- GZiKJWBIv6AF4yEyRqgavMo+BsjVwaoFCUNT7rFxoDidPjLadJNCVoR/NSwlzKyNKtKH
- HlZwZmm+IY57ChWnvoDylFd0Bx2GfsFQs1e14dIPDINY0fUdFhyGlcVBF/aTTZ1V9L+x
- Ly0jRZocJbLvr2UtS2FNpCfPrYaELsiLc49kmWN0aCEluB9+1S1Whn7mARUlSqaFWBQz kQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y66ne1jm1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Feb 2020 14:12:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B8BA100038;
-        Tue, 18 Feb 2020 14:12:38 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C17B2B12F5;
-        Tue, 18 Feb 2020 14:12:38 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 18 Feb 2020 14:12:37
- +0100
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        id S1727346AbgBRPSf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 10:18:35 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:39528 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727291AbgBRPSf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 10:18:35 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id 4FJD2200y5USYZQ01FJEv4; Tue, 18 Feb 2020 16:18:34 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j44dZ-0006yA-Pa; Tue, 18 Feb 2020 16:18:13 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j44dZ-00022u-MX; Tue, 18 Feb 2020 16:18:13 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
         Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <marex@denx.de>
-Subject: [PATCH v2 2/2] pinctrl: stm32: Add level interrupt support to gpio irq chip
-Date:   Tue, 18 Feb 2020 14:12:18 +0100
-Message-ID: <20200218131218.10789-3-alexandre.torgue@st.com>
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 0/5] gpio: Add GPIO Aggregator
+Date:   Tue, 18 Feb 2020 16:18:07 +0100
+Message-Id: <20200218151812.7816-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200218131218.10789-1-alexandre.torgue@st.com>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds level interrupt support to gpio irq chip.
+	Hi all,
 
-GPIO hardware block is directly linked to EXTI block but EXTI handles
-external interrupts only on edge. To be able to handle GPIO interrupt on
-level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
-is retriggered following interrupt type and gpio line value.
+GPIO controllers are exported to userspace using /dev/gpiochip*
+character devices.  Access control to these devices is provided by
+standard UNIX file system permissions, on an all-or-nothing basis:
+either a GPIO controller is accessible for a user, or it is not.
+Currently no mechanism exists to control access to individual GPIOs.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Tested-by: Marek Vasut <marex@denx.de>
+Hence this adds a GPIO driver to aggregate existing GPIOs, and expose
+them as a new gpiochip.  This is useful for implementing access control,
+and assigning a set of GPIOs to a specific user.  Furthermore, this
+simplifies and hardens exporting GPIOs to a virtual machine, as the VM
+can just grab the full GPIO controller, and no longer needs to care
+about which GPIOs to grab and which not, reducing the attack surface.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 2d5e0435af0a..dae236562543 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -92,6 +92,7 @@ struct stm32_gpio_bank {
- 	u32 bank_nr;
- 	u32 bank_ioport_nr;
- 	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
-+	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
- };
- 
- struct stm32_pinctrl {
-@@ -303,6 +304,46 @@ static const struct gpio_chip stm32_gpio_template = {
- 	.get_direction		= stm32_gpio_get_direction,
- };
- 
-+void stm32_gpio_irq_eoi(struct irq_data *d)
-+{
-+	struct stm32_gpio_bank *bank = d->domain->host_data;
-+	int line;
-+
-+	irq_chip_eoi_parent(d);
-+
-+	/* If level interrupt type then retrig */
-+	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-+	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
-+	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-+		irq_chip_retrigger_hierarchy(d);
-+};
-+
-+static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct stm32_gpio_bank *bank = d->domain->host_data;
-+	u32 parent_type;
-+
-+	bank->irq_type[d->hwirq] = type;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_EDGE_FALLING:
-+	case IRQ_TYPE_EDGE_BOTH:
-+		parent_type = type;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		parent_type = IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		parent_type = IRQ_TYPE_EDGE_FALLING;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return irq_chip_set_type_parent(d, parent_type);
-+};
-+
- static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-@@ -332,11 +373,11 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
- 
- static struct irq_chip stm32_gpio_irq_chip = {
- 	.name		= "stm32gpio",
--	.irq_eoi	= irq_chip_eoi_parent,
-+	.irq_eoi	= stm32_gpio_irq_eoi,
- 	.irq_ack	= irq_chip_ack_parent,
- 	.irq_mask	= irq_chip_mask_parent,
- 	.irq_unmask	= irq_chip_unmask_parent,
--	.irq_set_type	= irq_chip_set_type_parent,
-+	.irq_set_type	= stm32_gpio_set_type,
- 	.irq_set_wake	= irq_chip_set_wake_parent,
- 	.irq_request_resources = stm32_gpio_irq_request_resources,
- 	.irq_release_resources = stm32_gpio_irq_release_resources,
+Recently, other use cases have been discovered[1]:
+  - Describing simple GPIO-operated devices in DT, and using the GPIO
+    Aggregator as a generic GPIO driver for userspace, which is useful
+    for industrial control.
+
+Changes compared to v4[2]:
+  - Add Reviewed-by, Tested-by,
+  - Fix inconsistent indentation in documentation.
+
+Changes compared to v3[3] (more details in the individual patches):
+  - Drop controversial GPIO repeater,
+  - Drop support for legacy sysfs interface based name matching,
+  - Drop applied "gpiolib: Add GPIOCHIP_NAME definition",
+  - Documentation improvements,
+  - Lots of small cleanups.
+
+Changes compared to v2[4] (more details in the individual patches):
+  - Integrate GPIO Repeater functionality,
+  - Absorb GPIO forwarder library, as the Aggregator and Repeater are
+    now a single driver,
+  - Use the aggregator parameters to create a GPIO lookup table instead
+    of an array of GPIO descriptors,
+  - Add documentation,
+  - New patches:
+      - "gpiolib: Add GPIOCHIP_NAME definition",
+      - "gpiolib: Add support for gpiochipN-based table lookup",
+      - "gpiolib: Add support for GPIO line table lookup",
+      - "dt-bindings: gpio: Add gpio-repeater bindings",
+      - "docs: gpio: Add GPIO Aggregator/Repeater documentation",
+      - "MAINTAINERS: Add GPIO Aggregator/Repeater section".
+  - Dropped patches:
+      - "gpio: Export gpiod_{request,free}() to modular GPIO code",
+      - "gpio: Export gpiochip_get_desc() to modular GPIO code",
+      - "gpio: Export gpio_name_to_desc() to modular GPIO code",
+      - "gpio: Add GPIO Forwarder Helper".
+
+Changes compared to v1[5]:
+  - Drop "virtual", rename to gpio-aggregator,
+  - Create and use new GPIO Forwarder Helper, to allow sharing code with
+    the GPIO inverter,
+  - Lift limit on the maximum number of GPIOs,
+  - Improve parsing of GPIO specifiers,
+  - Fix modular build.
+
+Aggregating GPIOs and exposing them as a new gpiochip was suggested in
+response to my proof-of-concept for GPIO virtualization with QEMU[6][7].
+
+For the first use case, aggregated GPIO controllers are instantiated and
+destroyed by writing to atribute files in sysfs.
+Sample session on the Renesas Koelsch development board:
+
+  - Unbind LEDs from leds-gpio driver:
+
+        echo leds > /sys/bus/platform/drivers/leds-gpio/unbind
+
+  - Create aggregators:
+
+    $ echo e6052000.gpio 19,20 \
+        > /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator gpio-aggregator.0: gpio 0 => gpio-953 (gpio-aggregator.0)
+    gpio-aggregator gpio-aggregator.0: gpio 1 => gpio-954 (gpio-aggregator.0)
+    gpiochip_find_base: found new base at 778
+    gpio gpiochip8: (gpio-aggregator.0): added GPIO chardev (254:8)
+    gpiochip_setup_dev: registered GPIOs 778 to 779 on device: gpiochip8 (gpio-aggregator.0)
+
+    $ echo e6052000.gpio 21 e6050000.gpio 20-22 \
+        > /sys/bus/platform/drivers/gpio-aggregator/new_device
+
+    gpio-aggregator gpio-aggregator.1: gpio 0 => gpio-955 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 1 => gpio-1012 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 2 => gpio-1013 (gpio-aggregator.1)
+    gpio-aggregator gpio-aggregator.1: gpio 3 => gpio-1014 (gpio-aggregator.1)
+    gpiochip_find_base: found new base at 774
+    gpio gpiochip9: (gpio-aggregator.1): added GPIO chardev (254:9)
+    gpiochip_setup_dev: registered GPIOs 774 to 777 on device: gpiochip9 (gpio-aggregator.1)
+
+  - Adjust permissions on /dev/gpiochip[89] (optional)
+
+  - Control LEDs:
+
+    $ gpioset gpiochip8 0=0 1=1 # LED6 OFF, LED7 ON
+    $ gpioset gpiochip8 0=1 1=0 # LED6 ON, LED7 OFF
+    $ gpioset gpiochip9 0=0     # LED8 OFF
+    $ gpioset gpiochip9 0=1     # LED8 ON
+
+  - Destroy aggregators:
+
+    $ echo gpio-aggregator.0 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+    $ echo gpio-aggregator.1 \
+            > /sys/bus/platform/drivers/gpio-aggregator/delete_device
+
+Thanks!
+
+References:
+  [1] "[PATCH V4 2/2] gpio: inverter: document the inverter bindings"
+      (https://lore.kernel.org/r/1561699236-18620-3-git-send-email-harish_kandiga@mentor.com/)
+  [2] "[PATCH v4 0/5] gpio: Add GPIO Aggregator"
+      (https://lore.kernel.org/r/20200115181523.23556-1-geert+renesas@glider.be)
+  [3] "[PATCH v3 0/7] gpio: Add GPIO Aggregator/Repeater"
+      (https://lore.kernel.org/r/20191127084253.16356-1-geert+renesas@glider.be/)
+  [4] "[PATCH/RFC v2 0/5] gpio: Add GPIO Aggregator Driver"
+      (https://lore.kernel.org/r/20190911143858.13024-1-geert+renesas@glider.be/)
+  [5] "[PATCH RFC] gpio: Add Virtual Aggregator GPIO Driver"
+      (https://lore.kernel.org/r/20190705160536.12047-1-geert+renesas@glider.be/)
+  [6] "[PATCH QEMU POC] Add a GPIO backend"
+      (https://lore.kernel.org/r/20181003152521.23144-1-geert+renesas@glider.be/)
+  [7] "Getting To Blinky: Virt Edition / Making device pass-through
+       work on embedded ARM"
+      (https://fosdem.org/2019/schedule/event/vai_getting_to_blinky/)
+
+Geert Uytterhoeven (5):
+  gpiolib: Add support for gpiochipN-based table lookup
+  gpiolib: Add support for GPIO line table lookup
+  gpio: Add GPIO Aggregator
+  docs: gpio: Add GPIO Aggregator documentation
+  MAINTAINERS: Add GPIO Aggregator section
+
+ .../admin-guide/gpio/gpio-aggregator.rst      | 102 ++++
+ Documentation/admin-guide/gpio/index.rst      |   1 +
+ MAINTAINERS                                   |   7 +
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-aggregator.c                | 574 ++++++++++++++++++
+ drivers/gpio/gpiolib.c                        |  33 +-
+ include/linux/gpio/machine.h                  |  15 +-
+ 8 files changed, 732 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-aggregator.rst
+ create mode 100644 drivers/gpio/gpio-aggregator.c
+
 -- 
 2.17.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
