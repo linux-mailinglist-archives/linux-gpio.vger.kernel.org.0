@@ -2,102 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19F82162F55
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 20:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 732AF162F69
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 20:09:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgBRTC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 14:02:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726291AbgBRTCz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:02:55 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B0324655;
-        Tue, 18 Feb 2020 19:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582052575;
-        bh=yGg6yNRaAc7iDhwPELABRLvrPSnaAFrFM+ijBgVtWoo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dQJS5bcavE0VoZy3dS/+CN4EqnAgMsL2HFP6co6j0tfwA/VryfUjJD+jLWGKNgP/s
-         7QO45qSnZKAlxcLswZk8QyTW0yHgO6D+IZvIOhyIhkmq9+QCOiyce6wE7ufDXvGxU2
-         pRuXmqKCuzRTX4I3uR6QSvrSq7TyLtxmGr0TfG/w=
-Date:   Tue, 18 Feb 2020 14:02:53 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH] firmware: imx: Align imx SC msg structs to 4
-Message-ID: <20200218190253.GW1734@sasha-vm>
-References: <3a8b6772a1edffdd7cdb54d6d50030b03ba0bebb.1581455751.git.leonard.crestez@nxp.com>
- <20200217062129.GB6790@dragon>
- <VI1PR04MB7023CDE9E4AD086F2E926495EE160@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <20200218091831.GB6075@dragon>
- <VI1PR04MB7023C1C536805130D9429E11EE110@VI1PR04MB7023.eurprd04.prod.outlook.com>
+        id S1726438AbgBRTJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 14:09:25 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33125 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgBRTJY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 14:09:24 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q81so21273981oig.0;
+        Tue, 18 Feb 2020 11:09:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4zbrnNvTNHgXxwjMJnfhT5sGHXVeYA3py+fC4nnQX1g=;
+        b=hxHpfGZ1eg9pnSfPg5YL2okaL4jIsS3ewInVnRJIojrOl5G/z0s1qZnXQGBlQykB0f
+         hSlxBgqWb6BCYu8bIp24/4I7qlQDPuGIv4AI3vUioZ4UzFg8hxphPf0RRLzr+cldvXl3
+         7C8RA+QYFKhThMLd+tcMT8v+n/yY//kQik1u4j95VqkNDyWyFsfU3abb2imPh0UvuMRy
+         JAZWUXCnV6nEgfNcW+hu2OWemlrp55oaqJSU+18nZ18z8euYMqrz5sAdol8ixHfddVpH
+         mlgv/p2nYrTIhUd4U29RfZ7i9N/eqnMUsC2KR+zyUnzpgKnXfQXQ4qa6nu1qDTLsG3i4
+         IzWQ==
+X-Gm-Message-State: APjAAAUCcdYj7HXVOR0jJtNGE+s7v2r1hNaO/oyoyr0yqCNQEBSmwIdM
+        3efZyMZ+BPjiTA5E+uxUwe6QBHivcrjFlUSxGH4=
+X-Google-Smtp-Source: APXvYqwnKTCIB9GTLLpEL5W7g+LauaFKN7iZKQPh2++RZaJoaT+SssBYOvEoCXI/Jb080pGI7GySD9qCX6q6Z+PF39M=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr2308514oia.102.1582052963942;
+ Tue, 18 Feb 2020 11:09:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB7023C1C536805130D9429E11EE110@VI1PR04MB7023.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200218151812.7816-1-geert+renesas@glider.be>
+ <20200218151812.7816-5-geert+renesas@glider.be> <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+In-Reply-To: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Feb 2020 20:09:12 +0100
+Message-ID: <CAMuHMdU9=vgO6ohoYTQMGjoFzhRy=4hYGjVyRsTK2uoNsU08XQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:48:50PM +0000, Leonard Crestez wrote:
->On 18.02.2020 11:18, Shawn Guo wrote:
->> On Mon, Feb 17, 2020 at 08:37:45PM +0000, Leonard Crestez wrote:
->>> On 17.02.2020 08:21, Shawn Guo wrote:
->>>> On Tue, Feb 11, 2020 at 11:24:33PM +0200, Leonard Crestez wrote:
->>>>> The imx SC api strongly assumes that messages are composed out of
->>>>> 4-bytes words but some of our message structs have sizeof "6" and "7".
->>>>>
->>>>> This produces many oopses with CONFIG_KASAN=y:
->>>>>
->>>>> 	BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
->>>>>
->>>>> It shouldn't cause an issues in normal use because these structs are
->>>>> always allocated on the stack.
->>>>>
->>>>> Cc: stable@vger.kernel.org
->>>>
->>>> Should we have a fixes tag and send it for -rc?
->>>
->>> I haven't check but this would probably have to be split into multiple
->>> patches because the structs were not added all at once.
->>
->> Or maybe we can just drop the stable tag, as it addresses a corner
->> case issue which could concern very few people?
->
->I think that "kernel does not boot with KASAN=y" is an issue worth fixing.
->
->I will split and resend with appropriate Fixes: tags.
->
->It seems likely that this will be picked up for -stable anyway via
->Sasha's automation scripts and those scripts benefit from Fixes: tags.
+Hi Randy,
 
-Even if not, we realy very much on KASAN working on stable kernels, so
-please do fix this :)
+On Tue, Feb 18, 2020 at 7:30 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
+> > Document the GPIO Aggregator, and the two typical use-cases.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
+> > @@ -0,0 +1,102 @@
+> > +.. SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +GPIO Aggregator
+> > +===============
+> > +
+> > +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
+>
+> "allows" really wants an object following the verb [although the kernel sources
+> and docs have many cases of it not having an object].  Something like
+>
+>                        allows {you, one, someone, users, a user} to aggregate
+
+Thanks for the hint!
+
+> > +             Example: Instantiate a new GPIO aggregator by aggregating GPIO
+> > +             19 of "e6052000.gpio" and GPIOs 20-21 of "gpiochip2" into a new
+> > +             gpio_chip:
+> > +
+> > +             .. code-block:: bash
+> > +
+> > +                 echo 'e6052000.gpio 19 gpiochip2 20-21' > new_device
+> > +
+>
+> Does the above command tell the user that the new device is named
+> "gpio-aggregator.0", as used below?
+
+Yes, it will be printed through the kernel log, cfr. the sample session in
+the cover letter.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Thanks,
-Sasha
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
