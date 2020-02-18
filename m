@@ -2,74 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CA991622F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 10:03:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 571C616233B
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 10:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgBRJDu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 04:03:50 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:35298 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726262AbgBRJDt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 04:03:49 -0500
-X-UUID: a4a37b1308e64430b496325a371776c2-20200218
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=DlP7gUEz9Ia/vWeuqmvg0SYWOZO+KenZYp1SrtwqqiI=;
-        b=iPYhH+mgq9a4ecXMskMpW2j6W0iOSnEnQii/E0EDRx+FE4+1ZlZrLqiLGo7vfoXjH5TlD+cQJtL4UrzjZbwsxEG88BD4J6JIIr9SVGB0wTv1QlepfkNxVpzzrW812Pk++2o1veOusGMl+K4vUhro1nS+NTFcVGqdY0iOuQ9dnHw=;
-X-UUID: a4a37b1308e64430b496325a371776c2-20200218
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1828405535; Tue, 18 Feb 2020 17:03:43 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Feb 2020 17:01:08 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Feb 2020 17:01:35 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v1 2/2] pinctrl: make MediaTek MT6765 pinctrl ready for buidling loadable module
-Date:   Tue, 18 Feb 2020 17:03:34 +0800
-Message-ID: <1582016614-20728-2-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1582016614-20728-1-git-send-email-light.hsieh@mediatek.com>
-References: <1582016614-20728-1-git-send-email-light.hsieh@mediatek.com>
+        id S1726281AbgBRJSl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 04:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbgBRJSl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 18 Feb 2020 04:18:41 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1331321D7D;
+        Tue, 18 Feb 2020 09:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582017520;
+        bh=WDLKT1u/eZpoRYcR0EZB25T+ZUURdxqfLJomoJXA9B8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KxQdcdNXE9bbEEapbGIJeH6RMZTaUyfg/N5Fkb7XCzkcHvbvoCuiux3AOFlStTllp
+         VdH2Eae5w/YC8wsB+61k+X/nVXRVnnJgMrzdnfD/PkPk/WoVCGW4ebxw1mv6jl00Sg
+         BB5FUHHRvBZNYeWhnQvTaqpZg+oMj4uXwVEx61Ys=
+Date:   Tue, 18 Feb 2020 17:18:32 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        "open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH] firmware: imx: Align imx SC msg structs to 4
+Message-ID: <20200218091831.GB6075@dragon>
+References: <3a8b6772a1edffdd7cdb54d6d50030b03ba0bebb.1581455751.git.leonard.crestez@nxp.com>
+ <20200217062129.GB6790@dragon>
+ <VI1PR04MB7023CDE9E4AD086F2E926495EE160@VI1PR04MB7023.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 18E68612A0FB098274AA7C089CD8263AC2969399CECD05502CBF99E6E5D9818A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB7023CDE9E4AD086F2E926495EE160@VI1PR04MB7023.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBwYXRj
-aCBtYWtlIHBpbmN0cmwtbXQ2NzY1IHJlYWR5IGZvciBidWlsZGluZyBhcw0KbG9hZGFibGUgbW9k
-dWxlLg0KDQpTaWduZWQtb2ZmLWJ5OiBMaWdodCBIc2llaCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsu
-Y29tPg0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgfCAy
-ICstDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMgfCA0ICsrKysN
-CiAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcgYi9kcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvS2NvbmZpZw0KaW5kZXggNGNkMTEwOS4uYzY0NWZkYiAxMDA2NDQNCi0tLSBh
-L2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnDQorKysgYi9kcml2ZXJzL3BpbmN0cmwv
-bWVkaWF0ZWsvS2NvbmZpZw0KQEAgLTg5LDcgKzg5LDcgQEAgY29uZmlnIFBJTkNUUkxfTVQyNzEy
-DQogCXNlbGVjdCBQSU5DVFJMX01USw0KIA0KIGNvbmZpZyBQSU5DVFJMX01UNjc2NQ0KLQlib29s
-ICJNZWRpYXRlayBNVDY3NjUgcGluIGNvbnRyb2wiDQorCXRyaXN0YXRlICJNZWRpYXRlayBNVDY3
-NjUgcGluIGNvbnRyb2wiDQogCWRlcGVuZHMgb24gT0YNCiAJZGVwZW5kcyBvbiBBUk02NCB8fCBD
-T01QSUxFX1RFU1QNCiAJZGVmYXVsdCBBUk02NCAmJiBBUkNIX01FRElBVEVLDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMgYi9kcml2ZXJzL3Bp
-bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYw0KaW5kZXggOTA1ZGFlOGMuLjJjNTlkMzkg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NjUuYw0K
-KysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCkBAIC02LDYg
-KzYsNyBAQA0KICAqDQogICovDQogDQorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KICNpbmNs
-dWRlICJwaW5jdHJsLW10ay1tdDY3NjUuaCINCiAjaW5jbHVkZSAicGluY3RybC1wYXJpcy5oIg0K
-IA0KQEAgLTExMDMsMyArMTEwNCw2IEBAIHN0YXRpYyBpbnQgX19pbml0IG10Njc2NV9waW5jdHJs
-X2luaXQodm9pZCkNCiAJcmV0dXJuIHBsYXRmb3JtX2RyaXZlcl9yZWdpc3RlcigmbXQ2NzY1X3Bp
-bmN0cmxfZHJpdmVyKTsNCiB9DQogYXJjaF9pbml0Y2FsbChtdDY3NjVfcGluY3RybF9pbml0KTsN
-CisNCitNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7DQorTU9EVUxFX0RFU0NSSVBUSU9OKCJNZWRp
-YVRlayBNVDY3NjUgUGluY3RybCBEcml2ZXIiKTsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+On Mon, Feb 17, 2020 at 08:37:45PM +0000, Leonard Crestez wrote:
+> On 17.02.2020 08:21, Shawn Guo wrote:
+> > On Tue, Feb 11, 2020 at 11:24:33PM +0200, Leonard Crestez wrote:
+> >> The imx SC api strongly assumes that messages are composed out of
+> >> 4-bytes words but some of our message structs have sizeof "6" and "7".
+> >>
+> >> This produces many oopses with CONFIG_KASAN=y:
+> >>
+> >> 	BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
+> >>
+> >> It shouldn't cause an issues in normal use because these structs are
+> >> always allocated on the stack.
+> >>
+> >> Cc: stable@vger.kernel.org
+> > 
+> > Should we have a fixes tag and send it for -rc?
+> 
+> I haven't check but this would probably have to be split into multiple 
+> patches because the structs were not added all at once.
 
+Or maybe we can just drop the stable tag, as it addresses a corner
+case issue which could concern very few people?
+
+Shawn
