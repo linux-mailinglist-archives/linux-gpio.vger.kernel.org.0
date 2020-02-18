@@ -2,244 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF3B41623F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 10:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C57D2162401
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 10:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgBRJwu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 04:52:50 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:58459 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgBRJwu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 04:52:50 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 0D59FE0002;
-        Tue, 18 Feb 2020 09:52:46 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 10:52:46 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
+        id S1726391AbgBRJ4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 04:56:17 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53009 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgBRJ4Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 04:56:16 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so2097259wmc.2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2020 01:56:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UdH2WwRjeP0392FSfzUeJpWFNKo0z7G6MGSSmZM+wnw=;
+        b=JkGobR7ne7hE4lO8Y9G7F0mwGgXu/l74bR/V2dOzMUri9Jndvty2pi+NIGotqZmZ8N
+         HBo97sQj1xBSQSYgD6BbGL3uQe26Q/j1SOWQOxIzG+pfQb8vH1l4UFQ3JnWANsCss2xp
+         l03JegdpvjVjSqzYW43xqrtJgsoFn1uRaRzCabyggFPT8pt6oNXGbn1i6/SKE0/2BDPT
+         BDmIp2NIjiUUtLycIG38oQH0Nv+X0gIASUrKcMtn3hsU7X/ZabQiQ8nEbYxHMFbJ734V
+         FyTj1fNiudVfEVUUGcEfCu6zsPo6BFhbzrQLV8eTj5iXyrei+J1uxqEyJ7aS8tteAG5c
+         3HhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UdH2WwRjeP0392FSfzUeJpWFNKo0z7G6MGSSmZM+wnw=;
+        b=Mo4/XNTXOkvUVjTzDKE5fTa8ajehq+z1GgEpU1HSf0Sq3f31owDoeb3Bdt55LOkHQu
+         d7fLf8qoCOuZVSN7+kGGwloHTsQqLScUr6Kn68h0FpUiZuHKhD48NNI2GGUPw8kS+/mw
+         dN1E4nqBidud77ufhjSjBtIko23NcRtCwo65SW0/ZwreIaAfDUXpy4pzjxDzA4FpM5LS
+         fZjCqPqfk9K386z6bFOOQt/OQaniIQFM3W5PrCFBMi83bRcwTEYzjC0ik5usuffH6/Yf
+         S/U1n90UHw70yKPILux/0mcfS+e6I499tCSZHwaf+QuxNLvECG9jQAyo0dwFCV2naC2o
+         Pf8g==
+X-Gm-Message-State: APjAAAXpq7u6VLN3sbPhrak2VRyT1WMYpPRNpuQ62wNr8UU1nxb49Eqr
+        ILCZZYpu8f25hWClCVWHS9/UwA==
+X-Google-Smtp-Source: APXvYqytGhJ61N7kXx+F6MuGoEGrfZFJgE1ENO08u102dUmJ85nq1PD/yvS6IXqIQnbuVfUdbBqsWQ==
+X-Received: by 2002:a1c:38c7:: with SMTP id f190mr2161681wma.94.1582019774942;
+        Tue, 18 Feb 2020 01:56:14 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id g21sm2835191wmh.17.2020.02.18.01.56.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 01:56:14 -0800 (PST)
+Subject: Re: [PATCH v2 2/7] nvmem: fix another memory leak in error path
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
-        "open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH] firmware: imx: Align imx SC msg structs to 4
-Message-ID: <20200218095246.GA3385@piout.net>
-References: <3a8b6772a1edffdd7cdb54d6d50030b03ba0bebb.1581455751.git.leonard.crestez@nxp.com>
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable@vger.kernel.org
+References: <20200218094234.23896-1-brgl@bgdev.pl>
+ <20200218094234.23896-3-brgl@bgdev.pl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6e7a5df7-6ded-7777-5552-879934c185ad@linaro.org>
+Date:   Tue, 18 Feb 2020 09:56:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a8b6772a1edffdd7cdb54d6d50030b03ba0bebb.1581455751.git.leonard.crestez@nxp.com>
+In-Reply-To: <20200218094234.23896-3-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/02/2020 23:24:33+0200, Leonard Crestez wrote:
-> The imx SC api strongly assumes that messages are composed out of
-> 4-bytes words but some of our message structs have sizeof "6" and "7".
-> 
-> This produces many oopses with CONFIG_KASAN=y:
-> 
-> 	BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
-> 
-> It shouldn't cause an issues in normal use because these structs are
-> always allocated on the stack.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Reported-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
+
+On 18/02/2020 09:42, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The nvmem struct is only freed on the first error check after its
+> allocation and leaked after that. Fix it with a new label.
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  drivers/clk/imx/clk-scu.c               | 8 ++++----
->  drivers/firmware/imx/misc.c             | 8 ++++----
->  drivers/firmware/imx/scu-pd.c           | 2 +-
->  drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
->  drivers/rtc/rtc-imx-sc.c                | 2 +-
->  drivers/soc/imx/soc-imx-scu.c           | 2 +-
->  6 files changed, 13 insertions(+), 13 deletions(-)
+>   drivers/nvmem/core.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
-> index fbef740704d0..b8b2072742a5 100644
-> --- a/drivers/clk/imx/clk-scu.c
-> +++ b/drivers/clk/imx/clk-scu.c
-> @@ -41,16 +41,16 @@ struct clk_scu {
->  struct imx_sc_msg_req_set_clock_rate {
->  	struct imx_sc_rpc_msg hdr;
->  	__le32 rate;
->  	__le16 resource;
->  	u8 clk;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct req_get_clock_rate {
->  	__le16 resource;
->  	u8 clk;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct resp_get_clock_rate {
->  	__le32 rate;
->  };
->  
-> @@ -82,11 +82,11 @@ struct imx_sc_msg_get_clock_parent {
->  	struct imx_sc_rpc_msg hdr;
->  	union {
->  		struct req_get_clock_parent {
->  			__le16 resource;
->  			u8 clk;
-> -		} __packed req;
-> +		} __packed __aligned(4) req;
->  		struct resp_get_clock_parent {
->  			u8 parent;
->  		} resp;
->  	} data;
->  };
-> @@ -119,11 +119,11 @@ struct imx_sc_msg_req_clock_enable {
->  	struct imx_sc_rpc_msg hdr;
->  	__le16 resource;
->  	u8 clk;
->  	u8 enable;
->  	u8 autog;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  static inline struct clk_scu *to_clk_scu(struct clk_hw *hw)
->  {
->  	return container_of(hw, struct clk_scu, hw);
->  }
-> diff --git a/drivers/firmware/imx/misc.c b/drivers/firmware/imx/misc.c
-> index 4b56a587dacd..d073cb3ce699 100644
-> --- a/drivers/firmware/imx/misc.c
-> +++ b/drivers/firmware/imx/misc.c
-> @@ -14,30 +14,30 @@
->  struct imx_sc_msg_req_misc_set_ctrl {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 ctrl;
->  	u32 val;
->  	u16 resource;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_req_cpu_start {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 address_hi;
->  	u32 address_lo;
->  	u16 resource;
->  	u8 enable;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_req_misc_get_ctrl {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 ctrl;
->  	u16 resource;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_resp_misc_get_ctrl {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 val;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  /*
->   * This function sets a miscellaneous control value.
->   *
->   * @param[in]     ipc         IPC handle
-> diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-> index b556612207e5..af3ae0087de4 100644
-> --- a/drivers/firmware/imx/scu-pd.c
-> +++ b/drivers/firmware/imx/scu-pd.c
-> @@ -59,11 +59,11 @@
->  /* SCU Power Mode Protocol definition */
->  struct imx_sc_msg_req_set_resource_power_mode {
->  	struct imx_sc_rpc_msg hdr;
->  	u16 resource;
->  	u8 mode;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  #define IMX_SCU_PD_NAME_SIZE 20
->  struct imx_sc_pm_domain {
->  	struct generic_pm_domain pd;
->  	char name[IMX_SCU_PD_NAME_SIZE];
-> diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
-> index 73bf1d9f9cc6..23cf04bdfc55 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-scu.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-> @@ -21,16 +21,16 @@ enum pad_func_e {
->  
->  struct imx_sc_msg_req_pad_set {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 val;
->  	u16 pad;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_req_pad_get {
->  	struct imx_sc_rpc_msg hdr;
->  	u16 pad;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_resp_pad_get {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 val;
->  } __packed;
-> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
-> index cf2c12107f2b..a5f59e6f862e 100644
-> --- a/drivers/rtc/rtc-imx-sc.c
-> +++ b/drivers/rtc/rtc-imx-sc.c
-> @@ -35,11 +35,11 @@ struct imx_sc_msg_timer_rtc_set_alarm {
->  	u8 mon;
->  	u8 day;
->  	u8 hour;
->  	u8 min;
->  	u8 sec;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
->  {
->  	struct imx_sc_msg_timer_get_rtc_time msg;
->  	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
-> index fb70b8a3f7c5..20d37eaeb5f2 100644
-> --- a/drivers/soc/imx/soc-imx-scu.c
-> +++ b/drivers/soc/imx/soc-imx-scu.c
-> @@ -23,11 +23,11 @@ struct imx_sc_msg_misc_get_soc_id {
->  		} __packed req;
->  		struct {
->  			u32 id;
->  		} resp;
->  	} data;
-> -} __packed;
-> +} __packed __aligned(4);
->  
->  struct imx_sc_msg_misc_get_soc_uid {
->  	struct imx_sc_rpc_msg hdr;
->  	u32 uid_low;
->  	u32 uid_high;
-> -- 
-> 2.17.1
-> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index b0be03d5f240..c9b3f4047154 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -343,10 +343,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   		return ERR_PTR(-ENOMEM);
+>   
+>   	rval  = ida_simple_get(&nvmem_ida, 0, 0, GFP_KERNEL);
+> -	if (rval < 0) {
+> -		kfree(nvmem);
+> -		return ERR_PTR(rval);
+> -	}
+> +	if (rval < 0)
+> +		goto err_free_nvmem;
+>   	if (config->wp_gpio)
+>   		nvmem->wp_gpio = config->wp_gpio;
+>   	else
+> @@ -432,6 +430,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	put_device(&nvmem->dev);
+>   err_ida_remove:
+>   	ida_simple_remove(&nvmem_ida, nvmem->id);
+> +err_free_nvmem:
+> +	kfree(nvmem);
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This is not correct fix to start with, if the device has already been 
+intialized before jumping here then nvmem would be freed as part of 
+nvmem_release().
+
+So the bug was actually introduced by adding err_ida_remove label.
+
+You can free nvmem at that point but not at any point after that as 
+device core would be holding a reference to it.
+
+--srini
+
+
+
+>   
+>   	return ERR_PTR(rval);
+>   }
+> 
