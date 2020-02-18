@@ -2,109 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7736C161E83
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 02:25:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19AD3161F04
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 03:36:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgBRBZt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Feb 2020 20:25:49 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:34042 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbgBRBZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Feb 2020 20:25:49 -0500
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 01I1Pjfa029198;
-        Tue, 18 Feb 2020 10:25:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 01I1Pjfa029198
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581989146;
-        bh=aHC68Gt/bTCwhaQGD8YtBd8mxysiY1ksslwULIMw21M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xbEqK3B/f3ZeMYMcEPTAwBLvw/Ioli6bXibu/eckH3BDDXYHgqFmWCrnJYxXXOyGO
-         AFeSVqb5NsZHr8kjUSTnwPHpgJgcWnajxN4MDVTrRLBSIERI1ol1T69DCm+lISgKQs
-         4wWoHI+CoQSGN9EKnI0jtyJik53CnvaFH4mxJofHuhgFEPNlQfB/vcXtEPErRdL1/y
-         c1wLpig6ijRKdqUor0kQTVWy3ygub06fsVPGUIH4PYniCUj0HQZDtbiIexE/aNURzr
-         j31xvcEE4jSd2F/XdiuXtI5YUcioAO02a17Gus4CVxAmR73eAkvlpogH7wTwAv6CIN
-         h4kbOzU+id4Rw==
-X-Nifty-SrcIP: [209.85.221.178]
-Received: by mail-vk1-f178.google.com with SMTP id t129so5096644vkg.6;
-        Mon, 17 Feb 2020 17:25:45 -0800 (PST)
-X-Gm-Message-State: APjAAAW08EiFdmzt9DTEhGkJWYyhxmhcGeSYzBl/9HMu/tRM/qWIW5Le
-        MJejCxlktyp1zjb8HoZt42KVQWPsLClRRPe/8v4=
-X-Google-Smtp-Source: APXvYqy1ybYtwGWK9rAxqG/hSwwoXAw5Wot5iv+8VzvGaL2uwXfJVUdhHC48DVLj7zfTqgLkFc5MMVzBt7ScX6KrvQ0=
-X-Received: by 2002:a1f:6344:: with SMTP id x65mr6933830vkb.26.1581989144317;
- Mon, 17 Feb 2020 17:25:44 -0800 (PST)
+        id S1726245AbgBRCgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Feb 2020 21:36:39 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10197 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726185AbgBRCgj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 17 Feb 2020 21:36:39 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A8648E11E7F6A8CFFD36;
+        Tue, 18 Feb 2020 10:36:36 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Feb 2020
+ 10:36:30 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <sean.wang@kernel.org>, <linus.walleij@linaro.org>,
+        <matthias.bgg@gmail.com>, <light.hsieh@mediatek.com>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@listd.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] pinctrl: mediatek: remove set but not used variable 'e'
+Date:   Tue, 18 Feb 2020 10:36:25 +0800
+Message-ID: <20200218023625.14324-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20200211210618.GA29823@embeddedor>
-In-Reply-To: <20200211210618.GA29823@embeddedor>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 18 Feb 2020 10:25:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASABqhpCjoQkQAZAVOjTvVG+4PDWaP+a8=hcv6GsgeQMQ@mail.gmail.com>
-Message-ID: <CAK7LNASABqhpCjoQkQAZAVOjTvVG+4PDWaP+a8=hcv6GsgeQMQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: uniphier: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 6:03 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
->
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
->
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c: In function mtk_hw_pin_field_lookup:
+drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c:70:39: warning:
+ variable e set but not used [-Wunused-but-set-variable]
 
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Since commit 3de7deefce69 ("pinctrl: mediatek: Check gpio pin
+number and use binary search in mtk_hw_pin_field_lookup()"),
+it is not used any more, so remove it, also remove redundant
+assignment to variable c, it will be assigned a new value later
+before used.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> ---
->  drivers/gpio/gpio-uniphier.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-> index 0f662b297a95..9843638d99d0 100644
-> --- a/drivers/gpio/gpio-uniphier.c
-> +++ b/drivers/gpio/gpio-uniphier.c
-> @@ -33,7 +33,7 @@ struct uniphier_gpio_priv {
->         struct irq_domain *domain;
->         void __iomem *regs;
->         spinlock_t lock;
-> -       u32 saved_vals[0];
-> +       u32 saved_vals[];
->  };
->
->  static unsigned int uniphier_gpio_bank_to_reg(unsigned int bank)
-> --
-> 2.25.0
->
-
-
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 1da9425..d3169a8 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -67,7 +67,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ 				   const struct mtk_pin_desc *desc,
+ 				   int field, struct mtk_pin_field *pfd)
+ {
+-	const struct mtk_pin_field_calc *c, *e;
++	const struct mtk_pin_field_calc *c;
+ 	const struct mtk_pin_reg_calc *rc;
+ 	int start = 0, end, check;
+ 	bool found = false;
+@@ -82,8 +82,6 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
+ 	}
+ 
+ 	end = rc->nranges - 1;
+-	c = rc->range;
+-	e = c + rc->nranges;
+ 
+ 	while (start <= end) {
+ 		check = (start + end) >> 1;
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
+
