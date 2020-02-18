@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB02B162AD0
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 17:39:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68BAD162AD2
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 17:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgBRQjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 11:39:53 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38938 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQjx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 11:39:53 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so3638638wme.4;
-        Tue, 18 Feb 2020 08:39:50 -0800 (PST)
+        id S1726528AbgBRQkP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 11:40:15 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40384 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgBRQkP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 11:40:15 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t3so24746433wru.7;
+        Tue, 18 Feb 2020 08:40:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4vYtRiW+6Wt12+b8bfpUgMwEp+iq8E8S7syR5LipLyA=;
-        b=DKfe2wW9oaDeBM+SV6K4t1eNOba9J697CSC9qWu6Jp4mnmnBs3cOIUkzajTzF/yLbJ
-         AjF0DdFDEiz+aZ9Nk23odnDRrBFuFOigR9d5WRvNyguuNWj7HFjn57McRQl1S7wkB7IO
-         WjtGXV3kAWLjYpP15Mh+6s3eDsM8+6C54oQreYcR83sBC1rM+YnjkzHi/esxWO59nTA3
-         2EzoAEgRUtygAqOLliHINcaQCRBZ0pActvOYcXXGGypJZ8vk3N5YqsuKl+fhIfFX85rT
-         Z48XBB+2D8wM9UdJJFZ2VgUBx9gRCktPQW5G8+v1+kbLyGivkFL5St3cpAnKY+JMrDPq
-         oJGQ==
+        bh=9Joze6fnZvPcBeFZDBLK+IUfRUadcgU8sMXjTz1RXhY=;
+        b=tZawfcPZf847NbZgyv7mxhUDujHEFkxgpbV5VLTLara5MFuK1WVrgRg8NqnLIawoLZ
+         7snf1SO6Db09/ee8Bsb/jMe5TBZJ2s1HJ8lefehtJq+DAYopg4FcqAoWXNiPpwxGtOEy
+         EFHB+8BdX81mnCaaa09RKc7pgOKrhuDq4Ts/5ywP07QQLLw9MRTDZXnNoHGRvldigwmJ
+         8T0eImmjUsLJgBqrBo9tGpQ9KH7uy1GM83J+sBh5+8/NcbmeHRQCR5UAnR5ysSfsykoF
+         jBW+8DxqxpmhuZ9jzMkrBOXV5oQLTm/HekqrmSZ+jiCxQarWr3rVrPX6JkCWmAZpmeSS
+         +oDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4vYtRiW+6Wt12+b8bfpUgMwEp+iq8E8S7syR5LipLyA=;
-        b=Hjii6/HDs6N5SUDnPH+7dwZpr1vLnFt+/mdVkvVKj+0rI/wKAr61OMKfU3S6Rf6NXW
-         Wdf8bF+GRkz2eHdwsiIlOQp2fJfUkUzaex5bcmHCy6FmzaVvB+hDg53REnc79qYyWUud
-         7gKfcB2KgqC1UiV9SzJi4MEkRB13xnBOXzt0/ml5s+9ewFo8dyhHim7ZfNiK8ZClEiGQ
-         PKOEA3QwkXi5eQRQMD9iRleYXMNZuRt3L/GmmePoc/oDfWDedgMg0FmFf5vn86pNdb2W
-         6aqv51k0xwsyv7CnX/Jmwt9E1RjLe7M6ZYPTGZBqaRRQ5BR7HrIhiz4zE3PqFOSN+Y2G
-         CO3A==
-X-Gm-Message-State: APjAAAVS46hqpBcGoyfM8hzKOUQf+wj0BUiKEsrX9/W/muIctIIz2YAY
-        XmWKH5RpbD4SJy2o40ISfUE=
-X-Google-Smtp-Source: APXvYqxcbI+RE+WYU+sXkJY9yUNjkkp8BNWl+KrGUkzF6VXs/f3FnNVbDMQEVrjHo9bLmnmRHMQZXQ==
-X-Received: by 2002:a05:600c:295d:: with SMTP id n29mr4018188wmd.101.1582043989830;
-        Tue, 18 Feb 2020 08:39:49 -0800 (PST)
+        bh=9Joze6fnZvPcBeFZDBLK+IUfRUadcgU8sMXjTz1RXhY=;
+        b=lPY4h/8kZcGqKBH8Jo7yzqC9lR9yO4nN7BsaKXfSVdPTwzATaZIfYJoysFyUnETxd/
+         J1DykGjKswllxALlu+0ONRGF6HI6c4kuQwgudmOggjGrMwNU7d1AAy2w1DpGGfiEL6Po
+         riNJ+aHNEvy+xjNBpyZwJUpa3B/QpfHTr+8Tk1uUXoqM4iEjokdr/KOSALXxFFNrUIMM
+         4W0iIDHiFowN1OpSsIGqiWrfVZAgeHLtz0gMo5P18fDTaZAABurrobgEuGEgPWAaPWxq
+         b6Y+9jZKC4XZ+aqHWEkD0cUTjA0c2AswTKASdB39+bmzRptIJ/eX2+ulh08dREAIv42S
+         AUYw==
+X-Gm-Message-State: APjAAAUdYOJmAIlSD7NT3GJJIPFSipiBivaUHnQ0IEahI0zM6b4TjlCa
+        wI9s3YncaJhQ5Fc22IbTerc=
+X-Google-Smtp-Source: APXvYqxHDHtarmVE5HdtGrtjP9dEin33Msz4OJ84qLkE6BXuHISu+eQBLKE/u+/4bWSAiC10fdy97A==
+X-Received: by 2002:adf:e5c6:: with SMTP id a6mr30418792wrn.185.1582044012545;
+        Tue, 18 Feb 2020 08:40:12 -0800 (PST)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id u62sm4293547wmu.17.2020.02.18.08.39.48
+        by smtp.gmail.com with ESMTPSA id h128sm4408935wmh.33.2020.02.18.08.40.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 08:39:49 -0800 (PST)
-Subject: Re: [PATCH v1 1/2] pinctrl: make MediaTek pinctrl v2 driver ready for
+        Tue, 18 Feb 2020 08:40:11 -0800 (PST)
+Subject: Re: [PATCH v1 2/2] pinctrl: make MediaTek MT6765 pinctrl ready for
  buidling loadable module
 To:     light.hsieh@mediatek.com, linus.walleij@linaro.org
 Cc:     sean.wang@kernel.org, kuohong.wang@mediatek.com,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-mediatek@lists.infradead.org
 References: <1582016614-20728-1-git-send-email-light.hsieh@mediatek.com>
+ <1582016614-20728-2-git-send-email-light.hsieh@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -127,12 +128,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <3db80f29-093b-ffc8-4c45-07a0508b523b@gmail.com>
-Date:   Tue, 18 Feb 2020 17:39:47 +0100
+Message-ID: <dbe41adb-356e-a5c7-99de-c98850f8cd90@gmail.com>
+Date:   Tue, 18 Feb 2020 17:40:10 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1582016614-20728-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1582016614-20728-2-git-send-email-light.hsieh@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -141,418 +142,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Light,
+
 
 On 18/02/2020 10:03, light.hsieh@mediatek.com wrote:
 > From: Light Hsieh <light.hsieh@mediatek.com>
 > 
-> Google plan to make platform driver as kernel module for future
-> Andriod kernel. This patch make pinctrl-paris.c ready for building as
-> loadable module. Besides, mtk-eint.c and pinctrl-mtk-common-v2.c,
-> the dependent objects of pinctrl-paris.c, are made to be ready for
-> building as loadable module.
-
-My proposal for the commit message:
-
-In the future we want to be able to build the pinctrl driver, based on paris, as
-kernel module. This patch allows pinctrl-paris.c the external interrupt
-controller mtk-eint.c and pinctrl-mtk-common-v2.c to be loadable as module.
-
-With this or something similar:
+> This patch make pinctrl-mt6765 ready for building as
+> loadable module.
+> 
+> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-> 
-> The following is the rationale for determining whether mtk-eint.c,
-> pinctrl-mtk-common-v2.c, and pinctrl-paris.c are built as loadable module:
-> 
-> 1. drivers/pinctrl/mediatek/Kconfig:
-> 1.1 PINCTRL_MTXXXX: change from bool to tristate. It is specified in
->         defconfig file. MTXXXX can only be the user of pinctrl-paris,
->         which can MT6765 or MT8183. The patch for changing
->         PINCTRL_MT6765 from bool to tristate will be given as the next
->         patch of the patch series.
-> 1.2 PINCTRL_MTK_PARIS: change from bool to tristate and select
->         PINCTRL_MTK_V2. No need to specify in defconfig file.
->       * PINCTRL_MTK_PARIS will be y if any PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS is y.
->       * PINCTRL_MTK_PARIS will be n if all PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS is n.
->       * PINCTRL_MTK_PARIS will be m if some PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS are m and other PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS are n.
-> 1.3 PINCTRL_MTK_MOORE: select EINT_MTK and PINCTRL_MTK_V2. It is make
->         to be ready for building as loadable kernel module because it
->         is not used on Android kernel.
-> 1.4 PINCTRL_MTK_V2: add this tristate config which depends on
->         PINCTRL_MTK_PARIS and PINCTRL_MTK_MOORE. No need to specify in
->         defconfig file.
->       * PINCTRL_MTK_V2 will be y if either PINCTRL_MTK_PARIS or
->         PINCTRL_MTK_MOORE is y.
->       * PINCTRL_MTK_V2 will be n if both PINCTRL_MTK_PARIS and
->         PINCTRL_MTK_MOORE are n.
->       * PINCTRL_MTK_V2 will be m if PINCTRL_MTK_PARIS is m and
->         PINCTRL_MTK_MOORE is n.
-> 1.5 EINT_MTK: change from bool to tristate and add rule for default.
->         No need to specify in defconfig file.
->       * First rule: determine if EINT_MTK is y or n according to
->         selection of PINCTRL_MTK or PINCTRL_MTK_MORE.
->       * Second rule: determine if EINT_MTK is y, m, or n according to
->         selection of PINCTRL_MTK_PARIS.
-> 
-> 2. drivers/pinctrl/mediatek/Makefile: Use PINCTRL_MTK_V2 to determine
->         if pinctrl-mtk-common-v2.c is built as loadable module or
->         built-in.
-> 
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
 > ---
->  drivers/pinctrl/mediatek/Kconfig                 | 13 +++++++++++--
->  drivers/pinctrl/mediatek/Makefile                |  5 +++--
->  drivers/pinctrl/mediatek/mtk-eint.c              |  9 +++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |  5 +++++
->  drivers/pinctrl/pinconf-generic.c                |  1 +
->  6 files changed, 53 insertions(+), 4 deletions(-)
+>  drivers/pinctrl/mediatek/Kconfig          | 2 +-
+>  drivers/pinctrl/mediatek/pinctrl-mt6765.c | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index 701f9af..4cd1109 100644
+> index 4cd1109..c645fdb 100644
 > --- a/drivers/pinctrl/mediatek/Kconfig
 > +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -3,10 +3,12 @@ menu "MediaTek pinctrl drivers"
->  	depends on ARCH_MEDIATEK || COMPILE_TEST
+> @@ -89,7 +89,7 @@ config PINCTRL_MT2712
+>  	select PINCTRL_MTK
 >  
->  config EINT_MTK
-> -	bool "MediaTek External Interrupt Support"
-> +	tristate "MediaTek External Interrupt Support"
->  	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
->  	select GPIOLIB
->  	select IRQ_DOMAIN
-> +	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
-> +	default PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MTK
->  	bool
-> @@ -17,23 +19,30 @@ config PINCTRL_MTK
->  	select EINT_MTK
->  	select OF_GPIO
->  
-> +config PINCTRL_MTK_V2
-> +	tristate
-> +	depends on PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS
-> +
->  config PINCTRL_MTK_MOORE
->  	bool
+>  config PINCTRL_MT6765
+> -	bool "Mediatek MT6765 pin control"
+> +	tristate "Mediatek MT6765 pin control"
 >  	depends on OF
->  	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> +	select EINT_MTK
->  	select GPIOLIB
->  	select OF_GPIO
-> +	select PINCTRL_MTK_V2
->  
->  config PINCTRL_MTK_PARIS
-> -	bool
-> +	tristate
->  	depends on OF
->  	select PINMUX
->  	select GENERIC_PINCONF
->  	select GPIOLIB
->  	select EINT_MTK
->  	select OF_GPIO
-> +	select PINCTRL_MTK_V2
->  
->  # For ARMv7 SoCs
->  config PINCTRL_MT2701
-> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
-> index a74325a..4b71328 100644
-> --- a/drivers/pinctrl/mediatek/Makefile
-> +++ b/drivers/pinctrl/mediatek/Makefile
-> @@ -2,8 +2,9 @@
->  # Core
->  obj-$(CONFIG_EINT_MTK)		+= mtk-eint.o
->  obj-$(CONFIG_PINCTRL_MTK)	+= pinctrl-mtk-common.o
-> -obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o pinctrl-mtk-common-v2.o
-> -obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o pinctrl-mtk-common-v2.o
-> +obj-$(CONFIG_PINCTRL_MTK_V2)	+= pinctrl-mtk-common-v2.o
-> +obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o
-> +obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o
->  
->  # SoC Drivers
->  obj-$(CONFIG_PINCTRL_MT2701)	+= pinctrl-mt2701.o
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 7e526bcf..99703a8 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -9,6 +9,7 @@
->   *
->   */
->  
-> +#include <linux/module.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/gpio/driver.h>
-> @@ -379,6 +380,7 @@ int mtk_eint_do_suspend(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_suspend);
->  
->  int mtk_eint_do_resume(struct mtk_eint *eint)
->  {
-> @@ -386,6 +388,7 @@ int mtk_eint_do_resume(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_resume);
->  
->  int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->  			  unsigned int debounce)
-> @@ -440,6 +443,7 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_set_debounce);
->  
->  int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->  {
-> @@ -451,6 +455,7 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->  
->  	return irq;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
->  
->  int mtk_eint_do_init(struct mtk_eint *eint)
->  {
-> @@ -495,3 +500,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_init);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("MediaTek EINT Driver");
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 1da9425..cdf2d69 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+>  	depends on ARM64 || COMPILE_TEST
+>  	default ARM64 && ARCH_MEDIATEK
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt6765.c b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> index 905dae8c..2c59d39 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mt6765.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt6765.c
 > @@ -6,6 +6,7 @@
 >   *
 >   */
 >  
 > +#include <linux/module.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
-> @@ -206,6 +207,7 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_hw_set_value);
->  
->  int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  		     int field, int *value)
-> @@ -225,6 +227,7 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_hw_get_value);
->  
->  static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
->  {
-> @@ -363,6 +366,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
->  
->  	return mtk_eint_do_init(hw->eint);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_build_eint);
->  
->  /* Revision 0 */
->  int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
-> @@ -382,6 +386,7 @@ int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set);
->  
->  int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->  				 const struct mtk_pin_desc *desc, int *res)
-> @@ -404,6 +409,7 @@ int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get);
->  
->  int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->  			 const struct mtk_pin_desc *desc, bool pullup)
-> @@ -423,6 +429,7 @@ int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set);
->  
->  int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->  			 const struct mtk_pin_desc *desc, bool pullup, int *res)
-> @@ -442,6 +449,7 @@ int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get);
->  
->  /* Revision 1 */
->  int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
-> @@ -456,6 +464,7 @@ int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set_rev1);
->  
->  int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->  				      const struct mtk_pin_desc *desc, int *res)
-> @@ -473,6 +482,7 @@ int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get_rev1);
->  
->  int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, bool pullup)
-> @@ -492,6 +502,7 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
->  
->  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, bool pullup,
-> @@ -517,6 +528,7 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_gev1);
->  
->  /* Combo for the following pull register type:
->   * 1. PU + PD
-> @@ -717,6 +729,7 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
->  out:
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_combo);
->  
->  int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc,
-> @@ -737,6 +750,7 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->  out:
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get_combo);
->  
->  /* Revision 0 */
->  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
-> @@ -766,6 +780,7 @@ int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set);
->  
->  int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->  			  const struct mtk_pin_desc *desc, int *val)
-> @@ -790,6 +805,7 @@ int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get);
->  
->  /* Revision 1 */
->  int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
-> @@ -811,6 +827,7 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_rev1);
->  
->  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, int *val)
-> @@ -828,18 +845,21 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_rev1);
->  
->  int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, u32 arg)
->  {
->  	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_raw);
->  
->  int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, int *val)
->  {
->  	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_raw);
->  
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
-> @@ -880,6 +900,7 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_set);
->  
->  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
-> @@ -922,6 +943,7 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_get);
->  
->  int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, u32 arg)
-> @@ -948,6 +970,7 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_set);
->  
->  int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, u32 *val)
-> @@ -971,3 +994,4 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 83bf29c..af97794 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -9,6 +9,7 @@
->   *	   Hongzhou.Yang <hongzhou.yang@mediatek.com>
->   */
->  
-> +#include <linux/module.h>
->  #include <linux/gpio/driver.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
+>  #include "pinctrl-mtk-mt6765.h"
 >  #include "pinctrl-paris.h"
-> @@ -1037,3 +1038,7 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->  	.suspend_noirq = mtk_paris_pinctrl_suspend,
->  	.resume_noirq = mtk_paris_pinctrl_resume,
->  };
-> +EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe);
+>  
+> @@ -1103,3 +1104,6 @@ static int __init mt6765_pinctrl_init(void)
+>  	return platform_driver_register(&mt6765_pinctrl_driver);
+>  }
+>  arch_initcall(mt6765_pinctrl_init);
 > +
 > +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("MediaTek Pinctrl Common Driver V2 Paris");
-> diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-> index 9eb8630..dfef471 100644
-> --- a/drivers/pinctrl/pinconf-generic.c
-> +++ b/drivers/pinctrl/pinconf-generic.c
-> @@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
->  	kfree(cfg);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
->  
->  int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
->  		struct device_node *np, struct pinctrl_map **map,
+> +MODULE_DESCRIPTION("MediaTek MT6765 Pinctrl Driver");
 > 
