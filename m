@@ -2,88 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C4B16260B
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 13:24:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD88162686
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 13:55:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgBRMY3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 07:24:29 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45022 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgBRMY3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 07:24:29 -0500
-Received: by mail-wr1-f66.google.com with SMTP id m16so23646671wrx.11
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2020 04:24:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Re/qzEfuGmEmN6RxPFcJneNfN0qHMlxoSuOmrZrkTeU=;
-        b=mj6hBil2iLdz+cczgouO2gaCmIfyVkInRXsS63E0gqDl4B2rgB7eJKkKlAn8UrA8Jz
-         QA3NnNBnww3tlN+SGg3J8S88XZ0Nd2Ml46qTBv0yo3TIpxY4JK6ECGA5OHEWbJf3Yhec
-         MoTVuiHP9ApF3jvvn4kX8uFX6DsrUc5dVHlhfTtnbtLlqmNmzpumdbSv2NZeD2Sc6p4n
-         Re8n+947kCLJwb2+BMP54W84BLvP0rIzA+tAdgbOc7LL5wt+5YK86cnL6Rro373s7kNC
-         PFQe3zFVnUcKl6s2yl5iEQw328dgKRlFcB/ZBSyB/Y32AbUHBeMhojH1kjSFnUTVlcBg
-         gTiw==
+        id S1726340AbgBRMzz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 07:55:55 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43142 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgBRMzz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 07:55:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id p8so19333769oth.10;
+        Tue, 18 Feb 2020 04:55:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Re/qzEfuGmEmN6RxPFcJneNfN0qHMlxoSuOmrZrkTeU=;
-        b=p9siW9a7uKjoj5BIlPDtfkFhFBMVytuQeOmB9iXbY1MSbsSPFVpZJSXf+qkdHfRpID
-         rBdb96zdZAUBur0ckHhOSryN0ipAagB3bIx90+S1rbTNnHblxlDqoxS86YBXobskJA2H
-         v/3c/P6FBiDUsnzDuOZ6wtiqLe9o6nJVNXISsy8jbG/3OW3eJZqnAUDOcgnml4338qxb
-         3maHUhBewvqRvfY5JfcTcXnSG0xsNEK5pZYYS73RRkXsXigP0mWrudtTZJdC1E7OL3aU
-         4Zlr+REBIPbesxbBj3pQBv2lvKrpaByefbu7ix+9pMCgG1vF95X+q0lvT2EwwC1ZGrs1
-         CgCw==
-X-Gm-Message-State: APjAAAX006sOkYvCM6iq3X4Bon1b4E+alvdHW0cCw1Q7vq2gyfpa+CYC
-        fFRYPb8yDUlnPnAxJEFCTEnw4g==
-X-Google-Smtp-Source: APXvYqxgTkUABQWZa4GKXpopxZNVDbhQPp/JsI03dbyF6i111bHEcaXHg9yi9TELKiIAhD0Vn4SAOA==
-X-Received: by 2002:adf:a381:: with SMTP id l1mr28798603wrb.102.1582028667675;
-        Tue, 18 Feb 2020 04:24:27 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y6sm5890329wrl.17.2020.02.18.04.24.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 04:24:26 -0800 (PST)
-Subject: Re: [PATCH v2 5/7] nvmem: release the write-protect pin
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200218094234.23896-1-brgl@bgdev.pl>
- <20200218094234.23896-6-brgl@bgdev.pl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <d2232172-f503-b7e4-a117-691ab2c480f4@linaro.org>
-Date:   Tue, 18 Feb 2020 12:24:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7m9U+ZDjRKStbdCgNtr/9vPYhAsJaG0K6XoFskR7rjM=;
+        b=HTDGFE7MDfusUpPauKOQmkI1cfqc2acVjOEqzeJcSsUgafIhuXNoISnv8S9gpFjYwN
+         AiKcG7lNLXDLyrWiSmJ2NaKCAlGq6+1hSjaL+QM5MurapUXNJNnEymufUvjFgB/ewipq
+         e783BAHhvsAgNnOMYRxPMzXx3qqn9PwlEDxSvitCVQDLPaXzc5Wm35544r2hnTw1kVva
+         pw2iW8Jg/1lBNCDhaIV8AeDOx//O9KvAwq0sTHOGa98ia2ESeHSiHm2Ga9xOYgvfORX4
+         aLXHffUmbetufzMnJW0UNM/qyitd00GlLaP1OjxFQyx9DOr0RCMeZVBEhAqYUr/b1La8
+         HVpA==
+X-Gm-Message-State: APjAAAWnGS7GxlwOx4+hFO549pNKoQjLzb6eC9p7OTLZChg9eio2x95N
+        vmSCVXxXsEySO5COXO7bvNay5/uhcfpomwDHyU4+583b
+X-Google-Smtp-Source: APXvYqxXI6z4p7G3Ac9Z9fz2+tsg4pGdYtK2i4VQFf85pL9mYaENBRLND7dGkiaDzNrpblFjz7pXPc1c+Y5gVxoun4A=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr855945otk.145.1582030554347;
+ Tue, 18 Feb 2020 04:55:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218094234.23896-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200218112557.5924-1-geert+renesas@glider.be>
+In-Reply-To: <20200218112557.5924-1-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Feb 2020 13:55:43 +0100
+Message-ID: <CAMuHMdUDZ8ErGRYwCOiarKfvTKV4=p72j3FYAQ05Ab_Pt0CQiA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sh-pfc: Remove use of ARCH_R8A7796
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Feb 18, 2020 at 12:26 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> CONFIG_ARCH_R8A7795 was split in CONFIG_ARCH_R8A77950 and
+> CONFIG_ARCH_R8A77951 in commit b925adfceb529389 ("soc: renesas: Add
+> ARCH_R8A7795[01] for existing R-Car H3"), so its users can be removed.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+ARCH_R8A7795 in the one-line summary, of course (thank you patchwork-bot ;-)
 
-On 18/02/2020 09:42, Bartosz Golaszewski wrote:
-> @@ -428,6 +429,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	device_del(&nvmem->dev);
->   err_put_device:
->   	put_device(&nvmem->dev);
-> +	gpiod_put(nvmem->wp_gpio);
->   err_ida_remove:
->   	ida_simple_remove(&nvmem_ida, nvmem->id);
->   err_free_nvmem:
+Gr{oetje,eeting}s,
 
-This is also redundant as explained in my previous comments about release()
+                        Geert
 
---srini
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-> -- 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
