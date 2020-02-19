@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E6841642C0
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 11:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96C8F1642C8
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 12:00:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgBSK5k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Feb 2020 05:57:40 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43218 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBSK5k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 05:57:40 -0500
-Received: by mail-wr1-f66.google.com with SMTP id r11so27622786wrq.10
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 02:57:39 -0800 (PST)
+        id S1726668AbgBSLAV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Feb 2020 06:00:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37826 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgBSLAV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 06:00:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a6so120508wme.2
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 03:00:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XbVzBlTzmMUb2Tui5d1tff0RCyFoEaGMTP5xbXMfFog=;
-        b=zzsVtrNanulY/mngUlst4INjYwfO7oe6NjEiCEOQ2DdCeylsbEXEfNxjrB32+F74cw
-         FnNXVYE+P46yRQocLtm+bg4/BtasFaxagt4BPpDPIWNYNFuldCG7zE3qzcKHAw2OMTQ2
-         ach3BEo29K06KggpiW17sffaCPd/dfhKZSFsCxQHpG4YdwUeYCOtcb/T8DDDP3gYj24l
-         /jF3//Lgb6Em0kT7GEiy51/mb/pjxV1JJ55mSfF0ZUNYntSNvhuUrGQ8nYVpsv6wRy3r
-         0Q0nWdnoIabKpitT+KwKXFGaNmsW3KUEGIcmt1ocL7fHq1Z8c/KQBHcctSbwcjHte1Id
-         mYrw==
+        bh=7H/YCOn3cZ80p3ZvLfOobGUP/Cj28W0PDaZeNMELPIA=;
+        b=flBkeap4OICGKzUAhwUnG6FiQB1q04IFsUXbjyFENB6EOm/Xqe55BJaBUvuTORHncc
+         VswpQuiR/4l08ix5jb3w4/Uc6QoG2O8dGaIxzVt9wP0x4G2FSLCPEG/W3o8OLIrFBx/P
+         IeqCZROJl3ptNO+i5+n5ziOvzba7tfCtGjz2cSyKsJ8dleFnYwzueCCsrCyPVTTstVH9
+         sjTB6latKBzHDv69IKj7VJeH78iqDtGrVIuGaml5dsEsuV4zNP8fFGHmdzUYTdgVgb8W
+         0ohMfKENUy7UNze1SiVkhESR2guCb527zd0ZJXxUVVx9MMqgev2XtDc3g0rB8O9igPlT
+         GzYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=XbVzBlTzmMUb2Tui5d1tff0RCyFoEaGMTP5xbXMfFog=;
-        b=RzNEjOKRtxi3DFGUjKZzzAGJnYc/ACHe9cxAkY32sPA1G+eyhkBrFs/9jdvJM4VLRX
-         trB2MaRVjDqG/D9AybL5azs6874sIh7OsG0aSqHB5beUeywAX199hOuZOEMa1mGxnidA
-         Dyo2gVeso9TPifV83fPwz7k3rzQg5WINClfAPdD8+AMPVN+AmuF64kjU65WyV0qLIr34
-         8BT7YylRUl8NNYp0Z+j0Zkj3mMutnWj5eDfgCFCz0CoI5gOZ3ZOpKuArmfrL2ct+MERR
-         8NUjo4zbY8GrBtRlzbKpIzcTPF+GC3Kod/fDVT8ZjjJG8m9CN4JN8hDpFor6BQ3KVR48
-         YnXA==
-X-Gm-Message-State: APjAAAWM41OJiMl6+Wzw/Wr4oRPs8zevuz8ZlhyLY+Kta/qQC/so3/KN
-        T7h2ebkuwYgG+qg2rp+yLFV4jA==
-X-Google-Smtp-Source: APXvYqwg9YyFLCEoecAsCJ8HXP+2fq8Io/qWMo1OmnwtGkM9ljAYSw/lwW8zQy81/NLD9oy1vhYbXg==
-X-Received: by 2002:adf:9c8d:: with SMTP id d13mr37236416wre.392.1582109858386;
-        Wed, 19 Feb 2020 02:57:38 -0800 (PST)
+        bh=7H/YCOn3cZ80p3ZvLfOobGUP/Cj28W0PDaZeNMELPIA=;
+        b=mBoSO6Lk/3escEkxXeL8hFa/hGlqtvVR6jt4Xv6eT70rw73rErH0wBHzDCBPYX6tfF
+         5MGzsoRN3i/0yMlzatU+Jgnpa+nnAjzecc4FJCx2GgwUEauXUvFtjlcaDZo/zvAZocyf
+         IBPa14kx/kyQrq5Tbtnc0CHMY/Lm6dZ2k+dZlkqkjv+ueUiKUiO9KjNl9DK8lTL/T+Sz
+         QL4tWs3ANqpVo+CqiEgL/CHYU5j9pCnrBQeklGuXPBeVXSrEfOiEORyz+0pDN7/0oKIp
+         QLaj0DssfJ3mRa1gfNlyTY+6jbDgv0uuBModBIXn4cJ7dqC+u2GEsnfqLX113c3llKun
+         sAqQ==
+X-Gm-Message-State: APjAAAXLFqaNiHTqwLijWs7BdS83Y0dG2/F0xKwDf46wKqrR8XWaEAur
+        wU3ntfXnBXn2DBYzK/sU+bsAyw==
+X-Google-Smtp-Source: APXvYqzf/HQlKxt/BTpiD44E/5sNAO7qxk3LcGuhwkPntczUGlNzz4XgXLBh2d4dsCaVgvNHY0KA4g==
+X-Received: by 2002:a7b:cd14:: with SMTP id f20mr9243214wmj.43.1582110018880;
+        Wed, 19 Feb 2020 03:00:18 -0800 (PST)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id y185sm2617910wmg.2.2020.02.19.02.57.37
+        by smtp.googlemail.com with ESMTPSA id t1sm2603782wma.43.2020.02.19.03.00.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Feb 2020 02:57:37 -0800 (PST)
-Subject: Re: [PATCH v3 7/7] nvmem: add a comment about resource management
+        Wed, 19 Feb 2020 03:00:18 -0800 (PST)
+Subject: Re: [PATCH v3 0/7] nvmem/gpio: fix resource management
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
         Khouloud Touil <ktouil@baylibre.com>,
@@ -53,14 +53,13 @@ To:     Bartosz Golaszewski <brgl@bgdev.pl>,
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 References: <20200219092218.18143-1-brgl@bgdev.pl>
- <20200219092218.18143-8-brgl@bgdev.pl>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <56f38e71-7572-55ac-d5ae-dfbe5c2345f7@linaro.org>
-Date:   Wed, 19 Feb 2020 10:57:36 +0000
+Message-ID: <4a36c93a-704a-832b-0f66-dd17fe304da6@linaro.org>
+Date:   Wed, 19 Feb 2020 11:00:17 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200219092218.18143-8-brgl@bgdev.pl>
+In-Reply-To: <20200219092218.18143-1-brgl@bgdev.pl>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -74,43 +73,10 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 19/02/2020 09:22, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> The fact that part of the resources associated with the nvmem resources
-> is freed by the release() callback in device_type caused me some
-> confusion. Add a comment explaining that to nvmem_register().
 
-I see this patch totally unnecessary!
+Can you please rebase your patches on top of
 
-I expect people creating patch in this area to understand what exactly 
-they are doing. This is not going to help them in anyway, other than 
-misleading and re-documenting device_add which is already available at
-
-https://www.kernel.org/doc/html/v5.5/driver-api/infrastructure.html
+https://git.kernel.org/pub/scm/linux/kernel/git/srini/nvmem.git/log/?h=for-next
 
 
-thanks,
-srini
-
-
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->   drivers/nvmem/core.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 40fe5913c264..6e28f3fddf53 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -397,6 +397,11 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   
->   	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
->   
-> +	/*
-> +	 * After calling device_add() we can stop freeing previously
-> +	 * allocated resources - they'll be freed from nvmem_release()
-> +	 * when the device's reference count drops to 0.
-> +	 */
->   	rval = device_add(&nvmem->dev);
->   	if (rval)
->   		goto err_put_device;
-> 
+--srini
