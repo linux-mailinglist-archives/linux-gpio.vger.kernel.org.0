@@ -2,74 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FC01649DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 17:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E65F164A27
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 17:23:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgBSQSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Feb 2020 11:18:13 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44587 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgBSQSJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 11:18:09 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so945723ljj.11
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 08:18:06 -0800 (PST)
+        id S1726528AbgBSQXy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Feb 2020 11:23:54 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40586 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgBSQXx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 11:23:53 -0500
+Received: by mail-lj1-f196.google.com with SMTP id n18so985808ljo.7
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 08:23:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FNIeeJsk5kS+/MNQiQBqWzPS8Hc6Zxgn+ktiCE+t/lw=;
-        b=aBSVx+8CRkbeLq8O0iXiBkO3p/l/2sIBUrlpB4EZuNuT794r8Cky2bj3/mLP0o7NIS
-         t/GNOUwYKG7SQqJfmMyOIODB4SVZwBWdaW9mb3hZ6Srj/mWOGa/M76b219nt+ofWdnnz
-         l8YoS6J9OAzKBUPte8XoLiVAUwfYiH/Ybme6CmKM/fQloZCg1BCBSS1hxbo5vt94wYDF
-         wi0lsZTkHc4CxlUSjQEAAHGk4WXxigdfP+E8YPreaG8pIZD1OgoOeZ6z+OFiOUIlR2sq
-         aKrNjvjgJmzQgu652ErrkkNmpNN4hy84IYrGAJbCTvvw7HmFg55X4aNgWUq3fQSVFT5l
-         NHxA==
+        bh=V+koYLn7ZJhaqj25+W9188jeUQ5uNdHzeqMm7FamtmY=;
+        b=tqwyRN7XCiE959aKxjtEOi7/UiVPLzQgbupb84ZCRLoTrnACUhp19awz+tzxddbR1X
+         9Yly0tVxiHyjnEOptVx9h+2uf8YOzE5dvLYJkwDqI+81p+8XHhPg9iGCPm0HJtE2JlIN
+         T1qaWa2iiTxPvshRd+3CGCmfMnZq80U/hWBatQRYUYlUClXPIgDK7pRWOri0lpuyWzu3
+         NBibHPKrpoVeYevXQaFye8xcnO1QgQuIk+je/kzXoFM4qtTR3f7899B7sEiilbXCfUA3
+         KPTriTwoL/s9tqAiZvdW9zYCz5Kmt8FriQ8IIGF8dXC08E0ZDt4nlf8pJZJPKLZc9jTr
+         0rZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FNIeeJsk5kS+/MNQiQBqWzPS8Hc6Zxgn+ktiCE+t/lw=;
-        b=VZwNIHk0JsRY0mdP7KUhmjBdfZOooxdscWAnjP9PzySDTh+mPBn/s09ddwByzE0ljS
-         DFnFZ++R+cAdBs4txhZuvcc55dkKU6jV3zAy9yufqwj+jhxPo6aybKG7i+l58WSgkZmw
-         ZQM4jMJxw+P4l0yWd6khK3I+ZLm7eBKGexkCCz9o9rlP8xhBKSgsQjaSBrEyy6xvkt6J
-         94gvVB4H41MLiy+miwMwBi6dowQeSvSu/We2Qq1QC0tBp1BvTaToifrCkxJ4134fqMiT
-         bW6zXw7h55RgMuYp2mAk7/xmVE20WBnQ0AFFof4A49lZRdKwhWrTxzxoXaYeMwRWENfP
-         hrgQ==
-X-Gm-Message-State: APjAAAVCj0dVPQNhexxMeOvvw/2bsgVlM2ba1cHpeXCW2z267JZC3b1j
-        j+1xZ62S4ldd1xYrzlmH4gDy9BYwOVy6yYH2gLhYgQ==
-X-Google-Smtp-Source: APXvYqz5+N8/IcBMuJha1sjwR5W6tlYYD0yG0sdk9Zg5a202hQT2/SIsxkI/6w5AHuyFS6gous52gqNq9cvuBXJcR+0=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr17031085ljc.39.1582129086032;
- Wed, 19 Feb 2020 08:18:06 -0800 (PST)
+        bh=V+koYLn7ZJhaqj25+W9188jeUQ5uNdHzeqMm7FamtmY=;
+        b=O2qj7e++gE/87fGDXl9Vl3pSqZoNwvTx0MZ+99H+aD3jt23Q1l1QOy1j1SPtTldzYJ
+         txr7kCEvj9cMD6jv2KiKj32TfWJuhGIxDmsp1xhOJYw/EAoeeftTfPDWfthAodERhUt0
+         WabTR2BEb6HmRYrye7jmDYSpIn/98UJLhMEPCHsQK4N7E5aFDHGZtHNTj84MAIKY/ggR
+         S9TO6BM6xjRW44wxhkj5FpEOtINaZp1uSFwj8/vt8aJhQN6A9fqXwFqnguzSKf9+lRvi
+         c1AxyqHfOOtsAOkizuD6n+em3ld0lCKZFDT/g+Vc+yrlyp4fDgfbb6EQVdwO3/OONapV
+         RfYw==
+X-Gm-Message-State: APjAAAVlSyoPpZnYPdlGnA6pGXrRi6dcsXm8gyJ4DgdlZYbx8VyLN+VZ
+        RA7w3TkLCJBgk32B3aRboOMa1WLSK6FtdUO99WiBpg==
+X-Google-Smtp-Source: APXvYqxJ7AMu2+7ZjAhkwR9hwSCjvmhllaXVwoznlwbfYWEU+J3T+FCENxb+Oo9gQMBsOOU7sXyzFQ8kRLk7wptkHE4=
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr16811174ljg.223.1582129430832;
+ Wed, 19 Feb 2020 08:23:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-4-m.felsch@pengutronix.de> <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200218110712.7wllleu2w5myphyb@pengutronix.de>
-In-Reply-To: <20200218110712.7wllleu2w5myphyb@pengutronix.de>
+References: <CAJZgTGF2ihuu_bSzQ93iBTf1YQ4_NM29S4iBFM8Fhd_RUaw2vQ@mail.gmail.com>
+In-Reply-To: <CAJZgTGF2ihuu_bSzQ93iBTf1YQ4_NM29S4iBFM8Fhd_RUaw2vQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 19 Feb 2020 17:17:55 +0100
-Message-ID: <CACRpkda94cDdDuuJE+j6-d=TcwyqQV6Ey+26oHM2TT06Rhxj8Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Date:   Wed, 19 Feb 2020 17:23:39 +0100
+Message-ID: <CACRpkdYXw0D9BJSBd6tvnKM3tkMir6ptcpg0nZxpbWQdAHYooA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: meson-gxl: fix GPIOX sdio pins
+To:     Nicolas Belin <nbelin@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 12:07 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+Hi Nicolas,
 
-> gentle ping. The mfd-code and the dt-bindings are landed in 5.6-rc1 but
-> this patch is missing.
+thanks for your patch!
 
-Patch applied for v5.7.
+I can't apply it for some reason, something is weird with it...
+
+On Wed, Feb 5, 2020 at 12:22 PM Nicolas Belin <nbelin@baylibre.com> wrote:
+
+> @@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]    = { GPIOX_0 };
+>  static const unsigned int sdio_d1_pins[]       = { GPIOX_1 };
+>  static const unsigned int sdio_d2_pins[]       = { GPIOX_2 };
+>  static const unsigned int sdio_d3_pins[]       = { GPIOX_3 };
+> -static const unsigned int sdio_cmd_pins[]      = { GPIOX_4 };
+> -static const unsigned int sdio_clk_pins[]      = { GPIOX_5 };
+> +static const unsigned int sdio_clk_pins[]      = { GPIOX_4 };
+> +static const unsigned int sdio_cmd_pins[]      = { GPIOX_5 };
+>  static const unsigned int sdio_irq_pins[]      = { GPIOX_7 };
+>
+>  static const unsigned int nand_ce0_pins[]      = { BOOT_8 };
+> --
+
+For example the patch just ends here with -- two dashes.
+
+Please collect Jerome's ACK and resend using git-send-email if possible.
 
 Yours,
 Linus Walleij
