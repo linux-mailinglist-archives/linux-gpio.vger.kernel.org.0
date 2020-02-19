@@ -2,94 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9F12164396
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 12:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBE5316439C
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 12:44:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgBSLnO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Feb 2020 06:43:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgBSLnO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:43:14 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7542524654;
-        Wed, 19 Feb 2020 11:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582112593;
-        bh=cMEgzzVGtoiAaBQbg6W/JzWI5xmZ34oYwgybQc4cGV0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LuTL44v0bbP2jnnoPOJQmUAw3xcYT0FnwLbsv5i51y1ywelaSOqjYVIO0+g5jbV5j
-         RBhT2CdyTMiKsv7W3SkiN+r11Swuqm4M4RK4VXgTUj3C3YGOOIJ0QXkcpFTjjjQVwy
-         dGNYJduxvrw9bNiMwNJEWLQXDfUIQnKiVLA5AAxw=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4Nl1-006Ugr-Nw; Wed, 19 Feb 2020 11:43:11 +0000
+        id S1726632AbgBSLoq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Feb 2020 06:44:46 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37573 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgBSLop (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 06:44:45 -0500
+Received: by mail-lj1-f193.google.com with SMTP id q23so36676ljm.4
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 03:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=MBYdY7YmJFAze+FI1YzaTjLSxr777+pClRagLHMOXDJovCzP4zvUljmkRcXrTyNxIN
+         zOTKxAm0qeBoFkKlwoJwSHFRWBNxYSPs6+BX4fXI53vazzK11SOc5bgvfb+akWU2hzck
+         wIwZaaG1TRBogMM3W+KAyQGr7YEmxCXTfBY9kwgqA1Ucu5jYQvPb1WicWdIqhfOLG+ut
+         wx3aCnsElDCP6nyCuv+j4jSKNbfDYwvUT1lkPNTpvr7vvlPV411arXWRbaki+KVzMAq0
+         cPTqaMugjwpt9jc0iz71wQSo/x7NK6ESwUF8fTmvrmmNGKhCCfcsYw6Qie/zvLo4YNDk
+         p4aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=iVwwP/bqDMomljXU2sgORqnXS9o/oo6S6qRNSM4YSSGxNPXo9DEbLPAhKhKqWaAvpB
+         5o43PTENNpHbYI5RQqYTUOPsKJN9ZGi0fdHDTHNzq5t5RqKn4tn8sqDHP9/LQkBiZAiN
+         fgHxNCRy3bJJocicEUzBkQzlVZHaL/W5X7MVBxQVO6BgIZTWciKsVoob8rX5s2oqEbVl
+         41yxHBB762PXGpVSlEYUBZat/Fn5H6TTKPITyJRDHFij8av4wbjPNPL47LNyBIoV94BN
+         zWA7iZyCSPs5ylW5KOwNBoUI2ZUWp+KAJ56SRjHhNnB7ENeTMPbux2hYG4rCPYTJhlwJ
+         gkrA==
+X-Gm-Message-State: APjAAAWDkkWcNT6fC7N++Sjo4jTk4/bVyY7BX9UvFzqI0ACC5nEGiKBI
+        kkISgsS7UwFD/DNDUAlRZ4BCB7mnM4KkCBbWlnk=
+X-Google-Smtp-Source: APXvYqwWJL+KorR71B19Ob3K8zexrT5D7RrteOzwWgNpdff2hG+Afz16cWgUBBbEtGu2khRKBv3kd9+V7Lcjhgu/ZLU=
+X-Received: by 2002:a2e:9218:: with SMTP id k24mr15240954ljg.262.1582112683726;
+ Wed, 19 Feb 2020 03:44:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Feb 2020 11:43:11 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>, marex@denx.de,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
-In-Reply-To: <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-2-alexandre.torgue@st.com>
- <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
-Message-ID: <608d9c84813323ee3839f6ac21aa8f4e@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, marex@denx.de, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Received: by 2002:ab3:4281:0:0:0:0:0 with HTTP; Wed, 19 Feb 2020 03:44:43
+ -0800 (PST)
+Reply-To: ayishagddafio@mail.ru
+From:   AISHA GADDAFI <mahasaliou4444@gmail.com>
+Date:   Wed, 19 Feb 2020 03:44:43 -0800
+Message-ID: <CAKHB8qdA5-UXcog27z=iSOhdJkBWO6NQE1ijAUU2uxof=pW7rQ@mail.gmail.com>
+Subject: Lieber Freund (Assalamu Alaikum),?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-02-19 11:33, Alexandre Torgue wrote:
-> Fix Marc email address
-> 
-> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
->> This commit introduces retrigger support for stm32_ext_h chip.
->> It consists to rise the GIC interrupt mapped to an EXTI line.
->> 
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->> 
->> diff --git a/drivers/irqchip/irq-stm32-exti.c 
->> b/drivers/irqchip/irq-stm32-exti.c
->> index e00f2fa27f00..c971d115edb4 100644
->> --- a/drivers/irqchip/irq-stm32-exti.c
->> +++ b/drivers/irqchip/irq-stm32-exti.c
->> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
->>   	unregister_syscore_ops(&stm32_exti_h_syscore_ops);
->>   }
->>   +static int stm32_exti_h_retrigger(struct irq_data *d)
->> +{
->> +	struct stm32_exti_chip_data *chip_data = 
->> irq_data_get_irq_chip_data(d);
->> +	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
->> +	void __iomem *base = chip_data->host_data->base;
->> +	u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
->> +
->> +	writel_relaxed(mask, base + stm32_bank->swier_ofst);
->> +
->> +	return irq_chip_retrigger_hierarchy(d);
+--=20
+Lieber Freund (Assalamu Alaikum),
 
-Calling irq_chip_retrigger_hierarchy here is really odd. If the write
-above has the effect of making the interrupt pending again, why do you
-need to force the retrigger any further?
+Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
+Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
+Mutter und eine Witwe
+mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
+hen
+Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
 
-             M.
--- 
-Jazz is not dead. It just smells funny...
+Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
+f=C3=BCnfhunderttausend
+United State Dollar ($ 27.500.000.00) und ich brauche eine
+vertrauensw=C3=BCrdige Investition
+Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
+jedoch
+M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
+von
+Investitionsprojekten in Ihrem Land
+Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
+bauen.
+
+Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
+n und
+Unternehmensgewinn zu verhandeln
+Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+
+Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
+antworten Sie bitte dringend
+Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
+.
+
+Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
+esse (
+ayishagddafio@mail.ru ) zur weiteren Diskussion.
+
+Freundliche Gr=C3=BC=C3=9Fe
+Frau Aisha Al-Qaddafi
