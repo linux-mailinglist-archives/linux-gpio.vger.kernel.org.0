@@ -2,74 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 112371634F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Feb 2020 22:29:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 332A31639A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 02:52:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgBRV3F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Feb 2020 16:29:05 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40637 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgBRV3E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 16:29:04 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so21030913otr.7;
-        Tue, 18 Feb 2020 13:29:03 -0800 (PST)
+        id S1727936AbgBSBwn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Feb 2020 20:52:43 -0500
+Received: from mail-pl1-f169.google.com ([209.85.214.169]:35503 "EHLO
+        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgBSBwn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Feb 2020 20:52:43 -0500
+Received: by mail-pl1-f169.google.com with SMTP id g6so8873989plt.2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Feb 2020 17:52:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=4uPjJJCRp+SB0pozAFRGdWFgxk0Vn/KKHhu8gk6Ht+w=;
+        b=QTGIrnUKl4RtvCoMmKrEk1eGka4IU1pMphGcUjHz7NXhCbUAYygGpfmBzW0JC8C6FO
+         RxPyEp0vbA4NOhaeF89m3JXjcGbQwG1HZFn7JCBvPUBc7yL2g5xM3dByIYF8y6U0rzr0
+         qRB2R3kWVTvpe8MW77KQvF30iG714pqd2EcVMK6oSESrmq5lqxd+WLonuNXFXgsnBlFX
+         rlp8ByyDX6TeiRS9RmZ3noRTMCimEBIDh2dCDY6viwJV24WG6Ut5p1VPW007XnGHrvp/
+         N2QD2B/wjWKAHhS4L6AJ4u7saKtPXlJ9HdyFpq2hMBnYO0LAk3oHfekSXlpaI/9//0VE
+         yL5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=whxmhsnQg5rfeVQ8ZQ6aBPD0ZGe096z7/eTSnisT0kE=;
-        b=RyGv/hjBo0zMcfCt4juT9SXvDolxNpOx+jSSvL3sN3XQ5fvtbHDGy8BRJN544hrIjV
-         +y7McCvkHoN7x8UhkTEV8jsE2o97SSajhxS76rbEnF+jmtI+WrygildiGAw6VaYsBUKB
-         cfR2ZGM9WAsNLc3UN8MO5crv2SzRXppzlq0so6X7JGGcAinRA6P4dc6n+3RWr0pIpC6Q
-         THnHr2Z+XlJUHpYbePuI8GaIuEKtVWGpR3EtfvF1IiyTbLLz9Oo5I5FSXLDDyPAZiywF
-         Bg+UEwBuzXFeabrvRvUwu9fmKc/1/9B80AsIa+6RM6UiIzGA5Da0eWt+JO4q8vIkwvkw
-         9FiA==
-X-Gm-Message-State: APjAAAUfk9YVly9IE0NLBKSH8iuCsNhmkOhiqf9j59wMWT45zWYmry8H
-        p7CdVbXWwS/cfXiX/UG/JA==
-X-Google-Smtp-Source: APXvYqxRtM8ThXtjCCD0M0nTwLEpFE/kUUuYb2tUlDQdcZPWlIjs8Joc8bDnpkG6QuXG2SStNT5Ndg==
-X-Received: by 2002:a9d:5885:: with SMTP id x5mr16787058otg.132.1582061342694;
-        Tue, 18 Feb 2020 13:29:02 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r2sm1752661otk.22.2020.02.18.13.29.01
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=4uPjJJCRp+SB0pozAFRGdWFgxk0Vn/KKHhu8gk6Ht+w=;
+        b=j4YTGYkDl1FXiJIOOOuzRjFAY2jPt1r5SK3H1SBji43H5oKMo5TnAGj06I5OnjSAYs
+         BkplCA12vM5JHE9OylAvUVkpVEff99W0UJCtMyN+P6qGpdYJBHflKrOv6070lxPiJVeR
+         qTiwX61idFzyukn/5XhGstMPoWO4rRMbaVL1PTjPM/o2C95/xBCRTtZRwUV5AM1ih5NL
+         ZLzWy48eIC/vhgYcKlpxPUgXFg7gVlrjF2wIgXT2s6bqrrkd/EwJ8KSeQSK7DIPmMY02
+         zQn+HgzAVnBUo9wQtFT/opqSXppSqymXP0awtJqPnDMTaYjvpxUVA2oNYtG3SsKOvoKi
+         GLfQ==
+X-Gm-Message-State: APjAAAWxQmfMCRlX/1jz64EUPPsv4Bi8hFeYe4y0dJEI4cMgx280y6XD
+        /N8F7RX6c9d+Zc7/RXyE1dHwwir64VJAQw==
+X-Google-Smtp-Source: APXvYqy10TnjEVOJu+W+sTmT7LCRGejTdSSZWZefXp7bVS4hUnC2y3/BZXxx0jq08RXpKxg+YNxK+Q==
+X-Received: by 2002:a17:902:b944:: with SMTP id h4mr23069734pls.92.1582077162064;
+        Tue, 18 Feb 2020 17:52:42 -0800 (PST)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id 70sm229998pgd.28.2020.02.18.17.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 13:29:02 -0800 (PST)
-Received: (nullmailer pid 4897 invoked by uid 1000);
-        Tue, 18 Feb 2020 21:29:01 -0000
-Date:   Tue, 18 Feb 2020 15:29:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V4 4/4] dt-bindings: pinctrl: imx8mp: Replace the
- uint32-array with uint32-matrix
-Message-ID: <20200218212901.GA4859@bogus>
-References: <1582012300-30260-1-git-send-email-Anson.Huang@nxp.com>
- <1582012300-30260-4-git-send-email-Anson.Huang@nxp.com>
+        Tue, 18 Feb 2020 17:52:41 -0800 (PST)
+Message-ID: <5e4c94e9.1c69fb81.f30a4.14e2@mx.google.com>
+Date:   Tue, 18 Feb 2020 17:52:41 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582012300-30260-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: gpio-v5.6-2-13-g53803ecac78b
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 5 builds: 0 failed,
+ 5 passed (gpio-v5.6-2-13-g53803ecac78b)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 18 Feb 2020 15:51:40 +0800, Anson Huang wrote:
-> The items of mux_reg/conf_reg/input_reg/mux_val/input_val/pad_setting
-> should be uint32-matrix instead of uint32-array, fix it and improve the
-> schema and example.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> New patch.
-> ---
->  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       | 25 ++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
+linusw/for-next build: 5 builds: 0 failed, 5 passed (gpio-v5.6-2-13-g53803e=
+cac78b)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/gpio-v5.6-2-13-g53803ecac78b/
+
+Tree: linusw
+Branch: for-next
+Git Describe: gpio-v5.6-2-13-g53803ecac78b
+Git Commit: 53803ecac78bbabfdd65f5cb789e46660fa63900
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
