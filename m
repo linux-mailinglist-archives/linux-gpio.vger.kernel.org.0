@@ -2,74 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91E3C164311
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 12:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8AC816432F
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 12:19:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBSLLf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Feb 2020 06:11:35 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52626 "EHLO mx2.suse.de"
+        id S1726632AbgBSLTo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Feb 2020 06:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726497AbgBSLLf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:11:35 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AF769B11F;
-        Wed, 19 Feb 2020 11:11:33 +0000 (UTC)
-Message-ID: <5909a00b6f95b14a983ba86297c0af29c290d0c1.camel@suse.de>
-Subject: Re: [PATCH 4/4] ARM: dts: bcm2711-rpi-4-b: Add SoC GPIO labels
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-Date:   Wed, 19 Feb 2020 12:11:31 +0100
-In-Reply-To: <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
-References: <1581166975-22949-1-git-send-email-stefan.wahren@i2se.com>
-         <1581166975-22949-5-git-send-email-stefan.wahren@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Z3GG+XB2cSE7kwAK7O6H"
-User-Agent: Evolution 3.34.3 
+        id S1726514AbgBSLTn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:19:43 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28B97206E2;
+        Wed, 19 Feb 2020 11:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582111183;
+        bh=BwgSD1a186ReLRbRpljqkbL5xbN/xb62IKOX5waLZ3U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DtGnndcmPB5eBW9AOBpUytkTAaLSpoU88u6KVZS6XNDAOBWhHwzPa2+Yd3gwdop9J
+         XNvJgwMBfFFWGu9XDvoyVbpApAltto5Xq31N289qcRTU2cZWKUV9mPH/8tDpmAKCMH
+         ERqmxUf1atqq4K7mZtC0xLZO8+Xbl/eGBMRHM8Ko=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j4NOH-006URF-9N; Wed, 19 Feb 2020 11:19:41 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 19 Feb 2020 11:19:41 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: stm32: Add level interrupt support to gpio
+ irq chip
+In-Reply-To: <dd6434a7-aff1-94ec-2fdf-51374c695ada@st.com>
+References: <20200210134901.1939-1-alexandre.torgue@st.com>
+ <20200210134901.1939-3-alexandre.torgue@st.com>
+ <377b0895-aaeb-b12e-cad7-469332787b4e@denx.de>
+ <dd6434a7-aff1-94ec-2fdf-51374c695ada@st.com>
+Message-ID: <b7965be80f0e5fe32599f188ae8b231d@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, marex@denx.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 2020-02-11 10:08, Alexandre Torgue wrote:
 
---=-Z3GG+XB2cSE7kwAK7O6H
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Sat, 2020-02-08 at 14:02 +0100, Stefan Wahren wrote:
-> This adds the labels for all the SoC GPIOs on the Raspberry Pi 4.
->=20
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Yes. It'll be fixed in v2.
 
-Patch applied with linus' Review tag.
+And when you do that, please use my official email address (my @arm.com
+address goes to my ex manager, and I don't think he cares much about 
+this).
 
-Thanks!
-Nicolas
-
-
---=-Z3GG+XB2cSE7kwAK7O6H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5NF+MACgkQlfZmHno8
-x/6CqAf+K9om+tz33E8dthw3hcUjPMENZG/D5qLKSIwqgCA1GP6d98AvL391IBEr
-mLBaZOEmws5YB70++XxAYPItxq6ictCaK2TGauHaTfLnYaCPUi8OMfssr6wEXXyw
-zoyNDg7kMjmJZpEuu2gW6qbmIzaMLkYlEK0mYYm0UhsOihbvGt+f3LlMS606S5Qt
-JRjPUgNgE1hUK3HCK8h/MZj3HDvvLZQcz4InESnFEeGU7HI9ozyR+tTu3c/jPQs+
-ta6erOveoIYmMU5dmz3dSqknne43Cue4MIhsOzgbzw4nQZ8yp+WVyG+NeTAM7PfR
-XnfmnuQtIic21pY5W2uUa9MmtBfECw==
-=yuBe
------END PGP SIGNATURE-----
-
---=-Z3GG+XB2cSE7kwAK7O6H--
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
