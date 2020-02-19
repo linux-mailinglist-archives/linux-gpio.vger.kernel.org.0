@@ -2,75 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC336164295
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 11:51:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72C92164298
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Feb 2020 11:52:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgBSKv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Feb 2020 05:51:59 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3927 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726469AbgBSKv6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 05:51:58 -0500
-X-UUID: 3877b925f684492badae9ed1ceb8d9af-20200219
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=B5BznUHUuKJwe4ePhTxbIRuKxxbW9yIzrNyklbjyAaU=;
-        b=jYRl4DEL62MamkR/5Xkut9+1PlWz10ux/CE5h4TUQ3XvZq/PW2BNiAmatQpQ+Zb5gawezi+lBycTHIgZhsoSsTF41qwJdIQRXv1w7PfPhA/bpuO6G0npSSKBo5jPfyIaODKNORMG1J7ay2m5k2iUMy5AsQACikszKiFUKN0BA08=;
-X-UUID: 3877b925f684492badae9ed1ceb8d9af-20200219
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1946344153; Wed, 19 Feb 2020 18:51:54 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 19 Feb 2020 18:51:08 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 19 Feb 2020 18:51:18 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [RESEND PATCH v2 2/2] pinctrl: make MediaTek MT6765 pinctrl ready for buidling loadable module
-Date:   Wed, 19 Feb 2020 18:51:22 +0800
-Message-ID: <1582109482-13625-2-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1582109482-13625-1-git-send-email-light.hsieh@mediatek.com>
-References: <1582109482-13625-1-git-send-email-light.hsieh@mediatek.com>
+        id S1726766AbgBSKwY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Feb 2020 05:52:24 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39229 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgBSKwY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Feb 2020 05:52:24 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y11so27621777wrt.6
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Feb 2020 02:52:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lt0NY5ib1Jfzy6tElePJc/SbaXVWZpjySCmieUMPpiA=;
+        b=J4R47UwDGmz+YjGbKXDX5CSCOZO416NJh6ZdqrxFKG3dhVEUsE3rOv1EF8B+Y0iK3q
+         bsAwG3EeaVeX+IyXwpE7L/9wnR807IGNztzxmqCG+FpwrRKwiqUCnGtY5lsp9rM3tizK
+         symTQZXecIKJZdkEExDae2REdzOidfh6IJH2KAITdcgOK0E2OT+I/V0FjmI2CZkhmPZk
+         HsWCrOE44uICeo36LlKHQkB26Bm0LnJRpKN41aLb4wxAmzemJ9M55qSaNKWKA2PQ0I8y
+         fgocye9J0gLkdY02OJ8zNS3SBSK/6saMb2e/ypV11YVYGCbhZ9jejZUJWEMsgpX7HbJz
+         eICA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lt0NY5ib1Jfzy6tElePJc/SbaXVWZpjySCmieUMPpiA=;
+        b=nl+eXs/osxJEpt5S5ez0BW5YofL7Cb+stpWvVM8KrFzDVpxLO8AADjZPfekFEAm1Cg
+         jzCPD6ExIY4lN7jOUP0OemJt/+XgrZ8rH905ZN+Z5/TwOfglqZML8tjZFUHNuRepX+rA
+         jo6ZJM+yY+UrHbKwg684oyRW9RFtsrQzAp5O4q2hyA6xPDOYe8AHj65v5bxl1ColRVzy
+         epIeSniv4VheD/QXWrSsKMHOx+soYIg/nax2jB7CaejyKTc5pA7fn0w8S48PuUqU/r4p
+         768TX8fHpvBDJljv2Disxrhn7Rpdk/WkIvdD/9pixGq/eqb7x5hA6cPKkswV1e9V4u3h
+         KiuQ==
+X-Gm-Message-State: APjAAAUZ66aWaVXTehE4/soxPERIhS2ZUVW/60/O8n76JAIiFMsMbVXc
+        fYVQShwxv/cx+ciB3N0KFHdvbVPozDw=
+X-Google-Smtp-Source: APXvYqxaU/hV+JRB683FKtQ1VLsdZn0+2CYY0PgX0KgoVd13wMkS8esIg98BvQAndfE6+8aniFhDyw==
+X-Received: by 2002:a5d:5381:: with SMTP id d1mr34595050wrv.259.1582109542207;
+        Wed, 19 Feb 2020 02:52:22 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id z133sm2623662wmb.7.2020.02.19.02.52.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 02:52:21 -0800 (PST)
+Subject: Re: [PATCH v3 1/7] nvmem: fix memory leak in error path
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200219092218.18143-1-brgl@bgdev.pl>
+ <20200219092218.18143-2-brgl@bgdev.pl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e1882a57-5a54-b94e-aa0d-3515c671bc3f@linaro.org>
+Date:   Wed, 19 Feb 2020 10:52:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A089DB8D829F8D46621F838D0090F255D1F6D9A56457DBACE20C27AC1C623EBF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200219092218.18143-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBwYXRj
-aCBtYWtlIHBpbmN0cmwtbXQ2NzY1IHJlYWR5IGZvciBidWlsZGluZyBhcyBsb2FkYWJsZSBtb2R1
-bGUuDQoNClNpZ25lZC1vZmYtYnk6IExpZ2h0IEhzaWVoIDxsaWdodC5oc2llaEBtZWRpYXRlay5j
-b20+DQpSZXZpZXdlZC1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNv
-bT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnICAgICAgICAgIHwgMiAr
-LQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jIHwgNCArKysrDQog
-MiBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnIGIvZHJpdmVycy9waW5jdHJs
-L21lZGlhdGVrL0tjb25maWcNCmluZGV4IDRjZDExMDkuLmM2NDVmZGIgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL0tjb25maWcNCkBAIC04OSw3ICs4OSw3IEBAIGNvbmZpZyBQSU5DVFJMX01UMjcxMg0K
-IAlzZWxlY3QgUElOQ1RSTF9NVEsNCiANCiBjb25maWcgUElOQ1RSTF9NVDY3NjUNCi0JYm9vbCAi
-TWVkaWF0ZWsgTVQ2NzY1IHBpbiBjb250cm9sIg0KKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2NzY1
-IHBpbiBjb250cm9sIg0KIAlkZXBlbmRzIG9uIE9GDQogCWRlcGVuZHMgb24gQVJNNjQgfHwgQ09N
-UElMRV9URVNUDQogCWRlZmF1bHQgQVJNNjQgJiYgQVJDSF9NRURJQVRFSw0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jIGIvZHJpdmVycy9waW5j
-dHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCmluZGV4IDkwNWRhZThjLi4yYzU5ZDM5IDEw
-MDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCisr
-KyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jDQpAQCAtNiw2ICs2
-LDcgQEANCiAgKg0KICAqLw0KIA0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVk
-ZSAicGluY3RybC1tdGstbXQ2NzY1LmgiDQogI2luY2x1ZGUgInBpbmN0cmwtcGFyaXMuaCINCiAN
-CkBAIC0xMTAzLDMgKzExMDQsNiBAQCBzdGF0aWMgaW50IF9faW5pdCBtdDY3NjVfcGluY3RybF9p
-bml0KHZvaWQpDQogCXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJm10Njc2NV9waW5j
-dHJsX2RyaXZlcik7DQogfQ0KIGFyY2hfaW5pdGNhbGwobXQ2NzY1X3BpbmN0cmxfaW5pdCk7DQor
-DQorTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KK01PRFVMRV9ERVNDUklQVElPTigiTWVkaWFU
-ZWsgTVQ2NzY1IFBpbmN0cmwgRHJpdmVyIik7DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
+
+On 19/02/2020 09:22, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski<bgolaszewski@baylibre.com>
+> 
+> We need to free the ida mapping and nvmem struct if the write-protect
+> GPIO lookup fails.
+> 
+> Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+> Signed-off-by: Bartosz Golaszewski<bgolaszewski@baylibre.com>
+> ---
+>   drivers/nvmem/core.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index ef326f243f36..89974e40d250 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -352,8 +352,11 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	else
+>   		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+>   						    GPIOD_OUT_HIGH);
+> -	if (IS_ERR(nvmem->wp_gpio))
+> -		return ERR_CAST(nvmem->wp_gpio);
+> +	if (IS_ERR(nvmem->wp_gpio)) {
+> +		ida_simple_remove(&nvmem_ida, nvmem->id);
+> +		kfree(nvmem);
+> +		return ERR_PTR(rval);
+
+Why are you returning rval here?
+This points return value of ida_simple_get and not the actual error code 
+from wp_gpio.
+
+--srini
+
+> +	}
