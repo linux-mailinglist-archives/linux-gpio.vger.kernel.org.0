@@ -2,82 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D6E1660AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 16:14:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ECFF1660B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 16:14:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgBTPOR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 10:14:17 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33477 "EHLO
+        id S1728480AbgBTPOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 10:14:52 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42938 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgBTPOR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 10:14:17 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so4646137lji.0
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 07:14:16 -0800 (PST)
+        with ESMTP id S1728512AbgBTPOw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 10:14:52 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d10so4583801ljl.9
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 07:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nyYfAxHT6CRHzAhL+Lfi1DTcyn2H/tLwm1L1QgCaoUc=;
-        b=FB6lzG1QsIqJHCuslHP3XrKS96DyFbJ/GgtiTNNd+l2lp80jw0+yLLjt0yAnjFUU6/
-         8WD/q9sg3t58MaC9meV35lDEcTrOtbdtPD1gGvBOTvftfV6FsjjVwS4RSzkAV6QEiTmI
-         VkJrdusURrmMv0GCiczAYp9z8LUIdgMCgb5L33aNByuSoyffErjFIldKL9bea4/kpf8N
-         RI/47mpW1GDKEPL7hpCsxbmnKlj2JtpAdfgYY/N13m1vHCq8UlzrBbEpSVbNXnebI2Jk
-         7y7BA/Uxnxq6PfuBrRb+x1Z032LUiaaFim9zrrTNbinVCNYATV2YijjptrZYmbGw2eFb
-         iKXA==
+        bh=2HGcoFXbyVbTV3eg7hismyxhu6dj14paC3J0LZjVjv8=;
+        b=JppMnoQE1IcDd7cMooO8wrTS949VE3Rf9AEiBdqR3i0G7zQTgWdaA9zCNpK2nYMEWw
+         kdLYxDmax/UsnA0Cv+uY3LrBW6q18f4OfUyT5xq1zbK6HzFfybo1dk17VlgKGLI+U4z3
+         7lNET/xn2+cEztXYx4WWqal15IyBWAzi+wWObB8DD2FK3IMs2ZV8crf3Cvxebps+zChJ
+         Yu24UACGUX/UpQ7uJA7aKSiEzzROngph4UQXkds9qL8NNSbETmh3kGHjYfYYJwv6wUnG
+         /fVwZM6feFreuwPXNsvHpdAdR+XqOxqlmz7h6Rc/bayCu/YyImcXg+LrdYaExGefUNeI
+         JqnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nyYfAxHT6CRHzAhL+Lfi1DTcyn2H/tLwm1L1QgCaoUc=;
-        b=aerwbeyM0CeQiRhI9qyq3IvlGKiLmRrbBl5ECW5sSEwSv+i8/RaQIUz+Y8uuX4D6rT
-         edTcnkiEynbhKVIe+o3b1qR+U3vSvzI8sBhegOAaVYjjoAuw9sebNij2R13ky9Lg6IYC
-         6FiFAIf6rig4aho2AJNE80Ifl8mUOLdoAHNtqtqW9OZKjGalILiXC7gtl8mU36RFuScy
-         Bh3Jr/35CAbquT3s4vreig4zRGWkefybQS3ktHNjGjt243pE2Z1NiVy02p/aY6QXifPR
-         0La80MQrYVxoIiiumdR/uh2SekvduC7WIU2rRVsb+iSLMzLhlwECDETfSkQY7V0WHvwE
-         glfA==
-X-Gm-Message-State: APjAAAWzeiZHfA5+pE/YphOeRezhagdW9UeeQT7q9XFWurPIzELvNMiU
-        8PczbnwCXAP7Ewfsb7g/Lj+hyNDBR6mHgVBuL1rQEg==
-X-Google-Smtp-Source: APXvYqxtKVKfD5MHxlSSaj0Vz28Axw6Zu0+dlk/mKScpMhfCjU4oekoeWPt9CHiwud40m5c1q60F4dL0wXI2I30UJCs=
-X-Received: by 2002:a2e:81c3:: with SMTP id s3mr18719210ljg.168.1582211654160;
- Thu, 20 Feb 2020 07:14:14 -0800 (PST)
+        bh=2HGcoFXbyVbTV3eg7hismyxhu6dj14paC3J0LZjVjv8=;
+        b=BJeYjj5NXkjqKr9DX/omR8eWVZxm2am/6EE6BnEw/gb7MbnKwXoZQFwikCeYwkRqMX
+         UtCwQE0/CtSe0LgOkmEYALAJqZAa+PZLpodIDb17wouMt1mV7tGk9VEbJI6BK0SmsWin
+         OoJC5KhOuEO0Mt0WgQiDQizzROgeO5T1BosaH7LzBdVbOs5yaTL2Acj/5QYuelLduJjY
+         b/PhIquN8DIH+jAOoSQOfm89WAU9S6UE/8hBBM5n0daZdB4R9SKauVjDg40vsIFZTOkD
+         wfniZSV9wYzbahRLAPW9FltN0RqQKRtqVFzqlIY8aiwFJt1E9RNBMw4tLEwOq55rh6Mu
+         HUog==
+X-Gm-Message-State: APjAAAWWSRHFlN1UKeaXu57xMKy0vz4HiSJWj0VmurkWSenkvEj14UDL
+        9lCd6srD4l5PLN+yGOIlhCo5nAO6KSYjgzhSeJUXLw==
+X-Google-Smtp-Source: APXvYqximU2hF5YQAA6qDC6WVIbiCSJIlm99ooaxT3H0C5jTGqzKFkBU+ytUiMHpo+Q/TVwdXj+JqE+CEg5n3KPW7DA=
+X-Received: by 2002:a2e:9013:: with SMTP id h19mr19780468ljg.223.1582211689431;
+ Thu, 20 Feb 2020 07:14:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20200218023625.14324-1-yuehaibing@huawei.com>
-In-Reply-To: <20200218023625.14324-1-yuehaibing@huawei.com>
+References: <20200218055247.74s2xa7veqx2do34@kili.mountain>
+In-Reply-To: <20200218055247.74s2xa7veqx2do34@kili.mountain>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Feb 2020 16:14:03 +0100
-Message-ID: <CACRpkdbgWj3FtKP2S1BcNDphYRS5G-c6-Ms1HGyrcOox8EFpOA@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: mediatek: remove set but not used variable 'e'
-To:     YueHaibing <yuehaibing@huawei.com>
+Date:   Thu, 20 Feb 2020 16:14:38 +0100
+Message-ID: <CACRpkdYWsWNg9oetuHPt0VEz+WKKiqfbfuCu503tpRyZ=7nV=A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: Fix some off by one bugs
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
         Light Hsieh <light.hsieh@mediatek.com>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel@listd.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 3:36 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Tue, Feb 18, 2020 at 6:55 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-> drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c: In function mtk_hw_pin_field_lookup:
-> drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c:70:39: warning:
->  variable e set but not used [-Wunused-but-set-variable]
+> These comparisons should be >= instead of > to prevent accessing one
+> element beyond the end of the hw->soc->pins[] array.
 >
-> Since commit 3de7deefce69 ("pinctrl: mediatek: Check gpio pin
-> number and use binary search in mtk_hw_pin_field_lookup()"),
-> it is not used any more, so remove it, also remove redundant
-> assignment to variable c, it will be assigned a new value later
-> before used.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Fixes: 3de7deefce69 ("pinctrl: mediatek: Check gpio pin number and use binary search in mtk_hw_pin_field_lookup()")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Patch applied with Matthias Review tag.
+Matthias could you have a look at this patch?
 
 Yours,
 Linus Walleij
