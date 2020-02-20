@@ -2,87 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40429165DE1
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 13:51:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 460D9165E0C
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 14:02:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBTMva (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 07:51:30 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42626 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgBTMva (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 07:51:30 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dc14so1796132qvb.9
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 04:51:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
-        b=tGoj+zJjCFlZ9bhdUn+7m0AmuqV1txOsHJRJBnEg6KA2fyVq+zz/iELWJgMTM24R+J
-         XatNmnPWbmev9wW0oX1X8qPc1uyytzGERnz+7t+htuv8OhQzlaT/mEP180ZemvSlUqTc
-         DYtkKQ8qAfkshrVXLAj9HR6UMkjPQus/rQ6ChK8lkcaX0+nrZQ7KoXewU+Nwva72Pl6n
-         a7OydZO/RoLaPMPYG7+T5OiQGt4kAWA9AshfOVz3jOURd5D4K1AFFR+Z1JUCkworJiz9
-         lvH0Nc5SPZ8m7Ouh9OP1JwUSDVLPgQtH93yYB/x3fQ0DT7dK8OX8QyV/rmWYqfxmNZcJ
-         SLqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
-        b=P2mmznEjE/Wejxb1+9bsSoIQli8XV4UyDyk1bDReMu1J9+cT8DIJcbG4dK4M4CxkKT
-         cvCNYNN5vbemh6Lx7Kek7vKouhSBpibdhnkxUPabLXM32JlHE8GNwHiECYkCBoWo+qVG
-         cKIreN/RY3IDIzQ05ny0cIL6GVVGXxIluCZcDQjWBzg5e8NbpGTwSgy074XxM8DYZmZ3
-         3SPXy6CuCr3ewQbE17+cFoG27wU5FpOVKx3DEUOZ6GGm7Qh+rAIQt7e4oqZSunOQq1RY
-         FFq+W5XrQqsG7STLELxjwj+Xk16qDUXCvO7UHBNXjmg55YdXqllxY1m5NQkN7rokN3TH
-         f5kw==
-X-Gm-Message-State: APjAAAVkcIA+CCbhIsn+723IGxGVFpttIOxuXpMBjaQ/HpeqnIjHNN3O
-        KDF1WcJtX8OIqph+9iYSBJCiNrfiIlChGhrUpskw2tYZ
-X-Google-Smtp-Source: APXvYqzt3/u4sLm+8a7c12Ru7REntLJGkgoZmt8TgpKEmEX2TJZHyXdbu5hruKsC4N7eHkriHdxricWluVN6/oEXbJs=
-X-Received: by 2002:ad4:446b:: with SMTP id s11mr25036775qvt.148.1582203089373;
- Thu, 20 Feb 2020 04:51:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220100141.5905-1-brgl@bgdev.pl> <20200220100141.5905-3-brgl@bgdev.pl>
- <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
-In-Reply-To: <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 20 Feb 2020 13:51:18 +0100
-Message-ID: <CAMpxmJX5673AmGDwrb=DMUu7=8Xi2VTtWE72F2hgitK9QUt-RA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] gpiolib: use kref in gpio_desc
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1728073AbgBTNCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 08:02:00 -0500
+Received: from michel.telenet-ops.be ([195.130.137.88]:34966 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgBTNCA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 08:02:00 -0500
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id 511u220045USYZQ0611udL; Thu, 20 Feb 2020 14:01:58 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j4lSj-000563-VA; Thu, 20 Feb 2020 14:01:53 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1j4lSj-0007LK-Ss; Thu, 20 Feb 2020 14:01:53 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/2] gpio: of: Add DT overlay support for GPIO hogs
+Date:   Thu, 20 Feb 2020 14:01:47 +0100
+Message-Id: <20200220130149.26283-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 20 lut 2020 o 13:05 Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
->
->
->
-> On 20/02/2020 10:01, Bartosz Golaszewski wrote:
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -2798,6 +2798,8 @@ static int gpiod_request_commit(struct gpio_desc =
-*desc, const char *label)
-> >               goto done;
-> >       }
-> >
-> > +     kref_init(&desc->ref);
-> > +
->
-> Should we not decrement refcount on the error path of this function?
->
+	Hi all,
 
-On error the descriptor will still be unrequested so there's no point
-in potentially calling gpiod_free(). Also: the next time someone
-requests it and succeeds, we'll set it back to 1.
+As GPIO hogs are configured at GPIO controller initialization time,
+adding/removing GPIO hogs in Device Tree overlays currently does not
+work.  Hence this patch series adds support for that, by registering an
+of_reconfig notifier, as is already done for platform, i2c, and SPI
+devices.
 
-Bartosz
+Changes compared to v1[1]:
+  - Drop RFC state,
+  - Document that modifying existing gpio-hog nodes is not supported.
+
+After I posted v1, Frank created a unittest[2] to demonstrate the
+problem, and to verify to my series fixes it (thanks a lot!).
+
+Thanks!
+
+[1] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
+    https://lore.kernel.org/r/20191230133852.5890-1-geert+renesas@glider.be/
+[2] "[RFC PATCH 0/2] of: unittest: add overlay gpio test to catch gpio hog
+     problem"
+    https://lore.kernel.org/r/1579070828-18221-1-git-send-email-frowand.list@gmail.com/
+
+Geert Uytterhoeven (2):
+  gpio: of: Extract of_gpiochip_add_hog()
+  gpio: of: Add DT overlay support for GPIO hogs
+
+ drivers/gpio/gpiolib-of.c | 139 +++++++++++++++++++++++++++++++++-----
+ drivers/gpio/gpiolib-of.h |   2 +
+ drivers/gpio/gpiolib.c    |  14 +++-
+ drivers/gpio/gpiolib.h    |   3 +
+ 4 files changed, 139 insertions(+), 19 deletions(-)
+
+-- 
+2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
