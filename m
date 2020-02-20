@@ -2,95 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB613165E78
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 14:15:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0116F165FDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 15:41:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgBTNPh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 08:15:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53289 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgBTNPh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 08:15:37 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so1954740wmh.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 05:15:36 -0800 (PST)
+        id S1727705AbgBTOlo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 09:41:44 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44390 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728171AbgBTOlo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 09:41:44 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q8so4458501ljj.11
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 06:41:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=XbSocyvlHYbidOLh4UOVd5RVPSZd3HbLsAjRlUOFqzE=;
-        b=cL9Qls0rrY+UzGeBw0dqcz5IcrwkrepfPyKpcfyhixITUM1d5/ShOLtYyv9e2ht9re
-         vNF4EHS1lout8tWKpDNYeE1wRWJUB1sne2NqK/Fp8QN4MgqLCzv/LyFVKSl2MdP7TfsB
-         jFYPfRkh6ytqAY8bNihNOxsftGETYTp9skzjC6gCf6wScN7+DVr3ntlwNTnbiS/vsVrq
-         RW6sXB8KpGLV3EjfZJLIAAN+AZLCNu9ksf6Vt5nE4aSeDTxWlB0KqxTWvlA1uAqcXnQm
-         31OCyhy4DJ6uyFnqeGplku3fQIs7GQi4AbO0uQU83nieE6vYGS8SxvvzL18IuhEZ+PGC
-         aTOQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2WHlji+P21Kboo5TQBiiWNfvaJqWviYfKbr+yK7daGI=;
+        b=nfg9Y6Ya/mjmEh/GzbxiwCKmaI718Lx4GQTRMhezN/qmHQnRJW5dmO5aVAgatjhxHU
+         YEOjXlidfsnh9QFoG+NSiL1n1Q492pfQSLOcbFxlwj5VNOzkN1718A9Q5pNBwqFywrYB
+         RTopqCqy/uVOQMnCaHvH6/uVvmnfckQSWCy2JjDIKybxlOEevBtn7dP8Ty8ql27ILKJU
+         YBgUsLWtDP9I55WgtlRCXnphieUnIwGnmcZbciKmKFfaTfsecP8NhmPvU8w/ghsPRsJ2
+         H2NNymtvfDY/jGYOVNz5YPJ2aGmjrg8yuqisB6v/XYSGm4BiPObsXiJMcXMBOdKPDusA
+         Ud3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XbSocyvlHYbidOLh4UOVd5RVPSZd3HbLsAjRlUOFqzE=;
-        b=Ztt1bKqk6VDNRzIn3hNrHy9bowZLvfMLuQkGGPYIsTefg4ALBKSwQPZZNUPM+foTWE
-         y+9cEP9qGgEoQAE3Ck23JEElRwNy1YCAAt3fUQ05vh9gs699rt89I8LUX83JNdppeqch
-         /l1WBqJpL6G5gy5wMnSK6fuJ72TPTJsV6+TG02YWncns0dtiqSbTmRG79DJ9H8j7PpSk
-         bWjzdX1dm6mdWLfssXrIlo01f6vG6YmPD4Qmmlv49gJZM7FIId+VgnyucxC5U8ThlYai
-         gKyVBrXzyvGFsCdzoUBckEFNqToQzphzUuFnKYHX8/buBrBqDdC+XMEFiguCBV9Mpl/q
-         FWJw==
-X-Gm-Message-State: APjAAAU8Xk34LlXtDl0eZHIOIMjmybkdmvweSByp8ukvLgo5k+J7JhGc
-        8h73dR/8LOJK5ezud62m5PJUEA==
-X-Google-Smtp-Source: APXvYqxJi6xwPPsEIzGnzgqipWlqaAxHhHMEH+ezeWOrFPemY21Bt4/b8HeNAvszDL/6lNpuF+oXFQ==
-X-Received: by 2002:a7b:c851:: with SMTP id c17mr4468157wml.71.1582204535329;
-        Thu, 20 Feb 2020 05:15:35 -0800 (PST)
-Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d204sm4382774wmd.30.2020.02.20.05.15.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 05:15:34 -0800 (PST)
-From:   Nicolas Belin <nbelin@baylibre.com>
-To:     linus.walleij@linaro.org
-Cc:     khilman@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicolas Belin <nbelin@baylibre.com>
-Subject: [PATCH RESEND] pinctrl: meson-gxl: fix GPIOX sdio pins
-Date:   Thu, 20 Feb 2020 14:15:12 +0100
-Message-Id: <1582204512-7582-1-git-send-email-nbelin@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2WHlji+P21Kboo5TQBiiWNfvaJqWviYfKbr+yK7daGI=;
+        b=nLhhY4n286silWU4BAUSXbL2jxU+aaZJs3722wPEXbfSNTS+c7BfmPBlaH0yT2qIog
+         PMw+L+ShfX5ccdwiN7BVHloBFoI1biwtbLPWJQDcU8WYZhpOV4WhPTZfHYtDQeMlwqXY
+         Xlt4dNq9iU5wjpNAbaMjaKFAW8Ef9tgC9CG174v1WnXAmoBvV5c8FjNXEXIHK9ZgbGtp
+         6U9UaGErw8nz85F8yh0zTqDXXEXo2uFoWv33q8bEu9r9fYy7lozz9c9/4o93Kpj7heNU
+         QmQ09+dDA/vZdDSf4ocNZmCrMXC2HLEhvLzlF8y8J1fLQTM0Xg/FNLqalmJ82hMuf3cS
+         Lklw==
+X-Gm-Message-State: APjAAAWv1JBwLcdg2B2Q33+F+xPqHmQCf4A2hPHuutiEU/3/EJv1z5RS
+        9nsENf1q+/XelBZ8DC7Cow8ooL9ocr8oM8+BFThMcQ==
+X-Google-Smtp-Source: APXvYqxdFNDLDnJaghMfOLP10G1gDevKPVMi1M6I5zdGkYtLMParaXo3/Sybal+uTiumjcsJkqh9NDXzQpvCwf48k2I=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr19923920ljc.39.1582209700508;
+ Thu, 20 Feb 2020 06:41:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20200210155059.29609-1-brgl@bgdev.pl>
+In-Reply-To: <20200210155059.29609-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 20 Feb 2020 15:41:29 +0100
+Message-ID: <CACRpkdY5xJke=5uuB9hv36j6N=kDwpwWg-7_aYKTpCBGRjASag@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mockup: coding-style fix
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
-any issue so far because devices using these pins always take both pins
-so the resulting configuration is OK.
+On Mon, Feb 10, 2020 at 4:51 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
----
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> The indentation is wrong in gpio_mockup_apply_pull(). This patch makes
+> the code more readable.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+> This fixes another indentation error introduced in v5.5 that I missed before.
 
-Hi Linus,
+Patch applied.
 
-Sorry for the the bad formatting of the first patch, this one should be fine.
-
-Thanks
-
-Nicolas
-
- drivers/pinctrl/meson/pinctrl-meson-gxl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 1b6e8646700f..2ac921c83da9 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]	= { GPIOX_0 };
- static const unsigned int sdio_d1_pins[]	= { GPIOX_1 };
- static const unsigned int sdio_d2_pins[]	= { GPIOX_2 };
- static const unsigned int sdio_d3_pins[]	= { GPIOX_3 };
--static const unsigned int sdio_cmd_pins[]	= { GPIOX_4 };
--static const unsigned int sdio_clk_pins[]	= { GPIOX_5 };
-+static const unsigned int sdio_clk_pins[]	= { GPIOX_4 };
-+static const unsigned int sdio_cmd_pins[]	= { GPIOX_5 };
- static const unsigned int sdio_irq_pins[]	= { GPIOX_7 };
- 
- static const unsigned int nand_ce0_pins[]	= { BOOT_8 };
--- 
-2.7.4
-
+Yours,
+Linus Walleij
