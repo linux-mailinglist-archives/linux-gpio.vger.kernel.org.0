@@ -2,25 +2,25 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 460D9165E0C
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 14:02:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF09E165E08
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 14:02:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgBTNCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 08:02:00 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:34966 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbgBTNCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 08:02:00 -0500
+        id S1727983AbgBTNB7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 08:01:59 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:53474 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBTNB7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 08:01:59 -0500
 Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id 511u220045USYZQ0611udL; Thu, 20 Feb 2020 14:01:58 +0100
+        by laurent.telenet-ops.be with bizsmtp
+        id 511u220065USYZQ0111uY3; Thu, 20 Feb 2020 14:01:58 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j4lSj-000563-VA; Thu, 20 Feb 2020 14:01:53 +0100
+        id 1j4lSj-000564-VF; Thu, 20 Feb 2020 14:01:53 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1j4lSj-0007LK-Ss; Thu, 20 Feb 2020 14:01:53 +0100
+        id 1j4lSj-0007Lh-To; Thu, 20 Feb 2020 14:01:53 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -33,58 +33,102 @@ Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/2] gpio: of: Add DT overlay support for GPIO hogs
-Date:   Thu, 20 Feb 2020 14:01:47 +0100
-Message-Id: <20200220130149.26283-1-geert+renesas@glider.be>
+Subject: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+Date:   Thu, 20 Feb 2020 14:01:48 +0100
+Message-Id: <20200220130149.26283-2-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200220130149.26283-1-geert+renesas@glider.be>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi all,
+Extract the code to add all GPIO hogs of a gpio-hog node into its own
+function, so it can be reused.
 
-As GPIO hogs are configured at GPIO controller initialization time,
-adding/removing GPIO hogs in Device Tree overlays currently does not
-work.  Hence this patch series adds support for that, by registering an
-of_reconfig notifier, as is already done for platform, i2c, and SPI
-devices.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - No changes.
+---
+ drivers/gpio/gpiolib-of.c | 49 ++++++++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 16 deletions(-)
 
-Changes compared to v1[1]:
-  - Drop RFC state,
-  - Document that modifying existing gpio-hog nodes is not supported.
-
-After I posted v1, Frank created a unittest[2] to demonstrate the
-problem, and to verify to my series fixes it (thanks a lot!).
-
-Thanks!
-
-[1] "[PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs"
-    https://lore.kernel.org/r/20191230133852.5890-1-geert+renesas@glider.be/
-[2] "[RFC PATCH 0/2] of: unittest: add overlay gpio test to catch gpio hog
-     problem"
-    https://lore.kernel.org/r/1579070828-18221-1-git-send-email-frowand.list@gmail.com/
-
-Geert Uytterhoeven (2):
-  gpio: of: Extract of_gpiochip_add_hog()
-  gpio: of: Add DT overlay support for GPIO hogs
-
- drivers/gpio/gpiolib-of.c | 139 +++++++++++++++++++++++++++++++++-----
- drivers/gpio/gpiolib-of.h |   2 +
- drivers/gpio/gpiolib.c    |  14 +++-
- drivers/gpio/gpiolib.h    |   3 +
- 4 files changed, 139 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index c6d30f73df078e0b..2b47f93886075294 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -604,6 +604,35 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+ 	return desc;
+ }
+ 
++/**
++ * of_gpiochip_add_hog - Add all hogs in a hog device node
++ * @chip:	gpio chip to act on
++ * @hog:	device node describing the hogs
++ *
++ * Returns error if it fails otherwise 0 on success.
++ */
++static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
++{
++	enum gpiod_flags dflags;
++	struct gpio_desc *desc;
++	unsigned long lflags;
++	const char *name;
++	unsigned int i;
++	int ret;
++
++	for (i = 0;; i++) {
++		desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
++		if (IS_ERR(desc))
++			break;
++
++		ret = gpiod_hog(desc, name, lflags, dflags);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
+ /**
+  * of_gpiochip_scan_gpios - Scan gpio-controller for gpio definitions
+  * @chip:	gpio chip to act on
+@@ -614,29 +643,17 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+  */
+ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
+ {
+-	struct gpio_desc *desc = NULL;
+ 	struct device_node *np;
+-	const char *name;
+-	unsigned long lflags;
+-	enum gpiod_flags dflags;
+-	unsigned int i;
+ 	int ret;
+ 
+ 	for_each_available_child_of_node(chip->of_node, np) {
+ 		if (!of_property_read_bool(np, "gpio-hog"))
+ 			continue;
+ 
+-		for (i = 0;; i++) {
+-			desc = of_parse_own_gpio(np, chip, i, &name, &lflags,
+-						 &dflags);
+-			if (IS_ERR(desc))
+-				break;
+-
+-			ret = gpiod_hog(desc, name, lflags, dflags);
+-			if (ret < 0) {
+-				of_node_put(np);
+-				return ret;
+-			}
++		ret = of_gpiochip_add_hog(chip, np);
++		if (ret < 0) {
++			of_node_put(np);
++			return ret;
+ 		}
+ 	}
+ 
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
