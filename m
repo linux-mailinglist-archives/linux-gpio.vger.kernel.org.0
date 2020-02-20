@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5440E165AFD
+	by mail.lfdr.de (Postfix) with ESMTP id 48019165AFC
 	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 11:01:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgBTKBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1727695AbgBTKBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 20 Feb 2020 05:01:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42255 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgBTKBs (ORCPT
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37908 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbgBTKBs (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 05:01:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id k11so3857208wrd.9
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:01:46 -0800 (PST)
+Received: by mail-wm1-f67.google.com with SMTP id a9so1325785wmj.3
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:01:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gvimdiptQxKDwgQGPEXuEUNnfR7qYGCLv3MPPaAy0kA=;
-        b=j34veHsgeEP9V3VPUbpkAjRZISXxpHyWJTvxtIALoZSHgpeJ8zA9ickBx3e4t4dR7n
-         lb9BM+0n9nfVIgPE5N5XCFydtb8pTJNoyR607zOr5q9mFSh+Dw6ZG4PVsLSAp3e5xYvr
-         5QvNpR48O9c7er4InM8KmUlGVRdYoMoeiaF0/zac1Kj+SkkTnUk59I28UjlutQzZOJJC
-         PJR5AEGY0zGTo5t91a6d7xV6dPxX6Onx/07lMJP8Xgr1M66WQ3NAS8QK0N5jb2q3ifL2
-         YiZugFv/Tw/NDyeKmpgWy4kJsrHgLo7JbEbYqfHvR1tvDS7N6ko4duJL38waMjSQxHIK
-         Y/tQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Tb5z2UeOLZl/UqO+U9twmLjCGpyhePDzuQ8mmkofF+4=;
+        b=wzgL+FZrc/X+hzZaF7lsn0YjEKYkeepxbRUqFbY9Zuc606QNHiesAFPsYD9Xxt+yZl
+         SPBY4XkW/FfQcIvxmma6uJss/8oIaVkzApUSRkJm/JAb5s+KPtsn59hl+QQPRdIWnmF4
+         U5BO+JM99SUUZy2CZG5B8NH04hBL1LIFBNejeo11Z831wsS7Kvxi/TG65UXiPwoH13wO
+         fJyIIbSPRb3MtgwU8+b3vTSaxrZQQwxK5P8Vw75xJ6LosdFx/TbcjBe2eVnh+VRXt30P
+         xFFo93zGWPSmBBoSq/v358GAMQo1S7mdUwpBDNQVjasa5Jlur6rEA6ncf9gB0UIibDPe
+         URhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gvimdiptQxKDwgQGPEXuEUNnfR7qYGCLv3MPPaAy0kA=;
-        b=ayYhgMXfnFOu20uRRCf91SAEYcWwR10V/WW6+kDp/ExeTzdQTvswPUt5h8RONUhv+x
-         Q1WOZrUERl7MbpUnA8HrjMM9qgd5I6pMZaX5VZgmm14dUctVuWD6c/4fdI7usgzE2HhD
-         Fx3rBP7HH+wJFeRPf4SuYL9sfK8TvMdc1b8mELusJxMyEEWujUoc4gblgUopbiobeX9e
-         JAhZknxUUmx/+XcYUQ9NN75yMZ006XMwlo5biKV6AyUHjeQgdlJ1Ri0QJuDbvl9p/26F
-         s5JYkeOOu7xzQZXtoY6SAg5P9Z0Lia+tqrQbgKRw98R32Xx3MbfC6JAYJbaL6hQHKO/q
-         C6Uw==
-X-Gm-Message-State: APjAAAVCOPLTLLqJQHDJ5GPmpcRyA4M4RyNOD6ck0/ZWK9cuXTfDJHlv
-        2Y4Zt36THrGWfL3Wcj2fbRTc3w==
-X-Google-Smtp-Source: APXvYqwwSVOXXtD8UnqpM0Ic92z5D37Wle2fwxSSRNd8498TLjsxd6QdmGSPTTwewn2G3lwHzjsjSQ==
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr13755154wrn.139.1582192905489;
-        Thu, 20 Feb 2020 02:01:45 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Tb5z2UeOLZl/UqO+U9twmLjCGpyhePDzuQ8mmkofF+4=;
+        b=ogJij768dHSFZ/bDhut9iqkyG/fjUocSrZWBc9FQtIvdr2TUzg9E0nd81WSjmgrEge
+         TxHqgaGJjLIYwrKR6gygOtp9D7kIl3LzwjxNKvAvSke9DspbKQ3wyk/3hLsaZyCG1Z6G
+         NbiHoeJjgVzvgXAQ1hJym/fSJElyUuBtQVUq/xxc4BQfOOFBFG/0OF99+5NfYhJvo0uc
+         xdbxp6JZvO+rI2dg5iUICxV1IkZZhsAHuy76dh3mDBtHQ3t7dwbGBZYgTCSniU2+GQYy
+         6mrRRjW/pqogQC2SV8fQ6T7vLCSseVomp6SWSU5smsIVwomUZ9QTsmKSu87wQD0J3i+w
+         2gmw==
+X-Gm-Message-State: APjAAAUREIR9VyPHqQGqOQdbaPJ1kNaNKMg2ABci4xZgcUTPIl2iUP7g
+        TpoHeFKwMlNf6g71oK77s6T8CQ==
+X-Google-Smtp-Source: APXvYqw0fTH4sWjn5ENuK3wMDJ5nqpMfOAHhHpEdjOffi/ADk7auSN+FgFBOXvarTSOCZvKpHY3whw==
+X-Received: by 2002:a1c:1fd0:: with SMTP id f199mr3399912wmf.113.1582192906765;
+        Thu, 20 Feb 2020 02:01:46 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-188-94.w2-15.abo.wanadoo.fr. [2.15.37.94])
-        by smtp.gmail.com with ESMTPSA id z1sm3663496wmf.42.2020.02.20.02.01.44
+        by smtp.gmail.com with ESMTPSA id z1sm3663496wmf.42.2020.02.20.02.01.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 02:01:44 -0800 (PST)
+        Thu, 20 Feb 2020 02:01:46 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -51,10 +51,12 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 0/4] nvmem/gpio: fix resource management
-Date:   Thu, 20 Feb 2020 11:01:37 +0100
-Message-Id: <20200220100141.5905-1-brgl@bgdev.pl>
+Subject: [PATCH v4 1/4] nvmem: fix memory leak in error path
+Date:   Thu, 20 Feb 2020 11:01:38 +0100
+Message-Id: <20200220100141.5905-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200220100141.5905-1-brgl@bgdev.pl>
+References: <20200220100141.5905-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -64,50 +66,32 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This series addresses a couple problems with memory management in nvmem
-core.
+We need to free the ida mapping and nvmem struct if the write-protect
+GPIO lookup fails.
 
-First we fix a memory leak introduced in this release cycle. Next we extend
-the GPIO framework to use reference counting for GPIO descriptors. We then
-use it to fix the resource management problem with the write-protect pin.
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/nvmem/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Finally we add some readability tweaks and a comment clearing up some
-confusion about resource management.
-
-While the memory leak with wp-gpios is now in mainline - I'm not sure how
-to go about applying the kref patch. This is theoretically a new feature
-but it's also the cleanest way of fixing the problem.
-
-v1 -> v2:
-- make gpiod_ref() helper return
-- reorganize the series for easier merging
-- fix another memory leak
-
-v2 -> v3:
-- drop incorrect patches
-- add a patch adding a comment about resource management
-- extend the GPIO kref patch: only increment the reference count if the
-  descriptor is associated with a requested line
-
-v3 -> v4:
-- fixed the return value in error path in nvmem_register()
-- dropped patches already applied to the nvmem tree
-- dropped the patch adding the comment about resource management
-
-Bartosz Golaszewski (3):
-  nvmem: fix memory leak in error path
-  gpiolib: use kref in gpio_desc
-  nvmem: increase the reference count of a gpio passed over config
-
-Khouloud Touil (1):
-  nvmem: release the write-protect pin
-
- drivers/gpio/gpiolib.c        | 36 ++++++++++++++++++++++++++++++++---
- drivers/gpio/gpiolib.h        |  1 +
- drivers/nvmem/core.c          |  8 ++++++--
- include/linux/gpio/consumer.h |  1 +
- 4 files changed, 41 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index 503da67dde06..948c7ebce340 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -353,8 +353,11 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+ 	else
+ 		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+ 						    GPIOD_OUT_HIGH);
+-	if (IS_ERR(nvmem->wp_gpio))
++	if (IS_ERR(nvmem->wp_gpio)) {
++		ida_simple_remove(&nvmem_ida, nvmem->id);
++		kfree(nvmem);
+ 		return ERR_CAST(nvmem->wp_gpio);
++	}
+ 
+ 	kref_init(&nvmem->refcnt);
+ 	INIT_LIST_HEAD(&nvmem->cells);
 -- 
 2.25.0
 
