@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE971662CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 17:29:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D7031662CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 17:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgBTQ3w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 11:29:52 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:35096 "EHLO inva020.nxp.com"
+        id S1728697AbgBTQ3y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 11:29:54 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:59246 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgBTQ3w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:29:52 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BEC3B1A17AF;
-        Thu, 20 Feb 2020 17:29:50 +0100 (CET)
+        id S1728130AbgBTQ3y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:29:54 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 05B50201078;
+        Thu, 20 Feb 2020 17:29:52 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B261F1A0D00;
-        Thu, 20 Feb 2020 17:29:50 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EAFE1200BC7;
+        Thu, 20 Feb 2020 17:29:51 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A2F820328;
-        Thu, 20 Feb 2020 17:29:49 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CBACC20328;
+        Thu, 20 Feb 2020 17:29:50 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>,
         Dong Aisheng <aisheng.dong@nxp.com>
@@ -36,9 +36,9 @@ Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
         kernel@pengutronix.de, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v2 6/8] pinctrl: imx: scu: Align imx sc msg structs to 4
-Date:   Thu, 20 Feb 2020 18:29:37 +0200
-Message-Id: <bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com>
+Subject: [PATCH v2 7/8] rtc: imx-sc: Align imx sc msg structs to 4
+Date:   Thu, 20 Feb 2020 18:29:38 +0200
+Message-Id: <13404bac8360852d86c61fad5ae5f0c91ffc4cb6.1582216144.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1582216144.git.leonard.crestez@nxp.com>
 References: <cover.1582216144.git.leonard.crestez@nxp.com>
@@ -57,35 +57,30 @@ This produces many oopses with CONFIG_KASAN=y.
 
 Fix by marking with __aligned(4).
 
-Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
+Fixes: a3094fc1a15e ("rtc: imx-sc: add rtc alarm support")
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-imx-sc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
-index 73bf1d9f9cc6..23cf04bdfc55 100644
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -21,16 +21,16 @@ enum pad_func_e {
- 
- struct imx_sc_msg_req_pad_set {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- 	u16 pad;
+diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c
+index cf2c12107f2b..a5f59e6f862e 100644
+--- a/drivers/rtc/rtc-imx-sc.c
++++ b/drivers/rtc/rtc-imx-sc.c
+@@ -35,11 +35,11 @@ struct imx_sc_msg_timer_rtc_set_alarm {
+ 	u8 mon;
+ 	u8 day;
+ 	u8 hour;
+ 	u8 min;
+ 	u8 sec;
 -} __packed;
 +} __packed __aligned(4);
  
- struct imx_sc_msg_req_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
- 
- struct imx_sc_msg_resp_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- } __packed;
+ static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ {
+ 	struct imx_sc_msg_timer_get_rtc_time msg;
+ 	struct imx_sc_rpc_msg *hdr = &msg.hdr;
 -- 
 2.17.1
 
