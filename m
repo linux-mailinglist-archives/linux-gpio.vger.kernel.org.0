@@ -2,74 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0116F165FDC
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 15:41:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8BCC166064
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 16:03:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBTOlo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 09:41:44 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44390 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728171AbgBTOlo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 09:41:44 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q8so4458501ljj.11
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 06:41:41 -0800 (PST)
+        id S1728198AbgBTPDE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 10:03:04 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34507 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgBTPDE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 10:03:04 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l18so3386516lfc.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 07:03:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2WHlji+P21Kboo5TQBiiWNfvaJqWviYfKbr+yK7daGI=;
-        b=nfg9Y6Ya/mjmEh/GzbxiwCKmaI718Lx4GQTRMhezN/qmHQnRJW5dmO5aVAgatjhxHU
-         YEOjXlidfsnh9QFoG+NSiL1n1Q492pfQSLOcbFxlwj5VNOzkN1718A9Q5pNBwqFywrYB
-         RTopqCqy/uVOQMnCaHvH6/uVvmnfckQSWCy2JjDIKybxlOEevBtn7dP8Ty8ql27ILKJU
-         YBgUsLWtDP9I55WgtlRCXnphieUnIwGnmcZbciKmKFfaTfsecP8NhmPvU8w/ghsPRsJ2
-         H2NNymtvfDY/jGYOVNz5YPJ2aGmjrg8yuqisB6v/XYSGm4BiPObsXiJMcXMBOdKPDusA
-         Ud3g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ls7pLpSdHmLvEFkt/UXuELoR7+2Vi27HOWMngmu2y9c=;
+        b=ZXCEKbYyOuKDjHaLDOyMq1UBBGqfQnxTGHgfFeJKdGnGlLCou86tpaPOyaHAEdGF0v
+         JUTiCq5meTiaqU6LEWrfRJSulwaCM1LJaZGL4A1WD36r8Bb+8+ltjlUReece2sdZl+yx
+         7YLctmn0muhlMg+/l3HfEdcHqudZwy61eE+cZ/JFgR2KR86FTJHoA3bOBilt21axPRN1
+         XebeJDOz827toqR9xZOQn/FQUoDLPVsg+lpt3N/wzNZmXoNrBj/OD4gQnx7gO2LiOnWu
+         lM2ywq8GuNJo7Afr3yHqeTwzH0guzSVHd2wwYQCXuIEso6Xu8/teTglG+4M3vm5mEUNW
+         ZviA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2WHlji+P21Kboo5TQBiiWNfvaJqWviYfKbr+yK7daGI=;
-        b=nLhhY4n286silWU4BAUSXbL2jxU+aaZJs3722wPEXbfSNTS+c7BfmPBlaH0yT2qIog
-         PMw+L+ShfX5ccdwiN7BVHloBFoI1biwtbLPWJQDcU8WYZhpOV4WhPTZfHYtDQeMlwqXY
-         Xlt4dNq9iU5wjpNAbaMjaKFAW8Ef9tgC9CG174v1WnXAmoBvV5c8FjNXEXIHK9ZgbGtp
-         6U9UaGErw8nz85F8yh0zTqDXXEXo2uFoWv33q8bEu9r9fYy7lozz9c9/4o93Kpj7heNU
-         QmQ09+dDA/vZdDSf4ocNZmCrMXC2HLEhvLzlF8y8J1fLQTM0Xg/FNLqalmJ82hMuf3cS
-         Lklw==
-X-Gm-Message-State: APjAAAWv1JBwLcdg2B2Q33+F+xPqHmQCf4A2hPHuutiEU/3/EJv1z5RS
-        9nsENf1q+/XelBZ8DC7Cow8ooL9ocr8oM8+BFThMcQ==
-X-Google-Smtp-Source: APXvYqxdFNDLDnJaghMfOLP10G1gDevKPVMi1M6I5zdGkYtLMParaXo3/Sybal+uTiumjcsJkqh9NDXzQpvCwf48k2I=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr19923920ljc.39.1582209700508;
- Thu, 20 Feb 2020 06:41:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200210155059.29609-1-brgl@bgdev.pl>
-In-Reply-To: <20200210155059.29609-1-brgl@bgdev.pl>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ls7pLpSdHmLvEFkt/UXuELoR7+2Vi27HOWMngmu2y9c=;
+        b=VJ4RTxrNZpltxTFOR45WUI8fb7w1PIwy1W8BXPUQUuGHI/YxaXC6bBK4oMd1hV+SIz
+         6xBlsQhKuZ/iXkpU+uTlRlOBsufBwt/VtRTJQwAxvaa8OWrz3WVRuMEdjIFp7yv+5nIV
+         qVzerOMHY3ZL3XEfqKeUqACALPGbP8Fjuvvf/cuLPRrClAq85vHznUs+/R2mODYxBcqE
+         Q9hlQjtpl3+4cT7Ae1V1X7WLHQcmnWmaex6so6SK7ytgL3SI+icEALMn9dMVpiIEktYd
+         j56AHaD4/oMkxDyCEB5SQ9E97zzaneX855DlkwiIbnwsyr7musVzseWJ1QfJbyu38Uhf
+         ZstQ==
+X-Gm-Message-State: APjAAAWQM+r2kKjw9dwvXE2/QK+KQREfW4/MpCbF0krxlfEn8H0u7eCr
+        0ypHqP4lZPC5L1zEdrQ1IutPUDulGRo=
+X-Google-Smtp-Source: APXvYqyAol62rWQaiN442zOYVrzijsZ4UQHT3ztNTVwVhEXcJJsc1UfLhGIJFqa8lUe56KKR845dfg==
+X-Received: by 2002:a05:6512:1107:: with SMTP id l7mr4615459lfg.108.1582210981613;
+        Thu, 20 Feb 2020 07:03:01 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id r10sm2203937ljk.9.2020.02.20.07.02.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 07:02:57 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Feb 2020 15:41:29 +0100
-Message-ID: <CACRpkdY5xJke=5uuB9hv36j6N=kDwpwWg-7_aYKTpCBGRjASag@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mockup: coding-style fix
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] gpio: Switch timestamps to ktime_get_ns()
+Date:   Thu, 20 Feb 2020 16:02:50 +0100
+Message-Id: <20200220150250.46226-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 4:51 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+The existing use of ktime_get_real_ns() in the timestamps from
+the GPIO events is dubious.
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> The indentation is wrong in gpio_mockup_apply_pull(). This patch makes
-> the code more readable.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
-> This fixes another indentation error introduced in v5.5 that I missed before.
+We have had several discussions about this timestamp, and it is
+unclear whether userspace has ever taken into account that a
+timestamp from ktime_get_real_ns() can actually move backwards
+in time relative the previous timetamp, and userspace is more
+likely to expect a monotonic counter.
 
-Patch applied.
+Background:
+https://lore.kernel.org/linux-gpio/CAK8P3a1Skvm48sje8FNDPLYqyz9Lf8q0qX1QETWtyZTxuX4k1g@mail.gmail.com/
+https://marc.info/?l=linux-gpio&m=151661955709074&w=2
 
-Yours,
-Linus Walleij
+The change is ABI incompatible, but incompatible in a way that
+is IMO more likely to fix future bugs rather than break current
+userspace. To the best of my knowledge all userspace expects
+a monotonic timestamp and users are just lucky that they very
+seldom move backwards in time.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 753283486037..5db16f69c13e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -945,7 +945,7 @@ static irqreturn_t lineevent_irq_thread(int irq, void *p)
+ 	 * we didn't get the timestamp from lineevent_irq_handler().
+ 	 */
+ 	if (!le->timestamp)
+-		ge.timestamp = ktime_get_real_ns();
++		ge.timestamp = ktime_get_ns();
+ 	else
+ 		ge.timestamp = le->timestamp;
+ 
+@@ -983,7 +983,7 @@ static irqreturn_t lineevent_irq_handler(int irq, void *p)
+ 	 * Just store the timestamp in hardirq context so we get it as
+ 	 * close in time as possible to the actual event.
+ 	 */
+-	le->timestamp = ktime_get_real_ns();
++	le->timestamp = ktime_get_ns();
+ 
+ 	return IRQ_WAKE_THREAD;
+ }
+-- 
+2.24.1
+
