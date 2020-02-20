@@ -2,86 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A8A41659F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 10:17:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F641165A8F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 10:54:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgBTJRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 04:17:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726756AbgBTJRX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:17:23 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A6A24654;
-        Thu, 20 Feb 2020 09:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582190242;
-        bh=bWixAGMKU8jAr6IWwbDseU4VCSvdbKE6KK8Sbxd6ZgQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oJYUJB6wiSoeEmvNcEfS3X7VfOLuHVjdjpsoUFRkT/spgki8coClO8V4oD4Dal1bU
-         JiDCIS1NSjQvu9qOYE1c8wHBlgz1p7hfeOA4hnjgAmI3ENkHLFMEH2DjofD322hQ3z
-         CCAioEScjF2KXmXZ8Kk9QFf2wlc4rC8O0Tes1TdQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4hxQ-006gyh-Gj; Thu, 20 Feb 2020 09:17:20 +0000
+        id S1727088AbgBTJyi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 04:54:38 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43399 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgBTJyi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 04:54:38 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u12so1663645pgb.10
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 01:54:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xsUbPWAhYtsZRE8nHbpZ90/dMr+6ACJOvf/o3gzcGwM=;
+        b=KfNWW2kcqvTW/9/08hTLogIqobA7bvlKpQJoYHafvufqDMAEJNGTi16kdgjiBPR6K2
+         IBu4QoBeoD1zPK+mAFEFCyGoW7vmbfnnJRoF3S1jn953AwhHjpsb61lJNKtC5Cd4w3ly
+         LyXVFblZTrGK4xKB1acSQvvf0L0W5gtLLv17Nc8u08V8JuGNOrki7Hu4hIn889cOrocf
+         OI7ofI/Ba26rlHcp25+n0dtCNsZNHdepJpLTvIgblIc5oB7MwKt85sd2HkDRZ6GK9GOZ
+         1AD79o4ZcYs/IVxzGoSLwT+BZX2xrTfctgg/ehk24p/tiuqY5cUAh9nbhz8Oq+hbCjua
+         K5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xsUbPWAhYtsZRE8nHbpZ90/dMr+6ACJOvf/o3gzcGwM=;
+        b=k7zQQ2vxfEdaI3M0p+5SGtFAr3/Us5Bl+jDSG8ZRiKrcuzJByMxWatEeRJ8W3t9nWW
+         RNmD6YXIdChdmhmXVbaNqdsEXy+t0a9mTQsYWlIwPL/xW+NjwkLKR8vsHA6QLXJLl9ai
+         zIpiJso3aqPMXT0Kk0YB8i9FWQf7gRVO97JzjoGNFbYqCifD5SyNoGiG2e0G0g9rv4wQ
+         w21PMjPpPTebF931pkGz5Y44mPjqt+JnhHzkTGx7xPv5rkUJdKZpe+UkZ2q23Y1tiiGm
+         Yaq52v/VqB9SFBO0uOLI4igf2Y/AzWzV6pJJP/AEttu9+4UZaOGUcoGXdjwunfKr/qpY
+         6I4A==
+X-Gm-Message-State: APjAAAUGbZp+nG+vG3634g/+cdfqRDwDqC6CChI+cJf/NKZxqKGiSba7
+        8nR/tzA3a3aR2y5PPIOeJB5Bby48NSYOLV8rBvc=
+X-Google-Smtp-Source: APXvYqySoCSJ82A8OuYPdZOTOSzwsgpIu/3GOYLR3uHjrSC8cVSsXETPeL8PxFF00bDBm0liDA2StN1CChwALXKR/tU=
+X-Received: by 2002:a62:5bc7:: with SMTP id p190mr30655380pfb.16.1582192477900;
+ Thu, 20 Feb 2020 01:54:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 09:17:20 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-In-Reply-To: <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
- <20200219143229.18084-3-alexandre.torgue@st.com>
- <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
-Message-ID: <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, marex@denx.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Received: by 2002:a17:90a:90f:0:0:0:0 with HTTP; Thu, 20 Feb 2020 01:54:37
+ -0800 (PST)
+Reply-To: cagesusan199@gmail.com
+From:   "Mrs. Susan S. Cage" <drgoodluckebelejonathan061@gmail.com>
+Date:   Thu, 20 Feb 2020 01:54:37 -0800
+Message-ID: <CALjo5=_qROtCiT4u8zj8ta2R612eUBzRGz6aZpKsD-fVmmvMXA@mail.gmail.com>
+Subject: Attention:Beneficiary
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-02-20 09:04, Linus Walleij wrote:
-> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
-> <alexandre.torgue@st.com> wrote:
-> 
->> GPIO hardware block is directly linked to EXTI block but EXTI handles
->> external interrupts only on edge. To be able to handle GPIO interrupt 
->> on
->> level a "hack" is done in gpio irq chip: parent interrupt (exti irq 
->> chip)
->> is retriggered following interrupt type and gpio line value.
->> 
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->> Tested-by: Marek Vasut <marex@denx.de>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> If Marc want to merge it with patch 1/2 go ahead!
-
-I'll queue the whole thing for 5.7.
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Dearest Friend,
+
+Sorry for invading your privacy, my name is Susan S. Cage I am 81
+years, citizen of United States and presently in hospital undergoing
+chromatography for bronchogenic carcinomas (Lung cancer) which
+affected both Lungs. The doctors said I have few days to live because
+the cancer has now affected my brain.
+
+My late husband left Fifteen Million, Five Hundred British Pounds
+Sterling in my account, I want to transfer the money to you and I want
+you to use it as a donate for charitable and help the needy,
+motherless, less privileged and widows within your location.
+
+I need your assurance that you will use the fund for charity, once I a
+favorable reply from you, will inform my Bank through my lawyer to
+transfer the fund to you as my Next of Kin and Sole Beneficiary. Once
+I receive your response, I will inform my bank in writing through my
+lawyer.
+
+
+
+Thank you and God bless you.
+
+Mrs. Susan S. Cage
