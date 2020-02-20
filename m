@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5651662B9
+	by mail.lfdr.de (Postfix) with ESMTP id 8E5F11662BB
 	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 17:29:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgBTQ3q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728133AbgBTQ3q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 20 Feb 2020 11:29:46 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:58946 "EHLO inva021.nxp.com"
+Received: from inva021.nxp.com ([92.121.34.21]:59034 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgBTQ3p (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:29:45 -0500
+        id S1728130AbgBTQ3q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:29:46 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6343A200BED;
-        Thu, 20 Feb 2020 17:29:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A7FE8200BB9;
+        Thu, 20 Feb 2020 17:29:44 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 54446200BC4;
-        Thu, 20 Feb 2020 17:29:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 99AF82007D0;
+        Thu, 20 Feb 2020 17:29:44 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BDDD20328;
-        Thu, 20 Feb 2020 17:29:42 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6CC6B20328;
+        Thu, 20 Feb 2020 17:29:43 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>,
         Dong Aisheng <aisheng.dong@nxp.com>
@@ -36,10 +36,14 @@ Cc:     Fabio Estevam <fabio.estevam@nxp.com>,
         kernel@pengutronix.de, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v2 0/8] firmware: imx: Align imx SC msg structs to 4
-Date:   Thu, 20 Feb 2020 18:29:31 +0200
-Message-Id: <cover.1582216144.git.leonard.crestez@nxp.com>
+Subject: [PATCH v2 1/8] clk: imx: Align imx sc clock msg structs to 4
+Date:   Thu, 20 Feb 2020 18:29:32 +0200
+Message-Id: <10e97a04980d933b2cfecb6b124bf9046b6e4f16.1582216144.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1582216144.git.leonard.crestez@nxp.com>
+References: <cover.1582216144.git.leonard.crestez@nxp.com>
+In-Reply-To: <cover.1582216144.git.leonard.crestez@nxp.com>
+References: <cover.1582216144.git.leonard.crestez@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -47,38 +51,54 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have sizeof "6" and "7".
+4-bytes words but some of our message structs have odd sizeofs.
 
-This produces many oopses with CONFIG_KASAN=y:
+This produces many oopses with CONFIG_KASAN=y.
 
-	BUG: KASAN: stack-out-of-bounds in imx_mu_send_data+0x108/0x1f0
+Fix by marking with __aligned(4).
 
-It shouldn't cause an issues in normal use because these structs are
-always allocated on the stack but tools like KASAN are very useful on
-stable kernels.
+Fixes: fe37b4820417 ("clk: imx: add scu clock common part")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+---
+ drivers/clk/imx/clk-scu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Chnages since v1:
-* Split into many patches with individual fixes: tags
-Link to v1: https://patchwork.kernel.org/patch/11376909/
-
-Leonard Crestez (8):
-  clk: imx: Align imx sc clock msg structs to 4
-  clk: imx: Align imx sc clock parent msg structs to 4
-  firmware: imx: misc: Align imx sc msg structs to 4
-  firmware: imx: scu-pd: Align imx sc msg structs to 4
-  firmware: imx: Align imx_sc_msg_req_cpu_start to 4
-  pinctrl: imx: scu: Align imx sc msg structs to 4
-  rtc: imx-sc: Align imx sc msg structs to 4
-  soc: imx-scu: Align imx sc msg structs to 4
-
- drivers/clk/imx/clk-scu.c               | 8 ++++----
- drivers/firmware/imx/misc.c             | 8 ++++----
- drivers/firmware/imx/scu-pd.c           | 2 +-
- drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
- drivers/rtc/rtc-imx-sc.c                | 2 +-
- drivers/soc/imx/soc-imx-scu.c           | 2 +-
- 6 files changed, 13 insertions(+), 13 deletions(-)
-
+diff --git a/drivers/clk/imx/clk-scu.c b/drivers/clk/imx/clk-scu.c
+index fbef740704d0..3c5c42d8833e 100644
+--- a/drivers/clk/imx/clk-scu.c
++++ b/drivers/clk/imx/clk-scu.c
+@@ -41,16 +41,16 @@ struct clk_scu {
+ struct imx_sc_msg_req_set_clock_rate {
+ 	struct imx_sc_rpc_msg hdr;
+ 	__le32 rate;
+ 	__le16 resource;
+ 	u8 clk;
+-} __packed;
++} __packed __aligned(4);
+ 
+ struct req_get_clock_rate {
+ 	__le16 resource;
+ 	u8 clk;
+-} __packed;
++} __packed __aligned(4);
+ 
+ struct resp_get_clock_rate {
+ 	__le32 rate;
+ };
+ 
+@@ -119,11 +119,11 @@ struct imx_sc_msg_req_clock_enable {
+ 	struct imx_sc_rpc_msg hdr;
+ 	__le16 resource;
+ 	u8 clk;
+ 	u8 enable;
+ 	u8 autog;
+-} __packed;
++} __packed __aligned(4);
+ 
+ static inline struct clk_scu *to_clk_scu(struct clk_hw *hw)
+ {
+ 	return container_of(hw, struct clk_scu, hw);
+ }
 -- 
 2.17.1
 
