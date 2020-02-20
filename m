@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7E3E165B68
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 11:26:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF0E1165B72
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 11:26:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgBTKZ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 05:25:59 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41484 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbgBTKZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 05:25:59 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d11so3014939qko.8
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:25:59 -0800 (PST)
+        id S1727743AbgBTK0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 05:26:48 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43184 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgBTK0s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 05:26:48 -0500
+Received: by mail-qk1-f194.google.com with SMTP id p7so3012176qkh.10
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:26:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=1rjvByHZQlMhjuCjov0yod+UTGqrYRpU4C6ciuXo5jA=;
-        b=CdzKYncWBcR3FH6IHEtYZ0S+4IOaHJ8BZumMqmbBM5KnI/rVVZtzcF95PvC9a4YLpE
-         Umlu/ONx/RIa9VNI+7jEUtROC3vC37mEt7oDRUXC4e/5Q56CvkXZIpmeEPyITPBktM7r
-         IpA/e4dXSUK7R4QRt79HUQgfaINm2xY/BSLeayOyZ6Jrt4HyvVappn8GF7mWsGhviR1/
-         iBtjL0jEkDQFbsFzp4XqQ2dcAzTDCI9YHs1SDGurn3nNo6gv4jLJq/F/iK6DB5lOpSdH
-         5wwaViz71p6RdAGz4t4ZHl5vyX58i5/HbEXkIfquHEBaVoLvCFdqYNHfPVwi3ww75gfH
-         gYuQ==
+        bh=XW0RVUOafRWzBn6AHPCLH2bW11TB9C9eIVtZb1rn20I=;
+        b=GOTeP2csS3xkcJ6a9/1t+PpPHy/Ce5CQ2FHQlbIQWzc6QcNwzZC8jt2NT60YL088wR
+         1BCx6egwQ3pNCKjmdgReg7Kl2q5LvlvYnNxc1XaXce3ERZQtiahMXw1w7dP9a84Md942
+         W9aAH1ejPT2Snn/8pyDsMUgdkFJoF1XTKUTaQ/k7TDslqU/EhmCFYGw+A27naDMfucF7
+         Do1mqV5OT4OQTjJatcSu4w4ZEX8E/8ot6knRdCQmnpNi+uncCzvGqHm9nlU0sXSrysMd
+         6Z42C8aoVna0JGz9bxdP/n0V/VbUNyIpL4lQt4IhnokFtUQpLSWtYQan0p+fSBtKnCgt
+         FGsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1rjvByHZQlMhjuCjov0yod+UTGqrYRpU4C6ciuXo5jA=;
-        b=nfXw3Q2vAAVPwn7cLseot3/LppapA8AKra+ts3HPjKEeJjL+DNTHJsML3H1Kg9z23/
-         ulle6MHfkLd9HgGr80TEz8Kua/rIqkm6ZbD16DnNRJr3GROz7+cnl6xz+bX50WDxDPgi
-         dcjAOz6TqNR5bI8zI9utCIBjG1l6Ai3su3ftxhJD4h39O1oOOe+Xj3/MjUGsCFUafY9r
-         BS6Bn4NZM++oPkSr0qiL04A3b1TkjRAYm66GQEdSz/oV9ucsCkxqfk8mZODc7qCZPcG7
-         4/1ZdIHKRQB9M1z9ATCB8iS5MmiCcm/lq1TBs0e5mauqUwnUSfTiYYw5+5pTIHUJbImh
-         +0TA==
-X-Gm-Message-State: APjAAAU+f8ADUsS3a6SZMXnbkavux10Y0s/uVpDLEpmWrm/iJI06jDGr
-        PE49m11j6FyXhbQIFm4i2pDgZBKUdm71qQfM/P0Djw==
-X-Google-Smtp-Source: APXvYqxR/dbvUf90qEuyfKeW+D4uBvlJHQinz1rXJBsKijjqfrR5Ujk5GurPtgBSmU/7aaiZPFsK04HuHH3vVOvHces=
-X-Received: by 2002:a37:8343:: with SMTP id f64mr26249549qkd.21.1582194358643;
- Thu, 20 Feb 2020 02:25:58 -0800 (PST)
+        bh=XW0RVUOafRWzBn6AHPCLH2bW11TB9C9eIVtZb1rn20I=;
+        b=ey7TSh1nb8BVRmorRtYDo8eshNRB0Z3OBtd/ylk7dKTPP4Mxv4kUbrH6R0MtWKl8uZ
+         pxK9zVc3p7C3obmSYWlq0MlOXCqHMKYx+0Lr4JGPrLNlVRetQuhlwT4DzLogvfgu65IG
+         DZlc0JEAIWQbwxl2Vb7QCA2/h9fWYR7IQHnO2KTAKv0bc5PmZ/EaDwsYAB1fUxVfT77i
+         s+3uUcn9fzeHGbISmfBc4iVDrCWzCWqVW1Iwn9goA9hdLKvCgHyhKdx9vZTg4bRUA0mk
+         KjueaJejX1Rj3JAKK2DoYSsxzebI6qr1J/MkxkOllhP3L8QUWPJD/bOFnGBYswBNEtFa
+         ZLQw==
+X-Gm-Message-State: APjAAAVtSSbfqDXYRsLSUm6+B879FQje92U87Q1dj2OOC2i40gZVuAX5
+        P5aGZq7/Uwa6j6INTKuZk8EuGqU8xZWojyEboqXNiQ==
+X-Google-Smtp-Source: APXvYqxZ/p9N0WN3fKI6WmMbU+UuLuuiId4wUYvQin8O/qYIMdHBWbfAsTzerfcyHk8G256I9CsY4ittloiK3eWs0hA=
+X-Received: by 2002:a37:a488:: with SMTP id n130mr26958458qke.120.1582194407546;
+ Thu, 20 Feb 2020 02:26:47 -0800 (PST)
 MIME-Version: 1.0
-References: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com> <1581942793-19468-3-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1581942793-19468-3-git-send-email-srinivas.neeli@xilinx.com>
+References: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com> <1581942793-19468-4-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1581942793-19468-4-git-send-email-srinivas.neeli@xilinx.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 20 Feb 2020 11:25:47 +0100
-Message-ID: <CAMpxmJWi4izL5MgZ3vkE-a3e0jR3nhwUax4mSxQF-Z_r9vjLUw@mail.gmail.com>
-Subject: Re: [PATCH V3 2/7] dt-bindings: gpio: Add binding for Versal gpio
+Date:   Thu, 20 Feb 2020 11:26:36 +0100
+Message-ID: <CAMpxmJWshBbSxL1FrOrb=Rq2bRvvijoaLn5xq5HxA01k0qX7BA@mail.gmail.com>
+Subject: Re: [PATCH V3 3/7] devicetree-binding: Add pmc gpio node
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -66,10 +66,10 @@ pon., 17 lut 2020 o 13:33 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
 >
 > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 >
-> Add binding for Versal binding.
+> Add the pmc gpio node to the device tree.
+>
 
-Please add a short note on Versal here as well - don't worry about
-duplicating commit messages: when I git blame the line and go to see
-the commit that introduced it, I want to get the whole picture.
+Same here: I don't know what pmc gpio node is nor do I need to. Please
+make your commit messages more verbose.
 
-Bart
+Bartosz
