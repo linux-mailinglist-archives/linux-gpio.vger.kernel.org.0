@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65BCA165DCC
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 13:45:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40429165DE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 13:51:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgBTMpV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 07:45:21 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34522 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727996AbgBTMpV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 07:45:21 -0500
-Received: by mail-qk1-f196.google.com with SMTP id c20so3405953qkm.1
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 04:45:20 -0800 (PST)
+        id S1727747AbgBTMva (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 07:51:30 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:42626 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgBTMva (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 07:51:30 -0500
+Received: by mail-qv1-f66.google.com with SMTP id dc14so1796132qvb.9
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 04:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=S+DR2tqwHDGoIzSaCv59EB/9EwXei3rtQ6/JX+jjHm0=;
-        b=u0kGKSV7g2gKVQQ0tktOYXAH7/+lxVouJ+8xGYEuQ+Ul+9zBK8tPqwmMCpEFgCrtOt
-         qxrVWpL+RHuA+RbhkCI8sYY6FKdTUxWLwet0QA9Qya0ymHwQetSiv9H3HffGUPO4kA/j
-         hpbls110s0uQMOQotm4P4lnkaWLzcue6FW2kncfAmejTlIFSRFAT/SyQD/Xa/P+aND6o
-         km9tF5TWWSRlNZ1PlpxW8AmXyHC1+IWdBRqhSFzAAhYByCHbsUq5RolPJNuQaODZmPxx
-         lVNMoV2qbwlogdzXgtoJRYF3SaN7wINLQiNYjcSwqfotwm2JMU9G7Lt41zirPPv768j9
-         J9WQ==
+        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
+        b=tGoj+zJjCFlZ9bhdUn+7m0AmuqV1txOsHJRJBnEg6KA2fyVq+zz/iELWJgMTM24R+J
+         XatNmnPWbmev9wW0oX1X8qPc1uyytzGERnz+7t+htuv8OhQzlaT/mEP180ZemvSlUqTc
+         DYtkKQ8qAfkshrVXLAj9HR6UMkjPQus/rQ6ChK8lkcaX0+nrZQ7KoXewU+Nwva72Pl6n
+         a7OydZO/RoLaPMPYG7+T5OiQGt4kAWA9AshfOVz3jOURd5D4K1AFFR+Z1JUCkworJiz9
+         lvH0Nc5SPZ8m7Ouh9OP1JwUSDVLPgQtH93yYB/x3fQ0DT7dK8OX8QyV/rmWYqfxmNZcJ
+         SLqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=S+DR2tqwHDGoIzSaCv59EB/9EwXei3rtQ6/JX+jjHm0=;
-        b=NN0tl97LwvNySWJyS9KG31CzxHZxdA+IWhuVER0102w0K6+YQ2D7ZTZqQCziit3kMd
-         jJ/40QhqXb3DuJLV6v9BRt6xLN9Kh0JCPcQaI171VNj0OqDyaHpJHmWQb3stjHcY5Ak5
-         sdVwlh/SBO04fG6vGJ4QF16jra/0+AMVCOLj06Ws6wAoVLK0DCIDzN1wunX+9KNp66uj
-         cfWY84gogK69Ax0eHnCxk2pIdNZ2faYxxDT3zl3HMx2+VksL8yxFbZ6PUHKdJiNuX6RG
-         Bb7zQun6uIlfZOvOwGTshh+rE1oMoxBluP/HogHf4N9K39RksQh5w4+BG21DXujFx/N8
-         I8GA==
-X-Gm-Message-State: APjAAAWK0yxSnfR7q7C6sFVGjJuB0zBaKTslFY3otYUdJyEf0caVVJtT
-        LmxfJH0zMPl3YBY50DXUKFXt8/Qe6iJp3+LiJGDjfw==
-X-Google-Smtp-Source: APXvYqxLCHV/q5CaKzKrQGpcmCEylpff0GaIk/6cWjgj7li8REIOva0pWlQZQJ1PFCpxJFhOHkj2NJEuc0c2pIY+tiA=
-X-Received: by 2002:a37:a488:: with SMTP id n130mr27484945qke.120.1582202720242;
- Thu, 20 Feb 2020 04:45:20 -0800 (PST)
+        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
+        b=P2mmznEjE/Wejxb1+9bsSoIQli8XV4UyDyk1bDReMu1J9+cT8DIJcbG4dK4M4CxkKT
+         cvCNYNN5vbemh6Lx7Kek7vKouhSBpibdhnkxUPabLXM32JlHE8GNwHiECYkCBoWo+qVG
+         cKIreN/RY3IDIzQ05ny0cIL6GVVGXxIluCZcDQjWBzg5e8NbpGTwSgy074XxM8DYZmZ3
+         3SPXy6CuCr3ewQbE17+cFoG27wU5FpOVKx3DEUOZ6GGm7Qh+rAIQt7e4oqZSunOQq1RY
+         FFq+W5XrQqsG7STLELxjwj+Xk16qDUXCvO7UHBNXjmg55YdXqllxY1m5NQkN7rokN3TH
+         f5kw==
+X-Gm-Message-State: APjAAAVkcIA+CCbhIsn+723IGxGVFpttIOxuXpMBjaQ/HpeqnIjHNN3O
+        KDF1WcJtX8OIqph+9iYSBJCiNrfiIlChGhrUpskw2tYZ
+X-Google-Smtp-Source: APXvYqzt3/u4sLm+8a7c12Ru7REntLJGkgoZmt8TgpKEmEX2TJZHyXdbu5hruKsC4N7eHkriHdxricWluVN6/oEXbJs=
+X-Received: by 2002:ad4:446b:: with SMTP id s11mr25036775qvt.148.1582203089373;
+ Thu, 20 Feb 2020 04:51:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220100141.5905-1-brgl@bgdev.pl> <20200220100141.5905-2-brgl@bgdev.pl>
- <965f715c-a714-00df-b496-a586969dd086@linaro.org>
-In-Reply-To: <965f715c-a714-00df-b496-a586969dd086@linaro.org>
+References: <20200220100141.5905-1-brgl@bgdev.pl> <20200220100141.5905-3-brgl@bgdev.pl>
+ <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
+In-Reply-To: <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 20 Feb 2020 13:45:09 +0100
-Message-ID: <CAMpxmJXiK+A1AF35OJoKnyYYkJ4VZUgqhzzYOazt-UWaMbCfww@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] nvmem: fix memory leak in error path
+Date:   Thu, 20 Feb 2020 13:51:18 +0100
+Message-ID: <CAMpxmJX5673AmGDwrb=DMUu7=8Xi2VTtWE72F2hgitK9QUt-RA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] gpiolib: use kref in gpio_desc
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -62,25 +62,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 20 lut 2020 o 12:30 Srinivas Kandagatla
+czw., 20 lut 2020 o 13:05 Srinivas Kandagatla
 <srinivas.kandagatla@linaro.org> napisa=C5=82(a):
 >
 >
 >
 > On 20/02/2020 10:01, Bartosz Golaszewski wrote:
-> > -     if (IS_ERR(nvmem->wp_gpio))
-> > +     if (IS_ERR(nvmem->wp_gpio)) {
-> > +             ida_simple_remove(&nvmem_ida, nvmem->id);
-> > +             kfree(nvmem);
-> >               return ERR_CAST(nvmem->wp_gpio);
-> You freed nvmem just before this statement, how can nvmem->wp_gpio be
-> still be valid?
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -2798,6 +2798,8 @@ static int gpiod_request_commit(struct gpio_desc =
+*desc, const char *label)
+> >               goto done;
+> >       }
+> >
+> > +     kref_init(&desc->ref);
+> > +
 >
-> Are you able to test this changes at your end?
-> Or
-> these are just compile tested?
+> Should we not decrement refcount on the error path of this function?
 >
 
-Sorry this was rushed, I will have access to the HW for testing tomorrow.
+On error the descriptor will still be unrequested so there's no point
+in potentially calling gpiod_free(). Also: the next time someone
+requests it and succeeds, we'll set it back to 1.
 
 Bartosz
