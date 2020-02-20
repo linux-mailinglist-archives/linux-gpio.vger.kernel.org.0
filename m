@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B2D1165AFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 11:01:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5D5165B06
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 11:02:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgBTKBv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 05:01:51 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37914 "EHLO
+        id S1726801AbgBTKCB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 05:02:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52169 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727761AbgBTKBu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 05:01:50 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so1325931wmj.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:01:49 -0800 (PST)
+        with ESMTP id S1727761AbgBTKBw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 05:01:52 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t23so1317607wmi.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Feb 2020 02:01:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Rxg8wmjxreDjdCxMbMFlkmFGNPMJBkC8wL2SGMFmsIE=;
-        b=pH5LbdRX0pwT9xeoJSpNRq+O/QWUaVVPyNAEsp7JEh2ZmbVS9HIiVO7xqgB7hpK72C
-         9UtLbQH7NcgwIecn0DB6MrOL1lVxxugOXxir+Qpnd3xWhrndnPwYikNvJeyrQbln50Un
-         cPBwE4YU989LwnzNRUyXP9yRWbqsS3/junhhamirZpZRuzI+j3FC6BrLFf0vo+rZ93fz
-         ENfXtq8sloPkZ9zpgJc+uvopDxVNtCyqF2AbrmUUQKHg77jE8viA90V5BZu+UVJoUR26
-         TFJnzmL//ktizHCoxk7F/BlMeiSDJt8lt4E9VGz29ugbHkeU/eL7IDmJ7RgocFAf7rtl
-         oYcg==
+        bh=O+T58/PVEkY9REC+CSDzxK/asJw/FlGJSf/x2KOhKHI=;
+        b=cw9v+mhdDqPF/lvJis9JsmFzwH6Orjo18NHmWpxXbdFBY4qbW8ictGK2MJM/f1sk79
+         zqytoP5UgLkxJ8NO5lCXCYOVtinGnT9/nTiyLYUk1F5SPEcZ8KUMr8K09T88N2fu2ftj
+         4uZZLq9UQ+4IL3Z5farc8lEH55/VuDoDF3F5tHrbYchEbv9Tu5xSRSsmcqNCa4dw9w24
+         TlcgghPck3QBjzvW4Mul7X+VLqjQUZ1Ig1iXZt0UMxSZFsQ767CZOS18BN3RFaCKhHbm
+         X7Y7QrMYRVndQc2HgiGuRuTSX5VEaSR+4PzbmXkdAfurK+4hlPedm8yC4VRsxmIaNb44
+         3n5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Rxg8wmjxreDjdCxMbMFlkmFGNPMJBkC8wL2SGMFmsIE=;
-        b=kAaaH7no/XNut7zOytXYZ1j3gxLhgNQAvN2qVBrbLeHcOV64C1MfBuCib24ut6gSSq
-         tSfwAmvjEolbbjKDGH6pzrjoRHG3mYkfIV8j3fJ/KS3QxafP0H2QT0pKbeuOrsRTkJnS
-         NgwciOP4H0X5Zr3Wz+r6Tey2XDo6xD5ApLZ0pGSxGfZGO1KKe18W2y5rYyfR1hj1oAaX
-         vFee1uIY2PnDspn1uLtZytI9xYxOe6w4eJs0hRt0ykYzVLaEHUpEVI4E1alrOfrWZbRk
-         Jwn53f16CdBPVYhY0xdvMnWLcVZD9AcjKP9PZ7AJD8WKBSWDRoyPvA47UAlD2IOYCc3f
-         Ag2A==
-X-Gm-Message-State: APjAAAUieS2BtI4wT3icADBEzeCgWpfwDKaRkU2ku4yHNzSZ2UrWcjXN
-        SS7jpZijc2QWugP5y7rlIYdl0Q==
-X-Google-Smtp-Source: APXvYqz6AFzCkyjyEbLox3ck731L1v4MNuLzNiI4VmJe3XCIzy/DGkwb5lkGPjUJsnaVTCB/OecZNA==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr3518038wmi.0.1582192909156;
-        Thu, 20 Feb 2020 02:01:49 -0800 (PST)
+        bh=O+T58/PVEkY9REC+CSDzxK/asJw/FlGJSf/x2KOhKHI=;
+        b=AJ6eH1qUsQ5C3NaEqmujiTK6pXMwoQJICfIERsB8ZAOLwuWJmhRjaCxuOSIzJIAhA8
+         Z7zj9IYZ5yIcCIH7zgb74FM3vmE8TO/M9gJ6xT1r9bZIyDjHg/8EV+6VmiM92gU+NHqg
+         eu6bgRvhUPJxx6ilqdHlUjfr0pML6wE5tAxy4qJ8wheILIlWvALlUTjXF0u63kZ98ECN
+         xNJI/D4WJEWHquY4NDrDEGm3qe5f6mkoV7vMGfND5uTjGEaOVRF1qQyy6vxBJywHkj6V
+         bNKZStHQDoui1m+ze/M3dF6540LkjD/Ni6iuK3FSdComJMVMe23ALLaOXbeDezY6sH+6
+         Am/w==
+X-Gm-Message-State: APjAAAVXoJZpbAzBoOqzOJjBH3vu2pfZCodUY+LeluabvKI3FyUczbqI
+        TKTLDqTWudjj4GsqVqzgmOe8qw==
+X-Google-Smtp-Source: APXvYqzVQbMdjAcZil54m2j1OZvhgzFZgUjumbB3Jr84HO8sjnpAKOw0NHFFXztnWSCSFcHuWNj4wQ==
+X-Received: by 2002:a05:600c:2104:: with SMTP id u4mr3544388wml.93.1582192910228;
+        Thu, 20 Feb 2020 02:01:50 -0800 (PST)
 Received: from localhost.localdomain (lfbn-nic-1-188-94.w2-15.abo.wanadoo.fr. [2.15.37.94])
-        by smtp.gmail.com with ESMTPSA id z1sm3663496wmf.42.2020.02.20.02.01.48
+        by smtp.gmail.com with ESMTPSA id z1sm3663496wmf.42.2020.02.20.02.01.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 02:01:48 -0800 (PST)
+        Thu, 20 Feb 2020 02:01:49 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -51,9 +51,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 3/4] nvmem: increase the reference count of a gpio passed over config
-Date:   Thu, 20 Feb 2020 11:01:40 +0100
-Message-Id: <20200220100141.5905-4-brgl@bgdev.pl>
+Subject: [PATCH v4 4/4] nvmem: release the write-protect pin
+Date:   Thu, 20 Feb 2020 11:01:41 +0100
+Message-Id: <20200220100141.5905-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200220100141.5905-1-brgl@bgdev.pl>
 References: <20200220100141.5905-1-brgl@bgdev.pl>
@@ -64,31 +64,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Khouloud Touil <ktouil@baylibre.com>
 
-We can obtain the write-protect GPIO in nvmem_register() by requesting
-it ourselves or by storing the gpio_desc passed in nvmem_config. In the
-latter case we need to increase the reference count so that it gets
-freed correctly.
+Put the write-protect GPIO descriptor in nvmem_release() so that it can
+be automatically released when the associated device's reference count
+drops to 0.
 
+Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+[Bartosz: tweak the commit message]
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/nvmem/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvmem/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 948c7ebce340..071fb897394c 100644
+index 071fb897394c..a82375f63d64 100644
 --- a/drivers/nvmem/core.c
 +++ b/drivers/nvmem/core.c
-@@ -349,7 +349,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
- 	}
+@@ -72,6 +72,7 @@ static void nvmem_release(struct device *dev)
+ 	struct nvmem_device *nvmem = to_nvmem_device(dev);
  
- 	if (config->wp_gpio)
--		nvmem->wp_gpio = config->wp_gpio;
-+		nvmem->wp_gpio = gpiod_ref(config->wp_gpio);
- 	else
- 		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
- 						    GPIOD_OUT_HIGH);
+ 	ida_simple_remove(&nvmem_ida, nvmem->id);
++	gpiod_put(nvmem->wp_gpio);
+ 	kfree(nvmem);
+ }
+ 
 -- 
 2.25.0
 
