@@ -2,50 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3E87166842
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 21:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81BE916688E
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Feb 2020 21:38:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgBTUY4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Feb 2020 15:24:56 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46825 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728926AbgBTUY4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Feb 2020 15:24:56 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a22so28872172oid.13;
-        Thu, 20 Feb 2020 12:24:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VL4WfOoLJnjZ2R/okVHXD23hjAj0o27pdyoFh9MWulM=;
-        b=RH8cgRNxioZwzGchWP5Fh4Hc7rPQgcOhNFEcsTkKAgbDDUuq+xiaSft2EN2/1tM9Zs
-         Va9hpD7tJXWi4OlTnbOPJ5kgDCJEHki37U8153DBNeX8rWICbpqpLgUpRjguVKWFAMj3
-         gctLsX5bNuDbEXVegp1lxNMu/jDxttSHmevD0MSCdThFO30aF66TEWnoymVvhnomTRXn
-         f0CTbyrrSNcDqs4G+auokF+q3wFyy1EQdv0d9ztpqFkTPbcsLJihZlI+a49S6m2pBbWX
-         jStYkAuuI+3aWXDnpTjGcsFKoHwATbmXG2Ch5mD+fdyQz7lRK0O2VJUhMqZSeyupOY+r
-         9law==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VL4WfOoLJnjZ2R/okVHXD23hjAj0o27pdyoFh9MWulM=;
-        b=G+1I3IMKSYpb9G0pdI1Th5KbDO2Msz3gjANmCRLM7CrrEGyIWPt9L/ijZFeg9fID8I
-         tKKghMExigOVAwWltVpkfGu47jLwhW+DVuoInU1IvYeuq6Ojq/PpvEVO2nUpcPRSBiND
-         IjOtkKccldRjQFZN9NV6dXSe83wRikBsl0KgtbJ8i9NHoSUgguu5zCxXX7RiiudB/T0z
-         /BEduV1wvZCmSyPlfGW0I1+GCYeuR/A4KGeJ/rr65wshKg54zwD/+QM/cAuufCpwVXuQ
-         bKnMvHy9tSwmSaNA2UR+yP6vTfAFY2oXWZ0V57XDlSaFCORlQBB4GoAo9YWC3o29nXFL
-         /O/g==
-X-Gm-Message-State: APjAAAWTxnaqwgDumw1sQo9/2ddmE9/mPLGUlA33jQn2A6GBfB4pNX1W
-        QCudBkSAIZ0VtLy4Eb9xwj6L+ZG6
-X-Google-Smtp-Source: APXvYqyqwBnUDWo9pAjLKTKlodDyuDcMk03B59vgEzCpTTp5T1uTLaRGek3wb8/GwIbaNas/G0wQoA==
-X-Received: by 2002:aca:f487:: with SMTP id s129mr3500567oih.75.1582230293647;
-        Thu, 20 Feb 2020 12:24:53 -0800 (PST)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id a30sm175773otc.79.2020.02.20.12.24.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 12:24:52 -0800 (PST)
+        id S1728936AbgBTUhv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Feb 2020 15:37:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32972 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgBTUhv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:37:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 210AEAD11;
+        Thu, 20 Feb 2020 20:37:48 +0000 (UTC)
 Subject: Re: [PATCH] pinctrl: mediatek: Fix some off by one bugs
+From:   Matthias Brugger <matthias.bgg@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     Sean Wang <sean.wang@kernel.org>,
@@ -56,8 +27,8 @@ Cc:     Sean Wang <sean.wang@kernel.org>,
         kernel-janitors@vger.kernel.org
 References: <20200218055247.74s2xa7veqx2do34@kili.mountain>
  <CACRpkdYWsWNg9oetuHPt0VEz+WKKiqfbfuCu503tpRyZ=7nV=A@mail.gmail.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ <1c333e81-7468-80d6-0835-02c444bb8b5d@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
  fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
  OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
@@ -131,12 +102,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <1c333e81-7468-80d6-0835-02c444bb8b5d@gmail.com>
-Date:   Thu, 20 Feb 2020 21:24:48 +0100
+Message-ID: <a4d98431-32c1-c903-56a6-d23a3c790333@gmail.com>
+Date:   Thu, 20 Feb 2020 21:37:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYWsWNg9oetuHPt0VEz+WKKiqfbfuCu503tpRyZ=7nV=A@mail.gmail.com>
+In-Reply-To: <1c333e81-7468-80d6-0835-02c444bb8b5d@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -145,21 +116,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 20/02/2020 16:14, Linus Walleij wrote:
-> On Tue, Feb 18, 2020 at 6:55 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On 20/02/2020 21:24, Matthias Brugger wrote:
 > 
->> These comparisons should be >= instead of > to prevent accessing one
->> element beyond the end of the hw->soc->pins[] array.
+> 
+> On 20/02/2020 16:14, Linus Walleij wrote:
+>> On Tue, Feb 18, 2020 at 6:55 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >>
->> Fixes: 3de7deefce69 ("pinctrl: mediatek: Check gpio pin number and use binary search in mtk_hw_pin_field_lookup()")
->> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>>> These comparisons should be >= instead of > to prevent accessing one
+>>> element beyond the end of the hw->soc->pins[] array.
+>>>
+>>> Fixes: 3de7deefce69 ("pinctrl: mediatek: Check gpio pin number and use binary search in mtk_hw_pin_field_lookup()")
+>>> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+>>
+>> Matthias could you have a look at this patch?
+>>
 > 
-> Matthias could you have a look at this patch?
+> From what I see hw->soc->npins is the ARRAY_SIZE() of the pins. So the index
+> should smaller hw->soc->npins.
+> 
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 > 
 
-From what I see hw->soc->npins is the ARRAY_SIZE() of the pins. So the index
-should smaller hw->soc->npins.
+Actually missing a second
+Fixes: 184d8e13f9b1 ("pinctrl: mediatek: Add support for pin configuration dump
+via debugfs.")
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Regards,
+Matthias
