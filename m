@@ -2,111 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF97B1683D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33F17168482
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 18:11:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgBUQmi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 11:42:38 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35793 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgBUQmi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:42:38 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w12so2778652wrt.2
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 08:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dU2FhZUg2nCekHubWuHKH9Qi01Tr3wAsi874rYY3BI8=;
-        b=Z5vwtae1LsCNztwbIoExKjaWqzNs/h/oWnLldNPNgBEuLaJZaLgrERr0VI3ivLsJmb
-         hc7nHMh/yNMDUb2h7uYOii6r04XrlNTY14jG/kRzfIhUJ/mVaYqibeawq5FNeYpvH4su
-         aIOP3j3BLeXWHsdm8C561jaKIzzttgeoW7xKDrOmzUPAHsogqIimdULOucFzTbWr8rhN
-         uW0h0UmYZqOS0dczW5jLvRMW8ZwyjACq1t/GnLI/UfiGFATr4Nw0J6Y62XGPL0HA2OQ4
-         eNv/qEaSCv36XIelTbD5XG6qWcP5dvdxxy9fcbE1frMYhgVIBMdAEc4msYW1K0ud2khJ
-         v0Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dU2FhZUg2nCekHubWuHKH9Qi01Tr3wAsi874rYY3BI8=;
-        b=g3Q7jUj9UnARh+gjo5Zb25Jq6MP2CN3EsQtZK9J2yz6xMhy8KKLFfNKr1uzCfTyFWL
-         VmdEUfxAgHM1ObZI1PDS9T6gkuALCTZz8U2VaACuzPNn/qy59rCd2PKK+431y75sefwC
-         fvpK81f0eetzbs0E/0IjMwfLCuLApZii0/4pLZwQ6WYly8t/ffhVY70C837394VkjfXr
-         r9LOVZTSylrtGyrk1kFLTDs90zhOQmprWpxOKoOlKM0xzTzWm15jXHXWMb7jzV3GQ5CO
-         lgNU9Emp5fZK5rRWj9MDwpfcVbyacM4D9MJxGuR8wlBZbI8+1xraG3/GiCasb/0TpPIq
-         bWSw==
-X-Gm-Message-State: APjAAAWpviNJfOg49Xm9nXTlROBU6zhNXME1vNegdz2FzRXXLJk658vB
-        NRNpjspM5K83R+zXmsaXcG6RoHXEjfM=
-X-Google-Smtp-Source: APXvYqzEW8eMMaKghIYJJvqFmuMwp40oiakJn3yx4aBzoUuiaoFVtdKXFaak7l01hmWSQmn3qzzK4Q==
-X-Received: by 2002:adf:dd46:: with SMTP id u6mr47574637wrm.13.1582303356072;
-        Fri, 21 Feb 2020 08:42:36 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id j15sm4709860wrp.9.2020.02.21.08.42.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 08:42:35 -0800 (PST)
-Subject: Re: [PATCH v5 1/5] nvmem: fix memory leak in error path
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        id S1726829AbgBURLa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 12:11:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:43978 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725957AbgBURLa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:11:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52BA730E;
+        Fri, 21 Feb 2020 09:11:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCA313F68F;
+        Fri, 21 Feb 2020 09:11:28 -0800 (PST)
+Date:   Fri, 21 Feb 2020 17:11:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200221154837.18845-1-brgl@bgdev.pl>
- <20200221154837.18845-2-brgl@bgdev.pl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <39750efc-47e0-5711-2619-2a14cb4dbc65@linaro.org>
-Date:   Fri, 21 Feb 2020 16:42:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, Jim Quinlan <james.quinlan@Broadcom.com>
+Subject: Re: [PATCH v2 1/2] PCI: brcmstb: Add regulator support
+Message-ID: <20200221171127.GH5546@sirena.org.uk>
+References: <20200221033640.55163-1-jaedon.shin@gmail.com>
+ <20200221033640.55163-2-jaedon.shin@gmail.com>
+ <20200221121231.GA5546@sirena.org.uk>
+ <40c4de9c-efdc-4fae-ad6d-1ba51fbbece1@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221154837.18845-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
+Content-Disposition: inline
+In-Reply-To: <40c4de9c-efdc-4fae-ad6d-1ba51fbbece1@gmail.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--rCwQ2Y43eQY6RBgR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 21/02/2020 15:48, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We need to free the ida mapping and nvmem struct if the write-protect
-> GPIO lookup fails.
-> 
-> Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Fri, Feb 21, 2020 at 08:33:36AM -0800, Florian Fainelli wrote:
+> On 2/21/2020 4:12 AM, Mark Brown wrote:
 
+> > No, this isn't a good idea - the set of supplies the device has is
+> > fixed when the silicon is produced, it's not something that needs to
+> > vary per board.  This means that the binding should have a fixed list of
+> > supplies, per SoC if that's needed.
 
-Applied this and 5/5
+> These are not the supplies for the PCIe I/Os on the SoCs side, but the
+> supplies for the PCIe end-point connected to the SoCs. More on that below.
 
-Thanks,
-srini
+Then the "slots" (obviously at least some of these are soldered down
+rather than on actual slots) should be represented in DT and the
+controller or bus should know that it needs to iterate over them to
+bring up the chips.  I would also expect that there are standard names
+in the PCI specs for the standard supplies that go into devices as part
+of the bus spec which would mean that there should still be no need to
+encode names like this.
 
-> ---
->   drivers/nvmem/core.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 503da67dde06..2758d90d63b7 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -353,8 +353,12 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	else
->   		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
->   						    GPIOD_OUT_HIGH);
-> -	if (IS_ERR(nvmem->wp_gpio))
-> -		return ERR_CAST(nvmem->wp_gpio);
-> +	if (IS_ERR(nvmem->wp_gpio)) {
-> +		ida_simple_remove(&nvmem_ida, nvmem->id);
-> +		rval = PTR_ERR(nvmem->wp_gpio);
-> +		kfree(nvmem);
-> +		return ERR_PTR(rval);
-> +	}
->   
->   	kref_init(&nvmem->refcnt);
->   	INIT_LIST_HEAD(&nvmem->cells);
-> 
+> If you describe the regulators as properties of the PCIe EP nodes which
+> are child nodes of the PCIe RC node (as we should), you will not be able
+> to manage all of them within your pci_driver instance, because if there
+> is no power to the EP you just do not enumerate it, therefore no
+> pci_device is created.
+
+The framework and/or driver can enumerate firmware information without
+actually powering up the devices of course.
+
+I would not be surprised to learn that most systems just mark the device
+supplies always on, it's not like the devices will be able to use them
+normally anyway.
+
+--rCwQ2Y43eQY6RBgR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5QDz4ACgkQJNaLcl1U
+h9D7MQf/YeQ1FAZw9dB7Kfcm1KJh5ahq4yucqHlg1gPLoilrZyl49an8LGVphqrg
+xaSJ/iWvuoiYz9WkG8/18my3ckt8bdexU8rsw3FJOvljJxY4bL4caT9uRovqO/Gx
+8aYf2FGDqaTWNA5MWDRHYP4vS6OSlu2Dq8QZAp8B4nII2XP+Y+FHi0X+oLGAsSub
+owUznmwx0P/KsCEhWJP722VTq1+il5WrZZnqgE4Qvf9EtIwvBgz5EA+GVqWG+QGT
+9qep25/GEqCx/kfgVzYvldCdzezJc7T43T8bNMrDNyRF7g2wQFoPy4aX/Tn8QL4v
+t1AWpMfPlRi8XT/pENcm0eEBl5aRQg==
+=GtTF
+-----END PGP SIGNATURE-----
+
+--rCwQ2Y43eQY6RBgR--
