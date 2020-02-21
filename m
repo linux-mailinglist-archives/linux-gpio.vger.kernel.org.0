@@ -2,105 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33F17168482
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 18:11:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CBDD1684B0
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 18:18:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBURLa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 12:11:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:43978 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgBURLa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:11:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52BA730E;
-        Fri, 21 Feb 2020 09:11:29 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCA313F68F;
-        Fri, 21 Feb 2020 09:11:28 -0800 (PST)
-Date:   Fri, 21 Feb 2020 17:11:27 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1727709AbgBURSj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 12:18:39 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:38752 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgBURSj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 12:18:39 -0500
+Received: by mail-yb1-f196.google.com with SMTP id v12so1449199ybi.5;
+        Fri, 21 Feb 2020 09:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
+        b=To6LkkfpvlqJHmYlRMozaiXtoGHLEAmYsU3E6heV4YAFR7/YKMi7pE8v1JXTlEa2O6
+         R+Hw9OPdOIMGk4DkCT34AmHveXtDgJURe3gPHl0gUAAajrMNmxSsdsUIdBNtg3OgseBZ
+         tcH0zfBNri6UF+VWaD7gBcGnbtSVGPeO4Oho+qSnZ8Mlt+PZtATpnSDDXCPFE2JqT9mL
+         lBfGEt3d+lDnm1ePque0hRtrK7ZlI5ooEG6kgHBv+w8rcxwYfuZ8O9vth1UAJxcXpq0L
+         pdMi9zm7YvVDH7iml5SXV0q1w+bDTDgWuWZCaBavtOM+j9Bg8GfAZ3qjv9oRRAGhEKXI
+         t9iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
+        b=cqBUR4tftQEBYyrBXazgKXQExAGxvYSfSmVQBl/WUH0wFh2rMS6gjlTrHq+Euei2di
+         tXbttUmG2hDtRQyHfjDxh/wrbGefMhSCRUAF6MKnnaffdir8u6w7KsmlSW5OUaqhw4yh
+         Rdol6iM4gLqA/6UWVY0cesYVM2JCtu1I2yiXn5hcQoNzmeSCiRkkccPhzzB7H7N/v8sM
+         OF/PlabmlyiKIftVxr4TesvC52uXM06zVrwEharRGnupk5pgt90GRu8D8EyNDk0pxasm
+         fCLTmDmRoU3hIzAgaV0o5SENCWviOqqV57tUJ9vVVPSDqgAMVkjy2LvctlT/B8wCzAKg
+         hpUg==
+X-Gm-Message-State: APjAAAVIugGA0l08Dl2ehPIP4PHwRm5hpGyBREKrFKKtjMBtFJvBOiLw
+        juU6qVD1Kp/tV+JxnnEW5y5kv0+n
+X-Google-Smtp-Source: APXvYqzYl4tIDKLb+5Vh4OEpx2jOybgaIKpG0e6x+kgfOHhXyezWBSp7YVo6A6FOfYjvVDd8nnxsJA==
+X-Received: by 2002:a25:9d92:: with SMTP id v18mr13049893ybp.176.1582305516271;
+        Fri, 21 Feb 2020 09:18:36 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id 71sm1496317ywd.59.2020.02.21.09.18.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 09:18:34 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, Jim Quinlan <james.quinlan@Broadcom.com>
-Subject: Re: [PATCH v2 1/2] PCI: brcmstb: Add regulator support
-Message-ID: <20200221171127.GH5546@sirena.org.uk>
-References: <20200221033640.55163-1-jaedon.shin@gmail.com>
- <20200221033640.55163-2-jaedon.shin@gmail.com>
- <20200221121231.GA5546@sirena.org.uk>
- <40c4de9c-efdc-4fae-ad6d-1ba51fbbece1@gmail.com>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be>
+ <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+Date:   Fri, 21 Feb 2020 11:18:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
-Content-Disposition: inline
-In-Reply-To: <40c4de9c-efdc-4fae-ad6d-1ba51fbbece1@gmail.com>
-X-Cookie: Dead? No excuse for laying off work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus, Rob,
 
---rCwQ2Y43eQY6RBgR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2/21/20 10:08 AM, Linus Walleij wrote:
+> On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> 
+>> Extract the code to add all GPIO hogs of a gpio-hog node into its own
+>> function, so it can be reused.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> v2:
+>>   - No changes.
+> 
+> Patch applied with Frank's Review tag.
 
-On Fri, Feb 21, 2020 at 08:33:36AM -0800, Florian Fainelli wrote:
-> On 2/21/2020 4:12 AM, Mark Brown wrote:
+I created a devicetree unittest to show the problem that Geert's patches
+fix.
 
-> > No, this isn't a good idea - the set of supplies the device has is
-> > fixed when the silicon is produced, it's not something that needs to
-> > vary per board.  This means that the binding should have a fixed list of
-> > supplies, per SoC if that's needed.
+I would prefer to have my unittest patch series applied somewhere,
+immediately followed by Geert's patch series.  This way, after
+applying my series, a test fail is reported, then after Geert's
+series is applied, the test fail becomes a test pass.
 
-> These are not the supplies for the PCIe I/Os on the SoCs side, but the
-> supplies for the PCIe end-point connected to the SoCs. More on that below.
+Can you coordinate with Rob to accept both series either via
+your tree or Rob's tree?
 
-Then the "slots" (obviously at least some of these are soldered down
-rather than on actual slots) should be represented in DT and the
-controller or bus should know that it needs to iterate over them to
-bring up the chips.  I would also expect that there are standard names
-in the PCI specs for the standard supplies that go into devices as part
-of the bus spec which would mean that there should still be no need to
-encode names like this.
+-Frank
 
-> If you describe the regulators as properties of the PCIe EP nodes which
-> are child nodes of the PCIe RC node (as we should), you will not be able
-> to manage all of them within your pci_driver instance, because if there
-> is no power to the EP you just do not enumerate it, therefore no
-> pci_device is created.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-The framework and/or driver can enumerate firmware information without
-actually powering up the devices of course.
-
-I would not be surprised to learn that most systems just mark the device
-supplies always on, it's not like the devices will be able to use them
-normally anyway.
-
---rCwQ2Y43eQY6RBgR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5QDz4ACgkQJNaLcl1U
-h9D7MQf/YeQ1FAZw9dB7Kfcm1KJh5ahq4yucqHlg1gPLoilrZyl49an8LGVphqrg
-xaSJ/iWvuoiYz9WkG8/18my3ckt8bdexU8rsw3FJOvljJxY4bL4caT9uRovqO/Gx
-8aYf2FGDqaTWNA5MWDRHYP4vS6OSlu2Dq8QZAp8B4nII2XP+Y+FHi0X+oLGAsSub
-owUznmwx0P/KsCEhWJP722VTq1+il5WrZZnqgE4Qvf9EtIwvBgz5EA+GVqWG+QGT
-9qep25/GEqCx/kfgVzYvldCdzezJc7T43T8bNMrDNyRF7g2wQFoPy4aX/Tn8QL4v
-t1AWpMfPlRi8XT/pENcm0eEBl5aRQg==
-=GtTF
------END PGP SIGNATURE-----
-
---rCwQ2Y43eQY6RBgR--
