@@ -2,93 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA781682D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:10:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC791682ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:13:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBUQKk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 11:10:40 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45451 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgBUQKk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:10:40 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z5so1859782lfd.12
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 08:10:37 -0800 (PST)
+        id S1727312AbgBUQNE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 11:13:04 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45526 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbgBUQNE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:13:04 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so2712439ljn.12
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 08:13:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1fzmdPVewt4poXC+/NMgaFWzacayCygYoOgCnUFqrFA=;
-        b=fVdWb+3x5OJjWjTS8JQOQcRTidOkvjo2ir5U7PGAMVw5WxJMB39mldwFJOaGJBpPUy
-         TygGJ4Dh2eYuVpqhNmTy3A+mpVuIa2KKYLFA3KwEZW7wHuF9sM0lfQDUBvctfKY5m1/w
-         pO0dTq0SLvot91o2JkazTn4LiuQ4fl4I5uYWo0e5ArrD3w5jCckR3bFlT9HGTa+m8PiK
-         8VAPpY7zeJn+UMraJSLg7HWnf8dY0AdiTCeorPVYG50crBQzgoxJZ4GIyr4FyKjRhKom
-         FwWdL94yUF4/ORBxgq/aGEs+gPSJnwmTca7vaVtED+YyMLd2N70TOhnvv4WIVVP46psz
-         EG0g==
+        bh=LqTxue78m0VGtZxl2013S2ddlAIfciqoVst56iF7SGs=;
+        b=BvOCY4WqvKvSmbgZTbzrZE34qr4LqSZ43ORPgG6FiaueJHCu06j2vI/i4JmgeO0n7v
+         Rbc1u6pnDAuBjtYyd7Nox+Oh9KUmMWJuAZnfXeaXqgabNrQ324jbS5Bkb9BDWWkQ9nuf
+         Xybhnbw9C03wwI5svyClubx5PE2EFuvtMMSyd5nvcyUpMolfbLHgSTWPdtHfTEMsszWh
+         WvW8HCo9EHW7FZ6o69Lh3YBJhepdESVmYcApE1j07CUs73iEnPQPgddW/ASD01W8k+3o
+         uIov3ZG0emYKmHEo9CdEaDqVA79Iy8r5CaB6o7YxuzLi6GvPewcHcNNIA1QMKVf0+x6E
+         drmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1fzmdPVewt4poXC+/NMgaFWzacayCygYoOgCnUFqrFA=;
-        b=HfKgMXRqlIWt8aFeQzMln1W3eBQpH2Yx98Lm0dTF7Va9S8mT4LDWnpKUHs8iJqkG3m
-         KfHaAKeuL16PWcZUzPfFORoJO90AXwQ3QBiXelCVyxaHX6y3qbsAedhdQFOOj4Zg7Y9c
-         2RpJs1i2x5ygMfhVus7cSDwGHVGzK4obXxWemeymhaDHn0XCIS8STiqleJ3aCWicC45b
-         VOsqQazx8JVncY21nDMtOwatUJsErSanq9fyvyNk2PPCVkMAzyEhh6ry/JeYkhIU19o/
-         c6SmqrLzGzvQnFigq1QjRqjVYPyquGAys92hB+Ra7B8bMs1iccj/M+R9Vkfj95rFGRHD
-         d+AA==
-X-Gm-Message-State: APjAAAUWg5NDWEJAHuPQRqnebzFyYIdrqJsO5Bf41DP+3mBE/ugRuwpR
-        HKxEDAlV9TC/el4pJaAxMrGcAnNIUJBdL8zjEEhDzQ==
-X-Google-Smtp-Source: APXvYqzfFpHz+WEEPdfY1KvmrQ7fJ+JA1hBH/qsYBoXtX0Ad1P1ZdxZA5yWVXCM5V2QXzRc1KsrSTBXhNXruk6AbO4k=
-X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20384167lfb.21.1582301436869;
- Fri, 21 Feb 2020 08:10:36 -0800 (PST)
+        bh=LqTxue78m0VGtZxl2013S2ddlAIfciqoVst56iF7SGs=;
+        b=a5dCMVb/bwXA5HpMKtVKO/5/t6MqObwTIblriKHS7zu4il7OHqixTiw26obmhd5CuA
+         bqBHEaIePzk2LJQmGK53KbUHztY+Ktaw+HqO7G4llIeCbac+j87AOhnul26Hemu2aaTK
+         vDGZsQS+4wQlfqeurf5N/h3N3o2JVqRmIXZL5h8CJOTVWvMxdKhoSOjIQytxR7wGLz9w
+         A8WxWw2LwWrW/RlbDLiOYbxbXRRhYEJc04JFRHaNTnOfXKxHmleLqlicauVL7hm1okfr
+         FvvH58kSOfuVS+PCbeOb0xKwrV95BQt6Zyt/ssHoV3W5ZxBwrxa2qPjupxO2kckzOZ+Y
+         c0TQ==
+X-Gm-Message-State: APjAAAWQIzBz2yFQ8SkjUzjs7Dxo+MarvZ7ZVzDrz2aB4qYJ7O7eTpwR
+        bhyGjWPiRQrmoaaRGnvb3zR86SBMd1igzUJ0nb7h7w==
+X-Google-Smtp-Source: APXvYqx1fG7Lz4lhwSO2oqygCFLqCAUK7qlx2swfnXZlid8cl7yxcjFZKc5d8xBtqEe+Hg9BDPxLjIE2diqSC+Ew0Lw=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23401405ljc.39.1582301580775;
+ Fri, 21 Feb 2020 08:13:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220130149.26283-1-geert+renesas@glider.be> <20200220130149.26283-3-geert+renesas@glider.be>
-In-Reply-To: <20200220130149.26283-3-geert+renesas@glider.be>
+References: <20200218055247.74s2xa7veqx2do34@kili.mountain>
+In-Reply-To: <20200218055247.74s2xa7veqx2do34@kili.mountain>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 17:10:25 +0100
-Message-ID: <CACRpkdbFRv2ab-fa3htiLBTmW4kCuB6Rmxb0Afj=eP4hH0W7BA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
+Date:   Fri, 21 Feb 2020 17:12:49 +0100
+Message-ID: <CACRpkdZeFrmA=ZwSNxY0=J6BpASkTrZLVQXBoenZKXFRS3xJPA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: Fix some off by one bugs
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Tue, Feb 18, 2020 at 6:55 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 
-> As GPIO hogs are configured at GPIO controller initialization time,
-> adding/removing GPIO hogs in DT overlays does not work.
+> These comparisons should be >= instead of > to prevent accessing one
+> element beyond the end of the hw->soc->pins[] array.
 >
-> Add support for GPIO hogs described in DT overlays by registering an OF
-> reconfiguration notifier, to handle the addition and removal of GPIO hog
-> subnodes to/from a GPIO controller device node.
->
-> Note that when a GPIO hog device node is being removed, its "gpios"
-> properties is no longer available, so we have to keep track of which
-> node a hog belongs to, which is done by adding a pointer to the hog's
-> device node to struct gpio_desc.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Drop RFC state,
->   - Document that modifying existing gpio-hog nodes is not supported.
+> Fixes: 3de7deefce69 ("pinctrl: mediatek: Check gpio pin number and use binary search in mtk_hw_pin_field_lookup()")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Clean and well separated code, patch applied
-with Frank's review tag!
+Patch applied as a non-critical fix with Matthias' Review tag.
 
 Yours,
 Linus Walleij
