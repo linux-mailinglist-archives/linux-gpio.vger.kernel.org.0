@@ -2,123 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4014C1681AA
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 16:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7BB01681BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 16:34:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgBUPcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 10:32:18 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39774 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgBUPcS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 10:32:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so2327196oty.6;
-        Fri, 21 Feb 2020 07:32:18 -0800 (PST)
+        id S1728326AbgBUPeN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 10:34:13 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43324 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgBUPeN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 10:34:13 -0500
+Received: by mail-lf1-f66.google.com with SMTP id s23so1782750lfs.10
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 07:34:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hUVfMiXxCwbSjtH9BPcnP06NcLeQvKTFfCk+TkAB1ZQ=;
+        b=v90zLbE5oSFF85/nmKa9caaE43xtNO2sg0peoa6K/LaorENVEkOf35lATcCgMyTbPW
+         O69VCm2Xttmp1nfwqSxxxy9Z1qj2m0SM9sgeOCvFYl6ECFGp8Z49HGtUdDD7nDXZV52M
+         7mVPCdX9y3erbnBlOsk9iMOXmAKwPffElO75JsVMyUHRTzF0K94XzifctntrM7BCB0Ih
+         fQWoyZ9Vw8c/u6cRD6ECP8tO3GWZezpVnii5ZYj2mp/KTrGI7hxBaziucNlZ/+MH44i7
+         oNQMfu6cTpDPUepThAKF9qA3+I22/r3p1UKcvLrsvEjQ5WzRxqInd4YIw+8dM1T1IxQa
+         crrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5jRzIkWfQ+0gox1TYbOKZYWDKTNe51R7eEKfAaND2e8=;
-        b=EwglTzWDYHi5zUI0G73egd4M8WlMq3bTf6ltjxwAhfwj0yGP2OQra9rJ/T28QVtQcF
-         VuLxYSannvQna2hi5P14PtkBHxph2sznltyrZqcAMS+swFY02tYpZEq9ezMzZQxQBaLz
-         YhBGldvZtk1mLwRrKnd+D2Td72Jr6D5lG+eDMv0Iv3me1ck5dWhwtmD8dZgjcZlRqrut
-         7cm3y91tdzTj9/WoxYLlHTkGjsf/PUxmuURJ60K3P30u7PabB5oKSBj/Q6wBWaD8j7Lj
-         tV+h3B6dwD1O9NLdi0uFieY4rOd2m6IYzW1m6bKd7vh0Kf2G58B2vPnJ/tDV+5yc7MdL
-         sLfQ==
-X-Gm-Message-State: APjAAAWGJ6+FxRtS2tsO1TB6zAaQy7MvqN6sBg4MFYZmAhqqy+zm088S
-        w77myMc3OGIYntQLqKV56w==
-X-Google-Smtp-Source: APXvYqyIi7otPk4YqJ66riR/MI9UiSp8vpqQOhiJlly3+GQnLyt8fa9IB1l62IViMdRSA1KiKTCn5w==
-X-Received: by 2002:a9d:6f0a:: with SMTP id n10mr29655564otq.54.1582299137818;
-        Fri, 21 Feb 2020 07:32:17 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t9sm1108521otm.76.2020.02.21.07.32.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:32:16 -0800 (PST)
-Received: (nullmailer pid 14335 invoked by uid 1000);
-        Fri, 21 Feb 2020 15:32:15 -0000
-Date:   Fri, 21 Feb 2020 09:32:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to
- json-schema
-Message-ID: <20200221153215.GA9815@bogus>
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-2-yamada.masahiro@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hUVfMiXxCwbSjtH9BPcnP06NcLeQvKTFfCk+TkAB1ZQ=;
+        b=Vqb5y0KXssZ+EkseakgaSXhrgd4UAvkbPVqnTIxyT/2bS96yW+X6TufXIqcQOzmCTP
+         SHqAJe5c41XRd5SId6frXzavE3v1811kkXjpcOtFIZqjnm244OYFz+ZtXSrIqqp3Tdw5
+         jIiJkPBMULs3ojlQ9a8ugzHJJynwxDQb6QqL2k+1KWmK1dVANND5c5/nGcZM9W8pFT6M
+         /LMy6StR1alfiqJKGo3G3sFiuwcRdVEraqy80sPUynX16u/kwXdPIgGU4SlSYHRCdBdn
+         WEYEE02+wgVtCse1Mtf1BeZkd0OFQIi6lRB/9QNHqrF2/ZjREojHdfZetnPkhsp6lne+
+         p9Wg==
+X-Gm-Message-State: APjAAAUvjiKKhADdngPqVwJc0Fv0qGOX5Q2nyUzdqGUXPKCvAqWPHQUG
+        IQAQ4At80A3R8VRzCH8QVpUDqXLBipvFlfjm633afA==
+X-Google-Smtp-Source: APXvYqxFOhbB45zhwJACKnRWGrffnbDn/50wsrqM8zfRboGUcRtR/fIOZXVdUDsZuFjz9JDddI6CuEa9zN+Z1wPCOKA=
+X-Received: by 2002:ac2:5499:: with SMTP id t25mr19779301lfk.194.1582299251375;
+ Fri, 21 Feb 2020 07:34:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221021002.18795-2-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1582216144.git.leonard.crestez@nxp.com> <bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com>
+In-Reply-To: <bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 21 Feb 2020 16:34:00 +0100
+Message-ID: <CACRpkdbB0xUF14aG5kVtmQ-AuwZVNKYq8_mW41jdQ_OfcNq8KQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] pinctrl: imx: scu: Align imx sc msg structs to 4
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Franck LENORMAND <franck.lenormand@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier GPIO controller binding to DT schema format.
-> 
-> I omitted the 'gpio-ranges' property because it is defined in the
-> dt-schema project (/schemas/gpio/gpio.yaml).
-> 
-> As of writing, the 'gpio-ranges-group-names' is not defined in that
-> file despite it is a common property described in
-> Documentation/devicetree/bindings/gpio/gpio.txt
-> So, I defined it in this schema.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> I have a question about the range about 'ngpio'.
-> 
->   ngpios:
->     minimum: 0
->     maximum: 512
-> 
-> The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
-> https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
-> 
-> 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
-> 
-> I cannot omit the minimum because minimum and maximum depend on each other.
-> I just put a sensible number, 512, in maximum.
-> 
-> If this range is entirely unneeded, I will delete it.
+On Thu, Feb 20, 2020 at 5:29 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
 
-This property is generally for when you can have some number less 
-than a maximum number implied by the compatible string. 
+> The imx SC api strongly assumes that messages are composed out of
+> 4-bytes words but some of our message structs have odd sizeofs.
+>
+> This produces many oopses with CONFIG_KASAN=y.
+>
+> Fix by marking with __aligned(4).
+>
+> Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-If there is really no max (e.g. 2^32 - 1 is valid), then just do 
-'ngpios: true'
+Patch applied for fixes. KASan needs to work.
+Thanks for fixing this!
 
-> 
-> 
->  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
->  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 90 insertions(+), 52 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1241747
-Please check and re-submit.
+Yours,
+Linus Walleij
