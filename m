@@ -2,54 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 753F91683CA
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:41:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF97B1683D9
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:42:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbgBUQlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 11:41:13 -0500
-Received: from mail-out.m-online.net ([212.18.0.10]:56838 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBUQlN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:41:13 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48PHK21SMHz1rd1Q;
-        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48PHK20WlYz1r0bZ;
-        Fri, 21 Feb 2020 17:41:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id T2YKWe-QNZdI; Fri, 21 Feb 2020 17:41:08 +0100 (CET)
-X-Auth-Info: tPcD5NT6YuYT6cAPtv9wImntzVhf6GYyvo9WLMRjP8E=
-Received: from [127.0.0.1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 21 Feb 2020 17:41:08 +0100 (CET)
-Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
- <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
- <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
- <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
- <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
- <66520848-f630-e210-aecb-96c8828605b7@st.com>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <faf55c81-e28f-20ed-ffdc-d20f00e3aefc@denx.de>
-Date:   Fri, 21 Feb 2020 17:41:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        id S1726443AbgBUQmi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 11:42:38 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35793 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgBUQmi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:42:38 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w12so2778652wrt.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 08:42:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dU2FhZUg2nCekHubWuHKH9Qi01Tr3wAsi874rYY3BI8=;
+        b=Z5vwtae1LsCNztwbIoExKjaWqzNs/h/oWnLldNPNgBEuLaJZaLgrERr0VI3ivLsJmb
+         hc7nHMh/yNMDUb2h7uYOii6r04XrlNTY14jG/kRzfIhUJ/mVaYqibeawq5FNeYpvH4su
+         aIOP3j3BLeXWHsdm8C561jaKIzzttgeoW7xKDrOmzUPAHsogqIimdULOucFzTbWr8rhN
+         uW0h0UmYZqOS0dczW5jLvRMW8ZwyjACq1t/GnLI/UfiGFATr4Nw0J6Y62XGPL0HA2OQ4
+         eNv/qEaSCv36XIelTbD5XG6qWcP5dvdxxy9fcbE1frMYhgVIBMdAEc4msYW1K0ud2khJ
+         v0Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dU2FhZUg2nCekHubWuHKH9Qi01Tr3wAsi874rYY3BI8=;
+        b=g3Q7jUj9UnARh+gjo5Zb25Jq6MP2CN3EsQtZK9J2yz6xMhy8KKLFfNKr1uzCfTyFWL
+         VmdEUfxAgHM1ObZI1PDS9T6gkuALCTZz8U2VaACuzPNn/qy59rCd2PKK+431y75sefwC
+         fvpK81f0eetzbs0E/0IjMwfLCuLApZii0/4pLZwQ6WYly8t/ffhVY70C837394VkjfXr
+         r9LOVZTSylrtGyrk1kFLTDs90zhOQmprWpxOKoOlKM0xzTzWm15jXHXWMb7jzV3GQ5CO
+         lgNU9Emp5fZK5rRWj9MDwpfcVbyacM4D9MJxGuR8wlBZbI8+1xraG3/GiCasb/0TpPIq
+         bWSw==
+X-Gm-Message-State: APjAAAWpviNJfOg49Xm9nXTlROBU6zhNXME1vNegdz2FzRXXLJk658vB
+        NRNpjspM5K83R+zXmsaXcG6RoHXEjfM=
+X-Google-Smtp-Source: APXvYqzEW8eMMaKghIYJJvqFmuMwp40oiakJn3yx4aBzoUuiaoFVtdKXFaak7l01hmWSQmn3qzzK4Q==
+X-Received: by 2002:adf:dd46:: with SMTP id u6mr47574637wrm.13.1582303356072;
+        Fri, 21 Feb 2020 08:42:36 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j15sm4709860wrp.9.2020.02.21.08.42.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Feb 2020 08:42:35 -0800 (PST)
+Subject: Re: [PATCH v5 1/5] nvmem: fix memory leak in error path
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200221154837.18845-1-brgl@bgdev.pl>
+ <20200221154837.18845-2-brgl@bgdev.pl>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <39750efc-47e0-5711-2619-2a14cb4dbc65@linaro.org>
+Date:   Fri, 21 Feb 2020 16:42:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <66520848-f630-e210-aecb-96c8828605b7@st.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200221154837.18845-2-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -57,68 +69,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2/20/20 2:09 PM, Alexandre Torgue wrote:
-> Hi Marek
 
-Hi,
 
-> On 2/19/20 6:24 PM, Marek Vasut wrote:
->> On 2/19/20 10:20 AM, Alexandre Torgue wrote:
->> Hi,
->> [...]
->>>>>>> This series adds the possibility to handle gpio interrupts on level.
->>>>>>>
->>>>>>> GPIO hardware block is directly linked to EXTI block but EXTI
->>>>>>> handles
->>>>>>> external interrupts only on edge. To be able to handle GPIO
->>>>>>> interrupt on
->>>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>>>>> chip)
->>>>>>> is retriggered following interrupt type and gpio line value.
->>>>>>>
->>>>>>> In exti irq chip, retrigger ops function is added.
->>>>>>
->>>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
->>>>>> set
->>>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It
->>>>>> seems
->>>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
->>>>>> selection")
->>>>>> prevents that.
->>>>>>
->>>>>
->>>>> No it's not possible. Each gpio line doesn't have a dedicated Exti
->>>>> line
->>>>> Each Exti line is muxing between gpio banks.
->>>>
->>>> OK, that confirms my assumption.
->>>>
->>>>> Mapping is done as following:
->>>>>
->>>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
->>>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
->>>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
->>>>> ...
->>>>
->>>> Is it at least possible to have IRQs of the same type on the same exti
->>>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
->>>> trigger-edge-falling ?
->>>>
->>>
->>> Sorry I don't catch your point. If you already succeed to get gpioA2,
->>> then you will failed to get gpioB2 but looking at function call stack we
->>> could get an other issue.
->>
->> Considering the EXTI line limitations, I'd like to know what kind of IRQ
->> input configuration is allowed/valid and what kind of configuration is
->> not valid.
+On 21/02/2020 15:48, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> As a mux is used to select which GPIO[A..Z]_X has to be mapped on exti_X
-> line, only one GPIO can be used on the EXTI line.
+> We need to free the ida mapping and nvmem struct if the write-protect
+> GPIO lookup fails.
 > 
-> For example, on EXTI2 you could map either gpioa2 or gpiob2 or
-> ....gpioz2 but not gpioa2 and gpiob2 in the same time.
+> Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Got it, thank you for the clarification.
 
-Maybe that could be something to improve for MP2 :-)
+Applied this and 5/5
+
+Thanks,
+srini
+
+> ---
+>   drivers/nvmem/core.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 503da67dde06..2758d90d63b7 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -353,8 +353,12 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	else
+>   		nvmem->wp_gpio = gpiod_get_optional(config->dev, "wp",
+>   						    GPIOD_OUT_HIGH);
+> -	if (IS_ERR(nvmem->wp_gpio))
+> -		return ERR_CAST(nvmem->wp_gpio);
+> +	if (IS_ERR(nvmem->wp_gpio)) {
+> +		ida_simple_remove(&nvmem_ida, nvmem->id);
+> +		rval = PTR_ERR(nvmem->wp_gpio);
+> +		kfree(nvmem);
+> +		return ERR_PTR(rval);
+> +	}
+>   
+>   	kref_init(&nvmem->refcnt);
+>   	INIT_LIST_HEAD(&nvmem->cells);
+> 
