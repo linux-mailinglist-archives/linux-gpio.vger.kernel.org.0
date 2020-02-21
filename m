@@ -2,89 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7BB01681BF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 16:34:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F639168239
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 16:48:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgBUPeN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 10:34:13 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43324 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgBUPeN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 10:34:13 -0500
-Received: by mail-lf1-f66.google.com with SMTP id s23so1782750lfs.10
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 07:34:12 -0800 (PST)
+        id S1728379AbgBUPsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 10:48:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53238 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgBUPsq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 10:48:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so2276432wmc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 07:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hUVfMiXxCwbSjtH9BPcnP06NcLeQvKTFfCk+TkAB1ZQ=;
-        b=v90zLbE5oSFF85/nmKa9caaE43xtNO2sg0peoa6K/LaorENVEkOf35lATcCgMyTbPW
-         O69VCm2Xttmp1nfwqSxxxy9Z1qj2m0SM9sgeOCvFYl6ECFGp8Z49HGtUdDD7nDXZV52M
-         7mVPCdX9y3erbnBlOsk9iMOXmAKwPffElO75JsVMyUHRTzF0K94XzifctntrM7BCB0Ih
-         fQWoyZ9Vw8c/u6cRD6ECP8tO3GWZezpVnii5ZYj2mp/KTrGI7hxBaziucNlZ/+MH44i7
-         oNQMfu6cTpDPUepThAKF9qA3+I22/r3p1UKcvLrsvEjQ5WzRxqInd4YIw+8dM1T1IxQa
-         crrw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LeI4uUAherKB7oCfyMKmC8mC9Xr3shtEsETnkdo6NKY=;
+        b=bc468FVjR0O2HzM4iW+Zet93uxru6fygwMokZnjsN4Z3+QauJeJgq3arXlVh56HWeZ
+         A5uIl36pE23TiUBNM7b9+bDJ85xe4zJtG+NoFQvuOXFPFp6oigTsxBosuCYShHjrDvzg
+         BcrOE7FV91S71wNKkhx6+2Rt2tD13s1SHZdHRfrdfNJALCTcoWsNhaK4BKGx95WoW65T
+         v82GGJ2l5ITDblA9SU5pJylgyjR0f9nsQYgtBDXc+oAtYKtOxKXTn8Lwi+b3hIDzXrT0
+         cS0CcEMHwqM3MJHCig0urM4lO3tc1/Oxa+RTBMuDvDS6of7qDUssIFruEBY2l4BzWH94
+         azxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hUVfMiXxCwbSjtH9BPcnP06NcLeQvKTFfCk+TkAB1ZQ=;
-        b=Vqb5y0KXssZ+EkseakgaSXhrgd4UAvkbPVqnTIxyT/2bS96yW+X6TufXIqcQOzmCTP
-         SHqAJe5c41XRd5SId6frXzavE3v1811kkXjpcOtFIZqjnm244OYFz+ZtXSrIqqp3Tdw5
-         jIiJkPBMULs3ojlQ9a8ugzHJJynwxDQb6QqL2k+1KWmK1dVANND5c5/nGcZM9W8pFT6M
-         /LMy6StR1alfiqJKGo3G3sFiuwcRdVEraqy80sPUynX16u/kwXdPIgGU4SlSYHRCdBdn
-         WEYEE02+wgVtCse1Mtf1BeZkd0OFQIi6lRB/9QNHqrF2/ZjREojHdfZetnPkhsp6lne+
-         p9Wg==
-X-Gm-Message-State: APjAAAUvjiKKhADdngPqVwJc0Fv0qGOX5Q2nyUzdqGUXPKCvAqWPHQUG
-        IQAQ4At80A3R8VRzCH8QVpUDqXLBipvFlfjm633afA==
-X-Google-Smtp-Source: APXvYqxFOhbB45zhwJACKnRWGrffnbDn/50wsrqM8zfRboGUcRtR/fIOZXVdUDsZuFjz9JDddI6CuEa9zN+Z1wPCOKA=
-X-Received: by 2002:ac2:5499:: with SMTP id t25mr19779301lfk.194.1582299251375;
- Fri, 21 Feb 2020 07:34:11 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LeI4uUAherKB7oCfyMKmC8mC9Xr3shtEsETnkdo6NKY=;
+        b=SqHzt5cshkW150mVFvFnBN8PECcKelim7nW3KUwZ2Lmeh8pLHJgT3d+4eiqYQmtIx0
+         5PSju2lQ/xUsEfjPq1R0xVZUar/LKRqZ11EDCX8pQHCqLmkE3Det4nC6Ct7Q36Bu9luH
+         p7G2P7YCOqCb1jtnnlUwhFTeLP751uTymP3JhUH9ITL7jrkaGlHQ1gULr5SGCoePEnP0
+         fvYEvUVy5Q34TkfL/g4XuroT2HmsOSIVQdhc15msXlAX2dhMHnogyFoSadkm+xMLclSm
+         jb0gI7Q6sEgntBJgATGHCr0+AjdlMOPxbd4TVqnoA16TxxFpIWdMhZRXw3xroq0DpIQD
+         W3OA==
+X-Gm-Message-State: APjAAAUT/ALqw0Dlovw+X2muXKGoxImPi3wv5YYcc6z5JZ2reId1cMSP
+        vlrnP2SQVl44hafl8GrF1/5vKg==
+X-Google-Smtp-Source: APXvYqxsLHrfDYzPsFWvn6is40yGLcNWGK+wdV+4cbAuhPNyi72AV/LyUrw6n6gSPS65K5YTI6GjRA==
+X-Received: by 2002:a1c:a1c3:: with SMTP id k186mr4502020wme.179.1582300124029;
+        Fri, 21 Feb 2020 07:48:44 -0800 (PST)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id h10sm4267947wml.18.2020.02.21.07.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:48:43 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/5] nvmem/gpio: fix resource management
+Date:   Fri, 21 Feb 2020 16:48:32 +0100
+Message-Id: <20200221154837.18845-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <cover.1582216144.git.leonard.crestez@nxp.com> <bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com>
-In-Reply-To: <bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 16:34:00 +0100
-Message-ID: <CACRpkdbB0xUF14aG5kVtmQ-AuwZVNKYq8_mW41jdQ_OfcNq8KQ@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] pinctrl: imx: scu: Align imx sc msg structs to 4
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Franck LENORMAND <franck.lenormand@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 5:29 PM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-> The imx SC api strongly assumes that messages are composed out of
-> 4-bytes words but some of our message structs have odd sizeofs.
->
-> This produces many oopses with CONFIG_KASAN=y.
->
-> Fix by marking with __aligned(4).
->
-> Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Hi Srinivas,
 
-Patch applied for fixes. KASan needs to work.
-Thanks for fixing this!
+sorry for the lack of proper QA last time. This time the code is tested
+on real HW (Beagle Bone Black with an ACME cape) including the error
+path.
 
-Yours,
-Linus Walleij
+--
+
+This series addresses a couple problems with memory management in nvmem
+core.
+
+First we fix a memory leak introduced in this release cycle. Next we extend
+the GPIO framework to use reference counting for GPIO descriptors. We then
+use it to fix the resource management problem with the write-protect pin.
+
+While the memory leak with wp-gpios is now in mainline - I'm not sure how
+to go about applying the kref patch. This is theoretically a new feature
+but it's also the cleanest way of fixing the problem.
+
+v1 -> v2:
+- make gpiod_ref() helper return
+- reorganize the series for easier merging
+- fix another memory leak
+
+v2 -> v3:
+- drop incorrect patches
+- add a patch adding a comment about resource management
+- extend the GPIO kref patch: only increment the reference count if the
+  descriptor is associated with a requested line
+
+v3 -> v4:
+- fixed the return value in error path in nvmem_register()
+- dropped patches already applied to the nvmem tree
+- dropped the patch adding the comment about resource management
+
+v4 -> v5:
+- don't reference nvmem once it's freed
+- add GPIO descriptor validation in gpiod_ref()
+
+Bartosz Golaszewski (4):
+  nvmem: fix memory leak in error path
+  gpiolib: provide VALIDATE_DESC_PTR() macro
+  gpiolib: use kref in gpio_desc
+  nvmem: increase the reference count of a gpio passed over config
+
+Khouloud Touil (1):
+  nvmem: release the write-protect pin
+
+ drivers/gpio/gpiolib.c        | 46 ++++++++++++++++++++++++++++++++---
+ drivers/gpio/gpiolib.h        |  1 +
+ drivers/nvmem/core.c          | 11 ++++++---
+ include/linux/gpio/consumer.h |  1 +
+ 4 files changed, 52 insertions(+), 7 deletions(-)
+
+-- 
+2.25.0
+
