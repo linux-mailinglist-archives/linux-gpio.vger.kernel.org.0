@@ -2,85 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40A3A167FF5
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 15:19:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CECEB168011
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 15:21:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgBUOTq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 09:19:46 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42062 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgBUOTq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 09:19:46 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d10so2338909ljl.9
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 06:19:45 -0800 (PST)
+        id S1728380AbgBUOVp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 09:21:45 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37888 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728396AbgBUOVp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 09:21:45 -0500
+Received: by mail-lf1-f65.google.com with SMTP id r14so1613468lfm.5
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Feb 2020 06:21:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vbp5HmE7gQPscb29G3f/m6n5PyBpWgUkLDK+pcD6IUw=;
-        b=sDQ4rKRcT9EGnaai5ZQuPPchUsTALBOnSJwytpPdvxe1r1Ltn/OpcV3lfkpxSCG4UR
-         KL2QLIxx95AzvErUjDzabgonfPxKPQ4o9yPgANoZ5QPVpSjG2f4LOplf0jtNOoO/nH5e
-         fPAjDCsapksFzZRD3HxxkaHj6ZBy8pV+q+wHgUfybXkKr77KFAiDOJIRRdLSku7V3uba
-         cLhSSgRo/5ubr0gsabf1g03T/QMQ6WAiISrGLChupPj8bsDbXu1g8mUsaqIvG7C985wz
-         YUWtWpU/rk5/80IN3wGPvDDl5xpQS6nGMI3cTs4q99Bst5PU/h8oNCzeYsSfy2y30ynH
-         nR4Q==
+         :cc:content-transfer-encoding;
+        bh=LzKEMSRm7aMhbsD4FLHQVZNBKfPqY5ZNIMagLE7b27A=;
+        b=zsnxq6A6AvCzyiGsP5PWzf+udVD1jQS/2saJCH+nR88fIRw0unQSUP++Rkfd5sfrf3
+         63Odo9vcMh/eXewq38ibkJ1zAQ2XWX6dpxB0JJcPabvSmgDjJRC5Kou7PPy1Y3opByhh
+         KSkTfPDsfmJB7xZ3BMmTpBKdQdz89FNs56yBrqtEQKqZY6vbtZWVPk/o8YuLpInm92zK
+         dqqaq61KzXrF7vBNf6jnMFIX0Sxnwqi5aFvV7T4nAtFd9Lf37IL2QKH3yC7R5ZlOo9KZ
+         9hhyJZtlyOTLlKFquzaoF4vwjdgdZZVrqiCHqBBKYBYpRAAedbT45Vu3fc79G6DiNgPM
+         4sYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vbp5HmE7gQPscb29G3f/m6n5PyBpWgUkLDK+pcD6IUw=;
-        b=cQZr5XZFVMsE+ZxQCTNze1E9qFPz5B0q3jxGZuiMsaBD5e3FWAgUdLoOfNyGHIfyN6
-         +MxEOlwFSyD+xSFplj4SlqQrNYZAQBVYQfqfZPD0NhK6vdRg5FkXqDEs12kNys3HnRkR
-         8pVduZB8fQbdSffmpnzxHQen4HzhpcD1VFPcRBMIec8gQfX4QR/z3GeKlBaRI+Pjl+8x
-         bCnV1KekLIefSvcaxzC3R/INhYjbC8Nb1vTj7ieJaSNHyyUz3lJYUhUH5rYg9d+I5BHz
-         mI+yqD/CZNeukAIdLBDuNR/x4pTMJgWAgsGUxCs3/hSO+Xg3J6l3l4iRk6Qz8IQdGTdX
-         yu0g==
-X-Gm-Message-State: APjAAAUz+X/i+dxQgraCmRIN6bu7dKIlmOT3q1xBtnn25AcDgBr99Ply
-        MgXLQGAS9hakWGNQ6NXHGkSeMrUUWyh19itJbJbWBw==
-X-Google-Smtp-Source: APXvYqz9cmg2KLMmUTg2JIW1MU0s4xog4bZMTJbbldDW/Cbwv/i7Q6SO6ViCj4zGcyeRfHb/ScJ7msrrT1A1urwRj5I=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23132078ljc.39.1582294784504;
- Fri, 21 Feb 2020 06:19:44 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LzKEMSRm7aMhbsD4FLHQVZNBKfPqY5ZNIMagLE7b27A=;
+        b=HDMRKvLMW5xYT1DUxnUsV86AMXGZq6C9eDtAYx4S8gxP9kxXX78g+QV63SBpt2ILR1
+         ueo6cJ7kbCFVtNh1T6+3iSwyLrsataTC9PYjfD4D3WeYEPWGatoFHsAeOCmuOjML4+tj
+         Ohtowo7NsLiu2Yo7EM4XjsHXhMfDYOfTqlGeS4kusOLu3QpAYaUaOr7njAvDbWDyU2AI
+         hwWaGChJaK1CW8qMslRv+2FZaSv5KDe5rHPI0DZYQ40nz11JkBUVTAexQDHwMnjA1Mhj
+         XS9o9Og1KOwPZ1JO9ZfIf7F3fRZaIL06cOLkSmQYeewEAeS9qwM+9jnO8NvDYGqaZush
+         MvOA==
+X-Gm-Message-State: APjAAAVqCsMTfS2ZWBfuOpr0GkOnd5V8tFKDT8epwfMxkvQieRViZIOs
+        cvsTO66Vuibk5qdFS/zr1bRpMDTmjr6c9csrOxxaEQ==
+X-Google-Smtp-Source: APXvYqyW4oBegi1hgs7WkmxGYjpV5GzFLky4el1v6dyD6KVQEdFEh3C2ql6oeVhPQ5VbCKKZC+kBcUpA3K20qa7gUd0=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr8132945lfm.4.1582294903260;
+ Fri, 21 Feb 2020 06:21:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200214135712.GA14557@localhost.localdomain>
-In-Reply-To: <20200214135712.GA14557@localhost.localdomain>
+References: <1581851828-3493-1-git-send-email-zhouyanjie@wanyeetech.com> <1581851828-3493-3-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To: <1581851828-3493-3-git-send-email-zhouyanjie@wanyeetech.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 15:19:33 +0100
-Message-ID: <CACRpkdbxB7yZ6xKxtSwz_L-20ofw26-LDX=3j4s05TT7aJ1+dQ@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Date:   Fri, 21 Feb 2020 15:21:31 +0100
+Message-ID: <CACRpkdbvc=HtaFnWHOhD=HquNCpbL04-6tTZ8yqwHBQcK+8tHw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Ingenic: Add missing parts for X1830.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 2:57 PM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Sun, Feb 16, 2020 at 12:17 PM =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)
+<zhouyanjie@wanyeetech.com> wrote:
 
-> Use newly added GPIO defines GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT instead of using hard-coded 1 and 0.
+> Add lcd pinctrl driver for X1830.
 >
-> Main benefit is to make it easier to see which values mean IN and which
-> OUT. As a side effect this helps GPIO framework to change the direction
-> defines to something else if ever needed.
->
-> Please note that return value from get_direction call on
-> pinctrl-axp209 driver was changed. Previously pinctrl-axp209 might have
-> returned value 2 for direction INPUT.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 
-Patch applied!
+Patch applied.
 
 Yours,
 Linus Walleij
