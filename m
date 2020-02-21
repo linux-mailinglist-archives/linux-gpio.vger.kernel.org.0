@@ -2,42 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2313168395
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:34:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D7971683A0
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Feb 2020 17:35:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgBUQeO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Feb 2020 11:34:14 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46488 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgBUQeO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:34:14 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a22so2122755oid.13;
-        Fri, 21 Feb 2020 08:34:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0P9tu6IOsuIOQ9cj+JFMIkV9AXW3CYPDjGH2uYPm8M=;
-        b=TQan+uI+buGQSXnVw9oHBVYIl68M0Y0nZhJSw3qYaBAcnViQ2WE+xmpF7EGWl0C5MG
-         AFAYukVTvmPds0Yt1uZHImTdyhsE57op0/EoFBu7UANTInihLVOHjJ2LuuxNDyz+Jxt5
-         7h/VB8CivGoN5BgC06wfIYUC2h3LJvDv/OxXHq4rZlUlfTTmDYkv9NBQzpq7VUdloguW
-         8eoYJEWhtm6ny7lvbKekL9xfjF4BUUP+z6C8cw/H0tD/alyL93c0X4K1e5/SHII8ppNO
-         iqn+eSP95Mm7EtABezqcGciJ5oFvwGqNYbrDzjkyPXDc7kyk+w1Xlz4yDWNfx67VQt1P
-         BXJg==
-X-Gm-Message-State: APjAAAUrHi/8Nfwh6StJyLqXLHMdvEPp2NO2ws7uODFnGje9uJdNbnzN
-        3/JwM+hRTMVwoUN/M3rvgWXyaM5ZKqkYy8A6KLg=
-X-Google-Smtp-Source: APXvYqzPNoAH+zVsto1+IiOMGfW8xsdQo0YD/gttJz8Iqi71pUo1KidDfXV90s/3JMzKKHdE/I36dl+GbJbfTmLaY4E=
-X-Received: by 2002:aca:c4d2:: with SMTP id u201mr2773907oif.54.1582302853428;
- Fri, 21 Feb 2020 08:34:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be>
- <20200218151812.7816-5-geert+renesas@glider.be> <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-In-Reply-To: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 17:34:02 +0100
-Message-ID: <CAMuHMdUFV0nbfrpxY60av2x+UUN62wDiVLbcEG83133aqfFcUQ@mail.gmail.com>
+        id S1726719AbgBUQfc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Feb 2020 11:35:32 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49546 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbgBUQfb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Feb 2020 11:35:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=VL6gh0yPQIpT2nL/+Hwg/Bl1b1dNG3KY79WqjmhXwG8=; b=Lu16Wnf5xgjg6FezgS0tFqeKPj
+        tlX0AdWRAo+cJ0QadzQvCTV+iqpD+UiJ1/PoWHBXN7Gh9a7iwm9TaHSyOBR+VNkDfmyAI6fN3zZ+o
+        qeDro/A338xHvEvS+VdB4v/IJhZ7AULjdBU89/ts77smD2uAZAO7OrKiRAlEbjb8yQRLZIlsh8zkl
+        50knhHs5T3HhvaQOa/3MWH/A1HEysEYc7nfq6LOFdVgnuQk8K8ZXmUrfIfdWMZKO6Q4bjLiRh4x6W
+        fCn+I1hd+RZBkAFhgQUKthDC80MHPcJpcdn8RPy/1bp3yJqXKBlwtazHGOgzlbq15la9d9d1dnDeW
+        wbqfYF8Q==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5BGx-0008Nu-4M; Fri, 21 Feb 2020 16:35:27 +0000
 Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
-To:     Randy Dunlap <rdunlap@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -58,83 +46,32 @@ Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200218151812.7816-1-geert+renesas@glider.be>
+ <20200218151812.7816-5-geert+renesas@glider.be>
+ <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
+ <CAMuHMdUFV0nbfrpxY60av2x+UUN62wDiVLbcEG83133aqfFcUQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <98997c64-9486-ee64-32df-3172e518b70d@infradead.org>
+Date:   Fri, 21 Feb 2020 08:35:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <CAMuHMdUFV0nbfrpxY60av2x+UUN62wDiVLbcEG83133aqfFcUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Randy,
+On 2/21/20 8:34 AM, Geert Uytterhoeven wrote:
+> Hi Randy,
+> 
 
-On Tue, Feb 18, 2020 at 7:30 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
-> > Document the GPIO Aggregator, and the two typical use-cases.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> > @@ -0,0 +1,102 @@
-> > +.. SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +GPIO Aggregator
-> > +===============
-> > +
-> > +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
->
-> "allows" really wants an object following the verb [although the kernel sources
-> and docs have many cases of it not having an object].  Something like
->
->                        allows {you, one, someone, users, a user} to aggregate
-
-Changing to:
-
-    provides a mechanism to aggregate GPIOs
-
-> > +gpio_chip.  This supports the following use cases.
-> > +
-> > +
-> > +Aggregating GPIOs using Sysfs
-> > +-----------------------------
-> > +
-> > +GPIO controllers are exported to userspace using /dev/gpiochip* character
-> > +devices.  Access control to these devices is provided by standard UNIX file
-> > +system permissions, on an all-or-nothing basis: either a GPIO controller is
-> > +accessible for a user, or it is not.
-> > +
-> > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-
-Changing to:
-
-    provides access control for a set of one or more GPIOs
-
-> > +them into a new gpio_chip, which can be assigned to a group or user using
-> > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> > +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> > +which not, reducing the attack surface.
-
-> > +Generic GPIO Driver
-> > +-------------------
-> > +
-> > +The GPIO Aggregator can also be used as a generic driver for a simple
-> > +GPIO-operated device described in DT, without a dedicated in-kernel driver.
-> > +This is useful in industrial control, and is not unlike e.g. spidev, which
-> > +allows to communicate with an SPI device from userspace.
->
->    allows {choose an object} to communicate
-
-Changing to:
-
-    allows the user to communicate
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Hi Geert,
+Those changes look good. Thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+~Randy
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
