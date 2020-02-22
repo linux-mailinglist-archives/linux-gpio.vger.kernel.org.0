@@ -2,49 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D76168CB3
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2020 06:33:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 847FF168CD3
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Feb 2020 07:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgBVFdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Feb 2020 00:33:20 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:58306 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgBVFdT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Feb 2020 00:33:19 -0500
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 01M5XDb8000801;
-        Sat, 22 Feb 2020 14:33:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 01M5XDb8000801
+        id S1727067AbgBVGFz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Feb 2020 01:05:55 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:42396 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgBVGFy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Feb 2020 01:05:54 -0500
+X-Greylist: delayed 100448 seconds by postgrey-1.27 at vger.kernel.org; Sat, 22 Feb 2020 01:05:52 EST
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 01M64cSK007264;
+        Sat, 22 Feb 2020 15:04:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 01M64cSK007264
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582349594;
-        bh=kfkRB8NqTSB8RfnnWhYO851m+pZCn26htPS02MwccbU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jGpTyMmaQFCA/yAC8SI4sEY5rRsGwV7n37iHBsYx0Tf7yhCGxJurnEkRnYv7mXkEJ
-         JsG/XgCkElNDfWpzULElIwahEskifFcCgfbfMXCevqXYv/LoxA47zlm0vQm2c+wXks
-         9sU0GorFjzp+hiEZTdTagyKsg7jPMB0IirRAzwYH6j1ZvpUe4A//reJSJZAgZdootB
-         2g7WnMlVvqwRfef0X7RYd/XXHwhTzr55mpoceajykax0eZUJhKShxiuBLuEbqxsn9r
-         23cnn4NQdvEhPKtWkgxQp/tWiyQ7DXLBQ2ZGCkxLv13OY12pHAVXycTmv8OGqxec2N
-         bHWw0f1u66WqQ==
-X-Nifty-SrcIP: [209.85.221.175]
-Received: by mail-vk1-f175.google.com with SMTP id w4so1193531vkd.5;
-        Fri, 21 Feb 2020 21:33:14 -0800 (PST)
-X-Gm-Message-State: APjAAAX9u7kSV5E4z26VhT21c5/p6BMSVa0JSalDpoLUTvi30+AlUk11
-        5KHMakTJ92TETGCzaHaUkDF5RruOVSnLL0yU3B0=
-X-Google-Smtp-Source: APXvYqw0koqWOvytLQ0hXmAEc9eS7xUecajG9z93OX8duyLUDb6bva5IL7M/xtzmqsUqDWyYc6mF9iWEJjnMvLa+UjA=
-X-Received: by 2002:a1f:1bc3:: with SMTP id b186mr19356263vkb.96.1582349592746;
- Fri, 21 Feb 2020 21:33:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20200221021002.18795-1-yamada.masahiro@socionext.com>
- <20200221021002.18795-2-yamada.masahiro@socionext.com> <20200221153215.GA9815@bogus>
-In-Reply-To: <20200221153215.GA9815@bogus>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 22 Feb 2020 14:32:36 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-Message-ID: <CAK7LNARhXbyUwMwXK=afXLnBVzg_MPv2D=oyn5qWkZtv12zmRg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+        s=dec2015msa; t=1582351480;
+        bh=QDsj9fQRh1dUOvTWAuvPScwGCLineeDyL2Vs+90dfww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=brdOKtaqTcaIBKZLJlFWtWmuZ/ritj3jrT5KxuqiYwuCbJ2G3yDExIZ9Hy7qIkzT0
+         dWnOlIFIJLcvozpjwWswrg/jQoYJa4aV7onyLY3Vaq0rPTvpco738GyON1s4cUHOyQ
+         /I6LEYeQAIbcJkCym07tVMqjM+6q1H5iFhgA60uBm/tltZV7CKDBIvmTueMhDX0WbM
+         i4XfJ1eeovVtPx+042/VZew8LZkbikZteg1Fe4mq/TuW64W+FZKl1Inb7oisAsbmoJ
+         fC2RkMoD7pfauf+DeC87iYIKvwx9dQ9ZpSXNDIMbmyn79zZH2iRbyzY4QRP8rqVCuZ
+         8U5bKZdQd2Zeg==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,97 +38,209 @@ Cc:     DTML <devicetree@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 2/3] dt-bindings: gpio: Convert UniPhier GPIO to json-schema
+Date:   Sat, 22 Feb 2020 15:04:34 +0900
+Message-Id: <20200222060435.971-2-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200222060435.971-1-yamada.masahiro@socionext.com>
+References: <20200222060435.971-1-yamada.masahiro@socionext.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+Convert the UniPhier GPIO controller binding to DT schema format.
 
-On Sat, Feb 22, 2020 at 12:32 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, 21 Feb 2020 11:10:01 +0900, Masahiro Yamada wrote:
-> > Convert the UniPhier GPIO controller binding to DT schema format.
-> >
-> > I omitted the 'gpio-ranges' property because it is defined in the
-> > dt-schema project (/schemas/gpio/gpio.yaml).
-> >
-> > As of writing, the 'gpio-ranges-group-names' is not defined in that
-> > file despite it is a common property described in
-> > Documentation/devicetree/bindings/gpio/gpio.txt
-> > So, I defined it in this schema.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > I have a question about the range about 'ngpio'.
-> >
-> >   ngpios:
-> >     minimum: 0
-> >     maximum: 512
-> >
-> > The 'ngpio' property is already defined as 'uint32' in the dt-schema tool:
-> > https://github.com/robherring/dt-schema/blob/master/schemas/gpio/gpio.yaml#L20
-> >
-> > 'uint32' is unsigned, so 'minimum: 0' looks too obvious.
-> >
-> > I cannot omit the minimum because minimum and maximum depend on each other.
-> > I just put a sensible number, 512, in maximum.
-> >
-> > If this range is entirely unneeded, I will delete it.
->
-> This property is generally for when you can have some number less
-> than a maximum number implied by the compatible string.
->
-> If there is really no max (e.g. 2^32 - 1 is valid), then just do
-> 'ngpios: true'
+I omitted the 'gpio-ranges' property because it is defined in the
+dt-schema project (/schemas/gpio/gpio.yaml).
 
+As of writing, the 'gpio-ranges-group-names' is not defined in that
+file despite it is a common property described in
+Documentation/devicetree/bindings/gpio/gpio.txt
+So, I defined it in this schema.
 
-What does ': true' mean?
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
+Changes in v2:
+  - fix the build error in the example
 
-If it is documented somewhere,
-could you point me to the reference?
+ .../bindings/gpio/gpio-uniphier.txt           | 51 ----------
+ .../gpio/socionext,uniphier-gpio.yaml         | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 93 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
 
-Even if I remove the 'ngpio' entirely
-from my dt-schema, the 'ngpio' is checked
-correctly.
-
-
-
-
->
-> >
-> >
-> >  .../bindings/gpio/gpio-uniphier.txt           | 51 -----------
-> >  .../gpio/socionext,uniphier-gpio.yaml         | 89 +++++++++++++++++++
-> >  MAINTAINERS                                   |  2 +-
-> >  3 files changed, 90 insertions(+), 52 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Error: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dts:38.34-35 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.example.dt.yaml] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1241747
-> Please check and re-submit.
-
-OK, I will.
-
-
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt b/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+deleted file mode 100644
+index f281f12dac18..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
++++ /dev/null
+@@ -1,51 +0,0 @@
+-UniPhier GPIO controller
+-
+-Required properties:
+-- compatible: Should be "socionext,uniphier-gpio".
+-- reg: Specifies offset and length of the register set for the device.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells: Should be 2.  The first cell is the pin number and the second
+-  cell is used to specify optional parameters.
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be 2.  The first cell defines the interrupt number.
+-  The second cell bits[3:0] is used to specify trigger type as follows:
+-    1 = low-to-high edge triggered
+-    2 = high-to-low edge triggered
+-    4 = active high level-sensitive
+-    8 = active low level-sensitive
+-  Valid combinations are 1, 2, 3, 4, 8.
+-- ngpios: Specifies the number of GPIO lines.
+-- gpio-ranges: Mapping to pin controller pins (as described in gpio.txt)
+-- socionext,interrupt-ranges: Specifies an interrupt number mapping between
+-  this GPIO controller and its interrupt parent, in the form of arbitrary
+-  number of <child-interrupt-base parent-interrupt-base length> triplets.
+-
+-Optional properties:
+-- gpio-ranges-group-names: Used for named gpio ranges (as described in gpio.txt)
+-
+-Example:
+-	gpio: gpio@55000000 {
+-		compatible = "socionext,uniphier-gpio";
+-		reg = <0x55000000 0x200>;
+-		interrupt-parent = <&aidet>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&pinctrl 0 0 0>;
+-		gpio-ranges-group-names = "gpio_range";
+-		ngpios = <248>;
+-		socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
+-	};
+-
+-Consumer Example:
+-
+-	sdhci0_pwrseq {
+-		compatible = "mmc-pwrseq-emmc";
+-		reset-gpios = <&gpio UNIPHIER_GPIO_PORT(29, 4) GPIO_ACTIVE_LOW>;
+-	};
+-
+-Please note UNIPHIER_GPIO_PORT(29, 4) represents PORT294 in the SoC document.
+-Unfortunately, only the one's place is octal in the port numbering.  (That is,
+-PORT 8, 9, 18, 19, 28, 29, ... are missing.)  UNIPHIER_GPIO_PORT() is a helper
+-macro to calculate 29 * 8 + 4.
+diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+new file mode 100644
+index 000000000000..580a39e09d39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/socionext,uniphier-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier GPIO controller
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
++
++  compatible:
++    const: socionext,uniphier-gpio
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    description: |
++      The first cell defines the interrupt number.
++      The second cell bits[3:0] is used to specify trigger type as follows:
++        1 = low-to-high edge triggered
++        2 = high-to-low edge triggered
++        4 = active high level-sensitive
++        8 = active low level-sensitive
++      Valid combinations are 1, 2, 3, 4, 8.
++    const: 2
++
++  ngpios:
++    minimum: 0
++    maximum: 512
++
++  gpio-ranges-group-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++
++  socionext,interrupt-ranges:
++    description: |
++      Specifies an interrupt number mapping between this GPIO controller and
++      its interrupt parent, in the form of arbitrary number of
++      <child-interrupt-base parent-interrupt-base length> triplets.
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++  - interrupt-controller
++  - "#interrupt-cells"
++  - ngpios
++  - gpio-ranges
++  - socionext,interrupt-ranges
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/gpio/uniphier-gpio.h>
++
++    gpio: gpio@55000000 {
++        compatible = "socionext,uniphier-gpio";
++        reg = <0x55000000 0x200>;
++        interrupt-parent = <&aidet>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        gpio-ranges = <&pinctrl 0 0 0>;
++        gpio-ranges-group-names = "gpio_range";
++        ngpios = <248>;
++        socionext,interrupt-ranges = <0 48 16>, <16 154 5>, <21 217 3>;
++    };
++
++    // Consumer:
++    // Please note UNIPHIER_GPIO_PORT(29, 4) represents PORT294 in the SoC
++    // document. Unfortunately, only the one's place is octal in the port
++    // numbering. (That is, PORT 8, 9, 18, 19, 28, 29, ... do not exist.)
++    // UNIPHIER_GPIO_PORT() is a helper macro to calculate 29 * 8 + 4.
++    sdhci0_pwrseq {
++        compatible = "mmc-pwrseq-emmc";
++        reset-gpios = <&gpio UNIPHIER_GPIO_PORT(29, 4) GPIO_ACTIVE_LOW>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 93ccb6708ae9..3cb4c8a9107d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2547,7 +2547,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/arm/socionext/uniphier.yaml
+-F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
++F:	Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+ F:	arch/arm/boot/dts/uniphier*
+ F:	arch/arm/include/asm/hardware/cache-uniphier.h
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
