@@ -2,117 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA78B16A6E7
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2020 14:08:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2E0D16A8CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Feb 2020 15:50:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgBXNIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Feb 2020 08:08:13 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37492 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbgBXNIK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Feb 2020 08:08:10 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01OD7CsK028839;
-        Mon, 24 Feb 2020 07:07:12 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582549632;
-        bh=Tx9NLTynxh7HMA5VHJWXsAof1AdXnE/KAs53Nqq7E70=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J8OaXTwY6rJidCznLf2G/vSUju+4HU3kRW0QV+CMkL2fpPxI5mFwt5l1u7GY1i0cK
-         fhdwF15G4WtYxb0NBQQmKRDL/VCrdAXaZORkAKh4uNPMzhrjf4desB5yiRBKSQYI5e
-         lr23otClWqEaN2djtLEvvM3O3oRjPmZTJi+w6edQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01OD7CFB102821
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Feb 2020 07:07:12 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 24
- Feb 2020 07:07:11 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 24 Feb 2020 07:07:12 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01OD7B3m002482;
-        Mon, 24 Feb 2020 07:07:11 -0600
-Subject: Re: [PATCH 2/7] docs: dt: fix several broken references due to
- renames
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-leds@vger.kernel.org>, <linux-aspeed@lists.ozlabs.org>,
-        <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-pm@vger.kernel.org>
-References: <cover.1582361737.git.mchehab+huawei@kernel.org>
- <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <e9ae8125-3f8f-5f8c-c19c-34ac1bb5c982@ti.com>
-Date:   Mon, 24 Feb 2020 07:02:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727326AbgBXOu2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Feb 2020 09:50:28 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37560 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbgBXOu1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Feb 2020 09:50:27 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so5479574pfn.4;
+        Mon, 24 Feb 2020 06:50:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LjdCnI1FDhpyq/TpzAqb/yMhriBw2389lOX4pglgwrQ=;
+        b=Gt8bTv0adK23rBe6BXKj4Fqv6D5zlw2L9BIMxeXEiBCFzuRAiW+4nAcnJn80MwYkMJ
+         ppWWo/X4X/uvS7JK+92wZups/N9PiygjXlIg1eIzofmxzwT83qVMY8dCmB2xR8BXsgYU
+         ueX1gT8JoGtk5DczgbbpA8s9en6k+/4AjviHZ1aqLdoy7B9RNH2tmRT5PzlpQdcNmITc
+         eSEH3nkopKh3uS0PGT/8bgNfc2RE4gOVSnav2hirm2Zm/SosOuS/6phi5m8RYemIIX3K
+         IupNJxAZwsIQv1pCvAlAQQ96mthazlo7ouuzTTSgoFL4B0GAhSaLn+3yol49JJBCFRg4
+         YbOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LjdCnI1FDhpyq/TpzAqb/yMhriBw2389lOX4pglgwrQ=;
+        b=FMaU877hyStqfRAsJwWozcJXnieCWhfHZMBjfRS3MKlKMiZF+m5FFuhK4/tgN2GQsn
+         1BX/FDRGNLSXq4w9QKH/nFPWvgK4OIvTDYcOxgKG3uV0RizDFGKGzHXFNc3lY7tMrXnS
+         yfhQcdYshSGp3slKcHy1AKGWFx23pjIS+iut7mRQJVNh+Hk1+w+EeMy8ZD5o+RrSoPf8
+         zMi1zDuF6Uis/5JCG4DGzZMor4QK40cnuFL2u36Z/fTHZmROpqRjK8tt/eLxepuYqqe1
+         V5Fi7tSDoiakCcWn4vi5mL39g5LXhlHHq/4SsBZ+hIWCiZPmUwtnsk2uLkKZpppjzAWB
+         t05w==
+X-Gm-Message-State: APjAAAWcrwl1VDDsLLXZGMF52cYqIt/+WQoP72mT5iofciDgJIAGW5wj
+        gY5kukRwd4gybIF8zcp6Kv1tAoQs/peAxA==
+X-Google-Smtp-Source: APXvYqyp5Ic3fOMWGtPCA7Y3BIZcBbRNyIkcwtJ3CRUa4YUOCKjAu2OYwk6Ij5ygOMqKATCWGrTeEQ==
+X-Received: by 2002:a63:3754:: with SMTP id g20mr50969368pgn.384.1582555826839;
+        Mon, 24 Feb 2020 06:50:26 -0800 (PST)
+Received: from firefly.lan (220-235-100-192.dyn.iinet.net.au. [220.235.100.192])
+        by smtp.gmail.com with ESMTPSA id y10sm13354189pfq.110.2020.02.24.06.50.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 06:50:26 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] gpiolib: fix unwatch ioctl()
+Date:   Mon, 24 Feb 2020 14:49:53 +0000
+Message-Id: <20200224144953.1845-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <83c5df4acbbe0fa55a1d58d4c4a435b51cd2a7ad.1582361737.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mauro
+Fix the field having a bit cleared by the unwatch ioctl().
 
-On 2/22/20 3:00 AM, Mauro Carvalho Chehab wrote:
-> Several DT references got broken due to txt->yaml conversion.
->
-> Those are auto-fixed by running:
->
-> 	scripts/documentation-file-ref-check --fix
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->   Documentation/devicetree/bindings/arm/arm,scmi.txt        | 2 +-
->   Documentation/devicetree/bindings/arm/arm,scpi.txt        | 2 +-
->   .../devicetree/bindings/arm/bcm/brcm,bcm63138.txt         | 2 +-
->   .../devicetree/bindings/arm/hisilicon/hi3519-sysctrl.txt  | 2 +-
->   .../devicetree/bindings/arm/msm/qcom,idle-state.txt       | 2 +-
->   Documentation/devicetree/bindings/arm/omap/mpu.txt        | 2 +-
->   Documentation/devicetree/bindings/arm/psci.yaml           | 2 +-
->   .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml       | 2 +-
->   .../devicetree/bindings/display/tilcdc/tilcdc.txt         | 2 +-
->   Documentation/devicetree/bindings/leds/common.yaml        | 2 +-
+Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-For LEDs
+---
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+I had written some tests for v1 of the new ioctl patch series, and just
+updated them to run against the v6, which is now in gpio/for-next.
 
+I found the Unwatch ioctl suffered a regression - it simply didn't work
+anymore, though it wasn't returning any error.
+
+This patch fixes that regression.
+
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 73a1e0831eeb..2411562a9bac 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1276,7 +1276,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		if (IS_ERR(desc))
+ 			return PTR_ERR(desc);
+ 
+-		clear_bit(desc_to_gpio(desc), &desc->flags);
++		clear_bit(desc_to_gpio(desc), priv->watched_lines);
+ 		return 0;
+ 	}
+ 	return -EINVAL;
+-- 
+2.25.0
 
