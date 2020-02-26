@@ -2,75 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71F2F17042D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2020 17:21:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B15A21708BB
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2020 20:13:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgBZQVa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Feb 2020 11:21:30 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37380 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgBZQV3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 11:21:29 -0500
-Received: by mail-oi1-f194.google.com with SMTP id q84so65582oic.4;
-        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R8CgB5ofq/CEo+Bbd71eYLol0DUjIXGKdAp6HQA/9d8=;
-        b=WXUtLvmQ3u/1TZxpMpTPUKrE/KEAeqbJczz5ZuaPKROK2TppNbJdB5WBS6dvKU3svD
-         f281IGiL8cWwhLtAiLtKn+BAGb7dKZzXuAgkAUhAfkZxBMj/y/pRtnTlTpsEbvIOJ7r7
-         I5d7LfzHL78FRqa9AbYMpbxFPIL4Y9HA+B/a1G50j2GcWwJkVX8xAWF9IKBg9XbALjZT
-         go52ZrackJPT1akPP7Y63RvqL8Lsc5k0wvUenX9y1Dkix3N6xlgzNa8H7YOimif9DBFQ
-         cPFKvdQYsVoDBYFN21W7kq4MbwJk+1ArEdBiZhHR+fSEx2K8/UKoY3PWtVmBwYu+uF4v
-         fIGQ==
-X-Gm-Message-State: APjAAAXB/apQltBC1HX0D8Dh4inbdcRinHjx+yQeBYsrlUWR78Ll41nG
-        LuvG/IizKgbxCBwr2D+9pw==
-X-Google-Smtp-Source: APXvYqx4y3t8f8l9YMHa0dnaCosRY7xiR2vi0DCieSBpahLqPG+tzB/Y2iH6dVgGLzxAw9q3lrEIRA==
-X-Received: by 2002:aca:ab53:: with SMTP id u80mr3693789oie.94.1582734089012;
-        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm939037oij.19.2020.02.26.08.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 08:21:26 -0800 (PST)
-Received: (nullmailer pid 13405 invoked by uid 1000);
-        Wed, 26 Feb 2020 16:21:25 -0000
-Date:   Wed, 26 Feb 2020 10:21:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.co,
-        alexandre.torgue@st.com, linus.walleij@linaro.org,
-        amelie.delaunay@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Message-ID: <20200226162125.GA13349@bogus>
-References: <20200220162246.8334-1-benjamin.gaignard@st.com>
+        id S1727359AbgBZTNN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Feb 2020 14:13:13 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:34487 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgBZTNN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 14:13:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582744390;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=Vdb7nlCxfqY9kDUQ+U3Vms96RRuZQL4A0e+CPRkPLwo=;
+        b=W+KwYSL5yaeIIKCaL2Tp11ufJA0OsTYPWOQVGuuD0sXvCOQPiTHX/p7D8gSjD3RI+y
+        3zy+BRo2F4aW2q4WOr/1xxspcEmpbPztp142wDxcRa+lxXshzn3b4n5KKOYKdkRsxret
+        xmO6zMb7BoZ2yIkuNkFyywiaMbMmEmfQWuqr57PZ5kqNW1seWbX36oAQwIPKxUcwXt3J
+        OLhTo21fATVcKEWrn0aVeNNQWk2fCTGCAKgtuyWheLpF5cTAM+fI9jBeuBviHTgRKd/K
+        twgDsMveqRsBaYblHzv0OGvha4rJ59O9CcYM94NNfiy10Sv6xqfxtFJg9MxPcTv5yPNP
+        LlTQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pAzoz/Oc2x"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1QJD06bJ
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Feb 2020 20:13:00 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC 0/8] MIPS: CI20: add HDMI out support 
+Date:   Wed, 26 Feb 2020 20:12:52 +0100
+Message-Id: <cover.1582744379.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 20 Feb 2020 17:22:46 +0100, Benjamin Gaignard wrote:
-> Convert stmfx bindings to json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
->  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
->  3 files changed, 124 insertions(+), 144 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
-> 
+This patch series adds HDMI output to the jz4780/CI20 board.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It is based on taking the old 3.18 vendor kernel and trying
+to achieve the same with modern DTS setup and new/modified
+drivers.
+
+Unfortunately, in this first RFC, only EDID and creation of
+/dev/fb0 are working. Also, HDMI hot plugging is detected.
+
+But there is no HDMI output signal. So some tiny piece seems
+to be missing to enable/configure the Synposys HDMI controller.
+
+We need help from the community to fix this.
+
+Note: device tree bindings are from 2015 and still seem to
+fit - except they are not in yaml format.
+
+Original authors of most patches are
+* Paul Boddie <paul@boddie.org.uk>
+* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+
+
+H. Nikolaus Schaller (2):
+  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+
+Paul Boddie (4):
+  drm: ingenic: add jz4780 Synopsys HDMI driver.
+  pinctrl: ingenic: add hdmi-ddc pin control group
+  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+  MIPS: DTS: CI20: add HDMI setup
+
+Zubair Lutfullah Kakakhel (2):
+  dt-bindings: video: Add jz4780-lcd binding
+  dt-bindings: video: Add jz4780-hdmi binding
+
+ .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+ .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+ arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
+ arch/mips/configs/ci20_defconfig              |   3 +
+ drivers/gpu/drm/ingenic/Kconfig               |   8 ++
+ drivers/gpu/drm/ingenic/Makefile              |   1 +
+ drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
+ drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             |   7 +
+ 10 files changed, 317 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.txt
+ create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
+
+-- 
+2.23.0
+
