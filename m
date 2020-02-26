@@ -2,73 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7EC3170203
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2020 16:10:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71F2F17042D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2020 17:21:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgBZPKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Feb 2020 10:10:50 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43870 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgBZPKu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 10:10:50 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e3so2425801lja.10
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Feb 2020 07:10:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ywGQ4ap8hZ15UaHkfn7n7MWKYQk9eNuFHiTciR36DjI=;
-        b=nirchHRV4fFyu1LmTe+rSa7LF4PjDFcQPCEV2Mb82lIqYC24fYT8R96zXVIa+YmuSz
-         7zk+Bm81Ko05N/1dbBucngPrxQMVc8oka+1lIaDlMg3MZDsJdtAWRyJt2pFG9yLj7NoK
-         mX6IVxUujBmOhH+veDdBaiamCQzLnL22tjClqSYPnevhJrDOxb1nRZzzFZPg+58fCYHz
-         MJl02rTkFd0qCQZF2IgqnZFE6NnojNA0reBtfgm9ToudHYAi75ju3qAYA7BEJQC9WJYO
-         e6ipsPQDE5PUm10oh1gYb7V6he9LRaLZhSmbDwLS3vPxwFvFkcWdKl6UXPWNJbQGhXxq
-         /MOg==
+        id S1726583AbgBZQVa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Feb 2020 11:21:30 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37380 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbgBZQV3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 11:21:29 -0500
+Received: by mail-oi1-f194.google.com with SMTP id q84so65582oic.4;
+        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ywGQ4ap8hZ15UaHkfn7n7MWKYQk9eNuFHiTciR36DjI=;
-        b=DcU/TKrKUuaWve2RpLuuiAaLUmyEhh9/6tztwjVjMwq0fcf56GTzFzv+Xu/aHeSOhD
-         LRDH7sqLqmD1FjJi9ay3LhYu/3O3xXsP/TrWWQZVhVHIY6o6HpLVHoFh/h6BQ22sS8Sr
-         A9Xj7KnZWD849h2trVx5MKStnM7gEAcXPofxKNd8no08q7EYpf4L+/EPLVv3GTYnhuFq
-         YCwW4iqrMorbOr5fRNrniocj4yw7SNnnAHfv9NuHbWPfbQcsHy5vwwTdcY7cGPGszpNl
-         tb7Muz/NNDsUSGyhSvJQ6NreJhTCJ7moJnPx6+dKPm6mSjxwK0LyGlnLiRk4vOzI8JtZ
-         Y+eA==
-X-Gm-Message-State: APjAAAVOHCVgCWnbPEVskdB2ZjzJRkLjP34rtmQf53pO/DTwWS019Lzd
-        olCEJ4xqEK3bfZAE8qZQHBWliuvIRpmoj7o9hiSVzg==
-X-Google-Smtp-Source: APXvYqznZ8kj7GOah27MLill09M7SOEW1d+KW4g55YWPxyVlegHJ9NdRHCHMWArmO6Dux3q5zquFPbEsvN/g+rrwh/Q=
-X-Received: by 2002:a2e:2a84:: with SMTP id q126mr3191242ljq.258.1582729848529;
- Wed, 26 Feb 2020 07:10:48 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R8CgB5ofq/CEo+Bbd71eYLol0DUjIXGKdAp6HQA/9d8=;
+        b=WXUtLvmQ3u/1TZxpMpTPUKrE/KEAeqbJczz5ZuaPKROK2TppNbJdB5WBS6dvKU3svD
+         f281IGiL8cWwhLtAiLtKn+BAGb7dKZzXuAgkAUhAfkZxBMj/y/pRtnTlTpsEbvIOJ7r7
+         I5d7LfzHL78FRqa9AbYMpbxFPIL4Y9HA+B/a1G50j2GcWwJkVX8xAWF9IKBg9XbALjZT
+         go52ZrackJPT1akPP7Y63RvqL8Lsc5k0wvUenX9y1Dkix3N6xlgzNa8H7YOimif9DBFQ
+         cPFKvdQYsVoDBYFN21W7kq4MbwJk+1ArEdBiZhHR+fSEx2K8/UKoY3PWtVmBwYu+uF4v
+         fIGQ==
+X-Gm-Message-State: APjAAAXB/apQltBC1HX0D8Dh4inbdcRinHjx+yQeBYsrlUWR78Ll41nG
+        LuvG/IizKgbxCBwr2D+9pw==
+X-Google-Smtp-Source: APXvYqx4y3t8f8l9YMHa0dnaCosRY7xiR2vi0DCieSBpahLqPG+tzB/Y2iH6dVgGLzxAw9q3lrEIRA==
+X-Received: by 2002:aca:ab53:: with SMTP id u80mr3693789oie.94.1582734089012;
+        Wed, 26 Feb 2020 08:21:29 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm939037oij.19.2020.02.26.08.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 08:21:26 -0800 (PST)
+Received: (nullmailer pid 13405 invoked by uid 1000);
+        Wed, 26 Feb 2020 16:21:25 -0000
+Date:   Wed, 26 Feb 2020 10:21:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.co,
+        alexandre.torgue@st.com, linus.walleij@linaro.org,
+        amelie.delaunay@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200226162125.GA13349@bogus>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-References: <20200226104529.17745-1-geert+renesas@glider.be>
-In-Reply-To: <20200226104529.17745-1-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 26 Feb 2020 16:10:37 +0100
-Message-ID: <CACRpkdYmbWXK0+HLbH1aXwTSrv__RsKC0tnVZwWzORF5Xqq_=Q@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.7
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 11:45 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Thu, 20 Feb 2020 17:22:46 +0100, Benjamin Gaignard wrote:
+> Convert stmfx bindings to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+>  3 files changed, 124 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> 
 
-> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
->
->   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.7-tag1
-
-Pulled into my "devel" branch and pushed to for-next.
-
-Thanks!
-
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
