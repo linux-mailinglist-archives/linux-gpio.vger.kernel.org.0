@@ -2,90 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C70C170B34
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Feb 2020 23:07:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75376170F80
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2020 05:13:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgBZWHZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Feb 2020 17:07:25 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43070 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgBZWHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 17:07:24 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so1153554oif.10;
-        Wed, 26 Feb 2020 14:07:24 -0800 (PST)
+        id S1728221AbgB0EN6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Feb 2020 23:13:58 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33352 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727735AbgB0EN6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Feb 2020 23:13:58 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m7so2791854pjs.0;
+        Wed, 26 Feb 2020 20:13:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SIAgH7rKdUKGoshqIOin6FqO+krncW7FxfqiqFVRH3w=;
+        b=CMgGP9JrpMJQQXJGeatjrkj3DhC95cRF/uucrCugOk8qmgtm2tkaH9kSCaLsreQiSR
+         wQrsAxHBI1A4ucPxyHzVI7tTkvD8pgPIZ8TQBFnyOkNSEDE+JGN9wASK06wh0D6S6y9Z
+         WqIOIlaNcnQz6byvBs2HXlpxMz15pa6lwmtw9xFPg4LrdY/hvi1bbEEXjIa2SiBxV427
+         V60Pw/pIw8O+etZkf8N2/3xgCt+KHNcvRD3xYu+g3iPShW8JlfQuISQAVTPu16aDq/CZ
+         V8DXdP9bzm/mowKy3RXjxmV9gjtG4lrcKE2FNldtHMCSR6hlfhPBMSOfLbszDQ4RiiTv
+         kq4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mh9L6UBbZd077xS3dYC1Wgq1kmV8/0MwjWPhr3ALxzw=;
-        b=N9w+Nq8poK4jaUe38on2fXvkH2viynFW13WNQroqsmRAJ+UHToAw5A8VL0AlDvGfZb
-         MLEuJeUvVvkqCNUQcun/AJba+hCkBuZgcOwWvyBQ+CVvre8rBf0lli8uk4hrEx+ccfni
-         wUkZJh0qH460B2Zl575crgh9/gTv3WcukfrMPewuM4wi1tKo9+zon9JGQNRhVD4h4jh/
-         0H2zypsL6VKsyui6kKHan1Ct7A1VAbGx6C647KpQfNiJb2YGHT5u4bo+zIpJaruy/FOx
-         1/iZVXYB5r9QtcJ4VdmGjyiuWeLL5AR2T0Hu9gfQtVcjD/UkkH73hru4B1VsngVLwIts
-         fSKA==
-X-Gm-Message-State: APjAAAWOrGu/vJxpAgAROAfSpc/ALKXZN2jLTC+K/tGuwazXx2N5VuQG
-        3bzUz7ndS6zMJqIpoyXpsQuDx4QoWA==
-X-Google-Smtp-Source: APXvYqw1VLx2OrRQwWC2sH4XIbmcGTHpYpjGcFlcP4IOlWJurHfS6aQcTHXktgvzJUWnvB4nMfEaPg==
-X-Received: by 2002:a54:4510:: with SMTP id l16mr969952oil.70.1582754843674;
-        Wed, 26 Feb 2020 14:07:23 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j45sm1220921ota.59.2020.02.26.14.07.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2020 14:07:23 -0800 (PST)
-Received: (nullmailer pid 18100 invoked by uid 1000);
-        Wed, 26 Feb 2020 22:07:21 -0000
-Date:   Wed, 26 Feb 2020 16:07:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
- controller to json-schema
-Message-ID: <20200226220721.GA18049@bogus>
-References: <20200222060435.971-1-yamada.masahiro@socionext.com>
- <20200222060435.971-3-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SIAgH7rKdUKGoshqIOin6FqO+krncW7FxfqiqFVRH3w=;
+        b=IInvClpL20AcEi8UFJ+ira5r01LkaVPugpQASBAWqSb0/LoiZ3PJKzol62aRrU7HG0
+         xiQmQLrWxmWp/atxe5K4QPC2kRplMRkmLaAV5UsU4iikQ9Ws5CuApKaGEHpJ0CrE9wfA
+         yPM/XcToAhFbGDsYAprnMje/G70jdPx/pwn7lNRaMn9FnVnbDNqXB6HY8KQyBhWH8CbV
+         +46kB4E0rCWqubSlZO5Dg8X9ZawD3uZoEIVtlb6aibuV7rsCcwiiSUEUg1OlhU2iZbcV
+         XLbX+1B8GtumYEF9LLmY1Ren9XFY6tM41gDiYev8rYvXhmlwP3OZcj67xaryaDB2IDOP
+         pmtA==
+X-Gm-Message-State: APjAAAVmT0Ut6+4Io/lijt3T38wX9BK4L+pnN8IbUu0Sbl7S7gqp45MK
+        UwbYHxQXk/AxEzaUhuEqrvs=
+X-Google-Smtp-Source: APXvYqwNCawRksnCDdUdstJsoTQIdLsZ9xk/0Jp/7/K0oRLGqKfUxdgwRoyLhBOSUuY/nERUS9Xz+g==
+X-Received: by 2002:a17:90a:cb0f:: with SMTP id z15mr2706443pjt.67.1582776837522;
+        Wed, 26 Feb 2020 20:13:57 -0800 (PST)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c1sm4729856pfa.51.2020.02.26.20.13.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 26 Feb 2020 20:13:57 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] pinctrl: Export some needed symbols at module load time
+Date:   Thu, 27 Feb 2020 12:13:46 +0800
+Message-Id: <f4e7e20afacb23e6fa7a6b33ea4319b2b3492840.1582776447.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 22 Feb 2020 15:04:35 +0900, Masahiro Yamada wrote:
-> Convert the UniPhier pin controller binding to DT schema format.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> In the original .txt file, there is a description:
-> The UniPhier pinctrl should be a subnode of a "syscon" compatible node
-> 
-> I did not figure out how to represent (or check) it in dt-schema.
-> I just moved it to a comment line in 'examples'.
-> If there is a better way, please let me know.
-> 
-> 
-> Changes in v2: None
-> 
->  .../pinctrl/socionext,uniphier-pinctrl.txt    | 27 ------------
->  .../pinctrl/socionext,uniphier-pinctrl.yaml   | 42 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 43 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
-> 
+Export the pin_get_name()/pinconf_generic_parse_dt_config() symbols needed
+by the Spreadtrum pinctrl driver when building it as a module.
 
-Applied, thanks.
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+ drivers/pinctrl/core.c            | 1 +
+ drivers/pinctrl/pinconf-generic.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-Rob
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 446d84f..893b1ac 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -176,6 +176,7 @@ const char *pin_get_name(struct pinctrl_dev *pctldev, const unsigned pin)
+ 
+ 	return desc->name;
+ }
++EXPORT_SYMBOL_GPL(pin_get_name);
+ 
+ /* Deletes a range of pin descriptors */
+ static void pinctrl_free_pindescs(struct pinctrl_dev *pctldev,
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 9eb8630..dfef471 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
+ 	kfree(cfg);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
+ 
+ int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		struct device_node *np, struct pinctrl_map **map,
+-- 
+1.9.1
+
