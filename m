@@ -2,165 +2,302 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08B8B172419
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2020 17:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94FBA17241A
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Feb 2020 17:57:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgB0Q4t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Feb 2020 11:56:49 -0500
-Received: from smtp70.ord1c.emailsrvr.com ([108.166.43.70]:42968 "EHLO
-        smtp70.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727211AbgB0Q4t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 27 Feb 2020 11:56:49 -0500
-X-Greylist: delayed 579 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Feb 2020 11:56:48 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=softiron.com;
-        s=20191119-3p77dzn5; t=1582822029;
-        bh=xVOIH7bxDvG01Gakqopm6BNFZTqj7/zKtpBBo9O1Zmg=;
-        h=Subject:To:From:Date:From;
-        b=R3UQN/mM5+n/qfTjYmJ4+dKCJvzgezRYswE/UDFPpoaFbD9n6q/rkFkho/STNtd7I
-         S4omcyGnzoHaljyzKkdST+ozIBwJiWDFHlHHyd9dCmN3YJ7gQ1+0LDsmTgkDZhRo+c
-         Y+RkFf/sDOhH2k9luwNdmJgOH7oOSOa0m/Sx7f+E=
-X-Auth-ID: alan@softiron.com
-Received: by smtp1.relay.ord1c.emailsrvr.com (Authenticated sender: alan-AT-softiron.com) with ESMTPSA id 77DDC201F5;
-        Thu, 27 Feb 2020 11:47:08 -0500 (EST)
-X-Sender-Id: alan@softiron.com
-Received: from [10.1.1.115] (99-117-187-177.lightspeed.dybhfl.sbcglobal.net [99.117.187.177])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Thu, 27 Feb 2020 11:47:09 -0500
-Subject: Re: pinctrl states vs pinmux vs gpio (i2c bus recovery)
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        kamel.bouhara@bootlin.com, Ludovic.Desroches@microchip.com
-References: <20191206173343.GX25745@shell.armlinux.org.uk>
- <CACRpkdZv2rzA8AbFZKq0XVBaXNJR8c5tsb+1KTZ7fNuWjm5cbQ@mail.gmail.com>
- <20191213002010.GO25745@shell.armlinux.org.uk>
-From:   Alan Ott <alan@softiron.com>
-Message-ID: <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
-Date:   Thu, 27 Feb 2020 11:47:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1729172AbgB0Q5Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Feb 2020 11:57:16 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:45686 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgB0Q5Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Feb 2020 11:57:16 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E83BF804D5;
+        Thu, 27 Feb 2020 17:57:07 +0100 (CET)
+Date:   Thu, 27 Feb 2020 17:57:06 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Message-ID: <20200227165706.GA20296@ravnborg.org>
+References: <cover.1582744379.git.hns@goldelico.com>
+ <20200227122325.GA7587@ravnborg.org>
+ <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20191213002010.GO25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=r_1tXGB3AAAA:8 a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8
+        a=d1djM_hZJe2JQW3CVLEA:9 a=dIJnsna9mnJheyWd:21 a=5nUNmSr-nzSVR-qf:21
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=t8nPyN_e6usw4ciXM-Pk:22
+        a=nCm3ceeH17rKjHWsMeRo:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/12/19 7:20 PM, Russell King - ARM Linux admin wrote:
-> On Mon, Dec 09, 2019 at 01:20:15AM +0100, Linus Walleij wrote:
->> Hi Russell,
->>
->> very nice description of this dual-mode problem.
->>
->> I wish I had a simple and elegant way we could make it
->> unambiguous and simple to use ... but it beats me right
->> now.
->>
->> On Fri, Dec 6, 2019 at 6:33 PM Russell King - ARM Linux admin
->> <linux@armlinux.org.uk> wrote:
->>
->>> One may expect:
->>>
->>>          pinctrl_select_state(i2c_imx->pinctrl, i2c_imx->pinctrl_pins_default);
->>>
->>> to change them back to the default state, but that would be incorrect.
->>> The first thing that pinctrl_select_state() does is check whether
->>>
->>>          p->state == state
->>>
->>> which it will do, as the pinctrl layer hasn't been informed of the
->>> change that has happened behind its back at the pinmux level.
->> Some pin controllers have the .strict property set
->> in their struct pinmux_ops:
->>
->> * @strict: do not allow simultaneous use of the same pin for GPIO and another
->> *      function. Check both gpio_owner and mux_owner strictly before approving
->> *      the pin request.
->>
->> The non-strict pin controllers are those that actually allow GPIO
->> and device functions to be used on the same physical line at the
->> same time. In this case there is not special GPIO mode for the
->> line in some muxing registers, they are just physically connected
->> somehow.
->>
->> One usecase is sort of like how tcpdump work for
->> ethernet interfaces: a GPIO register can "snoop" on a pin while
->> in used by another device.
->>
->> But it would notably also allow you to drive the line and interfere
->> with the device. Which is exactly what this I2C recovery mechanism
->> does, just that its pin controller is actually strict, will not allow
->> the same line to be used for GPIO and some other function at the
->> same time, so I suppose i.MX should probably explore the
->> strict mode.
->>
->> Enabling that will sadly make the problem MORE complex
->> for this I2C recovery, requiring a cycle of
->> gpiod_put()/gpiod_get() to get it released from GPIO mode, i.e.
->> we would need to just get the GPIO when this is strictly needed.
->> Using devm_gpiod_get() and keeping a reference descriptor
->> around would not work all of a sudden.
->>
->> I am thinking whether we can handle the non-strict controllers
->> in a more elegant way, or add some API to explicitly hand over
->> between device function and GPIO function. But I can't really
->> see some obvious solution.
-> What I'm currently trying is (error handling removed for brevity):
->
-> 	struct i2c_bus_recovery_info *bri = &i2c->recovery;
->
->          i2c->pinctrl = devm_pinctrl_get(dev);
->          i2c->pinctrl_default = pinctrl_lookup_state(i2c->pinctrl,
->                                                      PINCTRL_STATE_DEFAULT);
->          i2c->pinctrl_recovery = pinctrl_lookup_state(i2c->pinctrl,
-> 						     "recovery");
->          bri->sda_gpiod = devm_gpiod_get(dev, "sda", GPIOD_OUT_HIGH_OPEN_DRAIN);
->          bri->scl_gpiod = devm_gpiod_get(dev, "scl", GPIOD_OUT_HIGH_OPEN_DRAIN);
->
-> 	pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery);
-> 	return pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_default);
->
-> which seems good enough to get the pins back into i2c mode after the
-> gpios are obtained.  Then we switch the pinctrl state between
-> pinctrl_recovery and pinctrl_default as we have need to.
->
-> The problem is, the generic i2c bus recovery code wants the gpiod
-> descriptors to be setup and inplace by the time i2c_init_recovery()
-> is called (which is called when the adapter is registered) so
-> holding off until we need to do recovery doesn't work.
->
-> This seems to work for this SoC I'm currently working with, but I
-> think there's more on the horizon - I'm having the same problems
-> on another SoC which also needs bus recovery implemented, and as
-> the problem device is behind an I2C bus mux, when it locks the I2C
-> bus, it kills all I2C buses rooted at that particular SoC I2C
-> controller.  However, there's a problem - the pinctrls for that SoC
-> are set by ROM firmware at boot time by reading a table from the
-> boot media.  *Unprintables about firmware being too way limiting*. :p
->
-Hi all, what's the current state of this? I can confirm that this is 
-broken with the at91 i2c controller's recovery mode[1], which is 
-implemented exactly the same as other i2c master recovery modes, so I 
-suspect them to be broken as well.
+Hi Nikolaus.
 
-I'm using 5.5.6 with this patch applied (which adds the recovery):
-     https://patchwork.kernel.org/cover/11333883/
+> >> Zubair Lutfullah Kakakhel (2):
+> >>  dt-bindings: video: Add jz4780-lcd binding
+> >>  dt-bindings: video: Add jz4780-hdmi binding
+> >> 
+> >> .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+> >> .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+> > New bindings in DT Schema format please...
+> > We want to have then in a formal launguage so we can use these
+> > to verify the DT files.
+> 
+> Yes, I know. And I fully support the goal.
+> 
+> But I personally do not have the time to learn the (IMHO brain-twisting)
+> way the Schema format is working. Especially, I am not interested
+> in becoming volunteer translator for .txt based schemas developed
+> by someone else.
+> 
+> So I hope that someone from the community can and is willing to do
+> that.
 
-It worked fine with 5.2, but has now broken, the way Russell describes, 
-in 5.5.6 and also on the latest 5.6-rc3. Russell's suggested workaround 
-of setting the pinctrl to recovery (gpio) and then back to default does 
-make it work.
+I went ahead and typed them - please review and use these if OK.
 
-Alan.
+	Sam
 
-[1] currently the patch for i2c recovery for at91 is accepted to Wolfram 
-Sang's for-next tree.
+From 6fee276807dfe4a502ff760e7c7840480d275052 Mon Sep 17 00:00:00 2001
+From: Sam Ravnborg <sam@ravnborg.org>
+Date: Thu, 27 Feb 2020 17:18:29 +0100
+Subject: [PATCH 1/2] dt-bindings: display: add ingenic-jz4780-lcd DT Schema
+
+Add DT bindings for the LCD controller on the jz4780 SoC
+Based on .txt binding from Zubair Lutfullah Kakakhel
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+new file mode 100644
+index 000000000000..c71415a3a342
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic JZ4780 LCD Controller
++
++maintainers:
++  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
++  - H. Nikolaus Schaller <hns@goldelico.com>
++
++description: |
++  LCD Controller is the Display Controller for the Ingenic JZ4780 SoC
++
++properties:
++  compatible:
++    items:
++      - const: ingenic,jz4780-lcd
++
++  reg:
++    maxItems: 1
++    description: the address & size of the LCD controller registers
++
++  interrupts:
++    maxItems: 1
++    description: Specifies the interrupt provided by parent
++
++  clocks:
++    maxItems: 2
++    description: Clock specifiers for the JZ4780_CLK_TVE JZ4780_CLK_LCD0PIXCLK
++
++  clock-names:
++    items:
++      - const: lcd_clk
++      - const: lcd_pixclk
++
++  port:
++    type: object
++    description: |
++      A port node with endpoint definitions as defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++
++required:
++    - compatible
++    - reg
++    - interrupts
++    - clocks
++    - clock-names
++    - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4780-cgu.h>
++    lcd: jz4780-lcdk@0x13050000 {
++        compatible = "ingenic,jz4780-lcd";
++        reg = <0x13050000 0x1800>;
++
++        clocks = <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
++        clock-names = "lcd_clk", "lcd_pixclk";
++
++        interrupt-parent = <&intc>;
++        interrupts = <31>;
++
++        jz4780_lcd_out: port {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            jz4780_out_hdmi: endpoint@0 {
++                reg = <0>;
++                remote-endpoint = <&hdmi_in_lcd>;
++            };
++        };
++    };
++
++...
+-- 
+2.20.1
+
+From f4d01a657e07d468eb0bc811ed8edae0b58d66d7 Mon Sep 17 00:00:00 2001
+From: Sam Ravnborg <sam@ravnborg.org>
+Date: Thu, 27 Feb 2020 17:52:34 +0100
+Subject: [PATCH 2/2] dt-bindings: display: add ingenic-jz4780-ihdmi DT Schema
+
+Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+Based on .txt binding from Zubair Lutfullah Kakakhel
+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/display/ingenic-jz4780-hdmi.yaml | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+new file mode 100644
+index 000000000000..9b71c427bd69
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/ingenic-jz4780-hdmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic JZ4780 HDMI Transmitter
++
++maintainers:
++  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
++  - H. Nikolaus Schaller <hns@goldelico.com>
++
++description: |
++  The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
++  TX controller IP with accompanying PHY IP.
++
++allOf:
++  - $ref: panel/panel-common.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: ingenic,jz4780-hdmi
++
++  reg:
++    maxItems: 1
++    description: the address & size of the LCD controller registers
++
++  reg-io-width:
++    const: 4
++
++  interrupts:
++    maxItems: 1
++    description: Specifies the interrupt provided by parent
++
++  clocks:
++    maxItems: 2
++    description: Clock specifiers for isrf and iahb clocks
++
++  clock-names:
++    items:
++      - const: isfr
++      - const: iahb
++
++  ddc-i2c-bus: true
++  ports: true
++
++required:
++    - compatible
++    - clocks
++    - clock-names
++    - ports
++    - reg-io-width
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4780-cgu.h>
++
++    hdmi: hdmi@10180000 {
++        compatible = "ingenic,jz4780-hdmi";
++        reg = <0x10180000 0x8000>;
++        reg-io-width = <4>;
++        ddc-i2c-bus = <&i2c4>;
++        interrupt-parent = <&intc>;
++        interrupts = <3>;
++        clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
++        clock-names = "isfr", "iahb";
++
++        ports {
++            hdmi_in: port {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                hdmi_in_lcd: endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&jz4780_out_hdmi>;
++                };
++            };
++        };
++    };
++
++...
+-- 
+2.20.1
 
