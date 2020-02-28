@@ -2,106 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B550173BE1
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2020 16:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E84C173F4B
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2020 19:19:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgB1PmT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Feb 2020 10:42:19 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:3964 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726940AbgB1PmS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Feb 2020 10:42:18 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFcchc002611;
-        Fri, 28 Feb 2020 09:42:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type;
- s=PODMain02222019; bh=ufh6/9f7UQjn+9arPRj1c/9Z3GCp2z/Am5Y76SrZ/FY=;
- b=j9vAS3FE6Q5wGWY6Lixa19TgB/e3FKKlbumsGDPEfO4RSgtVdDOC75378CLN7bUFXQgG
- JJUe+JjZOWp+2wYv5TiWV7C/vwl3QC265Fueu8oOUb0E9iRi7LKwE0r6bE5LSXcxCRwW
- QDi2UMOKvXZzVC3j8fLTKyV5FkYxYYiJ+ceR1aLnc10n4kFMjhrdAJnrJmd1fRkOap16
- eE9bweH1zVQUoAUR7sS74qL1Sd7KWlOQpH16S56UhsTIvKGjTlxbNlg7MC9D76VFLVvI
- slf1o8V3smcnO3dbAZeQ0f0t90KJZAQzBK1cKyjxILiWLML22383o4PjK7sL6maY2B3H PA== 
-Authentication-Results: ppops.net;
-        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2yepwmse6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 28 Feb 2020 09:42:17 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 28 Feb
- 2020 15:42:15 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Fri, 28 Feb 2020 15:42:15 +0000
-Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id F02A645A;
-        Fri, 28 Feb 2020 15:42:14 +0000 (UTC)
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH] pinctrl: madera: Add missing call to pinctrl_unregister_mappings
-Date:   Fri, 28 Feb 2020 15:42:14 +0000
-Message-ID: <20200228154214.13916-1-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.11.0
+        id S1726016AbgB1STl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Feb 2020 13:19:41 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.173]:21610 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgB1STk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 13:19:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582913978;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=mtibfl3if76oFyUx4VaWIyxio7nt25pVHxLuChFLvDo=;
+        b=aZ75bPb3UYuN4N9aN0YBIWyrBOK/iZY8Ir6WhYzlfk445MnNbt/XqzVeFpHOQeHqYu
+        XpeqYIQ6uaOu08zU/kkP+WidWdRPzzcmHA0gwY4PIcIlzF4URVYwReZ+zcNnPOb43sYb
+        44Az9IukV0TptjcO3EI1bBW6S3pfh0cUQs7iVaZQZfuA0qrfFYc4asptQZKhyWcEjMjL
+        fp0pYh57py+WLFb5k1R9k4j+hsiUjV811aHdzKf5TtCIZNyXUgldWhAebHTMsE7OUZIC
+        0S36kvn3doNRlyuhZRgWCQwLyEcvarBp5G5BhLoz8kuaaNhwv7vJTpEVmjs0m2i09wab
+        JZ8A==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6G1+ULkA="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw1SIJY2Lm
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 28 Feb 2020 19:19:34 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [RFC v2 0/8] MIPS: CI20: add HDMI out support 
+Date:   Fri, 28 Feb 2020 19:19:25 +0100
+Message-Id: <cover.1582913973.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=745 clxscore=1015
- adultscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 spamscore=0
- suspectscore=1 impostorscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002280124
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pinctrl_register_mappings is called in the pdata case, however a call to
-pinctrl_unregister_mappings is missing causing the mappings to be leaked
-on driver unbind. Add the missing call to correct this issue.
+* Converted .txt bindings to .yaml (by Sam Ravnborg <sam@ravnborg.org> - big THANKS)
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/pinctrl/cirrus/pinctrl-madera-core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+RFC V1 2020-02-26 20:13:06:
+This patch series adds HDMI output to the jz4780/CI20 board.
 
-diff --git a/drivers/pinctrl/cirrus/pinctrl-madera-core.c b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-index 7b6409ef553c9..dce2626384a90 100644
---- a/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-madera-core.c
-@@ -1073,13 +1073,26 @@ static int madera_pin_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	platform_set_drvdata(pdev, priv);
-+
- 	dev_dbg(priv->dev, "pinctrl probed ok\n");
- 
- 	return 0;
- }
- 
-+static int madera_pin_remove(struct platform_device *pdev)
-+{
-+	struct madera_pin_private *priv = platform_get_drvdata(pdev);
-+
-+	if (priv->madera->pdata.gpio_configs)
-+		pinctrl_unregister_mappings(priv->madera->pdata.gpio_configs);
-+
-+	return 0;
-+}
-+
- static struct platform_driver madera_pin_driver = {
- 	.probe = madera_pin_probe,
-+	.remove = madera_pin_remove,
- 	.driver = {
- 		.name = "madera-pinctrl",
- 	},
+It is based on taking the old 3.18 vendor kernel and trying
+to achieve the same with modern DTS setup and new/modified
+drivers.
+
+Unfortunately, in this first RFC, only EDID and creation of
+/dev/fb0 are working. Also, HDMI hot plugging is detected.
+
+But there is no HDMI output signal. So some tiny piece seems
+to be missing to enable/configure the Synposys HDMI controller.
+
+We need help from the community to fix this.
+
+Original authors of most patches are
+* Paul Boddie <paul@boddie.org.uk>
+* Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+
+
+H. Nikolaus Schaller (2):
+  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+
+Paul Boddie (4):
+  drm: ingenic: add jz4780 Synopsys HDMI driver.
+  pinctrl: ingenic: add hdmi-ddc pin control group
+  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+  MIPS: DTS: CI20: add HDMI setup
+
+Sam Ravnborg (2):
+  dt-bindings: display: add ingenic-jz4780-lcd DT Schema
+  dt-bindings: display: add ingenic-jz4780-hdmi DT Schema
+
+ .../bindings/display/ingenic-jz4780-hdmi.yaml |  83 ++++++++++++
+ .../bindings/display/ingenic-jz4780-lcd.yaml  |  78 ++++++++++++
+ arch/mips/boot/dts/ingenic/ci20.dts           |  64 ++++++++++
+ arch/mips/boot/dts/ingenic/jz4780.dtsi        |  32 +++++
+ arch/mips/configs/ci20_defconfig              |   3 +
+ drivers/gpu/drm/ingenic/Kconfig               |   8 ++
+ drivers/gpu/drm/ingenic/Makefile              |   1 +
+ drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c      | 120 ++++++++++++++++++
+ drivers/gpu/drm/ingenic/ingenic-drm.c         |   2 +
+ drivers/pinctrl/pinctrl-ingenic.c             |   7 +
+ 10 files changed, 398 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+ create mode 100644 drivers/gpu/drm/ingenic/dw_hdmi-jz4780.c
+
 -- 
-2.11.0
+2.23.0
 
