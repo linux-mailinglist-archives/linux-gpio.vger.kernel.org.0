@@ -2,57 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E8B174304
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C12BC174324
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:31:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgB1X0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Feb 2020 18:26:48 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35482 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1X0r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:26:47 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z9so3352355lfa.2
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:26:46 -0800 (PST)
+        id S1726621AbgB1XbD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Feb 2020 18:31:03 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46704 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgB1XbD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:31:03 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h18so5022475ljl.13
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:31:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jrhuf4lQMf789aXqjDV/8MVAbPHgK/nDIiXvOW13JOI=;
-        b=rO+WDk956erxVFVfSU2H3hHLlMYNmDAMOXOFeD4pbkZcLgbyPe/Ae12DCeElQhhnfz
-         nZjNfcgZoznCKshbRDD5RhDsgJtlQxstHP9qDymW/A3cSaP5ijZ83c7vzIkAkF/Yd9Ba
-         iUC0bW/A6kBk/aD+uhICJQqrEgxrULwGvTbBbz/RvSn0/5aCu4DuFn8Xj7aXzNv+vJP9
-         tnRmMa8VPCDwRyA1dfh1F59v3+RmYnFVBPRQJ69EHGZdifl6LhczqWbNVp4ori8EZWgO
-         xCxsoDRNIuY/2iY6qme4j8zLvR3pMMc7YXkfDae9WgkGnPYSH5K00afmEHJwm1MPvAIv
-         mHnA==
+        bh=FJMOjeid6sdwgXv4TTvMxMhevRyWK73UfsN1mnUN154=;
+        b=sMe5Q6usg9+F4riRxov5cjG3cyELLD3oY3eqeIrCM0aMmY7BGEfLMLJT1SZ1gK0IwN
+         UFNBkrP7J25JufhFor+00VbaiY0V3wNFi5Y0V6yp/yTwjh7YTnRrLqyZ7eaDMrvF/TzZ
+         Dd+uXEyp9pONbPMH+vFvJHPbmE3J7xZx3HwKpXwcCLupuc+vQZA6GenODw9SfH6Az6nZ
+         hzzXjyLjydDHeMjOWfWF8PjkvIagnRsfW3bwZi7A4bzOB19Lx7TbyhEccYzR/YHRJNAZ
+         eoJubijvMqEQ04/8kdlkwXDI6wo5CzuUN5RPHEtk0Zeu1q+sM3u3109tFuStjvE6jYPa
+         NuOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jrhuf4lQMf789aXqjDV/8MVAbPHgK/nDIiXvOW13JOI=;
-        b=JRak1lHwaWi0KSP5SyqHO/wVgphemQRWR4F/Bgteo7EAoI6cvg3NnxeqIo++cjvFQR
-         25cI7IXXYlAYtlqraGsfV4yxh5OCDQ/esHIaSThHpq31hZiP0N99+GpTsSxJw99eNoPC
-         D7r2uBxCkddc7OMk3G5b1+wgRrupQiWvon8Ku1PlEGxnLmQOPRYp4lUxDoD/7cAWMWtG
-         ECoxEf2yUHYiV+hMdZeJjfMJzQv2LlHDBJakFR0V67faV2jqJc10YiTLknPy5fEJj4km
-         eOUUQZXnkhmI2SoEa4TmEhgraHqHiTj5H4O2UFClYVA0axuG/BuN+kWhY+n6vbHqQWjE
-         PGpw==
-X-Gm-Message-State: ANhLgQ3lpZ3zQh6nuKpFZ8p25oC4B4byAv6ddtFOGu4bJAHXJ5/ny1l4
-        7Iofl5UMQ3n8Im5duGSsdGYs9eZbj5G4uyg8ci9wkA==
-X-Google-Smtp-Source: ADFU+vvUMWfxluDt5eoB+Oyxc50yZOIsEYOtX4E9uDgWik3dzGkRingUQci7UbvajDnrKgRs33pWYVxrD7kHmz9g/yI=
-X-Received: by 2002:a19:ed0b:: with SMTP id y11mr3895984lfy.77.1582932406150;
- Fri, 28 Feb 2020 15:26:46 -0800 (PST)
+        bh=FJMOjeid6sdwgXv4TTvMxMhevRyWK73UfsN1mnUN154=;
+        b=Cx9I5SV5e2hr2BcYrrkg3mFMxiSMY8zGZrNfI4o3Zjpzq9p6DExN9Sxda+lxP1swTL
+         EKTV+KazpgSe0Hq2gDVHlq23+/ywwWcN25eoyZYHH8/VqXNek/SNgvax7SsHeZPMIhq0
+         puCgw5wIsCiME6bIWS0ty4DvKRlU0XDBcbTS02w+IDG3I1oJjYDDqqK9teFk21YVaanr
+         QheUIGQgoJHBZSQHWAJAf03h/0HrCnS1CYG0MORbVJ+Wr6N1ObIbEle/v7Y93q7Dn6Hp
+         CFVt47XSGPNu/YvQ3Zd4CGFIiYR7/L/k0/x3q9rA3I0cpUkciIkAQZxcToAXFHYxa+d2
+         Hakg==
+X-Gm-Message-State: ANhLgQ3s7TiY64eF+NtsF9eP3nSx40QMaH+6l08JUTJva6BWftlfU/yI
+        CAilC8IoJxMNa0uzSKZ+l+QGvbQ8UVE1XURGLJSuSg==
+X-Google-Smtp-Source: ADFU+vsxoOHRMUZvXuoHzVp2SunBEAeVGYJ5QRP7my8lror2nKWFrPn2yB/CjkXexreMLjBZgrvV44n23yoajzkayqA=
+X-Received: by 2002:a05:651c:2049:: with SMTP id t9mr4108228ljo.39.1582932660936;
+ Fri, 28 Feb 2020 15:31:00 -0800 (PST)
 MIME-Version: 1.0
-References: <f4e7e20afacb23e6fa7a6b33ea4319b2b3492840.1582776447.git.baolin.wang7@gmail.com>
- <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
-In-Reply-To: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
+References: <20200227185837.GA4469@embeddedor>
+In-Reply-To: <20200227185837.GA4469@embeddedor>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:26:35 +0100
-Message-ID: <CACRpkdYuWc5Okfgp3TO=iuJ_xSxoDkwN72Jim6=CSQC06s_n6w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
- into a module
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
+Date:   Sat, 29 Feb 2020 00:30:50 +0100
+Message-ID: <CACRpkda4wEck_JYpMYuQ+pAkaVo1JUE9nUpNseCBRCFADpZ9Ug@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sirf/atlas7: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Barry Song <baohua@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -60,14 +59,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 5:14 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Thu, Feb 27, 2020 at 7:55 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 
-> Change the config to 'tristate' and export some symbols needed by modules
-> to allow the Spreadtrum pinctrl driver building into a module.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Patch applied.
+Patch applied!
 
 Yours,
 Linus Walleij
