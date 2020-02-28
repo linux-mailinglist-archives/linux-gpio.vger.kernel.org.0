@@ -2,120 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ECC3174205
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2020 23:33:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E248E17425D
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Feb 2020 23:45:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgB1WdK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Feb 2020 17:33:10 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40222 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1WdK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 17:33:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 143so5064091ljj.7
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 14:33:09 -0800 (PST)
+        id S1726925AbgB1Wna (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Feb 2020 17:43:30 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41116 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbgB1Wn3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 17:43:29 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y17so3252244lfe.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 14:43:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kpMCwJPHsrLHrJr/d/YMgs2GY9/L334aO8TrlrMaCrA=;
-        b=g0xgaarU05W3RSjtAPA9tblHgqI6V0WPrwGkBFm1qkHKVRGZCKgYUKlrVXvftftHow
-         nnsJ7vO0KEApkPGIbs4EuQF6ysI3PtAWtYxocPPwiFezn49DVXs0JgdF8ugNvdvJSnXC
-         oCSYRW7DSRCFAzBU4mp/E3C4uS+SpA0DGRZVqTPZMe5TPIGLJ/7DzuD5pAY9aTRRGXc4
-         eBHRMO/0odwgM3kPTcsEgdG2TRgcZSsXO48emgRRJZB65r8PSjSYEj+jJZHhtguCGsZP
-         V9+uwYPRBEjD00y8GLfojLelEEWNO/7Ocv/ur+p1nu+asiIjpD9Pc/SglIpw3nTMi1xC
-         HcdQ==
+        bh=1BxbADyqh67zLR4CkPE+bXFbR7jY3OFFxVQi+eBGBI8=;
+        b=i6Mz6v7Na8BLINyiuQ/hSPnAQQmxYEOfbBcBVFXW97UtP8mWO1dwLWdjpxC9QcQGCg
+         GdGmH5PSCv3zZzOrPrMscGcCVDWEUpcF/bT6gk4hxsNm+jfO9DSU3BDnWl0836NcMsVt
+         AeoxZzXYTmEmRyTbde9eiR8/snn6du/PNUk9R33LMErQxsnUUVCGoyzoCaR7OPs1Lycm
+         KFvIQTf9dTXt9wDtHbgx+sHgl2V0qBKNBlC7Chtn3n2RL5q+hsn2Nku/sT5hzRzxg/Mk
+         GW5LmRNmZk92fK87ghlEjij9rPeSrQnhwdJqJ4cTn9k4ZWcE8oEBFHkcz1F+cG8aVhSU
+         oaUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kpMCwJPHsrLHrJr/d/YMgs2GY9/L334aO8TrlrMaCrA=;
-        b=RHQyFdqWShs4xAaWYquAZpH1AZYYZUfVojSHzvCk0euhkpSjNrlih0cf4U1cEn/l10
-         QpTQKVX846pelH+uc7x+x3SUK/AogWMIQEqlUdRrK7Kc5Xgh/9uvSmOudsM2Wm8nxa8g
-         Ie29AV/m8Dr2k0Ni5sPjfAhiZdBGp+9r2mVKPo/5tzjdtfOO7c9DjR7jVnMgZX/aQ3zc
-         sUAcYvrUCmQgMncFDrrZ++nMaF2vsf0W/uVFrc1BJlYer1JPfIC8lxAQsjT/ZoQdMhm+
-         e2AamAaZyGQB0yYpCjjsCfBl6BT525yHax7Ey//Y2TKnHs7DJ5kpMz3dG57b+LdrAPXT
-         ITVQ==
-X-Gm-Message-State: ANhLgQ37eKjF+BsTRugvXTMV6xGA7/bI1NMUKYeef/i5F1GUSq8xqPLQ
-        r7W6jT6YCYvp6Rh+PdoPrOxYm6jAJpEHxrCFnes6Pw1nWgQ=
-X-Google-Smtp-Source: ADFU+vtc1OzGddV5djfc//H/DNZzPS/rutyJLa99T7WGqAXyEX27iUhLOlCXVDp8//D7AaqwnHMg9AMSkedfxzU5NNk=
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr4375691ljg.223.1582929188647;
- Fri, 28 Feb 2020 14:33:08 -0800 (PST)
+        bh=1BxbADyqh67zLR4CkPE+bXFbR7jY3OFFxVQi+eBGBI8=;
+        b=j14/3EcE5B7uo8gK9Z0UPbHtsGeZXK7m9pcHUXI7HfoxuiiL0mFfaKS4TToy3vt+Va
+         LTPy7SJKrvlJ2voR1vT1ofOah40gDmkfoOZscnU9ipLyXR1hcpi//vUWEIVhkFmJJgyw
+         iSvqcTijwDSdUWO3uXQSBG0MCJTKh6fWJHM07F4+VTb0FgCIKkn2bIQb/mWwBFPdiiOH
+         YqssO3GkxTM58pLbWGGbD/ENK5n11BQoiHhN+Gk+4BP886MNHO33EUiATLhMyp+pRT06
+         ZwD4Axu40P1tvzZ5bnsjbXOcCYon1QMjCUXJISr3byXmGh5GUVXzvfbUbuwe7HoQVsrU
+         ep+A==
+X-Gm-Message-State: ANhLgQ0lnN3QYDDLEXVAyZ8XYkCF+/bz5kCtTvzrSxmOQvKY6wg2xyP+
+        7ukUwprRo7Y8I8G0DqBfj4Thc0ZxJ3feuH/zJytv2w==
+X-Google-Smtp-Source: ADFU+vvwV+eXKAqc/AH6wyolv56OmLms52Q1I+Lg/sFK1m7+034EZ451eAX8G9p01LxfFc6BXUqFS0ufeeNdx6RY9L0=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr3584341lfm.4.1582929807065;
+ Fri, 28 Feb 2020 14:43:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20200221154837.18845-1-brgl@bgdev.pl> <20200221154837.18845-4-brgl@bgdev.pl>
-In-Reply-To: <20200221154837.18845-4-brgl@bgdev.pl>
+References: <20200220130149.26283-1-geert+renesas@glider.be>
+ <20200220130149.26283-2-geert+renesas@glider.be> <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
+ <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
+In-Reply-To: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Feb 2020 23:32:57 +0100
-Message-ID: <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] gpiolib: use kref in gpio_desc
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Date:   Fri, 28 Feb 2020 23:43:16 +0100
+Message-ID: <CACRpkdZwaKA-Gq4wjkPZ_VFiOgNgvLPnYmx4A3AFE-0eNNjQpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 4:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Feb 21, 2020 at 6:18 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> On 2/21/20 10:08 AM, Linus Walleij wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Patch applied with Frank's Review tag.
 >
-> GPIO descriptors are freed by consumers using gpiod_put(). The name of
-> this function suggests some reference counting is going on but it's not
-> true.
+> I created a devicetree unittest to show the problem that Geert's patches
+> fix.
 >
-> Use kref to actually introduce reference counting for gpio_desc objects.
-> Add a corresponding gpiod_get() helper for increasing the reference count.
+> I would prefer to have my unittest patch series applied somewhere,
+> immediately followed by Geert's patch series.  This way, after
+> applying my series, a test fail is reported, then after Geert's
+> series is applied, the test fail becomes a test pass.
 >
-> This doesn't change anything for already existing (correct) drivers but
-> allows us to keep track of GPIO descs used by multiple users.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Can you coordinate with Rob to accept both series either via
+> your tree or Rob's tree?
 
-I'm having some trouble figuring out if we might be reinventing
-a wheel here.
+I see Rob already applied the test.
 
-A while back there was a proposed patch to add device links
-between GPIO producers and consumers, so that a GPIO
-chip won't be dropped while there are active consumers.
-
-(I don't remember who sent the patch.)
-
-We have a similar functionality in pin control if the
-.link_consumers property is set on the pincontrol device.
-I was thinking about making that compulsory at one point.
-
-The device links use a kref already existing in struct
-device and would in this case be the kref in the struct
-device for the struct gpio_device.
-
-So if that existed, gpiod_ref could just grab another
-device_link_add().
-
-Maybe we should just add device links between all
-GPIO consumers (devices) and struct gpio_device:s
-struct device and implement it like this so we don't
-have to back out of this later?
-
-C.f. commit
-commit 036f394dd77f8117346874151793ec38967d843f
-pinctrl: Enable device link creation for pin control
-
-(...)
-> @@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
->  struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
->                                                         const char *con_id,
->                                                         enum gpiod_flags flags);
-> +struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
->  void gpiod_put(struct gpio_desc *desc);
->  void gpiod_put_array(struct gpio_descs *descs);
-
-You forgot to add a stub for the case where GPIOLIB is not
-compiled in I think? (Lower in the same file.)
+I do not personally bother much about which order problems
+get solved but I guess if Rob can back out the patch I can apply
+it to my tree instead, before these patches. for some time,
+before I start pulling stuff on top.
 
 Yours,
 Linus Walleij
