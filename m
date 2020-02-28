@@ -2,79 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D69C1742F5
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:22:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12ED31742F9
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:25:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgB1XWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Feb 2020 18:22:54 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41681 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgB1XWy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:22:54 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u26so5008450ljd.8
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:22:52 -0800 (PST)
+        id S1726277AbgB1XZx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Feb 2020 18:25:53 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41464 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgB1XZx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:25:53 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y17so3308236lfe.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:25:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
-        b=fa//2cfD9xxk9b6pZ6Yw33KdAqjyxP/fqbFuCPrtvpvcXafVEnloRfDXvaBe0dN0Qa
-         fINSDiTXoEkKpAHbZR0/CdQGXzw4BkWxKqFbvTTlF2t30WImNasawyhoby7EbJk0v4sP
-         eFf8Y1wTo/G2c4D/JkpUKxEmXnYI5Cv+VsODpIJdCdKwfbE8trfou+O6r4JHKG9284Qv
-         VKRG+jTEXuy0aWblF9Jkk49FRn1B4uyIvX52L5y2JhQ/ZLISwAnuVEoiuN976mSXrGfs
-         khNSj9gFNkG3O9Qxt+VkpLOxS+pBmxH+KEZlYmCfeNRuyviRcA4DHcXPIw388fNvkykP
-         RL9g==
+        bh=dGzWMu4XBpH6ZuiaOU4SkMnEwOu+vcJlnvYgz7BApTg=;
+        b=hd8jSV8zpXXGza6L6G3ymjxMJXgY+rMSU6HHDbrcrq2BxjPzx9wUvpBoLGUSD6XIH3
+         9JwP8OgYtNI4RNyLQcfPcaMDlPO60XS6yo/jiSQV154OMAfGv6WFbnrKf0Sl8XOK6wyM
+         ccPmgyBxa4bM4bsaqkqxtcKyWDu9RpQ7Oc5OpJcRgCxWI3ZSmIQHKt0CQALV+IbUBHD5
+         O9PHjECPcWgnrVRXaLzhF+rEmGhD3aQSr3AiBdrKiSr/yZuIb+5C0tk27ZhUNNYW6J2i
+         i1sMaTN1TVImUppa0bK0vUA8gUYG4msYyDfgXvPQpENzXkaffwYOzO4XElnAH22OuRkD
+         BZ8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
-        b=gphaDjWSTPiWYKBwU0TFbsi1wNxikIOXV4qqXttQxZTWT1n1xwy78izY54SxGaTWS/
-         a9WyDk3AKcS+t+QtEHZahCMl66DXri4UXj3jMprkJQ8Bep4dMIyt5rpY3gqaS81ycO/y
-         yUbjdIpXtF9xN4oSt+RWRHu8yoEXYnB2Gg9DnShkngwOLp8skTdSIOsRmYrD2d3Mi0eZ
-         cwuaiWvRD/VLhxZpTPiugso9bYTyeBrgjHPXq8iLXgM6KUYa8FsguR2IjgkKT4M8d17H
-         POgN/R9T2RN+nLbZmThhfvTDavaR9jP4dcXSMML9i4f7jU9+kuF31zdGztGQEi3b+Xya
-         nWOA==
-X-Gm-Message-State: ANhLgQ0MeNj+ONXUwjeoJ9C/NamK94nqaPAD+QPAIsTKCyjGi5KlLV7Y
-        xkUvm36d3uk49GCe6A8riLXgK/bd9CakGey4HEPJrA==
-X-Google-Smtp-Source: ADFU+vv4jorIIrhlu3IkFg1e8VzFI1djLIzV0XhA4c7hYwnb2v6uJwaQ90o8fQbNN3FP42H3eq2tJ/643zwjgaSocV8=
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr4238077ljo.125.1582932172096;
- Fri, 28 Feb 2020 15:22:52 -0800 (PST)
+        bh=dGzWMu4XBpH6ZuiaOU4SkMnEwOu+vcJlnvYgz7BApTg=;
+        b=HfqbAaa+TwuP8WAgX5QPfGjBZhu6/bQLsFUoJkOa/6eVvmEGR+V53CIOdVpPLS6whz
+         lOZQM1H6O/aZCTXVsDkEdHFilszHvTTnlqJbYcIRZE3P3aXX8DjAduw67FzYOmffw8DO
+         1Gf+AQkJy/WqiDDdQOANMay+FAMeuOCE7XxAtUf52MvuPm90mdUOY05wfVkQupH2ROx/
+         n0EvjxPg4xtqiSrYH65nIZlVIJQ7IyJ+NyXtb+8oQq43tBiph168LJ4OVsezgs4RIGP+
+         6xl5SAT7CRIz2DE13Zp6dZ4b5o42MPrbonBkMzMXzjovbeIC3oRSE1YXLk0qABVTrvGx
+         fJCg==
+X-Gm-Message-State: ANhLgQ2V3ZQE7DUAIHkzXDIG/1sMmj6nBmvHgTdKG5827hUrWSTZ/pFY
+        vtzOSAQ0xri0AgizRqs/FdEaXqoXSgRhKvVzL6x2EQ==
+X-Google-Smtp-Source: ADFU+vt22lyrw7moxExhDGl8n/IQ3BjuLK/mIfpVH1gfOaJRjaKyKXYZdA+gW+XCRueBh3uOay0x6spXFd7hMrj0mKY=
+X-Received: by 2002:ac2:44a5:: with SMTP id c5mr3643708lfm.4.1582932351327;
+ Fri, 28 Feb 2020 15:25:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20200222060435.971-1-yamada.masahiro@socionext.com> <20200222060435.971-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
+References: <f4e7e20afacb23e6fa7a6b33ea4319b2b3492840.1582776447.git.baolin.wang7@gmail.com>
+In-Reply-To: <f4e7e20afacb23e6fa7a6b33ea4319b2b3492840.1582776447.git.baolin.wang7@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:22:41 +0100
-Message-ID: <CACRpkdaj8jiABWU8Nj1p8=8HbDoi3zh4yMedVQ9C9BppqMT65w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
- controller to json-schema
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sat, 29 Feb 2020 00:25:40 +0100
+Message-ID: <CACRpkdab7YLq-VoNZkB5uWSPLbFW3CyTkB+eCNgFG8KC9G3Msg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: Export some needed symbols at module load time
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 22, 2020 at 7:05 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Thu, Feb 27, 2020 at 5:13 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
 
-> Convert the UniPhier pin controller binding to DT schema format.
+> Export the pin_get_name()/pinconf_generic_parse_dt_config() symbols needed
+> by the Spreadtrum pinctrl driver when building it as a module.
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 
-I see this was applied, I had some comments on the previous
-version but they can be addressed with follow-up patches.
+Patch applied.
 
 Yours,
 Linus Walleij
