@@ -2,77 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDA21742EE
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D69C1742F5
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 00:22:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbgB1XUz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Feb 2020 18:20:55 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41225 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgB1XUz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:20:55 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y17so3302356lfe.8
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:20:53 -0800 (PST)
+        id S1726674AbgB1XWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Feb 2020 18:22:54 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41681 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1XWy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Feb 2020 18:22:54 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u26so5008450ljd.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Feb 2020 15:22:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IUCuvsoT8/LPUAazzHuf3BSlY/LuzBm/RZCQW8qkafc=;
-        b=AiUb6onFScs/DAQJxoWCQUJu07Ygr0wcS1Pv2MbH6OyAjWjgozRxwf6cNtCwOtlfVR
-         StL7/AuHIW0sbWv7NYip4IeQ3WOfVl8K+fzviBHY+O0vwd3X7fxSjz41UytCU5pFjIoA
-         Aj9gufEaX3ovYzGXMaPshc1QkuAjwholpDgzRax7GEvEpmZf06tYZ3d9zzaIeuFHWZIm
-         j41Pn3Li/q7s/VutdqRXw+8LiL7jgl4AFztDLVpC3ruoqCw4G8iPpD6CP1ybCpQkNhP6
-         GQksQkjbHI7sVqDVLH42/NIVMLVijAowK7Z57JkUzabEyP7k8fCQWxnPc8tyA+Bj8Onq
-         U+eA==
+        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
+        b=fa//2cfD9xxk9b6pZ6Yw33KdAqjyxP/fqbFuCPrtvpvcXafVEnloRfDXvaBe0dN0Qa
+         fINSDiTXoEkKpAHbZR0/CdQGXzw4BkWxKqFbvTTlF2t30WImNasawyhoby7EbJk0v4sP
+         eFf8Y1wTo/G2c4D/JkpUKxEmXnYI5Cv+VsODpIJdCdKwfbE8trfou+O6r4JHKG9284Qv
+         VKRG+jTEXuy0aWblF9Jkk49FRn1B4uyIvX52L5y2JhQ/ZLISwAnuVEoiuN976mSXrGfs
+         khNSj9gFNkG3O9Qxt+VkpLOxS+pBmxH+KEZlYmCfeNRuyviRcA4DHcXPIw388fNvkykP
+         RL9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IUCuvsoT8/LPUAazzHuf3BSlY/LuzBm/RZCQW8qkafc=;
-        b=q6nPoTeoR4mQMszfhOjB1v5p8LvhOi3FNxlCyqLewIFGVWFC2lo21ha9MtQG4roxPG
-         59QoQfGT8nRwtwSVW9lMPx5wi0RV/gKn1GFGyhFbRat3wLd/67d42tqV5nSfhzo05kM5
-         A7ozr2uJkH16GOPAogFWPFd3P/wKSdwWNpQi1bqvM4VgjRTfcd/3n7U+mqNRHJ6GZmqC
-         dcy423EBSVsF65RhAPicPJ5M1KvHpP/5LVwW6GMWsuJkzXQu+VeL3uF1Eo6mKakTB/PR
-         KWkE+l5rDuV8e/7ADwFtG8ewcAeqjW9YQIN3HaB5L44KoADiwOdXm5UcCuUh56jjbbuy
-         lSyQ==
-X-Gm-Message-State: ANhLgQ1PIy5k6/+F+3CUBCng2S5PlBxfdQj6KdsW6nQE0qLO7U5H6GB0
-        AS92MNnRYQYsOHDO48LYD8mJzhoBReUqvDErnTOAQG7f
-X-Google-Smtp-Source: ADFU+vvIU0LlYeHeLDZSjyzG9od8EC9fwjBLEALNd8L/0q/e9uAE6B+ghoG9n8TaFthveqPymw6YMKolM/LvPYLRYQQ=
-X-Received: by 2002:a19:110:: with SMTP id 16mr3859186lfb.21.1582932052865;
- Fri, 28 Feb 2020 15:20:52 -0800 (PST)
+        bh=2eqxeoYIrVLOIQ7hh1SkaHG4jTSn1JrLp5pMhF228gg=;
+        b=gphaDjWSTPiWYKBwU0TFbsi1wNxikIOXV4qqXttQxZTWT1n1xwy78izY54SxGaTWS/
+         a9WyDk3AKcS+t+QtEHZahCMl66DXri4UXj3jMprkJQ8Bep4dMIyt5rpY3gqaS81ycO/y
+         yUbjdIpXtF9xN4oSt+RWRHu8yoEXYnB2Gg9DnShkngwOLp8skTdSIOsRmYrD2d3Mi0eZ
+         cwuaiWvRD/VLhxZpTPiugso9bYTyeBrgjHPXq8iLXgM6KUYa8FsguR2IjgkKT4M8d17H
+         POgN/R9T2RN+nLbZmThhfvTDavaR9jP4dcXSMML9i4f7jU9+kuF31zdGztGQEi3b+Xya
+         nWOA==
+X-Gm-Message-State: ANhLgQ0MeNj+ONXUwjeoJ9C/NamK94nqaPAD+QPAIsTKCyjGi5KlLV7Y
+        xkUvm36d3uk49GCe6A8riLXgK/bd9CakGey4HEPJrA==
+X-Google-Smtp-Source: ADFU+vv4jorIIrhlu3IkFg1e8VzFI1djLIzV0XhA4c7hYwnb2v6uJwaQ90o8fQbNN3FP42H3eq2tJ/643zwjgaSocV8=
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr4238077ljo.125.1582932172096;
+ Fri, 28 Feb 2020 15:22:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20200226135323.1840-1-brgl@bgdev.pl>
-In-Reply-To: <20200226135323.1840-1-brgl@bgdev.pl>
+References: <20200222060435.971-1-yamada.masahiro@socionext.com> <20200222060435.971-3-yamada.masahiro@socionext.com>
+In-Reply-To: <20200222060435.971-3-yamada.masahiro@socionext.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 29 Feb 2020 00:20:41 +0100
-Message-ID: <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event watching
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Sat, 29 Feb 2020 00:22:41 +0100
+Message-ID: <CACRpkdaj8jiABWU8Nj1p8=8HbDoi3zh4yMedVQ9C9BppqMT65w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bingings: pinctrl: Convert UniPhier pin
+ controller to json-schema
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Sat, Feb 22, 2020 at 7:05 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Convert the UniPhier pin controller binding to DT schema format.
 >
-> When operating on the bits of watched_lines bitmap, we're using
-> desc_to_gpio() which returns the GPIO number from the global numberspace.
-> This leads to all sorts of memory corruptions and invalid behavior. We
-> should switch to using gpio_chip_hwgpio() instead.
->
-> Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-> Reported-by: Kent Gibson <warthog618@gmail.com>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-This looks good but where should it be applied?
-It fails to apply to my devel branch where this lives.
+I see this was applied, I had some comments on the previous
+version but they can be addressed with follow-up patches.
 
 Yours,
 Linus Walleij
