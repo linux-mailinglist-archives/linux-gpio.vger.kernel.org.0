@@ -2,88 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4C8174722
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 14:43:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7DC217488C
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 19:03:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgB2NnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Feb 2020 08:43:21 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34512 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgB2NnU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 08:43:20 -0500
-Received: by mail-io1-f68.google.com with SMTP id z190so6762556iof.1
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 05:43:19 -0800 (PST)
+        id S1727461AbgB2SDs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Feb 2020 13:03:48 -0500
+Received: from mail-pj1-f41.google.com ([209.85.216.41]:39370 "EHLO
+        mail-pj1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727209AbgB2SDs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 13:03:48 -0500
+Received: by mail-pj1-f41.google.com with SMTP id e9so2641788pjr.4
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 10:03:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
-        b=yEBCNkd7TJPUolzMHraLOsqEKzyKk6k2VfvLZhLJ8KOtcCks9KKwcLIF7jtCJvEgNe
-         SfIuchTv6Akv0aO7WL/MmIz3m2ktu7zv7FbTScrI9QeIb8++K1jD3o6bxHNTvtAUdEzk
-         wA9ZAJVVeBbT6cL3h0IuO6rdHP/raUGBzFK23EUNSIOtfdbJIdTbkha/+ktdspR0Zprm
-         M+n6x/LMk7vsHzsHS/h3F6MTMs78BN4rrq5q2la/aycPRkjBqi8DN7sJeHZn9O8H/2F7
-         Ik3cMc2EQ03Q4EKE/FxXqENqMLvMF+64f/qz1ETyn6VpfIIg6AZW4mErLr9svMbeK6hk
-         RjmA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=2r1QtGwVNmSw5Nf/YjqPoSgR725tiZFaQ5NSUWn6TIE=;
+        b=h0ddFfdlRprDP97rPGwC3M1ESmhVnQnAW1cbWVr3MLdtVQo6BEqrMr6nDQVJKfOIid
+         J2gqkWO/dbHSWJwbsaTUp4pOVueGxp5fiaxG6E8eAmHXOlC7kysF1Rzd7HVd92+NQ3sc
+         wAh1axUkWCuKqrUBjDsLka14pQsR1MvZ2X7IjzlBXFDi4hF8y8u3eyUsKim28YGzO5Hh
+         qZMI7I2jSy7kDWopGEAtf1MnLjQtU0zMLhZrfsKPuhuG19YdXjpPwCxt2kjzBzj7ppBr
+         2eVJngNfes1yqjcM1HIpMWrqwjU8xykt6ZhSMWyrL1PxyIBdVZ1BUZ385Ikh589kxSS6
+         qPsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
-        b=RgOtqoZn3nkNDy9eXDJuWqPWi3QyXIop3E0+0g8gN6izfI7zqzGNVeBsrwDd5G3xxj
-         LBgJW7webTLt8nFjWe0bWW3xhRWsfPwiWPBgeiTVaqUzHFgqmLZoN0ujNx4Z/NQdOLia
-         OFnrHrBYu+6MDnKBPmq0z2c55sfZ/V5Ocfi1+3mR7sadvw0T7lJ+UXhKVj+wOMH6ETxu
-         5fPu2V6KKvLyn/s9u5PgzMFi/blqlQ9i3+E5TcEoWyQVzvWUZNByIcdigDmedSQknRqa
-         KtvYgsrqbW7/yesvHfZiUdtk3YMbZq7NXlb2CkHxVi/Ity7XSTQ0sUoOdpdvOrexhF4h
-         qv+Q==
-X-Gm-Message-State: APjAAAVVQPq+y/15LlXy0U6MsU53SObtqzyK6o/i4M2e+rNF26fxqLVw
-        FEN4caNioygm474bhZXjN5KeCCO48VOwL7Ydp0S0gA==
-X-Google-Smtp-Source: APXvYqx8B+uG/d/zKTMD48jcMo2J92qHC86/tYSeXqTePGHZdl43A91WpjzUyjWqUJ4bMNeYSsp64ZF8rvX3Azc+XMg=
-X-Received: by 2002:a5d:8952:: with SMTP id b18mr7228069iot.40.1582983798962;
- Sat, 29 Feb 2020 05:43:18 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=2r1QtGwVNmSw5Nf/YjqPoSgR725tiZFaQ5NSUWn6TIE=;
+        b=LLjAl4MQ572cgE6Fioc9/T1D0jjhyajF6r+EIqPbInPmnNdKmIKf36iAxGhUOZCeYQ
+         rv/8vwEI0R9vRy3ak9CWN3iI1gy36wyqV0++MH6YrCEsUSQRhYJYONHATHF5AGL3W657
+         9IZW6TfchuEGea1Mx8KNWpt4i5hy+RNmT/mB6OqX0bbVV9DU9RAtgC9XJXC3htMdR+ac
+         K+EYvcow5vz1E9ngTc4yvxcYqTj3nNgJ+h1CIvh1M78IbeUBxPIL7k3MRJk3BeLzRKWu
+         66KB4zD54Lt8X1RGFosNe35xpU/hz0wwh4/CX1hSoWvptDWhXrZJzNdvtGoj0bY0+0J/
+         /o+Q==
+X-Gm-Message-State: APjAAAX4h7atESp5+6BZxYYJJC/7HjNgTjya/dHims69RuisjJge2Dgu
+        0EGHBtx2hKBLzY0iAkyvkwW/POttPbI=
+X-Google-Smtp-Source: APXvYqzp9LF1vlqVa2eS+MMuYJhmu4kPgokWzZ6pGfc70HmCHj6cjNcNv9IwiqQxobEfveXFbfMZzw==
+X-Received: by 2002:a17:90a:198e:: with SMTP id 14mr11410993pji.44.1582999426893;
+        Sat, 29 Feb 2020 10:03:46 -0800 (PST)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id h13sm6622863pjc.9.2020.02.29.10.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Feb 2020 10:03:46 -0800 (PST)
+Message-ID: <5e5aa782.1c69fb81.a6f31.f579@mx.google.com>
+Date:   Sat, 29 Feb 2020 10:03:46 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200226135323.1840-1-brgl@bgdev.pl> <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-In-Reply-To: <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 29 Feb 2020 14:43:08 +0100
-Message-ID: <CAMRc=McxeRWVaG3_+V4fodBf=vK8mLDna8dFdg=PjK5Bk0zJiw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event watching
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kent Gibson <warthog618@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: fixes
+X-Kernelci-Kernel: v5.6-rc3
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+Subject: linusw/fixes build: 6 builds: 0 failed, 6 passed (v5.6-rc3)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sob., 29 lut 2020 o 00:20 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Wed, Feb 26, 2020 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > When operating on the bits of watched_lines bitmap, we're using
-> > desc_to_gpio() which returns the GPIO number from the global numberspac=
-e.
-> > This leads to all sorts of memory corruptions and invalid behavior. We
-> > should switch to using gpio_chip_hwgpio() instead.
-> >
-> > Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes i=
-n line info")
-> > Reported-by: Kent Gibson <warthog618@gmail.com>
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> This looks good but where should it be applied?
-> It fails to apply to my devel branch where this lives.
->
-> Yours,
-> Linus Walleij
+linusw/fixes build: 6 builds: 0 failed, 6 passed (v5.6-rc3)
 
-This depends on Kent's other patch. I'll send you a PR.
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.6-rc3/
 
-Bart
+Tree: linusw
+Branch: fixes
+Git Describe: v5.6-rc3
+Git Commit: f8788d86ab28f61f7b46eb6be375f8a726783636
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
