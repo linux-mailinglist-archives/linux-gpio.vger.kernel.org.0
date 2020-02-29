@@ -2,61 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFB9D17462F
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 11:19:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF4C8174722
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 14:43:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgB2KT4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Feb 2020 05:19:56 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38115 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgB2KT4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 05:19:56 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e20so4015375qto.5
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 02:19:56 -0800 (PST)
+        id S1727075AbgB2NnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Feb 2020 08:43:21 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34512 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbgB2NnU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 08:43:20 -0500
+Received: by mail-io1-f68.google.com with SMTP id z190so6762556iof.1
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 05:43:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gK5Uyl9oPkaXj14xHvEkG8985MD73jyOB6lDBBEvkIA=;
-        b=NhqbFHLsXlViLc/4Kno20LgWr0AMjv4BHY+p+sAx2JsvdIMm0fB3sCCKQQYN34Eil5
-         8kNhvB88cL8o4qFOJILRZ+B3gNGrMz+e/j+Prvmb38rWvS2awNcf7csoOA93Bqa+guMd
-         Je+gCNHOBC6AUTIfRKzuYFNUvhYOPFOCswr0yS41KXW1b03+OBaps8q4hESJAuiUdfye
-         HGELMxrZauT3g2sK3/aidCeaG+4ZgdDOMuFKGJMtMWTrBktd2js1ew2OyxWJaUfpJBvQ
-         JC/Kgz52IGU+gNfaRWoxcByNzuPjyXiOjjRYu5T+PIpCP3LHkbrXAx+Z8dBeDeYyVHko
-         Fwkg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
+        b=yEBCNkd7TJPUolzMHraLOsqEKzyKk6k2VfvLZhLJ8KOtcCks9KKwcLIF7jtCJvEgNe
+         SfIuchTv6Akv0aO7WL/MmIz3m2ktu7zv7FbTScrI9QeIb8++K1jD3o6bxHNTvtAUdEzk
+         wA9ZAJVVeBbT6cL3h0IuO6rdHP/raUGBzFK23EUNSIOtfdbJIdTbkha/+ktdspR0Zprm
+         M+n6x/LMk7vsHzsHS/h3F6MTMs78BN4rrq5q2la/aycPRkjBqi8DN7sJeHZn9O8H/2F7
+         Ik3cMc2EQ03Q4EKE/FxXqENqMLvMF+64f/qz1ETyn6VpfIIg6AZW4mErLr9svMbeK6hk
+         RjmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=gK5Uyl9oPkaXj14xHvEkG8985MD73jyOB6lDBBEvkIA=;
-        b=pa3Bsvz4yKXUHzPaADHZUzd+xX1+j5z1GCuBQViOGiLpiwUfgMDBpo50Z6c8GRVM8Y
-         FR6NjpzTlwmZH9gKEIhNNm5nzHCU6q3tov2kY26Iu5MnmGMtYb9POKvv18rNfX0uHWlv
-         1eg0k/+7RCKcsURWBdOram/NhdlYRIn+2DZWtw4KyCqeeG16b/cN61dnZpLz8NLyGwqO
-         gB2PbzS35nOIIV7wUaZohY8JDNv4xKqdjf4DRf58FWXfIy/FEcu/W6biL9oX73KqT12l
-         Ka7dTd8iEgS8jkRgDEH9vhf2sOLWT37BAVVDHuVh0WKi9yVpiOQBQSwGPAmDJBRnCgVl
-         FYDw==
-X-Gm-Message-State: APjAAAXQX2Vd/KG0DIvopXJj1oaRzxUQq+MsE6BOJnGCddrclf1jVJoR
-        nGIibNFf6uUWhJZcPqfRbiQHoAnbEufZaFi8KuI=
-X-Google-Smtp-Source: APXvYqynjPIizyazrqRHcaZ1Am5GW5T6UjBQpCwYmQsGFAQuY7fxckkb29cxrNH3eCNqUGW6rRhk0S8n8UVhFnxBSkI=
-X-Received: by 2002:ac8:44c1:: with SMTP id b1mr1662731qto.331.1582971595721;
- Sat, 29 Feb 2020 02:19:55 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZkYYz+iEBVIVDEqw2HSEsdWZFMQZB77tAjcrNj7cono=;
+        b=RgOtqoZn3nkNDy9eXDJuWqPWi3QyXIop3E0+0g8gN6izfI7zqzGNVeBsrwDd5G3xxj
+         LBgJW7webTLt8nFjWe0bWW3xhRWsfPwiWPBgeiTVaqUzHFgqmLZoN0ujNx4Z/NQdOLia
+         OFnrHrBYu+6MDnKBPmq0z2c55sfZ/V5Ocfi1+3mR7sadvw0T7lJ+UXhKVj+wOMH6ETxu
+         5fPu2V6KKvLyn/s9u5PgzMFi/blqlQ9i3+E5TcEoWyQVzvWUZNByIcdigDmedSQknRqa
+         KtvYgsrqbW7/yesvHfZiUdtk3YMbZq7NXlb2CkHxVi/Ity7XSTQ0sUoOdpdvOrexhF4h
+         qv+Q==
+X-Gm-Message-State: APjAAAVVQPq+y/15LlXy0U6MsU53SObtqzyK6o/i4M2e+rNF26fxqLVw
+        FEN4caNioygm474bhZXjN5KeCCO48VOwL7Ydp0S0gA==
+X-Google-Smtp-Source: APXvYqx8B+uG/d/zKTMD48jcMo2J92qHC86/tYSeXqTePGHZdl43A91WpjzUyjWqUJ4bMNeYSsp64ZF8rvX3Azc+XMg=
+X-Received: by 2002:a5d:8952:: with SMTP id b18mr7228069iot.40.1582983798962;
+ Sat, 29 Feb 2020 05:43:18 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:aed:24d8:0:0:0:0:0 with HTTP; Sat, 29 Feb 2020 02:19:55
- -0800 (PST)
-Reply-To: tcas.esq@gmail.com
-From:   NJ ESK <banchikife@gmail.com>
-Date:   Sat, 29 Feb 2020 10:19:55 +0000
-Message-ID: <CAGPwWoVtw=w1dG2mksu0d7pZ6Ksa+oxbABJcXVczNyLyDsbfeA@mail.gmail.com>
-Subject: Re: Kindly confirm receipt
-To:     undisclosed-recipients:;
+References: <20200226135323.1840-1-brgl@bgdev.pl> <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
+In-Reply-To: <CACRpkdY4=bU-gMywttvnRbgu=CG0TtKx5DFiV-Gio5DBDV08-g@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 29 Feb 2020 14:43:08 +0100
+Message-ID: <CAMRc=McxeRWVaG3_+V4fodBf=vK8mLDna8dFdg=PjK5Bk0zJiw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix bitmap operations related to line event watching
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello dear, hope you are good today. Well, I tried several times to
-send you an Email yesterday but its keep repeating network failure.
-Please confirm if you receive this Email so I can re-send you the
-details.
+sob., 29 lut 2020 o 00:20 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Wed, Feb 26, 2020 at 2:53 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+>
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > When operating on the bits of watched_lines bitmap, we're using
+> > desc_to_gpio() which returns the GPIO number from the global numberspac=
+e.
+> > This leads to all sorts of memory corruptions and invalid behavior. We
+> > should switch to using gpio_chip_hwgpio() instead.
+> >
+> > Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes i=
+n line info")
+> > Reported-by: Kent Gibson <warthog618@gmail.com>
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This looks good but where should it be applied?
+> It fails to apply to my devel branch where this lives.
+>
+> Yours,
+> Linus Walleij
 
-Tony Esq.
+This depends on Kent's other patch. I'll send you a PR.
+
+Bart
