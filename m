@@ -2,91 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8163217456E
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 07:41:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFB9D17462F
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 11:19:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgB2Glj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Feb 2020 01:41:39 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:16056 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgB2Glj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 01:41:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582958496;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=0ME2SplYdZp/EcXKhCp8KyLMdT2ULtuVLwdKdNAFg6E=;
-        b=c/Efms7OL7pq8mGZHfLZOcbzDL1vn992XFmTCyE+TCrnL1gMKoHFFBEREUk5HZHnVr
-        S1GjWb/4nOiB8klGMDyDtsPq8/cpIl5ZGkwgsPlsTBe8Xi2LATC+Z4yA0jjbG1KZDQ4h
-        TXZlVpzdrkhcDe8WxtIoA3bLUAt/uCKmCjRGWBh3Q1x0gFVLfw8EN1214nZFr6EQaWVn
-        d8AL1Ohe4NHBg3m7Mat8ZJyGgj8LXLzWkz8maLDqaRV57HCxGZ7CNIgfVRwlFo7vz7Ac
-        X4184LR1WJlR5T8hbhFVDq+GS8f06Zlqw4MR4aucGl39zGxfGNPRt4ChE/EhlkfAhKDk
-        4GCQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlafXAwF5A=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw1T6fI3wF
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Sat, 29 Feb 2020 07:41:18 +0100 (CET)
-Subject: Re: [RFC v2 5/8] pinctrl: ingenic: add hdmi-ddc pin control group
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
-Date:   Sat, 29 Feb 2020 07:41:17 +0100
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A87158C4-E5AC-4B4A-B132-3A82982E37FC@goldelico.com>
-References: <cover.1582913973.git.hns@goldelico.com> <010d6ad3473fb4b1f1041888a071796180cdd838.1582913973.git.hns@goldelico.com> <CACRpkdYSde=6JBBbe3sL3hDHhGAeOfwadT0BvL0n+-F0O2vX0g@mail.gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: Apple Mail (2.3124)
+        id S1726809AbgB2KT4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Feb 2020 05:19:56 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38115 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgB2KT4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 05:19:56 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e20so4015375qto.5
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 02:19:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gK5Uyl9oPkaXj14xHvEkG8985MD73jyOB6lDBBEvkIA=;
+        b=NhqbFHLsXlViLc/4Kno20LgWr0AMjv4BHY+p+sAx2JsvdIMm0fB3sCCKQQYN34Eil5
+         8kNhvB88cL8o4qFOJILRZ+B3gNGrMz+e/j+Prvmb38rWvS2awNcf7csoOA93Bqa+guMd
+         Je+gCNHOBC6AUTIfRKzuYFNUvhYOPFOCswr0yS41KXW1b03+OBaps8q4hESJAuiUdfye
+         HGELMxrZauT3g2sK3/aidCeaG+4ZgdDOMuFKGJMtMWTrBktd2js1ew2OyxWJaUfpJBvQ
+         JC/Kgz52IGU+gNfaRWoxcByNzuPjyXiOjjRYu5T+PIpCP3LHkbrXAx+Z8dBeDeYyVHko
+         Fwkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gK5Uyl9oPkaXj14xHvEkG8985MD73jyOB6lDBBEvkIA=;
+        b=pa3Bsvz4yKXUHzPaADHZUzd+xX1+j5z1GCuBQViOGiLpiwUfgMDBpo50Z6c8GRVM8Y
+         FR6NjpzTlwmZH9gKEIhNNm5nzHCU6q3tov2kY26Iu5MnmGMtYb9POKvv18rNfX0uHWlv
+         1eg0k/+7RCKcsURWBdOram/NhdlYRIn+2DZWtw4KyCqeeG16b/cN61dnZpLz8NLyGwqO
+         gB2PbzS35nOIIV7wUaZohY8JDNv4xKqdjf4DRf58FWXfIy/FEcu/W6biL9oX73KqT12l
+         Ka7dTd8iEgS8jkRgDEH9vhf2sOLWT37BAVVDHuVh0WKi9yVpiOQBQSwGPAmDJBRnCgVl
+         FYDw==
+X-Gm-Message-State: APjAAAXQX2Vd/KG0DIvopXJj1oaRzxUQq+MsE6BOJnGCddrclf1jVJoR
+        nGIibNFf6uUWhJZcPqfRbiQHoAnbEufZaFi8KuI=
+X-Google-Smtp-Source: APXvYqynjPIizyazrqRHcaZ1Am5GW5T6UjBQpCwYmQsGFAQuY7fxckkb29cxrNH3eCNqUGW6rRhk0S8n8UVhFnxBSkI=
+X-Received: by 2002:ac8:44c1:: with SMTP id b1mr1662731qto.331.1582971595721;
+ Sat, 29 Feb 2020 02:19:55 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:aed:24d8:0:0:0:0:0 with HTTP; Sat, 29 Feb 2020 02:19:55
+ -0800 (PST)
+Reply-To: tcas.esq@gmail.com
+From:   NJ ESK <banchikife@gmail.com>
+Date:   Sat, 29 Feb 2020 10:19:55 +0000
+Message-ID: <CAGPwWoVtw=w1dG2mksu0d7pZ6Ksa+oxbABJcXVczNyLyDsbfeA@mail.gmail.com>
+Subject: Re: Kindly confirm receipt
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello dear, hope you are good today. Well, I tried several times to
+send you an Email yesterday but its keep repeating network failure.
+Please confirm if you receive this Email so I can re-send you the
+details.
 
-> Am 28.02.2020 um 23:05 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->=20
-> On Fri, Feb 28, 2020 at 7:19 PM H. Nikolaus Schaller =
-<hns@goldelico.com> wrote:
->=20
->> From: Paul Boddie <paul@boddie.org.uk>
->>=20
->> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> This looks good, can I just apply this to the pinctrl tree?
-
-Yes. It is more or less a base commit for the others.
-
->=20
-> Yours,
-> Linus Walleij
-
-BR and thanks,
-Nikolaus
-
+Tony Esq.
