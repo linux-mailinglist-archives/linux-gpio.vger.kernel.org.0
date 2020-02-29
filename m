@@ -2,148 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EED0717491F
-	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 21:15:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A24F0174978
+	for <lists+linux-gpio@lfdr.de>; Sat, 29 Feb 2020 21:58:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgB2UPd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Feb 2020 15:15:33 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45485 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgB2UPd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 15:15:33 -0500
-Received: by mail-qk1-f195.google.com with SMTP id z12so6409956qkg.12
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 12:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AkrOHzBpT7aSQxxu38gPuAtFlmcZ6KFfZpcl7dVQr/M=;
-        b=uup9BWovE5FGwg1628u7bfPLkVBD9SZqdEYgHMubCpmL63Z2e/FT5XNp9gSaoqhImR
-         RLoP2Pvp0RUdtP3iIBUPTw6ce4OX7Oe8eND+OV/7aOC5VWMmod2GSMOZtGX+HxivBLkv
-         XDU7H3PTOG/aiheZDXmJS585P0Wa8RvBE70sLr3tq74BydCqkZoMCMB6/tcMhkKxd9XG
-         hM4yJrdFndljuU+7dxf3g2teocvJO4/wntC4cmY90OcQIPUjc1rxfg6r3p39i7TTuqve
-         vY06hq2DoIi47te7BJiqAY5U2RefHs2BmEA6qV/oQLXZmGMhgBBkwB6Vjz01+LbDmIAJ
-         rOZA==
+        id S1727305AbgB2U6B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Feb 2020 15:58:01 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43203 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726663AbgB2U6B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 29 Feb 2020 15:58:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583009880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=grkL4cK36yhQ8pKdn5AWpPmByRCbwaCyrviGJG1XD54=;
+        b=W05fmqHUF/jAPQwWZ+WLm88PJ633GQrzxNFs1uGNotu/d6u5pNX+67x4BhHQvnmfPTBncd
+        CYNIGgc1U1/tzF84tz1LAoTvcsCBWA08WiF4abjec1MWB+8CqpkpuO8CT6vkAvjZqj1H/1
+        GV0wR0IsU18wLrj4Z4pff7IEHhdkOwQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-JNmYBEpmOiS_OJ4qpwEfIQ-1; Sat, 29 Feb 2020 15:57:55 -0500
+X-MC-Unique: JNmYBEpmOiS_OJ4qpwEfIQ-1
+Received: by mail-wr1-f71.google.com with SMTP id f10so3334941wrv.1
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 12:57:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AkrOHzBpT7aSQxxu38gPuAtFlmcZ6KFfZpcl7dVQr/M=;
-        b=gZrkda3fEWzMHE4eVNH1kx3pW/DvAswXECxyEFpAp0f0/RxJBDgRvPc9ozLxz3gRTD
-         r7iPAY6ihhu/TmIyyZlqxIQT5jNO6dwGZW5P9+eV7rQc/xINk+B6CxeWf99kGoZIHme0
-         gioUbu8llelW2byE3JPJBuT9esS/ifQ3oQqcwj71pzPm/diMHY8ODe3K+9zMx4N4Kl2Q
-         s3bb4Fze0QtnCVzHqv7mDWoABJdcpYnlTY2MsmHdLGLWu1ogkWmHN+Tz8AzWRUEzfGol
-         PfRDXA7X4JjUed7AvAeQtSDCZ697ub72B2fgjerVfuOp8cRdBk7HEGq/PBe0kvThwWDh
-         IMCw==
-X-Gm-Message-State: APjAAAXYx8OPvV8lEkeXtLphZrzsP+lluefFETjyb6jm7e8LzobOgcQu
-        p/d165IbB+dtV1sjsnN0viwJmxKbmpMazbzJg96dPQ==
-X-Google-Smtp-Source: APXvYqzkEFsbspGj5NQAyfgvc+06G3bNPskSG6F1LOR+Vx4D/xFT8f1Lvp8T1uiMCoD/QYcEJldeRaClcTK/m1tcHuA=
-X-Received: by 2002:a37:4808:: with SMTP id v8mr9042223qka.263.1583007332121;
- Sat, 29 Feb 2020 12:15:32 -0800 (PST)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=grkL4cK36yhQ8pKdn5AWpPmByRCbwaCyrviGJG1XD54=;
+        b=PwunKhLoqsKUKkmwgChuEcUCZH1O1RXCNAg5OqJn3/e8vuEICuN/mb2loQTThfBGXs
+         zCvriKuCJm2Wsj/uKNiNwwaan3ZuuzPR01HCVAAYRaX3EOMP/FHnxEPgO1PVNG3UrVV4
+         /eQ5rEvvgBVmEPoR4r+T1xxKViapgMJoo7w/KmKcjvY9q4uAjrKtU5AVi0Q9ny8FwJ/m
+         Ps5q0oAp5ptrDOteEY/ZF4emphVR+pkWmDl0pAP2BF8/BwoWnY+mViOmtFWlsNWZesGX
+         ZBpdhj1MRbDFXGrrVUvYvSsfqCQ1Ikq/48vtafVGDZIU3/sgocjq0R9cDmBcPpS8KilV
+         0yxw==
+X-Gm-Message-State: APjAAAXZaHML9ML7E1oF+G6wojWZdFjPYLR87V1QLruWEFpRdd3sFcdD
+        T9ZN31FOEU2KWr0AX4ok6PTFC6zH13ey1wn5gvrpx8obzf7o2Q4uEmnLQd4+3JOS7P8OEVQW3Tk
+        F/w6Wl70ifqo+4GWBpl7RSA==
+X-Received: by 2002:adf:fcc4:: with SMTP id f4mr12645581wrs.247.1583009874238;
+        Sat, 29 Feb 2020 12:57:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxPvtTPPm3BpDSKVd+9jIKsf1LtljBDmV1DoLIVXvSaB5EIwbizX9zavy0NQwR82A2rfmIapA==
+X-Received: by 2002:adf:fcc4:: with SMTP id f4mr12645569wrs.247.1583009874059;
+        Sat, 29 Feb 2020 12:57:54 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id s1sm19071282wro.66.2020.02.29.12.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Feb 2020 12:57:53 -0800 (PST)
+Subject: Re: [PATCH resend 2/3] gpiolib: acpi: Rename honor_wakeup option to
+ ignore_wake, add extra quirk
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Lehmann <schmorp@schmorp.de>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+References: <20200225102753.8351-1-hdegoede@redhat.com>
+ <20200225102753.8351-3-hdegoede@redhat.com>
+ <20200225105437.GG10400@smile.fi.intel.com>
+ <e0c39a89-bcac-4315-d764-5853eb77537d@redhat.com>
+ <20200225123425.GK10400@smile.fi.intel.com>
+ <20200225125700.GL10400@smile.fi.intel.com>
+ <44cc5510-571c-21c4-1855-f3141f72eaa3@redhat.com>
+Message-ID: <ac38ee83-5edf-2ee0-8cec-a0b4367054a8@redhat.com>
+Date:   Sat, 29 Feb 2020 21:57:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200221154837.18845-1-brgl@bgdev.pl> <20200221154837.18845-4-brgl@bgdev.pl>
- <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
-In-Reply-To: <CACRpkdYtHqTBr7HW4Oex+igAbyb3PuS16uq1DXe4mK2vzxNoCw@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Sat, 29 Feb 2020 21:15:21 +0100
-Message-ID: <CAMpxmJW2So7jNC+C4EJrnmp_heoge_biQ83Giojbx8Gnuh_vJw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <44cc5510-571c-21c4-1855-f3141f72eaa3@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pt., 28 lut 2020 o 23:33 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Fri, Feb 21, 2020 at 4:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
->
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > GPIO descriptors are freed by consumers using gpiod_put(). The name of
-> > this function suggests some reference counting is going on but it's not
-> > true.
-> >
-> > Use kref to actually introduce reference counting for gpio_desc objects=
-.
-> > Add a corresponding gpiod_get() helper for increasing the reference cou=
-nt.
-> >
-> > This doesn't change anything for already existing (correct) drivers but
-> > allows us to keep track of GPIO descs used by multiple users.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> I'm having some trouble figuring out if we might be reinventing
-> a wheel here.
->
-> A while back there was a proposed patch to add device links
-> between GPIO producers and consumers, so that a GPIO
-> chip won't be dropped while there are active consumers.
->
-> (I don't remember who sent the patch.)
->
-> We have a similar functionality in pin control if the
-> .link_consumers property is set on the pincontrol device.
-> I was thinking about making that compulsory at one point.
->
-> The device links use a kref already existing in struct
-> device and would in this case be the kref in the struct
-> device for the struct gpio_device.
->
-> So if that existed, gpiod_ref could just grab another
-> device_link_add().
->
+Hi,
 
-I was always under the impression that device links are aimed mostly
-at runtime PM.
+On 2/28/20 12:22 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 2/25/20 1:57 PM, Andy Shevchenko wrote:
+>> On Tue, Feb 25, 2020 at 02:34:25PM +0200, Andy Shevchenko wrote:
+>>> On Tue, Feb 25, 2020 at 12:26:04PM +0100, Hans de Goede wrote:
+>>
+>>> Let's do it as a list of pairs, but in slightly different format (I see some
+>>> potential to derive a generic parser, based on users described in
+>>> Documentation/admin-guide/kernel-parameters.txt), i.e.
+>>>
+>>>     ignore_wake=pin:controller[,pin:controller[,...]]
+>>
+>> Another possible format
+>>
+>>     ignore_wake=controller@pin[;controller@pin[;...]]
+> 
+> I like this one, the other one with the pin first feels wrong, the pin is
+> part of the controller, not the other way around.
+> 
+> I will rework the patch series to use the ignore_wake=controller@pin format.
 
-> Maybe we should just add device links between all
-> GPIO consumers (devices) and struct gpio_device:s
-> struct device and implement it like this so we don't
-> have to back out of this later?
->
-> C.f. commit
-> commit 036f394dd77f8117346874151793ec38967d843f
-> pinctrl: Enable device link creation for pin control
->
+Just a quick note. I've changed the separator from ; to , for some reason
+grub, at least as used in Fedora with Fedora's grub2 BLS (boot loader spec)
+implementation does not like it when there is a ; in the kernel commandline.
 
-Yes, definitely looks like it's done with PM in mind. Maybe we should
-do what nvmem does? Define a struct device_type for GPIO chips with an
-appropriate release() callback and use get_device() and put_device()?
-Although nvmem seems to use kref for cells and device reference
-counting somewhat separately - maybe that's something to address too.
+I will also send an email about this to Fedora grub maintainer, but for
+now it is easiest to just avoid the problem.
 
-> (...)
-> > @@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struc=
-t device *dev,
-> >  struct gpio_descs *__must_check gpiod_get_array_optional(struct device=
- *dev,
-> >                                                         const char *con=
-_id,
-> >                                                         enum gpiod_flag=
-s flags);
-> > +struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
-> >  void gpiod_put(struct gpio_desc *desc);
-> >  void gpiod_put_array(struct gpio_descs *descs);
->
-> You forgot to add a stub for the case where GPIOLIB is not
-> compiled in I think? (Lower in the same file.)
->
-> Yours,
-> Linus Walleij
+Regards,
 
-Yeah this is fixed in the next version (with a different subject since
-it no longer concerns nvmem that much).
+Hans
 
-Bart
