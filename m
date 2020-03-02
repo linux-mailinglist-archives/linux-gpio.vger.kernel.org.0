@@ -2,98 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DFB6017603D
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 17:44:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B82AD17634D
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 19:55:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCBQov (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Mar 2020 11:44:51 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49264 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgCBQou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Mar 2020 11:44:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Db4N5RoeZpBqkyfQn2cjA7DvkkRvJVrKvDaxzHmGOoQ=; b=BEMadxDuaUoFQKUjh4nNDeXTt
-        fonqrpNwJvY8x3p+/lIadBjI70zp3S+eUkrYMqBSYJqZzk0REK6OBxWBjTHq1le0auuHr4maSFkLG
-        sejqg/06OQthx7bHf+N93wHyEz+rhteHPt1AgTC9eRzjJAWjLQwCXTp3qVawHMfNOiwbPSvkWqwMx
-        9BVeuNKNe44SAsHJjJcVOqvI/yvj9+YrQqwr5pqsr8qKGx70P5lPPeZSWs5of82p0PnhZMv8PYjTQ
-        WlYWEmxvRMT+QYtCOMM/DGTehaUXist1iRwB8mGV1oJX16E+xRNvcbAfI23qMAp7ozQBO8OPD2QdJ
-        Y6+EmQJng==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:47796)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j8oBR-0002XR-Fc; Mon, 02 Mar 2020 16:44:45 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j8oBP-000544-FV; Mon, 02 Mar 2020 16:44:43 +0000
-Date:   Mon, 2 Mar 2020 16:44:43 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Linux GPIO List <linux-gpio@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Romain Izard <romain.izard.pro@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: GPIOs not correctly exported via sysfs on ATSAMA5D2
-Message-ID: <20200302164443.GI25745@shell.armlinux.org.uk>
-References: <CAMiSF3BULWkyWTytTBcFfch9YaV_QzuBiawk-ZqEcQnsuGdUiQ@mail.gmail.com>
- <20200302083959.wju5vz3acuka2edq@pengutronix.de>
- <20200302093607.GG25745@shell.armlinux.org.uk>
- <CACRpkdbADQ5+Tp9NDgQx20Y0QTcE_go2qzi7dJL9HLu8PU1Smg@mail.gmail.com>
+        id S1727408AbgCBSzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Mar 2020 13:55:05 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37892 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727372AbgCBSzF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Mar 2020 13:55:05 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i14so328957otp.5;
+        Mon, 02 Mar 2020 10:55:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uWS79D/0ZLL0e/s1oUout/5p5w20WIJlmrFZDFmjEe4=;
+        b=MW/FA4tmHQdKbLPYXiyQmytOsiIz4dfBkqDjJVktEmAYpBy7CUkSwE1yn+y7fdQZZG
+         3CFgxhxcdDmw5MLYIpDw0z7W5nVGm2L8UEpHfFfvCo9ItLkxJ1yhzzMgg/h7jgVsLakc
+         gHnEjLAeizVKhwUXK6R5tpRFNZgO7yPorlbvavMnnbTX6bFjHcyAJmBnDcSq2uZMybtz
+         xpAF3fQ9inpqKM4uCpBEoAyO6+MQZnl+F/YBh8wiLyTF3XuMrrU8HP2R2mqXJ1JOnR1B
+         GHwFqDoJ7ZyalaNC1v9vQJKsS6u9t0J2JNHeTZMJfNu0E3q3Aw6zMIMzqKGM++4Joq+r
+         1zSg==
+X-Gm-Message-State: ANhLgQ3K94ZXaH69ZYcThigZ6YbY6X8Sg+vt3MfhcmkeNgGRQE5ap3C6
+        LP5yOuYlRpWaylRckyi7+Q==
+X-Google-Smtp-Source: ADFU+vt2q1Eduhwf/PVNlCpfWIgnuXW91fEn1d40UCOZdJUjlTwYuw6/BVVLBJDj89BnwQ28P5Q3Hw==
+X-Received: by 2002:a05:6830:60b:: with SMTP id w11mr468468oti.350.1583175304589;
+        Mon, 02 Mar 2020 10:55:04 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n64sm6852351otn.35.2020.03.02.10.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 10:55:04 -0800 (PST)
+Received: (nullmailer pid 994 invoked by uid 1000);
+        Mon, 02 Mar 2020 18:55:03 -0000
+Date:   Mon, 2 Mar 2020 12:55:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Sam Ravnborg <sam@ravnborg.org>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT
+ Schema
+Message-ID: <20200302185503.GA32613@bogus>
+References: <cover.1582913973.git.hns@goldelico.com>
+ <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbADQ5+Tp9NDgQx20Y0QTcE_go2qzi7dJL9HLu8PU1Smg@mail.gmail.com>
+In-Reply-To: <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:34:19PM +0100, Linus Walleij wrote:
-> On Mon, Mar 2, 2020 at 10:36 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> > On Mon, Mar 02, 2020 at 09:39:59AM +0100, Uwe Kleine-König wrote:
+On Fri, 28 Feb 2020 19:19:26 +0100, "H. Nikolaus Schaller" wrote:
+> From: Sam Ravnborg <sam@ravnborg.org>
 > 
-> > >  - Sometimes it is useful to make use of a GPIO and a dedicated function
-> > >    on the same pin in a driver (e.g. an i2c driver might need to switch
-> > >    to gpio to do a bus recovery). The automatic pinmuxing then has
-> > >    strange side effect because you have to remux the pins after
-> > >    requesting the GPIOs even if you didn't drive the pins as GPIO and
-> > >    there is a short time where the pin function isn't the dedicated
-> > >    one.
-> >
-> > It's worse than that for the i2c driver.  The pins are muxed to the i2c
-> > function when the driver binds.  When the i2c driver claims the GPIOs
-> > corresponding with those pins, they get switched to GPIO mode behind
-> > the back of pinctrl.  You then have to _explicitly_ switch pinctrl to
-> > GPIO mode and back to I2C mode to get them back to I2C mode.
+> Add DT bindings for the LCD controller on the jz4780 SoC
+> Based on .txt binding from Zubair Lutfullah Kakakhel
 > 
-> That's especially annoying. I would consider adding a specific
-> consumer flag for GPIOs used this way, in additon to
-> GPIOD_ASIS, something like GPIOD_ASIS_NOMUX
-> (thinking of better names).
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 +++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+> 
 
-It's very annoying, and I believe something I did point out in my email
-about it when I discovered it towards the end of last year.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Having a way to avoid the muxing would be a very good idea, as there
-are cases where we really should not be taking the I2C pins away from
-the controller during driver initialisation.  In the case of i2c-pxa,
-when the pins are taken away, the controller sees the disconnected SCL
-and SDA lines go low, and it can assume that the bus is busy as a
-result, or worse see it as a START condition if SDA goes low while SCL
-is high.
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.example.dt.yaml: example-0: 'jz4780-lcdk@0x13050000' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+See https://patchwork.ozlabs.org/patch/1246780
+Please check and re-submit.
