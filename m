@@ -2,283 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E96EB1763CE
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 20:26:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EA731763DC
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 20:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCBT0A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Mar 2020 14:26:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:8171 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727126AbgCBT0A (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 2 Mar 2020 14:26:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 11:25:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,508,1574150400"; 
-   d="scan'208";a="258060225"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 11:25:57 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j8qhQ-000Dbi-C4; Tue, 03 Mar 2020 03:25:56 +0800
-Date:   Tue, 03 Mar 2020 03:24:54 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- e683f2fbe1bc97a94f74c459b27ba1ebb0da037d
-Message-ID: <5e5d5d86.tQMLQ5h9JROHLXja%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727749AbgCBT2B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Mar 2020 14:28:01 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:41992 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgCBT2A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Mar 2020 14:28:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583177278; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K/w7xN8JJOoqBkwjRFtmhdPO4ps8i2CpUSpPDW0yr48=;
+        b=ZMoaIqvQbluaDkRWIfTLHOhukc1YfE8Xoybz2XPE9LtkkQ0wOuUmtDUDeTBYUWqWh5eKBc
+        C9gPkHzyq+tu3AbaCh+RzGvtvPK19aYl0giwSqiFgtLMsnSNbO06WhmYqQPnfoJFEnVVTN
+        HIb/5holaayaF/L64+uCeT5qyw8gjuI=
+Date:   Mon, 02 Mar 2020 16:27:33 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver
+ and LCD controller
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Message-Id: <1583177253.3.5@crapouillou.net>
+In-Reply-To: <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
-branch HEAD: e683f2fbe1bc97a94f74c459b27ba1ebb0da037d  Merge branch 'devel' into for-next
+Hi Nikolaus,
 
-elapsed time: 2660m
 
-configs tested: 228
-configs skipped: 0
+Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> From: Paul Boddie <paul@boddie.org.uk>
+>=20
+> A specialisation of the generic Synopsys HDMI driver is employed for=20
+> JZ4780
+> HDMI support. This requires a new driver, plus device tree and=20
+> configuration
+> modifications.
+>=20
+> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 32=20
+> ++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index f928329b034b..391d4e1efd35 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -433,4 +433,36 @@
+>=20
+>  		status =3D "disabled";
+>  	};
+> +
+> +	hdmi: hdmi@10180000 {
+> +		compatible =3D "ingenic,jz4780-dw-hdmi";
+> +		reg =3D <0x10180000 0x8000>;
+> +		reg-io-width =3D <4>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+> +		clock-names =3D "isfr" , "iahb";
+> +
+> +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
+> +		assigned-clock-rates =3D <27000000>;
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I *think* this should go to the board file.
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-ia64                                defconfig
-powerpc                             defconfig
-xtensa                       common_defconfig
-nds32                             allnoconfig
-s390                             alldefconfig
-parisc                           allyesconfig
-m68k                       m5475evb_defconfig
-nios2                         3c120_defconfig
-h8300                     edosk2674_defconfig
-m68k                          multi_defconfig
-openrisc                 simple_smp_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                           sun3_defconfig
-powerpc                           allnoconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200302
-x86_64               randconfig-a002-20200302
-x86_64               randconfig-a003-20200302
-i386                 randconfig-a001-20200302
-i386                 randconfig-a002-20200302
-i386                 randconfig-a003-20200302
-x86_64               randconfig-a001-20200301
-x86_64               randconfig-a002-20200301
-x86_64               randconfig-a003-20200301
-i386                 randconfig-a001-20200301
-i386                 randconfig-a002-20200301
-i386                 randconfig-a003-20200301
-alpha                randconfig-a001-20200302
-parisc               randconfig-a001-20200302
-m68k                 randconfig-a001-20200302
-mips                 randconfig-a001-20200302
-nds32                randconfig-a001-20200302
-riscv                randconfig-a001-20200302
-riscv                randconfig-a001-20200301
-alpha                randconfig-a001-20200301
-m68k                 randconfig-a001-20200301
-mips                 randconfig-a001-20200301
-nds32                randconfig-a001-20200301
-parisc               randconfig-a001-20200301
-c6x                  randconfig-a001-20200302
-microblaze           randconfig-a001-20200302
-sparc64              randconfig-a001-20200301
-microblaze           randconfig-a001-20200301
-c6x                  randconfig-a001-20200301
-nios2                randconfig-a001-20200301
-h8300                randconfig-a001-20200301
-csky                 randconfig-a001-20200302
-s390                 randconfig-a001-20200302
-sh                   randconfig-a001-20200302
-xtensa               randconfig-a001-20200302
-sh                   randconfig-a001-20200301
-openrisc             randconfig-a001-20200301
-csky                 randconfig-a001-20200301
-s390                 randconfig-a001-20200301
-xtensa               randconfig-a001-20200301
-x86_64               randconfig-b001-20200302
-x86_64               randconfig-b002-20200302
-x86_64               randconfig-b003-20200302
-i386                 randconfig-b001-20200302
-i386                 randconfig-b002-20200302
-i386                 randconfig-b003-20200302
-x86_64               randconfig-b001-20200301
-x86_64               randconfig-b002-20200301
-i386                 randconfig-b001-20200301
-i386                 randconfig-b003-20200301
-i386                 randconfig-b002-20200301
-x86_64               randconfig-b003-20200301
-i386                 randconfig-c002-20200301
-x86_64               randconfig-c003-20200301
-i386                 randconfig-c001-20200301
-x86_64               randconfig-c002-20200301
-i386                 randconfig-c003-20200301
-x86_64               randconfig-c001-20200301
-x86_64               randconfig-c001-20200302
-x86_64               randconfig-c002-20200302
-x86_64               randconfig-c003-20200302
-i386                 randconfig-c001-20200302
-i386                 randconfig-c002-20200302
-i386                 randconfig-c003-20200302
-i386                 randconfig-d001-20200301
-x86_64               randconfig-d003-20200301
-x86_64               randconfig-d001-20200301
-i386                 randconfig-d003-20200301
-i386                 randconfig-d002-20200301
-x86_64               randconfig-d002-20200301
-x86_64               randconfig-d001-20200302
-i386                 randconfig-d001-20200302
-x86_64               randconfig-d002-20200302
-x86_64               randconfig-d003-20200302
-i386                 randconfig-d002-20200302
-i386                 randconfig-d003-20200302
-x86_64               randconfig-e001-20200301
-x86_64               randconfig-e002-20200301
-x86_64               randconfig-e003-20200301
-i386                 randconfig-e001-20200301
-i386                 randconfig-e002-20200301
-i386                 randconfig-e003-20200301
-x86_64               randconfig-e001-20200302
-x86_64               randconfig-e002-20200302
-x86_64               randconfig-e003-20200302
-i386                 randconfig-e001-20200302
-i386                 randconfig-e002-20200302
-i386                 randconfig-e003-20200302
-x86_64               randconfig-f001-20200302
-x86_64               randconfig-f002-20200302
-x86_64               randconfig-f003-20200302
-i386                 randconfig-f001-20200302
-i386                 randconfig-f002-20200302
-i386                 randconfig-f003-20200302
-x86_64               randconfig-f001-20200301
-x86_64               randconfig-f002-20200301
-x86_64               randconfig-f003-20200301
-i386                 randconfig-f001-20200301
-i386                 randconfig-f002-20200301
-i386                 randconfig-f003-20200301
-i386                 randconfig-g002-20200302
-i386                 randconfig-g003-20200302
-x86_64               randconfig-g001-20200302
-x86_64               randconfig-g002-20200302
-x86_64               randconfig-g003-20200302
-i386                 randconfig-g001-20200302
-i386                 randconfig-g003-20200301
-x86_64               randconfig-g003-20200301
-i386                 randconfig-g001-20200301
-x86_64               randconfig-g001-20200301
-x86_64               randconfig-g002-20200301
-i386                 randconfig-g002-20200301
-x86_64               randconfig-h001-20200301
-x86_64               randconfig-h002-20200301
-x86_64               randconfig-h003-20200301
-i386                 randconfig-h001-20200301
-i386                 randconfig-h002-20200301
-i386                 randconfig-h003-20200301
-x86_64               randconfig-h001-20200302
-x86_64               randconfig-h002-20200302
-x86_64               randconfig-h003-20200302
-i386                 randconfig-h001-20200302
-i386                 randconfig-h002-20200302
-i386                 randconfig-h003-20200302
-arc                  randconfig-a001-20200301
-sparc                randconfig-a001-20200301
-ia64                 randconfig-a001-20200301
-arm                  randconfig-a001-20200301
-arm64                randconfig-a001-20200301
-powerpc              randconfig-a001-20200301
-arm64                randconfig-a001-20200302
-ia64                 randconfig-a001-20200302
-powerpc              randconfig-a001-20200302
-arc                  randconfig-a001-20200302
-arm                  randconfig-a001-20200302
-sparc                randconfig-a001-20200302
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                       zfcpdump_defconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <3>;
+> +
+> +		/* ddc-i2c-bus =3D <&i2c4>; */
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+> +	lcd: lcd@13050000 {
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The node name should be 'lcd-controller'.
+
+> +		compatible =3D "ingenic,jz4740-lcd";
+
+The JZ4780's LCD controller is much newer than the JZ4740 one, so even=20
+if it works with the "ingenic,jz4740-lcd" compatible string, you want=20
+it as a fallback.
+So this should be: compatible =3D "ingenic,jz4780-lcd",=20
+"ingenic,jz4740-lcd".
+
+That means the YAML should be updated too.
+
+-Paul
+
+> +		reg =3D <0x13050000 0x1800>;
+> +
+> +		clocks =3D <&cgu JZ4780_CLK_TVE>, <&cgu JZ4780_CLK_LCD0PIXCLK>;
+> +		clock-names =3D "lcd", "lcd_pclk";
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <31>;
+> +
+> +		status =3D "disabled";
+> +	};
+>  };
+> --
+> 2.23.0
+>=20
+
+=
+
