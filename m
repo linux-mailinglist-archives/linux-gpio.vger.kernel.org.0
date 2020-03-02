@@ -2,81 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D70C1174A5F
-	for <lists+linux-gpio@lfdr.de>; Sun,  1 Mar 2020 01:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 558731751CE
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 03:33:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgCAAMz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Feb 2020 19:12:55 -0500
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:37428 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCAAMy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Feb 2020 19:12:54 -0500
-Received: by mail-pg1-f181.google.com with SMTP id z12so3490990pgl.4
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Feb 2020 16:12:54 -0800 (PST)
+        id S1726728AbgCBCdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 Mar 2020 21:33:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42608 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgCBCdU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Mar 2020 21:33:20 -0500
+Received: by mail-qk1-f193.google.com with SMTP id o28so8678767qkj.9;
+        Sun, 01 Mar 2020 18:33:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=hyKIEVG9lZE2xeiuQw4BWvfgp1wyVZEteJyyzDDfSZU=;
-        b=miegiKwp6m0cAoNgchRYekFCoPkVSe/ZaBRiRk9C6+IKmdPv6A61imQQSd5cuVZgmz
-         AwlPCBK3xtmstTaQ1mpql6+Z2JTGDJtvS5Ujgfx2PdkpiyWzgQZWyIhRh4CHvfOVrD8v
-         afnkeiEk5PELYsLlC6U+jkMfNX0RRW/YxWes2UrQbVnuYm2faikXNtBIoFkD51UQc5BM
-         DPst4r1l+cqtk2MYKNEJHBDmbwCyTShHVsdduQzfaWuT3Cqz50e8ENZi+609ANBFuXen
-         IEqa9iKqwKllwDRrEsHKdnlCGrbCXB6u4eF79Zp5pJ0V8rVWmtzLVTzaOjt36h7zcT2k
-         05mQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
+        b=iQMVAY2Ndh6lL0ADxF8SUuHgZM9LffAiUH9Jvo+D7d/ez5K2m+Xaq6zuA4Va/AQqpV
+         4yIO1YhZtjdhB16NbDa+FGYPHncktlCZH9TI2o2TJd+0MrWrNFr8TYpNnC9Zv8PRmBz6
+         nb0vIZN2EZjNqdK+AoHPFEZjSupAG+P+IP6xup6n+0p5tkkTgPOsoXgFVAC9UqGaZH5t
+         x3mZmg7tOMLdkleO2q6pMA7krpmC0HGvpoWMZHheKpdGpVoGShjT8VdSTdvmuzwCL7Bh
+         7g2Y0Dn1NlknZDnen2WoNzmnDOHrIMLrpBk36ojLpStVKvCxsTswk2UEE8EIMhaP99XC
+         1BzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=hyKIEVG9lZE2xeiuQw4BWvfgp1wyVZEteJyyzDDfSZU=;
-        b=r4lNoQOrGog3+suNfChg/+oMYl0ddE7AEe0SZ8k7nvNIDdCfdYmKVTfAa0MhslGJks
-         uaNkHzNkpRwpccOpJkfCn1ZHlMrjHHg19xEPebpvH5PIGhUrLp+7mGQSno/b9k1pdUtf
-         Yez/XTKMi8/25qoQ2QwFogNaOhwkv5srxBU/yZgWlJRcHvJQclUQetr+J6Y8G46qxOcJ
-         fuHL7+v/tr6DSdyM3kNcFhtCm4OrDw0211I2g2fao9/R1VlZ8+VozV6KMUn3DmPhTZ77
-         gPXRhgaE/IQjUZ3fCeVbe2Egow1qjC+On7Ntg8x2Hh6aoE6vqcGbS8918WXmFOf6iQhi
-         0gkA==
-X-Gm-Message-State: APjAAAVmO9GifwHdjPypzBem4dqXoEu/UXggshALATgc2WvEOh0V+yP5
-        jbXnOvqAT2sBowpEHmL8B60yJcIExIU=
-X-Google-Smtp-Source: APXvYqyTNS11j7plOZGVCHTuac/nLF92kK1wV8sX7RMLZvpkdUQ0SA3DbY0QBVJ5UYjruC6bt/sVNw==
-X-Received: by 2002:a63:3744:: with SMTP id g4mr12240656pgn.424.1583021573516;
-        Sat, 29 Feb 2020 16:12:53 -0800 (PST)
-Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id x11sm15672234pfn.53.2020.02.29.16.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Feb 2020 16:12:52 -0800 (PST)
-Message-ID: <5e5afe04.1c69fb81.0503.99c3@mx.google.com>
-Date:   Sat, 29 Feb 2020 16:12:52 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GWIRxMDx4FAXaSe6wG94uvUpHfjWqjY0tqCRVPxKBzI=;
+        b=KO8LXoPI05mej1kczmiQx29UOwbitfFn9vD838sNi7LexBb3vHTa/GPnHfI7AioA4C
+         hDpeuAOFQIizyyz3kE2a+8ESMOeOEz7uxVJ/kxvxiPRX3kxrJw7VLmCOLhXM1WHEKhNm
+         AuTfRNEnhn6HAD3BvLGVIDgajD0DxKYbvuTehFgvNQUx6QXQLRnbbzBuawSwSpuUcHHO
+         tHtosL9nownggvjxVnEftCRV9R6USS9AGGIv4D1KDOqZ0qE7U0LZMSWT69o4WnQdwKpQ
+         bzSj7hOmEEkrg0b9aYzQiGBqPtqZs7rnyjouZ0hLZjoYza40oaK3uBF025DkF3pZF7/P
+         MrgA==
+X-Gm-Message-State: APjAAAXVMMB6UCJLH6xO9j4ZHDFswFoSRynv+uCk3fiCxb94p9G4NEl1
+        0pPiwDUp2TK568T3GBTySI98M4WVPFjnLHFn7x54F7HP
+X-Google-Smtp-Source: APXvYqxWCNUo+QCfgt2XoZOE8ooJt2tqa9zZ3mhTxXmdKAeQmDiToITnQJU/qN0uQKHKjwSjJ0PBZ4KYYvNyPiwzNug=
+X-Received: by 2002:a37:6447:: with SMTP id y68mr14513354qkb.114.1583116399569;
+ Sun, 01 Mar 2020 18:33:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Kernel: v5.6-rc3-21-g27a2a9a4fa1f
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: linusw
-Subject: linusw/for-next boot: 26 boots: 0 failed,
- 26 passed (v5.6-rc3-21-g27a2a9a4fa1f)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
+ <202002290858.UhNBgssD%lkp@intel.com>
+In-Reply-To: <202002290858.UhNBgssD%lkp@intel.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 2 Mar 2020 10:33:08 +0800
+Message-ID: <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
+ into a module
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 26 boots: 0 failed, 26 passed (v5.6-rc3-21-g27a2a9a4f=
-a1f)
+Hi
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.6-rc3-21-g27a2a9a4fa1f/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.6-rc3-21-g27a2a9a4fa1f/
+On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi Baolin,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on pinctrl/devel]
+> [also build test ERROR on v5.6-rc3 next-20200228]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+> config: i386-randconfig-d003-20200229 (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
+> >> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
+>      ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
+>            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>            pinconf_generic_dump_config
+>    cc1: some warnings being treated as errors
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.6-rc3-21-g27a2a9a4fa1f
-Git Commit: 27a2a9a4fa1f84d99a649134aab7367464a1762b
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 26 unique boards, 7 SoC families, 2 builds out of 6
+I followed your attached configuration, but I can not reproduce your
+building error. Did I miss anything else? Thanks.
 
----
-For more info write to <info@kernelci.org>
+CONFIG_PINCTRL=y
+CONFIG_PINMUX=y
+CONFIG_GENERIC_PINMUX_FUNCTIONS=y
+CONFIG_PINCONF=y
+CONFIG_GENERIC_PINCONF=y
+CONFIG_PINCTRL_SPRD=y
+CONFIG_PINCTRL_SPRD_SC9860=y
