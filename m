@@ -2,57 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F670175B32
-	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 14:08:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B239A175CDA
+	for <lists+linux-gpio@lfdr.de>; Mon,  2 Mar 2020 15:23:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbgCBNIi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Mar 2020 08:08:38 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:57521 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbgCBNIi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Mar 2020 08:08:38 -0500
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D9253240009;
-        Mon,  2 Mar 2020 13:08:33 +0000 (UTC)
-Message-ID: <4f231582f5981411d79610d8883e74208965b440.camel@hadess.net>
-Subject: Re: [PATCH v3 2/2] touchscreen: goodix: define GPIO mapping for GPD
- P2 Max
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Peter Cai <peter@typeblog.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1727075AbgCBOXP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 2 Mar 2020 09:23:15 -0500
+Received: from mga11.intel.com ([192.55.52.93]:24977 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbgCBOXP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 2 Mar 2020 09:23:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 06:23:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,507,1574150400"; 
+   d="scan'208";a="351551237"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 02 Mar 2020 06:23:12 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 02 Mar 2020 16:23:11 +0200
+Date:   Mon, 2 Mar 2020 16:23:11 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Date:   Mon, 02 Mar 2020 14:08:33 +0100
-In-Reply-To: <CA+Zf_0fBX3YBVsiJbAGdtFp-428uwsRS3oncZCytSvxw8rXO4Q@mail.gmail.com>
-References: <20190831030916.13172-1-peter@typeblog.net>
-         <20190902124352.12291-1-peter@typeblog.net>
-         <20190902124352.12291-2-peter@typeblog.net>
-         <daeec373292e14c6aea179ddf690a5dace6c83f7.camel@hadess.net>
-         <CA+Zf_0fBX3YBVsiJbAGdtFp-428uwsRS3oncZCytSvxw8rXO4Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.35.91 (3.35.91-1.fc32) 
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Lehmann <schmorp@schmorp.de>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] gpiolib: acpi: Correct comment for HP x2 10
+ honor_wakeup quirk
+Message-ID: <20200302142311.GD2667@lahna.fi.intel.com>
+References: <20200302111225.6641-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302111225.6641-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2020-03-02 at 20:10 +0800, Peter Cai wrote:
+On Mon, Mar 02, 2020 at 12:12:22PM +0100, Hans de Goede wrote:
+> Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
+> quirk mechanism") added a quirk for some models of the HP x2 10 series.
 > 
-<snip>
-> Sorry I forgot to notify you earlier, but it turned out that the
-> manufacturer of the device has already applied a fix in their ACPI
-> table after this patch was submitted and discussed. This patch is no
-> longer needed.
+> There are 2 issues with the comment describing the quirk:
+> 1) The comment claims the DMI quirk applies to all Cherry Trail based HP x2
+>    10 models. In the mean time I have learned that there are at least 3
+>    models of the HP x2 10 models:
+> 
+>    Bay Trail SoC + AXP288 PMIC
+>    Cherry Trail SoC + AXP288 PMIC
+>    Cherry Trail SoC + TI PMIC
+> 
+>    And this quirk's DMI matches only match the Cherry Trail SoC + TI PMIC
+>    SoC, which is good because we want a slightly different quirk for the
+>    others. This commit updates the comment to make it clear that the quirk
+>    is only for the Cherry Trail SoC + TI PMIC models.
+> 
+> 2) The comment says that it is ok to disable wakeup on all ACPI GPIO event
+>    handlers, because there is only the one for the embedded-controller
+>    events. This is not true, there also is a handler for the special
+>    INT0002 device which is related to USB wakeups. We need to also disable
+>    wakeups on that one because the device turns of the USB-keyboard built
+>    into the dock when closing the lid. The XHCI controller takes a while
+>    to notice this, so it only notices it when already suspended, causing
+>    a spurious wakeup because of this. So disabling wakeup on all handlers
+>    is the right thing to do, but not because there only is the one handler
+>    for the EC events. This commit updates the comment to correctly reflect
+>    this.
+> 
+> Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
 
-That's nice when it happens, thanks for letting me know nonetheless :)
+Not sure if Fixes tag is needed if you only correct comment but fine :)
 
-Cheers
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
