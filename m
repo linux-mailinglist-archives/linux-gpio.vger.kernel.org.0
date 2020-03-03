@@ -2,126 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58184176F9F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 07:49:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 550B1176FF0
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 08:22:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725818AbgCCGtL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Mar 2020 01:49:11 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43521 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgCCGtL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Mar 2020 01:49:11 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v22so2013827qtp.10;
-        Mon, 02 Mar 2020 22:49:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
-        b=L38YK67bV0n3eydzwXR5khhw+tDh2beuqoeaMGhMYIOfYvnYJ97k7oHDPvEg4AUfts
-         C958CfObeXA65i+SX6PAsgsHLSF67UNUAkpJUL9dHVe14CNKx2mCk/Kvr8w1LneAhpX0
-         ZuEEZGnxyK0LLulkVzQaHEUBD/jf42ixwCaR3dyB4ytufkN+vjXmfPxdSxRuLv6/rJT+
-         7Q7tfHRvg9eWW8lI/lhWr905QqrGmPw0aWW2xwSa2uFaINdhikWK0DyA+Sp0ZCuT8OQ3
-         ZD1WxSRWmeKRetxj8aSSKNiTLPIhijzu9j3SlRqTi5eRI/2waj7tM5bhHK4kETaEG9w2
-         1vZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
-        b=Dd56v+jmD4C2qPLDRRiml7o2S5ArLPq4HvMSNFaMBKa3cWFLGVKV72EyjE5Q8CUxmI
-         3Ka9oIMj05UHidfQj0i59yyE0tGiFfBr8WbUqytwi2r5neBSyynEabW1Pf5nFqKbFpp4
-         RrEYZ3heWErXsSEAmtM05m1qvSMdcyevH52TdUKfiQXPIPexmpUZBkTI45b0Saxu2ydd
-         fC44SmzpHVnHMaUPGsiTj0tGtsZ3pBzBk7jS+Ii/9vqWL2631P5Yp7ggL98OWSberOST
-         zN6tDQKxVuh0t6ySLDgMyLQUsqR1WgiD9W/oYvWnTrr2wbKaABpuxVxZGs2+ZvCFSZUA
-         ftRg==
-X-Gm-Message-State: ANhLgQ2ULOxv0pbuHYOgr2tdgpaS4y9BqnvJsVjS4LlRhFEzmLcsrmJW
-        QA/G8SEo5Zl+9f+hWxD+1yr4YDaqkMggftPHo0VzO9j5
-X-Google-Smtp-Source: ADFU+vs4R8qEKRNY1/lZafw5dUr172u+Evb/NOh748tQmYp5cP0msuGg8tZjIX/zixgCsh2nB8cC2fQr5vW4zn5Ag7g=
-X-Received: by 2002:ac8:4408:: with SMTP id j8mr3106825qtn.3.1583218150151;
- Mon, 02 Mar 2020 22:49:10 -0800 (PST)
-MIME-Version: 1.0
-References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
- <202002290858.UhNBgssD%lkp@intel.com> <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
- <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
-In-Reply-To: <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 3 Mar 2020 14:48:58 +0800
-Message-ID: <CADBw62og=tuq1E695ujUM_PsFHySOymmevB2o1XaYGXZe8y3Dg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
- into a module
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        id S1727661AbgCCHWI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Mar 2020 02:22:08 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:8795 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCCHWI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Mar 2020 02:22:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583220123;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/FFJp29E0bM3pvHTu+JTqNaYJ7aZHkmiAWb7IBx82t4=;
+        b=tDly5Q0rgQXnp5SE2SQtiMZKkTKELlzQ1ExyaOKdk/JoMKZ/DZBhDg8xmu35Lg87dN
+        5fydczeSnZWO1+K96MiJpNJLQIA7Ma8+/D886QNuh4IdNw/wnXVn4c5QRGBd9ifyDbI/
+        FmEUAbpBOnJ9LHcARrsiVTZUln+0+vbyDmsWwzHQD0oOy+UVQIjNje/dFijBC82/IgmJ
+        nfn9UYWGMbclQEkRtvmxwC0/9cbFBuEtimt/3AAKpAMPMgCA0Ry1wfYKaFP7yrJqMwm/
+        Bn4G6zAmNzctHUlbgIf+pa5zmExYU5U+wW5r9ry+YcTxMHFRAhAPp3rImrxp3zPELszD
+        N50Q==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw237LkFyR
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Mar 2020 08:21:46 +0100 (CET)
+Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT Schema
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <1583176247.3.2@crapouillou.net>
+Date:   Tue, 3 Mar 2020 08:21:37 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <12E78333-0940-4F20-863E-91272C477B58@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com> <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com> <1583176247.3.2@crapouillou.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rong,
+Hi Paul,
 
-On Tue, Mar 3, 2020 at 2:43 PM Rong Chen <rong.a.chen@intel.com> wrote:
->
->
->
-> On 3/2/20 10:33 AM, Baolin Wang wrote:
-> > Hi
-> >
-> > On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
-> >> Hi Baolin,
-> >>
-> >> I love your patch! Yet something to improve:
-> >>
-> >> [auto build test ERROR on pinctrl/devel]
-> >> [also build test ERROR on v5.6-rc3 next-20200228]
-> >> [if your patch is applied to the wrong git tree, please drop us a note to help
-> >> improve the system. BTW, we also suggest to use '--base' option to specify the
-> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >>
-> >> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-> >> config: i386-randconfig-d003-20200229 (attached as .config)
-> >> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
-> >> reproduce:
-> >>          # save the attached .config to linux build tree
-> >>          make ARCH=i386
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kbuild test robot <lkp@intel.com>
-> >>
-> >> All errors (new ones prefixed by >>):
-> >>
-> >>     drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
-> >>>> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
-> >>       ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
-> >>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>             pinconf_generic_dump_config
-> >>     cc1: some warnings being treated as errors
-> > I followed your attached configuration, but I can not reproduce your
-> > building error. Did I miss anything else? Thanks.
-> >
-> > CONFIG_PINCTRL=y
-> > CONFIG_PINMUX=y
-> > CONFIG_GENERIC_PINMUX_FUNCTIONS=y
-> > CONFIG_PINCONF=y
-> > CONFIG_GENERIC_PINCONF=y
-> > CONFIG_PINCTRL_SPRD=y
-> > CONFIG_PINCTRL_SPRD_SC9860=y
-> >
->
-> Hi Baolin,
->
-> We can reproduce this error with attached config and our branch
-> "https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948",
-> could you try again?
+> Am 02.03.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
+>=20
+> Hi Nikolaus,
+>=20
+>=20
+> Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller =
+<hns@goldelico.com> a =E9crit :
+>> From: Sam Ravnborg <sam@ravnborg.org>
+>> Add DT bindings for the LCD controller on the jz4780 SoC
+>> Based on .txt binding from Zubair Lutfullah Kakakhel
+>=20
+> If you mean Documentation/devicetree/bindings/display/ingenic,lcd.txt =
+then it was written by me.
 
-I can reproduce the warning on X86 platform now, and I've already sent
-out a patch to fix it. Thanks
-https://lkml.org/lkml/2020/3/2/1551
+Ah, ok. We didn't recognise this before. 6 eyes see more than 4...
 
--- 
-Baolin Wang
+I just did cherry-pick this old 4.0 patch from 2015 by Zubair
+and it created a ingenic-jz4780-lcd.txt:
+
+https://lore.kernel.org/patchwork/patch/547872/
+
+and Sam was so kind to convert it to yaml.
+
+>=20
+>> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+>> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+>> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>> .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 =
++++++++++++++++++++
+>> 1 file changed, 78 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+>> diff --git =
+a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml =
+b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+>> new file mode 100644
+>> index 000000000000..c71415a3a342
+>> --- /dev/null
+>> +++ =
+b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
+>> @@ -0,0 +1,78 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Bindings for Ingenic JZ4780 LCD Controller
+>> +
+>> +maintainers:
+>> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+>> +  - H. Nikolaus Schaller <hns@goldelico.com>
+>=20
+> I'm the author of the driver, please put me here; and remove Zubair, =
+which 1. didn't touch the DRM driver at all, and 2. isn't working at =
+ImgTec anymore.
+
+Yes that is true.
+
+> Also, no need to put yourself here, unless you maintain the Ingenic =
+DRM/KMS driver.
+
+Agreed. That was suggested by Sam.
+
+>=20
+>> +
+>> +description: |
+>> +  LCD Controller is the Display Controller for the Ingenic JZ4780 =
+SoC
+>> +
+>> +properties:
+>=20
+> You should add a '$nodename' property.
+>=20
+>> +  compatible:
+>> +    items:
+>> +      - const: ingenic,jz4780-lcd
+>=20
+> The .txt lists more compatible strings. Please add them all.
+>=20
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: the address & size of the LCD controller registers
+>=20
+> Drop the description here,
+>=20
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: Specifies the interrupt provided by parent
+>=20
+> and here.
+>=20
+>> +
+>> +  clocks:
+>> +    maxItems: 2
+>> +    description: Clock specifiers for the JZ4780_CLK_TVE =
+JZ4780_CLK_LCD0PIXCLK
+>=20
+> Add one 'description:' per item.
+>=20
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: lcd_clk
+>> +      - const: lcd_pixclk
+>> +
+>> +  port:
+>> +    type: object
+>> +    description: |
+>> +      A port node with endpoint definitions as defined in
+>> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+>> +
+>> +required:
+>> +    - compatible
+>> +    - reg
+>> +    - interrupts
+>> +    - clocks
+>> +    - clock-names
+>> +    - port
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/jz4780-cgu.h>
+>> +    lcd: jz4780-lcdk@0x13050000 {
+>=20
+> The node name does not comply with the DT spec, it should be =
+'lcd-controller'.
+
+Ok, I think I'll review all so that it does match/replace
+Documentation/devicetree/bindings/display/ingenic,lcd.txt
+and no information is lost.
+=20
+>=20
+> Cheers,
+> -Paul
+
+BR and thanks,
+Nikolaus
+
