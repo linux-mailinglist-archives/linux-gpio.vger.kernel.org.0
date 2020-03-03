@@ -2,106 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 428A8177B0B
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 16:51:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FB20177BD6
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 17:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgCCPuv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Mar 2020 10:50:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730244AbgCCPuu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:50:50 -0500
-Received: from mail.kernel.org (ip-109-40-2-133.web.vodafone.de [109.40.2.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA9E320828;
-        Tue,  3 Mar 2020 15:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583250650;
-        bh=JkmjXkfmpFr8fwRmsjjmP5TuFZyy2up30ayz+lIaM4A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hntYcrzaB8veaIQrj/nRIdmwU+oxXnT/URQZf8cz50g18P61l0/jrJnPsOUj6YjPR
-         iFsUYdboVJifDeR/2RYky7P0APfFc63fN0DFJX6tpeDcEh5yT47J6rBLl+OHervJJl
-         YDQp2hE8lmlbA2Ho1HYd9PSJMax0bga6jRJgBw1c=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j99og-001ZOy-HA; Tue, 03 Mar 2020 16:50:42 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 5/9] docs: gpio: driver.rst: don't mark literal blocks twice
-Date:   Tue,  3 Mar 2020 16:50:35 +0100
-Message-Id: <9ee92407b467fd0b482a680bcce447f907df2278.1583250595.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <afbe367ccb7b9abcb9fab7bc5cb5e0686c105a53.1583250595.git.mchehab+huawei@kernel.org>
-References: <afbe367ccb7b9abcb9fab7bc5cb5e0686c105a53.1583250595.git.mchehab+huawei@kernel.org>
+        id S1730150AbgCCQ0l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Mar 2020 11:26:41 -0500
+Received: from mail-pl1-f181.google.com ([209.85.214.181]:37240 "EHLO
+        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729438AbgCCQ0l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Mar 2020 11:26:41 -0500
+Received: by mail-pl1-f181.google.com with SMTP id b8so40477plx.4
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Mar 2020 08:26:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=06QIyXPS56HKb1Smrkw992prWdLMrZW65C1iPlpp8IY=;
+        b=XLtMWKl8/FmMFU+Hgk+cHZ9AkjF1BtJwPyUa+WvhHvK12IvPaBIdwYgQ5KFZPS29AS
+         0ATlURoS7NutSR5bvaK3fbywJFkRk0MWltVNuLTLFsyOL41kcG7Y9AJRHwIuKpXCOO/x
+         TePQ2XTs394tlLKezA00OUEbPJwM6JEBz8CEJiMKMRxjgOWyLyCGoNbEhrguEnGIYYms
+         P6b4NJyy+qrIsIspaOTPrm5lu9Jni5uM+i7vZHVFARJcfcGBoYJOqozak9p4SYzDTe6r
+         GUmHQBhJRG9yH2lgzU9mKzcSTddHw5ZA19x/+6GZUrUgMJiJL3QHsXWzyhfhEvsQ26xO
+         gQ3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=06QIyXPS56HKb1Smrkw992prWdLMrZW65C1iPlpp8IY=;
+        b=pbPLL74+bCCDOcq/44ktn5QeL/lhArcPdWhtWDZjOkzd0datMb0zlTRHbEh8GfAnV9
+         wkIx+MnCoPAZRk6+1Nfnv1gJGr1uX6k5vszpuTiRtLqMVz3rQnQhQhqB43BIe3I653aO
+         KQ7x/WSD439r6nXnjveYf1oSCdkdc7ffaVQOHCjUQsDJGhm981RjI8rLFjjZSU9UChJn
+         JH0tbU86b5a7Eg6uxV/kC4jhFrIAQzpKG7saI+/IjqxJBakokYZBvb/eJKbSCDILuV6W
+         FNz5gYiFGFEX+FbF0dRHOT2qdDwTLDom7KOwOzOTaK92yGhLsp1LLe7WGW/ipPGZcqe8
+         +fbw==
+X-Gm-Message-State: ANhLgQ3hCL3WEZGhsygQtuwI8nkgYp6QeN9c0CMIelhdpzIohysxvjfc
+        VHtCMv9K/oWowzvK7PryZefkATrxYFY=
+X-Google-Smtp-Source: ADFU+vutG73ZwvLdy2P5qlWTfFjUeVbS0m1rGhf4QSuoVX3FwV2dPe3e9WmWAoJb2JwEdInFCGJZBg==
+X-Received: by 2002:a17:902:aa05:: with SMTP id be5mr4731584plb.142.1583252798198;
+        Tue, 03 Mar 2020 08:26:38 -0800 (PST)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id r8sm3000788pjo.22.2020.03.03.08.26.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 08:26:37 -0800 (PST)
+Message-ID: <5e5e853d.1c69fb81.28cdc.736a@mx.google.com>
+Date:   Tue, 03 Mar 2020 08:26:37 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: devel
+X-Kernelci-Kernel: v5.6-rc1-26-g5779925c23e1
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: linusw
+Subject: linusw/devel boot: 32 boots: 1 failed,
+ 31 passed (v5.6-rc1-26-g5779925c23e1)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Two literal blocks there are marked with both "::" and
+linusw/devel boot: 32 boots: 1 failed, 31 passed (v5.6-rc1-26-g5779925c23e1)
 
-	.. code-block:: c
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.6-rc1-26-g5779925c23e1/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.6-rc1-26-g5779925c23e1/
 
-This causes Sphinx (2.4.1) to do the wrong thing, causing
-lots of warnings:
+Tree: linusw
+Branch: devel
+Git Describe: v5.6-rc1-26-g5779925c23e1
+Git Commit: 5779925c23e1b9cc4cffb6dafe0b70a47beb364d
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 29 unique boards, 8 SoC families, 2 builds out of 6
 
-    Documentation/driver-api/gpio/driver.rst:425: WARNING: Unexpected indentation.
-    Documentation/driver-api/gpio/driver.rst:423: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:427: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:433: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:446: WARNING: Unexpected indentation.
-    Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:447: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/driver-api/gpio/driver.rst:449: WARNING: Definition list ends without a blank line; unexpected unindent.
-    Documentation/driver-api/gpio/driver.rst:462: WARNING: Unexpected indentation.
-    Documentation/driver-api/gpio/driver.rst:460: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:462: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:465: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:471: WARNING: Inline emphasis start-string without end-string.
-    Documentation/driver-api/gpio/driver.rst:478: WARNING: Inline emphasis start-string without end-string.
+Boot Regressions Detected:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+arm64:
+
+    defconfig:
+        gcc-8:
+          meson-gxl-s805x-libretech-ac:
+              lab-baylibre: new failure (last pass: v5.6-rc1-20-g869233f813=
+37)
+
+Boot Failure Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s805x-libretech-ac: 1 failed lab
+
 ---
- Documentation/driver-api/gpio/driver.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 871922529332..9809f593c0ab 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -416,7 +416,7 @@ The preferred way to set up the helpers is to fill in the
- struct gpio_irq_chip inside struct gpio_chip before adding the gpio_chip.
- If you do this, the additional irq_chip will be set up by gpiolib at the
- same time as setting up the rest of the GPIO functionality. The following
--is a typical example of a cascaded interrupt handler using gpio_irq_chip::
-+is a typical example of a cascaded interrupt handler using gpio_irq_chip:
- 
- .. code-block:: c
- 
-@@ -453,7 +453,7 @@ is a typical example of a cascaded interrupt handler using gpio_irq_chip::
-   return devm_gpiochip_add_data(dev, &g->gc, g);
- 
- The helper support using hierarchical interrupt controllers as well.
--In this case the typical set-up will look like this::
-+In this case the typical set-up will look like this:
- 
- .. code-block:: c
- 
--- 
-2.24.1
-
+For more info write to <info@kernelci.org>
