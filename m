@@ -2,99 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3B9F176E25
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 05:45:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0152C176E47
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Mar 2020 06:02:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCCEpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 2 Mar 2020 23:45:38 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44544 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726954AbgCCEph (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 2 Mar 2020 23:45:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=eLN9YBiut+Gct7IPcAPFG+XNP1pdvkitmza97VKOpx4=; b=WnpEGMNvpbb3FWnqXyTVw6ttOp
-        SIV3NYVwCcFouCVDjMJuqjgKkB/ynlpqqIVj1PxxbgKM+chESG8Jdvbyz9jyjyh2kS9E5mH/5pvEv
-        eQxYpgmqkiz/ER3qDrFtlkFlX0tAX3EyMC+bqPW4h3p9g8oFcV4vWpYL80BQ6KoDIx45o5Vw0j6qV
-        cP+AnG3nNRoeFXsNYtTXtpZDgR2MqY/RzWt8nSkH0C2+lm3tDnRhhjc3pyzjNoBKDgOqrIUbQAfhV
-        RuBS76fpmFuF00svrfSJgdgYGRMfZ6qHU6A5ZW8tW3DsZv+PyvPEsOJCorXkxHSDBDLCVEBtbQldl
-        7heFbZtA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j8zR3-0000hy-2G; Tue, 03 Mar 2020 04:45:37 +0000
-Subject: Re: [PATCH] pinctrl: sprd: Fix the kconfig warning
-To:     Baolin Wang <baolin.wang7@gmail.com>, linus.walleij@linaro.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <eeb12d7843fb06f80e19f98eb25711231c3b610f.1583205650.git.baolin.wang7@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3271ce73-7165-c545-43e7-93d85a7c3680@infradead.org>
-Date:   Mon, 2 Mar 2020 20:45:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1725765AbgCCFCi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Mar 2020 00:02:38 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33452 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgCCFCi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Mar 2020 00:02:38 -0500
+Received: by mail-qk1-f195.google.com with SMTP id p62so2235741qkb.0;
+        Mon, 02 Mar 2020 21:02:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X9bTTlF35r5TSl8dSQRie4Vik/3Afhj4BHnWJcWZbf4=;
+        b=PWZJA+zjpoYUP2LOlITnrD310E8NitwFdIGN1cCPCUAS+yE6avNdew3/gl1tzkhpdQ
+         9XxooyQ0U1ZPqqCAQTvCdHBLrbuDlv3/DO95ZvJ4lzJ4vk8bQbEtmP2JxucK7uKCfyYk
+         Ze+a4kSgBtvu1Zt19GhmJxUlS+bi1jTRYcemRR0/mgUXm/56V8Zghuj6XQYwYGdT82Xt
+         wiH5XIYwDu0pO7PLx9w7JSfLz/a+p7MzPVM+uOFU9VGUARZgTfYppBVY8+NtCGTk34Z/
+         5UFiz2QADhT1HQ3L/zm6kHfpVO5UJHbT+KMhpXdx+miJVCJv3wqXXw5rA0+yQorYX33T
+         FDoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X9bTTlF35r5TSl8dSQRie4Vik/3Afhj4BHnWJcWZbf4=;
+        b=icnWMr+TTY1/k3BRkjBGe4KLMUKICfsfdxJghG+0V2HXRmqALLI/+SzYOuGYy6sL9d
+         1i/md+VKCy/rWgqdvlwSUC2XEIe0W9+0eDLv65ueV+71znXcdgoZCa5SV3RClmkEX1WR
+         TD2D08KdYo/COjrwbv7X/Cuyxf1Pt2D9bfjXtD7QT400J+TB2WoqGYesgITZ6bLsOe+p
+         sNzy/qOeSPE9NSjf5495IsL5uBTiGX4ytmGgk3aHViGZTeFL381l0zcXSlOajxuzfCoJ
+         Vp++nbSFnZ8Dk6+OF8vZWQ/ZCZYvdMG9V8uRlH2W4cIf+xASOrs21ZdhNmZvU+ViMrIb
+         LtBQ==
+X-Gm-Message-State: ANhLgQ2vrIJgrWsr97U4UrX00z8wsCL1v9d9H2Z0xCvRw+MIlTOmGB+q
+        JAsF68FIyfw5PpZpUVModdlBebYb/SDSIodqwQY=
+X-Google-Smtp-Source: ADFU+vtmfsvJPV4oJnePyQzSlf/c1avXq5UwA1q9S5iiVzQ6AEoQD4B52gFb86s8xLQaEyUmnnVn66jiAsS3sjqE6VE=
+X-Received: by 2002:ae9:e104:: with SMTP id g4mr2412992qkm.133.1583211757281;
+ Mon, 02 Mar 2020 21:02:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <eeb12d7843fb06f80e19f98eb25711231c3b610f.1583205650.git.baolin.wang7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <eeb12d7843fb06f80e19f98eb25711231c3b610f.1583205650.git.baolin.wang7@gmail.com>
+ <3271ce73-7165-c545-43e7-93d85a7c3680@infradead.org>
+In-Reply-To: <3271ce73-7165-c545-43e7-93d85a7c3680@infradead.org>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 3 Mar 2020 13:02:25 +0800
+Message-ID: <CADBw62p3pKjLQivxZs9HtTnvey=qsU=piG-OkX8Vzfm5FiMWqA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sprd: Fix the kconfig warning
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/2/20 7:32 PM, Baolin Wang wrote:
-> On X86 plaform, if the CONFIG_OF is not selected, and set the
-> CONFIG_SPRD_SC9860 as 'm', that will cause below waring:
-> 
-> WARNING: unmet direct dependencies detected for PINCTRL_SPRD
->   Depends on [n]: PINCTRL [=y] && OF [=n] && (ARCH_SPRD || COMPILE_TEST [=y])
->   Selected by [m]:
->   - PINCTRL_SPRD_SC9860 [=m] && PINCTRL [=y]
-> 
-> Thus move the configuration dependency under CONFIG_PINCTRL_SPRD_SC9860
-> to fix the warning.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+On Tue, Mar 3, 2020 at 12:45 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 3/2/20 7:32 PM, Baolin Wang wrote:
+> > On X86 plaform, if the CONFIG_OF is not selected, and set the
+> > CONFIG_SPRD_SC9860 as 'm', that will cause below waring:
+> >
+> > WARNING: unmet direct dependencies detected for PINCTRL_SPRD
+> >   Depends on [n]: PINCTRL [=y] && OF [=n] && (ARCH_SPRD || COMPILE_TEST [=y])
+> >   Selected by [m]:
+> >   - PINCTRL_SPRD_SC9860 [=m] && PINCTRL [=y]
+> >
+> > Thus move the configuration dependency under CONFIG_PINCTRL_SPRD_SC9860
+> > to fix the warning.
+> >
+> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+>
+> Works for me.  Thanks.
+>
+> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Works for me.  Thanks.
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-
-> ---
->  drivers/pinctrl/sprd/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/sprd/Kconfig b/drivers/pinctrl/sprd/Kconfig
-> index c9e7f0b..eef35d0 100644
-> --- a/drivers/pinctrl/sprd/Kconfig
-> +++ b/drivers/pinctrl/sprd/Kconfig
-> @@ -4,9 +4,7 @@
->  #
->  
->  config PINCTRL_SPRD
-> -	tristate "Spreadtrum pinctrl driver"
-> -	depends on OF
-> -	depends on ARCH_SPRD || COMPILE_TEST
-> +	tristate
->  	select PINMUX
->  	select PINCONF
->  	select GENERIC_PINCONF
-> @@ -16,6 +14,8 @@ config PINCTRL_SPRD
->  
->  config PINCTRL_SPRD_SC9860
->  	tristate "Spreadtrum SC9860 pinctrl driver"
-> +	depends on OF
-> +	depends on ARCH_SPRD || COMPILE_TEST
->  	select PINCTRL_SPRD
->  	help
->  	  Say Y here to enable Spreadtrum SC9860 pinctrl driver
-> 
-
-
--- 
-~Randy
-
+Thanks for your reporting and testing.
