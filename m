@@ -2,58 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B59B217A312
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2020 11:27:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4CFC17A334
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2020 11:34:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgCEK0B convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 5 Mar 2020 05:26:01 -0500
-Received: from mail.11d02.mspz7.gob.ec ([181.211.254.254]:47228 "EHLO
-        mail.11d02.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCEKZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Mar 2020 05:25:59 -0500
-X-Greylist: delayed 3103 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 05:25:58 EST
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTP id F18D3144C0B;
-        Thu,  5 Mar 2020 04:08:39 -0500 (-05)
-Received: from mail.11d02.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d02.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id NLuDbuVN-C9W; Thu,  5 Mar 2020 04:08:39 -0500 (-05)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTP id 1730514358A;
-        Thu,  5 Mar 2020 03:54:09 -0500 (-05)
-X-Virus-Scanned: amavisd-new at 11d02.mspz7.gob.ec
-Received: from mail.11d02.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d02.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id CEDPsak9Y9Sm; Thu,  5 Mar 2020 03:54:08 -0500 (-05)
-Received: from [10.22.221.193] (unknown [105.0.4.26])
-        by mail.11d02.mspz7.gob.ec (Postfix) with ESMTPSA id 7E9A4144332;
-        Thu,  5 Mar 2020 03:48:03 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S1726956AbgCEKel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Mar 2020 05:34:41 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42144 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEKel (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Mar 2020 05:34:41 -0500
+Received: by mail-lf1-f65.google.com with SMTP id t21so4164583lfe.9
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2020 02:34:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=fz2DAL/hCVOBzgx+g45rdprPzuuFcQsUW1ZHNo4nDuWKCX/fmtcJFi6lbSs9P/RfJA
+         lAVCHt1fNQbO92SbHey4yazD8D+BRVnEqK7PVKp1rcMy40FqhDMG89bJ58GSzMbwvj8U
+         zAnHbCvHz8cMGM9KEggtHMrJgl6JBjlHSjxVfYCRhwYPKx+Jjq/D+Io2Qn9ywDnb1vG6
+         OscJGDR+ktAt1dSFKcBwqG0UklQUo5kR+xK1xD7ZN4ey+k79Dp/cQzpwPp4ZcFKOa/hp
+         HQXr9qb2tQ0y+avLLK+wgv/3Axz+CmJlkglRa4MPyv4tObLkJ7AkbgA7LI04c8TOXAVI
+         wgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=fBtOExDn/Uq5tnpmfU9PU1OTjBGyjuVJXDD6jolrLx9QQEd+9K1rG0++r4Eu6ve75t
+         OEMK/9ZewHBdiD/2yUEj0VVElnO18CQym1Iqp7cx0AJYU45GbQ1zFcsBTrBCGSVSC4Q0
+         a8ybkhCn7t0skAa2r/XbmgrMX4e7xJdW4u7uIIA0/h1zD0wY+EUsFCvN98qxhtjdiINg
+         j0tH/0qkWrBkfao9KNDfY9TEEnKylTAOG5LJjxWOxkfduz0KaiSZKg47SzrbOdND5ahz
+         zjvSU7Sv5nJ+iSmfTDICrQxqciA5yqeGB5izTfxljd9/x/7LIDLFOi42H293Kvb0iEgV
+         anFA==
+X-Gm-Message-State: ANhLgQ0802gbc5Sacf5jD3+A+sCLfrko4ndyB5jjtwwvuspunxGZgikv
+        xV0twaJrbZHOlzhFz36UBcuB5TpebNbpngENV14=
+X-Google-Smtp-Source: ADFU+vt4p78g3SCPLp2SkhMI2bIlerfed0N6TLid+L8CMxk399v6WJ1kSPdTuUyeuRHmX7GoHE72hDaaexbZ9WYxFUU=
+X-Received: by 2002:a19:c714:: with SMTP id x20mr5096973lff.107.1583404479393;
+ Thu, 05 Mar 2020 02:34:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <alex.zari@11d02.mspz7.gob.ec>
-From:   ''Michael Weirsky'' <alex.zari@11d02.mspz7.gob.ec>
-Date:   Thu, 05 Mar 2020 10:41:05 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20200305084804.7E9A4144332@mail.11d02.mspz7.gob.ec>
+Received: by 2002:ab3:5d10:0:0:0:0:0 with HTTP; Thu, 5 Mar 2020 02:34:38 -0800 (PST)
+Reply-To: ayishagddafio@mail.ru
+From:   AISHA GADDAFI <mahasaliou4444@gmail.com>
+Date:   Thu, 5 Mar 2020 02:34:38 -0800
+Message-ID: <CAKHB8qf7CPHeUuxPD-D07960Jx9qxdLt6hBH1AJUj0AYDreUzA@mail.gmail.com>
+Subject: Lieber Freund (Assalamu Alaikum),?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Lieber Freund,
+--=20
+Lieber Freund (Assalamu Alaikum),
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen.
-Das ist dein Spendencode: [MW530342019]
-www.youtube.com/watch?v=un8yRTmrYMY
+Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
+Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
+Mutter und eine Witwe
+mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
+hen
+Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
 
-Antworten Sie mit dem SPENDE-CODE an diese 
+Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
+f=C3=BCnfhunderttausend
+United State Dollar ($ 27.500.000.00) und ich brauche eine
+vertrauensw=C3=BCrdige Investition
+Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
+jedoch
+M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
+von
+Investitionsprojekten in Ihrem Land
+Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
+bauen.
 
-E-Mail:mikeweirskyspende@gmail.com
+Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
+n und
+Unternehmensgewinn zu verhandeln
+Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
 
-Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
+antworten Sie bitte dringend
+Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
+.
 
-Grüße
-Herr Mike Weirsky
+Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
+esse (
+ayishagddafio@mail.ru ) zur weiteren Diskussion.
+
+Freundliche Gr=C3=BC=C3=9Fe
+Frau Aisha Al-Qaddafi
