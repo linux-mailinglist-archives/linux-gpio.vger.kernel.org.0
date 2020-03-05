@@ -2,120 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2026E17AADD
-	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2020 17:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1003717AE03
+	for <lists+linux-gpio@lfdr.de>; Thu,  5 Mar 2020 19:23:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCEQtl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 5 Mar 2020 11:49:41 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35693 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCEQtl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Mar 2020 11:49:41 -0500
-Received: by mail-io1-f67.google.com with SMTP id h8so7230835iob.2
-        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2020 08:49:40 -0800 (PST)
+        id S1726204AbgCESW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 5 Mar 2020 13:22:56 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51273 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgCESWz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 5 Mar 2020 13:22:55 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a132so7470671wme.1
+        for <linux-gpio@vger.kernel.org>; Thu, 05 Mar 2020 10:22:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ELgp0+Vv43PvFwuT066GFbqjurDJh9gYaZikvQZEjzk=;
-        b=XTQub9NyfCXzfsgvbIgQ3rjnqhlldYIyaVZ+MrBR5Y0gzxPQYE7PN/wlFUF1+VG+ci
-         rmIdks6AeyN1FJyFvQfmMzygYaNGZoAHH0nibgS0SAZshOiRKpMdWR7BiCf5NNdyv1hL
-         ZfrT117rZvbOsfbyzqLZHJfydNZtgAiYUmMs4JX8mNpLzxtbjUe5Y76mvTbSjU3XPFnY
-         JouvIaWuOteSR2WlCboJXD9qXAQo6JaTCxYfEGgWH/1l1kNeA1kkrMy/V2I/kWNCqGMA
-         5zFjUAJCF5smnlLvORkZDipt/p6dmoiTBuXLmRYciH36ortQ2h9MglbcnsCLOZAFsNB2
-         MUxQ==
+        d=kresin-me.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Fka8imS/1xK6KJNhtftXLfBrbLrzvdMLMZpCkl8cR10=;
+        b=iWLNpIoER9UnuztnR+05HmzAnfkAl3NxxjdwsiL9JsUcDyjTQ+V13sJDvRF/CwMzp4
+         o7gU/oN9zypjyyHUlSeZUAIP5obBfz+5CN3Z4B9+bodo9PsjTV3RbEadDxdJzocUxJxz
+         8XXzco+fhfKO3iq7fq6PYjmvJx/a4mVZ6tef1hhUyeZCNPGBxZnvNokhMORxph8P535M
+         4nwDuBxd3Jnqx0pBWanAFthwus7h1F4uRjM3ARF/qw7ixwaZfhfGeVI+vqi+mTTGoQYy
+         wR8FZJ1UXkCx0EYIe5Jp+fyYPhf6U5MJk8HnSvx8PIVjXdmdoMYhWH4Ym+7Urr5CFQ2s
+         xnaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ELgp0+Vv43PvFwuT066GFbqjurDJh9gYaZikvQZEjzk=;
-        b=TiHHYdTWTR1JnfLKYhEBVC66/KcBvMeFEe+APQ56je1JHf9CVdFopcih3wkcNVFrGH
-         CDgKbuUYXooUOLw2M/WovSQhNVHCa/nbV+tA58TISGySxC4Xi9BFgU7YFoKgkLl/0hde
-         jSxD9kAZkjUz9M/xpyWL2FBnsDPfRpN0QGD/IA/n1svzGHzwpBVJ5jRuenZ2U2FKHh46
-         NyYsgy3g8+klfi4FTfeG8wW2q7TuMr02KuBHEnbP5vK7nA+rX9JWYvvJGYf4+a4O4tgR
-         wJ1qU08cckQygwkG8NH4tZziCl20Koo1y2ksHTpM9JDV0Mebm9Rb1VvTEPHQK2XpGg5J
-         vOtQ==
-X-Gm-Message-State: ANhLgQ0NJVSkgxWJS0c0BwbqhqeTDqh6fu8XM3VYo1sKGf1gzcuDZ4M7
-        vjIoISwhWqOnWlIzjp1gIBlZnGIIZk72Da9KbECzKg==
-X-Google-Smtp-Source: ADFU+vvzrUvKBCm/F735xdH6v0/qAZSe9OHz1wp2FJZxfMJIfBzy4XqfCG30OLuLV889Z7fadhympU7j9ak0gBoQMZM=
-X-Received: by 2002:a6b:3e07:: with SMTP id l7mr7197755ioa.287.1583426979686;
- Thu, 05 Mar 2020 08:49:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
-In-Reply-To: <20200224094158.28761-3-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 5 Mar 2020 17:49:28 +0100
-Message-ID: <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Khouloud Touil <ktouil@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Fka8imS/1xK6KJNhtftXLfBrbLrzvdMLMZpCkl8cR10=;
+        b=HuWlkdDHrD4Kt1xv/uYuQwSlpuk+7oro+9iK2H28dD2S96m0nL+IsCAfr1XznEw1ya
+         VbRM8JjiA+GGYLBqbJPSALh6zcpZNBdp4oKtD/xsLb+uMIrQPbRzba5VwxkmaPmti8vc
+         S+if/5RzDcmLkItwy6TdicolMOkaz8crSk2aj3FqQc5iawD8Mi7K1KWatfL5b7vvmrvL
+         64yl9g8othWs7tEzgaTwxb4KpGh0MCxhOe+QPdazZwhFDU/Ji3VTF6d41flkfGtVco01
+         X3mMNqs9I+LZk4ZjBCqRn4E9czMq8Ze5R35Iw/tLlc+/8lTXawYzlAviP3JWDxX1oRpX
+         h7CA==
+X-Gm-Message-State: ANhLgQ2nGv5ZyxJMz4VaDRzIhaeKKGLgdklUKC9Lv4hglpHktpazgO+R
+        gCPHdsApGuIJZcHkxnN1+4rL0A==
+X-Google-Smtp-Source: ADFU+vsIJFiHCoLIv+/msfzl/lI5ZtLr2/v7pFClpu9/Qs0qrq4bL/6WVmA9WiCBf4ySO/dBx+hrzQ==
+X-Received: by 2002:a1c:9802:: with SMTP id a2mr57168wme.117.1583432573971;
+        Thu, 05 Mar 2020 10:22:53 -0800 (PST)
+Received: from desktop.wvd.kresin.me (p200300EC2F0EF80014FA05E763F3370C.dip0.t-ipconnect.de. [2003:ec:2f0e:f800:14fa:5e7:63f3:370c])
+        by smtp.gmail.com with ESMTPSA id a5sm10540509wmb.37.2020.03.05.10.22.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 10:22:53 -0800 (PST)
+From:   Mathias Kresin <dev@kresin.me>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH] pinctrl: falcon: fix syntax error
+Date:   Thu,  5 Mar 2020 19:22:45 +0100
+Message-Id: <20200305182245.9636-1-dev@kresin.me>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 24 lut 2020 o 10:42 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
-a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> GPIO descriptors are freed by consumers using gpiod_put(). The name of
-> this function suggests some reference counting is going on but it's not
-> true.
->
-> Use kref to actually introduce reference counting for gpio_desc objects.
-> Add a corresponding gpiod_get() helper for increasing the reference count=
-.
->
-> This doesn't change anything for already existing (correct) drivers but
-> allows us to keep track of GPIO descs used by multiple users.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Add the missing semicolon after of_node_put to get the file compiled.
 
-Linus,
+Fixes: f17d2f54d36d ("pinctrl: falcon: Add of_node_put() before return")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+---
+ drivers/pinctrl/pinctrl-falcon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is in response to your suggestion under the previous version of this p=
-atch.
+diff --git a/drivers/pinctrl/pinctrl-falcon.c b/drivers/pinctrl/pinctrl-falcon.c
+index a454f57c264e..62c02b969327 100644
+--- a/drivers/pinctrl/pinctrl-falcon.c
++++ b/drivers/pinctrl/pinctrl-falcon.c
+@@ -451,7 +451,7 @@ static int pinctrl_falcon_probe(struct platform_device *pdev)
+ 		falcon_info.clk[*bank] = clk_get(&ppdev->dev, NULL);
+ 		if (IS_ERR(falcon_info.clk[*bank])) {
+ 			dev_err(&ppdev->dev, "failed to get clock\n");
+-			of_node_put(np)
++			of_node_put(np);
+ 			return PTR_ERR(falcon_info.clk[*bank]);
+ 		}
+ 		falcon_info.membase[*bank] = devm_ioremap_resource(&pdev->dev,
+-- 
+2.17.1
 
-I refreshed my memory on device links and reference counting. I think
-that device links are not the right tool for the problem I'm trying to
-solve. You're right on the other hand about the need for reference
-counting of gpiochip devices. Right now if we remove the chip with
-GPIOs still requested the only thing that happens is a big splat:
-"REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED".
-
-We should probably have a kref on the gpiochip structure which would
-be set to 1 when registering the chip, increased and decreased on
-every operation such as requesting and releasing a GPIO respectively
-and decreased by gpiochip_remove() too. That way if we call
-gpiochip_remove() while some users are still holding GPIO descriptors
-then the only thing that happens is: the reference count for this
-gpiochip is decreased. Once the final consumer calls the appropriate
-release routine and the reference count goes to 0, we'd call the
-actual gpiochip release code. This is similar to what the clock
-framework does IIRC.
-
-This patch however addresses a different issue: I'd like to add
-reference counting to descriptors associated with GPIOs requested by
-consumers. The kref release function would not trigger a destruction
-of the gpiochip - just releasing of the requested GPIO. In this
-particular use-case: we can pass an already requested GPIO descriptor
-to nvmem. I'd like the nvmem framework to be able to reference it and
-then drop the reference once it's done with the line, so that the life
-of this resource is not controlled only by the entity that initially
-requested it.
-
-In other words: we could use two kref objects: one for the gpiochip
-and one for GPIO descriptors.
-
-I hope that makes it more clear.
-
-Best regards,
-Bartosz
