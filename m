@@ -2,101 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0005217C0D2
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 15:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FE5417C0D6
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 15:47:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgCFOrb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Mar 2020 09:47:31 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43762 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726314AbgCFOrb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 09:47:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583506049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yhpVk++MgudHcvpslxpK/BIUu9Ii09q0rWMNLFp+cOE=;
-        b=XkEbWKLyWnuxErmLJnDhPk25JmjsfjPt7HbWQ3ws71GpzuEsX+693L+xHstotmy5V/kWyT
-        LiG7NyHszM1Wje/mc2q4uBmvSdw68A5vp4gvOMz4pPBJzDo1ce3BVPy/IkjbluCtl9oDv4
-        3RUMlH0Z73k6YGN8y0cgs6AbG9RUHiI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-j4JDQbCKN0OZkk-BaHx0uA-1; Fri, 06 Mar 2020 09:47:28 -0500
-X-MC-Unique: j4JDQbCKN0OZkk-BaHx0uA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40EF31085935;
-        Fri,  6 Mar 2020 14:47:26 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.36.118.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B98991D8E;
-        Fri,  6 Mar 2020 14:47:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH] gpiolib: acpi: Add missing __init(const) markers to initcall-s
-Date:   Fri,  6 Mar 2020 15:47:22 +0100
-Message-Id: <20200306144722.175298-1-hdegoede@redhat.com>
+        id S1726650AbgCFOrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Mar 2020 09:47:52 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39127 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCFOrw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 09:47:52 -0500
+Received: by mail-io1-f68.google.com with SMTP id h3so2309399ioj.6
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2020 06:47:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KrLWWUlLGpmBcr+990sHm5nWtHGvMjeSucxFXph89uM=;
+        b=Hfn1YzVgsbryvqOzuLT0so8v73NPmw/EcjhzepGDgb0bAssivRfq8bgTg6CqDPQ6li
+         hO/zJ9nlEHS0tm9kZZRgSlfEVwubsp27qhr3r1kLOvAtllmNrFEcHbd+dKOT2qrlIND2
+         L53faV82Z6fC0KJO+92g2XeVQOSL8Ve84+9nwvPUFs/81do0EnK0mZgvL5xJqCSAtRsT
+         YaDXSae22tY0bJ2OBUHegXJEIMGW98gY2GESPJduDnNUeFwdKxEESdMHoWZawxU0cjcM
+         VRTylycYBuETI51F0B3reuVTlVBkBQXf1Q1CQr4Kw5lNuDTb2BvIinGcsdtfnfD88+aD
+         hI4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KrLWWUlLGpmBcr+990sHm5nWtHGvMjeSucxFXph89uM=;
+        b=LCBYDM4rC74XWYhjGZO8CNihkHAIMwqEpG1cep+zvZbrRJnAicPfcKIH3zXxNV+At2
+         WreOf9/5vRj6/Fy4UwCszkvViFAumaxBfrntJIYZ+8qU8G+EAlT6EGy0P8VlgQTP+IPl
+         i6gRA7/ijM2QdM0RAbTL/cLNzdsbhM9RYCc8Y9h+aMsNHvG5cVh9loOasMCYJaat5jBP
+         +AvpC8onqSbrPlttN66jPgit6rRadHwwwd0GTNiBAvT+G09K4jx5IB01Xt37GdahOiw0
+         zH0IvcXsK11E1k6hg+JEjcZ53doc4B7LrT4+rZTNfdrXvPALW+eALGtTMG0zzR+ljU/I
+         jJUg==
+X-Gm-Message-State: ANhLgQ3U7Qlqx/23gF0zC+XpYdyHxchvXywGTpyQMesUdRhhFgofBzLx
+        j7BIc2Qnl/8NOKpGqotnotL1Rc0GBXmTifQn/oE=
+X-Google-Smtp-Source: ADFU+vtQAd5XCOCxDs0AF3aXpwwgOEtv4pLPmSp8lUoY9tdO7yzJH/xmNbdsDssCCpyNXq1L6LLpjnWBlPhbUV8Cz2k=
+X-Received: by 2002:a05:6638:ec9:: with SMTP id q9mr3328396jas.141.1583506071454;
+ Fri, 06 Mar 2020 06:47:51 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a6b:5a0a:0:0:0:0:0 with HTTP; Fri, 6 Mar 2020 06:47:50 -0800 (PST)
+Reply-To: ericb3191@gmail.com
+From:   Eric Barry <ussr9116@gmail.com>
+Date:   Fri, 6 Mar 2020 14:47:50 +0000
+Message-ID: <CALQMRtb39vxXUaHDGLe03xgs-_-61j81C0ssJgoPycspqmGRRg@mail.gmail.com>
+Subject: SA
+To:     ussr9116@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The gpiolib ACPI code uses 2 initcall-s and the called function
-(and used DMI table) is missing __init(const) markers.
-
-This commit fixes this freeing up some extra memory once the kernel
-has completed booting.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpio/gpiolib-acpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 0017367e94ee..9276051663da 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1353,7 +1353,7 @@ int acpi_gpio_count(struct device *dev, const char =
-*con_id)
- }
-=20
- /* Run deferred acpi_gpiochip_request_irqs() */
--static int acpi_gpio_handle_deferred_request_irqs(void)
-+static int __init acpi_gpio_handle_deferred_request_irqs(void)
- {
- 	struct acpi_gpio_chip *acpi_gpio, *tmp;
-=20
-@@ -1371,7 +1371,7 @@ static int acpi_gpio_handle_deferred_request_irqs(v=
-oid)
- /* We must use _sync so that this runs after the first deferred_probe ru=
-n */
- late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
-=20
--static const struct dmi_system_id gpiolib_acpi_quirks[] =3D {
-+static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst =3D =
-{
- 	{
- 		/*
- 		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
-@@ -1455,7 +1455,7 @@ static const struct dmi_system_id gpiolib_acpi_quir=
-ks[] =3D {
- 	{} /* Terminating entry */
- };
-=20
--static int acpi_gpio_setup_params(void)
-+static int __init acpi_gpio_setup_params(void)
- {
- 	const struct acpi_gpiolib_dmi_quirk *quirk =3D NULL;
- 	const struct dmi_system_id *id;
---=20
-2.25.1
-
+Dear Friend,
+I wish you and your family a blessed week!I have a confidential
+opportunity that is capable of changing our lives forever, if it
+interests you reply me for more details,I am a banker by profession
+here in my country Togo in West Africa one of our customer(Late
+Engineer Igor Lazarek) who used to work with shell development company
+here in republic of Togo. On the 21st of April 2012, our customer, his
+wife and their only daughter were involved in auto crash here in my
+country. I decided to contacted you so that the $10.5M he left behind
+in a bank here will be transferred to your bank account.
+Best regards,
+Eric Barry.
