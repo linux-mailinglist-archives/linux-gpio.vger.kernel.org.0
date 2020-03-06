@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8960317BC67
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 13:11:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3DAB17BC6C
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 13:12:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCFMLk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Mar 2020 07:11:40 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41880 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgCFMLk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 07:11:40 -0500
-Received: by mail-lf1-f68.google.com with SMTP id q10so971842lfo.8
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2020 04:11:37 -0800 (PST)
+        id S1726769AbgCFMM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Mar 2020 07:12:26 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32905 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbgCFMM0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 07:12:26 -0500
+Received: by mail-lf1-f67.google.com with SMTP id c20so1757526lfb.0
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2020 04:12:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VEqsZXiHi8Vzu3E0Qtt3LIyZX6LwUkCnc30Vn2vU9Ak=;
-        b=zFzQtOSjjltDX5jVktEU59kiyFn9FNMw9kPaMuvIeQSuE1/pSTIGxkEUj1l+uWxbmA
-         vOAdR6z/PwAp3hDJe5Ei9H6LmApPc2mJX0ZqOhdJwk8gUyAdbk9IHBZlQL1evSk/7yo2
-         /QZoiJdAUyrmyj0h+IBf41cet/T/YGQNeg55i1KHKjNDUzvc9Vi7xg1X5AOgLMfE2s5F
-         UCw4rGDarFv/1Bh4+LCL+PWtCc6f96F9g0q4yaOpKO7PDW5sUS23V2rdRgBiBLFDgakv
-         El8iV9dXC2jtFgPpsfggeY/p3g+3ihL7B8Q3tZOZt2ihNo757ETaZimIWeckb1ugxLT0
-         jBYA==
+        bh=MdGLbXy1B+XD+XeVWDRp+Nncre/eMQNyqszADUGHI/E=;
+        b=U98TlMWc0ETX7ITPk2EBkznugDxokNO8grELVoCdAPYy56inrAKLX4QoKdie2XeLt8
+         7bQe7zuoXKVdZmGxFof9IkKlO/WEuuLm2C6sTbbmsIqWLGpTXOavL8v62CsjQJrCA7Ty
+         r2ytlDJCL5zMvOqaTyd5ZTW/YU+Cf7jV1k9O7+V0D571UUwmYvAo3kL967Qfa+I7TcSn
+         fvmdCup28viSct+XkpWPBtlRhZ6Gtbto3NS6XqsdYDjEK3qyOGIqote42SkPLBnQe7fq
+         TO0d2tFF6gAHFz035c88r+39Owf3kqreeALQWwkIvW6AiCIJ19MxjQ2eAOxlopVvilMD
+         fVBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VEqsZXiHi8Vzu3E0Qtt3LIyZX6LwUkCnc30Vn2vU9Ak=;
-        b=XXEN/07dquxXBcuffFGaAbbNJhIiIPVxKizh+H9ooZxMxmy07ZKtsCaHGFMxKzkoqD
-         V5L/ascAJuOhHb2UATrlQG3sf5zyPWFSsMlrPys1Q5hKJ5GasNlIoIvPHwutl1xNh2K1
-         AHoBcdlMqvGBgEZEDe2gyOoW6YsQbvNfcSAK/0JtRKfrZhe/3Ek10BHCkX3tFDsAyphn
-         CAMBK1PEqS5UVHZWMpbE/4Vk9iGNhKj6c3Y0NAr/WolviP4keOOR8A43OKjAgT/1hFZw
-         q5QV71K8oguyEgzhYg6qJ2zVDAJ4f2LT0HilT9/tSyT9ShjDzOVa+Sj7S4XpvRVttQUH
-         7m4w==
-X-Gm-Message-State: ANhLgQ1Er4ZX1MxzJ+Lc8/JghyJQyakyo0VwO5ujD6Vo/OuKH2QGKxeC
-        1bVoYcv0Zq4kco38QK7kyVPPT+i1qPI=
-X-Google-Smtp-Source: ADFU+vusWHxWM2090L+QurVMnY/Ly7V8ZOTLsBWN8+l/yUDFL+8P6FUZWAbES3kVGO6/Xp3Rz8IRgg==
-X-Received: by 2002:ac2:5468:: with SMTP id e8mr1738377lfn.193.1583496695868;
-        Fri, 06 Mar 2020 04:11:35 -0800 (PST)
+        bh=MdGLbXy1B+XD+XeVWDRp+Nncre/eMQNyqszADUGHI/E=;
+        b=qZ0KUmlR1bSqXeikDLnnxzzL0chi9nnNIpN2h1IsYT3NBqvmlLSofPGXVJ2BDwzTcl
+         3RnSpKzf5DcJuP+5x792/nuMUlMx7e7Wz4mCeMFvO+06nId6l01l+QvM90JsrSeDdv+X
+         jGRVtTxeFN6Lz/pYEhEBx2fuUx2jlyIgDGnL8cM/x/Tjb8omoualUe/nufN9BQ9eEKKu
+         73bHpJmVdreuGZvyuB/c8XJrC+kWZUQIsxtoRIJQbZPDge0AcJ+Epshs6sE+RN0CM89m
+         FbHDEyumETtTzMa7SzIGEHnlLe6Qkjhx4XhhD9cDgEUtY/sW1BwpZDPXUXvxUnP81boo
+         nrRQ==
+X-Gm-Message-State: ANhLgQ3ZNX9XNYxVZ7jOJcM9Xt/cwl/tPkX9aBOuJOCpSLZkr67jCJvo
+        4wNDR1fqFqZGdWFuTI+e74BwImT5u94=
+X-Google-Smtp-Source: ADFU+vsdxv9EKXCC75n0AXj6pYl9BU2DcF9kaZTVaUWJGGSi0JL+PM1v6wqQ65nQvY1SRw4LrBHxCw==
+X-Received: by 2002:ac2:529c:: with SMTP id q28mr1798946lfm.59.1583496743953;
+        Fri, 06 Mar 2020 04:12:23 -0800 (PST)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id m15sm5178759ljo.52.2020.03.06.04.11.34
+        by smtp.gmail.com with ESMTPSA id u16sm16829780lfl.23.2020.03.06.04.12.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 04:11:35 -0800 (PST)
+        Fri, 06 Mar 2020 04:12:23 -0800 (PST)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Lina Iyer <ilina@codeaurora.org>,
         Marc Zyngier <maz@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>, stable@vger.kernel.org
 Subject: [PATCH] pinctrl: qcom: Guard irq_eoi()
-Date:   Fri,  6 Mar 2020 13:11:29 +0100
-Message-Id: <20200306121129.1231159-1-linus.walleij@linaro.org>
+Date:   Fri,  6 Mar 2020 13:12:21 +0100
+Message-Id: <20200306121221.1231296-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -88,6 +89,7 @@ so we get the following crash:
 Implement a local stub just avoiding to call down to
 irq_chip_eoi_parent() if d->parent_data is not set.
 
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Lina Iyer <ilina@codeaurora.org>
 Cc: Marc Zyngier <maz@kernel.org>
 Cc: Stephen Boyd <swboyd@chromium.org>
