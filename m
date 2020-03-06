@@ -2,66 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE5417C0D6
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 15:47:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9055B17C1B2
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 16:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgCFOrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Mar 2020 09:47:52 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39127 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgCFOrw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 09:47:52 -0500
-Received: by mail-io1-f68.google.com with SMTP id h3so2309399ioj.6
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2020 06:47:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=KrLWWUlLGpmBcr+990sHm5nWtHGvMjeSucxFXph89uM=;
-        b=Hfn1YzVgsbryvqOzuLT0so8v73NPmw/EcjhzepGDgb0bAssivRfq8bgTg6CqDPQ6li
-         hO/zJ9nlEHS0tm9kZZRgSlfEVwubsp27qhr3r1kLOvAtllmNrFEcHbd+dKOT2qrlIND2
-         L53faV82Z6fC0KJO+92g2XeVQOSL8Ve84+9nwvPUFs/81do0EnK0mZgvL5xJqCSAtRsT
-         YaDXSae22tY0bJ2OBUHegXJEIMGW98gY2GESPJduDnNUeFwdKxEESdMHoWZawxU0cjcM
-         VRTylycYBuETI51F0B3reuVTlVBkBQXf1Q1CQr4Kw5lNuDTb2BvIinGcsdtfnfD88+aD
-         hI4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=KrLWWUlLGpmBcr+990sHm5nWtHGvMjeSucxFXph89uM=;
-        b=LCBYDM4rC74XWYhjGZO8CNihkHAIMwqEpG1cep+zvZbrRJnAicPfcKIH3zXxNV+At2
-         WreOf9/5vRj6/Fy4UwCszkvViFAumaxBfrntJIYZ+8qU8G+EAlT6EGy0P8VlgQTP+IPl
-         i6gRA7/ijM2QdM0RAbTL/cLNzdsbhM9RYCc8Y9h+aMsNHvG5cVh9loOasMCYJaat5jBP
-         +AvpC8onqSbrPlttN66jPgit6rRadHwwwd0GTNiBAvT+G09K4jx5IB01Xt37GdahOiw0
-         zH0IvcXsK11E1k6hg+JEjcZ53doc4B7LrT4+rZTNfdrXvPALW+eALGtTMG0zzR+ljU/I
-         jJUg==
-X-Gm-Message-State: ANhLgQ3U7Qlqx/23gF0zC+XpYdyHxchvXywGTpyQMesUdRhhFgofBzLx
-        j7BIc2Qnl/8NOKpGqotnotL1Rc0GBXmTifQn/oE=
-X-Google-Smtp-Source: ADFU+vtQAd5XCOCxDs0AF3aXpwwgOEtv4pLPmSp8lUoY9tdO7yzJH/xmNbdsDssCCpyNXq1L6LLpjnWBlPhbUV8Cz2k=
-X-Received: by 2002:a05:6638:ec9:: with SMTP id q9mr3328396jas.141.1583506071454;
- Fri, 06 Mar 2020 06:47:51 -0800 (PST)
+        id S1726682AbgCFP0i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Mar 2020 10:26:38 -0500
+Received: from onstation.org ([52.200.56.107]:38468 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgCFP0i (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 6 Mar 2020 10:26:38 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 5E03F3EA2F;
+        Fri,  6 Mar 2020 15:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1583508397;
+        bh=O+r8VQF4XCl7Fiwv3/FRAInQGKr7a7TAhlPP1lLiB5w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kz2w2nk0xMH0lQUaFSboFrx8+8MIeJ9tKVC7RbgDzVIKgpdTIe2vAs2ZCNDrg2UAA
+         hp7ZpRiMiMl7TzyhfxKjbOttrULM/n8t9RrJPY6kzLjQ7K5nhJ1WlZeewCReBT/tVs
+         KgddGQQW500QfgDdxZo9irx4oEtT3jAz0437Ax8M=
+Date:   Fri, 6 Mar 2020 10:26:37 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
+Message-ID: <20200306152637.GA13000@onstation.org>
+References: <20200306143416.1476250-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Received: by 2002:a6b:5a0a:0:0:0:0:0 with HTTP; Fri, 6 Mar 2020 06:47:50 -0800 (PST)
-Reply-To: ericb3191@gmail.com
-From:   Eric Barry <ussr9116@gmail.com>
-Date:   Fri, 6 Mar 2020 14:47:50 +0000
-Message-ID: <CALQMRtb39vxXUaHDGLe03xgs-_-61j81C0ssJgoPycspqmGRRg@mail.gmail.com>
-Subject: SA
-To:     ussr9116@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306143416.1476250-1-linus.walleij@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
-I wish you and your family a blessed week!I have a confidential
-opportunity that is capable of changing our lives forever, if it
-interests you reply me for more details,I am a banker by profession
-here in my country Togo in West Africa one of our customer(Late
-Engineer Igor Lazarek) who used to work with shell development company
-here in republic of Togo. On the 21st of April 2012, our customer, his
-wife and their only daughter were involved in auto crash here in my
-country. I decided to contacted you so that the $10.5M he left behind
-in a bank here will be transferred to your bank account.
-Best regards,
-Eric Barry.
+On Fri, Mar 06, 2020 at 03:34:15PM +0100, Linus Walleij wrote:
+> We are parsing SSBI gpios as fourcell fwspecs but they are
+> twocell. Probably a simple copy-and-paste bug.
+> 
+> Tested on the APQ8060 DragonBoard and after this ethernet
+> and MMC card detection works again.
+> 
+> Cc: Brian Masney <masneyb@onstation.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: stable@vger.kernel.org
+> Fixes: ae436fe81053 ("pinctrl: ssbi-gpio: convert to hierarchical IRQ helpers in gpio core")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Reviewed-by: Brian Masney <masneyb@onstation.org>
+
+That was a copy and paste error on my part that originated from
+spmi-gpio.
+
+Brian
+
+
+> ---
+> ChangeLog v1->v2:
+> - Renamed function pointer field to .populate_parent_alloc_arg
+>   as it is named upstream.
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> index fba1d41d20ec..338a15d08629 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> @@ -794,7 +794,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
+>  	girq->fwnode = of_node_to_fwnode(pctrl->dev->of_node);
+>  	girq->parent_domain = parent_domain;
+>  	girq->child_to_parent_hwirq = pm8xxx_child_to_parent_hwirq;
+> -	girq->populate_parent_alloc_arg = gpiochip_populate_parent_fwspec_fourcell;
+> +	girq->populate_parent_alloc_arg = gpiochip_populate_parent_fwspec_twocell;
+>  	girq->child_offset_to_irq = pm8xxx_child_offset_to_irq;
+>  	girq->child_irq_domain_ops.translate = pm8xxx_domain_translate;
+>  
+> -- 
+> 2.24.1
