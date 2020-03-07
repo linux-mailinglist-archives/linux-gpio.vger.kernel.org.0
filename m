@@ -2,102 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E172217C7E3
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Mar 2020 22:32:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E456E17C97F
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Mar 2020 01:14:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCFVcO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Mar 2020 16:32:14 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34551 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFVcO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 16:32:14 -0500
-Received: by mail-pj1-f65.google.com with SMTP id gc16so2052900pjb.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Mar 2020 13:32:13 -0800 (PST)
+        id S1726314AbgCGAOI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Mar 2020 19:14:08 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35029 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgCGAOH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Mar 2020 19:14:07 -0500
+Received: by mail-pf1-f194.google.com with SMTP id u68so1170233pfb.2;
+        Fri, 06 Mar 2020 16:14:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=ThTZqiq06fipVzy9RW1LluCf54UlVnq4vd8uGcF/tcQ=;
-        b=jm6EHAKHOIoqgWI0j1ax51Ae6RTPkwFU+DpXO5+3A9VnGVafwQsPmjw8E8ojzvHo6C
-         yAQu4MAV420EisWUU2jslXFHbfnoMmi8mCY5UtpSDuMGlVpEdmpb294mKcgLOyn41ull
-         l6TQugpJwTXWhMqlyoQTWrBXvGDDNNVNHv88U=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hDYVA9f/L/3nXUZdsuoFqZfc8mAyfA73aRbFdpVcGqc=;
+        b=XB0ph0r+2HgvDAqyqb2/Cr6wxaivqkVjhN/an0c4Z18SEDlj3j+4OZbRp++gaoiWE1
+         CHoKLbUWDokwbzHNDpAof3rST5/dNaCwTPUN1RHGDgYwfQDDqnv7ckUHmxjMHYPTQIuU
+         VTJFP+ADKPDezmK3OZMypVinGO0XVPrEDwQsj2Gtxs7L678WJsknfqVF80FdMom3svQ0
+         e2ehbodObuJMWROKY+bLKrttZou1tX2nFH6Hn+NJZpoiH+xqlnnly2BANkp6O0HLcAyn
+         zZciGMmvs2lBzbUW1e6FiSNmMoPmOwKfc91+XwVAm8c1cDjWAijCNWF+90lQW9mnPKoI
+         +8uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=ThTZqiq06fipVzy9RW1LluCf54UlVnq4vd8uGcF/tcQ=;
-        b=oIk33vjAbimkD0+cfH8R5qfV9dWJufviYTEJGvL2eYwpLwHHLd7BHsBIOgSikO30Gi
-         GLe2axqYiul5ATCZzNRBXCtHZaFPxlnDO5HqULp526Pjc1Yb6M3ATP6+tY3JY9mSXs5o
-         2nMhe38hT/EUjOo2Eu6aEQValXIdM6CX6iTUDrrdNT67kWFMtm1QMCGHo0pcMl3Pigzn
-         0FAqSWGHtuL1sS+H+VoBK0xRUsiJHVZzpeDO9TjQu+bXueADzDORhocKhH6Gfbbck7HD
-         5hgcwBHXJdok+BtUyvdH/T0C7k3sZiHZ0frmHWxgJyJoxIijyY3oSgk2lVODDpiG87wl
-         XUTg==
-X-Gm-Message-State: ANhLgQ0s9F//gitT5iKo2YjgpGaXwFnmBcvaAGRITz2K3WLUtHkM5IDO
-        H4XcSaypPSVV/awvwUDxWFHTNg==
-X-Google-Smtp-Source: ADFU+vuadZKfQR3SfeWc/992URv4Ic0V5yrWlTYxzsEFN03fP1PsL8GxGlLlFmfNElKN8ajw6rOx9w==
-X-Received: by 2002:a17:90a:1747:: with SMTP id 7mr5666505pjm.154.1583530333345;
-        Fri, 06 Mar 2020 13:32:13 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w65sm33266018pfd.77.2020.03.06.13.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Mar 2020 13:32:12 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200306121221.1231296-1-linus.walleij@linaro.org>
-References: <20200306121221.1231296-1-linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom: Guard irq_eoi()
-From:   Stephen Boyd <swboyd@chromium.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hDYVA9f/L/3nXUZdsuoFqZfc8mAyfA73aRbFdpVcGqc=;
+        b=ZVxYxY/LKWAu/lP+4z/lkmcph3WbEV/AMbXoGdueJlw0hWUrd15YWlVQQZgtiCilhK
+         UIBHmtBsQYbiENQQyIXKa9EWVEaVXKlhDgBsTUWpNSMThcL3UjAwRyObNJBet/U1GYdz
+         AYz/DliPmKTu+70Fxl3li11Cz+w6wmzv08g7mDikSi6vM3BECDndwh59D34G6F4/1YuU
+         gX5/bdjdwDSLh/xhouZ3VhAIC5zf+BMm2lGjTBZ1XkQLcK8Zh9rg+N0Nnr6WfL0CMRyg
+         f6wFJTdKud29e5jIYMJVTxauUfmdFY9KPqKMTMnmVHQJaIjfrvkjcXJY6N9vy/M0T3oT
+         etrg==
+X-Gm-Message-State: ANhLgQ0CcuaQJnpXw9vC6ATwAiWfk1HN1Q40pDDza19avw6DIXEgmSA6
+        XGMnBGkz3OoJOfRrBLjDWwo=
+X-Google-Smtp-Source: ADFU+vu081bHBamqDSIur/Av+nz1dI+BeMe/H/ym0Ex6y1uepe0Hnbawqf3vUFGAn/2q6whw0bk7tQ==
+X-Received: by 2002:a62:17c8:: with SMTP id 191mr6287295pfx.105.1583540046576;
+        Fri, 06 Mar 2020 16:14:06 -0800 (PST)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h65sm14568846pfg.12.2020.03.06.16.14.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 06 Mar 2020 16:14:06 -0800 (PST)
+From:   Doug Berger <opendmb@gmail.com>
+To:     Gregory Fong <gregory.0xf0@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>, stable@vger.kernel.org
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Date:   Fri, 06 Mar 2020 13:32:11 -0800
-Message-ID: <158353033159.66766.8391368684056319578@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Doug Berger <opendmb@gmail.com>
+Subject: [PATCH] gpio: brcmstb: support gpio-line-names property
+Date:   Fri,  6 Mar 2020 16:13:06 -0800
+Message-Id: <1583539986-573-1-git-send-email-opendmb@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Linus Walleij (2020-03-06 04:12:21)
-> In the commit setting up the qcom/msm pin controller to
-> be hierarchical some callbacks were careful to check that
-> d->parent_data on irq_data was valid before calling the
-> parent function, however irq_chip_eoi_parent() was called
-> unconditionally which doesn't work with elder Qualcomm
-> platforms such as APQ8060.
->=20
-> When the drivers/mfd/qcom-pm8xxx.c driver calls
-> chained_irq_exit() that call will in turn call chip->irq_eoi()
-> which is set to irq_chip_eoi_parent() by default on a
-> hierachical IRQ chip, and the parent is pinctrl-msm.c
-> so that will in turn unconditionally call
-> irq_chip_eoi_parent() again, but its parent is invalid
-> so we get the following crash:
->=20
->  Unnable to handle kernel NULL pointer dereference at
->  virtual address 00000010
->  pgd =3D (ptrval)
->  [00000010] *pgd=3D00000000
->  Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->  (...)
->  PC is at irq_chip_eoi_parent+0x4/0x10
->  LR is at pm8xxx_irq_handler+0x1b4/0x2d8
->=20
-> Implement a local stub just avoiding to call down to
-> irq_chip_eoi_parent() if d->parent_data is not set.
->=20
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: stable@vger.kernel.org
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+The default handling of the gpio-line-names property by the
+gpiolib-of implementation does not work with the multiple
+gpiochip banks per device structure used by the gpio-brcmstb
+driver.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+This commit adds driver level support for the device tree
+property so that GPIO lines can be assigned friendly names.
+
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+---
+ drivers/gpio/gpio-brcmstb.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+index 05e3f99ae59c..e9ab246e2d42 100644
+--- a/drivers/gpio/gpio-brcmstb.c
++++ b/drivers/gpio/gpio-brcmstb.c
+@@ -603,6 +603,49 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops = {
+ 	.resume_noirq = brcmstb_gpio_resume,
+ };
+ 
++static void brcmstb_gpio_set_names(struct device *dev,
++				   struct brcmstb_gpio_bank *bank)
++{
++	struct device_node *np = dev->of_node;
++	const char **names;
++	int nstrings, base;
++	unsigned int i;
++
++	base = bank->id * MAX_GPIO_PER_BANK;
++
++	nstrings = of_property_count_strings(np, "gpio-line-names");
++	if (nstrings <= base)
++		/* Line names not present */
++		return;
++
++	names = devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(char *),
++			     GFP_KERNEL);
++	if (!names)
++		return;
++
++	/*
++	 * Make sure to not index beyond the end of the number of descriptors
++	 * of the GPIO device.
++	 */
++	for (i = 0; i < bank->width; i++) {
++		const char *name;
++		int ret;
++
++		ret = of_property_read_string_index(np, "gpio-line-names",
++						    base + i, &name);
++		if (ret) {
++			if (ret != -ENODATA)
++				dev_err(dev, "unable to name line %d: %d\n",
++					i, ret);
++			break;
++		}
++		if (*name)
++			names[i] = name;
++	}
++
++	bank->gc.names = names;
++}
++
+ static int brcmstb_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -726,6 +769,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+ 		need_wakeup_event |= !!__brcmstb_gpio_get_active_irqs(bank);
+ 		gc->write_reg(reg_base + GIO_MASK(bank->id), 0);
+ 
++		brcmstb_gpio_set_names(dev, bank);
+ 		err = gpiochip_add_data(gc, bank);
+ 		if (err) {
+ 			dev_err(dev, "Could not add gpiochip for bank %d\n",
+-- 
+2.7.4
+
