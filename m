@@ -2,85 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 075A717D3F7
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2020 14:51:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 717D217D545
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2020 18:43:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgCHNvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Mar 2020 09:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726271AbgCHNvV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 8 Mar 2020 09:51:21 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16A9D20848;
-        Sun,  8 Mar 2020 13:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583675481;
-        bh=X8dWOYJs91h+opdJ6WGqxXj3yahy3sLflXZCnwu6mPo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=t1xnULWxHc6VFtywIFWZxYUwDlTly6MXJ/Z30BOpDnG/cCrW1arzpQe84AIM3T4VB
-         Ltr5oVNC6xrluFJ8symvJzqVh+DX+yWip+8DHhANtv3EZdVz4sTuUJgZ9xgyJAs0Q+
-         sqaOCPyWmN5uVxwbQxIrOJDKGd/s9LOdTvijJwEo=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jAwKt-00B2fF-9L; Sun, 08 Mar 2020 13:51:19 +0000
-Date:   Sun, 8 Mar 2020 13:51:17 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
-Message-ID: <20200308135117.7c60c881@why>
-In-Reply-To: <20200211131240.15853-4-brgl@bgdev.pl>
-References: <20200211131240.15853-1-brgl@bgdev.pl>
-        <20200211131240.15853-4-brgl@bgdev.pl>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726279AbgCHRnW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Mar 2020 13:43:22 -0400
+Received: from mail-il1-f179.google.com ([209.85.166.179]:45207 "EHLO
+        mail-il1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCHRnW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Mar 2020 13:43:22 -0400
+Received: by mail-il1-f179.google.com with SMTP id p1so2598362ils.12
+        for <linux-gpio@vger.kernel.org>; Sun, 08 Mar 2020 10:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=agpvXQxmezAhH+DvBMusqaS9rHGsnSk75oR84nWZGYE=;
+        b=CptpmVD/T8IjIhoS3IIgV3p9Wokj9znUaNfsPMnvVIdwhThROowUEczYTgDBHBXA3S
+         jKTh8Pu220/kvYit+Il9smHKdUQuJSU1+zoqq/jbP/P3iW60YiDXO7Wu0RE641p8PtAE
+         C/9zRj4cJfyyBIA+F9rppXBJTXUOssb7CwJJO/hwJ3X2TuXaae1wTQySIkMXP80UE577
+         Dbjo2REkRIZyJnv2qGLJ4T4pC7d3NJp5AD8wup1erCiWJcaDXRIyS1Cl8V8orDsvstLb
+         rEKHOfw7fv8HZHzXEhHROQP4I1ypTCZMgsmmAItIhRP9kRyBrEi1znRbbzIeuA3Kdsxl
+         xFwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=agpvXQxmezAhH+DvBMusqaS9rHGsnSk75oR84nWZGYE=;
+        b=Ho2k81SbovMRYflIpGJ2JbI2Aj3FX1O+mDaGSAVEor+495QlPF7ZlvOcVUvQ40qstr
+         UetjFq1T+t3ZCms7skRDHBxQZWGYzCQ/H/0YnKSt8CnP+AavTy8/8I/6q03ZSGcQkjMd
+         9HPckjV6pUk7BDGa834xv6w5H9U4QFgRocwiTO3bJ8pix4RKtuNzI/1QxtMSlBkK2Lkn
+         uMeKV0tg8gL3Bxp4+SfZkTjj8ErsLRSsTVwbJ699gl3fib8G6spcEDq9dFjz6iZkRqA4
+         mUALA6cmgu62qgSO+httcwQJ5pIRAOcTG2+HCnI9uGsU2pDQ3+qDRx+TxVsrZUaejjpA
+         wLLQ==
+X-Gm-Message-State: ANhLgQ1jWmw+lYYv6XIKMxdoLatvCBOY+/2B15lzWxTIt+FQV1NJN7XS
+        bPTa+6b6hBIZFm/FH55KudnyY16NHAYr+a02lq0+HqDG
+X-Google-Smtp-Source: ADFU+vuL7hK14sSDPJgySUKA1w6LkqANU5K8ZMaaITS81eAe5z2qV9Mse3kWjizl8Ezp3l5nyU7B6EJWX+xXLEqQKek=
+X-Received: by 2002:a92:af8c:: with SMTP id v12mr3952528ill.6.1583689400009;
+ Sun, 08 Mar 2020 10:43:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <CAP6JJ88N28Tn+j=jonj8fVWmoVCLwK-4_6e-Vn8z+E7WDFHC=A@mail.gmail.com>
+ <CAMRc=MfgpwTM54oVkJsQ0ue0uibj0OMEDZHOQPEabPkRPSm6CQ@mail.gmail.com> <CAP6JJ88Uc3zw+r_qxHzsZ-fkwQ1-T+WS-_iNLiTQQFzOkKNd4Q@mail.gmail.com>
+In-Reply-To: <CAP6JJ88Uc3zw+r_qxHzsZ-fkwQ1-T+WS-_iNLiTQQFzOkKNd4Q@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sun, 8 Mar 2020 18:43:09 +0100
+Message-ID: <CAMRc=MeygWJzaZ9buuEwfc-XT881SXGQ85Jt8K5KSMiKzmObhA@mail.gmail.com>
+Subject: Re: libgpiod gpiod_line_request output and keep existing value
+To:     Mark Deneen <mdeneen@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Feb 2020 14:12:37 +0100
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+pt., 6 mar 2020 o 14:45 Mark Deneen <mdeneen@gmail.com> napisa=C5=82(a):
+>
+> Hi Bartosz,
+>
+> Thanks for the response, it is greatly appreciated. I've added a few
+> comments below.
+>
+> On Fri, Mar 6, 2020 at 6:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > czw., 5 mar 2020 o 15:57 Mark Deneen <mdeneen@gmail.com> napisa=C5=82(a=
+):
+> > >
+> > > Is it possible to use gpiod_line_request to set a given line as an
+> > > output but retain the current state of the line?  I can not use
+> > > gpiod_line_get_value to query the state since the line in question ha=
+s
+> > > not been requested yet.
+> >
+> > No, because it doesn't make sense. If you're driving the line, you
+> > define its state.
+>
+> I can test this, but does the line state reset when the chip is closed?
+>
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Add the remove() callback to irq_domain_ops which can be used to
-> automatically dispose of any host data associated with the domain when
-> irq_domain_remove() is called.
+This depends on your HW and the kernel driver. If the pin is pulled
+high/low than it will revert to the default state. If it floats than
+its state may be retained.
 
-I have a hard time buying this. Whatever data that is associated to the
-domain is already owned known by whoever created the domain the first
-place.
+> > >
+> > > Let's say that I have a userspace process which sets a gpio to high
+> > > and I restart the process.  I would like for the output to remain hig=
+h
+> > > when I request the line again in the new process.  This was possible
+> > > with gpiolib+sysfs, is it possible with libgpiod?
+> > >
+> >
+> > This was rather a side effect of sysfs keeping the line exported
+> > without any user-space process controlling it. This is not the case
+> > with a character device where if the process exits, all resources are
+> > freed ie. GPIOs are tied to processes rather than to a sysfs
+> > interface.
+>
+> I understand.  For some purposes this is a step backward although it
+> is definitely far more deterministic and that's probably a good thing.
+>
+> Let's say, for example, that a GPIO output is connected to a circuit
+> which controls a relay.  My process initialzes this gpio and engages
+> the relay.  At some point this process is restarted, possibly due to a
+> new version of the software being installed, and I wish for the relay
+> to remain engaged during this operation.  I can do this with the sysfs
+> interface by initializing the state to a predetermined value if the
+> direction had not been set to output yet.  With libgpiod I would have
+> to record the last state of the gpio somewhere and use this value when
+> requesting the line.
+>
+> Should I be writing a kernel module instead of using libgpiod if I
+> need this sort of control?
 
-Since the expected use case is that whoever created the domain also
-destroys it, the caller is already in a position to do its own cleanup,
-and we don't need any of this.
+Depends on your use-case. Do you have a specific kernel subsystem in
+mind? What would the role of this kernel driver be?
 
-So please explain what you are trying to achieve here.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Bart
