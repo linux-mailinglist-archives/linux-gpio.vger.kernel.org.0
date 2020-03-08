@@ -2,103 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A569F17D3CB
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2020 14:07:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 075A717D3F7
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Mar 2020 14:51:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgCHNHq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Mar 2020 09:07:46 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:38632 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCHNHq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Mar 2020 09:07:46 -0400
-Received: by mail-lj1-f175.google.com with SMTP id w1so7108739ljh.5
-        for <linux-gpio@vger.kernel.org>; Sun, 08 Mar 2020 06:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=PEjsBmq0oGYsC56UdyYVhp5hPk082kOp1hwXhzk5+QA=;
-        b=EVi39ie7yCBDdR6wSXweQKCjO1koGgSqxEmAhh5N5nhn3KhB0ZDCc8Q3jc43QrQRvT
-         liRJl8tzGgYz/ElHkkLxLAP/kYX0sa2ApUMXDzevGKEf2Gh73yLKvMvSp//ML46svFBY
-         06HaFYJf/F7nAFvVME1BUf0+NaU+vEMqLL+BhAqDxnqpXQCPCcTYwzFePExs5sbu4FKf
-         MesJ8gnMEVkjtK1svVef/rlpGeMkCu0fESYLXdwOkDI2Xig9yZKsxA5dnqPiVMn7QfBZ
-         nRwAioo6qs4eDGNI387CK/BKQNIYU/pVqL+Jp9GGAUVk439IXy1GxsQcP+hOsIdvZohv
-         TLOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=PEjsBmq0oGYsC56UdyYVhp5hPk082kOp1hwXhzk5+QA=;
-        b=L6wG+eMzYGhBEeudMJVXqSBCE6ZKSDboz+D0s7pvaoEDwxyfYz+9o2qkVkCKY+Rcqc
-         nNnnZGwgaBGNc28yQAY1s5GTUlEBZXAqmiTM7VP1Ky9WCueZNlOrtiiSuD+lsXWI1BfK
-         c6o0YX0esYWs+UNIT80em+8jzlLyK0V0r51vaU5myMN3gfKrCZsHZqvzbbEHZw1T7Nsm
-         +dHQIQt0jJGr4W5J5izU9L8TnYy0UsNClbJ/RO+WA4+LwRKf0MCqWtOC8ch/lBqFVPCp
-         0IrrVq7McrI3vX977WkVyHasghLWnt+pNhTgM/ubGlA+wzLZ4X0HUUFLTj6Ry89mbDk+
-         oRUg==
-X-Gm-Message-State: ANhLgQ18kQ+kElVe1VZa5DZT3ay5rAb63FdiszU6Bd0pTwQfP70tG8bo
-        viuCldrEzfHt0XoCWGzSQaUhBUqGj/hiHnJUpLw=
-X-Google-Smtp-Source: ADFU+vsu4ysosNA+Yd/FrmgD/b2AhwQsgb7wuGNQRgVMHI7RPEoLbk+YsDutCp+zDlyxBDqNagB3gyJnWESfwd1XqiM=
-X-Received: by 2002:a2e:9097:: with SMTP id l23mr7552620ljg.155.1583672864653;
- Sun, 08 Mar 2020 06:07:44 -0700 (PDT)
-MIME-Version: 1.0
-From:   Drew Fustini <drew@pdp7.com>
-Date:   Sun, 8 Mar 2020 14:08:04 +0100
-Message-ID: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
-Subject: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>
+        id S1726279AbgCHNvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Mar 2020 09:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726271AbgCHNvV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 8 Mar 2020 09:51:21 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16A9D20848;
+        Sun,  8 Mar 2020 13:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583675481;
+        bh=X8dWOYJs91h+opdJ6WGqxXj3yahy3sLflXZCnwu6mPo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=t1xnULWxHc6VFtywIFWZxYUwDlTly6MXJ/Z30BOpDnG/cCrW1arzpQe84AIM3T4VB
+         Ltr5oVNC6xrluFJ8symvJzqVh+DX+yWip+8DHhANtv3EZdVz4sTuUJgZ9xgyJAs0Q+
+         sqaOCPyWmN5uVxwbQxIrOJDKGd/s9LOdTvijJwEo=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jAwKt-00B2fF-9L; Sun, 08 Mar 2020 13:51:19 +0000
+Date:   Sun, 8 Mar 2020 13:51:17 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Drew Fustini <drew@beagleboard.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
+Message-ID: <20200308135117.7c60c881@why>
+In-Reply-To: <20200211131240.15853-4-brgl@bgdev.pl>
+References: <20200211131240.15853-1-brgl@bgdev.pl>
+        <20200211131240.15853-4-brgl@bgdev.pl>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Grygorii, Santosh and Kevin,
+On Tue, 11 Feb 2020 14:12:37 +0100
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-You are listed as gpio-omap maintainers so I wanted to reach out and
-get your feedback on this.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Add the remove() callback to irq_domain_ops which can be used to
+> automatically dispose of any host data associated with the domain when
+> irq_domain_remove() is called.
 
-The gpiolib userspace API added support for bias flags
-(pull-up/pull-down) in Linux 5.5:
-[GIT PULL] GPIO changes for v5.5 [1]
+I have a hard time buying this. Whatever data that is associated to the
+domain is already owned known by whoever created the domain the first
+place.
 
-The merged code is from the patch series:
-[PATCH v6 0/7] gpio: expose line bias flags to userspace [2]
+Since the expected use case is that whoever created the domain also
+destroys it, the caller is already in a position to do its own cleanup,
+and we don't need any of this.
 
-The gpiochip character device now supports theses flags [3]:
-GPIOHANDLE_REQUEST_BIAS_PULL_UP
-GPIOHANDLE_REQUEST_BIAS_PULL_DOWN
-GPIOHANDLE_REQUEST_BIAS_DISABLE
+So please explain what you are trying to achieve here.
 
-The pinctrl-bcm2835 driver used on Raspberry Pi already supports the
-pull-up/down bias flags [4].  pinctrl-bcm2835 is also a gpio driver
-[5].  libgpiod v1.5 supports these bias flags [6], so the command line
-gpioset utility can set the bias flags for a line on the Raspberry Pi
-[7].
+Thanks,
 
-I would like the BeagleBone, which has the TI AM3358 SoC, to be able
-to use the bias flags as well.   The AM3358 uses the gpio-omap GPIO
-driver.  However, gpio-omap does not support these flags [8].
-
-Do you have any feedback on whether this is possible to implement?
-
-If so, do you have any guidance about the correct way for me to add
-support for those bias flags in gpio-omap.c?
-
-Thank you,
-Drew
-
-[1] https://www.spinics.net/lists/linux-gpio/msg43719.html
-[2] https://lore.kernel.org/linux-gpio/CACRpkdbJxcfj6pK=1qjXxffFn0RUH9VD0HRFXX0RoZJDi=hfRw@mail.gmail.com/
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/gpiolib.c#n1061
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/bcm/pinctrl-bcm2835.c#n958
-[5] https://www.kernel.org/doc/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-[6] https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/commit/?h=v1.5.x&id=26d8d8f0b7bc0e300aaab05c75d5af1b0686af08
-[7] https://microhobby.com.br/blog/2020/02/02/new-linux-kernel-5-5-new-interfaces-in-gpiolib/
-[8] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpio/gpio-omap.c
+	M.
+-- 
+Jazz is not dead. It just smells funny...
