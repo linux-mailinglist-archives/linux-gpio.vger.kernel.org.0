@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7CB117E383
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2020 16:24:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD6C517E38E
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2020 16:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCIPY4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Mar 2020 11:24:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34373 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgCIPYz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Mar 2020 11:24:55 -0400
-Received: by mail-lj1-f194.google.com with SMTP id s13so1165810ljm.1
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2020 08:24:54 -0700 (PDT)
+        id S1726901AbgCIP0L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Mar 2020 11:26:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40140 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgCIP0K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Mar 2020 11:26:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so7563380ljj.7
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2020 08:26:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jbDLYusSnM6pIqjjnhoz0pEG1Av/QiUIZjymydPONDM=;
-        b=D/SW5tysueaKyWZGSiV2gS+rHzi+MdjpefC0HsRBSZ82fmjSRNcEX8R3ol/PDclgNa
-         NaoWVDVdYrrF9T0JWEZvwTKmvdPB1TtYK8i8mpZm4sE51rRyHNLheHZ1kz/SrAFF9BRZ
-         Ri5ild8YtgfzAFBZCgXhLfx3Og7Xne4okCG7cy4iFtwGSY3VM1T9vtfcpWzaRY0sRaIr
-         pAPKEPZuNV9b1XW9ls42JFqNYUr0kKl97O67bXLyoal38WAgHAiPzn5iq+KhF0lYvGjr
-         7ju0k/CfBpnvMi6Ai2zp8y5LHCcKzDsl/B5maqJ0DPNsh/vFlePv8JX1Er4jRZFaGOX9
-         izZQ==
+        bh=n2G0KJizTTOJ4ehEUzWr6CGXlUcOSYAVKuBsGihIoBo=;
+        b=l9uMC/7OGHVpByY57dMcWSod0Pgt6xYh1UOTZtkZbca5i5uzN2PGzmqQPsJVhoRddK
+         sdPl4a/RHYl+TJQW8S0h5r3czciP6Y3dA8E2unKQiimqpwF6oWZ0jVlcpdmd1N9JSwIR
+         +4Zd+jDHSakBYsEw9U3VZeoQTJDmVOog3u9Xjn4pOTPpiP8MV45RyfqgzZd6AGQJAUNM
+         7aoYpM+OGrw5G1NOtcdz0FMdfklrWhyQxYraUohp/1R/QfbJvG3XG4XDDyOy0kCSWGL3
+         Et6MGnhy5QfRZp7/MTlKQiDouprrOOqPv7gKogf1fdzGmwnPfkCXginPqxqCN0WJb5at
+         VniA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jbDLYusSnM6pIqjjnhoz0pEG1Av/QiUIZjymydPONDM=;
-        b=nPoMP4SBHGD8FEA9bfWTUyemeLL5y1bmwo+t3X5gTKBl2QfjEvQIF5IWmWChaMdibo
-         sQGnTRmW721/FeTLzBz26RpYxgXyXV/BX4RJv1kCY9gS81xqZgKhWiz4HxchjBxIALtz
-         wcWEUsw9ad7IRqJYddUL5OePYtfQq1xzeVKHe4cjOHvwAa6KB/IvcyKWnBlTRUs4ql9A
-         HloQ6TmMevG7tFaa6QgeYJ4XBq1FVKwuxLpS4iJgUAGlF6UDFNR8VXr+Z14iJmovJr1o
-         3o0Tixjc0im8psDluXuDmFIGLc6TfQhvC+mEv3i+GUC8TlBEMSit21K2EKH16GeiBuum
-         B9YQ==
-X-Gm-Message-State: ANhLgQ3cYLb8vAgU4yu6qbXOQMeYlMMTEm4hnA7q67HyHQP6jApwfIao
-        WedkAZPJTulI3ZShqkF3Qi01EICJ1Gg=
-X-Google-Smtp-Source: ADFU+vumSmmpcbUV4GBhSbfgzl204I7hwfHYv74YYnfGWpjaCDBPA+udq/cFB7VVqxqeU7/eCHpg9Q==
-X-Received: by 2002:a2e:b892:: with SMTP id r18mr10046087ljp.252.1583767493243;
-        Mon, 09 Mar 2020 08:24:53 -0700 (PDT)
+        bh=n2G0KJizTTOJ4ehEUzWr6CGXlUcOSYAVKuBsGihIoBo=;
+        b=GwSuCZQQXsEK1sWCxg4V85DMKk/kbrOtg+VNZbrm0OsUsZhw890K1UIZq/uq3Nr9jX
+         tnAWZ2yAIsn2zgB1pL2zoHzPL0tCgsidXfRN2MwfinTgPo6szHz9giC1gw7BJlpLxG0O
+         3mwgWTgYc1hg96Jg2hvvRb2htK36bymS/TYMs17tQZ71URuykFSJ8ohvI8WlvHYw6EHX
+         mkRgz4ER1ZvA3u96TxM1UWd7Bc/sQ7WCZPoqQhNpfoDRIQt0j1PK5fi3j4a12yif6LIu
+         uUBgCdearsk7ZxkfzolhLE1FeePS2gI1ytQNSUxcPslMcNqz1/xRd++XbJGWtr0InfUC
+         smQQ==
+X-Gm-Message-State: ANhLgQ1b2kpABxdh/cGdq/CY3t8dCKhbCWRYLvUSzGo1YGaZAEHgjN7I
+        01Tsco+AyJA9xZ3n05cd18/cp5WZTeA=
+X-Google-Smtp-Source: ADFU+vu/mPFMTwZzvD4SLct2qUyLQ3MOBNjuvflCxGLDc1sZJ2r+xIaGSsFNHSfJN1x/29WE6U671A==
+X-Received: by 2002:a2e:b6c6:: with SMTP id m6mr10138727ljo.3.1583767566796;
+        Mon, 09 Mar 2020 08:26:06 -0700 (PDT)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id c20sm14705688lfb.60.2020.03.09.08.24.52
+        by smtp.gmail.com with ESMTPSA id w24sm21270925ljh.26.2020.03.09.08.26.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Mar 2020 08:24:52 -0700 (PDT)
+        Mon, 09 Mar 2020 08:26:06 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -52,9 +52,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Lina Iyer <ilina@codeaurora.org>,
         Marc Zyngier <maz@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>, stable@vger.kernel.org
-Subject: [PATCH v3] pinctrl: qcom: Assign irq_disable/eoi conditionally
-Date:   Mon,  9 Mar 2020 16:24:46 +0100
-Message-Id: <20200309152446.584797-1-linus.walleij@linaro.org>
+Subject: [PATCH v4] pinctrl: qcom: Assign irq_eoi conditionally
+Date:   Mon,  9 Mar 2020 16:26:04 +0100
+Message-Id: <20200309152604.585112-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -105,6 +105,8 @@ Link: https://lore.kernel.org/r/20200309125207.571840-1-linus.walleij@linaro.org
 Tested-by: David Heidelberg <david@ixit.cz>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
+ChangeLog v3->v4:
+- Fix the patch subject too, doh.
 ChangeLog v2->v3:
 - Keep .irq_disable() around, just make the assignment of
   .irq_eoi() conditional.
