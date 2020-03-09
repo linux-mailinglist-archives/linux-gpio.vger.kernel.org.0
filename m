@@ -2,151 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 589C617E2C5
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2020 15:54:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC38017E302
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2020 16:03:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgCIOy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Mar 2020 10:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbgCIOy0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 9 Mar 2020 10:54:26 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8206222D9;
-        Mon,  9 Mar 2020 14:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583765665;
-        bh=C1cXE+shbxK5n3fyrkPtztfK5LTlFOl3pAD64gHyFSA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=i/DOvxuINdxlUMAZeNCWHguF45SpZBNMymonF3jKcRtH//+hgoHtRcGF4nAjahxLz
-         dzLX+V39ZRwypZsbr0esNBmDk5h0A0iH1ebaQibZ05vziD6pWaS2LKb4ANHJosWT09
-         BfDHO3yEeGC7qh/ECZxnf0eErvGt0hMDUeuxAFJg=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jBJnU-00BJ8t-3t; Mon, 09 Mar 2020 14:54:24 +0000
+        id S1726772AbgCIPDl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Mar 2020 11:03:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34979 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgCIPDk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Mar 2020 11:03:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u12so6109664ljo.2
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Mar 2020 08:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=60I0dJLVgvesjlRdADndse4fCiuUHqW4MeJ9mZcs2iE=;
+        b=jl72Qce2OLxZ5tZk9oBt/x/9/WVKwPY+lV3y0lk57qZKjsbO/qY5FQ6xldSAMLCYAm
+         R1/3MDvO3mIzqS6FmGGqBd2LVg8DnqLTEjUzDGPiC+jhy++h3eyk1GNRqGw0MC7NqSPR
+         S75G15YAhhG7ImcoyxpjL4EgiTfrz2pRGTnzhgm+P5SS8VY2jwes89+SS60d7ltdWnAt
+         835bf3OpWVZmgICA/u4NRpKVH1uZhJuSUgosIVR793LavVJRnuG2ZFSTTsFjYOwcg+cp
+         SaDZKujcZNoI/eOsPWPKldktQq7IPRvWu6CSiddDsd/Xtpzane12WwA7bovD9SdQ7lhA
+         tSNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=60I0dJLVgvesjlRdADndse4fCiuUHqW4MeJ9mZcs2iE=;
+        b=AuYpOgPr3BEHcSDjjppPZU96YGrqUfqZDMnpuaW4NjXQDG5u+At/JXdKNN3QiEhAnV
+         ixX3nmNgENt7MW/y48pLaG/JX3H5qqH1TY8y/S8Bt/OPFI3iCmP1ikaAAZqr01HxO3CI
+         MKfzS7XHN6fvOtGeHJbvJsqQgZkNu7smMa5pN1zCQrDgnjCS3jWO8MsHsY7uY4Ykbo3r
+         fsnpjt92PAuZxPqgsLDnXU0so7QVl4j2eeMe/KTDn91jRGpYxohHutFhql/Rt/5RN7lr
+         u9GzK5cj6ZWLsZIV4BKEM0cP7WRzVPIQacYt9YvC1U3jAM4WfRPrD2OhNaFkDN42f5Cq
+         HIrw==
+X-Gm-Message-State: ANhLgQ3z5MES+O7m0lz+QTjL+gmh2N5wAbg6tbfOGQVsNGar2G6XG3Bx
+        fBkcn+QFhRuPZJSsh5ZO9NnESFeJGcoSkO1Rmb0mzg==
+X-Google-Smtp-Source: ADFU+vt9jkmrIyzpB7ZpvnSjQiZyiwUn9LDNiF7f/+vCV18J3gc4EbD9apUGt2+Jc1REBefNpNPwdexa0p3vm7Z1h0s=
+X-Received: by 2002:a2e:9a90:: with SMTP id p16mr6708002lji.277.1583766217426;
+ Mon, 09 Mar 2020 08:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 09 Mar 2020 14:54:24 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
+References: <20200309125207.571840-1-linus.walleij@linaro.org> <1be9151d00160ef26a3900e0e6a5fd14@kernel.org>
+In-Reply-To: <1be9151d00160ef26a3900e0e6a5fd14@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 9 Mar 2020 16:03:26 +0100
+Message-ID: <CACRpkdamdgMh-z6AHqEptAw_o9JtCu1-RXDVWkqVJsoQTpc2NQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: Assign irq_disable/eoi conditionally
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Lina Iyer <ilina@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: qcom: Assign irq_disable/eoi conditionally
-In-Reply-To: <20200309125207.571840-1-linus.walleij@linaro.org>
-References: <20200309125207.571840-1-linus.walleij@linaro.org>
-Message-ID: <1be9151d00160ef26a3900e0e6a5fd14@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org, ilina@codeaurora.org, swboyd@chromium.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Stephen Boyd <swboyd@chromium.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Mon, Mar 9, 2020 at 3:54 PM Marc Zyngier <maz@kernel.org> wrote:
 
-On 2020-03-09 12:52, Linus Walleij wrote:
-> The hierarchical parts of MSM pinctrl/GPIO is only
-> used when the device tree has a "wakeup-parent" as
-> a phandle, but the .irq_disable and .irq_eoi are anyway
-> assigned leading to semantic problems on elder
-> Qualcomm chipsets.
-> 
-> When the drivers/mfd/qcom-pm8xxx.c driver calls
-> chained_irq_exit() that call will in turn call chip->irq_eoi()
-> which is set to irq_chip_eoi_parent() by default on a
-> hierachical IRQ chip, and the parent is pinctrl-msm.c
-> so that will in turn unconditionally call
-> irq_chip_eoi_parent() again, but its parent is invalid
-> so we get the following crash:
-> 
->  Unnable to handle kernel NULL pointer dereference at
->  virtual address 00000010
->  pgd = (ptrval)
->  [00000010] *pgd=00000000
->  Internal error: Oops: 5 [#1] PREEMPT SMP ARM
->  (...)
->  PC is at irq_chip_eoi_parent+0x4/0x10
->  LR is at pm8xxx_irq_handler+0x1b4/0x2d8
-> 
-> If we solve this crash by avoiding to call up to
-> irq_chip_eoi_parent(), the machine will hang and get
-> reset by the watchdog, because of semantic issues,
-> probably inside irq_chip.
-> 
-> As a solution, just assign the .irq_disable and .irq_eoi
-> condtionally if we are actually using a wakeup parent.
-> 
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: stable@vger.kernel.org
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - Noticed that the previous solution doesn't actually work,
->   the machine hangs and reboots intead (even if it got rid of
->   the most obvious crash). Make a more thorough solution that
->   completely avoids using these callbacks if we don't have
->   a parent.
+> On 2020-03-09 12:52, Linus Walleij wrote:
 
-What is the problem with disable exactly?
+> > ChangeLog v1->v2:
+> > - Noticed that the previous solution doesn't actually work,
+> >   the machine hangs and reboots intead (even if it got rid of
+> >   the most obvious crash). Make a more thorough solution that
+> >   completely avoids using these callbacks if we don't have
+> >   a parent.
+>
+> What is the problem with disable exactly?
 
-> - v1 was called "Guard irq_eoi()"
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c
-> b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 9a8daa256a32..fe3c53ae25f4 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1100,11 +1100,9 @@ static int msm_gpio_init(struct msm_pinctrl 
-> *pctrl)
-> 
->  	pctrl->irq_chip.name = "msmgpio";
->  	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
-> -	pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
+There is no problem with .irq_disable, the system still works
+if I keep that. But since the original patch added these two
+callbacks for hierarchical I just moved them both to be
+conditional.
 
-I find it really odd to have the enable callback, but not the disable.
-What is the rational for that? Can we drop the enable as well for old
-platforms and only use mask/unmask instead?
+The .irq_eoi callback is the culprit.
 
->  	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
->  	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
->  	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
-> -	pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
->  	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
->  	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->  	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
-> @@ -1118,7 +1116,8 @@ static int msm_gpio_init(struct msm_pinctrl 
-> *pctrl)
->  		if (!chip->irq.parent_domain)
->  			return -EPROBE_DEFER;
->  		chip->irq.child_to_parent_hwirq = msm_gpio_wakeirq;
-> -
-> +		pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
-> +		pctrl->irq_chip.irq_eoi = irq_chip_eoi_parent;
->  		/*
->  		 * Let's skip handling the GPIOs, if the parent irqchip
->  		 * is handling the direct connect IRQ of the GPIO.
+> >       pctrl->irq_chip.name = "msmgpio";
+> >       pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+> > -     pctrl->irq_chip.irq_disable = msm_gpio_irq_disable;
+>
+> I find it really odd to have the enable callback, but not the disable.
+> What is the rational for that? Can we drop the enable as well for old
+> platforms and only use mask/unmask instead?
 
-Thanks,
+Hm I'm just working with the regression, and before the
+patch I'm fixing the driver actually had just the .irq_enable
+callback, so I'm restoring that state.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Would you prefer a patch where I just move the assignment
+of the .irq_eoi callback to be conditional?
+
+I have no idea *why* .irq_eoi() locks up the system, I suspect
+one of those irqchip internal semantics that are sometimes
+not entirely clear.
+
+Yours,
+Linus Walleij
