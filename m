@@ -2,201 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4517417F552
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 11:47:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 334F617FFE1
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 15:12:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgCJKrg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Mar 2020 06:47:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33141 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgCJKrf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Mar 2020 06:47:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 03:47:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,536,1574150400"; 
-   d="scan'208";a="231279883"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 10 Mar 2020 03:47:33 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jBcQ9-000Hru-0G; Tue, 10 Mar 2020 18:47:33 +0800
-Date:   Tue, 10 Mar 2020 18:46:59 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- 5779925c23e1b9cc4cffb6dafe0b70a47beb364d
-Message-ID: <5e677023.ycPkimqcLYwpdHrb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726622AbgCJOMO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Mar 2020 10:12:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45007 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgCJOMO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Mar 2020 10:12:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a10so14261767ljp.11
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2020 07:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4QhA/j02FBxntBJRQBcss8svsZrEfLANO9BT4LL3iCU=;
+        b=RcBB6uSziFObfQh7F40JgIh9KQqUgYDwVustVXGRIPKq5nbuKDZAMkThEJVGtYXtmC
+         0gEjWZXupu/bjDHLhO3bDgP8Jai3e2Z2HPKRFnxW66BCqrmOGyFY/wtlV5fZsccTuwFX
+         UmPKp0oCjsJDT3K7zOj3RS/DMRdaAVrCSFfZONmcFzs850WYw8P+2+yeYHC/H5QHiIXL
+         yboqgrnJHVFHAaT7au0i6hkcUAemScwhj8pHIRGvNPzFrVp7jftLPaWXmWpjh0jt/Zm1
+         rGUFN2EhWYkgauQQgZAh6Z8zUxIBW95qtYNbBQBZmxLOLJzh3/ledsuZMFKEOvYoTxxb
+         wsAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4QhA/j02FBxntBJRQBcss8svsZrEfLANO9BT4LL3iCU=;
+        b=O8rjvEpkFar8vbo+XOWHNTGxmJlNk+zfNcAJAwlaG+QmtmfmPQqIaDURN22pkliSpD
+         UMrSKDjosBliymVjhky73NNpkdiihOrkur5xh89eAIFlXCGAXNdWWOFpTidaqhjmcwmS
+         Z5mRP4Vd9s99bIrIMuPirPx2qiTEiQUKBntlKI+oMmmTsITNEbOGnchug9jNxUauzBuj
+         jyITtF2Ft+dwrAoQkv3CxwnN28Pubaq8B+ks6ipZWK41QLfAgWZOW94ipyeko19X4o5W
+         HrBGdEJWFpNvQbXj++I8hF53+Rz597xJ/tIvxLPfqAtMLplZmXkWa3phZAtd6w8UoRdJ
+         ioZQ==
+X-Gm-Message-State: ANhLgQ2ScflkJAA5hv4hesWTXLgE9Dl3xNZ9BU0ZXjl51YmBF7O1QnD5
+        Izo9/yCIThdR8BjHWvj0ycYa717u37ZBwpeYXkMS5w==
+X-Google-Smtp-Source: ADFU+vsZjGe47Suk3ijAD4oBo8DcgUhtsIlZsoQp4eX5n+pgXggGbZV8FREk09m/qnaQ5xTBa9ZjBcN17IUu/qd8ZRc=
+X-Received: by 2002:a2e:8105:: with SMTP id d5mr7218437ljg.172.1583849531956;
+ Tue, 10 Mar 2020 07:12:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com> <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com>
+In-Reply-To: <20200210101414.GN2667@lahna.fi.intel.com>
+From:   =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>
+Date:   Tue, 10 Mar 2020 15:12:00 +0100
+Message-ID: <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
+ ACPI GPIO numbers
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 5779925c23e1b9cc4cffb6dafe0b70a47beb364d  Merge tag 'gpio-updates-for-v5.7-part2' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
+On Mon, Feb 10, 2020 at 11:14 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+>
+> On Sat, Feb 08, 2020 at 07:43:24PM +0100, Micha=C5=82 Stanek wrote:
+> > > >
+> > > > Hi Mika,
+> > > >
+> > > > The previous patches from Dmitry handled IRQ numbering, here we hav=
+e a
+> > > > similar issue with GPIO to pin translation - hardcoded values in FW
+> > > > which do not agree with the (non-consecutive) numbering in newer
+> > > > kernels.
+> > >
+> > > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+> > > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+> > > able to share the exact firmware description where this happens?
+> >
+> > Actually it is a GPIO offset in ACPI tables for Braswell that was
+> > hardcoded in the old firmware to match the previous (consecutive)
+> > Linux GPIO numbering.
+>
+> Can you share the ACPI tables and point me to the GPIO that is using
+> Linux number?
 
-elapsed time: 9883m
+I think this is the one:
+https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/=
+%2B/286534/2/src/mainboard/google/cyan/acpi/chromeos.asl
 
-configs tested: 146
-configs skipped: 0
+On Kefka the sysfs GPIO number for wpsw_cur was gpio392 before the
+translation change occurred in Linux.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > > > > What GPIO(s) we are talking about and how does it show up to the =
+user?
+> > > >
+> > > > As an example, the issue manifests itself when you run 'crossystem
+> > > > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instea=
+d
+> > > > of 0 when the write protect screw is removed.
+> > >
+> > > Is it poking GPIOs directly through sysfs relying the Linux GPIO
+> > > numbering (which can change and is fragile anyway)?
+> >
+> > I believe so, yes.
+>
+> This is something that should be fixed in userspace. Using global Linux
+> GPIO or IRQ numbers is fragile and source of issues like this. There are
+> correct ways of using GPIOs from userspace: in case of sysfs, you can
+> find the base of the chip and then user relative numbering against it or
+> switch to use libgpiod that does the same but uses the newer char
+> device. Both cases the GPIO number are relative against the GPIO chip so
+> they work even if global Linux GPIO numbering changes.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-s390                       zfcpdump_defconfig
-sparc64                          allyesconfig
-riscv                               defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200303
-x86_64               randconfig-a002-20200303
-x86_64               randconfig-a003-20200303
-i386                 randconfig-a001-20200303
-i386                 randconfig-a002-20200303
-i386                 randconfig-a003-20200303
-riscv                randconfig-a001-20200303
-alpha                randconfig-a001-20200303
-m68k                 randconfig-a001-20200303
-mips                 randconfig-a001-20200303
-nds32                randconfig-a001-20200303
-parisc               randconfig-a001-20200303
-c6x                  randconfig-a001-20200303
-h8300                randconfig-a001-20200303
-microblaze           randconfig-a001-20200303
-nios2                randconfig-a001-20200303
-sparc64              randconfig-a001-20200303
-csky                 randconfig-a001-20200304
-openrisc             randconfig-a001-20200304
-s390                 randconfig-a001-20200304
-sh                   randconfig-a001-20200304
-xtensa               randconfig-a001-20200304
-sh                   randconfig-a001-20200302
-openrisc             randconfig-a001-20200302
-csky                 randconfig-a001-20200302
-s390                 randconfig-a001-20200302
-xtensa               randconfig-a001-20200302
-x86_64               randconfig-c001-20200303
-x86_64               randconfig-c002-20200303
-x86_64               randconfig-c003-20200303
-i386                 randconfig-c001-20200303
-i386                 randconfig-c002-20200303
-i386                 randconfig-c003-20200303
-x86_64               randconfig-d001-20200303
-x86_64               randconfig-d002-20200303
-x86_64               randconfig-d003-20200303
-i386                 randconfig-d001-20200303
-i386                 randconfig-d002-20200303
-i386                 randconfig-d003-20200303
-x86_64               randconfig-g001-20200303
-x86_64               randconfig-g002-20200303
-x86_64               randconfig-g003-20200303
-i386                 randconfig-g001-20200303
-i386                 randconfig-g002-20200303
-i386                 randconfig-g003-20200303
-x86_64               randconfig-h001-20200303
-x86_64               randconfig-h002-20200303
-x86_64               randconfig-h003-20200303
-i386                 randconfig-h001-20200303
-i386                 randconfig-h002-20200303
-i386                 randconfig-h003-20200303
-arc                  randconfig-a001-20200303
-sparc                randconfig-a001-20200303
-ia64                 randconfig-a001-20200303
-arm                  randconfig-a001-20200303
-arm64                randconfig-a001-20200303
-powerpc              randconfig-a001-20200303
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
+I analyzed crossystem source code and it looks like it is doing
+exactly what you're saying without any hardcoded assumptions. It gets
+the absolute offset of the GPIO pin from sysfs using its ACPI
+identifier, then it subtracts the base offset of the GPIO bank from it
+and the result is added to the bank's gpiochip%d number as it shows up
+in sysfs. The result is what is used to export and read the state of
+the pin.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+With the newer kernel the gpiochip%d number is different so crossystem
+ends up reading the wrong pin.
