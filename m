@@ -2,74 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A07917E995
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Mar 2020 21:02:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6074017ED44
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 01:24:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgCIUCD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Mar 2020 16:02:03 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:42165 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgCIUCD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Mar 2020 16:02:03 -0400
-Received: by mail-ua1-f67.google.com with SMTP id p2so3794878uao.9;
-        Mon, 09 Mar 2020 13:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pTzxYDH2AxvhcoAC/Na4iwhOdxiHwUzqHjcxqLWpuxk=;
-        b=GQCEV06Lm4xXvCKBt/YE3GSEpfgS9Y+DsuySxrA/FHkBxV8cXIq+RGg2ipv1u4sZYF
-         Y1Niv6stWta6HJWJdBP2pxhMgSPsWIMQzQojVUSke1NPXKNcnAIHPK1BMqY2HAbSuNAI
-         Bx8K+OfFMgeBn4tOLISC5hk2R3KD9lw9FFqN7bkDpzAR4qouBJXawHJxL1La34QCRuId
-         QTnsRHKb70pRnU6u188Q1EVyhKdMnmg9neZn5tKeMF4p8k5vVen3/ke+M6kpszI3zP9V
-         uSdZAvBbvnDqRut4/NG88abbk1/2tEN3dROun3iwv5g37DwLSTZCv+MOrJKrO/jJ6p1i
-         zBKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pTzxYDH2AxvhcoAC/Na4iwhOdxiHwUzqHjcxqLWpuxk=;
-        b=X8tuGyxm0Uwra9FSTMjqjs4bJkOOZt/c7E5jbbjxnnM9l6gwkVsrc8md4LOCib9c+i
-         Zr8cBkIbwPkRjII+aC/JX+jduL/oijME/ViyVuYABqdnhexGjBDzfjF43SV3rDXRw10P
-         HbbFQmH4l6jpiLdMKSfvmv6zAG+RFyQPLxha4Vpq7beC+gRGlaYunFxY/8binCn+5AHf
-         NK4/WPrpfX2creLtVNsRZ4FAUV3eDhdLvBsLh4fdGpkgFnAFNFCkHyj6tPjwytcMSbsR
-         E+PlnaRA2D0ZLVUcs2aWCxzsi8EMzl0Fo2XAMg3d2Zi18QOXfxVE2xIZLsaJSZ7jzN8W
-         W4KA==
-X-Gm-Message-State: ANhLgQ1Mn8smSQ6xuUDmkAE9+5KOWfVMmc6jtNfWDFmYbL93gZ2HrJpV
-        4doW1Bdu79LdI2cxOmGnghoKpO32sU+zcFhWcwg=
-X-Google-Smtp-Source: ADFU+vvnyhaBj9HB+Vdqccw7wpInLbX76amumParBY6QdTNcO7OLeuGNAM4hdzC1UyzZYxq4D7RMbq+yXovPRruhtjU=
-X-Received: by 2002:ab0:471a:: with SMTP id h26mr10219454uac.34.1583784120687;
- Mon, 09 Mar 2020 13:02:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
-In-Reply-To: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
-From:   Gregory Fong <gregory.0xf0@gmail.com>
-Date:   Mon, 9 Mar 2020 13:01:34 -0700
-Message-ID: <CADtm3G6hwpOneYvwdrjiWHrRzsMmik5w7Y8gOhtJn7FaGMfw_A@mail.gmail.com>
-Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
-To:     Doug Berger <opendmb@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1727322AbgCJAYw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Mar 2020 20:24:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44402 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgCJAYv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Mar 2020 20:24:51 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 87999803087C;
+        Tue, 10 Mar 2020 00:24:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ODmLbv6xH-x5; Tue, 10 Mar 2020 03:24:48 +0300 (MSK)
+Date:   Tue, 10 Mar 2020 03:23:58 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
+References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200310002449.87999803087C@mail.baikalelectronics.ru>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 9, 2020 at 12:02 PM Doug Berger <opendmb@gmail.com> wrote:
->
-> The default handling of the gpio-line-names property by the
-> gpiolib-of implementation does not work with the multiple
-> gpiochip banks per device structure used by the gpio-brcmstb
-> driver.
->
-> This commit adds driver level support for the device tree
-> property so that GPIO lines can be assigned friendly names.
->
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
+On Fri, Mar 06, 2020 at 04:24:44PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <fancer.lancer@gmail.com>
+> 
+> There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+> supported by the kernel DW APB GPIO driver. It works for them just fine with
+> no modifications. But still there is a room for optimizations there.
+> 
+> First of all as it tends to be traditional for all Baikal-T1 SoC related
+> patchset we replaced the legacy plain text-based dt-binding file with
+> yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+> but in order to use it the corresponding reference clock must be enabled.
+> We added support of that clock in the driver and made sure the dt-bindings
+> had its declaration. In addition seeing both APB and debounce reference
+> clocks are optional, we replaced the standard devm_clk_get() usage with
+> the function of optional clocks acquisition.
+> 
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Hoan Tran <hoan@os.amperecomputing.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (4):
+>   dt-bindings: gpio: Replace DW APB GPIO legacy bindings with YAML-based
+>     one
+>   dt-bindings: gpio: Add DW GPIO debounce clocks bindings
+>   gpio: dwapb: Use optional-clocks interface for APB ref-clocks
+>   gpio: dwapb: Add debounce reference clock support
+> 
+>  .../bindings/gpio/snps,dw-apb-gpio.yaml       | 140 ++++++++++++++++++
+>  .../bindings/gpio/snps-dwapb-gpio.txt         |  65 --------
+>  drivers/gpio/gpio-dwapb.c                     |  41 +++--
+>  3 files changed, 166 insertions(+), 80 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> 
+> -- 
+> 2.25.1
+> 
 
-Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
+Folks,
+
+It appears our corporate email server changes the Message-Id field of 
+messages passing through it. Due to that the emails threading gets to be
+broken. I'll resubmit the properly structured patchset as soon as our system
+administrator fixes the problem. Sorry for the inconvenience caused by it.
+
+Regards,
+-Sergey
