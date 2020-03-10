@@ -2,94 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BCA618094F
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 21:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E886180C53
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2020 00:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgCJUlI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Mar 2020 16:41:08 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44605 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgCJUlI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Mar 2020 16:41:08 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d62so15324189oia.11
-        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2020 13:41:08 -0700 (PDT)
+        id S1727311AbgCJX1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Mar 2020 19:27:44 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39794 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgCJX1n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Mar 2020 19:27:43 -0400
+Received: by mail-oi1-f194.google.com with SMTP id d63so20757oig.6
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2020 16:27:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gateworks-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=o4jG9FgYERjshwJKDvb4igBteXFyMN8vceGJFigN9yY=;
-        b=aBScozVeOmel5KcowsGkoBFGm7EJZr+0mA5q4ExvEZEocbW7UPRc21UmtbmG/23rOz
-         0MoHVyyXb1ii4b7dVUFxFAz+7QEyGO2iy54kVlRU7qjDAQq3WSos092Kb+kstyfEcle4
-         Onbp2oOT5pc08yaVGtkjqTK8+wq9kcfJnozVwdHReIhUrCe+4vGKSkVRelr0sNA30kY8
-         jTO6RZZgZ1/WHzdFsyZdbRsJIANKJldLv2DN4tsJ2EV8Zskr7DJ9k8XYqV2DPabyIBmQ
-         5oq7joq64eAZnOIRcXU1Wz+A7R5p8ZSF7z5XdZkntcb651Py5QOe1I+Uwuzl7f0AjXiE
-         VZYQ==
+        bh=urlu+8TdQXdW80awHG4Zd4J9lzaBBb5vKaOjUvu/Baw=;
+        b=TWAFwRacAltjmxOIncTM4pfxUqZ6aLEc6D3plWuBUkMVwBWikAKxmA/+G8h7sSHmyB
+         EFPNWTaWMtj0FRPhsXGtXySfrpCA4iGwzXXTLofXfjpLjniSQ7nSic1fLN/FVIo8YxGK
+         7xO21xec0DGPZEOGtZJgsTQpe8NiVMsg1y/avSifZrIfD7OMJSPKqaZ8+ks3nvFF13WV
+         CzM5IZPb8PFQfnxKuYmDOjUfn7r2idvxonZ8HoisdEs7PBl8lHxYdn9FBn/UtfMfDNSj
+         D3dg/R1Kh0wQhAVd6/MHdsYS+o2M9VABsavSoob/Vo9kb7Dhp/L1QMmQyTOhcdmvRygp
+         u1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o4jG9FgYERjshwJKDvb4igBteXFyMN8vceGJFigN9yY=;
-        b=j6vFU80EW0dZFjWIxNkanA0xaYBB70Wrjyuwve4QG/O+oZAUwQOtlRUstoS2S3pqwP
-         t6iIQmWq/5N1cp3uZzCes/tXtuKJQKNrxJw2flfrMEy8Yv6pE12zaTbyTArU4tNCDO2M
-         tqYD9ibmuWiA70s5o8ymFQvQEDyMnVF4h8Q8OuyU0X+WdWvUctXzwwjUEEPR5lF1GFOd
-         8Crq59x9WSWWGk7EJCZGeJYkFFkpAmfVRnHntn1YoNLqa6Ft2ty39oXSnUHbtryjrxh9
-         50O2aDLDQRXyFFlaFonzTE762q/RDLotJ2MqTCN8qO3L2/p5uC4U4AHgPmEl6LETqHiO
-         hhKQ==
-X-Gm-Message-State: ANhLgQ3S2x6VitqM0Zt5JkfvufczMUd5rGFFFnifT8K2LZxcYj/eZ0Nk
-        iJcgA89y1G26rJUMqop1rZ9pQtZtyxO6BC0gK5CBcw==
-X-Google-Smtp-Source: ADFU+vtyKYgVBFoVNtSnh69eUf+8ydT3qkb9jum7u95LT8jvpyS+rZxuEkHco7PkJcEMhFZwiHAxIR1e1yunDyQv+1k=
-X-Received: by 2002:aca:474e:: with SMTP id u75mr2469786oia.52.1583872867595;
- Tue, 10 Mar 2020 13:41:07 -0700 (PDT)
+        bh=urlu+8TdQXdW80awHG4Zd4J9lzaBBb5vKaOjUvu/Baw=;
+        b=Lnhqo1ZQYvy23TmxBqAgWa6yWrYpfmMLJhBQr+kzcy1p9vQVCqcy1fGlTTu+ghEAsp
+         JsPAagA+zKvFxOgK+6nOfg1XfDumgopBqE4iat2esc1m6Lc9M3mFnSoKc2W+y5h4bdxf
+         nzkTVCwjB08mMTQ71OrxLxO9RZS8QUP8W4vCTQA/Z4UOTJ9J3f0Z4rK37+r39dW77bvZ
+         mW36mZP7165AfefNB9KP7NmWVPEddcdgwtBK5equXObJob1NQ/vhUh3wEpv5oxsdmCjo
+         k11NHwzOhOZIejCwzJc+rFZcOAfnkOj4JyEEc243VZxSTvgnhreWVrx/m3F9j8/q5UmQ
+         hhsg==
+X-Gm-Message-State: ANhLgQ1WG8lfZceLvXoh7e1PdL/RFHb+jcza01FG/JzFlLDNuwq7jDMc
+        yh3HDq93Zm0OKeo/Vf5ahevsd9vLPFjc6geDVm9GHQ==
+X-Google-Smtp-Source: ADFU+vtFw4+uD8Udv5vJx1K7Yd8AiJ1NSDWoUD72RcY9sbbnvgqvHt4vpV9vddaJ49Th3mFrW8Vk6vTPlnaLbkWy0qQ=
+X-Received: by 2002:aca:474e:: with SMTP id u75mr86968oia.52.1583882862823;
+ Tue, 10 Mar 2020 16:27:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200114082821.14015-1-haokexin@gmail.com> <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
-In-Reply-To: <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
+References: <20190430101230.21794-1-lokeshvutla@ti.com> <20190430101230.21794-8-lokeshvutla@ti.com>
+In-Reply-To: <20190430101230.21794-8-lokeshvutla@ti.com>
 From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Tue, 10 Mar 2020 13:40:56 -0700
-Message-ID: <CAJ+vNU0QCQP7Roud7AGVNOreDwAbZ4HBmpXp4P9DEJPDB5eOag@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Fix the regression for the thunderx gpio
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Kevin Hao <haokexin@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 10 Mar 2020 16:27:31 -0700
+Message-ID: <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com>
+Subject: Re: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for {request,release}_resources
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 2:20 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Tue, Apr 30, 2019 at 3:14 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
 >
-> On Tue, Jan 14, 2020 at 9:39 AM Kevin Hao <haokexin@gmail.com> wrote:
+> thunderx_gpio_irq_{request,release}_resources apis are trying to
+> {request,release} resources on parent interrupt. There are default
+> apis doing the same. Use the default parent apis instead of writing
+> the same code snippet.
 >
-> > Since the commit a7fc89f9d5fc ("gpio: thunderx: Switch to
-> > GPIOLIB_IRQCHIP"), the thunderx gpio doesn't work anymore. I noticed
-> > that you have submitted a patch [1] to fix the " irq_domain_push_irq: -22"
-> > error, but the kernel would panic after applying that fix because the hwirq
-> > passed to the msi irqdomain is still not correct. It seems that we need
-> > more codes to make the thunderx gpio work with the GPIOLIB_IRQCHIP. So I
-> > would prefer to revert the commit a7fc89f9d5fc first to make the thunderx
-> > gpio to work on the 5.4.x and 5.5 at least. We can then do more test for
-> > GPIOLIB_IRQCHIP switching (which the patch 2 ~ 4 do) before merging
-> > them.
+> Cc: linux-gpio@vger.kernel.org
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+> Changes since v7:
+> - None
 >
-> Thanks a LOT Kevin, and I'm sorry for open coding and breaking this
-> driver so much :/
+>  drivers/gpio/gpio-thunderx.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 >
-> I have applied all four patches for fixes.
+> diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+> index 1306722faa5a..715371b5102a 100644
+> --- a/drivers/gpio/gpio-thunderx.c
+> +++ b/drivers/gpio/gpio-thunderx.c
+> @@ -363,22 +363,16 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
+>  {
+>         struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+>         struct thunderx_gpio *txgpio = txline->txgpio;
+> -       struct irq_data *parent_data = data->parent_data;
+>         int r;
 >
+>         r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
+>         if (r)
+>                 return r;
+>
+> -       if (parent_data && parent_data->chip->irq_request_resources) {
+> -               r = parent_data->chip->irq_request_resources(parent_data);
+> -               if (r)
+> -                       goto error;
+> -       }
+> +       r = irq_chip_request_resources_parent(data);
+> +       if (r)
+> +               gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
 
-I'm running into an issue with thunderx-gpio when using a gpio as an
-interrupt with an mfd driver I'm working on[1]. The breakage appeared
-with 0d04d0c146786da42c6e68c7d2f09c956c5b5bd3 'gpio: thunderx: Use the
-default parent apis for {request,release}_resources'[2] and occurs
-when irq_chip_request_resources_parent() fails with -ENOSYS. Any ideas
-what happened here... It seems perhaps parent_data got lost?
+Lokesh,
 
-1. https://patchwork.kernel.org/patch/11401555/
-2. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpio-thunderx.c?id=0d04d0c146786da42c6e68c7d2f09c956c5b5bd3
+This patch breaks irq resources for thunderx-gpio as
+parent_data->chip->irq_request_resources is undefined thus your new
+irq_chip_request_resources_parent() returns -ENOSYS causing this
+function to return an error where as before it would happily return 0.
 
-Best regards,
+Is the following the correct fix or should we qualify
+data->parent_data->chip->irq_request_resources before calling
+irq_chip_request_resources_parent() in thunderx-gpio?
+
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index b3fa2d8..b2435ecb 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1525,7 +1525,7 @@ int irq_chip_request_resources_parent(struct
+irq_data *data)
+        if (data->chip->irq_request_resources)
+                return data->chip->irq_request_resources(data);
+
+-       return -ENOSYS;
++       return 0;
+ }
+ EXPORT_SYMBOL_GPL(irq_chip_request_resources_parent);
+
+Regards,
 
 Tim
