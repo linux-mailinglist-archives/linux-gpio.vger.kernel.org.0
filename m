@@ -2,119 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE134180094
-	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 15:51:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BCA618094F
+	for <lists+linux-gpio@lfdr.de>; Tue, 10 Mar 2020 21:41:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCJOvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 10 Mar 2020 10:51:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:61409 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbgCJOvD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 10 Mar 2020 10:51:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2020 07:49:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,537,1574150400"; 
-   d="scan'208";a="353639779"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 10 Mar 2020 07:49:14 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 10 Mar 2020 16:49:13 +0200
-Date:   Tue, 10 Mar 2020 16:49:13 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
- of ACPI GPIO numbers
-Message-ID: <20200310144913.GY2540@lahna.fi.intel.com>
-References: <20200205194804.1647-1-mst@semihalf.com>
- <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com>
- <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com>
- <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+        id S1726315AbgCJUlI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 10 Mar 2020 16:41:08 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44605 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgCJUlI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 10 Mar 2020 16:41:08 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d62so15324189oia.11
+        for <linux-gpio@vger.kernel.org>; Tue, 10 Mar 2020 13:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o4jG9FgYERjshwJKDvb4igBteXFyMN8vceGJFigN9yY=;
+        b=aBScozVeOmel5KcowsGkoBFGm7EJZr+0mA5q4ExvEZEocbW7UPRc21UmtbmG/23rOz
+         0MoHVyyXb1ii4b7dVUFxFAz+7QEyGO2iy54kVlRU7qjDAQq3WSos092Kb+kstyfEcle4
+         Onbp2oOT5pc08yaVGtkjqTK8+wq9kcfJnozVwdHReIhUrCe+4vGKSkVRelr0sNA30kY8
+         jTO6RZZgZ1/WHzdFsyZdbRsJIANKJldLv2DN4tsJ2EV8Zskr7DJ9k8XYqV2DPabyIBmQ
+         5oq7joq64eAZnOIRcXU1Wz+A7R5p8ZSF7z5XdZkntcb651Py5QOe1I+Uwuzl7f0AjXiE
+         VZYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o4jG9FgYERjshwJKDvb4igBteXFyMN8vceGJFigN9yY=;
+        b=j6vFU80EW0dZFjWIxNkanA0xaYBB70Wrjyuwve4QG/O+oZAUwQOtlRUstoS2S3pqwP
+         t6iIQmWq/5N1cp3uZzCes/tXtuKJQKNrxJw2flfrMEy8Yv6pE12zaTbyTArU4tNCDO2M
+         tqYD9ibmuWiA70s5o8ymFQvQEDyMnVF4h8Q8OuyU0X+WdWvUctXzwwjUEEPR5lF1GFOd
+         8Crq59x9WSWWGk7EJCZGeJYkFFkpAmfVRnHntn1YoNLqa6Ft2ty39oXSnUHbtryjrxh9
+         50O2aDLDQRXyFFlaFonzTE762q/RDLotJ2MqTCN8qO3L2/p5uC4U4AHgPmEl6LETqHiO
+         hhKQ==
+X-Gm-Message-State: ANhLgQ3S2x6VitqM0Zt5JkfvufczMUd5rGFFFnifT8K2LZxcYj/eZ0Nk
+        iJcgA89y1G26rJUMqop1rZ9pQtZtyxO6BC0gK5CBcw==
+X-Google-Smtp-Source: ADFU+vtyKYgVBFoVNtSnh69eUf+8ydT3qkb9jum7u95LT8jvpyS+rZxuEkHco7PkJcEMhFZwiHAxIR1e1yunDyQv+1k=
+X-Received: by 2002:aca:474e:: with SMTP id u75mr2469786oia.52.1583872867595;
+ Tue, 10 Mar 2020 13:41:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200114082821.14015-1-haokexin@gmail.com> <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
+In-Reply-To: <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Tue, 10 Mar 2020 13:40:56 -0700
+Message-ID: <CAJ+vNU0QCQP7Roud7AGVNOreDwAbZ4HBmpXp4P9DEJPDB5eOag@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Fix the regression for the thunderx gpio
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Kevin Hao <haokexin@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 03:12:00PM +0100, Michał Stanek wrote:
-> On Mon, Feb 10, 2020 at 11:14 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
-> > > > >
-> > > > > Hi Mika,
-> > > > >
-> > > > > The previous patches from Dmitry handled IRQ numbering, here we have a
-> > > > > similar issue with GPIO to pin translation - hardcoded values in FW
-> > > > > which do not agree with the (non-consecutive) numbering in newer
-> > > > > kernels.
-> > > >
-> > > > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
-> > > > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
-> > > > able to share the exact firmware description where this happens?
-> > >
-> > > Actually it is a GPIO offset in ACPI tables for Braswell that was
-> > > hardcoded in the old firmware to match the previous (consecutive)
-> > > Linux GPIO numbering.
-> >
-> > Can you share the ACPI tables and point me to the GPIO that is using
-> > Linux number?
-> 
-> I think this is the one:
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/%2B/286534/2/src/mainboard/google/cyan/acpi/chromeos.asl
-> 
-> On Kefka the sysfs GPIO number for wpsw_cur was gpio392 before the
-> translation change occurred in Linux.
+On Wed, Jan 15, 2020 at 2:20 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Jan 14, 2020 at 9:39 AM Kevin Hao <haokexin@gmail.com> wrote:
+>
+> > Since the commit a7fc89f9d5fc ("gpio: thunderx: Switch to
+> > GPIOLIB_IRQCHIP"), the thunderx gpio doesn't work anymore. I noticed
+> > that you have submitted a patch [1] to fix the " irq_domain_push_irq: -22"
+> > error, but the kernel would panic after applying that fix because the hwirq
+> > passed to the msi irqdomain is still not correct. It seems that we need
+> > more codes to make the thunderx gpio work with the GPIOLIB_IRQCHIP. So I
+> > would prefer to revert the commit a7fc89f9d5fc first to make the thunderx
+> > gpio to work on the 5.4.x and 5.5 at least. We can then do more test for
+> > GPIOLIB_IRQCHIP switching (which the patch 2 ~ 4 do) before merging
+> > them.
+>
+> Thanks a LOT Kevin, and I'm sorry for open coding and breaking this
+> driver so much :/
+>
+> I have applied all four patches for fixes.
+>
 
-But that table does not seem to have any GPIO numbers in it.
+I'm running into an issue with thunderx-gpio when using a gpio as an
+interrupt with an mfd driver I'm working on[1]. The breakage appeared
+with 0d04d0c146786da42c6e68c7d2f09c956c5b5bd3 'gpio: thunderx: Use the
+default parent apis for {request,release}_resources'[2] and occurs
+when irq_chip_request_resources_parent() fails with -ENOSYS. Any ideas
+what happened here... It seems perhaps parent_data got lost?
 
-> > > > > > What GPIO(s) we are talking about and how does it show up to the user?
-> > > > >
-> > > > > As an example, the issue manifests itself when you run 'crossystem
-> > > > > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
-> > > > > of 0 when the write protect screw is removed.
-> > > >
-> > > > Is it poking GPIOs directly through sysfs relying the Linux GPIO
-> > > > numbering (which can change and is fragile anyway)?
-> > >
-> > > I believe so, yes.
-> >
-> > This is something that should be fixed in userspace. Using global Linux
-> > GPIO or IRQ numbers is fragile and source of issues like this. There are
-> > correct ways of using GPIOs from userspace: in case of sysfs, you can
-> > find the base of the chip and then user relative numbering against it or
-> > switch to use libgpiod that does the same but uses the newer char
-> > device. Both cases the GPIO number are relative against the GPIO chip so
-> > they work even if global Linux GPIO numbering changes.
-> 
-> I analyzed crossystem source code and it looks like it is doing
-> exactly what you're saying without any hardcoded assumptions. It gets
-> the absolute offset of the GPIO pin from sysfs using its ACPI
-> identifier, then it subtracts the base offset of the GPIO bank from it
-> and the result is added to the bank's gpiochip%d number as it shows up
-> in sysfs. The result is what is used to export and read the state of
-> the pin.
-> 
-> With the newer kernel the gpiochip%d number is different so crossystem
-> ends up reading the wrong pin.
+1. https://patchwork.kernel.org/patch/11401555/
+2. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpio-thunderx.c?id=0d04d0c146786da42c6e68c7d2f09c956c5b5bd3
 
-Hmm, so gpiochipX is also not considered a stable number. It is based on
-ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
-chip is always gpichip200 for example then it is wrong.
+Best regards,
+
+Tim
