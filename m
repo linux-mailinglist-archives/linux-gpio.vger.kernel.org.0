@@ -2,159 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D98181864
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2020 13:45:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0153218197F
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Mar 2020 14:20:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgCKMpL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Mar 2020 08:45:11 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46162 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbgCKMpK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Mar 2020 08:45:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id t13so1368158qtn.13
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Mar 2020 05:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7snnG2HZlswbBJSz223TSuoJZEBBjKBU34cy2pxEXn0=;
-        b=dT0pZcxvwIPX12xfO4t487Fl0GOHZ/A6IaR2M6mQ5GM+E/wk7iNUrFXHT9FF+0NYI9
-         GHEFu91lwkPTexBWbmw+gJ/MTIAdNRydvdbLjgD2Ry7C4IoHXnUuxKqP98n4UKOpPzGO
-         hKJw5rM5rPUNzTVDN079X7RLLDw9qBEj2Kxb1QAJsIq/AXle7eLexfHmwAy2jEAyvqF2
-         UPyUdHDVL6KcS6FtNjZpylVb2pRDg2l4OzByfRPIfiZWWJBLBkUv6lg/mf1cNrvx8cak
-         n5/xcp5ZyE4GXgE/3ZG8qDhGC3hmCnXM1T/weA8ISyyBQHNoVu+ifljhKf1CTXr+p8k7
-         c4OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7snnG2HZlswbBJSz223TSuoJZEBBjKBU34cy2pxEXn0=;
-        b=SSn2hP9F07xNRM0PTCF4RXKyqvanWmlYU8Xt5FBTHnd+cox5mxmEyXbA6+6zjQlYbV
-         rDIrqS9ctAnfgYuAuoXAMRylA0B2HmaDGqdri0hWh7Ti5nSzEwfID0bR8bSGNnolqTZt
-         d2v+IX22uetsLD17FB/qAUaq8mMe7x8zVo5RIsTZY7N1gRN2OHeiqUEC+JufzA+jbzpB
-         WyfxIo+TvThsisX4/z+mcBZJY6JRjQFixcmzRVt1nUj7RtJSWaMRyG1Fq6l1U+gt1Dg6
-         3L+S9im7KLJY69MumCP3oOrtOgYI8fKC37/wQax5/btzPV6HesyvwfUuK5dqu1aj02va
-         Qo/A==
-X-Gm-Message-State: ANhLgQ3FZP3HnkZrnjR5sWhhogFmAHUcTz3vNxj2FLwlmyNCzmFfAYUO
-        Zyr92NNMdJQXrCbl/t14obwzgzXF7BhM2GnJ9pFOpA==
-X-Google-Smtp-Source: ADFU+vs4VPyLyCMdpaRb3Mw9YsCh4XInG4OPRetr+tK0zFze5UffR48usFwGSLRHCwJzcCynq75BaoCR2JKyG66qP/U=
-X-Received: by 2002:ac8:3a63:: with SMTP id w90mr2379643qte.27.1583930707972;
- Wed, 11 Mar 2020 05:45:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
-In-Reply-To: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Mar 2020 13:44:56 +0100
-Message-ID: <CAMpxmJXNQQTxRWZSP0RZTUuefAk3+AeDMVeVkgERy7f9X=CBsA@mail.gmail.com>
-Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
-To:     Doug Berger <opendmb@gmail.com>
-Cc:     Gregory Fong <gregory.0xf0@gmail.com>,
+        id S1729460AbgCKNUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Mar 2020 09:20:21 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35792 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgCKNUV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Mar 2020 09:20:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583932818; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VBz3FZ3ocy9Q4rzBgIHqJzobg61gP/HChhqdayvs+kk=;
+        b=yGNmzbLo0S1R24n1OGPsGlftaQ2Z9STV+IYFchtu/eOrKBQs99T+Sg0QfS0jjJiM7iPlvB
+        fCXv+Kd2EdwpQ7DhAMRKSbOYjLnORPIaX8ySm/AoXTBk1KYarlZRCzenNsMs2lIS3yfGGO
+        mUxsbYR1ib0OtfKdfzzID+aaqdyuqWM=
+Date:   Wed, 11 Mar 2020 14:20:09 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver
+ and LCD controller
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>
+Message-Id: <1583932809.3.0@crapouillou.net>
+In-Reply-To: <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+        <1583177253.3.5@crapouillou.net>
+        <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 9 mar 2020 o 20:02 Doug Berger <opendmb@gmail.com> napisa=C5=82(a):
->
-> The default handling of the gpio-line-names property by the
-> gpiolib-of implementation does not work with the multiple
-> gpiochip banks per device structure used by the gpio-brcmstb
-> driver.
->
-> This commit adds driver level support for the device tree
-> property so that GPIO lines can be assigned friendly names.
->
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> ---
->  drivers/gpio/gpio-brcmstb.c | 44 +++++++++++++++++++++++++++++++++++++++=
-+++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
-> index 05e3f99ae59c..fcfc1a1f1a5c 100644
-> --- a/drivers/gpio/gpio-brcmstb.c
-> +++ b/drivers/gpio/gpio-brcmstb.c
-> @@ -603,6 +603,49 @@ static const struct dev_pm_ops brcmstb_gpio_pm_ops =
-=3D {
->         .resume_noirq =3D brcmstb_gpio_resume,
->  };
->
-> +static void brcmstb_gpio_set_names(struct device *dev,
-> +                                  struct brcmstb_gpio_bank *bank)
-> +{
-> +       struct device_node *np =3D dev->of_node;
-> +       const char **names;
-> +       int nstrings, base;
-> +       unsigned int i;
-> +
-> +       base =3D bank->id * MAX_GPIO_PER_BANK;
-> +
-> +       nstrings =3D of_property_count_strings(np, "gpio-line-names");
-> +       if (nstrings <=3D base)
-> +               /* Line names not present */
-> +               return;
-> +
-> +       names =3D devm_kcalloc(dev, MAX_GPIO_PER_BANK, sizeof(*names),
-> +                            GFP_KERNEL);
-> +       if (!names)
-> +               return;
-> +
-> +       /*
-> +        * Make sure to not index beyond the end of the number of descrip=
-tors
-> +        * of the GPIO device.
-> +        */
-> +       for (i =3D 0; i < bank->width; i++) {
-> +               const char *name;
-> +               int ret;
-> +
-> +               ret =3D of_property_read_string_index(np, "gpio-line-name=
-s",
-> +                                                   base + i, &name);
-> +               if (ret) {
-> +                       if (ret !=3D -ENODATA)
-> +                               dev_err(dev, "unable to name line %d: %d\=
-n",
-> +                                       base + i, ret);
-> +                       break;
-> +               }
+Hi Nikolaus,
 
-This bit is confusing to me. If we can't read the property we break
-the loop and leave the remaining line names null but at the same time
-it isn't considered a probe failure? Would you mind at least
-commenting on this in the code?
 
-Bart
+Le mer., mars 11, 2020 at 13:43, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 02.03.2020 um 20:27 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  From: Paul Boddie <paul@boddie.org.uk>
+>>>  A specialisation of the generic Synopsys HDMI driver is employed=20
+>>> for JZ4780
+>>>  HDMI support. This requires a new driver, plus device tree and=20
+>>> configuration
+>>>  modifications.
+>>>  Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 32=20
+>>> ++++++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  index f928329b034b..391d4e1efd35 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  @@ -433,4 +433,36 @@
+>>>  		status =3D "disabled";
+>>>  	};
+>>>  +
+>>>  +	hdmi: hdmi@10180000 {
+>>>  +		compatible =3D "ingenic,jz4780-dw-hdmi";
+>>>  +		reg =3D <0x10180000 0x8000>;
+>>>  +		reg-io-width =3D <4>;
+>>>  +
+>>>  +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+>>>  +		clock-names =3D "isfr" , "iahb";
+>>>  +
+>>>  +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
+>>>  +		assigned-clock-rates =3D <27000000>;
+>>=20
+>>  I *think* this should go to the board file.
+>>=20
+>>>  +
+>>>  +		interrupt-parent =3D <&intc>;
+>>>  +		interrupts =3D <3>;
+>>>  +
+>>>  +		/* ddc-i2c-bus =3D <&i2c4>; */
+>>>  +
+>>>  +		status =3D "disabled";
+>>>  +	};
+>>>  +
+>>>  +	lcd: lcd@13050000 {
+>>=20
+>>  The node name should be 'lcd-controller'.
+>>=20
+>>>  +		compatible =3D "ingenic,jz4740-lcd";
+>>=20
+>>  The JZ4780's LCD controller is much newer than the JZ4740 one, so=20
+>> even if it works with the "ingenic,jz4740-lcd" compatible string,=20
+>> you want it as a fallback.
+>>  So this should be: compatible =3D "ingenic,jz4780-lcd",=20
+>> "ingenic,jz4740-lcd".
+>>=20
+>>  That means the YAML should be updated too.
+>=20
+> I have started to look into jz4780 HDMI setup again.
+>=20
+> Well, there is no driver compatible to "ingenic,jz4780-lcd" so far
+> and it is questionalbe if we need a different one.
+>=20
+> I think we should rather make the driver also compatible
+> than adding a fallback to ingenic,jz4740-lcdto the DTS.
+>=20
+> The reason why this is better even if both LCDC are almost
+> compatible is that the jz4780 allows for much bigger displays
+> and therefore should have its own jz_soc_info with 4k x 2k
+> as maximum.
 
-> +               if (*name)
-> +                       names[i] =3D name;
-> +       }
-> +
-> +       bank->gc.names =3D names;
-> +}
-> +
->  static int brcmstb_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
-> @@ -726,6 +769,7 @@ static int brcmstb_gpio_probe(struct platform_device =
-*pdev)
->                 need_wakeup_event |=3D !!__brcmstb_gpio_get_active_irqs(b=
-ank);
->                 gc->write_reg(reg_base + GIO_MASK(bank->id), 0);
->
-> +               brcmstb_gpio_set_names(dev, bank);
->                 err =3D gpiochip_add_data(gc, bank);
->                 if (err) {
->                         dev_err(dev, "Could not add gpiochip for bank %d\=
-n",
-> --
-> 2.7.4
->
+Sure, feel free to extend the driver.
+
+> Next I tried to find out if the LCDC are really compatible.
+>=20
+> Well the jz4780 has two lcdc instances but they are separated
+> by the reg addr. Next, there are unique features (like picture in
+> picture with alpha blending) but those are probably disabled
+> if not programmed from reset state. This may become a reason
+> to separate or augment the driver for the jz4780 but at the
+> moment we can ignore that.
+
+Two LCDC instances -> two lcd-controller@... nodes. It's that simple.
+
+The other features you listed are outside the LCDC, so outside the=20
+scope of this driver.
+
+> There are also subtly different bit definitions and register
+> widths (e.g. 24 bit in addition to 16/18 bit modes or more bits
+> for the sync position) but it looks as if the ingenic_drm
+> driver already handles this.
+>=20
+> Then I tried to read back the registers. Strangely they
+> are all 0x00000000. So there is no programming of the
+> lcd-controller in our DT setup with HDMI at all!
+
+How did you read them?
+Do it from the regmap: should be "cat=20
+/sys/kernel/debug/regmap/13050000.lcd-controller/registers" (not sure=20
+about the path)
+
+> I also checked that ingenic_drm_probe() is called and
+> returns successfully 0. It also reports that a /dev/fb
+> has been created:
+>=20
+> [    7.908830] ingenic-drm 13050000.lcd-controller: fb0:=20
+> ingenic-drmdrmf frame buffer device
+>=20
+> But for example ingenic_drm_encoder_atomic_mode_set() is
+> never called which should write some registers of the LCDC.
+>=20
+> I only did see some calls to ingenic_drm_encoder_atomic_check().
+>=20
+> This of course explains why we have no HDMI signals despite
+> proper HPD and a /dev/fb0. Because the LCDC is not being
+> programmed.
+
+It won't be called until the HDMI driver says that the cable is=20
+plugged, and there's a client application (e.g. fbdev emulation)=20
+running. So the problem is most likely within the HDMI driver.
+
+Cheers,
+-Paul
+
+> Any ideas / hints how to check or improve?
+>=20
+> BR and thanks,
+> Nikolaus
+>=20
+
+=
+
