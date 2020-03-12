@@ -2,133 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D39D0183220
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 14:54:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A4F4183227
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 14:55:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgCLNy0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 09:54:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46258 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCLNy0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 09:54:26 -0400
-Received: by mail-qk1-f195.google.com with SMTP id f28so6210456qkk.13
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 06:54:25 -0700 (PDT)
+        id S1727492AbgCLNzd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 09:55:33 -0400
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:42494 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbgCLNzd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 09:55:33 -0400
+Received: by mail-vk1-f194.google.com with SMTP id e20so1576934vke.9
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 06:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YJCbAPM757c7WtP5729q/CvzsGeEr1ydJuKt4rhqYN0=;
-        b=Wz9uTaImPoBXmMxauB2gmqMyOC7ZHJIqwDg3dkJxuEtcOEk7VlKjUF7hgOsfXtoDcf
-         j56kSjTCHlUXqEi+p4R2+8g6dT3gOl/SfmGOcvsTWoiIqnsO1gIjCd8nmxxSGGTU+gXg
-         redRm1hKIc7Hw5YBy+xDo0LJcZwVYZbd3/gGlzuiEBUPTOsTKdPvowZBsC/atoHowoQL
-         Wd6J4G7x2CQKp0qB8Q4ri+INEfgSNXrxafpiqxJXlFFMGhj7xVIBbfKyTOmvcpmFwtzH
-         rJWugm3npmE/ewF3g+mT9QpKbmwqmK6NhDhKv8RUCMsY/qAWA4H2bHNlERC3rgkJlNnM
-         +vxw==
+         :cc;
+        bh=f3uuC3dwn0tC5WDh43z+Qz3cNZTanvUjHY5K/ioZRrE=;
+        b=KVkVoA2k473yz0FJ1dnZvdkbqNXVgnmOKYeMLASFd+4bSsxq5NXs1+7o8r3p9WtTjE
+         dkXtgcZAcltgvd/hSXf0jyAfcWOy4O+uFY79LpGpQSK2nqebK3t+BwbvklghCJutN99P
+         6yO7hRXTMpLRdUJkZn+ZahduFDqpulDoa0xLbWnv67CuJk4DY5WfjjnA5zeDuRcrIUIe
+         iLUC1jmVqd0X3FMCG9O9mIAzG/HvJsm4zjcDumzRlBmQvfodAky3Pn/LEKNXs8yZRg9l
+         jC0lZMI+kCP/Vc3flcV3ewrQXXxRtcrWQy9zY7bV/OZTmsXn0q+se6I2okHonk1GL4Vi
+         DWAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YJCbAPM757c7WtP5729q/CvzsGeEr1ydJuKt4rhqYN0=;
-        b=r6z1uIwNjZ19tjWatuYDeaELG8DRcjw8b70oTtSLhCxk4P0LG0abFJvK1Q/u1rS0QR
-         MdTtvjBP4ZQXGqycErH9gM81yejiTKMXhC3gNPF6QisQyCCCpzKkRpqrGt0hhr/vfQh2
-         MvNnLODENuIHEXvtACG+uprhJTo8sld4Z/dFwZLrEbTVm7dMOSTZUXImBEQlTRF07i6k
-         v8BG55lDfViaeuJUWIR2+EIG4MAHZd+YOwM2wqnMRyBrmNJy9UOegpChxUsumAvAPVUh
-         ofbxBwHAefGp1dpotU3Mkt4+FrmjYM34NGXMWNQJYkoUtl4Ym4XkMnmuUDPEm8whtYY6
-         61cQ==
-X-Gm-Message-State: ANhLgQ3hemMVNwlwKEhpdSYcRPnLjvOSDcrkiLAGzmPBe+b7IPcTid0f
-        NEJiUqP7GTDloipB2Wvu5KUvGFR2mA/ipMHUvFxhzw==
-X-Google-Smtp-Source: ADFU+vsuGDmI45/A8Yf3+0B7+92jTTpshUjY3yuJofcW2KRZcB5IKMAjUaGCEWxWhVaaeduCWL8mS5oibYzFRjRxZqM=
-X-Received: by 2002:a05:620a:1362:: with SMTP id d2mr8052260qkl.120.1584021265259;
- Thu, 12 Mar 2020 06:54:25 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=f3uuC3dwn0tC5WDh43z+Qz3cNZTanvUjHY5K/ioZRrE=;
+        b=M9sHRosazuDRlC4F0X4qPr4ZM5bInw+/sRDlKrHrkbNUBTk43qNGWR1YT44SGVspe1
+         2rVrsAs1L5Ec9SJ8aocBXak12xpSrex1e7oNXf8C3ZLZI21rUUBBALurPC+YJ0NrIWKL
+         n403RRQoD0uAVUvx8GPI3phw0PNqTGQXTVVfoobCTpH8cl+OJTc3a2Nm0MceEGXVv20/
+         q3ly05gkzstYH4/l7Sudf0FNXwxOtx9Sul7IbV2+R9rsdIh87CkbYbS0NXrMB6XxvGGd
+         vk/5wHRMw+aZ9aNts1NzZKX4QLwVSEyFgcoOvjK1yFmP6qKGcFvvYr2VgXbtagXRekvA
+         N32Q==
+X-Gm-Message-State: ANhLgQ3KQxnIDpMWbtbVqgq21YjcP8ZfTgL/GiaWT+xh6mX5zULEMi/r
+        S/pLdhdLn/dexH2Xds/sYU/ilmGYBu/1aPGyz1InBw==
+X-Google-Smtp-Source: ADFU+vtnsiNcMca52ukoHC3qr+zfMoqmRF6BTsGwzWrnwAJ6XL1pJpX6SsAHKanNqeMSKOOjxyqGYzIy0bSZmwnEFSI=
+X-Received: by 2002:a05:6122:1065:: with SMTP id k5mr5346841vko.14.1584021332168;
+ Thu, 12 Mar 2020 06:55:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200312094008.1833929-1-gabravier@gmail.com>
-In-Reply-To: <20200312094008.1833929-1-gabravier@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 14:54:12 +0100
-Message-ID: <CAMpxmJUUth5w8tvZp8mFV-FDz0YivmRWAqsOQSTdze1xagMX8A@mail.gmail.com>
-Subject: Re: [PATCH] gpio-hammer: Avoid potential overflow in main
-To:     Gabriel Ravier <gabravier@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru> <20200306132519.2AC268030797@mail.baikalelectronics.ru>
+In-Reply-To: <20200306132519.2AC268030797@mail.baikalelectronics.ru>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Mar 2020 14:55:20 +0100
+Message-ID: <CACRpkdaU1f_RM8GDPxj_2qaiBsJ5JLnKp=ryZxAYMp2YhTDKWA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] gpio: dwapb: Add debounce reference clock support
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 12 mar 2020 o 10:40 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
-(a):
->
-> If '-o' was used more than 64 times in a single invocation of gpio-hammer=
-,
-> this could lead to an overflow of the 'lines' array. This commit fixes
-> this by avoiding the overflow and giving a proper diagnostic back to the
-> user
->
-> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
-> ---
->  tools/gpio/gpio-hammer.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 0e0060a6e..273d33847 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int=
- *lines, int nlines,
->
->                 fprintf(stdout, "[%c] ", swirr[j]);
->                 j++;
-> -               if (j =3D=3D sizeof(swirr)-1)
-> +               if (j =3D=3D sizeof(swirr) - 1)
+Hi Sergey,
 
-Please don't try to sneak in unrelated changes into commits. This is
-of course correct coding-style-wise but send it in a separate patch.
+thanks for your patch!
 
->                         j =3D 0;
->
->                 fprintf(stdout, "[");
-> @@ -135,7 +135,14 @@ int main(int argc, char **argv)
->                         device_name =3D optarg;
->                         break;
->                 case 'o':
-> -                       lines[i] =3D strtoul(optarg, NULL, 10);
-> +                       /*
-> +                        * Avoid overflow. Do not immediately error, we w=
-ant to
-> +                        * be able to accurately report on the amount of =
-times
-> +                        *'-o' was given to give an accurate error messag=
-e
-> +                        */
-> +                       if (i < GPIOHANDLES_MAX)
-> +                               lines[i] =3D strtoul(optarg, NULL, 10);
-> +
->                         i++;
->                         break;
->                 case '?':
-> @@ -143,6 +150,14 @@ int main(int argc, char **argv)
->                         return -1;
->                 }
->         }
-> +
-> +       if (i >=3D GPIOHANDLES_MAX) {
-> +               fprintf(stderr,
-> +                       "Only %d occurences of '-o' are allowed, %d were =
-found\n",
-> +                       GPIOHANDLES_MAX, i + 1);
-> +               return -1;
-> +       }
-> +
->         nlines =3D i;
->
->         if (!device_name || !nlines) {
-> --
-> 2.24.1
->
+On Fri, Mar 6, 2020 at 2:25 PM <Sergey.Semin@baikalelectronics.ru> wrote:
 
-Other than that, looks good.
+> +       err = devm_clk_bulk_get_optional(&pdev->dev, DWAPB_NR_CLOCKS,
+> +                                        gpio->clks);
+> +       if (err) {
+> +               dev_info(&pdev->dev, "Cannot get APB/Debounce clocks\n");
 
-Bartosz
+dev_err() again.
+
+> +       err = clk_bulk_prepare_enable(DWAPB_NR_CLOCKS, gpio->clks);
+>         if (err) {
+> -               dev_info(&pdev->dev, "Cannot enable APB clock\n");
+> +               dev_info(&pdev->dev, "Cannot enable APB/Debounce clocks\n");
+
+dev_err() again.
+
+Yours,
+Linus Walleij
