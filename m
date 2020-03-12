@@ -2,92 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAD72182B1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 09:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F4A182C9A
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 10:40:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbgCLIXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 04:23:02 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:44359 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgCLIXB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 04:23:01 -0400
-Received: by mail-qv1-f65.google.com with SMTP id w5so2161207qvp.11
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
+        id S1726000AbgCLJkS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 05:40:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34036 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLJkS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 05:40:18 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z15so6516178wrl.1;
+        Thu, 12 Mar 2020 02:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
-        b=XdThVGVLJ8fCTlPp04bt767nww/R0JNiDAgMPRu09nMpRox4DHlFpxcQWyDiIzhi4l
-         zPVbbL4xp6o5xCpctS7Jp/3wRpRJ0j2+c141ucsFPPZ3W/hCO0WyUNj59CUWyKWUbpCr
-         ceV9QtJMukXVzTgsXjnC0BIyprWSiwrhx5yp6mZbqXTFDAYTZ43cmbHSTcodDP8d1Y/K
-         u1Kv5F3EC1oaAjdZLlagq368xSL7t3dTHl7DcezV1iAJSdaZ4v0Epmd4C570b1Ec2YZi
-         /Db/T+9bJl2eydi+gBR8XLQvTZ7bd020wd8IQb/8d11ruupX0FCBQYpAd3ggUotu2DJd
-         W7IA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nIZqiO3olanBqpb8V00tr6xlu/aKR3WtYKMWSraEapQ=;
+        b=kjYPWyyWUUxkfuBZcUJPLcIVx7QylnuWHIRi+umPxZ6/c0nPYq8TuurW35PpZmufNQ
+         5CeFyqpJorb9S0Pj0Z5nItcDT+Uw0O34flWw1cnSaicZ+Llo4lJpU5gMKoKf0leVTP+x
+         Zsq5DeHoJNvtauMDMAyfSfjON5vgNH7c4K3WSHdbq7mM1kLDUfb5D4Gh2JVk57WGjbee
+         FkEWbdAskJ9XHi3EwCVYMPph4iCIN43IXr1ssQeYgFZ1RjjuVkj1L4L0FHZ9OXWGzpsu
+         mikgnPMZ4zt0VOpb4s90Et3BebiDEKjR0UNCOkRcs3rjO3gJvCHZsaqGCDQ1SBsSwpb7
+         xjoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
-        b=HjweVts7rJCD6jJrsKeL4jiAef4H4CoKIKsC/G1Y1xoSOp7Ut29w+6CSKtGPxeCwm/
-         AV/6J8o+JYPO6TalPYv5Pgb4hzueSFklQmmRwfotpCzAc1B9ppGo2n4zCKai+8WGLPtB
-         vzUYAmxIKnQqloFytjTLPm636Or0sgDMRx9ZzHRgghjeYFy1qru+OXMcWKsPzP0QJUQY
-         HDiXN8UhTO8iHPmfxl7wLhuodP/VWLd3IKJiWlNh7EGXfhTlragFbHGH9raJbTrDIAMO
-         BigmhprbQpKOqZQTRDUSOZiD6+vYSF6KBSnBNcJvNyAA2OI1/e7XGHM+ZSO8nUTxKtny
-         Tb0g==
-X-Gm-Message-State: ANhLgQ09E4Zpil75kLRaNPAamfRxp+BNYBmQzJ5Jis10DEYzyH+b5vfa
-        xqtnTLxAYNeGjugPXSnKFopZfoLmh11qeurKnd0SJw==
-X-Google-Smtp-Source: ADFU+vsJMDMQ1KzRZrYFym7/k0h4j5yi56oLBBmOZI8IRsJ++T2KNTs2w7I/VIUzjgv1K8oDQuyP8jHKibG5FlX1gps=
-X-Received: by 2002:ad4:5429:: with SMTP id g9mr6058767qvt.134.1584001379162;
- Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nIZqiO3olanBqpb8V00tr6xlu/aKR3WtYKMWSraEapQ=;
+        b=nqEOyknTC2HvvXfF4xS7LQCIBWpQrPuopWRlGr5IFH1yJDqco50PMejrH/w/o+JYyG
+         rmsgRLKAJQTwWEYRrcCj4LuuA9w8HBhECIpkrmkTTP1IGhiTJNDYAA57JD221WclzIed
+         zylF8aNQhwcQnE1oVfigrEcHZrSSImpY9r0/INIhLak/e/NbvVvAFxA5fHfjH5K+ZZam
+         /yfH9vbXtOCNnsdXkhIMMTYR58oJfLQMF/je5Zho+U4A4+J+bafr9+Zf3zxfNN8rhCtL
+         3Wk/uJotxjcfNZla1QJVuxWYbXLauPJo0J+VxflwsDLE9PDnyPzk+9uzmjK7IdNoCqT9
+         PfXg==
+X-Gm-Message-State: ANhLgQ3fNxk0eKcnzK+/EAlAIUitzrABVoo4w+cg6T/zxmDo1wC0tJhx
+        LIbTBlKQvlSuHoP6uK2+cIg=
+X-Google-Smtp-Source: ADFU+vv1kWRpUSYA1uOmPu+2xRuwtW9nWXk0R1u+yB/fY+6QpohYYxzMi5WjWNP9IskY8c5Fg538Ng==
+X-Received: by 2002:adf:b1d2:: with SMTP id r18mr9637346wra.86.1584006016105;
+        Thu, 12 Mar 2020 02:40:16 -0700 (PDT)
+Received: from localhost.localdomain ([37.58.58.231])
+        by smtp.gmail.com with ESMTPSA id c26sm11604589wmb.8.2020.03.12.02.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 02:40:15 -0700 (PDT)
+From:   Gabriel Ravier <gabravier@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gabriel Ravier <gabravier@gmail.com>
+Subject: [PATCH] gpio-hammer: Avoid potential overflow in main
+Date:   Thu, 12 Mar 2020 10:40:08 +0100
+Message-Id: <20200312094008.1833929-1-gabravier@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
- <CAMpxmJXNQQTxRWZSP0RZTUuefAk3+AeDMVeVkgERy7f9X=CBsA@mail.gmail.com> <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
-In-Reply-To: <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 12 Mar 2020 09:22:47 +0100
-Message-ID: <CAMpxmJX40tfNUqrqDwa+GEGAD9QuLym=jLi2MPuQX-FZS2Z9sQ@mail.gmail.com>
-Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
-To:     Doug Berger <opendmb@gmail.com>
-Cc:     Gregory Fong <gregory.0xf0@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 11 mar 2020 o 20:03 Doug Berger <opendmb@gmail.com> napisa=C5=82(=
-a):
->
-> The label names are viewed as a convenience for the user and are not
-> necessary for the proper functionality of the driver and device, so we
-> don't want to prevent the driver from succeeding at probe due to an
-> error in the gpio-line-names property. The bank->gc.names member is
-> still made non-NULL which is what we really care about to prevent the
-> misapplication of label names by devprop_gpiochip_set_names().
->
-> In fact, it is expected that the device-tree will only include label
-> strings up to the last GPIO of interest so the ENODATA error is
-> considered a valid result to terminate any further labeling so there is
-> no need for an error message in that case.
->
-> Other error results are unexpected so an error message indicating the
-> consequence of the error is appropriate here.
->
-> I'm not sure which aspect is confusing to you, so it's not clear to me
-> how best to comment the code. I can hazard a guess, but if you have a
-> suggestion I'm happy to submit a v3.
->
-> Thanks for taking the time to review this,
->     Doug
+If '-o' was used more than 64 times in a single invocation of gpio-hammer,
+this could lead to an overflow of the 'lines' array. This commit fixes
+this by avoiding the overflow and giving a proper diagnostic back to the
+user
 
-No it's fine, thank you for the explanation.
+Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+---
+ tools/gpio/gpio-hammer.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-Bartosz
+diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
+index 0e0060a6e..273d33847 100644
+--- a/tools/gpio/gpio-hammer.c
++++ b/tools/gpio/gpio-hammer.c
+@@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int *lines, int nlines,
+ 
+ 		fprintf(stdout, "[%c] ", swirr[j]);
+ 		j++;
+-		if (j == sizeof(swirr)-1)
++		if (j == sizeof(swirr) - 1)
+ 			j = 0;
+ 
+ 		fprintf(stdout, "[");
+@@ -135,7 +135,14 @@ int main(int argc, char **argv)
+ 			device_name = optarg;
+ 			break;
+ 		case 'o':
+-			lines[i] = strtoul(optarg, NULL, 10);
++			/*
++			 * Avoid overflow. Do not immediately error, we want to
++			 * be able to accurately report on the amount of times
++			 *'-o' was given to give an accurate error message
++			 */
++			if (i < GPIOHANDLES_MAX)
++				lines[i] = strtoul(optarg, NULL, 10);
++
+ 			i++;
+ 			break;
+ 		case '?':
+@@ -143,6 +150,14 @@ int main(int argc, char **argv)
+ 			return -1;
+ 		}
+ 	}
++
++	if (i >= GPIOHANDLES_MAX) {
++		fprintf(stderr,
++			"Only %d occurences of '-o' are allowed, %d were found\n",
++			GPIOHANDLES_MAX, i + 1);
++		return -1;
++	}
++
+ 	nlines = i;
+ 
+ 	if (!device_name || !nlines) {
+-- 
+2.24.1
+
