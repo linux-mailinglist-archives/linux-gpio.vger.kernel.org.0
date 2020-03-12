@@ -2,94 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26DFF183737
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 18:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C6C1838DA
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 19:44:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgCLRQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 13:16:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40179 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgCLRQx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 13:16:53 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e26so7218914wme.5
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 10:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rQJ5s9eoNFBhar1wZ/+BMG+x4PEp7qiKoL1BTIgIvvA=;
-        b=Ka1odxjcRRSsZ1+P6Rn0WoEFDUeURVfcilak6U3iuZHIxRHE32ImI96XvKGoiCT0Y7
-         zOYxfW2tFhqwc83KnA9LRE9Y/bECcG7knYp4dAlJcuSZ+I7KEIaRB3wcsXhJxjfiXysU
-         AfHFRHk0Ue+Vz6LtljNNVf05jOc3/U5XBXJs6yw4uB8pzEy5of9iCcDQ/+jsEKLk1Rdn
-         I1SB61RY0n8txp2+PVnprLtCRZmOpBLDdFcO8eT6UQTFnaNKh8ECGg5RZsdHoMNNnSau
-         dBV330hv6bac+puft7f4osu2jlwoU3uhEYQAeObG+QQQvrgkMs1w3Q2AWx8CLl0tP3ud
-         fSDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rQJ5s9eoNFBhar1wZ/+BMG+x4PEp7qiKoL1BTIgIvvA=;
-        b=G9Vp0geBuF056F0lzX4Krfnky/IrPqaxQXxnoWvRo/0JqdPiGllsig+R1JeEFWlTQG
-         5E85Y32vVlB+xr0z5RrNBTAxfbjbfXbIULi2W1rYr8l/juOsz+8UExdzuul10Mn/qn4f
-         RnFLElGT+Nz3f1sV5Ru5D3Z4UBZUJYJ061FM8KnLafDa/0Z7d8u2/K51Z92lutmT/FgF
-         HK2gqNN6dJeQdnqRCnhjy5f488bELtxgs95pGYUC+aRyem7LD3mGp15X4f6UqkUU+Kl2
-         9MRo4kmWSYprTe2bcXGJ6s7J/NzJ7kr8xsisU803uVsK0NknMn+ScuAzTdTKW3ODq2JY
-         eLcg==
-X-Gm-Message-State: ANhLgQ0Mr1GaJc7dgg8leMoD0uHrznIlunScyI8PlvlFOr4jdgB3xYPi
-        RZqBSFnfEyB0YMpZULFHj41jdm8fq9wvLmt8EnWZ/Q==
-X-Google-Smtp-Source: ADFU+vu9dcCqLenemNcAbEsZxGNAgsL5dkMGe56iFZ3uiRQSP35P55TvBH1Ty/uEmKNJhGhG9PF3mjvXjiunAlHs0ls=
-X-Received: by 2002:a05:600c:2188:: with SMTP id e8mr6133594wme.83.1584033411490;
- Thu, 12 Mar 2020 10:16:51 -0700 (PDT)
+        id S1726483AbgCLSoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 14:44:21 -0400
+Received: from 3.mo173.mail-out.ovh.net ([46.105.34.1]:46093 "EHLO
+        3.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgCLSoV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 14:44:21 -0400
+X-Greylist: delayed 1198 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 14:44:19 EDT
+Received: from player759.ha.ovh.net (unknown [10.110.171.5])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 855B7134E1D
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 19:07:44 +0100 (CET)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player759.ha.ovh.net (Postfix) with ESMTPSA id 3FFD5106367DE;
+        Thu, 12 Mar 2020 18:07:36 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] docs: driver-api/gpio/driver.rst: fix code blocks
+Date:   Thu, 12 Mar 2020 19:06:51 +0100
+Message-Id: <20200312180650.1365059-1-steve@sk2.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com> <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
-In-Reply-To: <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 12 Mar 2020 10:16:40 -0700
-Message-ID: <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
-To:     Linus Walleij <linus.walleij@linaro.org>, stable@vger.kernel.org
-Cc:     Robert Richter <rrichter@marvell.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 8822551671076179420
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejheelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 6:42 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Mar 11, 2020 at 4:43 PM Tim Harvey <tharvey@gateworks.com> wrote:
->
-> > If there are no parent resources do not call irq_chip_request_resources_parent
-> > at all as this will return an error.
-> >
-> > This resolves a regression where devices using a thunderx gpio as an interrupt
-> > would fail probing.
-> >
-> > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
-> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->
-> This patch does not apply to the mainline kernel or v5.6-rc1.
->
-> Please verify:
-> 1. If the problem is still in v5.6 (we refactored the driver to
->    use GPIOLIB_IRQCHIP)
+Two code blocks have duplicate declarations (:: and explicit
+.. code-block), this fixes them, addressing these warnings:
 
-Linus,
+	Documentation/driver-api/gpio/driver.rst:425: WARNING: Unexpected indentation.
+	Documentation/driver-api/gpio/driver.rst:423: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:427: WARNING: Block quote ends without a blank line; unexpected unindent.
+	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:433: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:446: WARNING: Unexpected indentation.
+	Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:447: WARNING: Block quote ends without a blank line; unexpected unindent.
+	Documentation/driver-api/gpio/driver.rst:449: WARNING: Definition list ends without a blank line; unexpected unindent.
+	Documentation/driver-api/gpio/driver.rst:462: WARNING: Unexpected indentation.
+	Documentation/driver-api/gpio/driver.rst:460: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:462: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:465: WARNING: Block quote ends without a blank line; unexpected unindent.
+	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:471: WARNING: Inline emphasis start-string without end-string.
+	Documentation/driver-api/gpio/driver.rst:478: WARNING: Inline emphasis start-string without end-string.
 
-Sorry, another issue was keeping me from being able to boot 5.6-rc but
-that's now understood and I can confirm the issue is not present in
-v5.6-rc5
+Fixes: 4e29b70d5437 ("Documentation: gpio: driver.rst: Fix warnings")
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/driver-api/gpio/driver.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> 2. If not, only propose it for linux-stable v5.5 etc.
->
+diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
+index 871922529332..9809f593c0ab 100644
+--- a/Documentation/driver-api/gpio/driver.rst
++++ b/Documentation/driver-api/gpio/driver.rst
+@@ -416,7 +416,7 @@ The preferred way to set up the helpers is to fill in the
+ struct gpio_irq_chip inside struct gpio_chip before adding the gpio_chip.
+ If you do this, the additional irq_chip will be set up by gpiolib at the
+ same time as setting up the rest of the GPIO functionality. The following
+-is a typical example of a cascaded interrupt handler using gpio_irq_chip::
++is a typical example of a cascaded interrupt handler using gpio_irq_chip:
+ 
+ .. code-block:: c
+ 
+@@ -453,7 +453,7 @@ is a typical example of a cascaded interrupt handler using gpio_irq_chip::
+   return devm_gpiochip_add_data(dev, &g->gc, g);
+ 
+ The helper support using hierarchical interrupt controllers as well.
+-In this case the typical set-up will look like this::
++In this case the typical set-up will look like this:
+ 
+ .. code-block:: c
+ 
 
-Yes, needs to be applied to v5.2, v5.3, v5.4, v5.5. I cc'd stable. If
-I need to re-submit please let me know.
+base-commit: 7d3d3254adaa61cba896f71497f56901deb618e5
+-- 
+2.24.1
 
-Cc: stable@vger.kernel.org
-
-Tim
