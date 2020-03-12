@@ -2,64 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A4324182AF3
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 09:15:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAD72182B1B
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 09:23:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCLIPs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 04:15:48 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42789 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgCLIPs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 04:15:48 -0400
-Received: by mail-io1-f65.google.com with SMTP id q128so4743003iof.9
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 01:15:48 -0700 (PDT)
+        id S1726557AbgCLIXC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 04:23:02 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44359 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIXB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 04:23:01 -0400
+Received: by mail-qv1-f65.google.com with SMTP id w5so2161207qvp.11
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=SbKHysQUbZ/dh7ia72ifq4ypokfVjTOV8KRXEk2mm6E=;
-        b=HW/3yzeGLwYUzKgBotCvQil10b5k3PMgnqNLNwh4LYMxBBipDNZnTparjCBsw75jmT
-         LR9bPRQUyiMcBVQ35pZ+4gCO0TFQgxHSKGUJ4J6wd1Muuemsw5Rv5KJk4mRF4r/spil1
-         kQ8MTVoYKrKO+mokZ0szhFARBQvPl5m6Mld7cpaKjIh9gSb1g3NlBBOgjynzb2UJlx2u
-         Wnaiv/p6g90hBTsTSECFMiuM/twzlKLd/W9nDKBjg82bdFJvQB28bdn5t69t6p861hjA
-         CuscM4BElkTTRIkaN0VRMuHvM/RMrtXYwHOo9RFcCGDj3w+tzVDHE75cJvEgoBVQWMPC
-         4zbA==
+        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
+        b=XdThVGVLJ8fCTlPp04bt767nww/R0JNiDAgMPRu09nMpRox4DHlFpxcQWyDiIzhi4l
+         zPVbbL4xp6o5xCpctS7Jp/3wRpRJ0j2+c141ucsFPPZ3W/hCO0WyUNj59CUWyKWUbpCr
+         ceV9QtJMukXVzTgsXjnC0BIyprWSiwrhx5yp6mZbqXTFDAYTZ43cmbHSTcodDP8d1Y/K
+         u1Kv5F3EC1oaAjdZLlagq368xSL7t3dTHl7DcezV1iAJSdaZ4v0Epmd4C570b1Ec2YZi
+         /Db/T+9bJl2eydi+gBR8XLQvTZ7bd020wd8IQb/8d11ruupX0FCBQYpAd3ggUotu2DJd
+         W7IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SbKHysQUbZ/dh7ia72ifq4ypokfVjTOV8KRXEk2mm6E=;
-        b=HU6Im04Py9vs0ubkwKYYnnEckKWMIgAurdk2xDU1pcZBvf8RiMynwRzGnedQTTxcnq
-         04cBnizwIJHHIwBVii18Cs/a2ZEXXHjzHvDnM+j+05lDtPQARKY645F4cqHompBHr4jL
-         o+5uXTU4bDvb/qxqzVniOFNayOHTH2djcLs4tC8BN7nnH6uakFhvai7BXQkcwPuim2P2
-         MypMl71TNUmj+YAodXcEEVcWkq6SwNiCzhr6Qut/ikLg5rogZo1JqA1C1gImNpaUtS9y
-         OgHEEmu2nJfBkLFQIArw8ob/9gbA5BJ0+0gOOr3VjSndGOlfqYVUuj/1GQOfRsr1Kr3y
-         mKwA==
-X-Gm-Message-State: ANhLgQ0dC+dx8eEsn7nWRn4CdKV5Tp2aLbl8zwCPCt2wWfMs/+6Jl12U
-        /AyvJBocsdwMGwK4L3cpjP+OXOGeE1n4LVFK3XCwmw==
-X-Google-Smtp-Source: ADFU+vsJK2Pg25haw7j27ecIOeODy3FgQxTo1Tl+FnV3LFLR4OX/Io9NTwxxprxHSAuuuRB9Jd4i/CNZrzCHWMxnj0M=
-X-Received: by 2002:a5e:c70c:: with SMTP id f12mr6552071iop.130.1584000947547;
- Thu, 12 Mar 2020 01:15:47 -0700 (PDT)
+        bh=P9izz9GwKEkmwA2CN2dI9HFL+pLvd99ZgSLtApoaeDU=;
+        b=HjweVts7rJCD6jJrsKeL4jiAef4H4CoKIKsC/G1Y1xoSOp7Ut29w+6CSKtGPxeCwm/
+         AV/6J8o+JYPO6TalPYv5Pgb4hzueSFklQmmRwfotpCzAc1B9ppGo2n4zCKai+8WGLPtB
+         vzUYAmxIKnQqloFytjTLPm636Or0sgDMRx9ZzHRgghjeYFy1qru+OXMcWKsPzP0QJUQY
+         HDiXN8UhTO8iHPmfxl7wLhuodP/VWLd3IKJiWlNh7EGXfhTlragFbHGH9raJbTrDIAMO
+         BigmhprbQpKOqZQTRDUSOZiD6+vYSF6KBSnBNcJvNyAA2OI1/e7XGHM+ZSO8nUTxKtny
+         Tb0g==
+X-Gm-Message-State: ANhLgQ09E4Zpil75kLRaNPAamfRxp+BNYBmQzJ5Jis10DEYzyH+b5vfa
+        xqtnTLxAYNeGjugPXSnKFopZfoLmh11qeurKnd0SJw==
+X-Google-Smtp-Source: ADFU+vsJMDMQ1KzRZrYFym7/k0h4j5yi56oLBBmOZI8IRsJ++T2KNTs2w7I/VIUzjgv1K8oDQuyP8jHKibG5FlX1gps=
+X-Received: by 2002:ad4:5429:: with SMTP id g9mr6058767qvt.134.1584001379162;
+ Thu, 12 Mar 2020 01:22:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-4-brgl@bgdev.pl>
- <20200308135117.7c60c881@why> <CAMRc=Me0AE7OgEVjiUfRUNODYoGj+LYy+1zGsGkXKput9AeKrA@mail.gmail.com>
-In-Reply-To: <CAMRc=Me0AE7OgEVjiUfRUNODYoGj+LYy+1zGsGkXKput9AeKrA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 12 Mar 2020 09:15:36 +0100
-Message-ID: <CAMRc=MdsQbm=L8sjJhnCcW+kb3UHHneSGqgCbTvWwsenCeMwxw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
+ <CAMpxmJXNQQTxRWZSP0RZTUuefAk3+AeDMVeVkgERy7f9X=CBsA@mail.gmail.com> <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
+In-Reply-To: <7fcc5cb2-5fdb-d1cf-e55b-c0f2d407e072@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Mar 2020 09:22:47 +0100
+Message-ID: <CAMpxmJX40tfNUqrqDwa+GEGAD9QuLym=jLi2MPuQX-FZS2Z9sQ@mail.gmail.com>
+Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -67,42 +63,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-niedz., 8 mar 2020 o 18:59 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82=
-(a):
+=C5=9Br., 11 mar 2020 o 20:03 Doug Berger <opendmb@gmail.com> napisa=C5=82(=
+a):
 >
-> niedz., 8 mar 2020 o 14:51 Marc Zyngier <maz@kernel.org> napisa=C5=82(a):
-> >
-> > On Tue, 11 Feb 2020 14:12:37 +0100
-> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > Add the remove() callback to irq_domain_ops which can be used to
-> > > automatically dispose of any host data associated with the domain whe=
-n
-> > > irq_domain_remove() is called.
-> >
-> > I have a hard time buying this. Whatever data that is associated to the
-> > domain is already owned known by whoever created the domain the first
-> > place.
-> >
-> > Since the expected use case is that whoever created the domain also
-> > destroys it, the caller is already in a position to do its own cleanup,
-> > and we don't need any of this.
-> >
-> > So please explain what you are trying to achieve here.
-> >
+> The label names are viewed as a convenience for the user and are not
+> necessary for the proper functionality of the driver and device, so we
+> don't want to prevent the driver from succeeding at probe due to an
+> error in the gpio-line-names property. The bank->gc.names member is
+> still made non-NULL which is what we really care about to prevent the
+> misapplication of label names by devprop_gpiochip_set_names().
 >
-> I'm mainly trying to remove irq_domain_remove_sim() and make it
-> possible to destroy the interrupt simulator domain with regular
-> irq_domain_remove(). If you prefer that we retain this routine as is,
-> I can limit this series to the first two patches, but I assumed the
-> fewer functions in the interface, the better. If you have a different
-> idea on how to do this - please let me know too.
+> In fact, it is expected that the device-tree will only include label
+> strings up to the last GPIO of interest so the ENODATA error is
+> considered a valid result to terminate any further labeling so there is
+> no need for an error message in that case.
 >
-> Bartosz
+> Other error results are unexpected so an error message indicating the
+> consequence of the error is appropriate here.
+>
+> I'm not sure which aspect is confusing to you, so it's not clear to me
+> how best to comment the code. I can hazard a guess, but if you have a
+> suggestion I'm happy to submit a v3.
+>
+> Thanks for taking the time to review this,
+>     Doug
 
-While this is being discussed - are the first two patches
-uncontroversial enough to make it into v5.7?
+No it's fine, thank you for the explanation.
 
 Bartosz
