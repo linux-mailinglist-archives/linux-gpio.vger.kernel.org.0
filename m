@@ -2,100 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07C6C1838DA
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 19:44:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63292183892
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Mar 2020 19:25:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCLSoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 14:44:21 -0400
-Received: from 3.mo173.mail-out.ovh.net ([46.105.34.1]:46093 "EHLO
-        3.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgCLSoV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 14:44:21 -0400
-X-Greylist: delayed 1198 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 14:44:19 EDT
-Received: from player759.ha.ovh.net (unknown [10.110.171.5])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 855B7134E1D
-        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 19:07:44 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player759.ha.ovh.net (Postfix) with ESMTPSA id 3FFD5106367DE;
-        Thu, 12 Mar 2020 18:07:36 +0000 (UTC)
-From:   Stephen Kitt <steve@sk2.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Daniel W . S . Almeida" <dwlsalmeida@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
-Subject: [PATCH] docs: driver-api/gpio/driver.rst: fix code blocks
-Date:   Thu, 12 Mar 2020 19:06:51 +0100
-Message-Id: <20200312180650.1365059-1-steve@sk2.org>
-X-Mailer: git-send-email 2.24.1
+        id S1726569AbgCLSZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 14:25:11 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45288 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbgCLSZK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 14:25:10 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z8so1821592qto.12
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 11:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Jf7CCJlaBzBWuwy+AxN+gg+jjj5mPJjuMgQyXl2F5To=;
+        b=dMld6cRIv553ZXuXvnx1/9oXxRUJQVhYQt01RJrga16eD9ADF5ho5x7vzM4Db/aHdG
+         +DmeShswgIdAanewpRonn6j3yBEUUSoTOlfx4iMa3nFX8Prgqh15+5c/CDgKro1CFjZ3
+         Aj+Nm1GSCTqfhSJKnlpdPUBzKbhgzr+h3YbEEYjiY3y26sbAQqPxfp1Z2wjmNVyFvwsC
+         jyxDjn/wZ1pGXSVD7ByXmgAkhFdX3NdyskFUfArocC35/y+7OMb2J0O6fiamvjFnGUms
+         cQ/DJ2LHDmuuG5YNQ1Q3lRIGIBddWrY+pL7rv+drHVDkU5yfhF/CPbw66l54yhxNL2OG
+         LvZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Jf7CCJlaBzBWuwy+AxN+gg+jjj5mPJjuMgQyXl2F5To=;
+        b=t1+EYvdqIj4e0M/2ECTfiub3VriFbYkmaTIAFOavSa1d0eTwe2SAZFPcYAHxSCfVIJ
+         OfgloNpO/Y0Skah7GlHUrI15WTyN3aQOzpWVFzActVDW8VAPoAangj6KyFwzb7wVzQEh
+         BB0Xe/++3Y/FmKe9AuIN1quI6f+syV3BO82KRWWipT7Uu/TB7EPl/Ba3sAlvtCkWLbPf
+         3JwsPMmUbLz5Z3sONdFjK6p9GY7elmgS+yWbmTDpAv/zvO7I1JzWIo+qnCsHY9kGm+ER
+         dBDZeVuXnXiG5wXLLNMISvFcKH4weOti4P2OloIJAq13ItBgCFrETSoeRzODMz91YKeN
+         IaTA==
+X-Gm-Message-State: ANhLgQ0ce6ynJ+wLHUNj5lVoWiHJK02GZ3FnHbBZUDIfR7VkCShJinyP
+        qo3PRSto89zRvnVCA/WQFDpwrXZfm1eC3h1ucMHhwQ==
+X-Google-Smtp-Source: ADFU+vsD3ZKdVJ0pPILwz7IOX2CSRr5vAuzW2yjE2tDAXBhQjc9fBMy9k9lWMN+DWil/TsgvNDIRF44f7yqjpKG8/Qc=
+X-Received: by 2002:ac8:5208:: with SMTP id r8mr8806874qtn.131.1584037508177;
+ Thu, 12 Mar 2020 11:25:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 8822551671076179420
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedgudduudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejheelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
+ <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com> <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 12 Mar 2020 19:24:54 +0100
+Message-ID: <CAMpxmJX_Jqz97bp-nKtJp7_CgJ=72ZxWkEPN4Y-dpNpqEwa_Mg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Khouloud Touil <ktouil@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Two code blocks have duplicate declarations (:: and explicit
-.. code-block), this fixes them, addressing these warnings:
+czw., 12 mar 2020 o 11:11 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Thu, Mar 5, 2020 at 5:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> > I refreshed my memory on device links and reference counting. I think
+> > that device links are not the right tool for the problem I'm trying to
+> > solve.
+>
+> OK, just check the below though so we are doing reference
+> counting in the right place.
+>
+> > You're right on the other hand about the need for reference
+> > counting of gpiochip devices. Right now if we remove the chip with
+> > GPIOs still requested the only thing that happens is a big splat:
+> > "REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED".
+> >
+> > We should probably have a kref on the gpiochip structure which would
+> > be set to 1 when registering the chip, increased and decreased on
+> > every operation such as requesting and releasing a GPIO respectively
+> > and decreased by gpiochip_remove() too. That way if we call
+> > gpiochip_remove() while some users are still holding GPIO descriptors
+> > then the only thing that happens is: the reference count for this
+> > gpiochip is decreased. Once the final consumer calls the appropriate
+> > release routine and the reference count goes to 0, we'd call the
+> > actual gpiochip release code. This is similar to what the clock
+> > framework does IIRC.
+>
+> I don't think that is consistent with the device model: there is already
+> a struct device inside struct gpio_device which is what gets
+> created when the gpio_chip is registered.
+>
+> The struct device inside struct gpio_device contains a
+> struct kobject.
+>
+> The struct kobject contains a struct kref.
+>
+> This kref is increased and decreased with get_device() and
+> put_device(). This is why in the gpiolib you have a bunch of
+> this:
+> get_device(&gdev->dev);
+> put_device(&gdev->dev);
+>
+> This is used when creating any descriptor handle with
+> [devm_]gpiod_request(), linehandles or lineevents.
+>
+> So it is already reference counted and there is no need to
+> introduce another reference counter on gpio_chips.
+>
 
-	Documentation/driver-api/gpio/driver.rst:425: WARNING: Unexpected indentation.
-	Documentation/driver-api/gpio/driver.rst:423: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:427: WARNING: Block quote ends without a blank line; unexpected unindent.
-	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:429: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:433: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:446: WARNING: Unexpected indentation.
-	Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:440: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:447: WARNING: Block quote ends without a blank line; unexpected unindent.
-	Documentation/driver-api/gpio/driver.rst:449: WARNING: Definition list ends without a blank line; unexpected unindent.
-	Documentation/driver-api/gpio/driver.rst:462: WARNING: Unexpected indentation.
-	Documentation/driver-api/gpio/driver.rst:460: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:462: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:465: WARNING: Block quote ends without a blank line; unexpected unindent.
-	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:467: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:471: WARNING: Inline emphasis start-string without end-string.
-	Documentation/driver-api/gpio/driver.rst:478: WARNING: Inline emphasis start-string without end-string.
+I think there's one significant detail missing here. While it's true
+that the life-time of a device object is controlled by its reference
+count, its registration with the driver model is not ie.
+device_add/del() are called once per device as opposed to
+get/put_device().
 
-Fixes: 4e29b70d5437 ("Documentation: gpio: driver.rst: Fix warnings")
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- Documentation/driver-api/gpio/driver.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> The reason why gpiochip_remove() right now
+> enforces removal and only prints a warning if you remove
+> a gpio_chip with requested GPIOs on it, is historical.
+>
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index 871922529332..9809f593c0ab 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -416,7 +416,7 @@ The preferred way to set up the helpers is to fill in the
- struct gpio_irq_chip inside struct gpio_chip before adding the gpio_chip.
- If you do this, the additional irq_chip will be set up by gpiolib at the
- same time as setting up the rest of the GPIO functionality. The following
--is a typical example of a cascaded interrupt handler using gpio_irq_chip::
-+is a typical example of a cascaded interrupt handler using gpio_irq_chip:
- 
- .. code-block:: c
- 
-@@ -453,7 +453,7 @@ is a typical example of a cascaded interrupt handler using gpio_irq_chip::
-   return devm_gpiochip_add_data(dev, &g->gc, g);
- 
- The helper support using hierarchical interrupt controllers as well.
--In this case the typical set-up will look like this::
-+In this case the typical set-up will look like this:
- 
- .. code-block:: c
- 
+Given the above I think that it wouldn't be possible to add reference
+counting to gpio devices without a new kref if the task of the release
+callback would be to call device_del() once the provider called its
+unregister function and all consumers released requested resources.
 
-base-commit: 7d3d3254adaa61cba896f71497f56901deb618e5
--- 
-2.24.1
+> When I created the proper device and char device, the gpiolib
+> was really just a library (hence the name) not a driver framework.
+> Thus there was no real reference counting of anything
+> going on, and it was (as I perceived it) pretty common that misc
+> platforms just pulled out the GPIO chip underneath the drivers
+> using the GPIO lines.
+>
+> If we would just block that, say refuse to perform the .remove
+> action on the module or platform (boardfile) code implementing
+> GPIO I was worried that we could cause serious regressions.
+>
+> But I do not think this is a big problem?
+>
+> Most drivers these days are using devm_gpiochip_add_data()
+> and that will not release the gpiochip until exactly this same
+> kref inside struct device inside gpio_device goes down to
+> zero.
+>
 
+I believe this is not correct. The resources managed by devres are
+released when the device is detached from a driver, not when the
+device's reference count goes to 0. When the latter happens, the
+device's specific (or its device_type's) release callback is called -
+for gpiolib this is gpiodevice_release().
+
+The kref inside struct device will not go down to zero until you call
+device_del() (if you previously called device_add() that is which
+increases the reference count by a couple points). But what I'm
+thinking about is making the call to device_del() depend not on the
+call to gpiochip_remove() but on the kref on the gpio device going
+down to zero. As for the protection against module removal - this
+should be handled by module_get/put().
+
+I may be wrong of course but when looking at the code, this is what I
+understand. Please let me know what you think.
+
+Best regards
+Bartosz Golaszewski
