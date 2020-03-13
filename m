@@ -2,117 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 088301849DB
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 15:47:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23E41184A1C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 16:01:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgCMOrk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 10:47:40 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33504 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgCMOrk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 10:47:40 -0400
-Received: by mail-il1-f195.google.com with SMTP id k29so9169567ilg.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
-        b=UULHVhHoV9B8wA8pT06k5F7CEKhKPJTemEriB5P4jsfUl+0MFuocFV+cKfEBUwJOZR
-         44SDm19Y7MNYFx7IBYDxU1eeSaW08Y1QdU5wPqJ476lvQgn0/8iH8LZarWTvyzQ8f8Pq
-         /yfiAazoYMLLCZA+WD2VvC0CB+j3dinbmK52mQS15VrJHiRU+hrdzgsvFqZQERc3wsoQ
-         g+ZBlhE9WbwRtM/eaNTiBOiVTrV5D3Y6m0xAntdjTsJR7LHKx3cw/ImN5JlKvRE2sZTY
-         CaoeXluOwsKMbIdEpQHSRSCk8Y3XWPOtb/vcDpCSafXtfOW3R/wFvDbweG9ep+FTXkfs
-         6jCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ro1R5ehcYhRf1s0gupnhw5Q+nbHwvID0ows7ral5AwA=;
-        b=jEAT/+FPYtYA17Q48DJpjLnNPJnC/5+Ccykd3nO1H8LB9548qpCefGDdpcmFbfTBNR
-         BVKaNZuedC2KAcHu4Yq6JUz8co4UeTtP3LUsdskQW/+KnUBSNJEyZK/tSSTGyLQ2QzTZ
-         7VfsHJ4AmT4jvABegxrIAplwhwzQsRKBYrI09yR/HibVO0mEnifdSFTedxXQOExTCDNf
-         lPZgTFgf39PtKsgTrvpAkg/MmOr6XN86mPtWhMKbuc1Z+ya5ChCRqQOGwrLww4czLzP1
-         xleZ1jthQLy2Ul1JLhVeQlmbBenjEdCx3MjXsz3qgLWA0VLHbsBcOBxVbNXwsMRiBcMS
-         u7iA==
-X-Gm-Message-State: ANhLgQ2gR10IpqLVk3U6xTDVHHpQh23+TFiYCnq5A1+3hKOv7eTmXUuJ
-        HhEjL4PTlb0/C6JXdVG4X62qlQheFJEcxAY2S/R8VXn5
-X-Google-Smtp-Source: ADFU+vsUQdVDGeuArwH8++3efQ8y7YMk8cNafYrhvyIqxS2kFexBfegk6QvD0SkMs57BFtt65r+sa+KzO6NudDFAdpc=
-X-Received: by 2002:a92:d191:: with SMTP id z17mr14076733ilz.287.1584110859057;
- Fri, 13 Mar 2020 07:47:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
-In-Reply-To: <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 13 Mar 2020 15:47:28 +0100
-Message-ID: <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S1726591AbgCMPBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 11:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbgCMPBH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Mar 2020 11:01:07 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AE9A206FA;
+        Fri, 13 Mar 2020 15:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584111666;
+        bh=go0P9fgXXPo35byt8AV+LGj/xg18Op3eY2CFhsORJbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K8rHC7e/bxxQzKqrId1m+K6LiZKbq8lWuCi+yqYhcaquiz7IwFvkE+RyrH5wmKj+K
+         3PM2wJT/oiPPYgA904Uke6d4R4y/gv9hly5h282sNqtwBzQ8k2YwnM1AHtyuC1vInn
+         5AA/nxabwg1lwVt/qWLsvpxMKNnkjPhdQ1La/phw=
+Date:   Fri, 13 Mar 2020 11:01:05 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, stable@vger.kernel.org,
+        Robert Richter <rrichter@marvell.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
+Message-ID: <20200313150105.GF1349@sasha-vm>
+References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
+ <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
+ <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
+On Thu, Mar 12, 2020 at 10:16:40AM -0700, Tim Harvey wrote:
+>On Thu, Mar 12, 2020 at 6:42 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>> On Wed, Mar 11, 2020 at 4:43 PM Tim Harvey <tharvey@gateworks.com> wrote:
+>>
+>> > If there are no parent resources do not call irq_chip_request_resources_parent
+>> > at all as this will return an error.
+>> >
+>> > This resolves a regression where devices using a thunderx gpio as an interrupt
+>> > would fail probing.
+>> >
+>> > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
+>> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+>>
+>> This patch does not apply to the mainline kernel or v5.6-rc1.
+>>
+>> Please verify:
+>> 1. If the problem is still in v5.6 (we refactored the driver to
+>>    use GPIOLIB_IRQCHIP)
 >
-> Hi Bartosz,
+>Linus,
 >
-> I'm struggling to figure out if this is the right way to count
-> references for gpio descriptors.
+>Sorry, another issue was keeping me from being able to boot 5.6-rc but
+>that's now understood and I can confirm the issue is not present in
+>v5.6-rc5
 >
-> I cleared up the situation of why we don't want to add kref
-> to gpio_chip in the previous message: I think we got that covered.
-> (If I'm not wrong about it, and I am frequently wrong.)
+>>
+>> 2. If not, only propose it for linux-stable v5.5 etc.
+>>
 >
-> This mail is about contrasting the suggested gpio_desc
-> kref with the existing managed resources, i.e. the
-> devm_* mechanisms.
+>Yes, needs to be applied to v5.2, v5.3, v5.4, v5.5. I cc'd stable. If
+>I need to re-submit please let me know.
 >
-> devm_* macros are elusive because they do not use
-> reference counting at all.
->
-> Instead they put every devm_* requested resource with
-> a destruction function on a list associated with the struct
-> device. Functions get put on that list when we probe a
-> device driver, and the list is iterated and all release functions
-> are called when we exit .probe() with error or after calling the
-> optional .remove() function on the module. (More or less.)
->
-> This means anything devm_* managed lives and dies
-> with the device driver attaching to the device.
-> Documentation/driver-api/driver-model/devres.rst
->
-> If the intention of the patch is that this action is associated
-> with the detachment of the driver, then we are reinventing
-> the wheel we already invented.
->
+>Cc: stable@vger.kernel.org
 
-In this case I was thinking about a situation where we pass a
-requested descriptor to some other framework (nvmem in this case)
-which internally doesn't know anything about who manages this resource
-externally. Now we can of course simply not do anything about it and
-expect the user (who passed us the descriptor) to handle the resources
-correctly. But what happens if the user releases the descriptor not on
-driver detach but somewhere else for whatever reason while nvmem
-doesn't know about it? It may try to use the descriptor which will now
-be invalid. Reference counting in this case would help IMHO.
+Linus, could you ack this patch for stable?
 
-Bart
-
-> E.g. to devm_* it doesn't really matter if someone else is
-> using a struct gpio_desc, or not, but if the current driver
-> is using it, it will be kept around until that driver detaches.
-> No reference counting needed for that.
->
-> So is this related to your problem or do I just get things
-> wrong?
+-- 
+Thanks,
+Sasha
