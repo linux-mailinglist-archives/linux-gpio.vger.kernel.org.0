@@ -2,95 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC18318447D
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 11:11:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C703C1845D4
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 12:20:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgCMKLc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 06:11:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:39697 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726216AbgCMKLc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 06:11:32 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MSKly-1ik3X01Xaq-00SiEB; Fri, 13 Mar 2020 11:11:30 +0100
-Received: by mail-qk1-f172.google.com with SMTP id d8so11505071qka.2;
-        Fri, 13 Mar 2020 03:11:30 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2xN5BlUpcZOrwMWPmjubsaakk47riZOIHyfUplu7RS5r9T+Kp3
-        lbPxLOjzhIAqgk7hqaj1nBiEKuKg+oYD+R6F7xY=
-X-Google-Smtp-Source: ADFU+vsCydklHK+9Ar4RDwAxNiVrZxoUVNmbFhA0K7Jp1usDjMuTKVKyrnX8uuq78mby8lyq2MddiuHVgl4hQ5+4glA=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr9621233qkd.394.1584094289099;
- Fri, 13 Mar 2020 03:11:29 -0700 (PDT)
+        id S1726426AbgCMLUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 07:20:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33989 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMLUg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 07:20:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id i19so7550330lfl.1
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2020 04:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=DUkzCT6fMDRuOGNPcFz5q/JbaZQPfDtLhcj9dME2OfQ=;
+        b=IB3sbGfN0StO/jH5TKXmiChcdQBxo7OyILPFiG2HQdsgqV4SoYe7Pnf1IJkAvrtnQG
+         1ueY6d12VCFY5TpireCAx+nIcMZ4OCtwvMo7DBWL2YBJVqxQsFiGUt+tAonojEHBaAo6
+         RThNZK5vaJOaVyPTz0l+uADtwK5ExnJ8iIjGZTecan0szZM2uBCzWXg+KBnqeK/bYCAk
+         PQb139GEmwwrmiRDEczR0gw8Sess7agRemt07OOKvvbOtk+zPIx/kouTjK6Y8Nn14B6P
+         7c7lFJ55FrxgKgApU76CP419u1sYF9BATBt6ZqLVJAV5O16rG6UbN9MNESyaDr0aXLUJ
+         9qRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=DUkzCT6fMDRuOGNPcFz5q/JbaZQPfDtLhcj9dME2OfQ=;
+        b=ZkDCBQvZayezGJUTvHQV146iRoSRTdFYfyHvplx0qrfyz7vM4Th3dRa3ZVDvMaCQQy
+         0v2HoEaUEK+OfHrhS+IR/EAehmup1QXQBgKegx5Us2UdGK8Yk6JNzrtbMbXf/QXJEtqM
+         o/ZWOjsvDVxAFTrEQlux0Jm+tXZA2ioQhZEPwZy0lz1J8HFitG0bxfnMy31h+tPT/d+o
+         eqHhq14gAwur5zM/Dsw8+mj4sdLUcA60a8GHtE7VMiud6ZlY6Am3/p/Y1+dhK6FxMmla
+         Ovcut0O1Z1iMyqig/T9Zo0WchuH4SobbnBkUSUbj2BWsNnt3A6npqX63dMkJlwJVaaeC
+         sFVw==
+X-Gm-Message-State: ANhLgQ0ZHwetieR4tXwjIuQriA4Z4hgdAHNE3AE7GdxBJkPj/EHJOaaX
+        LeAvdM8sWRYB9JlIhgHfxUgRrB2fkNNjBb1+WMQ=
+X-Google-Smtp-Source: ADFU+vuvRdE9efNesi45FkElXV9j1F5gxU2c/ObrHGCy6Z6yiThETmAEi6xRSQ6cyWKFZVcdFzPGzuFiC8o3M8hJONk=
+X-Received: by 2002:a05:6512:1041:: with SMTP id c1mr8294042lfb.14.1584098434359;
+ Fri, 13 Mar 2020 04:20:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com> <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1584070036-26447-4-git-send-email-peng.fan@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Mar 2020 11:11:13 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
-Message-ID: <CAK8P3a14BU5uHEqkVyWkeFVmxA1hJifQE+GkXFgmn59s_TL+Rw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] soc: imx: select ARM_GIC_V3 for i.MX8M
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Received: by 2002:ac2:5589:0:0:0:0:0 with HTTP; Fri, 13 Mar 2020 04:20:33
+ -0700 (PDT)
+Reply-To: francoissman72@gmail.com
+From:   Mr Francois Stamm <ttapiaatt4@gmail.com>
+Date:   Fri, 13 Mar 2020 04:20:33 -0700
+Message-ID: <CA+Vpfb-yWbn7=rouD8HydRv6k4G-OPLvPLuzhiM+ZwMkHnqdnw@mail.gmail.com>
+Subject: INVESTMENT PROPOSAL!
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:uvjspBKGh/OQ7ZCu5qAX+JEpwtp/DDl2j2tRGZ8BuC82ySLDPox
- MjmLpfL1rGkst0kB7uY96YNbUJgmmz13vi7GruTwMyJcJVSIQf80AIeHXwfo3BoIjwquyuS
- 9xk4nUq2npNh7BQQJFq908xB/KOEt4WDNIhpWmf+mjvfomE7HK1li9hzz94tpVkFyo9/g9C
- ZNxKlC9/5Dj5qAEEUynkg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yvuBIhSD7DY=:1Pze8/1ge8N3gcehyfQ95p
- dE8voLpyeScycF2ItZOrdGIiI+LPMkvEw6sUVdZPv+KWmsxX64GJJyXWvWBNIHUag4GkhPfr0
- JZyaz0CJ6h0YdKSlsqKLD0//s1DJ7q+9B4SWvWYTu+TmtxQnkSFUD7BxQ/kmScjjJpnn0nrvO
- szxFKMunxV6CVuzc++Fa1cFjx1jvTK/7+PM/A9EV4jPlx2bIdaUyKjVKiKrZ3zpKZfzAxqlCz
- tGtxs0bMqvewRParg8nIVQfEzm0qL1bF0UGHSPKF6pvRXPEe5dqtfN/mpxACwrjcA4+Fa6rnU
- hcrMitot+jx9dRQ/7O68GIjXJcd7gN+VuHnSG0XGkDfUzTX/4PIGpq+8kNsS5CFSfPfT4/U/m
- UjEkvoL/L6hmLpsqDxFkmFRLTygs3ATHOIb2qSFfdepu1zWlgiGCVAnojZQ1U02a/VSPfbDlN
- UaHUitDe/CR/ryF94/YPvgBTw0eDDqoqjiOMO5D88UJH5dqknS57JDjGURdbNQr2hzI4ILjJC
- J6zF5YHISRv/h/UFiZ1Eeuhow8WuPIai+29M0JDfwE6TZcOdhS8E2VgK6f64+Q309NDCR8qXF
- XuhBWhfn6uTWoLvEVV2fzLmb1kRm5mHZnMCKNPrJt3l6ZdOIflJGjyYct/YPXcRWVAsBL7YqI
- 7jNN12HWRQIJPqNi9DH9IMqK3tqOFVD/KlDinkRTlkHHoJwqRhPcSWT8I3Il9/n6za8ZuaG4X
- OD5TYEWYoAzWM6A8q+dj6bkajHAnlUUZvD9DMYAWmtpZvPp1+BLMCyGwMxaR5PrHSzIh7Cv9F
- CChPSiIap37YjRfVCH6lzOjXtfcLqCTIfyC0FbddtcpHRJ1fy0=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 4:34 AM <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Select ARM_GIC_V3, then it is able to use gic v3 driver in aarch32
-> mode linux on aarch64 hardware. For aarch64 mode, it not hurts
-> to select ARM_GIC_V3.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+I am Mr Francois Jean Stamm from Switzerland i am the chief delegate
+south Sudan red cross organisation, my objective to send this mail
+across to you  on mere internet search of a friend from your
+country,ilost his contact ,intent pump up your email is  to extend our
+humanitarian aid/assistance to  your country  on behalf of my
+organization
+INTERNATIONAL COMMITTEE OF THE  RED CROSS ORGANIZATION( ICRC) is an
+None governmental organization (NGO) at THE UNITED NATION is a journal
+of a
+humanitarian assistance such  as:Transgression of Human Rights in
+Humanitarian Emergencies:The Case of  Somali Refugees in Kenya and
+Zimbabwean Asylum-Seekers in South Africa  Mapping Population Mobility
+in a Remote Context:Health Service Planning  in the Whatnot District,
+Western Ethiopia,Humanitarian Challenges and  Dilemmas in
+Crisis Settings.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Our objective is to reach the need and the less privileged globally
+through  this project, we unanimously agreed to extend our charity
+work to your  country as benefactor to this assistant project.We need
+a sizable undisputed land in a good area where we can establish an
+orphanage home to effect life of the less privileged/orphans. On
+behalf of my organization International committee of the red cross
+organization(ICRC) I advised you urgent search of land at any cost as
+to  enable the organization to exhibit
 
-> diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-> index 70019cefa617..0b69024296d5 100644
-> --- a/drivers/soc/imx/Kconfig
-> +++ b/drivers/soc/imx/Kconfig
-> @@ -21,6 +21,7 @@ config SOC_IMX8M
->         bool "i.MX8M SoC family support"
->         depends on ARCH_MXC || COMPILE_TEST
->         default ARCH_MXC && ARM64
-> +       select ARM_GIC_V3
+action,furthermore the effective  execution of this proposed project
+will be under your supervision .
 
-It would seem sensible to also drop the dependency on the 'default'
+Best Regards
 
-      Arnd
+Francois
