@@ -2,86 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C703C1845D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 12:20:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5675318467A
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 13:05:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCMLUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 07:20:37 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33989 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgCMLUg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 07:20:36 -0400
-Received: by mail-lf1-f68.google.com with SMTP id i19so7550330lfl.1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2020 04:20:35 -0700 (PDT)
+        id S1726845AbgCMME4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 08:04:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35326 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgCMMEz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 08:04:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so11606597edj.2
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2020 05:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DUkzCT6fMDRuOGNPcFz5q/JbaZQPfDtLhcj9dME2OfQ=;
-        b=IB3sbGfN0StO/jH5TKXmiChcdQBxo7OyILPFiG2HQdsgqV4SoYe7Pnf1IJkAvrtnQG
-         1ueY6d12VCFY5TpireCAx+nIcMZ4OCtwvMo7DBWL2YBJVqxQsFiGUt+tAonojEHBaAo6
-         RThNZK5vaJOaVyPTz0l+uADtwK5ExnJ8iIjGZTecan0szZM2uBCzWXg+KBnqeK/bYCAk
-         PQb139GEmwwrmiRDEczR0gw8Sess7agRemt07OOKvvbOtk+zPIx/kouTjK6Y8Nn14B6P
-         7c7lFJ55FrxgKgApU76CP419u1sYF9BATBt6ZqLVJAV5O16rG6UbN9MNESyaDr0aXLUJ
-         9qRA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KVQaV5WPaAITEfXGJD3iw4zrtyye7kAolYp6oZ1quUI=;
+        b=GVZv6ChaXLEWYvbrWTdhS4i8fMw2qeJSXb/2JBjNdfMY6mhOggh6/Z5mOaWCYPz6Ad
+         PetuwUXpdI272XaInycenRqesHqQBmYhwOBAMPaM4DCpfbCev1WQekRbj0o7QM4YsMTi
+         FkvBwDPMqy4tbFaLyfxVfYKBPgeGMPLpoi1kp2ylMBm1/Ithj6eoLKXkBEzlhpA/ihLd
+         qL22Qiw9DAFKOJT6+N8KPo5aUP110lqB7mD++bhFrTZXbdce6Qd/U/JEnBbgdbSZBnq/
+         AaqJO9+Hx6eGmoHph7LwUFG+z4KSEcnIHB1QgOQ3JYmudJ1VcD4R91SoUMJraYGdukpk
+         vEcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DUkzCT6fMDRuOGNPcFz5q/JbaZQPfDtLhcj9dME2OfQ=;
-        b=ZkDCBQvZayezGJUTvHQV146iRoSRTdFYfyHvplx0qrfyz7vM4Th3dRa3ZVDvMaCQQy
-         0v2HoEaUEK+OfHrhS+IR/EAehmup1QXQBgKegx5Us2UdGK8Yk6JNzrtbMbXf/QXJEtqM
-         o/ZWOjsvDVxAFTrEQlux0Jm+tXZA2ioQhZEPwZy0lz1J8HFitG0bxfnMy31h+tPT/d+o
-         eqHhq14gAwur5zM/Dsw8+mj4sdLUcA60a8GHtE7VMiud6ZlY6Am3/p/Y1+dhK6FxMmla
-         Ovcut0O1Z1iMyqig/T9Zo0WchuH4SobbnBkUSUbj2BWsNnt3A6npqX63dMkJlwJVaaeC
-         sFVw==
-X-Gm-Message-State: ANhLgQ0ZHwetieR4tXwjIuQriA4Z4hgdAHNE3AE7GdxBJkPj/EHJOaaX
-        LeAvdM8sWRYB9JlIhgHfxUgRrB2fkNNjBb1+WMQ=
-X-Google-Smtp-Source: ADFU+vuvRdE9efNesi45FkElXV9j1F5gxU2c/ObrHGCy6Z6yiThETmAEi6xRSQ6cyWKFZVcdFzPGzuFiC8o3M8hJONk=
-X-Received: by 2002:a05:6512:1041:: with SMTP id c1mr8294042lfb.14.1584098434359;
- Fri, 13 Mar 2020 04:20:34 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KVQaV5WPaAITEfXGJD3iw4zrtyye7kAolYp6oZ1quUI=;
+        b=te0ugp9+/MBGziiL/OZXlCTcxx2lMkOYJbeGoOST5ychru5BRzMEu5IecT/eUBuriP
+         /JmVV9ohvSnTfmUOGo+Dtvk/aPDy7pGuyJchJRBlQ6/0tFWtYCwaf03QTQTaqA3xh/P2
+         oM+gidq//tbqLzH1FtA4B/uYQmI7/QZJU+wWKqNlvjHeXCNB45ffSObG5OmqcNzTVgS6
+         9+EkA2KD/LUvPByb9lgtfPgkJBJnVmxCMFJruEahKq3Ngv/2/GTst7Z1FDSf0jnyFBfd
+         wee8TtctMew0jyndufJgk+i6Oeggui8AMR4vKp+VqEngv87sLaH0C0gypy580kVkN+dV
+         NwFw==
+X-Gm-Message-State: ANhLgQ3BSzKL7pftzQLtkqz/NMw0LbqCaYgLKOhpdulUP2xCL1/GwHRx
+        a0XAwXrtKpVQRLpcjt21MG6i0cV/ppc=
+X-Google-Smtp-Source: ADFU+vskqub7CpCaC/ugUWZs2oR/RvePIrTwC+6a82eCHZMWi25KAtvuE8JcxWJt62Qtis9Q1Vw0NQ==
+X-Received: by 2002:a17:906:76c6:: with SMTP id q6mr11068012ejn.176.1584101092902;
+        Fri, 13 Mar 2020 05:04:52 -0700 (PDT)
+Received: from [192.168.1.9] ([84.238.208.211])
+        by smtp.googlemail.com with ESMTPSA id v25sm4584220edx.89.2020.03.13.05.04.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 05:04:52 -0700 (PDT)
+Subject: Re: [PATCH -next 011/491] ARM/QUALCOMM SUPPORT: Use fallthrough;
+To:     Joe Perches <joe@perches.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-pm@vger.kernel.org
+References: <cover.1583896344.git.joe@perches.com>
+ <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <2ac47436-e13c-bc87-d661-e4a423c7ef5b@linaro.org>
+Date:   Fri, 13 Mar 2020 14:04:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Received: by 2002:ac2:5589:0:0:0:0:0 with HTTP; Fri, 13 Mar 2020 04:20:33
- -0700 (PDT)
-Reply-To: francoissman72@gmail.com
-From:   Mr Francois Stamm <ttapiaatt4@gmail.com>
-Date:   Fri, 13 Mar 2020 04:20:33 -0700
-Message-ID: <CA+Vpfb-yWbn7=rouD8HydRv6k4G-OPLvPLuzhiM+ZwMkHnqdnw@mail.gmail.com>
-Subject: INVESTMENT PROPOSAL!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2e6818291503f032e7662f1fa45fb64c7751a7ae.1583896348.git.joe@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I am Mr Francois Jean Stamm from Switzerland i am the chief delegate
-south Sudan red cross organisation, my objective to send this mail
-across to you  on mere internet search of a friend from your
-country,ilost his contact ,intent pump up your email is  to extend our
-humanitarian aid/assistance to  your country  on behalf of my
-organization
-INTERNATIONAL COMMITTEE OF THE  RED CROSS ORGANIZATION( ICRC) is an
-None governmental organization (NGO) at THE UNITED NATION is a journal
-of a
-humanitarian assistance such  as:Transgression of Human Rights in
-Humanitarian Emergencies:The Case of  Somali Refugees in Kenya and
-Zimbabwean Asylum-Seekers in South Africa  Mapping Population Mobility
-in a Remote Context:Health Service Planning  in the Whatnot District,
-Western Ethiopia,Humanitarian Challenges and  Dilemmas in
-Crisis Settings.
+Hi,
 
-Our objective is to reach the need and the less privileged globally
-through  this project, we unanimously agreed to extend our charity
-work to your  country as benefactor to this assistant project.We need
-a sizable undisputed land in a good area where we can establish an
-orphanage home to effect life of the less privileged/orphans. On
-behalf of my organization International committee of the red cross
-organization(ICRC) I advised you urgent search of land at any cost as
-to  enable the organization to exhibit
+On 3/11/20 6:51 AM, Joe Perches wrote:
+> Convert the various uses of fallthrough comments to fallthrough;
+> 
+> Done via script
+> Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/media/platform/qcom/venus/vdec.c |  2 +-
 
-action,furthermore the effective  execution of this proposed project
-will be under your supervision .
+For the Venus bits:
 
-Best Regards
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
-Francois
+>  drivers/phy/qualcomm/phy-qcom-usb-hs.c   |  2 +-
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c |  4 ++--
+>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c |  2 +-
+>  drivers/rpmsg/qcom_glink_native.c        |  4 ++--
+>  drivers/soc/qcom/socinfo.c               | 16 ++++++++--------
+>  drivers/thermal/qcom/tsens-v0_1.c        |  8 ++++----
+>  drivers/thermal/qcom/tsens-v1.c          |  4 ++--
+>  8 files changed, 21 insertions(+), 21 deletions(-)
+> 
+
+-- 
+regards,
+Stan
