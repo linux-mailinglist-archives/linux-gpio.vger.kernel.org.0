@@ -2,147 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC4E2184F31
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 20:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E80D184F5E
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 20:41:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgCMTPY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 15:15:24 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38220 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgCMTPX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 15:15:23 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h5so13259956edn.5;
-        Fri, 13 Mar 2020 12:15:22 -0700 (PDT)
+        id S1727156AbgCMTle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 15:41:34 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40323 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgCMTld (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 15:41:33 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h17so11338735otn.7
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Mar 2020 12:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a/Mvn0+PY7Zqcxqn/jETgFaE9sx7vy1J6+fqxPSu5Yk=;
-        b=fuhkVmLz0gXC7XyjGBn7cTymXP5dyrOVvVB9f/Tnr8064WVq1pfjwi7JX5cFeEn2yf
-         4hfh/x5jL7FEsLrBWEH7S1jt4v6Yy9QEGXFKY6AULjKerRJZKILqoY5PFuN8n3daVfYl
-         awUBRY6G7fqWz4i2GTvRJ05OuVDVqNL4bxFY7jDWPZxHVpqgCMgl1AsPuHG2NM1SF7js
-         d4IT7h9k7jCZu1bzp4D4WrvNq7RYRYx+U3YahXAvOfglfYjatLK71vmFz93IsY0LraXE
-         vXmN2pbQCzySLsfI/QmDy6YMgSlrAn7oVk7F/iwCO9TVF+2YPyha8m/bTII43yQy4Wr5
-         Qpww==
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wjieT0R9WZnB9z3n+XY1qg0Ch3LybzVq7EUWHcy5YTo=;
+        b=kMlus6sC2nyintFvkXx9LHI0rgeCLG37gf4jtSyinrKY+YclOGnKzKJePfCn5QlwPl
+         YE5mMTwfiLKM9qhLlcNux4oSh+KMhKpwgc/lTfE7kLuFYjSliG5MuOmK9L2+7jrcgkuS
+         P/zojkhxaqelvLeov7dWwxqLSE+BmBFNJ3rlGn80JqYQwRKLPFu9pfr19m7H5auefrpW
+         dfPhDvvY+s8NCU+EeVfHUX7iP75icFzDdzXEkO4lxK1ujA++3w0bA/WkNmTLsgIvnXPM
+         d6PztCKlbM25SnoIAwKg6nz2f56lFb9vYDbZS82WyCJ4xXm58ANZaIf+uE7vhtALzOe/
+         aypQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=a/Mvn0+PY7Zqcxqn/jETgFaE9sx7vy1J6+fqxPSu5Yk=;
-        b=kL3yXd4D7DbNbuV+RdqAo1Lh1TUCNPwXlsCA7KwLbv8OWuAxURdoRMtBnpEa/SvoEm
-         npdieQVRc8/WyDilCyBWqFTqc2+W6Ob61ddQ1FXWUmurK6nOWJS2HcWFmHmNyHo2NYC/
-         uBsngqs9BHgwNQv26FnR49towoafA1J7H2V8So1oNiry9ZZ7gYWNSwKwmvEpWz0b2vyP
-         sQPEtx+8MPnozq/xAx9eC2HyuLtp+MEggg8Zfe2X1deXPzpw+8McPzzMkdwFmWUPHHJc
-         15VWeatzA8S45nIxDOPCmpAMeicThf0Z6KzZW5Fx7Uq4AcUWYF3TiG+ACJwjfX9CWFD9
-         iyMA==
-X-Gm-Message-State: ANhLgQ1YLWK4qFdrw1W408bmZbVPr0l+akXreAn82hpIuM6MPBl9rs4p
-        IDiWYeyc+kyemAgebGF+m4s=
-X-Google-Smtp-Source: ADFU+vuWQEL9cTysb661kQdTOnQxHILIOGZA5AemK+0tjWcwsDfvcfV7S8iwXIUEw+EDH7G3oqKPOA==
-X-Received: by 2002:aa7:cf86:: with SMTP id z6mr14954854edx.281.1584126921840;
-        Fri, 13 Mar 2020 12:15:21 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host61-50-dynamic.50-79-r.retail.telecomitalia.it. [79.50.50.61])
-        by smtp.googlemail.com with ESMTPSA id 94sm2552140eda.7.2020.03.13.12.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 12:15:21 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     agross@kernel.org
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Ajay Kishore <akisho@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: qcom: use scm_call to route GPIO irq to Apps
-Date:   Fri, 13 Mar 2020 20:15:13 +0100
-Message-Id: <20200313191513.11365-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wjieT0R9WZnB9z3n+XY1qg0Ch3LybzVq7EUWHcy5YTo=;
+        b=g71qHqAvyCA/dyIHh5uq6xd6JO5kQeX/aKDIaNV80+jOEN5LSjuK20xYOmArz1pkY+
+         AWqj3j7pkme11V4dRZGJ9jEX2zLw/AowaL8nBVMKwdMKP+6qk6ADQE0dMJkjwiCSb+qq
+         DClmOEFmr00dLesSGKVk6buUb2iFK7kyRdlKEdmsNIojMtRwfxACku5uVU8JzRs/82Tm
+         KQeBpxmCK4Zw+LEL2qsfWBGwUll1e6nWb2kYtEuFvAY0vwgEZJJtGYNDYckUlL5FdAKJ
+         G1UqRQbw2megF/kqxu8x/cAsak0ehNnFuCXjpQdBYeT2kDJUFwEXOfaEfuJi9r1SmTxb
+         Q0lg==
+X-Gm-Message-State: ANhLgQ2J4k8l0/8Z/aeEmpdfcE5Z1e5rBKSp+k4TxWXwFp8CUgwDEvta
+        7b9Z5OM8bf996IlcENbmBfEvIlxZyWfH/xMaXkHR0w==
+X-Google-Smtp-Source: ADFU+vvz3zyxGYanegEtEhYVsPXr7j+OJ3pchZ5Pgj4K3BmzZJUyaiASUSU1nbsKYRV4BYUb2xdxCgQLa7EcmLJRnHY=
+X-Received: by 2002:a05:6830:1e06:: with SMTP id s6mr1601032otr.28.1584128491269;
+ Fri, 13 Mar 2020 12:41:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
+ <20200313153151.e5nmsbr6yrzchdxi@rric.localdomain> <20200313191230.qrrlo7ht24fhfhvj@rric.localdomain>
+In-Reply-To: <20200313191230.qrrlo7ht24fhfhvj@rric.localdomain>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Fri, 13 Mar 2020 12:41:19 -0700
+Message-ID: <CAJ+vNU0q7wW8JPC8FjEkD4a-ZJc1QAmVNne0w1T4MX9pd4bCyg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For IPQ806x targets, TZ protects the registers that are used to
-configure the routing of interrupts to a target processor.
-To resolve this, this patch uses scm call to route GPIO interrupts
-to application processor. Also the scm call interface is changed.
+On Fri, Mar 13, 2020 at 12:12 PM Robert Richter <rrichter@marvell.com> wrote:
+>
+> On 13.03.20 16:31:51, Robert Richter wrote:
+> > On 11.03.20 08:43:53, Tim Harvey wrote:
+> > > If there are no parent resources do not call irq_chip_request_resources_parent
+> > > at all as this will return an error.
+> > >
+> > > This resolves a regression where devices using a thunderx gpio as an interrupt
+> > > would fail probing.
+> > >
+> > > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
+> > > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > > ---
+> > >  drivers/gpio/gpio-thunderx.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+> > > index 4627704..f84b9b1 100644
+> > > --- a/drivers/gpio/gpio-thunderx.c
+> > > +++ b/drivers/gpio/gpio-thunderx.c
+> > > @@ -366,15 +366,18 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
+> > >  {
+> > >     struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+> > >     struct thunderx_gpio *txgpio = txline->txgpio;
+> > > +   struct irq_data *parent_data = data->parent_data;
+> > >     int r;
+> > >
+> > >     r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
+> > >     if (r)
+> > >             return r;
+> > >
+> > > -   r = irq_chip_request_resources_parent(data);
+> > > -   if (r)
+> > > -           gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+> > > +   if (parent_data && parent_data->chip->irq_request_resources) {
+> > > +           r = irq_chip_request_resources_parent(data);
+> > > +           if (r)
+> > > +                   gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+> > > +   }
+> >
+> > There is no unlocking for the else case. I would assume the
+> > parent_data should be checked before grabbing the lock, or is this
+> > intended?
+>
+> Looking at the original code, the parent resources are requested only
+> if existing. So the change is ok.
+>
+> On the other hand, the overall change using irq_chip_{request,
+> release}_resources_parent() became pointless now. It is unreadable and
+> more complex now. Thus, commit 0d04d0c should just be reverted.
+>
+> The function interface is limited. Instead of letting the child device
+> deal with the parent, parent requests should be handled directly in
+> irq_request_resources(). Another aspect is that the code for this
+> driver has been already removed upstream and ti_sci_inta_msi.c is the
+> last remaining user of it. This speaks also for a removal by a revert.
+>
 
-Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 36 ++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+Robert,
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 9a8daa256a32..a83cfd1da219 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -22,6 +22,8 @@
- #include <linux/reboot.h>
- #include <linux/pm.h>
- #include <linux/log2.h>
-+#include <linux/qcom_scm.h>
-+#include <linux/io.h>
- 
- #include <linux/soc/qcom/irq.h>
- 
-@@ -710,6 +712,9 @@ static void msm_gpio_irq_mask(struct irq_data *d)
- 	const struct msm_pingroup *g;
- 	unsigned long flags;
- 	u32 val;
-+	u32 addr;
-+	int ret;
-+	const __be32 *reg;
- 
- 	if (d->parent_data)
- 		irq_chip_mask_parent(d);
-@@ -863,6 +868,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	const struct msm_pingroup *g;
- 	unsigned long flags;
- 	u32 val;
-+	int ret;
- 
- 	if (d->parent_data)
- 		irq_chip_set_type_parent(d, type);
-@@ -882,11 +888,33 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	else
- 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
- 
-+	ret = of_device_is_compatible(pctrl->dev->of_node,
-+					"qcom,ipq8064-pinctrl");
- 	/* Route interrupts to application cpu */
--	val = msm_readl_intr_target(pctrl, g);
--	val &= ~(7 << g->intr_target_bit);
--	val |= g->intr_target_kpss_val << g->intr_target_bit;
--	msm_writel_intr_target(val, pctrl, g);
-+	if (!ret) {
-+		val = msm_readl_intr_target(pctrl, g);
-+		val &= ~(7 << g->intr_target_bit);
-+		val |= g->intr_target_kpss_val << g->intr_target_bit;
-+		msm_writel_intr_target(val, pctrl, g);
-+	} else {
-+		const __be32 *reg = of_get_property(pctrl->dev->of_node,
-+						    "reg", NULL);
-+
-+		if (reg) {
-+			u32 addr = be32_to_cpup(reg) + g->intr_target_reg;
-+
-+			qcom_scm_io_readl(addr, &val);
-+			__iormb();
-+
-+			val &= ~(7 << g->intr_target_bit);
-+			val |= g->intr_target_kpss_val << g->intr_target_bit;
-+
-+			__iowmb();
-+			ret = qcom_scm_io_writel(addr, val);
-+			if (ret)
-+				pr_err("\n Routing interrupts to Apps proc failed");
-+		}
-+	}
- 
- 	/* Update configuration for gpio.
- 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
--- 
-2.25.0
+A revert does make the most sense to me and it works for 5.2, 5.3, and
+5.5 but the revert fails for 5.4 and needs some manual intervention.
 
+I'm not sure how to proceed with this.
+
+Tim
