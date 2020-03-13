@@ -2,33 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C212D184472
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 11:09:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A580184479
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 11:10:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCMKJm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 06:09:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:35973 "EHLO
+        id S1726514AbgCMKKB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 06:10:01 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:57185 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgCMKJm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 06:09:42 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5max-1jMwc32PVb-017Edn; Fri, 13 Mar 2020 11:09:40 +0100
-Received: by mail-qv1-f43.google.com with SMTP id cz10so4255862qvb.0;
-        Fri, 13 Mar 2020 03:09:40 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ209Q0Xsh9YwcpYqDKGyqqBhasdFmUT/aaujawpP+VxKKMRDH2r
-        qOIimB7zMzPIZNlOAz6Fp734atSGuZS/nVZ1SkY=
-X-Google-Smtp-Source: ADFU+vt+dplEfE+ba1F4rk6ReC6fOrvYlwWx8VR6mDemNP62902HsNZ8v7xXfhRh1qV8DDzdMc9fSjwZ+1FAfpkb8Yk=
-X-Received: by 2002:a0c:f647:: with SMTP id s7mr11509624qvm.4.1584094179347;
- Fri, 13 Mar 2020 03:09:39 -0700 (PDT)
+        with ESMTP id S1726387AbgCMKKB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Mar 2020 06:10:01 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MA844-1j1AfV1Fve-00BdNc; Fri, 13 Mar 2020 11:09:59 +0100
+Received: by mail-qk1-f182.google.com with SMTP id u25so11506661qkk.3;
+        Fri, 13 Mar 2020 03:09:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ07kEwFBblu2+zNiJgTxSW+grLMAyQqIi7eNwdWV3prvK8/A19o
+        LO1mXto2z40T35pyskb08/D3yBe7T+36gPQTJy0=
+X-Google-Smtp-Source: ADFU+vvWYzbzswGUwj98LCXyumKjsg6WUR5/OVwtFB1yQQW0GRetsjSX3tCPfS8PNkhlu5bWjtf3hlPAc+3Hny+d/0E=
+X-Received: by 2002:a37:b984:: with SMTP id j126mr11430329qkf.3.1584094198024;
+ Fri, 13 Mar 2020 03:09:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com> <1584070036-26447-2-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1584070036-26447-2-git-send-email-peng.fan@nxp.com>
+References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com> <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 13 Mar 2020 11:09:23 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1T5+9XioY5qW4Eoxbanp65cS+ffLie+erANw4ywUEAGA@mail.gmail.com>
-Message-ID: <CAK8P3a1T5+9XioY5qW4Eoxbanp65cS+ffLie+erANw4ywUEAGA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: freescale: drop the dependency on ARM64 for i.MX8M
+Date:   Fri, 13 Mar 2020 11:09:42 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a05++P1_0HxTrQueUhjnj83F1QOXES8SnmKkSX0a8fryQ@mail.gmail.com>
+Message-ID: <CAK8P3a05++P1_0HxTrQueUhjnj83F1QOXES8SnmKkSX0a8fryQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] clk: imx: drop the dependency on ARM64 for i.MX8M
 To:     Peng Fan <peng.fan@nxp.com>
 Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -45,24 +45,24 @@ Cc:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+RmOc7PXrsJSseKFFBMuCwfk87T03nH+DfBJenBveFxpC9xrbSI
- m/SFNuWTW79eFjW7rMdCsFBy0DTmjPfb9+HqAG7/qudSFDwqqccemVmTEuBfErUomcKfGt/
- nUpXsva7jeiXj5JlfAEEIGFhQE6OXLLm4bgU5YvVMoDR07BrJph2bfDkIc7qWAuDQb98XvV
- NvgkoeUc16DaRjjUoP0Ug==
+X-Provags-ID: V03:K1:SF+vIPvSuPXQhPAy0GL3fd2jRL1nJGvKosuL+a70acjVAswKbny
+ XIEGLIWc6bx6mSz4L3thVNj5gBwixafO0Lw7kWjjDoGD8O8MtAvhL4KGItG1sJdtDPM4PON
+ EXWdgJN6bnOgMmiWfJfLQr8nAD2sU8uzagoybNLB7G4/WcqVJt1CsdzUfeWBk0OVtjcWU2F
+ JSYXyEqm424a1btEm5h/Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xNaAwfrGQp0=:+myvPq7H2ApqeT+VMcVZs6
- lGCZV5hVheumvIlXb3BZo2fbv4RnixOFSTdm7+QoRQx/hi/DGw1rUdsh2zvppGbzGWBGyBl8M
- 65HhMj8ICSOQQL3fTIm2+dFWLlCYiTnlvKxnZggO0MeocB22oY+3G5rCqiIgElm0ChT7cDYY2
- YxuZ/NbFJFrlSuivnUjVZ6xLSiCkIEnu0SQGkHlXxDScZJBJXcijF1iQ2xizqOVx/60PhmMf7
- C0vXc8sxgr6JeYGjIRnLSGDHTK69Dhk5SguF+uzhgrSd6q7DMSIeDZCB5+xXS4qZgTQTHLuIQ
- RhBAAylr6vdlZkcWA9Z7HT7UhVxd7JjhvGI3jCscxxZWkjB7ZVqJo1n77s9usgpao6NYFDzvM
- VhmeW2Sxjhq2mP3FDrjjPH4EMYxpNT7+vWzmG6wa/0LJJFh/5LRKXQlkNEbBXZrDNbvJyfSyE
- IYUPY7m/W6XJKjnfk1mRY88ZtlVypm/LHLFUpdMvtWdIJ0OmOKLNkIHVO+q3I6bR4L/VPXmGR
- KO3tBYwbpjubhnTO1FjA0xugdaolwiU5PpxrzEsAK4ofThRgdUiF4jzhuRO/Cvyy358a/CAC3
- x29QxxiCJLa2v/0gvr57szgbKs3V2kp5six51UFFDvLw885rr0CzTq2QHnsvySWBUMs3OVzN1
- NLzxrq0kKC2dwCbIYpTj8tCxWnBCbsaSYBaBtL3+T7fhv9AuDkBc7U93D7gGsivst5sEGNBTS
- P96FSuzJJ2PRp4SOHyUhtDX91Ix80vaqC7Nj6pnfsrQP9gPImeuSjTVk7ZOlOig56dp0rpfMK
- +OtQ6POH8GcvhrHL0FZjkww/sBGchp4i+jviHaY3Cu9C9ry3Bc=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Jj5+MnFUktg=:PKp2rEVklc7oLY9dWI8mJI
+ UFYRgERUIP4cuQ34xNxldmbQvd52KwIANaURuNlPhzQFe7qFNkzD9G/TFtWq4tQHPGPqztMPx
+ 9TPc/b/NviL+syNA7xYlHOOteSw1MS5A+f6+QSaGz7UF0QqyKLQCZMz1esVXYTvmnypknizjM
+ Nzi+Gm49dp2UVF/xHiNb0tDAxBYZnHg9FROMnuS4dU52jVlMuXaZ2hw5Oc4YhUK0bj6hYX+RZ
+ xOlVg+EZ8D8EU22KNTZJn76Xt9KMimmlo/+8Jjc6SDxFOIBi9q7Lzkoue4mHdPlJG1V/MVqM2
+ k1KxetSWVw39veQEJTFaDIYHmBkqGiY1hFF6OgnNLzN3Qq0BW4kp/r/OoyTtQzrik+YV8xiSg
+ 5dzsUI0jdN8m97rMrlLr+scj438zXbtof9m8oxhtEU5yRVQ/V1kf2Ko+l0MMTGc+vnoSd9tbA
+ lxbY/o0f4hr8qWbNqfj7e6lJMXZahivMZ7j/BdryXpCXo/6LMWJaXTBxxGacF6Lr2Njyo0dOj
+ j/yXr7uFHKrL829z9a4cQtVnrXn6vu/BZvVpp/ZfCO3IGupl2XqjFLvLdmNWjLxRZk8VllHtd
+ EeIpdKbjOOAxt19sDsIwPDV7K3U4eaTZD7DZPesxljy3blmef956RjvBlzgpcIIsA5cI4tn3h
+ 2NtdB9OVZMkA8DVUF+OexUAg5de8+vHwWBn3tRetspTw7U3uvK/yG0Qvw0qi1F0+1gGo81E/S
+ ofNZV9Mcpf9qE6jLhD4K5N0JGcp0Y1/wvJTfXvos4Gr928/OU4kvkvTBZy7XomVqhpIIf4Gbi
+ v5F3/BM42guV6URGEAqRDSV/eC5XnsL1HxYDvQzEB9ylZyvAtk=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
