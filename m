@@ -2,167 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 853B7184F01
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 19:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D171E184F2A
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 20:12:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCMSxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Mar 2020 14:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCMSxt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:53:49 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73F9C20746;
-        Fri, 13 Mar 2020 18:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584125628;
-        bh=gnpxFQ6kyuv8cFJo/3Zkqq3inKgjgPxdNfOajCalHP4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0078zKpvvUv1c+PsA9vCK/xKx8XXEJInBx9+MguxNTCWmLdfMvwFJHrS2kObDs4Ya
-         HBHit0+PgmsC2scop4Tj7zRrPezAm8Y5xrIFaBjiaiZEumS70afq/118mW+ZCD5WWY
-         LrZpXqXkhgU62aXogfxtjv27UQvUhjq/oXpKEstI=
-Received: by mail-qk1-f170.google.com with SMTP id p62so14366596qkb.0;
-        Fri, 13 Mar 2020 11:53:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3mbNpRzwdC2lOUs0nfdC2dzjYN7K355c+crPuwDRj0HdOhAUbs
-        qjoepMy9fG5XobDdtVEhtA6zW4Ssn0oSC6g7UQ==
-X-Google-Smtp-Source: ADFU+vtIQWQ1iyBd9Hq/goh29DIW1Lm+8rr9b55lPBnrLwCB1yi/G66Yu2tNriWzEW+xFzAkAZJDQpZngvLu/4FVld8=
-X-Received: by 2002:a37:2cc6:: with SMTP id s189mr15023829qkh.223.1584125627547;
- Fri, 13 Mar 2020 11:53:47 -0700 (PDT)
+        id S1726894AbgCMTM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Mar 2020 15:12:56 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:59744 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726526AbgCMTMz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 13 Mar 2020 15:12:55 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DIrNHx010167;
+        Fri, 13 Mar 2020 12:12:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=/SDSJc0ogavFqoUKUPkDk8cyzNRleQar+Qv9oug8sDA=;
+ b=R3V1xbAzKNMLLWAHTn0V9bfOLxBGExUaUaN/pvnbGEdY56Jm1JxXPldW/LcDu4UoFRpD
+ 604Wza93AApAbALAAWOYVpO1+V8y8PO6X0QbRAd6mgOiQUXc7J3aNeIZE91KDbS9D4sC
+ VrEeY36Xj7vodrtj1ictCbTYZAbw4NNrISsS3ImCP48WaJ54OwYuenO+rP6bnudvRcv5
+ Xaq8wshJdagYGZZE60neKFphf/EiZKVlwvWAkIDd2x8ocIO/iAKtXzVhZgNcEfC08AVS
+ T1JX4TLV4/+axsgj8SvdtRpZuS+bhYZrtQLl5uxxoE+be4KhpnLS/Qgp6SKpqNCAQfw+ og== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2yqt7t58j9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Fri, 13 Mar 2020 12:12:50 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 13 Mar
+ 2020 12:12:49 -0700
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 13 Mar
+ 2020 12:12:48 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.57) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Fri, 13 Mar 2020 12:12:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k6BJiytZHehjz3Jjd+r3gR2MK4ZCb8hXkHv7fhauOKto0Lw7TrlFQ8RoGkC3a7FHmimKlszk0CnJ998tzxtilWkGFYsYL1PHrnYk8ZoIRPrQQz2w5QvR1q5FDht/tesJlc3bXDD2fu45r9HD9uxFz7r2FN+UpmhxZ8mvxqlFi/1Vdg6UhszqomXRCk5KH2uIAoNw4z8IjM4zgsyYQMrj4wde1UQEC8I9vohVvdxqDkGrm0HOt3AHZ1LAE+pFEs1u2CIyUhzjX0n4EIsQYC3ClNPAMP+qL8MD+0tCF2gGUbkL/iYLi73Hl4GVQRwpiIow87E3nVfrRkBOsCSjzJVLCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/SDSJc0ogavFqoUKUPkDk8cyzNRleQar+Qv9oug8sDA=;
+ b=UlDFxLJPJOQgbNf0xWoH0fO0DB1qePmfw+GUXTc02l3sr90qx3FkPxBUihHxDKViMUA1geDQ3+l32aM+UkvXeJHXB91Dj+8g8OQQG5Jnoh5+tAs2dT6RJ26cIe4HeZ4J9DOEGqksa+JJKqYF+2Lq0CCP41iHgW5S2CkdRJXN9Ch6PJGVeea4w4tBJRer+FLeo04C4WAyAhKRLbqhWITCo15beiDzFLaS6KgJcByvtNBmXGiOjPPtzdijA8PJx5DrIXFRi3aSkgAslZ5xVaLNLA7VmlGIr4UOmIjipj+LnlNcjZ2DX120mxVGsTZDpOgrO1QANALuyYeuHzXUfurIxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/SDSJc0ogavFqoUKUPkDk8cyzNRleQar+Qv9oug8sDA=;
+ b=Nskm3AqsRNMmfHO7KzYuO7jfIQpzq1OLy+1FKzz75TshcV3d1G5nIMde695EpjjkTX9XRZSaWhK8s4HTKMeGUxMmXbI4RW8pYFUXRS4w8E7m+bfGDnzOPgRv4E2vKUyBc1YSN595kI9M7g1OPVccsj0fQbS9x7B+acMXhG7jAOk=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
+ by MN2PR18MB2480.namprd18.prod.outlook.com (2603:10b6:208:100::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Fri, 13 Mar
+ 2020 19:12:47 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2814.018; Fri, 13 Mar 2020
+ 19:12:47 +0000
+Date:   Fri, 13 Mar 2020 20:12:31 +0100
+From:   Robert Richter <rrichter@marvell.com>
+To:     Tim Harvey <tharvey@gateworks.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
+Message-ID: <20200313191230.qrrlo7ht24fhfhvj@rric.localdomain>
+References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
+ <20200313153151.e5nmsbr6yrzchdxi@rric.localdomain>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313153151.e5nmsbr6yrzchdxi@rric.localdomain>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR05CA0341.eurprd05.prod.outlook.com
+ (2603:10a6:7:92::36) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
 MIME-Version: 1.0
-References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132510.AC2108030794@mail.baikalelectronics.ru> <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
- <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
-In-Reply-To: <20200313184005.gtlwzyak3sp6gier@ubsrv2.baikal.int>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 13 Mar 2020 13:53:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
-Message-ID: <CAL_JsqLFdjRkmtahBMTNhG3Vss2eL61MfucCb5KcnW9PX_PLHQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: Replace DW APB GPIO legacy
- bindings with YAML-based one
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0341.eurprd05.prod.outlook.com (2603:10a6:7:92::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Fri, 13 Mar 2020 19:12:46 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e7ce582e-ddb4-471a-3c03-08d7c78283ec
+X-MS-TrafficTypeDiagnostic: MN2PR18MB2480:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB2480BF8EBB84A9ECFB0B47FCD9FA0@MN2PR18MB2480.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 034119E4F6
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39850400004)(376002)(366004)(346002)(199004)(16526019)(316002)(6916009)(4326008)(478600001)(53546011)(26005)(186003)(6666004)(2906002)(55016002)(9686003)(7696005)(52116002)(66556008)(66476007)(8936002)(66946007)(5660300002)(1076003)(6506007)(81166006)(8676002)(81156014)(54906003)(86362001)(956004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2480;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AvKztxqr0ii2HGDoep0tih4RJF1bDWPIAHWtRABQo65FCc0O/8RM0LwQCk0dKOnllHDA+GiF8aAlZ2PfuRD16MaSDi8n0h8UkcraegoP1xu+HsIIhOb/fpBG/Ktk2O6sSQ/tTKaOOaGWhaIBwNfpVWoGnPmLzP3t+VvtGNvYFK+a73GGHfwFF9pGXTEPiVhgOGQzR3NnQLyg7O8jqdwZUvnbmmL4y431AaD8I0OUWSPXF9YNV9FuNGscjyxzhS3ogeJCf1SmknD96uQtJU043p+gdO/1C8mXyAEttyzJmE6MlbsOgncluFe5XPdK8G0v0rp38IZfQ4jqtJDlxdflrV31FwWBUgw+stf+Q65mvr5WCWY4oz6tQEQnmEP1vzbLyoCh6BHDy3xX2JCwi6X2KBm2xYwW5p+smyZA+OqAbgiiq51Qww9n1QsZzD1kaB4J
+X-MS-Exchange-AntiSpam-MessageData: p5sgIyGdJNt6CMuUPgKll/7OPijp+6Tj7hZyiK3tMXr0MLQj7dEw7DGzzZgGVmU7UzLMjV4MoKgoDLJ9m2PNkxhWUi/9qRu6um2PfbDA30wmbKhclyFsju9xDBwj2Ax4KTGZXhFU/Du5Uh6iI/Qs1w==
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7ce582e-ddb4-471a-3c03-08d7c78283ec
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 19:12:47.1006
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E03eMd8rlNsf4xvUfhoMyMnX8WMSEfT5A4sscGLwSj4DspDHdZalNFO8nW4MZ0ARdm3y1q7HEHj2bOTdqKd8gw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2480
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_07:2020-03-12,2020-03-13 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 1:40 PM Sergey Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Thu, Mar 12, 2020 at 08:47:56AM -0500, Rob Herring wrote:
-> > On Fri, Mar 6, 2020 at 7:25 AM <Sergey.Semin@baikalelectronics.ru> wrote:
-> > >
-> >
-> > Subject is kind of long and wordy. Perhaps:
-> >
-> > dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
-> >
->
-> Ok. I'll also do this for all similar patches in another patchsets.
->
-> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > >
-> > > Modern device tree bindings are supposed to be created as YAML-files
-> > > in accordance with dt-schema. This commit replaces Synopsys DW GPIO
-> > > legacy bare text bindings with YAML file. As before the bindings file
-> > > states that the corresponding dts node is supposed to be compatible
-> > > with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
-> > > compatible string and provide a mandatory registers memory range.
-> > > It may also have an optional clocks and resets phandle references.
-> > >
-> > > There must be specified at least one subnode with
-> > > "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
-> > > which would actually export the GPIO controller functionality. Such
-> > > nodes should have traditional GPIO controller properties together
-> > > with optional interrupt-controller attributes if the corresponding
-> > > controller was synthesized to detected and report the input values
-> > > change to the parental IRQ controller.
-> > >
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > Cc: Paul Burton <paulburton@kernel.org>
-> > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > >
-> > > ---
-> > >
-> > > Synopsis DesignWare APB SSI controller has a bindings property
-> > > "snps,nr-gpios" of numeric type, which means the number of GPIO pins
-> > > exported by the corresponding controller port. There is also a generic
-> > > pattern-property "*-gpios", which corresponds to a GPIOs array. As you
-> > > can see the GPIOs array property wildcard matches the vendor-specific
-> > > property "snps,nr-gpios" property while having an incompatible type.
-> > > Due to this the DW APB GPIO dts-nodes evaluation will report the
-> > > following error:
-> > >
-> > > snps,nr-gpios:0:0: 8 is not valid under any of the given schemas (Possible causes of the failure):
-> > > snps,nr-gpios:0:0: missing phandle tag in 8
-> > >
-> > > I didn't manage to fix the problem by redefining the property schema (this
-> > > might be impossible anyway). In my opinion the best way to solve it would be
-> > > to change the DW APB SSI Controller bindings so the driver would accept the
-> > > standard "ngpios" property for the same purpose. But in this case we would have
-> > > to alter all the dts files currently having the "snps,dw-apb-ssi" compatible
-> > > nodes (it's a lot). I know the bindings modifications aren't that much welcome
-> > > in the kernel community and there are good reasons why. So what do you think
-> > > would be the better way to fix the problem with the property types collision?
-> >
-> > Does this change (to dt-schema) work for you?
-> >
-> > diff --git a/schemas/gpio/gpio.yaml b/schemas/gpio/gpio.yaml
-> > index 1d9c109f9791..d1c08ccfdc1a 100644
-> > --- a/schemas/gpio/gpio.yaml
-> > +++ b/schemas/gpio/gpio.yaml
-> > @@ -34,7 +34,7 @@ properties:
-> >        - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >
-> >  patternProperties:
-> > -  ".*-gpios?$":
-> > +  "(?<!,nr)-gpios?$":
-> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >    "^gpios$":
-> >      $ref: "/schemas/types.yaml#/definitions/phandle-array"
-> >
->
-> It partly fixes the problem. There is meta-schems/gpios.yaml ,
-> which also has a rule for the properties with "-gpios" suffix. So yours
-> alteration together with the next one shall fix the problem completely:
+On 13.03.20 16:31:51, Robert Richter wrote:
+> On 11.03.20 08:43:53, Tim Harvey wrote:
+> > If there are no parent resources do not call irq_chip_request_resources_parent
+> > at all as this will return an error.
+> > 
+> > This resolves a regression where devices using a thunderx gpio as an interrupt
+> > would fail probing.
+> > 
+> > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
+> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> > ---
+> >  drivers/gpio/gpio-thunderx.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
+> > index 4627704..f84b9b1 100644
+> > --- a/drivers/gpio/gpio-thunderx.c
+> > +++ b/drivers/gpio/gpio-thunderx.c
+> > @@ -366,15 +366,18 @@ static int thunderx_gpio_irq_request_resources(struct irq_data *data)
+> >  {
+> >  	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
+> >  	struct thunderx_gpio *txgpio = txline->txgpio;
+> > +	struct irq_data *parent_data = data->parent_data;
+> >  	int r;
+> >  
+> >  	r = gpiochip_lock_as_irq(&txgpio->chip, txline->line);
+> >  	if (r)
+> >  		return r;
+> >  
+> > -	r = irq_chip_request_resources_parent(data);
+> > -	if (r)
+> > -		gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+> > +	if (parent_data && parent_data->chip->irq_request_resources) {
+> > +		r = irq_chip_request_resources_parent(data);
+> > +		if (r)
+> > +			gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+> > +	}
+> 
+> There is no unlocking for the else case. I would assume the
+> parent_data should be checked before grabbing the lock, or is this
+> intended?
 
-Oh right. I'll commit a fix for both.
+Looking at the original code, the parent resources are requested only
+if existing. So the change is ok.
 
->
-> --- a/meta-schemas/gpios.yaml   2020-03-13 20:20:10.072900019 +0300
-> +++ b/meta-schemas/gpios.yaml   2020-03-13 20:20:16.000953216 +0300
-> @@ -19,9 +19,7 @@
->      $ref: "cell.yaml#array"
->
->  patternProperties:
-> -  '.*-gpio$':
-> -    $ref: "cell.yaml#array"
-> -  '.*-gpios$':
-> +  '(?<!,nr)-gpios?$':
->      $ref: "cell.yaml#array"
->
->  dependencies:
->
-> Regarding the generic schemas/gpio/gpio.yaml . Do you think I should be
-> also allOf-ing it in my DT schema?
+On the other hand, the overall change using irq_chip_{request,
+release}_resources_parent() became pointless now. It is unreadable and
+more complex now. Thus, commit 0d04d0c should just be reverted.
 
-Only if you want to check everything twice. Most of the core schemas
-always get applied. The exception is generally bus controllers like
-SPI, I2C, etc.
+The function interface is limited. Instead of letting the child device
+deal with the parent, parent requests should be handled directly in
+irq_request_resources(). Another aspect is that the code for this
+driver has been already removed upstream and ti_sci_inta_msi.c is the
+last remaining user of it. This speaks also for a removal by a revert.
 
-Rob
+Thanks,
+
+-Robert
+
+> >  
+> >  	return r;
+> >  }
+> > -- 
+> > 2.7.4
+> > 
