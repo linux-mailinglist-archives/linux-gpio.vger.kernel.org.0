@@ -2,106 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53259183DE5
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 01:38:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D67C7183E99
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Mar 2020 02:15:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCMAiw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Mar 2020 20:38:52 -0400
-Received: from mail-lf1-f50.google.com ([209.85.167.50]:45561 "EHLO
-        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgCMAiw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 20:38:52 -0400
-Received: by mail-lf1-f50.google.com with SMTP id b13so6423213lfb.12;
-        Thu, 12 Mar 2020 17:38:50 -0700 (PDT)
+        id S1726895AbgCMBOm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Mar 2020 21:14:42 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42080 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgCMBOm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Mar 2020 21:14:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t3so3398086plz.9
+        for <linux-gpio@vger.kernel.org>; Thu, 12 Mar 2020 18:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=snVpnAGd/XEPtPPjHQpq2rJ6xYI2D1KtF5KErXLyfNc=;
-        b=kO8AmqJOU+KM9qP2BE8ZHr0kKAljWPcAU1wW63SQo4f4kqim0ROgU7TocO0UvimuzP
-         VxJeGdEjnxKqBtNNE0m+sOoYxHInxhEP4fHZGZ8GXM6d2FWKLhHsgfK9ES6XRp+8+iI6
-         Gkn7lVExsXheiI3v7cJp6w5OcJ1BiFWJk74UctZt13R4ycSJxuNxpVk5kzUWhSVEO93e
-         oJHxopgo6np9KnFMkMHWhQiVidjUReVIsAfN5tXh5I7wjW7heuSJfNzd8aVXBSR5hRw2
-         E952aaseIWKsbYmkT1dY4I/je0es4DaEZ5MhuKOjOsq7Cv7afYmstKjPppuoV3eMK3W1
-         Yg2A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qjJQpmCt5+Bj9s6c4s+LR19PtXcVxgKdoWHiu9bkYTQ=;
+        b=ioxcf3KuxHGJhBxLvtkftHAjwxfe80OwNQoZQR/Pp1c1SYS9B05ySCLuCRJkYpahjD
+         UAeGpcXsg/PJMedH/ysx11Kkzg8+blc8KVMsiarjLsqK/xMYVtuUb4QqUAeojq2NoGAR
+         ngZZ9OVLfT/8JGWyYLIN8AUyTqOgZrHB0ggOhz8y53vU1I2h2LUmJJCHV/dnvkM6V7Kf
+         xS4lozQYmarpPRug5843N1LqDhDtUQw9fJQm9pDPHDB/61JWPknUkm4yGziPgHREXmsT
+         ErMQcnfKafrImA2Gg4FZesvT+vUqq3CrsGMIMd3taLGrgJ+AytAvD+4rJb/lYfPnSw4E
+         GWnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=snVpnAGd/XEPtPPjHQpq2rJ6xYI2D1KtF5KErXLyfNc=;
-        b=mTMflYpU0z+KRaNR0KjB4WmKVIyDTMvJeVoG7419jmymI2NJ83i0qKBb2TQfPQ6/hj
-         pJtO0a5BacMW6WwlPI2NnnpqCaQH2F0jF6H09e2/MdS/+YzrpZXMjNb/DKJnydKT/Rt7
-         8YC70tNaNwBRfiVwJPcdsoscMfpT7j7ctqxE0AXsrcn2eD7G0Yhlv62R/TJwsCYKPyDE
-         gF7Rg8RCQjZGH/OzObJ+uNH7M9J+yh+oTRmZjyQx1avnSerfjzJqP2pRHj9QOrBoeAA0
-         9XDkmgKl99G85HyWTYw5obCLcVNCQ12+h3hBfgVT7Fhdq1zQPEMU/U0r+ET+r51FLMO5
-         RYRQ==
-X-Gm-Message-State: ANhLgQ23QamB96WaelpvE/YCdB4ThtgQHR+SRPtA+fQgP5A++EMpil5y
-        hibrfamQaeBZN83wzL33UesG6z1NhW3MQMLSmRw=
-X-Google-Smtp-Source: ADFU+vtTVjJ+RxjxbR7JULOQJhmBILTR/P/ggcbgW2SaHaxZT4d05DxUBzxF/wBT+F5bZ4L6qd1clmpi3RgqODdEerM=
-X-Received: by 2002:a19:4cc4:: with SMTP id z187mr6667902lfa.49.1584059929444;
- Thu, 12 Mar 2020 17:38:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qjJQpmCt5+Bj9s6c4s+LR19PtXcVxgKdoWHiu9bkYTQ=;
+        b=bw7OTGOVG+toL6aHWc/9pXWMXoaLBES6bTK4UKIUnyFqbnM+w0i98qvIUZv09dSguV
+         lVT1ve4pU9QynbFApplXPnAghfzTGZ87eE9S7fhlWPsNCfezcxaHioSr9utIjtXhfwPL
+         ClulGmT0BnWYK8ubQbrPK2yTvba7ofRGM5iSOoskAVWrG8sGEjXjjtzpXlrYrUNcADKO
+         RdypMC0gXhT0M5fGMKEucV0GsPPRk0i1ehGdNwSX/yE3g156KeYCwPxyeHfQIRxEqext
+         v9VZWk4vg4ZJtR6g53qZ3LMuA+GuR0oRkV50qnAsefrTwfIOomwPusSy2KxDd8/YRi3a
+         Tj7A==
+X-Gm-Message-State: ANhLgQ24ILJjVgR5NyvrbODAQ6dw1CLhhHyQ/wb2wDLtmvQ3v/JzQxjU
+        /GT8H9YtsbsOVGqzzna15T4=
+X-Google-Smtp-Source: ADFU+vur+iiemI1+aG1P3Vu0iQdSxjThTCmqPqVCPsUTFIKFYy+QI6LVQomeB31rWA4BYbm94LvIVA==
+X-Received: by 2002:a17:902:bc8a:: with SMTP id bb10mr10744319plb.102.1584062081279;
+        Thu, 12 Mar 2020 18:14:41 -0700 (PDT)
+Received: from pek-khao-d2.corp.ad.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
+        by smtp.gmail.com with ESMTPSA id p9sm9875428pjo.28.2020.03.12.18.14.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 18:14:40 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:14:31 +0800
+From:   Kevin Hao <haokexin@gmail.com>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 0/4] Fix the regression for the thunderx gpio
+Message-ID: <20200313011431.GA2424240@pek-khao-d2.corp.ad.wrs.com>
+References: <20200114082821.14015-1-haokexin@gmail.com>
+ <CACRpkda7LmJPkMG7hXq9MxHL2tYM5uTCEotdSbtaKxhtBQPW4g@mail.gmail.com>
+ <CAJ+vNU0QCQP7Roud7AGVNOreDwAbZ4HBmpXp4P9DEJPDB5eOag@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
- <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
-In-Reply-To: <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
-From:   Drew Fustini <pdp7pdp7@gmail.com>
-Date:   Fri, 13 Mar 2020 03:39:13 +0300
-Message-ID: <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Drew Fustini <drew@beagleboard.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        linux-omap@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU0QCQP7Roud7AGVNOreDwAbZ4HBmpXp4P9DEJPDB5eOag@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 1:43 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> Do we have a datasheet for this GPIO block somewhere? Should
-> be the datasheet for the ASIC.
 
-I am looking at the AM335x reference manual [0] but I can not actually
-find any references to pull-up/down or bias for GPIO pins.  I guess I
-was making of the mistake of assuming this would be something the gpio
-pins support.
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> We already have the required .set_config() callback on the OMAP
-> driver, it's just that it only uses it for debounce.
->
-> The driver is a bit convoluted with register offsets in a struct
-> omap_gpio_reg_offs depending on variant, but if they have
-> a register for this I'd say just get hacking.
->
-> If the GPIO driver is using pin control as back-end you are
-> looking at something more complex similar to what Intel is
-> doing inside drivers/pinctrl/intel/pinctrl-intel.c: this driver
-> is just calling up to gpiochip_generic_config() which will
-> try to configure the lines behind the GPIO using pin config,
-> which works if the proper ranges are defined so the
-> framework can map a GPIO line to a pin control pin.
+On Tue, Mar 10, 2020 at 01:40:56PM -0700, Tim Harvey wrote:
+> On Wed, Jan 15, 2020 at 2:20 AM Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+> >
+> > On Tue, Jan 14, 2020 at 9:39 AM Kevin Hao <haokexin@gmail.com> wrote:
+> >
+> > > Since the commit a7fc89f9d5fc ("gpio: thunderx: Switch to
+> > > GPIOLIB_IRQCHIP"), the thunderx gpio doesn't work anymore. I noticed
+> > > that you have submitted a patch [1] to fix the " irq_domain_push_irq:=
+ -22"
+> > > error, but the kernel would panic after applying that fix because the=
+ hwirq
+> > > passed to the msi irqdomain is still not correct. It seems that we ne=
+ed
+> > > more codes to make the thunderx gpio work with the GPIOLIB_IRQCHIP. S=
+o I
+> > > would prefer to revert the commit a7fc89f9d5fc first to make the thun=
+derx
+> > > gpio to work on the 5.4.x and 5.5 at least. We can then do more test =
+for
+> > > GPIOLIB_IRQCHIP switching (which the patch 2 ~ 4 do) before merging
+> > > them.
+> >
+> > Thanks a LOT Kevin, and I'm sorry for open coding and breaking this
+> > driver so much :/
+> >
+> > I have applied all four patches for fixes.
+> >
+>=20
+> I'm running into an issue with thunderx-gpio when using a gpio as an
+> interrupt with an mfd driver I'm working on[1]. The breakage appeared
+> with 0d04d0c146786da42c6e68c7d2f09c956c5b5bd3 'gpio: thunderx: Use the
+> default parent apis for {request,release}_resources'[2] and occurs
+> when irq_chip_request_resources_parent() fails with -ENOSYS. Any ideas
+> what happened here... It seems perhaps parent_data got lost?
 
-Thank you for the feedback, Linus.
+No, the parent_data doesn't get lost. The reason that -ENOSYS is returned i=
+s because
+the its_msi_irq_chip (the parent irq chip of thunderx-gpio) doesn't impleme=
+nt the
+=2Eirq_request_resources callback. As you can see in the irq_chip_request_r=
+esources_parent() code:
+    int irq_chip_request_resources_parent(struct irq_data *data)
+    {
+    	data =3D data->parent_data;
+   =20
+    	if (data->chip->irq_request_resources)
+    		return data->chip->irq_request_resources(data);
+   =20
+    	return -ENOSYS;
+    }
 
-Upon further review of drivers/pinctrl/pinctrl-single.c, I am not
-certain it actually supports pull-up/down.
-
-I see there is pcs_pinconf_clear_bias() and pcs_pinconf_bias_disable()
-but I don't see a place where the PIN_CONFIG_BIAS_PULL_DOWN or
-PIN_CONFIG_BIAS_PULL_UP get set.
-
-I'll have to look at that some more before I go back to thinking about
-how to integrate into gpio-omap.
+So the commit 0d04d0c14678 does change the logic of the original code and m=
+ake
+the thunderx_gpio_irq_request_resources() return -ENOSYS in a normal case. =
+But
+it doesn't matter now since the thunderx_gpio_irq_request_resources() has b=
+een
+dropped by the patches in this patch series. So your code should work with =
+the latest
+code. Could you rebase your code and git it a try?
 
 Thanks,
-Drew
+Kevin
 
-[0] http://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+
+>=20
+> 1. https://patchwork.kernel.org/patch/11401555/
+> 2. https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
+mit/drivers/gpio/gpio-thunderx.c?id=3D0d04d0c146786da42c6e68c7d2f09c956c5b5=
+bd3
+>=20
+> Best regards,
+>=20
+> Tim
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEHc6qFoLCZqgJD98Zk1jtMN6usXEFAl5q3ncACgkQk1jtMN6u
+sXEu4ggAsLnjx56vlLZ39HZReSK9ytUuFWMPiqHwYMgiHbZ3fo5PCa7i+vRlL+jF
+vqLEA8cSz/sNWuBg70efZgCPcOYQCBXF1hol991BX125DKotx4OkHet7CWnsepfQ
+677ahwbxjt7C1oli1rzJoRQ5wbIsovVxV+htdB2tT5I0I4CrVNC+LQKy20H30wYv
+lyYJl1HDcCxplJAuW34ZsTQAezI2HRT685lQzFqOr0sDd3WQENf89f4012FcnFXu
+mOPBZkMcS+SzDhCG65BEGql2w8Fh2o9yg1xyf1FVty1IGt2DBhDES7gsn7uRgdl0
+EPDbxIuCSmNcnZVssxfehPLAr7DCWg==
+=r7TH
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
