@@ -2,66 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3C2185C7A
-	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2020 13:54:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DECCA185D83
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Mar 2020 15:18:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgCOMye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 15 Mar 2020 08:54:34 -0400
-Received: from mx.0dd.nl ([5.2.79.48]:52546 "EHLO mx.0dd.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728522AbgCOMye (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 15 Mar 2020 08:54:34 -0400
-X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Mar 2020 08:54:33 EDT
-Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd01::250])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mx.0dd.nl (Postfix) with ESMTPS id 32AD15FB19;
-        Sun, 15 Mar 2020 13:48:57 +0100 (CET)
-Authentication-Results: mx.0dd.nl;
-        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="kOzIRY1m";
-        dkim-atps=neutral
-Received: from www (www.vdorst.com [192.168.2.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.vdorst.com (Postfix) with ESMTPSA id CF07623728F;
-        Sun, 15 Mar 2020 13:48:56 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com CF07623728F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
-        s=default; t=1584276536;
-        bh=Is7T8gsczbAflMtpH86ZF4mhjtkMOqN5/wzv7KlnGtc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kOzIRY1mr32lMxMDQcEn9401DmXj1RngdTgPhdC+quRwdtSfJ4U9O8lOjpq7cE/2p
-         3V43c43Hpew1vvNU0ooQIx5MDF7VELEPayVuSnXqjBLjRtpHy/9N+nlKPDUh9VVRgk
-         eZPdhvkogRf2Hjz6awee9vdt7z6RJ/KGoezDN1ZijC2tHT8c8zRdxTRzc7d5R9K8YY
-         EhhEMi9vHxETmH647fVSacigU5IL+PU6QCUbctesRtssqCY0IzWriFcibaVS+X2E28
-         ghyEbNG5m1BKMQWjDRu7bG+199F5/HTim2CqP/t6UP3IwVwdhP/iEGEcM0YTxAOnyY
-         or8/9Rj35zovA==
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1]) by
- www.vdorst.com (Horde Framework) with HTTPS; Sun, 15 Mar 2020 12:48:56 +0000
-Date:   Sun, 15 Mar 2020 12:48:56 +0000
-Message-ID: <20200315124856.Horde.FggCAOBKhyXcJ0kuGBpqX_l@www.vdorst.com>
-From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+        id S1728215AbgCOOSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 15 Mar 2020 10:18:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46906 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbgCOOSG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 15 Mar 2020 10:18:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 111so15083435oth.13;
+        Sun, 15 Mar 2020 07:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rIvjMCX4EF2e2/1EU9o3Lj1tLQtD2asohfX3nS6dN58=;
+        b=H5tlozNoL6ddzLiyDNNBheEf9TmDbw3WnAROlN+OXNbD7RPlO13XtIPgbQ262gQ1hO
+         9wGZUdGq0O8VVmGh9bN3Pu1v/O0vMyiYbhZSXB30nTHEGdbE43iSde1t3FtxVjrdQffb
+         ahODA5lOPfDiGN7rdvtJFgXd7PlHZxd2lgodcrQ1t+LDAQMRLEMJgqa/gbvCex+vlhBL
+         UfOGr1T7T7klHpGdFnmuuvGnjC+/+jpVTwbBiUMkI5TTaALgiHpLFwFVpYpysZXuFQ/Q
+         iOicwDyzEEWfevaKNMUMZ350UbWcVJ0Ik4uw7RcDgMyXtJKBBXCAZa9v7nRc72os6tZQ
+         xhuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rIvjMCX4EF2e2/1EU9o3Lj1tLQtD2asohfX3nS6dN58=;
+        b=cJmy7X0ojsDc0TiAx3Z95EZ9nMqO+Pihkub4b159Zs9g8nr4khDHazz+QjIzhdmwaa
+         ZdwNYqnNdsa5kDCfr5aMC7DmD5oKXb1kxjUClOwum5PIf4B+Lp37fVCNgOEHUTO7Nz/A
+         JNZtVQCQpokMuo3Gz6DicoLT0++bEX0MV5KU6si5WIvYuCyy5yBcNm/TyFEfaczUVS3b
+         9YSbtDyFJlrRcF0i5EcKiURQ3kKGoJgtEX1TVWC2p+rpGkngCbvBHklJmOifeim93aXU
+         aIiHQ7+0bfBDXz2DH759kMfD5TObCoXwvCnyn4jClpJc9z02BVejyMZ1FOVMEx4Xk4ql
+         ZMZw==
+X-Gm-Message-State: ANhLgQ2fqELkB/niDYkim06VnlKzSS9Hs92cdhpsP7LrjkxthUyhKcsw
+        VD5Scja0m/u+V61WX4JlacswyMCo62RdN9VpR3U=
+X-Google-Smtp-Source: ADFU+vtJyIW+7jIrbYSqcVwYrDRZW+PqsJKAdZgliGxBlK9407U+KaNa7HYtQCepI+/dIe5ND6qw1BT0Wh/ylXmoDk0=
+X-Received: by 2002:a9d:4c8f:: with SMTP id m15mr15310641otf.273.1584281885504;
+ Sun, 15 Mar 2020 07:18:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200315121338.251362-1-gch981213@gmail.com>
+In-Reply-To: <20200315121338.251362-1-gch981213@gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Sun, 15 Mar 2020 15:17:54 +0100
+Message-ID: <CAMhs-H-Teedp8ptaDvEFfye+zRsgE-n190doda3-2WkrUY=zyQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
 To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     linux-gpio@vger.kernel.org,
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
-In-Reply-To: <20200315121338.251362-1-gch981213@gmail.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Chuanhong Guo <gch981213@gmail.com>:
+Hi,
 
+On Sun, Mar 15, 2020 at 1:14 PM Chuanhong Guo <gch981213@gmail.com> wrote:
+>
 > Currently gpio-hog doesn't work on gpio-mt7621 driver. On further
 > debugging, I noticed that set/clear register on this controller
 > only works on output pins. We need to setup pin direction before
@@ -78,17 +79,14 @@ Quoting Chuanhong Guo <gch981213@gmail.com>:
 >  include/linux/gpio/driver.h |  1 +
 >  3 files changed, 22 insertions(+), 6 deletions(-)
 >
+
+This series looks good to me.
+
+Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+
+Best regards,
+    Sergio Paracuellos
+
 > --
 > 2.24.1
-Thanks Chuanhong for debugging the problem!
-
-With this patch gpio-hog works again.
-
-For the series:
-
-Tested-by: René van Dorst <opensource@vdorst.com>
-
-Greats,
-
-René
-
+>
