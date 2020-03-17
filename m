@@ -2,85 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E4C11886B9
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 15:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 613D5188853
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 15:55:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgCQOAM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Mar 2020 10:00:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40808 "EHLO vps0.lunn.ch"
+        id S1726826AbgCQOzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Mar 2020 10:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgCQOAL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:00:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FrLx3+zGH3oU0Jo8/lq72eF8fifQc3xB2bQg8gY6tl8=; b=cGnLnBuVsp6fkYfQcJ+N0lP7Zi
-        1CQ0257uMP73Zssq480GqtOsiT6dtz3j4jFY4auOWYouzd6Noyy4GBuZ2grQ+9xBQnBkb7o8JyQgO
-        LYVpPM0bbhZnw1Ygcjk+w5hK1jV6VmA0mj+VI2m8UsxHjo1atAFpbrGsSPzlUpACujao=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jEClA-0006j0-3H; Tue, 17 Mar 2020 14:59:56 +0100
-Date:   Tue, 17 Mar 2020 14:59:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        id S1726922AbgCQOyb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:54:31 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B232320774;
+        Tue, 17 Mar 2020 14:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584456870;
+        bh=0AuL5ik1PkjJ+CosUbhOjV9BkLKR6KOQzFJir/RXkZg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m8ldmA9DU/iSxsfnETccdctspko9w3ZRBbUmLw54wnHXP3hLUrbXj27KYlCBcQIGu
+         wPbAvFJvAaPuUKtwJqRau9wtNa4BUEE8ed5Y1Rz+z25ju6vnRvr7mAT0GHq8mh3cvX
+         zK8bmMlESnTs+4IeG7gojw74UawFtBD5ikVvjA2k=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jEDbw-000AN5-Px; Tue, 17 Mar 2020 15:54:28 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 00/28] DT: Improve validation for Marvell SoCs
-Message-ID: <20200317135956.GQ24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317134609.GN24270@lunn.ch>
- <20200317135551.GE3448@piout.net>
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+Date:   Tue, 17 Mar 2020 15:54:21 +0100
+Message-Id: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1584456635.git.mchehab+huawei@kernel.org>
+References: <cover.1584456635.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317135551.GE3448@piout.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:55:59PM +0100, Alexandre Belloni wrote:
-> On 17/03/2020 14:46:09+0100, Andrew Lunn wrote:
-> > On Tue, Mar 17, 2020 at 10:38:54AM +0100, Lubomir Rintel wrote:
-> > > Hello World,
-> > 
-> > Yah, that is an issue here. Marvell have a few different SoC families,
-> > each with there own maintainers. Gregory and I tend to look after
-> > 'mvebu', aka orion5x, kirkwood, dove, berlin and a few others. All the
-> > others are 'Somebody elses' problem'.
-> > 
-> 
-> Hum, berlin is not mvebu, it was the same BU as the MMP and it has been
-> sold to synopsys a while ago.
+Use a different markup for the ERR_PTR, as %FOO doesn't work
+if there are parenthesis. So, use, instead:
 
-Yes, the boundaries are a bit fluffy. At least the early work by
-Sebastian was merged via the mvebu maintainers, even if it is not
-technically part of mvebu.
+	``ERR_PTR(-EINVAL)``
 
-This is also part of the discussion about how this lot actually gets
-merged.
+This fixes the following warning:
 
-	   Andrew
+	./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index f31b1d46599e..74d8973025da 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -136,7 +136,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
+  * @hwnum: hardware number of the GPIO for this chip
+  *
+  * Returns:
+- * A pointer to the GPIO descriptor or %ERR_PTR(-EINVAL) if no GPIO exists
++ * A pointer to the GPIO descriptor or ``ERR_PTR(-EINVAL)`` if no GPIO exists
+  * in the given chip for the specified hardware number.
+  */
+ struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
+-- 
+2.24.1
+
