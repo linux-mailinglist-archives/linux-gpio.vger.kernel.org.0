@@ -2,55 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B970B188654
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 14:50:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D6D018865C
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 14:50:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgCQNun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Mar 2020 09:50:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44631 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgCQNun (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Mar 2020 09:50:43 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y2so10286219wrn.11
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2020 06:50:40 -0700 (PDT)
+        id S1726596AbgCQNur (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Mar 2020 09:50:47 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33408 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgCQNuq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Mar 2020 09:50:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r7so15710967wmg.0
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2020 06:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
-        b=BBO2buZOeTxK0pTFcnu2vsX80POcqQJc4xww2aupjp3CUcUyRERCJVPxOku6Aa1UD+
-         TdQ3ulqZrG+z4FycBEAhYazQKCR56uL3u+gjU2zBF1yApArsbKhWr+mIlMaeU6RJnIkH
-         3mha3ioQs0YGEaIJZyKWvb16kby/lPx/VM9v6RZ+7Vn/V3CzxmV9M/m4xaFBEmEAPnj1
-         at+zXtyuHqSvx6FIl1EDBhs4TosAgYqCTcjUKCE6hL9aWmjBjuD1ck604axr8kvBZp/X
-         2aIO/omD5oUHySZmd1whOdSQk6M2cGFoKZmq43572olq0U2X2dWCj6fWpArT4t+R2Ubo
-         LrEQ==
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=QSiI3s0YoV7n7/tnYog9oUBP3Cc6GxHGUCwCh0UhqjNIkn6pKoWxwDwIc7ZHfuKyt1
+         kEdvFCQ6j7+Noa9+D0kVSXd1O/Rq0h4ff0AABiKfQ0W9cNhse4SjTXrrb27FQeHJRpqX
+         rIA1fPNgK6D/F/8d3tqP2UVTDNrxXWhDA5E8X6jidyynaIZ0Cy+aY7WG7NpXiQONb4V8
+         LujVukcDZrWz+C7PF5bEhVfs5Bz/2BHH9zTE0HxRpIGKa2vvxtylEPZVlwnF7tZUgTXY
+         0rCI7jvUsKgzmx+R0sfFe10N4oWZb67+facmOeYl3vGzjeHlueh6TX64XNpmNRTf9oox
+         +L4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
-        b=JbBxhwk261QvE/FFZ+2yQhM7unXkuIen0rHtB2swEEahCiS9XEMwTitcGwI/ZVkAh9
-         No4k9qULS9iUJGKCvWzDnmnYtigNU/esal50+q0fAL93ytBFIHI8NqfjGnVdDXVyiYab
-         VyP6QSly8uo0MLDvunuHkZrt6A8PJryRsRg5g6vbnbO3fUMbHFbGktBw26nkIuwfL4gb
-         kprS3xmlfjGKEZpYVkSns2hQdhmyvNBzp0JYUE/glKJWF2ba3NmFWaLNcwfXhln5VK5S
-         ddqBV47gZ4LPeAtXG1z7TaGEqCN6+v5juImtMcxM6zTQPNy29ephqujplNCizgUf4IM0
-         7rJw==
-X-Gm-Message-State: ANhLgQ1D+GVP9cNEYTb/LbFPpskqGzY7uC3tJaEmwBu3urPgDGwGyvRE
-        +O0OdPak/k3F0du0fNyY64HKTm+h8CIn6R62HVe9zWhy
-X-Google-Smtp-Source: ADFU+vs1OKaCfhYsk3ZLqgceZIr7uOgl5r7AdLgYUcjxlwtwPMRQ6uDNBO6ughO/XEUAqjxZzkDuEiXPj5zd5bOvAHc=
-X-Received: by 2002:adf:bb06:: with SMTP id r6mr6318759wrg.324.1584453039735;
- Tue, 17 Mar 2020 06:50:39 -0700 (PDT)
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=oMMXUCjyQ2qOt89kPQteW9J6KFQ6CbP3v/EXMxf53j5vvTKCZSfJpI2jNlI53ogW+D
+         dx/wT2KMz26699mKxymLA+RxvkuE1fnVA1HLiaduGHz3wmG8NBaumCz9dC86pjjRuOn9
+         ycSnzOFj8aFf9YwGoVRD5vcc0VZqZcxqVTgg/nyKGszXOnMNMCPiMPYUyQjV3+rbX6aZ
+         Bo6+LH/NjquOKfGTgNyHZ/noov7iKbbsVRp8mIQnsKCBmureU1hsMO+Raajc4bp67hUo
+         rPfduOP3gn1tYs6P+asu4uC2tH5UZeX2YdvoszCFr2bRol8goxVblbBy3ph9HBkDOQwr
+         1d3Q==
+X-Gm-Message-State: ANhLgQ1atc1m1ub5H5hEpF6JKDlEoE+MZLjAlgVxfonbH7jRASwky37u
+        0zmxdl9ijnoV07/xxJINrQU9BUNgBZVi9HjiL5A3ZQ==
+X-Google-Smtp-Source: ADFU+vusa/y0ClrKHxHtyBDmZj1O+rMx8uu0qjHobSSS5JQecz+zDpUKEEddBu5XlbGpEmdbaIvM2nWs+JrNOWL77kQ=
+X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr5249108wmj.3.1584453043184;
+ Tue, 17 Mar 2020 06:50:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200316195048.2592199-1-gabravier@gmail.com>
-In-Reply-To: <20200316195048.2592199-1-gabravier@gmail.com>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org> <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 17 Mar 2020 14:50:03 +0100
-Message-ID: <CAMpxmJXHQPDBsuJ_tBhys0wtp1xcsi3irC7uexqW3iXxq=5JAA@mail.gmail.com>
-Subject: Re: [PATCH] gpio-hammer: Apply scripts/Lindent and retain good changes
-To:     Gabriel Ravier <gabravier@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 17 Mar 2020 14:50:32 +0100
+Message-ID: <CAMpxmJUPA2qDwDu-LUh-RtXt66NhQUdjnPOCSaaBZ9xEm0C5LQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Peled <bpeled@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,37 +72,57 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 16 mar 2020 o 20:50 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
-(a):
+wt., 17 mar 2020 o 14:10 Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> napisa=C5=82(a):
 >
-> "retain good changes" means that I left the help string split up instead
-> of having this weird thing where it tries to merge together the last thre=
-e
-> lines and it looks **really** bad
+> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
 >
-> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+> Update its references accordingly.
+>
+> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  tools/gpio/gpio-hammer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
+>  Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
-> index 0e0060a6eb34..51a65f8149ea 100644
-> --- a/tools/gpio/gpio-hammer.c
-> +++ b/tools/gpio/gpio-hammer.c
-> @@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int=
- *lines, int nlines,
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index 2e097b57f170..0fc6700ed800 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -14,7 +14,7 @@ Required properties:
 >
->                 fprintf(stdout, "[%c] ", swirr[j]);
->                 j++;
-> -               if (j =3D=3D sizeof(swirr)-1)
-> +               if (j =3D=3D sizeof(swirr) - 1)
->                         j =3D 0;
+>      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
+>      SoCs (either from AP or CP), see
+> -    Documentation/devicetree/bindings/arm/marvell/ap806-system-controlle=
+r.txt
+> +    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
+r.txt
+>      for specific details about the offset property.
 >
->                 fprintf(stdout, "[");
+>  - reg: Address and length of the register set for the device. Only one
+> diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt=
+ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> index f3b441100890..b0bee7e42038 100644
+> --- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> @@ -12,7 +12,7 @@ Required properties:
+>
+>  Note: these bindings are deprecated for AP806/CP110 and should instead
+>  follow the rules described in:
+> -Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.tx=
+t
+> +Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.tx=
+t
+>  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.tx=
+t
+>
+>  - reg: Device's register space.
 > --
 > 2.24.1
 >
 
-Patch applied, thanks!
+For GPIO:
 
-Bartosz
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
