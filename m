@@ -2,76 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0251188633
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 14:48:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B970B188654
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 14:50:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgCQNsU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Mar 2020 09:48:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40706 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgCQNsT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:48:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bYlQFWOfFv95sQLXQr8vkUotMJgsK9c12/BhzhTTiG8=; b=Q5hrXgSw41E7plUSnoZHt2EQg1
-        Arv6YyudHnKqxSCDvgnG/1p+vDAyc5UWmGp5ZZSKNBNpnzeHnJXmApv2msv7x/CC6the2kvbBGgC8
-        acDMOqO+sJTRIxbjtTtowhoJ65ProLnwtJBGXoq3Ml2+ks8e7eOLbNUZyxGGVZ1qBlT8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jECZh-0006cx-6s; Tue, 17 Mar 2020 14:48:05 +0100
-Date:   Tue, 17 Mar 2020 14:48:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 13/28] dt-bindings: serial: move Marvell compatible
- string to 8250 binding doc
-Message-ID: <20200317134805.GO24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-14-lkundrak@v3.sk>
+        id S1726294AbgCQNun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Mar 2020 09:50:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44631 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgCQNun (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Mar 2020 09:50:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y2so10286219wrn.11
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2020 06:50:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
+        b=BBO2buZOeTxK0pTFcnu2vsX80POcqQJc4xww2aupjp3CUcUyRERCJVPxOku6Aa1UD+
+         TdQ3ulqZrG+z4FycBEAhYazQKCR56uL3u+gjU2zBF1yApArsbKhWr+mIlMaeU6RJnIkH
+         3mha3ioQs0YGEaIJZyKWvb16kby/lPx/VM9v6RZ+7Vn/V3CzxmV9M/m4xaFBEmEAPnj1
+         at+zXtyuHqSvx6FIl1EDBhs4TosAgYqCTcjUKCE6hL9aWmjBjuD1ck604axr8kvBZp/X
+         2aIO/omD5oUHySZmd1whOdSQk6M2cGFoKZmq43572olq0U2X2dWCj6fWpArT4t+R2Ubo
+         LrEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bl6Wl8W1k8+UQXRdrCsPqiuDGnxac/zO2yeYWcwH/eY=;
+        b=JbBxhwk261QvE/FFZ+2yQhM7unXkuIen0rHtB2swEEahCiS9XEMwTitcGwI/ZVkAh9
+         No4k9qULS9iUJGKCvWzDnmnYtigNU/esal50+q0fAL93ytBFIHI8NqfjGnVdDXVyiYab
+         VyP6QSly8uo0MLDvunuHkZrt6A8PJryRsRg5g6vbnbO3fUMbHFbGktBw26nkIuwfL4gb
+         kprS3xmlfjGKEZpYVkSns2hQdhmyvNBzp0JYUE/glKJWF2ba3NmFWaLNcwfXhln5VK5S
+         ddqBV47gZ4LPeAtXG1z7TaGEqCN6+v5juImtMcxM6zTQPNy29ephqujplNCizgUf4IM0
+         7rJw==
+X-Gm-Message-State: ANhLgQ1D+GVP9cNEYTb/LbFPpskqGzY7uC3tJaEmwBu3urPgDGwGyvRE
+        +O0OdPak/k3F0du0fNyY64HKTm+h8CIn6R62HVe9zWhy
+X-Google-Smtp-Source: ADFU+vs1OKaCfhYsk3ZLqgceZIr7uOgl5r7AdLgYUcjxlwtwPMRQ6uDNBO6ughO/XEUAqjxZzkDuEiXPj5zd5bOvAHc=
+X-Received: by 2002:adf:bb06:: with SMTP id r6mr6318759wrg.324.1584453039735;
+ Tue, 17 Mar 2020 06:50:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-14-lkundrak@v3.sk>
+References: <20200316195048.2592199-1-gabravier@gmail.com>
+In-Reply-To: <20200316195048.2592199-1-gabravier@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 17 Mar 2020 14:50:03 +0100
+Message-ID: <CAMpxmJXHQPDBsuJ_tBhys0wtp1xcsi3irC7uexqW3iXxq=5JAA@mail.gmail.com>
+Subject: Re: [PATCH] gpio-hammer: Apply scripts/Lindent and retain good changes
+To:     Gabriel Ravier <gabravier@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:39:07AM +0100, Lubomir Rintel wrote:
-> These ports are compatible with NS8250 and handled by the same driver.
-> Get rid of the extra document that fails to document the properties that
-> are actually supported.
+pon., 16 mar 2020 o 20:50 Gabriel Ravier <gabravier@gmail.com> napisa=C5=82=
+(a):
+>
+> "retain good changes" means that I left the help string split up instead
+> of having this weird thing where it tries to merge together the last thre=
+e
+> lines and it looks **really** bad
+>
+> Signed-off-by: Gabriel Ravier <gabravier@gmail.com>
+> ---
+>  tools/gpio/gpio-hammer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/gpio/gpio-hammer.c b/tools/gpio/gpio-hammer.c
+> index 0e0060a6eb34..51a65f8149ea 100644
+> --- a/tools/gpio/gpio-hammer.c
+> +++ b/tools/gpio/gpio-hammer.c
+> @@ -77,7 +77,7 @@ int hammer_device(const char *device_name, unsigned int=
+ *lines, int nlines,
+>
+>                 fprintf(stdout, "[%c] ", swirr[j]);
+>                 j++;
+> -               if (j =3D=3D sizeof(swirr)-1)
+> +               if (j =3D=3D sizeof(swirr) - 1)
+>                         j =3D 0;
+>
+>                 fprintf(stdout, "[");
+> --
+> 2.24.1
+>
 
-Hi Lubmir
+Patch applied, thanks!
 
-This is needs a bit closer examination. By the PXA maintainers. It
-appears there are two serial drivers, the 8250 and a PXA specific
-driver.
-
-	Andrew
+Bartosz
