@@ -2,67 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A480F1889F1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 17:13:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 910FC188C2E
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 18:34:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgCQQND convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 17 Mar 2020 12:13:03 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36951 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgCQQND (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Mar 2020 12:13:03 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D937F240008;
-        Tue, 17 Mar 2020 16:12:57 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 17:12:56 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ben Peled <bpeled@marvell.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 05/12] docs: dt: fix references to
- ap806-system-controller.txt
-Message-ID: <20200317171256.7d56dcd6@xps13>
-In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
-        <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726248AbgCQRe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Mar 2020 13:34:27 -0400
+Received: from muru.com ([72.249.23.125]:60660 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgCQRe0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 17 Mar 2020 13:34:26 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 56C60810D;
+        Tue, 17 Mar 2020 17:35:12 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 10:34:22 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Dave Gerlach <d-gerlach@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 0/3] Block idle in gpio-omap with cpu_pm
+Message-ID: <20200317173422.GN37466@atomide.com>
+References: <20200304225433.37336-1-tony@atomide.com>
+ <CACRpkdYL5mZ7i6bEF0b_CUXaG-jHKz4KnSXsBNfs_9M054U3vQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYL5mZ7i6bEF0b_CUXaG-jHKz4KnSXsBNfs_9M054U3vQ@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mauro,
+Hi Linus,
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote on Tue, 17 Mar
-2020 14:10:44 +0100:
-
-> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
+* Linus Walleij <linus.walleij@linaro.org> [200309 09:27]:
+> On Wed, Mar 4, 2020 at 11:54 PM Tony Lindgren <tony@atomide.com> wrote:
 > 
-> Update its references accordingly.
+> > As discussed earlier, here's a series to use cpu_pm to block deeper SoC
+> > idle states if a gpio interrupt is pending.
 > 
-> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
+> As you requested I queued these on an immutable branch
+> based on v5.6-rc1:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-omap-block-idle
+> 
+> And merged into gpio-devel for v5.7.
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Hmm I'm not seeing these in Linux next yet though, care to check?
 
-Thanks,
-Miquèl
+Regards,
+
+Tony
