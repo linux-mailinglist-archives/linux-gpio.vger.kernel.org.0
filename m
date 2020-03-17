@@ -2,20 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27790187CB9
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 10:41:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7297B187DC2
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Mar 2020 11:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgCQJla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Mar 2020 05:41:30 -0400
-Received: from v6.sk ([167.172.42.174]:50944 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727332AbgCQJla (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:41:30 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 3F0D861096;
-        Tue, 17 Mar 2020 09:41:27 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
+        id S1726039AbgCQKFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Mar 2020 06:05:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39057 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbgCQKFG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Mar 2020 06:05:06 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f10so22068790ljn.6
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Mar 2020 03:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n09seZt9zQSEmn7PnJzgCcHPTYjmqdsKfcWkGxOyoSw=;
+        b=hsHzKaLO8KEYIAs97rD1AMV6mMcqn8KvHqg4ovsIqvIqJsmunKOt1qYqCT5n50NIxg
+         5W5zLGTss9f2hdJk1xumbMBaQMEDyvjcEyPZ3jrVx+WFRbtYyH8TPSgzOsF/O0ZDV+R+
+         YjoSBTZStIUKJShmEh3hEBHRdVxm1SY6SdsdZnyJxUDVSUVZF76uON1MxQVFXMBzq7je
+         dlg8JkAxS2yIyOnnmUE/68pzDOxpbgCvnSFoZcOm6vs6rcpTxYbjby1S67f7NF/Fv36c
+         IE9PiIrFyxQp03l/Q0rCM6x04ylSD3FBrTKVotFLkqpNP2woyYPVF4wSIq4KiiZs1osm
+         q5YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n09seZt9zQSEmn7PnJzgCcHPTYjmqdsKfcWkGxOyoSw=;
+        b=k+l1hOFJ7OX44Y1yLeksmGxUxflNMshoGeCXI9thjgKhWsBwaBPd0DM3z2epEyRsou
+         4pCznhLSSmlfdtegV83rOa5Wq3fSYstMFKZ2P8uOjvhzDB1b5s70H0aWjF5Q5450mPOx
+         hOxAgGdEVpBRCQQw+haQTtaxHue8TH1SROxlCPz2kz9DZl67b1mvrhHzu2RipAEJ+9h8
+         VvkZoWftstJw+g+mJhbQ+6zDDqleLre/rkBLhgaZ9PS2y4SSIjhJv2CgINA5jlidfmQU
+         vWz9dZXAd+uPs/gllhdo3/mweeOOQ0CZACDvVpUF5k6ROCjHb/jO5rLh6yMUfOSFpcRc
+         sYBw==
+X-Gm-Message-State: ANhLgQ3qb39mjiQ8wFcDKChSpOfCc3Y+8oIvnBoZib/cN9o0mX0hnrSO
+        0H5o0LSXi+9N6ld9LUCKqpuUPA==
+X-Google-Smtp-Source: ADFU+vvDFgn0Sv1qdBbtE4XeAKrxupkPbSjYz/5IJ9Z1M/fD+IB/2XXNoyEDPpVkBc5aUWJYf1e6nA==
+X-Received: by 2002:a2e:8119:: with SMTP id d25mr2329766ljg.39.1584439502560;
+        Tue, 17 Mar 2020 03:05:02 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:48ef:94a3:a481:5e62:4324:124b? ([2a00:1fa0:48ef:94a3:a481:5e62:4324:124b])
+        by smtp.gmail.com with ESMTPSA id r7sm1932099ljc.3.2020.03.17.03.05.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 03:05:01 -0700 (PDT)
+Subject: Re: [PATCH 17/28] dt-bindings: mmc: Fix up clk-phase-sd-hs in an
+ example
+To:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -38,127 +70,44 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 28/28] dt-bindings: usb: Convert ehci-mv to json-schema
-Date:   Tue, 17 Mar 2020 10:39:22 +0100
-Message-Id: <20200317093922.20785-29-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
 References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-18-lkundrak@v3.sk>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <d7ccf5c1-4bfa-2fd2-b32d-a520e96bdd1e@cogentembedded.com>
+Date:   Tue, 17 Mar 2020 13:04:55 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317093922.20785-18-lkundrak@v3.sk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A straightforward conversion of the ehci-mv binding to DT schema format
-using json-schema.
+Hello!
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- .../devicetree/bindings/usb/ehci-mv.txt       | 23 -------
- .../bindings/usb/marvell,pxau2o-ehci.yaml     | 60 +++++++++++++++++++
- 2 files changed, 60 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/ehci-mv.txt
- create mode 100644 Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
+On 17.03.2020 12:39, Lubomir Rintel wrote:
 
-diff --git a/Documentation/devicetree/bindings/usb/ehci-mv.txt b/Documentation/devicetree/bindings/usb/ehci-mv.txt
-deleted file mode 100644
-index 335589895763e..0000000000000
---- a/Documentation/devicetree/bindings/usb/ehci-mv.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--* Marvell PXA/MMP EHCI controller.
--
--Required properties:
--
--- compatible: must be "marvell,pxau2o-ehci"
--- reg: physical base addresses of the controller and length of memory mapped region
--- interrupts: one EHCI controller interrupt should be described here
--- clocks: phandle list of usb clocks
--- clock-names: should be "USBCLK"
--- phys: phandle for the PHY device
--- phy-names: should be "usb"
--
--Example:
--
--	ehci0: usb-ehci@d4208000 {
--		compatible = "marvell,pxau2o-ehci";
--		reg = <0xd4208000 0x200>;
--		interrupts = <44>;
--		clocks = <&soc_clocks MMP2_CLK_USB>;
--		clock-names = "USBCLK";
--		phys = <&usb_otg_phy>;
--		phy-names = "usb";
--	};
-diff --git a/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
-new file mode 100644
-index 0000000000000..189025ef1e92e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/marvell,pxau2o-ehci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell PXA/MMP EHCI bindings
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+allOf:
-+  - $ref: usb-hcd.yaml#
-+
-+properties:
-+  compatible:
-+    const: marvell,pxau2o-ehci
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: USBCLK
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: usb
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - phys
-+  - phy-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-+    usb@d4208000 {
-+        compatible = "marvell,pxau2o-ehci";
-+        reg = <0xd4208000 0x200>;
-+        interrupts = <44>;
-+        clocks = <&soc_clocks MMP2_CLK_USB>;
-+        clock-names = "USBCLK";
-+        phys = <&usb_otg_phy>;
-+        phy-names = "usb";
-+    };
-+
-+...
--- 
-2.25.1
+> This way the validator can know that the two cells constitute a singlej
 
+    Single?
+
+> pair of clock phase degrees value, not separate items Otherwise it is
+
+    Forgot a period after "items"?
+
+> unhappy:
+> 
+>    mmc-controller.example.dt.yaml: mmc@ab000000: clk-phase-sd-hs:0:
+>        [63] is too short
+>    mmc-controller.example.dt.yaml: mmc@ab000000: clk-phase-sd-hs:1:
+>        [72] is too short
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+[...]
+
+MBR, Sergei
