@@ -2,38 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9C018A5EB
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2020 22:04:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8593018A5DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Mar 2020 22:04:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgCRUzQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Mar 2020 16:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
+        id S1728268AbgCRUzT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Mar 2020 16:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgCRUzQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:16 -0400
+        id S1728253AbgCRUzS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827BB21473;
-        Wed, 18 Mar 2020 20:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 084FF216FD;
+        Wed, 18 Mar 2020 20:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564915;
-        bh=bONTE9QdEECJ7irBIRK7fX137XpPZQEhsAzh0W8JQ/4=;
+        s=default; t=1584564917;
+        bh=/LbwP3v/MBgQAofFuzjmdhtM3bu7o/LCwq51sIZqGXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mW+jkdajYXJf7POKeafghH/hpsXktWMSsj/+4xrU5uqk8Fb4JdZaGgjf4+qpWJQS6
-         VDXcLgKNVrHfFmGnjOYT/9DQsBsDawm9r9yrJLAVcVRt7N38WP9Hngd9myFBABVacz
-         P3YidteIk+B3oKNrrSGyFTO6qGJw32J8Or37Wa30=
+        b=A4HPH/R5kljBPf9yJ88XACD0AlqTTQdtjklZI3+/F4aF3agMHEZ8ByXooDYE48+BR
+         C7l/kYqnyB94jHcw3KMOlmMv3HvOYsevYb7ou6+Y9khBA7dDyaP7NRg/SsTwKNNTe+
+         VYHYrjmkum74rzKqS5eoLt/lu+EqN5q3csrqx+Po=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Belin <nbelin@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 04/37] pinctrl: meson-gxl: fix GPIOX sdio pins
-Date:   Wed, 18 Mar 2020 16:54:36 -0400
-Message-Id: <20200318205509.17053-4-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/37] pinctrl: core: Remove extra kref_get which blocks hogs being freed
+Date:   Wed, 18 Mar 2020 16:54:38 -0400
+Message-Id: <20200318205509.17053-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -46,39 +43,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Nicolas Belin <nbelin@baylibre.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit dc7a06b0dbbafac8623c2b7657e61362f2f479a7 ]
+[ Upstream commit aafd56fc79041bf36f97712d4b35208cbe07db90 ]
 
-In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
-any issue so far because devices using these pins always take both pins
-so the resulting configuration is OK.
+kref_init starts with the reference count at 1, which will be balanced
+by the pinctrl_put in pinctrl_unregister. The additional kref_get in
+pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
+not get freed when pinctrl_unregister is called.
 
-Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
-Link: https://lore.kernel.org/r/1582204512-7582-1-git-send-email-nbelin@baylibre.com
+Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 0c0a5018102b0..22ddb238e17c5 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -153,8 +153,8 @@ static const unsigned int sdio_d0_pins[]	= { GPIOX_0 };
- static const unsigned int sdio_d1_pins[]	= { GPIOX_1 };
- static const unsigned int sdio_d2_pins[]	= { GPIOX_2 };
- static const unsigned int sdio_d3_pins[]	= { GPIOX_3 };
--static const unsigned int sdio_cmd_pins[]	= { GPIOX_4 };
--static const unsigned int sdio_clk_pins[]	= { GPIOX_5 };
-+static const unsigned int sdio_clk_pins[]	= { GPIOX_4 };
-+static const unsigned int sdio_cmd_pins[]	= { GPIOX_5 };
- static const unsigned int sdio_irq_pins[]	= { GPIOX_7 };
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index c6ff4d5fa482e..76638dee65d94 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2008,7 +2008,6 @@ static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
+ 		return PTR_ERR(pctldev->p);
+ 	}
  
- static const unsigned int nand_ce0_pins[]	= { BOOT_8 };
+-	kref_get(&pctldev->p->users);
+ 	pctldev->hog_default =
+ 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
+ 	if (IS_ERR(pctldev->hog_default)) {
 -- 
 2.20.1
 
