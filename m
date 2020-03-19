@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 541FE18B368
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2020 13:28:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B86D618B36B
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2020 13:28:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgCSM2B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Mar 2020 08:28:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34002 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgCSM2B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Mar 2020 08:28:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 26so442802wmk.1;
-        Thu, 19 Mar 2020 05:27:59 -0700 (PDT)
+        id S1727089AbgCSM2E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Mar 2020 08:28:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50343 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgCSM2D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Mar 2020 08:28:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z13so2087310wml.0;
+        Thu, 19 Mar 2020 05:28:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QashyjqboWz8J76L55AnJ5EBJLCBBnyBfXdCGEoc+os=;
-        b=o1/hloQfvGSl37W4ZNhn89Py/Du6j+4TXvcraruh7gFvsvBOmTjH3pZv39kmrX1KmX
-         +eYGsRShE6jKkxX8o6bmSYOs/OvNAWvt5e84esmjwTan97i7w9Tc1fo+mPfZOTvT2u57
-         8n7tXhWCHbAl+VQpPpAGGsimVzjG1LLynn+gD2JtgsDFqW3Hd1CDnT5XWfmqZMc5edid
-         4d5xgfgnjC//kL93yzFekzpQ5pW8Ad8/VMUEu8/gTRYv9qpKzmbZTqzvKBv+LvxkgEeT
-         mLcUkGGEKNsOlmdOtZCnViqLJ4d5tErI5olKlIK/5+gRJF+AjeukRqmXs5agIJnKv3XT
-         52ng==
+        bh=2ok5T8nOrOvJjiHNCN+eqISks4zosVhn1uXl3HafWgc=;
+        b=UZE/Hfp2ubu9c97pvpxV+JCba4jHL7/oeLdORRiGpuelT/Xjf5EFeIDPpiMMWjt0JJ
+         XtPgZ5wU0T8qFaSapOcXvGFyIWEoe+s2qwxiutiTTE1wIOUef5uyvxE37NrcDSPyfGa5
+         UAjvrvTcFOU7mLLV8Op2rz8EpLeh72FlQ5GjUaGyVBbbVszPNIMRxbff7weS91ALZMi9
+         cyi2qviC4PJvXlLlkzrYRD7cHdYIAIeN/PrJsXPop/csPXXUUMGRP6+2sC9AOi78x9pg
+         csB0RJ/oiXcZ5F9Mo66CAynwheCz66ddxWr5jGOauQ1fj5JZxkp7o1MfnI7M8JnCfyx4
+         3orQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QashyjqboWz8J76L55AnJ5EBJLCBBnyBfXdCGEoc+os=;
-        b=BqMJVxm3oHEdtHn3D4RJAK/NYLaqSVU4o/bfmSPG1sYflotmzmo1UMlHorbMBv5MsT
-         6Kupwzbd5+MPq/DYRcMz3m+Q/eQp/gy6+2+kaU9qWH4FOlzgMz+z/88g53TzHwvBWq6E
-         yUw8eAymgtxTOe1dNnZVCnKsB5omqYlVYvWrsQycPaisGmd0RA+wYQwtt9I9NpksI39X
-         1bMt/xwdt2kKkCmHddIu5CxkN0lwkmBprN/xMf1FoSSPADrERIC3MxkLfNZ0hVdo6PEm
-         miArKphHpMc9aqPk64op8wI3QEtAqYSfBOxYjTg+Hr+1PRLDeXFEyKNS2ukKRgQT7YBU
-         nQiQ==
-X-Gm-Message-State: ANhLgQ1MUIpF7bvVOTZ546bqPgURPiLxhTt96kR6C9D3vDYVXb2G3yEs
-        wkz9yH5YBC99Xf3OcJapkXI=
-X-Google-Smtp-Source: ADFU+vsvbn7yVWTEh646qp3pbVZjpD4FdiXuQl7NWmueE7VtaEDfQ+va/8c7u52XAeKawo3FLLqWGw==
-X-Received: by 2002:a1c:6885:: with SMTP id d127mr3546279wmc.33.1584620879148;
-        Thu, 19 Mar 2020 05:27:59 -0700 (PDT)
+        bh=2ok5T8nOrOvJjiHNCN+eqISks4zosVhn1uXl3HafWgc=;
+        b=RUPwk6+mbZRu/ZJU2L37g96rgzuOy+ElL8KE70EiJyoJYg4HUhdMtChg57dIq4C/gi
+         Jo0IBvdJSJCr9/yyJRUtJ4RP6tzw3NbHL1cCtw/O6eaeb2g3iW0/Ns5HP5BlhBJokLc1
+         U/vHo5iGvqm7IGRaXY1mrqYJ8BhmglGEDvt+ScT3FpfeyRl4nQNjDTATLYBZXY1FZgAD
+         2wYgUgyNjsT15/lH7E5+LHb8MxRelPTsuN/BMzWvEYXZdiT/IFjBuoZjrVhihZPOV/ye
+         sS0c1NFgBw4PugitAU3uiEjLs2RSMrnBqi0krCBplILg581iCt04QzLQW8Ceau676md1
+         IN2g==
+X-Gm-Message-State: ANhLgQ3cJHAGt/szyvcMflnMwE4AGSTse4aNdExYSa3O8p5gYYiAzqsp
+        xtEUBDdSH2WW1WQOMdHksVg=
+X-Google-Smtp-Source: ADFU+vsCRi/h9UhqEDYtI8hhpzVZ9R4rmZr0ET/+3CveIO2W0TXmt6eHEygu79WH6FwKSc/+LzaMxA==
+X-Received: by 2002:a1c:ab07:: with SMTP id u7mr3351885wme.23.1584620881275;
+        Thu, 19 Mar 2020 05:28:01 -0700 (PDT)
 Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id l18sm3287288wrr.17.2020.03.19.05.27.57
+        by smtp.gmail.com with ESMTPSA id b15sm3159798wru.70.2020.03.19.05.27.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 05:27:58 -0700 (PDT)
+        Thu, 19 Mar 2020 05:28:00 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Jon Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
         linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 7/9] pinctrl: tegra: Do not add default pin range on Tegra194
-Date:   Thu, 19 Mar 2020 13:27:35 +0100
-Message-Id: <20200319122737.3063291-8-thierry.reding@gmail.com>
+Subject: [PATCH 8/9] pinctrl: tegra: Renumber the GG.0 and GG.1 pins
+Date:   Thu, 19 Mar 2020 13:27:36 +0100
+Message-Id: <20200319122737.3063291-9-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200319122737.3063291-1-thierry.reding@gmail.com>
 References: <20200319122737.3063291-1-thierry.reding@gmail.com>
@@ -64,41 +64,40 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-On Tegra194, almost all of the pin control programming happens in early
-boot firmware, so there is no use in having a pin range defined for all
-the pins.
+There is no need to define these at a specific offset since they are the
+only pins defined for this SoC generation. Begin numbering them at 0.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c    | 2 +-
- drivers/pinctrl/tegra/pinctrl-tegra194.c | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/tegra/pinctrl-tegra194.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index c8246cc2c4fd..65511bf27d34 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -794,7 +794,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
- 
- 	tegra_pinctrl_clear_parked_bits(pmx);
- 
--	if (!tegra_pinctrl_gpio_node_has_range(pmx))
-+	if (pmx->soc->ngpios > 0 && !tegra_pinctrl_gpio_node_has_range(pmx))
- 		pinctrl_add_gpio_range(pmx->pctl, &tegra_pinctrl_gpio_range);
- 
- 	platform_set_drvdata(pdev, pmx);
 diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-index d4e84530158c..61fc7e680788 100644
+index 61fc7e680788..61afe5fe9dec 100644
 --- a/drivers/pinctrl/tegra/pinctrl-tegra194.c
 +++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-@@ -134,7 +134,6 @@ static const struct tegra_pingroup tegra194_groups[] = {
+@@ -24,17 +24,14 @@
+ 
+ /* Define unique ID for each pins */
+ enum pin_id {
+-	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0 = 256,
+-	TEGRA_PIN_PEX_L5_RST_N_PGG1 = 257,
+-	TEGRA_PIN_NUM_GPIOS = 258,
++	TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
++	TEGRA_PIN_PEX_L5_RST_N_PGG1,
  };
  
- static const struct tegra_pinctrl_soc_data tegra194_pinctrl = {
--	.ngpios = TEGRA_PIN_NUM_GPIOS,
- 	.pins = tegra194_pins,
- 	.npins = ARRAY_SIZE(tegra194_pins),
- 	.functions = tegra194_functions,
+ /* Table for pin descriptor */
+ static const struct pinctrl_pin_desc tegra194_pins[] = {
+-	PINCTRL_PIN(TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0,
+-		    "TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0"),
+-	PINCTRL_PIN(TEGRA_PIN_PEX_L5_RST_N_PGG1,
+-		    "TEGRA_PIN_PEX_L5_RST_N_PGG1"),
++	PINCTRL_PIN(TEGRA_PIN_PEX_L5_CLKREQ_N_PGG0, "PEX_L5_CLKREQ_N_PGG0"),
++	PINCTRL_PIN(TEGRA_PIN_PEX_L5_RST_N_PGG1, "PEX_L5_RST_N_PGG1"),
+ };
+ 
+ static const unsigned int pex_l5_clkreq_n_pgg0_pins[] = {
 -- 
 2.24.1
 
