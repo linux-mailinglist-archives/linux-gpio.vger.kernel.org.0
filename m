@@ -2,99 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7370818C1F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Mar 2020 21:55:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D74318CA31
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 10:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgCSUz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Mar 2020 16:55:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34336 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSUz4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Mar 2020 16:55:56 -0400
-Received: by mail-lj1-f196.google.com with SMTP id s13so4162094ljm.1
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Mar 2020 13:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=4LVcNsetpkvMaOaEOSO/3EjRKHYLp8VED4Jf+MqhjiA=;
-        b=pwdmw4K3pYYDED1XgBEmBvdEURFAWAjGEYflQRe9HK/+VKUk/t+6LRgIpwjnhNAb42
-         qxtR3a49no36XgVkf5W01njNmn3lvszfFUueEB7nNve/UN3BqDWrZlQeJujTpbN8q3K1
-         IyZio98fOVuTTDkVwcZ5d6honINdl3zbCE8L/YGji4qDWqaO432CCo/H+GBO4WFmZiOj
-         NpmK37B5yHS80psYh2XGuoP0RFtTHBJqSvDYMX/Abo2Rx9ouwJESADNwC31/74MOvhQj
-         OOuODADRLYOeMW+VnemMiJabqY73x9OKdhs1d4BGiTk5Qy+dMwPK7XOLHJtJdeKVw4wo
-         183w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=4LVcNsetpkvMaOaEOSO/3EjRKHYLp8VED4Jf+MqhjiA=;
-        b=VzE9s0yEsWWKrsrcV7Vw8lSgZE/BRorz9wNjUV5HaaI1xUQ+Yccyr21DJpUtx6n500
-         3VF/RQXmO2qOtID189nxR/yYwXYPk0fr+6mJfEqsMGJNMKc81v41rObJ7CjoT0ZBg25x
-         u7xcnvTKpvSIfEso1ba1o3N3ui8awgkd/jhlUjeAGk/l3YYoViCqxeHlgVQyxs+BuQm+
-         EgXROJTgW5y/Qmk2HpJ0S62/SNrX84A3o7u96W9Yh/37il8jsnYuVteCrDFBDfhObAn8
-         B95vJESvhSvifUgKThUBZxsuatdBsQo6W2cW1bhJ/nZvoAuewLyTn4wHCnwsbK6fslPT
-         cjIA==
-X-Gm-Message-State: ANhLgQ30RXBaIOCLsfW8cSfi7cnmow0uOJGRX6jDNe+sjC/QTjtvThbM
-        9cXZEH44H/rRPsGMvYiDepZ8xz0Z
-X-Google-Smtp-Source: ADFU+vtVFEPNA7j8xxHRcaPdmJuSHNtxBPKaJ4S7Pj13laSWVW+FleeSM8ZUGyyDc+Nbn/viqIpvxA==
-X-Received: by 2002:a2e:b792:: with SMTP id n18mr3379082ljo.268.1584651354474;
-        Thu, 19 Mar 2020 13:55:54 -0700 (PDT)
-Received: from kbp1-lhp-F54859 ([77.47.205.181])
-        by smtp.gmail.com with ESMTPSA id r23sm2114476lfi.89.2020.03.19.13.55.53
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 19 Mar 2020 13:55:54 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 22:55:53 +0200
-From:   Mykyta Poturai <mykyta.poturai@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Subject: [PATCH] Fix typo in gpio-utils
-Message-ID: <20200319205553.GA9893@kbp1-lhp-F54859>
+        id S1726955AbgCTJY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 05:24:59 -0400
+Received: from mail.v3.sk ([167.172.186.51]:37792 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727000AbgCTJY6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:24:58 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id A9501DFC45;
+        Fri, 20 Mar 2020 09:25:15 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id CB3O09jGeY6v; Fri, 20 Mar 2020 09:25:15 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id D57D7E0028;
+        Fri, 20 Mar 2020 09:25:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id vyhPJH_CqW6F; Fri, 20 Mar 2020 09:25:14 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 6BB7CDFC45;
+        Fri, 20 Mar 2020 09:25:14 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 10:24:52 +0100
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 13/28] dt-bindings: serial: move Marvell compatible
+ string to 8250 binding doc
+Message-ID: <20200320092452.GA24507@furthur.local>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-14-lkundrak@v3.sk>
+ <CAL_Jsq+wG+DTZ8Vxcw=NR2isABGrkoDiBt-uG9+NF6qdWuU62Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAL_Jsq+wG+DTZ8Vxcw=NR2isABGrkoDiBt-uG9+NF6qdWuU62Q@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Signed-off-by: Mykyta Poturai <mykyta.poturai@gmail.com>
----
- tools/gpio/gpio-utils.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Thu, Mar 19, 2020 at 10:11:02AM -0600, Rob Herring wrote:
+> On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> >
+> > These ports are compatible with NS8250 and handled by the same driver.
+> > Get rid of the extra document that fails to document the properties that
+> > are actually supported.
+> >
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  Documentation/devicetree/bindings/serial/8250.txt        | 2 ++
+> >  Documentation/devicetree/bindings/serial/mrvl-serial.txt | 4 ----
+> >  2 files changed, 2 insertions(+), 4 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> I'd really like to see 8250.txt converted to schema.
 
-diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
-index 53470de..0600378 100644
---- a/tools/gpio/gpio-utils.c
-+++ b/tools/gpio/gpio-utils.c
-@@ -17,7 +17,7 @@
- #include <linux/gpio.h>
- #include "gpio-utils.h"
- 
--#define COMSUMER "gpio-utils"
-+#define CONSUMER "gpio-utils"
- 
- /**
-  * doc: Operation of gpio
-@@ -209,7 +209,7 @@ int gpiotools_gets(const char *device_name, unsigned int *lines,
- 
- 	ret = gpiotools_request_linehandle(device_name, lines, nlines,
- 					   GPIOHANDLE_REQUEST_INPUT, data,
--					   COMSUMER);
-+					   CONSUMER);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -259,7 +259,7 @@ int gpiotools_sets(const char *device_name, unsigned int *lines,
- 
- 	ret = gpiotools_request_linehandle(device_name, lines, nlines,
- 					   GPIOHANDLE_REQUEST_OUTPUT, data,
--					   COMSUMER);
-+					   CONSUMER);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.7.4
+I'll follow up just with that.
 
+Thanks quarantine.
+
+> Rob
+
+Lubo
