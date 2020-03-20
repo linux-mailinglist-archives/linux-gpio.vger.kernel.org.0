@@ -2,115 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A12BF18CC0D
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 11:59:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42C0A18CCBB
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 12:22:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgCTK7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Mar 2020 06:59:08 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34541 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgCTK7H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 06:59:07 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j5so6050111oij.1;
-        Fri, 20 Mar 2020 03:59:05 -0700 (PDT)
+        id S1727142AbgCTLWE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 07:22:04 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39778 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgCTLV6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 07:21:58 -0400
+Received: by mail-oi1-f194.google.com with SMTP id d63so6060829oig.6
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 04:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=6w+aFSJ+2vZ3lBtg9xVXLOFVqSNoMPd625E7FNYobb8=;
+        b=gXr8iqrFPWrUhIliERP+Rlw7D9XFBjLMvK5JfWrCwC1wCwV70lx2adPhEP+5LqtKBG
+         O7JxXe77iNTDDKteRIXyf/+5d6XSEUrRv+eG+L2zubgUkC+eWkybCOuucPHhc0ShVd1L
+         7mmc4fyfvf0Od1Bi4HewoE3FoNz+THwrf6rX53/BkajGTcaqNUtHUSKj+8dpdvKadb4o
+         I6t5k90iaDwdED7mSjm4SxMxu1mD1nZuxQ9ZeNQ+a6TGw/3h7X0TvsVG77lyIB9Bk3MP
+         RcyvjUdW1zADACdtH+UIpYKPK/PGfBGesTi7w5wMvW1LxvX8cJVM9F6GMvVusKZ+9xMh
+         9qFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JBGzd1fiCYIMs0yXGqTi6J4Cg8iQgyHBNWCz5d+cCxM=;
-        b=QSRMgd5q/1n7036elxXzPGURwccLrpWQkNYkFlA9lyisF9PSvlcz9R7uwdz0BFQiSn
-         MpMIiIDwykmOFZXeD9scfzwBVtr04YsRSuxqxpAO9daTwH8r6Yk5QK2aK6cq7+OVoNIf
-         8Bic8lYRjii0Dny8UpwZguzX5Ri36+lYgdW8rByMzk4HSG65coiHbjVKYOipiIywaixL
-         gyBoGgWPEsHz4eQIPnUkA/QyLsiUhA/7a6qY93BMH7Dvky/11fwkslxtwuFh273J9Sas
-         v0aYMxaA0ESGXnKyot81MqZxIzto/mhMUReAZO5/YqBnLRDESncjkU4m5msC4njEeLm2
-         BSDA==
-X-Gm-Message-State: ANhLgQ2pdLZMd1sR17D3QPWTwN6m5Kk3JCnlA33jd/8U77t/xA5wnZhM
-        m4xkxI3VRJFTq0lDvwSmBlqLkgz+giSv7I0Rq18=
-X-Google-Smtp-Source: ADFU+vuzusGltxXm39xTf3vqPlxbTHXIt6qTneJTbhVKaOcT9tMW2LW4pSYh6Pfa0gbq7YWeA+51D7+gwN7Lhc0efL4=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr6082546oie.54.1584701944814;
- Fri, 20 Mar 2020 03:59:04 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=6w+aFSJ+2vZ3lBtg9xVXLOFVqSNoMPd625E7FNYobb8=;
+        b=GbFov285ruArosQwGc0Y20XE0nll9M494fcpd6UZEBcu5IiK3ksAU5AZRkuzWwd5/Q
+         BKXL2DH+Y2BUoWGpnQuU9gtbUKBPgWZw8pHQ9Zy2uGrl/rgyo/lhAJs8n2d3z61a1BLO
+         fCifwZ6Upd156VPQw49Qp6sOksKbCr9Lgt+fohfzaBnes0mYFZ9W72I8FW1DEQw8TWhM
+         ml/1pAPR9yVAh4DwTdYcAkCBzGu2ODkHio+EEoJKP382iKpfsVYhyinAVQenxIf7cPpI
+         51LFSJgOBWQihEqHGnD0BeYfQyl0XCTteFIe2ea5wqbtUVFmse4CLZgKx+ssFf25l9E3
+         R/IA==
+X-Gm-Message-State: ANhLgQ0hs6DQs24ktns63BU4RmvAu4Aoe9YKbOCSmEWM8KZ3y62oT/GH
+        ugg1uACw1C78G69Rzfhn5gCh//KQAEDjF68CZ4g=
+X-Google-Smtp-Source: ADFU+vsEhnx2OvxntOwweiY4ejI8hgMnvqEI1mkGNtS4be2GVSqcT+fJU/MBEybdWCiYRkYwkzCyurhmJwBn7Zr4Sgs=
+X-Received: by 2002:aca:210c:: with SMTP id 12mr5681362oiz.0.1584703317715;
+ Fri, 20 Mar 2020 04:21:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200320093125.23092-1-brgl@bgdev.pl>
-In-Reply-To: <20200320093125.23092-1-brgl@bgdev.pl>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Mar 2020 11:58:53 +0100
-Message-ID: <CAMuHMdXWrK3QjGmAPC0aPtQ_62buiQLopyRKB-qro6HBK5bDyg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Received: by 2002:a05:6838:40c6:0:0:0:0 with HTTP; Fri, 20 Mar 2020 04:21:57
+ -0700 (PDT)
+From:   ECOWAS COMMITEE <ecowasmonitoringcommitteeabj@gmail.com>
+Date:   Fri, 20 Mar 2020 11:21:57 +0000
+Message-ID: <CAHHubrYVO=2YdPqKZhJ+2V5OGE9v-76hg5HAnvmVr7enpkq_MA@mail.gmail.com>
+Subject: HAPPY SURVIVAL OF CORONAVIRUS
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+Dear Sir/Madam
 
-On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
-> as it takes a mutex internally. Let's move the call before taking the
-> spinlock and store the return value.
->
-> This isn't perfect - there's a moment between calling
-> pinctrl_gpio_can_use_line() and taking the spinlock where the situation
-> can change but it isn't a regression either: previously this part wasn't
-> protected at all and it only affects the information user-space is
-> seeing.
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setting lineinfo")
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+HAPPY SURVIVAL OF CORONAVIRUS
 
-Thanks for your patch!
+We the West African Monitoring Committee of the West African Economic
+Community(ECOWAS)are contacting you for a business transaction which
+we feel will be of great interest to you.
 
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1154,8 +1154,19 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->                                   struct gpioline_info *info)
->  {
->         struct gpio_chip *chip = desc->gdev->chip;
-> +       bool ok_for_pinctrl;
->         unsigned long flags;
->
-> +       /*
-> +        * This function takes a mutex so we must check this before taking
-> +        * the spinlock.
-> +        *
-> +        * FIXME: find a non-racy way to retrieve this information. Maybe a
-> +        * lock common to both frameworks?
-> +        */
-> +       ok_for_pinctrl = pinctrl_gpio_can_use_line(
-> +                               chip->base + info->line_offset);
+Our duty is to see to the coming in and out of funds into this sub
+region.There is a fund which we confiscated worth of $12.5 million
+dollars.We will like you to receive this fund on your name in your
+account and as well helping us in the investment.
 
-Note that this is now called unconditionally, while before it was only called
-if all previous steps in the ||-pipeline failed.
+You are advised to contact us as soon as you get this message for
+details of the transaction if you find it interesting.
 
-> +
->         spin_lock_irqsave(&gpio_lock, flags);
->
->         if (desc->name) {
-> @@ -1182,7 +1193,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
->             test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
->             test_bit(FLAG_EXPORT, &desc->flags) ||
->             test_bit(FLAG_SYSFS, &desc->flags) ||
-> -           !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
-> +           !ok_for_pinctrl)
->                 info->flags |= GPIOLINE_FLAG_KERNEL;
->         if (test_bit(FLAG_IS_OUT, &desc->flags))
->                 info->flags |= GPIOLINE_FLAG_IS_OUT;
+Best Regards,
 
-Gr{oetje,eeting}s,
+Mr John Aka
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Chairman
+ECOWAS
+West African Monitoring Committee
+Tel 00225 6716 6756
+Abidjan Cote D'Ivoire
