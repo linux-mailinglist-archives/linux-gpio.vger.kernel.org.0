@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A0B18D4DF
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 17:50:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFE1818D4E3
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 17:51:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbgCTQuf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Mar 2020 12:50:35 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17023 "EHLO mga09.intel.com"
+        id S1727323AbgCTQvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 12:51:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37643 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgCTQuf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 20 Mar 2020 12:50:35 -0400
-IronPort-SDR: y7LarwUD8yZDruhoLCKzZBV6xi7+ax6eXuKppNp3DXJE5JgflQqgdtrTj190lufrqQ3cFSubSj
- YZK3P5TVnOQw==
+        id S1726983AbgCTQvf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 20 Mar 2020 12:51:35 -0400
+IronPort-SDR: KSBJUzDmD5IaiWcYNj/u47HFHG45l4Y/ZDS1ho0CjEX48bpGhwWBIsRgS/5d3ybWaafVlUdm07
+ nPsdFYuOGlUw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 09:50:34 -0700
-IronPort-SDR: jC3R1Ir+U31dJVm/4Dr723ztyDp1oS+lw+N5DsfsQl10jj8p2D+MquOXhY3lJCkcsPvicIabrz
- yaEeo8DdYz3A==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2020 09:51:35 -0700
+IronPort-SDR: +2aTu+aMwId4LA3wuBQ+AyNq+EngAeN+5Icjo4aWJNoYt8C5XU6TrLtz7/SblQ3ykAb8UtGPCW
+ Q6t0CED4fOtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,285,1580803200"; 
-   d="scan'208";a="237272173"
+   d="scan'208";a="264120691"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Mar 2020 09:50:33 -0700
+  by orsmga002.jf.intel.com with ESMTP; 20 Mar 2020 09:51:33 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jFKqu-000Eab-MB; Sat, 21 Mar 2020 00:50:32 +0800
-Date:   Sat, 21 Mar 2020 00:50:28 +0800
+        id 1jFKrs-000GEk-Qz; Sat, 21 Mar 2020 00:51:32 +0800
+Date:   Sat, 21 Mar 2020 00:50:30 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:fixes] BUILD SUCCESS
- 1b26f3ba611774c897d29228e4ba28919e0fbfd0
-Message-ID: <5e74f454.niSVobLdubHovuV4%lkp@intel.com>
+Subject: [gpio:gpio-devm-cleanup] BUILD SUCCESS
+ d2a6cc2035a0099009614ef80fbf7db46e837ee6
+Message-ID: <5e74f456.Nf6qGlmvTf7+FDNT%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
-branch HEAD: 1b26f3ba611774c897d29228e4ba28919e0fbfd0  gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP288 model
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-devm-cleanup
+branch HEAD: d2a6cc2035a0099009614ef80fbf7db46e837ee6  gpio: Move devres calls to devres file
 
 elapsed time: 482m
 
-configs tested: 159
+configs tested: 163
 configs skipped: 0
 
 The following configs have been built successfully.
@@ -60,34 +60,38 @@ arm                              allyesconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
 arm64                            allyesconfig
-arm                         at91_dt_defconfig
 arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
 arm                          exynos_defconfig
 arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
 arm                           sunxi_defconfig
-arm64                               defconfig
+arm                        multi_v7_defconfig
 sparc                            allyesconfig
 sh                          rsk7269_defconfig
 ia64                             alldefconfig
 sh                                allnoconfig
 i386                              allnoconfig
-i386                             alldefconfig
 i386                             allyesconfig
+i386                             alldefconfig
 i386                                defconfig
 ia64                             allmodconfig
 ia64                              allnoconfig
 ia64                             allyesconfig
 ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
 nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
 xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
 h8300                     edosk2674_defconfig
 h8300                    h8300h-sim_defconfig
 h8300                       h8s-sim_defconfig
@@ -141,12 +145,12 @@ x86_64               randconfig-b003-20200320
 i386                 randconfig-b001-20200320
 i386                 randconfig-b002-20200320
 i386                 randconfig-b003-20200320
-x86_64               randconfig-c001-20200320
-x86_64               randconfig-c002-20200320
 x86_64               randconfig-c003-20200320
-i386                 randconfig-c001-20200320
 i386                 randconfig-c002-20200320
+x86_64               randconfig-c001-20200320
 i386                 randconfig-c003-20200320
+i386                 randconfig-c001-20200320
+x86_64               randconfig-c002-20200320
 x86_64               randconfig-d001-20200320
 x86_64               randconfig-d002-20200320
 x86_64               randconfig-d003-20200320
@@ -183,12 +187,12 @@ arm64                randconfig-a001-20200320
 ia64                 randconfig-a001-20200320
 powerpc              randconfig-a001-20200320
 sparc                randconfig-a001-20200320
-riscv                            allmodconfig
-riscv                             allnoconfig
 riscv                            allyesconfig
-riscv                               defconfig
 riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
 riscv                          rv32_defconfig
+riscv                            allmodconfig
 s390                             alldefconfig
 s390                             allmodconfig
 s390                              allnoconfig
