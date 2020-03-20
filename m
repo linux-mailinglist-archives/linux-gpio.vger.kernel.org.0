@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C46718CAEB
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 10:55:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CD9F18CBA0
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 11:30:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgCTJzu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Mar 2020 05:55:50 -0400
-Received: from mail-pf1-f172.google.com ([209.85.210.172]:40646 "EHLO
-        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgCTJzu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 05:55:50 -0400
-Received: by mail-pf1-f172.google.com with SMTP id l184so2960210pfl.7
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 02:55:49 -0700 (PDT)
+        id S1726631AbgCTKaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 06:30:15 -0400
+Received: from mail-pj1-f41.google.com ([209.85.216.41]:33951 "EHLO
+        mail-pj1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgCTKaO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 06:30:14 -0400
+Received: by mail-pj1-f41.google.com with SMTP id q16so3330433pje.1
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 03:30:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=nspIYN9HIn6J8QDHjJHI3bM9ZwABJbpzOdoMw+L+OXU=;
-        b=vN3nyMuZKxpx0xraz4ZNVolf0UNW9gb4c7F7FVMqyAsalNB092e2ofaZet5EZfCv1c
-         JdMReYm7folELX/ZZDgtZ9AwMYmC41WTOkNZt6BnEdyEtgsU+C3o69HyQZM1JzAoN44M
-         YtXidG+u2DDcTpOieyIqGz5ekGyByV+sPj2XEeOQKl9PTPWaLpypYyx8XyKZwg67Cwre
-         I+BcBLINlkAHTCi3iekW2Y45qs2Y+JrX0VsKkdMfpr5PlQdWclIPi11h8EQQp3o/GCTV
-         0x8rciF44c7+2vWMrCFabAlptPbRIciqD9MhIAFgcVHN/X0cb86nuX5mV4FJHQY2gKt7
-         D2zw==
+        bh=CsMSBDDCZJ8NaYdqATbyzeDM453ODmlX3XZumBZQRwg=;
+        b=R/hfhcfyg7uNCku2R0MIOLwJxV/Z1SJPnV4NAFot5i/PdUsd+2SPXk2olRiRUumisd
+         XjdVm6/kyLzyZpxfb4UwffrEiVA03sNbk21rER3fCkn0O9Na5l0j69BUu+70GpQl+PuU
+         A+75ye7dUJyynqeuSVQIRG1Q6PsiPcRwKIFkCAjAXUCrgyYQzu/0ScgcLfJRlgyMcMXh
+         G/FUSqQb3wW9bZvH0X7UlGV/ATWmRGjNy9DisnTknRxE627aEw63Ua2PiTbnvA1e8GSs
+         1Hw1PSrMytVMjrZDb0lHG1Pl7gE0jeMT51psI3EF7GXSZYBDsyiJ+yryBzEi/Qhj69f7
+         eZ4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=nspIYN9HIn6J8QDHjJHI3bM9ZwABJbpzOdoMw+L+OXU=;
-        b=AaQ+dWLYYZTrY0lXOg6qrOUlxqGOyKNaMgw1yVjB1G6C2aD4kw8rr+NfG02nl9xwCk
-         TS/R9hW6a61uNvEBishRFg/E3X7Que2u1cLlkY9IUSrzy4oGnxfyzvD/Cb6iwhxl0Pg5
-         ZJHhGSu1ql+wum1m1jl7jqykyPykIPwZqFcFmCGhYc/hYZR5kltS0m9PUbTyfIGUdDhW
-         pQLLfhQQ5Xc4nU1yR37oZTvojdVLTrt0ajyZdNEapRhW2s0iIeJOlQN8P5Bl5I5jxyL/
-         cWHUei7Tg7psyE/TAkWW+IrOG0b5c9pKsKgT/rSuJJbzUh4DFjIONGdInKEtKKQAzOom
-         o69A==
-X-Gm-Message-State: ANhLgQ0YQBufOe9TGQMmYBvSf6g28oT0yqNP7xvXAWHsad5Jpbb6SOcA
-        QPfdyVA7jLEQxqE1+mYf1PHt5H/JCt0=
-X-Google-Smtp-Source: ADFU+vsaew938EGJSKLPryYgtsc0At9Br8E1L2fzt/9JYL4LAt1pvTfIsblihIEBfHRLN5ET1NFp5g==
-X-Received: by 2002:a62:1c48:: with SMTP id c69mr8708756pfc.283.1584698148322;
-        Fri, 20 Mar 2020 02:55:48 -0700 (PDT)
+        bh=CsMSBDDCZJ8NaYdqATbyzeDM453ODmlX3XZumBZQRwg=;
+        b=TUZnnyx0e3kSQv00txRgZk4P03gGne8cn4MXsknHKAxzN49b9OkD45Gcg2hbowIySJ
+         WadDsYaWhtX8Xhv2np+80mWi651EYMKBpJpnWuRr3LEANCNPaNbhD2qTFfOPLOIpZEmr
+         IRNZ2zXWPZWHeAJmupI0UYivARqu5MXQoAQXDSdEKm0tfzJjznD++PrLdI4/G9aZaen8
+         lVCbRS/usWQkbScyggWvxQ17BvvT80jKbu+mEnFumz9ue/e3eBDAfaoL/0bVdAk99xm2
+         7wH93Elb++86nftbkKMSFEEDQhVAeburVvzDu/7wpWLDgK+UuL7SlNnPGZPSU3ie0rAX
+         3Ktg==
+X-Gm-Message-State: ANhLgQ358SY71V6k45CZSR4bvhO97jYVsewi7aT7XfrGan+pyOlWKFZ1
+        SKHVFd8G5LN1Z+RG72rtTiMxrp3OY+8=
+X-Google-Smtp-Source: ADFU+vvEmNXxd1D/R+ueUfTMgA9fV/nxij+VNNjdyJ/80NhR1wgFbi61io9H32EJxlIDN0j1kru27g==
+X-Received: by 2002:a17:90b:3789:: with SMTP id mz9mr8603563pjb.43.1584700213563;
+        Fri, 20 Mar 2020 03:30:13 -0700 (PDT)
 Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id p8sm4872122pff.26.2020.03.20.02.55.47
+        by smtp.gmail.com with ESMTPSA id w127sm5116330pfb.70.2020.03.20.03.30.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 02:55:47 -0700 (PDT)
-Message-ID: <5e749323.1c69fb81.a4149.1ebe@mx.google.com>
-Date:   Fri, 20 Mar 2020 02:55:47 -0700 (PDT)
+        Fri, 20 Mar 2020 03:30:12 -0700 (PDT)
+Message-ID: <5e749b34.1c69fb81.9ed7e.1c37@mx.google.com>
+Date:   Fri, 20 Mar 2020 03:30:12 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
+X-Kernelci-Branch: fixes
 X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.6-rc1-31-g347ae6e29145
-X-Kernelci-Report-Type: build
-Subject: linusw/devel build: 6 builds: 0 failed,
- 6 passed (v5.6-rc1-31-g347ae6e29145)
+X-Kernelci-Kernel: v5.6-rc3-5-g1b26f3ba6117
+X-Kernelci-Report-Type: boot
+Subject: linusw/fixes boot: 64 boots: 2 failed,
+ 62 passed (v5.6-rc3-5-g1b26f3ba6117)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,55 +62,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed (v5.6-rc1-31-g347ae6e29145)
+linusw/fixes boot: 64 boots: 2 failed, 62 passed (v5.6-rc3-5-g1b26f3ba6117)
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.6-rc1-31-g347ae6e29145/
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/fixes/ke=
+rnel/v5.6-rc3-5-g1b26f3ba6117/
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.6-rc3-5-g1b26f3ba6117/
 
 Tree: linusw
-Branch: devel
-Git Describe: v5.6-rc1-31-g347ae6e29145
-Git Commit: 347ae6e29145077469838f3bb66939ec8ee8956a
+Branch: fixes
+Git Describe: v5.6-rc3-5-g1b26f3ba6117
+Git Commit: 1b26f3ba611774c897d29228e4ba28919e0fbfd0
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
 git/
-Built: 6 unique architectures
+Tested: 56 unique boards, 15 SoC families, 3 builds out of 6
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
+Boot Regressions Detected:
 
-Detailed per-defconfig build reports:
+arm:
 
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
+    multi_v7_defconfig:
+        gcc-8:
+          bcm2836-rpi-2-b:
+              lab-collabora: failing since 37 days (last pass: gpio-v5.5-4 =
+- first fail: v5.6-rc1-10-ga924eae75106)
 
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
+arm64:
 
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
-smatches
+    defconfig:
+        gcc-8:
+          meson-gxl-s905x-khadas-vim:
+              lab-baylibre: new failure (last pass: v5.6-rc3)
 
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
+Boot Failures Detected:
 
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
-tion mismatches
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm2836-rpi-2-b: 1 failed lab
 
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s905x-khadas-vim: 1 failed lab
 
 ---
 For more info write to <info@kernelci.org>
