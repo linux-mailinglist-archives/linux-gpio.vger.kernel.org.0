@@ -2,114 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 499B918CBD3
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 11:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A12BF18CC0D
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 11:59:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCTKkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Mar 2020 06:40:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43110 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgCTKkf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 06:40:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f206so3015760pfa.10
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 03:40:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=QiUxZWwPtf0NrSQG68BSjngMWDwYoz/5nYA8c1c7deA=;
-        b=xeMYdxpYLD+2MdWcDJg4uGVbjufKf1nYTuS08AJ8UUJdYg+wnMH2xdJIYqHIS7qd8R
-         B+vOd5oRF12g+f6aR22K0xhheRwlxviYfE7xN/x1HodkdWNJ8bMFjrg/qbm2Z4tN76rU
-         HZiypHPBbWuqZcqSOo4Pu7UzHAUGC7Ysldk5tsy8nARfZTo5XgiSpJYE5K0H/YFckFP3
-         fe1VpKI52esVgIbO+CVfOa85KfM0jDFvhFr4t0nYnWGwcumpM5Htc+Px/VgzGmzempdk
-         KNGzx3SYa7Re4mfcktEb23usBQLoYmuhFUBM+Ux2cFNGA6i3BqACS/4lqNUxEPNRTXLo
-         1BwQ==
+        id S1727133AbgCTK7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 06:59:08 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34541 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCTK7H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 06:59:07 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j5so6050111oij.1;
+        Fri, 20 Mar 2020 03:59:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=QiUxZWwPtf0NrSQG68BSjngMWDwYoz/5nYA8c1c7deA=;
-        b=ctW7W/AHSmDpwiTD7IYYkd90mlR1CXApRlNhwl5QJq3R++MP5c4w+xE/OkFwTsbmat
-         bLyofQ6+TDVwq0yRBTXDVclu3XBKELiKSiULQvVQH9yfW+40INPycq6qo96AtZuIXf7K
-         m1KP4UQfRdsEtrA6DAp9UIE/bFpuKwqHS6d0Xi+a0kEDnxcDPGdm2b7txB1EWXit7XVN
-         rwTaiwVj0TE9OLNv170p6RIoXHKtthQ71xwxW4RRjmwClDC6iVt3pRsGxBFBY8oD0LNF
-         8g/Mq35BuQ9PhFqo51baWbTSkJn/bkh32mAJPh5xSZI7huorAqXc2dtukwqzYQuz0ldz
-         PDtg==
-X-Gm-Message-State: ANhLgQ3wnxrP5hazxEkYdgT+QfIqadnXF97j6lo8uhtCBJIsfCIHvHpl
-        EpdXY1e7IrwOB1I1KzJqcRYm/2Mt3vc=
-X-Google-Smtp-Source: ADFU+vtmDGg0VI1U7gNxUs9IhxpaIDJdoYxXqw6lRm24K9Z9uyPPv92CF27JEjb12RDdgKrxJT9AOA==
-X-Received: by 2002:a63:5d04:: with SMTP id r4mr7845440pgb.241.1584700833873;
-        Fri, 20 Mar 2020 03:40:33 -0700 (PDT)
-Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id h15sm4833951pgd.19.2020.03.20.03.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 03:40:33 -0700 (PDT)
-Message-ID: <5e749da1.1c69fb81.2bc41.0c54@mx.google.com>
-Date:   Fri, 20 Mar 2020 03:40:33 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JBGzd1fiCYIMs0yXGqTi6J4Cg8iQgyHBNWCz5d+cCxM=;
+        b=QSRMgd5q/1n7036elxXzPGURwccLrpWQkNYkFlA9lyisF9PSvlcz9R7uwdz0BFQiSn
+         MpMIiIDwykmOFZXeD9scfzwBVtr04YsRSuxqxpAO9daTwH8r6Yk5QK2aK6cq7+OVoNIf
+         8Bic8lYRjii0Dny8UpwZguzX5Ri36+lYgdW8rByMzk4HSG65coiHbjVKYOipiIywaixL
+         gyBoGgWPEsHz4eQIPnUkA/QyLsiUhA/7a6qY93BMH7Dvky/11fwkslxtwuFh273J9Sas
+         v0aYMxaA0ESGXnKyot81MqZxIzto/mhMUReAZO5/YqBnLRDESncjkU4m5msC4njEeLm2
+         BSDA==
+X-Gm-Message-State: ANhLgQ2pdLZMd1sR17D3QPWTwN6m5Kk3JCnlA33jd/8U77t/xA5wnZhM
+        m4xkxI3VRJFTq0lDvwSmBlqLkgz+giSv7I0Rq18=
+X-Google-Smtp-Source: ADFU+vuzusGltxXm39xTf3vqPlxbTHXIt6qTneJTbhVKaOcT9tMW2LW4pSYh6Pfa0gbq7YWeA+51D7+gwN7Lhc0efL4=
+X-Received: by 2002:aca:ad93:: with SMTP id w141mr6082546oie.54.1584701944814;
+ Fri, 20 Mar 2020 03:59:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.6-rc1-31-g347ae6e29145
-X-Kernelci-Report-Type: boot
-Subject: linusw/devel boot: 64 boots: 2 failed,
- 61 passed with 1 untried/unknown (v5.6-rc1-31-g347ae6e29145)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+References: <20200320093125.23092-1-brgl@bgdev.pl>
+In-Reply-To: <20200320093125.23092-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Mar 2020 11:58:53 +0100
+Message-ID: <CAMuHMdXWrK3QjGmAPC0aPtQ_62buiQLopyRKB-qro6HBK5bDyg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 64 boots: 2 failed, 61 passed with 1 untried/unknown (v5=
-.6-rc1-31-g347ae6e29145)
+Hi Bartosz,
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.6-rc1-31-g347ae6e29145/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.6-rc1-31-g347ae6e29145/
+On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
+> as it takes a mutex internally. Let's move the call before taking the
+> spinlock and store the return value.
+>
+> This isn't perfect - there's a moment between calling
+> pinctrl_gpio_can_use_line() and taking the spinlock where the situation
+> can change but it isn't a regression either: previously this part wasn't
+> protected at all and it only affects the information user-space is
+> seeing.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setting lineinfo")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.6-rc1-31-g347ae6e29145
-Git Commit: 347ae6e29145077469838f3bb66939ec8ee8956a
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 56 unique boards, 15 SoC families, 3 builds out of 6
+Thanks for your patch!
 
-Boot Regressions Detected:
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1154,8 +1154,19 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>                                   struct gpioline_info *info)
+>  {
+>         struct gpio_chip *chip = desc->gdev->chip;
+> +       bool ok_for_pinctrl;
+>         unsigned long flags;
+>
+> +       /*
+> +        * This function takes a mutex so we must check this before taking
+> +        * the spinlock.
+> +        *
+> +        * FIXME: find a non-racy way to retrieve this information. Maybe a
+> +        * lock common to both frameworks?
+> +        */
+> +       ok_for_pinctrl = pinctrl_gpio_can_use_line(
+> +                               chip->base + info->line_offset);
 
-arm:
+Note that this is now called unconditionally, while before it was only called
+if all previous steps in the ||-pipeline failed.
 
-    multi_v7_defconfig:
-        gcc-8:
-          bcm2836-rpi-2-b:
-              lab-collabora: failing since 35 days (last pass: gpio-v5.5-4-=
-45-gd18fddff061d - first fail: v5.6-rc1-12-gb2929a9cb2fb)
+> +
+>         spin_lock_irqsave(&gpio_lock, flags);
+>
+>         if (desc->name) {
+> @@ -1182,7 +1193,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+>             test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+>             test_bit(FLAG_EXPORT, &desc->flags) ||
+>             test_bit(FLAG_SYSFS, &desc->flags) ||
+> -           !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
+> +           !ok_for_pinctrl)
+>                 info->flags |= GPIOLINE_FLAG_KERNEL;
+>         if (test_bit(FLAG_IS_OUT, &desc->flags))
+>                 info->flags |= GPIOLINE_FLAG_IS_OUT;
 
-arm64:
+Gr{oetje,eeting}s,
 
-    defconfig:
-        gcc-8:
-          meson-gxm-q200:
-              lab-baylibre: new failure (last pass: v5.6-rc1-26-g5779925c23=
-e1)
-          sun50i-a64-pine64-plus:
-              lab-baylibre: new failure (last pass: v5.6-rc1-26-g5779925c23=
-e1)
+                        Geert
 
-Boot Failures Detected:
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm2836-rpi-2-b: 1 failed lab
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxm-q200: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
