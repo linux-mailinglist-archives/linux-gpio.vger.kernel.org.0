@@ -2,116 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D31718CA69
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 10:31:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A294F18CA85
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Mar 2020 10:39:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgCTJbc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Mar 2020 05:31:32 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40824 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTJbb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 05:31:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f3so6522404wrw.7
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 02:31:29 -0700 (PDT)
+        id S1726631AbgCTJjG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Mar 2020 05:39:06 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35266 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTJjF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Mar 2020 05:39:05 -0400
+Received: by mail-il1-f193.google.com with SMTP id o16so2360225ilm.2
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Mar 2020 02:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxSCMf56EN6cVH20T+jGdX85jkdKPR+q8rPGaI1sQOs=;
-        b=cN3/TPOJyvrD0HS5TBISYW40rh8nMYZ30j86g1z+T6XV+5RdbRTwVGZj5kouUMNZkO
-         cRLcOwZNI6onvooo7dUMJNkveEKH4kpVjoDs5BfMQ2fgTXFjiD1Yjid8V2uYfzJ9Gyrd
-         vH4I+ufH8ZBc58lN2p+/TlqehFjx0I7mIfgf1MTlhTvauKa6YkG78lRqq19W4TBpOK6g
-         IyiCLSriyZolMW0bfPaZTiio/MksMpZPufpQllududTgJO7X8yI28h6XYX0k/kpLB2sz
-         hEn/C92SqLu3YpKn3ZzwJsbo2EGeA0Nuj2Qel6/USPO+Mmv4qMtqG7TDBnmWcOuLEGyU
-         YYZQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=E88U8nR939B0wRa/2ymgo/wzYZwBbl5Itx+Xn0KyBCo=;
+        b=IXvpJ9QsQUi2SmkShV+mL6C1EHO7bH5LxWIBM1iAg2RbAn8ltjzcw4k8Gzf/04fNE1
+         Uz09MB8Di2p01C9jdQvKGQzPAgFVqEjbrjuWISi/TXKUyaXBfsRCWMGdH55TACtLJl+O
+         +96zxdxSO4CAWHrvEDGVmRiVxp2voypd+cSClwkGZunY3rIDVCZtGqpnWx7L7KohbcFf
+         xZZ9Gy37XGsOCPW3SZuopsdZ+4cCPQiYd8C4hfKP/HCW4kZsKY/E+ReGVxYn5sYxVyWu
+         hzTnyxrceyk0Q1BtwD9bqeybfUslN3EoXiuVUHgq8b67XGEq+P5rnmZjJiAUtmm8lEVE
+         Fb9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxSCMf56EN6cVH20T+jGdX85jkdKPR+q8rPGaI1sQOs=;
-        b=uF/ossgZpu6jSY84CQRdLgK0P6/MFHEpWyS2Q9eyKSet3WE7wXVKfVw+UoDvALr1i5
-         G3s0MTDeoyLah52UPL4i4qhmDTvNG1n/uHzA2QOkCe00cHJU88UCu47B2fC+2xUaCBL5
-         njbmdXGi7HL3GC38j5afFTJFSpaNzMXPQvfeP5vhIO1czMl+brtaPMoZ9KjPR4ggcT44
-         ouC8IM1/NKuMHt2C1IGDtH228IbbQR/wKFr8Ei+CSgWSbHC8YBTfXGEj1m+kBP952qec
-         bHKTlDUcwLWwZvd0ofYcHb+2vyPfZ0HOJzBpQ2DYqpJH2DmBqWDg9svbU/r5mIwbWb6Y
-         WKKg==
-X-Gm-Message-State: ANhLgQ2Mru0XTGE7D/itBrPxd86ByRSd+irhUCgcCpS6ORogC/Swt58x
-        XYhbp+AqiL3JFmnuXxGtrobZRg==
-X-Google-Smtp-Source: ADFU+vsj/SVyNNacr9nRaQjep8JEOA8OAU8YrfS+ziyRE+d8wiTXaRxN9AYeYVYAx9j7j4BYCFujRg==
-X-Received: by 2002:adf:afcb:: with SMTP id y11mr9219120wrd.141.1584696688308;
-        Fri, 20 Mar 2020 02:31:28 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id r3sm7734017wrm.35.2020.03.20.02.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 02:31:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
-Date:   Fri, 20 Mar 2020 10:31:25 +0100
-Message-Id: <20200320093125.23092-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=E88U8nR939B0wRa/2ymgo/wzYZwBbl5Itx+Xn0KyBCo=;
+        b=LbBlAJgtj5F/0IwZHr54SHnLI6t2zqTb85Kk+ZpsytERnvNGwgvlu4T8p9nm8csodc
+         KNxp4j17MdV+2yL8hOf3s6oQbZNvJ1DIuN2v79CiA/b+/PXzyFlgoxRN1GcHVlAGa2S4
+         u5gmS03lBocfqCyDmFk4olWc2aNbRMPr4Nrdddv9hNwSRHkk+iBebhg4jd/5CPs0+NHT
+         AQAukQswNF3aWd3w7Xrc76J7c7r2ck9hO0rHYFHinFqicbBAwnDhsvqh2UUz28TjBl41
+         Aj7oRph7+6BmYedmWVmMHVYr4f8Not9oGhwFKMR7FZ9clAWvnjWgOAhzfUHwFZ6LxRyZ
+         TXWw==
+X-Gm-Message-State: ANhLgQ30KGOFILxsvzr8t9a5Xibo6PQGeQlgmNnhIStWP1rd9kG8bVn9
+        iHyPJ1knEAqq2rD9jl6gJTUKo7A2mGn85XDPG4iG0g==
+X-Google-Smtp-Source: ADFU+vuJOtM9SWuAoICDi7FUXuv/yqWKoRjPj7ViO11UNp0s8DbPeKyoqfntqFUE6WiJzk8VQzzH4TeWJXiEYV2KR9A=
+X-Received: by 2002:a92:d78c:: with SMTP id d12mr7307430iln.287.1584697145063;
+ Fri, 20 Mar 2020 02:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200211131240.15853-1-brgl@bgdev.pl> <20200211131240.15853-4-brgl@bgdev.pl>
+ <20200308135117.7c60c881@why> <CAMRc=Me0AE7OgEVjiUfRUNODYoGj+LYy+1zGsGkXKput9AeKrA@mail.gmail.com>
+ <CAMRc=MdsQbm=L8sjJhnCcW+kb3UHHneSGqgCbTvWwsenCeMwxw@mail.gmail.com>
+In-Reply-To: <CAMRc=MdsQbm=L8sjJhnCcW+kb3UHHneSGqgCbTvWwsenCeMwxw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 20 Mar 2020 10:38:54 +0100
+Message-ID: <CAMRc=Me2EPpF99ZZL=FAKh+d4+tGxQU7b8bsJmzApAvkwKQ91Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] irq/domain: add a new callback to domain ops
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+czw., 12 mar 2020 o 09:15 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
+a):
+>
+> niedz., 8 mar 2020 o 18:59 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
+=82(a):
+> >
+> > niedz., 8 mar 2020 o 14:51 Marc Zyngier <maz@kernel.org> napisa=C5=82(a=
+):
+> > >
+> > > On Tue, 11 Feb 2020 14:12:37 +0100
+> > > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > Add the remove() callback to irq_domain_ops which can be used to
+> > > > automatically dispose of any host data associated with the domain w=
+hen
+> > > > irq_domain_remove() is called.
+> > >
+> > > I have a hard time buying this. Whatever data that is associated to t=
+he
+> > > domain is already owned known by whoever created the domain the first
+> > > place.
+> > >
+> > > Since the expected use case is that whoever created the domain also
+> > > destroys it, the caller is already in a position to do its own cleanu=
+p,
+> > > and we don't need any of this.
+> > >
+> > > So please explain what you are trying to achieve here.
+> > >
+> >
+> > I'm mainly trying to remove irq_domain_remove_sim() and make it
+> > possible to destroy the interrupt simulator domain with regular
+> > irq_domain_remove(). If you prefer that we retain this routine as is,
+> > I can limit this series to the first two patches, but I assumed the
+> > fewer functions in the interface, the better. If you have a different
+> > idea on how to do this - please let me know too.
+> >
+> > Bartosz
+>
+> While this is being discussed - are the first two patches
+> uncontroversial enough to make it into v5.7?
+>
+> Bartosz
 
-We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
-as it takes a mutex internally. Let's move the call before taking the
-spinlock and store the return value.
+Gentle ping after another week.
 
-This isn't perfect - there's a moment between calling
-pinctrl_gpio_can_use_line() and taking the spinlock where the situation
-can change but it isn't a regression either: previously this part wasn't
-protected at all and it only affects the information user-space is
-seeing.
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setting lineinfo")
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpiolib.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 02f8b2b81199..ee20634a522c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1154,8 +1154,19 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 				  struct gpioline_info *info)
- {
- 	struct gpio_chip *chip = desc->gdev->chip;
-+	bool ok_for_pinctrl;
- 	unsigned long flags;
- 
-+	/*
-+	 * This function takes a mutex so we must check this before taking
-+	 * the spinlock.
-+	 *
-+	 * FIXME: find a non-racy way to retrieve this information. Maybe a
-+	 * lock common to both frameworks?
-+	 */
-+	ok_for_pinctrl = pinctrl_gpio_can_use_line(
-+				chip->base + info->line_offset);
-+
- 	spin_lock_irqsave(&gpio_lock, flags);
- 
- 	if (desc->name) {
-@@ -1182,7 +1193,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	    test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
- 	    test_bit(FLAG_EXPORT, &desc->flags) ||
- 	    test_bit(FLAG_SYSFS, &desc->flags) ||
--	    !pinctrl_gpio_can_use_line(chip->base + info->line_offset))
-+	    !ok_for_pinctrl)
- 		info->flags |= GPIOLINE_FLAG_KERNEL;
- 	if (test_bit(FLAG_IS_OUT, &desc->flags))
- 		info->flags |= GPIOLINE_FLAG_IS_OUT;
--- 
-2.25.0
-
+Bart
