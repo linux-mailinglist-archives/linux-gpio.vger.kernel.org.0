@@ -2,68 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EE1718FCE4
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 19:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5467818FD3B
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 20:04:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbgCWSlC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Mar 2020 14:41:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:4251 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727011AbgCWSlB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:41:01 -0400
-IronPort-SDR: 9ZUzGMCLHY4d9zR6RnuzhtggaX/W3hbXHrr0fVfL2qB+NSueVjNSV7xp3yy70TrZL1n2cI4gr6
- gjmoQTgfqRCg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 11:41:01 -0700
-IronPort-SDR: HGEymwe457Vj2f2lUyRzQhSbPQKgQfq3WRWjRVt677rv/RivSglMC9BfszmOeQ/BmcoLj++k5W
- 8Oz/wIiW144Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="292661832"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Mar 2020 11:41:00 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGS0U-00CJYn-Ox; Mon, 23 Mar 2020 20:41:02 +0200
-Date:   Mon, 23 Mar 2020 20:41:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of DW
- APB GPIO driver
-Message-ID: <20200323184102.GW1922688@smile.fi.intel.com>
-References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
- <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
- <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
+        id S1727793AbgCWTE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Mar 2020 15:04:28 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:48858 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbgCWTE2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 15:04:28 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48mP213YTmz1qs3f;
+        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48mP212dwFz1qyDb;
+        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id QqK1mG1Wus-J; Mon, 23 Mar 2020 20:04:24 +0100 (CET)
+X-Auth-Info: I4MqN1cNOhqaPCP1appfZmyf8HYmdhHvee0xhz+7aVc=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 23 Mar 2020 20:04:24 +0100 (CET)
+Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
+ gpio irq chip
+To:     Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200219143229.18084-1-alexandre.torgue@st.com>
+ <20200219143229.18084-3-alexandre.torgue@st.com>
+ <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
+ <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
+Date:   Mon, 23 Mar 2020 20:04:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Drop unneeded Cc's.
-
-On Mon, Mar 23, 2020 at 09:06:32PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On 2/20/20 10:17 AM, Marc Zyngier wrote:
+> On 2020-02-20 09:04, Linus Walleij wrote:
+>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
+>> <alexandre.torgue@st.com> wrote:
+>>
+>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>>> external interrupts only on edge. To be able to handle GPIO interrupt on
+>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>> chip)
+>>> is retriggered following interrupt type and gpio line value.
+>>>
+>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>> Tested-by: Marek Vasut <marex@denx.de>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> If Marc want to merge it with patch 1/2 go ahead!
 > 
-> Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
+> I'll queue the whole thing for 5.7.
 
-By the way, if you are really wanting to maintain the driver, I may give you
-(for free) Intel Galileo board where this IP is being used.
+I have a feeling this doesn't work with threaded interrupts.
 
-Send me private mail where we can discuss how to deliver.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+If the interrupt handler runs in a thread context, the EOI will happen
+almost right away (while the IRQ handler runs) and so will the code
+handling the IRQ retriggering. But since the IRQ handler still runs and
+didn't return yet, the retriggering doesn't cause the IRQ handler to be
+called again once it finishes, even if the IRQ line is still asserted.
+And that could result in some of the retriggers now happening I think.
+Or am I doing something wrong ?
