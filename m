@@ -2,110 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85A4D18F214
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 10:44:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7332B18F57B
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 14:16:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCWJoV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Mar 2020 05:44:21 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35028 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbgCWJoV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 05:44:21 -0400
-Received: by mail-qk1-f195.google.com with SMTP id k13so2794564qki.2
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Mar 2020 02:44:20 -0700 (PDT)
+        id S1728374AbgCWNQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Mar 2020 09:16:52 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37226 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbgCWNQw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 09:16:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d1so14760044wmb.2;
+        Mon, 23 Mar 2020 06:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8rk1s2n0n3WlyUexEwdaMQlRiTTXDsUBqn+ZqCiSJT0=;
-        b=2MDiU72HDQPRYZtJ/Nj3Z9lmK6+v4OUTMNRrQvhiZ50GHbwgKPFo/tk3KBqnvG4zku
-         fWpJDAcKhvLfAoE1zyHwPTvMYfeDnVZ8yERu7UTtdQhYZjTKl6r2vXy4+3HjOTOtr+75
-         zoz9YRJ9IbMk9GBwBCj3+t/V9rswMxd5t+BuW1PonyM/GIR1cDr0EWY4fgqe+LVt0hB9
-         qevFLFls95UbFzl6eru45QBA5dFhKvB4AbkAESXtBlCAEnysyZ4Yw1ewFyW6xiFkb/IX
-         BYyAU9uFQMU/BurUjV5GSeBqVOVAvwjb6+t/tXp90DWFUo3Ki6mVNdhpw84jt6wS5OjE
-         OFUw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ORf2w/9FF0BxtCkOLiJMVWgEDX2LkwMSef0JQI9tROI=;
+        b=QxYOkltnVTvfSCIvJ3A0W6Achxq5xAW15A2ViUtESmbvS+HzPTLGqg1YCn1jTN1aVu
+         nLVEL3sfYQ69UEOhLejH0BStu1fzlJIHW2ukj7pRyirqBd5jcw3/h3RPE5YWuUMvbeEt
+         dqZ4W/qr1NL3CVCTCWX6fcGKAdU8UjJB2LXfNK0Pb/7NZTjlhsh4xhJd4zE4fdunU3PP
+         GiwOin+FVbGEjfzUYJ0Mvebwwkw5N/3W+fvHfiL3+tRDxsChQIBXW4xCs0+4IpWse5tV
+         LCgndpYjcu8vn4eVjlMN1Vyzqi1zjjDThf7Rqpk+J0vblXl3813wUVGWBIvzGQKY94dh
+         wLEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8rk1s2n0n3WlyUexEwdaMQlRiTTXDsUBqn+ZqCiSJT0=;
-        b=C8TmuA8LanlBHR+6VmogcZVZqkKtSMO+cOEt5w30CapORLpBSRt6WxhId5ckGaqfq6
-         r8leKxooGXrgNg4jzgfG2u7PHlPGYEJe8Bl7vD/ZpA9Q6ih8G0QwRgyxzOyOgN7hopV7
-         J5zhgCh6AOTri7fHJ769b0j7vyiMjN2/jDuWRdgRRT18wVEP6RtNiUj8LvYmB16cjs/L
-         2xPuDCbTQz7Wu81PXWEvLjP3ZIAaoRXjLiCr7+Eq3GUQz6wwQ0VkZQvtxuGbQvkJE/iI
-         KlWLm8q/9aKiez/UaBULOAqxCyG7+4Xjs5s0lU0/rxfmTiiIgCe/iPi/qZPPdqP0+x4+
-         wVdw==
-X-Gm-Message-State: ANhLgQ3w1tcs++UtH4QbIX+gjy/wpuokbyONeMIFT0YrH/rUP2Mmdi5t
-        p/zQkG1Rm89IvbWp06sqIJaF96p60k30sbliIf9Km8Wm
-X-Google-Smtp-Source: ADFU+vuWIP58Cyj9q7Q7pmhqH70edsbdASTgISo4+iX78+rQgYON8i/I3NHqvy+PGFYxbpk+pfPSJnaiUfI98gQ5l+w=
-X-Received: by 2002:a37:7687:: with SMTP id r129mr726304qkc.263.1584956660067;
- Mon, 23 Mar 2020 02:44:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ORf2w/9FF0BxtCkOLiJMVWgEDX2LkwMSef0JQI9tROI=;
+        b=HKfgofas5jAm6zIerew5WwJH2PCp4RX/JmemJTsxpyZ+M9N+v5u18B360MBnqfN02X
+         nVSh/l3s0ZXX1CepQ3PzQXtkp33mi7I/lcwx9Yqorr6g+EuwlSO8AacrB0r8TrgEbuSU
+         tlQSU0nOPcnV5xIWfeUAW4npr8+0CIbPmeyytqdQS/y+wA05Q8L6EfuhC55wGEdKsA+k
+         cJQNLHpcq00hfoQBBOK7vsT4uixX38WQVOOxRJiuv9e+agmpxq9Pd2luhu28gACAd7+6
+         KQz3Xd5SwNaO57au0cFB7fR/HPmEg7cR2iJlTAbrkI00bkK2qHQryNNc2A2vXXFQW6Wv
+         iEpA==
+X-Gm-Message-State: ANhLgQ3em63cLHjb5oqP0l0NHMCVx7h7Pn3lPJWoilZZqAnC3+Zqk/ZX
+        jXeXK5YvgUEOn2gsIUmX30M=
+X-Google-Smtp-Source: ADFU+vuB2mMvGnpsepoopjQdP40suAURAfi95DKJ78DBWdCJtxh/IpQHPwakC2Fr0xo3a9lidHjqDg==
+X-Received: by 2002:a1c:408b:: with SMTP id n133mr26021099wma.182.1584969408394;
+        Mon, 23 Mar 2020 06:16:48 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id r15sm18136711wra.19.2020.03.23.06.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 06:16:47 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:16:46 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 0/9] pinctrl: tegra: Support SFIO/GPIO programming
+Message-ID: <20200323131646.GF3883508@ulmo>
+References: <20200319122737.3063291-1-thierry.reding@gmail.com>
+ <CACRpkdY7LnyHdX4xKrr1V8Cquched0PMNL1sFTrWT6J3fdRx=w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200322100943.GA22132@kbp1-lhp-F54859>
-In-Reply-To: <20200322100943.GA22132@kbp1-lhp-F54859>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 23 Mar 2020 10:44:09 +0100
-Message-ID: <CAMpxmJWPS_bP1CZqAfFHjtOwTKE48oy2WfPgkkit0qr-eVTF5Q@mail.gmail.com>
-Subject: Re: [PATCH] tools: gpio: Fix typo in gpio-utils
-To:     Mykyta Poturai <mykyta.poturai@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY7LnyHdX4xKrr1V8Cquched0PMNL1sFTrWT6J3fdRx=w@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-niedz., 22 mar 2020 o 11:10 Mykyta Poturai <mykyta.poturai@gmail.com>
-napisa=C5=82(a):
->
-> Replace COMSUMER with proper CONSUMER
->
-> Signed-off-by: Mykyta Poturai <mykyta.poturai@gmail.com>
-> ---
->  tools/gpio/gpio-utils.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/gpio/gpio-utils.c b/tools/gpio/gpio-utils.c
-> index 53470de..0600378 100644
-> --- a/tools/gpio/gpio-utils.c
-> +++ b/tools/gpio/gpio-utils.c
-> @@ -17,7 +17,7 @@
->  #include <linux/gpio.h>
->  #include "gpio-utils.h"
->
-> -#define COMSUMER "gpio-utils"
-> +#define CONSUMER "gpio-utils"
->
->  /**
->   * doc: Operation of gpio
-> @@ -209,7 +209,7 @@ int gpiotools_gets(const char *device_name, unsigned =
-int *lines,
->
->         ret =3D gpiotools_request_linehandle(device_name, lines, nlines,
->                                            GPIOHANDLE_REQUEST_INPUT, data=
-,
-> -                                          COMSUMER);
-> +                                          CONSUMER);
->         if (ret < 0)
->                 return ret;
->
-> @@ -259,7 +259,7 @@ int gpiotools_sets(const char *device_name, unsigned =
-int *lines,
->
->         ret =3D gpiotools_request_linehandle(device_name, lines, nlines,
->                                            GPIOHANDLE_REQUEST_OUTPUT, dat=
-a,
-> -                                          COMSUMER);
-> +                                          CONSUMER);
->         if (ret < 0)
->                 return ret;
->
-> --
-> 2.7.4
->
 
-Patch applied, thanks!
+--1Y7d0dPL928TPQbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bartosz
+On Fri, Mar 20, 2020 at 08:37:48PM +0100, Linus Walleij wrote:
+> On Thu, Mar 19, 2020 at 1:27 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+>=20
+> > This series of patches establishes the mapping of these two pins to
+> > their GPIO equivalents and implements the code necessary to switch
+> > between SFIO and GPIO modes when the kernel requests or releases the
+> > GPIOs, respectively.
+>=20
+> Is it possible to apply the gpio and pinctrl patches to
+> each tree separately?
+
+Yes, that should be possible. There's a dependency from patches 2 & 3 on
+patch 1, but since they are all for the same tree that should be fine.
+The dependency also is only a runtime dependency where the GPIO driver
+would defer probe indefinitely because no pin range would ever be added.
+So as long as patches 1-3 are applied in the order given in this series,
+everything should be okay.
+
+Thierry
+
+--1Y7d0dPL928TPQbc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl54trsACgkQ3SOs138+
+s6Hraw//WDcWXOjZtfCWb+CApaca6PA3gsr6NZLrK4iudTDwEG8zoyxLJxcA9zm/
+0OBbHHh13Wrs6JfYtNu5EIywxYBTbXBBHeHqlSMX+cJUQpetdG/QOk8AbhRNTZ6y
+a/wGxPl8Sueu0bSKedPnPkJbjF8qhb9rCz5MxhCNiEm77TszYyUJLle+LxVuZCuA
+GKPqq7wfua2SUm94tdaP9NM15NBGYvQHPei9ZuLWFv28ZAQYsKFUNY5SkOBfrjkd
+XEQGWpgmuDh/MP1+fB7XgLyl7t0GyOMbo1J1DNenfkwfqPSvdZk22wSRAzAs5Z1P
+9G5zbn6lBv0o3ndG67VbgDi8+DtSJ9i3okYpugPcRFiUJRLfsx0U3SwmeUaUJZas
+V3GMxlR9wnor8haY+ZUmcUo7i7+Omak/i3W4t5YYuOmm8+nYJjD3Vn40VQVTsJFQ
+hW7r+LiGxp0MVbg4F1h9bamoNpqiswM/nhS0zUO5DvZepHyzLxpxMABLilTE8Ssn
+09X3sgFYBZ1z0ia5qqj/5eE4vXYZR/Giln6jEuCos26vthCNCb4PYDYXuLyipciQ
+/0W+BQAI+emKc6vp09f852tOzthJwNXGpUmNZdyGeWQac6PR1GwiXiZywThVS2wc
+sbYPh3MkM40vMkMUpxUaB2snjPxbbBvtNQozaaZq3c/V/8azjxQ=
+=2kno
+-----END PGP SIGNATURE-----
+
+--1Y7d0dPL928TPQbc--
