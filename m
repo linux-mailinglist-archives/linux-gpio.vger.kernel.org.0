@@ -2,174 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3282018FE0B
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 20:49:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CFC518FE20
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 20:54:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgCWTtv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Mar 2020 15:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgCWTtv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 23 Mar 2020 15:49:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD84C2070A;
-        Mon, 23 Mar 2020 19:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584992989;
-        bh=75fCAdyH4YV81OwXKG2GRQR18TAvhiNCXmFJeaAdyck=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=y5vo+6AF3TQK2YW/tZA0Jy8AbEKmvv1Y6a4gi+YZPNOKWLQaJnYCs22QY5MeFL+Tq
-         ob/MhXhtp/8mzVoBIOuORDQL0p9rf4ph2aXEvxZygJS63Rv1lL7LtA4jfE+nD3pfz8
-         sCBHKEfhQ71SriTplZAe4wRFHMKpKehZlwZ5yUaQ=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGT51-00F3cy-U1; Mon, 23 Mar 2020 19:49:48 +0000
-Date:   Mon, 23 Mar 2020 19:49:46 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-Message-ID: <20200323194946.26bdd003@why>
-In-Reply-To: <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
-        <20200219143229.18084-3-alexandre.torgue@st.com>
-        <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
-        <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
-        <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
-        <8d6f6646-56e4-5218-9990-f0c96862dc83@denx.de>
-        <20200323193157.038f36f9@why>
-        <8e2795d8-4a8b-35a7-7d3f-e24d011878f6@denx.de>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725877AbgCWTyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Mar 2020 15:54:20 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38174 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWTyU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 15:54:20 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 97A9480307CA;
+        Mon, 23 Mar 2020 19:54:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LBgY4mT1fO6X; Mon, 23 Mar 2020 22:54:17 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/6] gpio: dwapb: Fix reference clocks usage
+Date:   Mon, 23 Mar 2020 22:53:55 +0300
+Message-ID: <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: marex@denx.de, linus.walleij@linaro.org, alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 23 Mar 2020 20:37:54 +0100
-Marek Vasut <marex@denx.de> wrote:
+From: Serge Semin <fancer.lancer@gmail.com>
 
-> On 3/23/20 8:31 PM, Marc Zyngier wrote:
-> > On Mon, 23 Mar 2020 20:19:39 +0100
-> > Marek Vasut <marex@denx.de> wrote:
-> > 
-> >> On 3/23/20 8:04 PM, Marek Vasut wrote:
-> >>> On 2/20/20 10:17 AM, Marc Zyngier wrote:
-> >>>> On 2020-02-20 09:04, Linus Walleij wrote:
-> >>>>> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
-> >>>>> <alexandre.torgue@st.com> wrote:
-> >>>>>
-> >>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
-> >>>>>> external interrupts only on edge. To be able to handle GPIO interrupt on
-> >>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
-> >>>>>> chip)
-> >>>>>> is retriggered following interrupt type and gpio line value.
-> >>>>>>
-> >>>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> >>>>>> Tested-by: Marek Vasut <marex@denx.de>
-> >>>>>
-> >>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>>>>
-> >>>>> If Marc want to merge it with patch 1/2 go ahead!
-> >>>>
-> >>>> I'll queue the whole thing for 5.7.
-> >>>
-> >>> I have a feeling this doesn't work with threaded interrupts.
-> >>>
-> >>> If the interrupt handler runs in a thread context, the EOI will happen
-> >>> almost right away (while the IRQ handler runs) and so will the code
-> >>> handling the IRQ retriggering. But since the IRQ handler still runs and
-> >>> didn't return yet, the retriggering doesn't cause the IRQ handler to be
-> >>> called again once it finishes, even if the IRQ line is still asserted.
-> >>> And that could result in some of the retriggers now happening I think.
-> >>> Or am I doing something wrong ?
-> >>
-> >> The patch below makes my usecase work, but I don't know whether it's
-> >> correct. Basically once the threaded IRQ handler finishes and unmasks
-> >> the IRQ, check whether the line is asserted and retrigger if so.
-> >>
-> >> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> index 9ac9ecfc2f34..060dbcb7ae72 100644
-> >> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> >> @@ -371,12 +371,26 @@ static void
-> >> stm32_gpio_irq_release_resources(struct irq_data *irq_data)
-> >>         gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
-> >>  }
-> >>
-> >> +static void stm32_gpio_irq_unmask(struct irq_data *d)
-> >> +{
-> >> +       struct stm32_gpio_bank *bank = d->domain->host_data;
-> >> +       int level;
-> >> +
-> >> +       irq_chip_unmask_parent(d);
-> >> +
-> >> +       /* If level interrupt type then retrig */
-> >> +       level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-> >> +       if ((level == 0 && bank->irq_type[d->hwirq] ==
-> >> IRQ_TYPE_LEVEL_LOW) ||
-> >> +           (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-> >> +               irq_chip_retrigger_hierarchy(d);
-> >> +}
-> >> +
-> >>  static struct irq_chip stm32_gpio_irq_chip = {
-> >>         .name           = "stm32gpio",
-> >>         .irq_eoi        = stm32_gpio_irq_eoi,
-> >>         .irq_ack        = irq_chip_ack_parent,
-> >>         .irq_mask       = irq_chip_mask_parent,
-> >> -       .irq_unmask     = irq_chip_unmask_parent,
-> >> +       .irq_unmask     = stm32_gpio_irq_unmask,
-> >>         .irq_set_type   = stm32_gpio_set_type,
-> >>         .irq_set_wake   = irq_chip_set_wake_parent,
-> >>         .irq_request_resources = stm32_gpio_irq_request_resources,
-> >>
-> > 
-> > OK, I see your problem now.
-> > 
-> > The usual flow is along the line of Ack+Eoi, and that's what the
-> > current code guarantees.
-> > 
-> > Threaded interrupts do Ack+Mask+Eoi, followed by an Unmask once the
-> > thread finishes. This unmask needs to do the retrigger as well, as you
-> > found out.
-> > 
-> > Can you please refactor the above so that we have the common code
-> > between unmask and eoi in a separate function, send a proper patch, and
-> > I'll apply it on top of the current irq/irqchip-5.7 branch.
-> 
-> Sure, I can. Do we still need this retriggering in the irq_eoi too ?
+There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+supported by the kernel DW APB GPIO driver. It works for them just fine with
+no modifications. But still there is a room for optimizations there.
 
-Absolutely, because that's what matters for the non-threaded case
-(there is no mask/unmask on that path). It is also never wrong to
-over-resample (it just slows things down).
+First of all as it tends to be traditional for all Baikal-T1 SoC related
+patchset we replaced the legacy plain text-based dt-binding file with
+yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+but in order to use it the corresponding reference clock must be enabled.
+We added support of that clock in the driver and made sure the dt-bindings
+had its declaration. In addition seeing both APB and debounce reference
+clocks are optional, we replaced the standard devm_clk_get() usage with
+the function of optional clocks acquisition.
 
-> Also, are there any other hidden details I might've missed ?
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-Probably. But let's fix one bug at a time, shall we? ;-) And let's hope
-that ST doesn't take this as a excuse not to clean up their act in
-their next SoC!
+Changelog v2:
+- Use a shorter summary describing the DT bindings conversion patch.
+- Add myself to the MAINTAINERS file as a maintainer of the DW APB GPIO driver.
+- Add myself to the maintainers list of the DW APB GPIO driver DT schema.
+- Print error instead of info-message if APB/debounce clocks either
+  failed to be acquired or couldn't be enabled.
+- Rearrange the SoB tags.
+- Make sure DT schema defines the lowercase hex numbers in the main dt-node
+  name and in the sub-node names.
+- Use "allOf:" statement to apply uint32 and "minimum/maximum" limitations
+  on the "snps,nr-gpios" property of the DW APB GPIO DT schema.
+- Discard "interrupts-extended" property from the DT schema.
+- Make sure the sub-nodes have names with either 'gpio-port' or
+  'gpio-controller' prefixes.
+- Our corporate email server doesn't change Message-Id anymore, so the patchset
+  is resubmitted being in the cover-letter-threaded format.
 
-Thanks,
+Changelog v3:
+- Replace S: with M: section entry in the MAINTAINERS file.
+- Cc Andy to all patches he isn't added by the auto "cc-cmd" command.
 
-	M.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (6):
+  dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
+  dt-bindings: gpio: Add DW GPIO debounce clock property
+  dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver maintainers
+  gpio: dwapb: Use optional-clocks interface for APB ref-clock
+  gpio: dwapb: Add debounce reference clock support
+  MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver
+
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       | 134 ++++++++++++++++++
+ .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
+ MAINTAINERS                                   |   1 +
+ drivers/gpio/gpio-dwapb.c                     |  41 ++++--
+ 4 files changed, 161 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+
 -- 
-Jazz is not dead. It just smells funny...
+2.25.1
+
