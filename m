@@ -2,86 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5467818FD3B
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 20:04:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A970E18FD64
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Mar 2020 20:16:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgCWTE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Mar 2020 15:04:28 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:48858 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727451AbgCWTE2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 15:04:28 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48mP213YTmz1qs3f;
-        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48mP212dwFz1qyDb;
-        Mon, 23 Mar 2020 20:04:25 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id QqK1mG1Wus-J; Mon, 23 Mar 2020 20:04:24 +0100 (CET)
-X-Auth-Info: I4MqN1cNOhqaPCP1appfZmyf8HYmdhHvee0xhz+7aVc=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 23 Mar 2020 20:04:24 +0100 (CET)
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-To:     Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200219143229.18084-1-alexandre.torgue@st.com>
- <20200219143229.18084-3-alexandre.torgue@st.com>
- <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
- <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <a7fc5e43-34c2-a4e6-e0c5-1584f17fb024@denx.de>
-Date:   Mon, 23 Mar 2020 20:04:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727758AbgCWTQp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Mar 2020 15:16:45 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37988 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727689AbgCWTQp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Mar 2020 15:16:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 75AFE80307C2;
+        Mon, 23 Mar 2020 19:16:43 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HOychBBlNtgQ; Mon, 23 Mar 2020 22:16:42 +0300 (MSK)
+Date:   Mon, 23 Mar 2020 22:16:28 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Joe Perches <joe@perches.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-gpio@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] MAINTAINERS: Add Segey Semin to maintainers of DW
+ APB GPIO driver
+Message-ID: <20200323191628.rbi2j2wk66fiyuyh@ubsrv2.baikal.int>
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+ <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323180632.14119-7-Sergey.Semin@baikalelectronics.ru>
+ <de4ee117f047874788ea64c4625c96d40ec0a35e.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <de4ee117f047874788ea64c4625c96d40ec0a35e.camel@perches.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2/20/20 10:17 AM, Marc Zyngier wrote:
-> On 2020-02-20 09:04, Linus Walleij wrote:
->> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
->> <alexandre.torgue@st.com> wrote:
->>
->>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>> external interrupts only on edge. To be able to handle GPIO interrupt on
->>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>> chip)
->>> is retriggered following interrupt type and gpio line value.
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>> Tested-by: Marek Vasut <marex@denx.de>
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> If Marc want to merge it with patch 1/2 go ahead!
+On Mon, Mar 23, 2020 at 11:36:45AM -0700, Joe Perches wrote:
+> On Mon, 2020-03-23 at 21:06 +0300, Sergey.Semin@baikalelectronics.ru
+> wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Add myself as a co-maintainer of the Synopsis DesignWare APB GPIO driver.
+> []
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -16084,6 +16084,7 @@ F:	drivers/tty/serial/8250/8250_dw.c
+> >  
+> >  SYNOPSYS DESIGNWARE APB GPIO DRIVER
+> >  M:	Hoan Tran <hoan@os.amperecomputing.com>
+> > +S:	Serge Semin <fancer.lancer@gmail.com>
 > 
-> I'll queue the whole thing for 5.7.
+> nack - S: is not the right line type prefix
+> 
+> You need to use an M: type line not an S:.
+> 
 
-I have a feeling this doesn't work with threaded interrupts.
+Ah, yeah. Will fix it in v3.
 
-If the interrupt handler runs in a thread context, the EOI will happen
-almost right away (while the IRQ handler runs) and so will the code
-handling the IRQ retriggering. But since the IRQ handler still runs and
-didn't return yet, the retriggering doesn't cause the IRQ handler to be
-called again once it finishes, even if the IRQ line is still asserted.
-And that could result in some of the retriggers now happening I think.
-Or am I doing something wrong ?
+Regards,
+-Sergey
+
+> The S: line is for subsystem status which should be one of:
+> 
+> 	S: *Status*, one of the following:
+> 	   Supported:	Someone is actually paid to look after this.
+> 	   Maintained:	Someone actually looks after it.
+> 	   Odd Fixes:	It has a maintainer but they don't have time to do
+> 			much other than throw the odd patch in. See below..
+> 	   Orphan:	No current maintainer [but maybe you could take the
+> 			role as you write your new code].
+> 	   Obsolete:	Old code. Something tagged obsolete generally means
+> 			it has been replaced by a better system and you
+> 			should be using that.
+> 
+> >  L:	linux-gpio@vger.kernel.org
+> >  S:	Maintained
+> 
+> like this...
+> 
+> >  F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> 
+> 
+> 
