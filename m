@@ -2,138 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71D1A190C0C
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 12:10:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B377190D32
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 13:20:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCXLKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Mar 2020 07:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
+        id S1727223AbgCXMUW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Mar 2020 08:20:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54156 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgCXLK3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:10:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A062720786;
-        Tue, 24 Mar 2020 11:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585048228;
-        bh=q+fr1XUysR+uZyKlppncJA/Y74Ewsk6+aW8I0yI5Bfw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=knQxveLIDh1KN9R/D4L2x/3sei3oJLnCRMmN9K8rmfSZY17PHfWmXQqS6tIM+Sxv0
-         FFQvSOcy3NHhg9WNFs4JehAdqKopz5xqshoxBg5WP1yZmMcjRJrw1mgME3EJKuJvPD
-         nvLPO8u9fje2VZ47/tEPTr95BX6e9QVdFwaB1baQ=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGhRy-00FErF-OK; Tue, 24 Mar 2020 11:10:27 +0000
-Date:   Tue, 24 Mar 2020 11:10:25 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] irqchip/stm32: Retrigger both in eoi and unmask
- callbacks
-Message-ID: <20200324111025.0523605a@why>
-In-Reply-To: <20200323235132.530550-1-marex@denx.de>
-References: <20200323235132.530550-1-marex@denx.de>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727161AbgCXMUW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:20:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=pXWFCcdJO8akl4rGuYz9ZIQj1bJiMdcrPKoInwmnqv0=; b=6XdVZySdOeqUJwBUZiP1uu6hSJ
+        RNqKrZKoX1H5ErMOy/+4NEuUpXD3WEHZgxinaQR0j0mBwW8WqzyYKSP1FDFYhSmT6ocWBEc7vLvJe
+        XOhUsnq1Qbx92j8YMcbi5OH556mcZ2mwtYRZ2q1LgrFhWh3IN5yY14foEMd/m2J6lDkg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jGiXZ-0001TW-SD; Tue, 24 Mar 2020 13:20:17 +0100
+Date:   Tue, 24 Mar 2020 13:20:17 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200324122017.GR3819@lunn.ch>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: marex@denx.de, linux-arm-kernel@lists.infradead.org, alexandre.torgue@st.com, jason@lakedaemon.net, linus.walleij@linaro.org, tglx@linutronix.de, linux-gpio@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324004413.14355-1-marek.behun@nic.cz>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 24 Mar 2020 00:51:32 +0100
-Marek Vasut <marex@denx.de> wrote:
-
-> Sampling the IRQ line state in EOI and retriggering the interrupt to
-> work around missing level-triggered interrupt support only works for
-> non-threaded interrupts. Threaded interrupts must be retriggered the
-> same way in unmask callback.
+On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
+> This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Marc Zyngier <maz@kernel.org>,
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-gpio@vger.kernel.org
-> To: linux-arm-kernel@lists.infradead.org
+> This commit caused a regression on Armada 37xx. The pinctrl driver says
+>   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+>   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> and afterwards other drivers cannot use GPIOs by this driver as IRQs.
+> 
+> Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> Cc: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/pinctrl/stm32/pinctrl-stm32.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> index 9ac9ecfc2f34..2dd4a4dd944c 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> @@ -304,18 +304,22 @@ static const struct gpio_chip stm32_gpio_template = {
->  	.get_direction		= stm32_gpio_get_direction,
->  };
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index 32f12a388b3c..5f125bd6279d 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>  		return ret;
+>  	}
 >  
-> -void stm32_gpio_irq_eoi(struct irq_data *d)
-> +static void stm32_gpio_irq_trigger(struct irq_data *d)
->  {
->  	struct stm32_gpio_bank *bank = d->domain->host_data;
->  	int level;
->  
-> -	irq_chip_eoi_parent(d);
-> -
->  	/* If level interrupt type then retrig */
->  	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
->  	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
->  	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
->  		irq_chip_retrigger_hierarchy(d);
-> +}
-> +
-> +void stm32_gpio_irq_eoi(struct irq_data *d)
+> -	nr_irq_parent = platform_irq_count(pdev);
 
-This should obviously be static. I'll amend it locally.
+Hi Marek
 
-> +{
-> +	irq_chip_eoi_parent(d);
-> +	stm32_gpio_irq_trigger(d);
->  };
->  
->  static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
-> @@ -371,12 +375,18 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
->  	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
->  }
->  
-> +static void stm32_gpio_irq_unmask(struct irq_data *d)
-> +{
-> +	irq_chip_unmask_parent(d);
-> +	stm32_gpio_irq_trigger(d);
-> +}
-> +
->  static struct irq_chip stm32_gpio_irq_chip = {
->  	.name		= "stm32gpio",
->  	.irq_eoi	= stm32_gpio_irq_eoi,
->  	.irq_ack	= irq_chip_ack_parent,
->  	.irq_mask	= irq_chip_mask_parent,
-> -	.irq_unmask	= irq_chip_unmask_parent,
-> +	.irq_unmask	= stm32_gpio_irq_unmask,
->  	.irq_set_type	= stm32_gpio_set_type,
->  	.irq_set_wake	= irq_chip_set_wake_parent,
->  	.irq_request_resources = stm32_gpio_irq_request_resources,
+Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+This patch has removed the handling of that.
 
-I'll queue this for 5.7.
+> -	if (nr_irq_parent < 0) {
+> -		if (nr_irq_parent != -EPROBE_DEFER)
+> -			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> -				ERR_PTR(nr_irq_parent));
+> -		return nr_irq_parent;
+> -	}
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks
+	Andrew
