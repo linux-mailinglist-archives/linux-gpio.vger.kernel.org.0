@@ -2,109 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 294E6191857
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 19:00:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFA53191BB2
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 22:08:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgCXR7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Mar 2020 13:59:41 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44581 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbgCXR7l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Mar 2020 13:59:41 -0400
-Received: by mail-io1-f68.google.com with SMTP id v3so18995090iot.11
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2020 10:59:41 -0700 (PDT)
+        id S1727040AbgCXVGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Mar 2020 17:06:48 -0400
+Received: from mail-pl1-f174.google.com ([209.85.214.174]:36977 "EHLO
+        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgCXVGr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Mar 2020 17:06:47 -0400
+Received: by mail-pl1-f174.google.com with SMTP id x1so3904836plm.4
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2020 14:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3/YdP/6ZBHatXWmdlHE9Atbea6809pNVDo3TmmIg+hY=;
-        b=hbA8KrXcZJOaEElrOE8LOVe+N0hSvJQfUjdDdNJNXl4yl876rjm0S18slUyuJePm6p
-         1hH8V8GCVcpEIub0vWvymgck6z4lgHphAxhkiHm8dDnYT8bDp4+GX/meMbcxCxbPGvX8
-         s2bUYqA7fo0zbB9JAAsiyZ7GTXuXXXCkcDrYYeV1vhSy9DlfWsB217cJ5G3BwAJ6YtDz
-         LSjNlRnti2O7g/SQa7GeV/t2pXw+HrlVewFE+KC8x3j0nEWW+BFiewPlNoN5rAeQ3Ivn
-         CBbSFW/FwXZtA1Tnv/2yLx5iXkZ2dO9EaI4du4gxld6m7qB+ZwBFE6ZywLOnCy4HYoTF
-         AQYg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=o/z0o79DvKPcN5WbJLUKMWCeZFYARtCTJxNBmVzTM+0=;
+        b=vX0Qt4sQPCH7pS+V0VUik/pjtJEzubZkcbDc4/zaE93tVRcFYIh26bJv+SC/42nItS
+         CtkNORGQbfh1rpfOLt0+3f2XMPjWO7FrO1McGd64GUrxxvPULhPz31I396X/jKHrNOad
+         +83nmZ+qTQEHYdxTfmKHTwD+jUTr14UV/sWWI1I76T//rLfusuYYPIGnWm3qYl/I5FDX
+         9t9+nplErs+GceaIRgXBX2cLu9nZAVp+bsIHbhZ/QwTxtjpFGxuRaNwlvRpo5ZdgA8sV
+         Csgioe5QGyAkTOrx9OKg9gTWZD04u7TQcrS8eCZUuR4vInj8rFo3MJqJOt18CyyCCPnT
+         PNxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3/YdP/6ZBHatXWmdlHE9Atbea6809pNVDo3TmmIg+hY=;
-        b=CNQeHkkSdy39IxCoAFWnuSl44Jj+46N4Y49l92nzfh4DLTAratekLXXj5+xcWbRhtm
-         gspGycMosD01MfBMTksC1W92rlSRziNihKmbbHbV5vRyaoVqU3BcySR0CqXgmQJjbEN0
-         O3t17FLXee49ECBezp4JfeP6q4zgQe8BCpHLAX80gfvLZSeLf6qRWUwrLFq4PX58DsHP
-         piwjzZ9lmTQHxi2Ok/F7ot3v8BnI9cou3eaBuLOdyIFXXUb+Ree63Zi82aGYZuMuDR3c
-         AeW0/yp3b3C+g+pU26olOLlfSRUn5Z/gwSc4zMxokLCzWHA3a5KT/2J/UPohmJe6TLYJ
-         xjrA==
-X-Gm-Message-State: ANhLgQ3/6+hwNt2LLaPLLrMmyek0Kh7jtG4tK7qBvoG56skVDPEbtqEL
-        5V3gKEIR5/sjt1rqhMv2ySUKFkeEBYcougz8RBZoWA==
-X-Google-Smtp-Source: ADFU+vsKXjUXcwzZ2JQAj+FIH1xlB2PDonLA9OClimtz00JXNl8TjYPoFyii6Ygxlbj/C2IZreWjjEIDQNNIAUKbHaU=
-X-Received: by 2002:a02:cbc3:: with SMTP id u3mr25169276jaq.114.1585072780667;
- Tue, 24 Mar 2020 10:59:40 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=o/z0o79DvKPcN5WbJLUKMWCeZFYARtCTJxNBmVzTM+0=;
+        b=HdHpg+7uuDgB+HfKuK+0mHwKytPPNCeEzDd2kQ1cpOxltaAn8kXBoSjzJb9jeXHHhZ
+         Zzg5o8Q17HhNJem7VnpSwnOGB2bhXOZx1/f2ct6ZWluCXUw8Jooj5fhPztfFfKyoVEp9
+         BOx83vSmwZhliXMKgv8D7W2O3WI0SFTslNyyNed5kjf86ZmnMHHmRFYl/LbghSYj6/Ym
+         Pzl5pnOXHVSzRFBq6qREVKSPT0qYB+KEJtfpdtJj+1V/zXReMWZv87W6auJOh3cmPKZy
+         XqG/kwovgNKTV5wEZFNt5Qyo+UKG/Owq1qguia7QnfsEuEFmeWETCwqQqsPLx9W/a23f
+         c8fw==
+X-Gm-Message-State: ANhLgQ3n3jTFgpPLoglgiVLwz6KUCznDU/jd7A5OdylzYSIhDvpiGln3
+        aU2GmEuw6jySEpuZNlQEboAbJdIYrPY=
+X-Google-Smtp-Source: ADFU+vtjIzr47CFGApPQAH9K8xAREGbPeTX/fbV71el3+LeQ1ncjy9E2z3/5+TGI4Jshd84xzUmTFQ==
+X-Received: by 2002:a17:902:b115:: with SMTP id q21mr27250042plr.337.1585084006022;
+        Tue, 24 Mar 2020 14:06:46 -0700 (PDT)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id u5sm16802206pfb.153.2020.03.24.14.06.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 14:06:45 -0700 (PDT)
+Message-ID: <5e7a7665.1c69fb81.22314.075e@mx.google.com>
+Date:   Tue, 24 Mar 2020 14:06:45 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200324082903.19366-1-brgl@bgdev.pl> <CACRpkdYk19NMMW9ua12475om-jKWWf5u8Rd=VU==2vhXRocnoA@mail.gmail.com>
- <CAMRc=Me55D2Os8KkFAbnL9-KfseYUS0=gogMrZfdzQ64to+0eg@mail.gmail.com> <CACRpkdaQQftxqVLNYeNnVzbYO+S3fKeVqshO98On+WJ2WdcALw@mail.gmail.com>
-In-Reply-To: <CACRpkdaQQftxqVLNYeNnVzbYO+S3fKeVqshO98On+WJ2WdcALw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 24 Mar 2020 18:59:29 +0100
-Message-ID: <CAMRc=Mfx-rYCC8sqtTthhzND_-k_oZxOen900q6fcZr6GZ0KKQ@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.7 part 3
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: fixes
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.6-rc3-5-g0c625ccfe6f7
+X-Kernelci-Report-Type: build
+Subject: linusw/fixes build: 6 builds: 0 failed,
+ 6 passed (v5.6-rc3-5-g0c625ccfe6f7)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 24 mar 2020 o 17:58 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Tue, Mar 24, 2020 at 1:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > wt., 24 mar 2020 o 10:05 Linus Walleij <linus.walleij@linaro.org> napis=
-a=C5=82(a):
-> > >
-> > > Hi Bartosz,
-> > >
-> > > On Tue, Mar 24, 2020 at 9:29 AM Bartosz Golaszewski <brgl@bgdev.pl> w=
-rote:
-> > >
-> > > > this is the third and probably last batch of changes for v5.7 I pic=
-ked up
-> > > > into my tree. Details are in the signed tag. Please pull.
-> > >
-> > > Which rc is this based on? I got a bunch of unrelated changes, so
-> > > I suppose I need to merge the right rc base to the devel branch
-> > > first.
-> > >
-> > > Yours,
-> > > Linus Walleij
-> >
-> > Hi Linus,
-> >
-> > this is rebased on top of your devel branch, so you should be able to
-> > pull it alright.
->
-> To me it looks like it is based on my for-next branch which is a
-> mixdown branch that I create solely for inclusion into
-> linux-next.
->
-> Can you double-check?
->
-> FWIW for-next is created like this:
-> git checkout for-next
-> git reset --hard fixes
-> git merge devel
->
-> So that branch is highly volatile and not very good for
-> development.
->
-> Yours,
-> Linus Walleij
+linusw/fixes build: 6 builds: 0 failed, 6 passed (v5.6-rc3-5-g0c625ccfe6f7)
 
-Hmm maybe I messed something up. What branch/tag do you want me to
-rebase it on then to make it the most comfortable for you?
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.6-rc3-5-g0c625ccfe6f7/
 
-Bart
+Tree: linusw
+Branch: fixes
+Git Describe: v5.6-rc3-5-g0c625ccfe6f7
+Git Commit: 0c625ccfe6f754d0896b8881f5c85bcb81699f1f
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
