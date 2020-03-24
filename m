@@ -2,70 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D19E819086F
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 10:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71D1A190C0C
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Mar 2020 12:10:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgCXJFE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Mar 2020 05:05:04 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:42485 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgCXJFE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Mar 2020 05:05:04 -0400
-Received: by mail-lj1-f181.google.com with SMTP id q19so17669213ljp.9
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Mar 2020 02:05:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SAIXqHToSo9jTaMlxPe0U+XSPNCPfimwxAOX7EBA8vQ=;
-        b=O+2CEPTm99I3oazFNaEz0F0XDKNSeEXlVVOlqnDKuRin15LiUeq820ZoCFVP0q0Pms
-         8HZPZtbXOotysXaXE3gMYkGfIKH7X9MsE4hXjjG8ynNdY21LhfgOTpdI65qSBSPNjKmI
-         qya/9U88yDBXgdXxNbO3ArpLtIwhLq9B1XVr7pJ6Xlse5HH+7G3BiiJWUM//4D7ta901
-         5iDLJ7s1msQAXYJocOT/GzsxbxyWMf6P8VchipIwaNcw9o4B5CZzgNjlaZaijrG0qHVb
-         J6IFygcOsYhxollEXj9/v1fhVpWO3UNk9gadDsFUqHUXeWSbQGZCEizfADfTK+pGq0wK
-         +sBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SAIXqHToSo9jTaMlxPe0U+XSPNCPfimwxAOX7EBA8vQ=;
-        b=qkIMd8/y2u+FmzPqqmoMVnb6L9JBvYpj8XGIH1pPXqIMdMkVbfT21coKM/rmKl2Qf7
-         5y5GrzddZTTEzvuePOfU6WbFQLMBGlqF9WUVoC0SSssUWqhsbnFwPNEDjiQGKFFdSJdU
-         RyR28HIa9zt7oNCv0E7TOZjnGA6p8CyyeHLI/d+xWlP84Dy+H/QPcw7m2T8WwWyU5J8W
-         IjCXGD9Oa0PZPvzo4XnQifLSxsSDpbPhdY/qMpqGbleHYoWy54x2B5+/KX8tVx2l+6bu
-         o4EhMSMx8jVIX9yl/bACHbzuw4PqIFuxJSypRPHmZ9p+Z+1Igr2TFTo1089yiWwnSgtC
-         Tc1A==
-X-Gm-Message-State: ANhLgQ3q6qo0cRa89Yhf6Q5/7dH7+3uTNkf9BYiuGMRplAjKqX/Ufghn
-        rCaUc9Rg1ur2Kayo5Oj0G3eo21QHy7yDwCAydf8LlbBr/C0=
-X-Google-Smtp-Source: ADFU+vuYwsP0Hycg+N3jDimLyr9N3LsHsIEVpDQ8ZTHYRnyGYYWwhecD1jrgTDAHJdFxJABRAp+/KKCe5snqAUz/qZc=
-X-Received: by 2002:a2e:9605:: with SMTP id v5mr4531862ljh.258.1585040701134;
- Tue, 24 Mar 2020 02:05:01 -0700 (PDT)
+        id S1727223AbgCXLKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Mar 2020 07:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726524AbgCXLK3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:10:29 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A062720786;
+        Tue, 24 Mar 2020 11:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585048228;
+        bh=q+fr1XUysR+uZyKlppncJA/Y74Ewsk6+aW8I0yI5Bfw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=knQxveLIDh1KN9R/D4L2x/3sei3oJLnCRMmN9K8rmfSZY17PHfWmXQqS6tIM+Sxv0
+         FFQvSOcy3NHhg9WNFs4JehAdqKopz5xqshoxBg5WP1yZmMcjRJrw1mgME3EJKuJvPD
+         nvLPO8u9fje2VZ47/tEPTr95BX6e9QVdFwaB1baQ=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jGhRy-00FErF-OK; Tue, 24 Mar 2020 11:10:27 +0000
+Date:   Tue, 24 Mar 2020 11:10:25 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Marek Vasut <marex@denx.de>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] irqchip/stm32: Retrigger both in eoi and unmask
+ callbacks
+Message-ID: <20200324111025.0523605a@why>
+In-Reply-To: <20200323235132.530550-1-marex@denx.de>
+References: <20200323235132.530550-1-marex@denx.de>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200324082903.19366-1-brgl@bgdev.pl>
-In-Reply-To: <20200324082903.19366-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Mar 2020 10:04:50 +0100
-Message-ID: <CACRpkdYk19NMMW9ua12475om-jKWWf5u8Rd=VU==2vhXRocnoA@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.7 part 3
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: marex@denx.de, linux-arm-kernel@lists.infradead.org, alexandre.torgue@st.com, jason@lakedaemon.net, linus.walleij@linaro.org, tglx@linutronix.de, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz,
+On Tue, 24 Mar 2020 00:51:32 +0100
+Marek Vasut <marex@denx.de> wrote:
 
-On Tue, Mar 24, 2020 at 9:29 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> Sampling the IRQ line state in EOI and retriggering the interrupt to
+> work around missing level-triggered interrupt support only works for
+> non-threaded interrupts. Threaded interrupts must be retriggered the
+> same way in unmask callback.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Marc Zyngier <maz@kernel.org>,
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-gpio@vger.kernel.org
+> To: linux-arm-kernel@lists.infradead.org
+> ---
+>  drivers/pinctrl/stm32/pinctrl-stm32.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 9ac9ecfc2f34..2dd4a4dd944c 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -304,18 +304,22 @@ static const struct gpio_chip stm32_gpio_template = {
+>  	.get_direction		= stm32_gpio_get_direction,
+>  };
+>  
+> -void stm32_gpio_irq_eoi(struct irq_data *d)
+> +static void stm32_gpio_irq_trigger(struct irq_data *d)
+>  {
+>  	struct stm32_gpio_bank *bank = d->domain->host_data;
+>  	int level;
+>  
+> -	irq_chip_eoi_parent(d);
+> -
+>  	/* If level interrupt type then retrig */
+>  	level = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
+>  	if ((level == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
+>  	    (level == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
+>  		irq_chip_retrigger_hierarchy(d);
+> +}
+> +
+> +void stm32_gpio_irq_eoi(struct irq_data *d)
 
-> this is the third and probably last batch of changes for v5.7 I picked up
-> into my tree. Details are in the signed tag. Please pull.
+This should obviously be static. I'll amend it locally.
 
-Which rc is this based on? I got a bunch of unrelated changes, so
-I suppose I need to merge the right rc base to the devel branch
-first.
+> +{
+> +	irq_chip_eoi_parent(d);
+> +	stm32_gpio_irq_trigger(d);
+>  };
+>  
+>  static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
+> @@ -371,12 +375,18 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
+>  	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
+>  }
+>  
+> +static void stm32_gpio_irq_unmask(struct irq_data *d)
+> +{
+> +	irq_chip_unmask_parent(d);
+> +	stm32_gpio_irq_trigger(d);
+> +}
+> +
+>  static struct irq_chip stm32_gpio_irq_chip = {
+>  	.name		= "stm32gpio",
+>  	.irq_eoi	= stm32_gpio_irq_eoi,
+>  	.irq_ack	= irq_chip_ack_parent,
+>  	.irq_mask	= irq_chip_mask_parent,
+> -	.irq_unmask	= irq_chip_unmask_parent,
+> +	.irq_unmask	= stm32_gpio_irq_unmask,
+>  	.irq_set_type	= stm32_gpio_set_type,
+>  	.irq_set_wake	= irq_chip_set_wake_parent,
+>  	.irq_request_resources = stm32_gpio_irq_request_resources,
 
-Yours,
-Linus Walleij
+I'll queue this for 5.7.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
