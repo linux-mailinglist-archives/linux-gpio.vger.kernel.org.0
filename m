@@ -2,101 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B55E519281E
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 13:22:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B15561928E7
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 13:51:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCYMWG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 08:22:06 -0400
-Received: from vm1.sequanux.org ([188.165.36.56]:55009 "EHLO vm1.sequanux.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgCYMWG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:22:06 -0400
-X-Greylist: delayed 598 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 08:22:06 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by vm1.sequanux.org (Postfix) with ESMTP id 62D7B1081EC;
-        Wed, 25 Mar 2020 13:12:07 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at vm1.sequanux.org
-Received: from vm1.sequanux.org ([127.0.0.1])
-        by localhost (vm1.sequanux.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1hVqBn0fh4OE; Wed, 25 Mar 2020 13:12:05 +0100 (CET)
-Received: from localhost (softwrestling.org [188.165.144.248])
-        by vm1.sequanux.org (Postfix) with ESMTPSA id 5EEA8108133;
-        Wed, 25 Mar 2020 13:12:05 +0100 (CET)
-Date:   Wed, 25 Mar 2020 13:12:05 +0100
-From:   Simon Guinot <simon.guinot@sequanux.org>
-To:     Nick Bowler <nbowler@draconx.ca>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: Fix gpio-f7188x module name in Kconfig help text.
-Message-ID: <20200325121205.GT21102@kw.sim.vm.gnt>
-References: <20200325005707.5891-1-nbowler@draconx.ca>
+        id S1727316AbgCYMvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 08:51:48 -0400
+Received: from smtp105.iad3b.emailsrvr.com ([146.20.161.105]:38922 "EHLO
+        smtp105.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727290AbgCYMvs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:51:48 -0400
+X-Greylist: delayed 549 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 08:51:47 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=softiron.com;
+        s=20191119-3p77dzn5; t=1585140157;
+        bh=ZXRuf5tQnXmldjtG8nfGMByOS+zlmXatmq7Rz9OdDQA=;
+        h=Subject:From:To:Date:From;
+        b=B+84GWS8Pj2Q+ZJZiyduuD/E8kK10bnrmdhCsoAeEkPg6QAgqW33DAXY9u6LjpC60
+         ypRR57M3KiCLag8GVUlC71KJKKY5rPBeO+R+ve55v/aZDb+4kYtgv2cLxWorbGOKZN
+         r9lxiSjUyo+Vc5B4ONMk+9dX9YcArWTUbYVPqE8g=
+X-Auth-ID: alan@softiron.com
+Received: by smtp6.relay.iad3b.emailsrvr.com (Authenticated sender: alan-AT-softiron.com) with ESMTPSA id 36D90200B6;
+        Wed, 25 Mar 2020 08:42:37 -0400 (EDT)
+X-Sender-Id: alan@softiron.com
+Received: from [10.1.1.115] (99-117-187-177.lightspeed.dybhfl.sbcglobal.net [99.117.187.177])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Wed, 25 Mar 2020 08:42:37 -0400
+Subject: Re: pinctrl states vs pinmux vs gpio (i2c bus recovery)
+From:   Alan Ott <alan@softiron.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     kamel.bouhara@bootlin.com, Wolfram Sang <wsa@the-dreams.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ludovic.Desroches@microchip.com,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20191206173343.GX25745@shell.armlinux.org.uk>
+ <CACRpkdZv2rzA8AbFZKq0XVBaXNJR8c5tsb+1KTZ7fNuWjm5cbQ@mail.gmail.com>
+ <20191213002010.GO25745@shell.armlinux.org.uk>
+ <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
+Message-ID: <4f9bb480-ba8d-b70e-961b-d6032232d250@softiron.com>
+Date:   Wed, 25 Mar 2020 08:42:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UEYxRAcbr7cS1UOX"
-Content-Disposition: inline
-In-Reply-To: <20200325005707.5891-1-nbowler@draconx.ca>
-User-Agent: Mutt/1.6.0 (2016-04-01)
+In-Reply-To: <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: f950c16d-b42a-4652-9c77-f844fcaebf4b-1-1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 2/27/20 11:47 AM, Alan Ott wrote:
+> On 12/12/19 7:20 PM, Russell King - ARM Linux admin wrote:
+>> On Mon, Dec 09, 2019 at 01:20:15AM +0100, Linus Walleij wrote:
+>>> Hi Russell,
+>>>
+>>> very nice description of this dual-mode problem.
+>>>
+>>> I wish I had a simple and elegant way we could make it
+>>> unambiguous and simple to use ... but it beats me right
+>>> now.
+>>>
+>>> On Fri, Dec 6, 2019 at 6:33 PM Russell King - ARM Linux admin
+>>> <linux@armlinux.org.uk> wrote:
+>>>
+>>>> One may expect:
+>>>>
+>>>>          pinctrl_select_state(i2c_imx->pinctrl, 
+>>>> i2c_imx->pinctrl_pins_default);
+>>>>
+>>>> to change them back to the default state, but that would be incorrect.
+>>>> The first thing that pinctrl_select_state() does is check whether
+>>>>
+>>>>          p->state == state
+>>>>
+>>>> which it will do, as the pinctrl layer hasn't been informed of the
+>>>> change that has happened behind its back at the pinmux level.
+>>> Some pin controllers have the .strict property set
+>>> in their struct pinmux_ops:
+>>>
+>>> * @strict: do not allow simultaneous use of the same pin for GPIO and 
+>>> another
+>>> *      function. Check both gpio_owner and mux_owner strictly before 
+>>> approving
+>>> *      the pin request.
+>>>
+>>> The non-strict pin controllers are those that actually allow GPIO
+>>> and device functions to be used on the same physical line at the
+>>> same time. In this case there is not special GPIO mode for the
+>>> line in some muxing registers, they are just physically connected
+>>> somehow.
+>>>
+>>> One usecase is sort of like how tcpdump work for
+>>> ethernet interfaces: a GPIO register can "snoop" on a pin while
+>>> in used by another device.
+>>>
+>>> But it would notably also allow you to drive the line and interfere
+>>> with the device. Which is exactly what this I2C recovery mechanism
+>>> does, just that its pin controller is actually strict, will not allow
+>>> the same line to be used for GPIO and some other function at the
+>>> same time, so I suppose i.MX should probably explore the
+>>> strict mode.
+>>>
+>>> Enabling that will sadly make the problem MORE complex
+>>> for this I2C recovery, requiring a cycle of
+>>> gpiod_put()/gpiod_get() to get it released from GPIO mode, i.e.
+>>> we would need to just get the GPIO when this is strictly needed.
+>>> Using devm_gpiod_get() and keeping a reference descriptor
+>>> around would not work all of a sudden.
+>>>
+>>> I am thinking whether we can handle the non-strict controllers
+>>> in a more elegant way, or add some API to explicitly hand over
+>>> between device function and GPIO function. But I can't really
+>>> see some obvious solution.
+>> What I'm currently trying is (error handling removed for brevity):
+>>
+>>     struct i2c_bus_recovery_info *bri = &i2c->recovery;
+>>
+>>          i2c->pinctrl = devm_pinctrl_get(dev);
+>>          i2c->pinctrl_default = pinctrl_lookup_state(i2c->pinctrl,
+>>                                                      
+>> PINCTRL_STATE_DEFAULT);
+>>          i2c->pinctrl_recovery = pinctrl_lookup_state(i2c->pinctrl,
+>>                              "recovery");
+>>          bri->sda_gpiod = devm_gpiod_get(dev, "sda", 
+>> GPIOD_OUT_HIGH_OPEN_DRAIN);
+>>          bri->scl_gpiod = devm_gpiod_get(dev, "scl", 
+>> GPIOD_OUT_HIGH_OPEN_DRAIN);
+>>
+>>     pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery);
+>>     return pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_default);
+>>
+>> which seems good enough to get the pins back into i2c mode after the
+>> gpios are obtained.  Then we switch the pinctrl state between
+>> pinctrl_recovery and pinctrl_default as we have need to.
+>>
+>> The problem is, the generic i2c bus recovery code wants the gpiod
+>> descriptors to be setup and inplace by the time i2c_init_recovery()
+>> is called (which is called when the adapter is registered) so
+>> holding off until we need to do recovery doesn't work.
+>>
+>> This seems to work for this SoC I'm currently working with, but I
+>> think there's more on the horizon - I'm having the same problems
+>> on another SoC which also needs bus recovery implemented, and as
+>> the problem device is behind an I2C bus mux, when it locks the I2C
+>> bus, it kills all I2C buses rooted at that particular SoC I2C
+>> controller.  However, there's a problem - the pinctrls for that SoC
+>> are set by ROM firmware at boot time by reading a table from the
+>> boot media.  *Unprintables about firmware being too way limiting*. :p
+>>
+ >
+> Hi all, what's the current state of this? I can confirm that this is 
+> broken with the at91 i2c controller's recovery mode[1], which is 
+> implemented exactly the same as other i2c master recovery modes, so I 
+> suspect them to be broken as well.
+> 
+> I'm using 5.5.6 with this patch applied (which adds the recovery):
+>      https://patchwork.kernel.org/cover/11333883/
+> 
+> It worked fine with 5.2, but has now broken, the way Russell describes, 
+> in 5.5.6 and also on the latest 5.6-rc3. Russell's suggested workaround 
+> of setting the pinctrl to recovery (gpio) and then back to default does 
+> make it work.
+> 
+> Alan.
+> 
+> [1] currently the patch for i2c recovery for at91 is accepted to Wolfram 
+> Sang's for-next tree.
+> 
 
---UEYxRAcbr7cS1UOX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is there any word on this?
 
-On Tue, Mar 24, 2020 at 08:57:07PM -0400, Nick Bowler wrote:
-> The Kconfig help text for the gpio-f7188x driver says that if you
-> compile the driver as a module, the module will be called f7188x-gpio.
-> This is a lie: the module is called gpio-f7188x.
-
-And what about just a mistake ? :)
-
-Acked-by: Simon Guinot <simon.guinot@sequanux.org>
-
->=20
-> Change the help text to be consistent with reality.
->=20
-> Signed-off-by: Nick Bowler <nbowler@draconx.ca>
-> ---
->  drivers/gpio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index b8013cf90064..8cf91a9fbd18 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -755,7 +755,7 @@ config GPIO_F7188X
->  	  chips F71869, F71869A, F71882FG, F71889F and F81866.
-> =20
->  	  To compile this driver as a module, choose M here: the module will
-> -	  be called f7188x-gpio.
-> +	  be called gpio-f7188x.
-> =20
->  config GPIO_GPIO_MM
->  	tristate "Diamond Systems GPIO-MM GPIO support"
-> --=20
-> 2.24.1
-
---UEYxRAcbr7cS1UOX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXW8DgovlR3VS5hA0zyg/RDPmszoFAl57SpQACgkQzyg/RDPm
-szq0dhAA2ihNwvtRWWIsdol4+p0cNGJCknIZv8lw/Jjm0GNbqo9nsRHuG5zFSowu
-G+u8NTUVKMqymYOn7jIDWqQH7Yc+xlGrKwJqRTCg+xvZhS1Pa4k+ocxn2m5hIFbv
-XR37R9Nn6gAQ6vvn1J5aIfaRLa953KkQ4fbmiExP0umTOAqj+AjHK6Tj0b4QtyD7
-3XPjgnKHWRNKkGFq5dLr67dRrLKx71WA1SUxBND/rRrty1rFnJhFXU8MfAiBZUpm
-X6WUtZQYx++OhHKBV9VPv0/psjbdIrUu9u1CMjL0dF1Ge20OQZuRRVzDPDYpFXOk
-IOypuEUSbwfLKA+fAgYYjIpsQMeEyudgXafnxNodbGPZyLi56Lv+jINErqsyS6OL
-b/rUCJQM4KSxdQLlvkVELTPnyO0aRCcDfSKap59YraLHF1yrbreQKi5e3RzTahmA
-eXsZ32mUMjTao7yJs1fzyWXxIrZcH2jczuy84f3eOgVekdWbUoqdRcOzuXp9ym5I
-XaNtr9ZdzpF4nsh1AimrVEKQSsZ7lya8O85a3R0OCkod6C4EpPYq9JGaMFZ2zNRz
-9opISQWXoE9USG1U1y0IaayWzGPD6YT0sM9rlZG/KQYc1AAMBL4xqO9rtUeWQxPY
-ZUfsSaSffU98oUlJVhypXFvQK9yCaiiKIy4jCjB/+gEja64ft58=
-=Qx7s
------END PGP SIGNATURE-----
-
---UEYxRAcbr7cS1UOX--
+Alan.
