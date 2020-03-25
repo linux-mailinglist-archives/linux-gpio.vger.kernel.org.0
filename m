@@ -2,108 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E808192298
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 09:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6523F192355
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 09:54:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCYIZp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 04:25:45 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41099 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgCYIZo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 04:25:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z65so697115pfz.8;
-        Wed, 25 Mar 2020 01:25:44 -0700 (PDT)
+        id S1727281AbgCYIy2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 04:54:28 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38432 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgCYIy2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 04:54:28 -0400
+Received: by mail-io1-f67.google.com with SMTP id m15so1443910iob.5
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 01:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=k5nOeJi4Mzd9odPDFONA/SAXJ8f92PxzBPduQMyeDMg=;
-        b=T9vBDhRIuJ/D4GuLLWk1B2GH9o4nQUMiMvyO/DOEChiaJ6t/tuw7xmiLP+LlFMxIFM
-         UvvL8XrqBw+azqnqS2sctnNXq1QuSOvU9PDaqF4IB3aLHn9zxRX68ANMOYqzjj/Mwn33
-         vELG+OQBlWQd2ssSPgMw/PXWG+8jAfCMFQnbtlYmbQmMRRoirop9gjnqwXG/XNfVjxsi
-         4OdgtDS9S6or25MDmw4Hl256Au0jUVvVy+Guf/HWSh4WdgsVIdVj+KyDuQHuKdgu3fKP
-         MbBEcp5QDZg6F1ANonYaHSxQ5G/VEgEXfWwwSBlWHtwIMm8UsTQTaPQwxr+a2vEq+3Db
-         IqCw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W2aO09GaLIA//OMpryPJlfnUBRQNatfNyS/NGPJVmt0=;
+        b=l7Wd4avBr3tySjTbJroFT1B9WaF0E2Axi9USU3FzFUiWaxqqxB/7FNmUpoaKaK+Orj
+         d2olp8y7qKCXsr2uS8G4JQcxWJgb5M21St3LbEO66QYYtaAin54Djg35xBXa0s+k2L8e
+         4XlR0u/5PQZiGFYNoEy2X8Yv0bot7Kn2YDSqsgCuP4SX9yWEZ//ZeoZxhLc/v1JhtbBj
+         Uh1DuDeslVSHiHIDn3Pchy/wmX6sPfK1cPFrKsp/qSB2n8ML7WdnTBhcQFHiioo5Tf0W
+         TGwxOsqf46jaAegqPJ+EV3HNDXpCON25uxEPsjPehosRCLT8ExZCMrqkrLxniGatLlJh
+         /bxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=k5nOeJi4Mzd9odPDFONA/SAXJ8f92PxzBPduQMyeDMg=;
-        b=Cg5EjHfLuqbCg8OjOdv6IYQZOzFh0azQzlGQGqKBUrN39VDHxNEgS8YLw3obkPEQsH
-         QgtlcqwpuHErO7jdwVm0CCYRg92kt0cBqov9WCYmn1780hdc35f/cHkGBWLVZ0Xnvw1K
-         nftiECnECMq+QqMsgKKBuJvFd6SNdKhDr4bur7oHJ7PyF8SvV4R7Nt36ze/T+CbS6IF9
-         bxnuciIe6Fltv6lf5WTiLB2Mlz1R4AHKQzeYT6OJrjUG+9qFOS1mUtkNixsqBBUPgEwV
-         76wp6dmkZ0NGdd0V7XrHMktA3hPF7WB6rwuPhAP/Kbew0InSeelL8MyBwGks/Wpiun1g
-         7g6g==
-X-Gm-Message-State: ANhLgQ1qkLU1IzBUAwBYw49XafFKoc5zsRZOY+T7LcIFGeQEYFBpleZE
-        RNcLY8UufRS0YMjS4UERR+s=
-X-Google-Smtp-Source: ADFU+vvNaXY1frNB5B6Wlr9zXp9E18HadbWvofvIBtet/xd8IHoM24/LYt9vgvOwHunuCwB7JHAEug==
-X-Received: by 2002:a62:5a03:: with SMTP id o3mr2154368pfb.301.1585124743957;
-        Wed, 25 Mar 2020 01:25:43 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id v123sm15764340pfv.41.2020.03.25.01.25.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 25 Mar 2020 01:25:43 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     linhua.xu@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        baolin.wang7@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] pinctrl: sprd: Add pin high impedance mode support
-Date:   Wed, 25 Mar 2020 16:25:28 +0800
-Message-Id: <3bdac4c2673b54c940e511f3fa569ee33b87b8d5.1585124562.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
-References: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
-In-Reply-To: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
-References: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W2aO09GaLIA//OMpryPJlfnUBRQNatfNyS/NGPJVmt0=;
+        b=hpkwJe4SlbIuPKz0A/yxnzAjvk6qV3qViCuVaRF72yw8s94Yr7vkOKss2PzYJuoGmE
+         ZN8NNyTv1BQpgEe1GSMbCDfz4yX8J5/PpkLo4AtKEtT/Q+u/D6gLrZaegqPP2A/avvtl
+         ayclVnqv8XnNQUnjXrMFxVkKpoaKKduD+TOFCEUrFyXMz9GUd/5VkTBb71RlrY2Dksj1
+         AFv2zJnPn54Dd+uuG5PvWc2AQsyZkfTlwV7zg3UVcBjjkeRXJ8IbYENlFndLGh+D/zUK
+         7IdDvTPhTxnDlMG+JsDJwsw1K9FUsJrWY57HZuTN8kx+LFBf/pSzRskEtL2g3uMWTTff
+         2EuA==
+X-Gm-Message-State: ANhLgQ0vM534tKxJa33zvhZ8Tdpj0wOoef//SVJ9fGueQ1kaYyIi1ufu
+        Qu3odoMw+DeB/wz/EgAa6M8O9f4QJkSNV8mpluvLvQ==
+X-Google-Smtp-Source: ADFU+vtIRncY7HcI4oekbiMR8AFXoSIEI2ly47rx88dyx6k9Fn0z2aEvCxU4x2ktrYoxK1aB5kqUlbZhbERPo2WEglk=
+X-Received: by 2002:a02:a882:: with SMTP id l2mr1951442jam.102.1585126466058;
+ Wed, 25 Mar 2020 01:54:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324082903.19366-1-brgl@bgdev.pl> <CACRpkdYk19NMMW9ua12475om-jKWWf5u8Rd=VU==2vhXRocnoA@mail.gmail.com>
+ <CAMRc=Me55D2Os8KkFAbnL9-KfseYUS0=gogMrZfdzQ64to+0eg@mail.gmail.com>
+ <CACRpkdaQQftxqVLNYeNnVzbYO+S3fKeVqshO98On+WJ2WdcALw@mail.gmail.com>
+ <CAMRc=Mfx-rYCC8sqtTthhzND_-k_oZxOen900q6fcZr6GZ0KKQ@mail.gmail.com> <CACRpkdbbJp91_tZaX-c5Mbhjm3Yf_ah-SjFjZ-kfF1TJNmZefA@mail.gmail.com>
+In-Reply-To: <CACRpkdbbJp91_tZaX-c5Mbhjm3Yf_ah-SjFjZ-kfF1TJNmZefA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 25 Mar 2020 09:54:15 +0100
+Message-ID: <CAMRc=MeJzUPygg0D_9zpXXDP6i8JP5khRJfsm5NrfnnHQ-Pk3Q@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: updates for v5.7 part 3
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Linhua Xu <linhua.xu@unisoc.com>
+wt., 24 mar 2020 o 22:15 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
+=82(a):
+>
+> On Tue, Mar 24, 2020 at 6:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> > wt., 24 mar 2020 o 17:58 Linus Walleij <linus.walleij@linaro.org> napis=
+a=C5=82(a):
+> > >
+> > > On Tue, Mar 24, 2020 at 1:34 PM Bartosz Golaszewski <brgl@bgdev.pl> w=
+rote:
+> > > > wt., 24 mar 2020 o 10:05 Linus Walleij <linus.walleij@linaro.org> n=
+apisa=C5=82(a):
+> > > > >
+> > > > > Hi Bartosz,
+> > > > >
+> > > > > On Tue, Mar 24, 2020 at 9:29 AM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > > > >
+> > > > > > this is the third and probably last batch of changes for v5.7 I=
+ picked up
+> > > > > > into my tree. Details are in the signed tag. Please pull.
+> > > > >
+> > > > > Which rc is this based on? I got a bunch of unrelated changes, so
+> > > > > I suppose I need to merge the right rc base to the devel branch
+> > > > > first.
+> > > > >
+> > > > > Yours,
+> > > > > Linus Walleij
+> > > >
+> > > > Hi Linus,
+> > > >
+> > > > this is rebased on top of your devel branch, so you should be able =
+to
+> > > > pull it alright.
+> > >
+> > > To me it looks like it is based on my for-next branch which is a
+> > > mixdown branch that I create solely for inclusion into
+> > > linux-next.
+> > >
+> > > Can you double-check?
+> > >
+> > > FWIW for-next is created like this:
+> > > git checkout for-next
+> > > git reset --hard fixes
+> > > git merge devel
+> > >
+> > > So that branch is highly volatile and not very good for
+> > > development.
+> > >
+> > > Yours,
+> > > Linus Walleij
+> >
+> > Hmm maybe I messed something up. What branch/tag do you want me to
+> > rebase it on then to make it the most comfortable for you?
+>
+> v5.6-rc1 or my devel branch (e.g if you have some deps) works fine, thank=
+s! :)
+>
+> I tend to base all next development on -rc1 unless there is some big
+> bug fix, then I pull in some later -rc as well.
+>
+> Linus
 
-For Spreadtrum pin controller, it will be the high impedance
-mode if disable input and output mode for a pin. Thus add
-PIN_CONFIG_BIAS_HIGH_IMPEDANCE configuration to support it.
+Ok, current devel branch from your tree it is. I'll send it as part4
+in order not to delete existing signed tags.
 
-Signed-off-by: Linhua Xu <linhua.xu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/pinctrl/sprd/pinctrl-sprd.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
-index 8e39610..48cbf2a 100644
---- a/drivers/pinctrl/sprd/pinctrl-sprd.c
-+++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
-@@ -467,6 +467,12 @@ static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 		case PIN_CONFIG_OUTPUT_ENABLE:
- 			arg = reg & SLEEP_OUTPUT_MASK;
- 			break;
-+		case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+			if ((reg & SLEEP_OUTPUT) || (reg & SLEEP_INPUT))
-+				return -EINVAL;
-+
-+			arg = 1;
-+			break;
- 		case PIN_CONFIG_DRIVE_STRENGTH:
- 			arg = (reg >> DRIVE_STRENGTH_SHIFT) &
- 				DRIVE_STRENGTH_MASK;
-@@ -646,6 +652,12 @@ static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
- 					shift = SLEEP_OUTPUT_SHIFT;
- 				}
- 				break;
-+			case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
-+				if (is_sleep_config == true) {
-+					val = shift = 0;
-+					mask = SLEEP_OUTPUT | SLEEP_INPUT;
-+				}
-+				break;
- 			case PIN_CONFIG_DRIVE_STRENGTH:
- 				if (arg < 2 || arg > 60)
- 					return -EINVAL;
--- 
-1.9.1
-
+Bart
