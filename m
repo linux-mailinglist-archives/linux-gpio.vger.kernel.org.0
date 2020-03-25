@@ -2,96 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33580192507
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:04:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 236B81925FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:42:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgCYKEp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 06:04:45 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:59656 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCYKEo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 06:04:44 -0400
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id Ja4k220035USYZQ01a4kxT; Wed, 25 Mar 2020 11:04:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tw-00033y-2V; Wed, 25 Mar 2020 11:04:44 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tw-0003ei-1c; Wed, 25 Mar 2020 11:04:44 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
+        id S1727272AbgCYKmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 06:42:10 -0400
+Received: from mail.bitwise.fi ([109.204.228.163]:34558 "EHLO mail.bitwise.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbgCYKmK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:42:10 -0400
+X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 06:42:09 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.bitwise.fi (Postfix) with ESMTP id A2E5160054;
+        Wed, 25 Mar 2020 12:33:10 +0200 (EET)
+X-Virus-Scanned: Debian amavisd-new at mail.bitwise.fi
+Received: from mail.bitwise.fi ([127.0.0.1])
+        by localhost (mail.bitwise.fi [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id q1tYnBd_Bn1G; Wed, 25 Mar 2020 12:33:07 +0200 (EET)
+Received: from localhost.localdomain (fw1.dmz.bitwise.fi [192.168.69.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: anssiha)
+        by mail.bitwise.fi (Postfix) with ESMTPSA id 443EA6004B;
+        Wed, 25 Mar 2020 12:33:07 +0200 (EET)
+From:   Anssi Hannula <anssi.hannula@bitwise.fi>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
-Date:   Wed, 25 Mar 2020 11:04:39 +0100
-Message-Id: <20200325100439.14000-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325100439.14000-1-geert+renesas@glider.be>
-References: <20200325100439.14000-1-geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, stable@vger.kernel.org,
+        Laura Abbott <labbott@redhat.com>
+Subject: [PATCH] tools: gpio: Fix out-of-tree build regression
+Date:   Wed, 25 Mar 2020 12:31:54 +0200
+Message-Id: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
+X-Mailer: git-send-email 2.21.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gpio_set_bias() no longer uses the passed gpio_chip pointer parameter.
-Remove it.
+Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+instead of the correct $(OUTPUT) for the output directory, breaking
+out-of-tree build (O=xx) with the following error:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+
+Fix that.
+
+Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+Cc: <stable@vger.kernel.org>
+Cc: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
 ---
- drivers/gpio/gpiolib.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8eeb29de12cb5811..7e3c19bd21cdf327 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3264,7 +3264,7 @@ static int gpio_set_config(struct gpio_desc *desc, enum pin_config_param mode)
- 	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
- }
+The 0161a94e2d1c was also applied to stable releases, which is where I
+got hit by the issue.
+
+ tools/gpio/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+index 842287e42c83..440434027557 100644
+--- a/tools/gpio/Makefile
++++ b/tools/gpio/Makefile
+@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux/gpio.h
  
--static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-+static int gpio_set_bias(struct gpio_desc *desc)
- {
- 	int bias = 0;
- 	int ret = 0;
-@@ -3330,7 +3330,7 @@ int gpiod_direction_input(struct gpio_desc *desc)
- 	}
- 	if (ret == 0) {
- 		clear_bit(FLAG_IS_OUT, &desc->flags);
--		ret = gpio_set_bias(chip, desc);
-+		ret = gpio_set_bias(desc);
- 	}
+ prepare: $(OUTPUT)include/linux/gpio.h
  
- 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
-@@ -3414,7 +3414,6 @@ EXPORT_SYMBOL_GPL(gpiod_direction_output_raw);
-  */
- int gpiod_direction_output(struct gpio_desc *desc, int value)
- {
--	struct gpio_chip *gc;
- 	int ret;
+-GPIO_UTILS_IN := $(output)gpio-utils-in.o
++GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
+ $(GPIO_UTILS_IN): prepare FORCE
+ 	$(Q)$(MAKE) $(build)=gpio-utils
  
- 	VALIDATE_DESC(desc);
-@@ -3432,7 +3431,6 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 		return -EIO;
- 	}
- 
--	gc = desc->gdev->chip;
- 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
- 		/* First see if we can enable open drain in hardware */
- 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_DRAIN);
-@@ -3458,7 +3456,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 	}
- 
- set_output_value:
--	ret = gpio_set_bias(gc, desc);
-+	ret = gpio_set_bias(desc);
- 	if (ret)
- 		return ret;
- 	return gpiod_direction_output_raw_commit(desc, value);
 -- 
-2.17.1
+2.21.1
 
