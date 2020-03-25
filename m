@@ -2,64 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4592192743
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 12:36:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E76C192788
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 12:51:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCYLgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 07:36:07 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39572 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCYLgH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 07:36:07 -0400
-Received: by mail-qk1-f194.google.com with SMTP id b62so2108763qkf.6
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 04:36:06 -0700 (PDT)
+        id S1727253AbgCYLvG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 07:51:06 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38268 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgCYLvG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 07:51:06 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h14so2152065qke.5
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 04:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=bSc9mBMtLwWQfwKgquoZTlMfgszjByzVoNHeKAodWUs=;
-        b=emz1+nz3y4wvNriGJwoIRqoV4ci7HwNm85PTpB/38lXN0Ja9bOf5HMyriN27EMwQkA
-         I6/jfJ2upb3hvkU3Ey40vobcv67jc9Q4BvFoGWrN5Yfc7TKXqja99vetjVG4C0w/ktkD
-         rCQLMtaYIurWO/vFvXB26Ki2WEoGZFX939E2TfMNSuWy2469Ve/OoBSx4xS86OFaJP7w
-         ZfSiWBPzFNPbfu1peFPSPg62RcHnzEDORJMMc6zXOiNQNfNsx0LAHAtW7JhLzrlgeIsb
-         Vc1JD73KKDVJVx8EMJNeBpDJMnPyD5oC4kYNJDMp8Z2aO80yd2xLz9Ft9VW6vMc39IRh
-         TMSw==
+        bh=8suGbOv0KrKKY7ywNkDRCgN2erCkDVAGfrjce5eT7LY=;
+        b=1GWMXzOKeIXJBjVHjUwj8wXPlI767hXa11eLOTR95pFTmfBHOLr61uRyiMBFC3jwDU
+         o2nfFuOG+Kmp633HsQNLXnVgaPV6AXSydeNFizGdYTRN9Pr2UzdpRe76JvAspLRVG3f8
+         bDU0s0BsXNQ43BGzvjWKZ+Xapt9FpfR2i9litpkjhm8m8ZIKYcWgCoAeFUcZZD8fDMpn
+         XweI5PbSAbZg3jqE2f0FtzuBLP6wDphnT9dbdf4wqg28zdApPq0nD4P6V/wgKYf5jfqS
+         3XWj6pSdG9LvURmxc/sXA7fisSyXa1fxV3ItKsJ0I0IFM9frVfEx9ELzhWaK/rWwnjDN
+         TaTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bSc9mBMtLwWQfwKgquoZTlMfgszjByzVoNHeKAodWUs=;
-        b=QlOtDgpXN05WOsrx4+4vGP/0RMqvXK3kilTf1Cey43xakE4PoxyjJuB3koSuzGflZd
-         0a9UDRAZnj/mAnPnk3tVbCwdHOhaQONCUUjEi4eJjDzrwCisnYZhHmha9joTN0UyNrxZ
-         CGaoXKD0SCe7AGnxKZVAAuiuPrH4ROPmHRhZSR/myvVzKQPHZV3mPEbxQgIOsf7z5fbT
-         XHRFiEx9hkg+WM0KUjPayzO5kv3bjagEDGEfAvAmPwVpHu0279eHMwsopxT+tmItm/EY
-         TEs6ngCMC48d28on/4Bu+QksQRudEdlWCKVuAgsBLzMAQ5YC34LKtoH8/O/czTo7e9i5
-         6w8A==
-X-Gm-Message-State: ANhLgQ0+aFtL//Lf/Pq/IPpgGE2gpg6OpInEfY3d0LPeEgPZJp7hc62l
-        0CWZX2+oTmYApfRfUll4pdOd6ZwJ0nUuhyl5cXN9ZQ==
-X-Google-Smtp-Source: ADFU+vulW3rcFWA4Rup1YiyivwdmvSxJzrHPxnTXjr9Wh5EcRjyi8bY3bUNqPEDPbEtw9JdXo/Z4SNjuFFhobVSlFys=
-X-Received: by 2002:a37:3c9:: with SMTP id 192mr2446179qkd.330.1585136165908;
- Wed, 25 Mar 2020 04:36:05 -0700 (PDT)
+        bh=8suGbOv0KrKKY7ywNkDRCgN2erCkDVAGfrjce5eT7LY=;
+        b=eWYvC5yrBGz7kugetdWZVD5Jv0uhzx4gQo/F0iY4mHamYGMSsFAws3DOiKKdwZzVyn
+         kXsqyeKwEYF96c8buD2clmo/cbD00jqV9wcJR5epXw2k0fYmK5+EF8L9+/6DU/s6rNzR
+         My+8xS5yQY4s3KyGEAbO0+kSQ+CQRzzSR/GuczCPYe7Z6kW4rxe0eTlCiwWbFsrWVAm2
+         +5ppLL8nmQH74P0BQUKoMzV19E61vnmTH79SX3PlHPhRxXgZN+jTa2WdlMP1lu2mfMLl
+         Ll8G3m1LdslMyRKg0gSBlSd190coj+7hrd6+s7ykffHak+rxuJOVPbu2V8rhdjeNWWwW
+         yw/g==
+X-Gm-Message-State: ANhLgQ0PLcwVuosaAsVpP3waW4gSqNpRraS6YfPPRJxavUgZPeVnloS5
+        4FHffvNKPg81LxkdurYOSOcMnz9XDX4U5uNJuGBuqA==
+X-Google-Smtp-Source: ADFU+vv8eje3pHIbt746kBlQLZsvROTbkBWjO7AjHeLMErwQUztDbBRQRA/LvttrBTFe4LDOdykEHjVw0I5D2TCyC2I=
+X-Received: by 2002:ae9:e90e:: with SMTP id x14mr2378644qkf.323.1585137064323;
+ Wed, 25 Mar 2020 04:51:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com>
- <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
- <CAMpxmJX_Jqz97bp-nKtJp7_CgJ=72ZxWkEPN4Y-dpNpqEwa_Mg@mail.gmail.com>
- <CACRpkdYpers8Zzh9A3T0mFSyZYDcrjfn9iaQn92RkVHWE+GinQ@mail.gmail.com>
- <CAMRc=MdLYD3CeFtp4jF+-P+4kSmt1sAezrkPFk5rK4=whNEWuA@mail.gmail.com>
- <CAMRc=MfEo6=im5EPHYtht3xN83k+rcRgQDSOB=Ucs52M8RWirg@mail.gmail.com> <CACRpkdY1u2xEFzJPrat73me11wdY9uGCK=FWWWzLkBY505JrUw@mail.gmail.com>
-In-Reply-To: <CACRpkdY1u2xEFzJPrat73me11wdY9uGCK=FWWWzLkBY505JrUw@mail.gmail.com>
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com> <9c310f2a11913d4d089ef1b07671be00@walle.cc>
+In-Reply-To: <9c310f2a11913d4d089ef1b07671be00@walle.cc>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 25 Mar 2020 12:35:55 +0100
-Message-ID: <CAMpxmJXXdmW_2MhUSGYZGy8xWy=oQKgng+cphzU-WDqQUKe=Dw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Khouloud Touil <ktouil@baylibre.com>
+Date:   Wed, 25 Mar 2020 12:50:53 +0100
+Message-ID: <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -67,34 +75,561 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 25 mar 2020 o 12:16 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
+=C5=9Br., 18 mar 2020 o 13:45 Michael Walle <michael@walle.cc> napisa=C5=82=
+(a):
 >
-> On Mon, Mar 23, 2020 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
+> Hi Bartosz,
 >
-> > Hi Linus,
+> Am 2020-03-18 10:14, schrieb Bartosz Golaszewski:
+> > wt., 17 mar 2020 o 21:50 Michael Walle <michael@walle.cc> napisa=C5=82(=
+a):
+> >>
+> >> This adds support for the GPIO controller of the sl28 board management
+> >> controller. This driver is part of a multi-function device.
+> >>
+> >> Signed-off-by: Michael Walle <michael@walle.cc>
 > >
-> > what is your decision on this? Because if we don't merge this, then we
-> > need to make sure nvmem doesn't call gpiod_put() for descriptors it
-> > didn't obtain itself and we should probably fix it this week.
+> > Hi Michael,
+> >
+> > thanks for the driver. Please take a look at some comments below.
 >
-> I'm simply just overloaded right now, things related to how the world
-> looks etc. Also Torvalds writes in Documentation/process/management-style=
-.rst
-> that if someone ask you to make a decision, you are screwed :/
+> well, thank you for the very fast review!
+>
+> >> ---
+> >>  drivers/gpio/Kconfig         |  11 ++
+> >>  drivers/gpio/Makefile        |   1 +
+> >>  drivers/gpio/gpio-sl28cpld.c | 332
+> >> +++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 344 insertions(+)
+> >>  create mode 100644 drivers/gpio/gpio-sl28cpld.c
+> >>
+> >> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> >> index 3cbf8882a0dd..516e47017ef5 100644
+> >> --- a/drivers/gpio/Kconfig
+> >> +++ b/drivers/gpio/Kconfig
+> >> @@ -1211,6 +1211,17 @@ config GPIO_RC5T583
+> >>           This driver provides the support for driving/reading the
+> >> gpio pins
+> >>           of RC5T583 device through standard gpio library.
+> >>
+> >> +config GPIO_SL28CPLD
+> >> +       tristate "Kontron sl28 GPIO"
+> >> +       depends on MFD_SL28CPLD
+> >> +       depends on OF_GPIO
+> >> +       select GPIOLIB_IRQCHIP
+> >
+> > Please see below - I think both are not needed.
+> >
+> >> +       help
+> >> +         This enables support for the GPIOs found on the Kontron sl28
+> >> CPLD.
+> >> +
+> >> +         This driver can also be built as a module. If so, the module
+> >> will be
+> >> +         called gpio-sl28cpld.
+> >> +
+> >>  config GPIO_STMPE
+> >>         bool "STMPE GPIOs"
+> >>         depends on MFD_STMPE
+> >> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> >> index 0b571264ddbc..0ca2d52c78e8 100644
+> >> --- a/drivers/gpio/Makefile
+> >> +++ b/drivers/gpio/Makefile
+> >> @@ -127,6 +127,7 @@ obj-$(CONFIG_GPIO_SCH311X)          +=3D
+> >> gpio-sch311x.o
+> >>  obj-$(CONFIG_GPIO_SCH)                 +=3D gpio-sch.o
+> >>  obj-$(CONFIG_GPIO_SIFIVE)              +=3D gpio-sifive.o
+> >>  obj-$(CONFIG_GPIO_SIOX)                        +=3D gpio-siox.o
+> >> +obj-$(CONFIG_GPIO_SL28CPLD)            +=3D gpio-sl28cpld.o
+> >>  obj-$(CONFIG_GPIO_SODAVILLE)           +=3D gpio-sodaville.o
+> >>  obj-$(CONFIG_GPIO_SPEAR_SPICS)         +=3D gpio-spear-spics.o
+> >>  obj-$(CONFIG_GPIO_SPRD)                        +=3D gpio-sprd.o
+> >> diff --git a/drivers/gpio/gpio-sl28cpld.c
+> >> b/drivers/gpio/gpio-sl28cpld.c
+> >> new file mode 100644
+> >> index 000000000000..94f82013882f
+> >> --- /dev/null
+> >> +++ b/drivers/gpio/gpio-sl28cpld.c
+> >> @@ -0,0 +1,332 @@
+> >> +// SPDX-License-Identifier: GPL-2.0-only
+> >> +/*
+> >> + * SMARC-sAL28 GPIO driver.
+> >> + *
+> >> + * Copyright 2019 Kontron Europe GmbH
+> >> + */
+> >> +
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/interrupt.h>
+> >> +#include <linux/regmap.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/gpio/driver.h>
+> >> +
+> >> +#define GPIO_REG_DIR   0
+> >> +#define GPIO_REG_OUT   1
+> >> +#define GPIO_REG_IN    2
+> >> +#define GPIO_REG_IE    3
+> >> +#define GPIO_REG_IP    4
+> >
+> > These values would be more clear if they were defined as hex.
+> >
+> >> +
+> >> +#define GPI_REG_IN     0
+> >> +
+> >> +#define GPO_REG_OUT    0
+> >
+> > Please also use a common prefix even for defines.
+>
+> ok
+>
+> >
+> >> +
+> >> +enum sl28cpld_gpio_type {
+> >> +       sl28cpld_gpio,
+> >> +       sl28cpld_gpi,
+> >> +       sl28cpld_gpo,
+> >> +};
+> >
+> > Enum values should be all upper-case.
+>
+> ok
+>
+> >> +
+> >> +struct sl28cpld_gpio {
+> >> +       struct gpio_chip gpio_chip;
+> >> +       struct irq_chip irq_chip;
+> >> +       struct regmap *regmap;
+> >> +       u32 offset;
+> >> +       struct mutex lock;
+> >> +       u8 ie;
+> >> +};
+> >> +
+> >> +static void sl28cpld_gpio_set_reg(struct gpio_chip *chip, unsigned
+> >> int reg,
+> >> +                                 unsigned int offset, int value)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
+> >> +       unsigned int mask =3D 1 << offset;
+> >> +       unsigned int val =3D value << offset;
+> >> +
+> >> +       regmap_update_bits(gpio->regmap, gpio->offset + reg, mask,
+> >> val);
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpio_set(struct gpio_chip *chip, unsigned int
+> >> offset,
+> >> +                             int value)
+> >> +{
+> >> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpo_set(struct gpio_chip *chip, unsigned int
+> >> offset,
+> >> +                            int value)
+> >> +{
+> >> +       sl28cpld_gpio_set_reg(chip, GPO_REG_OUT, offset, value);
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_get_reg(struct gpio_chip *chip, unsigned int
+> >> reg,
+> >> +                                unsigned int offset)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
+> >> +       unsigned int mask =3D 1 << offset;
+> >> +       unsigned int val;
+> >> +       int ret;
+> >> +
+> >> +       ret =3D regmap_read(gpio->regmap, gpio->offset + reg, &val);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       return (val & mask) ? 1 : 0;
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_get(struct gpio_chip *chip, unsigned int
+> >> offset)
+> >> +{
+> >> +       return sl28cpld_gpio_get_reg(chip, GPIO_REG_IN, offset);
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpi_get(struct gpio_chip *chip, unsigned int
+> >> offset)
+> >> +{
+> >> +       return sl28cpld_gpio_get_reg(chip, GPI_REG_IN, offset);
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_get_direction(struct gpio_chip *chip,
+> >> +                                      unsigned int offset)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
+> >> +       unsigned int reg;
+> >> +       int ret;
+> >> +
+> >> +       ret =3D regmap_read(gpio->regmap, gpio->offset + GPIO_REG_DIR,
+> >> &reg);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       if (reg & (1 << offset))
+> >> +               return GPIO_LINE_DIRECTION_OUT;
+> >> +       else
+> >> +               return GPIO_LINE_DIRECTION_IN;
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_set_direction(struct gpio_chip *chip,
+> >> +                                      unsigned int offset,
+> >> +                                      bool output)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
+> >> +       unsigned int mask =3D 1 << offset;
+> >> +       unsigned int val =3D (output) ? mask : 0;
+> >> +
+> >> +       return regmap_update_bits(gpio->regmap, gpio->offset +
+> >> GPIO_REG_DIR,
+> >> +                                 mask, val);
+> >> +
+> >
+> > Stray newline.
+> ok
+>
+> >
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_direction_input(struct gpio_chip *chip,
+> >> +                                        unsigned int offset)
+> >> +{
+> >> +       return sl28cpld_gpio_set_direction(chip, offset, false);
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_direction_output(struct gpio_chip *chip,
+> >> +                                         unsigned int offset, int
+> >> value)
+> >> +{
+> >> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
+> >> +       return sl28cpld_gpio_set_direction(chip, offset, true);
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpio_irq_lock(struct irq_data *data)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D
+> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> >> +
+> >> +       mutex_lock(&gpio->lock);
+> >
+> > How does that actually lock anything?
+>
+> TBH, I took that from gpio-pcf857x.c. But that
+>   (1) don't uses regmap
+>   (2) also uses that lock on other places.
+>
+> I'll dig deeper into that and try to understand why there is a lock at
+> all and why this callback is actually called _irq_lock() because that
+> made me wonder.
+>
+> > Regmap uses a different lock and
+> > if you want to make sure nobody modifies the GPIO registers than you'd
+> > need to use the same lock. Also: this looks a lot like a task for
+> > regmap_irqchip - maybe you could use it here or in the core mfd
+> > module?
+>
+> regmap_irqchip will register the interrupt controller on the device
+> which owns the regmap, ie. the parent. So (1) the phandle would need to
+> point to the parent device instead of the GPIO subnode and (2) I'm
+> already using the regmap_irqchip for the interrupt controller. I don't
+> know if you can actually have that multiple times.
+>
+> there was a discussion which might apply partly to (1):
+>   https://lore.kernel.org/patchwork/patch/802608/
 >
 
-I see, yeah the times are uncertain for sure. :(
+In that case maybe you should use the disable_locking option in
+regmap_config and provide your own callbacks that you can use in the
+irqchip code too?
 
-> Your decision is as good as mine, I'm not smarter in any
-> way so if it is urgent send me a pull request for the solution that seems=
- best
-> to you, I trust you on this.
+> >
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpio_irq_sync_unlock(struct irq_data *data)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D
+> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> >> +
+> >> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IE,
+> >> gpio->ie);
+> >> +       mutex_unlock(&gpio->lock);
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpio_irq_disable(struct irq_data *data)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D
+> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> >> +
+> >> +       if (data->hwirq >=3D 8)
+> >> +               return;
+> >> +
+> >> +       gpio->ie &=3D ~(1 << data->hwirq);
+> >> +}
+> >> +
+> >> +static void sl28cpld_gpio_irq_enable(struct irq_data *data)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D
+> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> >> +
+> >> +       if (data->hwirq >=3D 8)
+> >> +               return;
+> >> +
+> >> +       gpio->ie |=3D (1 << data->hwirq);
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_irq_set_type(struct irq_data *data, unsigned
+> >> int type)
+> >> +{
+> >> +       /* only edge triggered interrupts on both edges are supported
+> >> */
+> >> +       return (type =3D=3D IRQ_TYPE_EDGE_BOTH) ? 0 : -EINVAL;
+> >> +}
+> >> +
+> >> +static irqreturn_t sl28cpld_gpio_irq_thread(int irq, void *data)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D data;
+> >> +       unsigned int ip;
+> >> +       unsigned int virq;
+> >> +       int pin;
+> >> +       int ret;
+> >> +
+> >> +       ret =3D regmap_read(gpio->regmap, gpio->offset + GPIO_REG_IP,
+> >> &ip);
+> >> +       if (ret)
+> >> +               return IRQ_NONE;
+> >> +
+> >> +       /* mask other pending interrupts which are not enabled */
+> >> +       ip &=3D gpio->ie;
+> >> +
+> >> +       /* ack the interrupts */
+> >> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IP, ip);
+> >> +
+> >> +       /* and handle them */
+> >> +       while (ip) {
+> >> +               pin =3D __ffs(ip);
+> >> +               ip &=3D ~BIT(pin);
+> >> +
+> >> +               virq =3D irq_find_mapping(gpio->gpio_chip.irq.domain,
+> >> pin);
+> >> +               if (virq)
+> >> +                       handle_nested_irq(virq);
+> >> +       }
+> >> +
+> >> +       return IRQ_HANDLED;
+> >> +}
+> >
+> > This definitely looks like parts of regmap_irqchip reimplemented.
+> > Please check if you could reuse it - it would save a lot of code.
+>
+> See above. I'd be happy to reuse the code though.
+>
+> >
+> >> +
+> >> +static int sl28_cpld_gpio_irq_init(struct platform_device *pdev, int
+> >> irq)
+> >> +{
+> >> +       struct sl28cpld_gpio *gpio =3D platform_get_drvdata(pdev);
+> >> +       struct irq_chip *irq_chip =3D &gpio->irq_chip;
+> >> +       int ret;
+> >> +
+> >> +       irq_chip->name =3D "sl28cpld-gpio-irq",
+> >> +       irq_chip->irq_bus_lock =3D sl28cpld_gpio_irq_lock,
+> >> +       irq_chip->irq_bus_sync_unlock =3D sl28cpld_gpio_irq_sync_unloc=
+k,
+> >> +       irq_chip->irq_disable =3D sl28cpld_gpio_irq_disable,
+> >> +       irq_chip->irq_enable =3D sl28cpld_gpio_irq_enable,
+> >> +       irq_chip->irq_set_type =3D sl28cpld_gpio_irq_set_type,
+> >> +       irq_chip->flags =3D IRQCHIP_SKIP_SET_WAKE,
+> >> +
+> >> +       ret =3D gpiochip_irqchip_add_nested(&gpio->gpio_chip, irq_chip=
+,
+> >> 0,
+> >> +                                         handle_simple_irq,
+> >> IRQ_TYPE_NONE);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> >> +                                       sl28cpld_gpio_irq_thread,
+> >> +                                       IRQF_SHARED | IRQF_ONESHOT,
+> >> +                                       pdev->name, gpio);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       gpiochip_set_nested_irqchip(&gpio->gpio_chip, irq_chip, irq);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static int sl28cpld_gpio_probe(struct platform_device *pdev)
+> >> +{
+> >> +       enum sl28cpld_gpio_type type =3D
+> >> +               platform_get_device_id(pdev)->driver_data;
+> >> +       struct device_node *np =3D pdev->dev.of_node;
+> >> +       struct sl28cpld_gpio *gpio;
+> >> +       struct gpio_chip *chip;
+> >> +       struct resource *res;
+> >> +       bool irq_support =3D false;
+> >> +       int ret;
+> >> +       int irq;
+> >> +
+> >> +       gpio =3D devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+> >> +       if (!gpio)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       if (!pdev->dev.parent)
+> >> +               return -ENODEV;
+> >
+> > Why not check this before allocating any memory?
+>
+> I'll change that, you're not the first one which notices that. My reason
+> was to have the check together with the dev_get_regmap() which uses the
+> parent, expecting that the error case only happen exceptionally.
+>
+> >
+> >> +
+> >> +       gpio->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> >> +       if (!gpio->regmap)
+> >> +               return -ENODEV;
+> >> +
+> >> +       res =3D platform_get_resource(pdev, IORESOURCE_REG, 0);
+> >> +       if (!res)
+> >> +               return -EINVAL;
+> >> +       gpio->offset =3D res->start;
+> >> +
+> >
+> > This isn't how IO resources are used. What are you trying to achieve
+> > here?
+>
+> Mh are you sure? The blueprint for this were the regulators in
+> drivers/regulators/, eg the wm831x-ldo.c. IORESOURCE_REG isn't used
+> that often. But here is what I want to achieve (for which I haven't
+> found any existing drivers for now):
+>   (1) the individual blocks of the overall sl28cpld may be used
+>       multiple times, eg. this driver only has the offset to a
+>       base address. So if there are two blocks, this mfd core
+>       driver will register two devices for this driver with
+>       different base offsets, which are passed by IORESOURCE_REG
+>   (2) I wanted to avoid having a private mfd include with some
+>       kind of "proprietary" method how to get that offset
+>   (3) the mfd core driver is the one knowing the offset, thus it
+>       is possible to have different flavours of the sl28cpld
 >
 
-There are no users right now of the broken interface, so I'll just
-send a patch with an appropriate comment to Srinivas for the time
-being and we can try to fix it in the next release.
+Ok, now I see it's documented in the bindings. Thanks for the explanation.
+
+>
+> >
+> >> +       /* initialize struct gpio_chip */
+> >> +       mutex_init(&gpio->lock);
+> >> +       chip =3D &gpio->gpio_chip;
+> >> +       chip->parent =3D &pdev->dev;
+> >> +       chip->label =3D dev_name(&pdev->dev);
+> >> +       chip->owner =3D THIS_MODULE;
+> >> +       chip->can_sleep =3D true;
+> >> +       chip->base =3D -1;
+> >> +       chip->ngpio =3D 8;
+> >> +
+> >> +       switch (type) {
+> >> +       case sl28cpld_gpio:
+> >> +               chip->get_direction =3D sl28cpld_gpio_get_direction;
+> >> +               chip->direction_input =3D sl28cpld_gpio_direction_inpu=
+t;
+> >> +               chip->direction_output =3D
+> >> sl28cpld_gpio_direction_output;
+> >> +               chip->get =3D sl28cpld_gpio_get;
+> >> +               chip->set =3D sl28cpld_gpio_set;
+> >> +               irq_support =3D true;
+> >> +               break;
+> >> +       case sl28cpld_gpo:
+> >> +               chip->set =3D sl28cpld_gpo_set;
+> >> +               chip->get =3D sl28cpld_gpi_get;
+> >> +               break;
+> >> +       case sl28cpld_gpi:
+> >> +               chip->get =3D sl28cpld_gpi_get;
+> >> +               break;
+> >> +       }
+> >> +
+> >> +       ret =3D devm_gpiochip_add_data(&pdev->dev, chip, gpio);
+> >> +       if (ret < 0)
+> >> +               return ret;
+> >> +
+> >> +       platform_set_drvdata(pdev, gpio);
+> >> +
+> >> +       if (irq_support && of_property_read_bool(np,
+> >> "interrupt-controller")) {
+> >
+> > You're depending on OF_GPIO for this one function. Please switch to
+> > device_property_read_bool() instead.
+>
+> ok
+>
+>
+> >
+> >> +               irq =3D platform_get_irq(pdev, 0);
+> >> +               if (irq < 0)
+> >> +                       return ret;
+> >> +
+> >> +               ret =3D sl28_cpld_gpio_irq_init(pdev, irq);
+> >> +               if (ret)
+> >> +                       return ret;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +static const struct platform_device_id sl28cpld_gpio_id_table[] =3D {
+> >> +       {"sl28cpld-gpio", sl28cpld_gpio},
+> >> +       {"sl28cpld-gpi", sl28cpld_gpi},
+> >> +       {"sl28cpld-gpo", sl28cpld_gpo},
+> >
+> > Could you explain this a bit more? Is this the same component with
+> > input/output-only lines or three different components?
+>
+> These are actually three different components. Ie. you could have a
+> flavour where you have one GPIO (sl28cpld-gpio) and two output-only
+> ones (sl28cpld-gpo). Is that what you wanted to know?
+>
+
+Yes, thanks. This could use some documentation in the bindings though.
 
 Bartosz
+
+> >
+> >> +};
+> >> +MODULE_DEVICE_TABLE(platform, sl28cpld_gpio_id_table);
+> >> +
+> >> +static struct platform_driver sl28cpld_gpio_driver =3D {
+> >> +       .probe =3D sl28cpld_gpio_probe,
+> >> +       .id_table =3D sl28cpld_gpio_id_table,
+> >> +       .driver =3D {
+> >> +               .name =3D "sl28cpld-gpio",
+> >> +       },
+> >> +};
+> >> +module_platform_driver(sl28cpld_gpio_driver);
+> >> +
+> >> +MODULE_DESCRIPTION("sl28cpld GPIO Driver");
+> >> +MODULE_LICENSE("GPL");
+> >
+> > I think you could use a MODULE_ALIAS() here if you want this module to
+> > be loaded automatically by udev.
+>
+> ok, I'll look into that.
+>
+> thanks,
+> -michael
+>
+> >
+> >> --
+> >> 2.20.1
+> >>
+> >
+> > Best regards,
+> > Bartosz Golaszewski
