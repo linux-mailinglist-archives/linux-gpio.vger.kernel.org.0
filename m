@@ -2,128 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6523F192355
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 09:54:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 663CD19239E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 10:05:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgCYIy2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 04:54:28 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38432 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgCYIy2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 04:54:28 -0400
-Received: by mail-io1-f67.google.com with SMTP id m15so1443910iob.5
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 01:54:26 -0700 (PDT)
+        id S1726658AbgCYJFI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 05:05:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46074 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgCYJFI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 05:05:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id t7so1814426wrw.12
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 02:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W2aO09GaLIA//OMpryPJlfnUBRQNatfNyS/NGPJVmt0=;
-        b=l7Wd4avBr3tySjTbJroFT1B9WaF0E2Axi9USU3FzFUiWaxqqxB/7FNmUpoaKaK+Orj
-         d2olp8y7qKCXsr2uS8G4JQcxWJgb5M21St3LbEO66QYYtaAin54Djg35xBXa0s+k2L8e
-         4XlR0u/5PQZiGFYNoEy2X8Yv0bot7Kn2YDSqsgCuP4SX9yWEZ//ZeoZxhLc/v1JhtbBj
-         Uh1DuDeslVSHiHIDn3Pchy/wmX6sPfK1cPFrKsp/qSB2n8ML7WdnTBhcQFHiioo5Tf0W
-         TGwxOsqf46jaAegqPJ+EV3HNDXpCON25uxEPsjPehosRCLT8ExZCMrqkrLxniGatLlJh
-         /bxQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zRC19ri5zv/m8eCXDAwCzvxR7RgyVBjX8IIapbEs6Jc=;
+        b=c3XX8ChiBVhPikDSeIfTaq2/TabEc9tINC16lzoF091t8kOsG2/jsJyA6Bky0N5aL0
+         gFF+wgT1AL1oU8XeQb7r9WmYSxLE1KEqJMxTZAw7/kKZ4nWcaa6joKs8f4V6uUJ9bl+R
+         2Y84RQdflQAsLw+4Z0xdsW057ieELr2Mu7A1UgoRFfWOn9Qa3IYgxczAL8DhqJRG3isZ
+         psoFIavUUdaKpA/Rcq2VuU/bt0dbyceO0fJuAcAyiLysWEw1Ojwoi/CXzh7stvJCNTEO
+         Xu9kK7A8JNfbN8TZA5N5U/T+S0FL4LnN9sAsgdY9uaJjGifFW3zdPfiDSsHmYZaiVXys
+         1ikw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W2aO09GaLIA//OMpryPJlfnUBRQNatfNyS/NGPJVmt0=;
-        b=hpkwJe4SlbIuPKz0A/yxnzAjvk6qV3qViCuVaRF72yw8s94Yr7vkOKss2PzYJuoGmE
-         ZN8NNyTv1BQpgEe1GSMbCDfz4yX8J5/PpkLo4AtKEtT/Q+u/D6gLrZaegqPP2A/avvtl
-         ayclVnqv8XnNQUnjXrMFxVkKpoaKKduD+TOFCEUrFyXMz9GUd/5VkTBb71RlrY2Dksj1
-         AFv2zJnPn54Dd+uuG5PvWc2AQsyZkfTlwV7zg3UVcBjjkeRXJ8IbYENlFndLGh+D/zUK
-         7IdDvTPhTxnDlMG+JsDJwsw1K9FUsJrWY57HZuTN8kx+LFBf/pSzRskEtL2g3uMWTTff
-         2EuA==
-X-Gm-Message-State: ANhLgQ0vM534tKxJa33zvhZ8Tdpj0wOoef//SVJ9fGueQ1kaYyIi1ufu
-        Qu3odoMw+DeB/wz/EgAa6M8O9f4QJkSNV8mpluvLvQ==
-X-Google-Smtp-Source: ADFU+vtIRncY7HcI4oekbiMR8AFXoSIEI2ly47rx88dyx6k9Fn0z2aEvCxU4x2ktrYoxK1aB5kqUlbZhbERPo2WEglk=
-X-Received: by 2002:a02:a882:: with SMTP id l2mr1951442jam.102.1585126466058;
- Wed, 25 Mar 2020 01:54:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324082903.19366-1-brgl@bgdev.pl> <CACRpkdYk19NMMW9ua12475om-jKWWf5u8Rd=VU==2vhXRocnoA@mail.gmail.com>
- <CAMRc=Me55D2Os8KkFAbnL9-KfseYUS0=gogMrZfdzQ64to+0eg@mail.gmail.com>
- <CACRpkdaQQftxqVLNYeNnVzbYO+S3fKeVqshO98On+WJ2WdcALw@mail.gmail.com>
- <CAMRc=Mfx-rYCC8sqtTthhzND_-k_oZxOen900q6fcZr6GZ0KKQ@mail.gmail.com> <CACRpkdbbJp91_tZaX-c5Mbhjm3Yf_ah-SjFjZ-kfF1TJNmZefA@mail.gmail.com>
-In-Reply-To: <CACRpkdbbJp91_tZaX-c5Mbhjm3Yf_ah-SjFjZ-kfF1TJNmZefA@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zRC19ri5zv/m8eCXDAwCzvxR7RgyVBjX8IIapbEs6Jc=;
+        b=GQqmsz2wUOqqJNEQKgRJZCF2xFSzaW4U1TVA/S6RnJXMjgjDU/QE/mFvXmeY1a+G81
+         wDfTi1YqIhkE/KPr58x2ZwkmNnO5ulQR8CE/KTZyxeNQ3nCqTP7A0SplTVBpnfcNxP1Z
+         z8IrOIxwOXx+k7r1XN+J90b7i6gQXaySlb4MwrrP5zCJDdi8Bl0BxzKlXL4iZ+O7EVO8
+         OG9XgJW1pqCFMsh04HPddJEjnwQXjfOEA+xPKTnqlFrYw3s54+zCFu+eHr2HgEhYwoLe
+         tDCQaIEpBx4RUhlvoKVQp4mC94udufs9QhUxT23cXIZ9xXxExPyegF6KQ22jIBvZRmyD
+         m1lQ==
+X-Gm-Message-State: ANhLgQ344pgasjiPBs2PJ3QR16Ba/fV+gWQZyFL5USlGW0ERYAerAn/6
+        zmPfPgLpeDB7UvRvyaUGCfw+Sw==
+X-Google-Smtp-Source: ADFU+vt9kFnsbg1G4x1nTB25s9Fotv20OcSrNQyqDIrn/Phvwtq5Dl1TI41HEJKnTKtfvuipdbqYFA==
+X-Received: by 2002:adf:efc2:: with SMTP id i2mr2247425wrp.420.1585127106315;
+        Wed, 25 Mar 2020 02:05:06 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id 98sm32952129wrk.52.2020.03.25.02.05.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 02:05:05 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 25 Mar 2020 09:54:15 +0100
-Message-ID: <CAMRc=MeJzUPygg0D_9zpXXDP6i8JP5khRJfsm5NrfnnHQ-Pk3Q@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.7 part 3
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [GIT PULL] gpio: updates for v5.7 part4
+Date:   Wed, 25 Mar 2020 10:05:03 +0100
+Message-Id: <20200325090503.1468-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 24 mar 2020 o 22:15 Linus Walleij <linus.walleij@linaro.org> napisa=C5=
-=82(a):
->
-> On Tue, Mar 24, 2020 at 6:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > wt., 24 mar 2020 o 17:58 Linus Walleij <linus.walleij@linaro.org> napis=
-a=C5=82(a):
-> > >
-> > > On Tue, Mar 24, 2020 at 1:34 PM Bartosz Golaszewski <brgl@bgdev.pl> w=
-rote:
-> > > > wt., 24 mar 2020 o 10:05 Linus Walleij <linus.walleij@linaro.org> n=
-apisa=C5=82(a):
-> > > > >
-> > > > > Hi Bartosz,
-> > > > >
-> > > > > On Tue, Mar 24, 2020 at 9:29 AM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> > > > >
-> > > > > > this is the third and probably last batch of changes for v5.7 I=
- picked up
-> > > > > > into my tree. Details are in the signed tag. Please pull.
-> > > > >
-> > > > > Which rc is this based on? I got a bunch of unrelated changes, so
-> > > > > I suppose I need to merge the right rc base to the devel branch
-> > > > > first.
-> > > > >
-> > > > > Yours,
-> > > > > Linus Walleij
-> > > >
-> > > > Hi Linus,
-> > > >
-> > > > this is rebased on top of your devel branch, so you should be able =
-to
-> > > > pull it alright.
-> > >
-> > > To me it looks like it is based on my for-next branch which is a
-> > > mixdown branch that I create solely for inclusion into
-> > > linux-next.
-> > >
-> > > Can you double-check?
-> > >
-> > > FWIW for-next is created like this:
-> > > git checkout for-next
-> > > git reset --hard fixes
-> > > git merge devel
-> > >
-> > > So that branch is highly volatile and not very good for
-> > > development.
-> > >
-> > > Yours,
-> > > Linus Walleij
-> >
-> > Hmm maybe I messed something up. What branch/tag do you want me to
-> > rebase it on then to make it the most comfortable for you?
->
-> v5.6-rc1 or my devel branch (e.g if you have some deps) works fine, thank=
-s! :)
->
-> I tend to base all next development on -rc1 unless there is some big
-> bug fix, then I pull in some later -rc as well.
->
-> Linus
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Ok, current devel branch from your tree it is. I'll send it as part4
-in order not to delete existing signed tags.
+Linus,
 
-Bart
+as discussed - this PR contains the same commits as part3 but rebased
+on top of your devel branch.
+
+Bartosz
+
+The following changes since commit a28e1c0505a09c3a2d81fed1c8453ac2d8d02b3a:
+
+  gpio: Move devres calls to devres file (2020-03-20 10:23:06 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.7-part4
+
+for you to fetch changes up to 97551625025320e9d635531625316e43c8ed62b0:
+
+  tools: gpio: Fix typo in gpio-utils (2020-03-25 09:50:46 +0100)
+
+----------------------------------------------------------------
+gpio updates for v5.7 part 4
+
+- improve comments in the uapi header
+- fix documentation issues
+- add a warning to gpio-pl061 when the IRQ line is not configured
+- allow building gpio-mxc and gpio-mxs with COMPILE_TEST enabled
+- don't print an error message when an optional IRQ is missing in gpio-mvebu
+- fix a potential segfault in gpio-hammer
+- fix a couple typos and coding style issues in gpio tools
+- provide a new flag in gpio-mmio and use it in mt7621 to fix an issue with
+  the controller ignoring value setting when a GPIO is in input mode
+- slightly refactor gpio_name_to_desc()
+
+----------------------------------------------------------------
+Alexander Sverdlin (1):
+      gpio: pl061: Warn when IRQ line has not been configured
+
+Anson Huang (2):
+      gpio: mxc: Add COMPILE_TEST support for GPIO_MXC
+      gpio: mxs: add COMPILE_TEST support for GPIO_MXS
+
+Chris Packham (1):
+      gpio: mvebu: avoid error message for optional IRQ
+
+Chuanhong Guo (2):
+      gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
+      gpio: mt7621: add BGPIOF_NO_SET_ON_INPUT flag
+
+Colin Ian King (1):
+      tools: gpio-hammer: fix spelling mistake: "occurences" -> "occurrences"
+
+Gabriel Ravier (2):
+      tools: gpio-hammer: Avoid potential overflow in main
+      tools: gpio-hammer: Apply scripts/Lindent and retain good changes
+
+Jonathan Neuschäfer (1):
+      gpio: uapi: Improve phrasing around arrays representing empty strings
+
+Mauro Carvalho Chehab (1):
+      docs: gpio: driver.rst: don't mark literal blocks twice
+
+Michał Mirosław (1):
+      gpiolib: gpio_name_to_desc: factor out !name check
+
+Mykyta Poturai (1):
+      tools: gpio: Fix typo in gpio-utils
+
+ Documentation/driver-api/gpio/driver.rst |  4 ++--
+ drivers/gpio/Kconfig                     |  4 ++--
+ drivers/gpio/gpio-mmio.c                 | 23 +++++++++++++++++++----
+ drivers/gpio/gpio-mt7621.c               |  4 ++--
+ drivers/gpio/gpio-mvebu.c                |  2 +-
+ drivers/gpio/gpio-pl061.c                |  6 ++----
+ drivers/gpio/gpiolib.c                   |  5 ++++-
+ include/linux/gpio/driver.h              |  1 +
+ include/uapi/linux/gpio.h                |  8 ++++----
+ tools/gpio/gpio-hammer.c                 | 19 +++++++++++++++++--
+ tools/gpio/gpio-utils.c                  |  6 +++---
+ 11 files changed, 57 insertions(+), 25 deletions(-)
