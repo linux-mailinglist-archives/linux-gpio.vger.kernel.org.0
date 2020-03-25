@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B22D192901
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 13:54:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76A4C192C4A
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 16:24:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCYMyl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 08:54:41 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36784 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgCYMyl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 08:54:41 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d11so2350691qko.3
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 05:54:40 -0700 (PDT)
+        id S1727319AbgCYPYp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 11:24:45 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38773 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgCYPYp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 11:24:45 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z12so2463869qtq.5
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 08:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
-        b=N6DjDOyXGLVrfhnKgSW6pYwhh4epm7TFTINbnybcohaJp7bpWPTjI0USi9+zwBuc4p
-         hipSxYVV+rwwdBPFATtRmHNSbq9drmSshNOrWWnNWY4e35q5MzM11Qwz7JdPHTaEPVe7
-         KkYzRWmWACEsjLgnLFgr8k6IP1yNHynfTX9ojxWfu4rsZgNWab1eqnE/+6qnVxxf5g/c
-         cBRRQKv9l3QLeOKufr0zjvgqkc1Ko0Frl7n8tWovOAjazwloVRwnp/PhfIH09D16tqUK
-         KSTdpsGNkSk9VT+y0FZinFzhBd5Z/SrfhzUcTbHOsaNuA4UkOCbYnnJRJdzjAVMQ2GpA
-         Ljsw==
+        bh=l9GE4tNP0a/RYcvkghfD+VaPwEMEeyfTaeCdLtq9WBs=;
+        b=wVWeTezxWgvXAcgFch+CuNyCQLEX993+7lv4rY5iG3XINR5qc+jH54rGliBKEhLPq1
+         YpamQGAWuZudQBpIt8ifBbvloLD+k63TGJpGWDrlA/tfpvaTSdVmc5Cq7+z/Cn23n6b5
+         t/jZIwouA/Vb7mT/grgDUZCFq90A3GhQl/H2XcbkMFCyPR8etoBWYsQxTle1zkBC/0aj
+         1RTlSNlZG9mnMRgsa6J6ZgdwakrOpd1pLjk++s2eysIcxJtuZhJ1EfLnrVcutBwIHHTF
+         6GtfvvZFOIWDsCCqSGKLgYVFEdSKb/LphKT4Nd4ZewTJbFpE1VGJLA1SbrK54uHULvlO
+         krPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
-        b=JLDZfiwn/ouyTCLox1YnDCd2WcP6bl5GXUk2cnfE9Tm7dtXfTlmWaYrzegUsRCkION
-         1qABSSp2J+GTzvOdeu2HZ/vqSg21DCjwyDvBYvj41i4u5wNHbnRulxmhMQ4+X3AITV5h
-         wiilmBo2hD2BH5qoE8LUv9CTx79x/PfAirxOCMG1ut26rYwImL9QTouIefr9PheSgGjr
-         dDKrBNqtiuTSunQ/fryTMiaphvB/qZbAxvYgYJ0rz6zv0qQib+ZxdjkTjOaboPH7sUrX
-         IBfK9cX15LwOWkslUlsOb7xxOKoaxipiklc/GcwAMzQtBEMM/FjDxbCm89Yc6uhPyVsK
-         Viug==
-X-Gm-Message-State: ANhLgQ3xTlNYD9yexypXKZlA/ShLVZUmI2TsrmCfZYQGQlZlYR41Fg4t
-        r7euMNtSSd9hIjNoYlW3H5tE+N2kqSykNwNnuLx2zQ==
-X-Google-Smtp-Source: ADFU+vtYWyCKpiV6HL9KoZ/zSAsthjsfi5/+bVjB5sm9Hxel0UpTO8bItfwOZbQ3YQBl3fq9NQJ/tKrAmphnLe+CO8M=
-X-Received: by 2002:a37:c444:: with SMTP id h4mr2801574qkm.120.1585140879852;
- Wed, 25 Mar 2020 05:54:39 -0700 (PDT)
+        bh=l9GE4tNP0a/RYcvkghfD+VaPwEMEeyfTaeCdLtq9WBs=;
+        b=MB6c3ImcQezyhcQnIpuuFgCojduYbje4dbbF9ohAVBRBPx/WRUAR7S5Y1XHiM/gHae
+         9diJYKwXmwKUkDhZAivpZw7cfLri5n2430PupkXvs2zu9C/28fKtPEi4wzJOgR00teZg
+         LrHMunfAmaGKGXak3KwLVjWoteznVrjtG9bnEY7CCm+zoa+omEGqSBSTjTGBycwTt2wD
+         ir6QMB+1mNiqzEXMCxGBKYg23kOYBIM8lQGQF6mwC+I86K5MFEebtkBWtzoa3GjERbMd
+         sFn/I8L27O2vV1WdwmDvLqorvDAiz0TWMOc4mzk3EBOA57K2xoGzSjS4hh9PuqOPnZNf
+         vlRw==
+X-Gm-Message-State: ANhLgQ0TI65J1u3Q+wZgBl5452N+GD6Y/J/Ue8CJS7nXbQc4PR+vBHcI
+        uznEXCjGE4oa/lTdye6QIyRm34St0FBt4wtmGZhobvaR
+X-Google-Smtp-Source: ADFU+vsglUWcb8kSJWCWPe59RcqYFtxxJwWRhABAzMOq4UtV6psgXADMLDWsXL3t+InU3gTy9oWruRzOYaUvQgQRKg4=
+X-Received: by 2002:ac8:23fa:: with SMTP id r55mr3521929qtr.131.1585149883270;
+ Wed, 25 Mar 2020 08:24:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325100439.14000-1-geert+renesas@glider.be>
-In-Reply-To: <20200325100439.14000-1-geert+renesas@glider.be>
+References: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
+In-Reply-To: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 25 Mar 2020 13:54:28 +0100
-Message-ID: <CAMpxmJVduY65nnS_k+fa8h+5VXtwWjAfWvi5U8b4i99JD5NTxQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpiolib: gpio_set_config() cleanups
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Wed, 25 Mar 2020 16:24:32 +0100
+Message-ID: <CAMpxmJVrTJN_YgfvKfxbNHRKscM8rGetbc=ic6hsbqMwCJapPQ@mail.gmail.com>
+Subject: Re: [PATCH] tools: gpio: Fix out-of-tree build regression
+To:     Anssi Hannula <anssi.hannula@bitwise.fi>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        "Stable # 4 . 20+" <stable@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -58,42 +59,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 25 mar 2020 o 11:04 Geert Uytterhoeven <geert+renesas@glider.be>
-napisa=C5=82(a):
+=C5=9Br., 25 mar 2020 o 11:33 Anssi Hannula <anssi.hannula@bitwise.fi> napi=
+sa=C5=82(a):
 >
->         Hi Linus, Bartosz,
+> Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+> gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+> instead of the correct $(OUTPUT) for the output directory, breaking
+> out-of-tree build (O=3Dxx) with the following error:
 >
-> This patch sets reworks the parameters for gpio_set_config() and
-> gpio_set_bias(), which simplifies callers, and slightly reduces the
-> number of lines of code.
+>   No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out=
+/tools/gpio/lsgpio-in.o'.  Stop.
 >
-> Thanks for your comments!
+> Fix that.
 >
-> Geert Uytterhoeven (2):
->   gpiolib: Pass gpio_desc to gpio_set_config()
->   gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
+> Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gp=
+io_utils")
+> Cc: <stable@vger.kernel.org>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+> ---
 >
->  drivers/gpio/gpiolib.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
+> The 0161a94e2d1c was also applied to stable releases, which is where I
+> got hit by the issue.
+>
+>  tools/gpio/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+> index 842287e42c83..440434027557 100644
+> --- a/tools/gpio/Makefile
+> +++ b/tools/gpio/Makefile
+> @@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux=
+/gpio.h
+>
+>  prepare: $(OUTPUT)include/linux/gpio.h
+>
+> -GPIO_UTILS_IN :=3D $(output)gpio-utils-in.o
+> +GPIO_UTILS_IN :=3D $(OUTPUT)gpio-utils-in.o
+>  $(GPIO_UTILS_IN): prepare FORCE
+>         $(Q)$(MAKE) $(build)=3Dgpio-utils
 >
 > --
-> 2.17.1
+> 2.21.1
 >
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                                             -- Linus Torv=
-alds
-
-Both look good to me.
 
 Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
