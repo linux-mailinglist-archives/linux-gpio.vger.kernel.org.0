@@ -2,79 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 236B81925FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:42:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C40261925E7
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCYKmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 06:42:10 -0400
-Received: from mail.bitwise.fi ([109.204.228.163]:34558 "EHLO mail.bitwise.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbgCYKmK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:42:10 -0400
-X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 06:42:09 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.bitwise.fi (Postfix) with ESMTP id A2E5160054;
-        Wed, 25 Mar 2020 12:33:10 +0200 (EET)
-X-Virus-Scanned: Debian amavisd-new at mail.bitwise.fi
-Received: from mail.bitwise.fi ([127.0.0.1])
-        by localhost (mail.bitwise.fi [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q1tYnBd_Bn1G; Wed, 25 Mar 2020 12:33:07 +0200 (EET)
-Received: from localhost.localdomain (fw1.dmz.bitwise.fi [192.168.69.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1727259AbgCYKkD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 06:40:03 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41611 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbgCYKkD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:40:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585132802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MK8FJi8EH32DABBtM4+Sj2eGy/izEFYJv6Men8xb06o=;
+        b=Y33hUYj9ojdPkH38ehcdIz/4WR5SMcO6S3JRA4c1TUDMYJ5uwrHa5bUJdr70dgv/SSbwfe
+        9BIu8lL1S/OSmPJUlsIIsGlqqkDO/7Um8p3nqW2MKSR6Nk93qSMAZVcyfgpp1eTKG3O0F/
+        a51lWkrJOwqtP2h5gl8bMeIIr1u7/Cg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-FaN6xKrfNemWfAjsFbpmZw-1; Wed, 25 Mar 2020 06:40:00 -0400
+X-MC-Unique: FaN6xKrfNemWfAjsFbpmZw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: anssiha)
-        by mail.bitwise.fi (Postfix) with ESMTPSA id 443EA6004B;
-        Wed, 25 Mar 2020 12:33:07 +0200 (EET)
-From:   Anssi Hannula <anssi.hannula@bitwise.fi>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, stable@vger.kernel.org,
-        Laura Abbott <labbott@redhat.com>
-Subject: [PATCH] tools: gpio: Fix out-of-tree build regression
-Date:   Wed, 25 Mar 2020 12:31:54 +0200
-Message-Id: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
-X-Mailer: git-send-email 2.21.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 401AF107ACCA;
+        Wed, 25 Mar 2020 10:39:59 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-75.ams2.redhat.com [10.36.115.75])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B03A15C1A2;
+        Wed, 25 Mar 2020 10:39:57 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH 0/1 resend] gpiolib: acpi: Add missing __init(const) markers to initcall-s
+Date:   Wed, 25 Mar 2020 11:39:55 +0100
+Message-Id: <20200325103956.109284-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
-gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
-instead of the correct $(OUTPUT) for the output directory, breaking
-out-of-tree build (O=xx) with the following error:
+Hi Linus,
 
-  No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+I know it has not been that long ago since I send this out, but still
+I have the feeling this one seems to have fallen through the cracks?
 
-Fix that.
+It has already been Acked by Mika, so if you can queue it up in
+linux-gpio/for-next that would be great.
 
-Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
-Cc: <stable@vger.kernel.org>
-Cc: Laura Abbott <labbott@redhat.com>
-Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
----
+Regards,
 
-The 0161a94e2d1c was also applied to stable releases, which is where I
-got hit by the issue.
-
- tools/gpio/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-index 842287e42c83..440434027557 100644
---- a/tools/gpio/Makefile
-+++ b/tools/gpio/Makefile
-@@ -35,7 +35,7 @@ $(OUTPUT)include/linux/gpio.h: ../../include/uapi/linux/gpio.h
- 
- prepare: $(OUTPUT)include/linux/gpio.h
- 
--GPIO_UTILS_IN := $(output)gpio-utils-in.o
-+GPIO_UTILS_IN := $(OUTPUT)gpio-utils-in.o
- $(GPIO_UTILS_IN): prepare FORCE
- 	$(Q)$(MAKE) $(build)=gpio-utils
- 
--- 
-2.21.1
+Hans
 
