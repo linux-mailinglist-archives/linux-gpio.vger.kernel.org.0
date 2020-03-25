@@ -2,179 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B15561928E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 13:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B22D192901
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 13:54:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCYMvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 08:51:48 -0400
-Received: from smtp105.iad3b.emailsrvr.com ([146.20.161.105]:38922 "EHLO
-        smtp105.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727290AbgCYMvs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:51:48 -0400
-X-Greylist: delayed 549 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 08:51:47 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=softiron.com;
-        s=20191119-3p77dzn5; t=1585140157;
-        bh=ZXRuf5tQnXmldjtG8nfGMByOS+zlmXatmq7Rz9OdDQA=;
-        h=Subject:From:To:Date:From;
-        b=B+84GWS8Pj2Q+ZJZiyduuD/E8kK10bnrmdhCsoAeEkPg6QAgqW33DAXY9u6LjpC60
-         ypRR57M3KiCLag8GVUlC71KJKKY5rPBeO+R+ve55v/aZDb+4kYtgv2cLxWorbGOKZN
-         r9lxiSjUyo+Vc5B4ONMk+9dX9YcArWTUbYVPqE8g=
-X-Auth-ID: alan@softiron.com
-Received: by smtp6.relay.iad3b.emailsrvr.com (Authenticated sender: alan-AT-softiron.com) with ESMTPSA id 36D90200B6;
-        Wed, 25 Mar 2020 08:42:37 -0400 (EDT)
-X-Sender-Id: alan@softiron.com
-Received: from [10.1.1.115] (99-117-187-177.lightspeed.dybhfl.sbcglobal.net [99.117.187.177])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Wed, 25 Mar 2020 08:42:37 -0400
-Subject: Re: pinctrl states vs pinmux vs gpio (i2c bus recovery)
-From:   Alan Ott <alan@softiron.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     kamel.bouhara@bootlin.com, Wolfram Sang <wsa@the-dreams.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Ludovic.Desroches@microchip.com,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20191206173343.GX25745@shell.armlinux.org.uk>
- <CACRpkdZv2rzA8AbFZKq0XVBaXNJR8c5tsb+1KTZ7fNuWjm5cbQ@mail.gmail.com>
- <20191213002010.GO25745@shell.armlinux.org.uk>
- <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
-Message-ID: <4f9bb480-ba8d-b70e-961b-d6032232d250@softiron.com>
-Date:   Wed, 25 Mar 2020 08:42:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727381AbgCYMyl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 08:54:41 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36784 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgCYMyl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 08:54:41 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d11so2350691qko.3
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 05:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
+        b=N6DjDOyXGLVrfhnKgSW6pYwhh4epm7TFTINbnybcohaJp7bpWPTjI0USi9+zwBuc4p
+         hipSxYVV+rwwdBPFATtRmHNSbq9drmSshNOrWWnNWY4e35q5MzM11Qwz7JdPHTaEPVe7
+         KkYzRWmWACEsjLgnLFgr8k6IP1yNHynfTX9ojxWfu4rsZgNWab1eqnE/+6qnVxxf5g/c
+         cBRRQKv9l3QLeOKufr0zjvgqkc1Ko0Frl7n8tWovOAjazwloVRwnp/PhfIH09D16tqUK
+         KSTdpsGNkSk9VT+y0FZinFzhBd5Z/SrfhzUcTbHOsaNuA4UkOCbYnnJRJdzjAVMQ2GpA
+         Ljsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
+        b=JLDZfiwn/ouyTCLox1YnDCd2WcP6bl5GXUk2cnfE9Tm7dtXfTlmWaYrzegUsRCkION
+         1qABSSp2J+GTzvOdeu2HZ/vqSg21DCjwyDvBYvj41i4u5wNHbnRulxmhMQ4+X3AITV5h
+         wiilmBo2hD2BH5qoE8LUv9CTx79x/PfAirxOCMG1ut26rYwImL9QTouIefr9PheSgGjr
+         dDKrBNqtiuTSunQ/fryTMiaphvB/qZbAxvYgYJ0rz6zv0qQib+ZxdjkTjOaboPH7sUrX
+         IBfK9cX15LwOWkslUlsOb7xxOKoaxipiklc/GcwAMzQtBEMM/FjDxbCm89Yc6uhPyVsK
+         Viug==
+X-Gm-Message-State: ANhLgQ3xTlNYD9yexypXKZlA/ShLVZUmI2TsrmCfZYQGQlZlYR41Fg4t
+        r7euMNtSSd9hIjNoYlW3H5tE+N2kqSykNwNnuLx2zQ==
+X-Google-Smtp-Source: ADFU+vtYWyCKpiV6HL9KoZ/zSAsthjsfi5/+bVjB5sm9Hxel0UpTO8bItfwOZbQ3YQBl3fq9NQJ/tKrAmphnLe+CO8M=
+X-Received: by 2002:a37:c444:: with SMTP id h4mr2801574qkm.120.1585140879852;
+ Wed, 25 Mar 2020 05:54:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Classification-ID: f950c16d-b42a-4652-9c77-f844fcaebf4b-1-1
+References: <20200325100439.14000-1-geert+renesas@glider.be>
+In-Reply-To: <20200325100439.14000-1-geert+renesas@glider.be>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 25 Mar 2020 13:54:28 +0100
+Message-ID: <CAMpxmJVduY65nnS_k+fa8h+5VXtwWjAfWvi5U8b4i99JD5NTxQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpiolib: gpio_set_config() cleanups
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2/27/20 11:47 AM, Alan Ott wrote:
-> On 12/12/19 7:20 PM, Russell King - ARM Linux admin wrote:
->> On Mon, Dec 09, 2019 at 01:20:15AM +0100, Linus Walleij wrote:
->>> Hi Russell,
->>>
->>> very nice description of this dual-mode problem.
->>>
->>> I wish I had a simple and elegant way we could make it
->>> unambiguous and simple to use ... but it beats me right
->>> now.
->>>
->>> On Fri, Dec 6, 2019 at 6:33 PM Russell King - ARM Linux admin
->>> <linux@armlinux.org.uk> wrote:
->>>
->>>> One may expect:
->>>>
->>>>          pinctrl_select_state(i2c_imx->pinctrl, 
->>>> i2c_imx->pinctrl_pins_default);
->>>>
->>>> to change them back to the default state, but that would be incorrect.
->>>> The first thing that pinctrl_select_state() does is check whether
->>>>
->>>>          p->state == state
->>>>
->>>> which it will do, as the pinctrl layer hasn't been informed of the
->>>> change that has happened behind its back at the pinmux level.
->>> Some pin controllers have the .strict property set
->>> in their struct pinmux_ops:
->>>
->>> * @strict: do not allow simultaneous use of the same pin for GPIO and 
->>> another
->>> *      function. Check both gpio_owner and mux_owner strictly before 
->>> approving
->>> *      the pin request.
->>>
->>> The non-strict pin controllers are those that actually allow GPIO
->>> and device functions to be used on the same physical line at the
->>> same time. In this case there is not special GPIO mode for the
->>> line in some muxing registers, they are just physically connected
->>> somehow.
->>>
->>> One usecase is sort of like how tcpdump work for
->>> ethernet interfaces: a GPIO register can "snoop" on a pin while
->>> in used by another device.
->>>
->>> But it would notably also allow you to drive the line and interfere
->>> with the device. Which is exactly what this I2C recovery mechanism
->>> does, just that its pin controller is actually strict, will not allow
->>> the same line to be used for GPIO and some other function at the
->>> same time, so I suppose i.MX should probably explore the
->>> strict mode.
->>>
->>> Enabling that will sadly make the problem MORE complex
->>> for this I2C recovery, requiring a cycle of
->>> gpiod_put()/gpiod_get() to get it released from GPIO mode, i.e.
->>> we would need to just get the GPIO when this is strictly needed.
->>> Using devm_gpiod_get() and keeping a reference descriptor
->>> around would not work all of a sudden.
->>>
->>> I am thinking whether we can handle the non-strict controllers
->>> in a more elegant way, or add some API to explicitly hand over
->>> between device function and GPIO function. But I can't really
->>> see some obvious solution.
->> What I'm currently trying is (error handling removed for brevity):
->>
->>     struct i2c_bus_recovery_info *bri = &i2c->recovery;
->>
->>          i2c->pinctrl = devm_pinctrl_get(dev);
->>          i2c->pinctrl_default = pinctrl_lookup_state(i2c->pinctrl,
->>                                                      
->> PINCTRL_STATE_DEFAULT);
->>          i2c->pinctrl_recovery = pinctrl_lookup_state(i2c->pinctrl,
->>                              "recovery");
->>          bri->sda_gpiod = devm_gpiod_get(dev, "sda", 
->> GPIOD_OUT_HIGH_OPEN_DRAIN);
->>          bri->scl_gpiod = devm_gpiod_get(dev, "scl", 
->> GPIOD_OUT_HIGH_OPEN_DRAIN);
->>
->>     pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery);
->>     return pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_default);
->>
->> which seems good enough to get the pins back into i2c mode after the
->> gpios are obtained.  Then we switch the pinctrl state between
->> pinctrl_recovery and pinctrl_default as we have need to.
->>
->> The problem is, the generic i2c bus recovery code wants the gpiod
->> descriptors to be setup and inplace by the time i2c_init_recovery()
->> is called (which is called when the adapter is registered) so
->> holding off until we need to do recovery doesn't work.
->>
->> This seems to work for this SoC I'm currently working with, but I
->> think there's more on the horizon - I'm having the same problems
->> on another SoC which also needs bus recovery implemented, and as
->> the problem device is behind an I2C bus mux, when it locks the I2C
->> bus, it kills all I2C buses rooted at that particular SoC I2C
->> controller.  However, there's a problem - the pinctrls for that SoC
->> are set by ROM firmware at boot time by reading a table from the
->> boot media.  *Unprintables about firmware being too way limiting*. :p
->>
- >
-> Hi all, what's the current state of this? I can confirm that this is 
-> broken with the at91 i2c controller's recovery mode[1], which is 
-> implemented exactly the same as other i2c master recovery modes, so I 
-> suspect them to be broken as well.
-> 
-> I'm using 5.5.6 with this patch applied (which adds the recovery):
->      https://patchwork.kernel.org/cover/11333883/
-> 
-> It worked fine with 5.2, but has now broken, the way Russell describes, 
-> in 5.5.6 and also on the latest 5.6-rc3. Russell's suggested workaround 
-> of setting the pinctrl to recovery (gpio) and then back to default does 
-> make it work.
-> 
-> Alan.
-> 
-> [1] currently the patch for i2c recovery for at91 is accepted to Wolfram 
-> Sang's for-next tree.
-> 
+=C5=9Br., 25 mar 2020 o 11:04 Geert Uytterhoeven <geert+renesas@glider.be>
+napisa=C5=82(a):
+>
+>         Hi Linus, Bartosz,
+>
+> This patch sets reworks the parameters for gpio_set_config() and
+> gpio_set_bias(), which simplifies callers, and slightly reduces the
+> number of lines of code.
+>
+> Thanks for your comments!
+>
+> Geert Uytterhoeven (2):
+>   gpiolib: Pass gpio_desc to gpio_set_config()
+>   gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
+>
+>  drivers/gpio/gpiolib.c | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+>
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                                             -- Linus Torv=
+alds
 
-Is there any word on this?
+Both look good to me.
 
-Alan.
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
