@@ -2,56 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E8A719349A
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 00:32:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C647A19349C
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 00:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgCYXcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 19:32:12 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43489 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbgCYXcM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 19:32:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g27so4434396ljn.10
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 16:32:09 -0700 (PDT)
+        id S1727406AbgCYXdO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 19:33:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40008 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbgCYXdN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 19:33:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j17so3277758lfe.7
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 16:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pz27N0s4bGqH38nVVinTBm250zTTCRPj61s65LyetcI=;
-        b=oYlq9hh8/Gm/GSnuSQ/qhFMJzCvCTbM2E8LCW7ECvEPoGwPzJEaEPEZTfFFOti0HIo
-         iixVNgOlh+cRVQY4Btmg658tF7b3EvFUF4NFLZO+TEJIedkrMJn4ESbkJ6C6buL0HvAB
-         p7/R6klzpdVBtLs3Hq32KTzADXqpD7GxgRRSmDMRg4xhD/8YuqcnGo0yJPyt2c/8pn4V
-         oPikUzntwzEJf5PYkdQk4bzMkVqaGuNH8B2zsejRqZZhQzBuf5ZwCZwoBrgHfM6A0h8m
-         3Hhp3mDku8/QWsVgHZ7TYX29HS3vStwruDnPZzDvwL/444YpcDwXgwYZBgObnNh7lsUP
-         NqBg==
+        bh=fq+rH4YE72x0k6vRBalpeRHnZGOCdmKPprbP9ia4MOM=;
+        b=SNZW1PD3VW0c1h12/8mpMh7w/sIRy8tamsLzdz1LCfbU6hfQlo6W347kP/HwYMVR1F
+         Qc3yQZxk2Q6Ac3hySPQRuUUIwmpgB6X/EVSlxyyQNguRk2dl6pjGMgclgPV2raGbzK9K
+         s59O7jhtZLpU2H5VUcs/tWXFwDu7pd96OmcSlz6AjBg6aNFsyXNjjm+mTP00meS7lENx
+         30l18riTd02UZ0+iUuspw9fB5iqhvl4NzVmod84EmrphxF5y+4nSuUukkIRM/Yu9tVby
+         Q6rqikN8GIdZXWqgKQlp9hlkE1iRyVFIljrbqfzTgsWv9pAU/0VmpnsJ149VCt+YWN23
+         o4RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pz27N0s4bGqH38nVVinTBm250zTTCRPj61s65LyetcI=;
-        b=cO/qH6ZeaaTDvrm2zt82SNV1Lbx+EOfkFAYIPXc8LCQdz+joLQcLsSG4+cnepw0t/9
-         UnqzF7EwyXGhtWpkyX6aalewzyCGTDvR1i3llWc3bwwOy/vQd/jiTIH82VPh0t/hDvDl
-         YJbEQ+EAbpul4ggqJLRvT2585R9kBynmiJfghW8eiWjTSQhe1PYzgpJNsFPqzqdcDA6D
-         0zYHK6n3wPIRKEXkl/udfJ9/2bzGOhjcvl/LXQXMe/13aDfJxlt/Up8viLTMMAt5zcH9
-         ssh3KI3OMdX5YK+ulaKgd2CZ2JYMZKvC0SZXIwDfkx8bL9CQ1qHgPbY7FL4/nPd+NEqk
-         rnvA==
-X-Gm-Message-State: AGi0Pub622B7vnoIGUrY1cboDiPb+Oye0JE99vWdgzVeatPHRN+ThDTd
-        QLJG4HvXmU1cMsJHXx1QUlVM3dmLU6osuQJSNIS1nQ==
-X-Google-Smtp-Source: ADFU+vvXIlLAfb8Xes354yKGGFdqP+RtXwv/3ffUwqUHgps7GAEJ4AW0bT2D5wlGkKjN1zULPZwmyJMihIfPrh93b3M=
-X-Received: by 2002:a05:651c:1026:: with SMTP id w6mr3350282ljm.168.1585179128988;
- Wed, 25 Mar 2020 16:32:08 -0700 (PDT)
+        bh=fq+rH4YE72x0k6vRBalpeRHnZGOCdmKPprbP9ia4MOM=;
+        b=UpHvLuHG9p50qDNTxr01SUn1GnkO/QHIUNsapUhGzMQbXOtdIcsjJEkpiBns0feqfu
+         a422fdugTaR5CjnhGLJKH852Su/GtjUQvuwCgcA0bO/n1RIo5C69iNfau/STl4yTzsEY
+         xXW50D9NfZ3fjZLwN+0/3p6irFhH19KyTsCak8MdWMhLvy9mbyw//sZ0CFGDBHIF2ZeR
+         RiqAzlCQyEZHhSavnVaV9eyjIxSe06tOmutpk/+WUe5eB4Fas9rBZxN2B03pS/EJ1ux6
+         UPWJfcHAaVBEF15AIEAHKtBBR4yAOhKlsHdrakNuCHwdHgTTtpF0zm9RJi+dYvrDbcot
+         9Vjw==
+X-Gm-Message-State: ANhLgQ26MyatGPUvkJNdggapg0ujw+rzFUDSTdCOKfvQC+xteoXSpvCO
+        KVpLBfYyc0myvu5WVvddYztBeWoe2swUdL/DsI7HRA==
+X-Google-Smtp-Source: ADFU+vuRDjYt3cPfXr2YkUhRSV2AIb2Y7M3IIMYmQtgu1PjJAXlpar+ygRx9KVGiGad0CHgJv35Duhka07JGj4GSRfE=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr3760382lfk.77.1585179191616;
+ Wed, 25 Mar 2020 16:33:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200313191513.11365-1-ansuelsmth@gmail.com>
-In-Reply-To: <20200313191513.11365-1-ansuelsmth@gmail.com>
+References: <1583941433-15876-1-git-send-email-tharvey@gateworks.com>
+ <CACRpkdb3VzOFmnZkXXopsbKAAiQ9nzsqm6fMpcsCfmuvmaeOmg@mail.gmail.com>
+ <CAJ+vNU0U9jKDoZLBdC2aRrCCQkKmWATk6G6XAzQcF03tQY9r8g@mail.gmail.com> <20200313150105.GF1349@sasha-vm>
+In-Reply-To: <20200313150105.GF1349@sasha-vm>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Mar 2020 00:31:57 +0100
-Message-ID: <CACRpkdYvCHB_1FkHft3875iNZm9cGizFVLQQR56Lr95tEB_kwg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: use scm_call to route GPIO irq to Apps
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Ajay Kishore <akisho@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Thu, 26 Mar 2020 00:33:00 +0100
+Message-ID: <CACRpkdZmTi5xfiNRX6i1JKT_kxP0G1c=+SiqRi_eWb6YQ3NZ7Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: thunderx: fix irq_request_resources
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Tim Harvey <tharvey@gateworks.com>,
+        stable <stable@vger.kernel.org>,
+        Robert Richter <rrichter@marvell.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -60,58 +62,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 8:15 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
-
-> For IPQ806x targets, TZ protects the registers that are used to
-> configure the routing of interrupts to a target processor.
-> To resolve this, this patch uses scm call to route GPIO interrupts
-> to application processor. Also the scm call interface is changed.
+On Fri, Mar 13, 2020 at 4:01 PM Sasha Levin <sashal@kernel.org> wrote:
+> On Thu, Mar 12, 2020 at 10:16:40AM -0700, Tim Harvey wrote:
+> >On Thu, Mar 12, 2020 at 6:42 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >> On Wed, Mar 11, 2020 at 4:43 PM Tim Harvey <tharvey@gateworks.com> wrote:
+> >>
+> >> > If there are no parent resources do not call irq_chip_request_resources_parent
+> >> > at all as this will return an error.
+> >> >
+> >> > This resolves a regression where devices using a thunderx gpio as an interrupt
+> >> > would fail probing.
+> >> >
+> >> > Fixes: 0d04d0c ("gpio: thunderx: Use the default parent apis for {request,release}_resources")
+> >> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> >>
+> >> This patch does not apply to the mainline kernel or v5.6-rc1.
+> >>
+> >> Please verify:
+> >> 1. If the problem is still in v5.6 (we refactored the driver to
+> >>    use GPIOLIB_IRQCHIP)
+> >
+> >Linus,
+> >
+> >Sorry, another issue was keeping me from being able to boot 5.6-rc but
+> >that's now understood and I can confirm the issue is not present in
+> >v5.6-rc5
+> >
+> >>
+> >> 2. If not, only propose it for linux-stable v5.5 etc.
+> >>
+> >
+> >Yes, needs to be applied to v5.2, v5.3, v5.4, v5.5. I cc'd stable. If
+> >I need to re-submit please let me know.
+> >
+> >Cc: stable@vger.kernel.org
 >
-> Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Linus, could you ack this patch for stable?
 
-That's advanced. I'd really like Bjorn's review on this.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +       ret = of_device_is_compatible(pctrl->dev->of_node,
-> +                                       "qcom,ipq8064-pinctrl");
->         /* Route interrupts to application cpu */
-> -       val = msm_readl_intr_target(pctrl, g);
-> -       val &= ~(7 << g->intr_target_bit);
-> -       val |= g->intr_target_kpss_val << g->intr_target_bit;
-> -       msm_writel_intr_target(val, pctrl, g);
-> +       if (!ret) {
-
-Can't you just:
-
-if (!of_device_is_compatible(pctrl->dev->of_node, "qcom,ipq8064-pinctrl")) {
-
-OK maybe nitpicky.
-
-> +               val = msm_readl_intr_target(pctrl, g);
-> +               val &= ~(7 << g->intr_target_bit);
-> +               val |= g->intr_target_kpss_val << g->intr_target_bit;
-> +               msm_writel_intr_target(val, pctrl, g);
-> +       } else {
-> +               const __be32 *reg = of_get_property(pctrl->dev->of_node,
-> +                                                   "reg", NULL);
-> +
-> +               if (reg) {
-> +                       u32 addr = be32_to_cpup(reg) + g->intr_target_reg;
-> +
-> +                       qcom_scm_io_readl(addr, &val);
-> +                       __iormb();
-> +
-> +                       val &= ~(7 << g->intr_target_bit);
-> +                       val |= g->intr_target_kpss_val << g->intr_target_bit;
-> +
-> +                       __iowmb();
-> +                       ret = qcom_scm_io_writel(addr, val);
-> +                       if (ret)
-> +                               pr_err("\n Routing interrupts to Apps proc failed");
-> +               }
-
-Can we at least put a little comment on top here and explain what is
-going on?
+Sorry for the delay :/
 
 Yours,
 Linus Walleij
