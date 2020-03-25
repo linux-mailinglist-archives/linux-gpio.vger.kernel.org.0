@@ -2,37 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C40261925E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:40:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AB6B1925E9
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 11:40:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgCYKkD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 06:40:03 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41611 "EHLO
+        id S1727417AbgCYKkH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 06:40:07 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54803 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727129AbgCYKkD (ORCPT
+        by vger.kernel.org with ESMTP id S1727392AbgCYKkH (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:40:03 -0400
+        Wed, 25 Mar 2020 06:40:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585132802;
+        s=mimecast20190719; t=1585132806;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MK8FJi8EH32DABBtM4+Sj2eGy/izEFYJv6Men8xb06o=;
-        b=Y33hUYj9ojdPkH38ehcdIz/4WR5SMcO6S3JRA4c1TUDMYJ5uwrHa5bUJdr70dgv/SSbwfe
-        9BIu8lL1S/OSmPJUlsIIsGlqqkDO/7Um8p3nqW2MKSR6Nk93qSMAZVcyfgpp1eTKG3O0F/
-        a51lWkrJOwqtP2h5gl8bMeIIr1u7/Cg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2/jKQY/v3TwgChoX1/mwdlEYnDrnQ21fmszGm2dRlcU=;
+        b=R9LbvC/MvnRxyjqLuscUkK5zBT6z8oTPZkujsj0cslUhjUylX0HMRYfstVwEVN/f4Y3e/Y
+        6OMG7L/fewoL/N//Yosah8KR9bB9JeMWva7r/fMzRvDOq/x2w0cD9MF8M27H5gunqXq3Zb
+        1YtgjdG+luhvEeYxyCmep7Xue/NOZg8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-FaN6xKrfNemWfAjsFbpmZw-1; Wed, 25 Mar 2020 06:40:00 -0400
-X-MC-Unique: FaN6xKrfNemWfAjsFbpmZw-1
+ us-mta-304-maCLJrR3NPaCbcypwcHXmA-1; Wed, 25 Mar 2020 06:40:02 -0400
+X-MC-Unique: maCLJrR3NPaCbcypwcHXmA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 401AF107ACCA;
-        Wed, 25 Mar 2020 10:39:59 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 253138017DF;
+        Wed, 25 Mar 2020 10:40:01 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-115-75.ams2.redhat.com [10.36.115.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B03A15C1A2;
-        Wed, 25 Mar 2020 10:39:57 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87BD1BBBE5;
+        Wed, 25 Mar 2020 10:39:59 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -40,9 +41,11 @@ To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
         linux-acpi@vger.kernel.org
-Subject: [PATCH 0/1 resend] gpiolib: acpi: Add missing __init(const) markers to initcall-s
-Date:   Wed, 25 Mar 2020 11:39:55 +0100
-Message-Id: <20200325103956.109284-1-hdegoede@redhat.com>
+Subject: [PATCH resend] gpiolib: acpi: Add missing __init(const) markers to initcall-s
+Date:   Wed, 25 Mar 2020 11:39:56 +0100
+Message-Id: <20200325103956.109284-2-hdegoede@redhat.com>
+In-Reply-To: <20200325103956.109284-1-hdegoede@redhat.com>
+References: <20200325103956.109284-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Content-Transfer-Encoding: quoted-printable
@@ -51,15 +54,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+The gpiolib ACPI code uses 2 initcall-s and the called function
+(and used DMI table) is missing __init(const) markers.
 
-I know it has not been that long ago since I send this out, but still
-I have the feeling this one seems to have fallen through the cracks?
+This commit fixes this freeing up some extra memory once the kernel
+has completed booting.
 
-It has already been Acked by Mika, so if you can queue it up in
-linux-gpio/for-next that would be great.
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index 0017367e94ee..9276051663da 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1353,7 +1353,7 @@ int acpi_gpio_count(struct device *dev, const char =
+*con_id)
+ }
+=20
+ /* Run deferred acpi_gpiochip_request_irqs() */
+-static int acpi_gpio_handle_deferred_request_irqs(void)
++static int __init acpi_gpio_handle_deferred_request_irqs(void)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio, *tmp;
+=20
+@@ -1371,7 +1371,7 @@ static int acpi_gpio_handle_deferred_request_irqs(v=
+oid)
+ /* We must use _sync so that this runs after the first deferred_probe ru=
+n */
+ late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
+=20
+-static const struct dmi_system_id gpiolib_acpi_quirks[] =3D {
++static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst =3D =
+{
+ 	{
+ 		/*
+ 		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
+@@ -1455,7 +1455,7 @@ static const struct dmi_system_id gpiolib_acpi_quir=
+ks[] =3D {
+ 	{} /* Terminating entry */
+ };
+=20
+-static int acpi_gpio_setup_params(void)
++static int __init acpi_gpio_setup_params(void)
+ {
+ 	const struct acpi_gpiolib_dmi_quirk *quirk =3D NULL;
+ 	const struct dmi_system_id *id;
+--=20
+2.26.0.rc2
 
