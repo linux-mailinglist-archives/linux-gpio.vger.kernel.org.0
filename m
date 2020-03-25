@@ -2,96 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC8211933DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 23:50:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BFC3193416
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 00:02:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgCYWu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 18:50:57 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41882 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCYWu5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 18:50:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n17so4376542lji.8
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 15:50:55 -0700 (PDT)
+        id S1727358AbgCYXCH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 19:02:07 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38759 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCYXCG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 19:02:06 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c5so3255415lfp.5
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 16:02:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mvpoEnCZ4C8vKQMoIguE6IEarWu7BrtW6hbppPd41Ms=;
-        b=oiS1IbPa6rVlMQpiVeCxe4ZMoRkeE9A7zdm6RICLtCLk03wzQlXT9oAQNEEHqbunKx
-         7cYD+MpDnQ8WB5Rf5xDzOi6OguU/qsogEuvLJUUuwTIoudZBsmB37+jRcWkpJbEyI/cC
-         RB7bUKT0yh3ORR3ouXLj/jHG09NDIYmqk+1d02lS2+GyYtMAGj3kngCEa5tHViAu0FHX
-         7kia7cGC90BRYYoLTXBqEjLtTM344573/8/H/DWy7cw8xgH3Xw9cNnFf+zhxpcQrSLzC
-         AEQfz8TBMpIp7O7ezPZJEJtxMWuUQ1J4S8DHEKmts/yy/ka+BRwXO8qkTlMcQCqPdLmy
-         rerg==
+        bh=BhYWNeuI7fxySpW45Kxze00QPvGt6EkBnz4YWCMRr38=;
+        b=OpH/8hZQTg2SJikq6biTXo8/bYAy9RmjdvGqmZlTRV2KiX5dw9BrFyEVWY6DgVdUOh
+         0vO/66dL7horRhNEjDgdgJPwTyV9MMkTE5UhTxhsUFyXanIrspkrbwp8IqF1pJ6iXl2U
+         mHUwamaKdQXgC/T6Y1RSX+Qz09H5nRkqHt4Rt6fq2OEz3G7aI53HRH4nsQ2b9VHdh9JH
+         Oo4b4ZYlplhiUGso2Sr+Dd7tmT5AjYI86K0z4RUj3FeckZDawYobat7KQQL7H4RBVU0s
+         Z/M61Qqb8q7PxeWcPaY+/eZ9V1xuvzhqWx9OgL7tI8A7cJVCac7b99AFBV4dJg+1FVEq
+         AxyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mvpoEnCZ4C8vKQMoIguE6IEarWu7BrtW6hbppPd41Ms=;
-        b=S2EiV6DXldqgQ5FToQKL4XU8/S8AgteYbXGbD5wHJGUOj3IsQOmpakcXL3j0F1DyyM
-         /qhD1gEcCq1KIYTGxq6eJqphQxL2tLXXAq7mjjxeOmireJoDf4cfKjijl266GpvzEyku
-         HxtCgSYQfDw6KZF2ly6rPCg4hMQonusbOVjJJ52JzVy3TXzVtbW9EofbEeG73XNp2w8a
-         jiZOnXGvWksugsbJZ9TrKEKHuorcZYMv179rDOiHn7p6LlC1YYOjwX5WJ48msPxWgOAT
-         UvPlqd+Tyk8exKUXxP3Vb699l3c02ilIJp4G1JnUmVLboTdAzmwO0VICOXcmwb83S4R3
-         zkPw==
-X-Gm-Message-State: ANhLgQ1o31Jd3goVj3+DqbCmx3sVkc6/a98QzKIhIJCqyDwQQ5XAdWXY
-        iL7QlGFEinZuVXAzP/NGFRc6B/DMLGttWxzTlmFXMA==
-X-Google-Smtp-Source: ADFU+vuOH4Me0XspRjuLjVHoMVTABevC7PhfbHX7+cC03LR6H2O9N4MTjsXAhpRlFIcEFE1sqmjJ5hoUXeN01SCrpwY=
-X-Received: by 2002:a05:651c:445:: with SMTP id g5mr3210224ljg.125.1585176654577;
- Wed, 25 Mar 2020 15:50:54 -0700 (PDT)
+        bh=BhYWNeuI7fxySpW45Kxze00QPvGt6EkBnz4YWCMRr38=;
+        b=s+moQGGBMkr7O+D5rInShUWV/fwHDbkxs8p06qNi6fPSRmmgpgf7lFohhT++mwiSDb
+         C9MJzNUkMWZlCLm6LypUAbu7SfZ7rKPhFj/3jBuuJFEHG6HILdP57of4YqBAe7pc84qs
+         RaDiUS4Swy2eV3MmyOWR3wgNDDASX2U+8DY1n1uFRIAdpP/NUlCODQ4RUPgBGpaaV9BI
+         rgkM5YksSfEpjnIze/i1kyY4qv5Bn026OyZRCJ893Y8Pmvq4Xl0w478k/I7AVtaFVgWP
+         21FZC8lcgszlHFPkJOFweCLZYuepsCpgEyyrG+32zN6OUVByqKS8sbBaqf6Lbyc0DVwD
+         Ky1w==
+X-Gm-Message-State: ANhLgQ1FdIn/RqW7cuY4CiOVQcC96ws/txXiyoF6uAwklxklQ7muAmfi
+        KUKL3Y/TGn9whTvmuICDzUEO/WLAyY6T1ODK2kfmcQ==
+X-Google-Smtp-Source: ADFU+vtJik8NSp1FnZI4YjNb2Y+iw3oCOKRIyxD47R3rfEGrNA1Ywfe/cEKGAWBVGf9RtW8IvODoCsveb82PZVjsVao=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr3528125lfc.4.1585177322363;
+ Wed, 25 Mar 2020 16:02:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com> <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com> <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
- <20200310144913.GY2540@lahna.fi.intel.com>
-In-Reply-To: <20200310144913.GY2540@lahna.fi.intel.com>
+References: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
+In-Reply-To: <1583780521-45702-1-git-send-email-opendmb@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 25 Mar 2020 23:50:43 +0100
-Message-ID: <CACRpkdYP9a0oJnxodiSm8_Jst=3s=S4n82twp9V=8h=WCX5Gtw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
- ACPI GPIO numbers
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stanekm@google.com, stable <stable@vger.kernel.org>,
-        Marcin Wojtas <mw@semihalf.com>, levinale@chromium.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Date:   Thu, 26 Mar 2020 00:01:51 +0100
+Message-ID: <CACRpkdZiqT4hOS6bqucW7uG1ZQeijKQ1_OX2n3F8xO_H3y4-xw@mail.gmail.com>
+Subject: Re: [PATCH V2] gpio: brcmstb: support gpio-line-names property
+To:     Doug Berger <opendmb@gmail.com>
+Cc:     Gregory Fong <gregory.0xf0@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 3:49 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+On Mon, Mar 9, 2020 at 8:02 PM Doug Berger <opendmb@gmail.com> wrote:
 
-> > With the newer kernel the gpiochip%d number is different so crossystem
-> > ends up reading the wrong pin.
+> The default handling of the gpio-line-names property by the
+> gpiolib-of implementation does not work with the multiple
+> gpiochip banks per device structure used by the gpio-brcmstb
+> driver.
 >
-> Hmm, so gpiochipX is also not considered a stable number. It is based on
-> ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
-> chip is always gpichip200 for example then it is wrong.
+> This commit adds driver level support for the device tree
+> property so that GPIO lines can be assigned friendly names.
+>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 
-Yes it has always been clear that sysfs is what one shall use for establishing
-the topology of the hardware, so /sys/bus/gpiochip etc.
+Patch applied with the ACKs!
 
-For example on my laptop:
-$ pwd
-/sys/bus/gpio/devices
-$ ls -al
-total 0
-drwxr-xr-x. 2 root root 0 25 mar 23.49 .
-drwxr-xr-x. 4 root root 0 25 mar 23.49 ..
-lrwxrwxrwx. 1 root root 0 25 mar 23.49 gpiochip0 ->
-../../../devices/pci0000:00/INT344B:00/gpiochip0
-
-Here we see that this gpiochip is on this PCI card and so on.
-
-Linus
+Yours,
+Linus Walleij
