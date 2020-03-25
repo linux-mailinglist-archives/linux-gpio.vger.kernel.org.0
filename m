@@ -2,102 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6276193387
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 23:07:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8211933DC
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Mar 2020 23:50:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgCYWHw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Mar 2020 18:07:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:53740 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727357AbgCYWHw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:07:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F6641FB;
-        Wed, 25 Mar 2020 15:07:51 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE6623F71E;
-        Wed, 25 Mar 2020 15:07:50 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 22:07:49 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties:
- false'
-Message-ID: <20200325220749.GF12169@sirena.org.uk>
-References: <20200325220542.19189-1-robh@kernel.org>
- <20200325220542.19189-5-robh@kernel.org>
+        id S1727358AbgCYWu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Mar 2020 18:50:57 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41882 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCYWu5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Mar 2020 18:50:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n17so4376542lji.8
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Mar 2020 15:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mvpoEnCZ4C8vKQMoIguE6IEarWu7BrtW6hbppPd41Ms=;
+        b=oiS1IbPa6rVlMQpiVeCxe4ZMoRkeE9A7zdm6RICLtCLk03wzQlXT9oAQNEEHqbunKx
+         7cYD+MpDnQ8WB5Rf5xDzOi6OguU/qsogEuvLJUUuwTIoudZBsmB37+jRcWkpJbEyI/cC
+         RB7bUKT0yh3ORR3ouXLj/jHG09NDIYmqk+1d02lS2+GyYtMAGj3kngCEa5tHViAu0FHX
+         7kia7cGC90BRYYoLTXBqEjLtTM344573/8/H/DWy7cw8xgH3Xw9cNnFf+zhxpcQrSLzC
+         AEQfz8TBMpIp7O7ezPZJEJtxMWuUQ1J4S8DHEKmts/yy/ka+BRwXO8qkTlMcQCqPdLmy
+         rerg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mvpoEnCZ4C8vKQMoIguE6IEarWu7BrtW6hbppPd41Ms=;
+        b=S2EiV6DXldqgQ5FToQKL4XU8/S8AgteYbXGbD5wHJGUOj3IsQOmpakcXL3j0F1DyyM
+         /qhD1gEcCq1KIYTGxq6eJqphQxL2tLXXAq7mjjxeOmireJoDf4cfKjijl266GpvzEyku
+         HxtCgSYQfDw6KZF2ly6rPCg4hMQonusbOVjJJ52JzVy3TXzVtbW9EofbEeG73XNp2w8a
+         jiZOnXGvWksugsbJZ9TrKEKHuorcZYMv179rDOiHn7p6LlC1YYOjwX5WJ48msPxWgOAT
+         UvPlqd+Tyk8exKUXxP3Vb699l3c02ilIJp4G1JnUmVLboTdAzmwO0VICOXcmwb83S4R3
+         zkPw==
+X-Gm-Message-State: ANhLgQ1o31Jd3goVj3+DqbCmx3sVkc6/a98QzKIhIJCqyDwQQ5XAdWXY
+        iL7QlGFEinZuVXAzP/NGFRc6B/DMLGttWxzTlmFXMA==
+X-Google-Smtp-Source: ADFU+vuOH4Me0XspRjuLjVHoMVTABevC7PhfbHX7+cC03LR6H2O9N4MTjsXAhpRlFIcEFE1sqmjJ5hoUXeN01SCrpwY=
+X-Received: by 2002:a05:651c:445:: with SMTP id g5mr3210224ljg.125.1585176654577;
+ Wed, 25 Mar 2020 15:50:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
-Content-Disposition: inline
-In-Reply-To: <20200325220542.19189-5-robh@kernel.org>
-X-Cookie: Do not stamp.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+ <20200207075654.GB2667@lahna.fi.intel.com> <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+ <20200210101414.GN2667@lahna.fi.intel.com> <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
+ <20200310144913.GY2540@lahna.fi.intel.com>
+In-Reply-To: <20200310144913.GY2540@lahna.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 Mar 2020 23:50:43 +0100
+Message-ID: <CACRpkdYP9a0oJnxodiSm8_Jst=3s=S4n82twp9V=8h=WCX5Gtw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
+ ACPI GPIO numbers
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        stanekm@google.com, stable <stable@vger.kernel.org>,
+        Marcin Wojtas <mw@semihalf.com>, levinale@chromium.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Mar 10, 2020 at 3:49 PM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 
---sDKAb4OeUBrWWL6P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > With the newer kernel the gpiochip%d number is different so crossystem
+> > ends up reading the wrong pin.
+>
+> Hmm, so gpiochipX is also not considered a stable number. It is based on
+> ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
+> chip is always gpichip200 for example then it is wrong.
 
-On Wed, Mar 25, 2020 at 04:05:41PM -0600, Rob Herring wrote:
-> Setting 'additionalProperties: false' is frequently omitted, but is
-> important in order to check that there aren't extra undocumented
-> properties in a binding.
->=20
-> Ideally, we'd just add this automatically and make this the default, but
-> there's some cases where it doesn't work. For example, if a common
-> schema is referenced, then properties in the common schema aren't part
-> of what's considered for 'additionalProperties'. Also, sometimes there
-> are bus specific properties such as 'spi-max-frequency' that go into
-> bus child nodes, but aren't defined in the child node's schema.
+Yes it has always been clear that sysfs is what one shall use for establishing
+the topology of the hardware, so /sys/bus/gpiochip etc.
 
-Acked-by: Mark Brown <broonie@kernel.org>
+For example on my laptop:
+$ pwd
+/sys/bus/gpio/devices
+$ ls -al
+total 0
+drwxr-xr-x. 2 root root 0 25 mar 23.49 .
+drwxr-xr-x. 4 root root 0 25 mar 23.49 ..
+lrwxrwxrwx. 1 root root 0 25 mar 23.49 gpiochip0 ->
+../../../devices/pci0000:00/INT344B:00/gpiochip0
 
---sDKAb4OeUBrWWL6P
-Content-Type: application/pgp-signature; name="signature.asc"
+Here we see that this gpiochip is on this PCI card and so on.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl571jQACgkQJNaLcl1U
-h9Afjwf/TlVFnvMm+meLOwlfTMDT7xvKv6i3g4S/t/OkkG/qfuDfUpRz0LarRYTg
-8163ZrHY0aAQmLzyxMQR2cBhzM1tfANuY93djQNhe1ac6MUdNxTGLm1n+m9xh/o8
-IsSrgrnEqXCNCgqkAvPcDY7qkeLi68p5VqJIfdOjjeJkusQL3Q0kQUv7kpi6cgXn
-5Y+PlKm4cxLmOxFeUmCLQKocDSMttTCjxA/jm7jX+CWzKJjObhgsoHP9rg+uIO+1
-VHCHKXwxl1a8dhfG9ZnUxXY9UqGqGINojiPmRtTBX5oZqY95zShlcNiJ2HNaRRsT
-oIsZgkZuypvPpKies+jaVF2IuoSbcA==
-=EzfV
------END PGP SIGNATURE-----
-
---sDKAb4OeUBrWWL6P--
+Linus
