@@ -2,205 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B028E193B2C
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 09:39:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52F67193B37
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 09:40:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbgCZIjZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Mar 2020 04:39:25 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41239 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727575AbgCZIjY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 04:39:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h9so6621714wrc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 01:39:22 -0700 (PDT)
+        id S1726289AbgCZIkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Mar 2020 04:40:00 -0400
+Received: from mail-pj1-f52.google.com ([209.85.216.52]:54867 "EHLO
+        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZIkA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 04:40:00 -0400
+Received: by mail-pj1-f52.google.com with SMTP id np9so2154349pjb.4
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 01:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TLKfrWP8AcWMfXeFe+OL6HzlrP4WSBWNABjm4srbTno=;
-        b=J5gCYRRbYEj1hCUaEBVlU8bi9gpdFIkdCjjUKomRB01ovaQLmGoZezSV4UymD5J3Vk
-         UAQxUniYX12deWTkW2AoIfX8E0qqGRlViNFjELQqjswB0Ky5fe73mKF7U2oK3f+87AGk
-         apIJUNtPXDBW+DXgBlYQQ8G2wNlz5goRvUYS2XlnXUNWPg/ZkWNo6JPPdnEam/DLwCQo
-         lcizhqwTuoW7QH+u8TPnsYPhxgo0kuYLCsz+05OmYvB080/4lnQthTrOeNgwUYsfHhuY
-         V82r7rl7iMbh/wAzhsNyWZYchZdm8rEWBKL/b9eIdJLE9vEG7Zgqfl5mTb1K50VXGdJJ
-         UVew==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=IKXhnF5b2kRgiDvzdR+SY9Zq5PCgZZoxHrwTjIDIIpI=;
+        b=R86WI5i7M4bE9t90PBJNrmzOvBRXoU1jrPqWg/bEzX2gSIvjGDY+OMedebCGts67QV
+         t3sWczj1HzPFK0gkr+iKy9MKztafPXEYKXrfoYNVGFjvzr8n99jIeYrNFh0cK5+G7iKC
+         ptxkHewHPNpLVTjZnhmUIxWx7AfKCan7/tQYZK6YK4fjEVNRYBPKrF4DM5mErv0AaUoY
+         FjUWg1obGtMZjWrqLaGpAckixjehm3iBXIahHlcj8jwjYsuc9WS8mAjTfP4zvRIRttPW
+         3ipytsqzDS58xloyixMIRmeLnQtZVg1WYQZm+zEXXiJu0ZU2GhkTbg+sbiFe3mmHO6QE
+         JlAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TLKfrWP8AcWMfXeFe+OL6HzlrP4WSBWNABjm4srbTno=;
-        b=sDw9vKoJEDknHdFnTRZ1Ec417IUcdVigYUkNek2L2WG3aBj7cqvOKVb1GJqsoXptGb
-         WHjw2zgNnwnakInfredrX0mdtjRP754lKeJ819MXLEAwgX932y5qNnXd2g2rpcVF469L
-         oi7YWMPNQguw/whjr5LUQdVvr5wKX/lXmqRyVb+2Y6Miy4i3/69WhkP2teaSD4ZywjMl
-         jH+pozPq9l/6H6v1aWjh/ij/aYLQYeVXPmyuEHdCbqZZpDPeTNLr0+DZ8gfsB9b7c22t
-         UsLyyxDMZZUFc9sik3afmC6wMUtEv0+eYio/KVvvwsX1UcXb2eZoCBVJLoco99qOCG8C
-         G/QA==
-X-Gm-Message-State: ANhLgQ18bDYv6VR+QVTa6w/XZ/xcw30HHJoFyGoTUDEMu8faVPQ33TbP
-        8a3Zx39SSkMtCCIHwaoOwRynhQ==
-X-Google-Smtp-Source: ADFU+vvzuQ4QxVS/s0ibmVMZp4jdcmJoedPChELBVbuKyTFcPAB+5OcyntAwpr9Tl9sZS9yiTvZRQg==
-X-Received: by 2002:adf:c587:: with SMTP id m7mr8354429wrg.64.1585211961242;
-        Thu, 26 Mar 2020 01:39:21 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:25f2:833f:2a30:1344? ([2a01:e35:2ec0:82b0:25f2:833f:2a30:1344])
-        by smtp.gmail.com with ESMTPSA id l4sm1317884wru.1.2020.03.26.01.39.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 01:39:20 -0700 (PDT)
-Subject: Re: [PATCH 3/4] dt-bindings: Clean-up schema errors due to missing
- 'addtionalProperties: false'
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20200325220542.19189-1-robh@kernel.org>
- <20200325220542.19189-4-robh@kernel.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <e60df575-c70d-a194-6c54-32b5ae69a041@baylibre.com>
-Date:   Thu, 26 Mar 2020 09:39:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=IKXhnF5b2kRgiDvzdR+SY9Zq5PCgZZoxHrwTjIDIIpI=;
+        b=tDUWTEHVoICDL3wvf6mt7AX7tJjX2UobYkJ+q0CufVweUFPXwMoOZhKpE8Hii1/AMt
+         BjY7x4hD3uKekUlIpQkYCtok3gQUVOJSpsC4cIzOFKYH/akfNiOemrXjlcC5oVYXGtxb
+         wDqigo8+8Pal5jQ2YxFoTxvnN4ubxI3lHEpMzVJ+0mzrdTQppAgAGyYsjTst63VbgoFv
+         f66gSrM4IhnHwNS8+xJFhkGic1jevszK910bPTV12Rv0hs6ne64DBoZQUkviulwr7MOz
+         UclBTIRT3PB4zNQy/ExyME3Oq1q54xJbHgkHkXVqXEr0yveYZQ8Gt2rXhWtgZDFqKy7A
+         h4dQ==
+X-Gm-Message-State: ANhLgQ1inX+eMU0jsy6bsg5fJ3EuCiInEwew+Q6629u3K88CVUGdOKAF
+        m2oOyMUaGDhgXLqTqcqc0AT8cGmNNCw=
+X-Google-Smtp-Source: ADFU+vv1OCetkzQi3iop0jjfVcekp9efdIwEQHthy4y6FRhi3WXzYxEey9J+geFtSG80bj1Kwnlgqw==
+X-Received: by 2002:a17:90a:20f0:: with SMTP id f103mr1850407pjg.88.1585211998744;
+        Thu, 26 Mar 2020 01:39:58 -0700 (PDT)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id k6sm1095835pje.8.2020.03.26.01.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 01:39:57 -0700 (PDT)
+Message-ID: <5e7c6a5d.1c69fb81.7a675.4378@mx.google.com>
+Date:   Thu, 26 Mar 2020 01:39:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200325220542.19189-4-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.6-rc1-47-g5eefcaed501d
+X-Kernelci-Report-Type: build
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+Subject: linusw/devel build: 6 builds: 0 failed,
+ 6 passed (v5.6-rc1-47-g5eefcaed501d)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/03/2020 23:05, Rob Herring wrote:
-> Numerous schemas are missing 'additionalProperties: false' statements which
-> ensures a binding doesn't have any extra undocumented properties or child
-> nodes. Fixing this reveals various missing properties, so let's fix all
-> those occurrences.
-> 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Guillaume La Roque <glaroque@baylibre.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-amlogic@lists.infradead.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/clock/fsl,plldig.yaml |  3 +++
->  .../gpio/socionext,uniphier-gpio.yaml         |  2 ++
->  .../bindings/gpu/arm,mali-bifrost.yaml        |  6 ++---
->  .../bindings/gpu/arm,mali-midgard.yaml        |  3 +++
->  .../bindings/iio/adc/adi,ad7192.yaml          |  1 -
->  .../bindings/iio/pressure/bmp085.yaml         |  3 +++
->  .../media/amlogic,meson-gx-ao-cec.yaml        |  9 +++++---
->  .../bindings/mfd/rohm,bd71828-pmic.yaml       |  3 +++
->  .../bindings/net/ti,cpsw-switch.yaml          | 23 ++++++++++++-------
->  .../regulator/max77650-regulator.yaml         |  2 +-
->  .../bindings/thermal/amlogic,thermal.yaml     |  2 ++
->  .../bindings/timer/arm,arch_timer_mmio.yaml   |  2 ++
->  12 files changed, 43 insertions(+), 16 deletions(-)
-> 
+linusw/devel build: 6 builds: 0 failed, 6 passed (v5.6-rc1-47-g5eefcaed501d)
 
-For:
-  .../bindings/gpu/arm,mali-bifrost.yaml        |  6 ++---
-  .../bindings/gpu/arm,mali-midgard.yaml        |  3 +++
-  .../media/amlogic,meson-gx-ao-cec.yaml        |  9 +++++---
-  .../bindings/thermal/amlogic,thermal.yaml     |  2 ++
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.6-rc1-47-g5eefcaed501d/
 
+Tree: linusw
+Branch: devel
+Git Describe: v5.6-rc1-47-g5eefcaed501d
+Git Commit: 5eefcaed501dd9e3933dbff58720244bd75ed90f
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
+---
+For more info write to <info@kernelci.org>
