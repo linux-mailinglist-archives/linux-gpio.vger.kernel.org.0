@@ -2,161 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ABC619498D
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 21:50:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A11221949C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 22:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCZUu6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Mar 2020 16:50:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33078 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZUu6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 16:50:58 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f20so7994075ljm.0
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 13:50:56 -0700 (PDT)
+        id S1727606AbgCZVIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Mar 2020 17:08:05 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46768 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727352AbgCZVIE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 17:08:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so348575ljg.13
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 14:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7rAItXMRvBZm31ysm2z8WUbF9TsTJLp451lXgVpORtI=;
-        b=jSpc3zgtOsuGZiH4Vx5+f4B1qjsyI9zsctUsWSP69CzTAJxMCxojEJdHl61huawuZT
-         7z16LNUHLvoN0FK3avAUgWI5PRQafFJXvfOXbnfDeTTBt7YxG9nDBsLZ0Je97PwUzZFe
-         q+UUd4mACIn/XJ88T4iqtJwWmwjg/T5/gjhk1Lp52aD0BUtRA5rlgNbU9JhhjjVwGsgR
-         uTZDlwx1b5GTRDOXGcGvvqYISqZkALfdd5C0FVARQQ2mUksAQjgvQqLLNwemVXt5S5Jp
-         9JAjY/XpcPOKVllugYZ1I+t/N02KizInAewdW4zyZ92DhuaO/5fYhGjJsPUTJYIGtg0n
-         UxFw==
+         :cc;
+        bh=qAyBvgO4bOnc2gaynrGXEwwg2q9+bev/7Krv5slmOVU=;
+        b=qAM3YCcZs+npTx9BPPePlvKxpXslhpkUmEgugnm4zAlkgCuERkzo5/Ny5AqJKWuNI0
+         ee9NxL1Vene0EIe9MIIcEKVSNl3ELO9DzQV1v6OPZG/ymJS0GzpS5HpxEvajOFYGjLg/
+         8hTPoBBa+SZXYZv6GDDVEZOCIWiZqN1g2fSUO5WXwcWQv99jmowC0bv5jm8HQyAY9R0W
+         WdBbuyvVCJZ2oMFZsQJAT+IreTv93hXErVplWvMb+uKMkrZFThR29bTqy3mIrEYIHPb1
+         cOi1OYNIA3oIG4m5I6aUIgAH2xkWc7L3IilysL0bNP6jOWASQMrsZRbeWVUn4aYTPotV
+         ivYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7rAItXMRvBZm31ysm2z8WUbF9TsTJLp451lXgVpORtI=;
-        b=reaeje40FEx88y5hHu+ae1QAK0VBhQMuFpFmH/3MPmTw1kGlA1zM9zpplT3esth4DD
-         CVF8zK2cZHmHl0L/AM5b8IOYzNTJ9fduFkAdSI4xdlJkL/G9nPO7d9BzgVNBNH8v4i0x
-         R//wlCKSfLeKYa+XHZ96hMiwH5G3fvbWjly3fA3NJw0FzflhAcWY4qxHn4XKKxMR2JD+
-         YU+PfSqNLlKY6AbnGf5Oa5GH67mXmRRGX8qbs4gERFofHhKxE9fIRu1VeSaN06DDkAMi
-         MmbM/+iGb5kJh1NyFWWGZ9Bq5Nuq1OGz1tXqSFLD4ASfdsjeuABWU+w9qz0vVPAdoDes
-         QJ5w==
-X-Gm-Message-State: AGi0PuZ8lC3wRDvxS6GdEZSfAoMfSXikaBpEsF8IqDBW+LImOEZiYH4e
-        KaRUyJ96LVtlHvZjq+oqzGOj65dZzlXn0JmUXUDfMg==
-X-Google-Smtp-Source: APiQypJH7u6LrRAz5mVgf+hvQ1hGv7QlLR1Yc0jVBD8iyZzbx/yS97MV+WHcuRdT4e1rYMJHdWvPTPjYzmoRtZWIu3E=
-X-Received: by 2002:a2e:9c48:: with SMTP id t8mr496874ljj.168.1585255856054;
- Thu, 26 Mar 2020 13:50:56 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=qAyBvgO4bOnc2gaynrGXEwwg2q9+bev/7Krv5slmOVU=;
+        b=bvXASiiU/7cRl13F61nB0QjmuxGXxSuWb8c97nW4eOARcbgqPhc7d45GFH8g+Be0x2
+         208Ru3GAbvwVeeddAv5oArgQR4d6naMb6Rp8pGCmcpG7a/sqWBx+nNu+sHNzUyIlQmo6
+         0R+U+FPCBap8Ksb+S1jMxQ3p+Rttyd1jOgzdrmgazcgRIxGhzBD5rlkfAl/DQ3B1dY9t
+         /bFhy9HffV/TzYNhtN0C8ePuCJM/PJFW6ocefpueM/IrBW5oqAihD2hdF38+qc/jAb7y
+         stHuBSzhLO7xXxcI3ItHyRF4r+TXE2KZ5uefAv9hgp1X5q+iTKdtzR9DGlDilidHuYFo
+         sxSA==
+X-Gm-Message-State: AGi0PubunJhWHXpX0kOoWIzgtvieQ4GgGULCHJ8ghOx8canHsTLxL/ez
+        oPvbcU8HTCsNETJS68yODWvl1MC5VoQ50L4pvcn1hw==
+X-Google-Smtp-Source: APiQypKkTPp+fGz1ypK0j7lnjDyL1kGteAfWqjf8dTuHziw1bMtpKGCBe6kauaYbNGvlyl7GaC+Y5sCmhx3hwF0rDz8=
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr3830382ljo.223.1585256882978;
+ Thu, 26 Mar 2020 14:08:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com> <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
-In-Reply-To: <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
+References: <20200324135328.5796-1-geert+renesas@glider.be> <20200324135653.6676-1-geert+renesas@glider.be>
+In-Reply-To: <20200324135653.6676-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Mar 2020 21:50:44 +0100
-Message-ID: <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Date:   Thu, 26 Mar 2020 22:07:51 +0100
+Message-ID: <CACRpkdb=AVvyo6EOigKv+t5L4U=VjJ-16_ERimDvVWuCiU4Mxg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] ARM: integrator: impd1: Use GPIO_LOOKUP() helper macro
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
+On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> In this case I was thinking about a situation where we pass a
-> requested descriptor to some other framework (nvmem in this case)
-> which internally doesn't know anything about who manages this resource
-> externally. Now we can of course simply not do anything about it and
-> expect the user (who passed us the descriptor) to handle the resources
-> correctly. But what happens if the user releases the descriptor not on
-> driver detach but somewhere else for whatever reason while nvmem
-> doesn't know about it? It may try to use the descriptor which will now
-> be invalid. Reference counting in this case would help IMHO.
+> impd1_probe() fills in the GPIO lookup table by manually populating an
+> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP() helper
+> macro instead, to relax a dependency on the gpiod_lookup structure's
+> member names.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
+> support for GPIO lookup by line name", it can be applied independently.
+> But an Acked-by would be nice, too.
 
-I'm so confused because I keep believing it is reference counted
-elsewhere.
-
-struct gpio_desc *d always comes from the corresponding
-struct gpio_device *descs array. This:
-
-struct gpio_device {
-        int                     id;
-        struct device           dev;
-(...)
-        struct gpio_desc        *descs;
-(...)
-
-This array is allocated in gpiochip_add_data_with_key() like this:
-
-        gdev->descs =3D kcalloc(chip->ngpio, sizeof(gdev->descs[0]), GFP_KE=
-RNEL);
-
-Then it gets free:d in gpiodevice_release():
-
-static void gpiodevice_release(struct device *dev)
-{
-        struct gpio_device *gdev =3D dev_get_drvdata(dev);
-(...)
-        kfree(gdev->descs);
-        kfree(gdev);
-}
-
-This is the .release function for the gdev->dev, the device inside
-struct gpio_device,
-i.e. the same device that contains the descs in the first place. So it
-is just living
-and dying with the struct gpio_device.
-
-struct gpio_device does *NOT* die in the devm_* destructor that gets called
-when someone has e.g. added a gpiochip using devm_gpiochip_add_data().
-
-I think the above observation is crucial: the lifetime of struct gpio_chip =
-and
-struct gpio_device are decoupled. When the struct gpio_chip dies, that
-just "numbs" all gpio descriptors but they stay around along with the
-struct gpio_device that contain them until the last
-user is gone.
-
-The struct gpio_device reference counted with the call to get_device(&gdev-=
->dev)
-in gpiod_request() which is on the path of gpiod_get_[index]().
-
-If a consumer gets a gpio_desc using any gpiod_get* API this gets
-increased and it gets decreased at every gpiod_put() or by the
-managed resources.
-
-So should you not rather exploit this fact and just add something
-like:
-
-void gpiod_reference(struct gpio_desc *desc)
-{
-    struct gpio_device *gdev;
-
-    VALIDATE_DESC(desc);
-    gdev =3D desc->gdev;
-    get_device(&gdev->dev);
-}
-
-void gpiod_unreference(struct gpio_desc *desc)
-{
-    struct gpio_device *gdev;
-
-    VALIDATE_DESC(desc);
-    gdev =3D desc->gdev;
-    put_device(&gdev->dev);
-}
-
-This should make sure the desc and the backing gpio_device
-stays around until all references are gone.
-
-NB: We also issue try_module_get() on the module that drives the
-GPIO, which will make it impossible to unload that module while it
-has active GPIOs. I think maybe the whole logic inside gpiod_request()
-is needed to properly add an extra reference to a gpiod else someone
-can (theoretically) pull out the module from below.
+I simply applied this patch for v5.7 in the GPIO tree since I am the
+maintainer of this platform, and I might want to change stuff around
+Integrator next cycle so it's good to have this covered.
 
 Yours,
 Linus Walleij
