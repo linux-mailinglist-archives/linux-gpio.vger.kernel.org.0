@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9812B194A5E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 22:18:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99328194A81
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 22:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgCZVSx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Mar 2020 17:18:53 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35660 "EHLO
+        id S1726260AbgCZV0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Mar 2020 17:26:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41639 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbgCZVSw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 17:18:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k21so8047562ljh.2
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 14:18:51 -0700 (PDT)
+        with ESMTP id S1726067AbgCZV0o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 17:26:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so8043068lji.8
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BtDnHTuIZQJxreSGmLJQQ8ku1fLzEZvZgsl/IqNsN8A=;
-        b=IXxu/b/ZFJBTcuTRbJKkO3+OaHo+Jz796SjBmFajhclIBm/BsLYWIAcx9DtKHieiLy
-         tC1vll/WVvRZQ+7qJ8T1OabM2kIqVG9KEwn/gO1uzvwHIs/v6r5PUIM8K2kmGH3MMNXx
-         nmCCfjAEtu37RGo2HNzvtF+VDyr/FKocXnWXD6OBMy57AI/ZJMu+S2hSLH5zbmyjmr7E
-         sxTlRVJ5vW38t9Cg+zhSbse1W+BZkWRDzYx/Yu4yn+IZzHSViZT5elZgxloQRh/hC7i3
-         +w1dTkhKoFmmSYtRXjpmPsSyzvY/Q7+9WKp1e8RMSShyoiYZ9ziRyI4HZbJENIUJqUqy
-         2vwA==
+        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
+        b=R1ZbV8ZHF2uNrvQMw6yLPcZXYX/L1Bi1ZDegFPmpGCQZQxDo4xJstG1+5lxSGccQjM
+         DtHC3HQ/jx2YMTytcd6ultwEU/i0RlVnZivmFm9vimqHtelawlsMju+sVKJ7lHhUFclt
+         CAT0JwPBKGwAs7QH0zYIR8ngkUu1HqQt+JNM8LA/bSlIAM7ldYL3U3TWwGQQsnl/Hel9
+         6kj0OiO6KeusAjhbIL7po4EZAoa2QzUuNNDHmg7OdxCfj5w04nJlHikrm/4rjGHXVBbt
+         BztQyx2aUzDzf8VaHiOVqUzXyYasFaATNZCxsfBVkbIyEnDecxq0KQKBEI2iK76fHmnY
+         Nh5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BtDnHTuIZQJxreSGmLJQQ8ku1fLzEZvZgsl/IqNsN8A=;
-        b=kHacJ7MH/50HjvHIrRFQyp7wu1eAqQ8qannViBVtG26GFnXDBS8hFP0D+w4nYKVmdT
-         kexG3EzZhnkJscd5ABFYWrZJGGJjfnFGAR+yt3fA9I6XvLgu/QLNypD/mis13IvWNHZp
-         UDNAt2a2/n/IcDmVhJI/um0wwLTJcCtsxztnAjY7e3SjY6aC73OD4QDizcfg7C7gxJK0
-         vNxpBlIWPbBuNqXorsgZOBat6DO/EytzI6Ub3BVZfDOuAt/X0aDRNeQejfObtYNspIdH
-         zMKhMdrUb+vPh5d5sIz+Bt1fVjhUreGdfJVaHaLLT2YF4YUcpdyragQF9oR7LWu2UOTU
-         Db6Q==
-X-Gm-Message-State: AGi0PuZVh7iVXXeTwGA+bxddcCr9up9D35pal7/Inau5j8mE7M7CafQa
-        NIMhqsxT/EucgcJF+SIOtekZ47vMWLuYsu6CIAGMKw==
-X-Google-Smtp-Source: APiQypI3i354cA5ylzgV3u2ROOS/UyX7OA+VdV0fyyDcKpZ9OLsd6Iw0Xj96knvewn3/YsM9fw/zq6pJKSJXERmc8DI=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr5946209ljd.99.1585257530291;
- Thu, 26 Mar 2020 14:18:50 -0700 (PDT)
+        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
+        b=ZmsPU3jzEKh8GKBMO29y6OJtlYE3xsBCIvsrK7sxCnZY6q8t4eGnYjtaOiq3ZSt7c/
+         traNRfZrtg7CGOqVYvKhbrKu1AcyfDO6B93064O5SVCcrwVaC0sitZWLkboxH2qfJO8h
+         Y+n6YscB+XtCfWR5D1EMAtXPnLCIcSGNv1Q7xDfSQRK1gMpCTmwQw/qncOKdJGjdNCj0
+         DWSf8Hr/KsuqLRwLG3tBee9mz6oqlrsB2IyVXSyAlTWTs25y9anX6lDuoT7AMkLiBEiy
+         uOV5Uu64RROagU4fYzEZ/AemRGzCgIeUpDALOF5EWR0SqAQr6Tx7ZhzkV8RNnK9HF9T1
+         CB1w==
+X-Gm-Message-State: AGi0PuZ93qIhAUsgTub1rcsLBTVtKB5VD5jimfp1hHZ7uSB4OeVbS4++
+        CfPCLYt4ffFo/n7V9ONnTMM/2DlsZAHr1LZvt/MEDA==
+X-Google-Smtp-Source: APiQypLsy28BzQ4YoJJE2i0gYrneALBvsp4MxQ5uVCHUPAjFEGFTMqFCGi01B7eAtiikChneeDns42u4uM1vGmEAXuk=
+X-Received: by 2002:a2e:9c48:: with SMTP id t8mr568502ljj.168.1585258002139;
+ Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-4-geert+renesas@glider.be>
-In-Reply-To: <20200324135653.6676-4-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-5-geert+renesas@glider.be>
+In-Reply-To: <20200324135653.6676-5-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Mar 2020 22:18:39 +0100
-Message-ID: <CACRpkdbN82n3B+Q-QVjB1jLpJAYS19fKukkDXQm3gZsuFFFM_w@mail.gmail.com>
-Subject: Re: [PATCH v6 4/8] gpiolib: Add support for GPIO lookup by line name
+Date:   Thu, 26 Mar 2020 22:26:30 +0100
+Message-ID: <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
+Subject: Re: [PATCH v6 5/8] gpiolib: Introduce gpiod_set_config()
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -76,39 +76,29 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> Currently a GPIO lookup table can only refer to a specific GPIO by a
-> tuple, consisting of a GPIO controller label and a GPIO offset inside
-> the controller.
+> The GPIO Aggregator will need a method to forward a .set_config() call
+> to its parent gpiochip.  This requires obtaining the gpio_chip and
+> offset for a given gpio_desc.  While gpiod_to_chip() is public,
+> gpio_chip_hwgpio() is not, so there is currently no method to obtain the
+> needed GPIO offset parameter.
 >
-> However, a GPIO may also carry a line name, defined by DT or ACPI.
-> If present, the line name is the most use-centric way to refer to a
-> GPIO.  Hence add support for looking up GPIOs by line name.
+> Hence introduce a public gpiod_set_config() helper, which invokes the
+> .set_config() callback through a gpio_desc pointer, like is done for
+> most other gpio_chip callbacks.
 >
-> Implement this by reusing the existing gpiod_lookup infrastructure.
-> Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
-> that this field can have two meanings, and update the kerneldoc and
-> GPIO_LOOKUP*() macros.
+> Rewrite the existing gpiod_set_debounce() helper as a wrapper around
+> gpiod_set_config(), to avoid duplication.
 >
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+> v6:
+>   - New.
 
-I kind of like this approach, however there are things here that
-need to be considered: the line name is in no way globally unique,
-and I think there are already quite a few GPIO chips that
-have the same line names assigned for every instance of that
-chip.
-
-gpiochip_set_desc_names() only warns if there is a line with
-the same name on the same gpio_chip.
-
-I suppose we need to document that the line name look-up
-will be on a first-come-first-served basis: whatever line
-we find first with this name is what you will get a reference
-to, no matter what chip it is on, and it is possible albeit
-not recommended that some other chip has a line with the
-same name.
+This is nice, I tried to actually just apply this (you also sent some
+two cleanups that I tried to apply) byt Yue's cleanup patch
+commit d18fddff061d2796525e6d4a958cb3d30aed8efd
+"gpiolib: Remove duplicated function gpio_do_set_config()"
+makes none of them apply :/
 
 Yours,
 Linus Walleij
