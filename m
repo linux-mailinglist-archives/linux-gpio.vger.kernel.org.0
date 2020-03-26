@@ -2,78 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F67193B37
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 09:40:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB24E193B47
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Mar 2020 09:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgCZIkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Mar 2020 04:40:00 -0400
-Received: from mail-pj1-f52.google.com ([209.85.216.52]:54867 "EHLO
-        mail-pj1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgCZIkA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 04:40:00 -0400
-Received: by mail-pj1-f52.google.com with SMTP id np9so2154349pjb.4
-        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 01:39:59 -0700 (PDT)
+        id S1726336AbgCZIs0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Mar 2020 04:48:26 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34678 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZIsZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Mar 2020 04:48:25 -0400
+Received: by mail-ua1-f67.google.com with SMTP id d23so1577341uak.1
+        for <linux-gpio@vger.kernel.org>; Thu, 26 Mar 2020 01:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=IKXhnF5b2kRgiDvzdR+SY9Zq5PCgZZoxHrwTjIDIIpI=;
-        b=R86WI5i7M4bE9t90PBJNrmzOvBRXoU1jrPqWg/bEzX2gSIvjGDY+OMedebCGts67QV
-         t3sWczj1HzPFK0gkr+iKy9MKztafPXEYKXrfoYNVGFjvzr8n99jIeYrNFh0cK5+G7iKC
-         ptxkHewHPNpLVTjZnhmUIxWx7AfKCan7/tQYZK6YK4fjEVNRYBPKrF4DM5mErv0AaUoY
-         FjUWg1obGtMZjWrqLaGpAckixjehm3iBXIahHlcj8jwjYsuc9WS8mAjTfP4zvRIRttPW
-         3ipytsqzDS58xloyixMIRmeLnQtZVg1WYQZm+zEXXiJu0ZU2GhkTbg+sbiFe3mmHO6QE
-         JlAA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=Pdr09OqDCxaS6kxdInvAosUxxNdqt0/Zh3BWLp90rxfdNcAPsph15NKZwd3wfkTZTm
+         qzQYChmx5W0Wunv9vhngHdS0RD7uZckQcl7zXz0ZE3YDojFtAhH1J5pO8oT3+LG+KbJY
+         4Jc32I//Avw2fBLqn517aKbpsoLMnr2AW7fdDLiYNfvwRRxa0cfsz9cT666ZRznaYr8c
+         nIWfvA92h5j2xxP0adZimNVVbWfOh1Lavv7XpupLul+4QVrL9KD5UJt5Qd1hWXt4mJ1+
+         zEI3s10R2ZDgBkDWd2Z7LD3ZPOg143zf/aOSxDFeNWYbhSJM23B/gF3l4zgKWowp/eWP
+         cqKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=IKXhnF5b2kRgiDvzdR+SY9Zq5PCgZZoxHrwTjIDIIpI=;
-        b=tDUWTEHVoICDL3wvf6mt7AX7tJjX2UobYkJ+q0CufVweUFPXwMoOZhKpE8Hii1/AMt
-         BjY7x4hD3uKekUlIpQkYCtok3gQUVOJSpsC4cIzOFKYH/akfNiOemrXjlcC5oVYXGtxb
-         wDqigo8+8Pal5jQ2YxFoTxvnN4ubxI3lHEpMzVJ+0mzrdTQppAgAGyYsjTst63VbgoFv
-         f66gSrM4IhnHwNS8+xJFhkGic1jevszK910bPTV12Rv0hs6ne64DBoZQUkviulwr7MOz
-         UclBTIRT3PB4zNQy/ExyME3Oq1q54xJbHgkHkXVqXEr0yveYZQ8Gt2rXhWtgZDFqKy7A
-         h4dQ==
-X-Gm-Message-State: ANhLgQ1inX+eMU0jsy6bsg5fJ3EuCiInEwew+Q6629u3K88CVUGdOKAF
-        m2oOyMUaGDhgXLqTqcqc0AT8cGmNNCw=
-X-Google-Smtp-Source: ADFU+vv1OCetkzQi3iop0jjfVcekp9efdIwEQHthy4y6FRhi3WXzYxEey9J+geFtSG80bj1Kwnlgqw==
-X-Received: by 2002:a17:90a:20f0:: with SMTP id f103mr1850407pjg.88.1585211998744;
-        Thu, 26 Mar 2020 01:39:58 -0700 (PDT)
-Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id k6sm1095835pje.8.2020.03.26.01.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 01:39:57 -0700 (PDT)
-Message-ID: <5e7c6a5d.1c69fb81.7a675.4378@mx.google.com>
-Date:   Thu, 26 Mar 2020 01:39:57 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
+        b=pPZ492lQ3X0u9uDrP9LjJeKZlNHLGyIJULEJpaXymuhC91rTZ09XJvtCaR273ZEiEg
+         YRem9QUnzMi2IRQq25TMaWRdE4D5wQr/o5uyDf9ElKzPYD9ElK0ysquS/Dh9KXPAnpZY
+         YOSY8aBhCVBUQKTAAmpqXhZFsHyolggJ7hcVwwPu1OrU6brHsi18yQqwwM65+odBoWjA
+         nYrDpvGOsL6wvNfdXzTDUZMAIEbbwx5ewW4Alivk28QZXI2BkILeM/vlrymC+GwcRHfL
+         KYVfFq7pCDcYvjQw+1IZCrZpw2YYNCBnqpAIYmpJDCIqMxwVzf1XUl1x4ZIsgQfFKQQc
+         JXHw==
+X-Gm-Message-State: ANhLgQ1GQbwI+SLL6/W2xPGDdfNH68Sd2DSdHZTEQdx1rJhjyG2f1p82
+        Uxz4SqaixKp1zeZ0GvaMW4QNDuovWO/+AeJlY1o=
+X-Google-Smtp-Source: ADFU+vvlSdadq2T7Z94wxYdWR5tXm/x0xyQKdNjDSej6ZA3g+2eAIJg/KE5hL6EFaeqRsV685uu1jR6jbddsIMmQjjY=
+X-Received: by 2002:ab0:4502:: with SMTP id r2mr5697400uar.63.1585212504163;
+ Thu, 26 Mar 2020 01:48:24 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:a67:fc57:0:0:0:0:0 with HTTP; Thu, 26 Mar 2020 01:48:22
+ -0700 (PDT)
+Reply-To: ayishagddafio@mail.ru
+From:   Aisha Gddafi <aishagddafi68@gmail.com>
+Date:   Thu, 26 Mar 2020 01:48:22 -0700
+Message-ID: <CAKJgomEP0JjR9hPqgC-4BcDKN6zxZXyezTPi7OmekyWZNQH0mg@mail.gmail.com>
+Subject: Lieber Freund (Assalamu Alaikum),?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.6-rc1-47-g5eefcaed501d
-X-Kernelci-Report-Type: build
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-Subject: linusw/devel build: 6 builds: 0 failed,
- 6 passed (v5.6-rc1-47-g5eefcaed501d)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 6 builds: 0 failed, 6 passed (v5.6-rc1-47-g5eefcaed501d)
+--=20
+Lieber Freund (Assalamu Alaikum),
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.6-rc1-47-g5eefcaed501d/
+Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
+Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
+Mutter und eine Witwe
+mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
+hen
+Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
 
-Tree: linusw
-Branch: devel
-Git Describe: v5.6-rc1-47-g5eefcaed501d
-Git Commit: 5eefcaed501dd9e3933dbff58720244bd75ed90f
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 6 unique architectures
+Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
+f=C3=BCnfhunderttausend
+United State Dollar ($ 27.500.000.00) und ich brauche eine
+vertrauensw=C3=BCrdige Investition
+Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
+jedoch
+M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
+von
+Investitionsprojekten in Ihrem Land
+Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
+bauen.
 
----
-For more info write to <info@kernelci.org>
+Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
+n und
+Unternehmensgewinn zu verhandeln
+Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+
+Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
+antworten Sie bitte dringend
+Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
+.
+
+Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
+esse (
+ayishagddafio@mail.ru ) zur weiteren Diskussion.
+
+Freundliche Gr=C3=BC=C3=9Fe
+Frau Aisha Al-Qaddafi
