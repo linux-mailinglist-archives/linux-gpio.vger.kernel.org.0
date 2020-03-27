@@ -2,126 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2DD91956E5
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 13:13:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1721A1956E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 13:14:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0MN5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 08:13:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39392 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgC0MN5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 08:13:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id e9so145174wme.4;
-        Fri, 27 Mar 2020 05:13:55 -0700 (PDT)
+        id S1726661AbgC0MO0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 08:14:26 -0400
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:37185 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgC0MO0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 08:14:26 -0400
+Received: by mail-pl1-f182.google.com with SMTP id x1so3385993plm.4
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 05:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9iaDmSUKmxy4MplNRG0lgdo3RxFqTWGt2OBwvA1lXXc=;
-        b=pbCkSC0W37evpqV3fXh8Fl1hQJMePJa8Hcp6VZI9hvqs3bSIHkWw8S0TI18tVLlrdL
-         2P5ZHudgCcvM9FY11djQeTIZH/us+e77DIUk+oMRXQSxl7FlxIpdZq8TgHHg7UpwZDcI
-         E/QX5B4rv745UDPRZXYEQznH80ru6h4YBIeMD/Mh7J+kIIbKaok3JjtngxOS2ocEqcvA
-         zXS+d/F897ErSwZIpRKzxKqQLg2Wqh4H0vx/AaWeKa+i+xjugVMg4+pfsmRCiJMaKdY/
-         abHGwn+T9fguifc6m+z39wxIstfysN1SnADTETy3PfU3dTSmDrgUfEpw4MMGg0qmX9Qn
-         EGig==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=KLTlRoEH0CuOQS2LExETrPHh3D3S9E7CS2LaWmIntTo=;
+        b=bHJNFULjX7kcMHUlXdXh5J5fvb5G/evcxBDgC0d2cfofOsTU77StWapFD2my94QAU/
+         WH8Ga3Bhg3WYUETH2HOu9cAsSOd4a3INYHdwhGtcTzNKgl9EshIYd3DS9oerNMno5E9T
+         xZWa5+twtDVTO25Rvn6dEhZ/ucAlcwIkMyqBcUQAsNv4PGDXXgBop1jw2dOtT+jBlFpt
+         VFz6oyJ/L4KQYfKeu0SlU+bJ/oFD6eAKcxyQ55oAIY+0uzo1sNvjpl/kMPUJlyXmT9s6
+         41jVu/jRsfOEJS/fdgFFURFj2qh+fugTxk0EXaRhLQ7yMRFGokNCl79XLgUnbN9Iw5UB
+         gbtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9iaDmSUKmxy4MplNRG0lgdo3RxFqTWGt2OBwvA1lXXc=;
-        b=pqy/eXChq+nLH8+YFkDTIBPlS+OcSjneLONeEsn+NmcpLTCaUh8UW1RgfeBknMB+49
-         fpvxhuQt+Y+iUrUbi2QcUG2bTZUonrb6pZvuzTnglkC3peffHak7sxKzxWSaGKhOY4Fu
-         /y3yK2qYs+EBnfzGKUKW3BEzWlNPPCjjVQuqjckLmwrpWrBGW/SXHJIiKkLQwoCpQGrl
-         VykMayaYWb1k6bpwoGXmQn17t1Scgnn9GbS1l5g/vPAp8q36wa4oaaot6fp14rS7His1
-         gW3h8nCLRLkeok+rOwsmwS/ZlZJIYrKYH9cd0nwZc32TN8l1iKODK8EFp9k1gbzFGz+4
-         3hjw==
-X-Gm-Message-State: ANhLgQ0RCi0iCKBP0oK6dTw5HKnf9KxS7v0vmLyycTtm6Ass7zK4pcFm
-        7zyxlSpC/L++Cc/GXcREkuk=
-X-Google-Smtp-Source: ADFU+vvWKyzLcpXi3WGO7h6afkeLVwgYz3XZTq446EdsGFAoJ3O3CZE0jg+n87CFSZsso39H4lW1kA==
-X-Received: by 2002:a05:600c:54f:: with SMTP id k15mr4987908wmc.76.1585311234932;
-        Fri, 27 Mar 2020 05:13:54 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id v21sm23006wmh.26.2020.03.27.05.13.53
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=KLTlRoEH0CuOQS2LExETrPHh3D3S9E7CS2LaWmIntTo=;
+        b=dEj5ktwAJ1NCvIVfYiy1ng3g1u9/JbGp0tqGUA0+88jVsVYoHgltfOS+utwPzscrIc
+         EqHSt5f7k+xwNAY5IIH2X7lLRiv6ZhziRGvyznUDddTylLKfK2aBH3ZSvmY/tpINfId/
+         D0GgDEipwtZQVjTpBiuki4xRNwb92gxuydS/4FrXaCoUIm0+z5He6EpT6IXLdyWoinnQ
+         DBvL1bam3SGfsvG5CznJwoArQPGZXumV3lEBYXyWSxNmB35lFUHp62Mfoijs9qGqDaOy
+         6L7QbmxtvkMo4MXRKsqc8SYSmRerN+AJ0g3G1A2Rq7k63A3Ba7asb3m2ByhQhMiUpp+j
+         PAJw==
+X-Gm-Message-State: ANhLgQ0n/bnSQ0BcR1mfH4q7Lv2vJry5BidgAlfszygSA/f0njaP36dU
+        otrkNiZT8IuOEYOcWPPhotQR1CgNz2Y=
+X-Google-Smtp-Source: ADFU+vsyKl0+EnJwQyYWx/28TMzXjjJA7N2vUUlxUqPORRm5q9xOWbUFjNwEBy2clDZ8NcD+kwZwCA==
+X-Received: by 2002:a17:902:107:: with SMTP id 7mr12634437plb.302.1585311264844;
+        Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
+Received: from [10.0.9.4] ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id 185sm3957426pfz.119.2020.03.27.05.14.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 05:13:53 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 13:13:51 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 1/9] gpio: Support GPIO controllers without pin-ranges
-Message-ID: <20200327121351.GA2229783@ulmo>
-References: <20200319122737.3063291-1-thierry.reding@gmail.com>
- <20200319122737.3063291-2-thierry.reding@gmail.com>
- <CACRpkda5M4NPvMBBLg+_2BJw7ZmryrgN72JZL_XAFQ137s0OLA@mail.gmail.com>
+        Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
+Message-ID: <5e7dee20.1c69fb81.ac326.0867@mx.google.com>
+Date:   Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Content-Disposition: inline
-In-Reply-To: <CACRpkda5M4NPvMBBLg+_2BJw7ZmryrgN72JZL_XAFQ137s0OLA@mail.gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.6-rc1-51-gffa91e7ca142
+X-Kernelci-Report-Type: boot
+X-Kernelci-Branch: devel
+X-Kernelci-Tree: linusw
+Subject: linusw/devel boot: 43 boots: 0 failed,
+ 43 passed (v5.6-rc1-51-gffa91e7ca142)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+linusw/devel boot: 43 boots: 0 failed, 43 passed (v5.6-rc1-51-gffa91e7ca142)
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
+rnel/v5.6-rc1-51-gffa91e7ca142/
+Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
+5.6-rc1-51-gffa91e7ca142/
 
-On Fri, Mar 27, 2020 at 11:37:07AM +0100, Linus Walleij wrote:
-> On Thu, Mar 19, 2020 at 1:27 PM Thierry Reding <thierry.reding@gmail.com>=
- wrote:
->=20
-> > From: Thierry Reding <treding@nvidia.com>
-> >
-> > Wake gpiochip_generic_request() call into the pinctrl helpers only if a
-> > GPIO controller had any pin-ranges assigned to it. This allows a driver
-> > to unconditionally use this helper if it supports multiple devices of
-> > which only a subset have pin-ranges assigned to them.
-> >
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
->=20
-> Patch applied.
->=20
-> We have some drivers like this:
-> drivers/gpio/gpio-pl061.c:
->=20
->         if (of_property_read_bool(dev->of_node, "gpio-ranges")) {
->                 pl061->gc.request =3D gpiochip_generic_request;
->                 pl061->gc.free =3D gpiochip_generic_free;
->         }
->=20
-> Should we just make a patch assigning these callbacks
-> unconditionally as a follow-up?
+Tree: linusw
+Branch: devel
+Git Describe: v5.6-rc1-51-gffa91e7ca142
+Git Commit: ffa91e7ca1426a89eec1b3101286d82785760767
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 43 unique boards, 12 SoC families, 3 builds out of 6
 
-Yeah, that's a good idea. I'll look into it.
-
-Thierry
-
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl597foACgkQ3SOs138+
-s6Gtww//f2wgHp8+oZLyJJoqc6KL8UkvcBfrJRzcHr37THvP7BGCNWS7KIIvyR6Z
-7NYjQOm5daGIQJ1FQSBZHOKOPJ8t6Yocsf8sisIq53pW9EjUYjmJUKkwB1rNnD2Y
-/eh/szX/Z60bfuFlPNiYJgSWfIoRw4crM5yTrxjfIoV+HjX86zAkt8Ko7JLYYB/7
-5gGS4SEGwhyDvFNJwwdyW0CurFRmQbUWsSB1BPOzNYB30kubmB5HxBws/xaE3Pqk
-Z53TgLNemQ4hRcDzm0PeiPdvDWjI3Khy0j04+ivOUONzq7w7S+y+sTRha6mCykD8
-SNm92eegAtpSOrt/Ji4Qja1d7CQFO5SKvs4JlqifTuJ/PMuxH0aDmIUsVmKHPTqq
-rTrdvGWT3rV0TLWgZ1Q/j3nZrqp18pGGGSRaAZesE9dHVXrWfpO3WS+nGo2/Yb4q
-86XzxbIStJ17vrkrOI5ntSOdXVgouEgBR+XYkr8l4Yde4FoZTeAHQfM+0dhys0nG
-rIXMo74gRouOLhhz/tzvAYCnVTRWX4rrrfY5/bkSnlwGNmrLAYKbg02+faJVNFQy
-mSTjB7BtZ4C7w0ZsPCCwSYBXSPZZATgHJMjwf1FlO+j6AZ7l8URXC2HGuVfhmzl3
-qyGEfDlIRES9gbNzYyyMH21viwL3+6eA5GN9AVzA8e3G6PQvbwo=
-=0srh
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
+---
+For more info write to <info@kernelci.org>
