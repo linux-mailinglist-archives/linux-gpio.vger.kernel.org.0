@@ -2,205 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B52FF1960D8
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 23:07:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B756196126
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 23:32:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgC0WHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 18:07:05 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.163]:22486 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC0WHF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 18:07:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585346819;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=8US9yjR2qckFnDOrbB5ZKghJi+sBmaboahOW8mzYA7w=;
-        b=r6Mnd9Lcb43Y+Nn0Q00NkTqK4zJPILJ1xDIK19xwq4OcWORj4ntL7mUJFR6Gk6rKMu
-        +qsmbm6Tisp45X9dVoX6YX+OpRGnYaIY5wWryE1NNUxgjVFgo3OdC+NReGvPKqgKcGh+
-        UVgQ+vQgkfiMKwdnkroRBTZJpfgauDlf6QhAS9w/kVaIhByAjESUaDJkfKnFWL+Hqfl/
-        beBPoOnU7WUDARka3vSmYH+eaHP77F5mFTU83CkMsEwZbtmjybzB5uhswq2klS9LyXWB
-        tPSFT9pBpYpDitUe/tWTkxnNzFUm72yqduXGK5to8bh8daHOM8/HhqInZKztNm/dG4/B
-        NOsA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCUXA0O8ZI="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2RM6i7sq
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Fri, 27 Mar 2020 23:06:44 +0100 (CET)
-Subject: Re: [PATCH v1 2/2] [RFC] gpio: pca953x: drop unused parameters of pca953x_recalc_addr()
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200327172244.30816-3-u.kleine-koenig@pengutronix.de>
-Date:   Fri, 27 Mar 2020 23:06:43 +0100
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DF902AF8-CA86-4F31-9D98-288D40634D69@goldelico.com>
-References: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de> <20200327172244.30816-1-u.kleine-koenig@pengutronix.de> <20200327172244.30816-3-u.kleine-koenig@pengutronix.de>
-To:     =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-X-Mailer: Apple Mail (2.3124)
+        id S1727585AbgC0WcW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 18:32:22 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41541 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC0WcW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 18:32:22 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v1so13210024edq.8;
+        Fri, 27 Mar 2020 15:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PS7K5rF+Cg6On6T3DToyfe3R3dABZKL4am5J0GbhTdc=;
+        b=uhUfpfv1fHQDzSKiZvahUYHiOoF2HuQgzuE83x6rP4SAxvRKfVV29Os1SuqguMCqIo
+         n7FtXSqsPrizA2bWYlZqgJH9R5pbQDR2Y/zjaFsOCtsaY/ys/iTK0ADLKFG3+PGRGh/F
+         xIr2eTCKnTOoy4XHUpg50mXyOsd6Bi8gV9ufFexWeqMLPlh4DuJ69yu5JnN4OQKfjazd
+         lCDiTWcV2+x3ixrkMcD2mimcBvGmpRfHYMX32XlbIoGu6NSTmCg+tlkZK/3D/qegi5jD
+         GcOoZnubiVjCOFKZAnVsQUbDqkdyN/iVwqMMPAMu1/rqGpHqnAJnnH3XGw7P6BqfhWZx
+         zuyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PS7K5rF+Cg6On6T3DToyfe3R3dABZKL4am5J0GbhTdc=;
+        b=XcU4WI0n1FhswMRe64IKvYinIcj5H6A6ex+RwawWtSY9IHiMZch/O4FfuTIajwWSLs
+         mKEZz3QaWxM8bo4SJHmbzyOL+oUr9b+GjXKdmKHAqMjatBt6Wm9TBp3AGJMfDEeWPRrV
+         5jHz0tafcKJTQPyyfcy7SV2veH+8bqu6nQYiCHp0edPJIuAaO79IjqaAmvOTf1noExgF
+         G1Xy1x0ywMopWqI9o76zp15MoGmvgrcEmRmRmnqEiWKUATAWWFicqWuFuj4TwMC1ihgw
+         vmJaikr3QF/veOrBTJRBTX6r7vx95Eu7c5WYAhjZkcNZLHmdJMpPc0zinCaZRcd5j+iz
+         PfVw==
+X-Gm-Message-State: ANhLgQ2oClLWzGKQntNLTLOMhdAIZ6mHZkWyfTCCnf341xGdDwgmdKGd
+        i7DARoS4NyMV+4XBSHXVhLA=
+X-Google-Smtp-Source: ADFU+vtxilaq5/JJXYmsRylks0eE4gcJmXLVEWDGDi4/GpErXjHanhDXgc13g3q4tpCUIuuPtQGsyg==
+X-Received: by 2002:a05:6402:b14:: with SMTP id bm20mr1336170edb.365.1585348340310;
+        Fri, 27 Mar 2020 15:32:20 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id p8sm1056354edm.96.2020.03.27.15.32.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 15:32:19 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ajay Kishore <akisho@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] pinctrl: qcom: use scm_call to route GPIO irq to Apps
+Date:   Fri, 27 Mar 2020 23:32:08 +0100
+Message-Id: <20200327223209.20409-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Ajay Kishore <akisho@codeaurora.org>
 
-> Am 27.03.2020 um 18:22 schrieb Uwe Kleine-K=C3=B6nig =
-<u.kleine-koenig@pengutronix.de>:
->=20
-> After the previous patch the two last parameters of
-> pca953x_recalc_addr() are unused and so can be dropped.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> drivers/gpio/gpio-pca953x.c | 31 +++++++++++--------------------
-> 1 file changed, 11 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 8168558299c2..f4943cad5d0e 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -325,8 +325,7 @@ static const struct regmap_config =
-pca953x_ai_i2c_regmap =3D {
-> 	.max_register =3D 0x7f,
-> };
->=20
-> -static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int =
-off,
-> -			      bool write, bool addrinc)
-> +static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int =
-off)
-> {
-> 	int bank_shift =3D pca953x_bank_shift(chip);
-> 	int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
-> @@ -338,7 +337,7 @@ static u8 pca953x_recalc_addr(struct pca953x_chip =
-*chip, int reg, int off,
->=20
-> static int pca953x_write_regs(struct pca953x_chip *chip, int reg, =
-unsigned long *val)
-> {
-> -	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0, true, true);
-> +	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0;
+For IPQ806x targets, TZ protects the registers that are used to
+configure the routing of interrupts to a target processor.
+To resolve this, this patch uses scm call to route GPIO interrupts
+to application processor. Also the scm call interface is changed.
 
-here is some ")" missing.
+Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+v3:
+* Rename route_to_apps to intr_target_use_scm
+* Follow standard design and rename base_reg to phys_base
+* Add additional comments in route interrupts condition 
 
-After fix&compile it still works for the pcal6524 of the OMAP5/Pyra =
-(LPAE build).
+v2:
+* Move static varibale in msm_pinctrl struct
+* Revert '4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")'
+  to get base_reg addr
 
-> 	u8 value[MAX_BANK];
-> 	int i, ret;
->=20
-> @@ -356,7 +355,7 @@ static int pca953x_write_regs(struct pca953x_chip =
-*chip, int reg, unsigned long
->=20
-> static int pca953x_read_regs(struct pca953x_chip *chip, int reg, =
-unsigned long *val)
-> {
-> -	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0, false, true);
-> +	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0);
-> 	u8 value[MAX_BANK];
-> 	int i, ret;
->=20
-> @@ -375,8 +374,7 @@ static int pca953x_read_regs(struct pca953x_chip =
-*chip, int reg, unsigned long *
-> static int pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned =
-off)
-> {
-> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
-> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off,
-> -					true, false);
-> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off);
-> 	u8 bit =3D BIT(off % BANK_SZ);
-> 	int ret;
->=20
-> @@ -390,10 +388,8 @@ static int pca953x_gpio_direction_output(struct =
-gpio_chip *gc,
-> 		unsigned off, int val)
-> {
-> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
-> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off,
-> -					true, false);
-> -	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, off,
-> -					true, false);
-> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off);
-> +	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, =
-off);
-> 	u8 bit =3D BIT(off % BANK_SZ);
-> 	int ret;
->=20
-> @@ -413,8 +409,7 @@ static int pca953x_gpio_direction_output(struct =
-gpio_chip *gc,
-> static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
-> {
-> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
-> -	u8 inreg =3D pca953x_recalc_addr(chip, chip->regs->input, off,
-> -				       true, false);
-> +	u8 inreg =3D pca953x_recalc_addr(chip, chip->regs->input, off);
-> 	u8 bit =3D BIT(off % BANK_SZ);
-> 	u32 reg_val;
-> 	int ret;
-> @@ -438,8 +433,7 @@ static int pca953x_gpio_get_value(struct gpio_chip =
-*gc, unsigned off)
-> static void pca953x_gpio_set_value(struct gpio_chip *gc, unsigned off, =
-int val)
-> {
-> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
-> -	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, off,
-> -					true, false);
-> +	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, =
-off);
-> 	u8 bit =3D BIT(off % BANK_SZ);
->=20
-> 	mutex_lock(&chip->i2c_lock);
-> @@ -450,8 +444,7 @@ static void pca953x_gpio_set_value(struct =
-gpio_chip *gc, unsigned off, int val)
-> static int pca953x_gpio_get_direction(struct gpio_chip *gc, unsigned =
-off)
-> {
-> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
-> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off,
-> -					true, false);
-> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
-off);
-> 	u8 bit =3D BIT(off % BANK_SZ);
-> 	u32 reg_val;
-> 	int ret;
-> @@ -491,10 +484,8 @@ static int pca953x_gpio_set_pull_up_down(struct =
-pca953x_chip *chip,
-> 					 unsigned int offset,
-> 					 unsigned long config)
-> {
-> -	u8 pull_en_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_EN, =
-offset,
-> -					     true, false);
-> -	u8 pull_sel_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, =
-offset,
-> -					      true, false);
-> +	u8 pull_en_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_EN, =
-offset);
-> +	u8 pull_sel_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, =
-offset);
-> 	u8 bit =3D BIT(offset % BANK_SZ);
-> 	int ret;
->=20
-> --=20
-> 2.26.0.rc2
->=20
+ drivers/pinctrl/qcom/pinctrl-msm.c | 42 +++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 6 deletions(-)
 
-BR and thanks,
-Nikolaus Schaller
-
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 9a8daa256a32..7d2a34beb1b6 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -22,6 +22,8 @@
+ #include <linux/reboot.h>
+ #include <linux/pm.h>
+ #include <linux/log2.h>
++#include <linux/qcom_scm.h>
++#include <linux/io.h>
+ 
+ #include <linux/soc/qcom/irq.h>
+ 
+@@ -60,6 +62,8 @@ struct msm_pinctrl {
+ 	struct irq_chip irq_chip;
+ 	int irq;
+ 
++	bool intr_target_use_scm;
++
+ 	raw_spinlock_t lock;
+ 
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+@@ -68,6 +72,7 @@ struct msm_pinctrl {
+ 
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs[MAX_NR_TILES];
++	u32 phys_base[MAX_NR_TILES];
+ };
+ 
+ #define MSM_ACCESSOR(name) \
+@@ -882,11 +887,31 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	else
+ 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+ 
+-	/* Route interrupts to application cpu */
+-	val = msm_readl_intr_target(pctrl, g);
+-	val &= ~(7 << g->intr_target_bit);
+-	val |= g->intr_target_kpss_val << g->intr_target_bit;
+-	msm_writel_intr_target(val, pctrl, g);
++	/* Route interrupts to application cpu.
++	 * With intr_target_use_scm interrupts are routed to
++	 * application cpu using scm calls.
++	 */
++	if (pctrl->intr_target_use_scm) {
++		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
++		int ret;
++
++		qcom_scm_io_readl(addr, &val);
++
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++
++		ret = qcom_scm_io_writel(addr, val);
++		if (ret)
++			dev_err(pctrl->dev,
++				"Failed routing %lu interrupt to Apps proc",
++				d->hwirq);
++		}
++	} else {
++		val = msm_readl_intr_target(pctrl, g);
++		val &= ~(7 << g->intr_target_bit);
++		val |= g->intr_target_kpss_val << g->intr_target_bit;
++		msm_writel_intr_target(val, pctrl, g);
++	}
+ 
+ 	/* Update configuration for gpio.
+ 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+@@ -1241,6 +1266,9 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 	pctrl->dev = &pdev->dev;
+ 	pctrl->soc = soc_data;
+ 	pctrl->chip = msm_gpio_template;
++	pctrl->intr_target_use_scm = of_device_is_compatible(
++					pctrl->dev->of_node,
++					"qcom,ipq8064-pinctrl");
+ 
+ 	raw_spin_lock_init(&pctrl->lock);
+ 
+@@ -1253,9 +1280,12 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 				return PTR_ERR(pctrl->regs[i]);
+ 		}
+ 	} else {
+-		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
++		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(pctrl->regs[0]))
+ 			return PTR_ERR(pctrl->regs[0]);
++
++		pctrl->phys_base[0] = res->start;
+ 	}
+ 
+ 	msm_pinctrl_setup_pm_reset(pctrl);
+-- 
+2.25.1
 
