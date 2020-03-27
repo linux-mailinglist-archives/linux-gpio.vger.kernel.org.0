@@ -2,223 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A41195E72
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 20:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 551DD195E96
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 20:26:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgC0TQg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 15:16:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:62053 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0TQg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 27 Mar 2020 15:16:36 -0400
-IronPort-SDR: l8E/2uV/9qJuw0d8UetQWetfwy6vRYZU9TORQUcQd9p3iTxNhx0qIPOaTBo0yElwSSrwLEAdjH
- 8VGkimyg9pDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 12:16:34 -0700
-IronPort-SDR: j2t8RWl6Ft6IDGdVEAH2+h4xAviAYOAyqIjsnNIO0v//+a/HPDFWnCCQ+6ej+9XT9eyyk3AQM5
- oUp+Mtk6DHgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,313,1580803200"; 
-   d="scan'208";a="449117831"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2020 12:16:33 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHuT2-000Bfr-JU; Sat, 28 Mar 2020 03:16:32 +0800
-Date:   Sat, 28 Mar 2020 03:16:18 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 368b62f2fd077d4c7db09461e8e24f07491a513d
-Message-ID: <5e7e5102.oa4Vyy/5trM3kTQu%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726900AbgC0T0P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 15:26:15 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38945 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbgC0T0O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 15:26:14 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h6so3053844lfp.6
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 12:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
+        b=IGaP7Mdp93QPDuqZ2364as99CykHs3PJ4uYKf6kPp4MEHCRvpSlBKK1Qz4NqpXAC6F
+         jcs/JXuF1nLBhdGF1Gfkw12gMzmJM5qi8Hew8wMHVHPFn7QhLflUWGX6h8S1zZUgwGyT
+         ZwdedZA3Dn3uw31OdZWSCHUvQ9C5JfKBWJ6IESHexoyfrt48U76swLir1qWsNWYgDKBz
+         Umrm5nAGV4JXf72ChFK+JRjPexOHxC/o9E2BcsUkz3OS2rD419n45AlPLeHu98S305n6
+         Vn9s3lQwR9CuCC+WQNGKtunP3nNeRTSmrM3aVOkwU64nC9v2VXIkLhIGnMW6fzq+KY+T
+         k/2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
+        b=mt03ETWDdG3hfHE6UrMB7tsIsEDQ0xWVCy5aa1WqWovNubhsLMHP1WKz07GFnOpj7w
+         CV7A4kWEqpyVWppJJ1zb8uWrLbuvBMLbxXa9lXepJWopwRtugOacLS2gWxsu76BYCAGJ
+         S8XjMzK1U4fucMNwbKxLwjwXG8Q+uqzEJMIsAFSBg/C5xSneUZadD0ZfvW0iUglHseH9
+         5WbHjPubq6q7x4xImf84/+cOgmgIuWp8UMmTCia/F/Oeu1swaQMlLakY/HC0UKYmNHmO
+         HflywJkAAo+F8rhVzKRgGnklO4IPHyGv5KOinFqIQyKOcc9pPFamYyS503ELOvQ/Pgzn
+         wmAw==
+X-Gm-Message-State: AGi0PuZU/pt6SDRamA7RTa0f1ayq9+tSVVeHjfxpvVNnoFQnVJle8Dd4
+        yvatmkAfTzop7Svl2aHw8Lb+YLuyq4DVrYhNGx+PgD3s8mY=
+X-Google-Smtp-Source: APiQypIDOmD/wk2tYVESxm4bIRP7LjM723EaFL/9IRPRsGvMcf3ygcQJnmmosTirkk89eivLqwScLbnLWxa4ztRvg0Y=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr518366lfk.77.1585337170911;
+ Fri, 27 Mar 2020 12:26:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 20:25:59 +0100
+Message-ID: <CACRpkdY4_fEbsgX9vRHd5_8Z-1MbBDd3y-pVsTit4bDLW6VpoQ@mail.gmail.com>
+Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 368b62f2fd077d4c7db09461e8e24f07491a513d  pinctrl: tegra: Add SFIO/GPIO programming on Tegra194
+On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
 
-elapsed time: 494m
+> Use a different markup for the ERR_PTR, as %FOO doesn't work
+> if there are parenthesis. So, use, instead:
+>
+>         ``ERR_PTR(-EINVAL)``
+>
+> This fixes the following warning:
+>
+>         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-configs tested: 164
-configs skipped: 0
+Patch applied.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-mips                      fuloong2e_defconfig
-s390                       zfcpdump_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arc                              allyesconfig
-um                             i386_defconfig
-h8300                     edosk2674_defconfig
-um                                  defconfig
-sh                            titan_defconfig
-ia64                             allmodconfig
-parisc                            allnoconfig
-ia64                             alldefconfig
-m68k                           sun3_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-riscv                          rv32_defconfig
-parisc                generic-32bit_defconfig
-s390                          debug_defconfig
-alpha                               defconfig
-sh                          rsk7269_defconfig
-um                           x86_64_defconfig
-sparc64                          allyesconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-h8300                       h8s-sim_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                           allyesconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200327
-x86_64               randconfig-a002-20200327
-x86_64               randconfig-a003-20200327
-i386                 randconfig-a001-20200327
-i386                 randconfig-a002-20200327
-i386                 randconfig-a003-20200327
-alpha                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
-mips                 randconfig-a001-20200327
-nds32                randconfig-a001-20200327
-parisc               randconfig-a001-20200327
-riscv                randconfig-a001-20200327
-c6x                  randconfig-a001-20200327
-h8300                randconfig-a001-20200327
-microblaze           randconfig-a001-20200327
-nios2                randconfig-a001-20200327
-sparc64              randconfig-a001-20200327
-csky                 randconfig-a001-20200327
-openrisc             randconfig-a001-20200327
-s390                 randconfig-a001-20200327
-sh                   randconfig-a001-20200327
-xtensa               randconfig-a001-20200327
-x86_64               randconfig-b001-20200327
-x86_64               randconfig-b002-20200327
-x86_64               randconfig-b003-20200327
-i386                 randconfig-b001-20200327
-i386                 randconfig-b002-20200327
-i386                 randconfig-b003-20200327
-x86_64               randconfig-c001-20200327
-x86_64               randconfig-c002-20200327
-x86_64               randconfig-c003-20200327
-i386                 randconfig-c001-20200327
-i386                 randconfig-c002-20200327
-i386                 randconfig-c003-20200327
-x86_64               randconfig-d001-20200327
-x86_64               randconfig-d002-20200327
-x86_64               randconfig-d003-20200327
-i386                 randconfig-d001-20200327
-i386                 randconfig-d002-20200327
-i386                 randconfig-d003-20200327
-x86_64               randconfig-e001-20200327
-x86_64               randconfig-e002-20200327
-x86_64               randconfig-e003-20200327
-i386                 randconfig-e001-20200327
-i386                 randconfig-e002-20200327
-i386                 randconfig-e003-20200327
-x86_64               randconfig-f001-20200327
-x86_64               randconfig-f002-20200327
-x86_64               randconfig-f003-20200327
-i386                 randconfig-f001-20200327
-i386                 randconfig-f002-20200327
-i386                 randconfig-f003-20200327
-x86_64               randconfig-g001-20200327
-x86_64               randconfig-g002-20200327
-x86_64               randconfig-g003-20200327
-i386                 randconfig-g001-20200327
-i386                 randconfig-g002-20200327
-i386                 randconfig-g003-20200327
-x86_64               randconfig-h001-20200327
-x86_64               randconfig-h002-20200327
-x86_64               randconfig-h003-20200327
-i386                 randconfig-h001-20200327
-i386                 randconfig-h002-20200327
-i386                 randconfig-h003-20200327
-arm                  randconfig-a001-20200327
-arm64                randconfig-a001-20200327
-ia64                 randconfig-a001-20200327
-powerpc              randconfig-a001-20200327
-sparc                randconfig-a001-20200327
-arc                  randconfig-a001-20200327
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                             defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
