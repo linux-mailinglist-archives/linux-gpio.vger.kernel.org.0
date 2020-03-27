@@ -2,126 +2,286 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE5471959D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 16:28:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6741B195B06
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 17:24:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgC0P2Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 11:28:16 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:60325 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgC0P2P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 11:28:15 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EB34922FEC;
-        Fri, 27 Mar 2020 16:28:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585322892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqUqITWsj9KDFGHrWeFv9QwKV40MUcbbCm0POjhjwys=;
-        b=NH9IOM80ezOu/xwgBZKQz57gkLeRbVpBO6uhULy0WRIQwRM6uLeXsXUIgRsya4g0GiBhLJ
-        V7nQFEI7obV92eVs8K0Ug7pHGzqpMHjtBP9MH2YUCHq5FqwNCeHAAxhU3Opxy1oqePUh8G
-        x9v49TPkEiJCurb1daDWtLGhW/jpfno=
+        id S1727444AbgC0QYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 12:24:30 -0400
+Received: from smtp100.iad3b.emailsrvr.com ([146.20.161.100]:56648 "EHLO
+        smtp100.iad3b.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726333AbgC0QY3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:24:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=softiron.com;
+        s=20191119-3p77dzn5; t=1585326267;
+        bh=o9TxnCZztVH45jTet9PtyCOS7Am3+B7w1VhSx1p0HDU=;
+        h=Subject:To:From:Date:From;
+        b=WQ+snlQrIw3mg57cliJQl38uPDMF3IL4TqiU8oEYWDsHAC4Uqz7YjplBAYOKdJRFV
+         gsq/4jVX/66FiFNp3BePYAkFdsmiubW20dM+IggJRBrbN1iUiHhAYdzvk7yPLaZBif
+         23+T+Wd5RO/R5xiEAD5mcZ+ydgcygGJ98ilyCYdc=
+X-Auth-ID: alan@softiron.com
+Received: by smtp21.relay.iad3b.emailsrvr.com (Authenticated sender: alan-AT-softiron.com) with ESMTPSA id DD85E200C3;
+        Fri, 27 Mar 2020 12:24:26 -0400 (EDT)
+X-Sender-Id: alan@softiron.com
+Received: from [10.1.1.115] (99-117-187-177.lightspeed.dybhfl.sbcglobal.net [99.117.187.177])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Fri, 27 Mar 2020 12:24:27 -0400
+Subject: Re: pinctrl states vs pinmux vs gpio (i2c bus recovery)
+To:     Ludovic.Desroches@microchip.com, linux@armlinux.org.uk,
+        linus.walleij@linaro.org
+Cc:     kamel.bouhara@bootlin.com, wsa@the-dreams.de,
+        linux-gpio@vger.kernel.org, Codrin.Ciubotariu@microchip.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191206173343.GX25745@shell.armlinux.org.uk>
+ <CACRpkdZv2rzA8AbFZKq0XVBaXNJR8c5tsb+1KTZ7fNuWjm5cbQ@mail.gmail.com>
+ <20191213002010.GO25745@shell.armlinux.org.uk>
+ <1ca5d81d-5aa9-8f8d-8731-4d34de9c6bfa@softiron.com>
+ <4f9bb480-ba8d-b70e-961b-d6032232d250@softiron.com>
+ <edb09f97-7748-f7d0-cad6-e79db7950b0d@microchip.com>
+ <c193dd83-4cdc-9f3f-560e-828cf6e8a8db@softiron.com>
+ <538ed844-4be1-4bda-a198-8b5706ee818b@microchip.com>
+ <ae952fa3-4b20-5571-875c-408408d7ecb1@softiron.com>
+ <4ad49369-ec70-4452-2149-85b877a1c371@microchip.com>
+From:   Alan Ott <alan@softiron.com>
+Message-ID: <8774c911-7feb-eca5-f4dc-c4b6c6f0021b@softiron.com>
+Date:   Fri, 27 Mar 2020 12:24:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 27 Mar 2020 16:28:11 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-In-Reply-To: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc>
- <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
- <22944c9b62aa69da418de7766b7741bd@walle.cc>
- <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
-Message-ID: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: EB34922FEC
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.548];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+In-Reply-To: <4ad49369-ec70-4452-2149-85b877a1c371@microchip.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Classification-ID: e6538fcf-427e-4710-9f26-4128ca35a29a-1-1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-03-27 11:20, schrieb Linus Walleij:
-> On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
->> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+On 3/26/20 4:39 PM, Ludovic.Desroches@microchip.com wrote:
+> On 3/26/2020 4:55 PM, Alan Ott wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+>> the content is safe
+>>
+>> On 3/26/20 2:53 AM, Ludovic.Desroches@microchip.com wrote:
+>>> On 3/25/2020 10:09 PM, Alan Ott wrote:
+>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+>>>> the content is safe
+>>>>
+>>>> On 3/25/20 4:06 PM, Ludovic.Desroches@microchip.com wrote:
+>>>>> On 3/25/2020 1:42 PM, Alan Ott wrote:
+>>>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know
+>>>>>> the content is safe
+>>>>>>
+>>>>>> On 2/27/20 11:47 AM, Alan Ott wrote:
+>>>>>>> On 12/12/19 7:20 PM, Russell King - ARM Linux admin wrote:
+>>>>>>>> On Mon, Dec 09, 2019 at 01:20:15AM +0100, Linus Walleij wrote:
+>>>>>>>>> Hi Russell,
+>>>>>>>>>
+>>>>>>>>> very nice description of this dual-mode problem.
+>>>>>>>>>
+>>>>>>>>> I wish I had a simple and elegant way we could make it
+>>>>>>>>> unambiguous and simple to use ... but it beats me right
+>>>>>>>>> now.
+>>>>>>>>>
+>>>>>>>>> On Fri, Dec 6, 2019 at 6:33 PM Russell King - ARM Linux admin
+>>>>>>>>> <linux@armlinux.org.uk> wrote:
+>>>>>>>>>
+>>>>>>>>>> One may expect:
+>>>>>>>>>>
+>>>>>>>>>>             pinctrl_select_state(i2c_imx->pinctrl,
+>>>>>>>>>> i2c_imx->pinctrl_pins_default);
+>>>>>>>>>>
+>>>>>>>>>> to change them back to the default state, but that would be
+>>>>>>>>>> incorrect.
+>>>>>>>>>> The first thing that pinctrl_select_state() does is check whether
+>>>>>>>>>>
+>>>>>>>>>>             p->state == state
+>>>>>>>>>>
+>>>>>>>>>> which it will do, as the pinctrl layer hasn't been informed of the
+>>>>>>>>>> change that has happened behind its back at the pinmux level.
+>>>>>>>>> Some pin controllers have the .strict property set
+>>>>>>>>> in their struct pinmux_ops:
+>>>>>>>>>
+>>>>>>>>> * @strict: do not allow simultaneous use of the same pin for
+>>>>>>>>> GPIO and
+>>>>>>>>> another
+>>>>>>>>> *      function. Check both gpio_owner and mux_owner strictly
+>>>>>>>>> before
+>>>>>>>>> approving
+>>>>>>>>> *      the pin request.
+>>>>>>>>>
+>>>>>>>>> The non-strict pin controllers are those that actually allow GPIO
+>>>>>>>>> and device functions to be used on the same physical line at the
+>>>>>>>>> same time. In this case there is not special GPIO mode for the
+>>>>>>>>> line in some muxing registers, they are just physically connected
+>>>>>>>>> somehow.
+>>>>>>>>>
+>>>>>>>>> One usecase is sort of like how tcpdump work for
+>>>>>>>>> ethernet interfaces: a GPIO register can "snoop" on a pin while
+>>>>>>>>> in used by another device.
+>>>>>>>>>
+>>>>>>>>> But it would notably also allow you to drive the line and interfere
+>>>>>>>>> with the device. Which is exactly what this I2C recovery mechanism
+>>>>>>>>> does, just that its pin controller is actually strict, will not
+>>>>>>>>> allow
+>>>>>>>>> the same line to be used for GPIO and some other function at the
+>>>>>>>>> same time, so I suppose i.MX should probably explore the
+>>>>>>>>> strict mode.
+>>>>>>>>>
+>>>>>>>>> Enabling that will sadly make the problem MORE complex
+>>>>>>>>> for this I2C recovery, requiring a cycle of
+>>>>>>>>> gpiod_put()/gpiod_get() to get it released from GPIO mode, i.e.
+>>>>>>>>> we would need to just get the GPIO when this is strictly needed.
+>>>>>>>>> Using devm_gpiod_get() and keeping a reference descriptor
+>>>>>>>>> around would not work all of a sudden.
+>>>>>>>>>
+>>>>>>>>> I am thinking whether we can handle the non-strict controllers
+>>>>>>>>> in a more elegant way, or add some API to explicitly hand over
+>>>>>>>>> between device function and GPIO function. But I can't really
+>>>>>>>>> see some obvious solution.
+>>>>>>>> What I'm currently trying is (error handling removed for brevity):
+>>>>>>>>
+>>>>>>>>        struct i2c_bus_recovery_info *bri = &i2c->recovery;
+>>>>>>>>
+>>>>>>>>             i2c->pinctrl = devm_pinctrl_get(dev);
+>>>>>>>>             i2c->pinctrl_default = pinctrl_lookup_state(i2c->pinctrl,
+>>>>>>>>
+>>>>>>>> PINCTRL_STATE_DEFAULT);
+>>>>>>>>             i2c->pinctrl_recovery =
+>>>>>>>> pinctrl_lookup_state(i2c->pinctrl,
+>>>>>>>>                                 "recovery");
+>>>>>>>>             bri->sda_gpiod = devm_gpiod_get(dev, "sda",
+>>>>>>>> GPIOD_OUT_HIGH_OPEN_DRAIN);
+>>>>>>>>             bri->scl_gpiod = devm_gpiod_get(dev, "scl",
+>>>>>>>> GPIOD_OUT_HIGH_OPEN_DRAIN);
+>>>>>>>>
+>>>>>>>>        pinctrl_select_state(i2c->pinctrl, i2c->pinctrl_recovery);
+>>>>>>>>        return pinctrl_select_state(i2c->pinctrl,
+>>>>>>>> i2c->pinctrl_default);
+>>>>>>>>
+>>>>>>>> which seems good enough to get the pins back into i2c mode after the
+>>>>>>>> gpios are obtained.  Then we switch the pinctrl state between
+>>>>>>>> pinctrl_recovery and pinctrl_default as we have need to.
+>>>>>>>>
+>>>>>>>> The problem is, the generic i2c bus recovery code wants the gpiod
+>>>>>>>> descriptors to be setup and inplace by the time i2c_init_recovery()
+>>>>>>>> is called (which is called when the adapter is registered) so
+>>>>>>>> holding off until we need to do recovery doesn't work.
+>>>>>>>>
+>>>>>>>> This seems to work for this SoC I'm currently working with, but I
+>>>>>>>> think there's more on the horizon - I'm having the same problems
+>>>>>>>> on another SoC which also needs bus recovery implemented, and as
+>>>>>>>> the problem device is behind an I2C bus mux, when it locks the I2C
+>>>>>>>> bus, it kills all I2C buses rooted at that particular SoC I2C
+>>>>>>>> controller.  However, there's a problem - the pinctrls for that SoC
+>>>>>>>> are set by ROM firmware at boot time by reading a table from the
+>>>>>>>> boot media.  *Unprintables about firmware being too way
+>>>>>>>> limiting*. :p
+>>>>>>>>
+>>>>>>     >
+>>>>>>> Hi all, what's the current state of this? I can confirm that this is
+>>>>>>> broken with the at91 i2c controller's recovery mode[1], which is
+>>>>>>> implemented exactly the same as other i2c master recovery modes, so I
+>>>>>>> suspect them to be broken as well.
+>>>>>>>
+>>>>>>> I'm using 5.5.6 with this patch applied (which adds the recovery):
+>>>>>>>         https://patchwork.kernel.org/cover/11333883/
+>>>>>>>
+>>>>>>> It worked fine with 5.2, but has now broken, the way Russell
+>>>>>>> describes,
+>>>>>>> in 5.5.6 and also on the latest 5.6-rc3. Russell's suggested
+>>>>>>> workaround
+>>>>>>> of setting the pinctrl to recovery (gpio) and then back to default
+>>>>>>> does
+>>>>>>> make it work.
+>>>>>>>
+>>>>>>> Alan.
+>>>>>>>
+>>>>>>> [1] currently the patch for i2c recovery for at91 is accepted to
+>>>>>>> Wolfram
+>>>>>>> Sang's for-next tree.
+>>>>>>>
+>>>>>>
+>>>>>> Is there any word on this?
+>>>>>>
+>>>>>
+>>>>> Internally we have managed it in the same way as the one suggested by
+>>>>> Russell.
+>>>>>
+>>>>> We wondered if we should mainline it or not as it's really tricky to
+>>>>> proceed like this.
+>>>>
+>>>> Certainly it needs to work in mainline though, right? Not just in the
+>>>> linux4sam vendor kernel?
+>>>
+>>> It has been fixed two days ago. We'll send it and see if it will be
+>>> accepted.
+>>>
+>>> By the way, with which SoC have you encountered this issue? It is of
+>>> intereset as we have two different pin controllers.
+>>
+>> SAMA5D33
+>>
 > 
->> > In that case maybe you should use the disable_locking option in
->> > regmap_config and provide your own callbacks that you can use in the
->> > irqchip code too?
->> 
->> But how would that solve problem (1). And keep in mind, that the
->> reqmap_irqchip is actually used for the interrupt controller, which
->> is not this gpio controller.
->> 
->> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
->> and all interrupt phandles pointing to the interrupt controller will
->> reference the toplevel node. Any phandles pointing to the gpio
->> controller will reference the GPIO subnode.
+> Ok, thanks.
 > 
-> Ideally we would create something generic that has been on my
-> mind for some time, like a generic GPIO regmap irqchip now that
-> there are a few controllers like that.
+>>>
+>>>>
+>>>>>
+>>>>> In the future, we may declare our pinctrl as strict which should cause
+>>>>> another breakage... It's not done yet because when I tried to do it,
+>>>>> maybe it has changed now, I was not able to apply the pin configuration
+>>>>> to the pin muxed as a gpio.
+>>>>>
+>>>>
+>>>> The larger question I think is, is this a breakage in gpio? i2c-at91 is
+>>>> not the only i2c driver which uses gpio-based bus recovery, and many of
+>>>> them use nearly the exact same code as i2c-at91. Are they all broken
+>>>> with this kernel update too?
+>>>>
+>>>
+>>> I don't know what changed in gpio or pinctrl. Thinking more about it
+>>> I'am surprised it had worked. In my mind, gpiod_get has always ended
+>>> with a call to the gpio_request_enable operation so changing the mux to
+>>> a gpio function.
+>>
+>> I definitely did an A/B test with 5.2 and 5.5 before writing the email,
+>> and I also definitely traced it down to devm_gpiod_get() (ie: leave all
+>> the rest and take those two lines out in 5.5, and that made it not fail).
+>>
 > 
-> I don't know how feasible it is or how much work it would be. But
-> as with GPIO_GENERIC (for MMIO) it would be helpful since we
-> can then implement things like .set_multiple() and .get_multiple()
-> for everyone.
+> If I have well understood, in 5.5 you kept devm_gpiod_get() calls
+> without the recovery stuff and it works. Isn't it?
 
-For starters, would that be a drivers/gpio/gpio-regmap.c or a
-drivers/base/regmap/regmap-gpio.c? I would assume the first,
-because the stuff in drivers/base/regmap operates on a given
-regmap and we'd just be using one, correct? On the other hand
-there is also the reqmap-irq.c. But as pointed out before, it
-will add an interrupt controller to the regmap, not a device
-so to speak.
+No, it's what I said higher up in the email:
 
--michael
+* 5.2 plus the recovery patch linked above does work.
+* 5.5 plus the recovery patch linked above does not work[1].
+* 5.5 plus the recovery patch linked above plus a "fix" similar to 
+Russell's does work.
+
+> 
+>> Again, other i2c controllers are built the exact same way, with a
+>> handful of them using the same copied/pasted code. I suspect they are
+>> broken too (when gpio bus recovery is enabled). If they're not, then
+>> does it mean devm_gpiod_get() works differently on different CPUs?
+>>
+> 
+> devm_gpiod_get() calls gpio_request or gpio_request_enable ops which are
+> implemented in the pin controller so the behavior can be different.
+> 
+
+Are you asserting that, based on the controller,:
+* Sometimes gpiod_get() adjusts the pinmux, and
+* Sometimes gpiod_get() doesn't adjust the pinmux?
+
+Whatever it is, it appears that the behavior has changed for SAMA5D3 
+between 5.2 and 5.5, and it makes the patch set (linked above) that's 
+currently in Wolfram's for-next tree no longer work properly.
+
+Alan.
+
+[1] And "doesn't work" means, nothing in the i2c controller works 
+because the pinctrl is set to gpio rather than to the i2c controller.
