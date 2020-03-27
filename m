@@ -2,86 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16FC2195533
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:27:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F91819554E
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:31:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgC0K07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 06:26:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29889 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726540AbgC0K07 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:26:59 -0400
-IronPort-SDR: 13y2L3yxNCrWU6ZAQptlJH17v9d19ujAFzuxJ7VPFS0BWliYu81z2lxNk0RDaeJCBmZJ0QLERO
- AsfR+7wr6kHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 03:26:57 -0700
-IronPort-SDR: z8TyAzHNvHnaFD1VWiW6JR2ZUVnBK1p3XsDlWxzMHpgXGwwJG9OQrYCyrNzWu2t5P8h4AR/rqG
- TN4Bt90Asx/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
-   d="scan'208";a="282804442"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Mar 2020 03:26:57 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jHmCZ-00DNxv-Pb; Fri, 27 Mar 2020 12:26:59 +0200
-Date:   Fri, 27 Mar 2020 12:26:59 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Marek Vasut <marek.vasut@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org
-Subject: Re: register access issues in pca953x gpio driver
-Message-ID: <20200327102659.GN1922688@smile.fi.intel.com>
-References: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
+        id S1726233AbgC0KbS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 06:31:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43652 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgC0KbS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:31:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id g27so9593432ljn.10
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y9GPFegNFppAtG8VfOK1hzN6DX1neujiFhmSroslZ3A=;
+        b=v8SnBAISUhe4O2X68nvq2mTQ4IESHbhhK/DdVTGF6QQpxj+HBRN/yyyodYhymC+PzS
+         JAFdSEC2fpQdWWwymmeF4F7Gv6hDx0LMnRAoHX2Hv/10PnazJ3ZE2H5l++8BZLS7G864
+         MDArlHjA1tW1RQcDzi8mNdDB6rwpORj2r3S1sxgesBj3TttPQBwKjY6oDCQRmwRnomHt
+         T+5YUciUeMpRSj/VsI0hGrOMhNfaVUdroln9DIKVTKn7ACGvcu+rQF/w6717o6nKyw7s
+         +K1ZRkdSA3UaQo5WtepoU2x8h1WD6bBW87YeTPBJPZ/8OeN/4SKFC77CrK09NYv4o46P
+         2tYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y9GPFegNFppAtG8VfOK1hzN6DX1neujiFhmSroslZ3A=;
+        b=pfH9/wSD2ijJXPlpu80CAnVnGktnWYo8g2Ur6Xg5BOblRNanQslaIXIj5iNOlhQrPt
+         2LDlYg+FkFnyNTWLmQTLvPnTjdXU7Q7Dp3D9hg73rMdPxubSBQsOECqnSE9Z00Ekpi2D
+         KaSIdD7uRE6s8eRCUJjQTIRLkAGjq8Tc9t20sdZf7b3rssgakI2+4G4mnv8yI/1YIlVG
+         ky4Ex2GS26WRKrJ1N1ra5VcoGBKJ/L206iUp//fL7Ah6I5dXc4MbHeMqLKMNpoUxgy4X
+         hlr7Xc19ce26wO59/BAk+Ars/FjDRoDaxYL8QRAdtakV6LEfheYbSKCP+N5f8dW7yuNT
+         otvw==
+X-Gm-Message-State: ANhLgQ0jBxcVYQJmwaKchO1Mr79TpwnRWR8ymPWLbkc1N7vAUmGP/tZH
+        GLaia9N1PAtMYAzILnXsEA2i2pCiEnuhFKBrlLhBfw==
+X-Google-Smtp-Source: ADFU+vvzNuB6yrUNJcqv0peX2lxUzuEUOGbmXMaFpa4JyDohIZuKl0tKEbyR5jYlOofIttkCHl7I8ntnC39UZAJQJd4=
+X-Received: by 2002:a05:651c:445:: with SMTP id g5mr7734981ljg.125.1585305074115;
+ Fri, 27 Mar 2020 03:31:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200311090644.20287-1-tiwai@suse.de>
+In-Reply-To: <20200311090644.20287-1-tiwai@suse.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 11:31:03 +0100
+Message-ID: <CACRpkdYBQ4tqy8Ji6rMwkAjOyx9zZFb-CYyYdLAfkDg3c+iPTw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mediatek: Use scnprintf() for avoiding potential
+ buffer overflow
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 08:49:22AM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> I have an issue with an pca9505 when the .set_multiple callback is used.
-> That chip has a bit ("AI") in the register address that makes the
-> address increment automatically on subsequent reads and writes.
-> 
-> The problem (that was already noticed in commit 3b00691cc46a ("gpio:
-> pca953x: hack to fix 24 bit gpio expanders")) is that the regmap stuff
-> isn't aware of this bit and so register accesses that make use of the auto
-> incrementing are not matched to those without it.
-> 
-> Additionally there is a bug in pca953x_recalc_addr() that results in the
-> AI bit only be set for register writes. (That's the issue that made me
-> notice this problem. The result is that in .set_multiple the read
-> accesses bank 0's register only (when the hardware is hit) or uses the
-> read cache from a location without AI set and then writes using AI set.)
-> 
-> I didn't try to understand if fixing pca953x_recalc_addr() to not set AI
-> depending on write fixes all issues. But to make the register access in
-> the driver robust I'm convinced we need to fix the regmap stuff to
-> understand the AI bit.
-> 
-> @broonie: I don't know regmap good enough to instantly know the right
-> magic to do this. Can you give a rough overview what would be needed?
+On Wed, Mar 11, 2020 at 10:06 AM Takashi Iwai <tiwai@suse.de> wrote:
 
-Uwe, thank you for the report. Personally I didn't try set_multiple() with this
-driver and as you noticed Marek did a big refactoring to the driver to that
-part in particular.
+> Since snprintf() returns the would-be-output size instead of the
+> actual output size, the succeeding calls may go beyond the given
+> buffer limit.  Fix it by replacing with scnprintf().
+>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
-So, I guess he may shed a light a bit on this.
+No reaction from maintainers so patch applied.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
