@@ -2,146 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDA1B1952E9
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 09:32:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2604F19532B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 09:45:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0IcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 04:32:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39049 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgC0Ib7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 04:31:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a9so11325244wmj.4
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 01:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/8e1khbt3xy4ZUf34DU6Fxze93y8M47+3udr0iQSRsI=;
-        b=LHWAWHzmrgJi6sjgnjoGfbv7/nunVx19vgyHo/Iys+J47ldqjn8fGNWukWARkju+5I
-         vxbxj1NSvZ3VbfxweyHPqh6Dl1Ho/ppvvxSzYAun432P1qgCZD6dOCKJFmKI6uwd6wc0
-         o5bjDLooHalwWV9R8YtQ62qyeotsUIkiZl85Z4bpwT5LcRPhRZZXVI8vDevR0jT6RL/A
-         dNFry0CzpNV4ae7f5kjFirmvM+Lw7yrn81OFB0G15fzV2kHfMmi9DVpiOd4BQsfTBM74
-         jIUN9CTbrlLpgMk3oecrzVR0NLzrIAKFVi7HJ2Yuxpy5IyW5hHCabCi2m9dSFDAUUPsP
-         N1nw==
+        id S1725956AbgC0IpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 04:45:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40997 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgC0IpX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 04:45:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so8906097otf.8;
+        Fri, 27 Mar 2020 01:45:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/8e1khbt3xy4ZUf34DU6Fxze93y8M47+3udr0iQSRsI=;
-        b=CC0/glyMAQLNId6M1OQomebO/OuTiazETzZ33UtHWtItNQkfOxVFhZctNa5WfZeGuU
-         WuCa8bH5OfchQt/l7asQzSBlcvP3lTidWryFvYL9ubzX50jzNDluJ991zAhDJlILWWHB
-         a3u1mYqyMXKiwAB5lwzB2fWgN8fsEZfEFLvXDXyg6aUgpvjcm/a6dguCNnHUIED4ByAr
-         AlQZzOY221BH9konim8d9fSte5kajz1nqZGcrp3eoD0E7/GlfY1VhH0MqoztVD6Z8IdP
-         ccoXPHnhXe6MI3LlzDGOobuNL87Bt0Bc3IcSJy3dJ+Llnnjmpy2Z9STj71KSQTD4jCAt
-         Tm/Q==
-X-Gm-Message-State: ANhLgQ0bqLvlyeATfeLDE9LrP5dcpDBZ8vtCBfwD6caYTqSjW0FiIsuE
-        VnpoqU8zgXmW8aJybqCBy8bWkw==
-X-Google-Smtp-Source: ADFU+vshlFLkzjFGLqZWToyKEwofbRxD/jsH8lC+uHzFVX7qI4umf//ndsbal5w8KkGL0SIvWV2zCg==
-X-Received: by 2002:a7b:cc81:: with SMTP id p1mr4129403wma.158.1585297917089;
-        Fri, 27 Mar 2020 01:31:57 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id w67sm7008731wmb.41.2020.03.27.01.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 01:31:56 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 08:32:46 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: Clean-up schema errors due to missing
- 'addtionalProperties: false'
-Message-ID: <20200327083246.GJ603801@dell>
-References: <20200325220542.19189-1-robh@kernel.org>
- <20200325220542.19189-4-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eOBjyRt4JV8Fw0zzDZumBm7LVivMqi17PPfNiqHh3qk=;
+        b=nNNtvb5JIc83n6idKlCJmdznoRwgO2XqukBnIqMVHR2iYiS1c0eQbQxNV+khns1Etz
+         4a19wgV6Bu+yyQykC346Oc4laIsycpZmkDZQ0pAcfB7Tbbt/rWcA0IHWz6GZc4OK6RMH
+         Tel2tXBp7fRhFyuFxu2Hh4l0hxBSQ+6kK6e0mQjk5I5SFffAaGKUCbxNcbeyzT+kCZFB
+         TAVpLLmGR4zveD8PAUUZAp5yjfQmOs74roa7w2JDayt1VpGBdyhZdHgL4T2fRsOI0H3f
+         QmTNvvo0o3CMGcyz2wtZWaabIwwkAwHjyuMDpl+xGCNnA+rR6ThX9QppUZPlgRaeVZPH
+         V8Qg==
+X-Gm-Message-State: ANhLgQ2yJ40qSCH3ljnZDz/B3IlhkWOVH4uThm15uwGHNJx/erY3xT64
+        6UQMHcA8JUP371nKFCQblVc83c4CQTK89rUxvok=
+X-Google-Smtp-Source: ADFU+vtagf4b+RAfGcuiioWln2gooMsQamKP8V2Ub80rkt/+u/ChxOOa1j8Iz++kwA+q3IcKZA+D0S4VCVlwIW0ISTU=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr9385922otk.250.1585298722494;
+ Fri, 27 Mar 2020 01:45:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325220542.19189-4-robh@kernel.org>
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-5-geert+renesas@glider.be>
+ <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 27 Mar 2020 09:45:11 +0100
+Message-ID: <CAMuHMdVpiO+KGRTF=83kubuuJF2p8TJhWe_X32amSTa6bXsCxg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/8] gpiolib: Introduce gpiod_set_config()
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 25 Mar 2020, Rob Herring wrote:
+Hi Linus,
 
-> Numerous schemas are missing 'additionalProperties: false' statements which
-> ensures a binding doesn't have any extra undocumented properties or child
-> nodes. Fixing this reveals various missing properties, so let's fix all
-> those occurrences.
-> 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Guillaume La Roque <glaroque@baylibre.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-iio@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: linux-amlogic@lists.infradead.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/clock/fsl,plldig.yaml |  3 +++
->  .../gpio/socionext,uniphier-gpio.yaml         |  2 ++
->  .../bindings/gpu/arm,mali-bifrost.yaml        |  6 ++---
->  .../bindings/gpu/arm,mali-midgard.yaml        |  3 +++
->  .../bindings/iio/adc/adi,ad7192.yaml          |  1 -
->  .../bindings/iio/pressure/bmp085.yaml         |  3 +++
->  .../media/amlogic,meson-gx-ao-cec.yaml        |  9 +++++---
+On Thu, Mar 26, 2020 at 10:26 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > The GPIO Aggregator will need a method to forward a .set_config() call
+> > to its parent gpiochip.  This requires obtaining the gpio_chip and
+> > offset for a given gpio_desc.  While gpiod_to_chip() is public,
+> > gpio_chip_hwgpio() is not, so there is currently no method to obtain the
+> > needed GPIO offset parameter.
+> >
+> > Hence introduce a public gpiod_set_config() helper, which invokes the
+> > .set_config() callback through a gpio_desc pointer, like is done for
+> > most other gpio_chip callbacks.
+> >
+> > Rewrite the existing gpiod_set_debounce() helper as a wrapper around
+> > gpiod_set_config(), to avoid duplication.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v6:
+> >   - New.
+>
+> This is nice, I tried to actually just apply this (you also sent some
+> two cleanups that I tried to apply) byt Yue's cleanup patch
+> commit d18fddff061d2796525e6d4a958cb3d30aed8efd
+> "gpiolib: Remove duplicated function gpio_do_set_config()"
+> makes none of them apply :/
 
->  .../bindings/mfd/rohm,bd71828-pmic.yaml       |  3 +++
+/me confused.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+That commit was reverted later, so it shouldn't matter.
+
+I have just verified, and both my full series and just this single
+patch, do apply fine to all of current gpio/for-next, linus/master, and
+next-20200327.  They even apply fine to gpio/for-next before or after
+the two cleanups I sent, too.
+
+What am I missing?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
