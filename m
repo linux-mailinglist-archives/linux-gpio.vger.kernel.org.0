@@ -2,240 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9D701960BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 22:52:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B52FF1960D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 23:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgC0VwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 17:52:01 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37435 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC0VwB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 17:52:01 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so3944572plm.4
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 14:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gBPuJeY3dLf2RT1lf5uBkQiOCkTAmK3v0hMLV6g8WYA=;
-        b=E0pjgTC2wT8HGZZlEvw4wgVqJIyXjr7lYLeWPRIQfrZQyMl8GEdivYCcSRz8/C+QAT
-         BgWvF5fu+sJbxmM4K6cytpRAdvFPcashiS1qVq/hx1Au/iPzeakm8aARpEsY32O5TMOw
-         R4pK4aXghLdOrcHJ2yV1N9WpeITG5Q9sUKq6PwvlK8ESfvnxexT1L/poHbJTPWAld8wy
-         1Y5mh9+EG2HTW21iK2HZodTCV9rVn5B+dyW/fOo+pLyLXmfsKI6f2BytouT3pmeIwH3o
-         cOOdgOURm/kyhs6kcbEjR+dtp6ZxkU/Vyyj5LzZ/GLrj/+Q17wLL+V5W+lPYXZniL1Qc
-         J9DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gBPuJeY3dLf2RT1lf5uBkQiOCkTAmK3v0hMLV6g8WYA=;
-        b=LWVWo/q6PFDcQlQz8uVjQPtkvODigTllHYegmFSme4fhOtkST8oAqhrr/LtakNF/oy
-         11ApDLz4t7oL+gb6g78xxy7E8/4wtH6WySXi++wkV1MCjL8z94Y8SQSccpNecQyqcESL
-         Z0nrrn2xhJ8tGV5Ut/xssT70MktCMmswiohsOEA5qz+Re5KD1LUz73KUn5IT/xyHqOwK
-         864GggyboOBBwMQ+UmG80pLpbpPfQnON+rhCtm+MqprcCNqEtift9EQzc3rKGmIDIyfo
-         yX6jtl9aNqfvwmoPmu4ip1mWnrXiZ8TqaYnc1rsMPMYbLCGgZ9vue+P3LRmKV2oa6t/T
-         txOg==
-X-Gm-Message-State: ANhLgQ04z4Q/hM+oYGlMhnkGrFJO06+1kv0Z2BD9X2avlBIWyzlF5ZPm
-        oHEM4nTKfcFGN8q2c9iMjc4rmg==
-X-Google-Smtp-Source: ADFU+vu4f8JEOmDCYOkH4DfavtNwX5cxyzPgeeL/wA/5Pkm6OiDvDjlanl0ORciaVKINpvfp7+47XQ==
-X-Received: by 2002:a17:902:8348:: with SMTP id z8mr995022pln.342.1585345919178;
-        Fri, 27 Mar 2020 14:51:59 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id k17sm4803173pfp.194.2020.03.27.14.51.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 14:51:58 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 14:51:56 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     ansuelsmth@gmail.com
-Cc:     'Andy Gross' <agross@kernel.org>,
-        'Ajay Kishore' <akisho@codeaurora.org>,
-        'Linus Walleij' <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: R: [PATCH v2] pinctrl: qcom: use scm_call to route GPIO irq to
- Apps
-Message-ID: <20200327215156.GB211617@minitux>
-References: <20200326173524.15236-1-ansuelsmth@gmail.com>
- <20200327201340.GA211617@minitux>
- <048701d6047a$8752f390$95f8dab0$@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <048701d6047a$8752f390$95f8dab0$@gmail.com>
+        id S1727611AbgC0WHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 18:07:05 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.163]:22486 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC0WHF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 18:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585346819;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=8US9yjR2qckFnDOrbB5ZKghJi+sBmaboahOW8mzYA7w=;
+        b=r6Mnd9Lcb43Y+Nn0Q00NkTqK4zJPILJ1xDIK19xwq4OcWORj4ntL7mUJFR6Gk6rKMu
+        +qsmbm6Tisp45X9dVoX6YX+OpRGnYaIY5wWryE1NNUxgjVFgo3OdC+NReGvPKqgKcGh+
+        UVgQ+vQgkfiMKwdnkroRBTZJpfgauDlf6QhAS9w/kVaIhByAjESUaDJkfKnFWL+Hqfl/
+        beBPoOnU7WUDARka3vSmYH+eaHP77F5mFTU83CkMsEwZbtmjybzB5uhswq2klS9LyXWB
+        tPSFT9pBpYpDitUe/tWTkxnNzFUm72yqduXGK5to8bh8daHOM8/HhqInZKztNm/dG4/B
+        NOsA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDVCUXA0O8ZI="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2RM6i7sq
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Fri, 27 Mar 2020 23:06:44 +0100 (CET)
+Subject: Re: [PATCH v1 2/2] [RFC] gpio: pca953x: drop unused parameters of pca953x_recalc_addr()
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200327172244.30816-3-u.kleine-koenig@pengutronix.de>
+Date:   Fri, 27 Mar 2020 23:06:43 +0100
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <DF902AF8-CA86-4F31-9D98-288D40634D69@goldelico.com>
+References: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de> <20200327172244.30816-1-u.kleine-koenig@pengutronix.de> <20200327172244.30816-3-u.kleine-koenig@pengutronix.de>
+To:     =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 27 Mar 13:58 PDT 2020, ansuelsmth@gmail.com wrote:
 
-> > On Thu 26 Mar 10:35 PDT 2020, Ansuel Smith wrote:
-> > 
-> > > From: Ajay Kishore <akisho@codeaurora.org>
-> > >
-> > > For IPQ806x targets, TZ protects the registers that are used to
-> > > configure the routing of interrupts to a target processor.
-> > > To resolve this, this patch uses scm call to route GPIO interrupts
-> > > to application processor. Also the scm call interface is changed.
-> > >
-> > > Signed-off-by: Ajay Kishore <akisho@codeaurora.org>
-> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > 
-> > Thanks for respinning this Ansuel, just some minor things below.
-> > 
-> > > ---
-> > > v2:
-> > > * Move static varibale in msm_pinctrl struct
-> > > * Revert '4b024225c4a8 ("pinctrl: use
-> > devm_platform_ioremap_resource() to simplify code")'
-> > >   to get base_reg addr
-> > >
-> > >  drivers/pinctrl/qcom/pinctrl-msm.c | 37
-> > ++++++++++++++++++++++++++----
-> > >  1 file changed, 32 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > > index 9a8daa256a32..9627ebd41ff9 100644
-> > > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > > @@ -22,6 +22,8 @@
-> > >  #include <linux/reboot.h>
-> > >  #include <linux/pm.h>
-> > >  #include <linux/log2.h>
-> > > +#include <linux/qcom_scm.h>
-> > > +#include <linux/io.h>
-> > >
-> > >  #include <linux/soc/qcom/irq.h>
-> > >
-> > > @@ -60,6 +62,9 @@ struct msm_pinctrl {
-> > >  	struct irq_chip irq_chip;
-> > >  	int irq;
-> > >
-> > > +	int route_to_apps;
-> > 
-> > We "always" route our interrupts to apps, so please rename this to
-> > intr_target_use_scm. And using "bool" instead would make it clear that
-> > this is a binary flag.
-> > 
-> 
-> Will fix in v3
-> 
-> > > +	u32 base_reg;
-> > 
-> > Even though I think it's fine that you only fill in the first entry,
-> > please make this phys_base[MAX_NR_GPIO]; next to regs.
-> > 
-> 
-> If I understand correctly, I should replace base_reg with 
-> phys_base[MAX_NR_GPIO]
-> I think we should use MAX_NR_TILES instead of MAX_NR_GPIO
+> Am 27.03.2020 um 18:22 schrieb Uwe Kleine-K=C3=B6nig =
+<u.kleine-koenig@pengutronix.de>:
+>=20
+> After the previous patch the two last parameters of
+> pca953x_recalc_addr() are unused and so can be dropped.
+>=20
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> drivers/gpio/gpio-pca953x.c | 31 +++++++++++--------------------
+> 1 file changed, 11 insertions(+), 20 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 8168558299c2..f4943cad5d0e 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -325,8 +325,7 @@ static const struct regmap_config =
+pca953x_ai_i2c_regmap =3D {
+> 	.max_register =3D 0x7f,
+> };
+>=20
+> -static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int =
+off,
+> -			      bool write, bool addrinc)
+> +static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int =
+off)
+> {
+> 	int bank_shift =3D pca953x_bank_shift(chip);
+> 	int addr =3D (reg & PCAL_GPIO_MASK) << bank_shift;
+> @@ -338,7 +337,7 @@ static u8 pca953x_recalc_addr(struct pca953x_chip =
+*chip, int reg, int off,
+>=20
+> static int pca953x_write_regs(struct pca953x_chip *chip, int reg, =
+unsigned long *val)
+> {
+> -	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0, true, true);
+> +	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0;
 
-Yes of course, didn't pay attention to my autocomplete!
+here is some ")" missing.
 
-> Wouldn't this be a waste of memory since only the base_reg will be
-> needed?  I don't think there will be a soc with multiple tiles and the
-> need to add code in the loop function. (Also sorry for off-topic...
-> since we have soc_data->ntiles why don't we use kmem allocation
-> instead of statically use half empty array?)
-> 
+After fix&compile it still works for the pcal6524 of the OMAP5/Pyra =
+(LPAE build).
 
-While I hope you're right, I think it looks better if it mimics the
-overall design - at the expense of wasting 12 bytes.
+> 	u8 value[MAX_BANK];
+> 	int i, ret;
+>=20
+> @@ -356,7 +355,7 @@ static int pca953x_write_regs(struct pca953x_chip =
+*chip, int reg, unsigned long
+>=20
+> static int pca953x_read_regs(struct pca953x_chip *chip, int reg, =
+unsigned long *val)
+> {
+> -	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0, false, true);
+> +	u8 regaddr =3D pca953x_recalc_addr(chip, reg, 0);
+> 	u8 value[MAX_BANK];
+> 	int i, ret;
+>=20
+> @@ -375,8 +374,7 @@ static int pca953x_read_regs(struct pca953x_chip =
+*chip, int reg, unsigned long *
+> static int pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned =
+off)
+> {
+> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off,
+> -					true, false);
+> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off);
+> 	u8 bit =3D BIT(off % BANK_SZ);
+> 	int ret;
+>=20
+> @@ -390,10 +388,8 @@ static int pca953x_gpio_direction_output(struct =
+gpio_chip *gc,
+> 		unsigned off, int val)
+> {
+> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off,
+> -					true, false);
+> -	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, off,
+> -					true, false);
+> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off);
+> +	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, =
+off);
+> 	u8 bit =3D BIT(off % BANK_SZ);
+> 	int ret;
+>=20
+> @@ -413,8 +409,7 @@ static int pca953x_gpio_direction_output(struct =
+gpio_chip *gc,
+> static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+> {
+> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+> -	u8 inreg =3D pca953x_recalc_addr(chip, chip->regs->input, off,
+> -				       true, false);
+> +	u8 inreg =3D pca953x_recalc_addr(chip, chip->regs->input, off);
+> 	u8 bit =3D BIT(off % BANK_SZ);
+> 	u32 reg_val;
+> 	int ret;
+> @@ -438,8 +433,7 @@ static int pca953x_gpio_get_value(struct gpio_chip =
+*gc, unsigned off)
+> static void pca953x_gpio_set_value(struct gpio_chip *gc, unsigned off, =
+int val)
+> {
+> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+> -	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, off,
+> -					true, false);
+> +	u8 outreg =3D pca953x_recalc_addr(chip, chip->regs->output, =
+off);
+> 	u8 bit =3D BIT(off % BANK_SZ);
+>=20
+> 	mutex_lock(&chip->i2c_lock);
+> @@ -450,8 +444,7 @@ static void pca953x_gpio_set_value(struct =
+gpio_chip *gc, unsigned off, int val)
+> static int pca953x_gpio_get_direction(struct gpio_chip *gc, unsigned =
+off)
+> {
+> 	struct pca953x_chip *chip =3D gpiochip_get_data(gc);
+> -	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off,
+> -					true, false);
+> +	u8 dirreg =3D pca953x_recalc_addr(chip, chip->regs->direction, =
+off);
+> 	u8 bit =3D BIT(off % BANK_SZ);
+> 	u32 reg_val;
+> 	int ret;
+> @@ -491,10 +484,8 @@ static int pca953x_gpio_set_pull_up_down(struct =
+pca953x_chip *chip,
+> 					 unsigned int offset,
+> 					 unsigned long config)
+> {
+> -	u8 pull_en_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_EN, =
+offset,
+> -					     true, false);
+> -	u8 pull_sel_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, =
+offset,
+> -					      true, false);
+> +	u8 pull_en_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_EN, =
+offset);
+> +	u8 pull_sel_reg =3D pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, =
+offset);
+> 	u8 bit =3D BIT(offset % BANK_SZ);
+> 	int ret;
+>=20
+> --=20
+> 2.26.0.rc2
+>=20
 
-> > > +
-> > >  	raw_spinlock_t lock;
-> > >
-> > >  	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
-> > > @@ -883,10 +888,27 @@ static int msm_gpio_irq_set_type(struct
-> > irq_data *d, unsigned int type)
-> > >  		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
-> > >
-> > >  	/* Route interrupts to application cpu */
-> > > -	val = msm_readl_intr_target(pctrl, g);
-> > > -	val &= ~(7 << g->intr_target_bit);
-> > > -	val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > > -	msm_writel_intr_target(val, pctrl, g);
-> > > +	if (pctrl->route_to_apps && pctrl->base_reg) {
-> > 
-> > I meant that you could fill out "base_reg" only if it's supposed to be
-> > used, but looking at your patch I think it's nicer to have a separate
-> > flag - so you can omit the check for base_reg != NULL here.
-> > 
-> 
-> Since we return error if devm_ioremap_resource fails, it is good to only
-> check 
-> the route_to_apps as base_reg will be set for sure?
-> 
+BR and thanks,
+Nikolaus Schaller
 
-Right.
 
-My initial suggestion was that base != NULL would have the meaning of
-intr_target_use_scm. But what I meant here is that after looking at your
-patch I think one flag and a separate base is better.
-
-Thanks,
-Bjorn
-
-> > > +		u32 addr = pctrl->base_reg + g->intr_target_reg;
-> > > +		int ret;
-> > > +
-> > > +		qcom_scm_io_readl(addr, &val);
-> > > +
-> > > +		val &= ~(7 << g->intr_target_bit);
-> > > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > > +
-> > > +		ret = qcom_scm_io_writel(addr, val);
-> > > +		if (ret)
-> > > +			dev_err(pctrl->dev,
-> > > +				"Failed routing %lu interrupt to Apps proc",
-> > > +				d->hwirq);
-> > > +		}
-> > > +	} else {
-> > > +		val = msm_readl_intr_target(pctrl, g);
-> > > +		val &= ~(7 << g->intr_target_bit);
-> > > +		val |= g->intr_target_kpss_val << g->intr_target_bit;
-> > > +		msm_writel_intr_target(val, pctrl, g);
-> > > +	}
-> > >
-> > >  	/* Update configuration for gpio.
-> > >  	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
-> > > @@ -1241,6 +1263,8 @@ int msm_pinctrl_probe(struct platform_device
-> > *pdev,
-> > >  	pctrl->dev = &pdev->dev;
-> > >  	pctrl->soc = soc_data;
-> > >  	pctrl->chip = msm_gpio_template;
-> > > +	pctrl->route_to_apps = of_device_is_compatible(pctrl->dev-
-> > >of_node,
-> > > +					"qcom,ipq8064-pinctrl");
-> > >
-> > >  	raw_spin_lock_init(&pctrl->lock);
-> > >
-> > > @@ -1253,9 +1277,12 @@ int msm_pinctrl_probe(struct
-> > platform_device *pdev,
-> > >  				return PTR_ERR(pctrl->regs[i]);
-> > >  		}
-> > >  	} else {
-> > > -		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
-> > > +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
-> > >  		if (IS_ERR(pctrl->regs[0]))
-> > >  			return PTR_ERR(pctrl->regs[0]);
-> > > +		else
-> > 
-> > No need for the else, as the "positive" case is a return.
-> > 
-> 
-> Will fix in v3
-> 
-> > Thank you,
-> > Bjorn
-> > 
-> > > +			pctrl->base_reg = res->start;
-> > >  	}
-> > >
-> > >  	msm_pinctrl_setup_pm_reset(pctrl);
-> > > --
-> > > 2.25.1
-> > >
-> 
