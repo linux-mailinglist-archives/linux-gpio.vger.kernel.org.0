@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43DDA196035
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 22:08:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CC219603B
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 22:12:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgC0VIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 17:08:05 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32775 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbgC0VIE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 17:08:04 -0400
-Received: by mail-lf1-f65.google.com with SMTP id x200so1881420lff.0
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 14:08:03 -0700 (PDT)
+        id S1727620AbgC0VMC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 17:12:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45548 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbgC0VMC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 17:12:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v4so9014562lfo.12
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 14:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vy4A4qxxBdA1VleutrEnlGSM+k4IB/RyFCwjbH/DwRs=;
-        b=insSbL1QKr3lV5AjtxrrpT3lHkcvsXqses2tRsZBuLG1gwklF0Y+N9EVvzO07/hLsU
-         wu7zN34y5FLWLN1QLMBlpmL2STUMMAzQAF6tn6tg0u1uOjM74xN7q2yogJX5qzuPbGEH
-         Lqt+dYUamNPhBQZSOKc47DW762uhfVqspYXWTddaXEu2ykfgBgpWzthwxPwSBov1/InY
-         s4nv0AARFXvOo5+nzswznHeguw6+EedK9hShcRc06x2wu97IvqF96Ap4/hfn3+sXlpgI
-         yN1bTDXjyZSxMYQE7GzhErFJYfgV3AXbBd4P473sH8JuScGH6LSMOQ5aOfznVunftSWt
-         N67A==
+        bh=7JZ1QFI9+FtgdXcyl77TJuQPCE3U91hu8/wkfGn1LbU=;
+        b=SRwOWlJ2qXCpTZZFjHvFl3mL29jKoQFgfoZHcDLjwHGukw8P6wFh3FGGu+AXRlrn2y
+         +OdH52BNXFEn6p21ublMsHoo6lqqaR+4jkUuy0C0oxdqcNpHWuMML4QuXlQK52Xi+cso
+         P9XGUT437lc4964eA+xTTH8kDtY9o4BnYb1rFY5a30twe5eC4YRrQXN/btg62B3pxDkh
+         HXXHUtMfsNtvDuAouVXCvgAkN72fIINSfeFKG5y5yXYMzPei7uug/fBLL5YbI5qtX6Ux
+         4C5Oe9PQJNvG3Wiki1kOgmgOOWDnVzu5ULOG0vZs+hIZMfXismb1HNHAe0M6BiWDMbIu
+         oFeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vy4A4qxxBdA1VleutrEnlGSM+k4IB/RyFCwjbH/DwRs=;
-        b=cdyt8qsEOUlFS7ReMXHlolY4pB5Tdo/nXJuZ9pUv7r401QbLHnB13ytwKMgSErUsaS
-         eacrV36A24vky5AkiTZbyyiGBouIvwTUgKxfcjBlNxROFc3Fz///DMFoV14oHvR943gS
-         nHZR5Qpta6cz7KTd/3WGH9Jg6mwrCIoeuV4GIjZdYwhsEERG/NJ3gWfFqRE28SRUL1iR
-         gi9Jz82IwW1dszpmodFotpy1VGoczaG6MJ61WSvrkDOhvU8mCBSjeCvYvG7wLoBk32mA
-         xHcnSLizHs3+q7e7hVdCNs6gbeWE29Y3F85EzJiq5jssQlhJR6EBvPO05QSy1qip14be
-         jLdw==
-X-Gm-Message-State: AGi0PubHPgvP6mFTJxylnNURAcs+vQFdQZthYPFc1dWgAkHLq4t1zlJM
-        YN0J3JnItNgmtq5EHJZiO7FTbI3zDS4BatU0iVG46Q==
-X-Google-Smtp-Source: APiQypJ76gczVMcd8gIpx1lrB7rS9+3XkZL25VcWYPLe4V0BJq4mARvycmKskia8Vsz2vK5dkIxe3xkmkoEOmu4PDwI=
-X-Received: by 2002:ac2:5b49:: with SMTP id i9mr749117lfp.21.1585343282366;
- Fri, 27 Mar 2020 14:08:02 -0700 (PDT)
+        bh=7JZ1QFI9+FtgdXcyl77TJuQPCE3U91hu8/wkfGn1LbU=;
+        b=Mzbx4w41EPga2mXIQ1EGkfckMMwab6E2BvTglMU+dEdzqsFgRdbAntp0YOKl/QVbPe
+         5fSyEyPZ+Acor65x4kaw1CRrlNX7w94GEGev3wRlrH22D5UIXW6EYDM16I1KStX7vpch
+         vJ2pzHxbcw8Y/jOOYZQqNMZ6QMZk55DPi6J4xaoQsgR/4zj2UThcwchE5KEtGbT9RmS5
+         UoJaywMYzcOlIPFZhRLzfHMh2CaeEdGfHIUH/93jmrNs3tPIXcUNhHYmNDoi5K0nMsTn
+         HNCRIBxTCAlVo1uWt53tAUE1jNcmHRYKCtDHmFlti0KnKQ4Brm5kvmIhefUFxpJF24O7
+         affQ==
+X-Gm-Message-State: AGi0PuaOIrEkg3WNOvXckzgifRaeLlQwZB+qNa67reThJrOz+hGQk3fa
+        Whs7sshGSiIqcp8rJ2Y+YQf/LkFoZaTNdSpzONtPNw==
+X-Google-Smtp-Source: APiQypJLzv1jR04mjd+jD35S7idB5qw5grrozbcEYe5adOdvJDvuj9PH5V5xlh1OkmHnheg5tdSKwvBMWIQrB/u7tNk=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr745752lfk.77.1585343520022;
+ Fri, 27 Mar 2020 14:12:00 -0700 (PDT)
 MIME-Version: 1.0
 References: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
-In-Reply-To: <8a6f91b49c17beb218e46b23084f59a7c7260f86.1585124562.git.baolin.wang7@gmail.com>
+ <3bdac4c2673b54c940e511f3fa569ee33b87b8d5.1585124562.git.baolin.wang7@gmail.com>
+In-Reply-To: <3bdac4c2673b54c940e511f3fa569ee33b87b8d5.1585124562.git.baolin.wang7@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 22:07:51 +0100
-Message-ID: <CACRpkdZr7aexy3cbF+VemXyQYKJ_VQkFD5svEO9COcxAqKNKpA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: sprd: Use the correct pin output configuration
+Date:   Fri, 27 Mar 2020 22:11:48 +0100
+Message-ID: <CACRpkdZ9VwZdexCm+WsDT3c3ScTSMDCTii2fOphH-CrKqf6TMA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: sprd: Add pin high impedance mode support
 To:     Baolin Wang <baolin.wang7@gmail.com>
 Cc:     linhua.xu@unisoc.com, Orson Zhai <orsonzhai@gmail.com>,
         Lyra Zhang <zhang.lyra@gmail.com>,
@@ -62,18 +63,15 @@ On Wed, Mar 25, 2020 at 9:25 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
 
 > From: Linhua Xu <linhua.xu@unisoc.com>
 >
-> The Spreadtrum pin controller did not supply registers to set high level
-> or low level for output mode, instead we should let the pin controller
-> current configuration drive values on the line. So we should use the
-> PIN_CONFIG_OUTPUT_ENABLE configuration to enable or disable the output
-> mode.
+> For Spreadtrum pin controller, it will be the high impedance
+> mode if disable input and output mode for a pin. Thus add
+> PIN_CONFIG_BIAS_HIGH_IMPEDANCE configuration to support it.
 >
-> [Baolin Wang changes the commit message]
-> Fixes: 41d32cfce1ae ("pinctrl: sprd: Add Spreadtrum pin control driver")
 > Signed-off-by: Linhua Xu <linhua.xu@unisoc.com>
 > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 
-Patch applied.
+Patch applied! Nice engineering here, figuring out the right
+fit for pin control configs, thanks folks!
 
 Yours,
 Linus Walleij
