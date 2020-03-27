@@ -2,80 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7128B195512
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:23:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16FC2195533
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:27:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgC0KXF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 06:23:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42600 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgC0KXF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:23:05 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q19so9564712ljp.9
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/6+qsGlY5ufaYGYSvfi6R/XdWdgiZnQOUmk027h++wY=;
-        b=txdKACCdM7XXYtTJw1Cpjkvm6oyL7atR/RjEVZa4sh+MYp1TgRoMuB4B04Q0FgZjsv
-         y0KzVBiDt3Z1FhO2p8E+MU3YRMufVrRxCYmY7YjzjKWlGskcN+zZ06vyYjx+OiQr0UZ3
-         gpNercDKBycZnaS5EtnhmJ38FNp+YDDfQgGRFHKExKCyZWsHI9amhTlaUmujm60c5TI2
-         Ge3c0sBOTmyfm1JbVHfFedn9QZukp8yXjcH/fCQ5IpDzWxKthGjvXw00GQVULuC2mKz0
-         n2kpIEvWqRvtHSRWdfOvd0+a8KJf2vlqa1o2A7Quk9XZ2UFXj2EBVl8YdPspHfIuzTXf
-         v91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/6+qsGlY5ufaYGYSvfi6R/XdWdgiZnQOUmk027h++wY=;
-        b=eK1cd1v0aLy35dk83XlMU8/BxMVqGoPPyP7inLpYkwbN0+QQPjmbAUGPGpK+fvH0IA
-         d0Re734+uBEBwYPZuRzjCfhkzybgGY8YPNKZdTqIj3dsh4RpPkPi6KdJdM5DDMzXLFT9
-         2rBVERo7ynGhQoGcaxxdFyAOJeBHfsGC1OWM0NPdWFxZGZmACpo49kk2xhDInWcU5KSY
-         AlnrLuLPNDRGM2R+4JbKJ7powEXVpOfNh37nuTqpqljLd86M2orMdU8PF/PTJbje/gQX
-         4uCzisAt28xMxRwDN94ZwVR5YNZ04A4G+Qe3JK0u0WirnJAXwl0TuU9nah1aeD32BJe6
-         CX2Q==
-X-Gm-Message-State: AGi0PuaE1JNTOgUAyqlsqo+VnvxbnM3De1cvYxq+EUh6Hqzb+8AiTzej
-        05x+xIePatijlyKW8UK8ZLCAj9gu8Cq78kYamxNZjg==
-X-Google-Smtp-Source: APiQypLAxlxUn/h9pbLaNqfw8TLuPxvnQJeZXEcak++olZSdCahmwgdRjDUQzOitW2xd7O4LOLGl+Jaw0WeumCFSA7U=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr7429532ljd.99.1585304583741;
- Fri, 27 Mar 2020 03:23:03 -0700 (PDT)
+        id S1726217AbgC0K07 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 06:26:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29889 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726540AbgC0K07 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:26:59 -0400
+IronPort-SDR: 13y2L3yxNCrWU6ZAQptlJH17v9d19ujAFzuxJ7VPFS0BWliYu81z2lxNk0RDaeJCBmZJ0QLERO
+ AsfR+7wr6kHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 03:26:57 -0700
+IronPort-SDR: z8TyAzHNvHnaFD1VWiW6JR2ZUVnBK1p3XsDlWxzMHpgXGwwJG9OQrYCyrNzWu2t5P8h4AR/rqG
+ TN4Bt90Asx/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,312,1580803200"; 
+   d="scan'208";a="282804442"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Mar 2020 03:26:57 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jHmCZ-00DNxv-Pb; Fri, 27 Mar 2020 12:26:59 +0200
+Date:   Fri, 27 Mar 2020 12:26:59 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org
+Subject: Re: register access issues in pca953x gpio driver
+Message-ID: <20200327102659.GN1922688@smile.fi.intel.com>
+References: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
 MIME-Version: 1.0
-References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 11:22:52 +0100
-Message-ID: <CACRpkdYrL02YHn5dPnh_Oz0Ysm5BxHrwQgwNMtsD55XGid_hCQ@mail.gmail.com>
-Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+On Fri, Mar 27, 2020 at 08:49:22AM +0100, Uwe Kleine-König wrote:
+> Hello,
+> 
+> I have an issue with an pca9505 when the .set_multiple callback is used.
+> That chip has a bit ("AI") in the register address that makes the
+> address increment automatically on subsequent reads and writes.
+> 
+> The problem (that was already noticed in commit 3b00691cc46a ("gpio:
+> pca953x: hack to fix 24 bit gpio expanders")) is that the regmap stuff
+> isn't aware of this bit and so register accesses that make use of the auto
+> incrementing are not matched to those without it.
+> 
+> Additionally there is a bug in pca953x_recalc_addr() that results in the
+> AI bit only be set for register writes. (That's the issue that made me
+> notice this problem. The result is that in .set_multiple the read
+> accesses bank 0's register only (when the hardware is hit) or uses the
+> read cache from a location without AI set and then writes using AI set.)
+> 
+> I didn't try to understand if fixing pca953x_recalc_addr() to not set AI
+> depending on write fixes all issues. But to make the register access in
+> the driver robust I'm convinced we need to fix the regmap stuff to
+> understand the AI bit.
+> 
+> @broonie: I don't know regmap good enough to instantly know the right
+> magic to do this. Can you give a rough overview what would be needed?
 
-> Use a different markup for the ERR_PTR, as %FOO doesn't work
-> if there are parenthesis. So, use, instead:
->
->         ``ERR_PTR(-EINVAL)``
->
-> This fixes the following warning:
->
->         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Uwe, thank you for the report. Personally I didn't try set_multiple() with this
+driver and as you noticed Marek did a big refactoring to the driver to that
+part in particular.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+So, I guess he may shed a light a bit on this.
 
-Mauro are you merging this or do you want me to merge it?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
