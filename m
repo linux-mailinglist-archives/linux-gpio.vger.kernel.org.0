@@ -2,81 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B3819570A
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 13:25:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 095201957AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 14:03:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgC0MZ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 08:25:56 -0400
-Received: from mail-pl1-f175.google.com ([209.85.214.175]:42129 "EHLO
-        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgC0MZ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 08:25:56 -0400
-Received: by mail-pl1-f175.google.com with SMTP id e1so3385160plt.9
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 05:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=vxEu/Va6O0IiYUmx8M7PGHl2xFYx0jN5Sl6NJLSny0c=;
-        b=pHQaVdBa9qc8GpDtxG1mGz3gJ5ZtYmtz3IIqwYmMBEEnRzZHJvsilQ27Z3F95bWl+u
-         yknzZq7MwDCBLGWIoGQxyi8fXns6AuNLZdddolW0UFLxDoJddGeuEQmgW7q/7IA3yJfF
-         Z+nV7FN+jGK5bUSgHeAXO3dh5PZVLVnCK6QSFgvpex2hZ5GR3JvywoJATVW4acCgekuv
-         GKK8Pg4oBdXSmx/71y/1uCuofDZ5AYWkLRYR7isrAbrkb4Nsi5zkBIzkYu6agyZ/FR4y
-         okX6gPks4BUKxgzujcLzzTi20OVC6pEl5IDXy2Ojyv7fYD3YCbhG+YJcJPyTo3hTktp1
-         sX9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=vxEu/Va6O0IiYUmx8M7PGHl2xFYx0jN5Sl6NJLSny0c=;
-        b=iDAX5+7zZxe01PfiYoeHwwb4tAxosPXFp/gqQm5gWrJBDyF5JDpSOWaoOtLHO9pP2t
-         2yjcH16PGNgrbl5r953bc1kgyh04HinPMpM1godQwfMLMXFM+1wMchSEhjyZVhTkTr/G
-         wfJTc4G+N5k7zWN+Urtm4xEU5KlQj1nwTU71j9xA6kQUjiWLtWHt/1Qgv9kgdvmWfiYI
-         oYSZXhqNbLW4tVEcSRc8Bk/ld2Y2whRSVB7T5UD7guWNfALn5T/Mp4PJhuiqG3GywRqq
-         p+CLUkAaDNTg9aOjRNi4KjGAC77k/GjXtBR4EGXU7QwB+Uk3Jy/5WJKLebufsBMRZ/7C
-         6eSg==
-X-Gm-Message-State: ANhLgQ23a1YLZYPhqwOt2PayZTrgdGvvfgf/J38u1nv8j1SG7qhSDw5b
-        B2SSjis4WO902aZcA03D6sZYrkvAN2Y=
-X-Google-Smtp-Source: ADFU+vsG7fQLNfOoJ8Fi97wJrbwgzYr/zKt9yUkKwRnhyH4KvYgb85GzPpbDK8TU9iwPgudg4VWVvA==
-X-Received: by 2002:a17:90a:c790:: with SMTP id gn16mr5763218pjb.146.1585311954720;
-        Fri, 27 Mar 2020 05:25:54 -0700 (PDT)
-Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id y28sm4054877pfp.128.2020.03.27.05.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 05:25:53 -0700 (PDT)
-Message-ID: <5e7df0d1.1c69fb81.57d0.0d02@mx.google.com>
-Date:   Fri, 27 Mar 2020 05:25:53 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1727247AbgC0NDY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 09:03:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:44406 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgC0NDY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:03:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFD261FB;
+        Fri, 27 Mar 2020 06:03:23 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52AD13F71F;
+        Fri, 27 Mar 2020 06:03:23 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 13:03:21 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: register access issues in pca953x gpio driver
+Message-ID: <20200327130321.GA4437@sirena.org.uk>
+References: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.6-rc1-51-gffa91e7ca142
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-Subject: linusw/for-next boot: 43 boots: 0 failed,
- 43 passed (v5.6-rc1-51-gffa91e7ca142)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
+In-Reply-To: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 43 boots: 0 failed, 43 passed (v5.6-rc1-51-gffa91e7ca=
-142)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.6-rc1-51-gffa91e7ca142/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.6-rc1-51-gffa91e7ca142/
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.6-rc1-51-gffa91e7ca142
-Git Commit: ffa91e7ca1426a89eec1b3101286d82785760767
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 43 unique boards, 12 SoC families, 3 builds out of 6
+On Fri, Mar 27, 2020 at 08:49:22AM +0100, Uwe Kleine-K=F6nig wrote:
 
----
-For more info write to <info@kernelci.org>
+> @broonie: I don't know regmap good enough to instantly know the right
+> magic to do this. Can you give a rough overview what would be needed?
+
+If you want to dynamically change if the register is autoincrementing
+you're going to have to add stuff to regmap for that, it understands
+devices that autoincrement and devices that don't autoincrement but
+there's currently nothing for transitioning between the two.
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl59+ZYACgkQJNaLcl1U
+h9DPDwf/U7FGjCVpuBFG9+OmU7w304tObkWN8NNUZ3e1m/o8yC0l2kySyEdUGLxQ
+m/+oFRAamjXAPwb7pGyswc4NLHHxN5VEbXcmJlzj/4/GaLKsn+Piot/d51JCgw9k
+Ub744Z/ChCOF6g7QxpL0wt/ciSWmSqxzsV+ja7NeIdTH87KzFss8lsWqsoGFc7Nv
+GKE77O80LUlVBii3yVGl9tlPkwfapMDTqxkIFeNHfofbF8i/YjdXfCmywXnYxSS0
+RucKl2ljIYI8xcAZ+oJQkQdZTe824FFHGg7lUtRna+kGXvi20orfHngejCJ6HUpI
+8HZMBUjQc49d0UJcHU8PiMOKBCH1cA==
+=B4ZD
+-----END PGP SIGNATURE-----
+
+--bp/iNruPH9dso1Pn--
