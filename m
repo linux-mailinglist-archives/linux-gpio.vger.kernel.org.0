@@ -2,73 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F91819554E
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:31:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7150A195567
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:37:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgC0KbS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 06:31:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43652 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgC0KbS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:31:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so9593432ljn.10
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:31:14 -0700 (PDT)
+        id S1726400AbgC0KhX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 06:37:23 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41632 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0KhW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:37:22 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z23so7432885lfh.8
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y9GPFegNFppAtG8VfOK1hzN6DX1neujiFhmSroslZ3A=;
-        b=v8SnBAISUhe4O2X68nvq2mTQ4IESHbhhK/DdVTGF6QQpxj+HBRN/yyyodYhymC+PzS
-         JAFdSEC2fpQdWWwymmeF4F7Gv6hDx0LMnRAoHX2Hv/10PnazJ3ZE2H5l++8BZLS7G864
-         MDArlHjA1tW1RQcDzi8mNdDB6rwpORj2r3S1sxgesBj3TttPQBwKjY6oDCQRmwRnomHt
-         T+5YUciUeMpRSj/VsI0hGrOMhNfaVUdroln9DIKVTKn7ACGvcu+rQF/w6717o6nKyw7s
-         +K1ZRkdSA3UaQo5WtepoU2x8h1WD6bBW87YeTPBJPZ/8OeN/4SKFC77CrK09NYv4o46P
-         2tYQ==
+        bh=4Vut7VTM7zs8ysH2B780ttrV051MkOP9F58aRnk6Cy4=;
+        b=Kuh6tIjTFFoRTadz8ATz0SFS70JETusKnlolh2hu3umOXxgAaqXAG22Jz0eGeJvuSv
+         Py8+njw29WvZ0Mjz7rC76QpmsfhRwfOulZsHidLIPPHKU270HX6SYTbuwkamkVOdM+qs
+         Yuv7GQ9/MwN8JX6PsMBwUv6vVFiy28fBwPVc87KzVRNtHV/U6q9v6pIyBDEqRiMGCy4w
+         OjgWcrarThtJYwB7cCz0nBYWmHXenzaVyiGZSENgdj4gKqmtzpbH+6IKEQtMTw049iRA
+         /vvmVT17EcX610ymkNOegvRb3H7kRZOELLBzB+8Hp1i4uMQCAZohq/qpqqmMtDogmQXL
+         Qq8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y9GPFegNFppAtG8VfOK1hzN6DX1neujiFhmSroslZ3A=;
-        b=pfH9/wSD2ijJXPlpu80CAnVnGktnWYo8g2Ur6Xg5BOblRNanQslaIXIj5iNOlhQrPt
-         2LDlYg+FkFnyNTWLmQTLvPnTjdXU7Q7Dp3D9hg73rMdPxubSBQsOECqnSE9Z00Ekpi2D
-         KaSIdD7uRE6s8eRCUJjQTIRLkAGjq8Tc9t20sdZf7b3rssgakI2+4G4mnv8yI/1YIlVG
-         ky4Ex2GS26WRKrJ1N1ra5VcoGBKJ/L206iUp//fL7Ah6I5dXc4MbHeMqLKMNpoUxgy4X
-         hlr7Xc19ce26wO59/BAk+Ars/FjDRoDaxYL8QRAdtakV6LEfheYbSKCP+N5f8dW7yuNT
-         otvw==
-X-Gm-Message-State: ANhLgQ0jBxcVYQJmwaKchO1Mr79TpwnRWR8ymPWLbkc1N7vAUmGP/tZH
-        GLaia9N1PAtMYAzILnXsEA2i2pCiEnuhFKBrlLhBfw==
-X-Google-Smtp-Source: ADFU+vvzNuB6yrUNJcqv0peX2lxUzuEUOGbmXMaFpa4JyDohIZuKl0tKEbyR5jYlOofIttkCHl7I8ntnC39UZAJQJd4=
-X-Received: by 2002:a05:651c:445:: with SMTP id g5mr7734981ljg.125.1585305074115;
- Fri, 27 Mar 2020 03:31:14 -0700 (PDT)
+        bh=4Vut7VTM7zs8ysH2B780ttrV051MkOP9F58aRnk6Cy4=;
+        b=qAByapVpn3vy5+LIVQ7BaF1IqJ92EYmP06sxiNodvyzWKWcFJMAGWOY4Zk7aC5cORb
+         YSaeKCrtOw/6tk/+to4MOK5LNWucU7lP7LdLqAQvUVbKN2Wh6v3Qod2CHBBTwqCPVyKU
+         4LiYR6ANOJDEBuz2Eiufkzn1/ty8D6ZnmV0tWV/97C9yfNsE0dOjqpr518X+1R1xbMuo
+         vZ64UofwlgdXltX21/ujuvy0j8DJ6AEggmeGaeoTOXSKtKWcAGpJ4yOq7Q8Jo/hyt2ln
+         4/hn7zkRzaHpMC9QPyPNSsOQBs7T2WCkg5IWrVDiphS1MPSaAmwHzrffgTpPHjOLxoAW
+         B6Kw==
+X-Gm-Message-State: AGi0PuaTmvsAOPXUew84bKWHIioUYybd4rnEI5LsAX8fWfvmwKkdyXQI
+        nVqIIlcmNs9yOMVOcNkzFohwcADMs5utDySS1QvTUA==
+X-Google-Smtp-Source: APiQypIR2wA4g/0jaaOBlxu9E5xNVvbe/zDIM3SSAhpl1yLArRSZKVGdzEd6rwtgYKagGojPKD3FAt7LUBSldz2ZbJg=
+X-Received: by 2002:a19:be92:: with SMTP id o140mr711841lff.217.1585305438741;
+ Fri, 27 Mar 2020 03:37:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311090644.20287-1-tiwai@suse.de>
-In-Reply-To: <20200311090644.20287-1-tiwai@suse.de>
+References: <20200319122737.3063291-1-thierry.reding@gmail.com> <20200319122737.3063291-2-thierry.reding@gmail.com>
+In-Reply-To: <20200319122737.3063291-2-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 11:31:03 +0100
-Message-ID: <CACRpkdYBQ4tqy8Ji6rMwkAjOyx9zZFb-CYyYdLAfkDg3c+iPTw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: Use scnprintf() for avoiding potential
- buffer overflow
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Fri, 27 Mar 2020 11:37:07 +0100
+Message-ID: <CACRpkda5M4NPvMBBLg+_2BJw7ZmryrgN72JZL_XAFQ137s0OLA@mail.gmail.com>
+Subject: Re: [PATCH 1/9] gpio: Support GPIO controllers without pin-ranges
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 10:06 AM Takashi Iwai <tiwai@suse.de> wrote:
+On Thu, Mar 19, 2020 at 1:27 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-> Since snprintf() returns the would-be-output size instead of the
-> actual output size, the succeeding calls may go beyond the given
-> buffer limit.  Fix it by replacing with scnprintf().
+> From: Thierry Reding <treding@nvidia.com>
 >
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Wake gpiochip_generic_request() call into the pinctrl helpers only if a
+> GPIO controller had any pin-ranges assigned to it. This allows a driver
+> to unconditionally use this helper if it supports multiple devices of
+> which only a subset have pin-ranges assigned to them.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-No reaction from maintainers so patch applied.
+Patch applied.
+
+We have some drivers like this:
+drivers/gpio/gpio-pl061.c:
+
+        if (of_property_read_bool(dev->of_node, "gpio-ranges")) {
+                pl061->gc.request = gpiochip_generic_request;
+                pl061->gc.free = gpiochip_generic_free;
+        }
+
+Should we just make a patch assigning these callbacks
+unconditionally as a follow-up?
 
 Yours,
 Linus Walleij
