@@ -2,79 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 327B2196046
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 22:14:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 234D6196069
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 22:28:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgC0VON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 17:14:13 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46422 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727423AbgC0VON (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 17:14:13 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q5so9020927lfb.13
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 14:14:11 -0700 (PDT)
+        id S1727444AbgC0V2d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 17:28:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33843 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgC0V2d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 17:28:33 -0400
+Received: by mail-lf1-f65.google.com with SMTP id e7so9085206lfq.1
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 14:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XaIaaULbP3McQWHg8W+/o/1CYRBruKdNlh+486HcGCM=;
-        b=qX+gRLGFRJd3ElguqkNQqQ1OshtdqoG0XuATUd/h5tKBo00u2f17T9Fniq6VztFhqv
-         saK8XXwTdBDTw9Cai55RTVxGBbsQ1YaMMD9pR6C+3d7CQxZVvXty2cMgo7goryl4exdy
-         gCWeipbiUZ22ewiuX1E80s2NFUlT7pLNwPPCqaD4QTD4q+PVBOUkJ99HRl440D6LiGfm
-         MbX1iGfpZc4Xownq6lyJp6r7CNz7TxynKrN5ZMzW2BzMcDVIfKFPHpNX/lzeNO+SCP9N
-         OIPVSonZ873YmQ+LfN+slXRRpdBgCd6YKyChvDWPgHWNFugDmv1vf8PSrtyLLtrgYPCc
-         UnWQ==
+        bh=AKs2wUFl9mGzanJxstXyv3eIv3rgDvp5GN7P4hoUxzU=;
+        b=bXvaM7O2ssMqHhYhwo6oK1Jw53UiTWSKEt1XglHA8CnPQ1fyd+ZI62/7aMfqESwZTe
+         Xi/NInkuT/diSkGzzsziGL/kvqGwV/x5KpPlSLyI9EqIwJ7On3chcc4GlbVTgUzk3miE
+         2r1OaW9CDcCesVopTtnBJ0O+A4i8bd9Vxnj7VEoss22QmJJ0KqWCw5zyIZsh2Qn4WD+z
+         OwMCNsUjsbIrUpQLan32VNbK5Kih8QTdImTcN1PKw8nhsjgqa2sDUptAtKtwcclxQ5Sh
+         2WXwSYmX4x7jr3wqpzvmb3Ma8eT5hVWACOCLyGLznxWB2t/W7oOPPXl/+5Y2Wsy12XlI
+         N9ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XaIaaULbP3McQWHg8W+/o/1CYRBruKdNlh+486HcGCM=;
-        b=flDqZ7uLPQvw0AM2/HWy7Iszi7Jf24Y7YGnaPdPvSK+ySM2fbGAebiAMFvOeb24BWD
-         2DPVFku0BjzfXlJRnLSxMElfXhYTu7ndsc+6cQWeBNMHUEbYv85uhqfI9rZBLAQnxV9l
-         6avnXzLcfxce2+6nlzyf1gs4KAq4g+4qvYBiCYsfwvmAnpPq32RAJyPbKk8QIl7HsQaE
-         0jQoUO5bYmySTzXq9a2xcxosbgBqEwU3NjlJuCREQw3RWtGG5fnzRYKgccgzzUbDAhla
-         J/+w6oXSrQPVyi+ItmMvys+LzNF0qD+tLXkfJWMB0FINQPRMIWImIGjEg9eDJGghFOU7
-         K5bw==
-X-Gm-Message-State: AGi0PuZMyp20hDmJKJaSpmHuwN9HIAWqwwmcmYXLc4Jzz2SEgKF2vhLX
-        nARN4rPyOkLrkF69u5N8sdzza7EZJ+CkL3bgZRbHhw==
-X-Google-Smtp-Source: APiQypInNZ8StO0YG491G0Qh82LO28Kdxjyb+vEZxtIJy87j+WsFkKeAnw2pshXxgw6Ns3g/B8D5t4FRjpOdDRr5uuU=
-X-Received: by 2002:a05:6512:6c4:: with SMTP id u4mr757685lff.89.1585343650678;
- Fri, 27 Mar 2020 14:14:10 -0700 (PDT)
+        bh=AKs2wUFl9mGzanJxstXyv3eIv3rgDvp5GN7P4hoUxzU=;
+        b=oqHMM3bWLf8FxzcuPMJnP8N0y1nrviWfOzeKgVwkj7wG00A7FomRpNl51MHCNxoaUE
+         BtDa6kejQbqw62ByrVYtbrai+Htlzw8jzgV1NW5Q7PI5gkBQbQv+TrkQ1PzBoDcg6DYm
+         1iCIhsSA6l+Sxzf7A44mwIir+/wpcwxWgtSsHSfsDJcnZBLiNcVJSWSX1jZ/9V54MJXr
+         AaH/FcLbliaMPi+h2IRSB5pjeVLBhX+Xg3/cvCM+kQUKUiNYdF49pffEqMYRAUWbVxO/
+         MVsxVRSy+9wrjWwLIlfCRLkePw4v1HEAp/UZT0VfieNAy3XuXIrmxJa7EAhiXbLAmgmC
+         0Duw==
+X-Gm-Message-State: AGi0Pua7vdtwUvuSC/sygaLUT2HAdtnn6AATNcNdM9bBS6YdlCnPF4jb
+        T3e/Hnu1A66ramGj/5CpD1IYC4G36abZh+OopbYAmA==
+X-Google-Smtp-Source: APiQypKqfkkJWo0LyofqKXzbQiZeKqIvwRaDCBJui4ScAZ7ROxscEufS43eqyhCR13YrShZVlst0oCy4cgAUK1mRC50=
+X-Received: by 2002:a19:6502:: with SMTP id z2mr763585lfb.47.1585344509130;
+ Fri, 27 Mar 2020 14:28:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325103956.109284-1-hdegoede@redhat.com>
-In-Reply-To: <20200325103956.109284-1-hdegoede@redhat.com>
+References: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
+In-Reply-To: <20200325103154.32235-1-anssi.hannula@bitwise.fi>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 22:13:59 +0100
-Message-ID: <CACRpkdavyR7FRGMZFHZUvRhm9PL-X4SQQszN4HQn-+qpAhJnHw@mail.gmail.com>
-Subject: Re: [PATCH 0/1 resend] gpiolib: acpi: Add missing __init(const)
- markers to initcall-s
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Fri, 27 Mar 2020 22:28:17 +0100
+Message-ID: <CACRpkdafCsx+Q+L0q2j-=Q-5PY3yJx=JCmhPmDiDkt6p3YK2RA@mail.gmail.com>
+Subject: Re: [PATCH] tools: gpio: Fix out-of-tree build regression
+To:     Anssi Hannula <anssi.hannula@bitwise.fi>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        stable <stable@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:40 AM Hans de Goede <hdegoede@redhat.com> wrote:
+On Wed, Mar 25, 2020 at 11:33 AM Anssi Hannula <anssi.hannula@bitwise.fi> wrote:
 
-> I know it has not been that long ago since I send this out, but still
-> I have the feeling this one seems to have fallen through the cracks?
+> Commit 0161a94e2d1c7 ("tools: gpio: Correctly add make dependencies for
+> gpio_utils") added a make rule for gpio-utils-in.o but used $(output)
+> instead of the correct $(OUTPUT) for the output directory, breaking
+> out-of-tree build (O=xx) with the following error:
 >
-> It has already been Acked by Mika, so if you can queue it up in
-> linux-gpio/for-next that would be great.
+>   No rule to make target 'out/tools/gpio/gpio-utils-in.o', needed by 'out/tools/gpio/lsgpio-in.o'.  Stop.
+>
+> Fix that.
+>
+> Fixes: 0161a94e2d1c ("tools: gpio: Correctly add make dependencies for gpio_utils")
+> Cc: <stable@vger.kernel.org>
+> Cc: Laura Abbott <labbott@redhat.com>
+> Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
 
-It requires the fixes I just sent to Torvalds to be applied first.
-I simply need that stuff to be upstream before I can apply this.
-That is why it is deferred.
-
-Sometimes it happens that random fixes are dependent on
-critical fixes, then the critical fixes need to land upstream before
-the random fix can be applied, this is one of those cases.
+Patch applied with Bartosz' review tag.
 
 Yours,
 Linus Walleij
