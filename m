@@ -2,87 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 081B91954E1
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:10:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A25C6195504
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 11:21:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgC0KKq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 06:10:46 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41606 "EHLO
+        id S1726233AbgC0KVK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 06:21:10 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39005 "EHLO
         mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgC0KKq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:10:46 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z23so7373083lfh.8
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:10:43 -0700 (PDT)
+        with ESMTP id S1726165AbgC0KVJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 06:21:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so1614578lfp.6
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 03:21:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5Npbjmx2EEwqSvhfm8k1aVlqXx6O4MStkJENyJ0fqd4=;
-        b=FT8qzeO2T+rJuaOA0DKTsXprHUdy9BzaA7nB0Fr/QoXarVRQwzxhp7ZWERJ9S6Nk3x
-         1MmXn7rBgq6Knbjw+my1fmGfvrKb8HApm0swiL8DmY9PQa9MXJl92nPLb5whysAEig8y
-         gGaacje71Fwcn3Fc0uMXJF17TmzJ0JgJa32mkqnDFptAKimXjN0G4BeoTz8e8+5t3fbE
-         ugPIv7Y1GBHjDzF0qXIt2VnrwHR1viqbLaLaFePYBTZ1POhrro9XHlPwcNRy+KWIJuyc
-         ntLw9mARR8eVUnC2QZM7WILY85/+ZX5oce8D1ZiD6ZNSPWAM3Toiq6KvX7NRnXOIlIu/
-         I0yA==
+        bh=TuB8BNTEMS6Xu4xWKK0GTpM0KTFJDSPd7CoTH260LEY=;
+        b=BWdcmcSOZAia9WokqOKv83FwargH+rfDXr2Mp0QwyZsT/mABCSd3y3ZMISvNsbmXhU
+         gQMIR1duY1UxdvKr1tbHQzNudMLJvKqINJWtOlrbk9+kwOmXToR95IOMrI3yVrYmqYw4
+         ERIXKr3kSqBiWHHSNhbcDl9Iko5A1Q0USZ7lVRGh7i4ZWuu8E4UBLvEJ0Rb7XNIkfIsy
+         aw8uoNh4prsuenO/RPpdtz/llUkVRpSahQ6WFiqcc4YqGBOhRx5YxeATNzXZkpF5gRXs
+         u9qzGndEeTvD5XvNeditQ2MMZ58/zYFaGXYoaCpP0AzoqV0GaxsvyztxFYEj52lAcoCH
+         pBJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5Npbjmx2EEwqSvhfm8k1aVlqXx6O4MStkJENyJ0fqd4=;
-        b=rappMxmaSVkFrvOTTK37yxVnxp6K6m9ksnhLqICF7nMgTOpKL34V5K3rQeXWS2hWUN
-         pdVVpzOLShI14QAhvs/EgYJ81jqhSowoyXWQjKTxl7HFzibmvL7976ZjQy0UgPSOWBjA
-         C8nPsqqkyYdCP3E9aiB2SZFSTpLbk4wi/vmkGifjyU0lcKVExA6vUdnatXNER8QRS3Ev
-         IQBqBBay7Ulq0QwWCIyZBDlPJCt4zyPK2jCQkAmjrhZcJX7vLnWHJpG91YpxCTezv+W1
-         AgRhPW6WRQr9+qmtRSdXWGRltyHh0TE6HA0laQDePqM/Ix41Qj84P1DeyxtkeHTTyWa3
-         Ssuw==
-X-Gm-Message-State: ANhLgQ2A3uyPY+LKe9mLN/fBxZ3t6csazsjJSEScqxDu4ZsCjEtPMaAl
-        5ThgVycGyx8UD9GJZySrtL1NsPk35t1vfN7AfQ8omw==
-X-Google-Smtp-Source: ADFU+vuo7rHjjKyQgOxCXqSH33bSM+Ja4ivZZHhrCjU/q4tcBMMOvFAfACxfFq8agQOOqIlp22v+O/jFyzpwpcjpyIw=
-X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr8192077lfc.4.1585303842443;
- Fri, 27 Mar 2020 03:10:42 -0700 (PDT)
+        bh=TuB8BNTEMS6Xu4xWKK0GTpM0KTFJDSPd7CoTH260LEY=;
+        b=QOsRZrxqsskMuDMOSO1u9yUPDVdCCcFicMwwG/IzkYhY5TsZ8MIYGoBZL/gIoiTCN+
+         Pq+VfrQMO1gt0m6L7+LqtjjeA0jLa60ISS0x7CErRwU1/uCgEVnIDAvwSPGbMlp2smmn
+         PQ4XiM0pKpbXXcnkfdklNGs4+Dj0alpYRx5yY/z+/0G2Xyo1TJb6BIT3N4qGfOWcq2dO
+         57+wSwiiwPyWo1q2z8hEz2ZjY4AV+XSB7lNuVD2POs3ASS/3tM5XunoxJe7kCwkiQHsJ
+         aoJfUJzlPlEfsa/mDUt5pdk1ENFWYBLmG5+f08GloiDL7c+MSR4K5HHgZfroAIb3I0t3
+         xMgg==
+X-Gm-Message-State: ANhLgQ0ASRL899bX85rDoirCz3zPLPv21y1iChrRdX6Q4H/TBCp1TaFW
+        8qriT8UvbEpSEokY+/hXQ/gt9BlZ97UbJCvd/uHk76rNxqg=
+X-Google-Smtp-Source: ADFU+vtsIgqK8FyZODtKNKWKI1HxhtKduwTybRXQvKGmxQLsPLeMOqx9p3y4gdOqstKYu6oc3bIWeFZeiamysR3lBHg=
+X-Received: by 2002:a19:ac8:: with SMTP id 191mr8675462lfk.77.1585304468041;
+ Fri, 27 Mar 2020 03:21:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200304225433.37336-1-tony@atomide.com> <CACRpkdYL5mZ7i6bEF0b_CUXaG-jHKz4KnSXsBNfs_9M054U3vQ@mail.gmail.com>
- <20200317173422.GN37466@atomide.com>
-In-Reply-To: <20200317173422.GN37466@atomide.com>
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc>
+In-Reply-To: <22944c9b62aa69da418de7766b7741bd@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 11:10:31 +0100
-Message-ID: <CACRpkdad2Qm76aMhSw9Pdh9=Ed9BXsa6SVsAG2+v=KYRNcwEhg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Block idle in gpio-omap with cpu_pm
-To:     Tony Lindgren <tony@atomide.com>
+Date:   Fri, 27 Mar 2020 11:20:56 +0100
+Message-ID: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Tero Kristo <t-kristo@ti.com>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 6:34 PM Tony Lindgren <tony@atomide.com> wrote:
-> * Linus Walleij <linus.walleij@linaro.org> [200309 09:27]:
-> > On Wed, Mar 4, 2020 at 11:54 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > > As discussed earlier, here's a series to use cpu_pm to block deeper SoC
-> > > idle states if a gpio interrupt is pending.
-> >
-> > As you requested I queued these on an immutable branch
-> > based on v5.6-rc1:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=ib-omap-block-idle
-> >
-> > And merged into gpio-devel for v5.7.
->
-> Hmm I'm not seeing these in Linux next yet though, care to check?
+On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
 
-I was just slow on getting it build tested and pushed out, sorry.
+> > In that case maybe you should use the disable_locking option in
+> > regmap_config and provide your own callbacks that you can use in the
+> > irqchip code too?
+>
+> But how would that solve problem (1). And keep in mind, that the
+> reqmap_irqchip is actually used for the interrupt controller, which
+> is not this gpio controller.
+>
+> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+> and all interrupt phandles pointing to the interrupt controller will
+> reference the toplevel node. Any phandles pointing to the gpio
+> controller will reference the GPIO subnode.
+
+Ideally we would create something generic that has been on my
+mind for some time, like a generic GPIO regmap irqchip now that
+there are a few controllers like that.
+
+I don't know how feasible it is or how much work it would be. But
+as with GPIO_GENERIC (for MMIO) it would be helpful since we
+can then implement things like .set_multiple() and .get_multiple()
+for everyone.
 
 Yours,
 Linus Walleij
