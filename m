@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1721A1956E7
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 13:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43B3819570A
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 13:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgC0MO0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 08:14:26 -0400
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:37185 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgC0MO0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 08:14:26 -0400
-Received: by mail-pl1-f182.google.com with SMTP id x1so3385993plm.4
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 05:14:25 -0700 (PDT)
+        id S1726515AbgC0MZ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 08:25:56 -0400
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:42129 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0MZ4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 08:25:56 -0400
+Received: by mail-pl1-f175.google.com with SMTP id e1so3385160plt.9
+        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 05:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernelci-org.20150623.gappssmtp.com; s=20150623;
         h=message-id:date:mime-version:content-transfer-encoding:subject:to
          :from;
-        bh=KLTlRoEH0CuOQS2LExETrPHh3D3S9E7CS2LaWmIntTo=;
-        b=bHJNFULjX7kcMHUlXdXh5J5fvb5G/evcxBDgC0d2cfofOsTU77StWapFD2my94QAU/
-         WH8Ga3Bhg3WYUETH2HOu9cAsSOd4a3INYHdwhGtcTzNKgl9EshIYd3DS9oerNMno5E9T
-         xZWa5+twtDVTO25Rvn6dEhZ/ucAlcwIkMyqBcUQAsNv4PGDXXgBop1jw2dOtT+jBlFpt
-         VFz6oyJ/L4KQYfKeu0SlU+bJ/oFD6eAKcxyQ55oAIY+0uzo1sNvjpl/kMPUJlyXmT9s6
-         41jVu/jRsfOEJS/fdgFFURFj2qh+fugTxk0EXaRhLQ7yMRFGokNCl79XLgUnbN9Iw5UB
-         gbtw==
+        bh=vxEu/Va6O0IiYUmx8M7PGHl2xFYx0jN5Sl6NJLSny0c=;
+        b=pHQaVdBa9qc8GpDtxG1mGz3gJ5ZtYmtz3IIqwYmMBEEnRzZHJvsilQ27Z3F95bWl+u
+         yknzZq7MwDCBLGWIoGQxyi8fXns6AuNLZdddolW0UFLxDoJddGeuEQmgW7q/7IA3yJfF
+         Z+nV7FN+jGK5bUSgHeAXO3dh5PZVLVnCK6QSFgvpex2hZ5GR3JvywoJATVW4acCgekuv
+         GKK8Pg4oBdXSmx/71y/1uCuofDZ5AYWkLRYR7isrAbrkb4Nsi5zkBIzkYu6agyZ/FR4y
+         okX6gPks4BUKxgzujcLzzTi20OVC6pEl5IDXy2Ojyv7fYD3YCbhG+YJcJPyTo3hTktp1
+         sX9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:mime-version
          :content-transfer-encoding:subject:to:from;
-        bh=KLTlRoEH0CuOQS2LExETrPHh3D3S9E7CS2LaWmIntTo=;
-        b=dEj5ktwAJ1NCvIVfYiy1ng3g1u9/JbGp0tqGUA0+88jVsVYoHgltfOS+utwPzscrIc
-         EqHSt5f7k+xwNAY5IIH2X7lLRiv6ZhziRGvyznUDddTylLKfK2aBH3ZSvmY/tpINfId/
-         D0GgDEipwtZQVjTpBiuki4xRNwb92gxuydS/4FrXaCoUIm0+z5He6EpT6IXLdyWoinnQ
-         DBvL1bam3SGfsvG5CznJwoArQPGZXumV3lEBYXyWSxNmB35lFUHp62Mfoijs9qGqDaOy
-         6L7QbmxtvkMo4MXRKsqc8SYSmRerN+AJ0g3G1A2Rq7k63A3Ba7asb3m2ByhQhMiUpp+j
-         PAJw==
-X-Gm-Message-State: ANhLgQ0n/bnSQ0BcR1mfH4q7Lv2vJry5BidgAlfszygSA/f0njaP36dU
-        otrkNiZT8IuOEYOcWPPhotQR1CgNz2Y=
-X-Google-Smtp-Source: ADFU+vsyKl0+EnJwQyYWx/28TMzXjjJA7N2vUUlxUqPORRm5q9xOWbUFjNwEBy2clDZ8NcD+kwZwCA==
-X-Received: by 2002:a17:902:107:: with SMTP id 7mr12634437plb.302.1585311264844;
-        Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
+        bh=vxEu/Va6O0IiYUmx8M7PGHl2xFYx0jN5Sl6NJLSny0c=;
+        b=iDAX5+7zZxe01PfiYoeHwwb4tAxosPXFp/gqQm5gWrJBDyF5JDpSOWaoOtLHO9pP2t
+         2yjcH16PGNgrbl5r953bc1kgyh04HinPMpM1godQwfMLMXFM+1wMchSEhjyZVhTkTr/G
+         wfJTc4G+N5k7zWN+Urtm4xEU5KlQj1nwTU71j9xA6kQUjiWLtWHt/1Qgv9kgdvmWfiYI
+         oYSZXhqNbLW4tVEcSRc8Bk/ld2Y2whRSVB7T5UD7guWNfALn5T/Mp4PJhuiqG3GywRqq
+         p+CLUkAaDNTg9aOjRNi4KjGAC77k/GjXtBR4EGXU7QwB+Uk3Jy/5WJKLebufsBMRZ/7C
+         6eSg==
+X-Gm-Message-State: ANhLgQ23a1YLZYPhqwOt2PayZTrgdGvvfgf/J38u1nv8j1SG7qhSDw5b
+        B2SSjis4WO902aZcA03D6sZYrkvAN2Y=
+X-Google-Smtp-Source: ADFU+vsG7fQLNfOoJ8Fi97wJrbwgzYr/zKt9yUkKwRnhyH4KvYgb85GzPpbDK8TU9iwPgudg4VWVvA==
+X-Received: by 2002:a17:90a:c790:: with SMTP id gn16mr5763218pjb.146.1585311954720;
+        Fri, 27 Mar 2020 05:25:54 -0700 (PDT)
 Received: from [10.0.9.4] ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id 185sm3957426pfz.119.2020.03.27.05.14.23
+        by smtp.gmail.com with ESMTPSA id y28sm4054877pfp.128.2020.03.27.05.25.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
-Message-ID: <5e7dee20.1c69fb81.ac326.0867@mx.google.com>
-Date:   Fri, 27 Mar 2020 05:14:24 -0700 (PDT)
+        Fri, 27 Mar 2020 05:25:53 -0700 (PDT)
+Message-ID: <5e7df0d1.1c69fb81.57d0.0d02@mx.google.com>
+Date:   Fri, 27 Mar 2020 05:25:53 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-Kernelci-Kernel: v5.6-rc1-51-gffa91e7ca142
 X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
+X-Kernelci-Branch: for-next
 X-Kernelci-Tree: linusw
-Subject: linusw/devel boot: 43 boots: 0 failed,
+Subject: linusw/for-next boot: 43 boots: 0 failed,
  43 passed (v5.6-rc1-51-gffa91e7ca142)
 To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
 From:   "kernelci.org bot" <bot@kernelci.org>
@@ -62,15 +62,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel boot: 43 boots: 0 failed, 43 passed (v5.6-rc1-51-gffa91e7ca142)
+linusw/for-next boot: 43 boots: 0 failed, 43 passed (v5.6-rc1-51-gffa91e7ca=
+142)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.6-rc1-51-gffa91e7ca142/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.6-rc1-51-gffa91e7ca142/
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.6-rc1-51-gffa91e7ca142/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.6-rc1-51-gffa91e7ca142/
 
 Tree: linusw
-Branch: devel
+Branch: for-next
 Git Describe: v5.6-rc1-51-gffa91e7ca142
 Git Commit: ffa91e7ca1426a89eec1b3101286d82785760767
 Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
