@@ -2,78 +2,356 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 551DD195E96
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 20:26:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B052195EAB
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 20:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgC0T0P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 15:26:15 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38945 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgC0T0O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 15:26:14 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h6so3053844lfp.6
-        for <linux-gpio@vger.kernel.org>; Fri, 27 Mar 2020 12:26:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
-        b=IGaP7Mdp93QPDuqZ2364as99CykHs3PJ4uYKf6kPp4MEHCRvpSlBKK1Qz4NqpXAC6F
-         jcs/JXuF1nLBhdGF1Gfkw12gMzmJM5qi8Hew8wMHVHPFn7QhLflUWGX6h8S1zZUgwGyT
-         ZwdedZA3Dn3uw31OdZWSCHUvQ9C5JfKBWJ6IESHexoyfrt48U76swLir1qWsNWYgDKBz
-         Umrm5nAGV4JXf72ChFK+JRjPexOHxC/o9E2BcsUkz3OS2rD419n45AlPLeHu98S305n6
-         Vn9s3lQwR9CuCC+WQNGKtunP3nNeRTSmrM3aVOkwU64nC9v2VXIkLhIGnMW6fzq+KY+T
-         k/2Q==
+        id S1727549AbgC0T23 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 15:28:29 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44675 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgC0T23 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 15:28:29 -0400
+Received: by mail-io1-f68.google.com with SMTP id v3so10941236iot.11;
+        Fri, 27 Mar 2020 12:28:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xyt/WUa2OD/knVIi601SFgcT1l0Zvp/CDfO2pM2aN4k=;
-        b=mt03ETWDdG3hfHE6UrMB7tsIsEDQ0xWVCy5aa1WqWovNubhsLMHP1WKz07GFnOpj7w
-         CV7A4kWEqpyVWppJJ1zb8uWrLbuvBMLbxXa9lXepJWopwRtugOacLS2gWxsu76BYCAGJ
-         S8XjMzK1U4fucMNwbKxLwjwXG8Q+uqzEJMIsAFSBg/C5xSneUZadD0ZfvW0iUglHseH9
-         5WbHjPubq6q7x4xImf84/+cOgmgIuWp8UMmTCia/F/Oeu1swaQMlLakY/HC0UKYmNHmO
-         HflywJkAAo+F8rhVzKRgGnklO4IPHyGv5KOinFqIQyKOcc9pPFamYyS503ELOvQ/Pgzn
-         wmAw==
-X-Gm-Message-State: AGi0PuZU/pt6SDRamA7RTa0f1ayq9+tSVVeHjfxpvVNnoFQnVJle8Dd4
-        yvatmkAfTzop7Svl2aHw8Lb+YLuyq4DVrYhNGx+PgD3s8mY=
-X-Google-Smtp-Source: APiQypIDOmD/wk2tYVESxm4bIRP7LjM723EaFL/9IRPRsGvMcf3ygcQJnmmosTirkk89eivLqwScLbnLWxa4ztRvg0Y=
-X-Received: by 2002:a19:ac8:: with SMTP id 191mr518366lfk.77.1585337170911;
- Fri, 27 Mar 2020 12:26:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 27 Mar 2020 20:25:59 +0100
-Message-ID: <CACRpkdY4_fEbsgX9vRHd5_8Z-1MbBDd3y-pVsTit4bDLW6VpoQ@mail.gmail.com>
-Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wSuTgZKTO0qQOqXByUSPaUzWdLN8577ii/3i8TYD/j4=;
+        b=jPYR9vVO4YMsP5fstaCfQDfCt2nr2hfTiEXjXqI+lJlLGWfeFE2WEA8WnCYqFXPdTP
+         CMZyy5fK8/sy4aagLTaumNySbBgWkElzN9pXyTjzYrIR73IoQTCr3Qa5c3d9TbI2EGHm
+         7mjnaTQmmBWO2hzOp4dFrmjlX2ZXTy91OwSlt1CBHi/U6Rnj1E+wFwpUhJsgTxaLFBI8
+         r4RB9dkNOQk6Rhx05QTMJC0Aed06K3m/1ANF02NXJVY9Ohdlj2E1OPjLrn2RtitahMLx
+         HMqP0DLrqjjy/8N88iKxhRZc7B2tq3xXbIduBA42CgKBNAP7YNXdp4cnqQtNQ8hETeYY
+         9YPQ==
+X-Gm-Message-State: ANhLgQ3zzimEB0nSq8IB/MUMoLbd68zjWZrKRjJKoDICZCdBv/Ryt52G
+        WImD77BOqRo+fSHTudiOUA==
+X-Google-Smtp-Source: ADFU+vth6s3C4OMa7P2NrAFx24kevxMVVS6l73efVN15xapS4Cr/+y7vVrxHjDFNT97ioEaZowh09g==
+X-Received: by 2002:a02:cd2d:: with SMTP id h13mr455298jaq.46.1585337306126;
+        Fri, 27 Mar 2020 12:28:26 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c12sm2129545ile.12.2020.03.27.12.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 12:28:25 -0700 (PDT)
+Received: (nullmailer pid 31924 invoked by uid 1000);
+        Fri, 27 Mar 2020 19:28:20 -0000
+Date:   Fri, 27 Mar 2020 13:28:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 21/28] dt-bindings: gpio: Convert mrvl-gpio to json-schema
+Message-ID: <20200327192820.GA8577@bogus>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-22-lkundrak@v3.sk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317093922.20785-22-lkundrak@v3.sk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:54 PM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
+On Tue, Mar 17, 2020 at 10:39:15AM +0100, Lubomir Rintel wrote:
+> This converts the mrvl-gpio binding to DT schema format using json-schema.
+> 
+> Various fixes were done during the conversion, such as adding more
+> properties that are in fact mandatory or extending the examples to
+> include child nodes with extra GPIO blocks.
 
-> Use a different markup for the ERR_PTR, as %FOO doesn't work
-> if there are parenthesis. So, use, instead:
->
->         ``ERR_PTR(-EINVAL)``
->
-> This fixes the following warning:
->
->         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-string without end-string.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Ugg, not how I would have done this. Differences in register layout 
+should be implied by the compatible strings. But I guess we have to live 
+with it now.
 
-Patch applied.
+> The compatible strings are a mess. It is not clear why so many of them
+> are needed; the driver doesn't really seem to differentiate between the
+> models. Some of them, like marvell,pxa93x-gpio and marvell,pxa1928-gpio
+> are not used at all, so it's not known how many interrupts they utilize.
+> On the other hand, mrvl,pxa-gpio has been seen in the tree, but it
+> doesn't end up in any actual DTB file.
 
-Yours,
-Linus Walleij
+I added pxa1928 and then work on it ended. I think it is safe to remove, 
+but I dug up dts file and it is 1 irq.
+
+> In any case -- the schema merely copies whatever was in the original
+> binding document, so it's hopefully no more wrong that the original.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/gpio/mrvl-gpio.txt    |  48 -----
+>  .../devicetree/bindings/gpio/mrvl-gpio.yaml   | 173 ++++++++++++++++++
+>  2 files changed, 173 insertions(+), 48 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt b/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> deleted file mode 100644
+> index 30fd2201b3d4c..0000000000000
+> --- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.txt
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -* Marvell PXA GPIO controller
+> -
+> -Required properties:
+> -- compatible : Should be "intel,pxa25x-gpio", "intel,pxa26x-gpio",
+> -		"intel,pxa27x-gpio", "intel,pxa3xx-gpio",
+> -		"marvell,pxa93x-gpio", "marvell,mmp-gpio",
+> -		"marvell,mmp2-gpio" or marvell,pxa1928-gpio.
+> -- reg : Address and length of the register set for the device
+> -- interrupts : Should be the port interrupt shared by all gpio pins.
+> -  There're three gpio interrupts in arch-pxa, and they're gpio0,
+> -  gpio1 and gpio_mux. There're only one gpio interrupt in arch-mmp,
+> -  gpio_mux.
+> -- interrupt-names : Should be the names of irq resources. Each interrupt
+> -  uses its own interrupt name, so there should be as many interrupt names
+> -  as referenced interrupts.
+> -- interrupt-controller : Identifies the node as an interrupt controller.
+> -- #interrupt-cells: Specifies the number of cells needed to encode an
+> -  interrupt source.
+> -- gpio-controller : Marks the device node as a gpio controller.
+> -- #gpio-cells : Should be two.  The first cell is the pin number and
+> -  the second cell is used to specify flags. See gpio.txt for possible
+> -  values.
+> -
+> -Example for a MMP platform:
+> -
+> -	gpio: gpio@d4019000 {
+> -		compatible = "marvell,mmp-gpio";
+> -		reg = <0xd4019000 0x1000>;
+> -		interrupts = <49>;
+> -		interrupt-names = "gpio_mux";
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <1>;
+> -      };
+> -
+> -Example for a PXA3xx platform:
+> -
+> -	gpio: gpio@40e00000 {
+> -		compatible = "intel,pxa3xx-gpio";
+> -		reg = <0x40e00000 0x10000>;
+> -		interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> -		interrupts = <8 9 10>;
+> -		gpio-controller;
+> -		#gpio-cells = <0x2>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <0x2>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> new file mode 100644
+> index 0000000000000..5c713bf59b06d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+> @@ -0,0 +1,173 @@
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/mrvl-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell PXA GPIO controller
+> +
+> +maintainers:
+> +  - devicetree@vger.kernel.org
+
+Needs to be a real person that cares about this h/w.
+
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - intel,pxa25x-gpio
+> +              - intel,pxa26x-gpio
+> +              - intel,pxa27x-gpio
+> +              - intel,pxa3xx-gpio
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 3
+> +          maxItems: 3
+> +        interrupt-names:
+> +          items:
+> +            - const: gpio0
+> +            - const: gpio1
+> +            - const: gpio_mux
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - marvell,mmp-gpio
+> +              - marvell,mmp2-gpio
+
+I'd make this an else clause.
+
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          maxItems: 1
+> +        interrupt-names:
+> +          items:
+> +            - const: gpio_mux
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^gpio@[0-9a-f]+$'
+> +
+> +  compatible:
+> +    enum:
+> +      - intel,pxa25x-gpio
+> +      - intel,pxa26x-gpio
+> +      - intel,pxa27x-gpio
+> +      - intel,pxa3xx-gpio
+> +      - marvell,mmp-gpio
+> +      - marvell,mmp2-gpio
+> +      - marvell,pxa93x-gpio
+> +      - marvell,pxa1928-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  ranges: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+
+My pxa1928 dts has this in the child nodes. Sure this is right?
+
+> +
+> +  interrupts: true
+> +
+> +  interrupt-names: true
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +patternProperties:
+> +  '^gpio@[0-9a-f]*$':
+> +    type: object
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - interrupts
+> +  - interrupt-names
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/pxa-clock.h>
+> +    gpio@40e00000 {
+> +        compatible = "intel,pxa3xx-gpio";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        reg = <0x40e00000 0x10000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupts = <8>, <9>, <10>;
+> +        interrupt-names = "gpio0", "gpio1", "gpio_mux";
+> +        clocks = <&clks CLK_GPIO>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        ranges;
+
+No child, so there should be no ranges here.
+
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/marvell,pxa910.h>
+> +    gpio@d4019000 {
+> +        compatible = "marvell,mmp-gpio";
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        reg = <0xd4019000 0x1000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        interrupts = <49>;
+> +        interrupt-names = "gpio_mux";
+> +        clocks = <&soc_clocks PXA910_CLK_GPIO>;
+> +        resets = <&soc_clocks PXA910_CLK_GPIO>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        ranges;
+> +
+> +        gpio@d4019000 {
+> +            reg = <0xd4019000 0x4>;
+> +        };
+> +
+> +        gpio@d4019004 {
+> +            reg = <0xd4019004 0x4>;
+> +        };
+> +
+> +        gpio@d4019008 {
+> +            reg = <0xd4019008 0x4>;
+> +        };
+> +
+> +        gpio@d4019100 {
+> +            reg = <0xd4019100 0x4>;
+> +        };
+> +     };
+> +
+> +...
+> -- 
+> 2.25.1
+> 
