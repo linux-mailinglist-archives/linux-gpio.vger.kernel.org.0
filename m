@@ -2,75 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24815195253
-	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 08:49:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2344A1952B4
+	for <lists+linux-gpio@lfdr.de>; Fri, 27 Mar 2020 09:22:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgC0Htb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 27 Mar 2020 03:49:31 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54693 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgC0Htb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 27 Mar 2020 03:49:31 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jHjk3-00041i-2w; Fri, 27 Mar 2020 08:49:23 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jHjk2-0002Sr-EI; Fri, 27 Mar 2020 08:49:22 +0100
-Date:   Fri, 27 Mar 2020 08:49:22 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Marek Vasut <marek.vasut@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: register access issues in pca953x gpio driver
-Message-ID: <20200327074922.vrxbcjw2xlrv2bkb@pengutronix.de>
+        id S1726193AbgC0IW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 27 Mar 2020 04:22:56 -0400
+Received: from sonic303-1.consmr.mail.bf2.yahoo.com ([74.6.131.40]:46061 "EHLO
+        sonic303-1.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbgC0IW4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:22:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1585297375; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=dUzc9c8bsfaykrQjvI88uwMC6TZEWw1nvSxvVOTICqc7caCrbQ3LaWn+w4r70UVQLZ2/hOV1vBRy1RUBUXGj6QSaKLTMrSBgava/ujb+WZyy+bsNKTbuUm2w2ft4gG/LODa/ILs8hHHuyfTqhb4jbvKcBURwl2EsRlby/FmgE2TjNY03vmsHLt5d6WoYipsRDhOsB6yekw07oS36OOjlITwHh60/O46fGQO6jz19yY5Qr26vvWgaj0mZKm7tpISGmkpFkn266urhadGCKZB3xj0QJtyj1HYVr2xg33S9meP0SyqhkV4C4cKWuYYema8tboUvTjHCjsbhLnn0P4wPLA==
+X-YMail-OSG: mU6orekVM1kkfFEViLIqw3U6dxIwi_13MMW.FfcSKoo.kVG7mH5u5KYkaTJSKYU
+ HwsCgZhq9dtKpSVvF6Oku.N2C.FFXeVZ4oneUX1uisY6XZSZgMb9oJ9Dsa6DxQjI082gfd4XXNg_
+ Tq3vhPNzBS3581595ckMX4JO2ce2.PKYfWA3xOo__JLUKMf1HnD8DDC.VGIwI83ZVkwIXyzryD_c
+ .gLLK.i6tohy7rTBsxdAcnt.Cfc_bh_AIG_In2crzHcW_yILWltVnIpLPeulTF.eDWQdJ2brZtd4
+ r0D86cwwRumioQeYKenDaqAI_HE7zmTInHFtGnBFNLHiSBIg3nmLGOOj97vv5.UJl8yZla5UX8Xd
+ GeiKGH6u2tLUT_jXgWHbniNS_C5k8Z_jK1ZCR1mJO8EaiOgly0uGO6.NgNNPTI1_VvBvjZiFOmRq
+ c4u.KFdah4igWZcPrlWitYiwmvsOnqzpTkTwZR0SJ8nO.SBgq_dNCpw1Q47qcwzTc3PLdOTDGSkp
+ .pxB1dWV8d3NuBg_y8kqqJwyd4JS27uDEHQfJK8fGs8RiiHkRDHr1.fnjfMKWNd9Um_jmenkbCXa
+ DkrwQMXEvlBejJwAbjuB4padAI2fBUQafgBk.C3QNZrsjlbrwKjzExW1.kWzJlNS_jzlOjchC3AD
+ wX2V7H4lDQk22wSIc8YDedn5vQsiyCyTTPerDpBPKz8gjyXSxMiWWtjK_llpfQQHtySPhhRhFErn
+ M7eQxNgdohj4dfoxmNqK0zyAAEr.fgCjaxBDv_1pn09CHkYWwfe_RLXFLirCQX3zRjqB58cPGjwV
+ iL0RpB4vid0L0j7PHPkokcqyC_7lA15HYtu.XrfR6q3HzKG.S4zNYqAq7d8SOhWkvG74dnKc18.L
+ imeS3UqEKdGwFy2BDfFBAw3kLNFaNbmmpgEjdxCVC.eH.AQ.gMKkl.Vw0TI.DPT0ItE611FM0eGd
+ Lv1oDIUj5c1JFGIc_2iXtJcXACYHFskJ5XKACZe.U7bBVtXpWSzVh5Hqv9DgOjytno0NEWbz_ryu
+ 2rJb6FS0MlnOncIoOMnWIqCC.YfLkCt0EmyccEdnKbAouzQsTh.M_iNupjQO95Thw5PeIhpr44Se
+ PtM6PMzXIytkQs0KwKM4csJFYEFbPWsw3RVwtL1zVXTXToMewW1M5De5e7lWBImeNp.8ik4VbCeu
+ hUqeQzMSNsmWetVkOmkyGOSvh3q1efTLA_C77LQ6SNHlUDwoFDljmdlShn.UR0TFjZch7L8tDXJQ
+ HxJkoOPJG6eVSFX3Z14VgXI9mfSL2c9qvpc0C6.ikc3HlszGXUmx8D1DPOioWSFJ5MBTFGOkZ6u4
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Fri, 27 Mar 2020 08:22:55 +0000
+Date:   Fri, 27 Mar 2020 08:22:53 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1852203301.1879507.1585297373380@mail.yahoo.com>
+Subject: BUSINESS CO-OPERATION OPPORTUNITY.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1852203301.1879507.1585297373380.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15518 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
 
-I have an issue with an pca9505 when the .set_multiple callback is used.
-That chip has a bit ("AI") in the register address that makes the
-address increment automatically on subsequent reads and writes.
 
-The problem (that was already noticed in commit 3b00691cc46a ("gpio:
-pca953x: hack to fix 24 bit gpio expanders")) is that the regmap stuff
-isn't aware of this bit and so register accesses that make use of the auto
-incrementing are not matched to those without it.
+Dear Friend,
 
-Additionally there is a bug in pca953x_recalc_addr() that results in the
-AI bit only be set for register writes. (That's the issue that made me
-notice this problem. The result is that in .set_multiple the read
-accesses bank 0's register only (when the hardware is hit) or uses the
-read cache from a location without AI set and then writes using AI set.)
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
 
-I didn't try to understand if fixing pca953x_recalc_addr() to not set AI
-depending on write fixes all issues. But to make the register access in
-the driver robust I'm convinced we need to fix the regmap stuff to
-understand the AI bit.
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
 
-@broonie: I don't know regmap good enough to instantly know the right
-magic to do this. Can you give a rough overview what would be needed?
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
 
-Best regards
-Uwe
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
