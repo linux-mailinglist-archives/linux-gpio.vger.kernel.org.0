@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92A821963F7
-	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2020 07:35:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F176196443
+	for <lists+linux-gpio@lfdr.de>; Sat, 28 Mar 2020 08:42:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbgC1GfR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 28 Mar 2020 02:35:17 -0400
-Received: from mga07.intel.com ([134.134.136.100]:51255 "EHLO mga07.intel.com"
+        id S1725973AbgC1HmD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 28 Mar 2020 03:42:03 -0400
+Received: from mga18.intel.com ([134.134.136.126]:41849 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgC1GfR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 28 Mar 2020 02:35:17 -0400
-IronPort-SDR: FfdTrmwINqd41K9007nikN7oaW+YMNkmiNCooyVN2kQVF+JXv+ZJ9cgMKu6deAewWggXdreiDA
- 7ZwP+disJUHQ==
+        id S1725919AbgC1HmC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 28 Mar 2020 03:42:02 -0400
+IronPort-SDR: 4esez6vGMlE2zN/Q+5yPf8M6++D4UHEA3hRFLLgLQF/ViRoCIrpwa7eP2evwcw+NuFcYGclIjN
+ Kg9XO0J2TCfA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2020 23:35:16 -0700
-IronPort-SDR: LqSd05ItLd6lPOjHAvfYbaXERFGb+Z3k67DvpBQGIclzgIgJSxnzjNhDpytHfjC+cJde1Nv5Ko
- e8U8SpYz2LOw==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 00:42:01 -0700
+IronPort-SDR: Lqly1rH5mvE6gPHXMFRnnt+3+zEzjkG/UKl/bHkO4Bh3Ai9WGwsHJRBzH0EIO0n3Mzpdr4140b
+ Sa3T/iPvumUg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,315,1580803200"; 
-   d="scan'208";a="248102535"
+   d="scan'208";a="236858747"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 27 Mar 2020 23:35:15 -0700
+  by orsmga007.jf.intel.com with ESMTP; 28 Mar 2020 00:42:00 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jI53q-0009Hq-Ly; Sat, 28 Mar 2020 14:35:14 +0800
-Date:   Sat, 28 Mar 2020 14:34:49 +0800
+        id 1jI66R-0007Ag-Rx; Sat, 28 Mar 2020 15:41:59 +0800
+Date:   Sat, 28 Mar 2020 15:41:14 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- 5f4bf171ca03b79f0ed7a17216fd854e50955617
-Message-ID: <5e7ef009.Mx6f8LMxrCLw8U6Q%lkp@intel.com>
+Subject: [pinctrl:devel] BUILD REGRESSION
+ 13bec8d49bdf10aab4e1570ef42417f6bfbb6126
+Message-ID: <5e7eff9a.Q/s163B0l0c6QBmS%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,16 +43,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 5f4bf171ca03b79f0ed7a17216fd854e50955617  gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: 13bec8d49bdf10aab4e1570ef42417f6bfbb6126  pinctrl: qcom: use scm_call to route GPIO irq to Apps
 
-elapsed time: 481m
+Regressions in current branch:
 
-configs tested: 162
+bool pullup;
+drivers/pinctrl/mediatek/pinctrl-paris.c:167:9: note: Shadow variable
+drivers/pinctrl/mediatek/pinctrl-paris.c:167:9: warning: Local variable 'pullup' shadows outer variable [shadowVariable]
+drivers/pinctrl/mediatek/pinctrl-paris.c:81:6: note: Shadowed declaration
+int pullup, err, reg, ret = 1;
+
+Error ids grouped by kconfigs:
+
+recent_errors
+`-- x86_64-allyesconfig
+    |-- bool-pullup
+    |-- drivers-pinctrl-mediatek-pinctrl-paris.c:note:Shadow-variable
+    |-- drivers-pinctrl-mediatek-pinctrl-paris.c:note:Shadowed-declaration
+    |-- drivers-pinctrl-mediatek-pinctrl-paris.c:warning:Local-variable-pullup-shadows-outer-variable-shadowVariable
+    `-- int-pullup-err-reg-ret
+
+elapsed time: 482m
+
+configs tested: 164
 configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
 arm                              allmodconfig
 arm                               allnoconfig
@@ -75,34 +90,35 @@ sh                          rsk7269_defconfig
 s390                       zfcpdump_defconfig
 sparc64                          allyesconfig
 ia64                             allyesconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
 ia64                             allmodconfig
+sparc                               defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
 ia64                                defconfig
 ia64                              allnoconfig
 ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
 xtensa                          iss_defconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+c6x                              allyesconfig
 nds32                             allnoconfig
 csky                                defconfig
 alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
 h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
+h8300                     edosk2674_defconfig
 m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
 m68k                          multi_defconfig
 m68k                           sun3_defconfig
-arc                              allyesconfig
 arc                                 defconfig
+arc                              allyesconfig
 microblaze                      mmu_defconfig
 microblaze                    nommu_defconfig
 powerpc                           allnoconfig
@@ -116,20 +132,20 @@ mips                             allyesconfig
 mips                      fuloong2e_defconfig
 mips                      malta_kvm_defconfig
 parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
 parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
 x86_64               randconfig-a001-20200327
 x86_64               randconfig-a002-20200327
 x86_64               randconfig-a003-20200327
 i386                 randconfig-a001-20200327
 i386                 randconfig-a002-20200327
 i386                 randconfig-a003-20200327
-alpha                randconfig-a001-20200327
-m68k                 randconfig-a001-20200327
 mips                 randconfig-a001-20200327
 nds32                randconfig-a001-20200327
+m68k                 randconfig-a001-20200327
 parisc               randconfig-a001-20200327
+alpha                randconfig-a001-20200327
 riscv                randconfig-a001-20200327
 c6x                  randconfig-a001-20200327
 h8300                randconfig-a001-20200327
@@ -171,12 +187,12 @@ x86_64               randconfig-f003-20200327
 i386                 randconfig-f001-20200327
 i386                 randconfig-f002-20200327
 i386                 randconfig-f003-20200327
-i386                 randconfig-g003-20200327
+x86_64               randconfig-g001-20200327
 x86_64               randconfig-g002-20200327
+x86_64               randconfig-g003-20200327
 i386                 randconfig-g001-20200327
 i386                 randconfig-g002-20200327
-x86_64               randconfig-g001-20200327
-x86_64               randconfig-g003-20200327
+i386                 randconfig-g003-20200327
 x86_64               randconfig-h001-20200327
 x86_64               randconfig-h002-20200327
 x86_64               randconfig-h003-20200327
@@ -184,15 +200,17 @@ i386                 randconfig-h001-20200327
 i386                 randconfig-h002-20200327
 i386                 randconfig-h003-20200327
 arm                  randconfig-a001-20200327
-arm64                randconfig-a001-20200327
 ia64                 randconfig-a001-20200327
+sparc                randconfig-a001-20200327
+arc                  randconfig-a001-20200327
+arm64                randconfig-a001-20200327
 powerpc              randconfig-a001-20200327
+riscv                            allmodconfig
 riscv                             allnoconfig
 riscv                            allyesconfig
 riscv                               defconfig
 riscv                    nommu_virt_defconfig
 riscv                          rv32_defconfig
-riscv                            allmodconfig
 s390                             alldefconfig
 s390                             allmodconfig
 s390                              allnoconfig
@@ -200,22 +218,21 @@ s390                             allyesconfig
 s390                          debug_defconfig
 s390                                defconfig
 sh                               allmodconfig
-sh                                allnoconfig
 sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
 sh                            titan_defconfig
-sparc                               defconfig
 sparc64                          allmodconfig
 sparc64                           allnoconfig
 sparc64                             defconfig
 um                           x86_64_defconfig
 um                             i386_defconfig
 um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
+x86_64                               rhel-7.6
 x86_64                                   rhel
 x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
