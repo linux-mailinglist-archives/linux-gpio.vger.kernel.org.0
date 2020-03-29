@@ -2,90 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 825A3196EBA
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 19:36:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9BC8196F14
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 20:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgC2RgO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Mar 2020 13:36:14 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:17269 "EHLO
-        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbgC2RgN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Mar 2020 13:36:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503371;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=L2+kXr3RvjPKbYTAI82Pm7Ea8M3wbjo65G4k9DdxA1Q=;
-        b=GtlD+UCfUaomIzhfiUYZBtFuNA8baL4BRZuFS+LVFoYXmi8MYooIs+ITvxoODl+p7Y
-        xeDp+gKiI+1OGaT3aPnon+gDb3zRIvphhvpP7xenED/C00FDIUH28p87YjvIpAVC4x0w
-        POAAcN/vmZkWdeERBSv2ewM8mLEjY2HbII0F/P9K2QkThw04FsbyG6pzoi6e5ZxwV6VO
-        j1UZ1nPzEnkOncF7YvCbTVl1POv9M5BMu52WeggxKBb0LXHhnTe2LdffBaAcXHpYvc94
-        yZRlQ00bLPsuhopMxXtTUCubAXZFrgD8+q5brE4LlWLZN/o5KbypjOOV9EMnQUVTCKnI
-        tPGQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THa2BMH
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:36:02 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
+        id S1727506AbgC2SBJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Mar 2020 14:01:09 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45313 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbgC2SBJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Mar 2020 14:01:09 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jIcF1-0007F3-27; Sun, 29 Mar 2020 20:00:59 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jIcEy-0002N8-L3; Sun, 29 Mar 2020 20:00:56 +0200
+Date:   Sun, 29 Mar 2020 20:00:56 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>,
+        devicetree@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com
-Subject: [RFC v3 8/8] MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
-Date:   Sun, 29 Mar 2020 19:35:54 +0200
-Message-Id: <90af93353d2624cf4f1c052990e4e1e14fcf67a4.1585503354.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
+        linux-pwm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
+ devm_clk_get()
+Message-ID: <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
+ <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
+ <20200329133400.GA25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200329133400.GA25745@shell.armlinux.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We configure them as loadable modules by default.
+Hello Russell,
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/mips/configs/ci20_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
+> On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
+> > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
+> > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> > > index fa5641615db6..ee13b11c5298 100644
+> > > --- a/drivers/gpio/gpio-mvebu.c
+> > > +++ b/drivers/gpio/gpio-mvebu.c
+> > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+> > >  	}
+> > >  
+> > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+> > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
+> > > +		return -EPROBE_DEFER;
+> > > +
+> > >  	/* Not all SoCs require a clock.*/
+> > >  	if (!IS_ERR(mvchip->clk))
+> > >  		clk_prepare_enable(mvchip->clk);
+> > 
+> > I'd say the following is the right thing to do here:
+> > 
+> > 	mvchip->clk = devm_clk_get_optional(...);
+> > 	if (IS_ERR(mvchip->clk))
+> > 		return ...
+> 
+> It's not that simple.  The clock is required for Armada 370, and is
+> optional for Armada 8040.
 
-diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-index be41df2a81fb..3f733a555cb2 100644
---- a/arch/mips/configs/ci20_defconfig
-+++ b/arch/mips/configs/ci20_defconfig
-@@ -103,6 +103,9 @@ CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_JZ4740=y
- CONFIG_DMADEVICES=y
- CONFIG_DMA_JZ4780=y
-+CONFIG_DRM=m
-+CONFIG_DRM_DW_HDMI_JZ4780=m
-+CONFIG_DRM_DW_HDMI=m
- # CONFIG_IOMMU_SUPPORT is not set
- CONFIG_MEMORY=y
- CONFIG_EXT4_FS=y
+I'd say it is still the right approach here. On Armada 370 the dtb then
+has a clk and on Armada 8040 it doesn't. So if with
+devm_clk_get_optional() something goes wrong that's because the dtb is
+wrong. And in fact the handling is even better than with your suggested
+patch as every error (but EPROBE_DEFER) is ignored instead of passed to
+the caller with your (and the existing) approach.
+
+Best regards
+Uwe
+
 -- 
-2.25.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
