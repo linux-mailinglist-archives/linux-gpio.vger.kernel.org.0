@@ -2,119 +2,222 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BD0196F42
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 20:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1130196FBE
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 21:36:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgC2SWv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Mar 2020 14:22:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40694 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgC2SWu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Mar 2020 14:22:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ul5mPuoITZiwsLENljEvGuoEiNdCieYNeoF+CgVtynY=; b=fazfmfEZAjksByCU8DCpoS9F+
-        Nr90jbUdAi42KYu8HacKRPIMwtSxS8gPV08oocVVKktH55e304YKnr90bFNgyYt2QdC6Xo/x1JCLe
-        MeRgQnh2C3QeyvqYQ8+L1rm2X7XpkYeZf2LSddGAxZZwyi/MC5qfNUH7IICpLRcznIUswY/hP9LbD
-        G4Sr5nykVqVuGxItgtmgYImpYs/uMsRUiZ77JSOE+KLbqGB6hWPDdTpsOER/1oj+L3kuk1YV4S2MR
-        F37blPxMy0YhqGydl4ZS6VnWEQ9q7PCOx7sAvRpULKz8Nt04SRvjE0A+hPeGf4wkCK6cklh8gZUlC
-        etqkiKGaA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59598)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jIca0-0006Mb-Bc; Sun, 29 Mar 2020 19:22:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jIcZw-0006QA-JB; Sun, 29 Mar 2020 19:22:36 +0100
-Date:   Sun, 29 Mar 2020 19:22:36 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pwm@vger.kernel.org,
+        id S1728473AbgC2Tgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Mar 2020 15:36:50 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:34982 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbgC2Tgu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Mar 2020 15:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585510605;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=LGEWryyfK/Q4YmTBmmWe/YtpTjCpoE18SQ1zSiub5+0=;
+        b=s2cFM7cJN9nbvSDJSp/eLgprnBwpBxsxEjT7gCAEW8qExxHQaoy0uho/CSyfUdEOFH
+        B686KYlnjKdv9gVgE4PcFXnhZjYDvUl/ZV23FClJaNGAc92EuCVKQwcPX4MEgw76AcPo
+        JdN2ldRGsBKnP1llv+Cyqtssabi6LBaKmo29aELnRclTIkstnk2yU6MH9G/BwhEaULcL
+        CrIloBljC/twBts0MD1zLz4yhmXnfKBiCcpMpu+NPfIo9rOZ3goYDSxYdrL7qg+itLXK
+        B7r2F4/gTZ3c34duRily4VUd/GixwfxlTGgrZ4uWrTJ9/UJjxsZiaM75m3g9UN9Vcy7t
+        C3CA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2TJaTBbV
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 29 Mar 2020 21:36:29 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
- devm_clk_get()
-Message-ID: <20200329182236.GC25745@shell.armlinux.org.uk>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
- <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
- <20200329133400.GA25745@shell.armlinux.org.uk>
- <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC] dt-bindings.yaml: power: supply: add bindings for TI bq24296/7
+Date:   Sun, 29 Mar 2020 21:36:29 +0200
+Message-Id: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
-> Hello Russell,
-> 
-> On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
-> > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
-> > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
-> > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > > index fa5641615db6..ee13b11c5298 100644
-> > > > --- a/drivers/gpio/gpio-mvebu.c
-> > > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
-> > > >  	}
-> > > >  
-> > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
-> > > > +		return -EPROBE_DEFER;
-> > > > +
-> > > >  	/* Not all SoCs require a clock.*/
-> > > >  	if (!IS_ERR(mvchip->clk))
-> > > >  		clk_prepare_enable(mvchip->clk);
-> > > 
-> > > I'd say the following is the right thing to do here:
-> > > 
-> > > 	mvchip->clk = devm_clk_get_optional(...);
-> > > 	if (IS_ERR(mvchip->clk))
-> > > 		return ...
-> > 
-> > It's not that simple.  The clock is required for Armada 370, and is
-> > optional for Armada 8040.
-> 
-> I'd say it is still the right approach here. On Armada 370 the dtb then
-> has a clk and on Armada 8040 it doesn't. So if with
-> devm_clk_get_optional() something goes wrong that's because the dtb is
-> wrong. And in fact the handling is even better than with your suggested
-> patch as every error (but EPROBE_DEFER) is ignored instead of passed to
-> the caller with your (and the existing) approach.
+This is an attempt to define a schema for the bq24296/7
+charger and power supply controllers with battery monitoring
+and OTG booster.
 
-Sort of.  Every error is currently treated as "no clock", and only
-later does such an error become fatal in the driver _if_ PWM is
-configured into the kernel and we're running on Armada 370.  If PWM
-is disabled in the kernel, or on some other SoC, then the driver
-doesn't care whether getting the clock reported any kind of error.
+We model it as a dual regulator because it can generate
+a VSYS (with controllable voltage) and optionally an
+OTG voltage either from the battery or from external power
+supply.
 
-Your proposal is to always treat any error getting the clock,
-irrespective of whether there is PWM or not, as a fatal error for
-the driver.
+This scheme works well with e.g. the dwc3 setup of the
+OMAP5 to turn on OTG regulator on demand.
 
-That is an entirely seperate functional change.
+The DT should provide a reference to a monitored battery
+description so that initial and operation parameters
+of the battery can be specified to control the charger
+parameters.
 
+To support different initial charging current for USB
+and AC charger mode, an optional gpio should be provided
+that the driver can use to set defaults.
+
+A driver is available and working for several years,
+but the bindings should be clarified first.
+
+The example shows what we are successfully using for
+the working system.
+
+Since the omap5 Pyra Handheld is not yet in the DTS tree,
+there would be no explicit user of this driver. So
+the plan is to submit a full patch set for the Pyra
+later.
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ .../bindings/power/supply/bq2429x.yaml        | 122 ++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/supply/bq2429x.yaml b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+new file mode 100644
+index 000000000000..1b31ece4026e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/bq2429x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI bq24296/24297 and MPS MP2624 Li-Ion Charger with OTG booster
++
++maintainers:
++  - H. Nikolaus Schaller <hns@goldelico.com>
++
++description: |+
++  This binding will support the bq24296 and bq24297.
++  There are other ICs in the same family but those have
++  not been addressed.
++  The MP2624 is very similar to the bq24297 but not exactly
++  identical.
++  This chip is used by the OMAP5 based Pyra-Handheld.
++
++properties:
++  compatible:
++    oneOf:
++      - const: mps,mp2624
++      - const: ti,bq24296
++      - const: ti,bq24297
++
++  reg:
++    const: 0x6b
++
++  interrupts:
++    minItems: 1
++
++  monitored-battery:
++    - description: phandle to the battery node
++    - allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++# QUESTION : how can we correctly describe that we support only the following phandle properties and ignore the others?
++    - enum:
++      - voltage-max-design-microvolt:
++        - default: 4200000
++      - voltage-min-design-microvolt:
++        - default: 3200000
++      - constant-charge-current-max-microamp:
++        - default: as defined by boot loader
++      - precharge-current-microamp:
++        - default: 128000
++      - charge-term-current-microamp:
++        - default: 128000
++
++  regulators:
++    minItems: 2
++    maxItems: 2
++    items:
++# QUESTION: can we specify that these are to be regulator nodes?
++      - description: |
++          two regulator child nodes for
++          [0] vsys (battery or usb input -> system output)
++          [1] otg (battery input -> usb output).
++
++  dc-det-gpios:
++    items:
++# QUESTION: how do we specify that it should be a gpio?
++      - description: gpio for detecting two different DC sources
++      - default: use usb-input-current-microamp only
++
++  ti,usb-input-current-microamp:
++    items:
++      - description: initial current for USB source (if dc-det is 0)
++      - default: value as defined by boot loader
++
++  ti,adp-input-current-microamp:
++    items:
++      - description: initial current for other source (if dc-det is 1)
++      - default: 2048000ÂµA
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    bat: battery {
++      compatible = "simple-battery", "pyra-battery";
++      voltage-min-design-microvolt = <3200000>;
++      voltage-max-design-microvolt = <4200000>;
++      energy-full-design-microwatt-hours = <22200000>;
++      charge-full-design-microamp-hours = <6000000>;
++      charge-term-current-microamp = <128000>;
++      constant-charge-current-max-microamp = <1000000>;
++    };
++
++    bq24297@6b {
++      compatible = "ti,bq24297";
++      reg = <0x6b>;
++      monitored-battery = <&bat>;
++      interrupt-parent = <&gpio99>;
++      interrupts = <(1*8+3) IRQ_TYPE_EDGE_FALLING>;   /* P13 */
++      regulators {
++        vsys_reg: vsys_regulator {
++          regulator-compatible = "bq2429x-vsys";
++          regulator-name = "vsys";
++          regulator-min-microvolt = <3500000>;
++          regulator-max-microvolt = <4200000>;
++          regulator-always-on;
++          regulator-boot-on;
++        };
++        otg_reg: otg_regulator {
++          regulator-compatible = "bq2429x-otg";
++          regulator-name = "otg";
++          regulator-min-microvolt = <4900000>;
++          regulator-max-microvolt = <5100000>;
++        };
++      };
++    };
++
++...
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+2.25.1
+
