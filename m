@@ -2,222 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1130196FBE
-	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 21:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2202619705F
+	for <lists+linux-gpio@lfdr.de>; Sun, 29 Mar 2020 22:55:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgC2Tgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 29 Mar 2020 15:36:50 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:34982 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbgC2Tgu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 29 Mar 2020 15:36:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585510605;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=LGEWryyfK/Q4YmTBmmWe/YtpTjCpoE18SQ1zSiub5+0=;
-        b=s2cFM7cJN9nbvSDJSp/eLgprnBwpBxsxEjT7gCAEW8qExxHQaoy0uho/CSyfUdEOFH
-        B686KYlnjKdv9gVgE4PcFXnhZjYDvUl/ZV23FClJaNGAc92EuCVKQwcPX4MEgw76AcPo
-        JdN2ldRGsBKnP1llv+Cyqtssabi6LBaKmo29aELnRclTIkstnk2yU6MH9G/BwhEaULcL
-        CrIloBljC/twBts0MD1zLz4yhmXnfKBiCcpMpu+NPfIo9rOZ3goYDSxYdrL7qg+itLXK
-        B7r2F4/gTZ3c34duRily4VUd/GixwfxlTGgrZ4uWrTJ9/UJjxsZiaM75m3g9UN9Vcy7t
-        C3CA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
-X-RZG-CLASS-ID: mo00
-Received: from iMac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2TJaTBbV
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Sun, 29 Mar 2020 21:36:29 +0200 (CEST)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [RFC] dt-bindings.yaml: power: supply: add bindings for TI bq24296/7
-Date:   Sun, 29 Mar 2020 21:36:29 +0200
-Message-Id: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.25.1
+        id S1728426AbgC2Uzh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 29 Mar 2020 16:55:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:52472 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgC2Uzh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 29 Mar 2020 16:55:37 -0400
+IronPort-SDR: wb47AmJstzlxXI5o0zp1DSNnwdgxNJYcZgPH5LBkSULvGs2PT+Xxay7+nNC3nv59GmIW5ePg21
+ gFU+cUm/d1yQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2020 13:55:36 -0700
+IronPort-SDR: m5CqzSpR/ueDrPxW4d7vgTMIadGAghrGAsINEOThj0BEO0XhoyzmbQ1ChBQbUPQM0zzOhoeQ5i
+ UeA59aAULU9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,321,1580803200"; 
+   d="scan'208";a="394924745"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 29 Mar 2020 13:55:35 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jIexy-0006OM-Lq; Mon, 30 Mar 2020 04:55:34 +0800
+Date:   Mon, 30 Mar 2020 04:54:34 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-variable-naming] BUILD SUCCESS
+ 6ce316651a9f236e7204494a4fa080aaf59d5a9d
+Message-ID: <5e810b0a.Vyh3gb6eIsRUhjqf%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is an attempt to define a schema for the bq24296/7
-charger and power supply controllers with battery monitoring
-and OTG booster.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-variable-naming
+branch HEAD: 6ce316651a9f236e7204494a4fa080aaf59d5a9d  gpio: Rename variable in core APIs
 
-We model it as a dual regulator because it can generate
-a VSYS (with controllable voltage) and optionally an
-OTG voltage either from the battery or from external power
-supply.
+elapsed time: 480m
 
-This scheme works well with e.g. the dwc3 setup of the
-OMAP5 to turn on OTG regulator on demand.
+configs tested: 149
+configs skipped: 0
 
-The DT should provide a reference to a monitored battery
-description so that initial and operation parameters
-of the battery can be specified to control the charger
-parameters.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-To support different initial charging current for USB
-and AC charger mode, an optional gpio should be provided
-that the driver can use to set defaults.
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+arc                              allyesconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+i386                 randconfig-a002-20200329
+x86_64               randconfig-a001-20200329
+i386                 randconfig-a001-20200329
+i386                 randconfig-a003-20200329
+nds32                randconfig-a001-20200329
+mips                 randconfig-a001-20200329
+parisc               randconfig-a001-20200329
+m68k                 randconfig-a001-20200329
+alpha                randconfig-a001-20200329
+riscv                randconfig-a001-20200329
+h8300                randconfig-a001-20200329
+nios2                randconfig-a001-20200329
+microblaze           randconfig-a001-20200329
+sparc64              randconfig-a001-20200329
+c6x                  randconfig-a001-20200329
+s390                 randconfig-a001-20200329
+xtensa               randconfig-a001-20200329
+csky                 randconfig-a001-20200329
+openrisc             randconfig-a001-20200329
+sh                   randconfig-a001-20200329
+i386                 randconfig-b003-20200329
+x86_64               randconfig-b003-20200329
+i386                 randconfig-b001-20200329
+i386                 randconfig-b002-20200329
+x86_64               randconfig-b002-20200329
+x86_64               randconfig-b001-20200329
+i386                 randconfig-d003-20200329
+i386                 randconfig-d001-20200329
+x86_64               randconfig-d002-20200329
+i386                 randconfig-d002-20200329
+x86_64               randconfig-d001-20200329
+x86_64               randconfig-d003-20200329
+x86_64               randconfig-e001-20200329
+i386                 randconfig-e002-20200329
+x86_64               randconfig-e003-20200329
+i386                 randconfig-e003-20200329
+x86_64               randconfig-e002-20200329
+i386                 randconfig-e001-20200329
+i386                 randconfig-f001-20200329
+i386                 randconfig-f003-20200329
+i386                 randconfig-f002-20200329
+x86_64               randconfig-f002-20200329
+x86_64               randconfig-f001-20200329
+i386                 randconfig-g003-20200329
+x86_64               randconfig-g002-20200329
+i386                 randconfig-g002-20200329
+i386                 randconfig-g001-20200329
+x86_64               randconfig-g001-20200329
+x86_64               randconfig-h002-20200329
+x86_64               randconfig-h003-20200329
+i386                 randconfig-h003-20200329
+x86_64               randconfig-h001-20200329
+i386                 randconfig-h001-20200329
+i386                 randconfig-h002-20200329
+arm                  randconfig-a001-20200329
+arm64                randconfig-a001-20200329
+powerpc              randconfig-a001-20200329
+ia64                 randconfig-a001-20200329
+sparc                randconfig-a001-20200329
+arc                  randconfig-a001-20200329
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
 
-A driver is available and working for several years,
-but the bindings should be clarified first.
-
-The example shows what we are successfully using for
-the working system.
-
-Since the omap5 Pyra Handheld is not yet in the DTS tree,
-there would be no explicit user of this driver. So
-the plan is to submit a full patch set for the Pyra
-later.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../bindings/power/supply/bq2429x.yaml        | 122 ++++++++++++++++++
- 1 file changed, 122 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq2429x.yaml
-
-diff --git a/Documentation/devicetree/bindings/power/supply/bq2429x.yaml b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
-new file mode 100644
-index 000000000000..1b31ece4026e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
-@@ -0,0 +1,122 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/bq2429x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI bq24296/24297 and MPS MP2624 Li-Ion Charger with OTG booster
-+
-+maintainers:
-+  - H. Nikolaus Schaller <hns@goldelico.com>
-+
-+description: |+
-+  This binding will support the bq24296 and bq24297.
-+  There are other ICs in the same family but those have
-+  not been addressed.
-+  The MP2624 is very similar to the bq24297 but not exactly
-+  identical.
-+  This chip is used by the OMAP5 based Pyra-Handheld.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: mps,mp2624
-+      - const: ti,bq24296
-+      - const: ti,bq24297
-+
-+  reg:
-+    const: 0x6b
-+
-+  interrupts:
-+    minItems: 1
-+
-+  monitored-battery:
-+    - description: phandle to the battery node
-+    - allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+# QUESTION : how can we correctly describe that we support only the following phandle properties and ignore the others?
-+    - enum:
-+      - voltage-max-design-microvolt:
-+        - default: 4200000
-+      - voltage-min-design-microvolt:
-+        - default: 3200000
-+      - constant-charge-current-max-microamp:
-+        - default: as defined by boot loader
-+      - precharge-current-microamp:
-+        - default: 128000
-+      - charge-term-current-microamp:
-+        - default: 128000
-+
-+  regulators:
-+    minItems: 2
-+    maxItems: 2
-+    items:
-+# QUESTION: can we specify that these are to be regulator nodes?
-+      - description: |
-+          two regulator child nodes for
-+          [0] vsys (battery or usb input -> system output)
-+          [1] otg (battery input -> usb output).
-+
-+  dc-det-gpios:
-+    items:
-+# QUESTION: how do we specify that it should be a gpio?
-+      - description: gpio for detecting two different DC sources
-+      - default: use usb-input-current-microamp only
-+
-+  ti,usb-input-current-microamp:
-+    items:
-+      - description: initial current for USB source (if dc-det is 0)
-+      - default: value as defined by boot loader
-+
-+  ti,adp-input-current-microamp:
-+    items:
-+      - description: initial current for other source (if dc-det is 1)
-+      - default: 2048000µA
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    bat: battery {
-+      compatible = "simple-battery", "pyra-battery";
-+      voltage-min-design-microvolt = <3200000>;
-+      voltage-max-design-microvolt = <4200000>;
-+      energy-full-design-microwatt-hours = <22200000>;
-+      charge-full-design-microamp-hours = <6000000>;
-+      charge-term-current-microamp = <128000>;
-+      constant-charge-current-max-microamp = <1000000>;
-+    };
-+
-+    bq24297@6b {
-+      compatible = "ti,bq24297";
-+      reg = <0x6b>;
-+      monitored-battery = <&bat>;
-+      interrupt-parent = <&gpio99>;
-+      interrupts = <(1*8+3) IRQ_TYPE_EDGE_FALLING>;   /* P13 */
-+      regulators {
-+        vsys_reg: vsys_regulator {
-+          regulator-compatible = "bq2429x-vsys";
-+          regulator-name = "vsys";
-+          regulator-min-microvolt = <3500000>;
-+          regulator-max-microvolt = <4200000>;
-+          regulator-always-on;
-+          regulator-boot-on;
-+        };
-+        otg_reg: otg_regulator {
-+          regulator-compatible = "bq2429x-otg";
-+          regulator-name = "otg";
-+          regulator-min-microvolt = <4900000>;
-+          regulator-max-microvolt = <5100000>;
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
