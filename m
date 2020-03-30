@@ -2,127 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B183B198003
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 17:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC29219814A
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 18:33:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgC3PnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Mar 2020 11:43:18 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46536 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728669AbgC3PnS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 11:43:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id i3so9070204ioo.13;
-        Mon, 30 Mar 2020 08:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QZTacSjnasNg1ss/HrVdMsonrOQ5SdqkzGymGMFrIvk=;
-        b=IWJdc6Iw0CF8+zFvuY5CMBBV0Vk7pD/hhWJ7NCqJ7KNbX3mJFx3FDfYQBCYX+Se0tc
-         +e7sfvnAcqKy8CyJrU2Mx5DNgBCzZ6L4YsyJZrGH6dFkAkO0TfSNXyfG6ZLxCY4MHuXT
-         Xg0xrmaeFk8Pi+oF7gIja8kTq52oyESZ2eMUDhJg0Pvw8ekFOOZ1P6P24IBrawvICJrv
-         OiHDGXM8NUJ4nBoDKJ5qrLuSLV3bLoAmgH42hcsOsFKs1g3enm5xKhr+oxy3towwT/Mm
-         lA0OHIKtAYBzE8d2nbIKzzwiDZLIu7gQCaEoDS4Yu4p7fCBauKhhgHC0N29lbcog8osk
-         RrHg==
-X-Gm-Message-State: ANhLgQ3Wv4n7AnjVDzQ5EH/iJ+cyeAlL77KWyGBt4iyZAthlcNoIE0v0
-        gJncq5Bx6Nu5lAD1TgBZfw==
-X-Google-Smtp-Source: ADFU+vtagkVVM5xB3qhxbp6YHISoiVCmO7s0zBShZgPAMIst11fqDk7nV5IgjtgFY3XrZiCTtdijqQ==
-X-Received: by 2002:a5d:8d0e:: with SMTP id p14mr2838387ioj.0.1585582995052;
-        Mon, 30 Mar 2020 08:43:15 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b4sm5022641ilg.58.2020.03.30.08.43.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:43:14 -0700 (PDT)
-Received: (nullmailer pid 26197 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:43:11 -0000
-Date:   Mon, 30 Mar 2020 09:43:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [RFC] dt-bindings.yaml: power: supply: add bindings for TI
- bq24296/7
-Message-ID: <20200330154311.GA24776@bogus>
-References: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
-MIME-Version: 1.0
+        id S1728091AbgC3QdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Mar 2020 12:33:20 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15212 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgC3QdU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 12:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585585998;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m5OQurJ34G52si3xIHL2HoNqFTlRdT/1c2JFQwVStnA=;
+        b=sevkwHAFC4Ku8T1/SpAy6r9w/mgj+9cMf79C4S7fF5p3ftt94frkFzwZZVRXXC4IyV
+        x9vhs8r6njYIIcOJmA9iyPDeF9SujHi8UmeFibidIAGmYkcWpDngfWP71hkEwU/PpQIa
+        QJp3nJyfoP9vamSPRVe6B8IPSzHowitCS/+cLu6DIzLdwwH7XHQuFtMhbdgm+1grWUUd
+        2631FiAqiXfhDGl+wf4pYYu+7undCxQ3rMJ/DLhrLhZHr+iMsHTjVj3xMrBYIGI9PtGO
+        Dw7jxmt59OV6QE+b31BPyPZMXkbe66+XtQC6nIo0VqWen1u5ozqU3lV4oZaNH5Ezy4Oc
+        r1Ew==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw43oE44="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2UGXBGiV
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 30 Mar 2020 18:33:11 +0200 (CEST)
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to ingenic,lcd.yaml
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200330154202.GA23233@bogus>
+Date:   Mon, 30 Mar 2020 18:33:10 +0200
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <02E5EC5D-1FBB-45E4-907E-10450B449726@goldelico.com>
+References: <cover.1585503354.git.hns@goldelico.com> <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com> <20200330154202.GA23233@bogus>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 29 Mar 2020 21:36:29 +0200, "H. Nikolaus Schaller" wrote:
-> This is an attempt to define a schema for the bq24296/7
-> charger and power supply controllers with battery monitoring
-> and OTG booster.
-> 
-> We model it as a dual regulator because it can generate
-> a VSYS (with controllable voltage) and optionally an
-> OTG voltage either from the battery or from external power
-> supply.
-> 
-> This scheme works well with e.g. the dwc3 setup of the
-> OMAP5 to turn on OTG regulator on demand.
-> 
-> The DT should provide a reference to a monitored battery
-> description so that initial and operation parameters
-> of the battery can be specified to control the charger
-> parameters.
-> 
-> To support different initial charging current for USB
-> and AC charger mode, an optional gpio should be provided
-> that the driver can use to set defaults.
-> 
-> A driver is available and working for several years,
-> but the bindings should be clarified first.
-> 
-> The example shows what we are successfully using for
-> the working system.
-> 
-> Since the omap5 Pyra Handheld is not yet in the DTS tree,
-> there would be no explicit user of this driver. So
-> the plan is to submit a full patch set for the Pyra
-> later.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../bindings/power/supply/bq2429x.yaml        | 122 ++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2429x.yaml
-> 
+Hi Paul,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+> Am 30.03.2020 um 17:42 schrieb Rob Herring <robh@kernel.org>:
+>=20
+> On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
+>> and add compatible: jz4780-lcd, including an example how to
+>> configure both lcd controllers.
+>>=20
+>> Also fix the clock names and examples.
+>>=20
+>> Based on work by Paul Cercueil <paul@crapouillou.net> and
+>> Sam Ravnborg <sam@ravnborg.org>
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>> .../bindings/display/ingenic,lcd.txt          |  45 ------
+>> .../bindings/display/ingenic,lcd.yaml         | 128 =
+++++++++++++++++++
+>> 2 files changed, 128 insertions(+), 45 deletions(-)
+>> delete mode 100644 =
+Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>> create mode 100644 =
+Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+>>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> =
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/displ=
+ay/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: =
+[[4294967295, 9]] is too short
+>=20
+> See https://patchwork.ozlabs.org/patch/1263508
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:monitored-battery: [{'description': 'phandle to the battery node'}, {'allOf': [{'$ref': '/schemas/types.yaml#/definitions/phandle'}]}, {'enum': [{'voltage-max-design-microvolt': [{'default': 4200000}]}, {'voltage-min-design-microvolt': [{'default': 3200000}]}, {'constant-charge-current-max-microamp': [{'default': 'as defined by boot loader'}]}, {'precharge-current-microamp': [{'default': 128000}]}, {'charge-term-current-microamp': [{'default': 128000}]}]}] is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:dc-det-gpios: {'items': [{'description': 'gpio for detecting two different DC sources'}, {'default': 'use usb-input-current-microamp only'}]} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:dc-det-gpios: 'maxItems' is a required property
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:dc-det-gpios:items: [{'description': 'gpio for detecting two different DC sources'}, {'default': 'use usb-input-current-microamp only'}] is not valid under any of the given schemas (Possible causes of the failure):
-		/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:dc-det-gpios:items: [{'description': 'gpio for detecting two different DC sources'}, {'default': 'use usb-input-current-microamp only'}] is not of type 'object'
-		/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: properties:dc-det-gpios:items:1:default: 'use usb-input-current-microamp only' is not of type 'integer'
+If I read the message correctly, I think there should be 2 clocks =
+specified in
+the jz4725b-lcd example and not just
 
+	clocks =3D <&cgu JZ4725B_CLK_LCD>;
 
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/power/supply/bq2429x.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/power/supply/bq2429x.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/power/supply/bq2429x.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq2429x.yaml: ignoring, error in schema: properties: monitored-battery
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Unfortunately the jz4725b.dtsi does not seem to be upstream or in =
+linux-next so
+I don't know if it works without lcd_pclk or not.
 
-See https://patchwork.ozlabs.org/patch/1263547
+If there is really just one clock, we need to modify the clocks and =
+clock-names
+schema and add minItems: 1 and maxItems: 2 to allow for this =
+flexibility.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+Otherwise we have to fix the example. Do you have some git with an =
+up-to-date
+jz4725b.dtsi to look at?
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>=20
+> pip3 install =
+git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-Please check and re-submit.
++++ :)
+
+>=20
+> Please check and re-submit.
+
+Sure, since it is a RFC.
+
+BR and thanks,
+Nikolaus
+
