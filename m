@@ -2,137 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC29219814A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 18:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31EFB19832A
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 20:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgC3QdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Mar 2020 12:33:20 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15212 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgC3QdU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 12:33:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585585998;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=m5OQurJ34G52si3xIHL2HoNqFTlRdT/1c2JFQwVStnA=;
-        b=sevkwHAFC4Ku8T1/SpAy6r9w/mgj+9cMf79C4S7fF5p3ftt94frkFzwZZVRXXC4IyV
-        x9vhs8r6njYIIcOJmA9iyPDeF9SujHi8UmeFibidIAGmYkcWpDngfWP71hkEwU/PpQIa
-        QJp3nJyfoP9vamSPRVe6B8IPSzHowitCS/+cLu6DIzLdwwH7XHQuFtMhbdgm+1grWUUd
-        2631FiAqiXfhDGl+wf4pYYu+7undCxQ3rMJ/DLhrLhZHr+iMsHTjVj3xMrBYIGI9PtGO
-        Dw7jxmt59OV6QE+b31BPyPZMXkbe66+XtQC6nIo0VqWen1u5ozqU3lV4oZaNH5Ezy4Oc
-        r1Ew==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw43oE44="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2UGXBGiV
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Mon, 30 Mar 2020 18:33:11 +0200 (CEST)
-Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to ingenic,lcd.yaml
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200330154202.GA23233@bogus>
-Date:   Mon, 30 Mar 2020 18:33:10 +0200
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        MIPS Creator CI20 Development 
-        <mips-creator-ci20-dev@googlegroups.com>,
-        Rob Herring <robh@kernel.org>
+        id S1726981AbgC3SQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Mar 2020 14:16:21 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42051 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgC3SQV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 14:16:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z5so18872056oth.9;
+        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
+        b=ai6wI+ycqrkzpl/S2YJzZdSui/OqHxW+zs9NCXGh7U6Ao8RzV+b6ZH92pP+mJSeMDg
+         3zFsBbaW5dHtjdptA2ZKynOAnrY/IFF/rbTO3di295t+BhXrNfSP1TZfcKFLzaaoOfUV
+         bVKuFgdn0MvaqJSHswPZS+XldoySduiB80LONN0NvR4dSXufP5iF9jGiXSGWYDD9cBxG
+         xAJILj6xA/q3qaZGqm/kdv34TUUojc70Ogmsn38uo995wLI4LwNDS5srJoxLtqNTnQ0w
+         U9IlzFhfaJqL2AEjBt3teQ6hoVJOurZOyN+6s5i5g5RZL39LrAlRA3Usk0jJOm4IPLXJ
+         aPDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
+        b=EdvLemNxXnJ1LftsQOzPMFhujmuITyTJPbPfpiajmjYWdrJ7hZosla/6BYRmaZvKRz
+         6QWDBemcsgxjzgvkAmCrWE6GXun1MQ0HKsP+Z2x/Z9+bYwFFoIrGWa8O8TDBUbf70+xN
+         +Id8faID04DU50Vmfh/NlcxEhGtE9sPtABREMOiCZrLouR3XVtt3/6MU4pGfuMQKbcFN
+         nR+zRQEbMMO2VEBavxrElyYVy4D0nDc8wo6fe9UQnCJHtkTS5Izp0ayVSXFKWrU7siXe
+         ZxDc4NLwIYccXcCH3/WVkv9S86b69QfDGfxcNzhS1iKkACcjfaRmxRJRzvO5XPgooMzk
+         Zs6w==
+X-Gm-Message-State: ANhLgQ3OJ2hE+9CTE5b/UQqVmRCa10ZGkzCS2FQY1NBqOo3wZeiTDt3e
+        s+qcr7CgpqRopmBYAZ9lgKQqKXWfzx0=
+X-Google-Smtp-Source: ADFU+vvlSpRwHKn4r6g703Ne60gh2l2x19YSD2cUdpHUPeweDs5ZyHaHm8b4wc+Bl5wfRYsNGn1JCA==
+X-Received: by 2002:a05:6830:10a:: with SMTP id i10mr10498831otp.190.1585592178291;
+        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
+Received: from andrews-mbp-2.attlocal.net ([2600:1700:19e0:3310:81db:d33f:7ec:a679])
+        by smtp.gmail.com with ESMTPSA id o1sm4480246otl.49.2020.03.30.11.16.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Mar 2020 11:16:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
+From:   Andrew Geissler <geissonator@gmail.com>
+In-Reply-To: <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+Date:   Mon, 30 Mar 2020 13:16:16 -0500
+Cc:     Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <02E5EC5D-1FBB-45E4-907E-10450B449726@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com> <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com> <20200330154202.GA23233@bogus>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+Message-Id: <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
+References: <20200306170218.79698-1-geissonator@yahoo.com>
+ <20200306170218.79698-2-geissonator@yahoo.com>
+ <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Paul,
 
-> Am 30.03.2020 um 17:42 schrieb Rob Herring <robh@kernel.org>:
+
+> On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
 >=20
-> On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
->> and add compatible: jz4780-lcd, including an example how to
->> configure both lcd controllers.
+>=20
+>=20
+> On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
+>> Name the GPIOs to help userspace work with them. The names describe =
+the
+>> functionality the lines provide, not the net or ball name. This makes =
+it
+>> easier to share userspace code across different systems and makes the
+>> use of the lines more obvious.
 >>=20
->> Also fix the clock names and examples.
->>=20
->> Based on work by Paul Cercueil <paul@crapouillou.net> and
->> Sam Ravnborg <sam@ravnborg.org>
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+>=20
+> So we're creating a bit of an ad-hoc ABI here between the DT and =
+userspace.
+>=20
+> Where are we documenting it?
+
+Yeah, so far it=E2=80=99s basically design by precedent. If you want =
+your OpenBMC
+function to work then follow the standards we're setting in other =
+dts=E2=80=99s.
+
+Is there a good place to document this? I could create a OpenBMC design
+doc but that would not address non-OpenBMC areas.
+
+>=20
+> Generally I think the idea is good though, so:
+>=20
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
+
+Thanks
+
+>=20
 >> ---
->> .../bindings/display/ingenic,lcd.txt          |  45 ------
->> .../bindings/display/ingenic,lcd.yaml         | 128 =
-++++++++++++++++++
->> 2 files changed, 128 insertions(+), 45 deletions(-)
->> delete mode 100644 =
-Documentation/devicetree/bindings/display/ingenic,lcd.txt
->> create mode 100644 =
-Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+>> arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 37 =
++++++++++++++++++++---
+>> 1 file changed, 33 insertions(+), 4 deletions(-)
 >>=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> =
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/displ=
-ay/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: =
-[[4294967295, 9]] is too short
->=20
-> See https://patchwork.ozlabs.org/patch/1263508
-
-If I read the message correctly, I think there should be 2 clocks =
-specified in
-the jz4725b-lcd example and not just
-
-	clocks =3D <&cgu JZ4725B_CLK_LCD>;
-
-Unfortunately the jz4725b.dtsi does not seem to be upstream or in =
-linux-next so
-I don't know if it works without lcd_pclk or not.
-
-If there is really just one clock, we need to modify the clocks and =
-clock-names
-schema and add minItems: 1 and maxItems: 2 to allow for this =
-flexibility.
-
-Otherwise we have to fix the example. Do you have some git with an =
-up-to-date
-jz4725b.dtsi to look at?
-
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
->=20
-> pip3 install =
-git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-+++ :)
-
->=20
-> Please check and re-submit.
-
-Sure, since it is a RFC.
-
-BR and thanks,
-Nikolaus
+>> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts=20
+>> b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> index bc60ec291681..4bcc82046362 100644
+>> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> @@ -478,32 +478,61 @@
+>> 	pinctrl-names =3D "default";
+>> 	pinctrl-0 =3D <&pinctrl_gpioh_unbiased>;
+>>=20
+>> +	gpio-line-names =3D
+>> +	/*A0-A7*/	"","cfam-reset","","","","","","",
+>> +	/*B0-B7*/	"","","","","","","","",
+>> +	/*C0-C7*/	"","","","","","","","",
+>> +	/*D0-D7*/	=
+"fsi-enable","","","","","led-sys-boot-status","led-attention",
+>> +				"led-fault",
+>> +	/*E0-E7*/	"","","","","","","","presence-pcie-e2b",
+>> +	/*F0-F7*/	"","","","","","","","checkstop",
+>> +	/*G0-G7*/	"fsi-clock","fsi-data","","","","","","",
+>> +	/*H0-H7*/	=
+"onewire0","onewire1","onewire2","onewire3","","","","",
+>> +	/*I0-I7*/	"","","","power-button","","","","",
+>> +	/*J0-J7*/	"","","","","","","","",
+>> +	/*K0-K7*/	"","","","","","","","",
+>> +	/*L0-L7*/	"","","","","","","","",
+>> +	/*M0-M7*/	"","","","","","","","",
+>> +	/*N0-N7*/	"","","","","","","","",
+>> +	/*O0-O7*/	"","","","","iso_u164_en","","fsi-trans","",
+>> +	/*P0-P7*/	=
+"ncsi_mux_en_n","bmc_i2c2_sw_rst_n","","bmc_i2c5_sw_rst_n","",
+>> +				"","fsi-mux","",
+>> +	/*Q0-Q7*/	"","","","","","","","",
+>> +	/*R0-R7*/	"","","","","","","","",
+>> +	/*S0-S7*/	"","","","","","","","",
+>> +	/*T0-T7*/	"","","","","","","","",
+>> +	/*U0-U7*/	"","","","","","","","",
+>> +	/*V0-V7*/	"","","","","","","","",
+>> +	/*W0-W7*/	"","","","","","","","",
+>> +	/*X0-X7*/	"","","","","","","","",
+>> +	/*Y0-Y7*/	"","","","","","","","",
+>> +	/*Z0-Z7*/	"","","","","","","","",
+>> +	/*AA0-AA7*/	"","","led-hdd-fault","","","","","",
+>> +	/*AB0-AB7*/	"","","","","","","","",
+>> +	/*AC0-AC7*/	"","","","","","","","";
+>> +
+>> 	line_iso_u146_en {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(O, 4) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "iso_u164_en";
+>> 	};
+>>=20
+>> 	ncsi_mux_en_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
+>> 		output-low;
+>> -		line-name =3D "ncsi_mux_en_n";
+>> 	};
+>>=20
+>> 	line_bmc_i2c2_sw_rst_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "bmc_i2c2_sw_rst_n";
+>> 	};
+>>=20
+>> 	line_bmc_i2c5_sw_rst_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "bmc_i2c5_sw_rst_n";
+>> 	};
+>> };
+>>=20
+>> --=20
+>> 2.21.0 (Apple Git-122)
+>>=20
+>>=20
 
