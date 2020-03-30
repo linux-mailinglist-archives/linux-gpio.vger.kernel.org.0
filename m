@@ -2,172 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE855197E9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 16:37:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 868D8197FF8
+	for <lists+linux-gpio@lfdr.de>; Mon, 30 Mar 2020 17:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgC3OhN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 30 Mar 2020 10:37:13 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37084 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728356AbgC3OhK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 10:37:10 -0400
-Received: by mail-il1-f195.google.com with SMTP id a6so15990805ilr.4
-        for <linux-gpio@vger.kernel.org>; Mon, 30 Mar 2020 07:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
-        b=SEsGSlAkAq7kvJS1VYZJcqR4AJhsJuoPUhgMbkk3JafHzHF66EL0seoHaeWlH568uq
-         tDgaJ9vtCmFxUubE+xYdeRDUi4KTo+faDPsQod4ocxH/EoG0Xj7AE2NzSY+K43lWfcrL
-         6iL3uwdP3OnOIkBcZnfq5xSNFS42Vm2niEeVRe/SVNDx/1jX6Aa0yTmtmWUYhHurquPw
-         Jh/RQ8K+rNUUnuFwPhcHcSJc2cNcXDL8d325U44pr6emflT0qtirCS82i7XM8phDpt5v
-         mINUJZiGPyOxp63818+WfYSioBtWE+02kbP6O4WMNe0Aki0DyXJ3N9d+e6ShBmXD7oHG
-         Awhw==
+        id S1729499AbgC3PmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 30 Mar 2020 11:42:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46313 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC3PmH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 30 Mar 2020 11:42:07 -0400
+Received: by mail-io1-f66.google.com with SMTP id i3so9065464ioo.13;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
-        b=jn/188SP8AVbaKu6TFMMGklbnhF6RsKnJth8Joz7QL9M6s1Vxit/l7UA59fELBqy1O
-         EHF7yADZqpHUS2H/FgZCu0emmNYgYmFO5tMUbCVUzx21kScom7LImOiq4r1TGTHSkOnJ
-         /lly7+AnPDDMQT2RDZ7cbLG6SKvvZzutk14V2+/cA/8yoV5T4Rrk4yIAcsnwKrTElDOL
-         KCDYfknHFp6EobADLVGyyE/GhWv9O3NNWiCs5TjA08UQbSc3BOIx+ymbkOF0nakMriM+
-         Y63E30Qi86iICRpXtDuZcLiDsX+RaRJ4JdYyyxgluTYUe5ukDnML4Y5S8VPvBHX+ICQl
-         HCUg==
-X-Gm-Message-State: ANhLgQ3CroyqAHSTbTMTyTVe3VZCMNiEXFd26ZNzmUFMT4SasnqezKSQ
-        p77K43Sew5m0tMYuAh71XVztZpCm8/36aePvs1xDBw==
-X-Google-Smtp-Source: ADFU+vtCRUcet9Ol6edmtrTgiJaQqxlFSOniI6lnjEMLFkkPk3juAcB8HwPik3oLpwdOg4O05KtVRU/chRQsAOCgdes=
-X-Received: by 2002:a92:bbd8:: with SMTP id x85mr11862710ilk.40.1585579027952;
- Mon, 30 Mar 2020 07:37:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XToUOXTBi4v+G+zH1meistMeAK6/7kaJVHzaJ0IgHkE=;
+        b=f1ZsDbxR2FfpJdEdxwNjwq4aR3pKPSmVhTUSSHaC4GpZIBCxoN/ZQ0hw9614oIHJE3
+         UvLupyUmWwnN6esvWfGLH20978tGG4JyFS3qpvZ3bzD38y97Gh66nhcR7AdDCeJXQhzB
+         UegY+rWIq9S5GjZmssrAes2eOKGZ88UaQzCPvYBj6XGXkSpl0xdi+i1dvuffeT+6tib2
+         ZzHwpzGqIUVPdeEFsvJzqhg65Wef0JQ1NEggEIlo07EvAgbC4LxIOqJdxADUfpN7LO+Y
+         NNf8Ete1eSGEi75IekkSGmUA5A88RpiMY5nppTR3M3JebOwL1WJ04l3sCKJE3aFVJHiC
+         vnlA==
+X-Gm-Message-State: ANhLgQ33dmQEwg/DK2mN+1ybTVp9KXt+gxwjRTc7M0OXoBtDZOdjDi6c
+        Vz9me9OMBCuNs3c77HDeLw==
+X-Google-Smtp-Source: ADFU+vuo2GMSlIScfz8VpFQrF31IFo0FS6MvSyPlgMZwQJUJOQOv+ANaUZdUOCWSeh/xQWl4VpTXlQ==
+X-Received: by 2002:a02:641:: with SMTP id 62mr11747164jav.79.1585582926290;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c12sm5004502ila.31.2020.03.30.08.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:42:05 -0700 (PDT)
+Received: (nullmailer pid 24611 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:42:02 -0000
+Date:   Mon, 30 Mar 2020 09:42:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        mips-creator-ci20-dev@googlegroups.com
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to
+ ingenic,lcd.yaml
+Message-ID: <20200330154202.GA23233@bogus>
+References: <cover.1585503354.git.hns@goldelico.com>
+ <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
- <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com> <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
-In-Reply-To: <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 30 Mar 2020 16:36:57 +0200
-Message-ID: <CAMRc=Mf5cYtWxAVeMQmxwyoi9oxtVSidBQsdRV9H2E52H1TqKQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 26 mar 2020 o 21:50 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Fri, Mar 13, 2020 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> > In this case I was thinking about a situation where we pass a
-> > requested descriptor to some other framework (nvmem in this case)
-> > which internally doesn't know anything about who manages this resource
-> > externally. Now we can of course simply not do anything about it and
-> > expect the user (who passed us the descriptor) to handle the resources
-> > correctly. But what happens if the user releases the descriptor not on
-> > driver detach but somewhere else for whatever reason while nvmem
-> > doesn't know about it? It may try to use the descriptor which will now
-> > be invalid. Reference counting in this case would help IMHO.
->
-> I'm so confused because I keep believing it is reference counted
-> elsewhere.
->
-> struct gpio_desc *d always comes from the corresponding
-> struct gpio_device *descs array. This:
->
-> struct gpio_device {
->         int                     id;
->         struct device           dev;
-> (...)
->         struct gpio_desc        *descs;
-> (...)
->
-> This array is allocated in gpiochip_add_data_with_key() like this:
->
->         gdev->descs =3D kcalloc(chip->ngpio, sizeof(gdev->descs[0]), GFP_=
-KERNEL);
->
-> Then it gets free:d in gpiodevice_release():
->
-> static void gpiodevice_release(struct device *dev)
-> {
->         struct gpio_device *gdev =3D dev_get_drvdata(dev);
-> (...)
->         kfree(gdev->descs);
->         kfree(gdev);
-> }
->
-> This is the .release function for the gdev->dev, the device inside
-> struct gpio_device,
-> i.e. the same device that contains the descs in the first place. So it
-> is just living
-> and dying with the struct gpio_device.
->
-> struct gpio_device does *NOT* die in the devm_* destructor that gets call=
-ed
-> when someone has e.g. added a gpiochip using devm_gpiochip_add_data().
->
-> I think the above observation is crucial: the lifetime of struct gpio_chi=
-p and
-> struct gpio_device are decoupled. When the struct gpio_chip dies, that
-> just "numbs" all gpio descriptors but they stay around along with the
-> struct gpio_device that contain them until the last
-> user is gone.
->
-> The struct gpio_device reference counted with the call to get_device(&gde=
-v->dev)
-> in gpiod_request() which is on the path of gpiod_get_[index]().
->
-> If a consumer gets a gpio_desc using any gpiod_get* API this gets
-> increased and it gets decreased at every gpiod_put() or by the
-> managed resources.
->
-> So should you not rather exploit this fact and just add something
-> like:
->
-> void gpiod_reference(struct gpio_desc *desc)
-> {
->     struct gpio_device *gdev;
->
->     VALIDATE_DESC(desc);
->     gdev =3D desc->gdev;
->     get_device(&gdev->dev);
-> }
->
-> void gpiod_unreference(struct gpio_desc *desc)
-> {
->     struct gpio_device *gdev;
->
->     VALIDATE_DESC(desc);
->     gdev =3D desc->gdev;
->     put_device(&gdev->dev);
-> }
->
-> This should make sure the desc and the backing gpio_device
-> stays around until all references are gone.
->
-> NB: We also issue try_module_get() on the module that drives the
-> GPIO, which will make it impossible to unload that module while it
-> has active GPIOs. I think maybe the whole logic inside gpiod_request()
-> is needed to properly add an extra reference to a gpiod else someone
-> can (theoretically) pull out the module from below.
->
+On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
+> and add compatible: jz4780-lcd, including an example how to
+> configure both lcd controllers.
+> 
+> Also fix the clock names and examples.
+> 
+> Based on work by Paul Cercueil <paul@crapouillou.net> and
+> Sam Ravnborg <sam@ravnborg.org>
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../bindings/display/ingenic,lcd.txt          |  45 ------
+>  .../bindings/display/ingenic,lcd.yaml         | 128 ++++++++++++++++++
+>  2 files changed, 128 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+> 
 
-Thanks a lot for the detailed explanation. I'll make some time
-(hopefully soon) to actually test this path and let you know if it
-works as expected.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Best regards,
-Bartosz Golaszewski
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: [[4294967295, 9]] is too short
+
+See https://patchwork.ozlabs.org/patch/1263508
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
