@@ -2,293 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29C62198D31
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 09:40:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C6EB199308
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 12:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbgCaHkk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33383 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaHkk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7CC1E22EE3;
-        Tue, 31 Mar 2020 09:40:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585640434;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mviIisaY+natZUJ2Z168wGqsXylmvuvr2v6d2rj4s3E=;
-        b=SOXcyaVY+Xh1wNUH5QfHmaec2ziYF4dLWLvGyJL95daw/h6eKFaCWpOIFTEW8H93ID6Qnh
-        y756CM/zRC6dngc+sUgBXs/wyn4mOK8MCbT3stSE0gEjxEDC6ttFmj2u/XkqH7FgOiiJqV
-        6Q1uQMqY7aUaYn+pGQPt1Aow6EJGC58=
+        id S1730153AbgCaKCs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Mar 2020 06:02:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47422 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729997AbgCaKCs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:02:48 -0400
+IronPort-SDR: wkkzQjvyRpk3K8zijmSo84DV8Zxvbz4zxxnAFP+7zzOx/vGGIrllj7Ku6qIWOhCgAWWAhpGIqp
+ sZxcg7/lplcg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 03:02:47 -0700
+IronPort-SDR: uUBo1KpvwOm8FaapHEwGNN9q2Fw/PAqizxlp/nNO629pdNAtW0MiiIdgbtbnR3EJGQZYggJ097
+ uGCc2NaEhwXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="249000133"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 31 Mar 2020 03:02:45 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jJDjL-00ES7W-SF; Tue, 31 Mar 2020 13:02:47 +0300
+Date:   Tue, 31 Mar 2020 13:02:47 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org, Marcel Gudert <m.gudert@eckelmann.de>
+Subject: Re: [PATCH v2 1/2] gpio: pca953x: fix handling of automatic address
+ incrementing
+Message-ID: <20200331100247.GC1922688@smile.fi.intel.com>
+References: <20200330195018.27494-1-u.kleine-koenig@pengutronix.de>
+ <20200330195018.27494-2-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Mar 2020 09:40:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 04/18] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200330223535.GA31402@bogus>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-5-michael@walle.cc> <20200330223535.GA31402@bogus>
-Message-ID: <538e5e51e59594a39064841509395fdb@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: 7CC1E22EE3
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email,0.0.0.1:email];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.835];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,kernel.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200330195018.27494-2-u.kleine-koenig@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-03-31 00:35, schrieb Rob Herring:
-> On Tue, Mar 17, 2020 at 09:50:03PM +0100, Michael Walle wrote:
->> This adds device tree bindings for the board management controller 
->> found
->> on the Kontron SMARC-sAL28 board.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  .../bindings/mfd/kontron,sl28cpld.yaml        | 143 
->> ++++++++++++++++++
->>  1 file changed, 143 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
->> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> new file mode 100644
->> index 000000000000..3b9cca49d2d6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> @@ -0,0 +1,143 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kontron's sl28cpld board management controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  The board management controller may contain different IP blocks 
->> like
->> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
->> a
->> +  GPIO controller.
->> +
->> +properties:
->> +  compatible:
->> +    const: kontron,sl28cpld
->> +
->> +  reg:
->> +    description:
->> +      I2C device address.
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +patternProperties:
->> +  "^gp(io|i|o)(@[0-9]+)?$":
+On Mon, Mar 30, 2020 at 09:50:17PM +0200, Uwe Kleine-König wrote:
+> Some of the chips supported by the pca953x driver need the most
+> significant bit in the address word set to automatically increment the
+> address pointer on subsequent reads and writes (example: PCA9505). With
+> this bit unset the same register is read multiple times on a multi-byte
+> read sequence. Other chips must not have this bit set and autoincrement
+> always (example: PCA9555).
 > 
-> Just 'gpio'. We don't need that level of distinguishing in node names.
+> Up to now this AI bit was interpreted to be part of the address, which
+> resulted in inconsistent regmap caching when a register was written with
+> AI set and then read without it. This happened for the PCA9505 in
+> pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
+> cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
+> note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
+> be set to get OP0-OP4, which is another bug that is resolved here as a
+> by-product.) The same problem happens when calls to gpio_set_value() and
+> gpio_set_array_value() were mixed.
 > 
->> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
->> +
->> +  "^hwmon(@[0-9]+)?$":
->> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
->> +
->> +  "^pwm(@[0-9]+)?$":
->> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
->> +
->> +  "^watchdog(@[0-9]+)?$":
->> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
+> With this patch the AI bit is always set for chips that support it. This
+> works as there are no code locations that make use of the behaviour with
+> AI unset (for the chips that support it).
 > 
-> The patches for these files need to come first or validating this file
-> fails. Really, you can just make all five files 1 patch.
+> Note that the call to pca953x_setup_gpio() had to be done a bit earlier
+> to make the NBANK macro work.
 > 
->> +
->> +required:
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - compatible
->> +  - reg
->> +  - "#interrupt-cells"
->> +  - interrupt-controller
->> +
->> +oneOf:
->> +  - required:
->> +    - interrupts
->> +  - required:
->> +    - interrupts-extended
+> The history of this bug is a bit complicated. Commit b32cecb46bdc
+> ("gpio: pca953x: Extract the register address mangling to single
+> function") changed which chips and functions are affected. Commit
+> 3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
+> some duct tape to make the driver at least appear to work. Commit
+> 49427232764d ("gpio: pca953x: Perform basic regmap conversion")
+> introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
+> set_multiple to allow multiple bits to be set in one write.") introduced
+> the .set_multiple() callback which didn't work for chips that need the
+> AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
+> pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
+> sorry, I don't know which commit I should pick for a Fixes: line.
 > 
-> Don't need to do this. Just make 'interrupts' required and you'll get
-> interrupts-extended for free.
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    i2c {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        sl28cpld@4a {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            compatible = "kontron,sl28cpld";
->> +            reg = <0x4a>;
->> +            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
->> +
->> +            #interrupt-cells = <2>;
->> +            interrupt-controller;
->> +
->> +            gpio@0 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <0>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpio@1 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <1>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpo {
->> +                compatible = "kontron,sl28cpld-gpo";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                gpio-line-names = "a", "b", "c";
->> +            };
->> +
->> +            gpi {
->> +                compatible = "kontron,sl28cpld-gpi";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +            };
->> +
->> +            hwmon {
->> +                compatible = "kontron,sl28cpld-fan";
->> +            };
->> +
->> +            pwm@0 {
-> 
-> You already used the '0' address. You can't have 2 things at the
-> same address. There's only one number space at a given level.
 
-There was a reason for having duplicate unit-addresses. See here
-for my reasoning:
-https://lore.kernel.org/linux-devicetree/e55d59a68f497c8f2eb406d40ae878b9@walle.cc/
+Tags were applied to both patches.
+Just to elaborate here as well that I have tested on PCA9555 (GPIO mode +
+IRQ mode) and since it doesn't use AI, I haven't found any regressions.
 
-But I've already noticed that it shouldn't be done it this way. The
-DT check is already complaining.
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
+>  1 file changed, 28 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 5638b4e5355f..8168558299c2 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -307,8 +307,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
+>  	.volatile_reg = pca953x_volatile_register,
+>  
+>  	.cache_type = REGCACHE_RBTREE,
+> -	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
+> -	.max_register = 0xff,
+> +	.max_register = 0x7f,
+> +};
+> +
+> +static const struct regmap_config pca953x_ai_i2c_regmap = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +
+> +	.read_flag_mask = REG_ADDR_AI,
+> +	.write_flag_mask = REG_ADDR_AI,
+> +
+> +	.readable_reg = pca953x_readable_register,
+> +	.writeable_reg = pca953x_writeable_register,
+> +	.volatile_reg = pca953x_volatile_register,
+> +
+> +	.cache_type = REGCACHE_RBTREE,
+> +	.max_register = 0x7f,
+>  };
+>  
+>  static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+> @@ -319,18 +333,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+>  	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
+>  	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
+>  
+> -	/* Single byte read doesn't need AI bit set. */
+> -	if (!addrinc)
+> -		return regaddr;
+> -
+> -	/* Chips with 24 and more GPIOs always support Auto Increment */
+> -	if (write && NBANK(chip) > 2)
+> -		regaddr |= REG_ADDR_AI;
+> -
+> -	/* PCA9575 needs address-increment on multi-byte writes */
+> -	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
+> -		regaddr |= REG_ADDR_AI;
+> -
+>  	return regaddr;
+>  }
+>  
+> @@ -863,6 +865,7 @@ static int pca953x_probe(struct i2c_client *client,
+>  	int ret;
+>  	u32 invert = 0;
+>  	struct regulator *reg;
+> +	const struct regmap_config *regmap_config;
+>  
+>  	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+>  	if (chip == NULL)
+> @@ -925,7 +928,17 @@ static int pca953x_probe(struct i2c_client *client,
+>  
+>  	i2c_set_clientdata(client, chip);
+>  
+> -	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
+> +	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
+> +
+> +	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
+> +		dev_info(&client->dev, "using AI\n");
+> +		regmap_config = &pca953x_ai_i2c_regmap;
+> +	} else {
+> +		dev_info(&client->dev, "using no AI\n");
+> +		regmap_config = &pca953x_i2c_regmap;
+> +	}
+> +
+> +	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
+>  	if (IS_ERR(chip->regmap)) {
+>  		ret = PTR_ERR(chip->regmap);
+>  		goto err_exit;
+> @@ -956,7 +969,6 @@ static int pca953x_probe(struct i2c_client *client,
+>  	/* initialize cached registers from their original values.
+>  	 * we can't share this chip with another i2c master.
+>  	 */
+> -	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
+>  
+>  	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
+>  		chip->regs = &pca953x_regs;
+> -- 
+> 2.26.0.rc2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> All these child devices don't have any DT resources, so you don't 
-> really
-> need them. The parent node could be a gpio and pwm provider and that's
-> all you need in DT. Aside from DT resources, the only other reason
-> to have all these child nodes are if the child blocks are going to get
-> assembled in different combinations across a variety of h/w.
-
-What do you mean by DT resources? There is a new patch series in 
-preparation
-where for example the watchdog has a new property
-"kontron,assert-wdt-timeout-pin". Which IMHO should be go under the 
-watchdog
-node.
-Besides from that, there are actually three interrupt controllers, ie. 
-the
-two full featured gpio controllers and one interrupt controller. Do you 
-think
-it makes sense to combine that into the parent node eg. merging 
-different
-thinks like an interrupt controller and the gpio controllers into a 
-single
-interrupt mapping in the parent node.
-See also:
-https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
-
-Also please keep in mind, that these are only the current available 
-building
-blocks of a sl28cpld. They are likely to be extended for other 
-functionalities.
-So while it might be possible to merge the current nodes into the parent 
-I don't
-know it that is possible for future blocks.
-
--michael
