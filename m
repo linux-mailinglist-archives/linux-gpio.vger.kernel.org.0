@@ -2,127 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AF15199B80
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 18:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E57AB199E46
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 20:43:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbgCaQ33 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Mar 2020 12:29:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47221 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730011AbgCaQ33 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Mar 2020 12:29:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJJlN-0007Xk-7h; Tue, 31 Mar 2020 18:29:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJJlK-0005tF-Br; Tue, 31 Mar 2020 18:29:14 +0200
-Date:   Tue, 31 Mar 2020 18:29:14 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
- devm_clk_get()
-Message-ID: <20200331162914.h65jnclbsmlzpzti@pengutronix.de>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
- <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
- <20200329133400.GA25745@shell.armlinux.org.uk>
- <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
- <20200329182236.GC25745@shell.armlinux.org.uk>
+        id S1726411AbgCaSnq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Mar 2020 14:43:46 -0400
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:38434 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgCaSnp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Mar 2020 14:43:45 -0400
+Received: by mail-pg1-f176.google.com with SMTP id x7so10739048pgh.5
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2020 11:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=fgjV7okOyC28O8PpKTOMdviMOV2fclTKMy+aQdBSAok=;
+        b=hO2qAX/DGtrJx43jX59F+HiTzk8SD1PfGTFusiCIzL+69Myqh5XOljyyl1JaYcPtUQ
+         yaLF8RqitdTW8L3gh8ZuwWwk4JshnT7Gd/TYe5xZcuq/LXGNm2QtA6SYJj1YpoI7NlVg
+         1NoUVfrbtVIlH3ihGF9+bDVmEc4GtZYzDll5UimLEqdNomVTVXasqUhCHU4PjvBaE43D
+         pDts6ejhzJGskDR1vA7gJ9ULEaUzqr+DfFg06nq8c33krYqEOquqW07h9mjlqqmfUNO1
+         qMQLwbo3R0aUaR7KXufWticcDiuYWXNq7UBBsLWd41CpFWqSeXakvKy+Vc0aGcJvWtOn
+         6Y3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=fgjV7okOyC28O8PpKTOMdviMOV2fclTKMy+aQdBSAok=;
+        b=an0KgndRNAwwQDokBXDTus+SmGVWUeADswT05n6pyEuS+50znefxVJd9Q6PiYvPstZ
+         Egd5B6ZfIomlGDiPkaFLnwEc648q4Zo4LsL3uA6BbwATEGbk5BsiEkGspRAOa81hGIY6
+         Csd+5hoR14F2Fqgrqewiq/mYCeBchkWFJa8nIe1qNhTfq40G42SMaZ/JZauc7ExWomTs
+         EZ1d0Rc2zkO9FPDkCjV0Qvc8caS3OI9uI6cNJNILY1/J2F3iP6d7pQfsTih31WnwR016
+         Hnn1G+oubt+wZdksHBl0GnkobZThiC9gRVPT6r0Ih5GgybrduFlGhfPIlshC0TUHc9cI
+         LhbQ==
+X-Gm-Message-State: ANhLgQ3zR4leVD/jk9L7GTXh7w+dCGqcbyASwptoOSdyloKMIvHrkOcM
+        M+Lv1fDLUpyBOhv/TvfiwPx5SaMtzzk=
+X-Google-Smtp-Source: ADFU+vtnYUukQmtDw/vDcj/w0vnktcCc8ZQBRGB7AZseaCqBHhoohXJOaijG715quKWWN8kg8JMGlg==
+X-Received: by 2002:aa7:8b44:: with SMTP id i4mr20414188pfd.179.1585680222344;
+        Tue, 31 Mar 2020 11:43:42 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id z6sm2505618pjt.42.2020.03.31.11.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 11:43:41 -0700 (PDT)
+Message-ID: <5e838f5d.1c69fb81.dd873.a191@mx.google.com>
+Date:   Tue, 31 Mar 2020 11:43:41 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329182236.GC25745@shell.armlinux.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.6-rc7-58-g89ad556b7f96
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 6 builds: 0 failed,
+ 6 passed (v5.6-rc7-58-g89ad556b7f96)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Russell,
+linusw/for-next build: 6 builds: 0 failed, 6 passed (v5.6-rc7-58-g89ad556b7=
+f96)
 
-On Sun, Mar 29, 2020 at 07:22:36PM +0100, Russell King - ARM Linux admin wrote:
-> On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
-> > On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
-> > > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
-> > > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > > > index fa5641615db6..ee13b11c5298 100644
-> > > > > --- a/drivers/gpio/gpio-mvebu.c
-> > > > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
-> > > > >  	}
-> > > > >  
-> > > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
-> > > > > +		return -EPROBE_DEFER;
-> > > > > +
-> > > > >  	/* Not all SoCs require a clock.*/
-> > > > >  	if (!IS_ERR(mvchip->clk))
-> > > > >  		clk_prepare_enable(mvchip->clk);
-> > > > 
-> > > > I'd say the following is the right thing to do here:
-> > > > 
-> > > > 	mvchip->clk = devm_clk_get_optional(...);
-> > > > 	if (IS_ERR(mvchip->clk))
-> > > > 		return ...
-> > > 
-> > > It's not that simple.  The clock is required for Armada 370, and is
-> > > optional for Armada 8040.
-> > 
-> > I'd say it is still the right approach here. On Armada 370 the dtb then
-> > has a clk and on Armada 8040 it doesn't. So if with
-> > devm_clk_get_optional() something goes wrong that's because the dtb is
-> > wrong. And in fact the handling is even better than with your suggested
-> > patch as every error (but EPROBE_DEFER) is ignored instead of passed to
-> > the caller with your (and the existing) approach.
-> 
-> Sort of.  Every error is currently treated as "no clock", and only
-> later does such an error become fatal in the driver _if_ PWM is
-> configured into the kernel and we're running on Armada 370.  If PWM
-> is disabled in the kernel, or on some other SoC, then the driver
-> doesn't care whether getting the clock reported any kind of error.
-> 
-> Your proposal is to always treat any error getting the clock,
-> irrespective of whether there is PWM or not, as a fatal error for
-> the driver.
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.6-rc7-58-g89ad556b7f96/
 
-Is this clock (assuming it's available) needed for GPIO operation? If
-not, I'd say the call to devm_clk_get should go into mvebu_pwm_probe().
-And if yes, then use devm_clk_get_optional in mvebu_gpio_probe() and
-either request it once more in mvebu_pwm_probe() (without _optional) or
-test for mvchip->clk == NULL. (Or maybe just don't check and let the
-driver fail when clk_get_rate(mvchip->clk) returns zero.)
+Tree: linusw
+Branch: for-next
+Git Describe: v5.6-rc7-58-g89ad556b7f96
+Git Commit: 89ad556b7f96af54ae6762f561f0a09269265741
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 6 unique architectures
 
-> That is an entirely seperate functional change.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-This is still different to what you do, but it is (IMHO) cleaner and
-fixes the problem you want to solve en passant.
+Detailed per-defconfig build reports:
 
-Best regards
-Uwe
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
