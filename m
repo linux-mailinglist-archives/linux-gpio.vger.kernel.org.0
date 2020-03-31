@@ -2,141 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AA511998E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 16:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06B96199981
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 17:24:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgCaOst (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Mar 2020 10:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
+        id S1730528AbgCaPYd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Mar 2020 11:24:33 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3924 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgCaOst (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:48:49 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98470214DB;
-        Tue, 31 Mar 2020 14:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585666128;
-        bh=e/7jTSv5Ln/7N2erMxSAhTPfQO0mGgov7i4pB0Kxz8M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EbrJxT9+qQ4vbmfQodNUZ75MqmrVy3/2NQDxPg4GsBywCzjeqIw2fq6lj3s7435X2
-         NIM+7Ydop9wv5/4CkHGw9c7dOJtPBA/zSDJDrPe+DungVFsSYeZaSpNvpWfCUq24L2
-         R+q388+xL8Vgv6ukYJr671hgBiLOn4kma+Cvp9Ro=
-Received: by mail-qv1-f41.google.com with SMTP id p60so10971550qva.5;
-        Tue, 31 Mar 2020 07:48:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1vMtCY640U90YBDNmS9RLEHsh5XJbMHUiAIrRTnM79TJ+N1F3y
-        F6fi44rWk2ybm3rFmqdCCAJmx/+EFr9IetQppQ==
-X-Google-Smtp-Source: ADFU+vsm7QnLg9VC47OO+I8GiU3/k2tefVEY+Sy39Kwt/VBNT1kmLS6ih/sV4b6JI7vayYbVNykmFae5IwQbSwKy9fk=
-X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr16286378qvw.79.1585666127545;
- Tue, 31 Mar 2020 07:48:47 -0700 (PDT)
+        id S1730521AbgCaPYc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:24:32 -0400
+IronPort-SDR: ul8Nv2c8mdwp1DKo867dbvtd1JsPMyOsTMYSI4r1Z6Jic3DPzxXVyDwnec5s8Di+GfrWnstE59
+ qCdNZah733Ww==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 08:24:32 -0700
+IronPort-SDR: Tklf92seofkrhXckWfBN73bM2Ltjkj0TUmqF72HdMoKRC/qTxfNGHFraaYR4o5tHYe/vPUVVgo
+ 7LDeEK8wo+aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="240160890"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 08:24:30 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D8A8A202; Tue, 31 Mar 2020 18:24:29 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+Date:   Tue, 31 Mar 2020 18:24:28 +0300
+Message-Id: <20200331152428.33951-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-2-robh@kernel.org>
- <20200327202159.GA12749@ravnborg.org>
-In-Reply-To: <20200327202159.GA12749@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 08:48:36 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: iio/accel: Drop duplicate adi, adxl345/6
- from trivial-devices.yaml
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:22 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> On Wed, Mar 25, 2020 at 04:05:38PM -0600, Rob Herring wrote:
-> > The 'adi,adxl345' definition is a duplicate as there's a full binding in:
-> > Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> >
-> > The trivial-devices binding doesn't capture that 'adi,adxl346' has a
-> > fallback compatible 'adi,adxl345', so let's add it to adi,adxl345.yaml.
-> >
-> > Cc: Michael Hennerich <michael.hennerich@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/iio/accel/adi,adxl345.yaml     | 10 +++++++---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml |  4 ----
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > index c602b6fe1c0c..d124eba1ce54 100644
-> > --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > @@ -17,9 +17,13 @@ description: |
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - adi,adxl345
-> > -      - adi,adxl375
-> > +    oneOf:
-> > +      - items:
-> > +          - const: adi,adxl346
-> > +          - const: adi,adxl345
-> > +      - enum:
-> > +          - adi,adxl345
-> > +          - adi,adxl375
->
-> I assume it is my schema understanding that is poor.
-> But I cannot parse the above.
->
-> The mix of items, enum and const confuses me.
+It appears that pin configuration for GPIO chip hasn't been enabled yet
+due to absence of ->set_config() callback.
 
-compatible can be one of 3 possibilities:
-"adi,adxl346", "adi,adxl345"
-"adi,adxl345"
-"adi,adxl375"
+Enable it here for Intel Baytrail.
 
-For a single entry, 'items' can be omitted.
+Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
+Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> I guess that if I am confused then others may end in the same situation.
-> Can we improve readability here or amybe add a comment?
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index b409642f168d..9b821c9cbd16 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -1286,6 +1286,7 @@ static const struct gpio_chip byt_gpio_chip = {
+ 	.direction_output	= byt_gpio_direction_output,
+ 	.get			= byt_gpio_get,
+ 	.set			= byt_gpio_set,
++	.set_config		= gpiochip_generic_config,
+ 	.dbg_show		= byt_gpio_dbg_show,
+ };
+ 
+-- 
+2.25.1
 
-example-schema.yaml explains this to some extent. I'd rather improve that.
-
-Rob
