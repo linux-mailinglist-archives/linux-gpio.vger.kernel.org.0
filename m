@@ -2,121 +2,239 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0225519A090
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 23:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6101B19A31B
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Apr 2020 02:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgCaVQL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Mar 2020 17:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
+        id S1732399AbgDAA4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Mar 2020 20:56:38 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31238 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731236AbgCaVQL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:16:11 -0400
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1433B206DB;
-        Tue, 31 Mar 2020 21:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585689370;
-        bh=jf6zoqXWfNCOPCI+Bfu8MGbtJ3B0kxXSXQKXMuUQKKI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1MYy8H73lCY120WVEh+zL9+ak/XkWqWgR2yGBrmBrPHKN7JagqzUcvV2ykYmkhzAs
-         BCWPj8OfCHW1nwkvxT3shNUHNi1SCWHqj+szbZXwjNV12R++CQnNXnK51XA4KNX4dr
-         gDFIhQEztRF7LJwVAQuRn0LauQPqI7R75E2vGvp4=
-Received: by mail-io1-f50.google.com with SMTP id c16so8927251iod.6;
-        Tue, 31 Mar 2020 14:16:10 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3PO/QpylZZ8EJxBvZfSamk186q3WHeHW/brFbAPPAL3YVqRGg2
-        Eb0vsGHEmw/VbHHcmYM1YqJhcz9VRGjCMGd/P68=
-X-Google-Smtp-Source: ADFU+vuy0279ZdmmsQkWM7UtgQHdvE2o7mSVyhq21qmJU7mmw0M6FlvRofSohPicffCGA9jF0S915k7kmX9Zfg8ZH/c=
-X-Received: by 2002:a02:c792:: with SMTP id n18mr17940258jao.5.1585689369479;
- Tue, 31 Mar 2020 14:16:09 -0700 (PDT)
+        id S1732397AbgDAA4i (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 31 Mar 2020 20:56:38 -0400
+IronPort-SDR: qrJnLavAVaVNDfSomQT3tHvGZdPB0Zt/PQqvShuvkeA5za3WC/R30zSAZQ7tAqW5wO3NTo5x3O
+ cs5JLsjUoOzg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 17:56:37 -0700
+IronPort-SDR: gM8+PbfOn47m6ptcnx00uFaFQ3rns/7d+he2WnwOZwZhRrr7IXrr2ayrcqRex9+cNEfinnQitq
+ rMgnZOD4msVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,329,1580803200"; 
+   d="scan'208";a="252432642"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 31 Mar 2020 17:56:36 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jJRgJ-0002Ao-NI; Wed, 01 Apr 2020 08:56:35 +0800
+Date:   Wed, 01 Apr 2020 06:48:55 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ c42f69b4207e104229242c3d9da43b55d4b95d6d
+Message-ID: <5e83c8d7.+U09lbdwa1vJfb81%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <1585569648-14017-1-git-send-email-light.hsieh@mediatek.com> <1585569648-14017-2-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1585569648-14017-2-git-send-email-light.hsieh@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Tue, 31 Mar 2020 14:15:57 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzoJ1MiqQhoRnqEgrTP6FycVGJLSQR41FOYK85ic2cgmLA@mail.gmail.com>
-Message-ID: <CAGp9LzoJ1MiqQhoRnqEgrTP6FycVGJLSQR41FOYK85ic2cgmLA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] pinctrl: mediatek: make MediaTek pinctrl v2 driver
- ready for buidling loadable module
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, kuohong.wang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Light,
->  int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->                               const struct mtk_pin_desc *desc, bool pullup)
-> @@ -492,6 +502,7 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->
->         return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
->
->  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->                               const struct mtk_pin_desc *desc, bool pullup,
-> @@ -517,6 +528,7 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->
->         return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: c42f69b4207e104229242c3d9da43b55d4b95d6d  pinctrl: qcom: fix compilation error
 
-I got build error with the patch
+elapsed time: 481m
 
-../drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c:529:1: error:
-redefinition of '__ksymtab_mtk_pinconf_bias_set_rev1'
-../drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c:503:1: note:
-previous definition of '__ksymtab_mtk_pinconf_bias_set_rev1' was here
-make[4]: *** [drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.o] Error 1
+configs tested: 180
+configs skipped: 0
 
->  /* Combo for the following pull register type:
->   * 1. PU + PD
-> @@ -717,6 +729,7 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
->  out:
->         return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_combo);
->
-<snip>
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 83bf29c..8823c0c 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -10,6 +10,7 @@
->   */
->
->  #include <linux/gpio/driver.h>
-> +#include <linux/module.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
->  #include "pinctrl-paris.h"
->
-> @@ -633,6 +634,7 @@ ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
->
->         return len;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pctrl_show_one_pin);
->
->  #define PIN_DBG_BUF_SZ 96
->  static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> @@ -1037,3 +1039,7 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->         .suspend_noirq = mtk_paris_pinctrl_suspend,
->         .resume_noirq = mtk_paris_pinctrl_resume,
->  };
-> +EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-place EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe) exactly at the tail
-of mtk_paris_pinctrl_probe definition.
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+ia64                             alldefconfig
+microblaze                      mmu_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200331
+x86_64               randconfig-a002-20200331
+x86_64               randconfig-a003-20200331
+i386                 randconfig-a001-20200331
+i386                 randconfig-a002-20200331
+i386                 randconfig-a003-20200331
+alpha                randconfig-a001-20200331
+m68k                 randconfig-a001-20200331
+mips                 randconfig-a001-20200331
+nds32                randconfig-a001-20200331
+parisc               randconfig-a001-20200331
+alpha                randconfig-a001-20200401
+m68k                 randconfig-a001-20200401
+mips                 randconfig-a001-20200401
+nds32                randconfig-a001-20200401
+parisc               randconfig-a001-20200401
+riscv                randconfig-a001-20200401
+microblaze           randconfig-a001-20200331
+h8300                randconfig-a001-20200331
+nios2                randconfig-a001-20200331
+c6x                  randconfig-a001-20200331
+c6x                  randconfig-a001-20200401
+h8300                randconfig-a001-20200401
+microblaze           randconfig-a001-20200401
+nios2                randconfig-a001-20200401
+sparc64              randconfig-a001-20200401
+sparc64              randconfig-a001-20200331
+csky                 randconfig-a001-20200331
+openrisc             randconfig-a001-20200331
+s390                 randconfig-a001-20200331
+sh                   randconfig-a001-20200331
+xtensa               randconfig-a001-20200331
+x86_64               randconfig-b001-20200331
+x86_64               randconfig-b002-20200331
+x86_64               randconfig-b003-20200331
+i386                 randconfig-b001-20200331
+i386                 randconfig-b002-20200331
+i386                 randconfig-b003-20200331
+x86_64               randconfig-c001-20200331
+x86_64               randconfig-c002-20200331
+x86_64               randconfig-c003-20200331
+i386                 randconfig-c001-20200331
+i386                 randconfig-c002-20200331
+i386                 randconfig-c003-20200331
+x86_64               randconfig-d001-20200331
+x86_64               randconfig-d002-20200331
+x86_64               randconfig-d003-20200331
+i386                 randconfig-d001-20200331
+i386                 randconfig-d002-20200331
+i386                 randconfig-d003-20200331
+x86_64               randconfig-e001-20200331
+x86_64               randconfig-e002-20200331
+x86_64               randconfig-e003-20200331
+i386                 randconfig-e001-20200331
+i386                 randconfig-e002-20200331
+i386                 randconfig-e003-20200331
+x86_64               randconfig-f001-20200331
+x86_64               randconfig-f002-20200331
+x86_64               randconfig-f003-20200331
+i386                 randconfig-f001-20200331
+i386                 randconfig-f002-20200331
+i386                 randconfig-f003-20200331
+x86_64               randconfig-g001-20200331
+x86_64               randconfig-g002-20200331
+x86_64               randconfig-g003-20200331
+i386                 randconfig-g001-20200331
+i386                 randconfig-g002-20200331
+i386                 randconfig-g003-20200331
+x86_64               randconfig-h001-20200331
+x86_64               randconfig-h002-20200331
+x86_64               randconfig-h003-20200331
+i386                 randconfig-h001-20200331
+i386                 randconfig-h002-20200331
+i386                 randconfig-h003-20200331
+arc                  randconfig-a001-20200331
+arm                  randconfig-a001-20200331
+arm64                randconfig-a001-20200331
+ia64                 randconfig-a001-20200331
+powerpc              randconfig-a001-20200331
+sparc                randconfig-a001-20200331
+arc                  randconfig-a001-20200401
+arm                  randconfig-a001-20200401
+arm64                randconfig-a001-20200401
+ia64                 randconfig-a001-20200401
+powerpc              randconfig-a001-20200401
+sparc                randconfig-a001-20200401
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc64                             defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("MediaTek Pinctrl Common Driver V2 Paris");
-> --
-> 1.8.1.1.dirty
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
