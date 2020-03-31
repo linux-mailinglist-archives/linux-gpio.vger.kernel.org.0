@@ -2,72 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 765931998D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 16:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9FD71998E1
+	for <lists+linux-gpio@lfdr.de>; Tue, 31 Mar 2020 16:48:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgCaOp1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 31 Mar 2020 10:45:27 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39482 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCaOp0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Mar 2020 10:45:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i20so22263917ljn.6
-        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2020 07:45:25 -0700 (PDT)
+        id S1730589AbgCaOs0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 31 Mar 2020 10:48:26 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44129 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgCaOsZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 31 Mar 2020 10:48:25 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p14so22278970lji.11
+        for <linux-gpio@vger.kernel.org>; Tue, 31 Mar 2020 07:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RvKwvYHVc4M3qtK7TtEssy9WW1YebDgfSWAUAXk6VeE=;
-        b=Bi+huNd8QNlGw2jB32sxivuNoz+4tjL8D4Em0M3APfL6A3KyU0M3yfcpj+pwLX6tlA
-         Zym6qnZnRoxyCJ3f+XJz30qHOwjl2y5KtDGgsiwcg4yLPGGM/xMbQ+6B/fWxaKjJvEhB
-         Mz83jp+lCuHg7wl1Vj+Qae34xHEKDhn/Ujx6pxFjA0Vyi+brI0v6i+KQ9gsqifzqBIl4
-         56grEup1zn7i3/4L9dv7AEQjSJiKiCUscjcyURgoYz8ccNDXQopU+BUek10+X3JPOP2u
-         7FfkHNYyJuSZsT5W3YIYIFt0frLmvY/ubNsaNlJJTSYzsLebuRRMtSKANskdh5p4kJYf
-         dYAQ==
+        bh=N6Xz4CqYuqIBv2ZebWmCGF5bl8QGzp44TRh0S5GDwVs=;
+        b=gjokG7LFkFY7ioSbmzmzaZTgKbNADr/MY5HmpceKvDgbLDoW0JUH0VKunGcKl6Sf3C
+         MOCa3UQ79cYH22mO37ztuqRRVZXezKtdBJqDrIwHfU7IJTRVuYIUlaKzZ8/+TSX4oXzn
+         aKj7korhPUcnruW1P7AI4Rgev9kHGAMysC/Tw25KLZSPPWwq13aeHfQNpvuFNoGHvafb
+         ZXcN6K3+yR/7Bvxm8jQF4PfpWSgyadyQW7UemRq/7S6TqJRMEkS24Vpd5eTe0ZuMOGUr
+         mRee7Fdfu1YQH9h6oWwMHfDiXJ22bW/p7KH19LNrACVayi6n9CAmwuYf+CUQPjJ9e026
+         vmeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RvKwvYHVc4M3qtK7TtEssy9WW1YebDgfSWAUAXk6VeE=;
-        b=a2KjyLyun3pywd3hbORL4i1AO0C6vMQIPt023QIWU4/6254u8vvcVFRuSdMmQiUYav
-         mdsvCEI31EpuM8R72n7XgmYhVx4i1asGKjxOxTqvR7JNu9u/Chm0H57xKQeZg/YcZ2co
-         UMafcG19ndiQtqnRYUrT6orLrZw/2AP8YGtORiJrn8iom4uAbJO/6lDFWKsAz7gz4mhj
-         belX0vkNe5n0mhtOzoazhTJzCXDU6Z/yuFeYq+3yFxEv+ttPph/A1VVJsxUHEJTpG/W6
-         uTsF98XX1IQPJRuh7y9+luvtaf11wAjCeQZ9QX+jJWQ20Mvko8M+wScdQFPswaoKot58
-         N5Dg==
-X-Gm-Message-State: AGi0PuZ6gsaNkLFaSLO6tqHF67XQPnvbnx8fdhV+B2TXTD9jnk0a2TIr
-        pmVOwTtV6bsfeVFBGjHWcnennV/Ut7wbtkFehB4yY4/3
-X-Google-Smtp-Source: APiQypI1NWqQQGQQCZ+k2wSa1POnrOemcCyFbpH56oBK3kNBWVYi+yV909tG/yrbVrr9ZlaYp7cKoUJrCNW/V0gDjYo=
-X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr10614702ljo.223.1585665924643;
- Tue, 31 Mar 2020 07:45:24 -0700 (PDT)
+        bh=N6Xz4CqYuqIBv2ZebWmCGF5bl8QGzp44TRh0S5GDwVs=;
+        b=tIXI68WGgQQc86WGZeTBpnxrmeexidDEPCuvpkEMBDO0c5i6ybL57L6w8QsTpiFfB9
+         6uxpSGoH/zKy3aFxaaIfRaTUPdAvnPtdnQAUuDqhsXmAnzY5gXUI4Lm05U95DW8JvqKp
+         byA+ShdaZy8z1KGQ2DZszBuwt1Bk1h+JmKeHsRhUTnNjGx20UisBFZFYsdl5mpr12bWx
+         nv+ZIxb9/q1FknZgpKRrpN9pGBy+tpD48uA3pT3YQ516MHHo8UW/fNffxssH6/UWigBT
+         HrXPMnygnanERv8p511uVu1Q6Ui/6q2b1xz6QYnPzLXApiflkK2bLovfG/q88aiPHUO4
+         3aKg==
+X-Gm-Message-State: AGi0PuYppLackQimzA3rgy2LDE0NxoSYKNauqid1RIoG8QRlO+ScqM12
+        5zEXEl5TKu4LhhJW2xdF1P9e/8ba8PWBts9/4dkQKSy4S/4=
+X-Google-Smtp-Source: APiQypKJfSEDkSQs+ZMk59JfG3Qiy+6BhF4ZV4C4FTck4vZmijIZ/WNKplsHv+iySVWZwiWndiZ7mZURqug3drdWvhg=
+X-Received: by 2002:a05:651c:23b:: with SMTP id z27mr2629917ljn.125.1585666104014;
+ Tue, 31 Mar 2020 07:48:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331134603.13513-1-ansuelsmth@gmail.com>
-In-Reply-To: <20200331134603.13513-1-ansuelsmth@gmail.com>
+References: <20200330090257.2332864-1-thierry.reding@gmail.com>
+In-Reply-To: <20200330090257.2332864-1-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 31 Mar 2020 16:45:13 +0200
-Message-ID: <CACRpkdbkbWKBhtOQkCUOn6EW51bJB-Dg-v_4W3Cz4Pd+5XGwFA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: fix compilation error
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Tue, 31 Mar 2020 16:48:13 +0200
+Message-ID: <CACRpkdY5g=LJLT6XTAL1Wn5cQ9uuzR3h5EUXJfW_Kn7S5tOXQg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Avoid using pin ranges with !PINCTRL
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kbuild test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 3:46 PM Ansuel Smith <ansuelsmth@gmail.com> wrote:
+On Mon, Mar 30, 2020 at 11:03 AM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 
-> pinctrl: qcom: use scm_call to route GPIO irq to Apps has a typo in the
-> patch and introduced a compilation error.
+> From: Thierry Reding <treding@nvidia.com>
 >
-> Fixes: 13bec8d4 pinctrl: qcom: use scm_call to route GPIO irq to Apps
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Do not use the struct gpio_device's .pin_ranges field if the PINCTRL
+> Kconfig symbol is not selected to avoid build failures.
+>
+> Fixes: d2fbe53a806e ("gpio: Support GPIO controllers without pin-ranges")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-Patch applied!
+Patch applied with Geert's tags and fixes.
 
 Yours,
 Linus Walleij
