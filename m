@@ -2,77 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E88BD19C8D5
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 20:33:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8888E19C9EF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 21:21:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387866AbgDBSd7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Apr 2020 14:33:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33618 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgDBSd7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Apr 2020 14:33:59 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay1so1674857plb.0;
-        Thu, 02 Apr 2020 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
-        b=ZXpM5y7GAP9A42RTYplBVCjCe33qIGw2JT0x/NKRNTBtE+7b4Zlc023CFcBP3pjKNa
-         5ATyJcpTADz2kMNWYlFbVAtc31nQAsn+WWG0wgfD/Uj7flG85i6+ymRQekR+7w1dd6fi
-         537SiNd9M08XnpAyffnAJRqlOOqFllOg1FJ3jVtlPDPk5GWAFw4WWwUPjshtzDAzb77I
-         UmxhRCvEvD77fpsXDyxewGth0S/yQRxM99HLjyHYdFJjeY3p6yjYTvoYcRFIYo5+R+/E
-         Vy999SfA/2YFblHW++SjU9ov1U6BiFcqBm2okAdZYbFBcudcWu1POyaVWI5RYiDa52F5
-         w8Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oyphBXh8PTHTDQxehHVJCwGunWLiChskEfIoqWTwvaQ=;
-        b=IXx8+BCZXIWD/n+89m+mV5O6wH+FOUKyyMGXNo65rdA8soVubdqD+cDWJNR1a9q/bo
-         6Ei3XlHzlbwv3iwgsUqA2PpKgyDG2KF6NXnyCuS13n9DpFyqV7Luh21rS6JyboavcVgC
-         kjMLsyxTx2aOzHMQZIf6Fk6N/YXgEDmn04GiTx1mvvh8iJ+QvkktDdv8g+mS3vx7KCNm
-         2AydiWEyrmnxknxyMSdZVMAGPxStEM3EcbZ6CBRU1DRK3bU4WVAu8jJNzx/Iak8fp/wr
-         pXsyxZX4MiSOPyBPKs5IftMrZtYC7Rr8ZRFqG/ww1PK0nfaiiuJjci6h6OrWjCqOOk6A
-         hdXg==
-X-Gm-Message-State: AGi0PuYlqlsEP1qm005oKlOf3s9OXx+QXQbxygUnqaaBLiZUGZ36a+6H
-        /g2eA+8Fsi/5w+i/FiAoYkNnKhBrSW2cB+4rrGY=
-X-Google-Smtp-Source: APiQypIQUVU5fnxrgi96uTIAhx/kCF3JFOUaqIyWwDoKfIBqblI9dhgdXZIrLJOc0SXKh3FzBsKxXnzzpq8ug3Cxzlw=
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr5361787pjn.8.1585852437627;
- Thu, 02 Apr 2020 11:33:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
-In-Reply-To: <20200402155057.30667-1-vaibhavgupta40@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 2 Apr 2020 21:33:46 +0300
-Message-ID: <CAHp75VcYSaAYx5qy7S0ppb77afgz=Ma=7=opfgSMCBnnjmoWfw@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
-        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        id S1733055AbgDBTVv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Apr 2020 15:21:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55096 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732625AbgDBTVv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Apr 2020 15:21:51 -0400
+IronPort-SDR: O0smRVehKLG+A1cMuH+D2Dl4FjY8ffsAzEzMDCWGPiCSR9pEGTzU4K8Do8ie9mkS6sfyaPH21d
+ 6Fcpti8cZyUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 12:21:50 -0700
+IronPort-SDR: I3xyMGekXKlMuutMuCtbP3oXaDERzPpKCO1bpN1PY7MtRf23r20+hXOuf7FG09Uo4GMy82uMr7
+ AKJOZbqhk2Bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="268123085"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2020 12:21:47 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7EBB6149; Thu,  2 Apr 2020 22:21:46 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] gpio: Extend TODO to cover code duplication avoidance
+Date:   Thu,  2 Apr 2020 22:21:45 +0300
+Message-Id: <20200402192145.17239-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
->
-> Convert the legacy callback .suspend() and .resume()
-> to the generic ones.
->
+It appears at least two drivers has a lot of duplication code in
+GPIO subsystem. To avoid adding more and get rid of existing duplication
+extend TODO.
 
-Thank you for the patch.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/TODO | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Rather then doing this I think  the best approach is to unify gpio-pch
-and gpio-ml-ioh together.
-Under umbrella of the task, the clean ups like above are highly appreciated.
-
+diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+index 3a44e6ae52bd..b989c9352da2 100644
+--- a/drivers/gpio/TODO
++++ b/drivers/gpio/TODO
+@@ -99,6 +99,10 @@ similar and probe a proper driver in the gpiolib subsystem.
+ In some cases it makes sense to create a GPIO chip from the local driver
+ for a few GPIOs. Those should stay where they are.
+ 
++At the same time it makes sense to get rid of code duplication in existing or
++new coming drivers. For example, gpio-ml-ioh should be incorporated into
++gpio-pch. In similar way gpio-intel-mid into gpio-pxa.
++
+ 
+ Generic MMIO GPIO
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
