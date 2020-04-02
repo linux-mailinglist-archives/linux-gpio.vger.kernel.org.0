@@ -2,67 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E26D519CAEC
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 22:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177BF19CAEF
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 22:19:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbgDBUSo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Apr 2020 16:18:44 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:46024 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbgDBUSo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Apr 2020 16:18:44 -0400
-Received: by mail-vk1-f194.google.com with SMTP id b187so1349473vkh.12
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Apr 2020 13:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v5s4w4J1mIHS0EwKYTQkhpSR7LSeH2OOME7m6g+qqnw=;
-        b=Ue4pkL3IGxAAk6x7ln1ivONyHcfbgvuh1B5f1SnOsfOBp2icW93fJdWXYg91QsFOir
-         Yl2wVonAeSxSNaams+9aVWjf99MmimBFViS6GLtztk1YgZgDQm6YoV5fVt+Vd3NT72aw
-         b+vwR/N0ulTq2Fq0gZLb8+YRjvCcMfilTq7NRV/8n1JpmicPChYHT/wH3A06fzmWeGhh
-         6ZUYcdGg0ObumnokornXCYTfYPJ97R2T/ZY+eGqbR16TeiC3w1cEZ3YCNz5gQQECxMYY
-         +NPxauL6f7CF2MqdH8SmZgtbj0rbBx9Nnmdvc1MDqpSzWHNgAmczCtgwz8B6rKuwNV4w
-         rxuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v5s4w4J1mIHS0EwKYTQkhpSR7LSeH2OOME7m6g+qqnw=;
-        b=SV/n5OiCJU0eiuGOQkdq/k1GpPTWlrJlCmiS3PfXg+eYdA6eOcYbaRzjuybUFMchV7
-         Br4NHaT5LQxBcyCk98ZHHF/KJjsBx97dUx1fS5GEWc1rI1ng0tCqSR5spq1ufWtb+sKT
-         vNa4LK46nZZTFNzAHWh1qRPP5Ahq4Ls+NGZsBf59c7bPBocIxIgitXNUCE3HjhI8iP36
-         FoNSiSZzzJtwJMwATI8QvoLIptfheJXjNil7GBz23JlisxN1KJx02Si4qRwj2uEwWwd+
-         wzQspgxJjrPXQBWrrqB9c8FOxDDfrYc4quCc+2sOH8bRWOXZhPj55jsvUof5+NePE+ae
-         PSDQ==
-X-Gm-Message-State: AGi0PubUiQs/riiVWBtAxI6Ijodk8miRuIvo0PTsBkT4a8fImPdhI8yb
-        fvJUXEzObSjFGup+9SOpFruC/uhF/Q7gFhwBif8=
-X-Google-Smtp-Source: APiQypKX5r0ICmXxIU/CieugwURTQ4CVkItKoJwrHvdL50qbGJSY8fkgsEjb/vOpDVoOPfVdzWjNiCfuHh0cJzAwJJo=
-X-Received: by 2002:a1f:2b09:: with SMTP id r9mr3781843vkr.24.1585858722381;
- Thu, 02 Apr 2020 13:18:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200402192145.17239-1-andriy.shevchenko@linux.intel.com>
- <CAP+cEOO-G=4_txK3dtOxOoRS51GWBzEwa5FfpRzYxDKHo=MdiA@mail.gmail.com> <20200402200955.GD1922688@smile.fi.intel.com>
-In-Reply-To: <20200402200955.GD1922688@smile.fi.intel.com>
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Date:   Fri, 3 Apr 2020 01:47:52 +0530
-Message-ID: <CAP+cEONqu_4ebwcE1VmrR8yfYzX-vp-rdZC8m_h8NBnugzG_eQ@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: Extend TODO to cover code duplication avoidance
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1732263AbgDBUTD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Apr 2020 16:19:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58905 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726963AbgDBUTD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Apr 2020 16:19:03 -0400
+IronPort-SDR: a8qMIZCy9pOAAQmGgbXjj5XPSQaIm/wnF8x4T/wNCLQ5vTpnC7/8MkY4sGfhPORYUHwBy3VIJL
+ RFJne/Debd6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:19:02 -0700
+IronPort-SDR: owsMBh6FPat01RFGSza5u3nCzwKyV9ozIR27suIuSfixf0qa59OB73CjTpbSdZDhBdXFm5gKN6
+ WXj0C4im3TcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
+   d="scan'208";a="396493619"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 02 Apr 2020 13:19:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 419F9149; Thu,  2 Apr 2020 23:18:59 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/2] gpio: pch: Use BIT() and GENMASK() where it's appropriate
+Date:   Thu,  2 Apr 2020 23:18:58 +0300
+Message-Id: <20200402201859.35832-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> I guess this answers the question in the previous thread.
-> To be clear, scrap your patch and don't touch just gpio-ml-ioh alone.
-> Basically it should be one patch to get rid the driver.
-Sure! Will work on it.
+Use BIT() and GENMASK() where it's appropriate.
+At the same time drop it where it's not appropriate.
 
--- Vaibhav Gupta
->
-> JFYI, I will send couple of clean ups against gpio-pch.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-pch.c | 43 +++++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
+index 3f3d9a94b709..0b5aea0b1e8a 100644
+--- a/drivers/gpio/gpio-pch.c
++++ b/drivers/gpio/gpio-pch.c
+@@ -2,6 +2,7 @@
+ /*
+  * Copyright (C) 2011 LAPIS Semiconductor Co., Ltd.
+  */
++#include <linux/bits.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -11,11 +12,11 @@
+ #include <linux/slab.h>
+ 
+ #define PCH_EDGE_FALLING	0
+-#define PCH_EDGE_RISING		BIT(0)
+-#define PCH_LEVEL_L		BIT(1)
+-#define PCH_LEVEL_H		(BIT(0) | BIT(1))
++#define PCH_EDGE_RISING		1
++#define PCH_LEVEL_L		2
++#define PCH_LEVEL_H		3
+ #define PCH_EDGE_BOTH		BIT(2)
+-#define PCH_IM_MASK		(BIT(0) | BIT(1) | BIT(2))
++#define PCH_IM_MASK		GENMASK(2, 0)
+ 
+ #define PCH_IRQ_BASE		24
+ 
+@@ -103,9 +104,9 @@ static void pch_gpio_set(struct gpio_chip *gpio, unsigned nr, int val)
+ 	spin_lock_irqsave(&chip->spinlock, flags);
+ 	reg_val = ioread32(&chip->reg->po);
+ 	if (val)
+-		reg_val |= (1 << nr);
++		reg_val |= BIT(nr);
+ 	else
+-		reg_val &= ~(1 << nr);
++		reg_val &= ~BIT(nr);
+ 
+ 	iowrite32(reg_val, &chip->reg->po);
+ 	spin_unlock_irqrestore(&chip->spinlock, flags);
+@@ -115,7 +116,7 @@ static int pch_gpio_get(struct gpio_chip *gpio, unsigned nr)
+ {
+ 	struct pch_gpio *chip =	gpiochip_get_data(gpio);
+ 
+-	return (ioread32(&chip->reg->pi) >> nr) & 1;
++	return !!(ioread32(&chip->reg->pi) & BIT(nr));
+ }
+ 
+ static int pch_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
+@@ -130,13 +131,14 @@ static int pch_gpio_direction_output(struct gpio_chip *gpio, unsigned nr,
+ 
+ 	reg_val = ioread32(&chip->reg->po);
+ 	if (val)
+-		reg_val |= (1 << nr);
++		reg_val |= BIT(nr);
+ 	else
+-		reg_val &= ~(1 << nr);
++		reg_val &= ~BIT(nr);
+ 	iowrite32(reg_val, &chip->reg->po);
+ 
+-	pm = ioread32(&chip->reg->pm) & ((1 << gpio_pins[chip->ioh]) - 1);
+-	pm |= (1 << nr);
++	pm = ioread32(&chip->reg->pm);
++	pm &= BIT(gpio_pins[chip->ioh]) - 1;
++	pm |= BIT(nr);
+ 	iowrite32(pm, &chip->reg->pm);
+ 
+ 	spin_unlock_irqrestore(&chip->spinlock, flags);
+@@ -151,8 +153,9 @@ static int pch_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&chip->spinlock, flags);
+-	pm = ioread32(&chip->reg->pm) & ((1 << gpio_pins[chip->ioh]) - 1);
+-	pm &= ~(1 << nr);
++	pm = ioread32(&chip->reg->pm);
++	pm &= BIT(gpio_pins[chip->ioh]) - 1;
++	pm &= ~BIT(nr);
+ 	iowrite32(pm, &chip->reg->pm);
+ 	spin_unlock_irqrestore(&chip->spinlock, flags);
+ 
+@@ -277,7 +280,7 @@ static void pch_irq_unmask(struct irq_data *d)
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct pch_gpio *chip = gc->private;
+ 
+-	iowrite32(1 << (d->irq - chip->irq_base), &chip->reg->imaskclr);
++	iowrite32(BIT(d->irq - chip->irq_base), &chip->reg->imaskclr);
+ }
+ 
+ static void pch_irq_mask(struct irq_data *d)
+@@ -285,7 +288,7 @@ static void pch_irq_mask(struct irq_data *d)
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct pch_gpio *chip = gc->private;
+ 
+-	iowrite32(1 << (d->irq - chip->irq_base), &chip->reg->imask);
++	iowrite32(BIT(d->irq - chip->irq_base), &chip->reg->imask);
+ }
+ 
+ static void pch_irq_ack(struct irq_data *d)
+@@ -293,7 +296,7 @@ static void pch_irq_ack(struct irq_data *d)
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct pch_gpio *chip = gc->private;
+ 
+-	iowrite32(1 << (d->irq - chip->irq_base), &chip->reg->iclr);
++	iowrite32(BIT(d->irq - chip->irq_base), &chip->reg->iclr);
+ }
+ 
+ static irqreturn_t pch_gpio_handler(int irq, void *dev_id)
+@@ -344,7 +347,6 @@ static int pch_gpio_probe(struct pci_dev *pdev,
+ 	s32 ret;
+ 	struct pch_gpio *chip;
+ 	int irq_base;
+-	u32 msk;
+ 
+ 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (chip == NULL)
+@@ -357,7 +359,7 @@ static int pch_gpio_probe(struct pci_dev *pdev,
+ 		return ret;
+ 	}
+ 
+-	ret = pcim_iomap_regions(pdev, 1 << 1, KBUILD_MODNAME);
++	ret = pcim_iomap_regions(pdev, BIT(1), KBUILD_MODNAME);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "pci_request_regions FAILED-%d", ret);
+ 		return ret;
+@@ -393,9 +395,8 @@ static int pch_gpio_probe(struct pci_dev *pdev,
+ 	chip->irq_base = irq_base;
+ 
+ 	/* Mask all interrupts, but enable them */
+-	msk = (1 << gpio_pins[chip->ioh]) - 1;
+-	iowrite32(msk, &chip->reg->imask);
+-	iowrite32(msk, &chip->reg->ien);
++	iowrite32(BIT(gpio_pins[chip->ioh]) - 1, &chip->reg->imask);
++	iowrite32(BIT(gpio_pins[chip->ioh]) - 1, &chip->reg->ien);
+ 
+ 	ret = devm_request_irq(&pdev->dev, pdev->irq, pch_gpio_handler,
+ 			       IRQF_SHARED, KBUILD_MODNAME, chip);
+-- 
+2.25.1
+
