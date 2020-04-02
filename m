@@ -2,85 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42EE719CAF1
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 22:19:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CB8B19CB07
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Apr 2020 22:24:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388755AbgDBUTD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Apr 2020 16:19:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:23369 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388706AbgDBUTD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Apr 2020 16:19:03 -0400
-IronPort-SDR: 9pyz8bpCGxuh20NUejBEcWz6BYHmlVKpOgV2JUbKlM7/kbAtTfBCHNjymQTliZqNUNEePu956v
- 2/mNlQM5k50w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2020 13:19:02 -0700
-IronPort-SDR: 8xs7JjhSWDOyZOU8QlKbuKrGTJBPxu13Tpcel9HbxCkVvnjsAg6EPKwjoMUf5Wc1gWr7L/c/cC
- lj3z7rtbzZVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,336,1580803200"; 
-   d="scan'208";a="268137694"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 02 Apr 2020 13:19:01 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4F26079; Thu,  2 Apr 2020 23:19:00 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] gpio: pch: Get rid of unneeded variable in IRQ handler
-Date:   Thu,  2 Apr 2020 23:18:59 +0300
-Message-Id: <20200402201859.35832-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200402201859.35832-1-andriy.shevchenko@linux.intel.com>
-References: <20200402201859.35832-1-andriy.shevchenko@linux.intel.com>
+        id S2389613AbgDBUXl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Apr 2020 16:23:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39762 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389589AbgDBUXl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Apr 2020 16:23:41 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k18so1776506pll.6;
+        Thu, 02 Apr 2020 13:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TyQdsQSbBekp4Tdk1LegDdgAtaR9xk0x84j7nnBO4Kw=;
+        b=XgwsxnStrGVZljq9SxBCE9sZD3SzpuVDfCZcZGyeTerRmyBZ7Ye3fIj1J6qq1DnDme
+         cKLLxHm5g/RCFeHqs1PZ7aFVrG+CqT2Hbi2w4hB68Xhmb09P3zzs1FQuNOqOpaBbZ48X
+         xm4BhkUdu1MNzujbKWsFIUUjyGEBgYA+jlt6tOxXV32nisrkGJmkaWTYM0ZQbMwzuJng
+         BzZyTcY/SQgBojOF259ApOWdN1W0gaRfieuvMOaAy/XLrIk4sJZoOmhypzdHDhsXCWek
+         1jhxQVYy8pcGGNBvdXjmdJXSSRbXxSxGy3uG1+XLINRjnSOV7wZyJikpJ9T9Cp33gEm0
+         +59w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TyQdsQSbBekp4Tdk1LegDdgAtaR9xk0x84j7nnBO4Kw=;
+        b=YIolSg5gzClcunkUoxKIdddVQOVIFzsIwdgZmOtpzF1rvad5DVsr9LdF5Sm1BERqGO
+         QOT1q3cPT2y2rpjeEJM+S75Bo1QRjmcswMn7InU1cBJUkR9SrbLn9CGJNt85J8v/0NFW
+         hTQDUelpz/rNGkeeh4sl05TO2X5QwKUsINbk8WzFXjHJ+08WXa1VHSohhStcCNsomJQc
+         82snOG0Amk4maT7YsrmSwgoFJoG2/WxSggveb/Gy4y3/sDgsGV/55DGA+oeMGu0Y2qLw
+         yBsJGUH8eRlx56NI0fqI3NzcyLEvz6mRQ0j34u2qoox/wWnewHNsyC960A2bx5akxnPM
+         Eu1w==
+X-Gm-Message-State: AGi0PuZ/3BvyH1eNRNCWyt9uY8R/NSP4HIg3jx0x5k6tW3AwMYQoUrfy
+        zrUmKeWKubetqI38AkPo5rh04kTnGv+Fme7mX2w=
+X-Google-Smtp-Source: APiQypLfuJPn0GImSHOwLx7gpgYSjhE+LbCob9VHH6QqhJQ7dg98xJ/CCAB4Et4B3KkzbJe4j6qJiJLdtfvDYUAbfP4=
+X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr4727427plm.18.1585859019364;
+ Thu, 02 Apr 2020 13:23:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHp75VcYSaAYx5qy7S0ppb77afgz=Ma=7=opfgSMCBnnjmoWfw@mail.gmail.com>
+ <20200402201605.GA74927@google.com>
+In-Reply-To: <20200402201605.GA74927@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 2 Apr 2020 23:23:27 +0300
+Message-ID: <CAHp75Vfpj+ENMe9u-SMKfvCsyFtOucUT9bD3qfWX+QjccZ9ZyQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v1] gpio: ml: ioh: Convert to dev_pm_ops
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>, bjorn@helgaas.com,
+        andy@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-There is no need to have an additional variable in IRQ handler. We may simple
-rely on the fact of having non-zero register value we read from the hardware.
+On Thu, Apr 2, 2020 at 11:16 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Apr 02, 2020 at 09:33:46PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 2, 2020 at 6:52 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
+> > >
+> > > Convert the legacy callback .suspend() and .resume()
+> > > to the generic ones.
+> >
+> > Thank you for the patch.
+> >
+> > Rather then doing this I think  the best approach is to unify gpio-pch
+> > and gpio-ml-ioh together.
+> > Under umbrella of the task, the clean ups like above are highly appreciated.
+>
+> I'd be all in favor of that, but what Vaibhav is working toward is
+> eliminating use of legacy PM in PCI drivers.  I think unifying drivers
+> is really out of scope for that project.
+>
+> If you'd rather leave gpio-ml-ioh.c alone for now, I suggest that
+> Vaibhav move on to other PCI drivers that use legacy PM.  If we
+> convert all the others away from legacy PM and gpio-ml-ioh.c is the
+> only one remaining, then I guess we can revisit this :)
 
-While here, drop repetitive messages in time critical function.
+Then skip this driver for good.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-pch.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+> Or, maybe converting gpio-ml-ioh.c now, along the lines of
+> 226e6b866d74 ("gpio: pch: Convert to dev_pm_ops"), would be one small
+> step towards the eventual unification, by making gpio-pch and
+> gpio-ml-ioh a little more similar.
 
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index 0b5aea0b1e8a..a0b12bc766db 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -303,14 +303,15 @@ static irqreturn_t pch_gpio_handler(int irq, void *dev_id)
- {
- 	struct pch_gpio *chip = dev_id;
- 	unsigned long reg_val = ioread32(&chip->reg->istatus);
--	int i, ret = IRQ_NONE;
-+	int i;
- 
--	for_each_set_bit(i, &reg_val, gpio_pins[chip->ioh]) {
--		dev_dbg(chip->dev, "[%d]:irq=%d  status=0x%lx\n", i, irq, reg_val);
-+	dev_dbg(chip->dev, "irq=%d  status=0x%lx\n", irq, reg_val);
-+
-+	reg_val &= BIT(gpio_pins[chip->ioh]) - 1;
-+	for_each_set_bit(i, &reg_val, gpio_pins[chip->ioh])
- 		generic_handle_irq(chip->irq_base + i);
--		ret = IRQ_HANDLED;
--	}
--	return ret;
-+
-+	return IRQ_RETVAL(reg_val);
- }
- 
- static int pch_gpio_alloc_generic_chip(struct pch_gpio *chip,
+I think it will delay the real work here (very old code motivates
+better to get rid of it then semi-fixed one).
+Thank you for your understanding.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
