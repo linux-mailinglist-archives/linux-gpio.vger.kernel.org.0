@@ -2,316 +2,227 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5885419E4D8
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Apr 2020 14:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58AC919E6AA
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Apr 2020 19:20:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDDMIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Apr 2020 08:08:51 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:36617 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726220AbgDDMIv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Apr 2020 08:08:51 -0400
-Received: by mail-lj1-f174.google.com with SMTP id b1so9726204ljp.3
-        for <linux-gpio@vger.kernel.org>; Sat, 04 Apr 2020 05:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+blAdCyyPd5TO4J0c1wmSIoLGBiNVPhnANjsOBO34Lo=;
-        b=h7qtA2qqmxM7wOBr8JLzQtbyZ56VojwdRrhdt0wr/ol8iNtkNb+9zgpXmTJBPCdKYD
-         qDow4vNPGxu0NrSdTfPLoYwLph8BngS8GNadgJJF6N+Dp21QTGBGNRssSNc7mudPXyut
-         VvMhbu23PLIocupyxhHriVzRJIJaUvPP+M+kJOfWAX0lXAyZiumuL+hEKhIWQk0q5Hza
-         mLaBCNSbfa7LtC5uiaoCEaxtal6rYg+N40Ew6Bk7H2qlLjzcrZYaHIJadWbIO2r3dfoS
-         ZbJIyRj8uhhv5Jv6HZj9EMpQ/wFV0bndNAANBNOnTfpYMro/YAEnIm1MKReECpNZzEWF
-         5YKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+blAdCyyPd5TO4J0c1wmSIoLGBiNVPhnANjsOBO34Lo=;
-        b=DaQ39ZtLF1C5s932sfklfAVPYwCi5ThWPwt4eZFUt0BAM9GlR3KoCO6pDhEMhV1oyq
-         5QiUZJTWnO6RB4ZsrBhjthQfx74J7JPlHYmtcKpMHDFZ/pzQbwFXReJuZj5hqCWdMtnY
-         XdNDK3G8ueK0ErGIhjUcIRAMaQV5aVY93/O/9Jc/bL0yI2yl2hY7G/Iksp4a1+wuevPf
-         SmhhEQc8SOe/D1lLAsYM/F4d0NjPiFdL87Azypv8sIdtlN0w5/Zwluwjo433VBvlyhuz
-         /v0OEiKE3YVUy4kgNgQBR67EaQpM0gKLqAKjcRh2KHwUnOzu30EIrNBqISxT8+TTMPO5
-         Yd2Q==
-X-Gm-Message-State: AGi0PuZfL2X+WogaL3faTRFB0JvOjOQjKyW4SgWWf56R9EdRsOOfozjI
-        XKKxFLtHWZNi/XrW7vedTsv5Xo4kvsehE6dvuYmfjA==
-X-Google-Smtp-Source: APiQypJDNM/YCsCWW77oPYzNWheWMuJlDUnF6UzNK0BerFYSMOGIds2KbPfYgWSE92gDAXpHfktSMPhDbzKsXCxeNQI=
-X-Received: by 2002:a2e:9084:: with SMTP id l4mr7486363ljg.277.1586002125058;
- Sat, 04 Apr 2020 05:08:45 -0700 (PDT)
+        id S1726222AbgDDRUV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Apr 2020 13:20:21 -0400
+Received: from mail-oln040092009068.outbound.protection.outlook.com ([40.92.9.68]:42988
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726066AbgDDRUV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 4 Apr 2020 13:20:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JBYCyBQj4C9SKaf/vn0M57ou5kVdAv5iBrGA/pSG3QKWDKZl9eUCZSSpyKiCceA64gy/tOphuDxfZU7E8si45hDEUwzk48zGQpld8QHK+/NS1TR2bWzME0cOv6QcjFISql2sxN9RQTGXdpI8ZMYYeF+La68wtjDk3nFqDzW/2c57uK1CFjViU8lH8sjW1zqPaEMHoEGmR6kbK3+YYOiQQN4b9nfOYtYWk2FF12+JHqonwfIZczcVLtzSfPVSrw7C/6WRrD8g4JLt61PZAxmKpOicoPVAPMSqa/gXXsCP+s5mXxKjlHz37Xef8A2t4+gCcKjAGVu8QS24R3+ZPsW6SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fdrFjQhC4RTgH2t8+RYT/LGmHJ/bDys3+vyZf5Ea9Q8=;
+ b=aY4iVzJPKb5f5XiBi1OQHhLyWE3/4Tytjvdcs1cgptq4VMgmpIqhEkRqWNx0O7vhPQcl2H5sxofyhk0hqdykwPEXs0NbYwaLwreQD16SF4XUDVQP4Bj0puQplk3mu3T4Ea0xP0z2NLPNjBCeOy9EuqQJ1/nekQTREo1eiMvNzPoeUbMVEUUucj8VO7CZ6p8pBqzPXQVEsA2CZ1ymDguYSI4NtYsFz4kCuvIi+fUB8/oqKbF1CLrNBSpB5Via8qZjSdei5X+AQ1hUsMOV2oJ3qMbCqauj/q9m6ICg0qB6cEHmSZRQH93KQt4ovljVFUTT1bUJMkYxp/EMIDweKdVi7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from BN3NAM04FT019.eop-NAM04.prod.protection.outlook.com
+ (10.152.92.58) by BN3NAM04HT154.eop-NAM04.prod.protection.outlook.com
+ (10.152.93.148) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Sat, 4 Apr
+ 2020 17:20:18 +0000
+Received: from BYAPR10MB3479.namprd10.prod.outlook.com
+ (2a01:111:e400:7e4e::4f) by BN3NAM04FT019.mail.protection.outlook.com
+ (2a01:111:e400:7e4e::173) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Sat, 4 Apr 2020 17:20:18 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:945D559C09AC2F49B59F553698D54B91807AFD3DC69F582653470DCFF18F0A66;UpperCasedChecksum:16C04AF2120C2854D453EAA4C9A9000D8039B1A4675E33E4E9C0FE54D0AE0399;SizeAsReceived:7783;Count:48
+Received: from BYAPR10MB3479.namprd10.prod.outlook.com
+ ([fe80::e144:8ace:8677:a1bd]) by BYAPR10MB3479.namprd10.prod.outlook.com
+ ([fe80::e144:8ace:8677:a1bd%4]) with mapi id 15.20.2878.014; Sat, 4 Apr 2020
+ 17:20:18 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     tomasz.figa@gmail.com, krzk@kernel.org, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH] pinctrl: samsung: Correct setting of eint wakeup mask on s5pv210
+Date:   Sat,  4 Apr 2020 10:08:49 -0700
+Message-ID: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR2001CA0015.namprd20.prod.outlook.com
+ (2603:10b6:301:15::25) To BYAPR10MB3479.namprd10.prod.outlook.com
+ (2603:10b6:a03:11a::16)
+X-Microsoft-Original-Message-ID: <20200404170848.16372-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 4 Apr 2020 14:08:34 +0200
-Message-ID: <CACRpkdYMcy0ctKsUTdeXQ7EKZ40AeQVEo4fE4BpgXODJ+U6K1Q@mail.gmail.com>
-Subject: [GIT PULL] GPIO bulk changes for v5.7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb67:7300:9f89:4b96:de0b:cd14) by MWHPR2001CA0015.namprd20.prod.outlook.com (2603:10b6:301:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Sat, 4 Apr 2020 17:20:17 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200404170848.16372-1-xc-racer2@live.ca>
+X-TMN:  [5f6Q7YgA8UacrHNp2VQ/+jkm+NLv/XQ41l5hVvjxFMDsNCv/0+It1smRKpQt/qkq]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 758aab2a-d7eb-4849-8948-08d7d8bc7260
+X-MS-TrafficTypeDiagnostic: BN3NAM04HT154:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jHob2zY3LdcjtoV34gF2cD69v52hYZA11RIdOhwyFIEanMb77OIv+ptpNbM/ayUpgzLn6CCaGFHt9S4PRGE+QE5LGuAqIwaswCD0gjQdioo5Q3ELnk2/ESabX/IxGCO67nUDbGRbmC3hWTjf7nSMM/xMhAzwbC5MmTNOdJ+QmXS2Rltu8v2Ow4aOc5IEotVH
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3479.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: Z8+M3gSDCxbtYYtoDlo7K0lgTigr+H49vq9aE+iQWj6N5c0HL4eZwO/BeD6jYcVedArqQd+PVgjYCHyYuWIxcddhSqF8MQX52lZuqX0SSH97fCMt9oWBN9xTtzXxgsm9G2r7+lvbTqpTyvad8BboKBJOBHdFS/sWSUrQEfLCnWCxKxu2M23LzI6rHhcJo284iBQ7njMlzeih6Gmpp0yK8g==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 758aab2a-d7eb-4849-8948-08d7d8bc7260
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2020 17:20:18.4152
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3NAM04HT154
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
+mask") started writing the eint wakeup mask from the pinctrl driver.
+Unfortunately, it made the assumption that the private retention data
+was always a regmap while in the case of s5pv210 it is a raw pointer
+to the clock base (as the eint wakeup mask not in the PMU as with newer
+Exynos platforms).
 
-here is the GPIO pull request for the bulk of changes for v5.7.
+Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+---
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 73 ++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 24 deletions(-)
 
-There will be at least one conflict due to me fingering around and
-renaming variables. It is pretty straight-forward to resolve: in the
-gpiochip_irq_disable() what is in your branch came in as a late
-fix and that is what should stay, with the variable "chip" renamed
-to "gc". Sorry for messing with this so late in the cycle.
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index 0599f5127b01..5126a5a6d4c0 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -40,6 +40,8 @@ struct exynos_irq_chip {
+ 	u32 eint_pend;
+ 	u32 eint_wake_mask_value;
+ 	u32 eint_wake_mask_reg;
++	void (*set_eint_wakeup_mask)(struct samsung_pinctrl_drv_data *drvdata,
++				     struct exynos_irq_chip *irq_chip);
+ };
+ 
+ static inline struct exynos_irq_chip *to_exynos_irq_chip(struct irq_chip *chip)
+@@ -342,6 +344,47 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
+ 	return 0;
+ }
+ 
++static void
++exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++{
++	struct regmap *pmu_regs;
++
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
++	}
++
++	pmu_regs = drvdata->retention_ctrl->priv;
++	dev_info(drvdata->dev,
++		 "Setting external wakeup interrupt mask: 0x%x\n",
++		 irq_chip->eint_wake_mask_value);
++
++	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
++		     irq_chip->eint_wake_mask_value);
++}
++
++static void
++s5pv210_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
++				    struct exynos_irq_chip *irq_chip)
++
++{
++	void __iomem *clk_base;
++
++	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
++		dev_warn(drvdata->dev,
++			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
++		return;
++	}
++
++
++	clk_base = (void __iomem *) drvdata->retention_ctrl->priv;
++
++	__raw_writel(irq_chip->eint_wake_mask_value,
++		     clk_base + irq_chip->eint_wake_mask_reg);
++}
++
+ /*
+  * irq_chip for wakeup interrupts
+  */
+@@ -360,8 +403,9 @@ static const struct exynos_irq_chip s5pv210_wkup_irq_chip __initconst = {
+ 	.eint_mask = EXYNOS_WKUP_EMASK_OFFSET,
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+-	/* Only difference with exynos4210_wkup_irq_chip: */
++	/* Only differences with exynos4210_wkup_irq_chip: */
+ 	.eint_wake_mask_reg = S5PV210_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = s5pv210_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
+@@ -380,6 +424,7 @@ static const struct exynos_irq_chip exynos4210_wkup_irq_chip __initconst = {
+ 	.eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
+@@ -398,6 +443,7 @@ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
+ 	.eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
+ 	.eint_wake_mask_value = EXYNOS_EINT_WAKEUP_MASK_DISABLED,
+ 	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
++	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
+ };
+ 
+ /* list of external wakeup controllers supported */
+@@ -574,27 +620,6 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 	return 0;
+ }
+ 
+-static void
+-exynos_pinctrl_set_eint_wakeup_mask(struct samsung_pinctrl_drv_data *drvdata,
+-				    struct exynos_irq_chip *irq_chip)
+-{
+-	struct regmap *pmu_regs;
+-
+-	if (!drvdata->retention_ctrl || !drvdata->retention_ctrl->priv) {
+-		dev_warn(drvdata->dev,
+-			 "No retention data configured bank with external wakeup interrupt. Wake-up mask will not be set.\n");
+-		return;
+-	}
+-
+-	pmu_regs = drvdata->retention_ctrl->priv;
+-	dev_info(drvdata->dev,
+-		 "Setting external wakeup interrupt mask: 0x%x\n",
+-		 irq_chip->eint_wake_mask_value);
+-
+-	regmap_write(pmu_regs, irq_chip->eint_wake_mask_reg,
+-		     irq_chip->eint_wake_mask_value);
+-}
+-
+ static void exynos_pinctrl_suspend_bank(
+ 				struct samsung_pinctrl_drv_data *drvdata,
+ 				struct samsung_pin_bank *bank)
+@@ -626,8 +651,8 @@ void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+ 		else if (bank->eint_type == EINT_TYPE_WKUP) {
+ 			if (!irq_chip) {
+ 				irq_chip = bank->irq_chip;
+-				exynos_pinctrl_set_eint_wakeup_mask(drvdata,
+-								    irq_chip);
++				irq_chip->set_eint_wakeup_mask(drvdata,
++							       irq_chip);
+ 			} else if (bank->irq_chip != irq_chip) {
+ 				dev_warn(drvdata->dev,
+ 					 "More than one external wakeup interrupt chip configured (bank: %s). This is not supported by hardware nor by driver.\n",
+-- 
+2.20.1
 
-We have some patches to kfifo ACKed by the kfifo maintainer,
-details about this can be found in the signed tag.
-
-We have some two patches to arch/arm written by the maintainers
-for these same platforms.
-
-Please pull it in!
-
-Yours,
-Linus Walleij
-
-
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e=
-:
-
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.7-1
-
-for you to fetch changes up to 4ed7d7dd4890bb8120a3e77c16191a695fdfcc5a:
-
-  Revert "gpio: eic-sprd: Use devm_platform_ioremap_resource()"
-(2020-04-02 09:39:09 +0200)
-
-----------------------------------------------------------------
-This is the bulk of GPIO development for the v5.7 kernel cycle.
-
-Core and userspace API:
-
-- The userspace API KFIFOs have been imoproved with locks that
-  do not block interrupts. This makes us better at getting
-  events to userspace without blocking or disturbing new events
-  arriving in the same time. This was reviewed by the KFIFO
-  maintainer Stefani. This is a generic improvement which
-  paves the road for similar improvements in other subsystems.
-
-- We provide a new ioctl() for monitoring changes in the line
-  information, such as when multiple clients are taking lines
-  and giving them back, possibly reconfiguring them in the
-  process: we can now monitor that and not get stuck with stale
-  static information.
-
-- An example tool 'gpio-watch' is provided to showcase this
-  functionality.
-
-- Timestamps for events are switched to ktime_get_ns() which is
-  monotonic. We previously had a 'realtime' stamp which could
-  move forward and *backward* in time, which probably would just
-  cause silent bugs and weird behaviour. In the long run we
-  see two relevant timestamps: ktime_get_ns() or the timestamp
-  sometimes provided by the GPIO hardware itself, if that
-  exists.
-
-- Device Tree overlay support for GPIO hogs. On systems that
-  load overlays, these overlays can now contain hogs, and will
-  then be respected.
-
-- Handle pin control interaction with nonexisting pin ranges
-  in the GPIO library core instead of in the individual
-  drivers.
-
-New drivers:
-
-- New driver for the Mellanox BlueField 2 GPIO controller.
-
-Driver improvements:
-
-- Introduce the BGPIOF_NO_SET_ON_INPUT flag to the generic
-  MMIO GPIO library and use this flag in the MT7621 driver.
-
-- Texas Instruments OMAP CPU power management improvements,
-  such as blocking of idle on pending GPIO interrupts.
-
-----------------------------------------------------------------
-Alexander Sverdlin (1):
-      gpio: pl061: Warn when IRQ line has not been configured
-
-Andy Shevchenko (3):
-      gpio: Avoid kernel.h inclusion where it's possible
-      gpiolib: Optimize gpiochip_remove() when check for requested line
-      gpiolib: Rename 'event' to 'ge' to be consistent with other use
-
-Anson Huang (2):
-      gpio: mxc: Add COMPILE_TEST support for GPIO_MXC
-      gpio: mxs: add COMPILE_TEST support for GPIO_MXS
-
-Anssi Hannula (1):
-      tools: gpio: Fix out-of-tree build regression
-
-Ashish Chavan (1):
-      gpio: rcar: Fix typo in comment
-
-Asmaa Mnebhi (1):
-      gpio: add driver for Mellanox BlueField 2 GPIO controller
-
-Axel Lin (2):
-      gpio: wcd934x: Don't change gpio direction in wcd_gpio_set
-      gpio: wcd934x: Fix logic of wcd_gpio_get
-
-Baolin Wang (1):
-      Revert "gpio: eic-sprd: Use devm_platform_ioremap_resource()"
-
-Bartosz Golaszewski (10):
-      kfifo: provide noirqsave variants of spinlocked in and out helpers
-      kfifo: provide kfifo_is_empty_spinlocked()
-      gpiolib: rework the locking mechanism for lineevent kfifo
-      gpiolib: emit a debug message when adding events to a full kfifo
-      gpiolib: provide a dedicated function for setting lineinfo
-      gpiolib: add new ioctl() for monitoring changes in line info
-      tools: gpio: implement gpio-watch
-      gpio: mockup: coding-style fix
-      gpiolib: use gpiochip_get_desc() where applicable
-      gpiolib: fix bitmap operations related to line event watching
-
-Chris Packham (1):
-      gpio: mvebu: avoid error message for optional IRQ
-
-Chuanhong Guo (2):
-      gpio: mmio: introduce BGPIOF_NO_SET_ON_INPUT
-      gpio: mt7621: add BGPIOF_NO_SET_ON_INPUT flag
-
-Colin Ian King (1):
-      tools: gpio-hammer: fix spelling mistake: "occurences" -> "occurrence=
-s"
-
-Doug Berger (1):
-      gpio: brcmstb: support gpio-line-names property
-
-Gabriel Ravier (2):
-      tools: gpio-hammer: Avoid potential overflow in main
-      tools: gpio-hammer: Apply scripts/Lindent and retain good changes
-
-Geert Uytterhoeven (7):
-      gpio: of: Extract of_gpiochip_add_hog()
-      gpio: of: Add DT overlay support for GPIO hogs
-      gpiolib: Fix inverted check in gpiochip_remove()
-      ARM: integrator: impd1: Use GPIO_LOOKUP() helper macro
-      gpiolib: Introduce gpiod_set_config()
-      gpiolib: Pass gpio_desc to gpio_set_config()
-      gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
-
-Gustavo A. R. Silva (1):
-      gpio: uniphier: Replace zero-length array with flexible-array member
-
-Jonathan Neusch=C3=A4fer (1):
-      gpio: uapi: Improve phrasing around arrays representing empty strings
-
-Kent Gibson (1):
-      gpiolib: fix unwatch ioctl()
-
-Linus Walleij (8):
-      Merge tag 'gpio-updates-for-v5.7-part1' of
-git://git.kernel.org/.../brgl/linux into devel
-      gpio: Switch timestamps to ktime_get_ns()
-      Merge tag 'gpio-updates-for-v5.7-part2' of
-git://git.kernel.org/.../brgl/linux into devel
-      Merge branch 'ib-omap-block-idle' into devel
-      gpio: Move devres calls to devres file
-      Merge tag 'gpio-updates-for-v5.7-part4' of
-git://git.kernel.org/.../brgl/linux into devel
-      Merge tag 'v5.6-rc7' into devel
-      gpio: Rename variable in core APIs
-
-Lubomir Rintel (1):
-      gpio: pxa: Avoid a warning when gpio0 and gpio1 IRQS are not there
-
-Mauro Carvalho Chehab (2):
-      docs: gpio: driver.rst: don't mark literal blocks twice
-      gpio: gpiolib: fix a doc warning
-
-Micha=C5=82 Miros=C5=82aw (1):
-      gpiolib: gpio_name_to_desc: factor out !name check
-
-Mykyta Poturai (1):
-      tools: gpio: Fix typo in gpio-utils
-
-Stephen Rothwell (1):
-      gpio: export of_pinctrl_get to modules
-
-Thierry Reding (7):
-      gpio: Support GPIO controllers without pin-ranges
-      gpio: tegra186: Add support for pin ranges
-      gpio: tegra186: Add Tegra194 pin ranges for GG.0 and GG.1
-      gpio: Avoid using pin ranges with !PINCTRL
-      pinctrl: Define of_pinctrl_get() dummy for !PINCTRL
-      gpio: Unconditionally assign .request()/.free()
-      pinctrl: Unconditionally assign .request()/.free()
-
-Tony Lindgren (3):
-      ARM: OMAP2+: Handle errors for cpu_pm
-      gpio: omap: Block idle on pending gpio interrupts
-      Revert "gpio: omap: Fix lost edge wake-up interrupts"
-
-Uwe Kleine-K=C3=B6nig (1):
-      gpio: siox: use raw spinlock for irq related locking
-
- Documentation/driver-api/gpio/driver.rst |    4 +-
- arch/arm/mach-integrator/impd1.c         |   11 +-
- arch/arm/mach-omap2/cpuidle34xx.c        |    9 +-
- arch/arm/mach-omap2/cpuidle44xx.c        |   26 +-
- arch/arm/mach-omap2/pm34xx.c             |    8 +-
- drivers/gpio/Kconfig                     |   11 +-
- drivers/gpio/Makefile                    |    1 +
- drivers/gpio/gpio-brcmstb.c              |   44 +
- drivers/gpio/gpio-davinci.c              |    7 +-
- drivers/gpio/gpio-eic-sprd.c             |    9 +-
- drivers/gpio/gpio-mlxbf2.c               |  335 ++++++++
- drivers/gpio/gpio-mmio.c                 |   23 +-
- drivers/gpio/gpio-mockup.c               |    2 +-
- drivers/gpio/gpio-mt7621.c               |    4 +-
- drivers/gpio/gpio-mvebu.c                |    2 +-
- drivers/gpio/gpio-mxc.c                  |    7 +-
- drivers/gpio/gpio-omap.c                 |   29 +-
- drivers/gpio/gpio-pl061.c                |   13 +-
- drivers/gpio/gpio-pxa.c                  |   11 +-
- drivers/gpio/gpio-rcar.c                 |    4 +-
- drivers/gpio/gpio-siox.c                 |   28 +-
- drivers/gpio/gpio-tegra186.c             |   64 ++
- drivers/gpio/gpio-uniphier.c             |    2 +-
- drivers/gpio/gpio-wcd934x.c              |    9 +-
- drivers/gpio/gpio-zx.c                   |   10 +-
- drivers/gpio/gpiolib-devres.c            |   46 ++
- drivers/gpio/gpiolib-of.c                |  139 +++-
- drivers/gpio/gpiolib-of.h                |    2 +
- drivers/gpio/gpiolib.c                   | 1297 +++++++++++++++++---------=
-----
- drivers/gpio/gpiolib.h                   |    4 +
- drivers/pinctrl/devicetree.c             |    1 +
- drivers/pinctrl/pinctrl-ingenic.c        |    7 +-
- include/asm-generic/gpio.h               |    4 +-
- include/linux/gpio.h                     |    2 -
- include/linux/gpio/consumer.h            |   13 +-
- include/linux/gpio/driver.h              |  139 ++--
- include/linux/kfifo.h                    |   73 ++
- include/linux/of_gpio.h                  |    9 +-
- include/linux/pinctrl/pinctrl.h          |    2 +-
- include/uapi/linux/gpio.h                |   38 +-
- tools/gpio/.gitignore                    |    1 +
- tools/gpio/Build                         |    1 +
- tools/gpio/Makefile                      |   13 +-
- tools/gpio/gpio-hammer.c                 |   19 +-
- tools/gpio/gpio-utils.c                  |    6 +-
- tools/gpio/gpio-watch.c                  |   99 +++
- 46 files changed, 1814 insertions(+), 774 deletions(-)
- create mode 100644 drivers/gpio/gpio-mlxbf2.c
- create mode 100644 tools/gpio/gpio-watch.c
