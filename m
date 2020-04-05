@@ -2,73 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 50A9D19E85A
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Apr 2020 03:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D88C719EA78
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Apr 2020 12:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgDEBrL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Apr 2020 21:47:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40975 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDEBrL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Apr 2020 21:47:11 -0400
-Received: by mail-io1-f68.google.com with SMTP id b12so11902972ion.8;
-        Sat, 04 Apr 2020 18:47:10 -0700 (PDT)
+        id S1726444AbgDEKoG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Apr 2020 06:44:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42288 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgDEKoF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Apr 2020 06:44:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 22so6063994pfa.9;
+        Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
+        b=Ye9z1hO1q/z62yGaatDoxLKqIB8WqsUzxOEKT/Ba25Exfyd7HS1d06ZeN4dtiqoCUL
+         nppVH9FJ4/LPm+TR1Bgj/ouXjdVNEB+Gt6g7ymJtIa0x592aw6AKzTT6Tmcpb/EfGVJu
+         jiTT0XqE9QoRWru/6R25WHJYnT01S3ByqtlRfMvI/LpXQrTUy7A0SbNY8bZOgm01aTGe
+         THHXb9Ii71zj556Mijna4R7G8SYDX3c8Q1D+LS38cZc5+XoF784yExlBock5/R6UeAoO
+         TglL8WVGnSbd+uD99p1Sxo+bx11IGb3QUYUocsTzem9NW/4OQEDds48hkgFq8gctNyUl
+         hM6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xyeh33k5wDcGZSxdkpLIkuCmJmilM6XMzgA6pBlKGBI=;
-        b=e7/4d+Z8fWtI+wTmwHzYwPmRb9b/Nd73udl4XkoWMPe0bX+CGKJEEZY9i0nA6iucA4
-         zZSLk37nEQEpKZwnrnSXM09uFrXeiEt7UaspYwU2LaETNz6Q8bS9t4nt+zb+yQ3vZM4z
-         KtNSN/CvOsNoGMN9n8sobDDL7UiZMYvNIYDkZ4Nmke/PWnR+WQ8LIZKXu4BIH+xMGcZx
-         CCEZOSS2g3DUY69X0R4538s+RRhIdy18kPOmITm1I8BgbECLipGXgx6Q2uCtH8apt6Dl
-         Dcxd05M7rHV+vjNxwMGmXWx7QCHiUAxtPmYH98aomYNkQ18sqGz0p34J3W5NYMS7u8zL
-         TsWw==
-X-Gm-Message-State: AGi0Pua0H3sE1X/N7X6QAIioepcnJbhu+Hfjnq8vBOAjOAXXU2Lw06fP
-        HltfNFlMy5z2VhN9wJr48g==
-X-Google-Smtp-Source: APiQypI6OmYDV9zjOQGePspkdsj+RGnavHnK0g4RmrH4TOnA+zHnxAqvzSM6z9mLmqqbqCfhHNPFtA==
-X-Received: by 2002:a02:70d8:: with SMTP id f207mr668879jac.83.1586051230249;
-        Sat, 04 Apr 2020 18:47:10 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l70sm4473080ili.81.2020.04.04.18.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 18:47:09 -0700 (PDT)
-Received: (nullmailer pid 12218 invoked by uid 1000);
-        Sun, 05 Apr 2020 01:47:06 -0000
-Date:   Sat, 4 Apr 2020 19:47:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux@roeck-us.net,
-        gregkh@linuxfoundation.org, peng.fan@nxp.com, fugang.duan@nxp.com,
-        krzk@kernel.org, bjorn.andersson@linaro.org, leoyang.li@nxp.com,
-        olof@lixom.net, dinguyen@kernel.org, geert+renesas@glider.be,
-        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] dt-bindings: arm: fsl-scu: Add imx8dxl pinctrl
- support
-Message-ID: <20200405014706.GA12185@bogus>
-References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
+        b=FcEcwGAgV2MX7fvu/Y1ouJHbDsolKOLPJYWyBg5WQ8gGHS377iDv3evwQDzfk5asgX
+         U86mskhVfuS6BzPPE3uTVWSnIPowEdf1DQGTrw7FJITfHGMKls+jyJLQyCAnYT8S3rvb
+         brKENibJYZk3MIJfeQPZOxD8zaeaC8C4hfZ5SLd8HbitXap9m4AJulB4h+H5CzXX0pAY
+         rntvENPfpmZun4Y+zaIFgN9nvitIVbAhSPGr29q8rfQ4HLn/c28Ocl5dOXjTGrdwEnwn
+         e69GXNm9haUQxNZjiegTQoeZZ4WG+tiU6Y1ALWPkR54V1xObLY2tPA3hoFpMFtcE190W
+         oOCQ==
+X-Gm-Message-State: AGi0PuZLLHKZcQxaTjKIvpzRDeUPfxNi2E4Oo45S6Wz1vie6ealYCiEQ
+        JpuF1+AG2nonPOfHtc0PVLDa6TVEivQiMk6Qows=
+X-Google-Smtp-Source: APiQypI6eSEt/7OjXlQ7fneQEBVJlUoft1YyFL/U4/lAVdAbiWACIqZ9enxEfcw8nA6jlNHxqEU3WGluCTFo0hUHszk=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr4662429pgb.74.1586083443002;
+ Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
+In-Reply-To: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 5 Apr 2020 13:43:50 +0300
+Message-ID: <CAHp75Ve8hf9TZ4YL43nVJnZ+jcs80VdOddL8wbAqh-Te=0r12Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: msic: Delete an error message in platform_msic_gpio_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 27 Mar 2020 18:55:57 +0800, Anson Huang wrote:
-> Update binding doc to support i.MX8DXL pinctrl.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+On Sat, Apr 4, 2020 at 10:35 PM Markus Elfring <Markus.Elfring@web.de> wrot=
+e:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 4 Apr 2020 21:30:12 +0200
+>
+> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
+>
+> This issue was detected by using the Coccinelle software.
 
-Acked-by: Rob Herring <robh@kernel.org>
+No need to touch this ancient driver, since it's subject to remove in
+one of the (nearest) future releases.
+
+--=20
+With Best Regards,
+Andy Shevchenko
