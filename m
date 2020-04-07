@@ -2,50 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A9B1A04AD
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 03:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A361A062B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 07:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDGBzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Apr 2020 21:55:10 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45105 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgDGBzK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Apr 2020 21:55:10 -0400
-Received: by mail-ed1-f66.google.com with SMTP id m12so1962123edl.12
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Apr 2020 18:55:09 -0700 (PDT)
+        id S1726841AbgDGFMm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Apr 2020 01:12:42 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:34607 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgDGFMm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 01:12:42 -0400
+Received: by mail-yb1-f194.google.com with SMTP id l84so1167576ybb.1
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Apr 2020 22:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=KRU1fUgJ9mq/2EmmX91pd4664Jbd7pOskrgtWur3uVw=;
-        b=bqiDlA3C9o4YLVhBSNxIsAgtPP6zwn2iHA/LGr5/A4wVwSOFzqqwoeMiVVrb9vitK1
-         o8zzvmgcqstnFZw6ThWOIBaQUHve4CKT21SaTzBZd50FTqHmSJM79a1ReaHPe8eHRDNR
-         /rClhsaLuUVxqg64l1glyh3RvpoFYLfQVS3VaNTj3jTe1SVZcX2+J3vK8S6pLf48cKEV
-         1ryouG/L09K0hG1rWDiss6RJAaaPsynltLuW2mkurIFA8dkh1OlmlLc8bjAabSIHCYvb
-         ngsf5ZoPVBQiNRjNZOOcE7uSlJWmvEms9KZYEmr1rxRHL5GFUSXAL/SteL1qUi9XGiKA
-         8eHA==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=m9m/DCsFRus/zRmIuphflM5sHyenmkMN/TOEnECOGthbLJHVg8u2+iqtFZpNbyb2/k
+         2tLF//qwyXGtNVJKRleGUy+KbEtVjN+06Aw6FbGL98d5M/QEqB9c9SHaIsBPFlQYoUCh
+         Lj+P9EPUGdvyQRip4KeH3oSvDVhqDTV0IJcbcI66BzYP/b9Y/1y4LF++1q0teLhPl3GM
+         v15gBTxOBB8qvH4CNaCnwdm2sugBL+St8qIlm7SqBWweWj6hdsos1F0mjeWO8qJt64R9
+         xl3tya8AfljNAFdSOkZ4tC7INitomO8JQPFHHcp+JAODUsaup01At9KIYDntXEoTQZb0
+         DmdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=KRU1fUgJ9mq/2EmmX91pd4664Jbd7pOskrgtWur3uVw=;
-        b=ubbXS2JQ5w28DmdmVIQvnra8PrrVIi6QIfgdbc5QiRfBh4vg3oxQXIEx4Wb6Iolb5X
-         ClZw6D6QOsZpgK+Y7n2dskyzXYh7nAe4XyP6Em4kkDmT0X+3XI2zl1uqN7VtG4uOAa9l
-         av56ayyGn59GsHz7LASdokSrMGg4dr8cHvXxKB7MWgYmKHLOhYS56Sqg4moOxxAUdcXx
-         RysJ2nwpFnCa9G89+/wfS2chS6qc0QgyhIOlpUrEOJj0E9NPmnLVIh2pL1T9h3NlDr5d
-         8nOPHQ7Qls3ENJK9u2/xBM2O+20BViI42Mdzguffh97k6prVVStkkaYNpxLuAilpQvxc
-         VHHQ==
-X-Gm-Message-State: AGi0Pua3eQfGXIIUHqaRwvJqloGvUmMWV9AFKfozPm+1NnZ+q7wlmLzb
-        nbcpx3WwY/ewsp1Ade/om/mZ0fzAL1HyCBo8EJQ=
-X-Google-Smtp-Source: APiQypKdqA2fyUEeoN7aOI2mbnY/T0lCZvgplImhxrqmDzfQTrr/KQ4eHosXUu4dPrQESoEWVU7U8nCIlmi2G8JC78M=
-X-Received: by 2002:a05:6402:b7b:: with SMTP id cb27mr52684edb.343.1586224508665;
- Mon, 06 Apr 2020 18:55:08 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=DjFzy10WlieWUq55WkvuMzAEC5zv75s4bx6RYjZw9EzLhDc0TdSncQ9Y/KU4WPjWP6
+         f2TfCVw0QeJPyLFkM52nodIAv7gSrZgciZBNQ42VAt4oV65rRCsHd42rTLafWhPZBKKm
+         XnEsTljxkZuJt0MXLonlttJVCibTV31vr4vpixlO+EP9sRC102NhISUpYCaaHqhxG6BR
+         QIYTlmb94Q5YGOdDGdXiiyCZWuyXt7pxnrCxIW1TxA7GBGlw5b9+tIRiMdmKkcz8jnTr
+         ZkdUqCsW2n1zN4EVuOZrq27UkJB+UqzgnTaKmIs4i9nd5Tn/EYWDkxioUUwYF/WXuox7
+         xfLQ==
+X-Gm-Message-State: AGi0PubZOSrU2Yu1Ay50yeTat5ohVZAhsJxoR9wzi0Pd/P1rApEQU9KX
+        DLrKrOhokpADRDDKVPjANSHfJxtqoVhdjVynnZSMlkWMwCs=
+X-Google-Smtp-Source: APiQypIYXniGQUHEpASwiGNjKth4Cu9ElCz4yjrJ2uXbYBYunhfz0887D/TRydUbTstl7MwaeVftG8QxF1P80ST3qos=
+X-Received: by 2002:ab0:a9:: with SMTP id 38mr504317uaj.61.1586236361040; Mon,
+ 06 Apr 2020 22:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:aa7:d887:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 18:55:07 -0700 (PDT)
-Reply-To: flavbenz@gmail.com
-From:   Flavor Benz <morgansalami@gmail.com>
-Date:   Tue, 7 Apr 2020 02:55:07 +0100
-Message-ID: <CAPncyG5zEru5BsVzWLGEy77KcS2Gpxg_fj9g-=CVvpo47kO7hg@mail.gmail.com>
-Subject: Good day
+Received: by 2002:ab0:4929:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:12:40 -0700 (PDT)
+From:   SANDRA DEWI <dewisandra154@gmail.com>
+Date:   Tue, 7 Apr 2020 05:12:40 +0000
+Message-ID: <CABRVPWys0xe4CWBkaU0ZXQW+4d=tjDOjyo8cKohc5-VFkWPkcA@mail.gmail.com>
+Subject: whether this is your correct email address or not
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -53,13 +51,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello my dear Friend,
+Dear ,Pastor
 
-I sent you an email a month ago, but I'm not sure if you get the
-message, and this is the reason why I repeat it again.
 
-I urgently looking forward to hear from you as soon as you read my message.
 
-Thanks.
+I have a client who is an oil business man and he made a fixed deposit
+of $26 million USD in my bank, where I am the director of the branch,
+My client died with his entire family in Jordanian
 
-Mr.Flavour Benz.(Esq)
+50% of the fund will be for the church  for the work of God,the
+balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
+50% for me
+
+intervention in the Syrian Civil War 2014 leaving behind no next of
+kin. I Propose to present you as next of kin to claim the funds, if
+interested reply me for full details and how we are to
+
+
+
+proceed to close this deal.
+
+
+
+
+Mrs. Sandra Dewi
+
+
+
+Email  mrsdewi@gmx.com
