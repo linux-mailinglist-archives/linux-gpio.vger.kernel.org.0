@@ -2,67 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECB481A0E87
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 15:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFFBD1A106D
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 17:43:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgDGNlp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Apr 2020 09:41:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7166 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728573AbgDGNlp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 09:41:45 -0400
-X-UUID: dfbf9dd631bd4f5693f93839923541e8-20200407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=I+Idz2kS2YO8DN7EbW71q3QgUKuFjlpxCMebxFehMZE=;
-        b=LDGiTVjxygBOmbSSvdxYCQmSpHbtihQnuFr4bslpdD7ArdBogzLYkIttZ3NSi/58Tz1Q6OkAzKL7BJ2xOEvys7aDdbC8ByQCOmusz54qDgdMrDdSNWhHxujp+1Gmal2mHJj6b4ykSswtjnd9Z04ZriY15n4PU0hXs162IxGQoS0=;
-X-UUID: dfbf9dd631bd4f5693f93839923541e8-20200407
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1937740329; Tue, 07 Apr 2020 21:41:33 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Apr 2020 21:41:22 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Apr 2020 21:41:23 +0800
-Message-ID: <1586266885.31587.1.camel@mtksdaap41>
-Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable
- declaration
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     <light.hsieh@mediatek.com>
-CC:     <linus.walleij@linaro.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>
-Date:   Tue, 7 Apr 2020 21:41:25 +0800
-In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        id S1729175AbgDGPnB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Apr 2020 11:43:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40201 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbgDGPnA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 11:43:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a81so2323417wmf.5
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Apr 2020 08:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0aWpnnYlYguz3F+JVvnjabHfBBjsGY++SGOyWdWzZ3Y=;
+        b=DhHIZS8wCsY2m2Y4WUTVZOfRi1NuKy/87cmOCKVoLkgCRB/H9HL1usx3iwhVxtYoWI
+         +fGuCdjEiJleXLyLp84a6YF7Ow7Z6xQqlpfWvFJaky0qMvBOm/D+UC9gHrc4tS5PEl/J
+         ibWjrWXfDUrTttG7h3IskK+gKMvVjImOzcKxvw0kuE3grOMhUZj20fMQRr26uyDITT/U
+         CgE08Rbr4oZrg/vdKgnvUhYCvgmNwFqQ2uGu6WlcVqJ10oOYAojCHEmj5R11mI+kRjmE
+         1Pr6m57QPZZ6E1qJLVjqKACJY1mmEJKtxed9YP9vb+u4K/IXIRXunYS+GGc/y7pqeYLy
+         Onxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0aWpnnYlYguz3F+JVvnjabHfBBjsGY++SGOyWdWzZ3Y=;
+        b=AdVrVlqx2ET44kfSHaS9kTQqqsKFHEnikc3uNSPpje6WHi2duPRvlk55OR72kdVTYC
+         zQAxw1Wr8XOyGWMgurovSXInSrI8LozJKLTMpSVHY3DFVC0IbVhJ9K7e+T6tqXXeJ/e9
+         HM31TEWEPh0UgFxb9xDLIgwcKKy5rE5rbSzrmLTunUBeArt/UnYIYTuHnhyMSx6uR/pY
+         Oy+kZ6Q2QxypB0vT52b8zo2QgC4SIKH91Eq8YIOtIT6ATbFry8X78NY076WtBmyMNRXJ
+         tBndcOADzUeGo1IU9Q5lQuWUKpP6TUT2Ao65Ie1XsgQOdcThgJcn1E+t8oGyITp9i9LC
+         bDHw==
+X-Gm-Message-State: AGi0PuZbCTjfcaRkfmCC0KPb6G5hlLL0cxspGBh00vt+xvuywAikB7hc
+        cbzOP9Xdzrl+FjBfFpmR6d9t3A==
+X-Google-Smtp-Source: APiQypLt6v8178aJkXJnaecq/E50zJ1PoLpY2ZRcWCSHf4lHftAxL/6+mWI8xxQQQ7ku3oTkB+4o0w==
+X-Received: by 2002:a7b:ca46:: with SMTP id m6mr3032453wml.102.1586274177469;
+        Tue, 07 Apr 2020 08:42:57 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id b14sm1329274wrw.83.2020.04.07.08.42.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 08:42:56 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpio: pca953x: disable regmap locking
+Date:   Tue,  7 Apr 2020 17:42:45 +0200
+Message-Id: <20200407154245.2548-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTA3IGF0IDE4OjMzICswODAwLCBsaWdodC5oc2llaEBtZWRpYXRlay5j
-b20gd3JvdGU6DQo+IEZyb206IExpZ2h0IEhzaWVoIDxsaWdodC5oc2llaEBtZWRpYXRlay5jb20+
-DQo+IA0KPiBSZW1vdmUgc2hhZG93IGRlY2xhcmF0aW9uIG9mIHZhcmlhYmxlICdwdWxsdXAnIGlu
-IG10a19waW5jb25mX2dldCgpDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMaWdodCBIc2llaCA8bGln
-aHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRl
-ay9waW5jdHJsLXBhcmlzLmMgfCAyIC0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMo
-LSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1w
-YXJpcy5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KPiBpbmRl
-eCA4M2JmMjljLi44Zjc1MTE1IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
-ZWsvcGluY3RybC1wYXJpcy5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5j
-dHJsLXBhcmlzLmMNCj4gQEAgLTE2NCw4ICsxNjQsNiBAQCBzdGF0aWMgaW50IG10a19waW5jb25m
-X2dldChzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQo+ICAJY2FzZSBNVEtfUElOX0NPTkZJ
-R19QVV9BRFY6DQo+ICAJY2FzZSBNVEtfUElOX0NPTkZJR19QRF9BRFY6DQo+ICAJCWlmIChody0+
-c29jLT5hZHZfcHVsbF9nZXQpIHsNCj4gLQkJCWJvb2wgcHVsbHVwOw0KPiAtDQo+ICAJCQlwdWxs
-dXAgPSBwYXJhbSA9PSBNVEtfUElOX0NPTkZJR19QVV9BRFY7DQo+ICAJCQllcnIgPSBody0+c29j
-LT5hZHZfcHVsbF9nZXQoaHcsIGRlc2MsIHB1bGx1cCwgJnJldCk7DQo+ICAJCX0gZWxzZQ0KDQpI
-aSwgTGlnaHQsDQoNCldoYXQgaXMgdGhpcyBiYXNlZCBvbj8NClRoZSBjb2RlIGluIHY1LjYgZG9l
-c24ndCBsb29rcyBsaWtlIHRoaXMuDQoNCkpvZS5DDQoNCg0K
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This driver uses its own locking but regmap silently uses a mutex for
+all operations too. Add the option to disable locking to the regmap
+config struct.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpio-pca953x.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index 5638b4e5355f..40da1954d74b 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -306,6 +306,7 @@ static const struct regmap_config pca953x_i2c_regmap = {
+ 	.writeable_reg = pca953x_writeable_register,
+ 	.volatile_reg = pca953x_volatile_register,
+ 
++	.disable_locking = true,
+ 	.cache_type = REGCACHE_RBTREE,
+ 	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
+ 	.max_register = 0xff,
+-- 
+2.25.0
 
