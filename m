@@ -2,1086 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8262D1A12D0
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 19:39:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 962AC1A1685
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 22:08:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDGRjA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Apr 2020 13:39:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:9359 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgDGRjA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:39:00 -0400
-IronPort-SDR: bC1iZ4jYBc6Ai59veaPt9TJ3rY0zuVXJLsst1rxGhPA4iiaWV3qx22kH+lHfxN27mex5z/5yNc
- aUBQgs4o5/Jw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 10:38:54 -0700
-IronPort-SDR: UbV11R3M/UL19RSTSmqiHg8cYhtC4TevTl8q63Di1LhXAeTM7XeTUCb7SNt92THJcPvkupgV7h
- /Ii8ci6HgnNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
-   d="scan'208";a="254532190"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 10:38:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AACFF5EA; Tue,  7 Apr 2020 20:38:50 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 9/9] =?UTF-8?q?pinctrl:=20mcp23s08:=20Split=20to=20thre?= =?UTF-8?q?e=20parts:=20core,=20I=C2=B2C,=20SPI?=
-Date:   Tue,  7 Apr 2020 20:38:49 +0300
-Message-Id: <20200407173849.43628-9-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
-References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
+        id S1727815AbgDGUIb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Apr 2020 16:08:31 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57256 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726712AbgDGUIb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 16:08:31 -0400
+X-UUID: a0ef26e745474e91b944c1724fec8f54-20200408
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=k0N1E34+nhOU0U/t407+WqxpA7Qe1683WlAodaboMmc=;
+        b=aa0Ov3M//Qlk8MygQrpBA19ALUUpS/FILEZp/xgo1qn6/eUjBlPCmR0xqIijCg9tgCrBZ7ex23IWKFyCY5iLgfX0yn6qfcPmYPFjgwQGIgccXXMmXMW2W5VTCyC44oPmy5JkmNitC5918Kh3MziMHz8FPpTLlh9a1pyDC61VaHI=;
+X-UUID: a0ef26e745474e91b944c1724fec8f54-20200408
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1293237371; Wed, 08 Apr 2020 04:08:24 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 8 Apr 2020 04:08:16 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 8 Apr 2020 04:08:16 +0800
+From:   <sean.wang@mediatek.com>
+To:     <linus.walleij@linaro.org>, <linux-mediatek@lists.infradead.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v7 1/2] pinctrl: mediatek: make MediaTek pinctrl v2 driver ready for buidling loadable module
+Date:   Wed, 8 Apr 2020 04:08:16 +0800
+Message-ID: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E4434ADE93FB1DFDD2AC2821CF367BC3B4DFB0D230027CD63D42298064DF61562000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Split the driver to three parts: core, I²C, SPI.
-No functional change intended.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/Kconfig                |  13 +-
- drivers/pinctrl/Makefile               |   2 +
- drivers/pinctrl/pinctrl-mcp23s08.c     | 458 +------------------------
- drivers/pinctrl/pinctrl-mcp23s08.h     |  52 +++
- drivers/pinctrl/pinctrl-mcp23s08_i2c.c | 124 +++++++
- drivers/pinctrl/pinctrl-mcp23s08_spi.c | 262 ++++++++++++++
- 6 files changed, 459 insertions(+), 452 deletions(-)
- create mode 100644 drivers/pinctrl/pinctrl-mcp23s08.h
- create mode 100644 drivers/pinctrl/pinctrl-mcp23s08_i2c.c
- create mode 100644 drivers/pinctrl/pinctrl-mcp23s08_spi.c
-
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 834c59950d1c..f646f070d98f 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -172,15 +172,22 @@ config PINCTRL_GEMINI
- 	select GENERIC_PINCONF
- 	select MFD_SYSCON
- 
-+config PINCTRL_MCP23S08_I2C
-+	tristate
-+	select REGMAP_I2C
-+
-+config PINCTRL_MCP23S08_SPI
-+	tristate
-+	select REGMAP_SPI
-+
- config PINCTRL_MCP23S08
- 	tristate "Microchip MCP23xxx I/O expander"
- 	depends on SPI_MASTER || I2C
--	depends on I2C || I2C=n
- 	select GPIOLIB
- 	select GPIOLIB_IRQCHIP
--	select REGMAP_I2C if I2C
--	select REGMAP_SPI if SPI_MASTER
- 	select GENERIC_PINCONF
-+	select PINCTRL_MCP23S08_I2C if I2C
-+	select PINCTRL_MCP23S08_SPI if SPI_MASTER
- 	help
- 	  SPI/I2C driver for Microchip MCP23S08 / MCP23S17 / MCP23S18 /
- 	  MCP23008 / MCP23017 / MCP23018 I/O expanders.
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 0b36a1cfca8a..1731b2154df9 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -21,6 +21,8 @@ obj-$(CONFIG_PINCTRL_DIGICOLOR)	+= pinctrl-digicolor.o
- obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
- obj-$(CONFIG_PINCTRL_GEMINI)	+= pinctrl-gemini.o
- obj-$(CONFIG_PINCTRL_MAX77620)	+= pinctrl-max77620.o
-+obj-$(CONFIG_PINCTRL_MCP23S08_I2C)	+= pinctrl-mcp23s08_i2c.o
-+obj-$(CONFIG_PINCTRL_MCP23S08_SPI)	+= pinctrl-mcp23s08_spi.o
- obj-$(CONFIG_PINCTRL_MCP23S08)	+= pinctrl-mcp23s08.o
- obj-$(CONFIG_PINCTRL_MESON)	+= meson/
- obj-$(CONFIG_PINCTRL_OXNAS)	+= pinctrl-oxnas.o
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index ea8decc36d50..cb545557dcd4 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -7,9 +7,8 @@
- #include <linux/mutex.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/export.h>
- #include <linux/gpio/driver.h>
--#include <linux/i2c.h>
--#include <linux/spi/spi.h>
- #include <linux/slab.h>
- #include <asm/byteorder.h>
- #include <linux/interrupt.h>
-@@ -18,15 +17,7 @@
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinconf-generic.h>
- 
--/*
-- * MCP types supported by driver
-- */
--#define MCP_TYPE_S08	1
--#define MCP_TYPE_S17	2
--#define MCP_TYPE_008	3
--#define MCP_TYPE_017	4
--#define MCP_TYPE_S18	5
--#define MCP_TYPE_018	6
-+#include "pinctrl-mcp23s08.h"
- 
- /* Registers are all 8 bits wide.
-  *
-@@ -51,31 +42,6 @@
- #define MCP_GPIO	0x09
- #define MCP_OLAT	0x0a
- 
--struct mcp23s08;
--
--struct mcp23s08 {
--	u8			addr;
--	bool			irq_active_high;
--	bool			reg_shift;
--
--	u16			irq_rise;
--	u16			irq_fall;
--	int			irq;
--	bool			irq_controller;
--	int			cached_gpio;
--	/* lock protects regmap access with bypass/cache flags */
--	struct mutex		lock;
--
--	struct gpio_chip	chip;
--	struct irq_chip		irq_chip;
--
--	struct regmap		*regmap;
--	struct device		*dev;
--
--	struct pinctrl_dev	*pctldev;
--	struct pinctrl_desc	pinctrl_desc;
--};
--
- static const struct reg_default mcp23x08_defaults[] = {
- 	{.reg = MCP_IODIR,		.def = 0xff},
- 	{.reg = MCP_IPOL,		.def = 0x00},
-@@ -107,7 +73,7 @@ static const struct regmap_access_table mcp23x08_precious_table = {
- 	.n_yes_ranges = 1,
- };
- 
--static const struct regmap_config mcp23x08_regmap = {
-+const struct regmap_config mcp23x08_regmap = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
- 
-@@ -119,6 +85,7 @@ static const struct regmap_config mcp23x08_regmap = {
- 	.cache_type = REGCACHE_FLAT,
- 	.max_register = MCP_OLAT,
- };
-+EXPORT_SYMBOL_GPL(mcp23x08_regmap);
- 
- static const struct reg_default mcp23x16_defaults[] = {
- 	{.reg = MCP_IODIR << 1,		.def = 0xffff},
-@@ -151,7 +118,7 @@ static const struct regmap_access_table mcp23x16_precious_table = {
- 	.n_yes_ranges = 1,
- };
- 
--static const struct regmap_config mcp23x17_regmap = {
-+const struct regmap_config mcp23x17_regmap = {
- 	.reg_bits = 8,
- 	.val_bits = 16,
- 
-@@ -164,6 +131,7 @@ static const struct regmap_config mcp23x17_regmap = {
- 	.cache_type = REGCACHE_FLAT,
- 	.val_format_endian = REGMAP_ENDIAN_LITTLE,
- };
-+EXPORT_SYMBOL_GPL(mcp23x17_regmap);
- 
- static int mcp_read(struct mcp23s08 *mcp, unsigned int reg, unsigned int *val)
- {
-@@ -579,9 +547,8 @@ static int mcp23s08_irqchip_setup(struct mcp23s08 *mcp)
- 
- /*----------------------------------------------------------------------*/
- 
--static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
--			      unsigned int addr, unsigned int type,
--			      unsigned int base)
-+int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-+		       unsigned int addr, unsigned int type, unsigned int base)
- {
- 	int status, ret;
- 	bool mirror = false;
-@@ -690,411 +657,4 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		dev_dbg(dev, "can't setup chip %d, --> %d\n", addr, ret);
- 	return ret;
- }
--
--/*----------------------------------------------------------------------*/
--
--#if IS_ENABLED(CONFIG_I2C)
--
--static int mcp230xx_probe(struct i2c_client *client,
--				    const struct i2c_device_id *id)
--{
--	struct device *dev = &client->dev;
--	unsigned int type = id->driver_data;
--	struct mcp23s08 *mcp;
--	int status;
--
--	mcp = devm_kzalloc(&client->dev, sizeof(*mcp), GFP_KERNEL);
--	if (!mcp)
--		return -ENOMEM;
--
--	mcp->irq = client->irq;
--
--	switch (type) {
--	case MCP_TYPE_008:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x08_regmap);
--		mcp->reg_shift = 0;
--		mcp->chip.ngpio = 8;
--		mcp->chip.label = "mcp23008";
--		break;
--
--	case MCP_TYPE_017:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = "mcp23017";
--		break;
--
--	case MCP_TYPE_018:
--		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = "mcp23018";
--		break;
--
--	default:
--		dev_err(dev, "invalid device type (%d)\n", type);
--		return -EINVAL;
--	}
--
--	if (IS_ERR(mcp->regmap))
--		return PTR_ERR(mcp->regmap);
--
--	mcp->pinctrl_desc.name = "mcp23xxx-pinctrl";
--
--	status = mcp23s08_probe_one(mcp, dev, client->addr, type, -1);
--	if (status)
--		return status;
--
--	i2c_set_clientdata(client, mcp);
--
--	return 0;
--}
--
--static const struct i2c_device_id mcp230xx_id[] = {
--	{ "mcp23008", MCP_TYPE_008 },
--	{ "mcp23017", MCP_TYPE_017 },
--	{ "mcp23018", MCP_TYPE_018 },
--	{ },
--};
--MODULE_DEVICE_TABLE(i2c, mcp230xx_id);
--
--static const struct of_device_id mcp23s08_i2c_of_match[] = {
--	{
--		.compatible = "microchip,mcp23008",
--		.data = (void *) MCP_TYPE_008,
--	},
--	{
--		.compatible = "microchip,mcp23017",
--		.data = (void *) MCP_TYPE_017,
--	},
--	{
--		.compatible = "microchip,mcp23018",
--		.data = (void *) MCP_TYPE_018,
--	},
--/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
--	{
--		.compatible = "mcp,mcp23008",
--		.data = (void *) MCP_TYPE_008,
--	},
--	{
--		.compatible = "mcp,mcp23017",
--		.data = (void *) MCP_TYPE_017,
--	},
--	{ },
--};
--MODULE_DEVICE_TABLE(of, mcp23s08_i2c_of_match);
--
--static struct i2c_driver mcp230xx_driver = {
--	.driver = {
--		.name	= "mcp230xx",
--		.of_match_table = mcp23s08_i2c_of_match,
--	},
--	.probe		= mcp230xx_probe,
--	.id_table	= mcp230xx_id,
--};
--
--static int __init mcp23s08_i2c_init(void)
--{
--	return i2c_add_driver(&mcp230xx_driver);
--}
--
--static void mcp23s08_i2c_exit(void)
--{
--	i2c_del_driver(&mcp230xx_driver);
--}
--
--#else
--
--static int __init mcp23s08_i2c_init(void) { return 0; }
--static void mcp23s08_i2c_exit(void) { }
--
--#endif /* CONFIG_I2C */
--
--/*----------------------------------------------------------------------*/
--
--#ifdef CONFIG_SPI_MASTER
--
--#define MCP_MAX_DEV_PER_CS	8
--
--static int mcp23sxx_spi_write(void *context, const void *data, size_t count)
--{
--	struct mcp23s08 *mcp = context;
--	struct spi_device *spi = to_spi_device(mcp->dev);
--	struct spi_message m;
--	struct spi_transfer t[2] = { { .tx_buf = &mcp->addr, .len = 1, },
--				     { .tx_buf = data, .len = count, }, };
--
--	spi_message_init(&m);
--	spi_message_add_tail(&t[0], &m);
--	spi_message_add_tail(&t[1], &m);
--
--	return spi_sync(spi, &m);
--}
--
--static int mcp23sxx_spi_gather_write(void *context,
--				const void *reg, size_t reg_size,
--				const void *val, size_t val_size)
--{
--	struct mcp23s08 *mcp = context;
--	struct spi_device *spi = to_spi_device(mcp->dev);
--	struct spi_message m;
--	struct spi_transfer t[3] = { { .tx_buf = &mcp->addr, .len = 1, },
--				     { .tx_buf = reg, .len = reg_size, },
--				     { .tx_buf = val, .len = val_size, }, };
--
--	spi_message_init(&m);
--	spi_message_add_tail(&t[0], &m);
--	spi_message_add_tail(&t[1], &m);
--	spi_message_add_tail(&t[2], &m);
--
--	return spi_sync(spi, &m);
--}
--
--static int mcp23sxx_spi_read(void *context, const void *reg, size_t reg_size,
--				void *val, size_t val_size)
--{
--	struct mcp23s08 *mcp = context;
--	struct spi_device *spi = to_spi_device(mcp->dev);
--	u8 tx[2];
--
--	if (reg_size != 1)
--		return -EINVAL;
--
--	tx[0] = mcp->addr | 0x01;
--	tx[1] = *((u8 *) reg);
--
--	return spi_write_then_read(spi, tx, sizeof(tx), val, val_size);
--}
--
--static const struct regmap_bus mcp23sxx_spi_regmap = {
--	.write = mcp23sxx_spi_write,
--	.gather_write = mcp23sxx_spi_gather_write,
--	.read = mcp23sxx_spi_read,
--};
--
--/* A given spi_device can represent up to eight mcp23sxx chips
-- * sharing the same chipselect but using different addresses
-- * (e.g. chips #0 and #3 might be populated, but not #1 or $2).
-- * Driver data holds all the per-chip data.
-- */
--struct mcp23s08_driver_data {
--	unsigned		ngpio;
--	struct mcp23s08		*mcp[8];
--	struct mcp23s08		chip[];
--};
--
--static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
--				    unsigned int addr, unsigned int type)
--{
--	const struct regmap_config *config;
--	struct regmap_config *copy;
--	const char *name;
--
--	switch (type) {
--	case MCP_TYPE_S08:
--		mcp->reg_shift = 0;
--		mcp->chip.ngpio = 8;
--		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s08.%d",
--						 addr);
--
--		config = &mcp23x08_regmap;
--		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
--		break;
--
--	case MCP_TYPE_S17:
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s17.%d",
--						 addr);
--
--		config = &mcp23x17_regmap;
--		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
--		break;
--
--	case MCP_TYPE_S18:
--		mcp->reg_shift = 1;
--		mcp->chip.ngpio = 16;
--		mcp->chip.label = "mcp23s18";
--
--		config = &mcp23x17_regmap;
--		name = config->name;
--		break;
--
--	default:
--		dev_err(dev, "invalid device type (%d)\n", type);
--		return -EINVAL;
--	}
--
--	copy = devm_kmemdup(dev, &config, sizeof(config), GFP_KERNEL);
--	if (!copy)
--		return -ENOMEM;
--
--	copy->name = name;
--
--	mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp, copy);
--	if (IS_ERR(mcp->regmap))
--		return PTR_ERR(mcp->regmap);
--
--	return 0;
--}
--
--static int mcp23s08_probe(struct spi_device *spi)
--{
--	struct device *dev = &spi->dev;
--	unsigned long spi_present_mask;
--	const void *match;
--	int chips;
--	u32 v;
--	unsigned			addr;
--	struct mcp23s08_driver_data	*data;
--	int				status, type;
--	unsigned			ngpio = 0;
--
--	match = device_get_match_data(dev);
--	if (match)
--		type = (int)(uintptr_t)match;
--	else
--		type = spi_get_device_id(spi)->driver_data;
--
--	status = device_property_read_u32(dev, "microchip,spi-present-mask", &v);
--	if (status) {
--		status = device_property_read_u32(dev, "mcp,spi-present-mask", &v);
--		if (status) {
--			dev_err(&spi->dev, "missing spi-present-mask");
--			return status;
--		}
--	}
--	spi_present_mask = v;
--
--	if (!spi_present_mask || spi_present_mask >= BIT(MCP_MAX_DEV_PER_CS)) {
--		dev_err(&spi->dev, "invalid spi-present-mask");
--		return -ENODEV;
--	}
--
--	chips = hweight_long(spi_present_mask);
--
--	data = devm_kzalloc(&spi->dev,
--			    struct_size(data, chip, chips), GFP_KERNEL);
--	if (!data)
--		return -ENOMEM;
--
--	spi_set_drvdata(spi, data);
--
--	for_each_set_bit(addr, &spi_present_mask, MCP_MAX_DEV_PER_CS) {
--		data->mcp[addr] = &data->chip[--chips];
--		data->mcp[addr]->irq = spi->irq;
--
--		status = mcp23s08_spi_regmap_init(data->mcp[addr], dev, addr, type);
--		if (status)
--			return status;
--
--		data->mcp[addr]->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
--				"mcp23xxx-pinctrl.%d", addr);
--		if (!data->mcp[addr]->pinctrl_desc.name)
--			return -ENOMEM;
--
--		status = mcp23s08_probe_one(data->mcp[addr], dev, 0x40 | (addr << 1), type, -1);
--		if (status < 0)
--			return status;
--
--		ngpio += data->mcp[addr]->chip.ngpio;
--	}
--	data->ngpio = ngpio;
--
--	return 0;
--}
--
--static const struct spi_device_id mcp23s08_ids[] = {
--	{ "mcp23s08", MCP_TYPE_S08 },
--	{ "mcp23s17", MCP_TYPE_S17 },
--	{ "mcp23s18", MCP_TYPE_S18 },
--	{ },
--};
--MODULE_DEVICE_TABLE(spi, mcp23s08_ids);
--
--static const struct of_device_id mcp23s08_spi_of_match[] = {
--	{
--		.compatible = "microchip,mcp23s08",
--		.data = (void *) MCP_TYPE_S08,
--	},
--	{
--		.compatible = "microchip,mcp23s17",
--		.data = (void *) MCP_TYPE_S17,
--	},
--	{
--		.compatible = "microchip,mcp23s18",
--		.data = (void *) MCP_TYPE_S18,
--	},
--/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
--	{
--		.compatible = "mcp,mcp23s08",
--		.data = (void *) MCP_TYPE_S08,
--	},
--	{
--		.compatible = "mcp,mcp23s17",
--		.data = (void *) MCP_TYPE_S17,
--	},
--	{ },
--};
--MODULE_DEVICE_TABLE(of, mcp23s08_spi_of_match);
--
--static struct spi_driver mcp23s08_driver = {
--	.probe		= mcp23s08_probe,
--	.id_table	= mcp23s08_ids,
--	.driver = {
--		.name	= "mcp23s08",
--		.of_match_table = mcp23s08_spi_of_match,
--	},
--};
--
--static int __init mcp23s08_spi_init(void)
--{
--	return spi_register_driver(&mcp23s08_driver);
--}
--
--static void mcp23s08_spi_exit(void)
--{
--	spi_unregister_driver(&mcp23s08_driver);
--}
--
--#else
--
--static int __init mcp23s08_spi_init(void) { return 0; }
--static void mcp23s08_spi_exit(void) { }
--
--#endif /* CONFIG_SPI_MASTER */
--
--/*----------------------------------------------------------------------*/
--
--static int __init mcp23s08_init(void)
--{
--	int ret;
--
--	ret = mcp23s08_spi_init();
--	if (ret)
--		goto spi_fail;
--
--	ret = mcp23s08_i2c_init();
--	if (ret)
--		goto i2c_fail;
--
--	return 0;
--
-- i2c_fail:
--	mcp23s08_spi_exit();
-- spi_fail:
--	return ret;
--}
--/* register after spi/i2c postcore initcall and before
-- * subsys initcalls that may rely on these GPIOs
-- */
--subsys_initcall(mcp23s08_init);
--
--static void __exit mcp23s08_exit(void)
--{
--	mcp23s08_spi_exit();
--	mcp23s08_i2c_exit();
--}
--module_exit(mcp23s08_exit);
--
--MODULE_LICENSE("GPL");
-+EXPORT_SYMBOL_GPL(mcp23s08_probe_one);
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.h b/drivers/pinctrl/pinctrl-mcp23s08.h
-new file mode 100644
-index 000000000000..90dc27081a3c
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* MCP23S08 SPI/I2C GPIO driver */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/irq.h>
-+#include <linux/mutex.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/types.h>
-+
-+/*
-+ * MCP types supported by driver
-+ */
-+#define MCP_TYPE_S08	1
-+#define MCP_TYPE_S17	2
-+#define MCP_TYPE_008	3
-+#define MCP_TYPE_017	4
-+#define MCP_TYPE_S18	5
-+#define MCP_TYPE_018	6
-+
-+struct device;
-+struct regmap;
-+
-+struct pinctrl_dev;
-+
-+struct mcp23s08 {
-+	u8			addr;
-+	bool			irq_active_high;
-+	bool			reg_shift;
-+
-+	u16			irq_rise;
-+	u16			irq_fall;
-+	int			irq;
-+	bool			irq_controller;
-+	int			cached_gpio;
-+	/* lock protects regmap access with bypass/cache flags */
-+	struct mutex		lock;
-+
-+	struct gpio_chip	chip;
-+	struct irq_chip		irq_chip;
-+
-+	struct regmap		*regmap;
-+	struct device		*dev;
-+
-+	struct pinctrl_dev	*pctldev;
-+	struct pinctrl_desc	pinctrl_desc;
-+};
-+
-+extern const struct regmap_config mcp23x08_regmap;
-+extern const struct regmap_config mcp23x17_regmap;
-+
-+int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
-+		       unsigned int addr, unsigned int type, unsigned int base);
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08_i2c.c b/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-new file mode 100644
-index 000000000000..e0b001c8c08c
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* MCP23S08 I2C GPIO driver */
-+
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include "pinctrl-mcp23s08.h"
-+
-+static int mcp230xx_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	unsigned int type = id->driver_data;
-+	struct mcp23s08 *mcp;
-+	int ret;
-+
-+	mcp = devm_kzalloc(dev, sizeof(*mcp), GFP_KERNEL);
-+	if (!mcp)
-+		return -ENOMEM;
-+
-+	switch (type) {
-+	case MCP_TYPE_008:
-+		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x08_regmap);
-+		mcp->reg_shift = 0;
-+		mcp->chip.ngpio = 8;
-+		mcp->chip.label = "mcp23008";
-+		break;
-+
-+	case MCP_TYPE_017:
-+		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
-+		mcp->reg_shift = 1;
-+		mcp->chip.ngpio = 16;
-+		mcp->chip.label = "mcp23017";
-+		break;
-+
-+	case MCP_TYPE_018:
-+		mcp->regmap = devm_regmap_init_i2c(client, &mcp23x17_regmap);
-+		mcp->reg_shift = 1;
-+		mcp->chip.ngpio = 16;
-+		mcp->chip.label = "mcp23018";
-+		break;
-+
-+	default:
-+		dev_err(dev, "invalid device type (%d)\n", type);
-+		return -EINVAL;
-+	}
-+
-+	if (IS_ERR(mcp->regmap))
-+		return PTR_ERR(mcp->regmap);
-+
-+	mcp->irq = client->irq;
-+	mcp->pinctrl_desc.name = "mcp23xxx-pinctrl";
-+
-+	ret = mcp23s08_probe_one(mcp, dev, client->addr, type, -1);
-+	if (ret)
-+		return ret;
-+
-+	i2c_set_clientdata(client, mcp);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id mcp230xx_id[] = {
-+	{ "mcp23008", MCP_TYPE_008 },
-+	{ "mcp23017", MCP_TYPE_017 },
-+	{ "mcp23018", MCP_TYPE_018 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, mcp230xx_id);
-+
-+static const struct of_device_id mcp23s08_i2c_of_match[] = {
-+	{
-+		.compatible = "microchip,mcp23008",
-+		.data = (void *) MCP_TYPE_008,
-+	},
-+	{
-+		.compatible = "microchip,mcp23017",
-+		.data = (void *) MCP_TYPE_017,
-+	},
-+	{
-+		.compatible = "microchip,mcp23018",
-+		.data = (void *) MCP_TYPE_018,
-+	},
-+/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
-+	{
-+		.compatible = "mcp,mcp23008",
-+		.data = (void *) MCP_TYPE_008,
-+	},
-+	{
-+		.compatible = "mcp,mcp23017",
-+		.data = (void *) MCP_TYPE_017,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mcp23s08_i2c_of_match);
-+
-+static struct i2c_driver mcp230xx_driver = {
-+	.driver = {
-+		.name	= "mcp230xx",
-+		.of_match_table = mcp23s08_i2c_of_match,
-+	},
-+	.probe		= mcp230xx_probe,
-+	.id_table	= mcp230xx_id,
-+};
-+
-+static int __init mcp23s08_i2c_init(void)
-+{
-+	return i2c_add_driver(&mcp230xx_driver);
-+}
-+
-+/*
-+ * Register after I²C postcore initcall and before
-+ * subsys initcalls that may rely on these GPIOs.
-+ */
-+subsys_initcall(mcp23s08_i2c_init);
-+
-+static void mcp23s08_i2c_exit(void)
-+{
-+	i2c_del_driver(&mcp230xx_driver);
-+}
-+module_exit(mcp23s08_i2c_exit);
-+
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08_spi.c b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-new file mode 100644
-index 000000000000..e06fb885fd2b
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* MCP23S08 SPI GPIO driver */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+
-+#include "pinctrl-mcp23s08.h"
-+
-+#define MCP_MAX_DEV_PER_CS	8
-+
-+/*
-+ * A given spi_device can represent up to eight mcp23sxx chips
-+ * sharing the same chipselect but using different addresses
-+ * (e.g. chips #0 and #3 might be populated, but not #1 or #2).
-+ * Driver data holds all the per-chip data.
-+ */
-+struct mcp23s08_driver_data {
-+	unsigned		ngpio;
-+	struct mcp23s08		*mcp[8];
-+	struct mcp23s08		chip[];
-+};
-+
-+static int mcp23sxx_spi_write(void *context, const void *data, size_t count)
-+{
-+	struct mcp23s08 *mcp = context;
-+	struct spi_device *spi = to_spi_device(mcp->dev);
-+	struct spi_message m;
-+	struct spi_transfer t[2] = { { .tx_buf = &mcp->addr, .len = 1, },
-+				     { .tx_buf = data, .len = count, }, };
-+
-+	spi_message_init(&m);
-+	spi_message_add_tail(&t[0], &m);
-+	spi_message_add_tail(&t[1], &m);
-+
-+	return spi_sync(spi, &m);
-+}
-+
-+static int mcp23sxx_spi_gather_write(void *context,
-+				const void *reg, size_t reg_size,
-+				const void *val, size_t val_size)
-+{
-+	struct mcp23s08 *mcp = context;
-+	struct spi_device *spi = to_spi_device(mcp->dev);
-+	struct spi_message m;
-+	struct spi_transfer t[3] = { { .tx_buf = &mcp->addr, .len = 1, },
-+				     { .tx_buf = reg, .len = reg_size, },
-+				     { .tx_buf = val, .len = val_size, }, };
-+
-+	spi_message_init(&m);
-+	spi_message_add_tail(&t[0], &m);
-+	spi_message_add_tail(&t[1], &m);
-+	spi_message_add_tail(&t[2], &m);
-+
-+	return spi_sync(spi, &m);
-+}
-+
-+static int mcp23sxx_spi_read(void *context, const void *reg, size_t reg_size,
-+				void *val, size_t val_size)
-+{
-+	struct mcp23s08 *mcp = context;
-+	struct spi_device *spi = to_spi_device(mcp->dev);
-+	u8 tx[2];
-+
-+	if (reg_size != 1)
-+		return -EINVAL;
-+
-+	tx[0] = mcp->addr | 0x01;
-+	tx[1] = *((u8 *) reg);
-+
-+	return spi_write_then_read(spi, tx, sizeof(tx), val, val_size);
-+}
-+
-+static const struct regmap_bus mcp23sxx_spi_regmap = {
-+	.write = mcp23sxx_spi_write,
-+	.gather_write = mcp23sxx_spi_gather_write,
-+	.read = mcp23sxx_spi_read,
-+};
-+
-+static int mcp23s08_spi_regmap_init(struct mcp23s08 *mcp, struct device *dev,
-+				    unsigned int addr, unsigned int type)
-+{
-+	const struct regmap_config *config;
-+	struct regmap_config *copy;
-+	const char *name;
-+
-+	switch (type) {
-+	case MCP_TYPE_S08:
-+		mcp->reg_shift = 0;
-+		mcp->chip.ngpio = 8;
-+		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s08.%d", addr);
-+
-+		config = &mcp23x08_regmap;
-+		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
-+		break;
-+
-+	case MCP_TYPE_S17:
-+		mcp->reg_shift = 1;
-+		mcp->chip.ngpio = 16;
-+		mcp->chip.label = devm_kasprintf(dev, GFP_KERNEL, "mcp23s17.%d", addr);
-+
-+		config = &mcp23x17_regmap;
-+		name = devm_kasprintf(dev, GFP_KERNEL, "%d", addr);
-+		break;
-+
-+	case MCP_TYPE_S18:
-+		mcp->reg_shift = 1;
-+		mcp->chip.ngpio = 16;
-+		mcp->chip.label = "mcp23s18";
-+
-+		config = &mcp23x17_regmap;
-+		name = config->name;
-+		break;
-+
-+	default:
-+		dev_err(dev, "invalid device type (%d)\n", type);
-+		return -EINVAL;
-+	}
-+
-+	copy = devm_kmemdup(dev, &config, sizeof(config), GFP_KERNEL);
-+	if (!copy)
-+		return -ENOMEM;
-+
-+	copy->name = name;
-+
-+	mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp, copy);
-+	if (IS_ERR(mcp->regmap))
-+		return PTR_ERR(mcp->regmap);
-+
-+	return 0;
-+}
-+
-+static int mcp23s08_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct mcp23s08_driver_data *data;
-+	unsigned long spi_present_mask;
-+	const void *match;
-+	unsigned int addr;
-+	unsigned int ngpio = 0;
-+	int chips;
-+	int type;
-+	int ret;
-+	u32 v;
-+
-+	match = device_get_match_data(dev);
-+	if (match)
-+		type = (int)(uintptr_t)match;
-+	else
-+		type = spi_get_device_id(spi)->driver_data;
-+
-+	ret = device_property_read_u32(dev, "microchip,spi-present-mask", &v);
-+	if (ret) {
-+		ret = device_property_read_u32(dev, "mcp,spi-present-mask", &v);
-+		if (ret) {
-+			dev_err(dev, "missing spi-present-mask");
-+			return ret;
-+		}
-+	}
-+	spi_present_mask = v;
-+
-+	if (!spi_present_mask || spi_present_mask >= BIT(MCP_MAX_DEV_PER_CS)) {
-+		dev_err(dev, "invalid spi-present-mask");
-+		return -ENODEV;
-+	}
-+
-+	chips = hweight_long(spi_present_mask);
-+
-+	data = devm_kzalloc(dev, struct_size(data, chip, chips), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, data);
-+
-+	for_each_set_bit(addr, &spi_present_mask, MCP_MAX_DEV_PER_CS) {
-+		data->mcp[addr] = &data->chip[--chips];
-+		data->mcp[addr]->irq = spi->irq;
-+
-+		ret = mcp23s08_spi_regmap_init(data->mcp[addr], dev, addr, type);
-+		if (ret)
-+			return ret;
-+
-+		data->mcp[addr]->pinctrl_desc.name = devm_kasprintf(dev, GFP_KERNEL,
-+								    "mcp23xxx-pinctrl.%d",
-+								    addr);
-+		if (!data->mcp[addr]->pinctrl_desc.name)
-+			return -ENOMEM;
-+
-+		ret = mcp23s08_probe_one(data->mcp[addr], dev, 0x40 | (addr << 1), type, -1);
-+		if (ret < 0)
-+			return ret;
-+
-+		ngpio += data->mcp[addr]->chip.ngpio;
-+	}
-+	data->ngpio = ngpio;
-+
-+	return 0;
-+}
-+
-+static const struct spi_device_id mcp23s08_ids[] = {
-+	{ "mcp23s08", MCP_TYPE_S08 },
-+	{ "mcp23s17", MCP_TYPE_S17 },
-+	{ "mcp23s18", MCP_TYPE_S18 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, mcp23s08_ids);
-+
-+static const struct of_device_id mcp23s08_spi_of_match[] = {
-+	{
-+		.compatible = "microchip,mcp23s08",
-+		.data = (void *) MCP_TYPE_S08,
-+	},
-+	{
-+		.compatible = "microchip,mcp23s17",
-+		.data = (void *) MCP_TYPE_S17,
-+	},
-+	{
-+		.compatible = "microchip,mcp23s18",
-+		.data = (void *) MCP_TYPE_S18,
-+	},
-+/* NOTE: The use of the mcp prefix is deprecated and will be removed. */
-+	{
-+		.compatible = "mcp,mcp23s08",
-+		.data = (void *) MCP_TYPE_S08,
-+	},
-+	{
-+		.compatible = "mcp,mcp23s17",
-+		.data = (void *) MCP_TYPE_S17,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mcp23s08_spi_of_match);
-+
-+static struct spi_driver mcp23s08_driver = {
-+	.probe		= mcp23s08_probe,
-+	.id_table	= mcp23s08_ids,
-+	.driver = {
-+		.name	= "mcp23s08",
-+		.of_match_table = mcp23s08_spi_of_match,
-+	},
-+};
-+
-+static int __init mcp23s08_spi_init(void)
-+{
-+	return spi_register_driver(&mcp23s08_driver);
-+}
-+
-+/*
-+ * Register after SPI postcore initcall and before
-+ * subsys initcalls that may rely on these GPIOs.
-+ */
-+subsys_initcall(mcp23s08_spi_init);
-+
-+static void mcp23s08_spi_exit(void)
-+{
-+	spi_unregister_driver(&mcp23s08_driver);
-+}
-+module_exit(mcp23s08_spi_exit);
-+
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KSW4gdGhlIGZ1
+dHVyZSB3ZSB3YW50IHRvIGJlIGFibGUgdG8gYnVpbGQgdGhlIE1lZGlhVGVrIHBpbmN0cmwgZHJp
+dmVyLA0KYmFzZWQgb24gcGFyaXMsIGFzIGtlcm5lbCBtb2R1bGUuIFRoaXMgcGF0Y2ggYWxsb3dz
+IHBpbmN0cmwtcGFyaXMuYywgdGhlDQpleHRlcm5hbCBpbnRlcnJ1cHQgY29udHJvbGxlciBtdGst
+ZWludC5jLCBhbmQgcGluY3RybC1tdGstY29tbW9uLXYyLmMgdG8NCmJlIGxvYWRhYmxlIGFzIG1v
+ZHVsZS4NCg0KU2lnbmVkLW9mZi1ieTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29t
+Pg0KU2lnbmVkLW9mZi1ieTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4N
+ClJldmlld2VkLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0K
+LS0tDQp2Ni0+djc6IG5vIGNoYW5nZQ0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
+b25maWcgICAgICAgICAgICAgIHwgMTEgKysrKysrKy0tDQogZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL01ha2VmaWxlICAgICAgICAgICAgIHwgIDUgKystLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRp
+YXRlay9tdGstZWludC5jICAgICAgICAgICB8ICA5ICsrKysrKysNCiAuLi4vcGluY3RybC9tZWRp
+YXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYyAgfCAyNCArKysrKysrKysrKysrKysrKysrDQog
+ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYyAgICAgIHwgIDYgKysrKysN
+CiA1IGZpbGVzIGNoYW5nZWQsIDUxIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZyBiL2RyaXZlcnMvcGlu
+Y3RybC9tZWRpYXRlay9LY29uZmlnDQppbmRleCA3MDFmOWFmNjNmNWUuLjU1MWFjNzE2YjEwYyAx
+MDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnDQorKysgYi9kcml2
+ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KQEAgLTMsMTAgKzMsMTIgQEAgbWVudSAiTWVk
+aWFUZWsgcGluY3RybCBkcml2ZXJzIg0KIAlkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgfHwgQ09N
+UElMRV9URVNUDQogDQogY29uZmlnIEVJTlRfTVRLDQotCWJvb2wgIk1lZGlhVGVrIEV4dGVybmFs
+IEludGVycnVwdCBTdXBwb3J0Ig0KKwl0cmlzdGF0ZSAiTWVkaWFUZWsgRXh0ZXJuYWwgSW50ZXJy
+dXB0IFN1cHBvcnQiDQogCWRlcGVuZHMgb24gUElOQ1RSTF9NVEsgfHwgUElOQ1RSTF9NVEtfTU9P
+UkUgfHwgUElOQ1RSTF9NVEtfUEFSSVMgfHwgQ09NUElMRV9URVNUDQogCXNlbGVjdCBHUElPTElC
+DQogCXNlbGVjdCBJUlFfRE9NQUlODQorCWRlZmF1bHQgeSBpZiBQSU5DVFJMX01USyB8fCBQSU5D
+VFJMX01US19NT09SRQ0KKwlkZWZhdWx0IFBJTkNUUkxfTVRLX1BBUklTDQogDQogY29uZmlnIFBJ
+TkNUUkxfTVRLDQogCWJvb2wNCkBAIC0xNyw2ICsxOSw5IEBAIGNvbmZpZyBQSU5DVFJMX01USw0K
+IAlzZWxlY3QgRUlOVF9NVEsNCiAJc2VsZWN0IE9GX0dQSU8NCiANCitjb25maWcgUElOQ1RSTF9N
+VEtfVjINCisJdHJpc3RhdGUNCisNCiBjb25maWcgUElOQ1RSTF9NVEtfTU9PUkUNCiAJYm9vbA0K
+IAlkZXBlbmRzIG9uIE9GDQpAQCAtMjUsMTUgKzMwLDE3IEBAIGNvbmZpZyBQSU5DVFJMX01US19N
+T09SRQ0KIAlzZWxlY3QgR0VORVJJQ19QSU5NVVhfRlVOQ1RJT05TDQogCXNlbGVjdCBHUElPTElC
+DQogCXNlbGVjdCBPRl9HUElPDQorCXNlbGVjdCBQSU5DVFJMX01US19WMg0KIA0KIGNvbmZpZyBQ
+SU5DVFJMX01US19QQVJJUw0KLQlib29sDQorCXRyaXN0YXRlDQogCWRlcGVuZHMgb24gT0YNCiAJ
+c2VsZWN0IFBJTk1VWA0KIAlzZWxlY3QgR0VORVJJQ19QSU5DT05GDQogCXNlbGVjdCBHUElPTElC
+DQogCXNlbGVjdCBFSU5UX01USw0KIAlzZWxlY3QgT0ZfR1BJTw0KKwlzZWxlY3QgUElOQ1RSTF9N
+VEtfVjINCiANCiAjIEZvciBBUk12NyBTb0NzDQogY29uZmlnIFBJTkNUUkxfTVQyNzAxDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlIGIvZHJpdmVycy9waW5j
+dHJsL21lZGlhdGVrL01ha2VmaWxlDQppbmRleCBhNzQzMjVhYmQ4NzcuLjRiNzEzMjg3NmU3MSAx
+MDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZQ0KKysrIGIvZHJp
+dmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxlDQpAQCAtMiw4ICsyLDkgQEANCiAjIENvcmUN
+CiBvYmotJChDT05GSUdfRUlOVF9NVEspCQkrPSBtdGstZWludC5vDQogb2JqLSQoQ09ORklHX1BJ
+TkNUUkxfTVRLKQkrPSBwaW5jdHJsLW10ay1jb21tb24ubw0KLW9iai0kKENPTkZJR19QSU5DVFJM
+X01US19NT09SRSkgKz0gcGluY3RybC1tb29yZS5vIHBpbmN0cmwtbXRrLWNvbW1vbi12Mi5vDQot
+b2JqLSQoQ09ORklHX1BJTkNUUkxfTVRLX1BBUklTKSArPSBwaW5jdHJsLXBhcmlzLm8gcGluY3Ry
+bC1tdGstY29tbW9uLXYyLm8NCitvYmotJChDT05GSUdfUElOQ1RSTF9NVEtfVjIpCSs9IHBpbmN0
+cmwtbXRrLWNvbW1vbi12Mi5vDQorb2JqLSQoQ09ORklHX1BJTkNUUkxfTVRLX01PT1JFKSArPSBw
+aW5jdHJsLW1vb3JlLm8NCitvYmotJChDT05GSUdfUElOQ1RSTF9NVEtfUEFSSVMpICs9IHBpbmN0
+cmwtcGFyaXMubw0KIA0KICMgU29DIERyaXZlcnMNCiBvYmotJChDT05GSUdfUElOQ1RSTF9NVDI3
+MDEpCSs9IHBpbmN0cmwtbXQyNzAxLm8NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVk
+aWF0ZWsvbXRrLWVpbnQuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9tdGstZWludC5jDQpp
+bmRleCA3ZTUyNmJjZjVlMGIuLjIyNzM2ZjYwYzE2YyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGlu
+Y3RybC9tZWRpYXRlay9tdGstZWludC5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
+bXRrLWVpbnQuYw0KQEAgLTE1LDYgKzE1LDcgQEANCiAjaW5jbHVkZSA8bGludXgvaW8uaD4NCiAj
+aW5jbHVkZSA8bGludXgvaXJxY2hpcC9jaGFpbmVkX2lycS5oPg0KICNpbmNsdWRlIDxsaW51eC9p
+cnFkb21haW4uaD4NCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQogI2luY2x1ZGUgPGxpbnV4
+L29mX2lycS5oPg0KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCiANCkBAIC0z
+NzksNiArMzgwLDcgQEAgaW50IG10a19laW50X2RvX3N1c3BlbmQoc3RydWN0IG10a19laW50ICpl
+aW50KQ0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfZG9f
+c3VzcGVuZCk7DQogDQogaW50IG10a19laW50X2RvX3Jlc3VtZShzdHJ1Y3QgbXRrX2VpbnQgKmVp
+bnQpDQogew0KQEAgLTM4Niw2ICszODgsNyBAQCBpbnQgbXRrX2VpbnRfZG9fcmVzdW1lKHN0cnVj
+dCBtdGtfZWludCAqZWludCkNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BM
+KG10a19laW50X2RvX3Jlc3VtZSk7DQogDQogaW50IG10a19laW50X3NldF9kZWJvdW5jZShzdHJ1
+Y3QgbXRrX2VpbnQgKmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9udW0sDQogCQkJICB1bnNpZ25l
+ZCBpbnQgZGVib3VuY2UpDQpAQCAtNDQwLDYgKzQ0Myw3IEBAIGludCBtdGtfZWludF9zZXRfZGVi
+b3VuY2Uoc3RydWN0IG10a19laW50ICplaW50LCB1bnNpZ25lZCBsb25nIGVpbnRfbnVtLA0KIA0K
+IAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfc2V0X2RlYm91bmNl
+KTsNCiANCiBpbnQgbXRrX2VpbnRfZmluZF9pcnEoc3RydWN0IG10a19laW50ICplaW50LCB1bnNp
+Z25lZCBsb25nIGVpbnRfbikNCiB7DQpAQCAtNDUxLDYgKzQ1NSw3IEBAIGludCBtdGtfZWludF9m
+aW5kX2lycShzdHJ1Y3QgbXRrX2VpbnQgKmVpbnQsIHVuc2lnbmVkIGxvbmcgZWludF9uKQ0KIA0K
+IAlyZXR1cm4gaXJxOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfZWludF9maW5kX2lycSk7
+DQogDQogaW50IG10a19laW50X2RvX2luaXQoc3RydWN0IG10a19laW50ICplaW50KQ0KIHsNCkBA
+IC00OTUsMyArNTAwLDcgQEAgaW50IG10a19laW50X2RvX2luaXQoc3RydWN0IG10a19laW50ICpl
+aW50KQ0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2VpbnRfZG9f
+aW5pdCk7DQorDQorTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KK01PRFVMRV9ERVNDUklQVElP
+TigiTWVkaWFUZWsgRUlOVCBEcml2ZXIiKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwv
+bWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
+ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGQzMTY5YTg3ZTFiMy4uNmVhNDBiNTAx
+MzI4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNv
+bW1vbi12Mi5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29t
+bW9uLXYyLmMNCkBAIC0xMiw2ICsxMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L2dwaW8vZHJpdmVy
+Lmg+DQogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KICNpbmNsdWRlIDxsaW51
+eC9pby5oPg0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8bGludXgvb2Zf
+aXJxLmg+DQogDQogI2luY2x1ZGUgIm10ay1laW50LmgiDQpAQCAtMjA0LDYgKzIwNSw3IEBAIGlu
+dCBtdGtfaHdfc2V0X3ZhbHVlKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsIGNvbnN0IHN0cnVjdCBt
+dGtfcGluX2Rlc2MgKmRlc2MsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQ
+TChtdGtfaHdfc2V0X3ZhbHVlKTsNCiANCiBpbnQgbXRrX2h3X2dldF92YWx1ZShzdHJ1Y3QgbXRr
+X3BpbmN0cmwgKmh3LCBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KIAkJICAgICBp
+bnQgZmllbGQsIGludCAqdmFsdWUpDQpAQCAtMjIzLDYgKzIyNSw3IEBAIGludCBtdGtfaHdfZ2V0
+X3ZhbHVlKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2Mg
+KmRlc2MsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfaHdfZ2V0
+X3ZhbHVlKTsNCiANCiBzdGF0aWMgaW50IG10a194dF9maW5kX2VpbnRfbnVtKHN0cnVjdCBtdGtf
+cGluY3RybCAqaHcsIHVuc2lnbmVkIGxvbmcgZWludF9uKQ0KIHsNCkBAIC0zNjEsNiArMzY0LDcg
+QEAgaW50IG10a19idWlsZF9laW50KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsIHN0cnVjdCBwbGF0
+Zm9ybV9kZXZpY2UgKnBkZXYpDQogDQogCXJldHVybiBtdGtfZWludF9kb19pbml0KGh3LT5laW50
+KTsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX2J1aWxkX2VpbnQpOw0KIA0KIC8qIFJldmlz
+aW9uIDAgKi8NCiBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX3NldChzdHJ1Y3QgbXRrX3Bp
+bmN0cmwgKmh3LA0KQEAgLTM4MCw2ICszODQsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNh
+YmxlX3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQ
+T1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX3NldCk7DQogDQogaW50IG10
+a19waW5jb25mX2JpYXNfZGlzYWJsZV9nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkJ
+IGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGludCAqcmVzKQ0KQEAgLTQwMiw2ICs0
+MDcsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19kaXNhYmxlX2dldChzdHJ1Y3QgbXRrX3BpbmN0
+cmwgKmh3LA0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNv
+bmZfYmlhc19kaXNhYmxlX2dldCk7DQogDQogaW50IG10a19waW5jb25mX2JpYXNfc2V0KHN0cnVj
+dCBtdGtfcGluY3RybCAqaHcsDQogCQkJIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2Ms
+IGJvb2wgcHVsbHVwKQ0KQEAgLTQyMSw2ICs0MjcsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19z
+ZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9SVF9T
+WU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfc2V0KTsNCiANCiBpbnQgbXRrX3BpbmNvbmZfYmlh
+c19nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkgY29uc3Qgc3RydWN0IG10a19waW5f
+ZGVzYyAqZGVzYywgYm9vbCBwdWxsdXAsIGludCAqcmVzKQ0KQEAgLTQ0MCw2ICs0NDcsNyBAQCBp
+bnQgbXRrX3BpbmNvbmZfYmlhc19nZXQoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0
+dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfZ2V0KTsNCiAN
+CiAvKiBSZXZpc2lvbiAxICovDQogaW50IG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9zZXRfcmV2
+MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KQEAgLTQ1NCw2ICs0NjIsNyBAQCBpbnQgbXRrX3Bp
+bmNvbmZfYmlhc19kaXNhYmxlX3NldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQog
+CXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9iaWFzX2Rpc2Fi
+bGVfc2V0X3JldjEpOw0KIA0KIGludCBtdGtfcGluY29uZl9iaWFzX2Rpc2FibGVfZ2V0X3JldjEo
+c3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQkJICAgICAgY29uc3Qgc3RydWN0IG10a19waW5f
+ZGVzYyAqZGVzYywgaW50ICpyZXMpDQpAQCAtNDcxLDYgKzQ4MCw3IEBAIGludCBtdGtfcGluY29u
+Zl9iaWFzX2Rpc2FibGVfZ2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0
+dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfZGlzYWJsZV9n
+ZXRfcmV2MSk7DQogDQogaW50IG10a19waW5jb25mX2JpYXNfc2V0X3JldjEoc3RydWN0IG10a19w
+aW5jdHJsICpodywNCiAJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBi
+b29sIHB1bGx1cCkNCkBAIC00OTAsNiArNTAwLDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfc2V0
+X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9S
+VF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfc2V0X3JldjEpOw0KIA0KIGludCBtdGtfcGlu
+Y29uZl9iaWFzX2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogCQkJICAgICAgY29u
+c3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgYm9vbCBwdWxsdXAsDQpAQCAtNTE1LDYgKzUy
+Niw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2dldF9yZXYxKHN0cnVjdCBtdGtfcGluY3RybCAq
+aHcsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9i
+aWFzX2dldF9yZXYxKTsNCiANCiAvKiBDb21ibyBmb3IgdGhlIGZvbGxvd2luZyBwdWxsIHJlZ2lz
+dGVyIHR5cGU6DQogICogMS4gUFUgKyBQRA0KQEAgLTcxNSw2ICs3MjcsNyBAQCBpbnQgbXRrX3Bp
+bmNvbmZfYmlhc19zZXRfY29tYm8oc3RydWN0IG10a19waW5jdHJsICpodywNCiBvdXQ6DQogCXJl
+dHVybiBlcnI7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfc2V0X2Nv
+bWJvKTsNCiANCiBpbnQgbXRrX3BpbmNvbmZfYmlhc19nZXRfY29tYm8oc3RydWN0IG10a19waW5j
+dHJsICpodywNCiAJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLA0KQEAg
+LTczNSw2ICs3NDgsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYmlhc19nZXRfY29tYm8oc3RydWN0IG10
+a19waW5jdHJsICpodywNCiBvdXQ6DQogCXJldHVybiBlcnI7DQogfQ0KK0VYUE9SVF9TWU1CT0xf
+R1BMKG10a19waW5jb25mX2JpYXNfZ2V0X2NvbWJvKTsNCiANCiAvKiBSZXZpc2lvbiAwICovDQog
+aW50IG10a19waW5jb25mX2RyaXZlX3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KQEAgLTc2
+NCw2ICs3NzgsNyBAQCBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfc2V0KHN0cnVjdCBtdGtfcGluY3Ry
+bCAqaHcsDQogDQogCXJldHVybiBlcnI7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5j
+b25mX2RyaXZlX3NldCk7DQogDQogaW50IG10a19waW5jb25mX2RyaXZlX2dldChzdHJ1Y3QgbXRr
+X3BpbmN0cmwgKmh3LA0KIAkJCSAgY29uc3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgaW50
+ICp2YWwpDQpAQCAtNzg4LDYgKzgwMyw3IEBAIGludCBtdGtfcGluY29uZl9kcml2ZV9nZXQoc3Ry
+dWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xf
+R1BMKG10a19waW5jb25mX2RyaXZlX2dldCk7DQogDQogLyogUmV2aXNpb24gMSAqLw0KIGludCBt
+dGtfcGluY29uZl9kcml2ZV9zZXRfcmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KQEAgLTgw
+OSw2ICs4MjUsNyBAQCBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfc2V0X3JldjEoc3RydWN0IG10a19w
+aW5jdHJsICpodywNCiANCiAJcmV0dXJuIGVycjsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRr
+X3BpbmNvbmZfZHJpdmVfc2V0X3JldjEpOw0KIA0KIGludCBtdGtfcGluY29uZl9kcml2ZV9nZXRf
+cmV2MShzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAgICAgICBjb25zdCBzdHJ1Y3QgbXRr
+X3Bpbl9kZXNjICpkZXNjLCBpbnQgKnZhbCkNCkBAIC04MjYsMTggKzg0MywyMSBAQCBpbnQgbXRr
+X3BpbmNvbmZfZHJpdmVfZ2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCiANCiAJcmV0
+dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2RyaXZlX2dldF9yZXYx
+KTsNCiANCiBpbnQgbXRrX3BpbmNvbmZfZHJpdmVfc2V0X3JhdyhzdHJ1Y3QgbXRrX3BpbmN0cmwg
+Kmh3LA0KIAkJCSAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCB1MzIgYXJn
+KQ0KIHsNCiAJcmV0dXJuIG10a19od19zZXRfdmFsdWUoaHcsIGRlc2MsIFBJTkNUUkxfUElOX1JF
+R19EUlYsIGFyZyk7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2RyaXZlX3Nl
+dF9yYXcpOw0KIA0KIGludCBtdGtfcGluY29uZl9kcml2ZV9nZXRfcmF3KHN0cnVjdCBtdGtfcGlu
+Y3RybCAqaHcsDQogCQkJICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIGlu
+dCAqdmFsKQ0KIHsNCiAJcmV0dXJuIG10a19od19nZXRfdmFsdWUoaHcsIGRlc2MsIFBJTkNUUkxf
+UElOX1JFR19EUlYsIHZhbCk7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2Ry
+aXZlX2dldF9yYXcpOw0KIA0KIGludCBtdGtfcGluY29uZl9hZHZfcHVsbF9zZXQoc3RydWN0IG10
+a19waW5jdHJsICpodywNCiAJCQkgICAgIGNvbnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2Ms
+IGJvb2wgcHVsbHVwLA0KQEAgLTg3OCw2ICs4OTgsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYWR2X3B1
+bGxfc2V0KHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiBlcnI7DQogfQ0KK0VY
+UE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2Fkdl9wdWxsX3NldCk7DQogDQogaW50IG10a19w
+aW5jb25mX2Fkdl9wdWxsX2dldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAgICAgY29u
+c3Qgc3RydWN0IG10a19waW5fZGVzYyAqZGVzYywgYm9vbCBwdWxsdXAsDQpAQCAtOTIwLDYgKzk0
+MSw3IEBAIGludCBtdGtfcGluY29uZl9hZHZfcHVsbF9nZXQoc3RydWN0IG10a19waW5jdHJsICpo
+dywNCiANCiAJcmV0dXJuIDA7DQogfQ0KK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2Fk
+dl9wdWxsX2dldCk7DQogDQogaW50IG10a19waW5jb25mX2Fkdl9kcml2ZV9zZXQoc3RydWN0IG10
+a19waW5jdHJsICpodywNCiAJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNj
+LCB1MzIgYXJnKQ0KQEAgLTk0Niw2ICs5NjgsNyBAQCBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZl
+X3NldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIA0KIAlyZXR1cm4gZXJyOw0KIH0NCitFWFBP
+UlRfU1lNQk9MX0dQTChtdGtfcGluY29uZl9hZHZfZHJpdmVfc2V0KTsNCiANCiBpbnQgbXRrX3Bp
+bmNvbmZfYWR2X2RyaXZlX2dldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3LA0KIAkJCSAgICAgIGNv
+bnN0IHN0cnVjdCBtdGtfcGluX2Rlc2MgKmRlc2MsIHUzMiAqdmFsKQ0KQEAgLTk2OSwzICs5OTIs
+NCBAQCBpbnQgbXRrX3BpbmNvbmZfYWR2X2RyaXZlX2dldChzdHJ1Y3QgbXRrX3BpbmN0cmwgKmh3
+LA0KIA0KIAlyZXR1cm4gMDsNCiB9DQorRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYWR2
+X2RyaXZlX2dldCk7DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0
+cmwtcGFyaXMuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMNCmlu
+ZGV4IDM4NTNlYzNhMmE4ZS4uZDAwNmNlNGM5MjM4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waW5j
+dHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL3BpbmN0cmwtcGFyaXMuYw0KQEAgLTEwLDYgKzEwLDcgQEANCiAgKi8NCiANCiAjaW5jbHVk
+ZSA8bGludXgvZ3Bpby9kcml2ZXIuaD4NCisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQogI2lu
+Y2x1ZGUgPGR0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2NXh4Lmg+DQogI2luY2x1ZGUgInBpbmN0cmwt
+cGFyaXMuaCINCiANCkBAIC02MzMsNiArNjM0LDcgQEAgc3NpemVfdCBtdGtfcGN0cmxfc2hvd19v
+bmVfcGluKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQogDQogCXJldHVybiBsZW47DQogfQ0KK0VY
+UE9SVF9TWU1CT0xfR1BMKG10a19wY3RybF9zaG93X29uZV9waW4pOw0KIA0KICNkZWZpbmUgUElO
+X0RCR19CVUZfU1ogOTYNCiBzdGF0aWMgdm9pZCBtdGtfcGN0cmxfZGJnX3Nob3coc3RydWN0IHBp
+bmN0cmxfZGV2ICpwY3RsZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMsDQpAQCAtMTAyMSw2ICsxMDIz
+LDcgQEAgaW50IG10a19wYXJpc19waW5jdHJsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYsDQogDQogCXJldHVybiAwOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChtdGtfcGFyaXNf
+cGluY3RybF9wcm9iZSk7DQogDQogc3RhdGljIGludCBtdGtfcGFyaXNfcGluY3RybF9zdXNwZW5k
+KHN0cnVjdCBkZXZpY2UgKmRldmljZSkNCiB7DQpAQCAtMTA0MCwzICsxMDQzLDYgQEAgY29uc3Qg
+c3RydWN0IGRldl9wbV9vcHMgbXRrX3BhcmlzX3BpbmN0cmxfcG1fb3BzID0gew0KIAkuc3VzcGVu
+ZF9ub2lycSA9IG10a19wYXJpc19waW5jdHJsX3N1c3BlbmQsDQogCS5yZXN1bWVfbm9pcnEgPSBt
+dGtfcGFyaXNfcGluY3RybF9yZXN1bWUsDQogfTsNCisNCitNT0RVTEVfTElDRU5TRSgiR1BMIHYy
+Iik7DQorTU9EVUxFX0RFU0NSSVBUSU9OKCJNZWRpYVRlayBQaW5jdHJsIENvbW1vbiBEcml2ZXIg
+VjIgUGFyaXMiKTsNCi0tIA0KMi4yNS4xDQo=
 
