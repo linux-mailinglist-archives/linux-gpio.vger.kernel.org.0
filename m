@@ -2,88 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFFBD1A106D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 17:43:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56B1C1A11F3
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 18:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgDGPnB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Apr 2020 11:43:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40201 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbgDGPnA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 11:43:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a81so2323417wmf.5
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Apr 2020 08:42:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0aWpnnYlYguz3F+JVvnjabHfBBjsGY++SGOyWdWzZ3Y=;
-        b=DhHIZS8wCsY2m2Y4WUTVZOfRi1NuKy/87cmOCKVoLkgCRB/H9HL1usx3iwhVxtYoWI
-         +fGuCdjEiJleXLyLp84a6YF7Ow7Z6xQqlpfWvFJaky0qMvBOm/D+UC9gHrc4tS5PEl/J
-         ibWjrWXfDUrTttG7h3IskK+gKMvVjImOzcKxvw0kuE3grOMhUZj20fMQRr26uyDITT/U
-         CgE08Rbr4oZrg/vdKgnvUhYCvgmNwFqQ2uGu6WlcVqJ10oOYAojCHEmj5R11mI+kRjmE
-         1Pr6m57QPZZ6E1qJLVjqKACJY1mmEJKtxed9YP9vb+u4K/IXIRXunYS+GGc/y7pqeYLy
-         Onxw==
+        id S1726417AbgDGQoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Apr 2020 12:44:15 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44368 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgDGQoP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 12:44:15 -0400
+Received: by mail-ot1-f66.google.com with SMTP id a49so3767804otc.11;
+        Tue, 07 Apr 2020 09:44:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0aWpnnYlYguz3F+JVvnjabHfBBjsGY++SGOyWdWzZ3Y=;
-        b=AdVrVlqx2ET44kfSHaS9kTQqqsKFHEnikc3uNSPpje6WHi2duPRvlk55OR72kdVTYC
-         zQAxw1Wr8XOyGWMgurovSXInSrI8LozJKLTMpSVHY3DFVC0IbVhJ9K7e+T6tqXXeJ/e9
-         HM31TEWEPh0UgFxb9xDLIgwcKKy5rE5rbSzrmLTunUBeArt/UnYIYTuHnhyMSx6uR/pY
-         Oy+kZ6Q2QxypB0vT52b8zo2QgC4SIKH91Eq8YIOtIT6ATbFry8X78NY076WtBmyMNRXJ
-         tBndcOADzUeGo1IU9Q5lQuWUKpP6TUT2Ao65Ie1XsgQOdcThgJcn1E+t8oGyITp9i9LC
-         bDHw==
-X-Gm-Message-State: AGi0PuZbCTjfcaRkfmCC0KPb6G5hlLL0cxspGBh00vt+xvuywAikB7hc
-        cbzOP9Xdzrl+FjBfFpmR6d9t3A==
-X-Google-Smtp-Source: APiQypLt6v8178aJkXJnaecq/E50zJ1PoLpY2ZRcWCSHf4lHftAxL/6+mWI8xxQQQ7ku3oTkB+4o0w==
-X-Received: by 2002:a7b:ca46:: with SMTP id m6mr3032453wml.102.1586274177469;
-        Tue, 07 Apr 2020 08:42:57 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id b14sm1329274wrw.83.2020.04.07.08.42.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 08:42:56 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpio: pca953x: disable regmap locking
-Date:   Tue,  7 Apr 2020 17:42:45 +0200
-Message-Id: <20200407154245.2548-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R9dHFjOaPMQsaSClflJCrlQoK/O5+By+otwJwygb61Q=;
+        b=HIcxdrCnmWTYQrDPgWKr+Jc812n9wXD6ddP3WFlo3sM16pT4Z6P6zowTDDh4A5hJCJ
+         LGM9eHvAaDdTiXYNJI6PqTHwXVNHLYeLxCPOHXxfPueVScaBRCJC7zcaZgoo3rCITZh3
+         syNNOD2T6d1xCv42ox/6BvLDZwDfFE6IckNq4KgxB45G/02sbJl140L7OeWiY4ciIFKP
+         7FBJnp1Tl2KJmL6pzLz03hWJ/lSsC+b/AiabbNP6TVt5qRBJzrAl6DK1nJ2MYsVS5fMF
+         drNGW+0ZSaCHrp84+LdepKXfhMssFHwdgDrxLdtDblcOgDzBimf2UEiWBbmW5LruBuQk
+         5D4g==
+X-Gm-Message-State: AGi0PuaNpxnshSgURS2haHAQQ3E7754dn+leiDHxQEIl3cO6ycNcpsJ1
+        u/Zaku/YmBqgiy8/xrZE8FY3oPt4wyFtA25EFtFstmvD
+X-Google-Smtp-Source: APiQypLc/uUMJz9ICJUJPRnekoWgF51izVDvtaNrBMlK0cq68vLd0pZrBiVm2DFcsFWQ2jjjutdWum0eOj2kbLSYGtw=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr2334844otk.250.1586277854332;
+ Tue, 07 Apr 2020 09:44:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200407154245.2548-1-brgl@bgdev.pl>
+In-Reply-To: <20200407154245.2548-1-brgl@bgdev.pl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Apr 2020 18:44:02 +0200
+Message-ID: <CAMuHMdWPwG-U6H+0Nmsz7fLgc-wQDnyQbZbw_rvkMZX6E4Q+0w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: disable regmap locking
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Apr 7, 2020 at 5:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This driver uses its own locking but regmap silently uses a mutex for
+> all operations too. Add the option to disable locking to the regmap
+> config struct.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This driver uses its own locking but regmap silently uses a mutex for
-all operations too. Add the option to disable locking to the regmap
-config struct.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpio-pca953x.c | 1 +
- 1 file changed, 1 insertion(+)
+SATA on Salvator-XS with R-Car H3 ES2.0 relies on a pca9654 GPIO hog
+and still works, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 5638b4e5355f..40da1954d74b 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -306,6 +306,7 @@ static const struct regmap_config pca953x_i2c_regmap = {
- 	.writeable_reg = pca953x_writeable_register,
- 	.volatile_reg = pca953x_volatile_register,
- 
-+	.disable_locking = true,
- 	.cache_type = REGCACHE_RBTREE,
- 	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
- 	.max_register = 0xff,
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
