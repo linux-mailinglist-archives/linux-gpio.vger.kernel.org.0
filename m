@@ -2,105 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C5341A0D12
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 13:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 625E01A0E7E
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Apr 2020 15:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgDGLwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Apr 2020 07:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgDGLwe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:52:34 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192F620678;
-        Tue,  7 Apr 2020 11:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586260353;
-        bh=II1pwoRWO506IHM9BklJPMIsQjRlhdCQnZOBbPZ90Cw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SifwQlr3atkEZLhSnM4MAmtZm71biNi+AX4LOKYaXknDWl/wCp1Lmk4UVN9+zLMF2
-         lDF98dn00tOYCCIZK9KAbfg5Pz8IusxzfNqvIAPiMORjcAfr44WrVFdk3f/6eqBgTX
-         8Irnm5JZE0Fp81oQjeh7NcrHG6lEjRvPcf3CPRmw=
-Received: by pali.im (Postfix)
-        id C19B05F1; Tue,  7 Apr 2020 13:52:30 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 13:52:30 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
- use use platform api"
-Message-ID: <20200407115230.7dsepjfxwbk53x2v@pali>
-References: <20200324004413.14355-1-marek.behun@nic.cz>
- <20200324122017.GR3819@lunn.ch>
+        id S1728810AbgDGNhV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Apr 2020 09:37:21 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:37406 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728768AbgDGNhV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Apr 2020 09:37:21 -0400
+X-UUID: 54718c5495274adaa35b42087b8d6fb3-20200407
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RdRXX8sbx8HHYtoWDp4+BPvE2rMumZFXzEadK6V6dIU=;
+        b=gJSRYrHaXQFc1r524SPcwM9qUo/ejzOXONSR9Y0MIsoyiWQirls47ZIa2ELUo27R2mYJLjbe3rs5p69t4ImbJJIfWxomef7mV2n6MLTl9DgCPlNkjFu3AqRcEKGTMICWZWZDB+NnP0upeCN/HyFsywQUXb+2X55OaSgYm/qIHUQ=;
+X-UUID: 54718c5495274adaa35b42087b8d6fb3-20200407
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1348218777; Tue, 07 Apr 2020 21:37:16 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Apr 2020 21:37:11 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Apr 2020 21:37:10 +0800
+Message-ID: <1586266634.2221.0.camel@mtkswgap22>
+Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable
+ declaration
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     "light.hsieh@mediatek.com" <light.hsieh@mediatek.com>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "sean.wang@kernel.org" <sean.wang@kernel.org>,
+        "Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?=" 
+        <kuohong.wang@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 7 Apr 2020 21:37:14 +0800
+In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
+References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324122017.GR3819@lunn.ch>
-User-Agent: NeoMutt/20180716
+X-TM-SNTS-SMTP: C46968FC8DEA5F527A542FEB4FA622A3AA2E7B501EEE4D5BA8AE4EEE90C277142000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
-> On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
-> > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
-> > 
-> > This commit caused a regression on Armada 37xx. The pinctrl driver says
-> >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
-> >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-> > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-> > 
-> > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > Cc: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > index 32f12a388b3c..5f125bd6279d 100644
-> > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> >  #include <linux/pinctrl/pinconf-generic.h>
-> >  #include <linux/pinctrl/pinconf.h>
-> >  #include <linux/pinctrl/pinctrl.h>
-> > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
-> >  		return ret;
-> >  	}
-> >  
-> > -	nr_irq_parent = platform_irq_count(pdev);
-> 
-> Hi Marek
-> 
-> Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+SGkgTGlnaHQsDQoNCk9uIFR1ZSwgMjAyMC0wNC0wNyBhdCAxODozMyArMDgwMCwgbGlnaHQuaHNp
+ZWhAbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiBGcm9tOiBMaWdodCBIc2llaCA8bGlnaHQuaHNpZWhA
+bWVkaWF0ZWsuY29tPg0KPiANCj4gUmVtb3ZlIHNoYWRvdyBkZWNsYXJhdGlvbiBvZiB2YXJpYWJs
+ZSAncHVsbHVwJyBpbiBtdGtfcGluY29uZl9nZXQoKQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogTGln
+aHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3Bp
+bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jIHwgMiAtLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL3BpbmN0cmwtcGFyaXMuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBh
+cmlzLmMNCj4gaW5kZXggODNiZjI5Yy4uOGY3NTExNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9w
+aW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwv
+bWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQo+IEBAIC0xNjQsOCArMTY0LDYgQEAgc3RhdGljIGlu
+dCBtdGtfcGluY29uZl9nZXQoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiAgCWNhc2Ug
+TVRLX1BJTl9DT05GSUdfUFVfQURWOg0KPiAgCWNhc2UgTVRLX1BJTl9DT05GSUdfUERfQURWOg0K
+PiAgCQlpZiAoaHctPnNvYy0+YWR2X3B1bGxfZ2V0KSB7DQo+IC0JCQlib29sIHB1bGx1cDsNCj4g
+LQ0KPiAgCQkJcHVsbHVwID0gcGFyYW0gPT0gTVRLX1BJTl9DT05GSUdfUFVfQURWOw0KPiAgCQkJ
+ZXJyID0gaHctPnNvYy0+YWR2X3B1bGxfZ2V0KGh3LCBkZXNjLCBwdWxsdXAsICZyZXQpOw0KPiAg
+CQl9IGVsc2UNCg0KUmV2aWV3ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRl
+ay5jb20+DQoNCg==
 
-Hello Andrew! I have tested it with 5.6 kernel and return value in
-nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
-return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
-d0018800.pinctrl.
-
-So this is a clear regression introduced by that patch.
-
-> This patch has removed the handling of that.
-> 
-> > -	if (nr_irq_parent < 0) {
-> > -		if (nr_irq_parent != -EPROBE_DEFER)
-> > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
-> > -				ERR_PTR(nr_irq_parent));
-> > -		return nr_irq_parent;
-> > -	}
-> 
-> Thanks
-> 	Andrew
