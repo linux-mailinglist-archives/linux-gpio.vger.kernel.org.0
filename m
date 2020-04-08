@@ -2,223 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27EC21A224E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2020 14:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D74F1A2255
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2020 14:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgDHMtV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Apr 2020 08:49:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33953 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgDHMtV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Apr 2020 08:49:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id o1so8451298edv.1
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2020 05:49:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ImZqh6xFyWTP+hCLRseUGFfjvuATFwSzoN2jRckYzSk=;
-        b=iuHWZKg+pIWEBlsACAQ4YXH2mS3QrCGDdCd463hpF4FaNiGuk9aFm0zDBV3zdeafgR
-         3ZnImtuZ+wyMDDvmkR249YelH0aLXKbisp8ztrr4A0fBNyuZV+ObuE3T8OiMRRi340IU
-         wd7vqFZZ9kxtDpuz9bj10oUv10rucFw5JlYIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ImZqh6xFyWTP+hCLRseUGFfjvuATFwSzoN2jRckYzSk=;
-        b=Gkdq8bg9671+MiG1dD8rMQp5H/6GWxdI70UrX3G6MW6lNFmPFboabni7i7Buepuyem
-         Pd5LeotJaxcrr9QGMEAJ6R6HTBpYJIWpvd1uJmbzZxfzKX6pYC6m6lxWiNiX1lTddG9K
-         x0HT2aiOTWvOri5CunF73DgtLeVY/QAYIUnNU/6tFaTr7rLlzQfBrHJeU96KSyalcUxL
-         rXQcZ4PFrySjx/djEAicUsPQ2Cct2cnaFFgrGBphYYa4bf5PS80hFnWd1yRCGWqA/ae9
-         Qzle1A01V1S5uBzmYOPPhyeIpNhlWOM4xGdFsnkLEARq2vdU3liw4lryT0Shjql/xfsg
-         Dp9g==
-X-Gm-Message-State: AGi0PubqlpjKgtvyrmQURxuXcWqebWIrsjDvyd6LSO8FOaU4wcdn9YrE
-        QtaA3Ge2bVq5sYoY3XeO/lkpOySJUTzZ2g==
-X-Google-Smtp-Source: APiQypIaZRDiM57vLMN1oeMjViGn+YDVh/YISAf48t1eTh6aEPmXLnuL7TjL9TxmB200wi4DbGCt0g==
-X-Received: by 2002:a17:906:8257:: with SMTP id f23mr480769ejx.196.1586350157158;
-        Wed, 08 Apr 2020 05:49:17 -0700 (PDT)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id h14sm3523375ejt.1.2020.04.08.05.49.16
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 05:49:16 -0700 (PDT)
-Received: by mail-wm1-f54.google.com with SMTP id r26so5318411wmh.0
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2020 05:49:16 -0700 (PDT)
-X-Received: by 2002:a7b:c38b:: with SMTP id s11mr4529806wmj.55.1586350155398;
- Wed, 08 Apr 2020 05:49:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191211112849.16705-1-dongchun.zhu@mediatek.com>
- <20191211112849.16705-2-dongchun.zhu@mediatek.com> <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
-In-Reply-To: <CAAFQd5AnWZqjQEVvw8gv7JzOBHxJvsOWaGrbY8CXQ_87ap-ahA@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 8 Apr 2020 14:49:04 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5DHL3mXZGHW+XWMXTVfekamEvaEv3bLZt4Bg2UpKPohmA@mail.gmail.com>
-Message-ID: <CAAFQd5DHL3mXZGHW+XWMXTVfekamEvaEv3bLZt4Bg2UpKPohmA@mail.gmail.com>
-Subject: Re: [V6, 1/2] media: dt-bindings: media: i2c: Document OV02A10 bindings
-To:     Rob Herring <robh+dt@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        id S1727996AbgDHMut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Apr 2020 08:50:49 -0400
+Received: from mail-eopbgr00057.outbound.protection.outlook.com ([40.107.0.57]:41346
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727077AbgDHMus (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 8 Apr 2020 08:50:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DYj19CoShzpduY7xd1845aqBF+vA10+5CaxaXxJQflCxlznO2X74WgtqFtnTOnW/ItggsdZ5Oqp0YmR2+/76iXbIPEBTO5avqKjfYl4uNCX5YO6lBgVwCTRvAWAkhGDDvpMtFWeKwhRX+IpRtMcwepH0MRc/JIyVIBLOU0u0ZDIHrJfMXfXdnqY5Kc8rKagwiIGUqwNzYLKWjsdjNRrANevQoaVAsknCWibjq1Y970Y8Hd8UyR1E6r3S3/3Tk/cRuFvPGKjTY17Sk1whpFogpzBgMIHAcYVqtwh1xhah6OC1MY5YyzvbTaPK2DJGXTxFFIouBmcR4mKNeyQv8CBR8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xtCNVqovgg5+cnHfv2nqrMzaK+dMZK3ddl21NW9CvKE=;
+ b=d6qdTg5a0JMTJ4bnw9Kkar0DNkSfKozS7F5ksmrqX2daaFXxC+C3OvUg2yg9SZlX/+0ICuYqXXAxHXJfgCsJ/KZYlOk90ND7ZhAOQQemiaeWEW0HkpEtQ+yGma9fh9Dc0xTRp3q2z+VC+rKWww9KTYpLWTh7+3oSgV29RgfFJ7rfiPsHV0oc8gPiEAtO2MRWh9y+kI630nHArbfj01oM4khsQ3kysknQJd+AB74x5NJ8+Gz9KnhF43jNyXDYKVVNoEhglY+zfXdP3qhQNxUjpE0n6jt2v53cVVRFyX2N9Rq3pL/0bHghs3eJavT/V1zSGurOvFjUG90BtJQnoHwUsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xtCNVqovgg5+cnHfv2nqrMzaK+dMZK3ddl21NW9CvKE=;
+ b=RhsuyEUbMG+HOemfA1fD0MAD7vrA4ZGcJJbRRxlw1zSePkWgKBYbv80U0rir61nqM476T8Mx0kMPagtWi00V8jF1PysTkPfSsjkIYXHjH5Vdg2pxWDJ/DTR3EIWuBMjp/3i8et94TCdhkV2xrr2QxYzmbBT61FI+K/03mn4Awng=
+Received: from AM4PR0501MB2705.eurprd05.prod.outlook.com
+ (2603:10a6:200:5a::14) by AM4PR0501MB2707.eurprd05.prod.outlook.com
+ (2603:10a6:200:5c::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Wed, 8 Apr
+ 2020 12:50:45 +0000
+Received: from AM4PR0501MB2705.eurprd05.prod.outlook.com
+ ([fe80::1049:7e69:b177:10ff]) by AM4PR0501MB2705.eurprd05.prod.outlook.com
+ ([fe80::1049:7e69:b177:10ff%9]) with mapi id 15.20.2878.018; Wed, 8 Apr 2020
+ 12:50:44 +0000
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     YueHaibing <yuehaibing@huawei.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?= 
-        <shengnan.wang@mediatek.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH -next] gpio: remove unused including <linux/version.h>
+Thread-Topic: [PATCH -next] gpio: remove unused including <linux/version.h>
+Thread-Index: AQHWDXQ3/ucmFUSSak+g59WXZG2jHahvLaFw
+Date:   Wed, 8 Apr 2020 12:50:44 +0000
+Message-ID: <AM4PR0501MB2705406363FC5D9DBB60F517DAC00@AM4PR0501MB2705.eurprd05.prod.outlook.com>
+References: <20200408070832.137037-1-yuehaibing@huawei.com>
+In-Reply-To: <20200408070832.137037-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Asmaa@mellanox.com; 
+x-originating-ip: [65.96.160.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 56c65637-6d06-4984-a6d3-08d7dbbb741e
+x-ms-traffictypediagnostic: AM4PR0501MB2707:
+x-microsoft-antispam-prvs: <AM4PR0501MB2707FF2ADFFC8BF0B806E9F8DAC00@AM4PR0501MB2707.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:173;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4PR0501MB2705.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(366004)(396003)(136003)(376002)(39860400002)(53546011)(81156014)(6506007)(7696005)(186003)(4744005)(52536014)(55016002)(26005)(5660300002)(9686003)(66476007)(8936002)(66446008)(64756008)(66946007)(8676002)(478600001)(33656002)(71200400001)(81166007)(4326008)(54906003)(86362001)(2906002)(316002)(66556008)(76116006)(110136005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SJQGw2FOHr4nG5g6hBzT2SUOMSQCu5ASj50PXDESAjU9A21M0YFRZ0VvPRJbmrNlSzMy5VaOnsahBqWVLVurELBkB55WSAt68jrojs0AY8ZCpmYOtjPXu2C/Kos5vTt/KbFQaRmsD5DR4WuG2dApp6AXJKdjXKlnjT9oE3BVX/wu7BT9WgwH7C21QC07AsiLm6UWvOT1DkNBUWj3RXm8cOb6ah6V6+QJ1k8DYJOO7GMn2PD5KHR8WRLqCtZelI3CNzALrCkkDGSy7/5Od48MZas1CcMprS05L6t8Vl6p5H9ztX/pmZJCzKfeS6d0ifqR/TdPL3zCezQ9JaYS+ybIJab3KQnRGs3a31tEYKq1ZeyvKAqALc8NA2hJXLqJv+UHe93IFUVfL+32wRXUvK3BPvVETRZ+Uzcqa12uwSHl3MI/ds/9ML13qGG2L67nndQK
+x-ms-exchange-antispam-messagedata: XYVH7i4MEGfK0g97AJypEQJOyCWKEPR6QgP7FgHfXd3Ba11ERylXkvEGm0dL/AXD0XQp/PzZm65jY3TP4plcQ9l07sBkOuM9GL2htF2dKur0PKDm4R1I8R6fcYPaF5pQU7UkjPzC3b/cILirBofDiQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56c65637-6d06-4984-a6d3-08d7dbbb741e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 12:50:44.8228
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gFn4PNJczbQImPOQjq8V2WB92qR2Dj7uxPB6ZgVGgfZ0gDWsdrWNwm9Yr+d3VwNxlhgv8zNal0ZYdWX0xbliEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0501MB2707
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 4:15 AM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Hi Rob, Dongchun,
->
-> On Wed, Dec 11, 2019 at 8:29 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
-> >
-> > Add DT bindings documentation for Omnivision OV02A10 image sensor.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov02a10.txt      | 54 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  7 +++
-> >  2 files changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > new file mode 100644
-> > index 0000000..18acc4f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > @@ -0,0 +1,54 @@
-> > +* Omnivision OV02A10 MIPI CSI-2 sensor
-> > +
-> > +Required Properties:
-> > +- compatible: shall be "ovti,ov02a10"
-> > +- clocks: reference to the eclk input clock
-> > +- clock-names: shall be "eclk"
-> > +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
-> > +- avdd-supply: Analog voltage supply, 2.8 volts
-> > +- dvdd-supply: Digital core voltage supply, 1.8 volts
-> > +- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-> > +                  if any. This is an active low signal to the OV02A10.
->
-> On the hardware level this pin is active high, i.e. the device is
-> powered down when the signal is high.
->
-> > +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
-> > +              This is an active high signal to the OV02A10.
->
-> On the hardware level this pin is active low, i.e. the device is held
-> in reset when the signal is low.
->
-> However, there is some confusion around how the polarity flag in the
-> GPIO specifier is supposed to be used.
->
-> As per [1],
->
-> "The gpio-specifier's polarity flag should represent the physical
-> level at the GPIO controller that achieves (or represents, for inputs)
-> a logically asserted value at the device. The exact definition of
-> logically asserted should be defined by the binding for the device."
->
-> In this case it sounds like "logically asserted" means the device is
-> powered down or held in reset, respectively, which would suggest that
-> the specifiers should have GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW
-> respectively. The latter would cause the GPIO subsystem to invert the
-> values set by the consumers, which would then be confusing from the
-> driver implementation point of view.
->
-> Should the pin be renamed to "nreset"? It would change the meaning of
-> "logically asserted" to "device is not held in reset" and so
-> GPIO_ACTIVE_HIGH (or 0) would be the right value to use.
->
-> [1] https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/gpio/gpio.txt#L83
+Acked-by: asmaa@mellanox.com
 
-+ Bartosz, Linus, Sakari and the linux-gpio ML for a broader audience.
+-----Original Message-----
+From: YueHaibing <yuehaibing@huawei.com>=20
+Sent: Wednesday, April 8, 2020 3:09 AM
+To: Linus Walleij <linus.walleij@linaro.org>; Asmaa Mnebhi <Asmaa@mellanox.=
+com>; Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: YueHaibing <yuehaibing@huawei.com>; linux-gpio@vger.kernel.org; kernel-=
+janitors@vger.kernel.org
+Subject: [PATCH -next] gpio: remove unused including <linux/version.h>
 
-Would appreciate some feedback on what's the proper way of defining
-GPIO polarity. Thanks!
+Remove including <linux/version.h> that don't need it.
 
-Best regards,
-Tomasz
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpio/gpio-mlxbf2.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->
-> Best regards,
-> Tomasz
->
-> > +
-> > +Optional Properties:
-> > +- rotation: as defined in
-> > +           Documentation/devicetree/bindings/media/video-interfaces.txt,
-> > +           valid values are 0 (sensor mounted upright) and 180 (sensor
-> > +           mounted upside down).
-> > +
-> > +The device node shall contain one 'port' child node with an
-> > +'endpoint' subnode for its digital output video port,
-> > +in accordance with the video interface bindings defined in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > +
-> > +Example:
-> > +&i2c4 {
-> > +       ov02a10: camera-sensor@3d {
-> > +               compatible = "ovti,ov02a10";
-> > +               reg = <0x3d>;
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&camera_pins_cam1_mclk_on>;
-> > +
-> > +               clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
-> > +                       <&topckgen CLK_TOP_UNIVP_192M_D8>;
-> > +               clock-names = "eclk", "freq_mux";
-> > +               clock-frequency = <24000000>;
-> > +
-> > +               dovdd-supply = <&mt6358_vcamio_reg>;
-> > +               avdd-supply = <&mt6358_vcama1_reg>;
-> > +               dvdd-supply = <&mt6358_vcn18_reg>;
-> > +               powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
-> > +               reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
-> > +               rotation = <180>;
-> > +
-> > +               port {
-> > +                       /* MIPI CSI-2 bus endpoint */
-> > +                       ov02a10_core: endpoint {
-> > +                               remote-endpoint = <&ov02a10_0>;
-> > +                               link-frequencies = /bits/ 64 <390000000>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index bd5847e..92a868c 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12130,6 +12130,13 @@ T:     git git://linuxtv.org/media_tree.git
-> >  S:     Maintained
-> >  F:     drivers/media/i2c/ov13858.c
-> >
-> > +OMNIVISION OV02A10 SENSOR DRIVER
-> > +M:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > +L:     linux-media@vger.kernel.org
-> > +T:     git git://linuxtv.org/media_tree.git
-> > +S:     Maintained
-> > +F:     Documentation/devicetree/bindings/media/i2c/ov02a10.txt
-> > +
-> >  OMNIVISION OV2680 SENSOR DRIVER
-> >  M:     Rui Miguel Silva <rmfrfs@gmail.com>
-> >  L:     linux-media@vger.kernel.org
-> > --
-> > 2.9.2
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c index =
+7b7085050219..240b488609ac 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -14,7 +14,6 @@
+ #include <linux/resource.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+-#include <linux/version.h>
+=20
+ /*
+  * There are 3 YU GPIO blocks:
+
+
+
