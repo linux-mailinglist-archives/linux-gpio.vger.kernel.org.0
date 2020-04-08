@@ -2,60 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B65BB1A1C47
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2020 09:06:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 957EC1A1EDA
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Apr 2020 12:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDHHGr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Apr 2020 03:06:47 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49050 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725932AbgDHHGr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:06:47 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B7FD4F397D8D46CF05E4;
-        Wed,  8 Apr 2020 15:06:19 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 8 Apr 2020 15:06:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Asmaa Mnebhi <Asmaa@mellanox.com>,
+        id S1728130AbgDHKfp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Apr 2020 06:35:45 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59628 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDHKfp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:35:45 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A4A2F201437;
+        Wed,  8 Apr 2020 12:35:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8311D201436;
+        Wed,  8 Apr 2020 12:35:37 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 48D95402E4;
+        Wed,  8 Apr 2020 18:35:30 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] gpio: remove unused including <linux/version.h>
-Date:   Wed, 8 Apr 2020 07:08:32 +0000
-Message-ID: <20200408070832.137037-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH v1] gpio: mpc8xxx: Add shutdown function.
+Date:   Wed,  8 Apr 2020 18:21:17 +0800
+Message-Id: <20200408102118.17572-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
+From: Song Hui <hui.song_1@nxp.com>
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+The shutdown function needed to make interrupt handler to be NULL
+when kexec execute.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- drivers/gpio/gpio-mlxbf2.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpio/gpio-mpc8xxx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index 7b7085050219..240b488609ac 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -14,7 +14,6 @@
- #include <linux/resource.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
--#include <linux/version.h>
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..a24e6c5 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -446,9 +446,21 @@ static int mpc8xxx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- /*
-  * There are 3 YU GPIO blocks:
-
-
++static int mpc8xxx_shutdown(struct platform_device *pdev)
++{
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = platform_get_drvdata(pdev);
++
++	if (mpc8xxx_gc->irq) {
++		irq_set_chained_handler_and_data(mpc8xxx_gc->irqn, NULL, NULL);
++		irq_domain_remove(mpc8xxx_gc->irq);
++	}
++
++	return 0;
++}
+ static struct platform_driver mpc8xxx_plat_driver = {
+ 	.probe		= mpc8xxx_probe,
+ 	.remove		= mpc8xxx_remove,
++	.shutdown	= mpc8xxx_shutdown,
+ 	.driver		= {
+ 		.name = "gpio-mpc8xxx",
+ 		.of_match_table	= mpc8xxx_gpio_ids,
+-- 
+2.9.5
 
