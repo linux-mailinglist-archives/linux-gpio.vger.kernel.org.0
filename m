@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 197EE1A3ADD
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 21:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BD9B1A3ADF
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 21:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgDIT67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Apr 2020 15:58:59 -0400
+        id S1726855AbgDIT7A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Apr 2020 15:59:00 -0400
 Received: from mga14.intel.com ([192.55.52.115]:22248 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgDIT67 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:58:59 -0400
-IronPort-SDR: /beagUr4RAmCX2EMfEnZyLvfpPgFL5hv/BgNh0XOXJX2Vhe3PWMxsbeEIokEZy2hHi13aciLSL
- IkasNdfZa5TA==
+        id S1726793AbgDIT7A (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:59:00 -0400
+IronPort-SDR: mcZ+i8TCFL6FBt9IQGmWRQ6SkYf+XvGO3+3KV2RVANKqYkZ9xtbqH48/A7ROrvba1a+bIP54jN
+ vlP6I2doxcGQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:58:59 -0700
-IronPort-SDR: 5ugSmUDX84qekkZihqgqKgPZHq4JNVNb3vsJWkZtPUTvlhAYGaTaqD8CAnpZGibxC3K+ZIvWIx
- inHUo4KIxJeA==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:59:01 -0700
+IronPort-SDR: zsBoogpDr0xCLQhOQuZGn/J3+C17ujzvoAH00VGakkshqxRHh5LiH77aD24T7xzO9BYY9XqE5E
+ WPB4xf//z4Tg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,363,1580803200"; 
-   d="scan'208";a="242745271"
+   d="scan'208";a="242745277"
 Received: from davidadu-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.212.151.218])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2020 12:58:57 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2020 12:58:59 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
@@ -38,10 +38,12 @@ Cc:     tiwai@suse.de, broonie@kernel.org,
         Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [RFC PATCH 00/16] ASoC/SOF/clk/gpio/dt: add Hifiberry DAC+ PRO support
-Date:   Thu,  9 Apr 2020 14:58:25 -0500
-Message-Id: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+Subject: [RFC PATCH 01/16] ASoC: pcm512x: expose 6 GPIOs
+Date:   Thu,  9 Apr 2020 14:58:26 -0500
+Message-Id: <20200409195841.18901-2-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -49,60 +51,159 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Hifiberry DAC+ / DAC+ PRO is supported in the Raspberry PI tree
-but until now not in the mainline and not for ACPI platforms.
+The GPIOs are used e.g. on HifiBerry DAC+ HATs to control the LED
+(GPIO3) and the choice of the 44.1 (GPIO6) or 48 (GPIO3) kHz
+oscillator (when present).
 
-This patchset implements the recommendations suggested by Mark Brown
-back in 2018: first add a gpiochip in the PCM512x codec driver, then
-use these gpios from a clock driver and the machine driver.
+Enable basic gpio_chip to get/set values and get/set
+directions. Tested with GPIO_LIB from sys/class/gpio, the LED turns
+on/off as desired.
 
-Since this patchset relies on different subsystems, sending as RFC for
-now. I chose to import the original code from the Raspberry PI tree as
-is, and add my changes on top. If there is a preference to squash the
-changes that'd be fine. I also don't know if I should split this
-series in two, one for ASoC and one for clk changes?
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ sound/soc/codecs/pcm512x.c | 108 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
 
-This patchset does not add changes to the sound/soc/bcm machine
-drivers, but that should be trivial once all the gpio/clock is
-available.
-
-Thanks to Andy Shevchenko for his help navigating the gpio subsystem
-and flagging mistakes in the use of lookup tables, and to Rob Herring
-for pointers on the DT bindings verification tools.
-
-Daniel Matuschek (1):
-  clk: hifiberry-dacpro: initial import
-
-Pierre-Louis Bossart (15):
-  ASoC: pcm512x: expose 6 GPIOs
-  ASoC: pcm512x: use "sclk" string to retrieve clock
-  ASoC: Intel: sof-pcm512x: use gpiod for LED
-  ASoC: Intel: sof-pcm512x: detect Hifiberry DAC+ PRO
-  ASoC: Intel: sof-pcm512x: reconfigure sclk in hw_params if needed
-  ASoC: Intel: sof-pcm512x: select HIFIBERRY_DACPRO clk
-  clk: hifiberry-dacpro: update SDPX/copyright
-  clk: hifiberry-dacpro: style cleanups, use devm_
-  clk: hifiberry-dacpro: add OF dependency
-  clk: hifiberry-dacpro: transition to _hw functions
-  clk: hifiberry-dacpro: add ACPI support
-  clk: hifiberry-dacpro: add "sclk" lookup
-  clk: hifiberry-dacpro: toggle GPIOs on prepare/unprepare
-  clk: hifiberry-dacpro: add delay on clock prepare/deprepare
-  ASoC: dt-bindings: add document for Hifiberry DAC+ PRO clock
-
- .../bindings/sound/hifiberry-dacpro.yaml      |  38 +++
- drivers/clk/Kconfig                           |   4 +
- drivers/clk/Makefile                          |   1 +
- drivers/clk/clk-hifiberry-dacpro.c            | 284 ++++++++++++++++++
- sound/soc/codecs/pcm512x.c                    | 134 ++++++++-
- sound/soc/intel/boards/Kconfig                |   2 +
- sound/soc/intel/boards/sof_pcm512x.c          | 190 +++++++++++-
- 7 files changed, 635 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/hifiberry-dacpro.yaml
- create mode 100644 drivers/clk/clk-hifiberry-dacpro.c
-
-
-base-commit: dd8e871d4e560eeb8d22af82dde91457ad835a63
+diff --git a/sound/soc/codecs/pcm512x.c b/sound/soc/codecs/pcm512x.c
+index 4cbef9affffd..4f895a588c31 100644
+--- a/sound/soc/codecs/pcm512x.c
++++ b/sound/soc/codecs/pcm512x.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/clk.h>
++#include <linux/gpio/driver.h>
+ #include <linux/kernel.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+@@ -32,6 +33,7 @@ static const char * const pcm512x_supply_names[PCM512x_NUM_SUPPLIES] = {
+ struct pcm512x_priv {
+ 	struct regmap *regmap;
+ 	struct clk *sclk;
++	struct gpio_chip chip;
+ 	struct regulator_bulk_data supplies[PCM512x_NUM_SUPPLIES];
+ 	struct notifier_block supply_nb[PCM512x_NUM_SUPPLIES];
+ 	int fmt;
+@@ -1503,6 +1505,102 @@ const struct regmap_config pcm512x_regmap = {
+ };
+ EXPORT_SYMBOL_GPL(pcm512x_regmap);
+ 
++static int pcm512x_gpio_get_direction(struct gpio_chip *chip,
++				      unsigned int offset)
++{
++	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(pcm512x->regmap, PCM512x_GPIO_EN, &val);
++	if (ret < 0)
++		return ret;
++
++	val = (val >> offset) & 1;
++
++	/* val is 0 for input, 1 for output, return inverted */
++	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
++}
++
++static int pcm512x_gpio_direction_input(struct gpio_chip *chip,
++					unsigned int offset)
++{
++	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
++
++	return regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_EN,
++				  BIT(offset), 0);
++}
++
++static int pcm512x_gpio_direction_output(struct gpio_chip *chip,
++					 unsigned int offset,
++					 int value)
++{
++	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
++	unsigned int reg;
++	int ret;
++
++	/* select Register GPIOx output for OUTPUT_x (1..6) */
++	reg = PCM512x_GPIO_OUTPUT_1 + offset;
++	ret = regmap_update_bits(pcm512x->regmap, reg, 0x0f, 0x02);
++	if (ret < 0)
++		return ret;
++
++	/* enable output x */
++	ret = regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_EN,
++				 BIT(offset), BIT(offset));
++	if (ret < 0)
++		return ret;
++
++	/* set value */
++	return regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_CONTROL_1,
++				  BIT(offset), value << offset);
++}
++
++static int pcm512x_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(pcm512x->regmap, PCM512x_GPIO_CONTROL_1, &val);
++	if (ret < 0)
++		return ret;
++
++	return (val >> offset) & 1;
++}
++
++static void pcm512x_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
++	int ret;
++
++	ret = regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_CONTROL_1,
++				 BIT(offset), value << offset);
++
++	if (ret < 0)
++		pr_debug("%s: regmap_update_bits failed: %d\n", __func__, ret);
++}
++
++/* list human-readable names, makes GPIOLIB usage straightforward */
++static const char * const pcm512x_gpio_names[] = {
++	"PCM512x-GPIO1", "PCM512x-GPIO2", "PCM512x-GPIO3",
++	"PCM512x-GPIO4", "PCM512x-GPIO5", "PCM512x-GPIO6"
++};
++
++static const struct gpio_chip template_chip = {
++	.label			= "pcm512x-gpio",
++	.names			= pcm512x_gpio_names,
++	.owner			= THIS_MODULE,
++	.get_direction		= pcm512x_gpio_get_direction,
++	.direction_input	= pcm512x_gpio_direction_input,
++	.direction_output	= pcm512x_gpio_direction_output,
++	.get			= pcm512x_gpio_get,
++	.set			= pcm512x_gpio_set,
++	.base			= -1, /* let gpiolib select the base */
++	.ngpio			= ARRAY_SIZE(pcm512x_gpio_names),
++};
++
+ int pcm512x_probe(struct device *dev, struct regmap *regmap)
+ {
+ 	struct pcm512x_priv *pcm512x;
+@@ -1563,6 +1661,16 @@ int pcm512x_probe(struct device *dev, struct regmap *regmap)
+ 		goto err;
+ 	}
+ 
++	/* expose 6 GPIO pins, numbered from 1 to 6 */
++	pcm512x->chip = template_chip;
++	pcm512x->chip.parent = dev;
++
++	ret = devm_gpiochip_add_data(dev, &pcm512x->chip, pcm512x);
++	if (ret != 0) {
++		dev_err(dev, "Failed to register gpio chip: %d\n", ret);
++		goto err;
++	}
++
+ 	pcm512x->sclk = devm_clk_get(dev, NULL);
+ 	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
+ 		ret = -EPROBE_DEFER;
 -- 
 2.20.1
 
