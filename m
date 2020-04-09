@@ -2,113 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 162311A2D66
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 03:41:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87FCE1A2FCF
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 09:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDIBlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Apr 2020 21:41:13 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36643 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgDIBlN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Apr 2020 21:41:13 -0400
-Received: by mail-il1-f195.google.com with SMTP id p13so8757872ilp.3
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Apr 2020 18:41:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UsuV1XC9F0zUSNLW/lcGod5OvR07l0XsNTDcgl+q3cU=;
-        b=Txssr3a+IYMjEYumEe9phixDEvGEehJXijq/DurjwQzk9idcuRuuWSYehQN2WZ8Umf
-         kI15JnDMMYCo4GPb7FzCDCB4l/Mwtelqw4aPdNTg7+sGUxqvuSxkhOdU7f9UNgm4kQyp
-         uy8UITWyJxNNvfXTelPWkwt5IxihzSGoYSJH5DGfsKC0o4wzLOQkDIdrUjEvXRqqvIP9
-         oyDS9QhnyY1Czz2lDROPrKXFj2FhnlG5OGE2d6inPcBXE788lhpSo6IIhnCA8HqNY7z5
-         WFq3+aA+cwdKUgx6imhlX3weUmkpQjrAyEVxc6BdRzcxnHnr9AkoJ7JKgceNl+QS7qq9
-         BgdA==
-X-Gm-Message-State: AGi0PuajC7xLIH1ln3TgtekK3MVS6xGN5u0iTfSGjpPpzl6zHSgUlHdt
-        iHah+U2gCrQbZCxFUWT1fw==
-X-Google-Smtp-Source: APiQypINeHbzb+NYBIE8EG6FUqEg8T2imkw5bLeSjZTQarMw7AnVIG3U4B7YC6BT3jj9NYjkyM0XYQ==
-X-Received: by 2002:a92:cb49:: with SMTP id f9mr10672046ilq.193.1586396472971;
-        Wed, 08 Apr 2020 18:41:12 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.248])
-        by smtp.googlemail.com with ESMTPSA id s26sm188222ioe.27.2020.04.08.18.41.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 18:41:12 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: pl061: Support building as module
-Date:   Wed,  8 Apr 2020 19:41:10 -0600
-Message-Id: <20200409014110.27254-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        id S1726579AbgDIHNk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Apr 2020 03:13:40 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:55786 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgDIHNj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Apr 2020 03:13:39 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id EA82A8053D;
+        Thu,  9 Apr 2020 09:12:43 +0200 (CEST)
+Date:   Thu, 9 Apr 2020 09:12:37 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [RFC v3 4/8] dt-bindings: display: add ingenic-jz4780-hdmi DT
+ Schema
+Message-ID: <20200409071237.GA12367@ravnborg.org>
+References: <cover.1585503354.git.hns@goldelico.com>
+ <a1a5075ae6c970e97fb74c8dd5c626c35421cd4d.1585503354.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1a5075ae6c970e97fb74c8dd5c626c35421cd4d.1585503354.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=ztCEdXhiAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
+        a=_8fMXE9GZWbPDF1RzQ4A:9 a=NMQYXjR_ngKk-wD3:21 a=NsfBtDKyZ6-kNe2x:21
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=nCm3ceeH17rKjHWsMeRo:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enable building the PL061 GPIO driver as a module.
+Hi Nikolaus.
 
-This does change the initcall level when built-in. This shouldn't be a
-problem as any user should support deferred probe by now. A scan of DT
-based platforms at least didn't reveal any users that would be a
-problem.
+On Sun, Mar 29, 2020 at 07:35:50PM +0200, H. Nikolaus Schaller wrote:
+> From: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
+> Based on .txt binding from Zubair Lutfullah Kakakhel
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/gpio/Kconfig      | 2 +-
- drivers/gpio/gpio-pl061.c | 9 ++++-----
- 2 files changed, 5 insertions(+), 6 deletions(-)
+There is a few mistakes that originate from my original patch - sorry.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b8013cf90064..f1ef878f615b 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -422,7 +422,7 @@ config GPIO_OMAP
- 	  Say yes here to enable GPIO support for TI OMAP SoCs.
- 
- config GPIO_PL061
--	bool "PrimeCell PL061 GPIO support"
-+	tristate "PrimeCell PL061 GPIO support"
- 	depends on ARM_AMBA
- 	select IRQ_DOMAIN
- 	select GPIOLIB_IRQCHIP
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 5df7782e348f..cf0d5e9b6f2c 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/module.h>
- #include <linux/bitops.h>
- #include <linux/gpio/driver.h>
- #include <linux/device.h>
-@@ -413,6 +414,7 @@ static const struct amba_id pl061_ids[] = {
- 	},
- 	{ 0, 0 },
- };
-+MODULE_DEVICE_TABLE(amba, pl061_ids);
- 
- static struct amba_driver pl061_gpio_driver = {
- 	.drv = {
-@@ -424,9 +426,6 @@ static struct amba_driver pl061_gpio_driver = {
- 	.id_table	= pl061_ids,
- 	.probe		= pl061_probe,
- };
-+module_amba_driver(pl061_gpio_driver);
- 
--static int __init pl061_gpio_init(void)
--{
--	return amba_driver_register(&pl061_gpio_driver);
--}
--device_initcall(pl061_gpio_init);
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+> ---
+>  .../bindings/display/ingenic-jz4780-hdmi.yaml | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+> new file mode 100644
+> index 000000000000..a545ff8704eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-hdmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Ingenic JZ4780 HDMI Transmitter
+> +
+> +maintainers:
+> +  - H. Nikolaus Schaller <hns@goldelico.com>
+> +
+> +description: |
+> +  The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
+> +  TX controller IP with accompanying PHY IP.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
+panel-common is only supposed to be used by panels.
+There is a few users in display/ but this is bindings that are
+candidates to be moved to panel/ - and this binding describes a
+display controller and not a panel.
 
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ingenic,jz4780-hdmi
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: the address & size of the LCD controller registers
+> +
+> +  reg-io-width:
+> +    const: 4
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Specifies the interrupt provided by parent
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description: Clock specifiers for isrf and iahb clocks
+> +
+> +  clock-names:
+> +    items:
+> +      - const: isfr
+> +      - const: iahb
+> +
+> +  ddc-i2c-bus: true
+> +  ports: true
+As we no longer rely on panel-common this needs to be fully specified -
+for example like this:
+
+  ddc-i2c-bus:
+    $ref: /schemas/types.yaml#/definitions/phandle
+    description: phandle to the I2C bus that is connected to DDC
+
+  ports:
+    type: object
+    description: |
+      A ports node with endpoint definitions as defined in
+      Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+
+Thanks for taking care of this binding.
+
+	Sam
+
+
+> +
+> +required:
+> +    - compatible
+> +    - clocks
+> +    - clock-names
+> +    - ports
+> +    - reg-io-width
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +
+> +    hdmi: hdmi@10180000 {
+> +        compatible = "ingenic,jz4780-hdmi";
+> +        reg = <0x10180000 0x8000>;
+> +        reg-io-width = <4>;
+> +        ddc-i2c-bus = <&i2c4>;
+> +        interrupt-parent = <&intc>;
+> +        interrupts = <3>;
+> +        clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+> +        clock-names = "isfr", "iahb";
+> +
+> +        ports {
+> +            hdmi_in: port {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                hdmi_in_lcd: endpoint@0 {
+> +                    reg = <0>;
+> +                    remote-endpoint = <&jz4780_out_hdmi>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
