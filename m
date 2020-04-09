@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF7A41A317C
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 11:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 024841A31AA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 11:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbgDIJEO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Apr 2020 05:04:14 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:50806 "EHLO inva020.nxp.com"
+        id S1726561AbgDIJRT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Apr 2020 05:17:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58218 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgDIJEO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Apr 2020 05:04:14 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 05A8B1A03EC;
-        Thu,  9 Apr 2020 11:04:13 +0200 (CEST)
+        id S1725997AbgDIJRT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 9 Apr 2020 05:17:19 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9E85520039A;
+        Thu,  9 Apr 2020 11:17:18 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3B61A01DE;
-        Thu,  9 Apr 2020 11:04:07 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E69302003BE;
+        Thu,  9 Apr 2020 11:17:12 +0200 (CEST)
 Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 13F2840294;
-        Thu,  9 Apr 2020 17:04:00 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AD55B402E7;
+        Thu,  9 Apr 2020 17:17:05 +0800 (SGT)
 From:   Hui Song <hui.song_1@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -30,8 +30,8 @@ Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Song Hui <hui.song_1@nxp.com>
 Subject: [PATCH] gpio: mpc8xxx: Add shutdown function.
-Date:   Thu,  9 Apr 2020 16:49:53 +0800
-Message-Id: <20200409084953.46265-1-hui.song_1@nxp.com>
+Date:   Thu,  9 Apr 2020 17:02:59 +0800
+Message-Id: <20200409090259.13126-1-hui.song_1@nxp.com>
 X-Mailer: git-send-email 2.9.5
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
