@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AFFB1A3AE1
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 21:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40B881A3AE3
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Apr 2020 21:59:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgDIT7C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Apr 2020 15:59:02 -0400
+        id S1726875AbgDIT7E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Apr 2020 15:59:04 -0400
 Received: from mga14.intel.com ([192.55.52.115]:22248 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgDIT7C (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 9 Apr 2020 15:59:02 -0400
-IronPort-SDR: c5XAKoTcxFTYISEnVkhAiD8dZgjsWtAw4xZtpyyPWNPtn40kgiMrJvazfLW7X1UkCDYMaH/aLw
- fR0OBdSn1Vsg==
+        id S1726793AbgDIT7E (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 9 Apr 2020 15:59:04 -0400
+IronPort-SDR: UxARs1L3N/kUKuJJpkmhp6kZh7pdwbFlSczJPpamgzmcl51WWYIDPTSZJb0dhIeMs43EpkCKSU
+ 3bNtYNItyRQw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:59:03 -0700
-IronPort-SDR: 8K+mXrYK+GvQ/LMwBFGYlin/OhB/dVt/tdyXM/fxSWBSnq/Iwf5qKATIxeFzDNpBM/XXA3O31D
- 78K+hfWiC/Zw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2020 12:59:05 -0700
+IronPort-SDR: Xm4qqKX+D50Bu8qrr8/HRy9uXDhGIjH2KH56eGzv88z6EOX7KEXPqJSN6ShC5Eqj8Pmv/EKVGC
+ nCNOLyANLT0A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,363,1580803200"; 
-   d="scan'208";a="242745301"
+   d="scan'208";a="242745310"
 Received: from davidadu-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.212.151.218])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2020 12:59:01 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 09 Apr 2020 12:59:03 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     tiwai@suse.de, broonie@kernel.org,
         Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve clock
-Date:   Thu,  9 Apr 2020 14:58:27 -0500
-Message-Id: <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
+Subject: [RFC PATCH 03/16] ASoC: Intel: sof-pcm512x: use gpiod for LED
+Date:   Thu,  9 Apr 2020 14:58:28 -0500
+Message-Id: <20200409195841.18901-4-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
 References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
@@ -51,64 +51,118 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Using devm_clk_get() with a NULL string fails on ACPI platforms, use
-the "sclk" string as a fallback.
+Remove direct regmap access, use gpios exposed by PCM512x codec
+Keep the codec_init function, this will be used in following patches
+
+The gpios handling is done with an explicit lookup table. We cannot
+use ACPI-based mappings since we don't have an ACPI device for the
+machine driver, and the gpiochip is created during the probe of the
+PCM512x driver.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- sound/soc/codecs/pcm512x.c | 30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+ sound/soc/intel/boards/sof_pcm512x.c | 45 ++++++++++++++++++++--------
+ 1 file changed, 32 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/codecs/pcm512x.c b/sound/soc/codecs/pcm512x.c
-index 4f895a588c31..1df291b84925 100644
---- a/sound/soc/codecs/pcm512x.c
-+++ b/sound/soc/codecs/pcm512x.c
-@@ -1603,6 +1603,7 @@ static const struct gpio_chip template_chip = {
+diff --git a/sound/soc/intel/boards/sof_pcm512x.c b/sound/soc/intel/boards/sof_pcm512x.c
+index fb7811899999..dcd769b352fa 100644
+--- a/sound/soc/intel/boards/sof_pcm512x.c
++++ b/sound/soc/intel/boards/sof_pcm512x.c
+@@ -10,6 +10,8 @@
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+ #include <linux/module.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
+ #include <linux/platform_device.h>
+ #include <linux/types.h>
+ #include <sound/core.h>
+@@ -43,6 +45,7 @@ struct sof_hdmi_pcm {
+ struct sof_card_private {
+ 	struct list_head hdmi_pcm_list;
+ 	bool idisp_codec;
++	struct gpio_desc *gpio_4;
+ };
  
- int pcm512x_probe(struct device *dev, struct regmap *regmap)
+ static int sof_pcm512x_quirk_cb(const struct dmi_system_id *id)
+@@ -84,23 +87,16 @@ static int sof_hdmi_init(struct snd_soc_pcm_runtime *rtd)
+ 
+ static int sof_pcm512x_codec_init(struct snd_soc_pcm_runtime *rtd)
  {
-+	const char * const clk_name[] = {NULL, "sclk"};
- 	struct pcm512x_priv *pcm512x;
- 	int i, ret;
+-	struct snd_soc_component *codec = asoc_rtd_to_codec(rtd, 0)->component;
+-
+-	snd_soc_component_update_bits(codec, PCM512x_GPIO_EN, 0x08, 0x08);
+-	snd_soc_component_update_bits(codec, PCM512x_GPIO_OUTPUT_4, 0x0f, 0x02);
+-	snd_soc_component_update_bits(codec, PCM512x_GPIO_CONTROL_1,
+-				      0x08, 0x08);
+-
+ 	return 0;
+ }
  
-@@ -1671,17 +1672,28 @@ int pcm512x_probe(struct device *dev, struct regmap *regmap)
- 		goto err;
- 	}
+ static int aif1_startup(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+-	struct snd_soc_component *codec = asoc_rtd_to_codec(rtd, 0)->component;
++	struct sof_card_private *ctx = snd_soc_card_get_drvdata(rtd->card);
  
--	pcm512x->sclk = devm_clk_get(dev, NULL);
--	if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
--		ret = -EPROBE_DEFER;
--		goto err;
--	}
--	if (!IS_ERR(pcm512x->sclk)) {
--		ret = clk_prepare_enable(pcm512x->sclk);
--		if (ret != 0) {
--			dev_err(dev, "Failed to enable SCLK: %d\n", ret);
-+	for (i = 0; i < ARRAY_SIZE(clk_name); i++) {
-+		pcm512x->sclk = devm_clk_get(dev, clk_name[i]);
-+		if (PTR_ERR(pcm512x->sclk) == -EPROBE_DEFER) {
-+			ret = -EPROBE_DEFER;
- 			goto err;
- 		}
-+		if (!IS_ERR(pcm512x->sclk)) {
-+			dev_dbg(dev, "SCLK detected by devm_clk_get\n");
-+			ret = clk_prepare_enable(pcm512x->sclk);
-+			if (ret != 0) {
-+				dev_err(dev, "Failed to enable SCLK: %d\n",
-+					ret);
-+				goto err;
-+			}
-+			break;
-+		}
+-	snd_soc_component_update_bits(codec, PCM512x_GPIO_CONTROL_1,
+-				      0x08, 0x08);
++	/* Turn LED on */
++	gpiod_set_value(ctx->gpio_4, 1);
+ 
+ 	return 0;
+ }
+@@ -108,10 +104,10 @@ static int aif1_startup(struct snd_pcm_substream *substream)
+ static void aif1_shutdown(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+-	struct snd_soc_component *codec = asoc_rtd_to_codec(rtd, 0)->component;
++	struct sof_card_private *ctx = snd_soc_card_get_drvdata(rtd->card);
+ 
+-	snd_soc_component_update_bits(codec, PCM512x_GPIO_CONTROL_1,
+-				      0x08, 0x00);
++	/* Turn LED off */
++	gpiod_set_value(ctx->gpio_4, 0);
+ }
+ 
+ static const struct snd_soc_ops sof_pcm512x_ops = {
+@@ -354,6 +350,14 @@ static struct snd_soc_dai_link *sof_card_dai_links_create(struct device *dev,
+ 	return NULL;
+ }
+ 
++static struct gpiod_lookup_table pcm512x_gpios_table = {
++	/* .dev_id set during probe */
++	.table = {
++		GPIO_LOOKUP("pcm512x-gpio", 3, "PCM512x-GPIO4", GPIO_ACTIVE_HIGH),
++		{ },
++	},
++};
 +
-+		if (!clk_name[i])
-+			dev_dbg(dev, "no SCLK detected with NULL string\n");
-+		else
-+			dev_dbg(dev, "no SCLK detected for %s string\n",
-+				clk_name[i]);
- 	}
+ static int sof_audio_probe(struct platform_device *pdev)
+ {
+ 	struct snd_soc_acpi_mach *mach = pdev->dev.platform_data;
+@@ -413,6 +417,21 @@ static int sof_audio_probe(struct platform_device *pdev)
  
- 	/* Default to standby mode */
+ 	snd_soc_card_set_drvdata(&sof_audio_card_pcm512x, ctx);
+ 
++	/*
++	 * Enable GPIO4 for LED
++	 */
++	pcm512x_gpios_table.dev_id = dev_name(&pdev->dev);
++	gpiod_add_lookup_table(&pcm512x_gpios_table);
++
++	ctx->gpio_4 = devm_gpiod_get(&pdev->dev, "PCM512x-GPIO4",
++				     GPIOD_OUT_LOW);
++
++	if (IS_ERR(ctx->gpio_4)) {
++		dev_err(&pdev->dev, "gpio4 not found\n");
++		ret = PTR_ERR(ctx->gpio_4);
++		return ret;
++	}
++
+ 	return devm_snd_soc_register_card(&pdev->dev,
+ 					  &sof_audio_card_pcm512x);
+ }
 -- 
 2.20.1
 
