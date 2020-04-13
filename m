@@ -2,39 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8391A658F
+	by mail.lfdr.de (Postfix) with ESMTP id D7F141A658E
 	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 13:18:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgDMLSb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1728948AbgDMLSb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 13 Apr 2020 07:18:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:3812 "EHLO mga05.intel.com"
+Received: from mga03.intel.com ([134.134.136.65]:49288 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgDMLSa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 13 Apr 2020 07:18:30 -0400
-IronPort-SDR: 8X8pvIa1UThvHqNUK/iYwPtGe/gUhWmZ5rM+tuppnxm5LmaORxZudba5ewhuXoey7WV2gxSPcw
- zEa3e/plyq6Q==
+        id S1728947AbgDMLSb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Apr 2020 07:18:31 -0400
+IronPort-SDR: VyXra71rZnIdHjjm+Lh4kdfy+zN+F/DzFycuPHZ9jVUwieFu735E8UYHjLCMDgBHR4n4NmexjE
+ 5cZjA/29XcGQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 04:18:29 -0700
-IronPort-SDR: J+8fLmFZQudK6Ht9ItQvHS9DVAVBvZ6GCoUW7avdAUuxX5ybYoJ2baJB2KclA3cdzGLlzGQTpd
- 3wzdZYrDlqyg==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 04:18:29 -0700
+IronPort-SDR: S4g+teC9sTnXUr61VjblMQqa4QcXuqnC8p87Zj8jZ6ExfTb2o1kXYg9g6QhsCxlKzHCQI07Yxr
+ CrLSMpM3xEqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
-   d="scan'208";a="266744443"
+   d="scan'208";a="241635278"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 13 Apr 2020 04:18:28 -0700
+  by orsmga007.jf.intel.com with ESMTP; 13 Apr 2020 04:18:28 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3BD82DE; Mon, 13 Apr 2020 14:18:26 +0300 (EEST)
+        id 4B50495; Mon, 13 Apr 2020 14:18:27 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/6] pinctrl: intel: Introduce common flags for GPIO mapping scheme
-Date:   Mon, 13 Apr 2020 14:18:20 +0300
-Message-Id: <20200413111825.89866-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/6] pinctrl: cannonlake: Use generic flag for special GPIO base treatment
+Date:   Mon, 13 Apr 2020 14:18:21 +0300
+Message-Id: <20200413111825.89866-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200413111825.89866-1-andriy.shevchenko@linux.intel.com>
+References: <20200413111825.89866-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -42,108 +44,110 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Few drivers are using the same flag to tell Intel pin control core
-how to interpret GPIO base.
-
-Provide a generic flags so all drivers can use.
+Since we have a generic flag for special GPIO base treatment,
+use it in the driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v2: replace defines with enum with kernel doc descriptions (Mika)
- drivers/pinctrl/intel/pinctrl-intel.c | 19 +++++++++++++------
- drivers/pinctrl/intel/pinctrl-intel.h | 14 ++++++++++++--
- 2 files changed, 25 insertions(+), 8 deletions(-)
+v2: no changes
+ drivers/pinctrl/intel/pinctrl-cannonlake.c | 58 +++++++++++-----------
+ 1 file changed, 28 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 74fdfd2b9ff5..a1b286dc7008 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -798,7 +798,7 @@ static int intel_gpio_to_pin(struct intel_pinctrl *pctrl, unsigned int offset,
- 		for (j = 0; j < comm->ngpps; j++) {
- 			const struct intel_padgroup *pgrp = &comm->gpps[j];
+diff --git a/drivers/pinctrl/intel/pinctrl-cannonlake.c b/drivers/pinctrl/intel/pinctrl-cannonlake.c
+index f51b27bbf9f1..515f57a0d180 100644
+--- a/drivers/pinctrl/intel/pinctrl-cannonlake.c
++++ b/drivers/pinctrl/intel/pinctrl-cannonlake.c
+@@ -30,8 +30,6 @@
+ 		.gpio_base = (g),			\
+ 	}
  
--			if (pgrp->gpio_base < 0)
-+			if (pgrp->gpio_base == INTEL_GPIO_BASE_NOMAP)
- 				continue;
- 
- 			if (offset >= pgrp->gpio_base &&
-@@ -1138,7 +1138,7 @@ static int intel_gpio_add_community_ranges(struct intel_pinctrl *pctrl,
- 	for (i = 0; i < community->ngpps; i++) {
- 		const struct intel_padgroup *gpp = &community->gpps[i];
- 
--		if (gpp->gpio_base < 0)
-+		if (gpp->gpio_base == INTEL_GPIO_BASE_NOMAP)
- 			continue;
- 
- 		ret = gpiochip_add_pin_range(&pctrl->chip, dev_name(pctrl->dev),
-@@ -1180,7 +1180,7 @@ static unsigned int intel_gpio_ngpio(const struct intel_pinctrl *pctrl)
- 		for (j = 0; j < community->ngpps; j++) {
- 			const struct intel_padgroup *gpp = &community->gpps[j];
- 
--			if (gpp->gpio_base < 0)
-+			if (gpp->gpio_base == INTEL_GPIO_BASE_NOMAP)
- 				continue;
- 
- 			if (gpp->gpio_base + gpp->size > ngpio)
-@@ -1276,8 +1276,15 @@ static int intel_pinctrl_add_padgroups(struct intel_pinctrl *pctrl,
- 		if (gpps[i].size > 32)
- 			return -EINVAL;
- 
--		if (!gpps[i].gpio_base)
--			gpps[i].gpio_base = gpps[i].base;
-+		/* Special treatment for GPIO base */
-+		switch (gpps[i].gpio_base) {
-+			case INTEL_GPIO_BASE_MATCH:
-+				gpps[i].gpio_base = gpps[i].base;
-+				break;
-+			case INTEL_GPIO_BASE_NOMAP:
-+			default:
-+				break;
-+		}
- 
- 		gpps[i].padown_num = padown_num;
- 
-@@ -1596,7 +1603,7 @@ static void intel_restore_hostown(struct intel_pinctrl *pctrl, unsigned int c,
- 	struct device *dev = pctrl->dev;
- 	u32 requested;
- 
--	if (padgrp->gpio_base < 0)
-+	if (padgrp->gpio_base == INTEL_GPIO_BASE_NOMAP)
- 		return;
- 
- 	requested = intel_gpio_is_requested(&pctrl->chip, padgrp->gpio_base, padgrp->size);
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-index c6f066f6d3fb..89f38fae6da7 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.h
-+++ b/drivers/pinctrl/intel/pinctrl-intel.h
-@@ -53,8 +53,7 @@ struct intel_function {
-  * @reg_num: GPI_IS register number
-  * @base: Starting pin of this group
-  * @size: Size of this group (maximum is 32).
-- * @gpio_base: Starting GPIO base of this group (%0 if matches with @base,
-- *	       and %-1 if no GPIO mapping should be created)
-+ * @gpio_base: Starting GPIO base of this group
-  * @padown_num: PAD_OWN register number (assigned by the core driver)
-  *
-  * If pad groups of a community are not the same size, use this structure
-@@ -68,6 +67,17 @@ struct intel_padgroup {
- 	unsigned int padown_num;
+-#define CNL_NO_GPIO	-1
+-
+ #define CNL_COMMUNITY(b, s, e, o, g)			\
+ 	{						\
+ 		.barno = (b),				\
+@@ -377,27 +375,27 @@ static const struct intel_padgroup cnlh_community0_gpps[] = {
  };
  
-+/**
-+ * enum - Special treatment for GPIO base in pad group
-+ *
-+ * @INTEL_GPIO_BASE_NOMAP:	no GPIO mapping should be created
-+ * @INTEL_GPIO_BASE_MATCH:	matches with starting pin number
-+ */
-+enum {
-+	INTEL_GPIO_BASE_NOMAP	= -1,
-+	INTEL_GPIO_BASE_MATCH	= 0,
-+};
-+
- /**
-  * struct intel_community - Intel pin community description
-  * @barno: MMIO BAR number where registers for this community reside
+ static const struct intel_padgroup cnlh_community1_gpps[] = {
+-	CNL_GPP(0, 51, 74, 64),			/* GPP_C */
+-	CNL_GPP(1, 75, 98, 96),			/* GPP_D */
+-	CNL_GPP(2, 99, 106, 128),		/* GPP_G */
+-	CNL_GPP(3, 107, 114, CNL_NO_GPIO),	/* AZA */
+-	CNL_GPP(4, 115, 146, 160),		/* vGPIO_0 */
+-	CNL_GPP(5, 147, 154, CNL_NO_GPIO),	/* vGPIO_1 */
++	CNL_GPP(0, 51, 74, 64),				/* GPP_C */
++	CNL_GPP(1, 75, 98, 96),				/* GPP_D */
++	CNL_GPP(2, 99, 106, 128),			/* GPP_G */
++	CNL_GPP(3, 107, 114, INTEL_GPIO_BASE_NOMAP),	/* AZA */
++	CNL_GPP(4, 115, 146, 160),			/* vGPIO_0 */
++	CNL_GPP(5, 147, 154, INTEL_GPIO_BASE_NOMAP),	/* vGPIO_1 */
+ };
+ 
+ static const struct intel_padgroup cnlh_community3_gpps[] = {
+-	CNL_GPP(0, 155, 178, 192),		/* GPP_K */
+-	CNL_GPP(1, 179, 202, 224),		/* GPP_H */
+-	CNL_GPP(2, 203, 215, 256),		/* GPP_E */
+-	CNL_GPP(3, 216, 239, 288),		/* GPP_F */
+-	CNL_GPP(4, 240, 248, CNL_NO_GPIO),	/* SPI */
++	CNL_GPP(0, 155, 178, 192),			/* GPP_K */
++	CNL_GPP(1, 179, 202, 224),			/* GPP_H */
++	CNL_GPP(2, 203, 215, 256),			/* GPP_E */
++	CNL_GPP(3, 216, 239, 288),			/* GPP_F */
++	CNL_GPP(4, 240, 248, INTEL_GPIO_BASE_NOMAP),	/* SPI */
+ };
+ 
+ static const struct intel_padgroup cnlh_community4_gpps[] = {
+-	CNL_GPP(0, 249, 259, CNL_NO_GPIO),	/* CPU */
+-	CNL_GPP(1, 260, 268, CNL_NO_GPIO),	/* JTAG */
+-	CNL_GPP(2, 269, 286, 320),		/* GPP_I */
+-	CNL_GPP(3, 287, 298, 352),		/* GPP_J */
++	CNL_GPP(0, 249, 259, INTEL_GPIO_BASE_NOMAP),	/* CPU */
++	CNL_GPP(1, 260, 268, INTEL_GPIO_BASE_NOMAP),	/* JTAG */
++	CNL_GPP(2, 269, 286, 320),			/* GPP_I */
++	CNL_GPP(3, 287, 298, 352),			/* GPP_J */
+ };
+ 
+ static const unsigned int cnlh_spi0_pins[] = { 40, 41, 42, 43 };
+@@ -790,25 +788,25 @@ static const struct intel_function cnllp_functions[] = {
+ };
+ 
+ static const struct intel_padgroup cnllp_community0_gpps[] = {
+-	CNL_GPP(0, 0, 24, 0),			/* GPP_A */
+-	CNL_GPP(1, 25, 50, 32),			/* GPP_B */
+-	CNL_GPP(2, 51, 58, 64),			/* GPP_G */
+-	CNL_GPP(3, 59, 67, CNL_NO_GPIO),	/* SPI */
++	CNL_GPP(0, 0, 24, 0),				/* GPP_A */
++	CNL_GPP(1, 25, 50, 32),				/* GPP_B */
++	CNL_GPP(2, 51, 58, 64),				/* GPP_G */
++	CNL_GPP(3, 59, 67, INTEL_GPIO_BASE_NOMAP),	/* SPI */
+ };
+ 
+ static const struct intel_padgroup cnllp_community1_gpps[] = {
+-	CNL_GPP(0, 68, 92, 96),			/* GPP_D */
+-	CNL_GPP(1, 93, 116, 128),		/* GPP_F */
+-	CNL_GPP(2, 117, 140, 160),		/* GPP_H */
+-	CNL_GPP(3, 141, 172, 192),		/* vGPIO */
+-	CNL_GPP(4, 173, 180, 224),		/* vGPIO */
++	CNL_GPP(0, 68, 92, 96),				/* GPP_D */
++	CNL_GPP(1, 93, 116, 128),			/* GPP_F */
++	CNL_GPP(2, 117, 140, 160),			/* GPP_H */
++	CNL_GPP(3, 141, 172, 192),			/* vGPIO */
++	CNL_GPP(4, 173, 180, 224),			/* vGPIO */
+ };
+ 
+ static const struct intel_padgroup cnllp_community4_gpps[] = {
+-	CNL_GPP(0, 181, 204, 256),		/* GPP_C */
+-	CNL_GPP(1, 205, 228, 288),		/* GPP_E */
+-	CNL_GPP(2, 229, 237, CNL_NO_GPIO),	/* JTAG */
+-	CNL_GPP(3, 238, 243, CNL_NO_GPIO),	/* HVCMOS */
++	CNL_GPP(0, 181, 204, 256),			/* GPP_C */
++	CNL_GPP(1, 205, 228, 288),			/* GPP_E */
++	CNL_GPP(2, 229, 237, INTEL_GPIO_BASE_NOMAP),	/* JTAG */
++	CNL_GPP(3, 238, 243, INTEL_GPIO_BASE_NOMAP),	/* HVCMOS */
+ };
+ 
+ static const struct intel_community cnllp_communities[] = {
 -- 
 2.25.1
 
