@@ -2,170 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1481A64CB
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 11:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC0331A6509
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 12:11:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgDMJs5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Apr 2020 05:48:57 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45488 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbgDMJs4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 13 Apr 2020 05:48:56 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EA80200216;
-        Mon, 13 Apr 2020 11:48:54 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3636B201410;
-        Mon, 13 Apr 2020 11:48:49 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F0284402B4;
-        Mon, 13 Apr 2020 17:48:42 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: gpio: Convert i.MX to json-schema
-Date:   Mon, 13 Apr 2020 17:40:49 +0800
-Message-Id: <1586770849-15693-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1728143AbgDMKLd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Apr 2020 06:11:33 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36614 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgDMKLc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Apr 2020 06:11:32 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i7so11349490edq.3;
+        Mon, 13 Apr 2020 03:11:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IHzUNdwPsTQhqLll3sOK8O3xrvJdBlinyJZ6YxNwq5s=;
+        b=EQY2aTx9QZvn4hJbu8mvjayyvAl2zm1DV5RIyc+0eSB7YtkzKGD+3yq8EBkExqJRfC
+         cNa3Bvq2oP6c1RYsmbxZqno06TGcD876gAyiW3kkTVlI8zTARvb85T23jnI/uoDpb/6J
+         5LaVUJ6hVAkD3x3yJxyVui/7Cy5Dk06fEZsj4cKEPZ37YkGiqmY8C77mdqt//wiMQn5g
+         FMJpjqyFUr6HBdGFFjtoMD3sOqU1FGdGnjwafaRAmYFGG/OFD+vgAP2TV2nCziB2BApL
+         HCC3/9FpxxemsVpaYlACn+xh8fhbeCZBtUBf9o9mfCn8+Sc9WGmqY1jLwDgQ8idcG5cc
+         6ggA==
+X-Gm-Message-State: AGi0PuZlOxa39PVrwLnPR162rsr9V7Zesv/TSyDyJXUFdAxR2BW0wt8q
+        Yi7ttTXpTGbbFRKWxVkj75i2SD4R
+X-Google-Smtp-Source: APiQypLbUzeNvAIZR67vxpLwZzQRg3r3rXpBNYhH+Po0Qp1noxa7A8r1ABhf2bhfL8AcuoH9Rr3W4g==
+X-Received: by 2002:a05:6402:1383:: with SMTP id b3mr15439537edv.217.1586772689922;
+        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id g2sm1307883edm.77.2020.04.13.03.11.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 12:11:27 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: samsung: Correct setting of eint wakeup mask on
+ s5pv210
+Message-ID: <20200413101127.GA10535@kozik-lap>
+References: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the i.MX GPIO binding to DT schema format using json-schema.
+On Sat, Apr 04, 2020 at 10:08:49AM -0700, Jonathan Bakker wrote:
+> Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
+> mask") started writing the eint wakeup mask from the pinctrl driver.
+> Unfortunately, it made the assumption that the private retention data
+> was always a regmap while in the case of s5pv210 it is a raw pointer
+> to the clock base (as the eint wakeup mask not in the PMU as with newer
+> Exynos platforms).
+> 
+> Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-exynos.c | 73 ++++++++++++++++--------
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/gpio/fsl-imx-gpio.txt      | 35 -----------
- .../devicetree/bindings/gpio/fsl-imx-gpio.yaml     | 72 ++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 35 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+Thanks, applied (with Cc-stable tag).
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-deleted file mode 100644
-index b4cd9f90..0000000
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt
-+++ /dev/null
-@@ -1,35 +0,0 @@
--* Freescale i.MX/MXC GPIO controller
--
--Required properties:
--- compatible : Should be "fsl,<soc>-gpio"
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all 32 pins, if
--  one number.  If two numbers, the first one is the interrupt shared
--  by low 16 pins and the second one is for high 16 pins.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
--  The second cell bits[3:0] is used to specify trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
--
--Optional properties:
--- clocks: the clock for clocking the GPIO silicon
--
--Example:
--
--gpio0: gpio@73f84000 {
--	compatible = "fsl,imx51-gpio", "fsl,imx35-gpio";
--	reg = <0x73f84000 0x4000>;
--	interrupts = <50 51>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-new file mode 100644
-index 0000000..465104c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -0,0 +1,72 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/fsl-imx-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX/MXC GPIO controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx1-gpio
-+              - fsl,imx21-gpio
-+              - fsl,imx31-gpio
-+              - fsl,imx35-gpio
-+              - fsl,imx7d-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      Should be the port interrupt shared by all 32 pins, if one number.
-+      If two numbers, the first one is the interrupt shared by low 16 pins
-+      and the second one is for high 16 pins.
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  clocks:
-+    description: |
-+      The clock for clocking the GPIO silicon.
-+    maxItems: 1
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio0: gpio@73f84000 {
-+        compatible = "fsl,imx35-gpio";
-+        reg = <0x73f84000 0x4000>;
-+        interrupts = <50 51>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
-+
-+...
--- 
-2.7.4
+Best regards,
+Krzysztof
 
