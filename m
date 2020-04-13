@@ -2,74 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0331A6509
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 12:11:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA751A6551
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 12:46:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgDMKLd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Apr 2020 06:11:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36614 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgDMKLc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Apr 2020 06:11:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i7so11349490edq.3;
-        Mon, 13 Apr 2020 03:11:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IHzUNdwPsTQhqLll3sOK8O3xrvJdBlinyJZ6YxNwq5s=;
-        b=EQY2aTx9QZvn4hJbu8mvjayyvAl2zm1DV5RIyc+0eSB7YtkzKGD+3yq8EBkExqJRfC
-         cNa3Bvq2oP6c1RYsmbxZqno06TGcD876gAyiW3kkTVlI8zTARvb85T23jnI/uoDpb/6J
-         5LaVUJ6hVAkD3x3yJxyVui/7Cy5Dk06fEZsj4cKEPZ37YkGiqmY8C77mdqt//wiMQn5g
-         FMJpjqyFUr6HBdGFFjtoMD3sOqU1FGdGnjwafaRAmYFGG/OFD+vgAP2TV2nCziB2BApL
-         HCC3/9FpxxemsVpaYlACn+xh8fhbeCZBtUBf9o9mfCn8+Sc9WGmqY1jLwDgQ8idcG5cc
-         6ggA==
-X-Gm-Message-State: AGi0PuZlOxa39PVrwLnPR162rsr9V7Zesv/TSyDyJXUFdAxR2BW0wt8q
-        Yi7ttTXpTGbbFRKWxVkj75i2SD4R
-X-Google-Smtp-Source: APiQypLbUzeNvAIZR67vxpLwZzQRg3r3rXpBNYhH+Po0Qp1noxa7A8r1ABhf2bhfL8AcuoH9Rr3W4g==
-X-Received: by 2002:a05:6402:1383:: with SMTP id b3mr15439537edv.217.1586772689922;
-        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id g2sm1307883edm.77.2020.04.13.03.11.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Apr 2020 03:11:29 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 12:11:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     tomasz.figa@gmail.com, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, kgene@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: samsung: Correct setting of eint wakeup mask on
- s5pv210
-Message-ID: <20200413101127.GA10535@kozik-lap>
-References: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
+        id S1727782AbgDMKqQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Apr 2020 06:46:16 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32272 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727776AbgDMKqP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Apr 2020 06:46:15 -0400
+IronPort-SDR: QA9gdgYUTLL7RyYX7NExihlAqUW5tyUT6sKc5TNtU1/1kBkDczpgIKDs30P5eRAgfzrqZBPlYU
+ +4PlisExMyvg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 03:46:15 -0700
+IronPort-SDR: 542N4fSbJoAbeRYSCXDHHh+037dWBj4+gqCUE0IghUh+ea7+ns/EYQgrLtdKk/u25K1ye4Bt8P
+ OJ+Az74zGhkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="454174442"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Apr 2020 03:46:14 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jNwbY-000GvS-TB; Mon, 13 Apr 2020 13:46:16 +0300
+Date:   Mon, 13 Apr 2020 13:46:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1] pinctrl: baytrail: Enable pin configuration setting
+ for GPIO chip
+Message-ID: <20200413104616.GB34613@smile.fi.intel.com>
+References: <20200331152428.33951-1-andriy.shevchenko@linux.intel.com>
+ <20200401094620.GQ2564@lahna.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR10MB3479E878C547053C6B952E01A3C40@BYAPR10MB3479.namprd10.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200401094620.GQ2564@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 10:08:49AM -0700, Jonathan Bakker wrote:
-> Commit a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt
-> mask") started writing the eint wakeup mask from the pinctrl driver.
-> Unfortunately, it made the assumption that the private retention data
-> was always a regmap while in the case of s5pv210 it is a raw pointer
-> to the clock base (as the eint wakeup mask not in the PMU as with newer
-> Exynos platforms).
+On Wed, Apr 01, 2020 at 12:46:20PM +0300, Mika Westerberg wrote:
+> On Tue, Mar 31, 2020 at 06:24:28PM +0300, Andy Shevchenko wrote:
+> > It appears that pin configuration for GPIO chip hasn't been enabled yet
+> > due to absence of ->set_config() callback.
+> > 
+> > Enable it here for Intel Baytrail.
+> > 
+> > Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
+> > Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips")
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Fixes: a8be2af0218c ("pinctrl: samsung: Write external wakeup interrupt mask")
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  drivers/pinctrl/samsung/pinctrl-exynos.c | 73 ++++++++++++++++--------
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Thanks, applied (with Cc-stable tag).
+Pushed to fixes, thanks!
 
-Best regards,
-Krzysztof
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
