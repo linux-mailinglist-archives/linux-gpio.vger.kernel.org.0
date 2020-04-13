@@ -2,128 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB0C1A6240
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 06:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABD601A62B7
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 07:46:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgDMEuJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Apr 2020 00:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:35234 "EHLO
+        id S1726524AbgDMFqJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Apr 2020 01:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.18]:43510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgDMEuJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Apr 2020 00:50:09 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC044C0086B6
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2020 21:50:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id z9so3363207pjd.2
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2020 21:50:07 -0700 (PDT)
+        with ESMTP id S1726440AbgDMFqI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Apr 2020 01:46:08 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52939C008676
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2020 22:46:08 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id cb27so10643730edb.11
+        for <linux-gpio@vger.kernel.org>; Sun, 12 Apr 2020 22:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NhWWJKHzx6HRDsAvn1ifQlJriij6MaMtMDKuj/k9bmI=;
-        b=Ilf0eHpIqXWj5aYziVWyWEVczzYaKO7xs3TOtGKjHZzpBRWKefSNqvpSIRz9SNA1An
-         9T9MWJEW7SY+f2k1L1XT31fWJtol2e1d2HjiRCRiFhBnNqqDLSp0jz4yZhcBzFEXFCJl
-         DqC+0HiE9pjACjrXoTJ0vnvCva1g7VOu4ySPHUM0rrmgfO4hZCugABlWPanwKiffA9Cr
-         6jxz+bi8J10Hz69rgG3VeWy5fqc9aB6QN+Ch3O93EWByn3KSYkIepa9lZFJQlXM7LHza
-         2Y9O8QagnqoBVDmWaYzh2rHHWsJHajxeOrWC+dBIyQHY6mbM5I/nw7gTU5zY+B1m+GU0
-         vnqw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FlXaTOr+kqY8flt8h5iVXY9Br/kqLO22K8KEByA6izQ=;
+        b=tc6UrvOXwr3sXjeRrbWvKAa8Tlze9SysPRyOZENraq3tE4I0I/tBPhJG2EBV9hh0Fj
+         gxiVIkO3ELJsAWl/FjrQeUkLDFjKKvknUqC4do40feBzjfef2B+aYOeBj2G1H6ZleXLa
+         zqoiWKEVEtYed5vFpDV57oSul37uvT5xMRrWAIHxmVaP5UKLbJFSYqt4adESQC/Fdgol
+         Yx+RlMFYtDnlyDnSbbwEX4KSdh/kwLhIT7Bq6SjDvLp1K7Rjv/UwNMJuiZSpoOCV4Ryn
+         TWU4Oy/HH61rj+3hP6PGB1bdf48FFHS/i74A/uuTSXltzQyxdYS2Ovnh970wz9jFFKhN
+         Gdzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NhWWJKHzx6HRDsAvn1ifQlJriij6MaMtMDKuj/k9bmI=;
-        b=eo9aYKIVqR7XeGWxqbVV/TjmRpNjvIVF2jQqeYW9IBRDrFVLfKhFd9BCBVtO3SSQ4t
-         NdawsTOf2Khu3JdAVD7wB+ka40MhkA7lokVgfFdYFzf4Anervies0oNQ5IV5g+2Yuxkv
-         Ez+rKJF7iIAKbLiebylTwoUKgslzOMz3AcyovUzRg5zyPdFx80nYDE+w8TrIRQO8Ll1Y
-         0PEy3ZjA+F0oRc2xEQ/zuGIigIsUQLOjwuaA668mZgt4CrfiOAhV6LMDCxGfdeAKPiNJ
-         hU7fk6gp7H7gcezM3ntTl3CSmi+DcU8RN5zT5qsZffY5YpDkriBQST9y/ul+HGHnHBAa
-         WWfg==
-X-Gm-Message-State: AGi0PuZGczJkNpQ/x8moYwJLvbxUm9X5xuEBouyBhzG4oNCosI7rIGdM
-        2YP+D2Ew3ZkqKqavzw6BrkmT
-X-Google-Smtp-Source: APiQypLxN2kWhH7Hd3VY0khso1oP2c+rM/YXoKt5qQA/anPTSaA65z9Pb4w05IXpmzUAuzbW/FopKw==
-X-Received: by 2002:a17:902:7d89:: with SMTP id a9mr388312plm.233.1586753407086;
-        Sun, 12 Apr 2020 21:50:07 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:621d:5eab:88eb:9bf8:e528:ec6])
-        by smtp.gmail.com with ESMTPSA id f10sm8020649pjt.7.2020.04.12.21.50.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 Apr 2020 21:50:06 -0700 (PDT)
-Date:   Mon, 13 Apr 2020 10:19:59 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        andre.przywara@arm.com, matheus@castello.eng.br,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH] pinctrl: actions: fix function group name for i2c0_group
-Message-ID: <20200413044959.GA3071@Mani-XPS-13-9360>
-References: <1586702060-3769-1-git-send-email-amittomer25@gmail.com>
- <2d629e23-ddb1-6033-5ea3-fe9e02476e18@suse.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FlXaTOr+kqY8flt8h5iVXY9Br/kqLO22K8KEByA6izQ=;
+        b=BL2Z6YOdVgoiIGH9Cs1ep7PPJO4q+uj2wFlP01jkuAWZ+jiuUy9mqGxPXixCVDCZvY
+         svq82zvnfnNnNx1YANPjsU3qRpbWBWfGB4S1KAJ4CoZhBDmruAJeTZeoG4xrLQLhq5jG
+         FW3SWo7OG2iOoxXP2s92vvX7UOM/IxR4poebAFgE/IbYMkqF9ZGFe9WN6njD6VW2VmtT
+         O7eI0vXD5atO+/Khm4jpsw83PmrZ2AmT0mRi5HyQRHROycCNneZtY742Nv+zj9HkZcrV
+         Cg+v9dhfxESXTHfAHso+ZKRhwPDUiS0K+Qv/W4jf8qinIGiIkoZPwmxL6ecLM6H3ZcZs
+         dGlA==
+X-Gm-Message-State: AGi0Puaa36ToO1kCZFpR9cfV4FyUk9O1Xu9BvK3Do9bqSp34uckuLKpP
+        uJOSw2QOBT4mBH7LCQjqfI+xB8OrCVfy9jaky26WqryupCQ=
+X-Google-Smtp-Source: APiQypInrvlU5bGjQlx0jw89DxxNYX+O4NcAzxruo5nm5KOED5jzqWzENORa8AnHwL+1rP6V+Lu2MrtiqCa8KYrLssI=
+X-Received: by 2002:aa7:d588:: with SMTP id r8mr15358689edq.17.1586756766896;
+ Sun, 12 Apr 2020 22:46:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2d629e23-ddb1-6033-5ea3-fe9e02476e18@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1586702060-3769-1-git-send-email-amittomer25@gmail.com>
+ <2d629e23-ddb1-6033-5ea3-fe9e02476e18@suse.de> <20200413044959.GA3071@Mani-XPS-13-9360>
+In-Reply-To: <20200413044959.GA3071@Mani-XPS-13-9360>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 13 Apr 2020 11:15:30 +0530
+Message-ID: <CABHD4K_HS9QmL+X6hS-4gHfMYr9UW7_J0KL+byR1Wt4V5mvpiA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: actions: fix function group name for i2c0_group
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Andre Przywara <andre.przywara@arm.com>,
+        matheus@castello.eng.br, Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 12, 2020 at 11:58:05PM +0200, Andreas Färber wrote:
-> Hi,
-> 
-> Am 12.04.20 um 16:34 schrieb Amit Singh Tomar:
-> > After commit 6f87359e8bcaf88381b9c9c038929e0e6872d308("pinctrl: actions: Fix
-> > functions groups names for S700 SoC") following error has been observed
-> > while booting Linux on Cubieboard7-lite(based on S700 SoC).
-> > 
-> > [    1.206245] pinctrl-s700 e01b0000.pinctrl: invalid group "i2c0_mfp" for function "i2c0"
-> > 
-> > This commit fixes it by using correct name for i2c0_group.
-> > 
-> > Fixes: 6f87359 ("pinctrl: actions: Fix functions groups names for S700 SoC")
-> 
-> The commit hash should have 12 digits.
-> 
-> Please also check the white spaces: The subject seems to have too many after
-> "actions:", and there's one missing before each parenthesis above.
-> 
+Hi Mani,
 
-Amit, you can use something like this
+> Amit, you can use something like this
+>
+> git log -1 --abbrev-commit --pretty=format:"Fixes: %h (\"%s\")%n" <commit-hash>
 
-git log -1 --abbrev-commit --pretty=format:"Fixes: %h (\"%s\")%n" <commit-hash>
+Yeah, I already had this enabled in my git config:
 
-Thanks,
-Mani
+[pretty]
+        fixes = Fixes: %h (\"%s\")
+        picked = Cherry-Picked: %h (\"%s\")
 
-> Regards,
-> Andreas
-> 
-> > Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
-> > ---
-> >   drivers/pinctrl/actions/pinctrl-s700.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pinctrl/actions/pinctrl-s700.c b/drivers/pinctrl/actions/pinctrl-s700.c
-> > index 47a4ccd..f579a65 100644
-> > --- a/drivers/pinctrl/actions/pinctrl-s700.c
-> > +++ b/drivers/pinctrl/actions/pinctrl-s700.c
-> > @@ -1435,7 +1435,7 @@ static const char * const sd2_groups[] = {
-> >   static const char * const i2c0_groups[] = {
-> >   	"uart0_rx_mfp",
-> >   	"uart0_tx_mfp",
-> > -	"i2c0_mfp_mfp",
-> > +	"i2c0_mfp",
-> >   };
-> >   static const char * const i2c1_groups[] = {
-> > 
-> 
-> 
-> -- 
-> SUSE Software Solutions Germany GmbH
-> Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer
-> HRB 36809 (AG Nürnberg)
+and then I generated it using:
+
+git log --pretty=fixes -1 6f87359e8bcaf88381b9c9c038929e0e6872d308
+Fixes: 6f87359 ("pinctrl: actions: Fix functions groups names for S700 SoC")
+
+But seems to only generates 7 chars for commit hash
+
+Thanks
+Amit
