@@ -2,109 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B0301A65DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 13:50:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E5371A6669
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Apr 2020 14:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgDMLuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Apr 2020 07:50:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729173AbgDMLuF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Apr 2020 07:50:05 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2390C0085EE
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2020 04:41:09 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id n13so4325903pgp.11
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Apr 2020 04:41:09 -0700 (PDT)
+        id S1729522AbgDMMoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Apr 2020 08:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727797AbgDMMon (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Apr 2020 08:44:43 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20A5C0A3BE2;
+        Mon, 13 Apr 2020 05:38:43 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a81so9735858wmf.5;
+        Mon, 13 Apr 2020 05:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
-        b=HxOaFJZljqXQIeSLw7dw+YeTIVe76Yo57NkC3rYQjPPsruaWLZEetJYgTw7mDA7iYw
-         4KM/sQKuVdxfTyBgHy0QGrcgvhBAp/s2WR+7lhwMEms7c5U3ARzlxX4w9gHN6kyIVCTo
-         InVjjBwajQbgYMLlLr/dGAnfAOq75HLmi2bmQShdg5UrDH6ZNHdmpjirCjsFE3E+W3lI
-         4HPNdhIk9GHy3wOVy8qt79oLhQ3V0WJ+l2R8YfTk5No8OB207Mc1ssyzLdiNdU6iDIon
-         HSnId1sWR9JHq8BkscMOY+TVCS7WuDDdfTSRJRDObUGUY3pKdsd/NGq97n4qtv5szVJr
-         IEMQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B3G3up+sacqGwrkeNRbiAPfpytPVgXOCXw+62EiaExE=;
+        b=YDHHb9AWyoAkrefNdSOprNxlVoZH1mvo3GKu65RWs/01H8iAXcjWyyYMMqZGpUbbcA
+         5psi/m9ze5mzyjEhPMD5Q3wBdaWVjPxwFCgdL/gFvLmBYFdRAuod0cXaXhUM7rLBBYw8
+         W7J97Rma94EbonmB2BOzE9ufv6K4qteNE6PBz1+n3fYtIMDoensPf6fhMN/hdyojIjWK
+         qWXxbfYVUlLIAOAE1mjlRwECSCIIY5Sk6WfZ7N1TULQ2IfCtFx1kVCRETSOh2F1tcxWC
+         LuBepG8PRQExNgd46BAzrOz/mrG/NarelR4jzZ7v4D5Zs+UZkIHb9NtTQLTcxOT9iv5C
+         rSOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
-        b=F/0WQgi+hARDlZnCUzqLW1nLgTDCZ2SQ6AADPQRsu+X2Z69MlGSamorbwpd0aCUOse
-         ZfD84tOOhjI7+pUVvWyqoCjsVOPuoUsyuIzsWer/SvgCvgmSGMBpkoM/U1HS754NsKHH
-         hEYNHQcLL5owaZ6skmJSGH60zHsH4Fr+0BLStZULluMFUvALQvdLjOyCph7zpIgs0Pum
-         dZUWsQkP/Lmjg1eTk1QUvSyJZ7qjc3ugvEpNan1FrSuIjYcb6NEB8wCeuaHMUjBl9nrP
-         sLGIqu1BqK/6aa209MSzkvoIHlgQnT5leuFmfBShwh7RJMjl9CFYEbLsIohS2hKsM+Yk
-         KffA==
-X-Gm-Message-State: AGi0Pub/g1r27f3OaoHqU9ZubL92Ji0q4mHn/OQfLlmFMgIxEhp+E0OZ
-        QCiCxiWhxamK2pCG1mYexzTDovd6eHM2Qf6uDd2+JXo=
-X-Google-Smtp-Source: APiQypJ8Xf5JZIaJmuakcegBHklRN/w3ObzOY1fG2hZhiF0393fUgrxf6qaSVcLD5pLEm/4TEQgoj9oGK8tQ5EeyGAU=
-X-Received: by 2002:a05:6e02:c8f:: with SMTP id b15mr14965961ile.35.1586778068198;
- Mon, 13 Apr 2020 04:41:08 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B3G3up+sacqGwrkeNRbiAPfpytPVgXOCXw+62EiaExE=;
+        b=s+802lewxJYqDCnSbIv8812zNsMFa3830iA7SY+lFklOhIxmclX4D2jGNAQm3F+y95
+         +zxV8vAu3D845l3E0MAwUGWJGSaal+uUVjf2sSNEMzvwnF/2evuDtROHJK0TXUFA83nZ
+         k4I2JZvRtOEmhTFH35vVFxv6OTlRgtvaj7giMzU5jbtWEljHfg3CQAwnqFS8zSP+0AOo
+         g6/ALqZsy2yPNgRwQwnXHPlXoYIopoUYMr09gTJDmW/PssywS0IkeyVzP9kH29fuUfgj
+         Y7Pm6TgSeuKtbz24e0puVEnVjuC80B+l06aTsPuCPvoLkVSx6akcMGadFA9boR4KCenl
+         4wew==
+X-Gm-Message-State: AGi0PuZ9UOnDES3bbwSuwgg/hFD09QzzDTAjA46YyeNtbdxAz2ANxRtN
+        iVoxcfFe4zqdZrSoSr0OmZQ=
+X-Google-Smtp-Source: APiQypKINTvX+eUHVTxGsE/KYuvH4NMPf93w2kXDy3VYFzJa+K0tVZyS1i1tCFN7cTQRcjpPno6rzQ==
+X-Received: by 2002:a1c:5fc4:: with SMTP id t187mr19384279wmb.181.1586781522392;
+        Mon, 13 Apr 2020 05:38:42 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id w18sm14596456wrn.55.2020.04.13.05.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 05:38:41 -0700 (PDT)
+Date:   Mon, 13 Apr 2020 14:39:21 +0200
+From:   Drew Fustini <drew@pdp7.com>
+To:     Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc:     Drew Fustini <pdp7pdp7@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
+Message-ID: <20200413123921.GA32586@x1>
+References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
+ <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
+ <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
+ <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a02:5e49:0:0:0:0:0 with HTTP; Mon, 13 Apr 2020 04:41:07
- -0700 (PDT)
-Reply-To: mgbenin903@gmail.com
-From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
-        <info.zennitbankplcnigerian@gmail.com>
-Date:   Mon, 13 Apr 2020 13:41:07 +0200
-Message-ID: <CABHzvrm3rWryg1yAooKeHwdxzrKD47PRAEfC+ay1A6i5z3Wdiw@mail.gmail.com>
-Subject: I have already sent you first payment US$5000.00 this morning through
- MONEY Gram service.it is available to pick up in address now.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ATTN DEAR BENEFICIARY.
+On Fri, Mar 13, 2020 at 01:23:15PM +0800, Haojian Zhuang wrote:
+> On Fri, 13 Mar 2020 at 08:38, Drew Fustini <pdp7pdp7@gmail.com> wrote:
+> >
+> > On Thu, Mar 12, 2020 at 1:43 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > Do we have a datasheet for this GPIO block somewhere? Should
+> > > be the datasheet for the ASIC.
+> >
+> > I am looking at the AM335x reference manual [0] but I can not actually
+> > find any references to pull-up/down or bias for GPIO pins.  I guess I
+> > was making of the mistake of assuming this would be something the gpio
+> > pins support.
+> >
+> > > We already have the required .set_config() callback on the OMAP
+> > > driver, it's just that it only uses it for debounce.
+> > >
+> > > The driver is a bit convoluted with register offsets in a struct
+> > > omap_gpio_reg_offs depending on variant, but if they have
+> > > a register for this I'd say just get hacking.
+> > >
+> > > If the GPIO driver is using pin control as back-end you are
+> > > looking at something more complex similar to what Intel is
+> > > doing inside drivers/pinctrl/intel/pinctrl-intel.c: this driver
+> > > is just calling up to gpiochip_generic_config() which will
+> > > try to configure the lines behind the GPIO using pin config,
+> > > which works if the proper ranges are defined so the
+> > > framework can map a GPIO line to a pin control pin.
+> >
+> > Thank you for the feedback, Linus.
+> >
+> > Upon further review of drivers/pinctrl/pinctrl-single.c, I am not
+> > certain it actually supports pull-up/down.
+> >
+> > I see there is pcs_pinconf_clear_bias() and pcs_pinconf_bias_disable()
+> > but I don't see a place where the PIN_CONFIG_BIAS_PULL_DOWN or
+> > PIN_CONFIG_BIAS_PULL_UP get set.
+> >
+> 
+>                         /* 4 parameters */
+>                         case PIN_CONFIG_BIAS_DISABLE:
+>                                 pcs_pinconf_clear_bias(pctldev, pin);
+>                                 break;
+>                         case PIN_CONFIG_BIAS_PULL_DOWN:
+>                         case PIN_CONFIG_BIAS_PULL_UP:
+>                                 if (arg)
+>                                         pcs_pinconf_clear_bias(pctldev, pin);
+>                                 /* fall through */
+>                         case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+>                                 data &= ~func->conf[i].mask;
+>                                 if (arg)
+>                                         data |= func->conf[i].enable;
+>                                 else
+>                                         data |= func->conf[i].disable;
+>                                 break;
+> 
+> Because it does fall through, pullup/pulldown is set in the snippet of
+> "PIN_CONFIG_INPUT_SCHMITT_ENABLE".
+> 
+> Best Regards
+> Haojian
 
-GOOD NEWS.
+Thank you for the insights, Haojian and Linus.
 
-I have already sent you first payment US$5000.00 this morning through
-MONEY Gram service.it is available to pick up in address now.
+I've added debug print statements and it seems that pcs_pinconf_set()
+is never called on the BeagleBone (TI AM3358) either during boot or
+when gpiomon runs with bias switch that invokes GPIO_GET_LINEEVENT_IOCTL
+with GPIOHANDLE_REQUEST_BIAS_PULL_UP flag.
 
-So we advise you to Contact This Money Gram office to pick up your
-transfer $US5000.00 today.
+The pinctrl-single driver and gpio-omap driver bind as a result of these
+device tree nodes in arch/arm/boot/dts/am33xx-l4.dtsi:
+
+    am33xx_pinmux: pinmux@800 {
+        compatible = "pinctrl-single";
+        reg = <0x800 0x238>;
+        #pinctrl-cells = <1>;
+        pinctrl-single,register-width = <32>;
+        pinctrl-single,function-mask = <0x7f>;
+    };
+
+    gpio0: gpio@0 {
+        compatible = "ti,omap4-gpio";
+        gpio-controller;
+        #gpio-cells = <2>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        reg = <0x0 0x1000>;
+        interrupts = <96>;
+        gpio-line-names =
+        "MDIO_DATA",    // 0
+        <snip>
+
+I see in Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+
+    "pinctrl-single" means that pinconf isn't supported.
+
+I believe this is why pcs_pinconf_set() never gets called.
+
+Any suggestions as to how I could proceed?
+
+Is it reasonable to change the compatible to "pinconf-single"?
 
 
-Note that your compensation payment funds is total amount $US2.800,000
-Million Dollars.We have instructed the Money Gram Agent,Mr. James
-Gadner to keep sending the transfer to you daily, but the maximum
-amount you will be receiving everyday is US$5000.00. Contact Agent now
-to pick up your first payment $US5000.00 immediately.
-
-Contact Person, Mr. James Gadner, Dir. Money Gram Benin.
-Email: mgbenin903@gmail.com
-Telephone Numbers: +229 62819378/ +229 98477762
-
-HERE IS YOUR PAYMENT DETAILS FOR THE FIRST =C2=A3US5000.00 SENT TODAY.
-
-Track View Website link:
-https://secure.moneygram.com/track
-Sender=E2=80=99s First name: David
-Sender=E2=80=99s Last Name: Joiner
-Money Transfer Control Number (MTCN) (REFERENCE)# 26046856
-
-Contact the Mmoney Gram Urgent and reconfirm your address to the
-office before, they will allow you to pick up the transfer today.
-
-HERE IS WHAT REQUIRED OF YOU.
-
-YOUR FULL NAME---------
-ADDRESS--------------
-COUNTRY-----------------------------
-TELEPHONE NUMBERS-----------------
-
-Note, I paid the transfer fee for you, but only you are required to
-send to the office is $75 only,Been Your Payment File activation fee,
-Send once you contact the office,before you can able to pick up your
-transfer today.
-
-Let me know once you pick up first payment today.
-
-Barrister Robert Richter UN-Attorney at Law Court-Benin
+Thank You,
+Drew
