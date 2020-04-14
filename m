@@ -2,108 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3962B1A897A
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 20:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5CD41A89B3
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 20:36:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503957AbgDNS1e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 14:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503953AbgDNS1c (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 14:27:32 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S2504060AbgDNSga (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 14:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730984AbgDNSg0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Apr 2020 14:36:26 -0400
+X-Greylist: delayed 30551 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 11:36:25 PDT
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1035C061A0C;
+        Tue, 14 Apr 2020 11:36:25 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2070620774;
-        Tue, 14 Apr 2020 18:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586888851;
-        bh=setRMLbaGbdY6PfeXmGfv+P7oCdBEUV8af+jR4fH8Oo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mgUpmwnb5CDveFVgJHc4JDrOUzHq9FBD78BcxY4mQQouaDyuIGe1f1kFNblCrx3Ja
-         nvkNxhJcNe9EQKPcCiE/1QcJc81oQZh4MeXoY97nuBMpATca9MxwKNv/YFNGy/LPEn
-         eGjATpc0T7zOs8qPcKYUdihbl1y7nTWUKNhxcqK8=
-Date:   Tue, 14 Apr 2020 19:27:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-Message-ID: <20200414182728.GM5412@sirena.org.uk>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
- <20200414174530.GK5412@sirena.org.uk>
- <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 53BD023EC2;
+        Tue, 14 Apr 2020 20:36:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1586889384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ETg9DQrxdDCpr8jJWz38aDIweCD3QxDPHNHvzP2jUaI=;
+        b=UCGbIx6BP4Q+IaZfvVxIu9QIHpybrXsMYlGwiW2F5q48TGdHlwBz9HWEvKi0jPP6M5pjd9
+        Uw30KSd6GweHb9rvhRNdwXbJKNLmCajHFJWJw47XKaaa1+xYZhHnR2oC1BTv5WnO4w6CIb
+        AVzpz/8vTxtmpQrjUjxSLzL8hoFsy5E=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2YJj5f1P6Th4nBRw"
-Content-Disposition: inline
-In-Reply-To: <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Apr 2020 20:36:23 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
+ regmap
+In-Reply-To: <20200414172129.GJ5412@sirena.org.uk>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-11-michael@walle.cc>
+ <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+ <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc>
+ <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
+ <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
+ <20200414172129.GJ5412@sirena.org.uk>
+Message-ID: <fa605af3aee48f0bc62133f398ed7c5d@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Spam-Level: *
+X-Rspamd-Server: web
+X-Spam-Status: No, score=1.40
+X-Spam-Score: 1.40
+X-Rspamd-Queue-Id: 53BD023EC2
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[23];
+         NEURAL_HAM(-0.00)[-1.083];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Am 2020-04-14 19:21, schrieb Mark Brown:
+> On Tue, Apr 14, 2020 at 12:07:01PM +0200, Michael Walle wrote:
+>> Am 2020-04-14 11:50, schrieb Bartosz Golaszewski:
+> 
+>> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
+>> > IS_ERR() returning true?
+> 
+>> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
+>> the type the regmap API has for its "reg" property). It could be a
+>> pointer of course but then the user would have to allocate additional
+>> memory.
+> 
+> You could define REGMAP_INVALID_ADDR to be (unsigned int)(-1) or some
+> other suitably implausible address and use that as a value.  It's
+> possible that there might be a collision with a real address on some
+> device but it should be sufficiently unlikely to be useful, especially
+> if it's not something regmap in general goes and evaluates.  For extra
+> safety we could have an API for allowing users to query the register
+> validity information regmap has (or can be given) and gpiolib could 
+> then
+> use that to figure out if the value was actually a dummy value but
+> that's probably overdoing it.
 
---2YJj5f1P6Th4nBRw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If possible, I'd like to have the opposite logic. That is, if it is not
+set it should be invalid. If we have a magic macro like
+REGMAP_INVALID_ADDR, we must assign it to all the unused addresses. Thus
+every driver would have to assign all addresses and if in the future
+there will be some added, we'd have to touch all the drivers which use
+gpio_regmap.
 
-On Tue, Apr 14, 2020 at 01:14:41PM -0500, Pierre-Louis Bossart wrote:
-> On 4/14/20 12:45 PM, Mark Brown wrote:
-> > On Thu, Apr 09, 2020 at 02:58:27PM -0500, Pierre-Louis Bossart wrote:
-
-> > > Using devm_clk_get() with a NULL string fails on ACPI platforms, use
-> > > the "sclk" string as a fallback.
-
-> > Is this something that could be fixed at the ACPI level?
-
-> I guess to fix this we'd need some sort of ACPI-level connection or
-> description of the clock, and I've never seen such a description?
-
-Wait, so SCLK is in the *global* namespace and the provider has to
-register the same name?  That doesn't sound clever.  It might be better
-to have the board register the connection from the clock provider to the
-device rather than hard code global namespace strings like this, that
-sounds like a recipie for misery.
-
-It is really sad that nobody involved in producing these systems that
-don't work with the current limitations in ACPI has been able to make
-progress on improving ACPI so it can cope with modern hardware and we're
-having to deal with this stuff.
-
-> All the examples I've seen use an explicit 'mclk' string (that's e.g. what
-> we did for the PMC clocks for Baytrail/Cherrytrail machine drivers, we added
-> a lookup). Here I used 'sclk' since it's what TI refers to in their
-> documentation.
-
-They appear to call it SCK not SCLK.
-
---2YJj5f1P6Th4nBRw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6WAJAACgkQJNaLcl1U
-h9BADwf/fED5QJj8MeBLvtZRaTiqY4MJ/SKDCRbWQCSE1rKJquN+Q6S3Sw9LA6Pl
-+b6iqkWOyfvqyeHJTwR0cSNAgmaPHhbsmMKx6zX2+lyV0PO440CQ9B7EyK48Bp4F
-CX950pYjFVn0bmMKvwCE2zfogp2U7ZZky8NftSWGUkYb84/8sRyL3MTa52dR+SEW
-XI7I157Jehggi1pMsv5W11ikZnzGF3IwlIviWtq/3cM1Ji+4ZDiYCAni/zheOfFF
-w8OdUEoRqh8NIU2/apKSFLWAuyEubp7v2i784hEmjJrXgDQfs4P06rwb2Z0Og2MG
-0xmKr5g0y2UpAqVwO5SPq+uriix5FA==
-=5dN/
------END PGP SIGNATURE-----
-
---2YJj5f1P6Th4nBRw--
+-michael
