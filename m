@@ -2,112 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AA6C1A8728
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:12:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E781A8747
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:18:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407576AbgDNRMr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 13:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
+        id S2407581AbgDNRSF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 13:18:05 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5041 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407517AbgDNRMq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:12:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6937C20767;
-        Tue, 14 Apr 2020 17:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586884366;
-        bh=+qcyIZF6Y3PyicvWS4ejyY0zwsK0szUsXLI7l22j8W0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PbluDEd8klbe4xkNX9xFsE670ESHTTOhjhaQFVoprnCTaU4ZEjH5UTUWLd+mTSI+6
-         DSQqhWkIQPD3yBIeAJU1asNH6AEgt5USvO7Kqa+X6ECZCi+OKRLsnOvTCTR+BmFAPw
-         EQDmo85zc+VWDvUZDPnadGVNgStkGN6AM/MaH5iQ=
-Date:   Tue, 14 Apr 2020 18:12:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S2407532AbgDNRSD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:18:03 -0400
+IronPort-SDR: MwOkRpAphWPNBwgGCeRiSXOUH5i0wbRRGNaLxsyI/2l+hm41qbWNFoSQ4xDkYaYs5jh7FjnDjN
+ cfRbGt5Eo9Hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 10:17:54 -0700
+IronPort-SDR: wSdXoXBWbtwb3E7Tm0mh49EdJASJhS4vvbnijD6FTeBStrc1NUUNKh844LrZnzhDD7+w5nbfAD
+ Ad73pOsdtXRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="256582475"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2020 10:17:50 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jOPC4-000Zo4-PO; Tue, 14 Apr 2020 20:17:52 +0300
+Date:   Tue, 14 Apr 2020 20:17:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        Daniel Matuschek <daniel@hifiberry.com>,
+        Matthias Reichl <hias@horus.com>,
+        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 04/16] regmap-irq: make it possible to add irq_chip do
- a specific device node
-Message-ID: <20200414171243.GI5412@sirena.org.uk>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-5-michael@walle.cc>
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 03/16] ASoC: Intel: sof-pcm512x: use gpiod for LED
+Message-ID: <20200414171752.GC34613@smile.fi.intel.com>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+ <20200409195841.18901-4-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Q59ABw34pTSIagmi"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200402203656.27047-5-michael@walle.cc>
-X-Cookie: I've only got 12 cards.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200409195841.18901-4-pierre-louis.bossart@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Apr 09, 2020 at 02:58:28PM -0500, Pierre-Louis Bossart wrote:
+> Remove direct regmap access, use gpios exposed by PCM512x codec
+> Keep the codec_init function, this will be used in following patches
+> 
+> The gpios handling is done with an explicit lookup table. We cannot
+> use ACPI-based mappings since we don't have an ACPI device for the
+> machine driver, and the gpiochip is created during the probe of the
+> PCM512x driver.
 
---Q59ABw34pTSIagmi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Thu, Apr 02, 2020 at 10:36:44PM +0200, Michael Walle wrote:
-> Add a new function regmap_add_irq_chip_np() with its corresponding
-> devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
-> the IRQ domain on a different device node that the one of the regmap
+> +#include <linux/gpio/machine.h>
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Okay, it's a board code.
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+...
 
-are available in the Git repository at:
+> +static struct gpiod_lookup_table pcm512x_gpios_table = {
+> +	/* .dev_id set during probe */
+> +	.table = {
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-np
+> +		GPIO_LOOKUP("pcm512x-gpio", 3, "PCM512x-GPIO4", GPIO_ACTIVE_HIGH),
 
-for you to fetch changes up to 12479382877dcf6623af4676caa8d3c647469a1b:
+It says GPIO 4 and here is number 3.
+Does this 4 come from hardware documentation?
 
-  regmap-irq: make it possible to add irq_chip do a specific device node (2020-04-14 16:21:37 +0100)
+> +		{ },
 
-----------------------------------------------------------------
-regmap: Allow an irqchip to be created for a specific DT node
+No comma for terminator entries.
 
-----------------------------------------------------------------
-Michael Walle (1):
-      regmap-irq: make it possible to add irq_chip do a specific device node
+> +	},
+> +};
 
- drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++++++++--------
- include/linux/regmap.h           | 10 +++++
- 2 files changed, 78 insertions(+), 16 deletions(-)
+...
 
---Q59ABw34pTSIagmi
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	gpiod_add_lookup_table(&pcm512x_gpios_table);
 
------BEGIN PGP SIGNATURE-----
+Where is the counterpart gpiod_remove_lookup_table() call?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7woACgkQJNaLcl1U
-h9BuQQf/an0mQWAm5vrM5ORmT03qy9aVeFZm3VBOD6lyBwl1SqzPsYPgdbPBk75U
-DQv+FyWG5Qq1BmPfR4oE8pimSb+pt0UE1LO6zLTHt8WvYmRh+xj6UwLfO0WVEJ06
-+xdRzkrGLVScCsrlYGfx1RtjmpgvwRCKZVw39nPYTr57mRndNqlTCAtVtYoL8bX0
-I1ryrYEBvOcjJKTpWRKkm5LzVB67bpyYHEdmA5X6Xn1EwxcNrsfbJ5Eou9rlYmPI
-c1ehw1CrspXGb28+phVkDRaTYRzv4QhOZ/m7Rj1nTMemSL5++ew7GBtMQYqyh+T4
-x9u6Aa5UCcrOyLUoWRLaA3drz6EgbA==
-=lV/N
------END PGP SIGNATURE-----
+> +	ctx->gpio_4 = devm_gpiod_get(&pdev->dev, "PCM512x-GPIO4",
+> +				     GPIOD_OUT_LOW);
 
---Q59ABw34pTSIagmi--
+Can driver work without this GPIO? If so, perhaps devm_gpiod_get_optional().
+
+> +	if (IS_ERR(ctx->gpio_4)) {
+> +		dev_err(&pdev->dev, "gpio4 not found\n");
+> +		ret = PTR_ERR(ctx->gpio_4);
+> +		return ret;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
