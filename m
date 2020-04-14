@@ -2,70 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 268501A8726
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AA6C1A8728
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407454AbgDNRL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 13:11:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:8977 "EHLO mga04.intel.com"
+        id S2407576AbgDNRMr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 13:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732059AbgDNRL1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:11:27 -0400
-IronPort-SDR: CzANbdIBjLxTi14aMj4YgkwJMHhP/DeM4P2/I8XHRsX0+kecrGip9CK4STkT5OEPzahVSC4jVS
- GJ2AhYUGH6OQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 10:11:26 -0700
-IronPort-SDR: X2hTiwRuNNYfRLz2VLOiMFJdlmRfVHJElCnoyRMQXDU8M3WGbp89EjT8hNRzzE/v6NG223QzxF
- mFvtNXzD40nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
-   d="scan'208";a="454626137"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 14 Apr 2020 10:11:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOP5p-000Zja-QL; Tue, 14 Apr 2020 20:11:25 +0300
-Date:   Tue, 14 Apr 2020 20:11:25 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
+        id S2407517AbgDNRMq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:12:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6937C20767;
+        Tue, 14 Apr 2020 17:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586884366;
+        bh=+qcyIZF6Y3PyicvWS4ejyY0zwsK0szUsXLI7l22j8W0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PbluDEd8klbe4xkNX9xFsE670ESHTTOhjhaQFVoprnCTaU4ZEjH5UTUWLd+mTSI+6
+         DSQqhWkIQPD3yBIeAJU1asNH6AEgt5USvO7Kqa+X6ECZCi+OKRLsnOvTCTR+BmFAPw
+         EQDmo85zc+VWDvUZDPnadGVNgStkGN6AM/MaH5iQ=
+Date:   Tue, 14 Apr 2020 18:12:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-Message-ID: <20200414171125.GB34613@smile.fi.intel.com>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 04/16] regmap-irq: make it possible to add irq_chip do
+ a specific device node
+Message-ID: <20200414171243.GI5412@sirena.org.uk>
+References: <20200402203656.27047-1-michael@walle.cc>
+ <20200402203656.27047-5-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Q59ABw34pTSIagmi"
 Content-Disposition: inline
-In-Reply-To: <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200402203656.27047-5-michael@walle.cc>
+X-Cookie: I've only got 12 cards.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 02:58:27PM -0500, Pierre-Louis Bossart wrote:
-> Using devm_clk_get() with a NULL string fails on ACPI platforms, use
-> the "sclk" string as a fallback.
 
-This is fishy a bit.
-Do we have this name in the bindings?
+--Q59ABw34pTSIagmi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-If no, why not simple switch to devm_clk_get_optional()?
+On Thu, Apr 02, 2020 at 10:36:44PM +0200, Michael Walle wrote:
+> Add a new function regmap_add_irq_chip_np() with its corresponding
+> devm_regmap_add_irq_chip_np() variant. Sometimes one want to register
+> the IRQ domain on a different device node that the one of the regmap
 
--- 
-With Best Regards,
-Andy Shevchenko
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-irq-np
+
+for you to fetch changes up to 12479382877dcf6623af4676caa8d3c647469a1b:
+
+  regmap-irq: make it possible to add irq_chip do a specific device node (2020-04-14 16:21:37 +0100)
+
+----------------------------------------------------------------
+regmap: Allow an irqchip to be created for a specific DT node
+
+----------------------------------------------------------------
+Michael Walle (1):
+      regmap-irq: make it possible to add irq_chip do a specific device node
+
+ drivers/base/regmap/regmap-irq.c | 84 ++++++++++++++++++++++++++++++++--------
+ include/linux/regmap.h           | 10 +++++
+ 2 files changed, 78 insertions(+), 16 deletions(-)
+
+--Q59ABw34pTSIagmi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6V7woACgkQJNaLcl1U
+h9BuQQf/an0mQWAm5vrM5ORmT03qy9aVeFZm3VBOD6lyBwl1SqzPsYPgdbPBk75U
+DQv+FyWG5Qq1BmPfR4oE8pimSb+pt0UE1LO6zLTHt8WvYmRh+xj6UwLfO0WVEJ06
++xdRzkrGLVScCsrlYGfx1RtjmpgvwRCKZVw39nPYTr57mRndNqlTCAtVtYoL8bX0
+I1ryrYEBvOcjJKTpWRKkm5LzVB67bpyYHEdmA5X6Xn1EwxcNrsfbJ5Eou9rlYmPI
+c1ehw1CrspXGb28+phVkDRaTYRzv4QhOZ/m7Rj1nTMemSL5++ew7GBtMQYqyh+T4
+x9u6Aa5UCcrOyLUoWRLaA3drz6EgbA==
+=lV/N
+-----END PGP SIGNATURE-----
+
+--Q59ABw34pTSIagmi--
