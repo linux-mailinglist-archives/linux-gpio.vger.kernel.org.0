@@ -2,90 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1681A7D9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 15:25:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 477411A7E5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 15:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731801AbgDNNY1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 09:24:27 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27958 "EHLO mga12.intel.com"
+        id S2387701AbgDNNir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 09:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2502886AbgDNNQC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:16:02 -0400
-IronPort-SDR: 3tpqLDqSbU4PV6NSUDziPC3Rfe4ObGiiWsgP/nleRy4hVkxGjyvavSUrgWGoxQ+B1xFjJuLR2q
- GjUdgyl3pQVg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 06:16:02 -0700
-IronPort-SDR: 7chLMonp3MiLwS7wKWzh3J/k+8NngcaOFa/FGiQC9KcMDYQA0H8w7jImXNcowSTvb8VlHc4pux
- ppPB9BlGY98w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,382,1580803200"; 
-   d="scan'208";a="256506916"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 14 Apr 2020 06:15:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOLQ1-000X2W-Ln; Tue, 14 Apr 2020 16:16:01 +0300
-Date:   Tue, 14 Apr 2020 16:16:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org, Marcel Gudert <m.gudert@eckelmann.de>
-Subject: Re: [PATCH v2 1/2] gpio: pca953x: fix handling of automatic address
- incrementing
-Message-ID: <20200414131601.GO34613@smile.fi.intel.com>
-References: <20200330195018.27494-1-u.kleine-koenig@pengutronix.de>
- <20200330195018.27494-2-u.kleine-koenig@pengutronix.de>
- <20200331100759.GE1922688@smile.fi.intel.com>
- <20200414101545.2bmzlid7c7aosbs6@pengutronix.de>
+        id S2387571AbgDNNiG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Apr 2020 09:38:06 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C4112063A;
+        Tue, 14 Apr 2020 13:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586871486;
+        bh=C+Kf5k2bXkg0Y2GPt8KYHthrWFn7YtFU07XcZSmpOcA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lg8UrALfysnSRBHKXXV3Q1Xxzbn8AW4Ku9k3w2g+ebQRb6/iDcYMxOvgkDaaN8WEf
+         pgCUqux9e/oiV8wgbbo7JDm5Y25ABcj4xx1OokJupFxMQZNupuAyPpDAjWXBQZ0LEU
+         hxKmI2XnHUEbx2vjT+Z0f9l7dbeyh0O5srJ0LLhQ=
+Date:   Tue, 14 Apr 2020 21:37:57 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     sboyd@kernel.org, s.hauer@pengutronix.de, linus.walleij@linaro.org,
+        arnd@arndb.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        Anson.Huang@nxp.com, abel.vesa@nxp.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] clk: imx: drop the dependency on ARM64 for i.MX8M
+Message-ID: <20200414133756.GD30676@dragon>
+References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
+ <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200414101545.2bmzlid7c7aosbs6@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:15:45PM +0200, Uwe Kleine-König wrote:
-> Hello,
+On Fri, Mar 13, 2020 at 11:27:15AM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> obviously I failed to Cc: the gpio maintainers. Should I resend because
-> of that?
-
-I guess it's better to do because of
-- this,
-- v5.7-rc1 is out, makes sense to rebase.
-
-...
-
-> > So, something like
-> > 
-> > Fixes: b4818afeacbd ...
-> > Depends-on: 8958262af3fb ...
+> Moving to support aarch32 mode on aarch64 hardware, need to drop
+> the dependency on ARM64 to make the driver could be selected for
+> ARM32.
 > 
-> I don't know what is best here. Using
-> 
-> Fixes: b4818afeacbd ("gpio: pca953x: Add set_multiple to allow multiple bits to be set in one write.")
-> 
-> seems sensible. Not sure which commits are sensible to list in
-> Depends-on lines. I tend to just don't list any and then backport on
-> request of the stable maintainers iff and when application to older
-> versions failed.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Depends-on, in my opinion, is good to have to show at least one significant
-dependency for the fix.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Applied, thanks.
