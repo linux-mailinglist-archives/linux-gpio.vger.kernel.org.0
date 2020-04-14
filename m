@@ -2,57 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 477411A7E5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 15:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 689321A7F73
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 16:19:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387701AbgDNNir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 09:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387571AbgDNNiG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 09:38:06 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C4112063A;
-        Tue, 14 Apr 2020 13:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586871486;
-        bh=C+Kf5k2bXkg0Y2GPt8KYHthrWFn7YtFU07XcZSmpOcA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lg8UrALfysnSRBHKXXV3Q1Xxzbn8AW4Ku9k3w2g+ebQRb6/iDcYMxOvgkDaaN8WEf
-         pgCUqux9e/oiV8wgbbo7JDm5Y25ABcj4xx1OokJupFxMQZNupuAyPpDAjWXBQZ0LEU
-         hxKmI2XnHUEbx2vjT+Z0f9l7dbeyh0O5srJ0LLhQ=
-Date:   Tue, 14 Apr 2020 21:37:57 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     sboyd@kernel.org, s.hauer@pengutronix.de, linus.walleij@linaro.org,
-        arnd@arndb.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, aisheng.dong@nxp.com, stefan@agner.ch,
-        Anson.Huang@nxp.com, abel.vesa@nxp.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/3] clk: imx: drop the dependency on ARM64 for i.MX8M
-Message-ID: <20200414133756.GD30676@dragon>
-References: <1584070036-26447-1-git-send-email-peng.fan@nxp.com>
- <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
+        id S2389556AbgDNOTO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 10:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389449AbgDNOTD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Apr 2020 10:19:03 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B58C061A0C
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2020 07:19:02 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c63so13354589qke.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2020 07:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3EraRtfW5RLJEDi4lMBW11PhnefdSMnejhmHO2K18DU=;
+        b=UcIb0PcdWiFibmHdGVpYwwWIzuY5kBjjoeQUiF4QHkWxHm/+d1NDgIlJTgKq0acvgc
+         q22sdojzXgOovSTEjCTMI12brLIlZntbmMwHWvtb9Z5CoAjChvo6jK3zzV3bB2Fbye5S
+         3uV2GKhljThlWre7zOLuafSsAeFcDimgVmf55hLxDXgv5DbX65yyi1cbUZaGXTjoSxzS
+         aBf42Jt8J6/9lKIFIhXHMf4977lqnmbEP1ZxRbJeNICIJiKdfU1DF1wzI1SefbsaYS+C
+         ExIdgm1vfcefLkQ0jAFQblATMmZUW3pK7j9qV9+t2hxzeOBG8LDNEdXVB8v8dgBpQSF/
+         vVuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3EraRtfW5RLJEDi4lMBW11PhnefdSMnejhmHO2K18DU=;
+        b=KTcvYz43Kb0jwfmVoAjvnAUvWZHWY68c76wtoC2M98q/dJJjUqTw1LhJvtqlDaVZmH
+         18p705CBElb3C9Qfrh0KI5EatGVxXmOBTrRxW5jT4/r0dMdrSYaSPO50jDV+v/lhLuCH
+         DpgDIOm+VTQTJqElpw7Yh5gJ/RBBYCtks6VnaiCW4AyIr2kJ7RX+7XBZxrIGqUQflJuY
+         aO00MjqcAXgB6sKXAlzHZGtrlBrhY5trorPOJHRDR5TFWv8nMEsSWUoXZxgu1uUvh3wk
+         g+PuaWT/oxjyYlBp2ntLgfzJpMmbKNBbKCeYB2+OnQ9IG9xvfZlzqoOSFEXRTTUeh8J+
+         E1BQ==
+X-Gm-Message-State: AGi0Pua9sg9/6kY1wE8QNpe156jtIkO6eoV/3/okZBkPKMP0FRFJsy+b
+        cbls9dz6DSGjzZeXg5pJ1k5mmR3IJCX/BnGQqJ7r6qIQ
+X-Google-Smtp-Source: APiQypJ45n/aqPRRRlmXJ+LAlmliigwfL2fjEIEMVDsr+Acnlac4ie5oYjgyJ5a4H0HbKUrpS04udcBWMdnHrHvqZwo=
+X-Received: by 2002:a05:620a:1259:: with SMTP id a25mr10285006qkl.323.1586873942074;
+ Tue, 14 Apr 2020 07:19:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584070036-26447-3-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200406165115.25586-1-pthomas8589@gmail.com>
+In-Reply-To: <20200406165115.25586-1-pthomas8589@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 14 Apr 2020 16:18:50 +0200
+Message-ID: <CAMpxmJUUp5whscqBX2CU9--4zrh_+LUQOwVt1yUpffJQdPftkw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-pca953x, Add get_multiple function
+To:     Paul Thomas <pthomas8589@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 11:27:15AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Moving to support aarch32 mode on aarch64 hardware, need to drop
-> the dependency on ARM64 to make the driver could be selected for
-> ARM32.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+pon., 6 kwi 2020 o 18:53 Paul Thomas <pthomas8589@gmail.com> napisa=C5=82(a=
+):
+>
+> Implement a get_multiple function for gpio-pca953x. If a driver
+> leaves get_multiple unimplemented then gpio_chip_get_multiple()
+> in gpiolib.c takes care of it by calling chip->get() as needed.
+> For i2c chips this is very inefficient. For example if you do an
+> 8-bit read then instead of a single i2c transaction there are
+> 8 transactions reading the same byte!
+>
+> This has been tested with max7312 chips on a 5.2 kernel.
+>
+> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
+> ---
 
-Applied, thanks.
+Hi, this doesn't apply on top of current master. Can you rebase it on
+top of v5.7-rc1 and resend?
+
+Bart
