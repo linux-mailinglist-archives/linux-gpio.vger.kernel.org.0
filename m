@@ -2,110 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A3531A867E
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6E751A8715
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Apr 2020 19:11:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388208AbgDNRAu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Apr 2020 13:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732423AbgDNRAn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Apr 2020 13:00:43 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF1D5C061A0F
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id l25so14045673qkk.3
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=WJK29o3K5MXm6p3VWzbGrHsk0KBRUyWWpDHcGXG/HUX36uIXx5JyvHKhiu1s3JtLtU
-         V7gkFI/q1KmdLMhMMUxBqFlgpBaa0ZkNYnWmTKON4gWBw5jxIE0XBUAq91eeIGYap3zZ
-         OYhvWUkFkEL5+ErE8/pYC7Unq7WRkY9b6ox3OTtr13DORJy7fe4UWueM3dLYCpcH+haM
-         7s83titQwzbdrha9nbAnzXASShQuNXplRRlunOROJBdfg3Qf8CHG61pH9bI8Yw4wFfA2
-         c4dSOcHuk/T/b5dEH1oSwrARzE52d5vcmU9CxIdgyuhRNmOaqHvCyIjmpsCkx6zA/Qs+
-         xdOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GIN7IF6qYtKF4gSfr/AeRIvPX7/eCFsh4TApVUETWoE=;
-        b=Kc5uKC1NTi+MjzDcfSnx2Yx85a+sm/ho58EZx91irlNwI9wLieNzGE6Omi6QAw+Hex
-         +2XINvVPtgvii5aVPMrBzYmkDvxW2Rd4WKH/cEJUiE+/JU4pDZP+cd04HNNuZ8ObYy7l
-         t51YSWbOgednc+2lInp6NkVdzFZP459N/TNnqgpNKSC9odRSd+ziPGUnj3b+rDbEJrz0
-         l9XOK1Y+1dZgKxxLuiv77MTBTg6qltq0p4Oz6wfb9FmkZorA1LVINQGWdd4vXQ/giOIs
-         kA81QmIyhwwI3fzvQjSAm/Q+yDxatBWQcXtXX3ZXyth5sXC37k+zseU7eXx4R3tz1M4+
-         F3Bw==
-X-Gm-Message-State: AGi0PuZEdxG7bDo9t413IWB8iOCGLSUxQ/1Re6Io7WhoxiDBsh5xFNez
-        OYpEc9kh1i/pWAMdqNijpqA5dFAJS5Mg/XsYKMSbQA==
-X-Google-Smtp-Source: APiQypJAVUbx87PMTgMxPYPAUoh9xIaPNebw3vKNOCwEq+Xku6Borru68lB1wY/XGBsCVLhWsPFHE8/a8s5sITgt6DA=
-X-Received: by 2002:a05:620a:5f1:: with SMTP id z17mr18160792qkg.21.1586883642039;
- Tue, 14 Apr 2020 10:00:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
- <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
- <80bd8661ec8a1f5eda3f09a267846eaa@walle.cc> <CAMpxmJVC7e9JnHzBo-h8M1+KmcA32=Rvxo7+znH=-kAbcCr_LQ@mail.gmail.com>
- <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-In-Reply-To: <e0388a2137e23d76b2415a7549c01dd1@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 14 Apr 2020 19:00:30 +0200
-Message-ID: <CAMpxmJW1x4Orh1BZ4TUoCsYeaAAZ4NBUNvoMG9JgP0iLvXTOtg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        id S2407519AbgDNRJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Apr 2020 13:09:37 -0400
+Received: from mga12.intel.com ([192.55.52.136]:48324 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407566AbgDNRJg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Apr 2020 13:09:36 -0400
+IronPort-SDR: 6mBEyOKVda9NyUNz2ZlYKPiS6lvBozqEDpflJYj+oHP/kOF9vGsKaAjCeMEG2IN8O7FC6q2Vht
+ ycXoCOqCOdVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2020 10:09:35 -0700
+IronPort-SDR: 5AIfgOUvd8UvlvuCZCCAm90mtFkrEnCv8mUFyZEuBTYbD/KzyHNJlBJYVb4aqHbfD+tShrdJEX
+ Rnnmkmh/38mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,383,1580803200"; 
+   d="scan'208";a="298761048"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Apr 2020 10:09:32 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jOP42-000ZiJ-Nw; Tue, 14 Apr 2020 20:09:34 +0300
+Date:   Tue, 14 Apr 2020 20:09:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
+        Daniel Matuschek <daniel@hifiberry.com>,
+        Matthias Reichl <hias@horus.com>,
+        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC PATCH 01/16] ASoC: pcm512x: expose 6 GPIOs
+Message-ID: <20200414170934.GA34613@smile.fi.intel.com>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+ <20200409195841.18901-2-pierre-louis.bossart@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409195841.18901-2-pierre-louis.bossart@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 14 kwi 2020 o 12:07 Michael Walle <michael@walle.cc> napisa=C5=82(a):
-> >>
-> >> So the best from a user perspective I've could come up with was:
-> >>
-> >>    ->base_reg =3D GPIO_REGMAP_ADDR(addr);
-> >>
-> >> I'm open for suggestions.
-> >>
-> >
-> > Maybe setting the pointer to ERR_PTR(-ENOENT) which will result in
-> > IS_ERR() returning true?
->
-> Unfortunatly, its not a pointer, but only a regular unsigned int (ie
-> the type the regmap API has for its "reg" property). It could be a
-> pointer of course but then the user would have to allocate additional
-> memory.
->
-> -michael
->
+On Thu, Apr 09, 2020 at 02:58:26PM -0500, Pierre-Louis Bossart wrote:
+> The GPIOs are used e.g. on HifiBerry DAC+ HATs to control the LED
+> (GPIO3) and the choice of the 44.1 (GPIO6) or 48 (GPIO3) kHz
+> oscillator (when present).
+> 
+> Enable basic gpio_chip to get/set values and get/set
+> directions. Tested with GPIO_LIB from sys/class/gpio, the LED turns
+> on/off as desired.
 
-Eek, of course it's not a pointer. If possible I'd like to avoid this
-GPIO_REGMAP_ADDR() macro, so how about having some separate field for
-invalid offsets making every offset 'valid' by default?
 
-Linus: do you have a better idea?
+One question, can this use existing GPIO infrastructure, like bgpio_init()?
+Ah, I see, that one operates over MMIO, while we would need something based on
+regmap API.
 
-Bart
+Bartosz, do we have plans to have bgpio_regmap_init() or alike?
+
+...
+
+> +static int pcm512x_gpio_get_direction(struct gpio_chip *chip,
+> +				      unsigned int offset)
+> +{
+> +	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(pcm512x->regmap, PCM512x_GPIO_EN, &val);
+> +	if (ret < 0)
+> +		return ret;
+
+> +	val = (val >> offset) & 1;
+> +
+> +	/* val is 0 for input, 1 for output, return inverted */
+> +	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+
+This better to read as simple conditional, like
+
+	if (val & BIT(offset))
+		return ..._OUT;
+	return ..._IN;
+
+> +}
+
+...
+
+> +static int pcm512x_gpio_direction_output(struct gpio_chip *chip,
+> +					 unsigned int offset,
+> +					 int value)
+> +{
+> +	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
+> +	unsigned int reg;
+> +	int ret;
+> +
+> +	/* select Register GPIOx output for OUTPUT_x (1..6) */
+> +	reg = PCM512x_GPIO_OUTPUT_1 + offset;
+
+> +	ret = regmap_update_bits(pcm512x->regmap, reg, 0x0f, 0x02);
+
+Magic numbers detected.
+
+> +	if (ret < 0)
+
+Drop unnecessary ' < 0' parts where it makes sense, like here.
+
+> +		return ret;
+> +
+
+> +	/* enable output x */
+
+(1)
+
+> +	ret = regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_EN,
+> +				 BIT(offset), BIT(offset));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* set value */
+
+(2)
+
+With this (1)->(2) ordering it may be a glitch. So, first set value (if
+hardware allows you, otherwise it seems like a broken one), and then switch
+it to output.
+
+> +	return regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_CONTROL_1,
+> +				  BIT(offset), value << offset);
+
+You are using many times BIT(offset) mask above, perhaps
+	int mask = BIT(offset);
+
+Also, more robust is to use ternary here: 'value ? BIT(offset) : 0'.
+Rationale: think what happen with value != 1 (theoretical possibility in the
+future).
+
+> +}
+
+...
+
+> +static int pcm512x_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+
+> +	return (val >> offset) & 1;
+
+Don't forget to use BIT() macro.
+
+	return !!(val & BIT(offset));
+
+> +}
+
+...
+
+> +static void pcm512x_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +			     int value)
+> +{
+> +	struct pcm512x_priv *pcm512x = gpiochip_get_data(chip);
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(pcm512x->regmap, PCM512x_GPIO_CONTROL_1,
+> +				 BIT(offset), value << offset);
+
+value ? BIT(offset) : 0
+
+> +	if (ret < 0)
+
+> +		pr_debug("%s: regmap_update_bits failed: %d\n", __func__, ret);
+
+No __func__ in debug messages.
+Use dev_dbg() when we have struct device available.
+
+> +}
+
+...
+
+> +static const struct gpio_chip template_chip = {
+
+Give better name, please. E.g. pcm512x_gpio_chip.
+
+> +	.label			= "pcm512x-gpio",
+> +	.names			= pcm512x_gpio_names,
+> +	.owner			= THIS_MODULE,
+> +	.get_direction		= pcm512x_gpio_get_direction,
+> +	.direction_input	= pcm512x_gpio_direction_input,
+> +	.direction_output	= pcm512x_gpio_direction_output,
+> +	.get			= pcm512x_gpio_get,
+> +	.set			= pcm512x_gpio_set,
+> +	.base			= -1, /* let gpiolib select the base */
+> +	.ngpio			= ARRAY_SIZE(pcm512x_gpio_names),
+> +};
+
+...
+
+> +	/* expose 6 GPIO pins, numbered from 1 to 6 */
+> +	pcm512x->chip = template_chip;
+> +	pcm512x->chip.parent = dev;
+> +
+> +	ret = devm_gpiochip_add_data(dev, &pcm512x->chip, pcm512x);
+
+> +	if (ret != 0) {
+
+if (ret)
+
+> +		dev_err(dev, "Failed to register gpio chip: %d\n", ret);
+> +		goto err;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
