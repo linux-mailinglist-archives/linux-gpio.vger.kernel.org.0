@@ -2,69 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B40D1AA13A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 14:46:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE08A1AA18F
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 14:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409077AbgDOMfG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 08:35:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:8851 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S369796AbgDOMfB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:35:01 -0400
-IronPort-SDR: I7jJX3MxC/axRj56I/CkBWpSBz9LFJWyAg0757jIMsqH7JsVxbXoWIbapI/z7OkiBSLWXtflhZ
- OWhAZvTCZfaw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 05:34:59 -0700
-IronPort-SDR: 4Uzo0500NbvVEqyy2KsPpUZsFR8IO8xgjeu/TFftf0FwsU6XYqsUwacMVLywaRoEL6xTcHTBPW
- C7M8CuhYYikg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="400300373"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 05:34:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOhFs-000meL-Sr; Wed, 15 Apr 2020 15:35:00 +0300
-Date:   Wed, 15 Apr 2020 15:35:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
+        id S2897529AbgDOMmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 08:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2898181AbgDOMmq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:42:46 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AB0C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 05:42:46 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x23so2527638lfq.1
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 05:42:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ugh0fRZuhaEfXnQ8Vzyoe5R9ka3H4I0iPLvK/F0oTfY=;
+        b=jlSy4IWsS+VA5Wu0PcDDMTNeTjqtzyKZwtZuA1x06jL8uhH1YaO2sLxFPN9+7eBMi4
+         zvxXWSEMTKhS314ABf+6QIH3ftmI2YFu2KdXzWkvZBdUZ+9vil5P6zZcF+fOCEH25q6Z
+         Rr96wky8YpbTZqdGNJunkP93BbNapQCcM8b+KtTShWExf45i96A6+2CZLpWGinsoJ/6D
+         bb//FLXkM3pICyfialquNjHBP3NWVX1hgHBwFWfkWc6s8Zhhl7YFw1ffFusJ6PfxkDmR
+         ivVFQATolIKOTiZinN3zx3MV2JGiJkNOQGwqJzJRiuTLHmhPScqpqYjZcO0ln6BeNdwh
+         1tYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ugh0fRZuhaEfXnQ8Vzyoe5R9ka3H4I0iPLvK/F0oTfY=;
+        b=f7Tj3mVBg32vebZddSbwcgGGUrdmJD/2Bidqxdurlkqaz6MvibuDltG5WQFSQ5QmUC
+         ypf2C9QDz29PrYHA9YDcpPi5qWlBFuMmJCpXT55Nc2MuHYb3oGxIu67oO/gunsoANMBt
+         NDmiXXkpzvjwWWpNyixgs4euctY8W3C9r3QhGwqZ4nigmANzjliQi24bPsdH1rGOBbBO
+         UO3dcPEmhFtaqRQzLI7rlGH8sEf7hGoZ+4qJrGRVYG/S0YHIfkiSWxk9RrRwxQKNYl0q
+         wlgi/zMJ1yr1IKmeMQBo77kdhoxolHnKxpstlxjb08HCGSx6UoCDVhlwft2YmHcr8MBf
+         pPbw==
+X-Gm-Message-State: AGi0PuZDD+2Ijck1PMpDwusiPSS7gjfqxRHPSnMQjJRHdzfCex3+Hvo3
+        8U6+YJfmuHFs0NPkbbAiqyQ=
+X-Google-Smtp-Source: APiQypJxyk66ZKz/KBrbqYgO8ZvFYJ9gp+c8NPOiv7xUGxw3KMTOxZaRT1eiHJRd9TUtTHwr4YOLDQ==
+X-Received: by 2002:ac2:43c7:: with SMTP id u7mr3025686lfl.50.1586954564499;
+        Wed, 15 Apr 2020 05:42:44 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id o25sm12264379lfg.41.2020.04.15.05.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 05:42:43 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:42:42 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 02/13] gpio: dwapb: Refactor IRQ handler
-Message-ID: <20200415123500.GD185537@smile.fi.intel.com>
+Subject: Re: [PATCH v1 05/13] gpio: dwapb: Convert to use irqd_to_hwirq()
+Message-ID: <20200415124242.nnk7wamjw6e5jyez@mobilestation>
 References: <20200409141228.49561-1-andriy.shevchenko@linux.intel.com>
- <20200409141228.49561-3-andriy.shevchenko@linux.intel.com>
- <20200415120449.lzf47ju6s4bpfcvs@mobilestation>
+ <20200409141228.49561-6-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415120449.lzf47ju6s4bpfcvs@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200409141228.49561-6-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:04:49PM +0300, Serge Semin wrote:
-> On Thu, Apr 09, 2020 at 05:12:17PM +0300, Andy Shevchenko wrote:
-> > Refactor IRQ handler in order to:
-> > - enter and exit chained IRQ
-> > - use for_each_set_bit() helper
+On Thu, Apr 09, 2020 at 05:12:20PM +0300, Andy Shevchenko wrote:
+> Convert to use irqd_to_hwirq() instead of direct access to the hwirq member.
 > 
-> Please split these two changes into the dedicated patches.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index c0c267cddd80..3a1f3fae923f 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -230,7 +230,7 @@ static void dwapb_irq_enable(struct irq_data *d)
+>  
+>  	spin_lock_irqsave(&gc->bgpio_lock, flags);
+>  	val = dwapb_read(gpio, GPIO_INTEN);
+> -	val |= BIT(d->hwirq);
+> +	val |= BIT(irqd_to_hwirq(d));
+>  	dwapb_write(gpio, GPIO_INTEN, val);
+>  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  }
+> @@ -245,7 +245,7 @@ static void dwapb_irq_disable(struct irq_data *d)
+>  
+>  	spin_lock_irqsave(&gc->bgpio_lock, flags);
+>  	val = dwapb_read(gpio, GPIO_INTEN);
+> -	val &= ~BIT(d->hwirq);
+> +	val &= ~BIT(irqd_to_hwirq(d));
+>  	dwapb_write(gpio, GPIO_INTEN, val);
+>  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  }
+> @@ -255,8 +255,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+>  	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+>  	struct dwapb_gpio *gpio = igc->private;
+>  	struct gpio_chip *gc = &gpio->ports[0].gc;
+> -	int bit = d->hwirq;
+>  	unsigned long level, polarity, flags;
+> +	u32 bit = irqd_to_hwirq(d);
 
-Will do in v2. Hope your Tested-by holds.
+I'm not saying that the rest of the driver code is highly coherent with
+ideal design and style. But here I don't really see a point in converting
+the type to u32. As I see it int-like type is more appropriate since
+we don't need to signify the data type width in this context.
 
-> After this
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+-Sergey
 
-Thanks!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  
+>  	if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING |
+>  		     IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+> @@ -305,11 +305,12 @@ static int dwapb_irq_set_wake(struct irq_data *d, unsigned int enable)
+>  	struct irq_chip_generic *igc = irq_data_get_irq_chip_data(d);
+>  	struct dwapb_gpio *gpio = igc->private;
+>  	struct dwapb_context *ctx = gpio->ports[0].ctx;
+> +	u32 bit = irqd_to_hwirq(d);
+>  
+>  	if (enable)
+> -		ctx->wake_en |= BIT(d->hwirq);
+> +		ctx->wake_en |= BIT(bit);
+>  	else
+> -		ctx->wake_en &= ~BIT(d->hwirq);
+> +		ctx->wake_en &= ~BIT(bit);
+>  
+>  	return 0;
+>  }
+> @@ -365,8 +366,9 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  	struct gpio_chip *gc = &port->gc;
+>  	struct fwnode_handle  *fwnode = pp->fwnode;
+>  	struct irq_chip_generic	*irq_gc = NULL;
+> -	unsigned int hwirq, ngpio = gc->ngpio;
+> +	unsigned int ngpio = gc->ngpio;
+>  	struct irq_chip_type *ct;
+> +	irq_hw_number_t hwirq;
+>  	int err, i;
+>  
+>  	gpio->domain = irq_domain_create_linear(fwnode, ngpio,
+> -- 
+> 2.25.1
+> 
