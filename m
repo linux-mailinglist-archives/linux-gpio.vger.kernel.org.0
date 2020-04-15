@@ -2,110 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D31C1AA94B
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:02:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BECFC1AA956
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:06:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636391AbgDON7o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 09:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
+        id S2633929AbgDOODC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 10:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2633864AbgDON7g (ORCPT
+        by vger.kernel.org with ESMTP id S1730833AbgDOOC6 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:59:36 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9C6C061A0C;
-        Wed, 15 Apr 2020 06:59:36 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id e127so1880499iof.6;
-        Wed, 15 Apr 2020 06:59:36 -0700 (PDT)
+        Wed, 15 Apr 2020 10:02:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FC7C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 07:02:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id k1so12096060wrx.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 07:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pRjxl/RxXao+nWAMBe76BIw01PxwjbmGR4bmrWJXa/U=;
-        b=OHyRXv+EJe89bKlBtMIRcIy6iGVeg4+1BLUU7F45NUrTBpB2u/gXtdnigUcSXXpabv
-         0PEHLmSAs+VjQqxE2VA+r0z867D5opqanJSHqaEZCiHRhuAHlBnMGyF7XML6Jx9R7aeo
-         EGL8BOA/hRwlm2RsJ61XfQQJxwpxLIVFF/phNaIqd1YOA5kO960q45a6Uq+ydaF2N9ju
-         wZXKvL+1UrhIeVVBHfoD7bLX5j5uRuIBVGXNeA6LHtFhdER2isPGl524mlURGA0qddqz
-         8sBvv1BIPxFX3atJlXidBYRZN1b8BGV80dTsvd3hrqOa/oNQlf5+IG1lZNsJfX3dvP46
-         vyXA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yHM4I3UVsMWqFHkcRRV3Uj2fAsEa3/kl34z4h8ubApA=;
+        b=RpxZ+mJNoRt4v67f5B/0JZX3K43ow18KduhBvQakY34FTLjgNWVRER6k5rBBYOQC93
+         cxtjXNLiLCrXDYSSEwHpJoLzV8iyJcz09kzUsFr5u7GFx8K/cUOAb0Z/hXs5bGfLcb7H
+         lsSaMwTuPmltVuz64iOX3QYr/eFW4JuU+6KE7SfhiVR898VaXHs3F9R+Y66QCmOp/rXb
+         vD3H/mIyy6BgTgjqf+y9h71akDxFe3KsP6kzAn/CuXKJJwU3xeQzjBRnEN5Fq//IJDGB
+         fQVpiy8XHr33x3KkENpGUj81Uo1B0kXiTX0KiyxdjagYTFOxpIuge3DdHC/CG/MHSzMH
+         9mfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pRjxl/RxXao+nWAMBe76BIw01PxwjbmGR4bmrWJXa/U=;
-        b=BLBnOF0OzH8BkjBjeLHMlCGOuG8XgTopFmucrwbUhASviy+HpLwHrBCJITeZkjQNfZ
-         iPG0JYMgNzJ3TrYpfc2+lGm2oa1I8FLGxjL1etl2Mv/rmNkcvNtM3ESXnMCbzyUmcg9I
-         /SeO0EZjrDE+JaAtTzIvunsiya9VKf2Fs3G78J9oKG8SOh4QYsrCRaHiG35UYIvmofjg
-         0YqJkBMk3Vk+5i6UNxmRdXmCN4sqV1dy6cBMUJyjDdqDwgQuylEkajoO+h/Wc4DS2MuN
-         eggsZIh/35f0wrFbvvIjKgAvBO0iuQyyCm8jaUIYNOCEx0/qbEGSDmh1Aid7vMzdM1QA
-         KuCQ==
-X-Gm-Message-State: AGi0PuYinoZGwMu3aF/6Ma7PJH683rnd+F5TJaqT05YKNWXZXlm0qoDs
-        UCkEGBs/Z1IWQT+xDouotBMRIA6VUX4NV4D8CXHHzGXP
-X-Google-Smtp-Source: APiQypJ286KN3sPSWcXgZn5QQ32WFZCxO4SYT200TvkoL37eT//ErBTsACHHeQnxbpKmd+hJ2nunH5r/JqJOZNtShMQ=
-X-Received: by 2002:a05:6602:199:: with SMTP id m25mr26299437ioo.13.1586959175477;
- Wed, 15 Apr 2020 06:59:35 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yHM4I3UVsMWqFHkcRRV3Uj2fAsEa3/kl34z4h8ubApA=;
+        b=BzKIMtLKvH/GUa4+ZL59cG0ZY9vm+pYs9y1VQWS/dNXZ4cQhaj6QAFGM1P6i10/XYX
+         e0ygTczfkDpo5WHB6nkTOWq8ASmNg4nTQqCHCQ+L0y6sauN7HzpHpeR55+m0Cu9ODg4v
+         MbodjiE+VI3OBlhXEzV5dfo0v6HWBwv8ZTtmXw5NjlvS8P6kU+Zz8EnXjgG6XNZS2RhL
+         WidFeyFMDT1xcHSuZyzD0R/ZEVLJYwBYJ+Jfp0cHRWqhgCWUoggLM6Kl0X4OkswgHmqQ
+         IJL1O/aZvRw0PeVKfKGVFCwwMu9VxtUaGoA0bOGQA6YkpsZhFiHwucWOVcTpLtvKdzt7
+         EiaQ==
+X-Gm-Message-State: AGi0PubwWa/STH+rcyOr0CpYVakV3d0p33MRx4Ra8R/9jGn1evN5NUxl
+        K4h8KhxEGZEJ5EVf0M3mU0E=
+X-Google-Smtp-Source: APiQypK2mXgVCTr2Z7J7COa+ELVDDlOd2vmzhQ9xkfjKZJqiK5EbDu1CLJmuSI5kPoFIAUTyEqnm2g==
+X-Received: by 2002:a5d:5189:: with SMTP id k9mr1808621wrv.3.1586959376093;
+        Wed, 15 Apr 2020 07:02:56 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id u12sm2324622wmu.25.2020.04.15.07.02.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 07:02:54 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 16:03:35 +0200
+From:   Drew Fustini <drew@pdp7.com>
+To:     Kent Gibson <warthog618@gmail.com>, matheus@castello.eng.br
+Cc:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, bamv2005@gmail.com,
+        thomas.petazzoni@bootlin.com
+Subject: boards to test gpio line bias flags?
+Message-ID: <20200415140335.GA24288@x1>
+References: <20191105020429.18942-1-warthog618@gmail.com>
 MIME-Version: 1.0
-References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
- <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
- <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
- <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
- <20200413123921.GA32586@x1> <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com> <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
-In-Reply-To: <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
-From:   Robert Nelson <robertcnelson@gmail.com>
-Date:   Wed, 15 Apr 2020 08:59:09 -0500
-Message-ID: <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Drew Fustini <drew@pdp7.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Drew Fustini <pdp7pdp7@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Drew Fustini <drew@beagleboard.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105020429.18942-1-warthog618@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 8:47 AM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
->
->
-> On 15/04/2020 16:20, Robert Nelson wrote:
-> > Hi Grygorii,
-> >
-> > On Wed, Apr 15, 2020 at 8:15 AM Grygorii Strashko
-> > <grygorii.strashko@ti.com> wrote:
-> >>
-> >> For this platforms the dynamic GPIO muxing/configuration is not supported, and GPIO block by itself
-> >> does not provide such functions as pullup/pulldown.
-> >
-> > Correct, that's the state today, while Drew is investing time into
-> > trying to figure out how to properly extend this feature into our
-> > platform.
->
-> Sry, but it's not clear what's the final target (at least from public part of this thread).
+On Tue, Nov 05, 2019 at 10:04:22AM +0800, Kent Gibson wrote:
+> This series adds gross control o:f pull-up/pull-down to the GPIO uAPI.
+> Gross control means enabling and disabling of bias functionality,
+> not finer grained control such as setting biasing impedances.
+> 
+> The support allows both input and output lines to have any one of the
+> following biases applied as part of the line handle or event request:
+>  0. As Is - bias is left alone.  This is the default for ABI compatibility.
+>  1. Bias Disable - bias is explicitly disabled.
+>  2. Pull Down - pull-down bias is enabled.
+>  3. Pull Up - pull-up bias is enabled.
+> 
+> The biases are set via three flags, BIAS_DISABLE, BIAS_PULL_DOWN
+> and BIAS_PULL_UP.  These map directly to the similarly named 
+> pinctrl pin_config_param flags.
+> As Is corresponds to none of the flags being set.
 
-We are mainly targeting am335x based devices.  Today (well last few
-years) we've utilized a "hack-ish" kernel module (bone-pinmux-helper)
-to allow users to overide/change the pinmux-ing directly from
-user-space...  (This evil module allows us to specify a list of
-options for each pin, thus users can easily configure specifies of the
-pin, aka gpio_pd/gpio_pu/etc from user-space...).  Since that time,
-mainline has now grown a generic gpio pull-up/pull-down functionality,
-with the ability to re-control these values directly from a generic
-gpio library (libgpiod).
+I had been looking at how to make these flags work on the BeagleBone
+(TI Sitara AM3358 SoC) which uses the  gpio-omap driver and
+pinctrl-single driver.  Howeverm, it seems that it is not posssible as
+the BeagleBone device tree uses compatible of "pinctrl-single" instead
+of "padconf-single", and thus pcs_pinconf_set() is not called [0].
 
-Regards,
+The bias flags already work on the Raspberry Pi as the Broadcom SoC uses
+pinctrl-bcm2835.c which uses gpiochip_generic_config() from gpiolib.c 
+for .set_config in bcm2835_gpio_chip.  This eventually calls
+bcm2835_pinconf_set() which handles the PIN_CONFIG_BIAS_* flags.
 
--- 
-Robert Nelson
-https://rcn-ee.com/
+Thus, I started thinking about what other boards I could test the bias
+flags with, and potentially, find drivers that I could add or fix
+support.
+
+The PIN_CONFIG_BIAS_* flags exist in these GPIO drivers:
+
+gpio-aspeed.c:
+aspeed seems to be used in server BMC so not hardware that I have
+access to or could easily acquire.
+
+gpio-mockup.c:
+mockup driver that has already been tested and works
+
+gpio-pca953x.c:
+an external I2C GPIO expander, easy for me to acquire, it appears
+that gpio uapi bias flags should work, but I could test and verify
+
+gpiolib.c:
+like the bmc2835 in the raspberry pi, it seems some drivers in pinctrl
+directory will define a gpiochip and use gpiochip_generic_config().
+
+Here is a list of other pinctrl drivers which use gpiochip_generic_config:
+
+drivers/pinctrl/pinctrl-stmfx.c and drivers/pinctrl/pinctrl-sx150x.c:
+These are both GPIO expanders which I could probably purchase
+
+drivers/pinctrl/intel/pinctrl-intel.c:
+Maybe this means that I could try this on x86 boards?
+
+drivers/pinctrl/sunxi/pinctrl-sunxi.c
+Maybe the Allwinner boards might work too?
+
+
+Any other hardware that I should take a look at testing?
+
+
+Thanks,
+Drew
+
+
+[0] https://lore.kernel.org/linux-gpio/20200413123921.GA32586@x1/T/#t
