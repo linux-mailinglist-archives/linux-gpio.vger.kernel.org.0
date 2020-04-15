@@ -2,141 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 840861AADED
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 18:32:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1368F1AAE16
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 18:32:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415711AbgDOQWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 12:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37258 "EHLO mail.kernel.org"
+        id S1415843AbgDOQ0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 12:26:30 -0400
+Received: from lists.nic.cz ([217.31.204.67]:41208 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1415627AbgDOQWv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 12:22:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76CBF206F9;
-        Wed, 15 Apr 2020 16:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586967771;
-        bh=5vqYtdTCKFz1d6OC39tkbz4gI+3qu+ArDdtxYAtQrdc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=utbHXhovrSMk2Z+MefR5IojzWv2ZfkATL0DePNHpYK2CiqAB04Zmq/N9YZKqDzQTb
-         Nr26wl52buZfyRKbSXTvn7HP6bSwM2cz+XnhTxHwXV3cEnxswsDB+0iQJgeaGGCWFP
-         XhjtEzs72xyUjkaAF9FhYHckGVTu3by4V162+WP0=
-Date:   Wed, 15 Apr 2020 17:22:47 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
+        id S1415815AbgDOQ0P (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 12:26:15 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id CF1AC141613;
+        Wed, 15 Apr 2020 18:26:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1586967972; bh=OUmASI7k6fLdfyHcQ3klpVwKDiKIAMSXlml+xBJkTd8=;
+        h=Date:From:To;
+        b=CZz2qeZ4NSnc9TF0Qgb/Y/2SyC0PungwiOja4a1nvcLYkOl4QUImTHWIjWIV5xHP2
+         xYPOC5gI/s6dMfaAc3GKtB9SyYM70gHlsl7zz22PcKy7k+u8jWdcWhi7UBFf3Mospu
+         /HqhSV6O8aogx8SwkaF44LA6XTk3CrzTbSA/RF+o=
+Date:   Wed, 15 Apr 2020 18:26:11 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Pali =?UTF-8?B?Um9ow6Fy?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-Message-ID: <20200415162247.GF5265@sirena.org.uk>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
- <20200414174530.GK5412@sirena.org.uk>
- <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
- <20200414182728.GM5412@sirena.org.uk>
- <3017b762-7a0c-cee2-06dd-1e96f52eb849@linux.intel.com>
- <20200414195031.GP5412@sirena.org.uk>
- <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
- <20200415113630.GC5265@sirena.org.uk>
- <4635e57b-fccd-d8a9-fa99-8124debb3428@linux.intel.com>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200415182611.705c96b7@nic.cz>
+In-Reply-To: <20200415095307.dv4bwna32llnuy7e@pali>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
+        <20200324122017.GR3819@lunn.ch>
+        <20200407115230.7dsepjfxwbk53x2v@pali>
+        <20200415095307.dv4bwna32llnuy7e@pali>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/QKKmeG/X/bPShih"
-Content-Disposition: inline
-In-Reply-To: <4635e57b-fccd-d8a9-fa99-8124debb3428@linux.intel.com>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-100.0 required=5.9 tests=SHORTCIRCUIT,
+        USER_IN_WHITELIST shortcircuit=ham autolearn=disabled version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.nic.cz
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+X-Virus-Status: Clean
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, 15 Apr 2020 11:53:07 +0200
+Pali Roh=C3=A1r <pali@kernel.org> wrote:
 
---/QKKmeG/X/bPShih
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tuesday 07 April 2020 13:52:30 Pali Roh=C3=A1r wrote:
+> > On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote: =20
+> > > On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Beh=C3=BAn wrote: =20
+> > > > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+> > > >=20
+> > > > This commit caused a regression on Armada 37xx. The pinctrl driver =
+says
+> > > >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+> > > >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> > > > and afterwards other drivers cannot use GPIOs by this driver as IRQ=
+s.
+> > > >=20
+> > > > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform=
+...")
+> > > > Signed-off-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> > > > Cc: Peng Fan <peng.fan@nxp.com>
+> > > > ---
+> > > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+> > > >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/=
+pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > > index 32f12a388b3c..5f125bd6279d 100644
+> > > > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > > @@ -15,6 +15,7 @@
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/of_address.h>
+> > > >  #include <linux/of_device.h>
+> > > > +#include <linux/of_irq.h>
+> > > >  #include <linux/pinctrl/pinconf-generic.h>
+> > > >  #include <linux/pinctrl/pinconf.h>
+> > > >  #include <linux/pinctrl/pinctrl.h>
+> > > > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct=
+ platform_device *pdev,
+> > > >  		return ret;
+> > > >  	}
+> > > > =20
+> > > > -	nr_irq_parent =3D platform_irq_count(pdev); =20
+> > >=20
+> > > Hi Marek
+> > >=20
+> > > Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER=
+? =20
+> >=20
+> > Hello Andrew! I have tested it with 5.6 kernel and return value in
+> > nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
+> > return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
+> > d0018800.pinctrl. =20
+>=20
+> Adding Jason, Gregory and Sebastian into the loop.
+>=20
+> Could you please look at this problem? If there is no easy solution,
+> I would suggest to revert problematic commit as pinctrl in current state
+> is broken and unusable.
 
-On Wed, Apr 15, 2020 at 09:44:12AM -0500, Pierre-Louis Bossart wrote:
-> On 4/15/20 6:36 AM, Mark Brown wrote:
-
-> > Architectures that don't have firmware bindings use straight C code to
-> > register and set things up.  Machine drivers are essentially board
-> > files, they're just audio specific bits of board file that use audio
-> > APIs and so are in the sound directory.
-
-> Humm, we may have a conceptual disconnect here. In the ACPI world, there is
-> no support for the machine driver - unlike Device Tree. It is probed when
-
-This is nothing to do with device tree except in that it has useful
-firmware descriptions of the hardware.
-
-> the SST/SOF driver creates a platform device using the codec _HID as a key
-> to hard-coded lookup tables in sound/soc/intel/common/soc-acpi*.c - it will
-> be probed *after* the codec driver probes. I really don't see how to use the
-> machine driver as currently implemented to establish board-level connections
-> that would influence the codec driver probe and its use of a clock.
-
-You have the opportunity to run whatever code you want to run at the
-point where you're registering your drivers with the system on module
-init, things like DMI quirk tables (which is what you're going to need
-to do here AFAICT) should work just as well there as they do later on
-when the driver loads.
-
-> > I think you're giving up way too easily here.  The kernel has really
-> > good support for systems that don't have any firmware description at
-> > all, this shouldn't be complex or breaking new ground.
-
-> See above, I don't think the machine driver can do what you had in mind?
-
-> I don't see how to proceed unless we remove all support for ACPI, both for
-> codec and clock driver, and trigger their probe "manually" with a
-> board-level initialization.
-
-The clkdev stuff can use dev_name() so so long as the devices appear
-with predictable names you should be fine.  If not IIRC everything in
-ACPI is named in the AML so clkdev could be extended to be able to find
-things based on the names it gives.
-
-> And btw there's already a precedent for using global names, it's what the
-> Skylake driver does for the mclk and ssp clocks. To the best of my knowledge
-> the device specific namespacing does not exist on any ACPI platform. We have
-
-No machine description at all exists on board file systems other than
-what we write in C and they manage to cope with this, I'm sure we can
-find a way to do it with ACPI.  I mentioned clkdev before, that is
-something that's done entirely at the Linux level.
-
-> a request from Dialog to implement the same thing for SOF to solve
-> dependencies on the clock being stable before turning on the codec, so if
-> global names are not acceptable we have a real problem.
-
-If existing usages that have ended up getting merged are going to be
-used to push for additional adoption then that's not encouraging.
-
---/QKKmeG/X/bPShih
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6XNNYACgkQJNaLcl1U
-h9Aqhwf/cG1ywCKHbggOqbCvgesS1TiRvusYdrRC114nvcJ7Ljju1ZCzTa+SK2Xp
-bBL2XaKZ0KYChnzuGMGYjQEJbf1sUbA3zyM5barfwt4syASXT7VeaUfdcTYxS4dA
-pDtWAex05jD2YGVPThnn4AKiCBRB9ygszMsf4NTZHGW7l9bKvvZOWQTuvrZWY3pb
-0vRL6roijlkQ+2lDjpMZPQ9i5ni5Za0rwrHhS2b/kaGkBRZjpYuWjsQJXFRVKOsi
-yF5K3jCsFr7F6AAjEtGYoS5riG2c6vi2nvpquEe3EeAc0i0OlgJNpddd6K/mL+P0
-qqBUAo1IHNAuum9AYzbm9FSCpYBcyg==
-=ww1w
------END PGP SIGNATURE-----
-
---/QKKmeG/X/bPShih--
+Pali, the commit is already reverted in upstream.
