@@ -2,126 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D98391A9645
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 10:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0978C1A98BF
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2894432AbgDOIYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 04:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894416AbgDOIYE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Apr 2020 04:24:04 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4838CC061A0E
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 01:24:03 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z6so17871243wml.2
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 01:24:03 -0700 (PDT)
+        id S2895446AbgDOJYX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 05:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2895440AbgDOJYT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:24:19 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44409C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x25so16560555wmc.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 02:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EobkudjeEirKaGgdWsk/CD8WOleZ+DP3gR06TTwb6wk=;
-        b=bs3Z8EtMxZvpBwIchq8UtxwJizaNNzNokP+UGHuSBaEUXq7xAV3QKTkPn+7LwnWe5Y
-         BLFOPueN01cLHBquoZTBpIZ0B+3D1yKOgup/T4iQ830/a0A0b4Gq1KTQ6J0uSGE5ndAN
-         zZGg3Pd/O+Aqb4sW0MEBlmrOflpSpN07ce+np7CtjWokhkB4AQro2SYH2ouEXegI5Q7H
-         wufvnSz62M1BADvZCXRaGK6ZjgcqR5fu8kjcmfcYOEJF2uKYF14ObFvXK8d54HUodunO
-         YM4LkMH7/ACPGCwWF46pu634AMxsQoQx4y19p3mOekbiERK+Ws5N4xBSC/cYlNRv/Cli
-         xEIA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
+        b=MZISFk0+SGdYrIGleUjYyNyFlKlBZtpvcsFKyJMVxKBrgMGYtPYkcBrS4bRdkEp/7t
+         IW0OdNkkEzJjOHq32c8nyyFfVBOA0CWrvJjsIloNh7+9VO5CUroLlbNB3EdfC+VubzHW
+         RKiPdet4ElIC56WiuMenvtixe2coFc0mPjdD569+2OT9S+0GbYhuHmAMDdAJ2/wquaHH
+         afuwBSmcYlb9MymeQAxl6jMcXisGmnphb0nXiXzgHpPoKvx7ynmkS1jh5aDHDA3xUcag
+         t1mwgvkRTAPwn/Ml63NOIpJfKAurHTPzOMenfettsfMf8meyF+86UE6hMxa9KMhNgPe7
+         /dqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EobkudjeEirKaGgdWsk/CD8WOleZ+DP3gR06TTwb6wk=;
-        b=kIAaeSuXH8em04iY+izPL0XKK9/fHByIZbmLjAIEn/S0Eg7SHCDzDzKahTYerEevPp
-         QA+WpUeYuYpTr3ZUKJesO8XISDREchtzZLC6cPt1SW0sP5DRG6z/ICxDz9rBK3L9xcQL
-         fs27K/Lh+htt9VRhGd7ief2+QDJa86S0y8nzL/CoiGPYHPKolM/fwMpytMKKr62XUILT
-         7EDGMpTCBYExCghLpVxOrehYfSaiwF2xU2RVLWn8sTHhen1RYxE0x2t5KLh/Okm7q2oT
-         h+WVZ7ET7XjbNFYiwfcnexuLuMFvj1zeNqJlr2wBbnyZP+H0TXp0Ya3HfSVot6cuT0jJ
-         6m9g==
-X-Gm-Message-State: AGi0PuYHhB4yHTlndLeR9REazCb1S1cjgNzMwVG9myche0MHtfS6N8zE
-        YfCVwVkx8ll3Fgt9iMGqBmstMw==
-X-Google-Smtp-Source: APiQypL/4wlg57NoVsKljaiL1Y4FqjXf6bqEYqoWKKbjsZoMQY6CN22vxs05pWfQw6mQze9N+ac0dQ==
-X-Received: by 2002:a1c:1bcb:: with SMTP id b194mr4189899wmb.4.1586939041929;
-        Wed, 15 Apr 2020 01:24:01 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id w6sm18763373wrm.86.2020.04.15.01.24.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=25hsR70J4xkR7QjWib9TX4C/RIJl6X5HgsLKdDMfcIM=;
+        b=hrIYHyJkXlp7MrZBPFk2Q1cDEzEWZRa1ay284usf6xJz/m6a83INPn0j7r2AvBNVuq
+         Ib2ZUgkbPZblYv6ACxotuiBtLEBOgDfKiVj1ERbf2zUMaCUUhUl4LYvW8ZY786JKIH89
+         ubY4VDuYCMvfmQiztPtJMOrPOqSWni+qSVk7Z6cYB0RUUMLbIjAqCyoRlLsP0jGJNvYP
+         k9rXTGbyhnfQ7QLPnwWVSQWGHzMMtULoAZr2j0+q82pAjKcD7mJu0w3cCmY90z/izXfw
+         uNjP7a/QEFEvZgdy8AmsHVOecWzy79+rMkq53qXQ6M0pm/WwT2xM0ita4ZEUIlYZbc+J
+         04sg==
+X-Gm-Message-State: AGi0Pubt7eAMBjXA2GiuMSoZhUahvZpcx2DW56M4jYqj3tEsW/B/A2K9
+        nSxVnvRVLNDmqo3QcAkm/zgRzA==
+X-Google-Smtp-Source: APiQypI1L9Xj03pMeY/s2kTnKETE0bYjImrIZAgEBCHLd+qOzGsuktY5U9KyEtfeFWAbhU8Q4g0UeA==
+X-Received: by 2002:a7b:c10d:: with SMTP id w13mr4131241wmi.78.1586942657950;
+        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
+Received: from dell ([95.149.164.124])
+        by smtp.gmail.com with ESMTPSA id e1sm12258399wrc.12.2020.04.15.02.24.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2020 01:24:01 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpiolib: improve the robustness of watch/unwatch ioctl()
-Date:   Wed, 15 Apr 2020 10:23:59 +0200
-Message-Id: <20200415082359.22152-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        Wed, 15 Apr 2020 02:24:17 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 10:25:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org
+Subject: Re: [PATCH v6 3/8] mfd: sm501: Use GPIO_LOOKUP_IDX() helper macro
+Message-ID: <20200415092517.GF2167633@dell>
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be>
+ <20200324135653.6676-3-geert+renesas@glider.be>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324135653.6676-3-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, 24 Mar 2020, Geert Uytterhoeven wrote:
 
-This makes the new ioctl() a bit more robust - we now check if a line
-is already being watched and return -EBUSY if the user-space tries to
-start watching it again. Same for unwatch - return -EBUSY if user-space
-tries to unwatch a line that's not being watched.
+> i801_add_mux() fills in the GPIO lookup table by manually populating an
+> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP_IDX()
+> helper macro instead, to relax a dependency on the gpiod_lookup
+> structure's member names.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> ---
+> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
+> support for GPIO lookup by line name", it can be applied independently.
+> But an Acked-by would be nice, too.
+> 
+> Cover letter and full series at
+> https://lore.kernel.org/r/20200324135328.5796-1-geert+renesas@glider.be/
+> 
+> v6:
+>   - New.
+> ---
+>  drivers/mfd/sm501.c | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
 
-Fixes: 51c1064e82e7 ("gpiolib: add new ioctl() for monitoring changes in line info")
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpiolib.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 40f2d7f69be2..29f6abe84d2e 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1227,6 +1227,7 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 	void __user *ip = (void __user *)arg;
- 	struct gpio_desc *desc;
- 	__u32 offset;
-+	int hwgpio;
- 
- 	/* We fail any subsequent ioctl():s when the chip is gone */
- 	if (!gc)
-@@ -1259,13 +1260,19 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
- 
-+		hwgpio = gpio_chip_hwgpio(desc);
-+
-+		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL &&
-+		    test_bit(hwgpio, priv->watched_lines))
-+			return -EBUSY;
-+
- 		gpio_desc_to_lineinfo(desc, &lineinfo);
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
- 
- 		if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL)
--			set_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
-+			set_bit(hwgpio, priv->watched_lines);
- 
- 		return 0;
- 	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
-@@ -1280,7 +1287,12 @@ static long gpio_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
- 
--		clear_bit(gpio_chip_hwgpio(desc), priv->watched_lines);
-+		hwgpio = gpio_chip_hwgpio(desc);
-+
-+		if (!test_bit(hwgpio, priv->watched_lines))
-+			return -EBUSY;
-+
-+		clear_bit(hwgpio, priv->watched_lines);
- 		return 0;
- 	}
- 	return -EINVAL;
 -- 
-2.25.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
