@@ -2,133 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54E931AAF84
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 19:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41C721AB019
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 19:53:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410873AbgDOR1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 13:27:06 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53347 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410844AbgDOR1F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:27:05 -0400
-IronPort-SDR: bV+QBSVMvJsMWNZ50g8bFAqdcKjpyxE0x1nyUiy5xVEpflZ0dEY7iGaVswq8Rmb/a9NcHutWzo
- 2a0THkEP/jFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 10:27:02 -0700
-IronPort-SDR: mSk6aOISQhPtyVxBoM3CwHC1wCmHkRux0rvXtc6dsTm0VfMBf0EFhMxn3GGLZyAWqeKcLqI6xk
- CZlyMDkirMZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="271795362"
-Received: from jplam-mobl1.amr.corp.intel.com (HELO [10.209.82.197]) ([10.209.82.197])
-  by orsmga002.jf.intel.com with ESMTP; 15 Apr 2020 10:26:58 -0700
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-To:     Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S2440827AbgDORxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 13:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2437449AbgDORxO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:53:14 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8C6C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 10:53:13 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id h6so3375531lfc.0
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 10:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EbfsR42nuYqfxeWyLyKKeykYrRmBgeOrUICWoicNfFU=;
+        b=mWGw3XbFjypT1bWtjIsgq+IsXzqc8jymimW2BCM7sawygNCwDfJTCAeZ2QlhbiT79H
+         ESw+BIxuC7nN92Le/WwGqOP6Nt5V24o+FBgseeNv0jOnibPnebVoIaPHTlsV2sq+ubXk
+         SuN6gxrjQIit52n0wOqfVVMpvt8e3QkJeyxQH93oNO8CJ7/2mHahqPd5ssD/oXRcZP3n
+         ZCaiUCVpPYMWt75sxPoSg+QyFi6gu8nGhLWTfSsX5dX3wsLYcEbDp4c4UGtI9MKtx4+G
+         0rKEccEVMia1cVUeUHemfcuYyfVxcucxlhuAXIP4h03bc8p1qHpXbBJXcFZk0dsIp3jI
+         pL3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EbfsR42nuYqfxeWyLyKKeykYrRmBgeOrUICWoicNfFU=;
+        b=XUsxvOTqCbEO8cVheS/EPLaXb43AMh5H7zhRtmk8OgDLSe5GFr9WnhMIZjYb6+hwQn
+         E/9EJJEaRdRW0FptmOxaZi3NFSE0E0Y2uxkmuXlZhD5EAgDl2CcdY/FSC9Q9yK0UC14D
+         V9F4W8hW4rRq2DEKJIMC+MWvsgPdHIL04juzpgCyEM1UIE5SEv5ZM0KMgith7KZXLpyv
+         lYSyVjKRhSOn7J1LsgJ1Sxinr8YZgJBpEwwM7pRD3SzJd71PdCPk+CVWgExkK2oWXBe/
+         O84LoPpIJk/6jcu4LmCNyEbwzveLw5sbfKyOXxZbKnzDxIpDVYB9wl9dj/HGlH3SK5+w
+         hwgQ==
+X-Gm-Message-State: AGi0PuaDZTry3llZNbtFFFYqhumbbVHIV3Wm9rYB1vkNq0o/WWQkRIXl
+        J4wLwunCAWndUn+H/5YpqiE=
+X-Google-Smtp-Source: APiQypKrgGXN5RUIn73tsW0c+9pTy95IrSUwII2QkeNg2J7xSfii+drf4S9GJT4txxbVbNCifJ77WQ==
+X-Received: by 2002:a05:6512:318a:: with SMTP id i10mr3768472lfe.96.1586973191864;
+        Wed, 15 Apr 2020 10:53:11 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id z23sm12172479ljh.55.2020.04.15.10.53.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 10:53:11 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 20:53:09 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
- <20200414174530.GK5412@sirena.org.uk>
- <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
- <20200414182728.GM5412@sirena.org.uk>
- <3017b762-7a0c-cee2-06dd-1e96f52eb849@linux.intel.com>
- <20200414195031.GP5412@sirena.org.uk>
- <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
- <20200415113630.GC5265@sirena.org.uk>
- <4635e57b-fccd-d8a9-fa99-8124debb3428@linux.intel.com>
- <20200415162247.GF5265@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <9a7fbbac-818a-01d0-7a32-8ae313f9ad50@linux.intel.com>
-Date:   Wed, 15 Apr 2020 12:26:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 08/14] gpio: dwapb: Convert to use IRQ core provided
+ macros
+Message-ID: <20200415175309.6l6skv7qsdjqsryi@mobilestation>
+References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
+ <20200415141534.31240-9-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415162247.GF5265@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415141534.31240-9-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
->> the SST/SOF driver creates a platform device using the codec _HID as a key
->> to hard-coded lookup tables in sound/soc/intel/common/soc-acpi*.c - it will
->> be probed *after* the codec driver probes. I really don't see how to use the
->> machine driver as currently implemented to establish board-level connections
->> that would influence the codec driver probe and its use of a clock.
+On Wed, Apr 15, 2020 at 05:15:28PM +0300, Andy Shevchenko wrote:
+> IRQ core provides macros such as IRQ_RETVAL().
+> Convert code to use them.
 > 
-> You have the opportunity to run whatever code you want to run at the
-> point where you're registering your drivers with the system on module
-> init, things like DMI quirk tables (which is what you're going to need
-> to do here AFAICT) should work just as well there as they do later on
-> when the driver loads.
-
-The idea here was to have one single build, and then rely on what the 
-user configured with initrd override to probe the right I2C codec driver 
-and indirectly the machine driver. It's similar to device tree overlays.
-
-With the same up2 board, I change the .aml file in 
-/lib/firmware/acpi-upgrades, swap one HAT board for another and the new 
-board is handled automagically.
-
-I don't see how I can use hard-coded DMI tables or board-specific things 
-without losing the single build?
-
->>> I think you're giving up way too easily here.  The kernel has really
->>> good support for systems that don't have any firmware description at
->>> all, this shouldn't be complex or breaking new ground.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
 > 
->> See above, I don't think the machine driver can do what you had in mind?
-> 
->> I don't see how to proceed unless we remove all support for ACPI, both for
->> codec and clock driver, and trigger their probe "manually" with a
->> board-level initialization.
-> 
-> The clkdev stuff can use dev_name() so so long as the devices appear
-> with predictable names you should be fine.  If not IIRC everything in
-> ACPI is named in the AML so clkdev could be extended to be able to find
-> things based on the names it gives.
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 8b30ded9322a..4edac592c253 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -258,8 +258,7 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+>  	irq_hw_number_t bit = irqd_to_hwirq(d);
+>  	unsigned long level, polarity, flags;
+>  
+> -	if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING |
+> -		     IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+> +	if (type & ~IRQ_TYPE_SENSE_MASK)
+>  		return -EINVAL;
+>  
+>  	spin_lock_irqsave(&gc->bgpio_lock, flags);
+> @@ -351,12 +350,7 @@ static int dwapb_gpio_set_config(struct gpio_chip *gc, unsigned offset,
+>  
+>  static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
+>  {
+> -	u32 worked;
+> -	struct dwapb_gpio *gpio = dev_id;
+> -
+> -	worked = dwapb_do_irq(gpio);
+> -
+> -	return worked ? IRQ_HANDLED : IRQ_NONE;
+> +	return IRQ_RETVAL(dwapb_do_irq(dev_id));
+>  }
 
-I had a discussion with Andy Shevchenko that we should precisely not be 
-using dev_name() since we don't control the names that ACPI selects for 
-us. And since I was using the generic PRP0001 thing for the clock device 
-to probe using the 'compatible' string it's actually even less reliable 
-and unique...
+BTW Forgot to mention. Irrelevantly to this patch just so you know seeing
+you are from Intel and this part is being utilized by the Intel Quark SoC.
+dwapb_irq_handler_mfd() handler will cause a problem in RT-patched kernel
+(I've seen such issue in another GPIO-driver). So if PREEMP_RT_FULL patch
+is applied and the FULL-RT scheduler is enabled all interrupt handlers
+specified by request_irq()-based methods will be handled by a kernel thread,
+while generic_handle_irq() is supposed to be called from the atomic context
+only (with interrupts disabled). As a result an ugly stack dump will be printed
+to the kernel log by the next code:
+https://elixir.bootlin.com/linux/latest/source/kernel/irq/handle.c#L152
 
->> And btw there's already a precedent for using global names, it's what the
->> Skylake driver does for the mclk and ssp clocks. To the best of my knowledge
->> the device specific namespacing does not exist on any ACPI platform. We have
-> 
-> No machine description at all exists on board file systems other than
-> what we write in C and they manage to cope with this, I'm sure we can
-> find a way to do it with ACPI.  I mentioned clkdev before, that is
-> something that's done entirely at the Linux level.
-> 
->> a request from Dialog to implement the same thing for SOF to solve
->> dependencies on the clock being stable before turning on the codec, so if
->> global names are not acceptable we have a real problem.
-> 
-> If existing usages that have ended up getting merged are going to be
-> used to push for additional adoption then that's not encouraging.
+A way to fix this is described in Documentation/driver-api/gpio/driver.rst
 
-I wasn't trying to push this against your will, rather I wanted to 
-highlight that we should be clear on the direction for all these uses of 
-the clk API in an ACPI context. If what I suggested here is not the 
-right path, then how do we deal with all the existing cases? This 
-PCM512x use is not a mainstream usage, we use this board mainly for 
-validation and for community support, the other cases with 'mclk' and 
-'sspX_fsync' are critical and impact devices shipping in large volumes.
+Regards,
+-Sergey
+
+>  
+>  static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+> -- 
+> 2.25.1
+> 
