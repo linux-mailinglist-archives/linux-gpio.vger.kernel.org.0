@@ -2,81 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B0F31A9993
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:53:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD44A1A999B
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896040AbgDOJwf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 05:52:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:1107 "EHLO mga05.intel.com"
+        id S2896077AbgDOJxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 05:53:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896035AbgDOJwb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:52:31 -0400
-IronPort-SDR: UDgitaSKfp3Youv6TCSaWwlbHYw3QgOaHJs76qyVpkPhFaHVWDlBJIP1g38nDqyBujx6B990wl
- rJS5Lcsms2RA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:52:29 -0700
-IronPort-SDR: 3bHQzkGc0m5CIF5k9OB9pBoA/yIN1QL7/nZw6gWfk4G/8OiCSCkm5q7s7OrlvcmnazXjv4fp6+
- dQFWuzLywxJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="242261048"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2020 02:52:25 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOeia-000kCY-5n; Wed, 15 Apr 2020 12:52:28 +0300
-Date:   Wed, 15 Apr 2020 12:52:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de, broonie@kernel.org,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
+        id S2896071AbgDOJxM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:53:12 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C7E0206D9;
+        Wed, 15 Apr 2020 09:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586944390;
+        bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H8eUu2pEaSyw3x/u0TDYVRhgfmDcHV+D2EjWN4QhsKukqQhE7B3oM6yhSzUGz9+aI
+         vZnyFVGhzadGbT7dA3lrDvQzAdAVRF1SF1lvaznFqqItoeM1ahfAVayykFQ0uChlce
+         uvODjH/JaYfnnKAT1yzRaoGC9crUUw5C5vf4+Rp0=
+Received: by pali.im (Postfix)
+        id A8D3D589; Wed, 15 Apr 2020 11:53:07 +0200 (CEST)
+Date:   Wed, 15 Apr 2020 11:53:07 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-Message-ID: <20200415095228.GO34613@smile.fi.intel.com>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
- <20200414171125.GB34613@smile.fi.intel.com>
- <7c0e7f81-cb1c-9c59-4421-baf41b8d015b@linux.intel.com>
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200415095307.dv4bwna32llnuy7e@pali>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
+ <20200324122017.GR3819@lunn.ch>
+ <20200407115230.7dsepjfxwbk53x2v@pali>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7c0e7f81-cb1c-9c59-4421-baf41b8d015b@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200407115230.7dsepjfxwbk53x2v@pali>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 12:54:25PM -0500, Pierre-Louis Bossart wrote:
-> On 4/14/20 12:11 PM, Andy Shevchenko wrote:
-> > On Thu, Apr 09, 2020 at 02:58:27PM -0500, Pierre-Louis Bossart wrote:
-> > > Using devm_clk_get() with a NULL string fails on ACPI platforms, use
-> > > the "sclk" string as a fallback.
+On Tuesday 07 April 2020 13:52:30 Pali Rohár wrote:
+> On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
+> > On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
+> > > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+> > > 
+> > > This commit caused a regression on Armada 37xx. The pinctrl driver says
+> > >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+> > >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> > > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
+> > > 
+> > > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
+> > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> > > Cc: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+> > >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > index 32f12a388b3c..5f125bd6279d 100644
+> > > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/of.h>
+> > >  #include <linux/of_address.h>
+> > >  #include <linux/of_device.h>
+> > > +#include <linux/of_irq.h>
+> > >  #include <linux/pinctrl/pinconf-generic.h>
+> > >  #include <linux/pinctrl/pinconf.h>
+> > >  #include <linux/pinctrl/pinctrl.h>
+> > > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > -	nr_irq_parent = platform_irq_count(pdev);
 > > 
-> > This is fishy a bit.
+> > Hi Marek
+> > 
+> > Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
 > 
-> I didn't find a single example where we use a NULL string in ACPI cases?
+> Hello Andrew! I have tested it with 5.6 kernel and return value in
+> nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
+> return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
+> d0018800.pinctrl.
 
-...
+Adding Jason, Gregory and Sebastian into the loop.
 
-> > If no, why not simple switch to devm_clk_get_optional()?
+Could you please look at this problem? If there is no easy solution,
+I would suggest to revert problematic commit as pinctrl in current state
+is broken and unusable.
+
+> So this is a clear regression introduced by that patch.
 > 
-> Not sure what that would change?
-
-Hmm... Who is the provider of this clock?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> > This patch has removed the handling of that.
+> > 
+> > > -	if (nr_irq_parent < 0) {
+> > > -		if (nr_irq_parent != -EPROBE_DEFER)
+> > > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> > > -				ERR_PTR(nr_irq_parent));
+> > > -		return nr_irq_parent;
+> > > -	}
+> > 
+> > Thanks
+> > 	Andrew
