@@ -2,116 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD44A1A999B
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5AF01A99B1
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:56:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896077AbgDOJxQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 05:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48700 "EHLO mail.kernel.org"
+        id S2405462AbgDOJzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 05:55:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:3720 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896071AbgDOJxM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:53:12 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7E0206D9;
-        Wed, 15 Apr 2020 09:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586944390;
-        bh=ko2AkkMakGqS1ar5tmN5wIgkrlEvey6E66F/2XcU/gU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H8eUu2pEaSyw3x/u0TDYVRhgfmDcHV+D2EjWN4QhsKukqQhE7B3oM6yhSzUGz9+aI
-         vZnyFVGhzadGbT7dA3lrDvQzAdAVRF1SF1lvaznFqqItoeM1ahfAVayykFQ0uChlce
-         uvODjH/JaYfnnKAT1yzRaoGC9crUUw5C5vf4+Rp0=
-Received: by pali.im (Postfix)
-        id A8D3D589; Wed, 15 Apr 2020 11:53:07 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 11:53:07 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        id S2405394AbgDOJz3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 05:55:29 -0400
+IronPort-SDR: wOG+PzgVYM07kM+tQPBhfYCVhXlh8XCuTrCNAAQeX9BuVVCZchXErYQuCdrOi0LOR1ujhEXBzy
+ RYq6tcJr2LzQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:55:27 -0700
+IronPort-SDR: WHPT8+Gg5iTH6yvnDF7OIqInGJCBbqX2ZmU9Aj1/G6YOQ5VMqOwBwaZzFkv4wFgLHdMGkgdFy7
+ 2YSOsbDPHF+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
+   d="scan'208";a="427381313"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2020 02:55:24 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jOelS-000kEZ-F8; Wed, 15 Apr 2020 12:55:26 +0300
+Date:   Wed, 15 Apr 2020 12:55:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        linux-gpio@vger.kernel.org, tiwai@suse.de,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
- use use platform api"
-Message-ID: <20200415095307.dv4bwna32llnuy7e@pali>
-References: <20200324004413.14355-1-marek.behun@nic.cz>
- <20200324122017.GR3819@lunn.ch>
- <20200407115230.7dsepjfxwbk53x2v@pali>
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Matuschek <daniel@hifiberry.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Matthias Reichl <hias@horus.com>, broonie@kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC PATCH 04/16] ASoC: Intel: sof-pcm512x: detect Hifiberry
+ DAC+ PRO
+Message-ID: <20200415095526.GP34613@smile.fi.intel.com>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+ <20200409195841.18901-5-pierre-louis.bossart@linux.intel.com>
+ <20200414172002.GD34613@smile.fi.intel.com>
+ <d3b154f4-fa8a-50a5-7246-51d31e18c4e6@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200407115230.7dsepjfxwbk53x2v@pali>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <d3b154f4-fa8a-50a5-7246-51d31e18c4e6@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tuesday 07 April 2020 13:52:30 Pali Rohár wrote:
-> On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
-> > On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
-> > > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
-> > > 
-> > > This commit caused a regression on Armada 37xx. The pinctrl driver says
-> > >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
-> > >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-> > > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-> > > 
-> > > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-> > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > > Cc: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
-> > >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > index 32f12a388b3c..5f125bd6279d 100644
-> > > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/of.h>
-> > >  #include <linux/of_address.h>
-> > >  #include <linux/of_device.h>
-> > > +#include <linux/of_irq.h>
-> > >  #include <linux/pinctrl/pinconf-generic.h>
-> > >  #include <linux/pinctrl/pinconf.h>
-> > >  #include <linux/pinctrl/pinctrl.h>
-> > > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	nr_irq_parent = platform_irq_count(pdev);
+On Tue, Apr 14, 2020 at 01:02:12PM -0500, Pierre-Louis Bossart wrote:
+> On 4/14/20 12:20 PM, Andy Shevchenko wrote:
+> > On Thu, Apr 09, 2020 at 02:58:29PM -0500, Pierre-Louis Bossart wrote:
+
+...
+
+> > > +	ctx->sclk = devm_clk_get(rtd->card->dev, "sclk");
 > > 
-> > Hi Marek
-> > 
-> > Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+> > Is this in the bindings?
 > 
-> Hello Andrew! I have tested it with 5.6 kernel and return value in
-> nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
-> return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
-> d0018800.pinctrl.
+> Not for now. the 'sclk' part is only used by me myself and I in an ACPI
+> context. I can add this description if desired.
 
-Adding Jason, Gregory and Sebastian into the loop.
+Unfortunately you need to add this to the bindings, because it's a part of it
+and somebody may use it outside of your scope.
 
-Could you please look at this problem? If there is no easy solution,
-I would suggest to revert problematic commit as pinctrl in current state
-is broken and unusable.
-
-> So this is a clear regression introduced by that patch.
+> > > +	if (IS_ERR(ctx->sclk)) {
+> > 
+> > > +		dev_info(dev, "Could not get SCLK, will operate in SOC master mode\n");
+> > 
+> > Sounds like devm_clk_get_optional().
 > 
-> > This patch has removed the handling of that.
-> > 
-> > > -	if (nr_irq_parent < 0) {
-> > > -		if (nr_irq_parent != -EPROBE_DEFER)
-> > > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
-> > > -				ERR_PTR(nr_irq_parent));
-> > > -		return nr_irq_parent;
-> > > -	}
-> > 
-> > Thanks
-> > 	Andrew
+> I am not sure about the semantic here. This driver selects the one which
+> implements this clock, so if we get a -ENOENT return it's a very bad sign.
+> Not sure what suppressing the error and converting to NULL would do?
+
+Same as per GPIO.
+Can it work without this clock? How did it work before your change?
+
+When you add any hard dependency always ask yourself above questions.
+
+> > > +		goto skip_dacpro;
+> > > +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
