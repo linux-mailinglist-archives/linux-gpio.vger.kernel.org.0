@@ -2,75 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D46011AA409
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 15:23:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 354C61AA43C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 15:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506229AbgDONQf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 09:16:35 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35006 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2506223AbgDONQa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 09:16:30 -0400
-IronPort-SDR: odPh2Jpo/tcVIWKZ2fGp8oOqAX6LepohK9oOuhC6jQQ6FRHmlvxZUeaXu5gKpqj4Odh7HknnIs
- 8/Bq2a62oC4w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 06:16:28 -0700
-IronPort-SDR: f2cq93MnGGWkHLAWpAfsQOgK6ecOvIEV/ARtJ9+pPb+YOZ9X53nHaG4aILErw6Lh1+IIZTTjPk
- J3bkDabOMVyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="242301342"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2020 06:16:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOhu1-000n5L-UK; Wed, 15 Apr 2020 16:16:29 +0300
-Date:   Wed, 15 Apr 2020 16:16:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 05/13] gpio: dwapb: Convert to use irqd_to_hwirq()
-Message-ID: <20200415131629.GE185537@smile.fi.intel.com>
-References: <20200409141228.49561-1-andriy.shevchenko@linux.intel.com>
- <20200409141228.49561-6-andriy.shevchenko@linux.intel.com>
- <20200415124242.nnk7wamjw6e5jyez@mobilestation>
+        id S2506330AbgDONUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 09:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2506324AbgDONUo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 09:20:44 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE40C061A0C;
+        Wed, 15 Apr 2020 06:20:44 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id f2so3235028ilq.7;
+        Wed, 15 Apr 2020 06:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GuE7zCB+kjCMQSC6KSQqFmUyUFjxP8ZpVQ5YkoMnnCY=;
+        b=BiByiI5NznJ9Z0cSJAHIWIzEBySLeI4D5xFoSXWo+Fpt8MAr1tc4M11yneh4IRo/XS
+         aCUdjX4soeKLhhkZzga37LK0G6mDSKSryn5WkLjCtzwBM5ucWhTBPfIB6GNPB7f7qN5B
+         IifDOW5K1uy8/vcADYtehFfrixrAUDVoPyH7ulZ9xR/bidhBqupM+f6DdFptN6ykHsGP
+         DnYBrALROCLSf3AZQNw0P8Pz8t7sns6XCt64BJ+S8YxiTG2Ubi0laB0PPY0LQH+hjEx6
+         C5ehiub6PvCtKLZR6RviM6GDgy34P6mt+RXkD0YhkKWrPdZ0gidPOxVkKubrkjQsEWB4
+         aFDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GuE7zCB+kjCMQSC6KSQqFmUyUFjxP8ZpVQ5YkoMnnCY=;
+        b=ewMTuz4MyEnCQ38eYmCnbH4jFuS+30Po3DvUbLpSsHwymYZwFVaD+oZrHz3+8OnYpe
+         Lxgj3D3BhI2dIiFZi68+oLHhg92lNrQqIszMFYGOcjbWp64ROsYZFWCco23j0CpBARF7
+         DYK0QTHFuyMhPZSdG47ND9zOPntSMm8yWEfbCPGlDQUF8egm8/D1MR4yzxKLM9xENexL
+         Na837WOYtdiIPsD5qvWNoG2/Y5jicvefVixs+iKl4Rdytyg3vrhNblVah9gC8VIGTmAk
+         ZHSqB+C3b3M1DDkuJKon0eVSZGTpaxEjOJ5jqbWJCHAWWro81gWxTZkyqPOiSGdjOy9O
+         MofA==
+X-Gm-Message-State: AGi0PuasdNWJzHkTKyqn+S3HIJIju7YNZ+4w98mc/hQg9bAKOKeltRMg
+        f6pt4frZ7yrzVdpMX775PSaNVsfHp2bP5NssByc=
+X-Google-Smtp-Source: APiQypJcBc6S+JZCO0dPRaM0Nepcud4QLmwXVj9dY0ATI7R4HYmWzmYNGc67EXDuHehVfrI02wOOMwXqSg5/v/t9YhY=
+X-Received: by 2002:a92:86da:: with SMTP id l87mr5449555ilh.292.1586956843901;
+ Wed, 15 Apr 2020 06:20:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415124242.nnk7wamjw6e5jyez@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
+ <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
+ <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
+ <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
+ <20200413123921.GA32586@x1> <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
+In-Reply-To: <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
+From:   Robert Nelson <robertcnelson@gmail.com>
+Date:   Wed, 15 Apr 2020 08:20:18 -0500
+Message-ID: <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
+Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Drew Fustini <drew@pdp7.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Drew Fustini <pdp7pdp7@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 03:42:42PM +0300, Serge Semin wrote:
-> On Thu, Apr 09, 2020 at 05:12:20PM +0300, Andy Shevchenko wrote:
-> > Convert to use irqd_to_hwirq() instead of direct access to the hwirq member.
+Hi Grygorii,
 
-> > -	int bit = d->hwirq;
+On Wed, Apr 15, 2020 at 8:15 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+> For this platforms the dynamic GPIO muxing/configuration is not supported, and GPIO block by itself
+> does not provide such functions as pullup/pulldown.
 
-> > +	u32 bit = irqd_to_hwirq(d);
-> 
-> I'm not saying that the rest of the driver code is highly coherent with
-> ideal design and style. But here I don't really see a point in converting
-> the type to u32. As I see it int-like type is more appropriate since
-> we don't need to signify the data type width in this context.
+Correct, that's the state today, while Drew is investing time into
+trying to figure out how to properly extend this feature into our
+platform.
 
-> > +	u32 bit = irqd_to_hwirq(d);
-
-The idea is that it corresponds the hardware register width. But, i think the
-proper one is irq_hw_number_t as return type in all cases.
-Let me check this and fix accordingly.
-
-> > +	irq_hw_number_t hwirq;
+Regards,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Robert Nelson
+https://rcn-ee.com/
