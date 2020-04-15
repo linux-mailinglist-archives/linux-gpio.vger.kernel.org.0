@@ -2,36 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5AF01A99B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 11:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A051A99CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 12:02:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405462AbgDOJzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 05:55:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3720 "EHLO mga18.intel.com"
+        id S2896085AbgDOKAc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 06:00:32 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60203 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405394AbgDOJz3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:55:29 -0400
-IronPort-SDR: wOG+PzgVYM07kM+tQPBhfYCVhXlh8XCuTrCNAAQeX9BuVVCZchXErYQuCdrOi0LOR1ujhEXBzy
- RYq6tcJr2LzQ==
+        id S2895955AbgDOKAb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 06:00:31 -0400
+IronPort-SDR: 5JgyYJ26YInuRCAkHNAJRsE3lY9OvcL5Ns7/xU1zzid/4je+PU0KUCD4XFjY019wfNmCr78b0B
+ lzjGmRtOboQA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 02:55:27 -0700
-IronPort-SDR: WHPT8+Gg5iTH6yvnDF7OIqInGJCBbqX2ZmU9Aj1/G6YOQ5VMqOwBwaZzFkv4wFgLHdMGkgdFy7
- 2YSOsbDPHF+g==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 03:00:27 -0700
+IronPort-SDR: Ar2EFutLqMhbsnWlBemUKP4XSSJ8a0f6fMvHaHDtIvtZ1DSoJ94PMS483/QAZD0YIhxFj5TQHM
+ 112+e9iRo6AA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="427381313"
+   d="scan'208";a="400264550"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 15 Apr 2020 02:55:24 -0700
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2020 03:00:22 -0700
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOelS-000kEZ-F8; Wed, 15 Apr 2020 12:55:26 +0300
-Date:   Wed, 15 Apr 2020 12:55:26 +0300
+        id 1jOeqG-000kI3-Bw; Wed, 15 Apr 2020 13:00:24 +0300
+Date:   Wed, 15 Apr 2020 13:00:24 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         linux-gpio@vger.kernel.org, tiwai@suse.de,
+        DigitalDreamtime <clive.messer@digitaldreamtime.co.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Daniel Matuschek <daniel@hifiberry.com>,
@@ -40,56 +41,58 @@ Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org
-Subject: Re: [RFC PATCH 04/16] ASoC: Intel: sof-pcm512x: detect Hifiberry
- DAC+ PRO
-Message-ID: <20200415095526.GP34613@smile.fi.intel.com>
+Subject: Re: [RFC PATCH 07/16] clk: hifiberry-dacpro: initial import
+Message-ID: <20200415100024.GQ34613@smile.fi.intel.com>
 References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-5-pierre-louis.bossart@linux.intel.com>
- <20200414172002.GD34613@smile.fi.intel.com>
- <d3b154f4-fa8a-50a5-7246-51d31e18c4e6@linux.intel.com>
+ <20200409195841.18901-8-pierre-louis.bossart@linux.intel.com>
+ <20200414173110.GG34613@smile.fi.intel.com>
+ <1483c322-66b9-d68e-c8e9-81f826b01108@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3b154f4-fa8a-50a5-7246-51d31e18c4e6@linux.intel.com>
+In-Reply-To: <1483c322-66b9-d68e-c8e9-81f826b01108@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 01:02:12PM -0500, Pierre-Louis Bossart wrote:
-> On 4/14/20 12:20 PM, Andy Shevchenko wrote:
-> > On Thu, Apr 09, 2020 at 02:58:29PM -0500, Pierre-Louis Bossart wrote:
-
-...
-
-> > > +	ctx->sclk = devm_clk_get(rtd->card->dev, "sclk");
+On Tue, Apr 14, 2020 at 01:09:28PM -0500, Pierre-Louis Bossart wrote:
+> On 4/14/20 12:31 PM, Andy Shevchenko wrote:
+> > On Thu, Apr 09, 2020 at 02:58:32PM -0500, Pierre-Louis Bossart wrote:
+> > > From: Daniel Matuschek <daniel@hifiberry.com>
+> > > 
+> > > This patch imports the clock code from the Raspberry v5.5-y tree. The
+> > > ASoC machine driver initially present in this patch was dropped. The
+> > > comments are also dropped but all sign-offs are kept below. The patch
+> > > authorship was modified with explicit permission from Daniel Matuschek
+> > > to make sure it matches the Signed-off tag.
+> > > 
+> > > This patch generates a lot of checkpatch.pl warnings that are
+> > > corrected in follow-up patches.
 > > 
-> > Is this in the bindings?
+> > I guess it will be waste of time to review this part without squashing it first.
 > 
-> Not for now. the 'sclk' part is only used by me myself and I in an ACPI
-> context. I can add this description if desired.
+> I wasn't sure if squashing was desired, so kept all my changes separate.
 
-Unfortunately you need to add this to the bindings, because it's a part of it
-and somebody may use it outside of your scope.
+At the end, yes. It's a new contribution that can be at least cleaned before
+hands to more-or-less acceptable point. With so many subtle issues it's not
+good that we dump an ugly code outside of drivers/staging.
 
-> > > +	if (IS_ERR(ctx->sclk)) {
-> > 
-> > > +		dev_info(dev, "Could not get SCLK, will operate in SOC master mode\n");
-> > 
-> > Sounds like devm_clk_get_optional().
-> 
-> I am not sure about the semantic here. This driver selects the one which
-> implements this clock, so if we get a -ENOENT return it's a very bad sign.
-> Not sure what suppressing the error and converting to NULL would do?
+> There are some changes from the legacy clk to the clk_hw parts plus
+> introduction of ACPI support that are easier to review if kept separate.
 
-Same as per GPIO.
-Can it work without this clock? How did it work before your change?
+Yes, for review purposes it's okay.
 
-When you add any hard dependency always ask yourself above questions.
+You always can put your name as a SoB + Co-developed-by tag or give credits to
+other people in the commit message differently (depending to amount of work
+they do vs. yours).
 
-> > > +		goto skip_dacpro;
-> > > +	}
+> Maybe I should have squashed the cosmetic parts in patch8, and kept the
+> functional changes as separate patches.
+
+Use a common sense, you know your work better than me :-)
+Just explain this in cover letter (like you do for this version).
 
 -- 
 With Best Regards,
