@@ -2,131 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D204D1AA2FE
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 15:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F10E41A9E72
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 13:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505747AbgDONCv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 09:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897154AbgDOLge (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:36:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF07220857;
-        Wed, 15 Apr 2020 11:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950592;
-        bh=hGaPNPo2bXtmqhGm530nnBNN9yGymFS64dOLD7ZHm+o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RDSYzi66kakJCorZcJfkhARuzoUP//RGk5PLdJ450hrz9g205FplNu38EDzppW/ov
-         TCUjHOeKWHOSTLwCFCbpwKqRyUxti0cC9B2ozrkZROzXFkqvqAvpSIOxTy8oo0lB0W
-         Xk5FBXSqwwoz0VxNjsg4z4a60Fm/ZN4QZv2mS4DA=
-Date:   Wed, 15 Apr 2020 12:36:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S2409624AbgDOL4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 07:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2409617AbgDOL4B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Apr 2020 07:56:01 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE420C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 04:56:00 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id j3so2891413ljg.8
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 04:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ThQRICc5OXP3YfsYHpuU1KSyFzAUcmskO0ZXLUSWCFk=;
+        b=tYKcvyIKYngOKt8jqfNLvdhLdXoLVWVlNpybZX0aODFqwWzjP+J843t3yT9YWXDNgE
+         3DWgWx6SxhDZRTgakBualNv6Uc7AEFZauPdVXu7HoywIGh2+59/wyP71DoJ6kFizhv86
+         nVmXYyG8sru7kqsWEP3QlFKNQgouXJtM5ODm8MLupzlrsE3yXvK6lngKKDTAulyAcchk
+         z+y+IyBHNuD7KDaHcQ2pxqtdWblt4Ajjm4lr5P8qEuzBSN3gvjK7PGaFpwEg2jdH89TK
+         OwlxxBEU0ZxoHsOB+9ig1o0iEB4DQPgQmJw+npufe8VyAxxIjOOtFA9P7Ji9fZFlsCAu
+         /URw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ThQRICc5OXP3YfsYHpuU1KSyFzAUcmskO0ZXLUSWCFk=;
+        b=Im+AzAiElsRYg9ZlOLpQ3Kj3XgnPGH//igczXgjRcVYWIC9z3uIFs4u4ZPiskDkVIS
+         fvkaJgWJ9H+ZuOSs12kGF+rgNfyQHb+VGIrijbcXE/Zm99ZMqvDJAHLqeHCyq7pEIumI
+         gbCt0DKtbziaB4DKLeBa0NnJnpwyPdWMYj+0An/6px3rxvX7F9aI+8dfauPggxIK0+jt
+         DkUeDHDlMpCnCboePYkjwe3P8JpxZC8WwKEXXNVmz54NRKN4BEdNQ48M8gke4iKqU3zU
+         APnNlwdUT8ZvkYJxjjKL5tmq2EPIcAzbx25pJ7yB+AHyTtq+lr5geDeujiBBpcb2T7Ex
+         1uSA==
+X-Gm-Message-State: AGi0PuatSI7xOatmehPmqvlY2Cjx8JKQ8zdfpNf+2X7Ej/u2Mq2WajnG
+        wwj7/Ji7oJzO2/krMEcdYZI=
+X-Google-Smtp-Source: APiQypK9Qk2ZWa+hU8VzunEcqKtnBTDWwLwElnnmtTuIlgStEA8CZmJAIAmXJ9Znqll1LfrF/VHBIg==
+X-Received: by 2002:a2e:914c:: with SMTP id q12mr3064473ljg.124.1586951759363;
+        Wed, 15 Apr 2020 04:55:59 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id j8sm12504606lfk.88.2020.04.15.04.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 04:55:58 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 14:55:57 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-Message-ID: <20200415113630.GC5265@sirena.org.uk>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
- <20200414174530.GK5412@sirena.org.uk>
- <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
- <20200414182728.GM5412@sirena.org.uk>
- <3017b762-7a0c-cee2-06dd-1e96f52eb849@linux.intel.com>
- <20200414195031.GP5412@sirena.org.uk>
- <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 00/13] gpio: dwapb: Clean up the driver and a fix
+Message-ID: <20200415115557.jhe5kwezgib7dvyn@mobilestation>
+References: <20200409141228.49561-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tqI+Z3u+9OQ7kwn0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
-X-Cookie: Hire the morally handicapped.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200409141228.49561-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello Andy
 
---tqI+Z3u+9OQ7kwn0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Apr 09, 2020 at 05:12:15PM +0300, Andy Shevchenko wrote:
+> It appears that GPIO DW APB driver wasn't touched for a long time. Here is
+> the fix for long standing issue, i.e. missed module alias to make the driver
+> be loaded automatically.
+> 
+> On top of above a lot small clean ups here and there.
+> 
+> The series based on the v3 by Serge Semin which he sent earlier.
+> 
+> Driver has been tested on Intel Galileo Gen2 with AT25 SPI EEPROM using it
+> for a chip select.
 
-On Tue, Apr 14, 2020 at 03:13:01PM -0500, Pierre-Louis Bossart wrote:
-> On 4/14/20 2:50 PM, Mark Brown wrote:
+Thanks one more time for the series of nice cleanups. I've successfully
+tested it on our board with Baikal-T1 SoC, which has two DW APB IP-cores
+embedded with Ports A being configured as GPIOx32 and irqless GPIOx3.
+So for the whole series
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
 
-> > It's not just DT platforms that I'm worried about here, it's also ACPI
-> > systems - all it takes is for a system to have a second device and a
-> > name collision could happen, especially with such generic names.  We
-> > tried to avoid doing this for board files for the same reason.
+(Note since until my series is merged in to the kernel technically I'm not
+the driver maintainer so I'll use the reviewers tag for now where it's
+relevant.)
 
-> I am on the paranoid side but here I don't see much potential for conflicts:
+Regards,
+-Sergey
 
-> a) this only works for the Up2 board with a HAT connector
-> b) this only work with the Hifiberry DAC+ PRO board.
-
-> This codec is not used in any traditional client devices.
-
-That's what you're doing right now but someone else can use the same
-devices, or adopt the same approaches on something like a Chromebook.
-
-> > My understanding is that ACPI just doesn't have clock bindings (or audio
-> > bindings or...) so you're basically using board files here and board
-> > files can definitely do more than we're seeing here.
-
-> I don't understand your definition of board file, sorry. We've never had
-> one, the only thing that's board-specific is the machine driver.
-
-Architectures that don't have firmware bindings use straight C code to
-register and set things up.  Machine drivers are essentially board
-files, they're just audio specific bits of board file that use audio
-APIs and so are in the sound directory.
-
-> > You should be able to register links between devices using the clock
-> > API, or add that functionality if it's not there but AFAIK clkdev still
-> > works.
-
-> The machine driver has no information whatsoever on who provides the clock.
-> I just don't see how I might link stuff without at least some amount of
-> information?
-
-The machine driver must have this information, it knows exactly what
-hardware it runs on.  The whole point of a machine driver is that it's
-board specific.
-
-> All I needed was to toggle 2 gpios to select 44.1 or 48kHz...Looks like it's
-> going to take two more years, oh well.
-
-I think you're giving up way too easily here.  The kernel has really
-good support for systems that don't have any firmware description at
-all, this shouldn't be complex or breaking new ground.
-
---tqI+Z3u+9OQ7kwn0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6W8b0ACgkQJNaLcl1U
-h9D17Af/RhGgm4ZGHtLAdFJ+aGM6tFqBf1vbPHV3CiIESBM6b2F4siv8Zz1Tm62X
-ZrLAoIDt7NB9a9wxuWGYzZL0QKOunAXzw4kAxwdh3HlJPhrlc+mG0CPkc2gccNgb
-v9AQRQJX5Q6RkRsXPKLTENGvvBH/pjsybKCnHGZtj4ffWfitIRGLkRWa5ieEL0XS
-NAY2B1/Oqj0m9UXZnPC4vHPEyflD5z5thYNpCtrikrqWA0f/ydpYVOhLZxI7/Sli
-Bc/Z2E7vEoA/uifEu97t0X0VEqHShdd1ha7EPpNdPv5OUFW4GSrM6XJOIYGmtcAx
-ZKzPKc7vExdL8HgvNakMTp98Uxxfhw==
-=Be0S
------END PGP SIGNATURE-----
-
---tqI+Z3u+9OQ7kwn0--
+> 
+> Andy Shevchenko (13):
+>   gpio: dwapb: Append MODULE_ALIAS for platform driver
+>   gpio: dwapb: Refactor IRQ handler
+>   gpio: dwapb: set default handler to be handle_bad_irq()
+>   gpio: dwapb: Deduplicate IRQ resource management
+>   gpio: dwapb: Convert to use irqd_to_hwirq()
+>   gpio: dwapb: Use device_get_match_data() to simplify code
+>   gpio: dwapb: Convert to use IRQ core provided macros
+>   gpio: dwapb: Switch to more usual pattern of RMW in
+>     dwapb_gpio_set_debounce()
+>   gpio: dwapb: Drop bogus BUG_ON()s
+>   gpio: dwapb: Drop of_match_ptr() & ACPI_PTR() calls
+>   gpio: dwapb: Split out dwapb_get_irq() helper
+>   gpio: dwapb: Use positive conditional in dwapb_configure_irqs()
+>   gpio: dwapb: Amend indentation in some cases
+> 
+>  drivers/gpio/gpio-dwapb.c | 205 +++++++++++++++-----------------------
+>  1 file changed, 79 insertions(+), 126 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
