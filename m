@@ -2,49 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0765A1A9B87
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 12:57:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBDE71A9BC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 13:09:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896674AbgDOK5b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 06:57:31 -0400
-Received: from sauhun.de ([88.99.104.3]:52374 "EHLO pokefinder.org"
+        id S2393928AbgDOLH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 07:07:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896419AbgDOK53 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 06:57:29 -0400
-Received: from localhost (p54B33507.dip0.t-ipconnect.de [84.179.53.7])
-        by pokefinder.org (Postfix) with ESMTPSA id 073202C1FF1;
-        Wed, 15 Apr 2020 12:57:27 +0200 (CEST)
-Date:   Wed, 15 Apr 2020 12:57:26 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S2390655AbgDOLHy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:07:54 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D1E720737;
+        Wed, 15 Apr 2020 11:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586948874;
+        bh=UK2YfDhi6th3yPk2HH2R+bk5vBepXBcx+kjcQDjg4ns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wNkzIf6IsycXNBLxZcPoEvQ8q6mBrTzaO4+u1noOkWYub3+X6Mmtsf5qLANSSeXMu
+         9Toyd5nAP8MhKkzRSSzM8x1phPlseQAusbk1xtvXRFR02aQ9PsFYZ3cUmItglNdmul
+         5b2O6SNPBP5LmjwudDb0WBwLQkB5GqpL52iniCM0=
+Date:   Wed, 15 Apr 2020 12:07:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        linux-gpio@vger.kernel.org, tiwai@suse.de,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Matuschek <daniel@hifiberry.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Matthias Reichl <hias@horus.com>,
+        Michael Turquette <mturquette@baylibre.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org, Jean Delvare <jdelvare@suse.com>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v6 2/8] i2c: i801: Use GPIO_LOOKUP() helper macro
-Message-ID: <20200415105726.GL1141@ninjato>
-References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be>
- <20200324135653.6676-2-geert+renesas@glider.be>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
+ clock
+Message-ID: <20200415110751.GB5265@sirena.org.uk>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
+ <20200409195841.18901-3-pierre-louis.bossart@linux.intel.com>
+ <20200414174530.GK5412@sirena.org.uk>
+ <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
+ <20200414182728.GM5412@sirena.org.uk>
+ <3017b762-7a0c-cee2-06dd-1e96f52eb849@linux.intel.com>
+ <20200414195031.GP5412@sirena.org.uk>
+ <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
+ <8876c7ef-89f1-b79f-c7c4-7862b9f37db1@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5VuzLDXibKSJvVYD"
+        protocol="application/pgp-signature"; boundary="1LKvkjL3sHcu1TtY"
 Content-Disposition: inline
-In-Reply-To: <20200324135653.6676-2-geert+renesas@glider.be>
+In-Reply-To: <8876c7ef-89f1-b79f-c7c4-7862b9f37db1@linux.intel.com>
+X-Cookie: Hire the morally handicapped.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -52,42 +62,51 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---5VuzLDXibKSJvVYD
+--1LKvkjL3sHcu1TtY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 24, 2020 at 02:56:47PM +0100, Geert Uytterhoeven wrote:
-> i801_add_mux() fills in the GPIO lookup table by manually populating an
-> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP() helper
-> macro instead, to relax a dependency on the gpiod_lookup structure's
-> member names.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: linux-i2c@vger.kernel.org
+On Tue, Apr 14, 2020 at 04:02:00PM -0500, Pierre-Louis Bossart wrote:
 
-Applied to for-next, thanks!
+> Thinking a bit more on this, is the objection on the notion of using a fixed
+> string, on the way it's registered or the lack of support for clocks in
+> ACPI?
 
+The issue is using a clock named in the global namespace.  Like I keep
+saying you're not using ACPI here, you're using board files and board
+files can do better.
 
---5VuzLDXibKSJvVYD
+> From a quick look, the use of a fixed string is rather prevalent, see below.
+> Less than 10% of codec drivers rely on a NULL string, so is it really a
+> dangerous precedent so use "sclk" in this case? It seems to me that all clk
+> providers need to use a unique string - what am I missing here?
+
+> adau17x1.c:	adau->mclk = devm_clk_get(dev, "mclk");
+
+Notice how all the clock lookup functions take both a device and a
+string - the device is important here, the string is namespaced with the
+device in most usage (including board file usage) so if two different
+devices ask for the same name they might get different clocks.
+
+> wm8962.c:	pdata->mclk = devm_clk_get(&i2c->dev, NULL);
+
+This is how lookups that don't even specify a name can work.  You seem
+to want to rely on the name only which is very much not good practice,
+even on board files.
+
+--1LKvkjL3sHcu1TtY
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6W6JYACgkQFA3kzBSg
-KbZydg/8DULg8EIKkSzuh9yI6MGrXGUqwwvyIQHaC4oNjuLWC+cZPSPccmfkU9uQ
-o6AiQrnaN8DZR3q8QmuGEM1u8lWVsa41SjYPxIoqdYanYHCHb0SkajUh0nSCKpxF
-l5o/rcx0eoQq0cfS3D+Zx5tSrFXvruFSDCvcRRTkpkrjSN+k3Xu9Ax3WN3tj4+6q
-n2h254Z2JkFSDU5lLY/anLWJ8T9rw+o7TtuswdLV+whub9bZJqY9CMAMqAzJJyaG
-wK7HKn5WHLLEYGLDboN93jsTUFSn+HFQHNaDX0VKxGe+SvuWBQuMNC3gXQ0d4m7D
-tZtcW/6d4fVQ7GN5J+qgumLfjrWRpGgBSj5OSQtQhhlg1odDZEKediQXODLQe0Fl
-Zhcc1eh+IG4gBmfQ6DS00DMbeOBxTbQhKIfMvM8kLkQii6aLRuGr3GXD56Ssuo3v
-0U0h/L27isgQ/+EW1Bpncb03xpwkkF/x95sEFf2OsJDKmZwFKkI2vdlMYT78OLZc
-w5R954iVPIi1MgZoxULGz8DJ7TYLBYjLJQsgH4rADEJ9qh057/uo2pdGJsaBp4tH
-WDcpnmNMGjE96EhcdwgUWQ+jxhJJoaFofTDV8wdXIVApVW7h1mABRMk6Lnjfp+c9
-O+TDbzFWsbskBkXKpgp8wuDujmh8FLz2CRkeVDkuvan7iy6oUh0=
-=f8zu
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6W6wYACgkQJNaLcl1U
+h9D2/gf+LXkjRBEzfUWscE+SXIB9cbYvEbk/QxdKbt4nE92a9znb/4i7OhX0mL1n
+jypfnP5cV3Jwxe7W6H9DiQ/7kOkzyj0T4eeUANUrnTdO4T/2syULRbl5iEJt4Bcg
+G1Kr5copsLvu+Q4DA2dnDSGf+IHoWld/VilQjf3jYKMjQ7nB3EyCMVx2uh4T86uF
+XffW9vJJPSnceNgAEgZPBrjfRCp2VR0H0vDZuod9Hi7gbRQ9a9VLTHh0HgrjbOxx
+tu9j5y1f9ORSRgzt+i4lg9T5mTY4z+Cp7wS1PBSMSQhbsE26+sXxls+CXYYY2W94
+ZyJy69fNojmO5e1xy3kBpKozOk1PJQ==
+=Prgy
 -----END PGP SIGNATURE-----
 
---5VuzLDXibKSJvVYD--
+--1LKvkjL3sHcu1TtY--
