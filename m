@@ -2,31 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFC3D1AB26A
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 22:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3321AB2CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 22:44:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441997AbgDOUX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 16:23:56 -0400
-Received: from mga05.intel.com ([192.55.52.43]:41716 "EHLO mga05.intel.com"
+        id S2438175AbgDOUjZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 16:39:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2442001AbgDOUXC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 16:23:02 -0400
-IronPort-SDR: Kph5SZPCExo7dhzKarMnx/3kezfyhYzJ+e0vw3dHNxTCewcoMRt1xvY+JNBFxpavWE8SzSY0ZV
- tAnPPX4xcxJA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 13:23:02 -0700
-IronPort-SDR: 08Pg1nHfQyQeKArKnSkmpdMH/b4HOwFCML4/ru7SX9KLnJdr4lOWTww+DWNMC0geyIscbyA35T
- ROiYRywaa4Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,388,1580803200"; 
-   d="scan'208";a="332606832"
-Received: from jplam-mobl1.amr.corp.intel.com (HELO [10.209.82.197]) ([10.209.82.197])
-  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2020 13:22:59 -0700
-Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
- clock
-To:     Mark Brown <broonie@kernel.org>
+        id S2438090AbgDOUjX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 16:39:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA6120787;
+        Wed, 15 Apr 2020 20:39:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586983162;
+        bh=F3qZyBdt2Xx1NwEP6uSq60pJt8B7zrWHn0GD/ylers8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RisHhF3jA6l7pk2/1o4KS7ZVzduaO9wpuoTq4cpb1LqSFRrPVk2cxGA3ebcru1oLg
+         vTmRqcRDblI5UfRiOpU257GuoDjSId0OmwBRigzMPdHnOshL0vp0PGtHYdDstGUru5
+         ZjymD2Yc1OOWIhyTR2vtky9zew687ZvpEpHTs9zo=
+Date:   Wed, 15 Apr 2020 21:39:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         linux-gpio@vger.kernel.org, tiwai@suse.de,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -38,9 +37,10 @@ Cc:     alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-clk@vger.kernel.org
-References: <20200414174530.GK5412@sirena.org.uk>
- <8ee01a4f-ceb2-d207-7cef-cf766fa670af@linux.intel.com>
- <20200414182728.GM5412@sirena.org.uk>
+Subject: Re: [RFC PATCH 02/16] ASoC: pcm512x: use "sclk" string to retrieve
+ clock
+Message-ID: <20200415203920.GN5265@sirena.org.uk>
+References: <20200414182728.GM5412@sirena.org.uk>
  <3017b762-7a0c-cee2-06dd-1e96f52eb849@linux.intel.com>
  <20200414195031.GP5412@sirena.org.uk>
  <0d2aed9b-5c79-9ed2-6ca1-67b2688e4c99@linux.intel.com>
@@ -49,59 +49,73 @@ References: <20200414174530.GK5412@sirena.org.uk>
  <20200415162247.GF5265@sirena.org.uk>
  <9a7fbbac-818a-01d0-7a32-8ae313f9ad50@linux.intel.com>
  <20200415195033.GL5265@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b2db6026-c29f-0213-98d1-d8533e3159e1@linux.intel.com>
-Date:   Wed, 15 Apr 2020 15:22:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ <b2db6026-c29f-0213-98d1-d8533e3159e1@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200415195033.GL5265@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="prC3/KjdfqNV7evK"
+Content-Disposition: inline
+In-Reply-To: <b2db6026-c29f-0213-98d1-d8533e3159e1@linux.intel.com>
+X-Cookie: Hire the morally handicapped.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--prC3/KjdfqNV7evK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> In the case of this driver could you look at registering the link from
-> the device for the clocks?  Have it say "I supply SCK on device X" as it
-> registers.  That should be fairly straightforward I think, we do that
-> for one of the regulators.
+On Wed, Apr 15, 2020 at 03:22:50PM -0500, Pierre-Louis Bossart wrote:
 
-When you wrote 'in the case of this driver', were you referring to the 
-clock provider, saying 'I support SCK on device i2c-104C5122:00' ?
+> > In the case of this driver could you look at registering the link from
+> > the device for the clocks?  Have it say "I supply SCK on device X" as it
+> > registers.  That should be fairly straightforward I think, we do that
+> > for one of the regulators.
 
-If you have a pointer on the regulator example, I'd appreciate it, I am 
-really way beyond my comfort zone.
+> When you wrote 'in the case of this driver', were you referring to the clock
+> provider, saying 'I support SCK on device i2c-104C5122:00' ?
 
-> The main thing I want to avoid is having to have the CODEC drivers know
-> platform specific strings that they're supposed to look up, or general
-> approaches where that ends up being a thing that looks idiomatic.  That
-> was something board files did for a while, it didn't work very well and
-> we did something better with clkdev instead.  I'm a lot less worried
-> about this for cases where it's two devices that are part of the SoC
-> talking to each other, that's relatively well controled and doesn't
-> affect non-x86 platforms.  When it starts touching the CODECs it's a lot
-> more worrying.
+Yes.
 
-I see the nuance, thanks for the clarification.
+> If you have a pointer on the regulator example, I'd appreciate it, I am
+> really way beyond my comfort zone.
 
-Maybe an alternate suggestion if you want to avoid hard-coded strings in 
-the kernel: what if we added optional properties for the clock lookup 
-name in both the codec and clock driver, and set the name in a _DSD 
-blob. That would move the platform-specific names to platform firmware, 
-and avoid the links described above that are probably ACPI-only.
+The arizona driver is what I was thinking of, that's more complex than
+you proabably need as it's a MFD.
 
-In this case we can add whatever we want, the DSDT table contains 
-absolutely nothing for audio so we can add things as needed, and in case 
-another usage of this codec happens in a future device they'd have to 
-define their own clock name and store it in platform firmware.
+> Maybe an alternate suggestion if you want to avoid hard-coded strings in the
+> kernel: what if we added optional properties for the clock lookup name in
+> both the codec and clock driver, and set the name in a _DSD blob. That would
+> move the platform-specific names to platform firmware, and avoid the links
+> described above that are probably ACPI-only.
 
-> I think by now there's ample evidence that it's worth investing in
-> better firmware descriptions :(
+If you read the lookup information from firmware somehow that's probably
+fine I think.  It's not nice but if it's baked into firmware...
 
-Indeed, and tools to check they are correct! Most of the stuff we 
-defined for SoundWire ends-up wrong or undefined, still an uphill battle...
+> > I think by now there's ample evidence that it's worth investing in
+> > better firmware descriptions :(
+
+> Indeed, and tools to check they are correct! Most of the stuff we defined
+> for SoundWire ends-up wrong or undefined, still an uphill battle...
+
+The audio-graph-card appears to be working really well FWIW,
+Morimoto-san did an excellent job there.
+
+--prC3/KjdfqNV7evK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6XcPcACgkQJNaLcl1U
+h9CebAf6A48V9aus+H7FxEuq8AB7bAyf63kZiGZv2wSHn2LPeRtdM3Gq+gQ8DX9B
+ABou4ScgfHuBiZJgP6/CXeSIJDoyRSvrMWyv/RkGa9Dunj+THYuMATPnC9lDZYPt
+mNV/3tTBBOBajXwJgkMKw3lGnUz9o2BaQeiWBYin8LH0SpqddEn5ORv5Jv2Pf4CN
+dNhyO1C8Bfd1aUhhUzmLQwvkh9WU7hRPutGJMcj1Ygf3ayRFUTHV8txS1d8ikEi6
+2wi8zeIhgpgK4G4WUxgLUbT4kj1zqV3ZAPEaz9ALlh8Fy7EctSi8tFeAWCZMETX/
+Kli2fIRNAisVjMywH3V0NtxEI/MVxA==
+=uaKf
+-----END PGP SIGNATURE-----
+
+--prC3/KjdfqNV7evK--
