@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41EC61AA9AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772761AA9A4
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634150AbgDOOQx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 10:16:53 -0400
-Received: from mga14.intel.com ([192.55.52.115]:9848 "EHLO mga14.intel.com"
+        id S2636550AbgDOOQJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 10:16:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38643 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636547AbgDOOPo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 10:15:44 -0400
-IronPort-SDR: spGpC7BXw1vGEKsJRens762VIVGxd7cJuJ4nyW5c6BaN7IpI5Pbk2ElLf/QwIWf3op/pNXxsfY
- vZi3l5PgX+NQ==
+        id S2636554AbgDOOPv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:15:51 -0400
+IronPort-SDR: w+l0ZF2NqZ94TF2XuuYEYZTKDAbV84debK6geZaOn9Rq4NxF8IeHpsKwiATjnsOHVxFK36D+ZB
+ ewym9IZnMO2A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:15:40 -0700
-IronPort-SDR: l7bXwqLT92kk8e4MqmmOspqgN5/R4fw3wXCfcqUtG9L0jdqNlVCyLWwhdoQ83trx6XEk4e+m+I
- 4MJWRLlYwdHA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:15:40 -0700
+IronPort-SDR: Ntb2mJopzxDnMjdN2BeH449yrxBUUnSc9acUg+Q+xzgW7Q35u0LDDRosKg68Rv8TXrWsPU6eWy
+ Uu8zb5COfyoQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="244112402"
+   d="scan'208";a="454924080"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Apr 2020 07:15:38 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 15 Apr 2020 07:15:39 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id DE4D9E2F; Wed, 15 Apr 2020 17:15:35 +0300 (EEST)
+        id E8009E8C; Wed, 15 Apr 2020 17:15:35 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH v2 09/14] gpio: dwapb: Switch to more usual pattern of RMW in dwapb_gpio_set_debounce()
-Date:   Wed, 15 Apr 2020 17:15:29 +0300
-Message-Id: <20200415141534.31240-10-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 10/14] gpio: dwapb: Drop bogus BUG_ON()s
+Date:   Wed, 15 Apr 2020 17:15:30 +0300
+Message-Id: <20200415141534.31240-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
 References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
@@ -45,32 +45,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-More usual pattern is to prepare value and then write it in a single place.
-Switch code in dwapb_gpio_set_debounce() to it.
+There is no case when no context is provided in the ->suspend() and
+->resume() hooks. Moreover, BUG_ON() is harmful to user and makes kernel
+inoperable after the crash. Drop the BUG_ON()s for good.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Tested-by: Serge Semin <fancer.lancer@gmail.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/gpio/gpio-dwapb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 4edac592c253..0b073cbc003b 100644
+index 0b073cbc003b..ae4c4db8b156 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -327,9 +327,10 @@ static int dwapb_gpio_set_debounce(struct gpio_chip *gc,
+@@ -723,8 +723,6 @@ static int dwapb_gpio_suspend(struct device *dev)
+ 		unsigned int idx = gpio->ports[i].idx;
+ 		struct dwapb_context *ctx = gpio->ports[i].ctx;
  
- 	val_deb = dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
- 	if (debounce)
--		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, val_deb | mask);
-+		val_deb |= mask;
- 	else
--		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, val_deb & ~mask);
-+		val_deb &= ~mask;
-+	dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, val_deb);
+-		BUG_ON(!ctx);
+-
+ 		offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_STRIDE;
+ 		ctx->dir = dwapb_read(gpio, offset);
  
- 	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+@@ -773,8 +771,6 @@ static int dwapb_gpio_resume(struct device *dev)
+ 		unsigned int idx = gpio->ports[i].idx;
+ 		struct dwapb_context *ctx = gpio->ports[i].ctx;
+ 
+-		BUG_ON(!ctx);
+-
+ 		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_STRIDE;
+ 		dwapb_write(gpio, offset, ctx->data);
  
 -- 
 2.25.1
