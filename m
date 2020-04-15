@@ -2,83 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B9331A9F07
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 14:06:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AB711AA005
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 14:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S368404AbgDOMGL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 08:06:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:22134 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S368398AbgDOMGF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Apr 2020 08:06:05 -0400
-IronPort-SDR: NQb5MjY3euWEZXBMUnU7RMwVPvhoUkFcUctqsUNvp549liGPupHMoZsWb0drNBXvU0WSHX8m4r
- xClT92TzHung==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 05:06:04 -0700
-IronPort-SDR: PasCFvWNAGWtAhXJ7f3+RlzMlFghRoQDeIm25pFnOhKUbyTgSfrR2wO8d3AqmJ2Ue6RikQtlR9
- IftrblxcgSPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,386,1580803200"; 
-   d="scan'208";a="245674308"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2020 05:06:03 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jOgnu-000mFr-1K; Wed, 15 Apr 2020 15:06:06 +0300
-Date:   Wed, 15 Apr 2020 15:06:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
+        id S369131AbgDOMWh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Apr 2020 08:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S369120AbgDOMWR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Apr 2020 08:22:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35E2C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 05:22:12 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id r24so3436116ljd.4
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Apr 2020 05:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QV2GUGRRb0bR5elUgwxfO93XCtnEtS1YXGti93Wqa8o=;
+        b=sooWwYtmC9Ahxj6tH1ufF+oTmpyC676qDRJO67vhBPnc0H+OidRRUI7+Fffv2bAXrt
+         HmtdA7GAb2ldVhwrMmbq2+ExzofPLrz808inRnUwSqps3jXEGqNguTo+/Xl+N+Gjd7YX
+         4nmbn0J48pmVOaxT+9pETBvTLU7VALniw8SKhRNJSW0/ZHIHEpepF9qZw1PCEBDOHm6I
+         eGB6eBYjq+wFy9iMsOsKluYl+tbzQtsJE0u/S0sID7J75JttNVJ3GlGo+qOXZOOKjFxa
+         4qBWe/lgKv6Ntfc3MrdBY0w9HyoF6PHWv7xD+I6FigPBc7B4Fw2W3VUCnhESHvfcIzGF
+         kEkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QV2GUGRRb0bR5elUgwxfO93XCtnEtS1YXGti93Wqa8o=;
+        b=ADgeomudnkS3sMJSN6Xkzkncw0ar7fq9pY3mKLe4XTfwUdauWuyr0A+PjCuLbnJ8tO
+         5OAuI0EIhFyKCnuyRfHzM8T7T6uB1CyCSEWz6cZSOPQfYFE5MicF88qLv6HxwtrsggsX
+         n7buNwHfLdnZGgID7rYl/Fu1LSjFRwIab1NfWE6G366lxbMuSVCYRG2EbJo6ZfVINcVO
+         4T4IT0tU2MDOBSq2Zhar/y9dxiAqGhqQAyEAhH+4hrv7VudOI8xACUtHZvOTzjFKPdaT
+         T/h91dW+pBf+Beoa2GWNkK4McYmxIAndAHnca+3kzcNJS3lECOZiHq5DsYEq6FnU8rN3
+         b+zQ==
+X-Gm-Message-State: AGi0PubhKpVdEwA+lW/wkSKZJNdUnJ3oBxCRRvGdjzOB8LuMv6P65alp
+        vlBKXD+Owq7ePggIkBxr5Jw/IAGO
+X-Google-Smtp-Source: APiQypLZBxxbPUsI2GncWBJPhMumkJzERHJ0Zmt77S9zmZ+srf3KWnqwI64ORP0cVtHgva55tabMXQ==
+X-Received: by 2002:a2e:3012:: with SMTP id w18mr3273063ljw.100.1586953331365;
+        Wed, 15 Apr 2020 05:22:11 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id a28sm12316378lfr.4.2020.04.15.05.22.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Apr 2020 05:22:10 -0700 (PDT)
+Date:   Wed, 15 Apr 2020 15:22:08 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 00/13] gpio: dwapb: Clean up the driver and a fix
-Message-ID: <20200415120606.GZ34613@smile.fi.intel.com>
+Subject: Re: [PATCH v1 03/13] gpio: dwapb: set default handler to be
+ handle_bad_irq()
+Message-ID: <20200415122208.wp7ah6nxwhph4wi5@mobilestation>
 References: <20200409141228.49561-1-andriy.shevchenko@linux.intel.com>
- <20200415115557.jhe5kwezgib7dvyn@mobilestation>
+ <20200409141228.49561-4-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415115557.jhe5kwezgib7dvyn@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200409141228.49561-4-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 02:55:57PM +0300, Serge Semin wrote:
-> Hello Andy
+On Thu, Apr 09, 2020 at 05:12:18PM +0300, Andy Shevchenko wrote:
+> We switch the default handler to be handle_bad_irq() instead of
+> handle_level_irq(), though for now apply it later in the code,
+> to make the difference between IRQ chips more visible.
+
+s/IRQ chips/IRQ types ?
+
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+
+Note though I'd better refactored the whole dwapb_configure_irqs()
+method with using GPIOlib irqchip API, which is preferred by the current
+GPIO subsystem. This isn't a subject for this series. Just to note, that
+such change is very actual.
+
+-Sergey
+
 > 
-> On Thu, Apr 09, 2020 at 05:12:15PM +0300, Andy Shevchenko wrote:
-> > It appears that GPIO DW APB driver wasn't touched for a long time. Here is
-> > the fix for long standing issue, i.e. missed module alias to make the driver
-> > be loaded automatically.
-> > 
-> > On top of above a lot small clean ups here and there.
-> > 
-> > The series based on the v3 by Serge Semin which he sent earlier.
-> > 
-> > Driver has been tested on Intel Galileo Gen2 with AT25 SPI EEPROM using it
-> > for a chip select.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Thanks one more time for the series of nice cleanups. I've successfully
-> tested it on our board with Baikal-T1 SoC, which has two DW APB IP-cores
-> embedded with Ports A being configured as GPIOx32 and irqless GPIOx3.
-> So for the whole series
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
-
-Thank you very much.
-I hope Linus will figure out how to proceed with this.
-
-> (Note since until my series is merged in to the kernel technically I'm not
-> the driver maintainer so I'll use the reviewers tag for now where it's
-> relevant.)
-
-Even if you are not (yet) maintainer, your tags count and be appreciated.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index f61139f787d9..588d5c61ae42 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -400,7 +400,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  		return;
+>  
+>  	err = irq_alloc_domain_generic_chips(gpio->domain, ngpio, 2,
+> -					     DWAPB_DRIVER_NAME, handle_level_irq,
+> +					     DWAPB_DRIVER_NAME, handle_bad_irq,
+>  					     IRQ_NOREQUEST, 0,
+>  					     IRQ_GC_INIT_NESTED_LOCK);
+>  	if (err) {
+> @@ -439,6 +439,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  	}
+>  
+>  	irq_gc->chip_types[0].type = IRQ_TYPE_LEVEL_MASK;
+> +	irq_gc->chip_types[0].handler = handle_level_irq;
+>  	irq_gc->chip_types[1].type = IRQ_TYPE_EDGE_BOTH;
+>  	irq_gc->chip_types[1].handler = handle_edge_irq;
+>  
+> -- 
+> 2.25.1
+> 
