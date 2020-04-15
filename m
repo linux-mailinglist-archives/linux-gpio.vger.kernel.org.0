@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D2F01AA9AF
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:18:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B7F1AA99D
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Apr 2020 16:18:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2636537AbgDOOQ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Apr 2020 10:16:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43702 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2636539AbgDOOPl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S2636544AbgDOOPl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 15 Apr 2020 10:15:41 -0400
-IronPort-SDR: kkfOFbchQt/g4jVW7J13BUURN1eSCqM/8dE0fRs5xBDBKsSht7A+ICF4xDfEzTWaIXkyU3n+LM
- lccAoJbra7hA==
+Received: from mga14.intel.com ([192.55.52.115]:9843 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2636534AbgDOOPj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Apr 2020 10:15:39 -0400
+IronPort-SDR: CkLYfTz3l6+PAdCMRaRBc4vLT0sqnNKFyPML3b78EYqzz8xrFSvhIeKoTRM4V+m/USLJtUIChQ
+ 7JkExo17VU/g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:15:38 -0700
-IronPort-SDR: J5qQDhVsezmxea/Fk2X1ovJ/bXOqmxPzLAi1xZGG4fZC6XGvaswuY0bbsDZXfQXCy3d2gwV3O9
- NubxjPdrmvbQ==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2020 07:15:38 -0700
+IronPort-SDR: 0OfplfEkIEQKG4OZ80IoCzpORmB1Ae3EpccozAVAfJPadQk9UeCKykAngG3llsqveNMsnK698E
+ qv35/yykMESw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,387,1580803200"; 
-   d="scan'208";a="277627679"
+   d="scan'208";a="244112393"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Apr 2020 07:15:36 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 15 Apr 2020 07:15:36 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A29CF638; Wed, 15 Apr 2020 17:15:35 +0300 (EEST)
+        id AF2F076D; Wed, 15 Apr 2020 17:15:35 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH v2 03/14] gpio: dwapb: Use chained IRQ prologue and epilogue
-Date:   Wed, 15 Apr 2020 17:15:23 +0300
-Message-Id: <20200415141534.31240-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 04/14] gpio: dwapb: set default handler to be handle_bad_irq()
+Date:   Wed, 15 Apr 2020 17:15:24 +0300
+Message-Id: <20200415141534.31240-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
 References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
@@ -45,33 +45,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Refactor IRQ handler in order to enter and exit chained IRQ by using
-respective prologue and epilogue calls.
+We switch the default handler to be handle_bad_irq() instead of
+handle_level_irq(), though for now apply it later in the code,
+to make the difference between IRQ chips more visible.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Tested-by: Serge Semin <fancer.lancer@gmail.com>
 Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/gpio/gpio-dwapb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-dwapb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index e89a3c6877aa..f61139f787d9 100644
+index f61139f787d9..588d5c61ae42 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -215,10 +215,9 @@ static void dwapb_irq_handler(struct irq_desc *desc)
- 	struct dwapb_gpio *gpio = irq_desc_get_handler_data(desc);
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
+@@ -400,7 +400,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		return;
  
-+	chained_irq_enter(chip, desc);
- 	dwapb_do_irq(gpio);
--
--	if (chip->irq_eoi)
--		chip->irq_eoi(irq_desc_get_irq_data(desc));
-+	chained_irq_exit(chip, desc);
- }
+ 	err = irq_alloc_domain_generic_chips(gpio->domain, ngpio, 2,
+-					     DWAPB_DRIVER_NAME, handle_level_irq,
++					     DWAPB_DRIVER_NAME, handle_bad_irq,
+ 					     IRQ_NOREQUEST, 0,
+ 					     IRQ_GC_INIT_NESTED_LOCK);
+ 	if (err) {
+@@ -439,6 +439,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 	}
  
- static void dwapb_irq_enable(struct irq_data *d)
+ 	irq_gc->chip_types[0].type = IRQ_TYPE_LEVEL_MASK;
++	irq_gc->chip_types[0].handler = handle_level_irq;
+ 	irq_gc->chip_types[1].type = IRQ_TYPE_EDGE_BOTH;
+ 	irq_gc->chip_types[1].handler = handle_edge_irq;
+ 
 -- 
 2.25.1
 
