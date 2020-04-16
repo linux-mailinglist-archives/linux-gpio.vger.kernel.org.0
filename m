@@ -2,89 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01B321ACE0B
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 18:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACF871AC5E5
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 16:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgDPQv1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 12:51:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50923 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgDPQvZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:51:25 -0400
-IronPort-SDR: xhHJx65bGA7K8ejB6lFFQrI4tT4y201pn8T5dwpA6qwEj/k2Zgt4Oy8fvvYJqHVNb9m/wtElF2
- ZhuH2/9Z95lQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 09:51:24 -0700
-IronPort-SDR: BFJewqmLyHxlwPPIzbmpaDcWq2/78eGWBs6jbDpOcKLssIPLdS5UDrylMxYYckHIXKF9clIUA+
- 2JGaJL3drs4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="278060214"
-Received: from ernestom-mobl.amr.corp.intel.com (HELO [10.251.128.102]) ([10.251.128.102])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2020 09:51:23 -0700
-Subject: Re: [RFC PATCH 01/16] ASoC: pcm512x: expose 6 GPIOs
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S2387780AbgDPOaG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 10:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390867AbgDPOaE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:30:04 -0400
+X-Greylist: delayed 22509 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Apr 2020 07:30:02 PDT
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A3BC061A0C;
+        Thu, 16 Apr 2020 07:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KneQJooGNroMsnVhWpDNmOJcUpQzDw2TtA1XPoL0v94=; b=gpjzjvJ1SeNwiy64EvyosJQ8U
+        XL1D/lWSZEPz8nh71eZGnsa8wJymRu0HxttL22t1hKWPT7wk33UPO3X8aXHE9hIFE++kTF7+9U1yx
+        5jos7uFLFpiJyBwnjhrVHtWiiRzTpNHcxdGxfXopk8ecSU1y/osTb+cDOjx5VsHQtCp5ZOoCeruaz
+        libTRH86hFC6aupenZGdh7F2wIR9PRVNJPI+6mwdVGTOuvMJdO86X4GdYe2NDH71WRYjqoFOK9htC
+        XUAFco+ZR7JcPv1WXl9Ua6kNpoRcSWfo18uyeZ7fC7pmBX/6y2RMFmaO8TwQRRSD2RZ8WzoL+WyUW
+        SarV3nEjg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39222)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jP5WX-0004dh-LL; Thu, 16 Apr 2020 15:29:49 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jP5WS-0001x6-Nr; Thu, 16 Apr 2020 15:29:44 +0100
+Date:   Thu, 16 Apr 2020 15:29:44 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-2-pierre-louis.bossart@linux.intel.com>
- <20200414170934.GA34613@smile.fi.intel.com>
- <CACRpkdZRnSUhmVPKjJ6dWnSfhnvrAKUrBY6tWLkxPgT28CzbHw@mail.gmail.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <2cd8d540-8bd0-4a42-4d11-7dea0fb03c22@linux.intel.com>
-Date:   Thu, 16 Apr 2020 09:25:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
+Message-ID: <20200416142944.GH25745@shell.armlinux.org.uk>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
+ <20200416135039.GL657811@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZRnSUhmVPKjJ6dWnSfhnvrAKUrBY6tWLkxPgT28CzbHw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416135039.GL657811@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 4/16/20 6:42 AM, Linus Walleij wrote:
-> On Tue, Apr 14, 2020 at 7:09 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->> On Thu, Apr 09, 2020 at 02:58:26PM -0500, Pierre-Louis Bossart wrote:
->>> The GPIOs are used e.g. on HifiBerry DAC+ HATs to control the LED
->>> (GPIO3) and the choice of the 44.1 (GPIO6) or 48 (GPIO3) kHz
->>> oscillator (when present).
->>>
->>> Enable basic gpio_chip to get/set values and get/set
->>> directions. Tested with GPIO_LIB from sys/class/gpio, the LED turns
->>> on/off as desired.
->>
->>
->> One question, can this use existing GPIO infrastructure, like bgpio_init()?
->> Ah, I see, that one operates over MMIO, while we would need something based on
->> regmap API.
->>
->> Bartosz, do we have plans to have bgpio_regmap_init() or alike?
+On Thu, Apr 16, 2020 at 03:50:39PM +0200, Andrew Lunn wrote:
+> On Thu, Apr 16, 2020 at 09:51:37AM +0200, Linus Walleij wrote:
+> > On Sun, Mar 29, 2020 at 12:46 PM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > 
+> > > This series adds support for the fan PWM output on the Clearfog GT8K
+> > > platform, and can potentially be extended to the Macchiatobin.
+> > 
+> > The gpio changes all look fine to me +/- fixes for review comments.
+> > 
+> > Could the MVEBU maintainers provide some feedback?
 > 
-> Michael Walle is working on that:
-> https://lore.kernel.org/linux-gpio/20200402203656.27047-11-michael@walle.cc/
+> Hi Linus
 > 
-> I think we should try to merge it sooner rather than later.
-> I can provide an ib-* branch for ASoC whenever we agreed
-> on a basic generic driver.
+> I took a quick look at this when it was first posted. I also wrote the
+> PWM support in this driver. The hardware is mostly a GPIO driver, but
+> it has some basic PWM facilities. It is not possible to cleanly split
+> it into two drivers, which is why it has the current structure. And
+> the PWM maintainers ask that the PWM parts be listed in MAINTAINERS as
+> such, so they got to know about any changes.
+> 
+> Clocking with Marvell devices has always been interesting. Core IP
+> like this gets reused between different generations of SoCs. The
+> original Orion5x had no clock control at all. Latter SoCs have had
+> more and more complex clock trees. So care has to be taken to not
+> change old behaviour when adding support for new clocks. So Russell
+> 2/6 patch looks good to me, and Uwe request could break on some
+> SoCs. It would need testing on a lot of SoCs, with and without PWM
+> support. 
+> 
+> I assume Russell will at some point repost without the RFC tag. At
+> that point i will take a second look and add Reviewed-by.
 
-Thanks for the pointer, I will give it a try.
+I said in the cover message "The cooling maps are experimental".
+They work reasonably well for me with the fan I have (a noctua fan)
+but other people may find them to be problematical, so one of the
+reasons for sending it as RFC is to get people to test and see how
+well it works.
+
+I may have had greater success getting people to test if I'd added
+maps for the Macchiatobin, but that wasn't my target system. That's
+relatively easy to do - it's the same pin as on the gt8k, so merely
+putting the same DT changes onto Macchiatobin would allow testing
+with those settings.
+
+Whether that's correct for my Macchiatobin server setup is an
+entirely separate problem - where the fan PWM controls front panel
+fans and there's a bigger fanless heatsink on the Armada 8040 (as
+per the first revision of the Macchiatobin boards).  As the boards
+ship without a PWM controllable fan, it would be of limited use.
+
+So, really, I think the DT configuration of the PWM parameters is
+"for the user" and not actually for mainline kernels - which
+brings with it the problems of understanding control systems,
+stability of such systems, feedback, and how to configure the
+thermal subsystem... which is not easy.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
