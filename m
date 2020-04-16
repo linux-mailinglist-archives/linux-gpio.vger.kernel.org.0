@@ -2,247 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62CD11ACDBF
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 18:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B661ACDDD
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 18:39:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgDPQcW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 12:32:22 -0400
-Received: from muru.com ([72.249.23.125]:49792 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgDPQcV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 12:32:21 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D6E2D804F;
-        Thu, 16 Apr 2020 16:33:05 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 09:32:15 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        id S1728924AbgDPQiP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 12:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728068AbgDPQiM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 12:38:12 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FBCC061A0C;
+        Thu, 16 Apr 2020 09:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=c7EKIziO2LGfaFlRmTCfb2Sj+sRd/y/yZ4AR3gH5/YU=; b=a0FFXBLTAzcdGuplfONhR7yH5
+        qRwE7+TAkFXqPhFd59G4XpRmvw7y9SIixBFIRkyMzCsERthWhph59Pd0MHRwr7qC8dE4iAjq/dehF
+        zoduhsoGtH0ezKCosx8NaHDplop5RJHc7oIqwpFtPnFOY+IJEignKR5Gt/mwW/H5mW6+ybNy34YI5
+        MtqJZ68Bpi7Y4hrrmAQ3XRkyIMIlWmjd1lK0ICJAJZhpx4QwNNwG0YCPbElDyOc6qfA3G8pSEVj3B
+        YZaYydhSUpLlEKtYRy0Cny3/9FRjWfxZ8EBwk/JtsToP1RmpoF2VWAX4l2X+22527pf8Kl2Fmp+ff
+        6d/WIlAgQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50924)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jP7WS-0005GP-L7; Thu, 16 Apr 2020 17:37:57 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jP7WO-00021r-Hf; Thu, 16 Apr 2020 17:37:48 +0100
+Date:   Thu, 16 Apr 2020 17:37:48 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-Message-ID: <20200416163215.GH37466@atomide.com>
-References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
- <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
- <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
- <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
- <20200413123921.GA32586@x1>
- <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
- <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
- <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
- <20200415233712.GA16167@x1>
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
+Message-ID: <20200416163748.GL25745@shell.armlinux.org.uk>
+References: <20200329104549.GX25745@shell.armlinux.org.uk>
+ <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
+ <20200416135039.GL657811@lunn.ch>
+ <5c7cb0ff-bf49-640a-3c4a-ef71495af7b7@arm.com>
+ <20200416145517.GK25745@shell.armlinux.org.uk>
+ <010ccb32-42f1-cc32-0527-e608fc91a879@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415233712.GA16167@x1>
+In-Reply-To: <010ccb32-42f1-cc32-0527-e608fc91a879@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-* Drew Fustini <drew@pdp7.com> [200415 23:37]:
-> As Robert described, I wanted to make us of the new support for bias
-> flags in the gpiolib uapi which allows userspace libraries like libgpiod
-> set pull-up or pull-down on lines [0].
+On Thu, Apr 16, 2020 at 04:55:44PM +0100, Robin Murphy wrote:
+> On 2020-04-16 3:55 pm, Russell King - ARM Linux admin wrote:
+> > On Thu, Apr 16, 2020 at 03:37:40PM +0100, Robin Murphy wrote:
+> > > On 2020-04-16 2:50 pm, Andrew Lunn wrote:
+> > > [...]
+> > > > Clocking with Marvell devices has always been interesting. Core IP
+> > > > like this gets reused between different generations of SoCs. The
+> > > > original Orion5x had no clock control at all. Latter SoCs have had
+> > > > more and more complex clock trees. So care has to be taken to not
+> > > > change old behaviour when adding support for new clocks.
+> > > 
+> > > FWIW, that sounds like a good argument for encoding the clock requirements
+> > > of each variant in the of_match_data, so the driver doesn't have to simply
+> > > trust the DT and hope.
+> > 
+> > Please read my patches.  This is exactly what I'm doing.  I'm preserving
+> > as closely as possible the current driver behaviour while adding support
+> > for the Armada 8040 PWM while keeping compatibility with older DT.
+> > 
+> > And I'm doing that by keying off the match data, exactly as you're
+> > suggesting above.
 > 
-> Is there no way for gpio-omap to call into the pinctrl-single backend to
-> set the bias bits (PULLUDEN and PULLTYPESEL) in pad control registers?
+> AFAICS you're encoding the *PWM capability* in the match data and using that
+> to extend the existing behaviour, which comprises using soc_variant to maybe
+> treat the stashed error code as fatal somewhere else much later if
+> CONFIG_PWM happens to be enabled, and is subtle enough that at least two
+> reviewers overlooked or failed to make sense of it.
+> 
+> Compare and contrast with how self-contained and obvious this is:
+> 
+> -	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+> -	/* Not all SoCs require a clock.*/
+> -	if (!IS_ERR(mvchip->clk))
+> -		clk_prepare_enable(mvchip->clk);
+> 
+> +	/* Not all SoCs require a clock.*/
+> +	if (data->needs_clock)
+> +		mvchip->clk = devm_clk_get(&pdev->dev, NULL);
+> +		if (IS_ERR(mvchip->clk))
+> +			return PTR_ERR(mvchip_clk);
+> +		clk_prepare_enable(mvchip->clk);
+> +	}
+> 
+> If achieving the same end result by very different and roundabout means
+> constitutes "exactly the same thing", does me having written this email mean
+> that my house is exactly the same as the Arm office and someone else will be
+> along to clean the kitchen shortly? Here's hoping... :D
 
-It sure would be nice to improve some of this :) You should be able to
-do this using the gpio-ranges binding with the following steps:
+What if we have a platform where DT mentions the clock, and relies
+on it being enabled as per how the driver is coded today?  I don't
+know if that's true or not, I don't have the hardware to test.
 
-1. Add gpio-ranges to dts files
+So, while we can make improvements as you describe above, it's
+dangerous to do so because we don't have the information to know
+whether what's being proposed is correct or not.  Hence, it's safer
+to do the minimum amount of changes, and not do gratuitous potential
+regression causing cleanups as you're suggesting.
 
-This should be done for all the pins that need handling, here's
-just one line version:
+If we want to clean up the driver in potentially regression causing
+ways, that can be done at a later date.
 
-gpio-ranges = <&pmx_core 0 15 1>;
-                         |  | |
-			 |  | +-- number of pins
-			 |  +---- pin start
-			 +------- gpio start
-
-Some mappings can use larger ranges, while some pins just need
-to be added separately.
-
-2. Implement parsing of gpio-ranges to pinctrl-single.c
-
-The following test patch I did a while back should get you started.
-
-From what I recall, the issue here the addressing. The addressing
-ends up using an artiticial index of pin entries in the dts, while
-it should use the read pinctrl device padconf offset.
-
-Maybe Linus has some suggestion on how to deal with that?
-
-3. Have gpio-omap.c call gpiod_direction_input(desc) and
-   gpiod_to_irq(desc) for example for gpio interrupt pins
-
-To do that, you need something like this in gpio-omap.c:
-
-if (of_property_read_bool(dev->of_node, "gpio-ranges")) {
-	chips->chip.request = gpiochip_generic_request;
-	chips->chip.free = gpiochip_generic_free;
-}
-
-Regards,
-
-Tony
-
-8< -------------------
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/gpio.h>
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-@@ -149,6 +150,8 @@ struct pcs_soc_data {
-  * @dev:	device entry
-  * @np:		device tree node
-  * @pctl:	pin controller device
-+ * @gc:		optional gpio chip
-+ * @nr_gpio:	optional number of gpio pins
-  * @flags:	mask of PCS_FEAT_xxx values
-  * @missing_nr_pinctrl_cells: for legacy binding, may go away
-  * @socdata:	soc specific data
-@@ -178,6 +181,8 @@ struct pcs_device {
- 	struct device *dev;
- 	struct device_node *np;
- 	struct pinctrl_dev *pctl;
-+	struct gpio_chip *gc;
-+	int nr_gpio;
- 	unsigned flags;
- #define PCS_CONTEXT_LOSS_OFF	(1 << 3)
- #define PCS_QUIRK_SHARED_IRQ	(1 << 2)
-@@ -1340,6 +1345,8 @@ static int pcs_add_gpio_func(struct device_node *node, struct pcs_device *pcs)
- 		mutex_lock(&pcs->mutex);
- 		list_add_tail(&range->node, &pcs->gpiofuncs);
- 		mutex_unlock(&pcs->mutex);
-+
-+		pcs->nr_gpio += range->npins;
- 	}
- 	return ret;
- }
-@@ -1599,6 +1606,93 @@ static int pcs_irq_init_chained_handler(struct pcs_device *pcs,
- 	return 0;
- }
- 
-+static int pcs_gpio_find_by_offset(struct pcs_device *pcs, int offset)
-+{
-+
-+}
-+
-+static int pcs_gpio_request(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
-+
-+	return 0;
-+}
-+
-+static void pcs_gpio_free(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
-+}
-+
-+static int pcs_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
-+
-+	return 0;
-+}
-+
-+static int pcs_gpio_get(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
-+
-+	return -EINVAL;
-+}
-+
-+static void pcs_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u value: %i\n",
-+		 __func__, offset, value);
-+}
-+
-+static int pcs_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct pcs_device *pcs = gpiochip_get_data(gc);
-+
-+	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
-+
-+	return 0;
-+}
-+
-+static int pcs_init_gpiochip(struct device_node *np, struct pcs_device *pcs)
-+{
-+	int error;
-+
-+	if (!pcs->nr_gpio || !of_property_read_bool(np, "gpio-controller"))
-+		return 0;
-+
-+	pcs->gc = devm_kzalloc(pcs->dev, sizeof(*pcs->gc), GFP_KERNEL);
-+	if (!pcs->gc)
-+		return -ENOMEM;
-+
-+	pcs->gc->request = pcs_gpio_request;
-+	pcs->gc->free = pcs_gpio_free;
-+	pcs->gc->direction_input = pcs_gpio_direction_input;
-+	pcs->gc->get = pcs_gpio_get;
-+	pcs->gc->set = pcs_gpio_set;
-+	pcs->gc->to_irq = pcs_gpio_to_irq;
-+
-+	pcs->gc->label = pcs->desc.name;
-+	pcs->gc->parent = pcs->dev;
-+	pcs->gc->owner = THIS_MODULE;
-+	pcs->gc->base = -1;
-+	pcs->gc->ngpio = pcs->nr_gpio;
-+
-+	error = devm_gpiochip_add_data(pcs->dev, pcs->gc, pcs);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int pcs_save_context(struct pcs_device *pcs)
- {
-@@ -1868,6 +1962,10 @@ static int pcs_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto free;
- 
-+	ret = pcs_init_gpiochip(np, pcs);
-+	if (ret < 0)
-+		goto free;
-+
- 	pcs->socdata.irq = irq_of_parse_and_map(np, 0);
- 	if (pcs->socdata.irq)
- 		pcs->flags |= PCS_FEAT_IRQ;
 -- 
-2.26.1
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
