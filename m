@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC57F1AC0E1
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6D231AC10F
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635196AbgDPMQ4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 08:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
+        id S2635452AbgDPMVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 08:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2635002AbgDPMQv (ORCPT
+        by vger.kernel.org with ESMTP id S2635444AbgDPMVB (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:16:51 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC80C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:16:49 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 131so5372967lfh.11
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:16:49 -0700 (PDT)
+        Thu, 16 Apr 2020 08:21:01 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA99C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:21:01 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so1079114ljg.5
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t68CbxFaeKnYXts+L1lX3BCdeb2tFJ0W2dgkKwCzAv8=;
-        b=gaJpAydA8WAwfe5QLVb1HfYfQhjZTdZwf6OIn/w105Quvjv8Zghd1RkRu6K/wPstl9
-         1HLPqrvca/lgAOjYJQVXBUeMkPm+eH7JT5kftT/ty3ftGlOWbJY4UsePLaW8JHh1VzZ/
-         1KJ+7CkTHQ6vK9JBn2IygOxvOsq2D4Qs0XAd/gT1NJxzxgQUD+LcXHh/BzZea4oRe8Mf
-         8KWR0V9Y+w6S7W8HmSaUjp0kNDdNwPXSzhGMrGHNWwYc2YtJ9LGY8irwddP5CmWo3qMm
-         wO5ArGZaY4i2ylXp3jo+huvpzRDWIU6g1FSvSyGivvPECZhYI8vrAOxKK+GttN7/P9nF
-         CEEw==
+        bh=Rknl/ynm4VavE+Pu+iawF7Fl7IF9Ku/ZEj160zwTjKs=;
+        b=BD11vIE6RgcwRqvlKjES5WQXc66nQU9o+Vi+AdltFX5gHPj3NQDMFsFeoRh+cflBT/
+         iQtNMJdkLDCzOVU0lovj03FG0OtwaMVC8GYqCbvfYtE9CAhEYH5w1Z5aVNjU7141utE0
+         3El994Tl6mlvtpuylP342T5UOd1+/2Ek2jPj4Lj3Erb7cc91ltdn9U/UOMQr0iQ8QqTt
+         G5PiSckzAvUDzJ6eyjR0MjeW+GOUjIcU4Lb75YxDPHV9KKeoAxA0tut3e/IUvkWjJvji
+         fAtTkNkCRC+QqE1GblImYLK0t3OiMDRiXOTgFMTuHID4O/oN0HAe7i19LkhPUrqnr0DT
+         9FcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t68CbxFaeKnYXts+L1lX3BCdeb2tFJ0W2dgkKwCzAv8=;
-        b=JD3IUE9RifsVD9DmfHc1pg5aEQCn6ODOt7SCexdjJvJdEEZqbK6oZnKWrhNbKwgHum
-         MqHzrDpwBZjaTFcIajHlQ0Q6C6Ctpj4TM70eFOGFrP/agbbaRrn1Bn004UmRey2RFa7k
-         s1WYLjz80n3E5T7wJOi/EHz+/jxGaqgj/BwC0ZCYqUVv+a2P1XLmlTTK0LJJzxMbcXDw
-         IbJVRpUjDYVm+tMqM4A6rxKRhnktFicV9igeGXCmroTBezPpTGjnNdPwRPWiCSey/CFu
-         mMr64caYBJq84o4EcdKwQemXnNizgMRPitXT04YPCAI2P7FtbRXEijjyUDy6+lP9ervM
-         SlUg==
-X-Gm-Message-State: AGi0PuYLbkwUh756mfx/rEgfZUDLsgyvd4r2dEwrEaPEabHkG1iY5LO/
-        ZfwZ3vF61GkTSdnQLWZfKocr4dgNzn8qi/zeEm3xUbQE
-X-Google-Smtp-Source: APiQypK+N9jqVDZAfMojtnL5sjeaXSvMQB2MNiXRPV586cyFvGm5lcLzeqfBUKJvAPenRfJdIDzNXva4bT9JnX6assM=
-X-Received: by 2002:a05:6512:52c:: with SMTP id o12mr5744919lfc.217.1587039407819;
- Thu, 16 Apr 2020 05:16:47 -0700 (PDT)
+        bh=Rknl/ynm4VavE+Pu+iawF7Fl7IF9Ku/ZEj160zwTjKs=;
+        b=jH57lCpCd7Or/71jieLzVpJlHFI74tbFnQkQ/D2baaDOhPNcWJuCfMCutJ2zCRxPHP
+         7KyCKin+i7lAt4uKWGKW5aAS/IVmj1MmMt/3sC52Qyj5JxoGHt9zVsw5C9x+A4pCYOF4
+         IvEaaJtJfTXx8FkQOaROjedeWw0bJPUjPVgt1Exdwxr051j/n89+5qGVCh257LD+axIg
+         +7biHAj77b36UlJjZWCxm7w1am9HHXekbSknBt4lKtccm6WlJTUIA0HZXyKQIe8KKDN7
+         EsXHpmigjYurEYnFGn1P9FRrjdrDXwbI5jZH3qX5zLqXUvUdHjVKTV29Y87GV8UsxjCn
+         0TNQ==
+X-Gm-Message-State: AGi0PuYrUaac089a3kRpQr93gHXIi71xyLxEx8g7dvXE5M4EGPbzAiX3
+        5Kl5SqUnWLbXxn2FIqiZQa7T+f4gi+dB0NwfAWf97tAL
+X-Google-Smtp-Source: APiQypIyqABkvrUdCitKfD6vXcnegm6O7VukMz0pY9EwLKwd6NWTkxHDqTCb+HK6IH1dLQgaxOHJI6WXdASqDPYzvX0=
+X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr6115395ljo.168.1587039659684;
+ Thu, 16 Apr 2020 05:20:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200408154155.68310-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZKEpz=acfw0zQ71pWmLU8dALS4tap412U2x6GyY82opw@mail.gmail.com> <20200416113543.GB185537@smile.fi.intel.com>
-In-Reply-To: <20200416113543.GB185537@smile.fi.intel.com>
+References: <20200414174900.5099-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYu3uahs--iOKXwrowiwh4ch-evGZN91N9u9q_rrLFV9w@mail.gmail.com> <20200416105301.GY185537@smile.fi.intel.com>
+In-Reply-To: <20200416105301.GY185537@smile.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 14:16:36 +0200
-Message-ID: <CACRpkdZt-Amd64qE+UaGjUu4CuJ17yqyNBoFstxpcPgyx8c7nw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: merrifield: Switch over to MSI interrupts
+Date:   Thu, 16 Apr 2020 14:20:48 +0200
+Message-ID: <CACRpkdad_Raetj10e=N+KZ3erPZFTXC8F3ChShyew8PkLbiqAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] gpio: pch: Use BIT() and GENMASK() where it's appropriate
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
@@ -61,23 +61,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 1:35 PM Andy Shevchenko
+On Thu, Apr 16, 2020 at 12:53 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> On Thu, Apr 16, 2020 at 12:50:43PM +0200, Linus Walleij wrote:
-> > On Wed, Apr 8, 2020 at 5:41 PM Andy Shevchenko
+> On Thu, Apr 16, 2020 at 10:27:40AM +0200, Linus Walleij wrote:
+> > On Tue, Apr 14, 2020 at 7:49 PM Andy Shevchenko
 > > <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > > Some devices may support MSI interrupts. Let's at least try to use them
-> > > in platforms that provide MSI capability.
+> > > Use BIT() and GENMASK() where it's appropriate.
+> > > At the same time drop it where it's not appropriate.
 > > >
 > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > > v2: update one more macro (all IRQ settings are plain numbers, not bits)
 > >
-> > Patch applied.
+> > I managed to extract this v2 series with b4 and applied it.
+> >
+> > I don't know if you planned to send a pull request for the PCH
+> > changes, it was so simple to just use b4 that I tested it on this
+> > patch series and it just worked.
 >
-> Can we return to established scheme when we send a PR to you? Or you think
-> better not to do like that anymore?
+> Thanks!
+>
+> I would like to have rather Ack and send a PR, since there are more Intel GPIO
+> patches in a bunch.
 
-No problem, I haven't pushed this out or anything, I will drop these.
+OK I dropped the PCH patches from my branch!
+
+Sorry for missing this.
 
 Yours,
 Linus Walleij
