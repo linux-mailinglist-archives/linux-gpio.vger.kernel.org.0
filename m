@@ -2,111 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0566E1ABF54
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:34:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 858511ABEE6
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:13:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506074AbgDPLG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 07:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33632 "EHLO
+        id S2632750AbgDPLNx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505871AbgDPLGS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:06:18 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83D1C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:06:17 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id k28so5243431lfe.10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:06:17 -0700 (PDT)
+        with ESMTP id S2505858AbgDPLLO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:11:14 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE58C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:11:11 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q22so7411003ljg.0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PQVuIKSPezF1i5nCh/JaET+VC8GB3RQdOhpUD+ddEWo=;
-        b=uov2nDuIn/Wfs71R36fHzId2m3P8g9dLE0bbrT5rdMT6v1gNr99qpLTkqwfWLdheNj
-         aJRfWypx92TWH/ddNAgwVJgctFXrwcS8Wj4/lF+ooJQtZM3UCfKSBqMvI/S26u0NY4+M
-         KETVQvX+ghNwNDuK7WllZpjXjZYHXcVylRB9gpTEyb7Z5FGER8KMYnDKCQXh5BKvfhwm
-         Ntqw4RZhvB5pgLZWFGWt40USck22CbjJTuBp7aHKtcRBv6VoKcWju7z+bvjaJwcWm69G
-         mcXcTOI6cqaMu8SqDH3qo+jlfcC/OTzkwLtNsK2w/XrS5LpH0cv3UdPaY89RkQ+l4Au8
-         Kfxg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DagzPuCV35qt33fGvPGLDoiS08sYzbb9yy87y7EAnZ0=;
+        b=yet1Q0fX4nxzU8FeSJeMbsR/4M4ZR8bSZgTYXnm3b33HHgDAoFiGGbEVV4TxE3vhsD
+         /c2AJ4eKsLOLbAMS8meVpOJBnXQX4HaYBk/E4mO/kE7Qx15xwDrn79DqsnaQKBdPX72/
+         9AC/Nlvz6XGq4HUe2sfq8jP1MF1spNg/BW1C10iPp8ZwR/qYFHcIp6w8D37lenRxH3+d
+         QMT/GjndGpsyFcpVXgKMwHXurfH4Ri52ptjqKfjhQDs6tHzXng01V2kKubCYftC5vUbE
+         CodkmrdPVAcWtHmXRqehK2nzSMW+0LQSwyvkE09yxCKcEZThbjK0bRaMhUhgJU4enXbO
+         pl5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PQVuIKSPezF1i5nCh/JaET+VC8GB3RQdOhpUD+ddEWo=;
-        b=MIaWgk7dw+E7EQMAs9BGu0QTLK41dpoTDkrRWrZk/KQ3HQ+kTQ6Tlzyod+HDDUdh03
-         2CEh2Zwt5ZN1U087xn2PfKaHepGvGE3bnlm3XhxJT1Q7FWCKn2Ndlp+6Xh9G8x7jIw3/
-         DZPLpWmvjYCTkBo1N+hom7VtcF4krKMp8A0HNgsFTH+hDtf314gpDTYqXNIHdm2X0RNR
-         gLQgre8z+IJMOa+DOyrp3wu+P75XOq3/HmXWKCueJcSXpSUjIPSdkBmATPE5VmYrzn7c
-         N55oJxK9mcSY0FXTvT9ICY3NK7p4ML05kTOyZ/Gw8fhKfeE8w2rt2HO0ypULuOc6YoKV
-         JuHA==
-X-Gm-Message-State: AGi0PuZ827yrcDJugxDZ2pKODtG4efgzK6TAEb8Y7PoJP+Ox2XiTuD0+
-        ji7W5S0qfMvNGL5z0Urq75g=
-X-Google-Smtp-Source: APiQypLgw9vGRJ2wQiVzAogFPGr8u1/vreLctR6UCuyGuF0g39JdN3TrvCIzgX975/wk1OQBy1Ydxg==
-X-Received: by 2002:a19:43:: with SMTP id 64mr5574302lfa.67.1587035176422;
-        Thu, 16 Apr 2020 04:06:16 -0700 (PDT)
-Received: from mobilestation ([176.213.3.142])
-        by smtp.gmail.com with ESMTPSA id w1sm11852373ljw.48.2020.04.16.04.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 04:06:15 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 14:06:13 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 14/14] gpio: dwapb: Amend indentation in some cases
-Message-ID: <20200416110613.4yyrlcle4oiy46a7@mobilestation>
-References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
- <20200415141534.31240-15-andriy.shevchenko@linux.intel.com>
- <20200415171516.cugbzhvjua6cygnq@mobilestation>
- <20200416105614.GZ185537@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DagzPuCV35qt33fGvPGLDoiS08sYzbb9yy87y7EAnZ0=;
+        b=mFWyDqOxsuUzLmdVBi3UbxUJizvE3i5DgLtfVV15G8b989GJuqCx9fCWG4fr9UTELT
+         I2fCe/qNeX/zkoAf0m93lI2e/GrF829B/tK0aNTX6RIEQhsmVn9LSe2i4OAxQAbJO6rJ
+         AosEW0g6UHN5fs8EOgjMD1uK+XLAPX8ObtGgX8dvTp/C8OI3PtlzUuVrsf+o0UnBjmFV
+         BBaewaRc4pIp1sw4FSXpsAe56kH7zcwR3KuL66ZIBEIzZNmPxWPUxJuLXrifLGe/yhJ1
+         eFrGvc1pDnnKGFk9/RtKm9j4vllx8sBuqIf03RsltLJLqgPZ7MedZTN7cYt9u5n5vBDm
+         iy5w==
+X-Gm-Message-State: AGi0Pub1vQU5kwRTluIHPv91birGsbOnt1h9FFTQAIE9Za47vMHvYwR8
+        aSjPxbVQJO10XGTK2IZlRJ+a2SdY/7xRBbXeQ7UenA==
+X-Google-Smtp-Source: APiQypIe+xRjUiPUhs+Ll7NpUdbW/Z87i6LFhQq3LlYlzagCdixZd6a64fsv5yfIf2axg5JsvTgNsUrB0uS0JAF3Xd4=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr5942226ljh.258.1587035469976;
+ Thu, 16 Apr 2020 04:11:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416105614.GZ185537@smile.fi.intel.com>
+References: <1586757913-5438-1-git-send-email-amittomer25@gmail.com>
+In-Reply-To: <1586757913-5438-1-git-send-email-amittomer25@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 13:10:59 +0200
+Message-ID: <CACRpkda8bZQnQhNbwXPrf-8mZh2NhsPx3u1Gcpmi8KjUEd-17w@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: actions: fix function group name for i2c0_group
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Matheus Castello <matheus@castello.eng.br>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 01:56:14PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 15, 2020 at 08:15:16PM +0300, Serge Semin wrote:
-> > On Wed, Apr 15, 2020 at 05:15:34PM +0300, Andy Shevchenko wrote:
-> > > In some cases indentation makes code harder to read. Amend indentation
-> > > in those cases despite of lines go a bit over 80 character limit.
-> 
-> > > +			dev_err(dev, "missing/invalid port index for port%d\n", i);
-> > 
-> > What about shortening the message text to fit the 80 chars per line rule?
-> > I suppose the "missing" word could be omitted.
-> 
-> More likely port is not needed, but I think this kind of changes are material
-> for another (logically separated) patch.
-> 
-> ...
-> 
-> > >  			/* Mask out interrupts */
-> > > -			dwapb_write(gpio, GPIO_INTMASK,
-> > > -				    0xffffffff & ~ctx->wake_en);
-> > 
-> > > +			dwapb_write(gpio, GPIO_INTMASK, 0xffffffff & ~ctx->wake_en);
-> > 
-> > Hm, do I need some rest and missing something or the &-operation with 1s here
-> > does nothing seeing the operands data types have the same width?
-> > 
-> > (the change introduced by commit 6437c7ba69c3 ("gpio: dwapb: Add wakeup source support"))
-> 
-> No, you are right, it seems no-op to me, I have noticed it as well, but I think
-> we may improve this by separate change (as you seems also prefer not to mix
-> logically different changes in one patch).
+On Mon, Apr 13, 2020 at 8:05 AM Amit Singh Tomar <amittomer25@gmail.com> wrote:
 
-Ah, Linus already pulled the series in. Next time then.)
+> After commit 6f87359e8bca ("pinctrl: actions: Fix functions groups names
+> for S700 SoC") following error has been observed while booting Linux on
+> Cubieboard7-lite(based on S700 SoC).
+>
+> [    1.206245] pinctrl-s700 e01b0000.pinctrl: invalid group "i2c0_mfp" for function "i2c0"
+>
+> This commit fixes it by using correct name for i2c0_group.
+>
+> Fixes: 6f87359e8bca ("pinctrl: actions: Fix functions groups names for S700 SoC")
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
 
-Regards,
--Sergey
+Patch applied with Mani's ACK.
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Yours,
+Linus Walleij
