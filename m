@@ -2,77 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6D81ABAC3
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 10:03:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 624421ABC8D
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 11:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439858AbgDPIDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 04:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440173AbgDPICc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:02:32 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476C6C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x23so4884798lfq.1
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
-        b=vfo0PPID97JrT5WKWP575QXEQfMje8Y80j1J2y4VsCaINnaxBRBOwbphMCECPp2dp4
-         B0B/RHjLCRYxZCwT3VKOk8T9rFGCrA9byaN8YYhGfODjonk63PPGpAkGlYgE5JJCG6t3
-         brqYJkXoEUYfkA2gQEkVoUNveryy41bFDIecBXeQ8/6eLwP15B4SY1OZRlcAxaYoIirR
-         NHB9W5QNDgUKLULGcDhmopaU6Oc18sPdfhqCsauY04aSSGj8PQ6dFzKaZ3FBM58TcTiX
-         7Pm5np1XyoMAf9/uJ3q+fbexj3Ioq34+53S/J8DKepGd08s7ORCyG4xQJT/TryowzFmv
-         +flw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
-        b=i83kibYFMy+XxhsN1eHS1s3MTI5S7HpRWsTCLw+m9aSqTTIoF59/gXH4S/pnn9PmP8
-         b4NCxonpzPNlH4+bDwVGpcZxVJb9IQrOcYM6515RAQ11R1v5Nv3v2OSZHfY0RTp/bZxW
-         AaTlfiQj4kxmrQ4pSz1m7h9FgJYRSmQnl008m5a+IZEyvH9TjWRhjFWDhiE//k0ng7DP
-         cnNyE4UtTqenpbQVMapBYcljJh4Z/pWDWbroRXX2ijEI4R7LehqpUEB+vMyWv0ZAaAgQ
-         R46smQ3yxj5WzCqil6W9v5rONJwp4wj17zF02LJTMxuEwJlXSXctJIsXhez0te/PpVbw
-         fKYQ==
-X-Gm-Message-State: AGi0PuY9GJE4t0nqgJT4mphZ+MtwOYKd3ygoFU4zbpA9LSjMUHKbFXrX
-        Tgm1gPC/dd36oDfUNSRYKGu6ysiOXS4Yl5tZyr/mSw==
-X-Google-Smtp-Source: APiQypLuIixLf5ucqE301E0Pfpc6UIvL9GPllhUYp731XovnEOOMBJ2YWNaowR5LKg0u97weWLvK2TO24s4t9c/jatU=
-X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr5389181lfp.77.1587024149690;
- Thu, 16 Apr 2020 01:02:29 -0700 (PDT)
+        id S2441418AbgDPJQV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 05:16:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2441116AbgDPIHP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 04:07:15 -0400
+Received: from localhost (unknown [223.235.195.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F85206E9;
+        Thu, 16 Apr 2020 08:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587024434;
+        bh=6kwbxJH2RDveXqsZesbfmy1W3FzqE56YVY6CxJmBpFo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O1d6NWlKFfnyKMYlp3FSfoZyP6WL58llnMOPAcukWE4NK15IAgUmTc9Oy1CJfBrQJ
+         FzFh77ntmk81ok6QNhBa7Fsxt0mRWxySPBmmQLISyBFjZXKruM2zAQoNUgGwtCZMXr
+         hATzQxclu6p7VFesf/GI28sOVbjEiU4zdOe4G2WA=
+Date:   Thu, 16 Apr 2020 13:37:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: Clean-up schema indentation formatting
+Message-ID: <20200416080710.GI72691@vkoul-mobl>
+References: <20200416005549.9683-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 10:02:18 +0200
-Message-ID: <CACRpkdY_86VK2Acjk3MoJi4K_F2RP-2YW7nfEDN9Bg=TB9nr6w@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable declaration
-To:     Light Hsieh <light.hsieh@mediatek.com>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416005549.9683-1-robh@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:34 PM <light.hsieh@mediatek.com> wrote:
+On 15-04-20, 19:55, Rob Herring wrote:
+> Fix various inconsistencies in schema indentation. Most of these are
+> list indentation which should be 2 spaces more than the start of the
+> enclosing keyword. This doesn't matter functionally, but affects running
+> scripts which do transforms on the schema files.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/altera.yaml       |  6 +-
+>  .../amlogic/amlogic,meson-gx-ao-secure.yaml   |  2 +-
+>  .../devicetree/bindings/arm/bitmain.yaml      |  2 +-
+>  .../devicetree/bindings/arm/nxp/lpc32xx.yaml  |  9 ++-
+>  .../bindings/arm/socionext/uniphier.yaml      | 26 ++++----
+>  .../bindings/arm/stm32/st,mlahb.yaml          |  2 +-
+>  .../bindings/arm/stm32/st,stm32-syscon.yaml   |  6 +-
+>  .../bindings/ata/faraday,ftide010.yaml        |  4 +-
+>  .../bindings/bus/allwinner,sun8i-a23-rsb.yaml |  4 +-
+>  .../clock/allwinner,sun4i-a10-gates-clk.yaml  |  8 +--
+>  .../devicetree/bindings/clock/fsl,plldig.yaml | 17 +++--
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml  | 16 ++---
+>  .../bindings/connector/usb-connector.yaml     |  6 +-
+>  .../crypto/allwinner,sun4i-a10-crypto.yaml    | 14 ++--
+>  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 16 ++---
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   |  2 +-
+>  .../display/allwinner,sun4i-a10-hdmi.yaml     | 40 ++++++------
+>  .../display/allwinner,sun4i-a10-tcon.yaml     | 58 ++++++++---------
+>  .../display/allwinner,sun6i-a31-mipi-dsi.yaml | 28 ++++----
+>  .../display/allwinner,sun8i-a83t-dw-hdmi.yaml | 10 +--
+>  .../bindings/display/bridge/lvds-codec.yaml   | 18 +++---
+>  .../display/panel/sony,acx424akp.yaml         |  2 +-
+>  .../display/panel/xinpeng,xpp055c272.yaml     |  4 +-
+>  .../bindings/display/renesas,cmm.yaml         | 16 ++---
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   |  8 +--
 
-> From: Light Hsieh <light.hsieh@mediatek.com>
->
-> Remove shadow declaration of variable 'pullup' in mtk_pinconf_get()
->
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-Patch applied for fixes, thanks for fixing this!
-
-Yours,
-Linus Walleij
+-- 
+~Vinod
