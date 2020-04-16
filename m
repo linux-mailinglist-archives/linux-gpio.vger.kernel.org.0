@@ -2,86 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F14A91AC87C
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 17:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAAB81AC471
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 16:00:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408672AbgDPNu4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 09:50:56 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:41660 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408557AbgDPNuv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:50:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=EF/f9myVVbgrLxXwzUMzNnUxGooj5hG2873Zghg3qio=; b=f5c9A4Fn3ySTK1wzQTyIowkDaW
-        o2L99bBr1lFDYtL4BfBJGLRkjJyMo2p4ZrbupRO58aeykvzS/cr/UeCXY+d23IiSHcp6i7CeihRhq
-        jZli5GjTIUplIniSlLGL4h7pv3GwqBpq82wY+p3xcMk7emkYyilPwPjrq7EfOWM4IAck=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jP4ud-0034yA-Ey; Thu, 16 Apr 2020 15:50:39 +0200
-Date:   Thu, 16 Apr 2020 15:50:39 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
-Message-ID: <20200416135039.GL657811@lunn.ch>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
+        id S2898886AbgDPN76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 09:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2409173AbgDPN7s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 09:59:48 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD80C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 06:59:47 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 198so5664109lfo.7
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 06:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1q5iyLlgNj9M9GuhPuzbEbk8Ucjm1YG68RtJQG1D5po=;
+        b=xHSW14O7tFpGF5JL6qiZ+p2bG33urCfLnaN7tKyoMFa114XzVomjkby8Ov9s3hh/c+
+         ojjgEcUEGsO+33ErIkKBhqFSonEI4Y1/h3A78DkcVVYO3rS9Ofc8TjGzyY1yn58Imfpd
+         /D1ziD6R7x+QAYCxRjd/eirrQchp0C+vqpOXgw94JKwNDCPlaz1+K0+168nc+Y1o3IBm
+         6s8BqsdUdfK1+VLF+/pse3PLGkzMZTqNPU80KvTLa+Nj6MQkJ/pmC0t2lDKuX62sbpCi
+         0dpByTzJzgjYrxF8vnbqg3QF9rum+NiDiUce9KoZWkGXoMU/UI1+Ya+Uu1EBT+dHJyLn
+         z0yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1q5iyLlgNj9M9GuhPuzbEbk8Ucjm1YG68RtJQG1D5po=;
+        b=N8pfDcUE7lAnPO0TZzX2wgEhPS76GhsP7/c1St1eKQXlf3vhMePdkWZpYvcrqM20Ve
+         EZhWcmo+Bqoz+WpQD+FtUGXp90RY6giTTTOPiVq6+3xTejiUjngNRwcSV2TXiZyqHs8i
+         AXaWvDBCfXs4VbhOOMNB1FgwMlnMj8RkiKvNJHdmEGRfjBcvz/u3c/gaVsGIfI+hRgD0
+         uluVKhKjPdWo+ZLeSH74Z692xIy+A1yMCAocVY+kT3sS1imS6YFXc4QaFbob6RdCrdCS
+         t+9ssTkEk6qaH/O+pECG4J0I/0bmcWL2PFzd0It/93nxEqotx1BRSkdDQPjFw9ZgkYK8
+         Tzkw==
+X-Gm-Message-State: AGi0PuZ3nzQQ4IDnxeYMn/ixxAI7uZETxq6efxDtoOlJw2EQOzPpFE9g
+        mniFIDUADoCievhbmT7G6T5FKDkkQUhQv5bzSRo7AA==
+X-Google-Smtp-Source: APiQypIw7OqNd10YcS66AdS2GgB+hwghyrGEcWOkqEgJ0/XyHLwaw9wk7C+7hwx3lSrZlO9sUlyngnorQoAU/E5Sd1E=
+X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr5803057lfp.4.1587045586242;
+ Thu, 16 Apr 2020 06:59:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaL4-Z36aKOVW4o2MtCG9fbqm4gxZN3QjejVRPBZrzxxA@mail.gmail.com>
+References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
+ <20200415141534.31240-15-andriy.shevchenko@linux.intel.com>
+ <20200415171516.cugbzhvjua6cygnq@mobilestation> <20200416105614.GZ185537@smile.fi.intel.com>
+ <20200416110613.4yyrlcle4oiy46a7@mobilestation> <CACRpkdacW7_Q7YW1WOazLaP_HKBbNKev3caJyKSNMBbXp7j1Zw@mail.gmail.com>
+ <20200416133737.lvve4svqak6tbgwn@mobilestation>
+In-Reply-To: <20200416133737.lvve4svqak6tbgwn@mobilestation>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 15:59:34 +0200
+Message-ID: <CACRpkdbgtskGyQvUy9Eb--f8YahO9gw9jgDx0k1AkK=LkkuQJg@mail.gmail.com>
+Subject: Re: [PATCH v2 14/14] gpio: dwapb: Amend indentation in some cases
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 09:51:37AM +0200, Linus Walleij wrote:
-> On Sun, Mar 29, 2020 at 12:46 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> 
-> > This series adds support for the fan PWM output on the Clearfog GT8K
-> > platform, and can potentially be extended to the Macchiatobin.
-> 
-> The gpio changes all look fine to me +/- fixes for review comments.
-> 
-> Could the MVEBU maintainers provide some feedback?
+On Thu, Apr 16, 2020 at 3:37 PM Serge Semin <fancer.lancer@gmail.com> wrote:
 
-Hi Linus
+> caused the 80 chars line rule violation in some cases.
 
-I took a quick look at this when it was first posted. I also wrote the
-PWM support in this driver. The hardware is mostly a GPIO driver, but
-it has some basic PWM facilities. It is not possible to cleanly split
-it into two drivers, which is why it has the current structure. And
-the PWM maintainers ask that the PWM parts be listed in MAINTAINERS as
-such, so they got to know about any changes.
+As subsystem maintainer that's a coding style thing I don't
+really care much about, I personally violate it all the time.
+But you can have it any way you want of course :)
 
-Clocking with Marvell devices has always been interesting. Core IP
-like this gets reused between different generations of SoCs. The
-original Orion5x had no clock control at all. Latter SoCs have had
-more and more complex clock trees. So care has to be taken to not
-change old behaviour when adding support for new clocks. So Russell
-2/6 patch looks good to me, and Uwe request could break on some
-SoCs. It would need testing on a lot of SoCs, with and without PWM
-support. 
-
-I assume Russell will at some point repost without the RFC tag. At
-that point i will take a second look and add Reviewed-by.
-
-     Andrew
+Yours,
+Linus Walleij
