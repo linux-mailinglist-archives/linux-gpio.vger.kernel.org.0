@@ -2,82 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3461ABAB5
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 10:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C6D81ABAC3
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 10:03:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440182AbgDPIAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 04:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60990 "EHLO
+        id S2439858AbgDPIDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 04:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2440114AbgDPIAe (ORCPT
+        by vger.kernel.org with ESMTP id S2440173AbgDPICc (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 04:00:34 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A42FC061A10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:00:34 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id w145so4874516lff.3
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:00:34 -0700 (PDT)
+        Thu, 16 Apr 2020 04:02:32 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476C6C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x23so4884798lfq.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 01:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tjVFjiLUKq2dceYjR/sUZuoN+VaM2KkSpDEryVFjJAM=;
-        b=bUozIsQsOLIKrmIe04JjO05g7JBKyqXq8AdHzoY9+98g1GkgDs3t0ZDClZymhjwkrp
-         MByC50ZFFHYsMPZGUI3oyH1zekRuiC/DmTVL+6fK2pnd31mlDaqeXshW2PrfW6TKGkh5
-         dBeBVQy2o/c8U3eusS+I18vX7fIsdLrap/MTuqke74f8h1sfJsA/vNI7QewuTkLGLfiX
-         LZDVWtncz77CnlPHYu7z1PwxOXGCgThpfqHN2sydIRa9pH9054gcPx/FnQbBWcbrFCu/
-         B2wJoM2zJjIqKJYQ4ZUYjeTBW3+l3o13HlulzKtS/fh5gGg9WHIISWPjKIz6H5cx0w9h
-         Nn6Q==
+        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
+        b=vfo0PPID97JrT5WKWP575QXEQfMje8Y80j1J2y4VsCaINnaxBRBOwbphMCECPp2dp4
+         B0B/RHjLCRYxZCwT3VKOk8T9rFGCrA9byaN8YYhGfODjonk63PPGpAkGlYgE5JJCG6t3
+         brqYJkXoEUYfkA2gQEkVoUNveryy41bFDIecBXeQ8/6eLwP15B4SY1OZRlcAxaYoIirR
+         NHB9W5QNDgUKLULGcDhmopaU6Oc18sPdfhqCsauY04aSSGj8PQ6dFzKaZ3FBM58TcTiX
+         7Pm5np1XyoMAf9/uJ3q+fbexj3Ioq34+53S/J8DKepGd08s7ORCyG4xQJT/TryowzFmv
+         +flw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tjVFjiLUKq2dceYjR/sUZuoN+VaM2KkSpDEryVFjJAM=;
-        b=csULvun7odE+C8P4GQBkd1B4x7phIDxrsMwvIOvziVW8UHSdVjOufVID2KsNdNwdC4
-         2YdIAagOLZ+kYhgUcim94mG4/fwBZqpdioosmM3drJIxdYcBzAwul9EHveHYtb1hXiEm
-         WkZjP0E7BrVd2FQIPsd4/q9gK535QaijS/ES79SVp+arhXOt2+W5G2LX3dEvGkP0Czfv
-         VIvUnI4Z7bjP9lMT4Kcak9KkzW8nxYYHrAR7NRjxJN8CtUp16C0KzShITHoVvYDT4EcR
-         jOli7JnNGUSZmBjoaGrM+QVEYXpTje4V6gfymIh1ebI9tbcqtPnBvede/sKNDlsRkmom
-         d2dg==
-X-Gm-Message-State: AGi0Pua3c7FtFS7gQmA9uvU/wzXDfps6EPdoQk5HR4EqcwbtXii7KACK
-        lRhXbK/+ejsmUAalfpu+TamcypCnNOc+Zotre5zgDw==
-X-Google-Smtp-Source: APiQypLJmZ97wdSRNvt5K0Vot48JkDgvMOmnFHGu2O4iKZQqqK02fJBxbBO5EYfsbjVxASLotokCg8oMB6V5oELv+9k=
-X-Received: by 2002:a05:6512:685:: with SMTP id t5mr5198837lfe.47.1587024032955;
- Thu, 16 Apr 2020 01:00:32 -0700 (PDT)
+        bh=HS3wh14onxfnVAAnelvXE++p13ZTdiNaT9jQji2UHzs=;
+        b=i83kibYFMy+XxhsN1eHS1s3MTI5S7HpRWsTCLw+m9aSqTTIoF59/gXH4S/pnn9PmP8
+         b4NCxonpzPNlH4+bDwVGpcZxVJb9IQrOcYM6515RAQ11R1v5Nv3v2OSZHfY0RTp/bZxW
+         AaTlfiQj4kxmrQ4pSz1m7h9FgJYRSmQnl008m5a+IZEyvH9TjWRhjFWDhiE//k0ng7DP
+         cnNyE4UtTqenpbQVMapBYcljJh4Z/pWDWbroRXX2ijEI4R7LehqpUEB+vMyWv0ZAaAgQ
+         R46smQ3yxj5WzCqil6W9v5rONJwp4wj17zF02LJTMxuEwJlXSXctJIsXhez0te/PpVbw
+         fKYQ==
+X-Gm-Message-State: AGi0PuY9GJE4t0nqgJT4mphZ+MtwOYKd3ygoFU4zbpA9LSjMUHKbFXrX
+        Tgm1gPC/dd36oDfUNSRYKGu6ysiOXS4Yl5tZyr/mSw==
+X-Google-Smtp-Source: APiQypLuIixLf5ucqE301E0Pfpc6UIvL9GPllhUYp731XovnEOOMBJ2YWNaowR5LKg0u97weWLvK2TO24s4t9c/jatU=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr5389181lfp.77.1587024149690;
+ Thu, 16 Apr 2020 01:02:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
- <42100afe6f97d28447c153bea6b54ea556cf95ca.1586289920.git.sean.wang@mediatek.com>
-In-Reply-To: <42100afe6f97d28447c153bea6b54ea556cf95ca.1586289920.git.sean.wang@mediatek.com>
+References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
+In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 10:00:22 +0200
-Message-ID: <CACRpkdbszsyw550SZHBx73SHhUeDsKYC7od4pQRvpH+OdorCHQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] pinctrl: mediatek: make MediaTek MT6765 pinctrl
- ready for buiding loadable module
-To:     Sean Wang <sean.wang@mediatek.com>
+Date:   Thu, 16 Apr 2020 10:02:18 +0200
+Message-ID: <CACRpkdY_86VK2Acjk3MoJi4K_F2RP-2YW7nfEDN9Bg=TB9nr6w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable declaration
+To:     Light Hsieh <light.hsieh@mediatek.com>
 Cc:     "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Light Hsieh <light.hsieh@mediatek.com>
+        Sean Wang <sean.wang@kernel.org>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 10:08 PM <sean.wang@mediatek.com> wrote:
+On Tue, Apr 7, 2020 at 12:34 PM <light.hsieh@mediatek.com> wrote:
 
 > From: Light Hsieh <light.hsieh@mediatek.com>
 >
-> This patch make pinctrl-mt6765 ready for building as loadable module.
+> Remove shadow declaration of variable 'pullup' in mtk_pinconf_get()
 >
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
-> ---
-> v6->v7: remove change-id
 
-Patch applied.
+Patch applied for fixes, thanks for fixing this!
 
 Yours,
 Linus Walleij
