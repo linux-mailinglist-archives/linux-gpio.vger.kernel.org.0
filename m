@@ -2,75 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD7831ABFD8
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 535471ABEB9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:06:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505944AbgDPLlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 07:41:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:47743 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2505821AbgDPK6T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 06:58:19 -0400
-IronPort-SDR: UUeMEtLSTwLIubEx52H3kw/x2O/6mPQxfbuB7DrKTOnnHOBUwxO0d5Y45mugdOznJmrxfPJiGV
- Ru1K2qPOQgHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:52:59 -0700
-IronPort-SDR: bdDRaBiPIHAtcc2Tuy915ksm04Q3IXownOC0a3PcucytcTpMLLcBat9u3OknaSR+6VE8kRul4P
- 08CHEmN2vW4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
-   d="scan'208";a="276611758"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 16 Apr 2020 03:52:58 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jP28j-0010fP-Mq; Thu, 16 Apr 2020 13:53:01 +0300
-Date:   Thu, 16 Apr 2020 13:53:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 1/4] gpio: pch: Use BIT() and GENMASK() where it's
- appropriate
-Message-ID: <20200416105301.GY185537@smile.fi.intel.com>
-References: <20200414174900.5099-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYu3uahs--iOKXwrowiwh4ch-evGZN91N9u9q_rrLFV9w@mail.gmail.com>
+        id S2506054AbgDPLF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506036AbgDPLEr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:04:47 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49468C03C1AF
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:53:50 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id u6so5694495ljl.6
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QgaYHDB+V/P8sJggA7Iblc7jogxqawaSl+yzOQ0/Rn4=;
+        b=jU0ibB7dsoTTJYnbq7KJWD85iq65azWfsvxPzehE8nANACAg+Xlc06OrsGr3JWXvou
+         +BdxX7QH+4uNZZbRVtz1Sj5e+iyJNk2NR2lC4/RCe86BW3cGHIDvCNTX4J/dPtYe04lf
+         6G4J+hPkIZtAxrYdOwtV3czWB9x44QZehux9ei4JpD0kcovDb37m9XVWZZTzjLFfwNz1
+         pXypwEZ1sJqzrhLWKG+b6tys3DKV0kCeJ+YEnh9bqHbsd74k+JfGJVnkqjpGTBVdXuYF
+         n/RjND8rmIlYPVAQhR1gEvwX1ESXbgBH96blAk4ykcIl0nkMrwLci8W9mA/QX0ri65aj
+         hw8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QgaYHDB+V/P8sJggA7Iblc7jogxqawaSl+yzOQ0/Rn4=;
+        b=LUCMxmy9h8UKnFHwOGyqI3dQRo1V0cj00YOK9VoCxnrRdIpxlGaXMqnbdwvPgAd6Z4
+         Ix/Oef/3k7W7Ed4X8eT8jhvy9XNe6e0k4eOb7Ijqb2rkcqeMRVCG/Mkxx1dv0FvvOFqv
+         83iamz/ylKd7fL5gKz54b5CjB5v9lnivV05dee00is6ZmOtFgHhR6NKQjlkoZZ+71eAi
+         /v5MY1XTF8zjyDvZgqVvLMKLTeqW6ntxX4pcWeehhX0lo2dx1XdNZ/Zhz/oIyq7u8DvX
+         c8rRonQ4NwA7jQoLUmOnp93oJZwxfU1tiI9L3tcD6GZ4gLK6MepraCd8YST255Ltrd/w
+         P4HA==
+X-Gm-Message-State: AGi0PubR0W6lpCFoiveeoA9mZkq3M6N4CxIm+dC6DZWvVpokrFUC2Q76
+        I3ElPxVp6B6l2sksBHb1FGpqw1Vi4RfzvzJ5b6BKcg==
+X-Google-Smtp-Source: APiQypK6nkSTANaZW+1a43XoogM3H6sNnq4kMI4xqLyVIWS/PF6q8zPv4riQVVKMftU1hlwobUdBnlrK6GlVZzGsIdU=
+X-Received: by 2002:a2e:5048:: with SMTP id v8mr5601989ljd.99.1587034428690;
+ Thu, 16 Apr 2020 03:53:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYu3uahs--iOKXwrowiwh4ch-evGZN91N9u9q_rrLFV9w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200408070504.134847-1-yuehaibing@huawei.com>
+In-Reply-To: <20200408070504.134847-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 12:53:37 +0200
+Message-ID: <CACRpkdYUX5EuRQMj_c+0wJa2pP13MF1jd8T8AjpifeR22kc_pA@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: qcom: Remove duplicated include from pinctrl-msm.c
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Ajay Kishore <akisho@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 10:27:40AM +0200, Linus Walleij wrote:
-> On Tue, Apr 14, 2020 at 7:49 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Use BIT() and GENMASK() where it's appropriate.
-> > At the same time drop it where it's not appropriate.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > v2: update one more macro (all IRQ settings are plain numbers, not bits)
-> 
-> I managed to extract this v2 series with b4 and applied it.
-> 
-> I don't know if you planned to send a pull request for the PCH
-> changes, it was so simple to just use b4 that I tested it on this
-> patch series and it just worked.
+On Wed, Apr 8, 2020 at 9:02 AM YueHaibing <yuehaibing@huawei.com> wrote:
 
-Thanks!
+> Remove duplicated include.
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-I would like to have rather Ack and send a PR, since there are more Intel GPIO
-patches in a bunch.
+Patch applied.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
