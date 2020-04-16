@@ -2,106 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE081ABF02
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:21:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E0A1ABF05
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:23:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632943AbgDPLTy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 07:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        id S2633028AbgDPLW7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2632868AbgDPLTq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:19:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5304C061A0F
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so7372540ljn.7
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:19:45 -0700 (PDT)
+        with ESMTP id S2632869AbgDPLWk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:22:40 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA649C061A0F
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:22:35 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h25so7359637lja.10
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:22:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
-        b=OtzsmKq4kHVDABFucflRXQScsA5dK0d8y+T7VpIusux0bdbzOkryTGmdsRMejMModx
-         hG+VUUfuAGphGgNl/ZWXlXnkPfKW8XJTUtB2InKKwK+VcmtS133aXqUYztuRFDgCKwYr
-         CuXgPqQNihksSjAt6Quo/CXuja6kdP04P2Gvo1/g98aFnINd6I9yEQ/8pZ1kl2n2D588
-         7oh3h6PhgI4kgcrI04UrK/gjC7byofTga40iU9XD5p9G/tTD9nCNZdb0xlIsO1aFBAIB
-         1GMRLSIgOunDZtfkEJg5DwnLQjfuOZf9TkvUJjQS3MjVtW9RVo8n1pZUQ1yFDHuupZdE
-         870A==
+         :cc;
+        bh=jD1AYUXHP206GaKlRMZxnMBYwEQ2X8qjzb2HhhYNTqs=;
+        b=x62ukxN+n8Qv4MX7jge+8oGRbA3SvBvHRYMCTqRMEuaWVF6QRNsqmoyaKT+erSHjEu
+         WGs1fbbXWGTXJL+8ty/h9eYpXqPQWIccl9mnEQm8XIuWWTjvCCpW72h11tVxEcl6jP+g
+         DCVBQkchGYN4GcZ1WL4GIh+YETEdlWFKXWBqdrAifVm13YxGFqYQkpby/YG2wSzDT1uT
+         wOm6OE/3tA94BoxRfcxXEdoV+65rjYAGVRqAKedDvU16egHhvynyRhMihZiPqBmuy74W
+         zjZ4kxB5uzRngQOICftxq7vejQXlduE8xLp5QyHJEuPPv6h4rioZlg/cfqkTJV0Z+e/u
+         mXhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NGDiAiHa7gOkZcjetP+fIoZxVSWT0kUGxzHZFTTg7do=;
-        b=CHwWugLVvB3CEzpVtU11HCT3gR9VNttGGDus20RitTyf8t51Bt1dZvIFhf1+cC1fD+
-         gC7ids1oklyGJ1xFp6c5Xr/VYvvNseHgIwFutqmBRQH+XXNm8DKixS/b7NTEww5df0VD
-         X53QGKOn+SPJKdMLZHt3H1H1dnjOmijpiFJDSztNarnBxrd6da2u9cvOuCmh/oZWVVBc
-         vNqRJXtUjfQUIU00Nglhg1BjU9zKFgIB7XR/HYYf7PO05Cy3CEUERnJG4he5GYMd2GU1
-         aKin/0BsOKqtvxzA21NOBtWDmb9xPRqlvt1hQT4BNUIDQFywKpRj49BE3mX4YecY9N1R
-         M7Ng==
-X-Gm-Message-State: AGi0Pub9+bGFl5z8uZ9LaQR1N2tgmnU6dOMOnywaQJoVwIM8nrwX3zEX
-        y8Jq3FArOeZzvvlKux/PmFlgffwapKbceww2AVyHUg==
-X-Google-Smtp-Source: APiQypJy9THPwjoS7Jo2tqNfqwFCh62pVSbwOBq6PdDLITxyc2Xnd0cf+VlMiSRhsUAbLwuDb/LTyMe0TXHxVDUdths=
-X-Received: by 2002:a2e:5048:: with SMTP id v8mr5663453ljd.99.1587035984361;
- Thu, 16 Apr 2020 04:19:44 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=jD1AYUXHP206GaKlRMZxnMBYwEQ2X8qjzb2HhhYNTqs=;
+        b=uDm8TEAcoMw0h+zdZqozvDTXeLoXAZN3EG07RS/N1jmrmTb8Tn/dpTnssrxPuIC/ST
+         LTM7b/x4Ooakm6AtQgBNBtIykau8iHYTPqqCC6wuNsVtiz9u6EZEqKXs/KbcqW5W8TWa
+         H+9HX7PzelrEA3knz0B797Xhr+r8IdqGo/mN8GTK9sy/mcGFmP+QSsCTq9XqOPklh8tq
+         TFx3AMSbbpR+lJiEAVfP3q/QjTiNWkZOkd4mNjVJ1RalfEJ7jOyzuand5Wz7hGG3kwAo
+         7bybKF0PtvOSeVN11DHvtXhNGVmcrCVTmwrUm6KJuJNttumEtN/T/jIo82qJiNexglcE
+         0blA==
+X-Gm-Message-State: AGi0PuY0FahtcwLOdLIZntwZ/5eCbPKLjeIRD+A85vl/L6ylzn2r/bjh
+        ddFi8ChVgvdhNgHJZ8kOAxLEtdeNkxsfngm7kyywsQ==
+X-Google-Smtp-Source: APiQypIpKnyMQdCPwOkrU4XHmJGqGQzCTuqSu9dtAHs40Ji7eqg7X+BO8MRm5FUsUlc9uL65iAVZwfc0K19OPhETeAY=
+X-Received: by 2002:a2e:9ad9:: with SMTP id p25mr6305274ljj.39.1587036154321;
+ Thu, 16 Apr 2020 04:22:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
- <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
-In-Reply-To: <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
+References: <20200414152843.32129-1-pthomas8589@gmail.com>
+In-Reply-To: <20200414152843.32129-1-pthomas8589@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 13:19:33 +0200
-Message-ID: <CACRpkdaeWtk1fiGMX7QkkCZ-DcFqSvSB9xQmuLy1VO+QWsZo6w@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+Date:   Thu, 16 Apr 2020 13:22:23 +0200
+Message-ID: <CACRpkdaPc-rxNmdq7KFKZ-Qi7Tqy2RJ5Lkcv-8bTAh0GX7VygQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: gpio-pca953x, Add get_multiple function
+To:     Paul Thomas <pthomas8589@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 2:27 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
-> >
-> > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
-ote:
-> >
-> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
-> > > as it takes a mutex internally. Let's move the call before taking the
-> > > spinlock and store the return value.
-> > >
-> > > This isn't perfect - there's a moment between calling
-> > > pinctrl_gpio_can_use_line() and taking the spinlock where the situati=
-on
-> > > can change but it isn't a regression either: previously this part was=
-n't
-> > > protected at all and it only affects the information user-space is
-> > > seeing.
-> > >
-> > > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Fixes: d2ac25798208 ("gpiolib: provide a dedicated function for setti=
-ng lineinfo")
-> > > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > I'm sorry that I lost track of this patch :(
-> >
-> > Do we still need something like this or has it been fixed
-> > by some other patches?
-> >
-> > Yours,
-> > Linus Walleij
->
-> Nope, this is still an issue. Do you have a better idea than mine?
+On Tue, Apr 14, 2020 at 5:30 PM Paul Thomas <pthomas8589@gmail.com> wrote:
 
-Nope, can you just queue it in your tree?
+> Implement a get_multiple function for gpio-pca953x. If a driver
+> leaves get_multiple unimplemented then gpio_chip_get_multiple()
+> in gpiolib.c takes care of it by calling chip->get() as needed.
+> For i2c chips this is very inefficient. For example if you do an
+> 8-bit read then instead of a single i2c transaction there are
+> 8 transactions reading the same byte!
+>
+> This has been tested with max7312 chips on a 5.2 kernel.
+>
+> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
+> ---
+>  changes from v1: rebased to 5.7-rc1
+
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Since I know Bartosz is queueing other patches for this driver I
+let him pick it up.
 
 Yours,
 Linus Walleij
