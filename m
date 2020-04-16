@@ -2,89 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7171AC0AA
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:04:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 586481AC0B3
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634863AbgDPMEA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 08:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2634659AbgDPMD4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 08:03:56 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5785C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:03:55 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id h6so5421873lfc.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o670ErblNjXwLmVYEfpf91xjkotnH6/uPHwmnEnshmI=;
-        b=T7hOq5vMcO8u8QOFQRpuSFYa2mgJc1T47DhIMgZsV1yewE0TJ9HfdSUeqAQLNA/Zir
-         M8MCa50vW9VZfxqjHKEY7yGU7KMieeS4tpb9nmsG8XCcpOiCz38aezWClrX7vtgDlLRn
-         CqOrwpZDMNyKjHR6d6JxSr01EiaWzVLBywiV1KzhrVPrAdL3O8qd2CUy2BcXeSD+0emU
-         dxxF/rLiT1jnvoF/80sgewcUYpPUvxZt01A7DNgjptwkfhbJ26r6JhxkkXag6ljzjWpq
-         ta7DHxhmuyv86JiZoI8OgHkborDWJMr1Znk11uROgYyBGdL2xmdn8D+8Sq5aqDVeVX9b
-         3u4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o670ErblNjXwLmVYEfpf91xjkotnH6/uPHwmnEnshmI=;
-        b=WJuU6bhV78umsO7sacVwzPObaQBi5XePvNUxN6ef+xctrB53CuPMSvUyiYxx1hWtWv
-         Gzt7LbQj9nvgG5MzpwxgRyEwCA7B9i5FpIiIlCQQwioDZGD6MXLKUUlT9ZpObNx2FQqN
-         rKmDFqziJvh1//82WgMhgFknJUXfAq/nzI9+jV/Hr0WcHgDaqyikO8APrwrxoDTnOH0x
-         JBETAxKRy5Kl1VuCmtXYRKTt2WwWetijl8IqfSnajG0YgqRU/wyKmHDj8xKw+bjRRtDd
-         cAN5q9anU93GxEY5QW+zbDOlX+Huaj1tUvLkFXLoRYHjpGQktUyMKmEorSibnWxHX9py
-         vJ+w==
-X-Gm-Message-State: AGi0PuZ7X3TLdQKl+U2Jexb2JMiE/VIa0z9A4YaRXpir88YtNAuA5996
-        8KEe9QjwL7WXf8Coui1MNWqEGVAruN+WuSHSYNGOUA==
-X-Google-Smtp-Source: APiQypIK2uLfJGQ1ZATASJZHqPMrNJqaZjhcLiPjTVmrBxee13OJdf7e1BmxQ41P0mZKgKOa8lbi9SM1JzyVDj7V6W4=
-X-Received: by 2002:a19:cb41:: with SMTP id b62mr5955353lfg.21.1587038634346;
- Thu, 16 Apr 2020 05:03:54 -0700 (PDT)
+        id S2634872AbgDPMGU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 08:06:20 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50548 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2634695AbgDPMGS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 08:06:18 -0400
+IronPort-SDR: UGL/nwPnTx+YXm1Ng5y9zQcOZVNiAM/LSXconCBpO6K6kcPVliubmXzDdzEJHDd6tDglTHGwKt
+ Y68ENlYje6Rg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 05:06:16 -0700
+IronPort-SDR: ofhIn3qgxRHoj64Mnme4hmh0iHWWP75YUVPJIC6jSirW0tho2/03Vga8xWcSqoXfJt+5jWyNFn
+ bjwwUzrNNEcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="244379993"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Apr 2020 05:06:15 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jP3Hb-0007wr-5K; Thu, 16 Apr 2020 20:06:15 +0800
+Date:   Thu, 16 Apr 2020 20:05:34 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-sa1100fb] BUILD SUCCESS
+ 6a7f966069a267078313489f124a598169328e57
+Message-ID: <5e984a0e.K43SpVhTlMtizXtb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
- <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
- <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
- <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
- <20200413123921.GA32586@x1> <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
- <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com> <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
- <20200415233712.GA16167@x1>
-In-Reply-To: <20200415233712.GA16167@x1>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 14:03:43 +0200
-Message-ID: <CACRpkda_upTeRn7xT9LuAkVKAf8LxUmQJJbVWhOoq+4zyoxfsw@mail.gmail.com>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-To:     Drew Fustini <drew@pdp7.com>, Tony Lindgren <tony@atomide.com>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 1:36 AM Drew Fustini <drew@pdp7.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-sa1100fb
+branch HEAD: 6a7f966069a267078313489f124a598169328e57  ARM/fbdev: sa11x0: Switch to use GPIO descriptors
 
-> Is there no way for gpio-omap to call into the pinctrl-single backend to
-> set the bias bits (PULLUDEN and PULLTYPESEL) in pad control registers?
+elapsed time: 870m
 
-Mostly a Tony question I think, but the single pinconf_ops call
-pcs_pinconf_set() which is pretty straight-forward.
+configs tested: 78
+configs skipped: 0
 
-Have you tried modifying omap_gpio_set_config() so that
-it accepts these configs and just calls down to
-gpiochip_generic_config() for anything that is not debounce?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Yours,
-Linus Walleij
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                              allmodconfig
+sparc                            allyesconfig
+microblaze                      mmu_defconfig
+i386                                defconfig
+s390                                defconfig
+m68k                          multi_defconfig
+m68k                       m5475evb_defconfig
+c6x                              allyesconfig
+riscv                               defconfig
+nios2                         3c120_defconfig
+um                           x86_64_defconfig
+m68k                             allmodconfig
+openrisc                    or1ksim_defconfig
+s390                          debug_defconfig
+nds32                             allnoconfig
+csky                                defconfig
+nios2                         10m50_defconfig
+h8300                    h8300h-sim_defconfig
+mips                      fuloong2e_defconfig
+mips                              allnoconfig
+xtensa                          iss_defconfig
+s390                             allyesconfig
+um                                  defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+c6x                        evmc6678_defconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+i386                 randconfig-a002-20200416
+i386                 randconfig-a003-20200416
+i386                 randconfig-a001-20200416
+x86_64               randconfig-a001-20200416
+x86_64               randconfig-a002-20200416
+x86_64               randconfig-a003-20200416
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                             i386_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
