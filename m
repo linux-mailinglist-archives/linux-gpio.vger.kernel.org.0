@@ -2,72 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A0431ABE0A
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 12:36:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BF5C1ABE13
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 12:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505076AbgDPKgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 06:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505173AbgDPKgM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 06:36:12 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC219C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:36:11 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q19so7214047ljp.9
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:36:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQu300lUTOiTvpUJiIxEhKHUf2GTuAXWynFlZc+n7uw=;
-        b=oC99QlH5V7Mq+tevXx7T4yLRDAjfp1yUAH3klLye3RF3rK2BLGY0OxNQc6Dsdz8UUQ
-         MQAIiJ31+OhVsAtPqTz56wL48YxnC71rwCuUJ6Ga74dypo4dQXhGd4d5z/5jBbaRrvap
-         35oIuo6yWt3wGEofo4YyHdNXsB2jV/uQIeY6ke2QjCSNrUb6TwZz3Qi9ai9Zam4tqzS8
-         ZPebjPFnTBZM/+Z4ZCoevBjqgXStnDTbEoGxaP/Rm7wX3JwhbXc2pidfSTG+i67W/CS1
-         +E39bRDid0UMPia8tcLrUrhxT7g5SfOKsYFXraxFaK6UoDaiXEFOo3IJjLcGmfJVs19n
-         8KmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQu300lUTOiTvpUJiIxEhKHUf2GTuAXWynFlZc+n7uw=;
-        b=Z+Qq8Pq/rHqK+KMfoeSlMBQIfT50Mc448BYjYS5FWQJdxmw32uQflJ/x9+tZrMGkAm
-         SFAZht4QfC4bD0WaxU2s+ydtpOnjfjqH6Dq2W78wdRu7tf3KkPIqr+0cZ+X/p39yTV/I
-         Q0OYPTUIOFWWOf1pbhumJi+YIvsmizdmoDBO4jGqLRGa1Ti4AHSzirOh163V/4YGK6zM
-         jSnJH3/B27j2/NfLgm9aaCGSmJwX5qh7HMv+aB6gtOyLKu7hoBwYSv5NI/FNfbrsCyPX
-         +UpIILS9OP4MfUHpvCNpQ413R6qusjW+3eDPRB0Ry/FWjV/62SMMOyBoJA3NAdoLU9R5
-         otew==
-X-Gm-Message-State: AGi0PuZn7z24CtAmwusXiotmPY25EzBWSJ71UL77LXW/08MMCuXGOUFh
-        XR1gmh4XW8t9coJkTE58HT/B+LuqJDpQ+W+Vd+SzjH32
-X-Google-Smtp-Source: APiQypJ5zT5ApQmsgDMKRg4tfu0hHp6hblmlqwXZk9HJkob2nxscoxvuWaclwOU8WINGiLDL7umdGVs+BlcIuQjQ//M=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr1150046ljp.277.1587033370127;
- Thu, 16 Apr 2020 03:36:10 -0700 (PDT)
+        id S2505373AbgDPKjh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 06:39:37 -0400
+Received: from mga17.intel.com ([192.55.52.151]:1855 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505352AbgDPKjK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:39:10 -0400
+IronPort-SDR: NGZeJ0+fm8TUBqsDibiv9TKmw7gBZkneF5N/1xttWAlXrSO0zYowVyQTdwD/66GGmU3WmJOtDQ
+ HCiJkfxiLqhw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:39:10 -0700
+IronPort-SDR: a3ezKp64KdgfmwLRLcFP3yiMxwrf4aHAVPhtkgjrwoBwwa8mgqzs6MoUOL6QFqBd+rDmAkhk2S
+ s9afEAsO4ZVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="299271809"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Apr 2020 03:39:08 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jP1vL-0010XD-F1; Thu, 16 Apr 2020 13:39:11 +0300
+Date:   Thu, 16 Apr 2020 13:39:11 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 08/14] gpio: dwapb: Convert to use IRQ core provided
+ macros
+Message-ID: <20200416103911.GX185537@smile.fi.intel.com>
+References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
+ <20200415141534.31240-9-andriy.shevchenko@linux.intel.com>
+ <20200415175309.6l6skv7qsdjqsryi@mobilestation>
 MIME-Version: 1.0
-References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 12:35:59 +0200
-Message-ID: <CACRpkdY6_EChELrKGtcvsBvDqEQ9QD1=+PWWZuyBZV_CpLvUyA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/9] pinctrl: mcp23s08: Get rid of legacy platform data
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415175309.6l6skv7qsdjqsryi@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 7:38 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Wed, Apr 15, 2020 at 08:53:09PM +0300, Serge Semin wrote:
+> On Wed, Apr 15, 2020 at 05:15:28PM +0300, Andy Shevchenko wrote:
+> > IRQ core provides macros such as IRQ_RETVAL().
+> > Convert code to use them.
 
-> Platform data is a legacy interface to supply device properties
-> to the driver. In this case we even don't have in-kernel users
-> for it. Just remove it for good.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> BTW Forgot to mention. Irrelevantly to this patch just so you know seeing
+> you are from Intel and this part is being utilized by the Intel Quark SoC.
+> dwapb_irq_handler_mfd() handler will cause a problem in RT-patched kernel
+> (I've seen such issue in another GPIO-driver). So if PREEMP_RT_FULL patch
+> is applied and the FULL-RT scheduler is enabled all interrupt handlers
+> specified by request_irq()-based methods will be handled by a kernel thread,
+> while generic_handle_irq() is supposed to be called from the atomic context
+> only (with interrupts disabled). As a result an ugly stack dump will be printed
+> to the kernel log by the next code:
+> https://elixir.bootlin.com/linux/latest/source/kernel/irq/handle.c#L152
+> 
+> A way to fix this is described in Documentation/driver-api/gpio/driver.rst
 
-All 9 patches applied.
+There is patch from Siemens to fix that [1]. I dunno if they are going to upstream it.
+Jan?
 
-Thanks!
-Linus Walleij
+[1]: https://github.com/siemens/meta-iot2000/blob/master/meta-iot2000-bsp/recipes-kernel/linux/patches/rt-0002-gpio-dwapb-Work-around-RT-full-s-enforced-IRQ-thread.patch
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
