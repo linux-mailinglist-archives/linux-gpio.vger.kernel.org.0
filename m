@@ -2,74 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 849791ABE79
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 12:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD7831ABFD8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2505790AbgDPKwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 06:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505651AbgDPKvx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 06:51:53 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5DEC061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:51:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so7284849ljn.7
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 03:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GlIF++nu8Ug7h0uE3qnGmqRpm35mv0oidrnwnkh7B9c=;
-        b=prL4/FeR8bv2MG6Cl0V6E9Ku1o+7uXcyJbztbjzweZCiBx9Hxp2gx2xVHJlovmeZGo
-         qYEnpxMnkZ6hvRXMT8He8BDtsd+mBMZzcqI9c8eprJINfbrqJG03PfWmtht5dHLWcJZI
-         5trDR28YZxCIA/02mnH8j4RcbQskOsmU/6yzQLNd51onivgIz59Evhk5DUQ5kIDQ7b9s
-         7uwHfKzCzVwbIgyxx0ixXVUTtIOL4t2SXk0cTmPyZD17+QToyL3VCtTirBj0LQbqeQzs
-         +YCUXsSX1xU/JzvCFOBZndza7FZKSctqx0U9eSocwX17I60uhTy2glxNqkBz3eJgMWDX
-         Af9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GlIF++nu8Ug7h0uE3qnGmqRpm35mv0oidrnwnkh7B9c=;
-        b=IsSJE74550x8v2ozamVzSBR8qivkAJsTZxr+2qU77DRQ9DjSN88+oOxZunBRBw2TiX
-         ANwqm8G7rkPX8o5VOoi9pwxJFLQAEDXif/TZZ6I50L5ScbNDR02AepdeB1IXZcm2UzSm
-         O9y68y1CgP6OwOlEdt5EAbjFrKjNoDUU6HIlC23+R7owpOzB4+fW+4DeJ5dCTEKPdYaP
-         i6PMZhjTzvisE9aJSXA7sEmgH/0g2m194b5eaqtWObdZTtzyyKbEtUdr+fMqWnj4TGJt
-         bWKUi0LJDu9QD22BUOxIThVXBLfW2xQ5knUEdzqj1+WNFo2h1Oe7BS09QSXERkiliC3c
-         uWgw==
-X-Gm-Message-State: AGi0PubFDk0J3MterLnFms5ptgGzL/WGcDS5x0OXWbjQGzcnxYEUhyiq
-        4fU1hpbfWJr9QlcX0+ZI47B6zyQvyupKHNuetD+uj1Zu
-X-Google-Smtp-Source: APiQypLDep+VjwqXW1hBjTwNlksRFgFUS2Kz+7KEpbjH0NkG1BgoTJqjsUW/HhLphKoiHD/OZe0mOzjlWJ+3bzC+P6Y=
-X-Received: by 2002:a2e:9605:: with SMTP id v5mr5892673ljh.258.1587034291083;
- Thu, 16 Apr 2020 03:51:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200408154155.68310-1-andriy.shevchenko@linux.intel.com> <20200408154155.68310-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200408154155.68310-2-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 12:51:19 +0200
-Message-ID: <CACRpkdYd4SOZrX0x9m9r+E70OKs=riu3R2r=_w3yH9WpEOyHBg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: merrifield: Better show how GPIO and IRQ
- bases are derived from hardware
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S2505944AbgDPLlz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:41:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:47743 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2505821AbgDPK6T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 06:58:19 -0400
+IronPort-SDR: UUeMEtLSTwLIubEx52H3kw/x2O/6mPQxfbuB7DrKTOnnHOBUwxO0d5Y45mugdOznJmrxfPJiGV
+ Ru1K2qPOQgHw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 03:52:59 -0700
+IronPort-SDR: bdDRaBiPIHAtcc2Tuy915ksm04Q3IXownOC0a3PcucytcTpMLLcBat9u3OknaSR+6VE8kRul4P
+ 08CHEmN2vW4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="276611758"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 16 Apr 2020 03:52:58 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jP28j-0010fP-Mq; Thu, 16 Apr 2020 13:53:01 +0300
+Date:   Thu, 16 Apr 2020 13:53:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2 1/4] gpio: pch: Use BIT() and GENMASK() where it's
+ appropriate
+Message-ID: <20200416105301.GY185537@smile.fi.intel.com>
+References: <20200414174900.5099-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdYu3uahs--iOKXwrowiwh4ch-evGZN91N9u9q_rrLFV9w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYu3uahs--iOKXwrowiwh4ch-evGZN91N9u9q_rrLFV9w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 5:41 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Apr 16, 2020 at 10:27:40AM +0200, Linus Walleij wrote:
+> On Tue, Apr 14, 2020 at 7:49 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Use BIT() and GENMASK() where it's appropriate.
+> > At the same time drop it where it's not appropriate.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > v2: update one more macro (all IRQ settings are plain numbers, not bits)
+> 
+> I managed to extract this v2 series with b4 and applied it.
+> 
+> I don't know if you planned to send a pull request for the PCH
+> changes, it was so simple to just use b4 that I tested it on this
+> patch series and it just worked.
 
-> It's a bit hard to realize what the BAR1 is for and what is the layout
-> of the data in it. Be slightly more verbose to better show how GPIO and
-> IRQ bases are derived from the hardware.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks!
 
-Patch applied.
+I would like to have rather Ack and send a PR, since there are more Intel GPIO
+patches in a bunch.
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
