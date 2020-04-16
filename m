@@ -2,76 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C5471ABF6F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56EA71ABF73
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2632907AbgDPLf2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 07:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506401AbgDPLfS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:35:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AD1C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:35:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id r17so5336144lff.2
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KaAhukMUIHoPJmiet8bQ9He9/igYhmROF/7nbgT3NNs=;
-        b=VaA8N/yDV5gUKBF5azwBtgHkrXp/cGfGUNE29vNHgk7uyXpKQBkJSzymfBO5T5yfy1
-         aIW/Efb9Py59WvBfFHkF6YUvNe6Tn9nxH3QHSnbo+Q9ycdl227TVI5lUbm+oiGp5i8dA
-         PqZtCrFqqOmj7p9TkmQXg3RLA8JizGO7+rleOXOFZFTThlhpsiGrR7gwL2t78/ggtA6x
-         4gSjPkEq7GVeiz/ce36nzJOzg8Z7vylxL39EumAWakC09+XIw8bc2OgcpB3NVkwxovHk
-         xua8lLAnwetlHmTpbq8I+DS7qlJ27bgm+3jr8eamhFykzQsgrBMZSE2ZNRq6St6ghuPc
-         1j7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KaAhukMUIHoPJmiet8bQ9He9/igYhmROF/7nbgT3NNs=;
-        b=KHGvMgq3niV6T+nah+wUXCc0QC/2h9LTqghtBZEsXtlNrP+frNe9iEVSx6OsmX0JDW
-         WKFsT5jrIaXZz4Zb/w7roSdnbLuSzSLsenTyEUe6sjHrF/YWO7sNWG9PP2GCFfyiN/9o
-         lTVQeBLhddCufznO8TQDWz8cIowdl34/rk1DOOuiik4OxslkvYgv6RpalJ1/GCGLBAlP
-         cAbvm3zCjsohBk5tseGQqf2+j71tDeQvjzt550Rc09EVjw6Z34jNDkpCpBLCPROMCrmh
-         t8sh7MZFBg9Xe/I/t11YXnG/tx920giB+a9LxtpS3hwIjt4VXQV22dnQ3E99vM3+H5Mn
-         Hqxw==
-X-Gm-Message-State: AGi0PuZkxW/dzbgqROnGHZT1dvBfMtBhIiJA4kLPUMRkGJBYPl6lBm2Y
-        4uIMb/qo7Og3BNjZqFFwhjF3/KvjEbRct88lrTOrJw==
-X-Google-Smtp-Source: APiQypJmC7KgFV1aBCIMoLEemCJAeJyegX94Nx9H1CIZ7FdkAQVcBfWABrRgBI2IN4HJjyXehe8cuD+DW63+70AOJTA=
-X-Received: by 2002:a19:cb41:: with SMTP id b62mr5891623lfg.21.1587036916039;
- Thu, 16 Apr 2020 04:35:16 -0700 (PDT)
+        id S2633485AbgDPLf5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:35:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:49921 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2633761AbgDPLfm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 07:35:42 -0400
+IronPort-SDR: JlLiotrAurs9eS89D/lL3AA4s91UrsTVbW6lQSOcgq4Nfy9UMqWRx1TfT9C2Bd2WWlaWK6yOxq
+ Ww2oA0Phhz/A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 04:35:42 -0700
+IronPort-SDR: NqK85L1dulKu/5rbERxgaLNMOI3Omv8yoJBKLFyT1x2ewZRht2u3F0FMPEnjSSVuWMxowS81QK
+ 7w8kFJWUaXkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,390,1580803200"; 
+   d="scan'208";a="242623296"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 16 Apr 2020 04:35:40 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jP2o3-00115L-UD; Thu, 16 Apr 2020 14:35:43 +0300
+Date:   Thu, 16 Apr 2020 14:35:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] gpio: merrifield: Switch over to MSI interrupts
+Message-ID: <20200416113543.GB185537@smile.fi.intel.com>
+References: <20200408154155.68310-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZKEpz=acfw0zQ71pWmLU8dALS4tap412U2x6GyY82opw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200414161338.3025-1-andriy.shevchenko@linux.intel.com> <20200414161338.3025-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200414161338.3025-2-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 13:35:05 +0200
-Message-ID: <CACRpkdYpQC2xMzRXcm8v0LC7NB+47txJph37YHjUw9Vjw0b2bw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] pinctrl: lynxpoint: Use platform_get_irq_optional()
- explicitly
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZKEpz=acfw0zQ71pWmLU8dALS4tap412U2x6GyY82opw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 6:13 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Apr 16, 2020 at 12:50:43PM +0200, Linus Walleij wrote:
+> On Wed, Apr 8, 2020 at 5:41 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Some devices may support MSI interrupts. Let's at least try to use them
+> > in platforms that provide MSI capability.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Patch applied.
 
-> There is no need to repeat functionality of platform_get_irq_optional()
-> in the driver. Replace it with explicit call to the helper.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Can we return to established scheme when we send a PR to you? Or you think
+better not to do like that anymore?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-For all Intel pinctrl patches I will occasionally review and othewise
-just wait for your pull requests.
 
-Yours,
-Linus Walleij
