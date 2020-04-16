@@ -2,100 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A84F1ABFDD
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD481AC04D
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 13:53:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633788AbgDPLmt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 07:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
+        id S2634113AbgDPLxl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 07:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2506472AbgDPLml (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:42:41 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3CEC061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:42:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m8so7493662lji.1
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:42:39 -0700 (PDT)
+        with ESMTP id S2634099AbgDPLxi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 07:53:38 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482C0C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:53:38 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id w145so5364820lff.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 04:53:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PMemjoCt4EMKF+iaj5mfbjvOgSWo2uOQlvsUZEFak2w=;
-        b=d+ge5ueOEBxL85/Rug3S7EEuX77yMsrtiKnGUaRtQ7w1l8OIu5l5bvFy7ZuS4+iIDc
-         vEuvxgrjdYRMjzfB1i5140XxLorLvTk+XhU8Lw4ySKdwNEyiBqJ1e11vOAimeEDdeFsq
-         d5G10/xEhTp5FHT0pJH7mGsdf7DK30sWc0QPDKj4xkmzQvUvk97GJouZCpzE97tjVwAk
-         5vuoYW/mt34Hi9rtm+iEnu0/oKgBGroShdTRV5HUW+iduqhk9LagtACmFRFCGZT7azR9
-         htL5Wotiu2zhlKEoa4o/iQd5efO8JDhDuyekp+xZ2jonjMgCc03NFrnveMG4VUo2epW5
-         6Gag==
+        bh=m8ZQeMlZwt4Luzk/CrzC0D37KaOrj1I1Zm2f8GE934A=;
+        b=xuyhjCJNnvRgEB+JDis7XdLSadcTJyK9uVilGBmrq53lTLTBmX7XkYb6umQe8YK+nr
+         fxGXOhvzNg4cvUdv81KMGbUcvKQRMZOS6Ff4T8GR9IPRmq7U3VKYJTp3Tu3PtlCH0Nuq
+         KMLxip7oYzNL7+3YL6PVaUW13b1fgkzzQaiEjcitJGSl4DixblUV/RK8UwzSDf5gYdhu
+         boMl3sGMmPDF//s1/2pV5w4k49fVPWKMqrGc8RJYfu3yBn0JNY4nkMiULGo9e0Xrw9j3
+         zgej0c7d/1qd/TggB4iIkDa17CwrnXRHSSvYpe8/EsuLJQAKpP10Yb0FcETK0StzBxWn
+         t0Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PMemjoCt4EMKF+iaj5mfbjvOgSWo2uOQlvsUZEFak2w=;
-        b=V6KfemfzNe9tgqPAywaZKNyX+yNCob7IfH2hsH4pwfU33l1oifg8x82x4d59sDcGCL
-         nP10I92XPPKOOyj2UzFjUkHbsEGs0yBbx78uGa7I5lkOp9ahSwZMeYJZPvNCuAIsA1rv
-         WA2pQaUrljen0PH3Ll+O0JKWyS2yVmERIEZsVmD/voWANyAyq1O3oRfQMn4tNdo3h2PJ
-         RFTUf2Weu1aOjOxQdVsJUOavwNafeh9dWdsoVge0hy0xKAE6/uJ29u+Q0RuPCDuZaT14
-         h4zIuK2j9oQIUzZ7h0DRgqOz7Kdl07uWfHDByb8+ywtdVhTNas2eE9udstYtWWp/zyK1
-         SA3A==
-X-Gm-Message-State: AGi0PuaN23733LjCPt7mlCMSBOE2gZXGpgTXneAF4AZEZR3LQctcVhgc
-        A/8X0nKp1seTXjFS7hJd1yKe8Z5yrlUDZs9+ltZYwA==
-X-Google-Smtp-Source: APiQypIiZuLzQrvYkiNeyORy157fLPptCAM8hPVcZFSfyIeA/0Aw/t8tq6u9+QYki+nEJa9ACas6eAvqHD2XaCatgUw=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr1319254ljp.277.1587037358214;
- Thu, 16 Apr 2020 04:42:38 -0700 (PDT)
+        bh=m8ZQeMlZwt4Luzk/CrzC0D37KaOrj1I1Zm2f8GE934A=;
+        b=sup4lguzanM/+LJ7gipNkXrSK59dPifLinzhF41+ikfW7vlEDKBPsLg1d0wiFmEp4q
+         dAXEtERqGe73647S9g/GiWJRia6HTK/c5cQ18ZCONa3balS+vZVLGr/sAC71VEDi0S9V
+         ejYWR8yU3CKFc580j4KftQeFAYFgCXgdO4ZW8aaoSJNHtX/OnH//Z8sNe3JwXDmlJdtL
+         9A/4XDjIa+VsjF7dNdEyTM+gyZ4wb7nSpk5NovlmuDutSeaRLOxKGr2k2OlnAck0vu9W
+         +IUf3GZmd2e/VFhPVyQpEgcxKAcEaRJEpuMyEhxCiD+4gRZM+egfAj07zaRsfN5BYWEX
+         HYhw==
+X-Gm-Message-State: AGi0PuYU2DX1oV8xBbJdu/Q2MHA2zGCU8veMRami5hDGLDEwAVe2Rci9
+        sJel1CNugVpDfs0Z65PrufJDfN+Cl9EEC28HoS5KBA==
+X-Google-Smtp-Source: APiQypLwJebkvpewjgmUDZ4bFXdTBWDUH7wGL9hEnXECiQww129uiHsEPRZGRuSm+dgP+CDFoSHw6jGbYOsM0Q/69C0=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr5927482lfp.77.1587038016764;
+ Thu, 16 Apr 2020 04:53:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-2-pierre-louis.bossart@linux.intel.com> <20200414170934.GA34613@smile.fi.intel.com>
-In-Reply-To: <20200414170934.GA34613@smile.fi.intel.com>
+References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
+ <20200415141534.31240-14-andriy.shevchenko@linux.intel.com> <20200415163710.e26czil5abouujzu@mobilestation>
+In-Reply-To: <20200415163710.e26czil5abouujzu@mobilestation>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Apr 2020 13:42:27 +0200
-Message-ID: <CACRpkdZRnSUhmVPKjJ6dWnSfhnvrAKUrBY6tWLkxPgT28CzbHw@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/16] ASoC: pcm512x: expose 6 GPIOs
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Matthias Reichl <hias@horus.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Thu, 16 Apr 2020 13:53:25 +0200
+Message-ID: <CACRpkdaO8GMXOOMomzmzfhDqYfgdhjTq8XvQHXuGRmnrfk7bOw@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] gpio: dwapb: Use positive conditional in dwapb_configure_irqs()
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 7:09 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Thu, Apr 09, 2020 at 02:58:26PM -0500, Pierre-Louis Bossart wrote:
-> > The GPIOs are used e.g. on HifiBerry DAC+ HATs to control the LED
-> > (GPIO3) and the choice of the 44.1 (GPIO6) or 48 (GPIO3) kHz
-> > oscillator (when present).
-> >
-> > Enable basic gpio_chip to get/set values and get/set
-> > directions. Tested with GPIO_LIB from sys/class/gpio, the LED turns
-> > on/off as desired.
+On Wed, Apr 15, 2020 at 6:37 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Wed, Apr 15, 2020 at 05:15:33PM +0300, Andy Shevchenko wrote:
+> > The negative conditionals are harder to parse by reader.
+> > Switch to positive one in dwapb_configure_irqs().
 >
+> Sorry as for me this modification is redundant. Yes, I know that if-else
+> statement in some cases better to start with positive expression to make it
+> a bit more clear, but in this case I'd leave it as is. First this rule is
+> applicable if both branches are more or less equal, but here I see the most
+> normal case of using the dt-based generic device, which doesn't declare the
+> IRQs as shared seeing it is selected by far more devices at the moment.
+> Second the non-shared IRQs case also covers a combined and multiple-lined
+> GPIO IRQs (chained cascaded GPIO irqchip), while the irq_shared clause have
+> only a single IRQ source supported. Finally If the code was like you
+> suggested from the very beginning I wouldn't say a word, but this patch seems
+> to me at least just moving the code around with gaining less than we have at
+> the moment.
 >
-> One question, can this use existing GPIO infrastructure, like bgpio_init()?
-> Ah, I see, that one operates over MMIO, while we would need something based on
-> regmap API.
->
-> Bartosz, do we have plans to have bgpio_regmap_init() or alike?
+> Linus, Bartosz and other GPIO-ers may think differently though. Lets see their
+> opinion.
 
-Michael Walle is working on that:
-https://lore.kernel.org/linux-gpio/20200402203656.27047-11-michael@walle.cc/
+I think I already applied all patches with the batch application tool b4,
+without properly checking which patches you reviewed and not, sorry :(
 
-I think we should try to merge it sooner rather than later.
-I can provide an ib-* branch for ASoC whenever we agreed
-on a basic generic driver.
+However if any change is controversial I can revert or pull the patch out.
 
 Yours,
 Linus Walleij
