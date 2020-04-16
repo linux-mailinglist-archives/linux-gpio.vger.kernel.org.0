@@ -2,101 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 216561AC0BF
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7171AC0AA
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Apr 2020 14:04:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2635043AbgDPMIY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 08:08:24 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:32806 "EHLO lizzard.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2635001AbgDPMIT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 08:08:19 -0400
-X-Greylist: delayed 448 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Apr 2020 08:08:17 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 03GC0XTI010334
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 14:00:33 +0200
-Received: from [167.87.14.243] ([167.87.14.243])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 03GC0WZT010398;
-        Thu, 16 Apr 2020 14:00:33 +0200
-Subject: Re: [PATCH v2 08/14] gpio: dwapb: Convert to use IRQ core provided
- macros
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
- <20200415141534.31240-9-andriy.shevchenko@linux.intel.com>
- <20200415175309.6l6skv7qsdjqsryi@mobilestation>
- <20200416103911.GX185537@smile.fi.intel.com>
- <20200416110135.dieh6gctkh3bwyiz@mobilestation>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <d4840691-72d6-316c-a66f-a44d422b07cb@siemens.com>
-Date:   Thu, 16 Apr 2020 14:00:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2634863AbgDPMEA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 08:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2634659AbgDPMD4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Apr 2020 08:03:56 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5785C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:03:55 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id h6so5421873lfc.0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 05:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o670ErblNjXwLmVYEfpf91xjkotnH6/uPHwmnEnshmI=;
+        b=T7hOq5vMcO8u8QOFQRpuSFYa2mgJc1T47DhIMgZsV1yewE0TJ9HfdSUeqAQLNA/Zir
+         M8MCa50vW9VZfxqjHKEY7yGU7KMieeS4tpb9nmsG8XCcpOiCz38aezWClrX7vtgDlLRn
+         CqOrwpZDMNyKjHR6d6JxSr01EiaWzVLBywiV1KzhrVPrAdL3O8qd2CUy2BcXeSD+0emU
+         dxxF/rLiT1jnvoF/80sgewcUYpPUvxZt01A7DNgjptwkfhbJ26r6JhxkkXag6ljzjWpq
+         ta7DHxhmuyv86JiZoI8OgHkborDWJMr1Znk11uROgYyBGdL2xmdn8D+8Sq5aqDVeVX9b
+         3u4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o670ErblNjXwLmVYEfpf91xjkotnH6/uPHwmnEnshmI=;
+        b=WJuU6bhV78umsO7sacVwzPObaQBi5XePvNUxN6ef+xctrB53CuPMSvUyiYxx1hWtWv
+         Gzt7LbQj9nvgG5MzpwxgRyEwCA7B9i5FpIiIlCQQwioDZGD6MXLKUUlT9ZpObNx2FQqN
+         rKmDFqziJvh1//82WgMhgFknJUXfAq/nzI9+jV/Hr0WcHgDaqyikO8APrwrxoDTnOH0x
+         JBETAxKRy5Kl1VuCmtXYRKTt2WwWetijl8IqfSnajG0YgqRU/wyKmHDj8xKw+bjRRtDd
+         cAN5q9anU93GxEY5QW+zbDOlX+Huaj1tUvLkFXLoRYHjpGQktUyMKmEorSibnWxHX9py
+         vJ+w==
+X-Gm-Message-State: AGi0PuZ7X3TLdQKl+U2Jexb2JMiE/VIa0z9A4YaRXpir88YtNAuA5996
+        8KEe9QjwL7WXf8Coui1MNWqEGVAruN+WuSHSYNGOUA==
+X-Google-Smtp-Source: APiQypIK2uLfJGQ1ZATASJZHqPMrNJqaZjhcLiPjTVmrBxee13OJdf7e1BmxQ41P0mZKgKOa8lbi9SM1JzyVDj7V6W4=
+X-Received: by 2002:a19:cb41:: with SMTP id b62mr5955353lfg.21.1587038634346;
+ Thu, 16 Apr 2020 05:03:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200416110135.dieh6gctkh3bwyiz@mobilestation>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
+ <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
+ <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
+ <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
+ <20200413123921.GA32586@x1> <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
+ <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
+ <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com> <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
+ <20200415233712.GA16167@x1>
+In-Reply-To: <20200415233712.GA16167@x1>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Apr 2020 14:03:43 +0200
+Message-ID: <CACRpkda_upTeRn7xT9LuAkVKAf8LxUmQJJbVWhOoq+4zyoxfsw@mail.gmail.com>
+Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
+To:     Drew Fustini <drew@pdp7.com>, Tony Lindgren <tony@atomide.com>
+Cc:     Robert Nelson <robertcnelson@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16.04.20 13:01, Serge Semin wrote:
-> On Thu, Apr 16, 2020 at 01:39:11PM +0300, Andy Shevchenko wrote:
->> On Wed, Apr 15, 2020 at 08:53:09PM +0300, Serge Semin wrote:
->>> On Wed, Apr 15, 2020 at 05:15:28PM +0300, Andy Shevchenko wrote:
->>>> IRQ core provides macros such as IRQ_RETVAL().
->>>> Convert code to use them.
->>
->>> BTW Forgot to mention. Irrelevantly to this patch just so you know seeing
->>> you are from Intel and this part is being utilized by the Intel Quark SoC.
->>> dwapb_irq_handler_mfd() handler will cause a problem in RT-patched kernel
->>> (I've seen such issue in another GPIO-driver). So if PREEMP_RT_FULL patch
->>> is applied and the FULL-RT scheduler is enabled all interrupt handlers
->>> specified by request_irq()-based methods will be handled by a kernel thread,
->>> while generic_handle_irq() is supposed to be called from the atomic context
->>> only (with interrupts disabled). As a result an ugly stack dump will be printed
->>> to the kernel log by the next code:
->>> https://elixir.bootlin.com/linux/latest/source/kernel/irq/handle.c#L152
->>>
->>> A way to fix this is described in Documentation/driver-api/gpio/driver.rst
->>
->> There is patch from Siemens to fix that [1]. I dunno if they are going to upstream it.
->> Jan?
->>
->> [1]: https://github.com/siemens/meta-iot2000/blob/master/meta-iot2000-bsp/recipes-kernel/linux/patches/rt-0002-gpio-dwapb-Work-around-RT-full-s-enforced-IRQ-thread.patch
-> 
-> Just to note I wouldn't accept that patch as it is, because it's applied to all
-> types of IRQ handlers supported by the driver. The chained cascaded IRQ
-> handlers won't be converted to the kernel threads in RT-patched kernels [1], so
-> using the wa-lock is redundant in that case. One of the ways to fix it is
-> to have a conditional wa_lock acquisition depended on the irq_shared flag
-> state. Alternatively we could create a dedicated handlers for each types of
-> the IRQs.
+On Thu, Apr 16, 2020 at 1:36 AM Drew Fustini <drew@pdp7.com> wrote:
 
-Yeah, never had the time to dig into details. Also, that patch was only 
-tested on one particular device with one particular kernel series 
-(4.4-cip-rt). That's why it's a "workaround", not a fix.
+> Is there no way for gpio-omap to call into the pinctrl-single backend to
+> set the bias bits (PULLUDEN and PULLTYPESEL) in pad control registers?
 
-Jan
+Mostly a Tony question I think, but the single pinconf_ops call
+pcs_pinconf_set() which is pretty straight-forward.
 
-> 
-> [1] Documentation/driver-api/gpio/driver.rst
-> 
-> Regards,
-> -Sergey
-> 
->>
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->>
->>
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Have you tried modifying omap_gpio_set_config() so that
+it accepts these configs and just calls down to
+gpiochip_generic_config() for anything that is not debounce?
+
+Yours,
+Linus Walleij
