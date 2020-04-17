@@ -2,101 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DFB31AD9FE
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 11:32:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E4A1ADAD8
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 12:21:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgDQJcB convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 17 Apr 2020 05:32:01 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40265 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730233AbgDQJcA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Apr 2020 05:32:00 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t199so1543589oif.7;
-        Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
+        id S1728674AbgDQKVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Apr 2020 06:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728631AbgDQKVf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Apr 2020 06:21:35 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C42C061A0C
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:21:34 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id r7so1434076ljg.13
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MQOUnSzPjZ8rvbaZqPPxjqcJfgipgrmZi1Zgn0PyywM=;
+        b=mQEXkcdMMwE/eQPM0YapPBtjMo6DST8o/moyzKmeqyXHWeNXpaubL07pfHl0TCMyoP
+         UDzcaqza5elEsa5JBNm9+fq7gPLXOG2qh4fD8KB2OL9HLLRnkaV6TMU0VHE7Nt62638r
+         U45iyML7axS810w9+Q5wyOkZ/VeJ53MjVgt6o98t//JMLxEkXjYYjbO8X+rloy0brHZ0
+         DPkso4foCSua+bH6ScvruldG2dbqu2uXxpJ7RXCqfWADAOnm8oM86LF3QZ8P5jrSIwsH
+         HHIiFP9hwT4MlYhyPmIrLS7Iko6Y6GqA5kuQNDGTB9NqLnv90/OgaYq++M/g7hDwDiX5
+         QnDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Xdw7qE++WbJcYYYVLLUf8m1JuzUUrBMPMGWetZ3yNmk=;
-        b=umjJwxwdZaZ9suhke1DqinrYaXbobkasW/nYM7VcjfUZssTXIpgDBJ4S7TzzzcCIbU
-         3pOBuyrUOza3erBxhjDDROKuSmyQnkU5OD5JmUNHoOd4pL7qBKQ1+FE+GD2+X+TJsRg8
-         GelTKUOF0UwvvI8488HYvh6MqT0c7fiSo7lk+1R9dkCqWBqY2aER34VPCq+oC83SQghm
-         xJ0r9h1Dvr75ISlOkz9zB1v0LmXWmjCDYILCkFyX7bNVuYBXJzHnoKZ5yhJvFiBmsieR
-         6wETxkCiuNHJPxTWo+uSNN5OURyGsa/uiG8XGy4UdEZX04rMmufBwbLYz/KWTeRRbp1g
-         VN3g==
-X-Gm-Message-State: AGi0PuZcsWfKsnF4IkGOOuBUPMTYo0QvIQYsJpvuIxG8UA5UG7Yhwgs4
-        eQk6eM2AQOrNuaItQI7drBO+J+bjDhfPHnERFUA=
-X-Google-Smtp-Source: APiQypLK2MzhwAlU5maq3OzaoFcwlxith+KDd7vNSYpfBpMujUQxyS1N38HvpPJg+83Xryx07p4rjzYgxCDw7EU0uIE=
-X-Received: by 2002:a05:6808:8cf:: with SMTP id k15mr1541313oij.54.1587115918339;
- Fri, 17 Apr 2020 02:31:58 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=MQOUnSzPjZ8rvbaZqPPxjqcJfgipgrmZi1Zgn0PyywM=;
+        b=iPPa5G2pDD/fVaZ6xU1OSf1nRIqgNrVlxD++KZ4bWdOHRFNuSddMQOn2AmXmHlmnkJ
+         s/AClnDdmPEjBJJOixWhFaI6exrbcVhYkEFjW+Yy9sK5HA8S2UPaSdaZqEFq/XERQyLZ
+         Is67s/FGjVm3btxVrDfk70yh8xBTe4/QzEvycu4LNGDBzmeWgBs4Gx5b1+xWZ4E1zeeV
+         xKLthn29rF7F6S+EM4B1UK/bobhdvVQLfOiTIC9sxjvBUQZCxwklZ4++7lHuy9aAUlO9
+         Qe4ByEAkXYzSNO9ZrOGCFbCVbNEJNEDqazob5UJ+LPmgrz+72qf5Zqd6LaZXBd2rNm/p
+         zDoQ==
+X-Gm-Message-State: AGi0PuZHkp0Ef0e+ZxTO8pBohxSheLyU4zbOrzip7n6XpU5w//4yLWL6
+        ecNI22zfZsbaqcmGsQpd0wr6Lg77aAK85bUdpH0dJQ==
+X-Google-Smtp-Source: APiQypLTHEN5Wyv0xGHW8W9/+MjNtXfHLBoSN6+O6bavkPZo9Vmsv7BORVR9ikzPGn8HwVlxK1NAzmMA+uwJYGmoXoI=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr1602091ljh.258.1587118893186;
+ Fri, 17 Apr 2020 03:21:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417092042.11994-1-yanaijie@huawei.com>
-In-Reply-To: <20200417092042.11994-1-yanaijie@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Apr 2020 11:31:46 +0200
-Message-ID: <CAMuHMdUfwbsfLNSxJLqkwTNEQims1RHBn_EwBvBUqEZshHZHdQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rza1: remove unused 'rza1l_swio_pins'
+References: <20200417092125.12513-1-yanaijie@huawei.com>
+In-Reply-To: <20200417092125.12513-1-yanaijie@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Apr 2020 12:21:21 +0200
+Message-ID: <CACRpkdYm7_DYSxvj+cwciUrfDZETbJSdGj=5L8O=QK5xcGYcCQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: mcp23s08: add module license
 To:     Jason Yan <yanaijie@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>,
-        Chris Brandt <Chris.Brandt@renesas.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jason,
+On Fri, Apr 17, 2020 at 10:55 AM Jason Yan <yanaijie@huawei.com> wrote:
 
-On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
-> Fix the following gcc warning:
+> Fix the following build warning:
 >
-> drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
-> defined but not used [-Wunused-const-variable=]
->  static const struct rza1_swio_pin rza1l_swio_pins[] = {
->                                    ^~~~~~~~~~~~~~~
+> WARNING: modpost: missing MODULE_LICENSE() in
+> drivers/pinctrl/pinctrl-mcp23s08.o
+> see include/linux/module.h for more information
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Thanks for your patch!
+Thanks, patch applied.
 
-> --- a/drivers/pinctrl/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-> @@ -398,15 +398,6 @@ static const struct rza1_bidir_pin rza1l_bidir_pins_p9[] = {
->         { .pin = 5, .func = 3 },
->  };
->
-> -static const struct rza1_swio_pin rza1l_swio_pins[] = {
-> -       { .port = 2, .pin = 8, .func = 2, .input = 0 },
-> -       { .port = 5, .pin = 6, .func = 3, .input = 0 },
-> -       { .port = 6, .pin = 6, .func = 3, .input = 0 },
-> -       { .port = 6, .pin = 10, .func = 3, .input = 0 },
-> -       { .port = 7, .pin = 10, .func = 2, .input = 0 },
-> -       { .port = 8, .pin = 2, .func = 3, .input = 0 },
-> -};
-> -
->  static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
->         [1] = { ARRAY_SIZE(rza1l_bidir_pins_p1), rza1l_bidir_pins_p1 },
->         [3] = { ARRAY_SIZE(rza1l_bidir_pins_p3), rza1l_bidir_pins_p3 },
-
-rza1l_swio_pins[] is unused because rza1l_swio_entries[] refers to the
-wrong array. So I'd rather see a patch to fix that instead.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
