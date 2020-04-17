@@ -2,172 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE2D41AD44C
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 04:06:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65B7A1AD4B6
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 05:07:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgDQCGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Apr 2020 22:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725800AbgDQCGp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Apr 2020 22:06:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2F27C061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 19:06:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g6so342671pgs.9
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 19:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Hfdx7uDJvgrGkRYQDhx6DARmHevGcYuM4GwFr74akkA=;
-        b=FQVf+DFnRHPeQ/SGO5Hw0smu9KCNhym996v6AIV/dsuwaWRyhQrYQwMlpB1zt0+nX/
-         BSOYTHaqkFX/m3b9KlZPcrLzLGvOlmcJROEVN5Y5MvozAx1dvDjYDESncXlfAe105qfx
-         onkTOTzapOUqP3I+4socEd8Os145UAQyxt7/I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Hfdx7uDJvgrGkRYQDhx6DARmHevGcYuM4GwFr74akkA=;
-        b=Do3pTRAGC09GT8k1lM7G+OhMReWXBnu7/oYMRumu7Kcxu1Fh3b7iaMs3Wfkn53ffrr
-         rOq3Ai8CUwlh6GZkh8tbpZQWkUKNVTRam4qcRv57TbZI+rsA7AlCAjyXI0NNt76LhPpY
-         t2iEhY/46LdardxScEqMyzK4oEiQAJKbIAArtfEyzMUs+wLBdLRlz9gjoQ+5mWvSKcX9
-         tIQzIHgjZwT8XObDNmlO/nsp+E3dbR6hdc/IiZ0egaREtZhQtqKyoOCOv9QdF/7BFlIm
-         15QtF4z/99W5xSWXbubWPyg7dHkH+XbqKxw0zc8UM/mxNIdKfjjA6+5hphI/rQKade8n
-         0ONA==
-X-Gm-Message-State: AGi0PubUMfLchPXkIqLDVfQT1BN5n+iFAHx2ZEKGvT1qRKRGwXK6qcus
-        4vRYWS4V3K0V4adfAql+C1JIpw==
-X-Google-Smtp-Source: APiQypIAm+eOkLnh9jfVGsJPFCRSE3u2oQZAeMT8zXL+p+ToKv0aaogvmqJScYekjpJ7CEwbwJZhCw==
-X-Received: by 2002:a63:2cce:: with SMTP id s197mr761627pgs.184.1587089205194;
-        Thu, 16 Apr 2020 19:06:45 -0700 (PDT)
-Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id t5sm365532pjo.19.2020.04.16.19.06.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2020 19:06:44 -0700 (PDT)
-Date:   Thu, 16 Apr 2020 19:06:41 -0700
-From:   Brian Norris <briannorris@chromium.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        id S1729422AbgDQDHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Apr 2020 23:07:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:55962 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726261AbgDQDHW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Apr 2020 23:07:22 -0400
+IronPort-SDR: EYdJCmtBru4rbaluOyE5MHeEV7Ivrm+HrzjFRK86wc3KiFFCHHtZtTSzQr6Y4DytL+QqCIWyWV
+ 8rkoE9IPUrdA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 20:07:21 -0700
+IronPort-SDR: oHFK1spMtpYMj3ToB3RxqHDIeFREVMv9M2EozHcEDEAr5bLUR9sj5f/mtarLi5cvLgUCKMUukH
+ eYkPq9vAo4gA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
+   d="scan'208";a="289122494"
+Received: from gracekao-precision-3630-tower.itwn.intel.com ([10.5.232.24])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Apr 2020 20:07:19 -0700
+From:   Grace Kao <grace.kao@intel.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
- of ACPI GPIO numbers
-Message-ID: <20200417020641.GA145784@google.com>
-References: <20200205194804.1647-1-mst@semihalf.com>
- <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
- <20200207075654.GB2667@lahna.fi.intel.com>
- <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
- <20200210101414.GN2667@lahna.fi.intel.com>
- <CAMiGqYiYp=aSgW-4ro5ceUEaB7g0XhepFg+HZgfPvtvQL9Z1jA@mail.gmail.com>
- <20200310144913.GY2540@lahna.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200310144913.GY2540@lahna.fi.intel.com>
+        linux-kernel@vger.kernel.org, briannorris@chromium.org,
+        grace.kao@intel.com
+Subject: [PATCH v2 1/1] pinctrl: cherryview: Add missing spinlock usage in chv_gpio_irq_handler
+Date:   Fri, 17 Apr 2020 11:04:49 +0800
+Message-Id: <20200417030449.10601-1-grace.kao@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mika,
+According to Braswell NDA Specification Update (#557593),
+concurrent read accesses may result in returning 0xffffffff and write
+instructions may be dropped. We have an established format for the
+commit references, i.e.
+cdca06e4e859 ("pinctrl: baytrail: Add missing spinlock usage in
+byt_gpio_irq_handler")
 
-I'm following along with attempts to "fix" our user space to paper over
-this issue, and I think some of this conversation missed the mark.
-(Sorry for jumping in late.)
+Signed-off-by: Grace Kao <grace.kao@intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Tue, Mar 10, 2020 at 04:49:13PM +0200, Mika Westerberg wrote:
-> On Tue, Mar 10, 2020 at 03:12:00PM +0100, Michał Stanek wrote:
-> > On Mon, Feb 10, 2020 at 11:14 AM Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > On Sat, Feb 08, 2020 at 07:43:24PM +0100, Michał Stanek wrote:
-> > > > > >
-> > > > > > Hi Mika,
-> > > > > >
-> > > > > > The previous patches from Dmitry handled IRQ numbering, here we have a
-> > > > > > similar issue with GPIO to pin translation - hardcoded values in FW
-> > > > > > which do not agree with the (non-consecutive) numbering in newer
-> > > > > > kernels.
-> > > > >
-> > > > > Hmm, so instead of passing GpioIo/GpioInt resources to devices the
-> > > > > firmware uses some hard-coded Linux GPIO numbering scheme? Would you
-> > > > > able to share the exact firmware description where this happens?
-> > > >
-> > > > Actually it is a GPIO offset in ACPI tables for Braswell that was
-> > > > hardcoded in the old firmware to match the previous (consecutive)
-> > > > Linux GPIO numbering.
-> > >
-> > > Can you share the ACPI tables and point me to the GPIO that is using
-> > > Linux number?
-> > 
-> > I think this is the one:
-> > https://chromium-review.googlesource.com/c/chromiumos/third_party/coreboot/%2B/286534/2/src/mainboard/google/cyan/acpi/chromeos.asl
-> > 
-> > On Kefka the sysfs GPIO number for wpsw_cur was gpio392 before the
-> > translation change occurred in Linux.
-> 
-> But that table does not seem to have any GPIO numbers in it.
+diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+index 4c74fdde576d..1093a6105d40 100644
+--- a/drivers/pinctrl/intel/pinctrl-cherryview.c
++++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+@@ -1479,11 +1479,15 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
+ 	struct chv_pinctrl *pctrl = gpiochip_get_data(gc);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned long pending;
++	unsigned long flags;
+ 	u32 intr_line;
+ 
+ 	chained_irq_enter(chip, desc);
+ 
++	raw_spin_lock_irqsave(&chv_lock, flags);
+ 	pending = readl(pctrl->regs + CHV_INTSTAT);
++	raw_spin_unlock_irqrestore(&chv_lock, flags);
++
+ 	for_each_set_bit(intr_line, &pending, pctrl->community->nirqs) {
+ 		unsigned int irq, offset;
+ 
+-- 
+2.17.1
 
-Actually, it's encoding pin numbers, not GPIO numbers. The 0x10016 (or
-now, 0x10013) is encoding a bank offset (0x10000) and pin number (0x16
-or 0x13). The actual pin numbers is 0x16, I believe, but someone decided
-to subtract 3, because the Linux numbering used to be contiguous,
-skipping over the hole between 11 and 15.
-
-So no, nobody was hard-coding gpiochip numbers -- we were hard-coding
-the contiguous pin number (relative to the bank). Now that commit
-03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO
-translation") made those non-contiguous, we're kinda screwed -- we have
-to guess (based on the kernel version number) whether pin numbers
-(within a single bank!) are contiguous or not.
-
-> > > This is something that should be fixed in userspace. Using global Linux
-> > > GPIO or IRQ numbers is fragile and source of issues like this.
-
-To be clear, we're not hard-coding global <anything> numbers in user
-space.
-
-> > > in case of sysfs, you can
-> > > find the base of the chip
-
-We're doing that.
-
-> > > and then user relative numbering against it or
-> > > switch
-
-^^ This is the problem. The *bank-relative* numbers changed.
-
-> > > Both cases the GPIO number are relative against the GPIO chip so
-> > > they work even if global Linux GPIO numbering changes.
-> > 
-> > I analyzed crossystem source code and it looks like it is doing
-> > exactly what you're saying without any hardcoded assumptions.
-
-^^ Exactly.
-
-> > With the newer kernel the gpiochip%d number is different so crossystem
-> > ends up reading the wrong pin.
-> 
-> Hmm, so gpiochipX is also not considered a stable number. It is based on
-> ARCH_NR_GPIOS which may change. So if the userspace is relaying certain GPIO
-> chip is always gpichip200 for example then it is wrong.
-
-If you just read the last sentence from Michal, you get the wrong
-picture. There's no hard-coding of gpiochipX numbers going on. We only
-had the pin offsets "hardcoded" (in ACPI), and the kernel driver
-unilaterally changed from a contiguous mapping to a non-contiguous
-mapping.
-
-How do you recommend determining (both pre- and
-post-commit-03c4749dd6c7ff94) whether pin 22 is at offset 22, vs. offset
-19?
-
-Brian
