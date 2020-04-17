@@ -2,33 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D57D21AD931
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 10:55:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC601AD934
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 10:55:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbgDQIzA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Apr 2020 04:55:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2395 "EHLO huawei.com"
+        id S1729790AbgDQIzO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Apr 2020 04:55:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55402 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729784AbgDQIzA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Apr 2020 04:55:00 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 858E4286A544F9606FBB;
-        Fri, 17 Apr 2020 16:54:57 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
- 16:54:46 +0800
+        id S1729784AbgDQIzO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Apr 2020 04:55:14 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E2194417BC2613B5E240;
+        Fri, 17 Apr 2020 16:55:09 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 17 Apr 2020
+ 16:54:59 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <manivannan.sadhasivam@linaro.org>, <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+To:     <linus.walleij@linaro.org>, <andriy.shevchenko@linux.intel.com>,
         <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] pinctrl: remove unused 'pwm37_pins'
-Date:   Fri, 17 Apr 2020 17:21:12 +0800
-Message-ID: <20200417092112.12303-1-yanaijie@huawei.com>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] pinctrl: mcp23s08: add module license
+Date:   Fri, 17 Apr 2020 17:21:25 +0800
+Message-ID: <20200417092125.12513-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.175.124.28]
 X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
@@ -36,31 +35,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix the following gcc warning:
+Fix the following build warning:
 
-drivers/pinctrl/pinctrl-bm1880.c:263:27: warning: ‘pwm37_pins’ defined
-but not used [-Wunused-const-variable=]
- static const unsigned int pwm37_pins[] = { 110 };
-                           ^~~~~~~~~~
+WARNING: modpost: missing MODULE_LICENSE() in
+drivers/pinctrl/pinctrl-mcp23s08.o
+see include/linux/module.h for more information
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/pinctrl/pinctrl-bm1880.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/pinctrl-mcp23s08.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
-index f7dff4f14101..80bc04f40964 100644
---- a/drivers/pinctrl/pinctrl-bm1880.c
-+++ b/drivers/pinctrl/pinctrl-bm1880.c
-@@ -260,7 +260,6 @@ static const unsigned int pwm33_pins[] = { 106 };
- static const unsigned int pwm34_pins[] = { 107 };
- static const unsigned int pwm35_pins[] = { 108 };
- static const unsigned int pwm36_pins[] = { 109 };
--static const unsigned int pwm37_pins[] = { 110 };
- static const unsigned int i2c0_pins[] = { 63, 64 };
- static const unsigned int i2c1_pins[] = { 65, 66 };
- static const unsigned int i2c2_pins[] = { 67, 68 };
+diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
+index cb545557dcd4..151931b593f6 100644
+--- a/drivers/pinctrl/pinctrl-mcp23s08.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+@@ -658,3 +658,4 @@ int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(mcp23s08_probe_one);
++MODULE_LICENSE("GPL");
 -- 
 2.21.1
 
