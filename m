@@ -2,101 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1E81ADB3F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 12:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3A061ADB4A
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 12:42:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgDQKiA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Apr 2020 06:38:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
+        id S1728997AbgDQKmr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Apr 2020 06:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726632AbgDQKh7 (ORCPT
+        by vger.kernel.org with ESMTP id S1728868AbgDQKmr (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:37:59 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13406C061A0F
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:37:58 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id t11so1406102lfe.4
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:37:57 -0700 (PDT)
+        Fri, 17 Apr 2020 06:42:47 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1B2C061A0C
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:42:46 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id x23so1431857lfq.1
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 03:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sa/iJD7pXLwK0IaGFW8Prsaqr68kQ7db+mxnLmQAbkc=;
-        b=iety4liZG5P9elk7/lP+iL2AHMKx0QtHLW7VYtXbcYPQLbLVQtk+jn9f4kR9a7n5vG
-         aFBkAg7UsNhsWOLfIkPyEVRnddRtiZU8WGG6b/oiz5r3gPilwiajTp18Jn4Wnq+lNWCU
-         t3rzThml+VgLWjJ2Wb/Bshfyg+lrYBzSvPZo0iPTjt3Ykh6GE9r83GwKIrq1EaHM+lZn
-         9YA65HUiiaEn5pxzlDukLJpEqrd7SQH6JHyPVzitYN59CHHfMreGQeVSkXL+dpRHDoFz
-         xcQldlM18jB91KEArUgpoVVlBLAPptdB+Fw6JFHbWwm1qzpovQtWxQXMNq5KzMD+Ml8v
-         Qjog==
+        bh=YxN2yxW874P8A7hETIl8EsG5Owkh3VbSAfnlbnPQFMg=;
+        b=u355q6QTnYTq05Y9/zb4PLporI/eqbgtLb5hQlUlpbqDsLGwuGGYxRUZ4mGOH6UJxu
+         /W2Gp0JwtTPcy3ZDDmgX81ZMayylSYYF9h8yr1Cmf+vZGIQtaVnyjoOdj1sMp8wyM+cx
+         LRR6wYcAPb9TLOb+vo+vM/gWZlMf7GlehVD/8F93ohNED8E55K2tgJ/P8GtcSUV538pb
+         zTFlegd/6aXQjGtzYOFrUI9PFPIRQu4KNcSsBH93PrhBt1pzJt6KFs3FVWPPE7XLiotW
+         IScrUIpk/VdNUTKfig53N/skrPoKj8ouuSrxsPQpBsE/lHN8kJqqoySfS4LN7BSlo/3q
+         nICw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sa/iJD7pXLwK0IaGFW8Prsaqr68kQ7db+mxnLmQAbkc=;
-        b=lX9iD/bYNRiaq43xD8P1gRosvk7YevINvFjm1UPxCKJyYgc8P78Kx069w5fkvOnMqE
-         mx4wqbwAF3Iwowa9MZnoBJKnZABoMUhEkSgfcFCVpRYFZeoHFfqOW4BWDk+5FOIGJr5Z
-         +1DaGVZ/ydEGJpeWPiU1kWvmEExFmRlxItca/pjYTq5nWyhmbqho32nDa9BVFkA1Zj9g
-         TYTKuvB7YoPpM9Y8SJHUMxUYJaWhVjNo4Y26KmyJbR1oX42qscAvwXWnJcYVIncPxaev
-         A7TDZsv6RlRWzy1xFNbyXL8Mj2ljtmC6zqwy+qqgjnqyjNGEry4cHjC6PiE5gkR/xbyZ
-         J1Fg==
-X-Gm-Message-State: AGi0PubvEqAiz9Y1u8Bt//VqOn5g9Bi8M/KHFYK1qYw0rTyD96Vjg007
-        JhAPpIneFjh97rl60/mt1F+8ti2RA1CY8QTO4lB27Q==
-X-Google-Smtp-Source: APiQypL+l3OfAOj7WyEBiVnd1Hde8nWUk9oVTa23Bt1LquS4heag/rCd339qzjCwvyfj3fQjgyxmvThxLnBwUwkb0rw=
-X-Received: by 2002:a19:48c3:: with SMTP id v186mr1618012lfa.194.1587119876479;
- Fri, 17 Apr 2020 03:37:56 -0700 (PDT)
+        bh=YxN2yxW874P8A7hETIl8EsG5Owkh3VbSAfnlbnPQFMg=;
+        b=nTJQz65Q110hatlpIXHmGX/g1r2RdOtx/p4eqzLi6D78u/D3EMpQkuKIu2C3+nJE9Y
+         rsc/UliRrAIsGClTNL0Nz4g6FMjj7kaSrJ6a0qorsd12t00ST++A9d3LKFyn5mI3736Z
+         apbnSIvUYR6F1WMQhvQirToDOL9IQ6PWQU1YqgN8u8zxs4SCWC07gXXCACMw6jcI/DVc
+         Qp1bLp1Jbm7En4e2qNfPY+j4a6GDTD9OGpMJaN08qG0QpAyAtTu820acwlpOM/lFlG60
+         NdvCQKZp0O6leBMSoL+UQa/hzwZA1WRBbGR8V8M2SSYBKhYTuAh5+c1d2uMyFzSmUh21
+         DM6Q==
+X-Gm-Message-State: AGi0PuYiWlu6XMZPmQSkGg4Oy1Pjxl8Pos5Kk4DLsERHw08zR+Fk8Vjh
+        ixHSA6SmFZKVwwHwHduYfw3bttfSs8xm7TQWT+6/Jw==
+X-Google-Smtp-Source: APiQypKFBSuCwC7maRKJqpnX+T3xsz+RBuJC3RScwHzukTePXKuTbwAz0wvhNpVnDKfiz65FTFucZehoFupDb1ZyGqU=
+X-Received: by 2002:a19:cb41:: with SMTP id b62mr1676270lfg.21.1587120165164;
+ Fri, 17 Apr 2020 03:42:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAEf4M_Du6Egn-3nZHtSnMMwohc+-DyEdtWU5DqSJi71+nDthFw@mail.gmail.com>
- <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
- <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
- <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
- <20200413123921.GA32586@x1> <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
- <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com> <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
- <20200415233712.GA16167@x1> <495f118d-380d-a994-d8f9-bacdfe4efb85@ti.com>
-In-Reply-To: <495f118d-380d-a994-d8f9-bacdfe4efb85@ti.com>
+References: <20200415141534.31240-1-andriy.shevchenko@linux.intel.com>
+ <20200415141534.31240-14-andriy.shevchenko@linux.intel.com>
+ <20200415163710.e26czil5abouujzu@mobilestation> <CACRpkdaO8GMXOOMomzmzfhDqYfgdhjTq8XvQHXuGRmnrfk7bOw@mail.gmail.com>
+ <20200416134805.r5qp4o34rpxr2h2d@mobilestation>
+In-Reply-To: <20200416134805.r5qp4o34rpxr2h2d@mobilestation>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Apr 2020 12:37:45 +0200
-Message-ID: <CACRpkdZww1k-vo32FRjQZ0Qic_FccHh4KuekNm1aU3i5XW6Gog@mail.gmail.com>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Drew Fustini <drew@pdp7.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 17 Apr 2020 12:42:33 +0200
+Message-ID: <CACRpkdYCOHQ-e8sswUqv=exuKEasanWKUjPOjsvGDQC5sV4C4g@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] gpio: dwapb: Use positive conditional in dwapb_configure_irqs()
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 4:17 PM Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Thu, Apr 16, 2020 at 3:48 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Thu, Apr 16, 2020 at 01:53:25PM +0200, Linus Walleij wrote:
+> > On Wed, Apr 15, 2020 at 6:37 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > > On Wed, Apr 15, 2020 at 05:15:33PM +0300, Andy Shevchenko wrote:
+> > > > The negative conditionals are harder to parse by reader.
+> > > > Switch to positive one in dwapb_configure_irqs().
+> > >
+> > > Sorry as for me this modification is redundant. Yes, I know that if-else
+> > > statement in some cases better to start with positive expression to make it
+> > > a bit more clear, but in this case I'd leave it as is. First this rule is
+> > > applicable if both branches are more or less equal, but here I see the most
+> > > normal case of using the dt-based generic device, which doesn't declare the
+> > > IRQs as shared seeing it is selected by far more devices at the moment.
+> > > Second the non-shared IRQs case also covers a combined and multiple-lined
+> > > GPIO IRQs (chained cascaded GPIO irqchip), while the irq_shared clause have
+> > > only a single IRQ source supported. Finally If the code was like you
+> > > suggested from the very beginning I wouldn't say a word, but this patch seems
+> > > to me at least just moving the code around with gaining less than we have at
+> > > the moment.
+> > >
+> > > Linus, Bartosz and other GPIO-ers may think differently though. Lets see their
+> > > opinion.
+> >
+> > I think I already applied all patches with the batch application tool b4,
+> > without properly checking which patches you reviewed and not, sorry :(
+> >
+> > However if any change is controversial I can revert or pull the patch out.
+>
+> In this case it's up to you to decide.
 
-> (Changing MUX_MODE from user space sounds very unsafe for me.)
-
-The way it works on a lot of platforms is to implement the
-gpio_request_enable() callback such that it muxes the pin
-when requested to use as GPIO.
-
-How to handle that is up to the driver, but the simple ones
-just assume that if (A) the pin is not muxed for something
-else like SPI or MMC or whatever and (B) the pin can be
-muxed into GPIO mode, then it goes ahead and does that.
-
-But this policy is up to the driver maintainer.
-
-Given that Beagles etc are pretty much for makers and
-industrial control and such, a relaxed policy would be
-beneficial for users that want to do some tinkerytink.
-The reverse goes for users making airplane control
-systems.
+I backed out the last two patches now and kept the rest except 13 and 14.
 
 Yours,
 Linus Walleij
