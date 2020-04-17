@@ -2,169 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F1191AD62B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 08:34:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C02ED1AD635
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 08:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDQGeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Apr 2020 02:34:18 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:42453 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgDQGeS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Apr 2020 02:34:18 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 062C222EEB;
-        Fri, 17 Apr 2020 08:34:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587105252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yRofvrT7uJxuqc53iK0glkaODL7zqW5wwpHXjFjKcgw=;
-        b=QJWl4WcToI73JqjXrubzRp0qLIcPIjk2ilLyWMLcnLKpiGqrfWON6uL1z8JhJq7r5UUkyF
-        TKqmBRGjCEejYmQaC3M7NJhp8Ji3md43YmGOp9YWBADR/RoIApO6RHynSWNUvMQUz3QA90
-        FlDbwzSR3GqZVaXjssTh33Iz8CDafW4=
+        id S1727915AbgDQGfj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Apr 2020 02:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727852AbgDQGfi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Apr 2020 02:35:38 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C35C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 23:35:38 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id o25so1216461oic.11
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Apr 2020 23:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=HTEhZ/HYzspp+SdCifa6b7F4NHIbS2vygJ35URS+kXo=;
+        b=ZTaYzvOAEMKcjdbMKRi7wC6alqo20T2voDp6nu5C4JwrP3zvzMkoDV0tudgHMDjgqR
+         6IuD01bb1JCE+Vk7NkZIrwxVxwmdU34umiMobKiPrjZjza8iyv9tJTi+0YCe0bpRELKg
+         Ewg3Zq3SNegUqluySLhLIo747kTEi5dJNHQ5+SM/rx8cig/aEZyfqBY5nkJ3WTLn+319
+         z23CGx6Yedu3trEb4lKzCz+A3iLe+9cWKj+tharvrfBYNdwIsKitKxHYMkLWWFlEZoC2
+         1PKSZjSfV/ac+GI73gJypQ2B0srTR+8dZ1KHHjg4XdCbweD0MxYy20toZtVBz3K+8NHJ
+         gS1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=HTEhZ/HYzspp+SdCifa6b7F4NHIbS2vygJ35URS+kXo=;
+        b=okGfFqnXRcg+U6KXZT38+lUy3EEWSDnVt9/GKiUBTuLEpe7xcQ13uJETk3fb2zR5YT
+         BK2srs3pP8FcZDgKp8D5GsnXslDTcTDRLql9OB/KiCetH1yC5rBn/LyDgjLkLOjFgo+o
+         3qY4UJ4OgoPxmDPttGoUtSDwJZ8BHxS9ZD7sRPYObtGfH8xmEx61WZptlmsBW/0d04WQ
+         l0Zv3Eu5I8lU9JzUOflSfeechJIbi4HnCEQh5yh9/xggRiLenOx/3zrNxPftWHvLo0tk
+         0a93c1AP70pWHC6NhBhMyHqYi6u95zgBzctr6nSynk9c0XO1FzCByN7EtnnbZanVT2B5
+         Ctpg==
+X-Gm-Message-State: AGi0PubQgmey5wF7qVJXCrs4S04fm8e0keARD3HerwZ3sNGtmhRistAF
+        S1Hux1RHBQyJmUargUFm/aryQdeUSa+fGPt0HqM=
+X-Google-Smtp-Source: APiQypJuKTGE9MqDbXIU77r9QgWyJx/pkQeGDQVqPuAnVCJnEvFKSP95xVNGE/gF0qzXCzBSFs2ZDayBU/vS4kQzD8s=
+X-Received: by 2002:aca:dc56:: with SMTP id t83mr1116496oig.48.1587105337837;
+ Thu, 16 Apr 2020 23:35:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Apr 2020 08:34:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-References: <20200402203656.27047-1-michael@walle.cc>
- <20200402203656.27047-11-michael@walle.cc>
- <CACRpkdaqgHhPwdKdUai4zvi21qR-cSQUKyzZ3SyfWBLPN9us3w@mail.gmail.com>
-Message-ID: <f82706a8596436d13642c49e26233133@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Spam-Level: *
-X-Rspamd-Server: web
-X-Spam-Status: No, score=1.40
-X-Spam-Score: 1.40
-X-Rspamd-Queue-Id: 062C222EEB
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[23];
-         NEURAL_HAM(-0.00)[-0.393];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,baylibre.com,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Received: by 2002:ac9:74c1:0:0:0:0:0 with HTTP; Thu, 16 Apr 2020 23:35:37
+ -0700 (PDT)
+From:   BTCI NATIONAL <btcinational@gmail.com>
+Date:   Thu, 16 Apr 2020 23:35:37 -0700
+Message-ID: <CAMntoujBhR8tPbuNA-=z3xREAbjmn4qdiLEuJkCai2XvRPG2hA@mail.gmail.com>
+Subject: Urgently Needed
+To:     BTCI NATIONAL <btcinational@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
-
-Am 2020-04-16 11:27, schrieb Linus Walleij:
-> On Thu, Apr 2, 2020 at 10:37 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> There are quite a lot simple GPIO controller which are using regmap to
->> access the hardware. This driver tries to be a base to unify existing
->> code into one place. This won't cover everything but it should be a 
->> good
->> starting point.
->> 
->> It does not implement its own irq_chip because there is already a
->> generic one for regmap based devices. Instead, the irq_chip will be
->> instanciated in the parent driver and its irq domain will be associate
->> to this driver.
->> 
->> For now it consists of the usual registers, like set (and an optional
->> clear) data register, an input register and direction registers.
->> Out-of-the-box, it supports consecutive register mappings and mappings
->> where the registers have gaps between them with a linear mapping 
->> between
->> GPIO offset and bit position. For weirder mappings the user can 
->> register
->> its own .xlate().
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
-> 
-> Overall I really like this driver and I think we should merge is as 
-> soon
-> as it is in reasonable shape and then improve on top so we can start
-> migrating drivers to it.
-> 
->> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int 
->> offset)
->> +{
->> +       struct gpio_regmap_data *data = gpiochip_get_data(chip);
->> +       struct gpio_regmap *gpio = data->gpio;
->> +
->> +       /* the user might have its own .to_irq callback */
->> +       if (gpio->to_irq)
->> +               return gpio->to_irq(gpio, offset);
->> +
->> +       return irq_create_mapping(gpio->irq_domain, offset);
-> 
-> I think that should at least be irq_find_mapping(), the mapping should
-> definately not be created by the .to_irq() callback since that is just
-> a convenience function.
-
-what do you mean by conenience function? are there other ways? if you 
-use
-irq_find_mapping() who will create the mappings? most gpio drivers use a
-similar function like gpio_regmap_to_irq().
-
-> 
->> +       if (gpio->irq_domain)
->> +               chip->to_irq = gpio_regmap_to_irq;
-> 
-> I don't know about this.
-> (...)
->> + * @irq_domain:                (Optional) IRQ domain if the 
->> controller is
->> + *                     interrupt-capable
-> (...)
->> +       struct irq_domain *irq_domain;
-> 
-> I don't think this is a good storage place for the irqdomain, we 
-> already have
-> gpio_irq_chip inside gpio_chip and that has an irqdomain, we should
-> strive to reuse that infrastructure also for regmap GPIO I think, for 
-> now
-> I would just leave .to_irq() out of this and let the driver deal with 
-> any
-> irqs.
-
-How would a driver attach the to_irq callback then? At the moment, the
-gpio_regmap doesn't expose the gpio_chip. So either we have to do that 
-or
-the config still have to have a .to_irq property.
-
--michael
+SGVsbG8uDQpJIHNlbnQgeW91IHRoaXMgbGV0dGVyIGEgbW9udGggYWdvLCBidXQgSSBkaWRuJ3Qg
+aGVhciBmcm9tIHlvdSwgSSdtDQpub3Qgc3VyZSBpZiB5b3UgcmVjZWl2ZWQgaXQuIEFuZCB0aGF0
+IGlzIHdoeSBJIHNheSBpdCBhZ2FpbjogRmlyc3QsIEkNCmFtIFRob21hcywgQ29udHJvbGVyIG9m
+IFdlc3RlciBBZnJpY2FuIEludGVybmF0aW9uYWwgTW9uZXRhcnkgRnVuZC4NCkluIGZhY3QsIHdl
+IGhhdmUgcmV2aWV3ZWQgYWxsIG9mIHRoZSBvYnN0YWNsZXMgYW5kIGlzc3VlcyBzdXJyb3VuZGlu
+Zw0KeW91ciBpbmNvbXBsZXRlIHRyYW5zYWN0aW9uLg0KV2UsIHRoZSBCb2FyZCBvZiBEaXJlY3Rv
+cnMsIHRoZSBXb3JsZCBCYW5rLCBhbmQgdGhlIEludGVybmF0aW9uYWwNCk1vbmV0YXJ5IEZ1bmQg
+KElNRikgV2FzaGluZ3RvbiwgRC5DLiwgYWxvbmcgd2l0aCB0aGUgVVMgVHJlYXN1cnkNCkRlcGFy
+dG1lbnQuIFVTQSBBbmQgc29tZSBvdGhlciByZWxldmFudCByZXNlYXJjaCBhZ2VuY2llcyBoZXJl
+IGluIHRoZQ0KVW5pdGVkIFN0YXRlcy4gaGFzIGluc3RydWN0ZWQgb3VyIE92ZXJzZWFzIFBheW1l
+bnQgUmVtaXR0YW5jZSBCVENJDQpMb21lIFRvZ28sIHRvIHBheSB5b3VyIGZ1bmQgJCA4MDAsMDAw
+LjAwIFVTRC4NCkFuZCB0b2RheSB3ZSBub3RpZnkgeW91IHRoYXQgeW91ciBmdW5kIGhhcyBiZWVu
+IGFwcHJvdmVkIHRvIHBheSB0byB5b3UNCnRocm91Z2ggQlRDSSAtIFRPR08uDQpOb3cgY29udGFj
+dCB0aGUgQlRDSSB3aXRoIGVtYWlsIGFkZHJlc3M6IEVtYWlsOiBpbmZvci5idGNpQG1haWwuY29t
+DQpTZW5kIHRoZSBmb2xsb3dpbmcgaW5mb3JtYXRpb24gZm9yIHlvdXIgcGF5bWVudC4NCg0KWW91
+ciBmdWxsIG5hbWUgPT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KWW91ciBjb3VudHJ5IG9m
+IG9yaWdpbiA9PT09PT09PT09PT09PT09PT09PT09PQ0KWW91ciBob21lIGFkZHJlc3MgPT09PT09
+PT09PT09PT09PT09PT09PT09PQ0KWW91ciBwaG9uZSBudW1iZXIgPT09PT09PT09PT09PT09PT09
+PT09PT09PQ0KDQpSZWdhcmRzLA0KVGhvbWFzDQoNCtCj0LLQsNC20LDQtdC80YvQuS4NCtCvINC+
+0YLQv9GA0LDQstC40Lsg0LLQsNC8INGN0YLQviDQv9C40YHRjNC80L4g0LzQtdGB0Y/RhiDQvdCw
+0LfQsNC0LCDQvdC+INC90LUg0L/QvtC70YPRh9C40Lsg0L7RgiDQstCw0YEg0L7RgtCy0LXRgtCw
+LCDQvdC1DQrRg9Cy0LXRgNC10L0sINGH0YLQviDQstGLINC10LPQviDQv9C+0LvRg9GH0LjQu9C4
+LiDQmCDQuNC80LXQvdC90L4g0L/QvtGN0YLQvtC80YMg0Y8g0L/QvtCy0YLQvtGA0Y/RjiDRjdGC
+0L46DQrQstC+LdC/0LXRgNCy0YvRhSwg0Y8g0KLQvtC80LDRgSwg0YPQv9GA0LDQstC70Y/RjtGJ
+0LjQuSDQkNGE0YDQuNC60LDQvdGB0LrQvtCz0L4g0LzQtdC20LTRg9C90LDRgNC+0LTQvdC+0LPQ
+viDQstCw0LvRjtGC0L3QvtCz0L4NCtGE0L7QvdC00LAuDQrQpNCw0LrRgtC40YfQtdGB0LrQuCwg
+0LzRiyDRgNCw0YHRgdC80L7RgtGA0LXQu9C4INCy0YHQtSDQv9GA0LXQv9GP0YLRgdGC0LLQuNGP
+INC4INC/0YDQvtCx0LvQtdC80YssINGB0LLRj9C30LDQvdC90YvQtSDRgQ0K0LLQsNGI0LXQuSDQ
+vdC10LfQsNCy0LXRgNGI0LXQvdC90L7QuSDRgtGA0LDQvdC30LDQutGG0LjQtdC5Lg0K0JzRiywg
+0KHQvtCy0LXRgiDQtNC40YDQtdC60YLQvtGA0L7Qsiwg0JLRgdC10LzQuNGA0L3Ri9C5INCx0LDQ
+vdC6INC4INCc0LXQttC00YPQvdCw0YDQvtC00L3Ri9C5INCy0LDQu9GO0YLQvdGL0Lkg0YTQvtC9
+0LQNCijQnNCS0KQpLCDQktCw0YjQuNC90LPRgtC+0L0sINC+0LrRgNGD0LMg0JrQvtC70YPQvNCx
+0LjRjywg0LLQvNC10YHRgtC1INGBINCc0LjQvdC40YHRgtC10YDRgdGC0LLQvtC8INGE0LjQvdCw
+0L3RgdC+0LIg0KHQqNCQLg0K0KHQqNCQINC4INC90LXQutC+0YLQvtGA0YvQtSDQtNGA0YPQs9C4
+0LUg0YHQvtC+0YLQstC10YLRgdGC0LLRg9GO0YnQuNC1INC40YHRgdC70LXQtNC+0LLQsNGC0LXQ
+u9GM0YHQutC40LUg0LDQs9C10L3RgtGB0YLQstCwDQrQt9C00LXRgdGMLCDQsiDQodC+0LXQtNC4
+0L3QtdC90L3Ri9GFINCo0YLQsNGC0LDRhS4g0L/QvtGA0YPRh9C40Lsg0L3QsNGI0LXQvNGDINC8
+0LXQttC00YPQvdCw0YDQvtC00L3QvtC80YMg0L/Qu9Cw0YLQtdC20L3QvtC80YMNCtC/0LXRgNC1
+0LLQvtC00YMgQlRDSSBMb21lIFRvZ28g0L7Qv9C70LDRgtC40YLRjCDQstCw0Ygg0YTQvtC90LQg
+0LIg0YDQsNC30LzQtdGA0LUgODAwIDAwMCwwMA0K0LTQvtC70LvQsNGA0L7QsiDQodCo0JAuDQrQ
+mCDRgdC10LPQvtC00L3RjyDQvNGLINGB0L7QvtCx0YnQsNC10Lwg0LLQsNC8LCDRh9GC0L4g0LLQ
+sNGIINGE0L7QvdC0INCx0YvQuyDRg9GC0LLQtdGA0LbQtNC10L0g0LTQu9GPINC+0L/Qu9Cw0YLR
+iyDRh9C10YDQtdC3DQpCVENJIC0gVE9HTy4NCtCi0LXQv9C10YDRjCDRgdCy0Y/QttC40YLQtdGB
+0Ywg0YEgQlRDSSDRgSDQsNC00YDQtdGB0L7QvCDRjdC70LXQutGC0YDQvtC90L3QvtC5INC/0L7R
+h9GC0Ys6IEVtYWlsOiBpbmZvci5idGNpQG1haWwuY29tDQrQntGC0L/RgNCw0LLRjNGC0LUg0YHQ
+u9C10LTRg9GO0YnRg9GOINC40L3RhNC+0YDQvNCw0YbQuNGOINC00LvRjyDQvtC/0LvQsNGC0Ysu
+DQoNCtCS0LDRiNC1INC/0L7Qu9C90L7QtSDQuNC80Y8gPT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQ0K0JLQsNGI0LAg0YHRgtGA0LDQvdCwINC/0YDQvtC40YHRhdC+0LbQtNC10L3QuNGPID09
+PT09PT09PT09PT09PT09PT09PT09DQrQktCw0Ygg0LTQvtC80LDRiNC90LjQuSDQsNC00YDQtdGB
+ID09PT09PT09PT09PT09PT09PT09PT09PT0NCtCS0LDRiCDQvdC+0LzQtdGAINGC0LXQu9C10YTQ
+vtC90LAgPT09PT09PT09PT09PT09PT09PT09PT09PQ0KDQrQoSDQo9Cy0LDQttC10L3QuNC10Lws
+DQrQotC+0LzQsNGBDQo=
