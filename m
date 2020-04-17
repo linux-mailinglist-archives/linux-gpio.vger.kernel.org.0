@@ -2,63 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FEF31ADF9B
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 16:15:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F971AE003
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Apr 2020 16:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725906AbgDQOPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Apr 2020 10:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33042 "EHLO
+        id S1727769AbgDQOgn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Apr 2020 10:36:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgDQOPE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Apr 2020 10:15:04 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B89C061A0C
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 07:15:04 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by laurent.telenet-ops.be with bizsmtp
-        id TqA42200b4dKHqf01qA4J0; Fri, 17 Apr 2020 16:10:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jPRgy-0002EP-Em; Fri, 17 Apr 2020 16:10:04 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jPRgy-0005xL-CZ; Fri, 17 Apr 2020 16:10:04 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] MAINTAINERS: Add DT Bindings for Renesas Pin Function Controllers
-Date:   Fri, 17 Apr 2020 16:10:03 +0200
-Message-Id: <20200417141003.22816-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S1726438AbgDQOgn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Apr 2020 10:36:43 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF39C061A0C
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 07:36:42 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id m8so2288998lji.1
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Apr 2020 07:36:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hsQxsLkGr+x1jBlRKnkBHWDMjvgC7496JJqGqem4MVI=;
+        b=B/v6nzjVxzQ8hcjVtCntwklO1Or8E84jT2npg6fawUyB3nmfWRZK6AKmNE3gg0tjHz
+         4aKNywzkDtMGIIsqYkHHlqsRFzYkcSboUbpUisChY4uggzAAX5hrhLctSIC7+ESBJ9gs
+         rNM7Do4DRtWPm1JWok/NG791sweaoAsARkQSRK/yY8dw1rN8n5zl374Shd0PYUOFhpWS
+         Lqm1j6IDsqJQT68siC0ptiqJ0ob++0hS/87p+Xi/RmA6+IUhRCRJhfskneR6iVXIDNTr
+         pWfRKoTzuZ5XRVGparRkX0jWl33wT5/zqWu044A3xmbphzbv8XykO9xKAYrVbPQNgOtM
+         dsPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hsQxsLkGr+x1jBlRKnkBHWDMjvgC7496JJqGqem4MVI=;
+        b=cpFWIzsIawIspotY9tAdbxSGiOL0KXoFyLtEdKLU3NjB18m6PRAXmHIGRNxrrxsbP5
+         +ajD1T6sVYYgSqBNYkV0IY4lUEWxSY/Z5yuBQkcZ81W4HZkOXiFvskoAN5e2NLvhecua
+         Ouy7Y55qKx26+3E2VBXpJ6AUsg5/zZi7fDZwEJzsj1hFt89PxrVYEkviq4zlterowir3
+         2QfVjLRBMKfvq1yVUBM2i39PZ7efmY/Hbsg/XYtx1fMSBOE+BpLxUMFAQkADCKGRjWDq
+         nI251cXF1+IPBwoEgTgSgnfqao7EBrwcJtdeamI+50XC0tHF7jPRalb98dkdYk/v7kYc
+         cmjw==
+X-Gm-Message-State: AGi0Pub4Q7QeEzbqMoadkzMKAhKPC/mWJVxu0qmFJfnDRLwtXK+lJi8m
+        m5TqD3aWRNm+TSobgOF7o3chSKzRYDWRX6HyqpsoI5Oi
+X-Google-Smtp-Source: APiQypI17sR1VJnoeOfw1HsRC0J1Ugd5y4yCRK1+PT0BvZQrMSgGwVOQnxShJDZ4Bv+NtAhR0RYisNelJr0gV5iFvjo=
+X-Received: by 2002:a2e:8087:: with SMTP id i7mr605300ljg.99.1587134201353;
+ Fri, 17 Apr 2020 07:36:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200417131455.GA7456@black.fi.intel.com>
+In-Reply-To: <20200417131455.GA7456@black.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Apr 2020 16:36:29 +0200
+Message-ID: <CACRpkdbmvy8SGi2UWxkzfftd4B71ZaGJO0Dj7w-CRHqAWzRZkQ@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 5.7-2
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The "PIN CONTROLLER - RENESAS" section lacks the related DT bindings.
-Add them.
+On Fri, Apr 17, 2020 at 3:14 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in sh-pfc for v5.8.
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Fixes for v5.7-rc2 of Intel pin control drivers.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d1cbcd80a89eadb4..b5edcd4bdbdf63d1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13378,6 +13378,7 @@ M:	Geert Uytterhoeven <geert+renesas@glider.be>
- L:	linux-renesas-soc@vger.kernel.org
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git sh-pfc
-+F:	Documentation/devicetree/bindings/pinctrl/renesas,*
- F:	drivers/pinctrl/pinctrl-rz*
- F:	drivers/pinctrl/sh-pfc/
- 
--- 
-2.17.1
+Pulled in for fixes, thanks!
 
+Yours,
+Linus Walleij
