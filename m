@@ -2,110 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A79481AF983
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 13:02:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9D01AFA26
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 14:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgDSLCo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Apr 2020 07:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725845AbgDSLCo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 19 Apr 2020 07:02:44 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47440C061A0C
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2020 04:02:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so3151066pjb.3
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Apr 2020 04:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=6/hGeEBsll1AWoAN3S22qegDLqpkRnDfv/OrTuwHX9w=;
-        b=W3kpTeLqbDuyBCOYk9XGGJlT7+9CLoM8vQUGuvOI48U++Z5M5ArpLEFaixQ1SbF0fN
-         cgYwZgU5pKZd9pFoCUeBK/04YTceQumOSu4YAWdj86HtaRybVndHtxIKXXWlZgOZ5Sql
-         kIKIqRUpwFA4ZisdiuAlfSikTM80ukR6EPLfEOrGrlTHYRLdDWV7N1HnfD3nDiHmkNde
-         9FlE3JrgVswRE/YyZEPZbBc9UNM0F0Ll5qRcY8O0SoTdxFrawqc20ny7J+pZ+NYF/tbm
-         sdHcpcJ4NeLHHX5dKX+t1CsbcFEZnkTDYol75qwSjKZPwoHrsdWMe5QPhCkosppoiTq3
-         +2lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=6/hGeEBsll1AWoAN3S22qegDLqpkRnDfv/OrTuwHX9w=;
-        b=rAxiz2hqsvlr7nsjo0OyCqm8T6l+Pd1/8aCzjutC/qJgCxx+02RIgyT4jEKSC6fWra
-         76Zszt9Xx9YN7DOkZLktav/P0dtdkqapkHfG4nS8JU9cXfdUTCdR+JUwLWeGlbZ4nHKi
-         zH8gyiQxj298gyqBTvW59EUaJWtyZtQtt0W7PXbDbLo2iuNhKq/Gu/5zTaYUS95W/TY1
-         Aj8A+AzEeGGeWNHOHB75ggbAhP29ii/thr9JgZ15pL/lc5Kb2edt7OueQTeTz1rHtws7
-         mJo2Su9+L4MAY6I2FTxXz1zU4in/OUUM6uQYaJwJwE8PdOJ4mdw1EapP+ZWIatgXYWHA
-         bUXQ==
-X-Gm-Message-State: AGi0PuZzVnxo9+ANfHh/UX9yYyeN3fxmDwLwcEtqC35rP0jS1oJZlP4T
-        IgLwSdep3oTNnsLu0R4tV0gRyPTSfUU=
-X-Google-Smtp-Source: APiQypISLEHksSqHLPIvlHiRcDy0usjavYJBZiIAiWjOYltzo72awaRZI/pM39JAspjNwVLkF08bvw==
-X-Received: by 2002:a17:90a:2fc8:: with SMTP id n8mr14508272pjm.159.1587294163294;
-        Sun, 19 Apr 2020 04:02:43 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id o187sm24195280pfb.12.2020.04.19.04.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Apr 2020 04:02:42 -0700 (PDT)
-Message-ID: <5e9c2fd2.1c69fb81.11a27.5b6d@mx.google.com>
-Date:   Sun, 19 Apr 2020 04:02:42 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1726006AbgDSMuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Apr 2020 08:50:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgDSMuo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 19 Apr 2020 08:50:44 -0400
+Received: from ROU-LT-M43218B.mchp-main.com (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A844F2137B;
+        Sun, 19 Apr 2020 12:50:34 +0000 (UTC)
+Date:   Sun, 19 Apr 2020 14:50:58 +0200
+From:   ludovic.desroches@microchip.com
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        kamel.bouhara@bootlin.com, linux@armlinux.org.uk,
+        linus.walleij@linaro.org, alan@softiron.com, wsa@the-dreams.de
+Subject: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for bus
+ recovery
+Message-ID: <20200419125058.ldueh7fdswgxocgf@ROU-LT-M43218B.mchp-main.com>
+References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.7-rc1-20-g9f676e5313c1
-Subject: linusw/for-next boot: 44 boots: 1 failed,
- 43 passed (v5.7-rc1-20-g9f676e5313c1)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next boot: 44 boots: 1 failed, 43 passed (v5.7-rc1-20-g9f676e531=
-3c1)
+On Wed, Apr 15, 2020 at 10:06:43AM +0300, Codrin Ciubotariu wrote:
+> devm_gpiod_get() usually calls gpio_request_enable() for non-strict pinmux
+> drivers. These puts the pins in GPIO mode, whithout notifying the pinctrl
+> driver. At this point, the I2C bus no longer owns the pins. To mux the
+> pins back to the I2C bus, we use the pinctrl driver to change the state
+> of the pins to GPIO, before using devm_gpiod_get(). After the pins are
+> received as GPIOs, we switch theer pinctrl state back to the default
+> one,
+> 
+> Fixes: d3d3fdcc4c90 ("i2c: at91: implement i2c bus recovery")
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.7-rc1-20-g9f676e5313c1/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.7-rc1-20-g9f676e5313c1/
+At the moment, I don't see another way to deal with this issue.
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.7-rc1-20-g9f676e5313c1
-Git Commit: 9f676e5313c1fb7070997bd652a4ed68c6fb9a8c
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 42 unique boards, 11 SoC families, 3 builds out of 6
+Link to the discussion:
+https://lore.kernel.org/linux-arm-kernel/20191206173343.GX25745@shell.armlinux.org.uk/
 
-Boot Regressions Detected:
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-arm:
-
-    multi_v7_defconfig:
-        gcc-8:
-          bcm2836-rpi-2-b:
-              lab-collabora: failing since 67 days (last pass: gpio-v5.5-4-=
-45-gd18fddff061d - first fail: v5.6-rc1-12-g612e35e76ec8)
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-sm1-khadas-vim3l:
-              lab-baylibre: new failure (last pass: v5.7-rc1-23-gbbcb9d87df=
-a9)
-
-Boot Failure Detected:
-
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm2836-rpi-2-b: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+> ---
+>  drivers/i2c/busses/i2c-at91-master.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+> index 0aba51a7df32..43d85845c897 100644
+> --- a/drivers/i2c/busses/i2c-at91-master.c
+> +++ b/drivers/i2c/busses/i2c-at91-master.c
+> @@ -845,6 +845,18 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
+>  							 PINCTRL_STATE_DEFAULT);
+>  	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
+>  						      "gpio");
+> +	if (IS_ERR(dev->pinctrl_pins_default) ||
+> +	    IS_ERR(dev->pinctrl_pins_gpio)) {
+> +		dev_info(&pdev->dev, "pinctrl states incomplete for recovery\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * pins will be taken as GPIO, so we might as well inform pinctrl about
+> +	 * this and move the state to GPIO
+> +	 */
+> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
+> +
+>  	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
+>  	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
+>  		return -EPROBE_DEFER;
+> @@ -855,9 +867,7 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
+>  		return -EPROBE_DEFER;
+>  
+>  	if (IS_ERR(rinfo->sda_gpiod) ||
+> -	    IS_ERR(rinfo->scl_gpiod) ||
+> -	    IS_ERR(dev->pinctrl_pins_default) ||
+> -	    IS_ERR(dev->pinctrl_pins_gpio)) {
+> +	    IS_ERR(rinfo->scl_gpiod)) {
+>  		dev_info(&pdev->dev, "recovery information incomplete\n");
+>  		if (!IS_ERR(rinfo->sda_gpiod)) {
+>  			gpiod_put(rinfo->sda_gpiod);
+> @@ -870,6 +880,9 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
+>  		return -EINVAL;
+>  	}
+>  
+> +	/* change the state of the pins back to their default state */
+> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
+> +
+>  	dev_info(&pdev->dev, "using scl, sda for recovery\n");
+>  
+>  	rinfo->prepare_recovery = at91_prepare_twi_recovery;
+> -- 
+> 2.20.1
+> 
