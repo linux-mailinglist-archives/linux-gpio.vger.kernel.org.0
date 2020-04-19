@@ -2,93 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 378681AFCE7
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 19:55:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCD761AFD11
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 20:14:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgDSRzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Apr 2020 13:55:12 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43612 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgDSRzM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Apr 2020 13:55:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g14so6032947otg.10;
-        Sun, 19 Apr 2020 10:55:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VDmkWCWwG3g8+hFt8ioGTKPIegMkTeVdebevBg3rZlg=;
-        b=bruDHE6COW6ZMe2m1H/w3ZlEEapPJoXCscEA29L8rFz3gsTOaSdEaGMp9zIHzDi9Gy
-         jrK3yM+8Lvay676p7sQV3QwWTbN+/36irR0TX4kMHgFV0KlkvUJ24oGZ4mlaqwoWpjCw
-         SKNjkyLxSZaF2gyPhsVaWaXp4CFUxVpFNT1OLcnbjXArFM/u1g5tyh78563X62opDh0j
-         KkmMJFkvNsXvaJgwZM2lF3lTmzTO6vphskyVdd6ic/TgQa0Rqu24ZuPQXFfdcm9o83qo
-         +90gNSCN7DrJuk17evJ6hm1oGZLXG0Kp6jmctYbTP4E1rJFJXMqsJtEk+oz4DzJln2sn
-         tqHg==
-X-Gm-Message-State: AGi0PubCMVoYCeerztyuR8XA0p9stE4N6x1C/bm6NsKAZhygjDyyWq4U
-        9tRfj9BMlizgl/RNeVgbfeJ3URBuwN0j4jXrRTk=
-X-Google-Smtp-Source: APiQypLun+CBwjKUVhxWQXJcxguZiuK6rc3+flEUnR/EKcSAY97xhSafAUIDuwbhXe7DQoenZLlSb0NGyAF3AoPlsmY=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr3149825ots.250.1587318911290;
- Sun, 19 Apr 2020 10:55:11 -0700 (PDT)
+        id S1726681AbgDSSOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Apr 2020 14:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgDSSOk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 19 Apr 2020 14:14:40 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3440920771;
+        Sun, 19 Apr 2020 18:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587320079;
+        bh=bOt9BTn/I9BtpLW6MYPux7kH7zXf1KQ4OwttSbOUgxw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=F96kxGnwb5hbRo2uaveExMkh4pG5tmsfXC/X4f7LcIR9NVVk3+CXqwPimCRGIZsLq
+         200DZ+NlYkyxPrNFkbuYootDCzDqqWFu0hJkAVPZpKUAgkDDPBPfI6mIZvHi8k+VtM
+         aJNXnDOzYimf/GSU7Z8wIQIZEF7kJxvbDOxdjZqA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200419164956.3484-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200419164956.3484-1-zhengdejin5@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sun, 19 Apr 2020 19:54:59 +0200
-Message-ID: <CAMuHMdXyWuTDqBASA8ofhHqt-4r56u_brJENkW4eiZsEEY-G-A@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: fix several typos
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200416005549.9683-2-robh@kernel.org>
+References: <20200416005549.9683-1-robh@kernel.org> <20200416005549.9683-2-robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Remove cases of 'allOf' containing a '$ref'
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Jun Nie <jun.nie@linaro.org>, stephan@gerhold.net,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Danie l Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sun, 19 Apr 2020 11:14:38 -0700
+Message-ID: <158732007844.132238.3936257450130949073@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 19, 2020 at 6:50 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
-> use codespell to fix lots of typos over frontends.
->
-> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Quoting Rob Herring (2020-04-15 17:55:49)
+> json-schema versions draft7 and earlier have a weird behavior in that
+> any keywords combined with a '$ref' are ignored (silently). The correct
+> form was to put a '$ref' under an 'allOf'. This behavior is now changed
+> in the 2019-09 json-schema spec and '$ref' can be mixed with other
+> keywords. The json-schema library doesn't yet support this, but the
+> tooling now does a fixup for this and either way works.
+>=20
+> This has been a constant source of review comments, so let's change this
+> treewide so everyone copies the simpler syntax.
+>=20
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/clock/fixed-factor-clock.yaml    |   5 +-
 
-Thanks for your patch!
-
->  drivers/pinctrl/sh-pfc/pfc-sh7269.c              | 2 +-
-
-For sh-pfc:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-> +++ b/drivers/pinctrl/sh-pfc/pfc-sh7269.c
-> @@ -1963,7 +1963,7 @@ static const struct pinmux_func pinmux_func_gpios[] = {
->  static const struct pinmux_cfg_reg pinmux_config_regs[] = {
->         /* "name" addr register_size Field_Width */
->
-> -       /* where Field_Width is 1 for single mode registers or 4 for upto 16
-> +       /* where Field_Width is 1 for single mode registers or 4 for up to 16
->            mode registers and modes are described in assending order [0..16] */
-
-Which brings my attention to another typo: that range should be [0..15].
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Stephen Boyd <sboyd@kernel.org> # clock
