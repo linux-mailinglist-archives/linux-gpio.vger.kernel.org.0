@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B39E1AF5FB
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 02:19:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E88021AF5FD
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 02:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725805AbgDSATk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Apr 2020 20:19:40 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:44796 "EHLO
+        id S1725805AbgDSAW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Apr 2020 20:22:56 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.215]:34393 "EHLO
         mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbgDSATk (ORCPT
+        by vger.kernel.org with ESMTP id S1725804AbgDSAW4 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 18 Apr 2020 20:19:40 -0400
-Received: from [100.112.6.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-c.us-east-1.aws.symcld.net id 57/03-23081-9199B9E5; Sun, 19 Apr 2020 00:19:37 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRWlGSWpSXmKPExsXi5LtOQFdi5uw
-  4g7kzTC2m/FnOZLF5/h9Gi8u75rA5MHvcubaHzePzJrkApijWzLyk/IoE1ow1bx4xFnwTqHiw
-  4xpbA+NZvi5GLg4hgVWMEqvObmLpYuQEctYwSrybkgdiswnoSWy6f5odxBYRYJZYMPU8YxcjB
-  wezQLbEoz2JIGFhAVOJr1O3grWyCKhKbP/Uxwhi8wrYSmyc3wUWlxCQl1i94QAzRFxQ4uTMJ2
-  BxZgEJiYMvXjCDjBQSUJE4950RolxBYv3Vc6wTGHlnIemYhaRjASPTKkbTpKLM9IyS3MTMHF1
-  DAwNdQ0MjXVNdYzO9xCrdZL3SYt3UxOISXUO9xPJiveLK3OScFL281JJNjMCASylgVdnBeHjt
-  e71DjJIcTEqivGXds+OE+JLyUyozEosz4otKc1KLDzHKcHAoSfAumg6UEyxKTU+tSMvMAQY/T
-  FqCg0dJhHctSJq3uCAxtzgzHSJ1ilFRSpx3KkhCACSRUZoH1waLuEuMslLCvIwMDAxCPAWpRb
-  mZJajyrxjFORiVhHl7QKbwZOaVwE1/BbSYCWhxvinY4pJEhJRUA1PjFoavTTZy/54zW6g9ti0
-  wT2+o2fLXJW5CzsVMLc9uhSbX1TeYbVbo+j8UWhPwz376reVry1eG7bl6ir1n74ae2cdzr4kf
-  UmAt3ZrqFCt+7+7yRtOF19ZZrvhwQlVAMLHz1/kzls/cL116ozZJ/84eOQ0+pb79j/nXzz6w4
-  7FUfTOHbB375+sT2q+Ff7Ryf2DYpGaXIVtQdaZdfZ7dm74qyeuJNVsduWZrHv3OyXoi+F7Q2z
-  eHOvp7O03WP/1uddNAYc71uYXKSw69+6a1eeXPS1v996xiWcjFI/KK13TrzzMSvg6CvRLCVvP
-  LmZPzrVY8VChbu33PlX29S60yNf5YbLxoyZKRZP1G8t7fU1FKLMUZiYZazEXFiQBZLoT4MwMA
+        Sat, 18 Apr 2020 20:22:56 -0400
+Received: from [100.112.5.244] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-c.us-east-1.aws.symcld.net id 7E/E8-35930-ED99B9E5; Sun, 19 Apr 2020 00:22:54 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRWlGSWpSXmKPExsXi5LtOQPfuzNl
+  xBvsnmllM+bOcyWLz/D+MFpd3zWFzYPa4c20Pm8fnTXIBTFGsmXlJ+RUJrBlr3jxiLPgmUPFg
+  xzW2BsazfF2MXBxCAqsYJSZ9vsAC4axhlJg/aS17FyMnB5uAnsSm+6fBbBEBZokFU88zgtjMA
+  tMYJab8dwKxhQVMJb5O3coCYrMIqEo8nHiXFcTmFbCVmPPqHRuILSEgL7F6wwFmiLigxMmZT1
+  gg5khIHHzxAijOAbRYReLcd0aIcgWJ9VfPsU5g5J2FpGMWko4FjEyrGM2SijLTM0pyEzNzdA0
+  NDHQNDY10zXSNjAz1Eqt0k/VKi3VTE4tLdIHc8mK94src5JwUvbzUkk2MwLBLKWC7u4Nxx/L3
+  eocYJTmYlER5y7pnxwnxJeWnVGYkFmfEF5XmpBYfYpTh4FCS4P01AygnWJSanlqRlpkDjAGYt
+  AQHj5II73eQNG9xQWJucWY6ROoUo6KUOO99kIQASCKjNA+uDRZ3lxhlpYR5GRkYGIR4ClKLcj
+  NLUOVfMYpzMCoJ814CmcKTmVcCN/0V0GImoMX5pmCLSxIRUlINTNxc6rK/+oP22GfwXuoXsZi
+  yb3LFCZuTQopzjYpl2ufX/crP99/NveLZ+UWLV76KOS3k3Bad/WnuU6f3Vabqe9OVOx4GmPP8
+  8L5psnHBu3KV4rKqiLPJm5yfhqsEVqx43n5mzakYV+536sdE3i1Jlb3NGrEtoub8Ycf+Pc+mz
+  n6R4PdNqyVq+aQgozKFv+/Metizr3K9NTWo+hz9vkPl09+PjtqsTwKeTd976ZJMu4TooTzPRb
+  +79217pfK7dceeFdzP8xd7BXLVFfhev67/e9pjD+beuV8ey7ReusKzZRmT91XNusR/ztqPPnq
+  mcuwrfnl9V+flsIu7FCr+l3SY7lC8eGp28q/nTmvcn249xazEUpyRaKjFXFScCACOMt9fNgMA
   AA==
 X-Env-Sender: Hector.Bujanda@digi.com
-X-Msg-Ref: server-3.tower-414.messagelabs.com!1587255576!1658909!1
+X-Msg-Ref: server-33.tower-414.messagelabs.com!1587255773!3698671!1
 X-Originating-IP: [66.77.174.16]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.50.1; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 19104 invoked from network); 19 Apr 2020 00:19:36 -0000
+Received: (qmail 6264 invoked from network); 19 Apr 2020 00:22:53 -0000
 Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
-  by server-3.tower-414.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 19 Apr 2020 00:19:36 -0000
+  by server-33.tower-414.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 19 Apr 2020 00:22:53 -0000
 Received: from DOR-SMS-XCH01.digi.com (10.49.8.99) by MCL-VMS-XCH01.digi.com
  (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sat, 18 Apr 2020
- 19:19:36 -0500
+ 19:22:53 -0500
 Received: from localhost.localdomain (172.27.2.183) by dor-sms-xch01.digi.com
  (10.49.8.99) with Microsoft SMTP Server (TLS) id 14.3.468.0; Sun, 19 Apr 2020
- 02:19:30 +0200
+ 02:22:48 +0200
 From:   Hector Bujanda <hector.bujanda@digi.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
+CC:     Hector Bujanda <hector.bujanda@digi.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 Subject: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-Date:   Sat, 18 Apr 2020 17:18:57 -0700
-Message-ID: <20200419001858.105281-1-hector.bujanda@digi.com>
+Date:   Sat, 18 Apr 2020 17:22:20 -0700
+Message-ID: <20200419002220.105338-1-hector.bujanda@digi.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
