@@ -2,109 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C9D01AFA26
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 14:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5041F1AFC11
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Apr 2020 18:47:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726006AbgDSMuo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Apr 2020 08:50:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725910AbgDSMuo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 19 Apr 2020 08:50:44 -0400
-Received: from ROU-LT-M43218B.mchp-main.com (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A844F2137B;
-        Sun, 19 Apr 2020 12:50:34 +0000 (UTC)
-Date:   Sun, 19 Apr 2020 14:50:58 +0200
-From:   ludovic.desroches@microchip.com
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        kamel.bouhara@bootlin.com, linux@armlinux.org.uk,
-        linus.walleij@linaro.org, alan@softiron.com, wsa@the-dreams.de
-Subject: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for bus
- recovery
-Message-ID: <20200419125058.ldueh7fdswgxocgf@ROU-LT-M43218B.mchp-main.com>
-References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+        id S1726337AbgDSQit (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Apr 2020 12:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725793AbgDSQis (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 19 Apr 2020 12:38:48 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F03C061A0C;
+        Sun, 19 Apr 2020 09:38:48 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w65so3727998pfc.12;
+        Sun, 19 Apr 2020 09:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MxRnre2TGJoBqRkcaKyaSPFLdXb03GRebHRCx/K9LB4=;
+        b=oaqTeG9JDQfKNVnHaapynwdylZHqO9r3VxEj9N6HQj3ukwiSrs+qgaqQ2oaHee8Mln
+         gSPIiPQDT1rD0IPLxPaNBSztuDTNexc4CBO85J4vhBZ4bz2qaNkarcTpnT4vzOg9GFD0
+         j0U4KHXxj2cqb0wC5dNq5N+S8/X4nFhx5ObNaiYMbTL9AHT44fFnYqpPUKCwgRdzVceV
+         mMM2V/RTrfqNmsdG45M7CvG4ub+maCYW37AxWQMuUDA4IE4Sy2YtVcKy7D6XtgydB0fa
+         U0e8geYJyudPfce3owIZep3EnU996oHTNvGeRkIL3E/qOeIZlrGhyKFPjwAGvUqtAqr4
+         Wq7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MxRnre2TGJoBqRkcaKyaSPFLdXb03GRebHRCx/K9LB4=;
+        b=ODNDm0lEqYTS/o+JhQsIYdTeINlS76ETFZeqRHQ585jhW9NtIijYM+wV7zvPRzrSja
+         nT8weHvCcVTwc3fAkmNywkxZVgd/2O5ENok4b9kRndeHhbbxJ8zroaesflJz0kyDNHjb
+         /97JSlQEl4It1a9RE7ZP+wIaqV/YeNuNm0QxzYIv0+44HMW5EI84Cjy/cnBUEdmfESbV
+         Rb/pGGeouYT4946ttIp5bVrba+ZPJRx601Q5OgaQ2ZwXb65CMEWAloN9FHHemoyRyysZ
+         gIHN8iQHRxoS5NUoJTNP/pZ1oEkf5xWWQBXnuQviyR4sG3WQhQJXtvUrswsd9Igq4bkI
+         tNVw==
+X-Gm-Message-State: AGi0PuaX2XFh8vdgy/pksZuPX+/LQH/HOBsJhNe+bRHCnvdGWT6f7qwh
+        3h5o7t3IswTcn+DPUD9eNezKeIJH
+X-Google-Smtp-Source: APiQypK8TY9x0fZ8kox4VD1WuHzR2UWzumPYpn6nhnAmKjKIEGKKZ5SyKg8w2UT6Gn5lLWGsArZ+Wg==
+X-Received: by 2002:a63:ff49:: with SMTP id s9mr12971814pgk.46.1587314328022;
+        Sun, 19 Apr 2020 09:38:48 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id z63sm24836070pfb.20.2020.04.19.09.38.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 19 Apr 2020 09:38:47 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v1] gpio: fix several typos
+Date:   Mon, 20 Apr 2020 00:38:16 +0800
+Message-Id: <20200419163816.19856-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 10:06:43AM +0300, Codrin Ciubotariu wrote:
-> devm_gpiod_get() usually calls gpio_request_enable() for non-strict pinmux
-> drivers. These puts the pins in GPIO mode, whithout notifying the pinctrl
-> driver. At this point, the I2C bus no longer owns the pins. To mux the
-> pins back to the I2C bus, we use the pinctrl driver to change the state
-> of the pins to GPIO, before using devm_gpiod_get(). After the pins are
-> received as GPIOs, we switch theer pinctrl state back to the default
-> one,
-> 
-> Fixes: d3d3fdcc4c90 ("i2c: at91: implement i2c bus recovery")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Use codespell to fix lots of typos over frontends.
 
-At the moment, I don't see another way to deal with this issue.
+CC: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/gpio/gpio-ftgpio010.c | 2 +-
+ drivers/gpio/gpio-mm-lantiq.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Link to the discussion:
-https://lore.kernel.org/linux-arm-kernel/20191206173343.GX25745@shell.armlinux.org.uk/
+diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+index fbddb1662428..4031164780f7 100644
+--- a/drivers/gpio/gpio-ftgpio010.c
++++ b/drivers/gpio/gpio-ftgpio010.c
+@@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 	if (val == deb_div) {
+ 		/*
+ 		 * The debounce timer happens to already be set to the
+-		 * desireable value, what a coincidence! We can just enable
++		 * desirable value, what a coincidence! We can just enable
+ 		 * debounce on this GPIO line and return. This happens more
+ 		 * often than you think, for example when all GPIO keys
+ 		 * on a system are requesting the same debounce interval.
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index f460d71b0c92..538e31fe8903 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -36,7 +36,7 @@ struct ltq_mm {
+  * @chip:     Pointer to our private data structure.
+  *
+  * Write the shadow value to the EBU to set the gpios. We need to set the
+- * global EBU lock to make sure that PCI/MTD dont break.
++ * global EBU lock to make sure that PCI/MTD don't break.
+  */
+ static void ltq_mm_apply(struct ltq_mm *chip)
+ {
+-- 
+2.25.0
 
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-> ---
->  drivers/i2c/busses/i2c-at91-master.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index 0aba51a7df32..43d85845c897 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -845,6 +845,18 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
->  							 PINCTRL_STATE_DEFAULT);
->  	dev->pinctrl_pins_gpio = pinctrl_lookup_state(dev->pinctrl,
->  						      "gpio");
-> +	if (IS_ERR(dev->pinctrl_pins_default) ||
-> +	    IS_ERR(dev->pinctrl_pins_gpio)) {
-> +		dev_info(&pdev->dev, "pinctrl states incomplete for recovery\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * pins will be taken as GPIO, so we might as well inform pinctrl about
-> +	 * this and move the state to GPIO
-> +	 */
-> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_gpio);
-> +
->  	rinfo->sda_gpiod = devm_gpiod_get(&pdev->dev, "sda", GPIOD_IN);
->  	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER)
->  		return -EPROBE_DEFER;
-> @@ -855,9 +867,7 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
->  		return -EPROBE_DEFER;
->  
->  	if (IS_ERR(rinfo->sda_gpiod) ||
-> -	    IS_ERR(rinfo->scl_gpiod) ||
-> -	    IS_ERR(dev->pinctrl_pins_default) ||
-> -	    IS_ERR(dev->pinctrl_pins_gpio)) {
-> +	    IS_ERR(rinfo->scl_gpiod)) {
->  		dev_info(&pdev->dev, "recovery information incomplete\n");
->  		if (!IS_ERR(rinfo->sda_gpiod)) {
->  			gpiod_put(rinfo->sda_gpiod);
-> @@ -870,6 +880,9 @@ static int at91_init_twi_recovery_info(struct platform_device *pdev,
->  		return -EINVAL;
->  	}
->  
-> +	/* change the state of the pins back to their default state */
-> +	pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
-> +
->  	dev_info(&pdev->dev, "using scl, sda for recovery\n");
->  
->  	rinfo->prepare_recovery = at91_prepare_twi_recovery;
-> -- 
-> 2.20.1
-> 
