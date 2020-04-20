@@ -2,41 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2E551B12FA
+	by mail.lfdr.de (Postfix) with ESMTP id 762961B12F9
 	for <lists+linux-gpio@lfdr.de>; Mon, 20 Apr 2020 19:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726081AbgDTR16 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Apr 2020 13:27:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:1400 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbgDTR15 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1726355AbgDTR15 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 20 Apr 2020 13:27:57 -0400
-IronPort-SDR: kMFGfasKJEu0soN+Y0v+1ooI1f9xGFZb2EZ1KTxFFNnBKnOF//BiR5NBwKH3wmMxcPofthVC1J
- NvXlj+csm5MA==
+Received: from mga03.intel.com ([134.134.136.65]:2872 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726081AbgDTR15 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 20 Apr 2020 13:27:57 -0400
+IronPort-SDR: IGFn+tlZn1O7/12K7YAnAzsW66iduLxUe+E7zGVgZFKYfa+xaKcDKC0VbgiPNn5eJpW2qQgKl8
+ zFAAjyX6hjBg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 10:27:57 -0700
-IronPort-SDR: AZSI5JSSr1VXIIJONXDCXuG+66YDp9EbqdZvtwyjKC8QhaWFjwrwfyRgQGgkhApvLc3dnL9Xu2
- IBcEbga6QegA==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2020 10:27:56 -0700
+IronPort-SDR: IST0KvdQ6A9cJz/g7DD+yqXpYHxTAgt2xbUaHL71FDq3eStfHWib0zHy6S3ZiA8zNnCh6rtF58
+ rvkvhNTAWGOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,407,1580803200"; 
-   d="scan'208";a="255007530"
+   d="scan'208";a="243892358"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 20 Apr 2020 10:27:54 -0700
+  by orsmga007.jf.intel.com with ESMTP; 20 Apr 2020 10:27:54 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B09DB17F; Mon, 20 Apr 2020 20:27:53 +0300 (EEST)
+        id B64FD233; Mon, 20 Apr 2020 20:27:53 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
-Cc:     Marcel Gudert <m.gudert@eckelmann.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v3 2/3] gpio: pca953x: fix handling of automatic address incrementing
-Date:   Mon, 20 Apr 2020 20:27:51 +0300
-Message-Id: <20200420172752.33588-2-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 3/3] gpio: pca953x: drop unused parameters of pca953x_recalc_addr()
+Date:   Mon, 20 Apr 2020 20:27:52 +0300
+Message-Id: <20200420172752.33588-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
 References: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
@@ -50,135 +49,115 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Some of the chips supported by the pca953x driver need the most
-significant bit in the address word set to automatically increment the
-address pointer on subsequent reads and writes (example: PCA9505). With
-this bit unset the same register is read multiple times on a multi-byte
-read sequence. Other chips must not have this bit set and autoincrement
-always (example: PCA9555).
+After the previous patch the two last parameters of
+pca953x_recalc_addr() are unused and so can be dropped.
 
-Up to now this AI bit was interpreted to be part of the address, which
-resulted in inconsistent regmap caching when a register was written with
-AI set and then read without it. This happened for the PCA9505 in
-pca953x_gpio_set_multiple() where pca953x_read_regs() bulk read from the
-cache for registers 0x8-0xc and then wrote to registers 0x88-0x8c. (Side
-note: reading 5 values from offset 0x8 yiels OP0 5 times because AI must
-be set to get OP0-OP4, which is another bug that is resolved here as a
-by-product.) The same problem happens when calls to gpio_set_value() and
-gpio_set_array_value() were mixed.
-
-With this patch the AI bit is always set for chips that support it. This
-works as there are no code locations that make use of the behaviour with
-AI unset (for the chips that support it).
-
-Note that the call to pca953x_setup_gpio() had to be done a bit earlier
-to make the NBANK macro work.
-
-The history of this bug is a bit complicated. Commit b32cecb46bdc
-("gpio: pca953x: Extract the register address mangling to single
-function") changed which chips and functions are affected. Commit
-3b00691cc46a ("gpio: pca953x: hack to fix 24 bit gpio expanders") used
-some duct tape to make the driver at least appear to work. Commit
-49427232764d ("gpio: pca953x: Perform basic regmap conversion")
-introduced the caching. Commit b4818afeacbd ("gpio: pca953x: Add
-set_multiple to allow multiple bits to be set in one write.") introduced
-the .set_multiple() callback which didn't work for chips that need the
-AI bit which was fixed later for some chips in 8958262af3fb ("gpio:
-pca953x: Repair multi-byte IO address increment on PCA9575"). So I'm
-sorry, I don't know which commit I should pick for a Fixes: line.
-
-Tested-by: Marcel Gudert <m.gudert@eckelmann.de>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 41be681ae77c2..590b072366377 100644
+index 590b072366377..06d6af60e6b76 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -308,8 +308,22 @@ static const struct regmap_config pca953x_i2c_regmap = {
- 
- 	.disable_locking = true,
- 	.cache_type = REGCACHE_RBTREE,
--	/* REVISIT: should be 0x7f but some 24 bit chips use REG_ADDR_AI */
--	.max_register = 0xff,
-+	.max_register = 0x7f,
-+};
-+
-+static const struct regmap_config pca953x_ai_i2c_regmap = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.read_flag_mask = REG_ADDR_AI,
-+	.write_flag_mask = REG_ADDR_AI,
-+
-+	.readable_reg = pca953x_readable_register,
-+	.writeable_reg = pca953x_writeable_register,
-+	.volatile_reg = pca953x_volatile_register,
-+
-+	.cache_type = REGCACHE_RBTREE,
-+	.max_register = 0x7f,
+@@ -326,8 +326,7 @@ static const struct regmap_config pca953x_ai_i2c_regmap = {
+ 	.max_register = 0x7f,
  };
  
- static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
-@@ -320,18 +334,6 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
- 	int pinctrl = (reg & PCAL_PINCTRL_MASK) << 1;
- 	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
+-static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
+-			      bool write, bool addrinc)
++static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off)
+ {
+ 	int bank_shift = pca953x_bank_shift(chip);
+ 	int addr = (reg & PCAL_GPIO_MASK) << bank_shift;
+@@ -339,7 +338,7 @@ static u8 pca953x_recalc_addr(struct pca953x_chip *chip, int reg, int off,
  
--	/* Single byte read doesn't need AI bit set. */
--	if (!addrinc)
--		return regaddr;
--
--	/* Chips with 24 and more GPIOs always support Auto Increment */
--	if (write && NBANK(chip) > 2)
--		regaddr |= REG_ADDR_AI;
--
--	/* PCA9575 needs address-increment on multi-byte writes */
--	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE)
--		regaddr |= REG_ADDR_AI;
--
- 	return regaddr;
- }
+ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
+ {
+-	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, true, true);
++	u8 regaddr = pca953x_recalc_addr(chip, reg, 0);
+ 	u8 value[MAX_BANK];
+ 	int i, ret;
  
-@@ -882,6 +884,7 @@ static int pca953x_probe(struct i2c_client *client,
+@@ -357,7 +356,7 @@ static int pca953x_write_regs(struct pca953x_chip *chip, int reg, unsigned long
+ 
+ static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *val)
+ {
+-	u8 regaddr = pca953x_recalc_addr(chip, reg, 0, false, true);
++	u8 regaddr = pca953x_recalc_addr(chip, reg, 0);
+ 	u8 value[MAX_BANK];
+ 	int i, ret;
+ 
+@@ -376,8 +375,7 @@ static int pca953x_read_regs(struct pca953x_chip *chip, int reg, unsigned long *
+ static int pca953x_gpio_direction_input(struct gpio_chip *gc, unsigned off)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off,
+-					true, false);
++	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off);
+ 	u8 bit = BIT(off % BANK_SZ);
  	int ret;
- 	u32 invert = 0;
- 	struct regulator *reg;
-+	const struct regmap_config *regmap_config;
  
- 	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL)
-@@ -944,7 +947,17 @@ static int pca953x_probe(struct i2c_client *client,
+@@ -391,10 +389,8 @@ static int pca953x_gpio_direction_output(struct gpio_chip *gc,
+ 		unsigned off, int val)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off,
+-					true, false);
+-	u8 outreg = pca953x_recalc_addr(chip, chip->regs->output, off,
+-					true, false);
++	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off);
++	u8 outreg = pca953x_recalc_addr(chip, chip->regs->output, off);
+ 	u8 bit = BIT(off % BANK_SZ);
+ 	int ret;
  
- 	i2c_set_clientdata(client, chip);
+@@ -414,8 +410,7 @@ static int pca953x_gpio_direction_output(struct gpio_chip *gc,
+ static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 inreg = pca953x_recalc_addr(chip, chip->regs->input, off,
+-				       true, false);
++	u8 inreg = pca953x_recalc_addr(chip, chip->regs->input, off);
+ 	u8 bit = BIT(off % BANK_SZ);
+ 	u32 reg_val;
+ 	int ret;
+@@ -439,8 +434,7 @@ static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+ static void pca953x_gpio_set_value(struct gpio_chip *gc, unsigned off, int val)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 outreg = pca953x_recalc_addr(chip, chip->regs->output, off,
+-					true, false);
++	u8 outreg = pca953x_recalc_addr(chip, chip->regs->output, off);
+ 	u8 bit = BIT(off % BANK_SZ);
  
--	chip->regmap = devm_regmap_init_i2c(client, &pca953x_i2c_regmap);
-+	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
-+
-+	if (NBANK(chip) > 2 || PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
-+		dev_info(&client->dev, "using AI\n");
-+		regmap_config = &pca953x_ai_i2c_regmap;
-+	} else {
-+		dev_info(&client->dev, "using no AI\n");
-+		regmap_config = &pca953x_i2c_regmap;
-+	}
-+
-+	chip->regmap = devm_regmap_init_i2c(client, regmap_config);
- 	if (IS_ERR(chip->regmap)) {
- 		ret = PTR_ERR(chip->regmap);
- 		goto err_exit;
-@@ -975,7 +988,6 @@ static int pca953x_probe(struct i2c_client *client,
- 	/* initialize cached registers from their original values.
- 	 * we can't share this chip with another i2c master.
- 	 */
--	pca953x_setup_gpio(chip, chip->driver_data & PCA_GPIO_MASK);
+ 	mutex_lock(&chip->i2c_lock);
+@@ -451,8 +445,7 @@ static void pca953x_gpio_set_value(struct gpio_chip *gc, unsigned off, int val)
+ static int pca953x_gpio_get_direction(struct gpio_chip *gc, unsigned off)
+ {
+ 	struct pca953x_chip *chip = gpiochip_get_data(gc);
+-	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off,
+-					true, false);
++	u8 dirreg = pca953x_recalc_addr(chip, chip->regs->direction, off);
+ 	u8 bit = BIT(off % BANK_SZ);
+ 	u32 reg_val;
+ 	int ret;
+@@ -509,10 +502,8 @@ static int pca953x_gpio_set_pull_up_down(struct pca953x_chip *chip,
+ 					 unsigned int offset,
+ 					 unsigned long config)
+ {
+-	u8 pull_en_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_EN, offset,
+-					     true, false);
+-	u8 pull_sel_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, offset,
+-					      true, false);
++	u8 pull_en_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_EN, offset);
++	u8 pull_sel_reg = pca953x_recalc_addr(chip, PCAL953X_PULL_SEL, offset);
+ 	u8 bit = BIT(offset % BANK_SZ);
+ 	int ret;
  
- 	if (PCA_CHIP_TYPE(chip->driver_data) == PCA953X_TYPE) {
- 		chip->regs = &pca953x_regs;
 -- 
 2.26.1
 
