@@ -2,80 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B91F1B42D4
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 13:09:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 530501B4152
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 12:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgDVLJj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Apr 2020 07:09:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12656 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726119AbgDVLJj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 Apr 2020 07:09:39 -0400
-IronPort-SDR: 4lqwUABa6GduU6jxawJAUHxNAYgAjPusCLlvizn5biuUZeNr/VV3ujFLBDIrLZA9Ujg95l99RX
- EPkcDzNNA3lw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 04:09:39 -0700
-IronPort-SDR: zrx63v+4Ld9sS5yeRI5wicoe4XOKrd5S577ODD2pZGoLaTNDF/hU0/7MBEwNcSL1UmBQ4IwfPj
- a7MhtA4R0pHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,414,1580803200"; 
-   d="scan'208";a="457108286"
-Received: from ajavier-mobl1.amr.corp.intel.com (HELO [10.255.68.153]) ([10.255.68.153])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Apr 2020 04:09:37 -0700
-Subject: Re: [RFC PATCH 12/16] clk: hifiberry-dacpro: add ACPI support
-To:     Stephen Boyd <sboyd@kernel.org>, alsa-devel@alsa-project.org
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        tiwai@suse.de, Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Matthias Reichl <hias@horus.com>, broonie@kernel.org,
+        id S1728536AbgDVKK6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Apr 2020 06:10:58 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:57691 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729105AbgDVKK5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Apr 2020 06:10:57 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 64B203C004C;
+        Wed, 22 Apr 2020 12:10:54 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oguoUnbPx3nK; Wed, 22 Apr 2020 12:10:49 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 69CC13C057F;
+        Wed, 22 Apr 2020 12:10:49 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.60) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 22 Apr
+ 2020 12:10:48 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     <linux-renesas-soc@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-13-pierre-louis.bossart@linux.intel.com>
- <158754793532.132238.9824423478783177623@swboyd.mtv.corp.google.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <60402718-f36c-cab3-2766-9ae180dd7504@linux.intel.com>
-Date:   Wed, 22 Apr 2020 04:54:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Yusuke Ashiduka <ashiduka@fujitsu.com>,
+        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
+        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
+        Yasushi Asano <yasano@jp.adit-jv.com>,
+        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <rosca.eugeniu@gmail.com>
+Subject: [RFC PATCH 0/3] gpio: rcar: Add support for GPIO alternative interrupt
+Date:   Wed, 22 Apr 2020 12:10:23 +0200
+Message-ID: <20200422101026.9220-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <158754793532.132238.9824423478783177623@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.72.94.60]
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The motivation behind this series is described in commit
+("gpio: rcar: Add support for GPIO alternative interrupt").
 
+The reasons for which RFC tag is attached are:
+ - Have Renesas/linux-gpio communities been facing GPIO interrupt
+   partitioning questions in the past (specifically AP vs RT)?
+ - Is it a no-go to have mandatory DTS dependencies like updating
+   'interrupts' on specifying the new 'use-alternative-interrupt'?
 
-On 4/22/20 4:32 AM, Stephen Boyd wrote:
-> Quoting Pierre-Louis Bossart (2020-04-09 12:58:37)
->> On ACPI platforms the of_ functions are irrelevant, conditionally
->> compile them out and add devm_clk_hw_register_clkdev() call instead.
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>   drivers/clk/clk-hifiberry-dacpro.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/clk/clk-hifiberry-dacpro.c b/drivers/clk/clk-hifiberry-dacpro.c
->> index bf0616c959da..d01a90fed51b 100644
->> --- a/drivers/clk/clk-hifiberry-dacpro.c
->> +++ b/drivers/clk/clk-hifiberry-dacpro.c
->> @@ -114,15 +114,22 @@ static int clk_hifiberry_dacpro_probe(struct platform_device *pdev)
->>                  return ret;
->>          }
->>   
->> +#ifndef CONFIG_ACPI
-> 
-> Use if (!IS_ENABLED(CONFIG_ACPI)) instead?
+Many thanks for your comments!
 
-git grep CONFIG_ACPI shows most of the kernel code uses #if(n)def 
-CONFIG_ACPI. It's equivalent, it's a boolean.
+Eugeniu Rosca (1):
+  [LOCAL] arm64: dts: renesas: ulcb: Showcase 'use-alternative-interrupt'
+
+Torii Kenichi (2):
+  dt-bindings: gpio-rcar: Add optional use-alternative-interrupt property
+  gpio: rcar: Add support for GPIO alternative interrupt
+
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt |  3 +++
+ arch/arm64/boot/dts/renesas/ulcb.dtsi                        | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpio-rcar.c                                     | 22 +++++++++++++++++-----
+ 3 files changed, 60 insertions(+), 5 deletions(-)
+
+-- 
+2.26.0
+
