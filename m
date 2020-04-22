@@ -2,207 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B03F1B31C2
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Apr 2020 23:16:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3951D1B3661
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 06:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgDUVQT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Apr 2020 17:16:19 -0400
-Received: from mx02.beuth-hochschule.de ([141.64.5.24]:25648 "EHLO
-        mx02.beuth-hochschule.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgDUVQT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Apr 2020 17:16:19 -0400
-X-Greylist: delayed 341 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Apr 2020 17:16:18 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx02.beuth-hochschule.de (Postfix) with ESMTP id D114C20083
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Apr 2020 23:10:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        beuth-hochschule.de; h=content-transfer-encoding:content-type
-        :content-type:mime-version:x-mailer:message-id:subject:subject
-        :from:from:date:date:received:received; s=beuth; t=1587503431;
-         x=1589317832; bh=oK2OMCjyFwnPynLxYK1HuSmbHL4pm4ygS0Yj52ra5oM=; b=
-        QdL6SUo0bLCbnU4s+BBsYa86UNuBH51jf6RnjttT56xJDnXFMtCR2i9Cb8Z/vMj8
-        1fNDzP8umvdNbDoha/Y/F2P/bkCWYYowFJnHy5Ft8Z8EdRoKTYxFiaglv+qfPuXl
-        cu/u5A3ZjjPqePl3K2gOLWebyRWU6tqSXiJom2uf/w8=
-X-Virus-Scanned: amavisd-new at mx02.beuth-hochschule.de
-Received: from mailstore1.beuth-hochschule.de ([141.64.12.230])
-        by localhost (mx02.beuth-hochschule.de [141.64.5.24]) (amavisd-new, port 10034)
-        with ESMTP id BiMyuBg_3sv9 for <linux-gpio@vger.kernel.org>;
-        Tue, 21 Apr 2020 23:10:31 +0200 (CEST)
-Received: from rechenknecht2k11 (mue-88-130-48-030.dsl.tropolys.de [88.130.48.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailstore1.beuth-hochschule.de (Postfix) with ESMTPSA
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Apr 2020 23:10:31 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 23:09:45 +0200
-From:   Benjamin Valentin <benjamin.valentin@beuth-hochschule.de>
-To:     linux-gpio@vger.kernel.org
-Subject: GPIO fd won't generate signal
-Message-ID: <20200421230945.11c862e2@rechenknecht2k11>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725934AbgDVEdr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Apr 2020 00:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725929AbgDVEdr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 Apr 2020 00:33:47 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F8BC061BD3
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Apr 2020 21:33:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id a21so789820ljb.9
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Apr 2020 21:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7ZW2G5EWj02g78DhOe3VvfhnqHuBH5xIVqVpm2/M/48=;
+        b=ftBZoe+dtjZZgFL2UgUfqHRuKKiVHbKWT/bynCHsxKoKz4IcTm0WwutgI3i5hpNY98
+         K3VlGh2WcXO+IIqZNMS78Rnfg9KmPqpBJYifX80Wf/69Z2T5mHfETMxmOzGws4fBitrt
+         DqRxvnTbVmjC1diNrZ4cjEEhS3JqUGcxKSv041Goz3gMepbdk1cOhQvWRS34gQjXtFNw
+         l+/nRItNTXXVooPSKrNA6KVXKlYiZrag68mnacFZpJGljSQBDMzhHpmy2XxWE5jiR3i/
+         hLLkzWOWfRItJwB3ixGCZLpFcs6Xp0CLjD3n5TNLkqD/1k7XYPj5H6drTPFVkS7iTFUA
+         nldw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7ZW2G5EWj02g78DhOe3VvfhnqHuBH5xIVqVpm2/M/48=;
+        b=ktMBXWjPW/StqxO+ehgZaMQyvDqoRD3dOWkWagsE2TuYyoG32BjQKE3Q3VMfoW4ieh
+         eowdYzKV3T0DBQKATrh278nO54bxXwkRfNmWrvsPE6h7JmGzw5CDXcDxRbZggDE9+2Ag
+         xf6qclDHjRu/LXACE8M2fNBc5Ji7EeyJMhvQFEWmlSTE3hRpWm/ouc7Q7sXlNiLDMlAh
+         2hdjgGewG6olfS7Iir6O3eLlXcq7CSedmGV91EeYCAJy/nbZmmS2toJpySfpe92iVvti
+         DvsYsOpKeLnkDd2rUlormAHWJruJBl4xMQTikMgT0PvtpG39FBKZddNp1mQuIIzUJyi5
+         3QFQ==
+X-Gm-Message-State: AGi0Pubmyna4LCix4swMdM4BvlDhposw+bUntb7vZFzk+L4RbMwikxzC
+        KlJNJsvFEa9r7sHFwWK+N8I7dEX0agiKpFET17Pn6YtF
+X-Google-Smtp-Source: APiQypKGtSxvcNSfOuJN4z8vfc8l/7jCSAABN6rF+t76f74i6p74JCOzZ2zXJghABD3r7qf6kGliAh0+wLQs3o/nOwQ=
+X-Received: by 2002:a2e:9dcd:: with SMTP id x13mr14113487ljj.120.1587530025623;
+ Tue, 21 Apr 2020 21:33:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
+ <CAD56B7da+DDxpMvvntmq_nQaZ8aiJ+up4CY5QQ6t2hz_C8LhjQ@mail.gmail.com>
+ <20200421125553.GJ185537@smile.fi.intel.com> <20200421140624.sipahotlak5ukrxy@pengutronix.de>
+ <20200421142145.GO185537@smile.fi.intel.com>
+In-Reply-To: <20200421142145.GO185537@smile.fi.intel.com>
+From:   Paul Thomas <pthomas8589@gmail.com>
+Date:   Wed, 22 Apr 2020 00:33:34 -0400
+Message-ID: <CAD56B7fUZ4+oUpsmmydYeFK0K4xvZa-txth07BmoVu3XUP8iSA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: pca953x: Rewrite ->get_multiple() function
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Everyone,
 
-AFAIU a GPIO fd will generate a POLLPRI event when an interrupt occurs
-on the GPIO.
-I can wait for this event using poll() just fine.
+On Tue, Apr 21, 2020 at 10:21 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 04:06:24PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > On Tue, Apr 21, 2020 at 03:55:53PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Apr 20, 2020 at 11:23:57PM -0400, Paul Thomas wrote:
+> > > > On Mon, Apr 20, 2020 at 1:27 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > The commit 96d7c7b3e654 ("gpio: gpio-pca953x, Add get_multiple fu=
+nction")
+> > > > > basically did everything wrong from style and code reuse perspect=
+ive, i.e.
+> > > > Hi Andy,
+> > > >
+> > > > Well your version is certainly elegant and simple, and does better
+> > > > with code reuse. However there are a couple of other goals I had in
+> > > > mind.
+> > > > First, the "lazy" approach of 96d7c7b3e654 is actually faster when
+> > > > user space sets up a 8-bit linehandle[1]146us (single regmap_read()=
+)
+> > > > vs 172us (pca953x_read_regs()) which incidentally is what we do in =
+our
+> > > > application. In lazily reading 1 byte at a time it is the fastest
+> > > > access for that, if user space is always setting up the linehandle =
+for
+> > > > the whole chip pca953x_read_regs() would be faster. Seeing as
+> > > > get_multiple has been unimplemented for this chip until now perhaps
+> > > > our use case deserves some consideration?
+> > >
+> > > I understand completely your goal, but
+> > > - for I=C2=B2C expanders timings is the last thing to look for (they =
+are quite slow
+> > >   by nature), so, I really don't care about 16% speed up for one call=
+; don't
+> > >   forget that we are in multi-task OS, where this can be easily inter=
+rupted and
+> > >   user will see the result quite after expected quick result
+Sure, it's not a HUGE deal, but this will get worse for 5 bank chips.
+Also, 26us is not insignificant, with the preempt-rt kernel we're
+using that can be more than the max interrupt latency.
 
-fcntl(fd, F_SETOWN, getpid()) should then turn such an event into a
-signal that can be caught by the signal handler of the process.
+> >
+> > I didn't do any timing analysis and while I understand your
+> > argumentation, I'm not sure to agree. I noticed while debugging the
+> > problem that then resulted in my fix that gpioctl uses the .set_multipl=
+e
+> > callback. I told my customer to use gpioctl instead of /sys/class/gpio
+> > because it performs better just to notice that when using gpioctl to se=
+t
+> > a single GPIO this transfers five bytes instead of only two.
+> >
+> > Having said that I think the sane approach is to optimize
+> > .{g,s}et_multiple to reduce the read/write size to the smallest bulk
+> > size possible that covers all bits that have their corresponding bit se=
+t
+> > in mask.
+> >
+> > > - the code maintenance has a priority over micro-optimization (this d=
+river
+> > >   suffered many times of breakages because of some optimizations done=
+)
+Yeah, I appreciate that maintainability needs to be a big priority,
+I'm wondering if comments & syntax could be improved so that the
+general idea of 96d7c7b3e654 is clear and maintainable. It is just
+walking through mask, and whenever it gets to a new byte it reads it
+from the hardware.
 
-This however does not work. Is this an omission by the GPIO API or am I
-understanding the API wrong here?
+> >
+> > ack here. Some parts of the driver were harder to grasp than necessary.
+> >
+> > > - it breaks Uwe's approach to fix AI chips, after my patch Uwe's ones=
+ are
+> > >   applied cleanly
+> >
+> > I didn't check, is 96d7c7b3e654 broken for some chips?
+>
+> I was referring to another call to recalc address with additional paramet=
+ers,
+> which your second patch actually gets rid of.
 
-Attached you find a little program to reproduce this:
+If it's just the call to pca953x_recalc_addr() that caused the
+conflict with Uwe's work with 96d7c7b3e654, we can just remove the
+last two arguments so it matches what pca953x_gpio_get_value() is
+doing.
 
-When running on a raspberry pi, bridge GPIO20 and GPIO26.
-The program will periodically toggle GPIO26, this should generate an
-interrupt on GPIO20.
-I can poll() GPIO20 but no signal is generated.
-
-#include <fcntl.h>
-#include <linux/gpio.h>
-#include <poll.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#define PIN_IN  (20)
-#define PIN_OUT (26)
-
-static int fd_in; /* to be read in the signal handler */
-
-/* configure input pin */
-static int setup_pin_int(int fd, int pin, int mode, int flank) {
-    struct gpioevent_request req = {
-        .lineoffset  = pin,
-        .handleflags = mode,
-        .eventflags  = flank
-    };
-
-    int res = ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &req);
-
-    if (res < 0) {
-        return res;
-    }
-
-    return req.fd;
-}
-
-/* configure output pin */
-static int setup_pin_out(int fd, int pin, int mode) {
-    struct gpiohandle_request req = {
-        .lineoffsets[0] = pin,
-        .flags          = mode,
-        .lines          = 1
-    };
-
-    int res = ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
-
-    if (res < 0) {
-        return res;
-    }
-
-    return req.fd;
-}
-
-static void pin_set(int fd, uint8_t val) {
-    ioctl(fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &val);
-}
-
-/* print which edge triggered the event */
-static void sigurg_handler(void) {
-    struct gpioevent_data event;
-    read(fd_in, &event, sizeof(event));
-
-    if (event.id == GPIOEVENT_EVENT_RISING_EDGE) {
-        puts("rising");
-    }
-    if (event.id == GPIOEVENT_EVENT_FALLING_EDGE) {
-        puts("falling");
-    }
-}
-
-static void signal_handler(int signal) {
-    printf("got signal: %x\n", signal);
-
-    if (signal == SIGURG) {
-        sigurg_handler();
-    }
-}
-
-static void register_signal(int signal, void (*handler)(int)) {
-    struct sigaction sa = {
-        .sa_handler = handler
-    };
-
-    sigaction(signal, &sa, NULL);
-}
-
-/* calling poll() on the fd works as expected */
-static void _do_poll(int fd) {
-
-    struct pollfd pfd = {
-        .fd = fd,
-        .events = POLLIN | POLLPRI
-    };
-
-    if (poll(&pfd, 1, 1000) > 0) {
-        sigurg_handler();
-    }
-}
-
-int main(void) {
-
-    int pins[2];
-
-    int fd = open("/dev/gpiochip0", O_RDWR);
-    pins[0] = setup_pin_int(fd, PIN_IN, GPIOHANDLE_REQUEST_INPUT,
-    GPIOEVENT_REQUEST_BOTH_EDGES); pins[1] = setup_pin_out(fd, PIN_OUT,
-    GPIOHANDLE_REQUEST_OUTPUT);
-
-    fd_in = pins[0];
-
-    /* register signal handler */
-    register_signal(SIGIO, signal_handler);
-    register_signal(SIGURG, signal_handler);
-
-    /* make the fd generate signals */
-    fcntl(fd_in, F_SETOWN, getpid());
-    fcntl(fd_in, F_SETFL, O_NONBLOCK | O_ASYNC);
-
-    /* toggle the output pin each second */
-    int state;
-    while (1) {
-        state = !state;
-        sleep(1);
-
-        printf("set %d\n", state);
-        pin_set(pins[1], state);
-
-        /* poll() is working on the fd */
-//        _do_poll(fd_in);
-    }
-
-    close(fd);
-
-    return 0;
-}
-
-I can send signals to the process with kill -23 <pid> just fine and the
-signal handler will be caught.
-Just not when the GPIO event occurs.
-
-Thank you!
-Benjamin
+thanks,
+Paul
