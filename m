@@ -2,92 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EFD11B4ED0
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 23:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC5ED1B4EDD
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 23:12:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgDVVIt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Apr 2020 17:08:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24084 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726068AbgDVVIt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:08:49 -0400
-IronPort-SDR: cSkAKulplLEtMzhqI6RGvrYOY1YUT5tDHuVqKOMNDcI8BHLUBrQHlEdhr3AIneDCsbYh0Iw9mz
- wsJTcxWSXyLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:08:48 -0700
-IronPort-SDR: OR9zGtfyQpMcV4afdZVH3NnBLr3lk7xcncQE4cUHbgMbM+idqrkVVLGwx7GuDbpx41mMXv0KmV
- j65tepvaTZ5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="457280305"
-Received: from jpilli-mobl.amr.corp.intel.com (HELO [10.254.51.39]) ([10.254.51.39])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Apr 2020 14:08:45 -0700
-Subject: Re: [RFC PATCH 12/16] clk: hifiberry-dacpro: add ACPI support
-To:     Stephen Boyd <sboyd@kernel.org>, alsa-devel@alsa-project.org
-Cc:     Matthias Reichl <hias@horus.com>, tiwai@suse.de,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Matuschek <daniel@hifiberry.com>,
-        linux-clk@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        broonie@kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Turquette <mturquette@baylibre.com>
-References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com>
- <20200409195841.18901-13-pierre-louis.bossart@linux.intel.com>
- <158754793532.132238.9824423478783177623@swboyd.mtv.corp.google.com>
- <60402718-f36c-cab3-2766-9ae180dd7504@linux.intel.com>
- <158758876497.163502.13202465070681172627@swboyd.mtv.corp.google.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <8054d4a1-8889-5ccf-a685-59fa16502822@linux.intel.com>
-Date:   Wed, 22 Apr 2020 16:08:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726337AbgDVVMX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Apr 2020 17:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgDVVMX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Apr 2020 17:12:23 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367C8C03C1AB
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 14:12:23 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id fu13so925384pjb.5
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 14:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=XDPcP3tbzlYKPYQTKxlpDEEO5QOa9GV0Amha8h89AsA=;
+        b=e2qv8zerN73zMA5kW/Ta2fN1O8dVIK6jdFNxVtrJdjtMXUttRjJYvnccM0b/J1yciZ
+         lzbNuem24E3qhUXCCDGrhc2xgjM6SrUupLu6OxsIqZDgHOnnSZ5flr/7F/DAhDRki5P4
+         qLllKpWEIlToWVvAZA0E5oKaNXV4MQmK5onWY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=XDPcP3tbzlYKPYQTKxlpDEEO5QOa9GV0Amha8h89AsA=;
+        b=qbggwtUnrQ3m6CQlK9MuRA0c50hblzcHsYMMsFc4N2LUmywd98xxSXsUizccCDcZL4
+         clEt8XbcUd75D73BTuZir6BgmuKJ/gjfkRxFRxwZSxUwMcqZwKP8HMktvTuy2PkeDBwG
+         TScD8vnI8gQYBphdoiMu1rqLEa1Q4rco/HqE24l1SM5czffdg34xEaPMS2GGlsgYx+M2
+         aiPwYzBjSvfTIysqIWoT/exxoyOLZBk3QKCffV/lF1zUxS+dVbHTu+6xICDCmX+Z51Ee
+         NEiqf+JS5NRlMeY7LP7fFg9PkwUOEeLVrzjFDf8e5QUynOHjJ5ITghihs9yLsIES/jmy
+         QoEg==
+X-Gm-Message-State: AGi0PubT4HW9IXUJRjSn4AduqFHQuWFZIvCLWa6WKWybPJcxp0ktIxHw
+        UvkVf11BtdiR4SzR1ighoz7y6w==
+X-Google-Smtp-Source: APiQypL5oBKdc6NVB1E/uXQs9airhXye2LtpOV4841Lu7hi+EjVHEnGsUW8WDXrjg92l2+Vpp882FA==
+X-Received: by 2002:a17:902:6b86:: with SMTP id p6mr639876plk.150.1587589942545;
+        Wed, 22 Apr 2020 14:12:22 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id o40sm164208pjb.18.2020.04.22.14.12.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 14:12:21 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <158758876497.163502.13202465070681172627@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200420220458.v2.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
+References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.3.I53fed5b501a31e7a7fa13268ebcdd6b77bd0cadd@changeid>
+Subject: Re: [PATCH v2 3/6] drm/panel-simple: Support hpd-gpios for delaying prepare()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        jernej.skrabec@siol.net, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org
+To:     Douglas Anderson <dianders@chromium.org>,
+        Laurent.pinchart@ideasonboard.com, a.hajda@samsung.com,
+        airlied@linux.ie, bgolaszewski@baylibre.com, daniel@ffwll.ch,
+        linus.walleij@linaro.org, narmstrong@baylibre.com,
+        robh+dt@kernel.org, spanda@codeaurora.org
+Date:   Wed, 22 Apr 2020 14:12:20 -0700
+Message-ID: <158758994028.230545.10042873479857418029@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Quoting Douglas Anderson (2020-04-20 22:06:19)
+> People use panel-simple when they have panels that are builtin to
+> their device.  In these cases the HPD (Hot Plug Detect) signal isn't
+> really used for hotplugging devices but instead is used for power
+> sequencing.  Panel timing diagrams (especially for eDP panels) usually
+> have the HPD signal in them and it acts as an indicator that the panel
+> is ready for us to talk to it.
+>=20
+> Sometimes the HPD signal is hooked up to a normal GPIO on a system.
+> In this case we need to poll it in the correct place to know that the
+> panel is ready for us.  In some system designs the right place for
+> this is panel-simple.
+>=20
+> When adding this support, we'll account for the case that there might
+> be a circular dependency between panel-simple and the provider of the
+> GPIO.  The case this was designed for was for the "ti-sn65dsi86"
+> bridge chip.  If HPD is hooked up to one of the GPIOs provided by the
+> bridge chip then in our probe function we'll always get back
+> -EPROBE_DEFER.  Let's handle this by allowing this GPIO to show up
+> late if we saw -EPROBE_DEFER during probe.
 
+May be worth mentioning that if there isn't an hpd-gpios property then
+we only try once during probe and then after that the prepare callback
+doesn't try again because the gpio_get_optional() APIs are used. I had
+to think about that for a minute.
 
-On 4/22/20 3:52 PM, Stephen Boyd wrote:
-> Quoting Pierre-Louis Bossart (2020-04-22 02:54:38)
->>
->>
->> On 4/22/20 4:32 AM, Stephen Boyd wrote:
->>> Quoting Pierre-Louis Bossart (2020-04-09 12:58:37)
->>>> On ACPI platforms the of_ functions are irrelevant, conditionally
->>>> compile them out and add devm_clk_hw_register_clkdev() call instead.
->>>>
->>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>>> ---
->>>>    drivers/clk/clk-hifiberry-dacpro.c | 7 +++++++
->>>>    1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/drivers/clk/clk-hifiberry-dacpro.c b/drivers/clk/clk-hifiberry-dacpro.c
->>>> index bf0616c959da..d01a90fed51b 100644
->>>> --- a/drivers/clk/clk-hifiberry-dacpro.c
->>>> +++ b/drivers/clk/clk-hifiberry-dacpro.c
->>>> @@ -114,15 +114,22 @@ static int clk_hifiberry_dacpro_probe(struct platform_device *pdev)
->>>>                   return ret;
->>>>           }
->>>>    
->>>> +#ifndef CONFIG_ACPI
->>>
->>> Use if (!IS_ENABLED(CONFIG_ACPI)) instead?
->>
->> git grep CONFIG_ACPI shows most of the kernel code uses #if(n)def
->> CONFIG_ACPI. It's equivalent, it's a boolean.
-> 
-> It's not equivalent. It is a pre-processor directive vs. an if statement
-> that evaluates to 0 or 1 and lets the compiler see both sides of the
-> code to check types.
+>=20
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-Ah, yes I misunderstood your point.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
