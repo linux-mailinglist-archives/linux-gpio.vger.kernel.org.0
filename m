@@ -2,92 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 973491B3A90
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 10:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58D4E1B3B67
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 11:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726041AbgDVIu7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Apr 2020 04:50:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:25247 "EHLO mga07.intel.com"
+        id S1726164AbgDVJcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Apr 2020 05:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgDVIu7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 Apr 2020 04:50:59 -0400
-IronPort-SDR: DQ4hpGOT8DJyLvb5vCEIRvAbWImCsjn1l60uQDyYZoCqCJOfpb+tuuq0nD9vSNsuxSKl9R8/4U
- vLWcnmZkxCKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 01:50:59 -0700
-IronPort-SDR: jrRXER75DcihCkHZB+dJRt2irUf7UMEXjfpJcaziCw8vlGMtAjPXncl31Ncp529hP+M/D9IZvB
- WsSuSomBuIWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,413,1580803200"; 
-   d="scan'208";a="365619255"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 22 Apr 2020 01:50:56 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 22 Apr 2020 11:50:56 +0300
-Date:   Wed, 22 Apr 2020 11:50:56 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 2/2] pinctrl: intel: Move npins closer to pin_base in
- struct intel_community
-Message-ID: <20200422085056.GR2586@lahna.fi.intel.com>
-References: <20200421190049.44888-1-andriy.shevchenko@linux.intel.com>
- <20200421190049.44888-2-andriy.shevchenko@linux.intel.com>
+        id S1726021AbgDVJcQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 22 Apr 2020 05:32:16 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5752075A;
+        Wed, 22 Apr 2020 09:32:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587547936;
+        bh=lIl6HImVJ6Dh/zIbLnzk79LumoD5Vgqca2ZsZri1L9M=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2kFpEQIZIJ4lZcUA7T08f6TV99oT5xXQrAyVh3KqbohiFsYKkNCACfJshaKBda9So
+         +KF0TH5tFfnbWpkpLSNVOi293lHsXSjKFMQpENVaZmDlvdcYnH4bquNMpfJ3m2rtlE
+         K8cQcvWAtne6L9kmuXBUpKWpRUHvUgUvOLvn+P3Y=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200421190049.44888-2-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200409195841.18901-13-pierre-louis.bossart@linux.intel.com>
+References: <20200409195841.18901-1-pierre-louis.bossart@linux.intel.com> <20200409195841.18901-13-pierre-louis.bossart@linux.intel.com>
+Subject: Re: [RFC PATCH 12/16] clk: hifiberry-dacpro: add ACPI support
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     tiwai@suse.de, broonie@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Matuschek <daniel@hifiberry.com>,
+        Matthias Reichl <hias@horus.com>,
+        Hui Wang <hui.wang@canonical.com>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org
+Date:   Wed, 22 Apr 2020 02:32:15 -0700
+Message-ID: <158754793532.132238.9824423478783177623@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 10:00:49PM +0300, Andy Shevchenko wrote:
-> It's common across the drivers to use the (pin_base, npins) pair to describe
-> community characteristics. Thus, move them in the struct intel_community
-> to be closer to each other.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Quoting Pierre-Louis Bossart (2020-04-09 12:58:37)
+> On ACPI platforms the of_ functions are irrelevant, conditionally
+> compile them out and add devm_clk_hw_register_clkdev() call instead.
+>=20
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > ---
->  drivers/pinctrl/intel/pinctrl-intel.h | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-> index 058bf2b6d9f0e..bd653f2a07382 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.h
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.h
-> @@ -94,12 +94,12 @@ enum {
->   * @ie_offset: Register offset of GPI_IE from @regs.
->   * @features: Additional features supported by the hardware
->   * @pin_base: Starting pin of pins in this community
-> + * @npins: Number of pins in this community
->   * @gpp_size: Maximum number of pads in each group, such as GPI_IS, GPI_IE,
->   *            PADCFGLOCK, HOSTSW_OWN. Used when @gpps is %NULL.
->   * @gpp_num_padown_regs: Number of pad registers each pad group consumes at
->   *			 minimum. Use %0 if the number of registers can be
->   *			 determined by the size of the group.
-> - * @npins: Number of pins in this community
->   * @gpps: Pad groups if the controller has variable size pad groups
->   * @ngpps: Number of pad groups in this community
->   * @pad_map: Optional non-linear mapping of the pads
-> @@ -121,12 +121,13 @@ struct intel_community {
->  	unsigned int ie_offset;
->  	unsigned int features;
->  	unsigned int pin_base;
-> +	size_t npins;
->  	unsigned int gpp_size;
->  	unsigned int gpp_num_padown_regs;
-> -	size_t npins;
->  	const struct intel_padgroup *gpps;
->  	size_t ngpps;
->  	const unsigned int *pad_map;
-> +
+>  drivers/clk/clk-hifiberry-dacpro.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk-hifiberry-dacpro.c b/drivers/clk/clk-hifiber=
+ry-dacpro.c
+> index bf0616c959da..d01a90fed51b 100644
+> --- a/drivers/clk/clk-hifiberry-dacpro.c
+> +++ b/drivers/clk/clk-hifiberry-dacpro.c
+> @@ -114,15 +114,22 @@ static int clk_hifiberry_dacpro_probe(struct platfo=
+rm_device *pdev)
+>                 return ret;
+>         }
+> =20
+> +#ifndef CONFIG_ACPI
 
-Unrelated whitespace change?
+Use if (!IS_ENABLED(CONFIG_ACPI)) instead?
 
-In any case,
-
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>         ret =3D of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
+>                                      &proclk->hw);
+> +#else
+> +       ret =3D devm_clk_hw_register_clkdev(dev, &proclk->hw,
+> +                                         init.name, NULL);
+> +#endif
+> =20
+>         return ret;
+>  }
+> =20
+>  static int clk_hifiberry_dacpro_remove(struct platform_device *pdev)
+>  {
+> +#ifndef CONFIG_ACPI
+>         of_clk_del_provider(pdev->dev.of_node);
+> +#endif
