@@ -2,266 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8721B4A0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 18:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFE21B4A73
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Apr 2020 18:28:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDVQRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Apr 2020 12:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
+        id S1726692AbgDVQ2N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Apr 2020 12:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgDVQRu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Apr 2020 12:17:50 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07964C03C1A9
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 09:17:50 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id s202so2496127oih.3
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 09:17:50 -0700 (PDT)
+        with ESMTP id S1726691AbgDVQ2N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Apr 2020 12:28:13 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2913C03C1A9
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 09:28:12 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w20so3013283ljj.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 09:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T7WB2HoF0WdrIBv4ktK6B9A0gQgQTPn58z8FyVNp2Jo=;
-        b=YUweHA8CPztpA/loYxHMeUD6/w6PlfE/ulWxFTAqTelrd/PSlWYfc59LLKgL0oup6K
-         Wzp8tzuL9Y46ob+y6q3r39I+vyASikO8AKSyHcHHm+6yF1JC7x79QyduJb7BeQXAdP36
-         +G9cFYFIEVSpCrwxqE2aTcNw0iAIiuBDIQHVU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jh34xQLAdLVa3Jb0cZAhcrfr5B2psBww6k3NySEC3Ic=;
+        b=JLecEVlMkbymQSsiitD9WYTzaqLY/PdetekYqRGjDsWXcQMWW/8ljb+qNLKDXb65zR
+         Z/0mbSfsW5Flg1CfnnObvDxc1gAwO9UebF4FcYA9B8aBVsoMmXscOgEWpSFFqAXuK4YA
+         w6zLmPMoOtatUvDIqKas9uB5TBmV6MVF4XA77bbJdOQrb4EeOd9pKLbNQ2GZGgWzj9kE
+         tyY/IBN0iXXRYMlMREWbXvmyRb2PbijUg0BNxi/VIRhWRlmBd//wvaQ+67JEoNVQF5Jw
+         FjcgHq8vUmuxlkzPweZT2Ji9T3LIICECdX4ilm98U9ix8DknC5JtlFt1u/vrO0A4o9m+
+         oU2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T7WB2HoF0WdrIBv4ktK6B9A0gQgQTPn58z8FyVNp2Jo=;
-        b=mqdtHQbhfoAJmffvI8Bmv+THhoF3TThHXDzq9qdmHqOL8ZxD5cI6CdRZDHmAncTDHP
-         fgRy3XUC8tpgQc2vwV13lilZ2m4zVW176qLG61kZ/xi7fkLmbrXcFPPzxs6uUSPFabt4
-         h0G65kvsrlYvvpafo2lIEuZhuqoYmJ9OD7hDh7f/vsR4LHQfVz9oI99Yi34EeU/LdSoO
-         DgG0t41PiOKrXPmOaygGetFGEONKs2WEPUf0EVMonD7xKHbucO28Zhye2xPIeOXNSUKT
-         xOtgw3qDKt8qv7SpwxIKhJRTNUoQ7cc6B3Zhz/lMjvfwRm8jTW7m/UBUnhQLlzBh9NyV
-         EbAg==
-X-Gm-Message-State: AGi0Pube01ivzFwONq2AwR7Shuhf86+t3MuOwK/7E9AUKjPITvyHIMxM
-        z0MfIjKsQXQZhOee6D/047Ea77tea5I=
-X-Google-Smtp-Source: APiQypLFXciNi4920IPG+rCA44MoI5UkWbu/hN96h3qiZoKgOH0v3AvyUUwT8wlLNHTr/QTchfeglg==
-X-Received: by 2002:aca:4a0c:: with SMTP id x12mr7492973oia.19.1587572269108;
-        Wed, 22 Apr 2020 09:17:49 -0700 (PDT)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
-        by smtp.gmail.com with ESMTPSA id e13sm1506124ooq.44.2020.04.22.09.17.48
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Apr 2020 09:17:48 -0700 (PDT)
-Received: by mail-ot1-f44.google.com with SMTP id e20so2451951otk.12
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Apr 2020 09:17:48 -0700 (PDT)
-X-Received: by 2002:ab0:375a:: with SMTP id i26mr16701248uat.120.1587571768922;
- Wed, 22 Apr 2020 09:09:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jh34xQLAdLVa3Jb0cZAhcrfr5B2psBww6k3NySEC3Ic=;
+        b=Jpr3b5zkWbNpeMJGXnft4oxoBuGekn1RLMLZubhN/hM1ZIMaXTbwoZKbsiI4JQTMIT
+         +gM2GfSmX0vBDsjZg6F/xtqbZHHCCZfdpLz6wrNRElG5QamxIbYlupipXzg5cZphgOI4
+         //HC4BZApprKSxZbsvC1wZ7f8GhjJK4GZzYcu+Z/hUgZTHJXp7G+NoLVLyyoCr4zaYyw
+         2lrOnYk8MmwF+VNZVK3p0con4GYwwJtlsV5X/qItPKxlMf5cCh9n90ZvX+Gcx7tUyYeK
+         utTmJtqFjv/hVZvEutChXooFIuZND5yifqCK81oppI1P8yxjNuyxH3Nrp6KjQOWN35Hy
+         4/SA==
+X-Gm-Message-State: AGi0PuZjeVKU4nxBYV4VFz4qBP1kR2zIJSd79vFlInfkrjMhvIcmNeFz
+        783iZXVMPmcg6rtPLOgjZWIgk85+
+X-Google-Smtp-Source: APiQypIgn7lk13lS/DuRJWWnWjH0d020qCWI/sDCR47x47fHaUWx+sAAjO5cO5Q2mTml10sH/E9yKA==
+X-Received: by 2002:a2e:9e97:: with SMTP id f23mr14966249ljk.228.1587572891066;
+        Wed, 22 Apr 2020 09:28:11 -0700 (PDT)
+Received: from mobilestation ([176.213.3.142])
+        by smtp.gmail.com with ESMTPSA id q6sm4975544ljp.21.2020.04.22.09.28.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Apr 2020 09:28:10 -0700 (PDT)
+Date:   Wed, 22 Apr 2020 19:28:08 +0300
+From:   Sergey Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] gpio: dwapb: Get rid of unnecessary conjunction
+ over 32-bit value
+Message-ID: <20200422162808.lezkix7i53bx35fs@mobilestation>
+References: <20200422110654.23442-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200421050622.8113-1-dianders@chromium.org> <20200420220458.v2.1.Ia50267a5549392af8b37e67092ca653a59c95886@changeid>
- <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
-In-Reply-To: <158755100643.159702.17904334834962681759@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 22 Apr 2020 09:09:17 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com>
-Message-ID: <CAD=FV=WJONhm4ukwZa2vGtozrz_SmLuTCLxVimnGba7wRPPzgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, bgolaszewski@baylibre.com,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LinusW <linus.walleij@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422110654.23442-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Wed, Apr 22, 2020 at 02:06:53PM +0300, Andy Shevchenko wrote:
+> When we mask interrupts before sleep, there is no need to have a conjunction
+> with 0xffffffff since the accepted by dwapb_write() value is 32-bit.
 
-On Wed, Apr 22, 2020 at 3:23 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Douglas Anderson (2020-04-20 22:06:17)
-> > The ti-sn65dsi86 MIPI DSI to eDP bridge chip has 4 pins on it that can
-> > be used as GPIOs in a system.  Each pin can be configured as input,
-> > output, or a special function for the bridge chip.  These are:
-> > - GPIO1: SUSPEND Input
-> > - GPIO2: DSIA VSYNC
-> > - GPIO3: DSIA HSYNC or VSYNC
-> > - GPIO4: PWM
-> >
-> > Let's expose these pins as GPIOs.  A few notes:
-> > - Access to ti-sn65dsi86 is via i2c so we set "can_sleep".
-> > - These pins can't be configured for IRQ.
-> > - There are no programmable pulls or other fancy features.
-> > - Keeping the bridge chip powered might be expensive.  The driver is
-> >   setup such that if all used GPIOs are only inputs we'll power the
-> >   bridge chip on just long enough to read the GPIO and then power it
-> >   off again.  Setting a GPIO as output will keep the bridge powered.
-> > - If someone releases a GPIO we'll implicitly switch it to an input so
-> >   we no longer need to keep the bridge powered for it.
-> >
-> > Becaue of all of the above limitations we just need to implement a
->
-> Because
->
-> > bare-bones GPIO driver.  The device tree bindings already account for
-> > this device being a GPIO controller so we only need the driver changes
-> > for it.
-> >
-> > NOTE: Despite the fact that these pins are nominally muxable I don't
-> > believe it makes sense to expose them through the pinctrl interface as
-> > well as the GPIO interface.  The special functions are things that the
-> > bridge chip driver itself would care about and it can just configure
-> > the pins as needed.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > ---
-> >
->
-> Cool patch.
->
-> > Changes in v2:
-> > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> >
-> >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 165 ++++++++++++++++++++++++++
-> >  1 file changed, 165 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > index 6ad688b320ae..d04c2b83d699 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > @@ -874,6 +886,153 @@ static int ti_sn_bridge_parse_dsi_host(struct ti_sn_bridge *pdata)
-> >         return 0;
-> >  }
-> >
-> > +static struct ti_sn_bridge *gchip_to_pdata(struct gpio_chip *chip)
-> > +{
-> > +       return container_of(chip, struct ti_sn_bridge, gchip);
-> > +}
-> > +
-> > +static int ti_sn_bridge_gpio_get_direction(struct gpio_chip *chip,
-> > +                                          unsigned int offset)
-> > +{
-> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-> > +
-> > +       return (atomic_read(&pdata->gchip_output) & BIT(offset)) ?
->
-> Any reason this isn't a bitmap?
+Thanks!
 
-Don't bitmaps need an external lock to protect against concurrent
-access?  When I looked I wasn't convinced that the GPIO subsystem
-prevented two callers from changing two GPIOs at the same time.  See
-below for a bigger discussion.
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
 
-
-> > +               GPIOF_DIR_OUT : GPIOF_DIR_IN;
->
-> And why can't we read the hardware to figure out if it's in output or
-> input mode?
-
-A few reasons:
-
-1. If nobody else had the bridge powered on this would be a slow
-operation involving powering the bridge on, querying via i2c, and then
-powering the bridge off.  Not only would it be slow but you'd be
-powering the chip up for no really good reason.  You didn't need to
-know anything that only the chip could tell you.
-
-2. If nobody else had the bridge powered on then the bridge loses
-state and resets to defaults (everything resets to "input").  Yes, we
-could still power the bridge up and confirm this, but...
-
-3. This bitmap does double-duty of not only knowing whether a pin is
-input or output but also whether we've incremented the "pm_runtime"
-refcount in order to keep the output driven.  Knowing whether we've
-already incremented the "pm_runtime" refcount can simplify a bit of
-the code because we know whether it's powered without having to power
-it on and query.  If we didn't have a cache, then when we changed a
-pin to input we'd do:
-
-pm_runtime_get() // Make sure we can access
-if dir_was_output:
-  pm_runtime_put() // Not driving anymore
-set_to_input();
-pm_runtime_put()  // Done with access
-
-...basically in some cases we'd do pm_runtime_put() twice in the same
-function.  It'd work, but feels like a worse solution than the one in
-my patch.
-
-4. When I bootup I see that this call gets made once per GPIO in
-gpiochip_add_data_with_key().  There's no reason to go through all the
-slowness when we know these pins are inputs.
-
-
-In the next version of the patch I'll plan to add a kerneldoc comment
-to "struct ti_sn_bridge" and add a summary of the above for
-"gchip_output".
-
-
-> > +}
-> > +
-> [...]
-> > +static int ti_sn_bridge_gpio_direction_output(struct gpio_chip *chip,
-> > +                                             unsigned int offset, int val)
-> > +{
-> > +       struct ti_sn_bridge *pdata = gchip_to_pdata(chip);
-> > +       int shift = offset * 2;
-> > +       int old_gchip_output;
-> > +       int ret;
-> > +
-> > +       old_gchip_output = atomic_fetch_or(BIT(offset), &pdata->gchip_output);
->
-> I presume gpiolib is already preventing a gpio from being modified twice
-> at the same time. So is this atomic stuff really necessary?
-
-Right.  I've assumed that we're not running two of these functions at
-the same time for the same GPIO.  I'm not convinced that the GPIO core
-enforces this but it seems like it'd be undefined behavior for a
-client to be, for instance, setting and changing direction for the
-same GPIO in two threads at the same time.  Where simple I've tried to
-make it so it wouldn't horribly break if someone did some amount of
-concurrent access of the same pin but not every corner case is
-handled.  Mostly I focused on making sure that I could never mess up
-keeping track of whether I incremented the "pm_runtime" refcount for a
-pin.  One thing specifically I didn't handle: if we were midway
-through ti_sn_bridge_gpio_set(), we context switched out and someone
-changed us to an input, then we'd possibly do an unpowered
-regmap_update_bits() and timeout.
-
-What I do think is a sensible case to handle, though, is someone
-working with two different GPIOs exported by this controller at the
-same time.  IIUC atomic_t allows me to only spend 1 bit per pin, have
-no lock, and still make sure these different consumers don't stomp on
-each other.
-
-NOTE: I did a quick trace for the call chain when using the "gpioget"
-command-line tool.  I saw:
-
-- ti_sn_bridge_gpio_get()
-- gpio_chip_get_multiple()
-- gpiod_get_array_value_complex()
-- linehandle_ioctl()
-
-None of these appear to do any locking.  There's sorta an implicit
-lock in that only one client can "request" a given GPIO at the same
-time so the assumption that we're somewhat protected against two
-concurrent accesses of the exact same GPIO is a bit justified.  ...but
-nothing appears to protect us from concurrent accesses of different
-GPIOs.
-
-I also notice that other GPIO drivers seem to grab their own locks.
-If it makes the patch more palatable, I can get rid of all the atomic
-stuff and put in a big mutex?
-
--Doug
+> 
+> Cc: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 31d29ec6ab5c3..9d8476afaba3d 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -743,8 +743,7 @@ static int dwapb_gpio_suspend(struct device *dev)
+>  			ctx->int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
+>  
+>  			/* Mask out interrupts */
+> -			dwapb_write(gpio, GPIO_INTMASK,
+> -				    0xffffffff & ~ctx->wake_en);
+> +			dwapb_write(gpio, GPIO_INTMASK, ~ctx->wake_en);
+>  		}
+>  	}
+>  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> -- 
+> 2.26.1
+> 
