@@ -2,72 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FC221B58C7
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 12:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B64E1B58CD
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 12:08:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgDWKGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 06:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59324 "EHLO
+        id S1726343AbgDWKIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 06:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725863AbgDWKGc (ORCPT
+        by vger.kernel.org with ESMTP id S1725863AbgDWKIO (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:06:32 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFC8C03C1AF;
-        Thu, 23 Apr 2020 03:06:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so6118934wrs.9;
-        Thu, 23 Apr 2020 03:06:31 -0700 (PDT)
+        Thu, 23 Apr 2020 06:08:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDE1C03C1AF;
+        Thu, 23 Apr 2020 03:08:14 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x4so5802937wmj.1;
+        Thu, 23 Apr 2020 03:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=e5RvPEwI+UM9ijZWcKSbX/0IbSZr0thQvP2hbsva6TA=;
-        b=AuMdsl+VnfTe1jjNNi29XIm17OHg02WS/wqTVCHm1p+rwwZODtF7lplkjA5YoeIQpf
-         ecam5lBJ56FDTaC7EMrltKLBqcYcDOMapc5oHK+shUOinowyYFLX3SB1nImmLgLc9n1F
-         IGLAVpBCiKjPYfqwy2+PVucHmAjwyn8xwPYuQ7EgH8i9kCtsAhFwpHTKPU7gqc4N09S9
-         tPMy2U0K0mJSmFKRSi8GwEMVFtS8vJAzY3xqC82BrB9i+S2+4VeoASPOTqiLx/h79R2E
-         cMlunvNdVpWeTTuIDgHSE97jBGk4571XEMx9sVsvkRUSjTtL4h7h85AN3RmHYTXZAClK
-         YaNw==
+        bh=26mFD04CNLFNlq5fAwrmrHfJmkaVx1OLPhxNguFh7xM=;
+        b=DoHbKLumbW1jbNg5zp+nL52JxsLPjc3C17kr+ny3zbMXIVdaahc73R1TIbSTPF1m9v
+         RNcv1YHT4VJ7LyYmS+XxvHU8uqzHXYXa0a0/jdpgmSbc9XvxGWDToOioxBvoinAAd0N0
+         a2HufSO4MzO95HjOdCzcg0Xnp9qZrNWRJ/TIVydjqEVd5QBZtHgPeDp3amNZ3Dtvs2RR
+         WZ2prwrHvSfqMD5TFbuzhWhKaxsZzaUgAQq4a1MI8TJhaE9KjQEiRNWjioMLA+GUEgAq
+         7SyuRqyDT+mTX8BLKiphd4VxGb1JtbK8Nyzlo5DkNjs3akcN+2f3P7XpgmhA46TskOBk
+         GtKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=e5RvPEwI+UM9ijZWcKSbX/0IbSZr0thQvP2hbsva6TA=;
-        b=Svdo75Uha3bv+TAICbdx3DFVj6/4Nycc77OPXMl0J6G3Y1Yg/DM3d+SWJjOvhd8/Zj
-         a5jO4cn8bQjQFGOShJS/g70OXqsjHJcoPG01aSL5f6G2Ic2a0S4ZFi4ze+WJEvrlALGf
-         jHZ1UYP3MQi4EcMy1I5Z4PdiicV+D0AADjwMckCxwEypKHTv7hfL9vAWiiD7pVnumM2Y
-         MBrM0OUfLcimIigtdB16NlhAmodEVN2BJn4MpPbIuTcubs2RA4Q2sEHqfiK8uJ6Xem7Q
-         LZEAbc6MIrd8weIdxarD+kQMbXdLuVq03Fp+pXVfqa3gCvklS1pLwN8t3sDriEoaQgqi
-         xpTA==
-X-Gm-Message-State: AGi0Pub4krdSImeDmR3LeEJarES9b7whrG6YYM3FhDf3elZBjoILuoD5
-        4QwYoX2mLj+u9t2x6BVDCn3t3VAj
-X-Google-Smtp-Source: APiQypLPmuzHqRdwFrp1m3HuXGaCgWSp1L7oPSDr1PIJa3R6Q65sf2zj0gUhAEQ0fgOhkDzlgdzL1g==
-X-Received: by 2002:a5d:4b04:: with SMTP id v4mr4256862wrq.358.1587636390479;
-        Thu, 23 Apr 2020 03:06:30 -0700 (PDT)
+        bh=26mFD04CNLFNlq5fAwrmrHfJmkaVx1OLPhxNguFh7xM=;
+        b=l+YcEIeUS3ahKRt8EJXzWApw/J23eTtutYT90EXoGB9SnqyedJuwU7cHedJVYCqtqK
+         L2y2ZKsRIvExsAQEfn4KHyP1nk75pECBd4QZUgw7Audlsvf7WKnJMq8rTj+5whf9LB3Q
+         yg3YIfu/N3g1XRhAFNzULAxKO7prZKpqDYNG7JsigvNDhELApDZyxLnTvF3LHB3LxZSl
+         CHBqnWgu3a5Q7Tko7HgDpObuFn56omarDs5rsGR4M7NJ5p4Jck7AIYZ91JigWsPlh/db
+         uIPIl+ibS2xwNxJDXp1FqOOQBS4kprnSXXwFwHTms83cKH8xSsyyIbLL29ocqgpp3Ndt
+         PclA==
+X-Gm-Message-State: AGi0PuYarKuubJPHlOivnAPQWtY6k1F2b8nNo62qVky+C+XVUdWU9u2b
+        5kaG+JgwkU8t0bQJB6V1b84=
+X-Google-Smtp-Source: APiQypJVfHDHkHric+gNI7mRErrqjsp+Ov6eucAV34wwMbLFaCzHsxXljw5uC5pI/k3ra+xBspQ35g==
+X-Received: by 2002:a7b:c250:: with SMTP id b16mr3447916wmj.100.1587636493270;
+        Thu, 23 Apr 2020 03:08:13 -0700 (PDT)
 Received: from [192.168.1.39] (116.red-83-42-57.dynamicip.rima-tde.net. [83.42.57.116])
-        by smtp.gmail.com with ESMTPSA id l5sm2971405wrm.66.2020.04.23.03.06.29
+        by smtp.gmail.com with ESMTPSA id l6sm3040357wrb.75.2020.04.23.03.08.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 03:06:29 -0700 (PDT)
-Subject: Re: [PATCH QEMU v2 3/5] Add a GPIO backend using libgpiod
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thu, 23 Apr 2020 03:08:12 -0700 (PDT)
+Subject: Re: [PATCH QEMU v2 4/5] ARM: PL061: Add gpiodev support
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Peter Maydell <peter.maydell@linaro.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Alexander Graf <graf@amazon.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bartekgola@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        qemu-arm <qemu-arm@nongnu.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        qemu-arm@nongnu.org, qemu-devel@nongnu.org
 References: <20200423090118.11199-1-geert+renesas@glider.be>
- <20200423090118.11199-4-geert+renesas@glider.be>
- <5dbfd026-3807-b122-ce60-1339a5252fca@amsat.org>
- <CAMuHMdWf2RfGvSizXKonmAB84kPyAPwZ3mF1PayK_mdn=wwRkw@mail.gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+ <20200423090118.11199-5-geert+renesas@glider.be>
+ <520d1d07-7530-e133-af6e-a8b4615829b8@amsat.org>
 Autocrypt: addr=f4bug@amsat.org; keydata=
  mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
  u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
@@ -91,12 +87,12 @@ Autocrypt: addr=f4bug@amsat.org; keydata=
  K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
  n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
  CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <4ae7812b-6df5-f024-871b-903966f73b8e@amsat.org>
-Date:   Thu, 23 Apr 2020 12:06:28 +0200
+Message-ID: <e279f622-3af6-5073-dac0-4c452a88c32b@amsat.org>
+Date:   Thu, 23 Apr 2020 12:08:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWf2RfGvSizXKonmAB84kPyAPwZ3mF1PayK_mdn=wwRkw@mail.gmail.com>
+In-Reply-To: <520d1d07-7530-e133-af6e-a8b4615829b8@amsat.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -105,159 +101,124 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 4/23/20 11:41 AM, Geert Uytterhoeven wrote:
-> Hi Philippe,
-> 
-> Thanks for your comments!
-> 
-> On Thu, Apr 23, 2020 at 11:28 AM Philippe Mathieu-Daudé <f4bug@amsat.org> wrote:
->> On 4/23/20 11:01 AM, Geert Uytterhoeven wrote:
->>> Add a GPIO controller backend, to connect virtual GPIOs on the guest to
->>> physical GPIOs on the host.  This allows the guest to control any
->>> external device connected to the physical GPIOs.
->>>
->>> Features and limitations:
->>>   - The backend uses libgpiod on Linux,
->>>   - For now only GPIO outputs are supported,
->>>   - The number of GPIO lines mapped is limited to the number of GPIO
->>>     lines available on the virtual GPIO controller.
->>>
->>> Future work:
->>>   - GPIO inputs,
->>>   - GPIO line configuration,
->>>   - Optimizations for controlling multiple GPIO lines at once,
->>>   - ...
->>>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
->>> --- /dev/null
->>> +++ b/backends/gpiodev.c
->>> @@ -0,0 +1,94 @@
->>> +/*
->>> + * QEMU GPIO Backend
->>> + *
->>> + * Copyright (C) 2018-2020 Glider bv
->>> + *
->>> + * SPDX-License-Identifier: GPL-2.0-or-later
->>> + */
->>> +
->>> +#include <errno.h>
+On 4/23/20 11:33 AM, Philippe Mathieu-Daudé wrote:
+> On 4/23/20 11:01 AM, Geert Uytterhoeven wrote:
+>> Make the PL061 GPIO controller user-creatable, and allow the user to tie
+>> a newly created instance to a gpiochip on the host.
 >>
->> <errno.h> probably not needed.
-> 
-> It is indeed included by one of the other header files.
-> What is the QEMU policy w.r.t. that?
-
-See CODING_STYLE.rst:
-
-Include directives
-------------------
-
-Order include directives as follows:
-
-.. code-block:: c
-
-    #include "qemu/osdep.h"  /* Always first... */
-    #include <...>           /* then system headers... */
-    #include "..."           /* and finally QEMU headers. */
-
-The "qemu/osdep.h" header contains preprocessor macros that affect the
-behavior
-of core system headers like <stdint.h>.  It must be the first include so
-that
-core system headers included by external libraries get the preprocessor
-macros
-that QEMU depends on.
-
-> 
+>> To create a new GPIO controller, the QEMU command line must be augmented
+>> with:
 >>
->>> +#include <gpiod.h>
+>>     -device pl061,host=<gpiochip>
 >>
->> Please move this one...
+>> with <gpiochip> the name or label of the gpiochip on the host.
 >>
->>> +
->>> +#include "qemu/osdep.h"
->>> +#include "qemu/config-file.h"
->>> +#include "qemu/cutils.h"
-> 
-> I forgot to remove the two above...
-> 
->>> +#include "qemu/error-report.h"
->>> +#include "qemu/module.h"
->>> +#include "qemu/option.h"
-> 
-> ... and the two above.
-> 
->>> +#include "qapi/error.h"
->>> +
->>> +#include "sysemu/gpiodev.h"
->>> +
->>> +#include "hw/irq.h"
->>> +#include "hw/qdev-core.h"
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>> v2:
+>>   - New.
+>> ---
+>>  hw/gpio/pl061.c | 35 +++++++++++++++++++++++++++++++++++
+>>  qemu-options.hx |  9 +++++++++
+>>  2 files changed, 44 insertions(+)
 >>
->> ... here:
+>> diff --git a/hw/gpio/pl061.c b/hw/gpio/pl061.c
+>> index 74ba733a8a5e8ca5..98204f9a586ae8c8 100644
+>> --- a/hw/gpio/pl061.c
+>> +++ b/hw/gpio/pl061.c
+>> @@ -12,11 +12,14 @@
+>>  #include "hw/arm/fdt.h"
+>>  #include "hw/gpio/pl061.h"
+>>  #include "hw/irq.h"
+>> +#include "hw/qdev-properties.h"
+>>  #include "hw/sysbus.h"
+>>  #include "migration/vmstate.h"
+>> +#include "qapi/error.h"
+>>  #include "qemu/log.h"
+>>  #include "qemu/module.h"
+>>  #include "sysemu/device_tree.h"
+>> +#include "sysemu/gpiodev.h"
+>>  
+>>  //#define DEBUG_PL061 1
+>>  
+>> @@ -41,6 +44,9 @@ static const uint8_t pl061_id_luminary[12] =
+>>  typedef struct PL061State {
+>>      SysBusDevice parent_obj;
+>>  
+>> +#ifdef CONFIG_GPIODEV
+>> +    char *host;
+>> +#endif
+>>      MemoryRegion iomem;
+>>      uint32_t locked;
+>>      uint32_t data;
+>> @@ -370,10 +376,39 @@ static void pl061_init(Object *obj)
+>>      qdev_init_gpio_out(dev, s->out, 8);
+> 
+> Not related to this patch, but we should replace this 8 magic value by a
+> proper definition...
+> 
+>>  }
+>>  
+>> +#ifdef CONFIG_GPIODEV
+>> +static Property pl061_properties[] = {
+>> +    DEFINE_PROP_STRING("host", PL061State, host),
+>> +    DEFINE_PROP_END_OF_LIST(),
+>> +};
+>> +
+>> +static void pl061_realize(DeviceState *dev, Error **errp)
+>> +{
+>> +    PL061State *s = PL061(dev);
+>> +
+>> +    if (!dev->opts) {
+>> +        /* Not created by user */
+>> +        return;
+>> +    }
+>> +
+>> +    if (!s->host) {
+>> +        error_setg(errp, "'host' property is required");
+>> +        return;
+>> +    }
+>> +
+>> +    qemu_gpiodev_add(dev, s->host, 8, errp);
+>> +}
+>> +#endif /* CONFIG_GPIODEV */
+>> +
+>>  static void pl061_class_init(ObjectClass *klass, void *data)
+>>  {
+>>      DeviceClass *dc = DEVICE_CLASS(klass);
+>>  
+>> +#ifdef CONFIG_GPIODEV
+>> +    device_class_set_props(dc, pl061_properties);
+>> +    dc->realize = pl061_realize;
+>> +    dc->user_creatable = true;
+>> +#endif
+>>      dc->vmsd = &vmstate_pl061;
+>>      dc->reset = &pl061_reset;
+>>  }
+>> diff --git a/qemu-options.hx b/qemu-options.hx
+>> index 292d4e7c0cef6097..182de7fb63923b38 100644
+>> --- a/qemu-options.hx
+>> +++ b/qemu-options.hx
+>> @@ -875,6 +875,15 @@ SRST
+>>  ``-device isa-ipmi-bt,bmc=id[,ioport=val][,irq=val]``
+>>      Like the KCS interface, but defines a BT interface. The default port
+>>      is 0xe4 and the default interrupt is 5.
+>> +
+>> +#ifdef CONFIG_GPIODEV
+>> +``-device pl061,host=gpiochip``
+>> +    Add a PL061 GPIO controller, and map its virtual GPIO lines to a GPIO
+>> +    controller on the host.
+>> +
+>> +    ``host=gpiochip``
+>> +        The name or label of the GPIO controller on the host.
+>> +#endif
+>>  ERST
+>>  
+>>  DEF("name", HAS_ARG, QEMU_OPTION_name,
 >>
->> #include <gpiod.h>
 > 
-> OK.
-> 
->>> --- a/configure
->>> +++ b/configure
->>> @@ -509,6 +509,7 @@ libpmem=""
->>>  default_devices="yes"
->>>  plugins="no"
->>>  fuzzing="no"
->>> +gpio=""
->>
->> Maybe name this feature 'libgpiod'?
-> 
-> Makes sense.
-> 
->>>
->>>  supported_cpu="no"
->>>  supported_os="no"
->>> @@ -1601,6 +1602,10 @@ for opt do
->>>    ;;
->>>    --gdb=*) gdb_bin="$optarg"
->>>    ;;
->>> +  --disable-gpio) gpio="no"
->>> +  ;;
->>> +  --enable-gpio) gpio="yes"
->>
->> Ditto: --enable-libgpiod, because else it seems rather confusing.
-> 
-> OK.
-> 
->>> --- /dev/null
->>> +++ b/include/sysemu/gpiodev.h
->>> @@ -0,0 +1,12 @@
->>> +/*
->>> + * QEMU GPIO Backend
->>> + *
->>> + * Copyright (C) 2018-2020 Glider bv
->>> + *
->>> + * SPDX-License-Identifier: GPL-2.0-or-later
->>> + */
->>> +
->>> +#include "qemu/typedefs.h"
->>
->> "qemu/typedefs.h" not needed in includes.
-> 
-> While removing that works, it does mean the header file is no longer
-> self-contained:
-> 
-> include/sysemu/gpiodev.h:10:23: error: unknown type name ‘DeviceState’
+> Instead of restricting this to the pl061, it would be cleaner you add a
+> GPIO_PLUGGABLE_INTERFACE (or GPIO_BINDABLE_INTERFACE or better name),
+> and have TYPE_PL061 implement it.
 
-Odd, because your backends/gpiodev.c already has:
-
-#include "hw/qdev-core.h"
-
-> 
->>> +
->>> +void qemu_gpiodev_add(DeviceState *dev, const char *name, unsigned int maxgpio,
->>> +                      Error **errp);
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+IOW your backend should consume devices implementing this generic interface.
