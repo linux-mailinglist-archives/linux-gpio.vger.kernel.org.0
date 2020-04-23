@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF3631B5825
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 11:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D67C91B583D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 11:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgDWJ2R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 05:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53368 "EHLO
+        id S1726375AbgDWJdP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 05:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgDWJ2Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 05:28:16 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54876C03C1AF;
-        Thu, 23 Apr 2020 02:28:16 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g12so5764495wmh.3;
-        Thu, 23 Apr 2020 02:28:16 -0700 (PDT)
+        with ESMTP id S1726335AbgDWJdO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 05:33:14 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F84C03C1AF;
+        Thu, 23 Apr 2020 02:33:14 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x25so5671767wmc.0;
+        Thu, 23 Apr 2020 02:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UlGV2vqlzbuHPWbE+jpO9xzuY7SKXtYOixbqsj1pKu0=;
-        b=I7xhHbF+mE0+/tGWxhgM39U1d2IvjmUw+CZakoTePRpplOwIz6ZoBxkb4lEakLjvYp
-         LA32xw2L/KFi4DmEmYrlKwwA7lP39PZynWbGKhfw9ck3frnsdsckhlbA4KGyGd+F5FrG
-         B1C7C7zYlfhJVkegH5TYu8N/AA5KnCHJs7E4/ZlY8No2+gBD8s83Bo4423JcnAZ8/en5
-         epsR3viwNyh0jGFQe5CX8rGcX3u/M0B9YOC90Vlgb0OeHAuJNA96IEs09tqSiQjdFHKT
-         ttddYL07HQxzM1aPJFbAedHpFfS8jN0/C/eDWBDcEniELDJPtmPRuyLb5h5VMPLY6fU5
-         Pa9A==
+        bh=ie8fd80pKQOw/4law6NwTSp7VLmg/W54peLA+cXfPAU=;
+        b=U9L8z5YsVN10xsWQsxpWiPLnYbY4YpZLAcOeu2Vf6klussm+SSqTJ/dRhRuqObBmqa
+         dzMrmnQIo2bBvYe4rIuHWMCZO/EmjDUXngmmFXgfWO8ZPP7aLdSm8lWGGC/lrb5rVp5T
+         HxPqDjVlzspM5759e6HC2csaoGdLC6Ng657/FQG5nBDmwjQ5EWZfqJmjej0yBix2pgFw
+         PlLO0/sAJVrGP6DSawa6PLBAyR3+bey6sAaFRVQ9MHEJ+7qsTrIcbOy9aFJlvhQXm5u5
+         i2eTa73gCOqe8xY6LaDx47HcIKhRNF6wBPuke9fHiX9Z29p0FX2Q2gUBd4iyTWknpcrY
+         vFuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=UlGV2vqlzbuHPWbE+jpO9xzuY7SKXtYOixbqsj1pKu0=;
-        b=f2yzBEMFUI+XLxhJNYkyVBn9TvuHnEU1ubS9mjTq0WabsQApR8epgHg9W2bcC3+szy
-         DHyB3Lnq0MAebz4YL2Tig3Y5CayRvNT7XyUnbZln8ChPXNvBKSJpSW96sFAm2Q/AfaeJ
-         8mZeBWrOG1ZCd2AxXGoNqynp94MBfq/iB4ZW1UUiuShgbYi47HTzCASsZ3a/iN0BxxAH
-         Od/klwQcpABGC4uX+4lTELGtuC0SB0l34X3XCmK8GtNbyDl6eKI+ZUYI0KhihXY1Q6U7
-         KQpJupICFE4ypiH87Sovitqrek8OVtwhPkdhrEgKdx5eRor+A23k19Z9OAUC8ccSv/iy
-         lEOQ==
-X-Gm-Message-State: AGi0PubZ612u65jXZ3ep4OAHn/Y2JLA3hbJoIxWuE8ZTWItkAue+KlVV
-        0JFEwrzIxlfVEqv6Tk6u07o=
-X-Google-Smtp-Source: APiQypI0tSrwVFSMJqlo68TMKyN6DXnYSBys22qyaZ9lQpFL0wHrneSe0n6hs4lJWTiHBsj2dV9J/Q==
-X-Received: by 2002:a05:600c:22d1:: with SMTP id 17mr2966366wmg.167.1587634094955;
-        Thu, 23 Apr 2020 02:28:14 -0700 (PDT)
+        bh=ie8fd80pKQOw/4law6NwTSp7VLmg/W54peLA+cXfPAU=;
+        b=IAyjFC86/5E7/dB0d+XcUPDXrv3ev3IH5+RmWP1IMZ0g10rWhSrvHJhjTV6jtJJVAe
+         3gw0fWSibxwj3xl8Lk329OBFLtWBYnYlgdHjaBt8wafyQdPoWrxG6J4MhmO7sL3EVyJh
+         /Isre9sneEZo+kg5Vb3FU3md/jLkVhegBo0lu3fIQLadc32wK6BezZKSiVBCCSrJlzBb
+         ezQxq7krrSNmco3CNEtsbHceusq2Zn5XM5YcTydK7JBcOpmXlOD9XX/DhB/1tMv2HSKe
+         sT3Ss1ykDNHn0yMc5l+RIxKdUKSVmBvqtGaLclr+Y89cVDMnjT54nqpSuPE9IM1sVbbo
+         x19g==
+X-Gm-Message-State: AGi0PubBS7NbToMj2Lnr0KWvCLEwZSSeGltuyrlfvi1KEePO//RV+WUz
+        +b5W3U6oQkhs9TzfseZJoOw=
+X-Google-Smtp-Source: APiQypJn6Jo5bWNco1Dr1gsuy2tU1voc78b4d3AIYUCxtjdbTyeq+uU1kCe7feQnwy3TWyUwgYyTcg==
+X-Received: by 2002:a7b:c931:: with SMTP id h17mr3317560wml.105.1587634392908;
+        Thu, 23 Apr 2020 02:33:12 -0700 (PDT)
 Received: from [192.168.1.39] (116.red-83-42-57.dynamicip.rima-tde.net. [83.42.57.116])
-        by smtp.gmail.com with ESMTPSA id w10sm3037407wrg.52.2020.04.23.02.28.13
+        by smtp.gmail.com with ESMTPSA id m15sm2748741wmc.35.2020.04.23.02.33.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 02:28:14 -0700 (PDT)
-Subject: Re: [PATCH QEMU v2 3/5] Add a GPIO backend using libgpiod
+        Thu, 23 Apr 2020 02:33:12 -0700 (PDT)
+Subject: Re: [PATCH QEMU v2 4/5] ARM: PL061: Add gpiodev support
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Peter Maydell <peter.maydell@linaro.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
@@ -60,7 +60,7 @@ To:     Geert Uytterhoeven <geert+renesas@glider.be>,
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         qemu-arm@nongnu.org, qemu-devel@nongnu.org
 References: <20200423090118.11199-1-geert+renesas@glider.be>
- <20200423090118.11199-4-geert+renesas@glider.be>
+ <20200423090118.11199-5-geert+renesas@glider.be>
 From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
 Autocrypt: addr=f4bug@amsat.org; keydata=
  mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
@@ -85,12 +85,12 @@ Autocrypt: addr=f4bug@amsat.org; keydata=
  K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
  n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
  CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <5dbfd026-3807-b122-ce60-1339a5252fca@amsat.org>
-Date:   Thu, 23 Apr 2020 11:28:13 +0200
+Message-ID: <520d1d07-7530-e133-af6e-a8b4615829b8@amsat.org>
+Date:   Thu, 23 Apr 2020 11:33:11 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200423090118.11199-4-geert+renesas@glider.be>
+In-Reply-To: <20200423090118.11199-5-geert+renesas@glider.be>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -100,275 +100,120 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 4/23/20 11:01 AM, Geert Uytterhoeven wrote:
-> Add a GPIO controller backend, to connect virtual GPIOs on the guest to
-> physical GPIOs on the host.  This allows the guest to control any
-> external device connected to the physical GPIOs.
+> Make the PL061 GPIO controller user-creatable, and allow the user to tie
+> a newly created instance to a gpiochip on the host.
 > 
-> Features and limitations:
->   - The backend uses libgpiod on Linux,
->   - For now only GPIO outputs are supported,
->   - The number of GPIO lines mapped is limited to the number of GPIO
->     lines available on the virtual GPIO controller.
+> To create a new GPIO controller, the QEMU command line must be augmented
+> with:
 > 
-> Future work:
->   - GPIO inputs,
->   - GPIO line configuration,
->   - Optimizations for controlling multiple GPIO lines at once,
->   - ...
+>     -device pl061,host=<gpiochip>
+> 
+> with <gpiochip> the name or label of the gpiochip on the host.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 > v2:
->   - Drop vgpios and gpios parameters, and map the full gpiochip instead,
->   - Replace hardcoded PL061 instance by multiple dynamic instances,
->     registered through qemu_gpiodev_add().
+>   - New.
 > ---
->  MAINTAINERS              |  6 +++
->  backends/Makefile.objs   |  2 +
->  backends/gpiodev.c       | 94 ++++++++++++++++++++++++++++++++++++++++
->  configure                | 28 ++++++++++++
->  include/sysemu/gpiodev.h | 12 +++++
->  5 files changed, 142 insertions(+)
->  create mode 100644 backends/gpiodev.c
->  create mode 100644 include/sysemu/gpiodev.h
+>  hw/gpio/pl061.c | 35 +++++++++++++++++++++++++++++++++++
+>  qemu-options.hx |  9 +++++++++
+>  2 files changed, 44 insertions(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e760f65270d29d5d..a70af47430083d14 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -607,6 +607,12 @@ F: include/hw/arm/digic.h
->  F: hw/*/digic*
->  F: include/hw/*/digic*
->  
-> +GPIO device backend
-> +M: Geert Uytterhoeven <geert+renesas@glider.be>
-> +S: Supported
-> +F: backends/gpiodev.c
-> +F: include/sysemu/gpiodev.h
-> +
->  Goldfish RTC
->  M: Anup Patel <anup.patel@wdc.com>
->  M: Alistair Francis <Alistair.Francis@wdc.com>
-> diff --git a/backends/Makefile.objs b/backends/Makefile.objs
-> index 28a847cd571d96ed..ee658e797454119a 100644
-> --- a/backends/Makefile.objs
-> +++ b/backends/Makefile.objs
-> @@ -21,3 +21,5 @@ common-obj-$(CONFIG_LINUX) += hostmem-memfd.o
->  common-obj-$(CONFIG_GIO) += dbus-vmstate.o
->  dbus-vmstate.o-cflags = $(GIO_CFLAGS)
->  dbus-vmstate.o-libs = $(GIO_LIBS)
-> +
-> +common-obj-$(CONFIG_GPIODEV) += gpiodev.o
-> diff --git a/backends/gpiodev.c b/backends/gpiodev.c
-> new file mode 100644
-> index 0000000000000000..df1bd0113c7b2985
-> --- /dev/null
-> +++ b/backends/gpiodev.c
-> @@ -0,0 +1,94 @@
-> +/*
-> + * QEMU GPIO Backend
-> + *
-> + * Copyright (C) 2018-2020 Glider bv
-> + *
-> + * SPDX-License-Identifier: GPL-2.0-or-later
-> + */
-> +
-> +#include <errno.h>
-
-<errno.h> probably not needed.
-
-> +#include <gpiod.h>
-
-Please move this one...
-
-> +
-> +#include "qemu/osdep.h"
-> +#include "qemu/config-file.h"
-> +#include "qemu/cutils.h"
-> +#include "qemu/error-report.h"
-> +#include "qemu/module.h"
-> +#include "qemu/option.h"
+> diff --git a/hw/gpio/pl061.c b/hw/gpio/pl061.c
+> index 74ba733a8a5e8ca5..98204f9a586ae8c8 100644
+> --- a/hw/gpio/pl061.c
+> +++ b/hw/gpio/pl061.c
+> @@ -12,11 +12,14 @@
+>  #include "hw/arm/fdt.h"
+>  #include "hw/gpio/pl061.h"
+>  #include "hw/irq.h"
+> +#include "hw/qdev-properties.h"
+>  #include "hw/sysbus.h"
+>  #include "migration/vmstate.h"
 > +#include "qapi/error.h"
-> +
+>  #include "qemu/log.h"
+>  #include "qemu/module.h"
+>  #include "sysemu/device_tree.h"
 > +#include "sysemu/gpiodev.h"
-> +
-> +#include "hw/irq.h"
-> +#include "hw/qdev-core.h"
+>  
+>  //#define DEBUG_PL061 1
+>  
+> @@ -41,6 +44,9 @@ static const uint8_t pl061_id_luminary[12] =
+>  typedef struct PL061State {
+>      SysBusDevice parent_obj;
+>  
+> +#ifdef CONFIG_GPIODEV
+> +    char *host;
+> +#endif
+>      MemoryRegion iomem;
+>      uint32_t locked;
+>      uint32_t data;
+> @@ -370,10 +376,39 @@ static void pl061_init(Object *obj)
+>      qdev_init_gpio_out(dev, s->out, 8);
 
-... here:
+Not related to this patch, but we should replace this 8 magic value by a
+proper definition...
 
-#include <gpiod.h>
-
+>  }
+>  
+> +#ifdef CONFIG_GPIODEV
+> +static Property pl061_properties[] = {
+> +    DEFINE_PROP_STRING("host", PL061State, host),
+> +    DEFINE_PROP_END_OF_LIST(),
+> +};
 > +
-> +static void gpiodev_irq_handler(void *opaque, int n, int level)
+> +static void pl061_realize(DeviceState *dev, Error **errp)
 > +{
-> +    struct gpiod_line *line = opaque;
-> +    int status;
+> +    PL061State *s = PL061(dev);
 > +
-> +    status = gpiod_line_set_value(line, level);
-> +    if (status < 0) {
-> +        struct gpiod_chip *chip = gpiod_line_get_chip(line);
-> +
-> +        error_report("%s/%s: Cannot set GPIO line %u: %s",
-> +                     gpiod_chip_name(chip), gpiod_chip_label(chip),
-> +                     gpiod_line_offset(line), strerror(errno));
-> +    }
-> +}
-> +
-> +static int gpiodev_map_line(DeviceState *dev, struct gpiod_chip *chip,
-> +                            unsigned int gpio, Error **errp)
-> +{
-> +    struct gpiod_line *line;
-> +    qemu_irq irq;
-> +    int status;
-> +
-> +    line = gpiod_chip_get_line(chip, gpio);
-> +    if (!line) {
-> +        error_setg(errp, "Cannot obtain GPIO line %u: %s", gpio,
-> +                   strerror(errno));
-> +        return -1;
-> +    }
-> +
-> +    status = gpiod_line_request_output(line, "qemu", 0);
-> +    if (status < 0) {
-> +        error_setg(errp, "Cannot request GPIO line %u for output: %s", gpio,
-> +                   strerror(errno));
-> +        return status;
-> +    }
-> +
-> +    irq = qemu_allocate_irq(gpiodev_irq_handler, line, 0);
-> +    qdev_connect_gpio_out(dev, gpio, irq);
-> +    return 0;
-> +}
-> +
-> +void qemu_gpiodev_add(DeviceState *dev, const char *name, unsigned int maxgpio,
-> +                      Error **errp)
-> +{
-> +    struct gpiod_chip *chip;
-> +    unsigned int i, n;
-> +    int status;
-> +
-> +    chip = gpiod_chip_open_lookup(name);
-> +    if (!chip) {
-> +        error_setg(errp, "Cannot open GPIO chip %s: %s", name,
-> +                   strerror(errno));
+> +    if (!dev->opts) {
+> +        /* Not created by user */
 > +        return;
 > +    }
 > +
-> +    n = gpiod_chip_num_lines(chip);
-> +    if (n > maxgpio) {
-> +        warn_report("Last %u GPIO line(s) will not be mapped", n - maxgpio);
-> +        n = maxgpio;
+> +    if (!s->host) {
+> +        error_setg(errp, "'host' property is required");
+> +        return;
 > +    }
 > +
-> +    for (i = 0; i < n; i++) {
-> +        status = gpiodev_map_line(dev, chip, i, errp);
-> +        if (status < 0) {
-> +            return;
-> +        }
-> +    }
-> +
-> +    info_report("Mapped %u GPIO lines", n);
+> +    qemu_gpiodev_add(dev, s->host, 8, errp);
 > +}
-> diff --git a/configure b/configure
-> index 23b5e93752b6a259..8b133402ef727c8e 100755
-> --- a/configure
-> +++ b/configure
-> @@ -509,6 +509,7 @@ libpmem=""
->  default_devices="yes"
->  plugins="no"
->  fuzzing="no"
-> +gpio=""
-
-Maybe name this feature 'libgpiod'?
-
->  
->  supported_cpu="no"
->  supported_os="no"
-> @@ -1601,6 +1602,10 @@ for opt do
->    ;;
->    --gdb=*) gdb_bin="$optarg"
->    ;;
-> +  --disable-gpio) gpio="no"
-> +  ;;
-> +  --enable-gpio) gpio="yes"
-
-Ditto: --enable-libgpiod, because else it seems rather confusing.
-
-> +  ;;
->    *)
->        echo "ERROR: unknown option $opt"
->        echo "Try '$0 --help' for more information"
-> @@ -1894,6 +1899,7 @@ disabled with --disable-FEATURE, default is enabled if available:
->    debug-mutex     mutex debugging support
->    libpmem         libpmem support
->    xkbcommon       xkbcommon support
-> +  gpio            gpio support
->  
->  NOTE: The object files are built at the place where configure is launched
->  EOF
-> @@ -6250,6 +6256,23 @@ case "$slirp" in
->      ;;
->  esac
->  
-> +##########################################
-> +# check for libgpiod
+> +#endif /* CONFIG_GPIODEV */
 > +
-> +if test "$gpio" != "no"; then
-> +    if $pkg_config --exists "libgpiod"; then
-> +        gpio="yes"
-> +        libgpiod_libs=$($pkg_config --libs libgpiod)
-> +        libgpiod_cflags=$($pkg_config --cflags libgpiod)
-> +        libs_softmmu="$libs_softmmu $libgpiod_libs"
-> +        QEMU_CFLAGS="$QEMU_CFLAGS $libgpiod_cflags"
-> +    else
-> +        if test "$gpio" = "yes" ; then
-> +            feature_not_found "gpio" "Install libgpiod"
-> +        fi
-> +        gpio="no"
-> +    fi
-> +fi
+>  static void pl061_class_init(ObjectClass *klass, void *data)
+>  {
+>      DeviceClass *dc = DEVICE_CLASS(klass);
 >  
->  ##########################################
->  # End of CC checks
-> @@ -6733,6 +6756,7 @@ echo "default devices   $default_devices"
->  echo "plugin support    $plugins"
->  echo "fuzzing support   $fuzzing"
->  echo "gdb               $gdb_bin"
-> +echo "gpio support      $gpio"
+> +#ifdef CONFIG_GPIODEV
+> +    device_class_set_props(dc, pl061_properties);
+> +    dc->realize = pl061_realize;
+> +    dc->user_creatable = true;
+> +#endif
+>      dc->vmsd = &vmstate_pl061;
+>      dc->reset = &pl061_reset;
+>  }
+> diff --git a/qemu-options.hx b/qemu-options.hx
+> index 292d4e7c0cef6097..182de7fb63923b38 100644
+> --- a/qemu-options.hx
+> +++ b/qemu-options.hx
+> @@ -875,6 +875,15 @@ SRST
+>  ``-device isa-ipmi-bt,bmc=id[,ioport=val][,irq=val]``
+>      Like the KCS interface, but defines a BT interface. The default port
+>      is 0xe4 and the default interrupt is 5.
+> +
+> +#ifdef CONFIG_GPIODEV
+> +``-device pl061,host=gpiochip``
+> +    Add a PL061 GPIO controller, and map its virtual GPIO lines to a GPIO
+> +    controller on the host.
+> +
+> +    ``host=gpiochip``
+> +        The name or label of the GPIO controller on the host.
+> +#endif
+>  ERST
 >  
->  if test "$supported_cpu" = "no"; then
->      echo
-> @@ -7614,6 +7638,10 @@ if test -n "$gdb_bin" ; then
->      echo "HAVE_GDB_BIN=$gdb_bin" >> $config_host_mak
->  fi
->  
-> +if test "$gpio" = "yes" ; then
-> +  echo "CONFIG_GPIODEV=y" >> $config_host_mak
-> +fi
-> +
->  if test "$tcg_interpreter" = "yes"; then
->    QEMU_INCLUDES="-iquote \$(SRC_PATH)/tcg/tci $QEMU_INCLUDES"
->  elif test "$ARCH" = "sparc64" ; then
-> diff --git a/include/sysemu/gpiodev.h b/include/sysemu/gpiodev.h
-> new file mode 100644
-> index 0000000000000000..bedd141001245207
-> --- /dev/null
-> +++ b/include/sysemu/gpiodev.h
-> @@ -0,0 +1,12 @@
-> +/*
-> + * QEMU GPIO Backend
-> + *
-> + * Copyright (C) 2018-2020 Glider bv
-> + *
-> + * SPDX-License-Identifier: GPL-2.0-or-later
-> + */
-> +
-> +#include "qemu/typedefs.h"
-
-"qemu/typedefs.h" not needed in includes.
-
-> +
-> +void qemu_gpiodev_add(DeviceState *dev, const char *name, unsigned int maxgpio,
-> +                      Error **errp);
+>  DEF("name", HAS_ARG, QEMU_OPTION_name,
 > 
+
+Instead of restricting this to the pl061, it would be cleaner you add a
+GPIO_PLUGGABLE_INTERFACE (or GPIO_BINDABLE_INTERFACE or better name),
+and have TYPE_PL061 implement it.
