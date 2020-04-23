@@ -2,91 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63DE61B639F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 20:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C91CD1B6578
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 22:34:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgDWS1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 14:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        id S1726410AbgDWUeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 16:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730303AbgDWS0y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 14:26:54 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0F2C025498
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id i16so6544965ils.12
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+        with ESMTP id S1726392AbgDWUef (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 16:34:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8301C09B042
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 13:34:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a7so2984024pju.2
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 13:34:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
-         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
-         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
-         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
-         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
-         vLew==
+        bh=S6QHYAQNJk/r7RcX2egg9QjNYJDfZ7VPfp2pyf+zOWQ=;
+        b=iuLVk7tU3P3H5Mb1U3zBU4nWhOhIRU5F/zHi9uFNWmfJsHIbXcw1Fq8YtaDEcAOuR3
+         JPhKTcSr8mLnmintaxTFgbNsVH/uXvrg8cNfE/krwGJFmsJlsqYeRV7sr6oqMdseMFSQ
+         Qd39yC6MzTDdmRRmpM+96KY4wn8Z7GUwGDU9M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=RI2plW+GfJGIrBWiPVsBIyGR1+gddnS6vlj4UZlfooU3BhhbyGjbZM/7uA4ogI023A
-         8s185HONXoOUU5ibslamsWjBXQ4X0+mL4lNkdb8xnUmC59uuEDpNSfyLJLmUG6bHxpZt
-         +5XMEEUWRHxrNnMfFWwYzfowTFwdDrDhibZ186lm6y1lHkwsrBL9p0PQ/8PVT2sKunru
-         htnKiPse3i8GKOWIj3jOWNG16lxsQo0YPJO7CQJN+Esa6aOxn7VoHFdZpVVL98FinXT9
-         CJMUyYtICY+kesQ0lktNpb+bv7S/FdQu0L1EqbNJFQDFqB1BhH/n2+zYhUOdQlERy0tL
-         EaAg==
-X-Gm-Message-State: AGi0PubIFU+CJDa+ANyy+d0m0hovTcz7lLTDLOMEFoYTofLLxOl23J8L
-        VEJsbk7daCYCtGmHmgeJ7PItrGmcVzL7GzYD0q0HaCE=
-X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
-X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
- Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=S6QHYAQNJk/r7RcX2egg9QjNYJDfZ7VPfp2pyf+zOWQ=;
+        b=nGv09JVQGz46BI0vG8IsFeXFj/N83Qr67DgjeNHOMxnsmXMgrjGROc9gMFW91ffnrf
+         sqAQH1zo16LA2b+bLQS21z4rbdV+j4JNKwm+ezKdx1rlbtl4afpeqsPVrCaiFE80kygl
+         6uSQBRZSUSuIlWx1hppHw5UbeGyCGbMxubU8OWmbYujM2MlI7Yyk/NevQuWhzb3pWrTh
+         xdp7NA4UWjjQ+OPk6bY543MDodIlXvjUhoo6PIiNlcLQ7XzOu2QheanXlYbJa7UmHp8x
+         pWNX6qm3+W3viiMFHRP2ymj8wQVoJUdCxeF1+C3v1rPNchq3HCqcH597A7+vnXrXQLaH
+         uvig==
+X-Gm-Message-State: AGi0PuY0PhkrJ81sFHkiTh8rrClVZaf7xm/XjAhRipmz6M/m3ZiD/nNq
+        BsKgVQ1CVpvuA6MeuK2pOV0hMA==
+X-Google-Smtp-Source: APiQypJXeojnpJa/3rx7LWMgNYonCQfG+V/x3GE+RkoYxeMue+ICy0iF43qe2z6K+6WZkzhatKZVpg==
+X-Received: by 2002:a17:902:8688:: with SMTP id g8mr5781326plo.268.1587674075346;
+        Thu, 23 Apr 2020 13:34:35 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id c3sm3391925pfa.160.2020.04.23.13.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 13:34:34 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Alexandru M Stan <amstan@chromium.org>
+Subject: [PATCH] gpiolib: devprop: Warn if gpio-line-names is too long
+Date:   Thu, 23 Apr 2020 13:34:16 -0700
+Message-Id: <20200423203416.133274-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.26.2.303.gf8c07b1a785-goog
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:26:49 +0200
-Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
-Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
- amount of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+Some DT authors (including myself) have messed up the length of
+gpio-line-names and made it longer than it should be. Add a warning here
+so that developers can figure out that they've messed up their DT and
+should fix it.
+
+Cc: Alexandru M Stan <amstan@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/gpio/gpiolib-devprop.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib-devprop.c b/drivers/gpio/gpiolib-devprop.c
+index 53781b253986..26741032fa9e 100644
+--- a/drivers/gpio/gpiolib-devprop.c
++++ b/drivers/gpio/gpiolib-devprop.c
+@@ -37,8 +37,11 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+ 	if (count < 0)
+ 		return;
+ 
+-	if (count > gdev->ngpio)
++	if (count > gdev->ngpio) {
++		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
++			 count, gdev->ngpio);
+ 		count = gdev->ngpio;
++	}
+ 
+ 	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
+ 	if (!names)
+-- 
+Sent by a computer, using git, on the internet
+
