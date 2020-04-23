@@ -2,117 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CBE21B6122
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 18:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46E8B1B6236
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 19:46:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgDWQmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 12:42:13 -0400
-Received: from muru.com ([72.249.23.125]:51134 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729407AbgDWQmM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Apr 2020 12:42:12 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 6E33B8022;
-        Thu, 23 Apr 2020 16:42:59 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 09:42:08 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-Message-ID: <20200423164208.GF37466@atomide.com>
-References: <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
- <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
- <20200413123921.GA32586@x1>
- <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
- <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
- <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
- <20200415233712.GA16167@x1>
- <20200416163215.GH37466@atomide.com>
- <20200423131738.GA16584@x1>
+        id S1729901AbgDWRq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 13:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729802AbgDWRq2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 13:46:28 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E82C09B042;
+        Thu, 23 Apr 2020 10:46:28 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id E320A22F99;
+        Thu, 23 Apr 2020 19:46:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1587663986;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=fbl5Ev06XHPQ6bOW/xCAY2dvNLIEvNxrk8zF984jvaw=;
+        b=sMd5Sf/Gr7RDhCy0+J0cj0WYWOD0lOYOkQEwhSmS6CAWOek6JVxnbjkp7z9W0lvIqGzIs6
+        b6eRHnVgVWaTIxuTWGTr+jr15rr1ZYhjeSrq/0F6TLIiYfzE2Wgrt/nOLGdrDQqTAUniBz
+        DqFfsoQQwq0NxBO0PaIgCwuVxGZF3pk=
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v3 00/16] Add support for Kontron sl28cpld
+Date:   Thu, 23 Apr 2020 19:45:27 +0200
+Message-Id: <20200423174543.17161-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423131738.GA16584@x1>
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Spam-Level: ******
+X-Rspamd-Server: web
+X-Spam-Status: Yes, score=6.40
+X-Spam-Score: 6.40
+X-Rspamd-Queue-Id: E320A22F99
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         NEURAL_SPAM(0.00)[1.002];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[25];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Drew Fustini <drew@pdp7.com> [200423 13:17]:
-> Thanks, Tony.  I was able to apply your patch cleanly to 5.5.9 kernel
-> and boot it ok on the PocketBeagle (AM3358) which is what I'm currently
-> testing with.  I can switch to 5.7.x but I just happened to be on 5.5.x
-> because that is when bias flags were added to gpiolib uapi.
+The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+monitoring and an interrupt controller. For now this controller is used on
+the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+might also be used on other boards in the future. The individual blocks
+(like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+then instantiates different (or multiple of the same) blocks. It also
+provides the register layout so it might be updated in the future without a
+device tree change; and support other boards with a different layout or
+functionalities.
 
-OK. BTW, with PocketBeagle and mainline v5.6 kernel, I see the micro-USB
-connection always get disconnected after few hours of use. Are you aware
-ofthat?
+See also [1] for more information.
 
-This is with the micro-USB configured as acm and ecm gadget via configfs.
+This is my first take of a MFD driver. I don't know whether the subsystem
+maintainers should only be CCed on the patches which affect the subsystem
+or on all patches for this series. I've chosen the latter so you can get a
+more complete picture.
 
-> I'm a somewhat confused about the difference between the "gpio-ranges"
-> property for the gpio[0-3] nodes and the "pinctrl-single,gpio-range"
-> property for the am33xx_pinmux node.
-> 
-> For a test, I tried adding "gpio-ranges" to arch/arm/boot/dts/am33xx-l4.dtsi:
-> 
->                         gpio0: gpio@0 {
->                                 compatible = "ti,omap4-gpio";
->                                 gpio-controller;
->                                 #gpio-cells = <2>;
->                                 interrupt-controller;
->                                 #interrupt-cells = <2>;
->                                 reg = <0x0 0x1000>;
->                                 interrupts = <96>;
->                                 gpio-ranges = <&am33xx_pinmux 0 0 1>;
-> 			}
+[1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
 
-So the gpio-ranges tells the gpio contorller what pinctrl device pin
-to use for configuring things.
+Changes since v2:
+As suggested by Guenter Roeck:
+ - added sl28cpld.rst to index.rst
+ - removed sl28cpld_wdt_status()
+ - reverse christmas tree local variable ordering
+ - assign device_property_read_bool() retval directly
+ - introduce WDT_DEFAULT_TIMEOUT and use it if the hardware reports
+   0 as timeout.
+ - set WDOG_HW_RUNNING if applicable
+ - remove platform_set_drvdata() leftover
 
-> and "pinctrl-single,gpio-range" like this:
-> 
->                                 am33xx_pinmux: pinmux@800 {
->                                         compatible = "pinctrl-single";
->                                         reg = <0x800 0x238>;
->                                         #pinctrl-cells = <1>;
->                                         pinctrl-single,register-width = <32>;
->                                         pinctrl-single,function-mask = <0x7f>;
-> 
->                                         pinctrl-single,gpio-range = <&range 0 1 0>;
-> 
->                                         range: gpio-range {
->                                                 #pinctrl-single,gpio-range-cells = <3>;
->                                         };
->                                 };
-> 
-> Do you think both of those properties would be needed?
+As suggested by Bartosz Golaszewski:
+ - don't export gpio_regmap_simple_xlate()
+ - combine local variable declaration of the same type
+ - drop the "struct gpio_regmap_addr", instead use -1 to force an address
+   offset of zero
+ - fix typo
+ - use "struct gpio_regmap_config" pattern, keep "struct gpio_regmap"
+   private. this also means we need a getter/setter for the driver_data
+   element.
 
-No I don't think so. The pinctrl-single could be additionally
-configured for gpio functionality too. For omaps, that gpio
-functionality would be mostly limited to output toggling using the
-internal pulls. Would be still usable on some systems though.
+As suggested by Linus Walleij:
+ - don't store irq_domain in gpio-regmap. drop to_irq() altogether for now.
+   Instead there is now a new patch which lets us set the irqdomain of the
+   gpiochip_irqchip and use its .to_irq() function. This way we don't have
+   to expose the gpio_chip inside the gpio-regmap to the user.
 
-Also, it's been a while so I don't remember where I started running
-into addressing issues though.. My guess is that you will soon hit
-them too and notice :)
+Changes since v1:
+ - use of_match_table in all drivers, needed for automatic module loading,
+   when using OF_MFD_CELL()
+ - add new gpio-regmap.c which adds a generic regmap gpio_chip
+   implementation
+ - new patch for reqmap_irq, so we can reuse its implementation
+ - remove almost any code from gpio-sl28cpld.c, instead use gpio-regmap and
+   regmap-irq
+ - change the handling of the mfd core vs device tree nodes; add a new
+   property "of_reg" to the mfd_cell struct which, when set, is matched to
+   the unit-address of the device tree nodes.
+ - fix sl28cpld watchdog when it is not initialized by the bootloader.
+   Explicitly set the operation mode.
+ - also add support for kontron,assert-wdt-timeout-pin in sl28cpld-wdt.
 
-But basically we want to reference the pinctrl pins based on their
-physical offset from the padconf base register, and not based on an
-invented number in the dts. Well maybe you can describe the problem
-further for us to discuss when you see it :)
+As suggested by Bartosz Golaszewski:
+ - define registers as hex
+ - make gpio enum uppercase
+ - move parent regmap check before memory allocation
+ - use device_property_read_bool() instead of the of_ version
+ - mention the gpio flavors in the bindings documentation
 
-Regards,
+As suggested by Guenter Roeck:
+ - cleanup #includes and sort them
+ - use devm_watchdog_register_device()
+ - use watchdog_stop_on_reboot()
+ - provide a Documentation/hwmon/sl28cpld.rst
+ - cleaned up the weird tristate->bool and I2C=y issue. Instead mention
+   that the MFD driver is bool because of the following intc patch
+ - removed the SL28CPLD_IRQ typo
 
-Tony
+As suggested by Rob Herring:
+ - combine all dt bindings docs into one patch
+ - change the node name for all gpio flavors to "gpio"
+ - removed the interrupts-extended rule
+ - cleaned up the unit-address space, see above
+
+Michael Walle (16):
+  include/linux/ioport.h: add helper to define REG resource constructs
+  mfd: mfd-core: Don't overwrite the dma_mask of the child device
+  mfd: mfd-core: match device tree node against reg property
+  dt-bindings: mfd: Add bindings for sl28cpld
+  mfd: Add support for Kontron sl28cpld management controller
+  irqchip: add sl28cpld interrupt controller support
+  watchdog: add support for sl28cpld watchdog
+  pwm: add support for sl28cpld PWM controller
+  gpiolib: Introduce gpiochip_irqchip_add_domain()
+  gpio: add a reusable generic gpio_chip using regmap
+  gpio: add support for the sl28cpld GPIO controller
+  hwmon: add support for the sl28cpld hardware monitoring controller
+  arm64: dts: freescale: sl28: enable sl28cpld
+  arm64: dts: freescale: sl28: map GPIOs to input events
+  arm64: dts: freescale: sl28: enable LED support
+  arm64: dts: freescale: sl28: enable fan support
+
+ .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  51 +++
+ .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++
+ .../bindings/mfd/kontron,sl28cpld.yaml        | 162 ++++++++
+ .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++
+ .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/sl28cpld.rst              |  36 ++
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  14 +
+ .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |   9 +
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 124 +++++++
+ drivers/gpio/Kconfig                          |  15 +
+ drivers/gpio/Makefile                         |   2 +
+ drivers/gpio/gpio-regmap.c                    | 348 ++++++++++++++++++
+ drivers/gpio/gpio-sl28cpld.c                  | 184 +++++++++
+ drivers/gpio/gpiolib.c                        |  20 +
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sl28cpld-hwmon.c                | 151 ++++++++
+ drivers/irqchip/Kconfig                       |   3 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-sl28cpld.c                |  97 +++++
+ drivers/mfd/Kconfig                           |  21 ++
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mfd-core.c                        |  31 +-
+ drivers/mfd/sl28cpld.c                        | 153 ++++++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sl28cpld.c                    | 203 ++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/sl28cpld_wdt.c               | 233 ++++++++++++
+ include/linux/gpio-regmap.h                   |  69 ++++
+ include/linux/gpio/driver.h                   |   3 +
+ include/linux/ioport.h                        |   5 +
+ include/linux/mfd/core.h                      |  26 +-
+ 35 files changed, 2079 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+ create mode 100644 Documentation/hwmon/sl28cpld.rst
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
+ create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+ create mode 100644 drivers/irqchip/irq-sl28cpld.c
+ create mode 100644 drivers/mfd/sl28cpld.c
+ create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+ create mode 100644 include/linux/gpio-regmap.h
+
+-- 
+2.20.1
+
