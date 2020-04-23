@@ -2,223 +2,324 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B64E1B58CD
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 12:08:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6A311B5C3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 15:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgDWKIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 06:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
+        id S1726710AbgDWNQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 09:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725863AbgDWKIO (ORCPT
+        by vger.kernel.org with ESMTP id S1726429AbgDWNQ7 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Apr 2020 06:08:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDE1C03C1AF;
-        Thu, 23 Apr 2020 03:08:14 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x4so5802937wmj.1;
-        Thu, 23 Apr 2020 03:08:14 -0700 (PDT)
+        Thu, 23 Apr 2020 09:16:59 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4C1C08E934;
+        Thu, 23 Apr 2020 06:16:58 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g13so6795034wrb.8;
+        Thu, 23 Apr 2020 06:16:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=26mFD04CNLFNlq5fAwrmrHfJmkaVx1OLPhxNguFh7xM=;
-        b=DoHbKLumbW1jbNg5zp+nL52JxsLPjc3C17kr+ny3zbMXIVdaahc73R1TIbSTPF1m9v
-         RNcv1YHT4VJ7LyYmS+XxvHU8uqzHXYXa0a0/jdpgmSbc9XvxGWDToOioxBvoinAAd0N0
-         a2HufSO4MzO95HjOdCzcg0Xnp9qZrNWRJ/TIVydjqEVd5QBZtHgPeDp3amNZ3Dtvs2RR
-         WZ2prwrHvSfqMD5TFbuzhWhKaxsZzaUgAQq4a1MI8TJhaE9KjQEiRNWjioMLA+GUEgAq
-         7SyuRqyDT+mTX8BLKiphd4VxGb1JtbK8Nyzlo5DkNjs3akcN+2f3P7XpgmhA46TskOBk
-         GtKA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XpdNKfJoHYgU72M4JXWT2tifVV3ixcA1zo52dixVMjA=;
+        b=bUt4lvr+hwAUNw0QFxf6mmZLWBQAFA31IBQRDMO+DG7r/dUrF0eUsZ+fqXWRkYMkic
+         AJOyW906egGOf3v8AV4xDSy79iHXKWkxzeAS+PZ7tWexTQ5UFTgkO4b7bQazgbG1mTyp
+         F9yTAqElhffW/OPJSocDQvpu0CblzYvW0NNwEVb7QdX742Dn8RTFFK3JO+YWUMkxShNO
+         mlorzUuSgflJH8kw3IkL8AcI6WDleLKoXYwbqCE+An6h5tA4vLcLGa9aEMrTrXq6cVJm
+         Nne/YVeH4QkHNETFoshjs6Zadbd3NVd5Sn7L5uFYNld4bEhQbvtGn455sI+3PK6+e0hL
+         9+yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=26mFD04CNLFNlq5fAwrmrHfJmkaVx1OLPhxNguFh7xM=;
-        b=l+YcEIeUS3ahKRt8EJXzWApw/J23eTtutYT90EXoGB9SnqyedJuwU7cHedJVYCqtqK
-         L2y2ZKsRIvExsAQEfn4KHyP1nk75pECBd4QZUgw7Audlsvf7WKnJMq8rTj+5whf9LB3Q
-         yg3YIfu/N3g1XRhAFNzULAxKO7prZKpqDYNG7JsigvNDhELApDZyxLnTvF3LHB3LxZSl
-         CHBqnWgu3a5Q7Tko7HgDpObuFn56omarDs5rsGR4M7NJ5p4Jck7AIYZ91JigWsPlh/db
-         uIPIl+ibS2xwNxJDXp1FqOOQBS4kprnSXXwFwHTms83cKH8xSsyyIbLL29ocqgpp3Ndt
-         PclA==
-X-Gm-Message-State: AGi0PuYarKuubJPHlOivnAPQWtY6k1F2b8nNo62qVky+C+XVUdWU9u2b
-        5kaG+JgwkU8t0bQJB6V1b84=
-X-Google-Smtp-Source: APiQypJVfHDHkHric+gNI7mRErrqjsp+Ov6eucAV34wwMbLFaCzHsxXljw5uC5pI/k3ra+xBspQ35g==
-X-Received: by 2002:a7b:c250:: with SMTP id b16mr3447916wmj.100.1587636493270;
-        Thu, 23 Apr 2020 03:08:13 -0700 (PDT)
-Received: from [192.168.1.39] (116.red-83-42-57.dynamicip.rima-tde.net. [83.42.57.116])
-        by smtp.gmail.com with ESMTPSA id l6sm3040357wrb.75.2020.04.23.03.08.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2020 03:08:12 -0700 (PDT)
-Subject: Re: [PATCH QEMU v2 4/5] ARM: PL061: Add gpiodev support
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alexander Graf <graf@amazon.com>,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XpdNKfJoHYgU72M4JXWT2tifVV3ixcA1zo52dixVMjA=;
+        b=X92SqaIigbuN5JrS7BNlRpTf801+GFK/sJPXnYPBeaFEWIHCGlRywt+hOp87khWEcS
+         RhiES91zsxSk09p7srJLRM3wSXxPjGEGtmxIuw2eXtRefLuZQqlZlETTd19qYjlbYvLH
+         7DDZk/6x23YrlD7d6IrquvGuwFFKUUJGuj/bMEGRRBxcO+g0kBgY1N7Z0Dfk6mNbBjHc
+         eqJpZLeYO9oI6ctoH92NM7eheorOqT4ASVGIS8tSHBIZhKd4Qa6WW5gJKanSCpg47f/S
+         n2XTtOH2rlLoFo1EuVvPiojrUKzhcNu/jbpi8FbYuL+Pxe0gXcjTVAZ0Gt6xz8aJNNa9
+         rsKw==
+X-Gm-Message-State: AGi0PubtH/6ry03+Qr3ITwG+8j4TzJSOorAFCZ9yt27Qi4N8tuo23HLo
+        QsTQEYvkXwOBpNW943jVIpU=
+X-Google-Smtp-Source: APiQypIJM+T2B/a+R+KzzjxZIuBrkfj75YkUcJWrzLSJZdNz9OtpX3vVivwEbipMXmV71LD2+yftag==
+X-Received: by 2002:a5d:4ac9:: with SMTP id y9mr5200334wrs.182.1587647817328;
+        Thu, 23 Apr 2020 06:16:57 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id r20sm3459821wmh.26.2020.04.23.06.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 06:16:56 -0700 (PDT)
+Date:   Thu, 23 Apr 2020 15:17:38 +0200
+From:   Drew Fustini <drew@pdp7.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Robert Nelson <robertcnelson@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartekgola@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        qemu-arm@nongnu.org, qemu-devel@nongnu.org
-References: <20200423090118.11199-1-geert+renesas@glider.be>
- <20200423090118.11199-5-geert+renesas@glider.be>
- <520d1d07-7530-e133-af6e-a8b4615829b8@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <e279f622-3af6-5073-dac0-4c452a88c32b@amsat.org>
-Date:   Thu, 23 Apr 2020 12:08:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
+Message-ID: <20200423131738.GA16584@x1>
+References: <CACRpkdaPoMGZ7jGh6j4dYexx+qCcoMQ37vS7kbpf=3TtcA9zQQ@mail.gmail.com>
+ <CAEf4M_B_sxOiKFnEVUrx00RE2MaMA98LpijNhp0EVY11eRAXHg@mail.gmail.com>
+ <CAD6h2NT840zMfwaJatfKzai8QjZEQmF5v0xgE+9ngSJJ+Qy+6g@mail.gmail.com>
+ <20200413123921.GA32586@x1>
+ <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
+ <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
+ <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
+ <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
+ <20200415233712.GA16167@x1>
+ <20200416163215.GH37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <520d1d07-7530-e133-af6e-a8b4615829b8@amsat.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416163215.GH37466@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 4/23/20 11:33 AM, Philippe Mathieu-Daudé wrote:
-> On 4/23/20 11:01 AM, Geert Uytterhoeven wrote:
->> Make the PL061 GPIO controller user-creatable, and allow the user to tie
->> a newly created instance to a gpiochip on the host.
->>
->> To create a new GPIO controller, the QEMU command line must be augmented
->> with:
->>
->>     -device pl061,host=<gpiochip>
->>
->> with <gpiochip> the name or label of the gpiochip on the host.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v2:
->>   - New.
->> ---
->>  hw/gpio/pl061.c | 35 +++++++++++++++++++++++++++++++++++
->>  qemu-options.hx |  9 +++++++++
->>  2 files changed, 44 insertions(+)
->>
->> diff --git a/hw/gpio/pl061.c b/hw/gpio/pl061.c
->> index 74ba733a8a5e8ca5..98204f9a586ae8c8 100644
->> --- a/hw/gpio/pl061.c
->> +++ b/hw/gpio/pl061.c
->> @@ -12,11 +12,14 @@
->>  #include "hw/arm/fdt.h"
->>  #include "hw/gpio/pl061.h"
->>  #include "hw/irq.h"
->> +#include "hw/qdev-properties.h"
->>  #include "hw/sysbus.h"
->>  #include "migration/vmstate.h"
->> +#include "qapi/error.h"
->>  #include "qemu/log.h"
->>  #include "qemu/module.h"
->>  #include "sysemu/device_tree.h"
->> +#include "sysemu/gpiodev.h"
->>  
->>  //#define DEBUG_PL061 1
->>  
->> @@ -41,6 +44,9 @@ static const uint8_t pl061_id_luminary[12] =
->>  typedef struct PL061State {
->>      SysBusDevice parent_obj;
->>  
->> +#ifdef CONFIG_GPIODEV
->> +    char *host;
->> +#endif
->>      MemoryRegion iomem;
->>      uint32_t locked;
->>      uint32_t data;
->> @@ -370,10 +376,39 @@ static void pl061_init(Object *obj)
->>      qdev_init_gpio_out(dev, s->out, 8);
+On Thu, Apr 16, 2020 at 09:32:15AM -0700, Tony Lindgren wrote:
+> Hi,
 > 
-> Not related to this patch, but we should replace this 8 magic value by a
-> proper definition...
+> * Drew Fustini <drew@pdp7.com> [200415 23:37]:
+> > As Robert described, I wanted to make us of the new support for bias
+> > flags in the gpiolib uapi which allows userspace libraries like libgpiod
+> > set pull-up or pull-down on lines [0].
+> > 
+> > Is there no way for gpio-omap to call into the pinctrl-single backend to
+> > set the bias bits (PULLUDEN and PULLTYPESEL) in pad control registers?
 > 
->>  }
->>  
->> +#ifdef CONFIG_GPIODEV
->> +static Property pl061_properties[] = {
->> +    DEFINE_PROP_STRING("host", PL061State, host),
->> +    DEFINE_PROP_END_OF_LIST(),
->> +};
->> +
->> +static void pl061_realize(DeviceState *dev, Error **errp)
->> +{
->> +    PL061State *s = PL061(dev);
->> +
->> +    if (!dev->opts) {
->> +        /* Not created by user */
->> +        return;
->> +    }
->> +
->> +    if (!s->host) {
->> +        error_setg(errp, "'host' property is required");
->> +        return;
->> +    }
->> +
->> +    qemu_gpiodev_add(dev, s->host, 8, errp);
->> +}
->> +#endif /* CONFIG_GPIODEV */
->> +
->>  static void pl061_class_init(ObjectClass *klass, void *data)
->>  {
->>      DeviceClass *dc = DEVICE_CLASS(klass);
->>  
->> +#ifdef CONFIG_GPIODEV
->> +    device_class_set_props(dc, pl061_properties);
->> +    dc->realize = pl061_realize;
->> +    dc->user_creatable = true;
->> +#endif
->>      dc->vmsd = &vmstate_pl061;
->>      dc->reset = &pl061_reset;
->>  }
->> diff --git a/qemu-options.hx b/qemu-options.hx
->> index 292d4e7c0cef6097..182de7fb63923b38 100644
->> --- a/qemu-options.hx
->> +++ b/qemu-options.hx
->> @@ -875,6 +875,15 @@ SRST
->>  ``-device isa-ipmi-bt,bmc=id[,ioport=val][,irq=val]``
->>      Like the KCS interface, but defines a BT interface. The default port
->>      is 0xe4 and the default interrupt is 5.
->> +
->> +#ifdef CONFIG_GPIODEV
->> +``-device pl061,host=gpiochip``
->> +    Add a PL061 GPIO controller, and map its virtual GPIO lines to a GPIO
->> +    controller on the host.
->> +
->> +    ``host=gpiochip``
->> +        The name or label of the GPIO controller on the host.
->> +#endif
->>  ERST
->>  
->>  DEF("name", HAS_ARG, QEMU_OPTION_name,
->>
+> It sure would be nice to improve some of this :) You should be able to
+> do this using the gpio-ranges binding with the following steps:
 > 
-> Instead of restricting this to the pl061, it would be cleaner you add a
-> GPIO_PLUGGABLE_INTERFACE (or GPIO_BINDABLE_INTERFACE or better name),
-> and have TYPE_PL061 implement it.
+> 1. Add gpio-ranges to dts files
+> 
+> This should be done for all the pins that need handling, here's
+> just one line version:
+> 
+> gpio-ranges = <&pmx_core 0 15 1>;
+>                          |  | |
+> 			 |  | +-- number of pins
+> 			 |  +---- pin start
+> 			 +------- gpio start
+> 
+> Some mappings can use larger ranges, while some pins just need
+> to be added separately.
+> 
+> 2. Implement parsing of gpio-ranges to pinctrl-single.c
+> 
+> The following test patch I did a while back should get you started.
+> 
+> From what I recall, the issue here the addressing. The addressing
+> ends up using an artiticial index of pin entries in the dts, while
+> it should use the read pinctrl device padconf offset.
 
-IOW your backend should consume devices implementing this generic interface.
+Thanks, Tony.  I was able to apply your patch cleanly to 5.5.9 kernel
+and boot it ok on the PocketBeagle (AM3358) which is what I'm currently
+testing with.  I can switch to 5.7.x but I just happened to be on 5.5.x
+because that is when bias flags were added to gpiolib uapi.
+
+I'm a somewhat confused about the difference between the "gpio-ranges"
+property for the gpio[0-3] nodes and the "pinctrl-single,gpio-range"
+property for the am33xx_pinmux node.
+
+For a test, I tried adding "gpio-ranges" to arch/arm/boot/dts/am33xx-l4.dtsi:
+
+                        gpio0: gpio@0 {
+                                compatible = "ti,omap4-gpio";
+                                gpio-controller;
+                                #gpio-cells = <2>;
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                reg = <0x0 0x1000>;
+                                interrupts = <96>;
+                                gpio-ranges = <&am33xx_pinmux 0 0 1>;
+			}
+
+and "pinctrl-single,gpio-range" like this:
+
+                                am33xx_pinmux: pinmux@800 {
+                                        compatible = "pinctrl-single";
+                                        reg = <0x800 0x238>;
+                                        #pinctrl-cells = <1>;
+                                        pinctrl-single,register-width = <32>;
+                                        pinctrl-single,function-mask = <0x7f>;
+
+                                        pinctrl-single,gpio-range = <&range 0 1 0>;
+
+                                        range: gpio-range {
+                                                #pinctrl-single,gpio-range-cells = <3>;
+                                        };
+                                };
+
+Do you think both of those properties would be needed?
+
+> 
+> Maybe Linus has some suggestion on how to deal with that?
+> 
+> 3. Have gpio-omap.c call gpiod_direction_input(desc) and
+>    gpiod_to_irq(desc) for example for gpio interrupt pins
+> 
+> To do that, you need something like this in gpio-omap.c:
+> 
+> if (of_property_read_bool(dev->of_node, "gpio-ranges")) {
+> 	chips->chip.request = gpiochip_generic_request;
+> 	chips->chip.free = gpiochip_generic_free;
+> }
+> 
+> Regards,
+> 
+> Tony
+> 
+> 8< -------------------
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -10,6 +10,7 @@
+>   */
+>  
+>  #include <linux/init.h>
+> +#include <linux/gpio.h>
+>  #include <linux/module.h>
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
+> @@ -149,6 +150,8 @@ struct pcs_soc_data {
+>   * @dev:	device entry
+>   * @np:		device tree node
+>   * @pctl:	pin controller device
+> + * @gc:		optional gpio chip
+> + * @nr_gpio:	optional number of gpio pins
+>   * @flags:	mask of PCS_FEAT_xxx values
+>   * @missing_nr_pinctrl_cells: for legacy binding, may go away
+>   * @socdata:	soc specific data
+> @@ -178,6 +181,8 @@ struct pcs_device {
+>  	struct device *dev;
+>  	struct device_node *np;
+>  	struct pinctrl_dev *pctl;
+> +	struct gpio_chip *gc;
+> +	int nr_gpio;
+>  	unsigned flags;
+>  #define PCS_CONTEXT_LOSS_OFF	(1 << 3)
+>  #define PCS_QUIRK_SHARED_IRQ	(1 << 2)
+> @@ -1340,6 +1345,8 @@ static int pcs_add_gpio_func(struct device_node *node, struct pcs_device *pcs)
+>  		mutex_lock(&pcs->mutex);
+>  		list_add_tail(&range->node, &pcs->gpiofuncs);
+>  		mutex_unlock(&pcs->mutex);
+> +
+> +		pcs->nr_gpio += range->npins;
+>  	}
+>  	return ret;
+>  }
+> @@ -1599,6 +1606,93 @@ static int pcs_irq_init_chained_handler(struct pcs_device *pcs,
+>  	return 0;
+>  }
+>  
+> +static int pcs_gpio_find_by_offset(struct pcs_device *pcs, int offset)
+> +{
+> +
+> +}
+> +
+> +static int pcs_gpio_request(struct gpio_chip *gc, unsigned offset)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
+> +
+> +	return 0;
+> +}
+> +
+> +static void pcs_gpio_free(struct gpio_chip *gc, unsigned offset)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
+> +}
+> +
+> +static int pcs_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pcs_gpio_get(struct gpio_chip *gc, unsigned offset)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static void pcs_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u value: %i\n",
+> +		 __func__, offset, value);
+> +}
+> +
+> +static int pcs_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+> +{
+> +	struct pcs_device *pcs = gpiochip_get_data(gc);
+> +
+> +	dev_info(pcs->dev, "XXX %s offset: %u\n", __func__, offset);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pcs_init_gpiochip(struct device_node *np, struct pcs_device *pcs)
+> +{
+> +	int error;
+> +
+> +	if (!pcs->nr_gpio || !of_property_read_bool(np, "gpio-controller"))
+> +		return 0;
+> +
+> +	pcs->gc = devm_kzalloc(pcs->dev, sizeof(*pcs->gc), GFP_KERNEL);
+> +	if (!pcs->gc)
+> +		return -ENOMEM;
+> +
+> +	pcs->gc->request = pcs_gpio_request;
+> +	pcs->gc->free = pcs_gpio_free;
+> +	pcs->gc->direction_input = pcs_gpio_direction_input;
+> +	pcs->gc->get = pcs_gpio_get;
+> +	pcs->gc->set = pcs_gpio_set;
+> +	pcs->gc->to_irq = pcs_gpio_to_irq;
+> +
+> +	pcs->gc->label = pcs->desc.name;
+> +	pcs->gc->parent = pcs->dev;
+> +	pcs->gc->owner = THIS_MODULE;
+> +	pcs->gc->base = -1;
+> +	pcs->gc->ngpio = pcs->nr_gpio;
+> +
+> +	error = devm_gpiochip_add_data(pcs->dev, pcs->gc, pcs);
+> +	if (error)
+> +		return error;
+> +
+> +	return 0;
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  static int pcs_save_context(struct pcs_device *pcs)
+>  {
+> @@ -1868,6 +1962,10 @@ static int pcs_probe(struct platform_device *pdev)
+>  	if (ret < 0)
+>  		goto free;
+>  
+> +	ret = pcs_init_gpiochip(np, pcs);
+> +	if (ret < 0)
+> +		goto free;
+> +
+>  	pcs->socdata.irq = irq_of_parse_and_map(np, 0);
+>  	if (pcs->socdata.irq)
+>  		pcs->flags |= PCS_FEAT_IRQ;
+> -- 
+> 2.26.1
