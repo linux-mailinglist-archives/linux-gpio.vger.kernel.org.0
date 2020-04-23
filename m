@@ -2,120 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBDAB1B6258
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 19:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63DE61B639F
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 20:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgDWRq4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 13:46:56 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:55937 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730060AbgDWRqn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 13:46:43 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 68A3123E29;
-        Thu, 23 Apr 2020 19:46:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1587664001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5ltDxDEQqoNxt8d4SzlK52JEqovfZ9pOb0c+YAdkDG4=;
-        b=ndrLsL6rTTVpPoRWs2aC5feQCyYUOV3TA68T9rDcGDAiW0u9/1yxyGTNoiZZsnbuvlxHMa
-        zY5HhLxAOEeGohWZ6V3dbrA3U0GZOMsp7NwNLNAoB3xfXNBgV+DtpF3FFsU+Ln6GYlxME0
-        EBIwdSgMqZ3V49SjVC2JaTU0EjFhMTI=
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 16/16] arm64: dts: freescale: sl28: enable fan support
-Date:   Thu, 23 Apr 2020 19:45:43 +0200
-Message-Id: <20200423174543.17161-17-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200423174543.17161-1-michael@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc>
+        id S1730312AbgDWS1g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 14:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730303AbgDWS0y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Apr 2020 14:26:54 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0F2C025498
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id i16so6544965ils.12
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 11:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=g40sBMuaO0eKdotmx6qgQBl63DKBmrekz5bvyEQHA4wVZtcqrxc+aFVgh/QD84O9VQ
+         7GeGJGwCstc5CQBYUut5JFB/SR9hiHRBoNucBdQ5+M/xcZE7LYnQNVriX94nlJDQQ53M
+         WWNnGuPMmJMtuCxOc6M3BOG48McWyi9pwkfv1qCbwmDhh95byI3UmcGK9ZJ59xQm/kqA
+         giNgZwxUHu+XTIAoqn/uu1orK63Ur+6hMBQW2TB101zb0oJ5HpVThkCq6id/TjpQtg27
+         HPMb1DcYsj7bM6wQaeV1UkPK6mgUhECRFNV10F5zDhvx1RXP4ikb8uuEIGMKOSNWVb51
+         vLew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=RI2plW+GfJGIrBWiPVsBIyGR1+gddnS6vlj4UZlfooU3BhhbyGjbZM/7uA4ogI023A
+         8s185HONXoOUU5ibslamsWjBXQ4X0+mL4lNkdb8xnUmC59uuEDpNSfyLJLmUG6bHxpZt
+         +5XMEEUWRHxrNnMfFWwYzfowTFwdDrDhibZ186lm6y1lHkwsrBL9p0PQ/8PVT2sKunru
+         htnKiPse3i8GKOWIj3jOWNG16lxsQo0YPJO7CQJN+Esa6aOxn7VoHFdZpVVL98FinXT9
+         CJMUyYtICY+kesQ0lktNpb+bv7S/FdQu0L1EqbNJFQDFqB1BhH/n2+zYhUOdQlERy0tL
+         EaAg==
+X-Gm-Message-State: AGi0PubIFU+CJDa+ANyy+d0m0hovTcz7lLTDLOMEFoYTofLLxOl23J8L
+        VEJsbk7daCYCtGmHmgeJ7PItrGmcVzL7GzYD0q0HaCE=
+X-Google-Smtp-Source: APiQypKZ88CB7WlyCjo0k9+cU4PX0VcggKkKtzSKgRJHkcPGizF0yZXAjzEMBgo6XH4xzBXv0KAOMjPM9p1sgpp6/70=
+X-Received: by 2002:a5e:9416:: with SMTP id q22mr2547966ioj.93.1587666410194;
+ Thu, 23 Apr 2020 11:26:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Spam-Level: ******
-X-Rspamd-Server: web
-X-Spam-Status: Yes, score=6.40
-X-Spam-Score: 6.40
-X-Rspamd-Queue-Id: 68A3123E29
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_SPAM(0.00)[0.993];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[25];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         FREEMAIL_CC(0.00)[linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,walle.cc];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:26:49
+ -0700 (PDT)
+Reply-To: boa.benin107@yahoo.com
+From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
+Date:   Thu, 23 Apr 2020 20:26:49 +0200
+Message-ID: <CABHzvr=N78snvtMHePMOa+RLFdcZEjXLPkuhkojt4VoZGNzBsQ@mail.gmail.com>
+Subject: Contact Bank of Africa-Benin to receive your payment funds transfer
+ amount of $12.800.000,00 Million USD,approved this morning by IMF.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a pwm-fan mapped to the PWM channel 0 which is connected to the
-fan connector of the carrier.
-
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- .../dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-index 0973a6a45217..c45d7b40e374 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28-var3-ads2.dts
-@@ -15,6 +15,15 @@
- 	compatible = "kontron,sl28-var3-ads2", "kontron,sl28-var3",
- 		     "kontron,sl28", "fsl,ls1028a";
- 
-+	pwm-fan {
-+		compatible = "pwm-fan";
-+		cooling-min-state = <0>;
-+		cooling-max-state = <3>;
-+		#cooling-cells = <2>;
-+		pwms = <&sl28cpld_pwm0 0 4000000>;
-+		cooling-levels = <1 128 192 255>;
-+	};
-+
- 	sound {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.20.1
-
+Attn Dear.
+Contact Bank of Africa-Benin to receive your payment funds transfer amount =
+of
+$12.800.000,00 Million USD,approved this morning by IMF.
+Happy to inform you, we have finally deposited your payment funds
+$12.8 million us dollars with the Paying Bank of Africa-Benin
+to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
+Contact the bank immediately you receive this email now.
+Director Bank of Africa-Benin: Dr. Festus Obiara
+Email id:  boa.benin107@yahoo.com
+Tel/mobile, (229) 62819378
+BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
+Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
+Phone:(229) 62819378.
+2020 GROUPE BANK OF AFRICA
+Be advised to re-confirm your bank details to this bank as listed.
+Your account Holder's name----------------
+Bank Name----------------------------------------------------------
+Bank address----------------------------------------------
+Account Numbers---------------------------------------
+Rounting-----------------------------------------------------------------
+Your direct Phone Numbers----------------------------------------------
+Note,I have paid the deposit and insurance fees for you
+But the only money you are to send to this bank is $150.00 us dollars
+Been for the wire transfer fees of your funds
+Contact Him now to receive your transfer deposited this morning
+I wait for your reply upon confirmation
+Mrs. Angella Michelle
+Editor, Zenith Bank- Companies Benin
+mrsa9389@gmail.com
