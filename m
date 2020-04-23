@@ -2,59 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 081671B5E33
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 16:47:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D4731B606D
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Apr 2020 18:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgDWOq4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Apr 2020 10:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDWOqz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:46:55 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78E42074F;
-        Thu, 23 Apr 2020 14:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587653215;
-        bh=dKwZcTA1rgXNzu8RlWdM83F/mPA130mSalvzMrCfR5c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WGRv7srctdJKAMqmK8eL+KLDl94Qq12AGW4/+u5N+2s/PfFr4W8aju2QTPOM1c8yO
-         nNXGiVKCmSSYXkJi/a5D98loXkbFfpq6K3zLK627HHMMr/UHwkHxkcE3ap0YL4oqbD
-         fAy2Sj+j+mGN/Ly5MRfly27bv+M+sEkunwv54s0E=
-Date:   Thu, 23 Apr 2020 22:46:44 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
-        aisheng.dong@nxp.com, festevam@gmail.com, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux@roeck-us.net,
-        gregkh@linuxfoundation.org, peng.fan@nxp.com, fugang.duan@nxp.com,
-        krzk@kernel.org, bjorn.andersson@linaro.org, leoyang.li@nxp.com,
-        olof@lixom.net, dinguyen@kernel.org, geert+renesas@glider.be,
-        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] arm64: defconfig: Enable CONFIG_PINCTRL_IMX8DXL by
- default
-Message-ID: <20200423144642.GE9391@dragon>
-References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
- <1585306559-13973-3-git-send-email-Anson.Huang@nxp.com>
+        id S1729308AbgDWQLI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Apr 2020 12:11:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728865AbgDWQLI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:11:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C5FC09B041
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 09:11:07 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id g13so7496632wrb.8
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 09:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Oicma1MBgZbQF2akoDHcSsrFoGKdPLFNTqRTFU/b4M=;
+        b=vrV0fdzsAdC6GW0Pge6WbvUWlL6vp0xmODmIHt/TTJUaZKWP8kcbwJdK+aNBrRGXgP
+         7t5dGR7NEwzjKu+dw40owZRQ/UIrqnY9wFyI4pGbpEb5lI/xi1+coJ/zv60sa7H5DXoq
+         rKvl+lMq2wUfJKnshl0tRNVP2c6b6gFKX/vdEfCwK+BNPFDy4iONwpyrSKpizwYRSC9B
+         zfcN9Eu15TSHWhlL+e615WCuawFC8g56Xgjx7uiEjN5TlAK9Xevu20obO0QJXAHewed1
+         s7Ps4mKKjF6YK3EcusfOaFRz5Ksm1KErFJHU0VjJDzqyIrCKEvDZbaf70pv3m4tTa4pm
+         ggoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Oicma1MBgZbQF2akoDHcSsrFoGKdPLFNTqRTFU/b4M=;
+        b=tyeS4mra5yuOmEQxiSfIkQtV8VvxRfo11rMifi81U6Of8C9DBaPlTvCDw89wbGNV57
+         UE3RylGWrOw4qjMChuqGgUehy8QizVS0vbVCj8qNHQtMrFs6c1U+OiHtsTy050LUjSp2
+         h5ULx7Y9BF5g9xCiZKSstOvl+0rICLcNW/QPzj19q7v6nFUD1QBduH96kfsNTMhDWSov
+         ft8FxcUOeWKFL24fkG63lx/59mpz4jryqU+siB+6vGg7AhMXM37Ztjt+PV3MV7WCu/yM
+         dZJSv3mQlukqUPA83uqSw6pKx22iVJ7uaIbwS47BPzzhrtbWfyv0inr+3s8L5Pk58FaN
+         yfVw==
+X-Gm-Message-State: AGi0PuYVZwLG0BxnU3SHIS2slWdMzfSlgJS0YKem09NnfJ4EGPgXymAA
+        2ejZ+3ruF2JZzNepcKh4EMfnqg==
+X-Google-Smtp-Source: APiQypLzqXV5Dc0IC07dcB9aBwRhf7IUbMoM+3IxhHkAIgWpyVJSDILhjphX8JKQBLZUxtnFwkS6Yg==
+X-Received: by 2002:a5d:4005:: with SMTP id n5mr5673730wrp.242.1587658265881;
+        Thu, 23 Apr 2020 09:11:05 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id 33sm4535466wrp.5.2020.04.23.09.11.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Apr 2020 09:11:05 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.7-rc3
+Date:   Thu, 23 Apr 2020 18:11:01 +0200
+Message-Id: <20200423161101.15993-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585306559-13973-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 06:55:59PM +0800, Anson Huang wrote:
-> Enable CONFIG_PINCTRL_IMX8DXL by default to support i.MX8DXL
-> pinctrl driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Applied, thanks.
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.7-rc3
+
+for you to fetch changes up to 6409d049ce28bef35e13dfb8699fc7ee27469ba1:
+
+  gpiolib: don't call sleeping functions with a spinlock taken (2020-04-23 17:55:27 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.7-rc3
+
+- fix set_config in pca953x
+- improve robustness of the new line watch/unwatch ioctl()
+- fix a bug with caling a sleeping function with spinlock taken
+
+----------------------------------------------------------------
+Adam Ford (1):
+      gpio: pca953x: Fix pca953x_gpio_set_config
+
+Bartosz Golaszewski (2):
+      gpiolib: improve the robustness of watch/unwatch ioctl()
+      gpiolib: don't call sleeping functions with a spinlock taken
+
+ drivers/gpio/gpio-pca953x.c |  2 +-
+ drivers/gpio/gpiolib.c      | 29 ++++++++++++++++++++++++++---
+ 2 files changed, 27 insertions(+), 4 deletions(-)
