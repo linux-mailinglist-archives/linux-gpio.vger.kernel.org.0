@@ -2,100 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 720941B7057
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 11:13:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15DFC1B7132
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 11:50:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgDXJNV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 05:13:21 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:37154 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgDXJNV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Apr 2020 05:13:21 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 630A9B1E84;
-        Fri, 24 Apr 2020 17:13:15 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [113.57.152.160])
-        by smtp.263.net (postfix) whith ESMTP id P17634T139992827418368S1587719594268319_;
-        Fri, 24 Apr 2020 17:13:15 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <b887aa9ef3120df775ab07e15fb52640>
-X-RL-SENDER: caizhaopeng@uniontech.com
-X-SENDER: caizhaopeng@uniontech.com
-X-LOGIN-NAME: caizhaopeng@uniontech.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 113.57.152.160
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   caizhaopeng@uniontech.com
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726582AbgDXJuk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Apr 2020 05:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726193AbgDXJuk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Apr 2020 05:50:40 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD508C09B045;
+        Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x15so4573896pfa.1;
+        Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pbcOhQqKUatbZW3PIFWQB5WseDd9hz4BT+OKuV/Ex7c=;
+        b=TL206/yZkNCWkdT6lTbCRA+yet/mIFpmA/kkvZoeN13bkRghulq4uPnFiTInaph6vu
+         0lsjwi/qCY82okNZ8Cj75SBQEPzEL4oL8QtKOr812oYwJznSfRaUtiYf89kH1av7vp7L
+         G/wzsGsCqgQG9I/K8UBzKMsrl/k5xblLEfKZCN0zpTLHMxsWCtfXSFnmE9Ozdda3P8Q2
+         kjeA6u+jJIKCbFi4RNMCYIUJATEJHDbWEMQZ/DVQpLSrKd/uLBcci5IewrdVnKv7RXKA
+         /rtGkwEWrrzZtt/6HNWEYzDNhr4FveRGf0RXBk0Krjg6DCdspss4ZHQcUmYHMoJktsNr
+         eYqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pbcOhQqKUatbZW3PIFWQB5WseDd9hz4BT+OKuV/Ex7c=;
+        b=h1Z53n6eqbxtYeNCIsrj9RuaWZL+Ki60SKas5pauYwgGmia465/vOtvZUfpVf9QIhm
+         EW6U20lnLJOhTrQmX0rsm7xCm8LZtdB/GMyIkJt+dgZOqq5SUnrWb6rSRiiUGPPBti8Y
+         hwIfA9YyJDjhPm1bLtHKI0DLrWIFCSj1rTfmssux1J3zEJky1pw4KvcVCPtnbiQJd09N
+         +MlUJC2tH0mYYkcR1CnwNfj6WMNUwpOO1D2SlxHRGxDvFcD7AZqX8JRsuXIN2XdfJRAS
+         MWo0L30hR/WdhJNd/qakKubeAUEF4wdWsk+wGe5L0enJxisGnDxk6BwvLAhyxu+ytkV0
+         jhfw==
+X-Gm-Message-State: AGi0PubJ2N/csKljO41W8txMAdvCwFSb33NvXOzaJ2Sg2eHa+0yaO+2C
+        9xtnWla8Feol7EJLb+Rx/zkJl/81mXq4h3yjmnw=
+X-Google-Smtp-Source: APiQypJXXt1pl3u4AK4S+SuhVmIplJPaKhlPqZsOUJSg4hODFktaXH831PhMVdx9Mh7LqK5fPo+AHR2k21LMyjkNLvE=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr8205689pgb.4.1587721838081;
+ Fri, 24 Apr 2020 02:50:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200424091201.568-1-caizhaopeng@uniontech.com>
+In-Reply-To: <20200424091201.568-1-caizhaopeng@uniontech.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Apr 2020 12:50:30 +0300
+Message-ID: <CAHp75VekvqHX_eUm88RQJQiU59hUoxUY=pP4MWsp6xn3os9bPg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: add IRQF_EARLY_RESUME flags with gpio irq
+ for elan touchpad.
+To:     caizhaopeng@uniontech.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Zhangyueqian <zhangyueqian@uniontech.com>,
         Zhangshuang <zhangshuang@uniontech.com>,
         Hualet Wang <wangyaohua@uniontech.com>,
-        Zhanglei <zhanglei@uniontech.com>,
-        Caicai <caizhaopeng@uniontech.com>
-Subject: [PATCH 1/1] pinctrl: add IRQF_EARLY_RESUME flags with gpio irq for elan touchpad.
-Date:   Fri, 24 Apr 2020 17:12:01 +0800
-Message-Id: <20200424091201.568-1-caizhaopeng@uniontech.com>
-X-Mailer: git-send-email 2.11.0
+        Zhanglei <zhanglei@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Caicai <caizhaopeng@uniontech.com>
+On Fri, Apr 24, 2020 at 12:16 PM <caizhaopeng@uniontech.com> wrote:
+>
+> From: Caicai <caizhaopeng@uniontech.com>
+>
+> I had tested two Notebook machines, the Intel i5(or amd ryzen)
+> with elan touchpad, and there's a probability that the touchpad
+> won't work after going to the S3/S4 to wake up, that it would
+> appear no more than 15 times. I found that there's no interrupt
+> to check for /proc/interrupt. It was found that the gpio
+> interrupt of i2c was also not on top. By adding the gpio
+> interrupt flags with IRQF_EARLY_RESUME, now the touchpad tested
+> 200 + times works well.
 
-I had tested two Notebook machines, the Intel i5(or amd ryzen)
-with elan touchpad, and there's a probability that the touchpad
-won't work after going to the S3/S4 to wake up, that it would
-appear no more than 15 times. I found that there's no interrupt
-to check for /proc/interrupt. It was found that the gpio
-interrupt of i2c was also not on top. By adding the gpio
-interrupt flags with IRQF_EARLY_RESUME, now the touchpad tested
-200 + times works well.
+Thanks for the contribution!
 
-Signed-off-by: Caicai <caizhaopeng@uniontech.com>
----
- drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
- drivers/pinctrl/pinctrl-amd.c         | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+You need
+a) to split this to patch per driver (I can't take or speak for AMD
+code, I'm not a maintainer and don't have hardware)
+b) explain what this flag actually means and does
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 8fb6c9668c37..a350dade6aa0 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -1189,7 +1189,7 @@ static int intel_gpio_probe(struct intel_pinctrl *pctrl, int irq)
- 	 * controllers share the same interrupt line.
- 	 */
- 	ret = devm_request_irq(pctrl->dev, irq, intel_gpio_irq,
--			       IRQF_SHARED | IRQF_NO_THREAD,
-+			       IRQF_SHARED | IRQF_NO_THREAD | IRQF_EARLY_RESUME,
- 			       dev_name(pctrl->dev), pctrl);
- 	if (ret) {
- 		dev_err(pctrl->dev, "failed to request interrupt\n");
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 977792654e01..70c37f4da2b1 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -937,7 +937,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_request_irq(&pdev->dev, irq_base, amd_gpio_irq_handler,
--			       IRQF_SHARED, KBUILD_MODNAME, gpio_dev);
-+			       IRQF_SHARED | IRQF_EARLY_RESUME | IRQF_NO_THREAD, KBUILD_MODNAME, gpio_dev);
- 	if (ret)
- 		goto out2;
- 
+On top of that we need to test this widely to avoid regressions.
+
 -- 
-2.20.1
-
-
-
+With Best Regards,
+Andy Shevchenko
