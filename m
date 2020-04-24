@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8847B1B6E42
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 08:39:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C471B6EAA
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 09:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDXGjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 02:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53804 "EHLO
+        id S1726588AbgDXHKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Apr 2020 03:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726008AbgDXGjR (ORCPT
+        by vger.kernel.org with ESMTP id S1726576AbgDXHKl (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Apr 2020 02:39:17 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB0EFC09B046
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 20so9153171qkl.10
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
+        Fri, 24 Apr 2020 03:10:41 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1668C09B045
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 00:10:39 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id v10so4219172qvr.2
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 00:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
-        b=dg9qHz7EDRwXufT/YP6k9XH3SP+J4Xh//jNFQ/EEJX3Nvk0y/SC3n1nt9PMbu0jQ/X
-         VvKHCMu8F94TwPTtc555MwZ0CQ4mT22g0uTSgbO933KX3/H1GcfLmykKQO+SYU0LSpBL
-         WzyVexhmKOfFxDRtOYgaSZXe7uB7Ipi9U9Nx0bG/ahjksO2aD5C7ZELgYFF5qx1Fa+es
-         c/gCbAj0tpavovlvqPWD/tZt9Jufis2GRR3Jg4P008vrb9xN6lOhdU5TudO9A2zcARwL
-         ocjyOXAIweMQdtqDEP+aYenA+/JBp8ExxBuOIxZ12fw96S3t6YFPR/5NUypiLRP90Qfj
-         /W1w==
+        bh=Lj7aW35DO+M7We9UOI+vkxS0Q1SHiDXk8hCy7w5jTmE=;
+        b=ccGT/QtmDoSYhFHcVXKb9or5R6EAyfDThNXzsSHmeDZcTQKBQAmXVdW3eLiVs90rlc
+         xUxzkGOTWXPsPLHnvszjnsmw82S4nejPZeApqeuOae8yVuMFGQ+Sve6h2W8TpaekXQIh
+         FFTBLOmx6t49YyAFzXeAe1CYKgFL6o9NBASHnJ2jqB8gsOIhnqDdueYadlL7RQOjyJjK
+         LqZ9Po9TfYAsfffYMgwmhBRQl9SvQvbAJiNdTrXDD3w6UqmAEIG91vC8aLMoYdbQN/UU
+         c6S6el/jFIZgWe0h70Gm15CMh+r80GQ2uQhmdlpR0mpNwC7JuG0VFDQbommVq3FQFf57
+         AatA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MI+yH4sWs2g+xaF5o8m/k2oPkU56sjfkGtnomIB4E0U=;
-        b=lRjWf8GF6Dp0UWzkiVhTnUOUeF7jJsT4v+/p79xN/6IsRgKfvma87uyTZf3xpdvygz
-         cmmobjUU3nvy81yDwJWMdAHut4gt9fSyzn1Y02NKACMu333L297RL3N4vznFeI7ZSaSc
-         wScAGJ1uTqyvupSG52cxlZTeSlq7A2uioo4cM/sDKa45zKuRW6FW19THzmJmK0INxqgv
-         nuJ3JC7qP6FQMEk3m4ITMdpMIrrawkgFLdle0s4KRnNd3dMrXS2gZRu5CfmOz1A+WMzD
-         H+fAIANVRmwosjDeJo50P4ib6zLefCW6VR2AMXqvlevWWOr12TduUJ02l7rJA9OWq20c
-         m++g==
-X-Gm-Message-State: AGi0PuYnZvN1NeomcDAgwcwPoXyOCn2cUehGixmH5m1PnZDCrPXHn8Tk
-        cnoTJOZm6uxq1nKs8Mw1ugP5HehVvoan7JiYV4gEWg==
-X-Google-Smtp-Source: APiQypJTxoKTMusG3+g6U7mAgMTkBCtd9S+RSwVgV6Ylt84lBEXLVH/cth7Ecc7CdJxpGo1zxG6AXwY9dmwgK2uLDgw=
-X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr7467340qki.120.1587710355206;
- Thu, 23 Apr 2020 23:39:15 -0700 (PDT)
+        bh=Lj7aW35DO+M7We9UOI+vkxS0Q1SHiDXk8hCy7w5jTmE=;
+        b=AIPv04LVRMxZBJT7l9hqxjdvKLr2/qdLXeoXSTMwNTxF979c5KXGFR5SJyn0+vN6VI
+         qGwvgt0RHgvO2Hzn09+Vh+DSBHYrDKA4U12+qvlpB50ETyIvBXrgh52hmZMT7yc41X+8
+         s76qOVBAfs5lhyjp2F3ak/EqNMmrRw0aK95eFvyNI52khwx/xNWaZQBzZqNlhwZJtJqM
+         YPZah6OJuwrxzJp2F2dUA1rC1dvERDPX564YmjRuG9Y65umEVB+wJxir3ZvIp+biKS3O
+         HrgofkyL7Ve0CN58KbZC5TTDMF8sZX6Otge9AG/b+TU/wPgT0E0YFdZJjuyIKxBkQ1Qe
+         AM3g==
+X-Gm-Message-State: AGi0Pub8Xq1ZL57FjI101i8tYv4Kw8MzyiIvg+QznMeu18gBPne59i6m
+        Rczmm78dYezhXaEY7FR/c63O4TLQgovJGeJdZii4Fg==
+X-Google-Smtp-Source: APiQypJ/L+JCBo+Y35s94v6igCtkuAj1kEPqwIs9Upb+zp6FE6NVUQhbwJTacAl7UGyj8ZjacqY6iPSLgfZFWurtfJs=
+X-Received: by 2002:a0c:d7c8:: with SMTP id g8mr7809466qvj.148.1587712239009;
+ Fri, 24 Apr 2020 00:10:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200419163816.19856-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200419163816.19856-1-zhengdejin5@gmail.com>
+References: <20200423203416.133274-1-swboyd@chromium.org>
+In-Reply-To: <20200423203416.133274-1-swboyd@chromium.org>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 24 Apr 2020 08:39:04 +0200
-Message-ID: <CAMpxmJUzrWRuHV-=EOgjd-N-iwhZwVGzF26tH0ybpzZQSP6VJQ@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: fix several typos
-To:     Dejin Zheng <zhengdejin5@gmail.com>
+Date:   Fri, 24 Apr 2020 09:10:28 +0200
+Message-ID: <CAMpxmJUEnpQjPFJUdSKhOwikPqo6NPqFzJf_eT4ju7212x8O9g@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: devprop: Warn if gpio-line-names is too long
+To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Alexandru M Stan <amstan@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,57 +63,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-niedz., 19 kwi 2020 o 18:38 Dejin Zheng <zhengdejin5@gmail.com> napisa=C5=
-=82(a):
+czw., 23 kwi 2020 o 22:34 Stephen Boyd <swboyd@chromium.org> napisa=C5=82(a=
+):
 >
-> Use codespell to fix lots of typos over frontends.
+> Some DT authors (including myself) have messed up the length of
+> gpio-line-names and made it longer than it should be. Add a warning here
+> so that developers can figure out that they've messed up their DT and
+> should fix it.
 >
-> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> Cc: Alexandru M Stan <amstan@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/gpio/gpio-ftgpio010.c | 2 +-
->  drivers/gpio/gpio-mm-lantiq.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  drivers/gpio/gpiolib-devprop.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.=
-c
-> index fbddb1662428..4031164780f7 100644
-> --- a/drivers/gpio/gpio-ftgpio010.c
-> +++ b/drivers/gpio/gpio-ftgpio010.c
-> @@ -193,7 +193,7 @@ static int ftgpio_gpio_set_config(struct gpio_chip *g=
-c, unsigned int offset,
->         if (val =3D=3D deb_div) {
->                 /*
->                  * The debounce timer happens to already be set to the
-> -                * desireable value, what a coincidence! We can just enab=
-le
-> +                * desirable value, what a coincidence! We can just enabl=
-e
->                  * debounce on this GPIO line and return. This happens mo=
-re
->                  * often than you think, for example when all GPIO keys
->                  * on a system are requesting the same debounce interval.
-> diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.=
-c
-> index f460d71b0c92..538e31fe8903 100644
-> --- a/drivers/gpio/gpio-mm-lantiq.c
-> +++ b/drivers/gpio/gpio-mm-lantiq.c
-> @@ -36,7 +36,7 @@ struct ltq_mm {
->   * @chip:     Pointer to our private data structure.
->   *
->   * Write the shadow value to the EBU to set the gpios. We need to set th=
-e
-> - * global EBU lock to make sure that PCI/MTD dont break.
-> + * global EBU lock to make sure that PCI/MTD don't break.
->   */
->  static void ltq_mm_apply(struct ltq_mm *chip)
->  {
+> diff --git a/drivers/gpio/gpiolib-devprop.c b/drivers/gpio/gpiolib-devpro=
+p.c
+> index 53781b253986..26741032fa9e 100644
+> --- a/drivers/gpio/gpiolib-devprop.c
+> +++ b/drivers/gpio/gpiolib-devprop.c
+> @@ -37,8 +37,11 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip=
+,
+>         if (count < 0)
+>                 return;
+>
+> -       if (count > gdev->ngpio)
+> +       if (count > gdev->ngpio) {
+> +               dev_warn(&gdev->dev, "gpio-line-names is length %d but sh=
+ould be at most length %d",
+> +                        count, gdev->ngpio);
+>                 count =3D gdev->ngpio;
+> +       }
+>
+>         names =3D kcalloc(count, sizeof(*names), GFP_KERNEL);
+>         if (!names)
 > --
-> 2.25.0
+> Sent by a computer, using git, on the internet
 >
 
-The subject line should be gpio: <name of the driver>: short message
-
-And please split those into patches for each driver.
+Patch applied, thanks!
 
 Bart
