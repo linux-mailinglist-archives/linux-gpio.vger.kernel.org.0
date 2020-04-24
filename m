@@ -2,172 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0278A1B7D44
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 19:49:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BEC61B7DDC
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 20:29:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDXRtu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 13:49:50 -0400
-Received: from muru.com ([72.249.23.125]:51280 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgDXRtt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Apr 2020 13:49:49 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 3C75E80E7;
-        Fri, 24 Apr 2020 17:50:35 +0000 (UTC)
-Date:   Fri, 24 Apr 2020 10:49:44 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@pdp7.com>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
+        id S1727898AbgDXS3N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Apr 2020 14:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727059AbgDXS3M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Apr 2020 14:29:12 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FECEC09B04A
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 11:29:12 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id r2so10191457ilo.6
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 11:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=o3ECeOnWmOOIX7JhONBpTDrU6V2RncHpVLywz33DaM0=;
+        b=B1/5SqL0yLaKdQZ0nVzCSET6KOFzOezDBatJbZRoANF6iAyGl68o1Z4bZsudRV09sh
+         PnubkcySFifqXIcbIugrfnLPzy1jXIU1LJb6B1TxJAJ454iWUvnlc8zRMNJc0wZm8QNO
+         luAsBYEmRZSzphToZbUw8440p0nnXREQkeZuc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=o3ECeOnWmOOIX7JhONBpTDrU6V2RncHpVLywz33DaM0=;
+        b=PtjwnnjrLa/U571DL1eP86Rp+WOYHkjY7FW5CiEoHV1+xk+kpkdjimG2qrivwrFssD
+         hlliBUIfVuBmZnlAjWRdx4tSPBvgsj22MmirxiGMDWzSRO+DnmT2kBYARNdGEmEKMqhk
+         zWzwTtoqJsOmYm81jNdGgSnVbO8Y6wql2t3Jt9mbEtwl7UneGoFa+58OZ7+eCgn1xkF2
+         l6rDq+IfmDf5L23FNrZXWsUo/wVMH4hcAuTqxIHrFxCiFhf63UCkjhS4yFhPP2q9EywP
+         o5CNAY1KvQTzxFFRhHUkcovs0UzLWCD2oxy/3ZiXcn/41/G2D8nLhmJW0U4duWuiB5Mz
+         snPQ==
+X-Gm-Message-State: AGi0PuYPE7LxfcsqOOJM7CJZoQ6Zmcq2wQxU80oRly7vqEpQIQ0Sj/4j
+        9EthsUrg5YIiG8aHaddC883FoQ==
+X-Google-Smtp-Source: APiQypL779N+IIt95hyM/PzjM4PPg8knZ/jgyJ3ubr7vLM8Nr7bmHptbylBBO3nXHUcwZ+5v2tR6tA==
+X-Received: by 2002:a92:d846:: with SMTP id h6mr8165453ilq.248.1587752951431;
+        Fri, 24 Apr 2020 11:29:11 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id l14sm2047083ioj.12.2020.04.24.11.29.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 11:29:10 -0700 (PDT)
+Subject: Re: [PATCH] selftests: add build/cross-build dependency check script
+To:     "Bird, Tim" <Tim.Bird@sony.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "bamv2005@gmail.com" <bamv2005@gmail.com>,
+        "khilman@baylibre.com" <khilman@baylibre.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: gpio-omap: add support gpiolib bias (pull-up/down) flags?
-Message-ID: <20200424174944.GL37466@atomide.com>
-References: <20200413123921.GA32586@x1>
- <578a51c3-9cb4-91f9-4735-c512bf75553c@ti.com>
- <CAOCHtYg=rM_zP6Wr3bWKfvGpeK7sXLj6GLN3DXSh8JgfqDTcCA@mail.gmail.com>
- <db5e49dc-41b4-2ba5-87b3-f345749d7984@ti.com>
- <CAOCHtYgNH-OUWdKgKLr7U8Zy2OZb=P9Rpsv4mFii+VwU7h-vGA@mail.gmail.com>
- <20200415233712.GA16167@x1>
- <20200416163215.GH37466@atomide.com>
- <20200423131738.GA16584@x1>
- <20200423164208.GF37466@atomide.com>
- <20200424173242.GA25624@x1>
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200414212208.21667-1-skhan@linuxfoundation.org>
+ <374866ac-4519-f367-bdc6-ec8d0c1b6347@infradead.org>
+ <CY4PR13MB1527A6A6F9BCEADAF14A3C6BFDD00@CY4PR13MB1527.namprd13.prod.outlook.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <177a6b62-630d-7b30-dbb6-7e6ca7054790@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 12:29:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200424173242.GA25624@x1>
+In-Reply-To: <CY4PR13MB1527A6A6F9BCEADAF14A3C6BFDD00@CY4PR13MB1527.namprd13.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Drew Fustini <drew@pdp7.com> [200424 17:32]:
-> On Thu, Apr 23, 2020 at 09:42:08AM -0700, Tony Lindgren wrote:
-> > * Drew Fustini <drew@pdp7.com> [200423 13:17]:
-> > > Thanks, Tony.  I was able to apply your patch cleanly to 5.5.9 kernel
-> > > and boot it ok on the PocketBeagle (AM3358) which is what I'm currently
-> > > testing with.  I can switch to 5.7.x but I just happened to be on 5.5.x
-> > > because that is when bias flags were added to gpiolib uapi.
-> > 
-> > OK. BTW, with PocketBeagle and mainline v5.6 kernel, I see the micro-USB
-> > connection always get disconnected after few hours of use. Are you aware
-> > ofthat?
-> > 
-> > This is with the micro-USB configured as acm and ecm gadget via configfs.
+On 4/24/20 11:28 AM, Bird, Tim wrote:
+>> -----Original Message-----
+>> From: linux-kselftest-owner@vger.kernel.org <linux-kselftest-owner@vger.kernel.org> On Behalf Of Randy Dunlap
+>>
+>> On 4/14/20 2:22 PM, Shuah Khan wrote:
+>>> -CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
+>>> -LDLIBS += $(MOUNT_LDLIBS)
+>>> +CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(VAR_CFLAGS)
+>>> +LDLIBS += $(VAR_LDLIBS)
+>>
+>>
+>> (1) Can that series of ../../../.. be replaced by $(objtree)?
+>> If so, that would be much cleaner IMO.
 > 
-> I've been rebooting often as I build new kernels with debug output but I
-> will do a test with 5.6 by leaving it running overnight and see if it gets
-> disrupted.  I use the PocketBeagle with the TechLab PocketCape [0] for
-> kernel development as there is no eMMC to confuse the boot sequence and
-> the TechLab has a seperate USB to serial converter so I can easily see
-> u-boot and kernel console.
-
-Oh OK that looks like a nice cape :)
-
-> I asked Robert Nelson if he'd heard of this issue and he had not.  But he
-> asked how you are powering the board as any blip would probably reset the
-> board instantly as not enough cap's on the PocketBeagle's USB power rail.  
-
-Hmm good point. I recall the pocketbeagle uptime being many days with
-USB stopping enumerating. But yes, this is powered over USB.
-
-> > > I'm a somewhat confused about the difference between the "gpio-ranges"
-> > > property for the gpio[0-3] nodes and the "pinctrl-single,gpio-range"
-> > > property for the am33xx_pinmux node.
-> > > 
-> > > For a test, I tried adding "gpio-ranges" to arch/arm/boot/dts/am33xx-l4.dtsi:
-> > > 
-> > >                         gpio0: gpio@0 {
-> > >                                 compatible = "ti,omap4-gpio";
-> > >                                 gpio-controller;
-> > >                                 #gpio-cells = <2>;
-> > >                                 interrupt-controller;
-> > >                                 #interrupt-cells = <2>;
-> > >                                 reg = <0x0 0x1000>;
-> > >                                 interrupts = <96>;
-> > >                                 gpio-ranges = <&am33xx_pinmux 0 0 1>;
-> > > 			}
-> > 
-> > So the gpio-ranges tells the gpio contorller what pinctrl device pin
-> > to use for configuring things.
+> kselftests doesn't set $(objtree) when it is run directly
+> (ie make -C tools/testing/selftests)
 > 
-> Thanks, that makes sense. 
+> I had my own solution which was to use KBUILD_OUTPUT, like so:
+> This was a patch in my queue, that I didn't send in because I wasn't
+> very happy with it.  I was still considering alternatives.
 > 
-> But in this case, pinctrl-single also needs to parse "gpio-ranges"
-> property from the gpio nodes?
-
-Hmm not sure but don't think so, I think that information comes from
-the calls from gpio-omap.c to pinctrl-single.c.
-
-> > > and "pinctrl-single,gpio-range" like this:
-> > > 
-> > >                                 am33xx_pinmux: pinmux@800 {
-> > >                                         compatible = "pinctrl-single";
-> > >                                         reg = <0x800 0x238>;
-> > >                                         #pinctrl-cells = <1>;
-> > >                                         pinctrl-single,register-width = <32>;
-> > >                                         pinctrl-single,function-mask = <0x7f>;
-> > > 
-> > >                                         pinctrl-single,gpio-range = <&range 0 1 0>;
-> > > 
-> > >                                         range: gpio-range {
-> > >                                                 #pinctrl-single,gpio-range-cells = <3>;
-> > >                                         };
-> > >                                 };
-> > > 
-> > > Do you think both of those properties would be needed?
-> > 
-> > No I don't think so. The pinctrl-single could be additionally
-> > configured for gpio functionality too. For omaps, that gpio
-> > functionality would be mostly limited to output toggling using the
-> > internal pulls. Would be still usable on some systems though.
+> ---------------- (patch)
+> Subject: [PATCH] selftests/vm: use includes from KBUILD_OUTPUT directory
 > 
-> What woud it mean for the pinctrl-single to be configured for gpio
-> functionality?
-
-That would mean that you can also use pinctrl-single as a gp(i)o
-controller in some cases with the pulls instead of gpio-omap.
-
-> Would that be needed for pinctrl_gpio_request() to succeed?
-
-No, that's a separate feature.
-
-> > Also, it's been a while so I don't remember where I started running
-> > into addressing issues though.. My guess is that you will soon hit
-> > them too and notice :)
-> > 
-> > But basically we want to reference the pinctrl pins based on their
-> > physical offset from the padconf base register, and not based on an
-> > invented number in the dts. Well maybe you can describe the problem
-> > further for us to discuss when you see it :)
+> The Makefile for the vm tests was specifying a relative path
+> (in the source directory) for accessing include files.  This
+> doesn't work when the headers files are placed in another
+> directory (with O= or KBUILD_OUTPUT).  It may appear to work,
+> but ends up using includes from the host machine, which may
+> not match the kernel source being compiled against.
 > 
-> Wouldn't the pinctrl pin numbering be from 0 to pcs_device.size /
-> pcs_device.width ?  
+> Without this change, when the program userfaultfd.c was
+> compiled, it generated errors like the following:
+> 
+>      userfaultfd.c:267:21: error: 'UFFD_API_RANGE_IOCTLS_BASIC' undeclared
+>      here (not in a function)
+>        .expected_ioctls = UFFD_API_RANGE_IOCTLS_BASIC,
+>                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>      userfaultfd.c: In function 'uffd_poll_thread':
+>      userfaultfd.c:529:8: error: 'UFFD_EVENT_FORK' undeclared (first use in
+>      this function)
+>         case UFFD_EVENT_FORK:
+>              ^~~~~~~~~~~~~~~
+>      userfaultfd.c:529:8: note: each undeclared identifier is reported only
+>      once for each function it appears in
+>      userfaultfd.c:531:18: error: 'union <anonymous>' has no member named
+>      'fork'
+>          uffd = msg.arg.fork.ufd;
+>                        ^
+> 
+> Change the CFLAGS definition in the Makefile to reference
+> KBUILD_OUTPUT.
+> 
+> Signed-off-by: Tim Bird <tim.bird@sony.com>
+> ---
+>   tools/testing/selftests/vm/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+> index 7f9a8a8..0208659 100644
+> --- a/tools/testing/selftests/vm/Makefile
+> +++ b/tools/testing/selftests/vm/Makefile
+> @@ -3,7 +3,7 @@
+>   uname_M := $(shell uname -m 2>/dev/null || echo not)
+>   ARCH ?= $(shell echo $(uname_M) | sed -e 's/aarch64.*/arm64/')
+>   
+> -CFLAGS = -Wall -I ../../../../usr/include $(EXTRA_CFLAGS)
+> +CFLAGS = -Wall -I $(KBUILD_OUTPUT)/usr/include $(EXTRA_CFLAGS)
+>   LDLIBS = -lrt
+>   TEST_GEN_FILES = compaction_test
+>   TEST_GEN_FILES += gup_benchmark
+> 
 
-Yes. And ideally we'd specify the real register offset rather
-than the index number for the pin also in the dts.
+This should be $(OUTPUT) instead of $(KBUILD_OUTPUT). OUTPUT is
+set by selftests Makefile and lib.mk which is common for all
+tests even when make -C is used for compile.
 
-If that does not work for some reason, then it's best to set up a
-macro to avoid confusion with figuring out the pin index rather
-than look up the register offset in the TRM. But we can figure
-that out once you have something working.
+Using KBUILD_OUTPUT will break other use-cases.
 
-> That index number of the pin plus pcs_device would give the physical
-> address of the padconf register.
+Send me the patch when you are ready.
 
-Right, I'm more concerned what gets put into the dts files
-as that's an ABI.
+kselftest Makefile invokes headers_install from the main Makefile.
 
-Regards,
+This sequence doesn't install headers again when kselftest make
+is done:
 
-Tony
+Main directory:
+# make headers_install
+[headers_install runs]
 
-> [0] https://beagleboard.org/techlab
+# make headers_install
+INSTALL ./usr/include
+[does nothing - headers are there]
+
+make kselftest-all
+make --no-builtin-rules ARCH=x86 -C ../../.. headers_install
+make[2]: Entering directory '/home/shuah/lkml/linux_5.7'
+   INSTALL ./usr/include
+
+[Same here - headers aren't installed]
+
+I didn't check O= and KBUILD_OUTPUT cases though.
+
+thanks,
+-- Shuah
