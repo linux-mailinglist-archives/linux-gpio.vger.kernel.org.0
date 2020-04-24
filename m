@@ -2,95 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 610B11B7A50
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 17:44:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CE61B7B95
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 18:28:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgDXPln (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 11:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbgDXPlm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Apr 2020 11:41:42 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776B2C09B045;
-        Fri, 24 Apr 2020 08:41:42 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 18so4964429pfx.6;
-        Fri, 24 Apr 2020 08:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e6UUELKHTRaIcS4QV07X3ojg7mLYoqqYg7x69qbXEkQ=;
-        b=NxQn4qOKgz8xVV7lxduOyYb3+YCe4TyyGDtxoi9a9lQ43/mbSE75yKhsXIIbBkbjLH
-         cDCvTpXkFsuBO3Klr1iLl3Do97q5nEmBhgZh3m85X0pZGDvtT0khadl95d9OIK1UkSh9
-         x89xDEw1ys0X2IbDopkojpxRd+PtImGMNBOb3avmy/y9HsSezXsK8Wn8hxLjba2cNOB2
-         M0X4VGiwPeFAHBtDXquCH7eP/kas/Euiv10uhm8deETb68oYgIFNTn2z4XMGubVd7vo/
-         wlD/cQr+HHUUqJWLJJFmHswMRLkOnyY8MBhf4keuBf8upBRvBZYOfr35Iq7/Rxhf8hH1
-         boiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e6UUELKHTRaIcS4QV07X3ojg7mLYoqqYg7x69qbXEkQ=;
-        b=UpEcJBEqGqAmOj5keY9o5ad3mdtPedA/gQCrYKF+NuERiQlNyhXEtZqBsA0A+jC8UK
-         0Zer5MHK1vPKMm5n6muxWzYtjRt29eGmRCHGdbDSiuZkrjgAd/rdxP9YupMGoElGn/HU
-         kxSTHVTyh5t0DfvC28TX0we959NNQMM0xRulTB9pi23fkxL0I0KsrX5lRK6yWjEbcN/u
-         PenQXaZ39lAWlplBgBBJlQqzF27LHBnccSBpw92JmlXgRUP+PBj5yE3ZPUGxv9nmR0BE
-         2AmE2afm7/xrKIDX0cBzJ1OvxcqUnGCUhJAQsRqgG9wMUZotR3LNB1XhdolKQ7FChis1
-         gunw==
-X-Gm-Message-State: AGi0PuYqhyQWj56ftTbNH4xq/1nYhAK37yDYPr2y8+aTPqHP3DF1pkrf
-        mQUUkWQPaKH+h2Qsq3kflQLkqc+v1Vg=
-X-Google-Smtp-Source: APiQypLEeCOlNG0+Rqfu88xx7FRmNk43AaBB/EAQTUmGncEwTg9rT0JpRiLBp8O7HKG5LYUF08p1vg==
-X-Received: by 2002:a63:5f4d:: with SMTP id t74mr9844812pgb.385.1587742902107;
-        Fri, 24 Apr 2020 08:41:42 -0700 (PDT)
-Received: from localhost (176.122.158.64.16clouds.com. [176.122.158.64])
-        by smtp.gmail.com with ESMTPSA id v127sm5950379pfv.77.2020.04.24.08.41.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Apr 2020 08:41:41 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2 2/2] gpio: mm-lantiq: Fix small typo
-Date:   Fri, 24 Apr 2020 23:41:03 +0800
-Message-Id: <20200424154103.10311-3-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200424154103.10311-1-zhengdejin5@gmail.com>
-References: <20200424154103.10311-1-zhengdejin5@gmail.com>
+        id S1727841AbgDXQ2q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Apr 2020 12:28:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:39131 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727808AbgDXQ2q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 24 Apr 2020 12:28:46 -0400
+IronPort-SDR: blpGAwZDqpro+lc0ahbbQwYhY6TGcxpRhG/PnVss1FEWoAMXWfh3ahciZgHgZjhb0TMCsz+bHa
+ 2prjJPP9dzVg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2020 09:28:45 -0700
+IronPort-SDR: jeDDky+ZJjvBy2IfDqA0f79rtfkaJHYl2liJyWlpfY/OGX7D97oMfaTjX7fRZtxeSSaGiF5THd
+ s8YRO/Ecc/Hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,311,1583222400"; 
+   d="scan'208";a="259867503"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 24 Apr 2020 09:28:41 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jS1Bz-002sAW-Pb; Fri, 24 Apr 2020 19:28:43 +0300
+Date:   Fri, 24 Apr 2020 19:28:43 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 0/6] Introduce the for_each_set_clump macro
+Message-ID: <20200424162843.GC185537@smile.fi.intel.com>
+References: <20200424122407.GA5523@syed>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424122407.GA5523@syed>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix a spelling typo in gpio-mm-lantiq.c by codespell
-s/dont/don't/
+On Fri, Apr 24, 2020 at 05:54:07PM +0530, Syed Nayyar Waris wrote:
+> This patchset introduces a new generic version of for_each_set_clump. 
+> The previous version of for_each_set_clump8 used a fixed size 8-bit
+> clump, but the new generic version can work with clump of any size but
+> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+> in several GPIO drivers.
 
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v1 -> v2:
-	- split patch v1 (only one patch) into patches for each driver
-	  by Bartosz's suggestion. thanks Bartosz.
+You have broken thread. Please, use --thread when run `git format-patch ...`.
 
- drivers/gpio/gpio-mm-lantiq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
-index f460d71b0c92..538e31fe8903 100644
---- a/drivers/gpio/gpio-mm-lantiq.c
-+++ b/drivers/gpio/gpio-mm-lantiq.c
-@@ -36,7 +36,7 @@ struct ltq_mm {
-  * @chip:     Pointer to our private data structure.
-  *
-  * Write the shadow value to the EBU to set the gpios. We need to set the
-- * global EBU lock to make sure that PCI/MTD dont break.
-+ * global EBU lock to make sure that PCI/MTD don't break.
-  */
- static void ltq_mm_apply(struct ltq_mm *chip)
- {
 -- 
-2.25.0
+With Best Regards,
+Andy Shevchenko
+
 
