@@ -2,121 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CEF41B777E
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 15:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 807F31B7785
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 15:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgDXNvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 09:51:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36404 "EHLO
+        id S1726895AbgDXNvZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Apr 2020 09:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726301AbgDXNvE (ORCPT
+        by vger.kernel.org with ESMTP id S1726301AbgDXNvY (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Apr 2020 09:51:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71CF0C09B045;
-        Fri, 24 Apr 2020 06:51:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c63so10195759qke.2;
-        Fri, 24 Apr 2020 06:51:04 -0700 (PDT)
+        Fri, 24 Apr 2020 09:51:24 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E3FC09B045
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 06:51:24 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id s10so9289754iln.11
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Apr 2020 06:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fgJguWGGGlAwhNoBLU8EzUqvt2IciwBdbaU2eBO5bRQ=;
-        b=ZpSrIlJFDAQM2PzcbDXbif7ws5tgVsC+SiR4zGfEblxvm086ureP8r1nAITfl8TIOy
-         GOkHU0Cscq5l+LM684La5i3gk7cPZbCa2RJz7An5lly6zB7wUEIpwukKeQrxg/oG4JB6
-         1epMl0zCFhVwi6KydpE32wQFW2goQwOzMyRv8uK6V9qzlwSYr1FEZFyRd223cPiKKFae
-         kPQvywYLasJWWSG7jzSITghE7vV8tfJ7Csz9eEV7xaPJMDehUKU3jBZapUnzf0Q/e1Y7
-         zoJcJI1puU/0SYKl7j0YbtGFVfNcoIJ9G+HGChIzjOX48DIis3JCkKaqHiNpBNOyC70x
-         szRA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H+CTATUY43QUl8bEZDT4/FwObgvLqI92c3iLY3Q0w14=;
+        b=OorVP0iSjGLd1uPapODQNsplj1Gqmm+THths8W6ixLi97RC1HqPzC+yrHHWSUiy5gI
+         xxywWUtpL8xY0askqqQCyYo/9yYh3difefwizlJXSrLaXSoi2MlFjXeFtim4v1MBZmhb
+         cL9WD+5t/4pm+RWs/73JhkQkGVcOnXySGMiDE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fgJguWGGGlAwhNoBLU8EzUqvt2IciwBdbaU2eBO5bRQ=;
-        b=t/Jt/vJxZFswOQjE5k/dy+bQoex60vLAvryBlF7MudY1MnKxajXY6oHLN1WNIbhQkP
-         a4UX2HvEBDPTjY/F5/6wiTVxm6r+/uNAde2fZVJyUwWguwPvk2gITNiHlO+Tp19xpCre
-         9pU/X3xJD5Rm8MyqI/V6zPFNEW9NdLWXfbHo7XwxFfGo3EAE6pi5nfso5yJzpQPXatdS
-         j8Kd6j6yfh5Z/Y0N8vfydgBkGavrE9SDELCW3CeALA5uLtMAv4v3YByRsmRCf9HUaiRk
-         m5teFkgjUKjPkj08UORO/Q36N/ryWL5VQHIOiiXcqsndwFtguPHIhPNMlBRioRsTgcZ/
-         eV1A==
-X-Gm-Message-State: AGi0PuYXxP49YLYcUY1zBLMMp91nkPbLBGQ093ZpnW5EzlgmWqZbbVXm
-        yg6QKxa1QoSvYF7lz3RxCUo=
-X-Google-Smtp-Source: APiQypItRiDO2aQPCX87jaYTk5YAO3bdQyOshfgS2sb8Hqf6eQRZZNBqqaJDaEAmj1prQvI5CMGfng==
-X-Received: by 2002:a37:48a:: with SMTP id 132mr9342479qke.390.1587736263497;
-        Fri, 24 Apr 2020 06:51:03 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id z6sm3741966qke.56.2020.04.24.06.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Apr 2020 06:51:02 -0700 (PDT)
-Date:   Fri, 24 Apr 2020 09:50:33 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>,
-        andriy.shevchenko@linux.intel.com, michal.simek@xilinx.com,
-        arnd@arndb.de, rrichter@marvell.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, yamada.masahiro@socionext.com,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-arch@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 0/6] Introduce the for_each_set_clump macro
-Message-ID: <20200424135011.GA3255@icarus>
-References: <20200424122407.GA5523@syed>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H+CTATUY43QUl8bEZDT4/FwObgvLqI92c3iLY3Q0w14=;
+        b=VJRqtv/gA+lRE8p8kByzxXq//H4hoIKaXpQT4tbLlN39kuOWjBuOhOiEtXsJ/m9XiD
+         +XfJY7OTsoSEEJWCuXvExFIxRR9Cy3F73ORQTgi7xHCf5V44v2EHpcB2GDFVMo4EZ2MR
+         tS1bh2J8t/twyJUGaejfjkExvFqcd1Yz8gN7nkV4DVXPjtJjU4XNileUkW+DV7PC4XVy
+         477+LZ3qSIQppfYhWDtZ51PsRyoNTE0cWrzlkyo4Uf2RYT1dDHLldlNlo+RC6me2J7lP
+         cLiAwVNaewdgEAA5nU4TxC1DZYIO8c5SGnbcCpkEfX2/mItiym8ihk136PyEikKcV7u2
+         iDww==
+X-Gm-Message-State: AGi0PuadIp9HPZDHL3k3l3PQoIc0v4KqtEsjWcXIOZjmlj+99XdYJbkg
+        FqrWOS3pwSdjR04NAqdVlo2ukA==
+X-Google-Smtp-Source: APiQypLTkc2GkWL/T3rx0fb+9zJAX28z3GYjexeUDoq25xwzohe8uX2ewDoXKCyKUWlZ8oR3mAf0aw==
+X-Received: by 2002:a92:d744:: with SMTP id e4mr8832181ilq.174.1587736284020;
+        Fri, 24 Apr 2020 06:51:24 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h82sm2101809ila.14.2020.04.24.06.51.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Apr 2020 06:51:23 -0700 (PDT)
+Subject: Re: [PATCH] selftests: add build/cross-build dependency check script
+To:     Randy Dunlap <rdunlap@infradead.org>, shuah@kernel.org,
+        bamv2005@gmail.com, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200414212208.21667-1-skhan@linuxfoundation.org>
+ <374866ac-4519-f367-bdc6-ec8d0c1b6347@infradead.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <734b0bac-ace3-13fc-b8d1-e317a8512c08@linuxfoundation.org>
+Date:   Fri, 24 Apr 2020 07:51:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
-Content-Disposition: inline
-In-Reply-To: <20200424122407.GA5523@syed>
+In-Reply-To: <374866ac-4519-f367-bdc6-ec8d0c1b6347@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 4/23/20 9:25 PM, Randy Dunlap wrote:
+> Hi,
+> 
+> On 4/14/20 2:22 PM, Shuah Khan wrote:
+>> -CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(MOUNT_CFLAGS)
+>> -LDLIBS += $(MOUNT_LDLIBS)
+>> +CFLAGS += -O2 -g -std=gnu99 -Wall -I../../../../usr/include/ $(VAR_CFLAGS)
+>> +LDLIBS += $(VAR_LDLIBS)
+> 
+> 
+> (1) Can that series of ../../../.. be replaced by $(objtree)?
+> If so, that would be much cleaner IMO.
+> 
 
---WYTEVAkct0FjGQmd
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed. It can be done in a separate patch. We have other tests that
+do similar hard coded header paths.
 
-On Fri, Apr 24, 2020 at 05:54:07PM +0530, Syed Nayyar Waris wrote:
-> This patchset introduces a new generic version of for_each_set_clump.=20
-> The previous version of for_each_set_clump8 used a fixed size 8-bit
-> clump, but the new generic version can work with clump of any size but
-> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro=
-=20
-> in several GPIO drivers.
+> (2) I can't find anything that checks that ../../../../usr/include exists
+> (or has been installed via 'make headers_install').  Or anything that
+> requires that CONFIG_HEADERS_INSTALL be set/enabled.  Well, other than
+> a Makefile error, but that's not a nice way to find out.
+> 
 
-Regarding the nomenclature, I created the term "clump" to represent an
-8-bit value that was not necessarily a byte yet was a contiguous
-grouping of bits. With this patchset, we now have a more generic
-for_each_set_clump macro that can handle values larger and smaller than
-8-bits.
+At the moment no. When this Makefile is fixed, that is another check
+to add. It is addressed by headers install during selftest make.
 
-Would it make sense to retire the term "clump" and instead use "nbits"
-where applicable, in order to match the existing convention used by the
-bitmap functions; for instance, would it be better to name this macro
-for_each_set_nbits?
+Headers are installed as part of selftests make since selftests are
+often dependent on recent headers and headers install is a necessary
+step.
 
-William Breathitt Gray
+You are right. There are several tests that need cleanup for such
+hard coded values and this dependency check script in this patch
+currently does libs check. My plan is to extend this to check for
+headers installed or not and flag headers as missing dependency.
 
---WYTEVAkct0FjGQmd
-Content-Type: application/pgp-signature; name="signature.asc"
+I can do that in my next version of this dependency check script.
 
------BEGIN PGP SIGNATURE-----
+thanks,
+-- Shuah
 
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl6i7qkACgkQhvpINdm7
-VJIciBAA4lGCd+eUHQXeYgvLK14UXVfbjASoiUjFVFetkDeXj+GGFQG7W/fVMxrM
-LoJV4wXwNl9qyedfdNI8aZmjUwF2Tyy+XEaxo/wa6XyfIXvKrqDYNpESIhvFgMv9
-BcxDVlWrMixZ440pQqqFRfGx7bLM2pryn05hh5yr46Y3kZZRISeAlygC+cZfDmzT
-O7KXcRIB4ZTeZ0irSlLKsEFpp42YIKUX+gt3zwkxSoRIhfBRToE2KU42oLhez48t
-WuUHpZ2TexCV35B+QAjjAXqMdnL3Rg43pRCJG614VuvSleY2hAkED5lqMlt0SIh4
-4kEbvK/fea2QInYY/WA5EKxtFka9huXJ1dhqqUUSFFQfUPhqA/GSxpZ+5o7EeWjr
-v4d4uzg897E5BwZhrWOJUHBIfA4LXkQMV+ZGL1ijWmNnYy3uigREGZYrNylShQ1O
-INlHzTcoqy++g+kETBV/MEZJWGbtqRGqr4/u1UaECO/Ccy0cHDhp9mQ0JmSoXdQe
-pIIhBDfm3raffCMVjSqfVToHENxHuwqcTIgxJ+CAR7j2BOAF/oeNULgsKnRZrfMu
-UE32VfmG2xXdHiqw4R/fBzK1g/DLF7c04RYBPjY7S1/Tvrox9dTnfJbPA1r4KB35
-vIQf2L/hGGV/F/IRYgVdtVVVNaB3qEsrimj0CJjnpQYNkE3fUoM=
-=A+Kx
------END PGP SIGNATURE-----
 
---WYTEVAkct0FjGQmd--
