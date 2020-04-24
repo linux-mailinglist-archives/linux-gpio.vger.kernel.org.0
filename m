@@ -2,41 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 467951B6F8B
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 10:07:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB51B1B6FDB
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Apr 2020 10:36:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgDXIHM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Apr 2020 04:07:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42824 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDXIHM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Apr 2020 04:07:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id m18so10934569otq.9;
-        Fri, 24 Apr 2020 01:07:11 -0700 (PDT)
+        id S1726723AbgDXIg1 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 24 Apr 2020 04:36:27 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:43261 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbgDXIg1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Apr 2020 04:36:27 -0400
+Received: by mail-oo1-f66.google.com with SMTP id d21so1937057ook.10;
+        Fri, 24 Apr 2020 01:36:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tzIFhflCUpW0vlwD+HN499aTW1TuNaMPbwNcI/YnbU8=;
-        b=sSX50AOTW8dUpnYE+Fuki2PZITmeLRO2PtouLIrv57IVcQz0IpnI4UWvD99MmD22yG
-         SAWGvNwBFbajaf2NXazrw13oSgONZZzVIEipsFpGgNCEMKxzkTXVsSOzRxdH+T18CD2M
-         1vJcwMfEmF0chAmi4ptV146nIChqbDtplA60esmVB1mD0hzAqP5ICjmEnoeJ2PWTrXHr
-         HOYEHExELPJ+QQ/ITljVEPHhGyAkTfNxfTFNFu1c+ZXcg2Ttb54u9+BuP35RbAL3a6fr
-         xJJFo19E6jBwuAgtvkjYUIKA5Kav+fmHqVhGY9bFQwzluIN5S6zKlOC/Wh5FzPx3sNHH
-         xs1Q==
-X-Gm-Message-State: AGi0PuZv9BDBONgIydasA6ozGJSt1zrtVm6AZp/b831RR8clkn6PwCGJ
-        r7LibU1b08ZCKqT/nlAXXLjnCDbRYkxNPYWz2AzHapEy
-X-Google-Smtp-Source: APiQypKQNbeN4mNtj3QtUc1MVDLrUbKP4GFG3yBb1TIc/Bv8Ot642D/RYCQ/hI/TESa0U15+fXMnRv0n9KoFV8tx1ZE=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr6433482otn.107.1587715630830;
- Fri, 24 Apr 2020 01:07:10 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XKUviGQehYQsdPKsJqlt0d2ewH3Dpwogjgl85Dr+3Rw=;
+        b=XY5fHa7oE/1dGjuGiinKTT0AdqNxEX1tt8Zkkd0M68pryp5dJicpudxWnVUO0ydrxQ
+         lCCZCrLKyN3U0A0kH3rkv5IU/bWGe4QoHG97RPHbtBxRnLBtiOlQJyJz/I/gJscqBvFk
+         81EOMxcclPJdmqetgdy/ws+o/BBKAQoDEMei198qzWAiitvbKZXi1KLYhn9m7YCgEDkR
+         Pl9LqsUR1lMvQeowurAARU4OVzI/QnFw8M5KeSEUhlg4g6+6rx3kbxsM9lBR/mc5bA+k
+         EGQ79x+u7s5qs9cVWK1vzVH5Ju5HuL+rpubHBIBDtcEpNUO2LhA0Fn7Uw9UfgHtmh/wN
+         8j6g==
+X-Gm-Message-State: AGi0PubwIcPkRZVqAv9D8XN2OPuVXm3u+s2NRPKcMRAk5Q7WWAeX+81e
+        kdVC2rkGdver4TNGwbiYgGY8Lpn9F+fLoqXsARo=
+X-Google-Smtp-Source: APiQypIVddFc2avRWYGOIH6oeKGojSMgUbJRYGpyiRb64rLZ7Aov6VHeA2Aewh2TWUmXLDJs8MbOEd1c/ZrcZ7neZb4=
+X-Received: by 2002:a4a:eb08:: with SMTP id f8mr6964772ooj.1.1587717385908;
+ Fri, 24 Apr 2020 01:36:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200422101026.9220-1-erosca@de.adit-jv.com> <20200422101026.9220-2-erosca@de.adit-jv.com>
-In-Reply-To: <20200422101026.9220-2-erosca@de.adit-jv.com>
+References: <20200422101026.9220-1-erosca@de.adit-jv.com> <20200422101026.9220-3-erosca@de.adit-jv.com>
+In-Reply-To: <20200422101026.9220-3-erosca@de.adit-jv.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 24 Apr 2020 10:06:59 +0200
-Message-ID: <CAMuHMdXvrBHuBpVbJ=fUcRsQ9qk4Q3Lr13DeJjiHanN3f8K+1g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio-rcar: Add optional
- use-alternative-interrupt property
+Date:   Fri, 24 Apr 2020 10:36:14 +0200
+Message-ID: <CAMuHMdUV-179XEVF9UMdiB6p_2gQeWJKz+25qCfn+b_h8VSdcQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] gpio: rcar: Add support for GPIO alternative interrupt
 To:     Eugeniu Rosca <erosca@de.adit-jv.com>
 Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -60,8 +59,10 @@ Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Eugeniu Rosca <rosca.eugeniu@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -70,48 +71,71 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 Hi Eugeniu,
 
 CC devicetree
+CC Stefano
+
+Thanks for forwarding this patch!
 
 On Wed, Apr 22, 2020 at 12:11 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
 > From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
 >
-> When setting this property, you must set alternate interrupt number in
-> the 'interrupts' property.
+> INTC-AP accepts both GPIO interrupt and GPIO alternative interrupt,
+> but INTC-RT can only handle GPIO interrupt, as depicted in below excerpt
+> from 'Figure 7.1 GPIO Block Configuration (1)' of
+> 'R-Car3 HW User's Manual Rev.2.00, Jul 2019':
 >
+>   +------------------------------+
+>   | Interrupt  display register  +----> GPIO.ch*  (to INTC-AP, INTC-RT)
+>   |           (INTDTn)           +----> GPIO.ch*A (to INTC-AP)
+>   +------------------------------+
+
+Note that GPIO.ch[67]A seem to be available on INTC-RT, too. But for
+the other channels, you're right in that the "A" variants are connected
+to INTC-AP only.
+
+> It seems to be also the case for earlier Renesas SoCs like RZ/G,
+> as per 'Figure 6.1 GPIO Block Configuration' in
+> 'RZ/G Series User’s Manual: Hardware Rev.1.00 Sep 2016' [1].
+
+On R-Car Gen2, they're called "EXT_INT" resp. "EXT_ALT_INT" instead of
+"GPIO.ch*" and "GPIO.ch*A".
+
+> To reduce the interference between RT domain (CR7/SH) and the AP domain
+> (Cortex A5x) and to independently control GPIO interrupts in these two
+> domains, add support for processing GPIO alternative interrupts in AP.
+>
+> This allows handling normal GPIO interrupts exclusively by INTC-RT.
+> The change is DT-driven and depends on the enablement of the
+> 'use-alternative-interrupt' DTS property.
+>
+> One caveat is that the 'interrupts' property update must go hand in hand
+> with the newly added 'use-alternative-interrupt' property.
+
+As I replied to the DT bindings patch, I think the "interrupts" property
+should contain both, so "use-alternative-interrupt" can pick the one it
+needs.
+
 > Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> [erosca: tidy up the descriptions/comments]
+> [erosca: enrich commit description]
 > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-Thanks for your/forwarding this patch!
+[actual patch[1] deleted, as it doesn't really matter for the discussion].
 
-> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-> @@ -50,6 +50,9 @@ Optional properties:
->    - clocks: Must contain a reference to the functional clock.  The property is
->      mandatory if the hardware implements a controllable functional clock for
->      the GPIO instance.
-> +  - use-alternative-interrupt: Use 'alternative' GPIO interrupt instead
+You may want to look at "LTD20-205 System Device Tree Project"[2],
+where Stefano talks about using DT to describe the full system
+(I've read the slides, but haven't watched the video yet).
 
-renesas,use-alternative-interrupt?
-(unless you can convince Rob this becomes a generic property).
+Your patch shows that the assumption "All devices have interrupts routed
+to both interrupt controllers" isn't always true.
 
-> +    of 'normal' GPIO interrupt. When you specify this property, you must
-> +    also change the 'interrupts' DT property.
-
-In light of "DT describes the hardware", I think you should instead list
-both interrupts in DT.  I.e. first/single interrupt is the normal one,
-second optional interrupt is the alternative one.
-
-On R-Car Gen2, the oldest SoC family with this feature I could find,
-they are called "ext_int" resp. "ext_alt_int", so introducing the
-optional "clock-names" property would be a good idea, too.
-
->    - gpio-reserved-ranges: See gpio.txt.
+[1] https://lore.kernel.org/linux-gpio/20200422101026.9220-3-erosca@de.adit-jv.com/
+[2] https://connect.linaro.org/resources/ltd20/ltd20-205/
 
 Gr{oetje,eeting}s,
 
                         Geert
 
--- 
+
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
