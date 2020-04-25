@@ -2,678 +2,418 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D32CD1B8767
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2020 17:38:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A58431B87EE
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2020 19:03:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgDYPia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Apr 2020 11:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbgDYPi3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 25 Apr 2020 11:38:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 586A620704;
-        Sat, 25 Apr 2020 15:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587829108;
-        bh=Ds8KaQrPpt8EHTTpcgg2zmlfWdozEAB00KrvzGKb6js=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RAIHf7+UtfbIPbo4W53F5kc5sf/4onjLbcYstU7IQSz9+MFOEz0ctNPTSNK4zO3pk
-         ZOvhLhKptGvCsmcv95R39NgkLjIq7qO/N21byl5CES5uzCMdn7wdtyhXE7WbHlVqSm
-         M90864ef3Euu13pQao0SeFe43/kOqBFRsgF2xy3k=
-Date:   Sat, 25 Apr 2020 16:38:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        id S1726399AbgDYRCz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Apr 2020 13:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726156AbgDYRCy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 25 Apr 2020 13:02:54 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165C2C09B04D;
+        Sat, 25 Apr 2020 10:02:54 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k18so4983893pll.6;
+        Sat, 25 Apr 2020 10:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VBIKmrJmiLWT4Ougw5jkUobA+4SdhZWTwHOXjczvwT8=;
+        b=F1xHEvaM/b0ETQppnfeYOtPh30ENq2JghHVih6jnKJLKWHYcJGY+xrsuK3WO83ZqJx
+         z0pucKqy8sY00PZVachPpDczSX62gIOpqRdgHD7OuRop8AWrYpQGvcokOJluORRgY7wb
+         n5dmX1cCrT9fnHHz843nHVYboBmN/LopNAySkSD0CFmWcx7CxIf8zfM/aTqOf3Yxwg1A
+         JX5k+O0rLeXxIRNbnNoUDiwcgPwWpEkCR9Y/nRXtrg7iN13m/LgfT2yZ0KyUSgwTVbKA
+         8Lh6z2F/xT69/sqzw5bwuxS0R4qk9Y5ClcO2c7kBJCKOKCvG7RczXvIjsAGkaBZ1eoH4
+         5HZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VBIKmrJmiLWT4Ougw5jkUobA+4SdhZWTwHOXjczvwT8=;
+        b=V0s9UTkJPyfDr+1+6YGN35vqOUS6c2YAoYcqldqFNeIy/qsUEdO0fHBA2RPnND6+s2
+         szmgIQTIJ7HJcW61KOo/2GoFeDo8xl2CNike95F55wi1Maos8vGsSJtkSWmsBQqcPGUG
+         oRvoe0JUzYYj49CU7H0yMb6Pd9aOJ/gJop/mc1r2odK/s10tDdAcQX4hjDPFqGbP0MPV
+         NurTmCYck/nUCahlMFqIiiK7C5urLMy/XQgSKQv/REjvoyXeAsTY079vsRhowXcnJpQU
+         EMLjWJFvpTrF0K+AbjuqZt3FviS6SPnyPJ3sgwo4Nb7n25xaI+cxSO8QC03GjSjnfviV
+         quJg==
+X-Gm-Message-State: AGi0PuaaK1Q2lm/XPru7PaDMddRTzU5tG5ZdEv4LUJm+yHLrz6/vC24m
+        Fzw3wviJD41Q+v3IETTMBiI=
+X-Google-Smtp-Source: APiQypLt+dLMSaesv3UmaS6qMNSUbYz8bicIkLNwhtfCAYBPi7k45+K175L6T0qLP+x69lMz7tEucw==
+X-Received: by 2002:a17:90a:a893:: with SMTP id h19mr13405208pjq.138.1587834173439;
+        Sat, 25 Apr 2020 10:02:53 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z5sm8397473pfn.142.2020.04.25.10.02.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Apr 2020 10:02:52 -0700 (PDT)
+Subject: Re: [PATCH v3 07/16] watchdog: add support for sl28cpld watchdog
+To:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 2/2] irq/irq_sim: simplify the API
-Message-ID: <20200425163823.58257e33@archlinux>
-In-Reply-To: <20200417080549.23751-3-brgl@bgdev.pl>
-References: <20200417080549.23751-1-brgl@bgdev.pl>
-        <20200417080549.23751-3-brgl@bgdev.pl>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-8-michael@walle.cc>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <eaa00592-8b9b-458e-f445-c7f7b5bcd007@roeck-us.net>
+Date:   Sat, 25 Apr 2020 10:02:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200423174543.17161-8-michael@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 17 Apr 2020 10:05:49 +0200
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On 4/23/20 10:45 AM, Michael Walle wrote:
+> This adds support for the watchdog of the sl28cpld board management
+> controller. This is part of a multi-function device driver.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The interrupt simulator API exposes a lot of custom data structures and
-> functions and doesn't reuse the interfaces already exposed by the irq
-> subsystem. This patch tries to address it.
-> 
-> We hide all the simulator-related data structures from users and instead
-> rely on the well-known irq domain. When creating the interrupt simulator
-> the user receives a pointer to a newly created irq_domain and can use it
-> to create mappings for simulated interrupts.
-> 
-> It is also possible to pass a handle to fwnode when creating the simulator
-> domain and retrieve it using irq_find_matching_fwnode().
-> 
-> The irq_sim_fire() function now only takes the virtual interrupt number
-> as argument - there's no need anymore to pass it any data structure linked
-> to the simulator.
-> 
-> We modify the two modules that use the simulator at the same time as
-> adding these changes in order to reduce the intermediate bloat that would
-> result when trying to migrate the drivers in separate patches.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-I'm not going to comment on the more generic bits as I don't have
-time today to learn enough about it. IIO changes look sensible to me.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  drivers/gpio/gpio-mockup.c          |  47 ++++--
->  drivers/iio/dummy/iio_dummy_evgen.c |  32 ++--
->  include/linux/irq_sim.h             |  34 ++---
->  kernel/irq/Kconfig                  |   1 +
->  kernel/irq/irq_sim.c                | 225 +++++++++++++++++-----------
->  5 files changed, 202 insertions(+), 137 deletions(-)
+>  drivers/watchdog/Kconfig        |  11 ++
+>  drivers/watchdog/Makefile       |   1 +
+>  drivers/watchdog/sl28cpld_wdt.c | 233 ++++++++++++++++++++++++++++++++
+>  3 files changed, 245 insertions(+)
+>  create mode 100644 drivers/watchdog/sl28cpld_wdt.c
 > 
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 3eb94f3740d1..941a967296c4 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -14,6 +14,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/irq_sim.h>
-> +#include <linux/irqdomain.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
-> @@ -48,7 +49,7 @@ struct gpio_mockup_line_status {
->  struct gpio_mockup_chip {
->  	struct gpio_chip gc;
->  	struct gpio_mockup_line_status *lines;
-> -	struct irq_sim irqsim;
-> +	struct irq_domain *irq_sim_domain;
->  	struct dentry *dbg_dir;
->  	struct mutex lock;
->  };
-> @@ -144,14 +145,12 @@ static void gpio_mockup_set_multiple(struct gpio_chip *gc,
->  static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
->  				  unsigned int offset, int value)
->  {
-> +	int curr, irq, irq_type, ret = 0;
->  	struct gpio_desc *desc;
->  	struct gpio_chip *gc;
-> -	struct irq_sim *sim;
-> -	int curr, irq, irq_type;
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 0663c604bd64..6c53c1d0f348 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -340,6 +340,17 @@ config MLX_WDT
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called mlx-wdt.
 >  
->  	gc = &chip->gc;
->  	desc = &gc->gpiodev->descs[offset];
-> -	sim = &chip->irqsim;
->  
->  	mutex_lock(&chip->lock);
->  
-> @@ -161,14 +160,24 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
->  		if (curr == value)
->  			goto out;
->  
-> -		irq = irq_sim_irqnum(sim, offset);
-> +		irq = irq_find_mapping(chip->irq_sim_domain, offset);
-> +		if (!irq)
-> +			/*
-> +			 * This is fine - it just means, nobody is listening
-> +			 * for interrupts on this line, otherwise
-> +			 * irq_create_mapping() would have been called from
-> +			 * the to_irq() callback.
-> +			 */
-> +			goto set_value;
+> +config SL28CPLD_WATCHDOG
+> +	tristate "Kontron sl28 watchdog"
+> +	depends on MFD_SL28CPLD
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  on the Kontron sl28 CPLD.
 > +
->  		irq_type = irq_get_trigger_type(irq);
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called sl28cpld_wdt.
+> +
+>  # ALPHA Architecture
 >  
->  		if ((value == 1 && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
->  		    (value == 0 && (irq_type & IRQ_TYPE_EDGE_FALLING)))
-> -			irq_sim_fire(sim, offset);
-> +			irq_sim_fire(irq);
->  	}
->  
-> +set_value:
->  	/* Change the value unless we're actively driving the line. */
->  	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
->  	    !test_bit(FLAG_IS_OUT, &desc->flags))
-> @@ -177,7 +186,7 @@ static int gpio_mockup_apply_pull(struct gpio_mockup_chip *chip,
->  out:
->  	chip->lines[offset].pull = value;
->  	mutex_unlock(&chip->lock);
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int gpio_mockup_set_config(struct gpio_chip *gc,
-> @@ -236,7 +245,7 @@ static int gpio_mockup_to_irq(struct gpio_chip *gc, unsigned int offset)
->  {
->  	struct gpio_mockup_chip *chip = gpiochip_get_data(gc);
->  
-> -	return irq_sim_irqnum(&chip->irqsim, offset);
-> +	return irq_create_mapping(chip->irq_sim_domain, offset);
->  }
->  
->  static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
-> @@ -389,6 +398,19 @@ static int gpio_mockup_name_lines(struct device *dev,
->  	return 0;
->  }
->  
-> +static void gpio_mockup_dispose_mappings(void *data)
+>  # ARM Architecture
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 6de2e4ceef19..b9ecdf2d7347 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -224,3 +224,4 @@ obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
+>  obj-$(CONFIG_MENZ069_WATCHDOG) += menz69_wdt.o
+>  obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
+>  obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
+> +obj-$(CONFIG_SL28CPLD_WATCHDOG) += sl28cpld_wdt.o
+> diff --git a/drivers/watchdog/sl28cpld_wdt.c b/drivers/watchdog/sl28cpld_wdt.c
+> new file mode 100644
+> index 000000000000..2640084ace5c
+> --- /dev/null
+> +++ b/drivers/watchdog/sl28cpld_wdt.c
+> @@ -0,0 +1,233 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld watchdog driver.
+> + *
+> + * Copyright 2019 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/watchdog.h>
+> +
+> +/*
+> + * Watchdog timer block registers.
+> + */
+> +#define WDT_CTRL			0x00
+> +#define  WDT_CTRL_EN			BIT(0)
+> +#define  WDT_CTRL_LOCK			BIT(2)
+> +#define  WDT_CTRL_ASSERT_SYS_RESET	BIT(6)
+> +#define  WDT_CTRL_ASSERT_WDT_TIMEOUT	BIT(7)
+> +#define WDT_TIMEOUT			0x01
+> +#define WDT_KICK			0x02
+> +#define  WDT_KICK_VALUE			0x6b
+> +#define WDT_COUNT			0x03
+> +
+> +#define WDT_DEFAULT_TIMEOUT		10
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static int timeout;
+> +module_param(timeout, int, 0);
+> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
+> +
+> +struct sl28cpld_wdt {
+> +	struct watchdog_device wdd;
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +	bool assert_wdt_timeout;
+> +};
+> +
+> +static int sl28cpld_wdt_ping(struct watchdog_device *wdd)
 > +{
-> +	struct gpio_mockup_chip *chip = data;
-> +	struct gpio_chip *gc = &chip->gc;
-> +	int i, irq;
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
 > +
-> +	for (i = 0; i < gc->ngpio; i++) {
-> +		irq = irq_find_mapping(chip->irq_sim_domain, i);
-> +		if (irq)
-> +			irq_dispose_mapping(irq);
-> +	}
+> +	return regmap_write(wdt->regmap, wdt->offset + WDT_KICK,
+> +			    WDT_KICK_VALUE);
 > +}
 > +
->  static int gpio_mockup_probe(struct platform_device *pdev)
->  {
->  	struct gpio_mockup_chip *chip;
-> @@ -456,8 +478,13 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->  			return rv;
->  	}
->  
-> -	rv = devm_irq_sim_init(dev, &chip->irqsim, gc->ngpio);
-> -	if (rv < 0)
-> +	chip->irq_sim_domain = devm_irq_domain_create_sim(dev, NULL,
-> +							  gc->ngpio);
-> +	if (IS_ERR(chip->irq_sim_domain))
-> +		return PTR_ERR(chip->irq_sim_domain);
-> +
-> +	rv = devm_add_action_or_reset(dev, gpio_mockup_dispose_mappings, chip);
-> +	if (rv)
->  		return rv;
->  
->  	rv = devm_gpiochip_add_data(dev, &chip->gc, chip);
-> diff --git a/drivers/iio/dummy/iio_dummy_evgen.c b/drivers/iio/dummy/iio_dummy_evgen.c
-> index a6edf30567aa..31c9e012abeb 100644
-> --- a/drivers/iio/dummy/iio_dummy_evgen.c
-> +++ b/drivers/iio/dummy/iio_dummy_evgen.c
-> @@ -37,8 +37,7 @@ struct iio_dummy_eventgen {
->  	struct iio_dummy_regs regs[IIO_EVENTGEN_NO];
->  	struct mutex lock;
->  	bool inuse[IIO_EVENTGEN_NO];
-> -	struct irq_sim irq_sim;
-> -	int base;
-> +	struct irq_domain *irq_sim_domain;
->  };
->  
->  /* We can only ever have one instance of this 'device' */
-> @@ -46,19 +45,17 @@ static struct iio_dummy_eventgen *iio_evgen;
->  
->  static int iio_dummy_evgen_create(void)
->  {
-> -	int ret;
-> -
->  	iio_evgen = kzalloc(sizeof(*iio_evgen), GFP_KERNEL);
->  	if (!iio_evgen)
->  		return -ENOMEM;
->  
-> -	ret = irq_sim_init(&iio_evgen->irq_sim, IIO_EVENTGEN_NO);
-> -	if (ret < 0) {
-> +	iio_evgen->irq_sim_domain = irq_domain_create_sim(NULL,
-> +							  IIO_EVENTGEN_NO);
-> +	if (IS_ERR(iio_evgen->irq_sim_domain)) {
->  		kfree(iio_evgen);
-> -		return ret;
-> +		return PTR_ERR(iio_evgen->irq_sim_domain);
->  	}
->  
-> -	iio_evgen->base = irq_sim_irqnum(&iio_evgen->irq_sim, 0);
->  	mutex_init(&iio_evgen->lock);
->  
->  	return 0;
-> @@ -80,7 +77,7 @@ int iio_dummy_evgen_get_irq(void)
->  	mutex_lock(&iio_evgen->lock);
->  	for (i = 0; i < IIO_EVENTGEN_NO; i++) {
->  		if (!iio_evgen->inuse[i]) {
-> -			ret = irq_sim_irqnum(&iio_evgen->irq_sim, i);
-> +			ret = irq_create_mapping(iio_evgen->irq_sim_domain, i);
->  			iio_evgen->inuse[i] = true;
->  			break;
->  		}
-> @@ -101,21 +98,27 @@ EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_irq);
->   */
->  void iio_dummy_evgen_release_irq(int irq)
->  {
-> +	struct irq_data *irqd = irq_get_irq_data(irq);
-> +
->  	mutex_lock(&iio_evgen->lock);
-> -	iio_evgen->inuse[irq - iio_evgen->base] = false;
-> +	iio_evgen->inuse[irqd_to_hwirq(irqd)] = false;
-> +	irq_dispose_mapping(irq);
->  	mutex_unlock(&iio_evgen->lock);
->  }
->  EXPORT_SYMBOL_GPL(iio_dummy_evgen_release_irq);
->  
->  struct iio_dummy_regs *iio_dummy_evgen_get_regs(int irq)
->  {
-> -	return &iio_evgen->regs[irq - iio_evgen->base];
-> +	struct irq_data *irqd = irq_get_irq_data(irq);
-> +
-> +	return &iio_evgen->regs[irqd_to_hwirq(irqd)];
-> +
->  }
->  EXPORT_SYMBOL_GPL(iio_dummy_evgen_get_regs);
->  
->  static void iio_dummy_evgen_free(void)
->  {
-> -	irq_sim_fini(&iio_evgen->irq_sim);
-> +	irq_domain_remove_sim(iio_evgen->irq_sim_domain);
->  	kfree(iio_evgen);
->  }
->  
-> @@ -131,7 +134,7 @@ static ssize_t iio_evgen_poke(struct device *dev,
->  {
->  	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
->  	unsigned long event;
-> -	int ret;
-> +	int ret, irq;
->  
->  	ret = kstrtoul(buf, 10, &event);
->  	if (ret)
-> @@ -140,7 +143,8 @@ static ssize_t iio_evgen_poke(struct device *dev,
->  	iio_evgen->regs[this_attr->address].reg_id   = this_attr->address;
->  	iio_evgen->regs[this_attr->address].reg_data = event;
->  
-> -	irq_sim_fire(&iio_evgen->irq_sim, this_attr->address);
-> +	irq = irq_find_mapping(iio_evgen->irq_sim_domain, this_attr->address);
-> +	irq_sim_fire(irq);
->  
->  	return len;
->  }
-> diff --git a/include/linux/irq_sim.h b/include/linux/irq_sim.h
-> index 4500d453a63e..26bf6164dcc7 100644
-> --- a/include/linux/irq_sim.h
-> +++ b/include/linux/irq_sim.h
-> @@ -1,41 +1,27 @@
->  /* SPDX-License-Identifier: GPL-2.0+ */
->  /*
->   * Copyright (C) 2017-2018 Bartosz Golaszewski <brgl@bgdev.pl>
-> + * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
->   */
->  
->  #ifndef _LINUX_IRQ_SIM_H
->  #define _LINUX_IRQ_SIM_H
->  
-> -#include <linux/irq_work.h>
->  #include <linux/device.h>
-> +#include <linux/fwnode.h>
-> +#include <linux/irqdomain.h>
->  
->  /*
->   * Provides a framework for allocating simulated interrupts which can be
->   * requested like normal irqs and enqueued from process context.
->   */
->  
-> -struct irq_sim_work_ctx {
-> -	struct irq_work		work;
-> -	unsigned long		*pending;
-> -};
-> -
-> -struct irq_sim_irq_ctx {
-> -	int			irqnum;
-> -	bool			enabled;
-> -};
-> -
-> -struct irq_sim {
-> -	struct irq_sim_work_ctx	work_ctx;
-> -	int			irq_base;
-> -	unsigned int		irq_count;
-> -	struct irq_sim_irq_ctx	*irqs;
-> -};
-> -
-> -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs);
-> -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
-> -		      unsigned int num_irqs);
-> -void irq_sim_fini(struct irq_sim *sim);
-> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset);
-> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset);
-> +struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
-> +					 unsigned int num_irqs);
-> +struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
-> +					      struct fwnode_handle *fwnode,
-> +					      unsigned int num_irqs);
-> +void irq_domain_remove_sim(struct irq_domain *domain);
-> +void irq_sim_fire(int virq);
->  
->  #endif /* _LINUX_IRQ_SIM_H */
-> diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-> index 20d501af4f2e..d63c324895ea 100644
-> --- a/kernel/irq/Kconfig
-> +++ b/kernel/irq/Kconfig
-> @@ -72,6 +72,7 @@ config IRQ_DOMAIN
->  config IRQ_SIM
->  	bool
->  	select IRQ_WORK
-> +	select IRQ_DOMAIN
->  
->  # Support for hierarchical irq domains
->  config IRQ_DOMAIN_HIERARCHY
-> diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
-> index b992f88c5613..575c1e3d32a9 100644
-> --- a/kernel/irq/irq_sim.c
-> +++ b/kernel/irq/irq_sim.c
-> @@ -1,14 +1,30 @@
->  // SPDX-License-Identifier: GPL-2.0+
->  /*
->   * Copyright (C) 2017-2018 Bartosz Golaszewski <brgl@bgdev.pl>
-> + * Copyright (C) 2020 Bartosz Golaszewski <bgolaszewski@baylibre.com>
->   */
->  
-> -#include <linux/slab.h>
-> -#include <linux/irq_sim.h>
->  #include <linux/irq.h>
-> +#include <linux/irq_sim.h>
-> +#include <linux/irq_work.h>
-> +#include <linux/slab.h>
-> +
-> +struct irq_sim_work_ctx {
-> +	struct irq_work		work;
-> +	int			irq_base;
-> +	unsigned int		irq_count;
-> +	unsigned long		*pending;
-> +	struct irq_domain	*domain;
-> +};
-> +
-> +struct irq_sim_irq_ctx {
-> +	int			irqnum;
-> +	bool			enabled;
-> +	struct irq_sim_work_ctx	*work_ctx;
-> +};
->  
->  struct irq_sim_devres {
-> -	struct irq_sim		*sim;
-> +	struct irq_domain	*domain;
->  };
->  
->  static void irq_sim_irqmask(struct irq_data *data)
-> @@ -47,148 +63,179 @@ static void irq_sim_handle_irq(struct irq_work *work)
->  {
->  	struct irq_sim_work_ctx *work_ctx;
->  	unsigned int offset = 0;
-> -	struct irq_sim *sim;
->  	int irqnum;
->  
->  	work_ctx = container_of(work, struct irq_sim_work_ctx, work);
-> -	sim = container_of(work_ctx, struct irq_sim, work_ctx);
->  
-> -	while (!bitmap_empty(work_ctx->pending, sim->irq_count)) {
-> +	while (!bitmap_empty(work_ctx->pending, work_ctx->irq_count)) {
->  		offset = find_next_bit(work_ctx->pending,
-> -				       sim->irq_count, offset);
-> +				       work_ctx->irq_count, offset);
->  		clear_bit(offset, work_ctx->pending);
-> -		irqnum = irq_sim_irqnum(sim, offset);
-> +		irqnum = irq_find_mapping(work_ctx->domain, offset);
->  		handle_simple_irq(irq_to_desc(irqnum));
->  	}
->  }
->  
-> +static int irq_sim_domain_map(struct irq_domain *domain,
-> +			      unsigned int virq, irq_hw_number_t hw)
+> +static int sl28cpld_wdt_start(struct watchdog_device *wdd)
 > +{
-> +	struct irq_sim_work_ctx *work_ctx = domain->host_data;
-> +	struct irq_sim_irq_ctx *irq_ctx;
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int val;
 > +
-> +	irq_ctx = kzalloc(sizeof(*irq_ctx), GFP_KERNEL);
-> +	if (!irq_ctx)
+> +	val = WDT_CTRL_EN | WDT_CTRL_ASSERT_SYS_RESET;
+> +	if (wdt->assert_wdt_timeout)
+> +		val |= WDT_CTRL_ASSERT_WDT_TIMEOUT;
+> +	if (nowayout)
+> +		val |= WDT_CTRL_LOCK;
+> +
+> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
+> +				  val, val);
+> +}
+> +
+> +static int sl28cpld_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_update_bits(wdt->regmap, wdt->offset + WDT_CTRL,
+> +				  WDT_CTRL_EN, 0);
+> +}
+> +
+> +static unsigned int sl28cpld_wdt_get_timeleft(struct watchdog_device *wdd)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_COUNT, &val);
+> +
+> +	return (ret < 0) ? 0 : val;
+> +}
+> +
+> +static int sl28cpld_wdt_set_timeout(struct watchdog_device *wdd,
+> +				    unsigned int timeout)
+> +{
+> +	struct sl28cpld_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	int ret;
+> +
+> +	ret = regmap_write(wdt->regmap, wdt->offset + WDT_TIMEOUT, timeout);
+> +	if (!ret)
+> +		wdd->timeout = timeout;
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct watchdog_info sl28cpld_wdt_info = {
+> +	.options = WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
+> +	.identity = "sl28cpld watchdog",
+> +};
+> +
+> +static struct watchdog_ops sl28cpld_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = sl28cpld_wdt_start,
+> +	.stop = sl28cpld_wdt_stop,
+> +	.ping = sl28cpld_wdt_ping,
+> +	.set_timeout = sl28cpld_wdt_set_timeout,
+> +	.get_timeleft = sl28cpld_wdt_get_timeleft,
+> +};
+> +
+> +static int sl28cpld_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct watchdog_device *wdd;
+> +	struct sl28cpld_wdt *wdt;
+> +	struct resource *res;
+> +	unsigned int status;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
 > +		return -ENOMEM;
 > +
-> +	irq_set_chip(virq, &irq_sim_irqchip);
-> +	irq_set_chip_data(virq, irq_ctx);
-> +	irq_set_handler(virq, handle_simple_irq);
-> +	irq_modify_status(virq, IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
-> +	irq_ctx->work_ctx = work_ctx;
+> +	wdt->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!wdt->regmap)
+> +		return -ENODEV;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +	wdt->offset = res->start;
+> +
+> +	wdt->assert_wdt_timeout = device_property_read_bool(&pdev->dev,
+> +							    "kontron,assert-wdt-timeout-pin");
+> +
+> +	/* initialize struct watchdog_device */
+> +	wdd = &wdt->wdd;
+> +	wdd->parent = &pdev->dev;
+> +	wdd->info = &sl28cpld_wdt_info;
+> +	wdd->ops = &sl28cpld_wdt_ops;
+> +	wdd->min_timeout = 1;
+> +	wdd->max_timeout = 255;
+> +
+> +	watchdog_set_drvdata(wdd, wdt);
+> +	watchdog_stop_on_reboot(wdd);
+> +
+> +	/*
+> +	 * Read the status early, in case of an error, we haven't modified the
+> +	 * hardware.
+> +	 */
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_CTRL, &status);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Initial timeout value, may be overwritten by device tree or module
+> +	 * parmeter in watchdog_init_timeout().
+> +	 *
+> +	 * Reading a zero here means that either the hardware has a default
+> +	 * value of zero (which is very unlikely and definitely a hardware
+> +	 * bug) or the bootloader set it to zero. In any case, we handle
+> +	 * this case gracefully and set out own timeout.
+> +	 */
+> +	ret = regmap_read(wdt->regmap, wdt->offset + WDT_TIMEOUT, &val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (val)
+> +		wdd->timeout = val;
+> +	else
+> +		wdd->timeout = WDT_DEFAULT_TIMEOUT;
+> +
+> +	watchdog_init_timeout(wdd, timeout, &pdev->dev);
+> +	sl28cpld_wdt_set_timeout(wdd, wdd->timeout);
+> +
+> +	/* if the watchdog is locked, we set nowayout */
+> +	if (status & WDT_CTRL_LOCK)
+> +		nowayout = true;
+> +	watchdog_set_nowayout(wdd, nowayout);
+> +
+> +	/*
+> +	 * If watchdog is already running, keep it enabled, but make
+> +	 * sure its mode is set correctly.
+> +	 */
+> +	if (status & WDT_CTRL_EN) {
+> +		sl28cpld_wdt_start(wdd);
+> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +	}
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, wdd);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "initial timeout %d sec%s\n",
+> +		 wdd->timeout, nowayout ? ", nowayout" : "");
 > +
 > +	return 0;
 > +}
 > +
-> +static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
-> +{
-> +	struct irq_sim_irq_ctx *irq_ctx;
-> +	struct irq_data *irqd;
-> +
-> +	irqd = irq_domain_get_irq_data(domain, virq);
-> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
-> +
-> +	irq_set_handler(virq, NULL);
-> +	irq_domain_reset_irq_data(irqd);
-> +	kfree(irq_ctx);
-> +}
-> +
-> +static const struct irq_domain_ops irq_sim_domain_ops = {
-> +	.map		= irq_sim_domain_map,
-> +	.unmap		= irq_sim_domain_unmap,
+> +static const struct of_device_id sl28cpld_wdt_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-wdt" },
+> +	{},
 > +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_wdt_of_match);
 > +
->  /**
-> - * irq_sim_init - Initialize the interrupt simulator: allocate a range of
-> - *                dummy interrupts.
-> + * irq_domain_create_sim - Create a new interrupt simulator irq_domain and
-> + *                         allocate a range of dummy interrupts.
->   *
-> - * @sim:        The interrupt simulator object to initialize.
-> - * @num_irqs:   Number of interrupts to allocate
-> + * @fnode:      struct fwnode_handle to be associated with this domain.
-> + * @num_irqs:   Number of interrupts to allocate.
->   *
-> - * On success: return the base of the allocated interrupt range.
-> - * On failure: a negative errno.
-> + * On success: return a new irq_domain object.
-> + * On failure: a negative errno wrapped with ERR_PTR().
->   */
-> -int irq_sim_init(struct irq_sim *sim, unsigned int num_irqs)
-> +struct irq_domain *irq_domain_create_sim(struct fwnode_handle *fwnode,
-> +					 unsigned int num_irqs)
->  {
-> -	int i;
-> +	struct irq_sim_work_ctx *work_ctx;
->  
-> -	sim->irqs = kmalloc_array(num_irqs, sizeof(*sim->irqs), GFP_KERNEL);
-> -	if (!sim->irqs)
-> -		return -ENOMEM;
-> +	work_ctx = kmalloc(sizeof(*work_ctx), GFP_KERNEL);
-> +	if (!work_ctx)
-> +		goto err_out;
->  
-> -	sim->irq_base = irq_alloc_descs(-1, 0, num_irqs, 0);
-> -	if (sim->irq_base < 0) {
-> -		kfree(sim->irqs);
-> -		return sim->irq_base;
-> -	}
-> +	work_ctx->pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
-> +	if (!work_ctx->pending)
-> +		goto err_free_work_ctx;
->  
-> -	sim->work_ctx.pending = bitmap_zalloc(num_irqs, GFP_KERNEL);
-> -	if (!sim->work_ctx.pending) {
-> -		kfree(sim->irqs);
-> -		irq_free_descs(sim->irq_base, num_irqs);
-> -		return -ENOMEM;
-> -	}
-> +	work_ctx->domain = irq_domain_create_linear(fwnode, num_irqs,
-> +						    &irq_sim_domain_ops,
-> +						    work_ctx);
-> +	if (!work_ctx->domain)
-> +		goto err_free_bitmap;
->  
-> -	for (i = 0; i < num_irqs; i++) {
-> -		sim->irqs[i].irqnum = sim->irq_base + i;
-> -		sim->irqs[i].enabled = false;
-> -		irq_set_chip(sim->irq_base + i, &irq_sim_irqchip);
-> -		irq_set_chip_data(sim->irq_base + i, &sim->irqs[i]);
-> -		irq_set_handler(sim->irq_base + i, &handle_simple_irq);
-> -		irq_modify_status(sim->irq_base + i,
-> -				  IRQ_NOREQUEST | IRQ_NOAUTOEN, IRQ_NOPROBE);
-> -	}
-> +	work_ctx->irq_count = num_irqs;
-> +	init_irq_work(&work_ctx->work, irq_sim_handle_irq);
->  
-> -	init_irq_work(&sim->work_ctx.work, irq_sim_handle_irq);
-> -	sim->irq_count = num_irqs;
-> +	return work_ctx->domain;
->  
-> -	return sim->irq_base;
-> +err_free_bitmap:
-> +	bitmap_free(work_ctx->pending);
-> +err_free_work_ctx:
-> +	kfree(work_ctx);
-> +err_out:
-> +	return ERR_PTR(-ENOMEM);
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_init);
-> +EXPORT_SYMBOL_GPL(irq_domain_create_sim);
->  
->  /**
-> - * irq_sim_fini - Deinitialize the interrupt simulator: free the interrupt
-> - *                descriptors and allocated memory.
-> + * irq_domain_remove_sim - Deinitialize the interrupt simulator domain: free
-> + *                         the interrupt descriptors and allocated memory.
->   *
-> - * @sim:        The interrupt simulator to tear down.
-> + * @domain:     The interrupt simulator domain to tear down.
->   */
-> -void irq_sim_fini(struct irq_sim *sim)
-> +void irq_domain_remove_sim(struct irq_domain *domain)
->  {
-> -	irq_work_sync(&sim->work_ctx.work);
-> -	bitmap_free(sim->work_ctx.pending);
-> -	irq_free_descs(sim->irq_base, sim->irq_count);
-> -	kfree(sim->irqs);
-> +	struct irq_sim_work_ctx *work_ctx = domain->host_data;
+> +static const struct platform_device_id sl28cpld_wdt_id_table[] = {
+> +	{ "sl28cpld-wdt" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, sl28cpld_wdt_id_table);
 > +
-> +	irq_work_sync(&work_ctx->work);
-> +	bitmap_free(work_ctx->pending);
-> +	kfree(work_ctx);
+> +static struct platform_driver sl28cpld_wdt_driver = {
+> +	.probe = sl28cpld_wdt_probe,
+> +	.id_table = sl28cpld_wdt_id_table,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = sl28cpld_wdt_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_wdt_driver);
 > +
-> +	irq_domain_remove(domain);
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_fini);
-> +EXPORT_SYMBOL_GPL(irq_domain_remove_sim);
->  
-> -static void devm_irq_sim_release(struct device *dev, void *res)
-> +static void devm_irq_domain_release_sim(struct device *dev, void *res)
->  {
->  	struct irq_sim_devres *this = res;
->  
-> -	irq_sim_fini(this->sim);
-> +	irq_domain_remove_sim(this->domain);
->  }
->  
->  /**
-> - * irq_sim_init - Initialize the interrupt simulator for a managed device.
-> + * devm_irq_domain_create_sim - Create a new interrupt simulator for
-> + *                              a managed device.
->   *
->   * @dev:        Device to initialize the simulator object for.
-> - * @sim:        The interrupt simulator object to initialize.
-> + * @fnode:      struct fwnode_handle to be associated with this domain.
->   * @num_irqs:   Number of interrupts to allocate
->   *
-> - * On success: return the base of the allocated interrupt range.
-> - * On failure: a negative errno.
-> + * On success: return a new irq_domain object.
-> + * On failure: a negative errno wrapped with ERR_PTR().
->   */
-> -int devm_irq_sim_init(struct device *dev, struct irq_sim *sim,
-> -		      unsigned int num_irqs)
-> +struct irq_domain *devm_irq_domain_create_sim(struct device *dev,
-> +					      struct fwnode_handle *fwnode,
-> +					      unsigned int num_irqs)
->  {
->  	struct irq_sim_devres *dr;
-> -	int rv;
->  
-> -	dr = devres_alloc(devm_irq_sim_release, sizeof(*dr), GFP_KERNEL);
-> +	dr = devres_alloc(devm_irq_domain_release_sim,
-> +			  sizeof(*dr), GFP_KERNEL);
->  	if (!dr)
-> -		return -ENOMEM;
-> +		return ERR_PTR(-ENOMEM);
->  
-> -	rv = irq_sim_init(sim, num_irqs);
-> -	if (rv < 0) {
-> +	dr->domain = irq_domain_create_sim(fwnode, num_irqs);
-> +	if (IS_ERR(dr->domain)) {
->  		devres_free(dr);
-> -		return rv;
-> +		return dr->domain;
->  	}
->  
-> -	dr->sim = sim;
->  	devres_add(dev, dr);
-> -
-> -	return rv;
-> +	return dr->domain;
->  }
-> -EXPORT_SYMBOL_GPL(devm_irq_sim_init);
-> +EXPORT_SYMBOL_GPL(devm_irq_domain_create_sim);
->  
->  /**
->   * irq_sim_fire - Enqueue an interrupt.
->   *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt which should be fired.
-> + * @virq:       Virtual interrupt number to fire. It must be associated with
-> + *              an existing interrupt simulator.
->   */
-> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
-> +void irq_sim_fire(int virq)
->  {
-> -	if (sim->irqs[offset].enabled) {
-> -		set_bit(offset, sim->work_ctx.pending);
-> -		irq_work_queue(&sim->work_ctx.work);
-> +	struct irq_sim_irq_ctx *irq_ctx;
-> +	struct irq_data *irqd;
-> +
-> +	irqd = irq_get_irq_data(virq);
-> +	if (!irqd) {
-> +		pr_warn_ratelimited("%s: invalid irq number\n", __func__);
-> +		return;
->  	}
-> -}
-> -EXPORT_SYMBOL_GPL(irq_sim_fire);
->  
-> -/**
-> - * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
-> - *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt for which to retrieve
-> - *              the number.
-> - */
-> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
-> -{
-> -	return sim->irqs[offset].irqnum;
-> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
-> +
-> +	if (irq_ctx->enabled) {
-> +		set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
-> +		irq_work_queue(&irq_ctx->work_ctx->work);
-> +	}
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
-> +EXPORT_SYMBOL_GPL(irq_sim_fire);
+> +MODULE_DESCRIPTION("sl28cpld Watchdog Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+> 
 
