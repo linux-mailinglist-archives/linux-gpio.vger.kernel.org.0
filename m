@@ -2,97 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38D171B892A
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2020 21:54:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA891B8967
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Apr 2020 22:39:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgDYTyc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Apr 2020 15:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34528 "EHLO
+        id S1726398AbgDYUix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Apr 2020 16:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgDYTyb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Apr 2020 15:54:31 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A643C09B04D;
-        Sat, 25 Apr 2020 12:54:30 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id w4so14377163ioc.6;
-        Sat, 25 Apr 2020 12:54:30 -0700 (PDT)
+        with ESMTP id S1726190AbgDYUix (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Apr 2020 16:38:53 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA99C09B04D;
+        Sat, 25 Apr 2020 13:38:51 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id f8so10603098lfe.12;
+        Sat, 25 Apr 2020 13:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mfnbKcCpJbWCQA0NeNDV+FBZxx+MPYQOlwXCT1OUxm4=;
-        b=oEnWezvbQ0wLmJ3qpYZUMG6fbo/KEIDRrkdrDctwvp4YFJ9YXWnIq/LA+w0I00Cw0B
-         aad4R8G5mNnojDY8/cxBsmY/RSiVeIVuJ5o8q4hp614Bs8LNlsLso3VMks3z+KGINn0v
-         ctGRZSO0HmO6lzjhR8Gi9m3nEUICojaY0OfFGtG4LyA3aJrh/CBsBzqrMcymk3lN8ukc
-         5sHaRvEBwI7t0MF0KipcbccT2AIcBCkyRGzfrLXsVsT2bdol5TR8M0tZLUW/LarkmKR0
-         1CCsknhX4Ymmh9i50cZ7XyfS9zGOS6cnRslBa7hfeMcmb94Pmer7ul2fRfIok0/859Uk
-         cosw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IUZuK6LrVH3Ngu6B46nOOKkYisDzi/1XwA762HMgff0=;
+        b=V2ezzqMUTDBZh9cXerwSV1N/6v6QpdkeM22Ea5I5UDtoo4CEea7X1Hxo0Fr7RCD1gC
+         0hf45J6VrCrwHYTU+ESNXFHgS31f846moyZ9GTFiK0NGVuzGUrzpdpLIMr2ADOVkSfS7
+         grx+gvWBqigYqt2TPdGg9I1apOQyptpwoLfFCWG1fQqBcVxdxrGhVvjulw0hEQFS9SIf
+         VtGFTVO7gPIayq2OQnFWoNFYKRwHnMn39pU2Detvrh772ORrbs3SxS0XuXl7gZ5r+DXH
+         5uLQK17roLW7wg0EA2FLBGbxOM+9qIcp0ge+F9aHD0MaoB3hkgduCXijXfmvBzVNqVX0
+         QFWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mfnbKcCpJbWCQA0NeNDV+FBZxx+MPYQOlwXCT1OUxm4=;
-        b=qc76CmFIfRxePKPZDDvd7Cs3qsOCxqbc3TfukgjEYUl+/mYY+PYePmZ7FcMGMGCE5a
-         ft6pNDIfziXDfRdOPW3XwsIVoQrFoLeXDFPUbcVfXXMx4k6bLHj/DfyK8bOFHql/P+np
-         oDi/Uh0x9P9RFDtZ7uKzGBdFqWsX+MAh6I0cYSUWfVs3KXEPoZECjS9u3i6CdlsMeBQD
-         drkoeXp1X1KXH+4UE0hX76FjebEQCSobMjO9vs6yf2rF2Ieej1pjDmWkZDisk5iKDbLe
-         o3DP0kju5YMCViWPXzZyTLuhNbIYtq/yGsUR9U3PQA+FikLYWpSwkDqGYSWum4T89nC7
-         kn4Q==
-X-Gm-Message-State: AGi0PuYW27zBgi/Pi2isCl6eWu02nToWEEe8avOqnB4te1Q3kHhKxHfS
-        MF2uDbVdgsB+SFN7BlI9n75yYF95S2hyQcsM0Zo=
-X-Google-Smtp-Source: APiQypJ9fBT7OSqx8QDi4cFo8f9HY1o/iD3UGfefjuzCIkvL6m2Qz8zpz+Fc5LCLfaghvnfs1hSk6OGANzTFANVcYK0=
-X-Received: by 2002:a02:cbac:: with SMTP id v12mr13485718jap.103.1587844469555;
- Sat, 25 Apr 2020 12:54:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IUZuK6LrVH3Ngu6B46nOOKkYisDzi/1XwA762HMgff0=;
+        b=h84Fc4r6Kcx+XJaNgRnpGAMfTPa27PXoSDglSgkvCn95aKH69eGC7yefFq6+yy73Lr
+         7v5o7prlUWW0hNPvQ5t0aWAgr2rHwaf1n/0k12+us4rfcdrs8r3wnpurSGpRR5qv9ENX
+         Fokbc3LB+zI3RCjIqkijvU81I+OYAUf7hpnnkT3b9/51ASfDfh20U+o3sf7m72lYHaX1
+         d5Z7kBVQ9ntqd4cBStx6Nvlf1vGM3vgg2su/YJieI62cm1///rSLzHi5VAahRZ1X7CDx
+         RpivgsQPc6NMdwUtxLvciLVvW+XuAqu00bMQSOmWIvQkPqThd7gn2wCvPFssS/sAVsPn
+         TfEg==
+X-Gm-Message-State: AGi0PuaVEMXMqdShL4XpUp3fl8Q6MsrS8yHBhXHhG4Xo1a2AcONwavtw
+        7ARA7Hm654rBiaNyFQlZY4E926c+vkg=
+X-Google-Smtp-Source: APiQypKWMYnecAtML7dO7IHXnSDWqvdkhR4jlNMbXyQK3Bxsqk9YJiG92B98HoHamKEkCbQYfzDUcQ==
+X-Received: by 2002:a19:ee06:: with SMTP id g6mr10588140lfb.90.1587847129476;
+        Sat, 25 Apr 2020 13:38:49 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-165.NA.cust.bahnhof.se. [82.196.111.165])
+        by smtp.gmail.com with ESMTPSA id l7sm7981806lfg.79.2020.04.25.13.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Apr 2020 13:38:48 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, nishkadg.linux@gmail.com,
+        matti.vaittinen@fi.rohmeurope.com, chenjh@rock-chips.com,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] pinctrl: rk805: Constify rk805_gpio_cfgs
+Date:   Sat, 25 Apr 2020 22:38:13 +0200
+Message-Id: <20200425203813.6442-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <cover.1587840667.git.syednwaris@gmail.com> <66296904e2ffce670c14576dfc7ea56417c670ab.1587840668.git.syednwaris@gmail.com>
- <20200425192607.qa2jr7ef2g726txr@wunner.de>
-In-Reply-To: <20200425192607.qa2jr7ef2g726txr@wunner.de>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Sun, 26 Apr 2020 01:24:18 +0530
-Message-ID: <CACG_h5pVEQ8+LGogWo4Ea+8OcRz1edudJPWL8SytGdaAc8xabw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] gpio: thermal: Utilize for_each_set_clump macro
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, yamada.masahiro@socionext.com,
-        rui.zhang@intel.com, Daniel Lezcano <daniel.lezcano@linaro.org>,
-        amit.kucheria@verdurent.com, linux-gpio@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Apr 26, 2020 at 12:56 AM Lukas Wunner <lukas@wunner.de> wrote:
->
-> On Sun, Apr 26, 2020 at 12:35:02AM +0530, Syed Nayyar Waris wrote:
-> > This patch replaces all the existing for_each_set_clump8 and related
-> > function calls in the drivers (gpio and thermal) with the equivalent
-> > new generic for_each_set_clump macro.
->
-> Why are patches [3/6] and [4/6] included in v2 even though William
-> said they should be ignored?
->
-> Again, replacing for_each_set_clump8() with for_each_set_clump()
-> does not provide any benefit but may impact performance and makes
-> the code more difficult to follow.  So once more, please do not
-> change drivers which are known to work fine with 8 bit clumps,
-> specifically gpio-max3191x.c and gpio-74x164.c.
->
-> Please in the future include a list of the changes you've made
-> in the cover letter, not just in each individual patch.
->
-> Thanks,
->
-> Lukas
+Mark pin_cfg as const, allowing the compiler to put the struct in
+.rodata instead of .data.
 
-Hi Lukas,
-Your concerns are noted. [3/6] and [4/6] won't be included in the next
-version v3 of the patchset.
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/pinctrl/pinctrl-rk805.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Regards
-Syed Nayyar Waris
+diff --git a/drivers/pinctrl/pinctrl-rk805.c b/drivers/pinctrl/pinctrl-rk805.c
+index cccbe072274e..c6f4229eb106 100644
+--- a/drivers/pinctrl/pinctrl-rk805.c
++++ b/drivers/pinctrl/pinctrl-rk805.c
+@@ -73,7 +73,7 @@ struct rk805_pctrl_info {
+ 	int num_pin_groups;
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int num_pins;
+-	struct rk805_pin_config *pin_cfg;
++	const struct rk805_pin_config *pin_cfg;
+ };
+ 
+ enum rk805_pinmux_option {
+@@ -121,7 +121,7 @@ static const struct rk805_pin_group rk805_pin_groups[] = {
+ #define RK805_GPIO0_VAL_MSK	BIT(0)
+ #define RK805_GPIO1_VAL_MSK	BIT(1)
+ 
+-static struct rk805_pin_config rk805_gpio_cfgs[] = {
++static const struct rk805_pin_config rk805_gpio_cfgs[] = {
+ 	{
+ 		.reg = RK805_OUT_REG,
+ 		.val_msk = RK805_GPIO0_VAL_MSK,
+-- 
+2.26.2
+
