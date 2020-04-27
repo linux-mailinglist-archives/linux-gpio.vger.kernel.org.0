@@ -2,105 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C501BA2E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2020 13:45:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD4AE1BA581
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2020 15:57:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgD0LpP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Apr 2020 07:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgD0LpO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Apr 2020 07:45:14 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC26C0610D5;
-        Mon, 27 Apr 2020 04:45:14 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jT2C4-0001Mi-Mv; Mon, 27 Apr 2020 13:45:00 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1C40E100606; Mon, 27 Apr 2020 13:45:00 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Michael Walle <michael@walle.cc>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v3 11/16] gpio: add support for the sl28cpld GPIO controller
-In-Reply-To: <20200423174543.17161-12-michael@walle.cc>
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-12-michael@walle.cc>
-Date:   Mon, 27 Apr 2020 13:45:00 +0200
-Message-ID: <87k121qhj7.fsf@nanos.tec.linutronix.de>
+        id S1727006AbgD0N5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Apr 2020 09:57:01 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42857 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgD0N5A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Apr 2020 09:57:00 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m18so26194421otq.9;
+        Mon, 27 Apr 2020 06:57:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lbW4CP+foDZ7c7LiUzqrWQ0Yn8i7eKW7LGOFzJFSjRk=;
+        b=TlpzW9uOKqrCvDYgdR0vIYgnLI2Sd2U4PQUJ02dLh1VIaVhnmTmZ6cDs2IPMWl9Bdh
+         3v83dwrbHc7OmRK5IeNov2Z+vCVx2BEUXegv5wnJBzgIulGH2Jlym1WtqtHVlFMdPBmL
+         8Rq7eVIph9DTNKlYC/d4sKL6eAYdNCV93pP6g4Nhr7szWxmilYsCaWpdja3L0+um3NZN
+         dZrMYFUzrLgwJpb3eQ8XmR/B8K0LCXgzifME6lBq4+uBEb4wq5H57o/m8HjapSHGPPeF
+         2AAdMKPmlbXp+B9xaQsdFDmc72GTAhMFc8OWlrrIAfDiFYDCYNwaaI4/OFX6SEx7fzCw
+         TJaw==
+X-Gm-Message-State: AGi0PuYtu+oQOxAkPZQ5jBZzDQJBw7/7YqMIY11qjwshUksMCtquL42q
+        rmUMmiNjG8i2ZFivvg8nqAigCuUmfwYACqmZAnI=
+X-Google-Smtp-Source: APiQypItatage2dW1ybVsZrW2pFyPk+1PxaK/KIBR0r2hz/mKUjiljs4/lAKgCXRXVtD2OMVZzrJKtiDNWGJfv4MhzQ=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr15973637oig.54.1587995819823;
+ Mon, 27 Apr 2020 06:56:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200417140920.22596-1-geert+renesas@glider.be>
+In-Reply-To: <20200417140920.22596-1-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 27 Apr 2020 15:56:48 +0200
+Message-ID: <CAMuHMdWzkV1SGvpOg31ZBLHPCGYSEOB1yM=vEKVDqnqJsXj3-Q@mail.gmail.com>
+Subject: Re: [PATCH RFC] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Michael Walle <michael@walle.cc> writes:
-> +struct sl28cpld_gpio {
-> +	struct regmap_irq_chip irq_chip;
-> +	struct regmap_irq_chip_data *irq_data;
-> +};
+On Fri, Apr 17, 2020 at 4:09 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> documentation to json-schema.
+>
+> Document missing properties.
+> Drop deprecated and obsolete #gpio-range-cells property.
+> Update the example to match reality.
+> Drop consumer examples, as they do not belong here.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> How to describe that pin configuration nodes can have subnodes?
+> E.g.
+>
+>     arch/arm/boot/dts/sh73a0-kzm9g.dt.yaml: pin-controller@e6050000: mmc: Additional properties are not allowed ('cfg', 'mux' were unexpected)
+>
+> Dropping "additionalProperties: false" from the patternProperties
+> section gets rid of these warnings, but of course it would be better if
+> the subnodes would be validated, too.
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+
+> +patternProperties:
+> +  "^.*$":
+> +    if:
+> +      type: object
+> +    then:
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +      description:
+> +        Pinctrl node's client devices use subnodes for desired pin
+> +        configuration.
+> +        Client device subnodes use below standard properties.
 > +
-> +static const struct regmap_irq sl28cpld_gpio_irqs[] = {
-> +	REGMAP_IRQ_REG_LINE(0, 8),
-> +	REGMAP_IRQ_REG_LINE(1, 8),
-> +	REGMAP_IRQ_REG_LINE(2, 8),
-> +	REGMAP_IRQ_REG_LINE(3, 8),
-> +	REGMAP_IRQ_REG_LINE(4, 8),
-> +	REGMAP_IRQ_REG_LINE(5, 8),
-> +	REGMAP_IRQ_REG_LINE(6, 8),
-> +	REGMAP_IRQ_REG_LINE(7, 8),
-> +};
+> +      properties:
+> +        phandle: true
+> +        pins: true
+> +        groups: true
+> +        function: true
+> +        bias-disable: true
+> +        bias-pull-down: true
+> +        bias-pull-up: true
+> +        drive-strength:
+> +          enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
+> +        power-source:
+> +          enum: [ 1800, 3300 ]
+> +        gpio-hog: true
+> +        gpios: true
+> +        output-high: true
+> +        output-low: true
 
-This is exactly the same as the one in the irq chip patch.
+The above list lacks the "input" property. Will add.
 
-> +static int sl28cpld_gpio_irq_init(struct device *dev,
-> +				  struct sl28cpld_gpio *gpio,
-> +				  struct regmap *regmap, unsigned int base,
-> +				  int irq)
-> +{
-> +	struct regmap_irq_chip *irq_chip = &gpio->irq_chip;
-> +
-> +	irq_chip->name = "sl28cpld-gpio-irq",
-> +	irq_chip->irqs = sl28cpld_gpio_irqs;
-> +	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
-> +	irq_chip->num_regs = 1;
-> +	irq_chip->status_base = base + GPIO_REG_IP;
-> +	irq_chip->mask_base = base + GPIO_REG_IE;
-> +	irq_chip->mask_invert = true,
-> +	irq_chip->ack_base = base + GPIO_REG_IP;
-> +
-> +	return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), regmap,
-> +					   irq, IRQF_SHARED | IRQF_ONESHOT, 0,
-> +					   irq_chip, &gpio->irq_data);
-> +}
+Gr{oetje,eeting}s,
 
-And this looks pretty familiar as well. What's the point of duplicating
-that code?
+                        Geert
 
-Thanks,
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-        tglx
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
