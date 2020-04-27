@@ -2,66 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 181231BA1ED
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2020 13:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE8E51BA28E
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Apr 2020 13:40:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgD0LHX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Apr 2020 07:07:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3351 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726485AbgD0LHX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Apr 2020 07:07:23 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 958FB754D2A32F7543AA;
-        Mon, 27 Apr 2020 19:07:19 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 27 Apr 2020 19:07:09 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] gpio: mlxbf2: fix return value check in mlxbf2_gpio_get_lock_res()
-Date:   Mon, 27 Apr 2020 11:08:29 +0000
-Message-ID: <20200427110829.154785-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726821AbgD0Lkj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Apr 2020 07:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgD0Lkj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Apr 2020 07:40:39 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A343C0610D5;
+        Mon, 27 Apr 2020 04:40:39 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jT27W-0001FM-LG; Mon, 27 Apr 2020 13:40:18 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 118A3100606; Mon, 27 Apr 2020 13:40:18 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v3 06/16] irqchip: add sl28cpld interrupt controller support
+In-Reply-To: <20200423174543.17161-7-michael@walle.cc>
+References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-7-michael@walle.cc>
+Date:   Mon, 27 Apr 2020 13:40:18 +0200
+Message-ID: <87pnbtqhr1.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In case of error, the function devm_ioremap() returns NULL pointer not
-ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+Michael Walle <michael@walle.cc> writes:
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/gpio/gpio-mlxbf2.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> This patch adds support for the interrupt controller inside the sl28
 
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index 240b488609ac..fca6a50d9308 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -109,8 +109,8 @@ static int mlxbf2_gpio_get_lock_res(struct platform_device *pdev)
- 	}
- 
- 	yu_arm_gpio_lock_param.io = devm_ioremap(dev, res->start, size);
--	if (IS_ERR(yu_arm_gpio_lock_param.io))
--		ret = PTR_ERR(yu_arm_gpio_lock_param.io);
-+	if (!yu_arm_gpio_lock_param.io)
-+		ret = -ENOMEM;
- 
- exit:
- 	mutex_unlock(yu_arm_gpio_lock_param.lock);
+git grep 'This patch' Documentation/process/
 
+> CPLD management controller.
+>
+> +static int sl28cpld_intc_probe(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_intc *irqchip;
+> +	struct resource *res;
+> +	unsigned int irq;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
+> +	if (!irqchip)
+> +		return -ENOMEM;
+> +
+> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!irqchip->regmap)
+> +		return -ENODEV;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return irq;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	irqchip->chip.name = "sl28cpld-intc";
+> +	irqchip->chip.irqs = sl28cpld_irqs;
+> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
+> +	irqchip->chip.num_regs = 1;
+> +	irqchip->chip.status_base = res->start + INTC_IP;
+> +	irqchip->chip.mask_base = res->start + INTC_IE;
+> +	irqchip->chip.mask_invert = true,
+> +	irqchip->chip.ack_base = res->start + INTC_IP;
+> +
+> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
+> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
 
+What's the point of IRQF_SHARED | IRQF_ONESHOT here?
 
+> +				       &irqchip->chip, &irqchip->irq_data);
 
+Thanks,
 
+        tglx
