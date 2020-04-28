@@ -2,92 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D8391BBE80
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8CA11BBE9E
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:09:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgD1NG0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 09:06:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:51134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726746AbgD1NG0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:06:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 145BA31B;
-        Tue, 28 Apr 2020 06:06:25 -0700 (PDT)
-Received: from [10.57.33.170] (unknown [10.57.33.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 710363F68F;
-        Tue, 28 Apr 2020 06:06:21 -0700 (PDT)
-Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
- the child device
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-3-michael@walle.cc>
- <20200428124548.GS185537@smile.fi.intel.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
-Date:   Tue, 28 Apr 2020 14:06:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726881AbgD1NJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 09:09:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726819AbgD1NJR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Apr 2020 09:09:17 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD864C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:09:16 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id j3so21340480ljg.8
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:09:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6wGncaYo3LN/NQ0J5wn4KymE59fDMQLF7G38Kj4SR5I=;
+        b=d5zYmSh/sLF8PRnCwJ5PFqFLmWs2hDLudcnmdg/fr4W5alWmrt88371fPhq7Jx20ei
+         NRQ9YNvy5+fzMKoEX7L3GC0De0aGjGuv30GjtcBs+XnYaR6VsyJ5o3yHHXR2NShM/KBu
+         yFa8nEFpAd3KAgPWXDpDBLXPnMNJ2c86xoEr1hF+UPaGCZ/qswhQ5ZmEtV1i6LaLIvoB
+         +wdAvTlUbevn/+LZSECtajTFvcRk9U+BfFIdbGz6cAaKCcSgViuj3tHsoD268VBcVaXN
+         8+VgTdEMZ6O+oUXNVaxSYCKWcFoIJYJA4HAdd0w/a+5ZqC17vfcOzepWF6rkA/C0JCnV
+         QV7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6wGncaYo3LN/NQ0J5wn4KymE59fDMQLF7G38Kj4SR5I=;
+        b=Pqy8lA+a15mfo764qlDUaUII5gnPhkcALXbXs2GO9EwI9gviYcC2i2lfycLJkrBG5F
+         OMeFtSJjUlGyjHDWu6eg3Z4T+dwgZsl0S4kAHGIfS/fdp0FhBsLHaAJNStKQ+uPpDyGx
+         i4BhvA63zcwa8NwZ7CaX8+/tKv3m5TeWrkOu5HCwMsK6G5Yq0crN4mTKe2IVPHtdMrfX
+         MQWLD5ZnMiTSeHpA83BKq7zTIIP21i8F6wprVqaHPLwL8TcM5yiIIqq238G8xPQVmR1T
+         q1PdSDoVbXoU2KUt4+JGdDYL2E6mf7UWzFUlz6EhKwKEa/pT37gBKkfklEjDoLnaXGaI
+         jRLA==
+X-Gm-Message-State: AGi0PuZ/MT5YoQajzfzow5v478O/fcaYHxXZ5ABRfCglM+2J7px9orsC
+        tPaokSWecGhiTDQX8p5/tAdkFhyfMKDgEX5bnSA=
+X-Google-Smtp-Source: APiQypJqqFsPe8wwTx9/Es/1Ml+3jIa5oGIk/RbnpXluIyaMQ5c7oru7212HKUS3n7OcjkeRrH5nAjqBK3AVFLqNZ7Y=
+X-Received: by 2002:a2e:6a08:: with SMTP id f8mr18392818ljc.8.1588079355163;
+ Tue, 28 Apr 2020 06:09:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200428124548.GS185537@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
+ <20200421130300.GK185537@smile.fi.intel.com> <CAMpxmJVVDUN6ei__wt5z+hOJQ0w0r9TZjhN9HCtpCA8Vrud0qg@mail.gmail.com>
+ <CACRpkdYDHiscnm0BrSTwG6=-SCWZeqVfnEEkMAeQcco77GM8kg@mail.gmail.com> <20200428124129.GR185537@smile.fi.intel.com>
+In-Reply-To: <20200428124129.GR185537@smile.fi.intel.com>
+From:   Paul Thomas <pthomas8589@gmail.com>
+Date:   Tue, 28 Apr 2020 09:09:03 -0400
+Message-ID: <CAD56B7cR9asgW-6PS7V+jZ8O7AYeYuH9egnF1G0uoQQaS9GhMA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: pca953x: Rewrite ->get_multiple() function
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-04-28 1:45 pm, Andy Shevchenko wrote:
-> On Thu, Apr 23, 2020 at 07:45:29PM +0200, Michael Walle wrote:
->> Commit cdfee5623290 ("driver core: initialize a default DMA mask for
->> platform device") initialize the DMA of a platform device. But if the
->> parent doesn't have a dma_mask set, for example if it's an I2C device,
->> the dma_mask of the child platform device will be set to zero again.
->> Which leads to many "DMA mask not set" warnings, if the MFD cell has the
->> of_compatible property set.
-> 
-> I'm wondering why parent doesn't have it.
+On Tue, Apr 28, 2020 at 8:41 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Apr 28, 2020 at 02:13:21PM +0200, Linus Walleij wrote:
+> > On Tue, Apr 21, 2020 at 5:42 PM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > wt., 21 kwi 2020 o 15:03 Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
+> > > > On Mon, Apr 20, 2020 at 08:27:50PM +0300, Andy Shevchenko wrote:
+>
+> ...
+>
+> > I don't mind trying to put in code to optimize use cases
+> > when accessing single bytes here either. But I'd like there
+> > to be explicit comments in the code saying why these
+> > optimizations are there. Can we do those on top of
+> > this (hopefully) known working base?
+For the record my original get_multiple patch was a known working base.
 
-Because the parent isn't on a DMA-capable bus, and thus really shouldn't 
-have a valid DMA configuration ever.
+>
+> As I pointed out to Paul, the optimization like he proposed is not bad th=
+ing
+> per se, the implementation is. On top of that I suggested to take a look =
+to IRQ
+> status bits, which presumable will leverage from this optimization as wel=
+l.
+>
+> So, After applying this series it would be matter of change one line in t=
+he
+> ->get_multiple() to replace read_regs() with optimized version or so alon=
+g with
+> IRQ bits changes.
 
-> I remember we have explicit patches in the past for buses such as PCI and AMBA
-> to set default DMA mask for all physical devices on the respective bus, of
-> course they can individually override it later.
-> 
-> So, this seems to me a paper over the real issue (absence of default DMA mask
-> where it's needed) and devices should explicitly define it if they disagree
-> with default.
-> 
-> If I'm wrong, you really need elaborate commit message much better.
+This new function would then at least need to be called with mask as
+an additional argument right? Then the bitmap_replace() will set
+everything regardless of if it was read, this is fine I suppose
+because it doesn't matter if it's setting bits outside of mask. You
+just have two loops one in the new function and one in
+bitmap_replace(). If this is what people would like to see I can work
+on it. I did look into the sparse reads and it seems as though regmap
+has a gather_write, but not a gather_read and gather_write isn't in
+regmap-i2c.c anyway.
 
-The problem here is that MFD children are created as platform devices 
-(regardless of what their parent is) and assigned an of_node, at which 
-point they look pretty much indistinguishable from SoC devices created 
-by the of_platform code, that *do* have to be assumed to be DMA-capable 
-to prevent ~90% of existing devicetrees from breaking.
-
-Of course the real fundamental issue is the platform bus itself, but 
-it's way too late to fix that :(
-
-Robin.
+-Paul
