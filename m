@@ -2,73 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D0D1BC028
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:49:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8AF1BC02E
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgD1Nt5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 09:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
+        id S1727105AbgD1NvD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 09:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgD1Nt5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 09:49:57 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0DBC03C1AB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:49:57 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h4so7990408ljg.12
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:49:57 -0700 (PDT)
+        with ESMTP id S1727078AbgD1NvC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 09:51:02 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82DEC03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:51:02 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b2so21505919ljp.4
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:51:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=K8+fuPYkH+puLBJZrUcKcisDj7x840mOx2H/AXTSfXc=;
-        b=p5Udw9bpsNiJSRMg3b5y5IhL8YEuFQwO5OsVib3uyjXzhkWGcTlaHtkl3R1HGV4DQ3
-         rJl/fnDPJTNEAhDESkXnBYSglWuOOHsQJj6dnYzUkWY2FxQp1kgpJr7VsAPEuQPO+m8a
-         0hZvMw8Wf9iE8FQ/CNrOYlPIiDkUjzm37NJ9yJGMQ63KBIcaM3FU+xbGGyw6N+TMOcKj
-         CLWt/ZVZdFOpw1VOaM8dUExw/MT6GYZ7Rve+ZabI71dn/3Ryx6XJtAb96ekMVBUdQX6m
-         nMlX3tlmq0zGcOHTw77PvFxF7F6NggrItFv/aSZVtFp9D88403vwRShnXvCTKMsSRwEA
-         vVkg==
+        bh=No9mDU8+hvTrxab2bfODpNQEmVb8+9eYKL1viviYflk=;
+        b=F0lctHGXr6jxwvKD4j4xHhHu6YEO/4zlTpbN7NBj+iDYDcRv+wMBBKfiOOM+FjiMR+
+         lpR9iy2WdJwDPLMri0y+4EDQWpt3PO7Gkih2Kn6NOAKd57pi1KoiFfPXJNAGBMDqJHC0
+         PDoT931yQq4MLlavt+7GIhVrgpoUvNVnLqUqJwQzS02Uv1JuUU/GDQIMPeFVxCHdYjL+
+         dNJELMJC65x1lv+B9ioAWKrWL7MTGups367J+RXMINkXOt7TZqoF0W7XZ6mDb/HyKmyK
+         Rvr56ynF6c9t4hGrSfszYPHDkkotjTPKZ2At7Bp0KjLq2aSTb8B/1RBmpO/SeXpxpJmg
+         e16Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K8+fuPYkH+puLBJZrUcKcisDj7x840mOx2H/AXTSfXc=;
-        b=KdoEu3KKXf4/9zMyKK8eTTKiYrDtk5fId9CYeohFQ/1zm7VncYXoLgVrCLpiMN8YVC
-         87T8dCHE9aKcrE5juyc5CAyF+nRMsmy3sf8+YcqFswhAlgdGfol/ApbE3ASoJf9WGIiz
-         9wVXafZSzyHIZ0Bd7u2bbV48tCY6ke9uQAXjCVZRb0DmSds+JIsxufQtBmqcmmO4hIQD
-         XPbJYOVLje7fVTX7Wg5XO14tWByvhXOrMZrGuqbCdIzO2U6cyEzY34UUSC7iQRttgmH+
-         gzHShD6n1QVd+03Ce8hQLEhEfSxmlst5jfzNSsE6OIlWvAzWbu1oL6hKIJQBjlNToZzi
-         uu6Q==
-X-Gm-Message-State: AGi0PuYDbJaKM4Ek6jWydvSWp/Xif/sKDjifyI37Azx03jf96y171KmG
-        R78jYqHyWrz0woH4oHOrpPmiLcuCVrI3WeR2mz0OZjiS
-X-Google-Smtp-Source: APiQypIc/HQesVeDmCFc8wG0wY/Ggva2NZkJMawXfsozJERv7QuSkzZDCvjIox+R6iueMRpnA9xGQJce2qF7OX0/rpQ=
-X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr17807230ljp.277.1588081795589;
- Tue, 28 Apr 2020 06:49:55 -0700 (PDT)
+        bh=No9mDU8+hvTrxab2bfODpNQEmVb8+9eYKL1viviYflk=;
+        b=hLDOYTdME37nPycvedJ7rwHdHAi3FpuybSqlMvy6cdNh6d+ximpWN6Bo5QEy4sa/pM
+         /gJ1QjJmI9YhXoMJ747Ven2D3le+3VuXuAN2VjOl+RqeM5xilapCsaVlxdrGlHTRg6iF
+         vu8Rkronbxxx2Op1ZZxOWhMlz1ga04PG0ynyqbhcphfGvIFD21cZmjakhoNYnar36MP8
+         ZzZTAznaj9t1OEMBvVqBzK8TjNB+XE9IWzksIB+nuM49ES952/ZwOukDfvCk74gDxum9
+         8jJiWLszUHbg26s/PLwlhCajq+K/64Jaib1ahpcpkZ+++ZOuIBH0sCsl1Ut3c4KxrIpy
+         glcw==
+X-Gm-Message-State: AGi0PuYxgRL7UON8vBkllf4Ps/vPGele8sudZ4h4VwhmguVgBsL03pro
+        Sapo3uFIl7eMRnY9pwTNznp4Onx3JO/eC1jDv0Pzrg==
+X-Google-Smtp-Source: APiQypLdIhxDt7oAMgAtRuC1BqrbNsbzfwAGYm/SlOw+A65DFkTDz7D8p1kJXqeCEJ9Pc5tSJD376epb7DfyMNEXiso=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr18490498ljh.223.1588081861179;
+ Tue, 28 Apr 2020 06:51:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424141517.11582-1-geert+renesas@glider.be>
-In-Reply-To: <20200424141517.11582-1-geert+renesas@glider.be>
+References: <20200424154103.10311-1-zhengdejin5@gmail.com> <20200424154103.10311-2-zhengdejin5@gmail.com>
+In-Reply-To: <20200424154103.10311-2-zhengdejin5@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 15:49:44 +0200
-Message-ID: <CACRpkdah7D7b+-DBnMnh9_WmCK9qXGaA9usK-1jSJ+0nihWC6g@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Rename "chip" variables to "gc" in core header file
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Tue, 28 Apr 2020 15:50:49 +0200
+Message-ID: <CACRpkdZD4x3PV4jn0Wwxq7N_Ub4HGQFVFzniTUHYajQSOy6sGA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: ftgpio010: Fix small typo
+To:     Dejin Zheng <zhengdejin5@gmail.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 4:15 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Fri, Apr 24, 2020 at 5:41 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 
-> Consistently use "gc" for "struct gpio *" variables.
+> Fix a spelling typo in gpio-ftgpio010.c by codespell
+> s/desireable/desirable/
 >
-> This follows the spirit of commit a0b66a73785ccc8f ("gpio: Rename
-> variable in core APIs").
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+> v1 -> v2:
+>         - split patch v1 (only one patch) into patches for each driver
+>           by Bartosz's suggestion. thanks Bartosz.
 
 Patch applied.
 
