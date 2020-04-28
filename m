@@ -2,87 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6101BBCBB
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 13:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C055C1BBCE2
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 13:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgD1LpE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 07:45:04 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:3324 "EHLO huawei.com"
+        id S1726634AbgD1L4b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 07:56:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59456 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbgD1LpE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 07:45:04 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id ED5169C0DE979926EC9A;
-        Tue, 28 Apr 2020 19:44:59 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
- 19:44:50 +0800
-Subject: Re: [PATCH] pinctrl: remove unused 'pwm37_pins'
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-References: <20200417092112.12303-1-yanaijie@huawei.com>
- <CACRpkdb5Ozz_MKAUDoyOxdnu_NkN72vRu=ZY7j_Lb5uMAiS3SA@mail.gmail.com>
- <20200428113049.GA5259@Mani-XPS-13-9360>
+        id S1726505AbgD1L4b (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Apr 2020 07:56:31 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E6470767EDA26952B564;
+        Tue, 28 Apr 2020 19:56:29 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 28 Apr 2020
+ 19:56:19 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <57bc1105-06e9-2951-45c0-04b048f65d2e@huawei.com>
-Date:   Tue, 28 Apr 2020 19:44:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+To:     <manivannan.sadhasivam@linaro.org>, <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] pinctrl: add pwm37 to bm1880_pctrl_groups
+Date:   Tue, 28 Apr 2020 19:55:43 +0800
+Message-ID: <20200428115543.33379-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <20200428113049.GA5259@Mani-XPS-13-9360>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
+X-Originating-IP: [10.175.124.28]
 X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The 'pwm37' is not added to bm1880_pctrl_groups, which triggers a gcc
+build warning:
 
+drivers/pinctrl/pinctrl-bm1880.c:263:27: warning: ‘pwm37_pins’ defined
+but not used [-Wunused-const-variable=]
+ static const unsigned int pwm37_pins[] = { 110 };
 
-在 2020/4/28 19:30, Manivannan Sadhasivam 写道:
-> On Tue, Apr 28, 2020 at 11:58:01AM +0200, Linus Walleij wrote:
->> On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
->>
->>> Fix the following gcc warning:
->>>
->>> drivers/pinctrl/pinctrl-bm1880.c:263:27: warning: ‘pwm37_pins’ defined
->>> but not used [-Wunused-const-variable=]
->>>   static const unsigned int pwm37_pins[] = { 110 };
->>>                             ^~~~~~~~~~
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->>
->> I'm sceptic about this. I think PWM37 exists and just need to be
->> properly defined.
->>
->> Mani will know the right solution to this.
->>
-> 
-> Sorry for missing this thread before. The original patch didn't land in my
-> inbox.
-> 
-> Anyway the issue is, pwm37 is not added to BM1880_PINCTRL_GRP. So the proper
-> fix would be to add it.
-> 
-> Jason, will you be able to send a patch for adding it? Otherwise I'll do that.
-> 
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/pinctrl/pinctrl-bm1880.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-OK, I will send v2 soon.
-
-Thanks,
-Jason
-
-> Thanks,
-> Mani
-> 
->> Yours,
->> Linus Walleij
-> 
+diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+index f7dff4f14101..d1a7d9836787 100644
+--- a/drivers/pinctrl/pinctrl-bm1880.c
++++ b/drivers/pinctrl/pinctrl-bm1880.c
+@@ -408,6 +408,7 @@ static const struct bm1880_pctrl_group bm1880_pctrl_groups[] = {
+ 	BM1880_PINCTRL_GRP(pwm34),
+ 	BM1880_PINCTRL_GRP(pwm35),
+ 	BM1880_PINCTRL_GRP(pwm36),
++	BM1880_PINCTRL_GRP(pwm37),
+ 	BM1880_PINCTRL_GRP(i2c0),
+ 	BM1880_PINCTRL_GRP(i2c1),
+ 	BM1880_PINCTRL_GRP(i2c2),
+-- 
+2.21.1
 
