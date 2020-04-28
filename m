@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A637E1BC01F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9D0D1BC028
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:49:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbgD1NtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 09:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
+        id S1727080AbgD1Nt5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 09:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgD1Ns7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 09:48:59 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49AB9C03C1AB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:48:59 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u6so21519618ljl.6
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:48:59 -0700 (PDT)
+        with ESMTP id S1726942AbgD1Nt5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 09:49:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0DBC03C1AB
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:49:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h4so7990408ljg.12
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hprmAywS78pYBC0BQt7gTceIcUivP3JeOHfXgeteKA0=;
-        b=fCPifXw/aNPOXfO0rsjZ+yaZg41307Lkkk7BSKaH5H7psRRpteV5LYlsmB0N4dqM+G
-         B8ufwhgl1jAKHJtIaK2N3pMI8gNruYVHB2STb08rGaoYD52IUxGOz4Aspg3Ds0Le0ikd
-         TVuF6fV3Rvf7ebyZClOq1W3RpoHzm1YWMlrNqWKruL5OMdAZDou+zZlYEpF0HNAI/2Mc
-         4NeZzLtbfLNep4qlhJEL6P9PCgYdG7lyL4tYiZmCwJhcQwNzV22+w6k7VeKjtO6YFRXV
-         VYcgB+OPVwmv8eRYthKbSjqUsDGLqzpfUOeRl8laT2tDQSpAHIW/c8WTecXhOlyjnf/2
-         XtVQ==
+        bh=K8+fuPYkH+puLBJZrUcKcisDj7x840mOx2H/AXTSfXc=;
+        b=p5Udw9bpsNiJSRMg3b5y5IhL8YEuFQwO5OsVib3uyjXzhkWGcTlaHtkl3R1HGV4DQ3
+         rJl/fnDPJTNEAhDESkXnBYSglWuOOHsQJj6dnYzUkWY2FxQp1kgpJr7VsAPEuQPO+m8a
+         0hZvMw8Wf9iE8FQ/CNrOYlPIiDkUjzm37NJ9yJGMQ63KBIcaM3FU+xbGGyw6N+TMOcKj
+         CLWt/ZVZdFOpw1VOaM8dUExw/MT6GYZ7Rve+ZabI71dn/3Ryx6XJtAb96ekMVBUdQX6m
+         nMlX3tlmq0zGcOHTw77PvFxF7F6NggrItFv/aSZVtFp9D88403vwRShnXvCTKMsSRwEA
+         vVkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hprmAywS78pYBC0BQt7gTceIcUivP3JeOHfXgeteKA0=;
-        b=DbhRTOQw1jQbainsXxgO8CfsFY29uZ7m+GidPS5nfpyTybTt9fnR6pFzojZvI9UNQa
-         thyQJpV07Y9xKM1hPhdN8kIjjwlFaLycR2PhAEcEKeJD0Q+T+SoZUqFWKD8X4SyWjD0r
-         OOX3spMYawQdmdWIrcSZxKJMKRCq3icueLI8My8fapbn9LQNi1cPS3j2FmAX83AM3wdV
-         R0x/pYZ9jxsMkU0lhqWLmoDH9odU49ICTcp/cF/qei7+d4+poNnLD/kob8DBQ56VIcdE
-         yvec/gO/uQwE3WV9YRujOpNROwnHpeqCEI8L35UuZy/z02qkh0KA0W5mCogUFo12i8iw
-         87yw==
-X-Gm-Message-State: AGi0PuYzwb5dKMKGPbo+fG0GjHUb90fB1XsEeOjzSU1RKxCQwpC8SWrp
-        OeQ/FLDPEMHdZpEFWy/YPn/1a77v8df6kWBzGKJUug==
-X-Google-Smtp-Source: APiQypJIhrNrQ+oaUJ5NP4QQvPil4l3MmkC57hDze40HmsjQNpb70nI3ajhIbXVp601g+fxmmSsaOiIc+ymo3FzTcC0=
-X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr18355448ljm.39.1588081737490;
- Tue, 28 Apr 2020 06:48:57 -0700 (PDT)
+        bh=K8+fuPYkH+puLBJZrUcKcisDj7x840mOx2H/AXTSfXc=;
+        b=KdoEu3KKXf4/9zMyKK8eTTKiYrDtk5fId9CYeohFQ/1zm7VncYXoLgVrCLpiMN8YVC
+         87T8dCHE9aKcrE5juyc5CAyF+nRMsmy3sf8+YcqFswhAlgdGfol/ApbE3ASoJf9WGIiz
+         9wVXafZSzyHIZ0Bd7u2bbV48tCY6ke9uQAXjCVZRb0DmSds+JIsxufQtBmqcmmO4hIQD
+         XPbJYOVLje7fVTX7Wg5XO14tWByvhXOrMZrGuqbCdIzO2U6cyEzY34UUSC7iQRttgmH+
+         gzHShD6n1QVd+03Ce8hQLEhEfSxmlst5jfzNSsE6OIlWvAzWbu1oL6hKIJQBjlNToZzi
+         uu6Q==
+X-Gm-Message-State: AGi0PuYDbJaKM4Ek6jWydvSWp/Xif/sKDjifyI37Azx03jf96y171KmG
+        R78jYqHyWrz0woH4oHOrpPmiLcuCVrI3WeR2mz0OZjiS
+X-Google-Smtp-Source: APiQypIc/HQesVeDmCFc8wG0wY/Ggva2NZkJMawXfsozJERv7QuSkzZDCvjIox+R6iueMRpnA9xGQJce2qF7OX0/rpQ=
+X-Received: by 2002:a05:651c:32e:: with SMTP id b14mr17807230ljp.277.1588081795589;
+ Tue, 28 Apr 2020 06:49:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424141432.11400-1-geert+renesas@glider.be>
-In-Reply-To: <20200424141432.11400-1-geert+renesas@glider.be>
+References: <20200424141517.11582-1-geert+renesas@glider.be>
+In-Reply-To: <20200424141517.11582-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 15:48:46 +0200
-Message-ID: <CACRpkdYozdZZN5OB_tYOizFynWAXGSuRMbA1HmfBh0cZJ4J9aA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Improve kernel messages
+Date:   Tue, 28 Apr 2020 15:49:44 +0200
+Message-ID: <CACRpkdah7D7b+-DBnMnh9_WmCK9qXGaA9usK-1jSJ+0nihWC6g@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Rename "chip" variables to "gc" in core header file
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -60,22 +60,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 24, 2020 at 4:14 PM Geert Uytterhoeven
+On Fri, Apr 24, 2020 at 4:15 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> Simplify the printing of kernel messages and make the messages more
-> accurate by using the most appropriate {dev,chip,gpiod}_*() helpers.
+> Consistently use "gc" for "struct gpio *" variables.
 >
-> Sample impact:
->
->     -gpiochip_setup_dev: registered GPIOs 496 to 511 on device: gpiochip0 (e6050000.gpio)
->     +gpio gpiochip0: registered GPIOs 496 to 511 on e6050000.gpio
->
->     -no flags found for gpios
->     +gpio-953 (?): no flags found for gpios
->
->     -GPIO line 355 (PCIE/SATA switch) hogged as output/low
->     +gpio-355 (PCIE/SATA switch): hogged as output/low
+> This follows the spirit of commit a0b66a73785ccc8f ("gpio: Rename
+> variable in core APIs").
 >
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
