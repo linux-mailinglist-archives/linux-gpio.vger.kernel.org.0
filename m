@@ -2,222 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 991461BD026
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 00:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF96C1BD050
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 01:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgD1Wsr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 18:48:47 -0400
-Received: from mga09.intel.com ([134.134.136.24]:47696 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbgD1Wsr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 18:48:47 -0400
-IronPort-SDR: T6+tGeP0dn8kq6XkauUx/1vO5aDXGsN/MA8gaW+uV2d/Cuq6WXzokS30cPSNj/9lvFRX8lpLac
- Qqt2A8wdQDMw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:48:46 -0700
-IronPort-SDR: 9wSJ0+yZi7/cKFqhqA8G4PnbiN6wDtEE3MfQPdKyTIVG7irBSGOrDB/WuP6jdguQ5tCXgxCRh9
- wCetXid8XLVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="458971811"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Apr 2020 15:48:45 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jTZ1w-000DSf-Ka; Wed, 29 Apr 2020 06:48:44 +0800
-Date:   Wed, 29 Apr 2020 06:48:02 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:ab8505-fix] BUILD SUCCESS
- 1ff9467f80a0632fad928d252484c361bd486762
-Message-ID: <5ea8b2a2.3ZhjWG5N/L9qaanj%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726508AbgD1XDd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 19:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1XDc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:03:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404C4C03C1AC;
+        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z1so125996pfn.3;
+        Tue, 28 Apr 2020 16:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
+        b=O/0NG8PwX3dqCAE7rfx8O3nSMOjMBNp9iVLdYyb89n+JKhHj4S3b6rT1SFs6VUg8TO
+         4SCiIYfSZ1XxRzLFCdve1O7apjpLhRFTzRGSoQiEyox4wQ2taYf6FgD5ZP9Aulmwmpw8
+         H3LCU/JfOKq5DOLTVpAGUwJFhmhCY+7433CAtbSBOgwP19+kmfD1LAfaID8A0zQQzVXL
+         u9jslrVS/aDUNtDHHS8GyoP5fsrgudZdaV/qh91IB5uJDTiLfeWg4z4VM0hB+HUFAPbK
+         F5xLvRL/ratvulf6NIij4g1JX4B3DykyWtItpjgce/1QmNaSXEfGSG1SjKPAUruI0inN
+         9BiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+eb5YBzAF98WZOyXU0W5JrcpxvfZ8QdL+rCMUNBogBs=;
+        b=FAfMjvzQ5rE22TliDdfA0WbWxA8fPLJ2ORdxVccdim/XkNpVuU+COq8W87Cm5Vauhi
+         UpKcFHXkKA95hnkf27fwDAlsM7fWY30RI6Ry6RdWotv+BFusnO5ew1cdFphht6/4D52w
+         Y92htOBLakWHQkxw88gvcyfCWFKw6vJNyZWfwq53yjjYNnfs3y/ke1b+QvcS5EFBzjMK
+         BtoRtBM0DI0Vg+mpAx1pHf9PI/CNkeTwks1hpvFNLKKk2pp7AZcPc6kuua1i1e1Q8ugd
+         M8WitFjQr4HHPEd7Nriuhin1XgqMrl4cNoDuGaGlkFUh8sSO8SJ1cow207DnonhmdNdg
+         zERg==
+X-Gm-Message-State: AGi0PuZcnWKaXF8oIAuzFiWOpPhESqvDp8K355G3XmRu3Ch5KjHpru4l
+        Ub1CnHpT6rWlNkI6s5TcOAA=
+X-Google-Smtp-Source: APiQypJPE+cc4RU52SwdvwJv6fLg/VZd1xU0gwwQyijEzCMwU4XUhna9Mxms6HnaLfQFvRuDeLePLQ==
+X-Received: by 2002:a63:f30a:: with SMTP id l10mr30917710pgh.372.1588115010795;
+        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
+Received: from syed ([106.202.21.137])
+        by smtp.gmail.com with ESMTPSA id kb10sm3100232pjb.6.2020.04.28.16.03.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 28 Apr 2020 16:03:30 -0700 (PDT)
+Date:   Wed, 29 Apr 2020 04:33:11 +0530
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/4] Introduce the for_each_set_clump macro
+Message-ID: <cover.1588112714.git.syednwaris@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  ab8505-fix
-branch HEAD: 1ff9467f80a0632fad928d252484c361bd486762  pinctrl: db8500: Fix some old bugs
+This patchset introduces a new generic version of for_each_set_clump. 
+The previous version of for_each_set_clump8 used a fixed size 8-bit
+clump, but the new generic version can work with clump of any size but
+less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+in several GPIO drivers.
 
-elapsed time: 488m
+The earlier 8-bit for_each_set_clump8 facilitated a
+for-loop syntax that iterates over a memory region entire groups of set
+bits at a time.
 
-configs tested: 163
-configs skipped: 0
+For example, suppose you would like to iterate over a 32-bit integer 8
+bits at a time, skipping over 8-bit groups with no set bit, where
+XXXXXXXX represents the current 8-bit group:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+    Example:        10111110 00000000 11111111 00110011
+    First loop:     10111110 00000000 11111111 XXXXXXXX
+    Second loop:    10111110 00000000 XXXXXXXX 00110011
+    Third loop:     XXXXXXXX 00000000 11111111 00110011
 
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-mips                       capcella_defconfig
-microblaze                      mmu_defconfig
-sparc64                          allmodconfig
-ia64                             allmodconfig
-mips                           ip32_defconfig
-powerpc                           allnoconfig
-i386                             allyesconfig
-ia64                              allnoconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                                defconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                    nommu_defconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-parisc               randconfig-a001-20200428
-m68k                 randconfig-a001-20200428
-alpha                randconfig-a001-20200428
-nds32                randconfig-a001-20200428
-riscv                randconfig-a001-20200428
-nios2                randconfig-a001-20200428
-h8300                randconfig-a001-20200428
-c6x                  randconfig-a001-20200428
-sparc64              randconfig-a001-20200428
-microblaze           randconfig-a001-20200428
-sh                   randconfig-a001-20200428
-csky                 randconfig-a001-20200428
-s390                 randconfig-a001-20200428
-xtensa               randconfig-a001-20200428
-openrisc             randconfig-a001-20200428
-i386                 randconfig-c002-20200428
-i386                 randconfig-c001-20200428
-x86_64               randconfig-c001-20200428
-i386                 randconfig-c003-20200428
-x86_64               randconfig-c003-20200428
-x86_64               randconfig-d001-20200428
-i386                 randconfig-d002-20200428
-i386                 randconfig-d001-20200428
-x86_64               randconfig-d003-20200428
-i386                 randconfig-d003-20200428
-x86_64               randconfig-a001-20200428
-i386                 randconfig-a003-20200428
-x86_64               randconfig-a003-20200428
-i386                 randconfig-a002-20200428
-i386                 randconfig-a001-20200428
-x86_64               randconfig-a002-20200428
-x86_64               randconfig-f002-20200428
-i386                 randconfig-f002-20200428
-i386                 randconfig-f003-20200428
-x86_64               randconfig-f003-20200428
-i386                 randconfig-f001-20200428
-x86_64               randconfig-f001-20200428
-i386                 randconfig-g003-20200428
-x86_64               randconfig-g001-20200428
-i386                 randconfig-g001-20200428
-x86_64               randconfig-g002-20200428
-i386                 randconfig-g002-20200428
-x86_64               randconfig-g003-20200428
-x86_64               randconfig-h001-20200428
-i386                 randconfig-h003-20200428
-x86_64               randconfig-h003-20200428
-x86_64               randconfig-h002-20200428
-i386                 randconfig-h001-20200428
-i386                 randconfig-h002-20200428
-sparc                randconfig-a001-20200428
-ia64                 randconfig-a001-20200428
-powerpc              randconfig-a001-20200428
-arm64                randconfig-a001-20200428
-arc                  randconfig-a001-20200428
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+Each iteration of the loop returns the next 8-bit group that has at
+least one set bit.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+But with the new for_each_set_clump the clump size can be different from 8 bits.
+Moreover, the clump can be split at word boundary in situations where word 
+size is not multiple of clump size. Following are examples showing the working 
+of new macro for clump sizes of 24 bits and 6 bits.
+
+Example 1:
+clump size: 24 bits, Number of clumps (or ports): 10
+bitmap stores the bit information from where successive clumps are retrieved.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x000000aa000000aa;
+        0xbbbbabcdeffedcba;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:-
+'offset' is the bit position and 'clump' is the 24 bit clump from the
+above bitmap.
+Iteration first:        offset: 0 clump: 0xfedcba
+Iteration second:       offset: 24 clump: 0xabcdef
+Iteration third:        offset: 48 clump: 0xaabbbb
+Iteration fourth:       offset: 96 clump: 0xaa
+Iteration fifth:        offset: 144 clump: 0xff
+Iteration sixth:        offset: 168 clump: 0xaaaaaa
+Iteration seventh:      offset: 216 clump: 0xff
+Loop breaks because in the end the remaining bits (0x00aa) size was less
+than clump size of 24 bits.
+
+In above example it can be seen that in iteration third, the 24 bit clump
+that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+also shows that 24 bit zeroes if present in between, were skipped (preserving
+the previous for_each_set_macro8 behaviour). 
+
+Example 2:
+clump size = 6 bits, Number of clumps (or ports) = 3.
+
+     /* bitmap memory region */
+        0x00aa0000ff000000;  /* Most significant bits */
+        0xaaaaaa0000ff0000;
+        0x0f00000000000000;
+        0x0000000000000ac0;  /* Least significant bits */
+
+Different iterations of for_each_set_clump:
+'offset' is the bit position and 'clump' is the 6 bit clump from the
+above bitmap.
+Iteration first:        offset: 6 clump: 0x2b
+Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+Here 6 * 3 is clump size * no. of clumps.
+
+Changes in v3:
+ - Patch 3: Change datatype of some variables from u64 to unsigned long
+   in function thunderx_gpio_set_multiple.
+
+CHanges in v2:
+ - Patch 2: Unify different tests for 'for_each_set_clump'. Pass test data as
+   function parameters.
+ - Patch 2: Remove unnecessary bitmap_zero calls.
+
+Syed Nayyar Waris (4):
+  bitops: Introduce the the for_each_set_clump macro
+  lib/test_bitmap.c: Add for_each_set_clump test cases
+  gpio: thunderx: Utilize for_each_set_clump macro
+  gpio: xilinx: Utilize for_each_set_clump macro
+
+ drivers/gpio/gpio-thunderx.c      |  12 ++-
+ drivers/gpio/gpio-xilinx.c        |  64 ++++++++--------
+ include/asm-generic/bitops/find.h |  19 +++++
+ include/linux/bitmap.h            |  61 +++++++++++++++
+ include/linux/bitops.h            |  13 ++++
+ lib/find_bit.c                    |  14 ++++
+ lib/test_bitmap.c                 | 121 ++++++++++++++++++++++++++++++
+ 7 files changed, 270 insertions(+), 34 deletions(-)
+
+
+base-commit: a9509b8ee069a06cd14334edca904bd0607622ca
+-- 
+2.26.2
+
