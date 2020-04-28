@@ -2,85 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C9281BC070
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 16:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7411BC0BD
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 16:10:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgD1OAu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 10:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgD1OAt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 10:00:49 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB0BEC03C1AB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 07:00:49 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id l11so16992506lfc.5
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 07:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CwLBtHMxIouz6WBeC7Ry6rusTbPMGQuVa1Crv6UC2Xo=;
-        b=BU+9LphHkBjB7hH3z9ucS+MQDbJGncdMqaSIrZNJDwbF7FB/iurPpMj9+WTW1eINtV
-         S+zPTDnJ2xc37hyY/wcVjeGHslM6ThBq1dhnjpBW/0YueJvJrSSUE4hAHM9EEyacv3Ro
-         B4Za1VsqsZSuElBjM85ap7CwkGKyGxqqN7dtffSV9ZXfDzfNtS9JLqmcjjuPzSrfUaBK
-         svAItVmk9afH4cQWB3NgbC+jjqW/aQxBvNk83ZIHRMWRmn1wKI1nxz2I3zt0djJgqNvX
-         6pfBW4YM3wGhGZ0YVH8s1R7KHYvSvKB3Tydn+/GBEY6VmzY0tVzY4gNFP0OsRxKZZLkF
-         EAxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CwLBtHMxIouz6WBeC7Ry6rusTbPMGQuVa1Crv6UC2Xo=;
-        b=T+YRrOg46qfT6/jqmmywsL8Tc280z6sOYGasTSqEIr1zyspp3i+H/RISOU7GmTzBfm
-         TVptzbER85QWChoB2wVzFT7TSARw6Wckbr5zCPDmkOLdUIBzYjEft+6o66/Xu7XFHW/E
-         fgQWwOuVV2PQQRfd3A8IBTRmMVMrfh3RRwYBtWY9tpofsDKIfH+1HUX8ntKh8O4eTY8+
-         bLT67t5wnXSzb01tQq1IZgG8Irt/arAsbipCRretiYnYUzLgceaymw+qTAiHHy8+8W5J
-         Sd2Er48TjxmvSyMCNX9j1znZL04ciIpKYFZB/7oq7QHHuuXKR3SLqgwxooDkwNxBSWRg
-         R2mw==
-X-Gm-Message-State: AGi0PuaYN5oUOnReKOTikhlsGzLXy9XXftgySlPNXXqRmFkuwiCWwUUR
-        RMmtpxY5E45/ShfBFSFI9oG/jxfMJlZLD1h8T3MKUg==
-X-Google-Smtp-Source: APiQypIYzSbT7CAknI2cCMtFL2RX7gZahBzPYkhQq2sZJSILQBDs0uGsOEbqwcRELaTFxqJh/6Pd64SWJfEU4rNWbvI=
-X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19555025lfp.77.1588082448005;
- Tue, 28 Apr 2020 07:00:48 -0700 (PDT)
+        id S1727920AbgD1OKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 10:10:23 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38506 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgD1OKW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 10:10:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1588083017; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2+w+KwDzaOwV/ww7pNfZrsFBOSdK2uRoIyYyszXC2jE=;
+        b=vOy6cik5Ke533LRPLshMJ+qzIX64H6Cij9kixdoYn7wlFWU7BcpUORTgGjl00q+cPNyTHh
+        BbFCg7mLoK1rJVPcplaMCp9tjrNaBELaA/yLJ5L01LwPb6aiWQha9Riei2/T2hz8Wp0kvk
+        mMmfgtX5WwOdDWnDWKeSk5Jfz8HZyCs=
+Date:   Tue, 28 Apr 2020 16:10:05 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/8] dt-bindings: intc: Convert ingenic,intc.txt to YAML
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
+        =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Message-Id: <TO4I9Q.UQRWC3A2ABT52@crapouillou.net>
+In-Reply-To: <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
+References: <20200426185856.38826-1-paul@crapouillou.net>
+        <20200426185856.38826-2-paul@crapouillou.net>
+        <f865b39a-3e8d-a367-45b2-aa5e7412e81a@cogentembedded.com>
 MIME-Version: 1.0
-References: <20200425044655.166257-1-davidgow@google.com>
-In-Reply-To: <20200425044655.166257-1-davidgow@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 16:00:36 +0200
-Message-ID: <CACRpkdY=CvSyKO+LpGqu06XVq5pdwycMwyey3U=-qzFY+Dpv4g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: of: Build fails if CONFIG_OF_DYNAMIC enabled
- without CONFIG_OF_GPIO
-To:     David Gow <davidgow@google.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Frank Rowand <frank.rowand@sony.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 6:46 AM David Gow <davidgow@google.com> wrote:
+Hi Sergei,
 
-> The symbol 'gpio_of_notifier' doesn't exist without both CONFIG_OF_GPIO
-> and CONFIG_OF_DYNAMIC enabled, but is referenced when only
-> CONFIG_OF_DYNAMIC is enabled.
->
-> This broke building with 'make ARCH=um allyesconfig':
-> ---------------
-> /usr/bin/ld: drivers/gpio/gpiolib.o: in function `gpiolib_dev_init':
-> ./drivers/gpio/gpiolib.c:5293: undefined reference to `gpio_of_notifier'
-> collect2: error: ld returned 1 exit status
-> ---------------
->
-> Fixes: 63636d956c45 ("gpio: of: Add DT overlay support for GPIO hogs")
-> Signed-off-by: David Gow <davidgow@google.com>
+Le lun. 27 avril 2020 =E0 12:11, Sergei Shtylyov=20
+<sergei.shtylyov@cogentembedded.com> a =E9crit :
+> Hello!
+>=20
+> On 26.04.2020 21:58, Paul Cercueil wrote:
+>=20
+>> Convert the ingenic,intc.txt doc file to ingenic,intc.yaml.
+>>=20
+>> Some compatible strings now require a fallback, as the controller
+>> generally works the same across the SoCs families.
+>>=20
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> [...]
+>> diff --git=20
+>> a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml
+>> new file mode 100644
+>> index 000000000000..28b27e1a6e9d
+>> --- /dev/null
+>> +++=20
+>> b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.ya=
+ml
+>> @@ -0,0 +1,63 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id:=20
+>> http://devicetree.org/schemas/interrupt-controller/ingenic,intc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Ingenic SoCs interrupt controller devicetree bindings
+>> +
+>> +maintainers:
+>> +  - Paul Cercueil <paul@crapouillou.net>
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^interrupt-controller@[0-9a-f]+$"
+>> +
+>> +  compatible:
+>> +    oneOf:
+>> +      - enum:
+>> +        - ingenic,jz4740-intc
+>> +        - ingenic,jz4760-intc
+>> +        - ingenic,jz4780-intc
+>> +      - items:
+>> +        - enum:
+>> +          - ingenic,jz4775-intc
+>> +          - ingenic,jz4770-intc
+>> +        - const: ingenic,jz4760-intc
+>> +      - items:
+>> +        - const: ingenic,x1000-intc
+>> +        - const: ingenic,jz4780-intc
+>> +      - items:
+>> +        - const: ingenic,jz4725b-intc
+>> +        - const: ingenic,jz4740-intc
+>> +
+>> +  "#interrupt-cells":
+>> +    const: 1
+>=20
+>    Do double quotes work the same as the single ones?
 
-Patch applied for fixes since it fixes a regression,
-I recommend looking a bit down the dependency
-chain as indicated by Geert if you have time!
+Yes. The only difference is that you can escape characters in double=20
+quotes.
 
-Yours,
-Linus Walleij
+-Paul
+
+>=20
+> [...]
+>=20
+> MBR, Sergei
+
+
