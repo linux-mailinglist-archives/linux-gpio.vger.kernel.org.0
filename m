@@ -2,170 +2,220 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A23001BD071
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 01:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C8A1BD07C
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 01:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbgD1XKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 19:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726044AbgD1XKF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:10:05 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F054C03C1AC;
-        Tue, 28 Apr 2020 16:10:04 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l20so58932pgb.11;
-        Tue, 28 Apr 2020 16:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6zdBCh/xlVK5PCSYWZXUcjZ7d6eaIl4/naLqN4XoTsQ=;
-        b=XjQhU/J/vVFmZufkukdky9ZAfYjHNtQJMoxIRTvq2m2kpaihr5sAGI2VcBL6m4x0iG
-         qeRJnHnZFxBzu3PUnUhzp5W0UiJ749XBnZ01JktFSXLSGDMkZ4ISZqJPZ0TTVnYNsXZs
-         MySDnyco1HlwbIkkiQB0IykeOKEYW5h/XDgmMYJcCNe5hMKMv9AFMqgQz8tJS8y/D+cy
-         CJ2I4vm6PGZLLWgcTfCZHTd1LQIDm0DmnehRRPx7Hben1TjNZ8twflFrSso4BDW/NK9u
-         X6quEAzsd1qfesQM8WoP+qmaR/hUkwC9r1fIzztBFbp3Yik2oQDVpymy/SsS8ZnqcyMY
-         SvmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6zdBCh/xlVK5PCSYWZXUcjZ7d6eaIl4/naLqN4XoTsQ=;
-        b=f0UDYGDCv2i64SXTH9cIOGwlGbyQe4YoGjd2P4/s243dY+/FYKAYof+WIFxV4/wMzc
-         qomThnA+3aY9skYcDcgUntP7J4Sqvp8iR0NznCOqsjQernzN17oi1Xakdr6s/yUv/LKK
-         vsX/WV0Bc5/YVeXB1pUG7BQCIGIat7w7dOZGV5Nih24ucKLVTC81Dj5KMrPqR1CJJX3p
-         RU4SgJ/pa7mDuhe4e34J1s204ksmKFsSg4Ht06DH7ZTiWSAbRebatj6mHIopJU8Qm7YN
-         XD8pgR2qkw6FjHoP6UC8WWDTvPu4oDP0y+ElAc8zbp/BBgA1O5twC/gXibJauzTFZ+B4
-         x3rA==
-X-Gm-Message-State: AGi0PuZqX19XmSVIk1M2SY5KJ/HpHF3LAijBp2GIr5weG05hoxxUpupT
-        wf4H4IMOMKgZlCr7XT+5zrM=
-X-Google-Smtp-Source: APiQypJzE2hJ/H1IOJtoj3OJHBazjKl15p0BAdZCOJ4C/E1CEkWGc8AvSD7FuWooJHXEdCYLZuVonA==
-X-Received: by 2002:a63:4047:: with SMTP id n68mr29781771pga.321.1588115404136;
-        Tue, 28 Apr 2020 16:10:04 -0700 (PDT)
-Received: from syed ([106.202.21.137])
-        by smtp.gmail.com with ESMTPSA id u188sm16140298pfu.33.2020.04.28.16.10.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 16:10:03 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 04:39:47 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-Message-ID: <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
-References: <cover.1588112714.git.syednwaris@gmail.com>
+        id S1726279AbgD1XMA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 19:12:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35447 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgD1XMA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Apr 2020 19:12:00 -0400
+IronPort-SDR: 9Jy7Tkkdj67Ev5X9+qj6rkK1Fylf3euTI/3fRlqq/yTNJXPankuN8417dMzny28EaW+0CXjvwW
+ eYlHOrwhC7aA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 16:11:59 -0700
+IronPort-SDR: KSNo6OaWEdmBTjHR/YqrwoZs62xKlV1ZEyoZqJDHZa5eNkA/Cd2C/EaxIjCZd6eLdjKNl53lc/
+ LJCna2MCba7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="257775116"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 28 Apr 2020 16:11:58 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jTZOP-0000WS-Cj; Wed, 29 Apr 2020 07:11:57 +0800
+Date:   Wed, 29 Apr 2020 07:11:17 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:devel] BUILD SUCCESS
+ 66d8ad67aab3bc6f55e7de81565cd0d4875bd851
+Message-ID: <5ea8b815.srpRDaV5eQHxzm4m%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1588112714.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch reimplements the xgpio_set_multiple function in
-drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
-Instead of looping for each bit in xgpio_set_multiple
-function, now we can check each channel at a time and save cycles.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
+branch HEAD: 66d8ad67aab3bc6f55e7de81565cd0d4875bd851  gpio: mlxbf2: fix return value check in mlxbf2_gpio_get_lock_res()
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+elapsed time: 511m
+
+configs tested: 161
+configs skipped: 0
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+sparc                            allyesconfig
+mips                       capcella_defconfig
+microblaze                      mmu_defconfig
+ia64                             allmodconfig
+mips                           ip32_defconfig
+powerpc                           allnoconfig
+openrisc                    or1ksim_defconfig
+riscv                               defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+ia64                         bigsur_defconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                    nommu_defconfig
+mips                malta_kvm_guest_defconfig
+mips                         tb0287_defconfig
+mips                  decstation_64_defconfig
+mips                      loongson3_defconfig
+mips                          ath79_defconfig
+mips                        bcm63xx_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                            ar7_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc               randconfig-a001-20200428
+m68k                 randconfig-a001-20200428
+alpha                randconfig-a001-20200428
+nds32                randconfig-a001-20200428
+riscv                randconfig-a001-20200428
+nios2                randconfig-a001-20200428
+h8300                randconfig-a001-20200428
+c6x                  randconfig-a001-20200428
+sparc64              randconfig-a001-20200428
+microblaze           randconfig-a001-20200428
+sh                   randconfig-a001-20200428
+csky                 randconfig-a001-20200428
+s390                 randconfig-a001-20200428
+xtensa               randconfig-a001-20200428
+openrisc             randconfig-a001-20200428
+i386                 randconfig-c002-20200428
+i386                 randconfig-c001-20200428
+x86_64               randconfig-c001-20200428
+i386                 randconfig-c003-20200428
+x86_64               randconfig-c003-20200428
+x86_64               randconfig-d001-20200428
+i386                 randconfig-d002-20200428
+i386                 randconfig-d001-20200428
+x86_64               randconfig-d003-20200428
+i386                 randconfig-d003-20200428
+x86_64               randconfig-a001-20200428
+i386                 randconfig-a003-20200428
+x86_64               randconfig-a003-20200428
+i386                 randconfig-a002-20200428
+i386                 randconfig-a001-20200428
+x86_64               randconfig-a002-20200428
+x86_64               randconfig-f002-20200428
+i386                 randconfig-f002-20200428
+i386                 randconfig-f003-20200428
+x86_64               randconfig-f003-20200428
+i386                 randconfig-f001-20200428
+x86_64               randconfig-f001-20200428
+i386                 randconfig-g003-20200428
+x86_64               randconfig-g001-20200428
+i386                 randconfig-g001-20200428
+x86_64               randconfig-g002-20200428
+i386                 randconfig-g002-20200428
+x86_64               randconfig-g003-20200428
+x86_64               randconfig-h001-20200428
+i386                 randconfig-h003-20200428
+x86_64               randconfig-h003-20200428
+x86_64               randconfig-h002-20200428
+i386                 randconfig-h001-20200428
+i386                 randconfig-h002-20200428
+ia64                 randconfig-a001-20200428
+powerpc              randconfig-a001-20200428
+arm64                randconfig-a001-20200428
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
-Changes in v3:
- - No change.
-
-Changes in v2:
- - No change.
-
- drivers/gpio/gpio-xilinx.c | 64 ++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 67f9f82e0db0..428207f9ab91 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -136,39 +136,43 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
- static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
- 			       unsigned long *bits)
- {
--	unsigned long flags;
-+	unsigned long flags[2];
- 	struct xgpio_instance *chip = gpiochip_get_data(gc);
--	int index = xgpio_index(chip, 0);
--	int offset, i;
--
--	spin_lock_irqsave(&chip->gpio_lock[index], flags);
--
--	/* Write to GPIO signals */
--	for (i = 0; i < gc->ngpio; i++) {
--		if (*mask == 0)
--			break;
--		/* Once finished with an index write it out to the register */
--		if (index !=  xgpio_index(chip, i)) {
--			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       index * XGPIO_CHANNEL_OFFSET,
--				       chip->gpio_state[index]);
--			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
--			index =  xgpio_index(chip, i);
--			spin_lock_irqsave(&chip->gpio_lock[index], flags);
--		}
--		if (__test_and_clear_bit(i, mask)) {
--			offset =  xgpio_offset(chip, i);
--			if (test_bit(i, bits))
--				chip->gpio_state[index] |= BIT(offset);
--			else
--				chip->gpio_state[index] &= ~BIT(offset);
--		}
-+	u32 *const state = chip->gpio_state;
-+	unsigned int *const width = chip->gpio_width;
-+	const unsigned long state_size = BITS_PER_TYPE(*state);
-+	unsigned long offset, clump;
-+	size_t index;
-+
-+#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
-+	DECLARE_BITMAP(old, TOTAL_BITS);
-+	DECLARE_BITMAP(new, TOTAL_BITS);
-+	DECLARE_BITMAP(changed, TOTAL_BITS);
-+
-+	spin_lock_irqsave(&chip->gpio_lock[0], flags[0]);
-+	spin_lock_irqsave(&chip->gpio_lock[1], flags[1]);
-+
-+	bitmap_set_value(old, state[0], 0, width[0]);
-+	bitmap_set_value(old, state[1], width[0], width[1]);
-+	bitmap_replace(new, old, bits, mask, gc->ngpio);
-+
-+	bitmap_set_value(old, state[0], 0, state_size);
-+	bitmap_set_value(old, state[1], state_size, state_size);
-+	state[0] = bitmap_get_value(new, 0, width[0]);
-+	state[1] = bitmap_get_value(new, width[0], width[1]);
-+	bitmap_set_value(new, state[0], 0, state_size);
-+	bitmap_set_value(new, state[1], state_size, state_size);
-+	bitmap_xor(changed, old, new, TOTAL_BITS);
-+
-+	for_each_set_clump(offset, clump, changed, TOTAL_BITS, state_size) {
-+		index = offset / state_size;
-+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
-+				index * XGPIO_CHANNEL_OFFSET,
-+				state[index]);
- 	}
- 
--	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
--
--	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
-+	spin_unlock_irqrestore(&chip->gpio_lock[1], flags[1]);
-+	spin_unlock_irqrestore(&chip->gpio_lock[0], flags[0]);
- }
- 
- /**
--- 
-2.26.2
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
