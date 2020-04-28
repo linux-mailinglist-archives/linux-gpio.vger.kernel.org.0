@@ -2,106 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E2971BBD33
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 14:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06B631BBD4C
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 14:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgD1MNf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 08:13:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41034 "EHLO
+        id S1726763AbgD1MRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 08:17:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbgD1MNf (ORCPT
+        by vger.kernel.org with ESMTP id S1726634AbgD1MRd (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:13:35 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED83C03C1A9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:13:34 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t11so16655174lfe.4
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:13:34 -0700 (PDT)
+        Tue, 28 Apr 2020 08:17:33 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 721DFC03C1AB
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id l11so16706563lfc.5
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:17:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=b2zEr6GSGq6P53PK6N6qDZtN5fHu9nTPoj3KiK/HB20=;
-        b=TXcHc84UJDMqMyXkViQc1fvVIpsQvmfjZmNigqUTTvXSU9SblKons3Atq7mYzK36UT
-         xed4Fa5XbRISfs99ZrXyVKj1a6j9QNNeMzLdpiE6kuOY7ip8cNhvjB/5ljj9AXXJbRDv
-         NzwWYGYUc6R0jbtvYx6vT/kCa3Q3cSJAwE7PJSP96yjtoehnGct9QiZr2QLyEqolXfKl
-         X4vHJJ98qpMhsDiuMB3ll+C7Xt8JbeVNiAPmEY6vfqiHuaK9+KmDJODrwHvF51+wLFdw
-         wSGRGpN9mjXksG0wm2EVUZxUpg/WHn/zxE1xIkqutAjlA+li+veIIucHoC1Bd5EDYRYg
-         fy7A==
+         :cc;
+        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
+        b=cpxZ39XBlCTINntejfucjY+fxwFnKaspaM3tU4nQp/hop/2uuOah5PTPJIVYhBsP0W
+         lfbrOouP0K5/qArfU93epvXV9Y0O6xB64TrG2LalkHRUXMuhtF1VOGCuunlHRaSWlCvU
+         UHkcTxvAalSafoniWBgo7ypiQQoQkfcbaM7lr8XOmc03Hs2/vYdnvaGbEYi7RwmhyLgh
+         Ix0qkhnBs+3QBU4zUqNxIMJE9AGHOeu95Yjh4jGOIRVTbFV9eWhbfrJs5DKMZu0bEYCE
+         nPaF6CiFGEo7dZEoqMb+u78l257RyVEql24fQGrFjpdihMl/nM+w9d0ScNBUeGpLfumj
+         egvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=b2zEr6GSGq6P53PK6N6qDZtN5fHu9nTPoj3KiK/HB20=;
-        b=GXQwRw5xs49RS1ljSWSBSwhrYkX0VA8b9NR72e088OOxlWUFousDONJsW9Y8SrzDwL
-         +yss0zWFvHfnDOV0EupB6SOjPoachwpsNT2TbTTfEmz84lCDT2HS1PQnyC+Ql3CUXOi8
-         XTwpMgoyKCXUBNoMslNDqlN4NPjw8InCSUl8vJiz/FtW5gLzHYU01gk3sFg8YJX4GOVZ
-         vkhRRiWjzWZpR6ISckNuLbpB10/q9i1SROF07BBnCAX3CxDVQsvdmfYL04jh6cP5dzkD
-         CLnWp7JrCsezMT2z4W7erspOsJ9REdxAE6NxuwXnKkzlnWDMMw8dvf6+uR5Lm1LOyLTM
-         hMJA==
-X-Gm-Message-State: AGi0Puargtrq98lIUy+uLyhXafTCYiNHhsxZmmgNMD7jNMz9y2IsmZW5
-        XR/59av5BsZgZjQWdgRjKHQwlrSF9gyavDIiQpiyZdSi
-X-Google-Smtp-Source: APiQypLElCjT+nD9xM7fcez5f0aPtDH+ruQba2CrDas7/xdd58VSlxDK1GJzuQlHsFWBVhrLVxlxRiLpUYysrFNgp6w=
-X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19245284lfp.77.1588076013160;
- Tue, 28 Apr 2020 05:13:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=LMRN5qxFiZK7LH7wFWLeZOcUrBLsRhKOimHQVM7fOfk=;
+        b=qhkFmHWWpsG4ASHTrJo8Q1ykDpHLJIu12pgZ4pywb7ss0z+dA8Eq2ruUuYd9GhM/a5
+         Y/Xmj9DFOPgUejcQdfdtoRCvg5PKsGoBIxmWEcrWnFuOm+M5GiWvJAAxq8uQv3idL361
+         nNJJVh+els/uj8eEULSweHVR/iIGp23ilyY0R1FloNboGbaoHZW+vSw9sX12zmsUSbGG
+         IEHbqZ2s1+KuCQzTlku4p2QgNHSkCOhC4igq6MiHJ5EDufdnQFj4Dou8Zo782CxFNred
+         HGj4rfA3SDMclvCfOUKSzaDnzlHUext1qsLY+Nla6RfGi/2Oqmt4Uj8YPIAXMLQFM2uE
+         tvLQ==
+X-Gm-Message-State: AGi0Pub1Kem8Y0od1uYMH9LGc8niwnwSxLlhP/8mNfTlPdzUiRhjTBUt
+        ChWq1/tLRA0AVlUw+hrWqFPaMLhG0mUHQuKXDyuX1A==
+X-Google-Smtp-Source: APiQypLWMYHDowDI3oIfEvtVytKcitjHf4lYdOHlnfwZ2JMiRfn25SLHbT7DdEte3F2EYP1mH2KagEeErbh4nPD3DbI=
+X-Received: by 2002:ac2:5c4e:: with SMTP id s14mr19256598lfp.77.1588076251617;
+ Tue, 28 Apr 2020 05:17:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
- <20200421130300.GK185537@smile.fi.intel.com> <CAMpxmJVVDUN6ei__wt5z+hOJQ0w0r9TZjhN9HCtpCA8Vrud0qg@mail.gmail.com>
-In-Reply-To: <CAMpxmJVVDUN6ei__wt5z+hOJQ0w0r9TZjhN9HCtpCA8Vrud0qg@mail.gmail.com>
+References: <20200423162548.129661-1-dianders@chromium.org> <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
+In-Reply-To: <20200423092431.v3.2.I1976736b400a3b30e46efa47782248b86b3bc627@changeid>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 14:13:21 +0200
-Message-ID: <CACRpkdYDHiscnm0BrSTwG6=-SCWZeqVfnEEkMAeQcco77GM8kg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] gpio: pca953x: Rewrite ->get_multiple() function
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Paul Thomas <pthomas8589@gmail.com>
+Date:   Tue, 28 Apr 2020 14:17:20 +0200
+Message-ID: <CACRpkdZuMALENkGjOUuQqS1pTH2sXkj1Z59mPjOrBynnkAQdpA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add hpd-gpios to
+ panel-common bindings
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 5:42 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> wt., 21 kwi 2020 o 15:03 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
-> >
-> > On Mon, Apr 20, 2020 at 08:27:50PM +0300, Andy Shevchenko wrote:
-> > > The commit 96d7c7b3e654 ("gpio: gpio-pca953x, Add get_multiple functi=
-on")
-> > > basically did everything wrong from style and code reuse perspective,=
- i.e.
-> > > - it didn't utilize existing PCA953x internal helpers
-> > > - it didn't utilize bitmap API
-> > > - it misses the point that ilog2(), besides that BANK_SFT is useless,
-> > >   can be used in macros
-> > > - it has indentation issues.
-> > >
-> > > Rewrite the function completely.
-> >
-> > Bart, Linus, please, consider this series to be applied, because it has=
- Uwe's fixes.
-> > We may still discuss the approach with ->get_multiple(), though.
-> >
+On Thu, Apr 23, 2020 at 6:26 PM Douglas Anderson <dianders@chromium.org> wrote:
+
+> In the cases where there is no connector in a system there's no great
+> place to put "hpd-gpios".  As per discussion [1] the best place to put
+> it is in the panel.  Add this to the device tree bindings.
 >
-> Personally I like these patches - if Linus doesn't object in the
-> coming days I'll pick them up into my tree as a follow-up to Paul's
-> patch.
+> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-I don't mind.
-
-I would like that Uwe also agrees that we can merge
-these three and use as a base?
-
-I don't mind trying to put in code to optimize use cases
-when accessing single bytes here either. But I'd like there
-to be explicit comments in the code saying why these
-optimizations are there. Can we do those on top of
-this (hopefully) known working base?
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
