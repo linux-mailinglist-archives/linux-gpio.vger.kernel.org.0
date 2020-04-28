@@ -2,78 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C391BB9B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FDCB1BBA0F
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgD1JUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 05:20:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727064AbgD1JUu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:20:50 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1279BC03C1AD
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:20:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r17so16280854lff.2
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ICN7dCbBx+6WcoJArMnBEzGvK72rSzOZiK5dL2bPeD0=;
-        b=GSzf/+wsv5cyATIz/phw1ojwp4XlksxZM2jEHxqwTKLBsfOj2Tm8SPZhPYNBd+ZYiw
-         kkFCMlrO12KSyLfwW6Npq2lked/S06URs6P2h7WJVdy8hHZ+CBtRGQCAQDMgJyyyLRaO
-         IvBJ7XYQ5jC0tIiRtVPN2ODt0VtbClcg2ZPs2tMKCR1du0uNpaTy0bAsbdFeW8k/6lVQ
-         KjKh1X855w6wNtJ5KK+z0/TMd5dyQCBrcsoXmCGNxSxdiKBaLmy+WoA5p4sO8gqIU4K/
-         yvpoXibwcg0tLpNTItn8e408z//AZ+7vFd8F9xxOLytU2lVZhMpt9K7sasBX3FT6nu4o
-         4phw==
+        id S1726958AbgD1Jki (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 05:40:38 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:32971 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgD1Jkh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 05:40:37 -0400
+Received: by mail-ej1-f66.google.com with SMTP id nv1so16756254ejb.0;
+        Tue, 28 Apr 2020 02:40:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ICN7dCbBx+6WcoJArMnBEzGvK72rSzOZiK5dL2bPeD0=;
-        b=lnFXGPvxqweYjcu+ogWKey3KieJuJP2forb5QkrhZOsWxbTff2EeYCf+CoWLiv6dl8
-         az/PWaUswqfDasPCkfXO4wcdh6U3T1c0jCgl7naRjBvQd0V9kz2go0dxmeO84I2cVokB
-         JJ6BzcUaSrq5FAMy7iRR6At5NpEhcFdLpk7Evtlsq3ZH7cy0ayF5yvNGII/H5HQ6HL18
-         3Bgxs+CFtbTkSUK+yvIu+/qlMm/ZOIFRbeUAlKKp0U88vxyZAGM39AiwtZncBEaKUlgp
-         Aaqb+Xq6UvDa8RFIPZomZKMpCVXQUA8GRpRcy7aFQf+cceoSMxR5oBIPSzoAsVpIUuNp
-         GAWQ==
-X-Gm-Message-State: AGi0PuYc/nGeSKtLntst7z2qL3OwFI+g1TpeHITonSvFTWKpMvAcBJgL
-        UZwG11sOJZXunIgGsJ3qcv+Sj7mRdp3E9v4c3kTFBw==
-X-Google-Smtp-Source: APiQypIus6ZMe4qjasmN97t76YaFjK6cebZ/M2PBOdjLaAbJq41X1LdszKoDynGbta+EZNl04COKBV/jynSPVQp9okk=
-X-Received: by 2002:a19:42c3:: with SMTP id p186mr349742lfa.194.1588065647258;
- Tue, 28 Apr 2020 02:20:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QPpy8dELuAAjDK6ELgslqKgtZGdGtoakZnwFCsFyxiY=;
+        b=SB1C5AgCL0uhWv8Autt7LrkawzvSoMx1LjP4jyMGQCHiV71tslZ5VBQOVjNnqPn1yE
+         Exj3BPYhxPecw2VqYN5+msmjRp1dBKFFiNX3RatKtVd0lLl3ctH6iPZ11+VCon2oN5Kc
+         NIl3JJLhkUkVTZ2W71ePFm7+SkkJgxYt2i1iWLz4VHinRzl+y95iQqLCQsinfsDjazhI
+         zWxLT8fFvWer6c2Gux47FqyGijwi7/lANI6xV2Vc+dFc05aImplSdMpktnyg5O4B3wBr
+         tDXOylZut0Ko5zkdML+9Ym1VC+PUnmrcerUEaZHFSjv0STgVvvzSqiNAJ2HXCRzSIgf+
+         2+7A==
+X-Gm-Message-State: AGi0PuapHNDy4Srupr3U4sy97HgivpsOTu7WqBuMlMrbpZpWkBonY1cE
+        TifHUIKd/gN2HQP0KZT1HJewoPQo
+X-Google-Smtp-Source: APiQypK/J2mRSfYf1Diw96LSTO8Uy+VHIm/8bbRhhtGMjC1QU33gdmtKQlVA6cbWyNIKnF5z1H2Phw==
+X-Received: by 2002:a17:907:20b5:: with SMTP id pw21mr22933290ejb.227.1588066835749;
+        Tue, 28 Apr 2020 02:40:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id yd11sm398829ejb.8.2020.04.28.02.40.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 02:40:34 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 11:40:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     tomasz.figa@gmail.com, s.nawrocki@samsung.com,
+        linus.walleij@linaro.org, kgene@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: samsung: Save/restore eint_mask over suspend
+ for EINT_TYPE GPIOs
+Message-ID: <20200428094032.GA23462@kozik-lap>
+References: <BN6PR04MB06600C848C2C1531F73DAD7BA3D10@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 11:20:36 +0200
-Message-ID: <CACRpkdb9ZmoD5x1g7O-BHFWJ3qNMBGrrVN_=ygDAMuXe76xuFg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Qualcomm SM8250 TLMM binding and driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB06600C848C2C1531F73DAD7BA3D10@BN6PR04MB0660.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 8:19 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Sat, Apr 25, 2020 at 04:10:46PM -0700, Jonathan Bakker wrote:
+> Currently, for EINT_TYPE GPIOs, the CON and FLTCON registers
+> are saved and restored over a suspend/resume cycle.  However, the
+> EINT_MASK registers are not.
+> 
+> On S5PV210 at the very least, these registers are not retained over
+> suspend, leading to the interrupts remaining masked upon resume and
+> therefore no interrupts being triggered for the device.  There should
+> be no effect on any SoCs that do retain these registers as theoretically
+> we would just be re-writing what was already there.
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-exynos.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-> Binding and driver for the Qualcomm SM8250 TLMM pinctrl block
+Exynos4412 (Odroid U3) also did not retain the register values. SD card
+detect interrupt should be affected.
 
-Applied both patches. Thanks!
+Thanks, applied (with CC-stable).
 
-As noted elsewhere Qualcomm is full circle now recycling the
-number of their first Snapdragon QSD8250 SoC from 2007
-for a new SM8250 SoC only 13 years later :D
+Best regards,
+Krzysztof
 
-Yours,
-Linus Walleij
