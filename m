@@ -2,82 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90BD81BBA8A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 12:01:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5153B1BBB50
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 12:35:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgD1KBZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 06:01:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48454 "EHLO
+        id S1726348AbgD1KfT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 06:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726598AbgD1KBZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726309AbgD1KfS (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 06:01:25 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F54C03C1A9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 03:01:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u6so20784329ljl.6
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 03:01:25 -0700 (PDT)
+        Tue, 28 Apr 2020 06:35:18 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD15C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 03:35:18 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id t11so16429989lfe.4
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 03:35:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vLmsZ8FzUvZ2qyUD84j1b22i18dHEE70Jtvscxhc09k=;
-        b=YuSW84MJxGm4qTrO7x6FDa0tNZ2DwTGnBZcdLuuUJwmIySl3NXFo5FIxgcdvSWhhHw
-         w8f3SVhylLAGIenBWpXFofh7SIqxoYqGlwz7LQm+YJ51a177fjUJO5Xr8wTKk7PLE9Ow
-         sq0njirZjcIVJgrpYtz0SI1Xkqde9Fx+gJzIVvtihqPzC8b+RubH3I+eAsZH3kyRJCaT
-         TGV1gQgqGK9ntlhlHxoERIFjvIwg0mp1TnG9kPacdcpTqghNObPflJ8OxLxmk7azsenJ
-         5pB5uU4FilL+JAVfPKMCSGlURLIKRawxY2bwR16A3geOEdTBD8NnehNPWlwNekdReDCw
-         g9WA==
+        bh=BJeRnwA9amHTr9HBEW7mHHem3+zV44srWi4Z/fPkb/4=;
+        b=FkJkBtD/KENicQYgV8/9KEdp8orrQgIFyT8zmHnW3Mmp+OnH1EUrSPkgFaAg7rlchX
+         +x9wIx2GcWtef8yKRxW2LS2+lJhQzg4O7CvPlq35R9E/b77f5c3yVqjodC6AWLuIrjpC
+         ZZ3Yv2dbBK4OV+W6SO3oy7dR13A6BBHvJAr094oN+JHE0yFTpbEG11D1hiAVxQDVmsG3
+         u2rsoy++wB9s/xSFhf11yHvF6EgyXav/TWlMOgfJTVtgZYELJRT0juiYqxxpzQoGLnxE
+         PlDm2IZvcXvllzW7RQ/ZPx6HDNBLisPgsdamz+sZ0J+VdUf8wgDn+ytmTx70QEXxeFPy
+         l5Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vLmsZ8FzUvZ2qyUD84j1b22i18dHEE70Jtvscxhc09k=;
-        b=OKAJPuOWPdib+AEbxSTb30WySOUWLLD3ZlfmiWB++RsbgVL8oB4Aev8f9h+1g0A8go
-         N3Wxqerc0FJnwKDNPTIZbnHZf8ImHi/6/Z+6jDvJLdXEBTzIgDtE4iG5J+CU3FItEFot
-         CNEKvyktJnQPbjQB5yV7XEW7uFaxEObkNuB+eyPSpN4J1XeKAckgy9/07xpnXY/2B7Z9
-         dQ9wG6zgBaZU7fT9Pe6ei2GbZAAp6pknGbkCjhpMbR26cdS1XJRngMcRXIzbalKtE5GF
-         cAwOa6HrPLB01eb9AWwFFIGx55EvecrRxUJvdcCAtweiIZOVABShOp9a0Tbd7SKhBzTt
-         bgjA==
-X-Gm-Message-State: AGi0Pua1cY1kBBS+sMUrMNOmCnQUVws69n7oxlI2pP4t5qhKCkdKspyf
-        XY5eXP341pNs2+mzRD0DzYVurqQkGQwBYUxbcIRe6Q==
-X-Google-Smtp-Source: APiQypILX45Ac1tiqnMnI+HFKCHUmn1qsryssGy+UbF1Sz2zs9tEQxqIByqukAumdnDai62XdgrEeXgjb4HSD+iqAwQ=
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr8308858ljq.125.1588068083674;
- Tue, 28 Apr 2020 03:01:23 -0700 (PDT)
+        bh=BJeRnwA9amHTr9HBEW7mHHem3+zV44srWi4Z/fPkb/4=;
+        b=Gqym+XUCli8acsUsVv8NSUa215wDW0g+avGc0b2m8kzeKr014B1xD+oOUqSu3wAa6m
+         lSCpr5krFW+JQQGeJr/O9TWOXlLncxdXExbcfqBMhKKWNgT2I3C7MFWZUfu5GoYy+3rX
+         dmxDuvmAWmaQLxfH7C5M82mayzKqOmwnqfy5GBbgHj6lRX170MoFmnrOM1XTH+BGIaWA
+         KgCqjn0NV+AHMPlaeBby6auQrWYj9wzJM4/YUAf02rs1S5i7vE0Xnxzskt2pJj26X6XY
+         iDBAMwDPOqE+QO5uiP4gPwAlx+SFTV38xjfO2dWBAr4DyJEa5OwzyB5d1neS9fnA0cHc
+         4eeA==
+X-Gm-Message-State: AGi0PuZzbE/pHp0oZw/6Km5ZAhFQXfLsMtrfPr7Vqm9XRDL+ZvhMfznh
+        rU6hDyks7N/YA+MQuPgDdRVhS/oFmk0KNo5TlU36dA==
+X-Google-Smtp-Source: APiQypJQohGEauHOPeCAfh6CAKNLQi3MDZVRWRvhKmCXA8vccTfOzGPM5rSuUJLaL3HrFixXMly5E2pXIjeahpVHKf8=
+X-Received: by 2002:a19:42c3:: with SMTP id p186mr548845lfa.194.1588070116907;
+ Tue, 28 Apr 2020 03:35:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200417183349.1283092-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200417183349.1283092-1-martin.blumenstingl@googlemail.com>
+References: <20200419002220.105338-1-hector.bujanda@digi.com>
+In-Reply-To: <20200419002220.105338-1-hector.bujanda@digi.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 12:01:12 +0200
-Message-ID: <CACRpkdZ82tjcBc_kF29zUMiLLH==0zKbOd=fTRGq5-4FOiez5w@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 0/2] pinctrl-meson: two small improvements
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 28 Apr 2020 12:35:05 +0200
+Message-ID: <CACRpkdZgkKG04=MmRLjepYY+trGY3fQCx49iFk9aTC4axfaMyw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Hector Bujanda <hector.bujanda@digi.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Drew Fustini <drew@pdp7.com>,
+        Kent Gibson <warthog618@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 8:34 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+Hi Hector,
 
-> While playing with audio output on Meson8b I found out that the
-> vendor kernel uses a custom version of the GPIO_PULL_UP flag. I
-> suspect that we will need this for audio support on Meson8b and/or
-> Meson8m2 but I don't see it hurt other platforms.
+thanks for your patch!
+
+On Sun, Apr 19, 2020 at 2:22 AM Hector Bujanda <hector.bujanda@digi.com> wrote:
+
+> This allows calling gpiod_set_debounce function through char device ioctl.
 >
-> Also while comparing the register bits with the GPIO direction (of
-> GPIOs exported to sysfs) I sometimes had a mismatch. This also wires
-> up gpio_chip.get_direction to have sysfs and the actual registers in
-> sync.
+> Signed-off-by: Hector Bujanda <hector.bujanda@digi.com>
 
-Patches applied.
+(...)
+> +/**
+> + * struct gpioline_debounce - GPIO line debounce
+> + * @line_offset: the local offset on this GPIO device, fill this in when
+> + * requesting the line information from the kernel
+> + * @debounce_usec: debounce in uSeconds to set for this line
+> + */
+> +struct gpioline_debounce {
+> +       __u32 line_offset;
+> +       __u32 debounce_usec;
+> +};
+(...)
+> @@ -154,5 +165,6 @@ struct gpioevent_data {
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+>  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
+> +#define GPIO_SET_DEBOUNCE_IOCTL _IOW(0xB4, 0x05, struct gpioline_debounce)
+
+Please do not define a new ioctl for this: since of commit
+e588bb1eae31be73fbec2b731be986a7c09635a4
+"gpio: add new SET_CONFIG ioctl() to gpio chardev"
+by Kent Gibson we have this:
+
+/**
+ * struct gpiohandle_config - Configuration for a GPIO handle request
+ * @flags: updated flags for the requested GPIO lines, such as
+ * GPIOHANDLE_REQUEST_OUTPUT, GPIOHANDLE_REQUEST_ACTIVE_LOW etc, OR:ed
+ * together
+ * @default_values: if the GPIOHANDLE_REQUEST_OUTPUT is set in flags,
+ * this specifies the default output value, should be 0 (low) or
+ * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
+ * @padding: reserved for future use and should be zero filled
+ */
+struct gpiohandle_config {
+        __u32 flags;
+        __u8 default_values[GPIOHANDLES_MAX];
+        __u32 padding[4]; /* padding for future use */
+};
+
+#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
+
+Setting debounce is just another type of config, so please use Kent's
+work as a base for this.
 
 Yours,
 Linus Walleij
