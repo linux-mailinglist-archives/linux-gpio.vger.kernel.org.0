@@ -2,111 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8CA11BBE9E
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A637E1BC01F
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 15:49:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgD1NJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 09:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726819AbgD1NJR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 09:09:17 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD864C03C1A9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:09:16 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j3so21340480ljg.8
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:09:16 -0700 (PDT)
+        id S1727812AbgD1NtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 09:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgD1Ns7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 09:48:59 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49AB9C03C1AB
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:48:59 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id u6so21519618ljl.6
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 06:48:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6wGncaYo3LN/NQ0J5wn4KymE59fDMQLF7G38Kj4SR5I=;
-        b=d5zYmSh/sLF8PRnCwJ5PFqFLmWs2hDLudcnmdg/fr4W5alWmrt88371fPhq7Jx20ei
-         NRQ9YNvy5+fzMKoEX7L3GC0De0aGjGuv30GjtcBs+XnYaR6VsyJ5o3yHHXR2NShM/KBu
-         yFa8nEFpAd3KAgPWXDpDBLXPnMNJ2c86xoEr1hF+UPaGCZ/qswhQ5ZmEtV1i6LaLIvoB
-         +wdAvTlUbevn/+LZSECtajTFvcRk9U+BfFIdbGz6cAaKCcSgViuj3tHsoD268VBcVaXN
-         8+VgTdEMZ6O+oUXNVaxSYCKWcFoIJYJA4HAdd0w/a+5ZqC17vfcOzepWF6rkA/C0JCnV
-         QV7A==
+         :cc;
+        bh=hprmAywS78pYBC0BQt7gTceIcUivP3JeOHfXgeteKA0=;
+        b=fCPifXw/aNPOXfO0rsjZ+yaZg41307Lkkk7BSKaH5H7psRRpteV5LYlsmB0N4dqM+G
+         B8ufwhgl1jAKHJtIaK2N3pMI8gNruYVHB2STb08rGaoYD52IUxGOz4Aspg3Ds0Le0ikd
+         TVuF6fV3Rvf7ebyZClOq1W3RpoHzm1YWMlrNqWKruL5OMdAZDou+zZlYEpF0HNAI/2Mc
+         4NeZzLtbfLNep4qlhJEL6P9PCgYdG7lyL4tYiZmCwJhcQwNzV22+w6k7VeKjtO6YFRXV
+         VYcgB+OPVwmv8eRYthKbSjqUsDGLqzpfUOeRl8laT2tDQSpAHIW/c8WTecXhOlyjnf/2
+         XtVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6wGncaYo3LN/NQ0J5wn4KymE59fDMQLF7G38Kj4SR5I=;
-        b=Pqy8lA+a15mfo764qlDUaUII5gnPhkcALXbXs2GO9EwI9gviYcC2i2lfycLJkrBG5F
-         OMeFtSJjUlGyjHDWu6eg3Z4T+dwgZsl0S4kAHGIfS/fdp0FhBsLHaAJNStKQ+uPpDyGx
-         i4BhvA63zcwa8NwZ7CaX8+/tKv3m5TeWrkOu5HCwMsK6G5Yq0crN4mTKe2IVPHtdMrfX
-         MQWLD5ZnMiTSeHpA83BKq7zTIIP21i8F6wprVqaHPLwL8TcM5yiIIqq238G8xPQVmR1T
-         q1PdSDoVbXoU2KUt4+JGdDYL2E6mf7UWzFUlz6EhKwKEa/pT37gBKkfklEjDoLnaXGaI
-         jRLA==
-X-Gm-Message-State: AGi0PuZ/MT5YoQajzfzow5v478O/fcaYHxXZ5ABRfCglM+2J7px9orsC
-        tPaokSWecGhiTDQX8p5/tAdkFhyfMKDgEX5bnSA=
-X-Google-Smtp-Source: APiQypJqqFsPe8wwTx9/Es/1Ml+3jIa5oGIk/RbnpXluIyaMQ5c7oru7212HKUS3n7OcjkeRrH5nAjqBK3AVFLqNZ7Y=
-X-Received: by 2002:a2e:6a08:: with SMTP id f8mr18392818ljc.8.1588079355163;
- Tue, 28 Apr 2020 06:09:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=hprmAywS78pYBC0BQt7gTceIcUivP3JeOHfXgeteKA0=;
+        b=DbhRTOQw1jQbainsXxgO8CfsFY29uZ7m+GidPS5nfpyTybTt9fnR6pFzojZvI9UNQa
+         thyQJpV07Y9xKM1hPhdN8kIjjwlFaLycR2PhAEcEKeJD0Q+T+SoZUqFWKD8X4SyWjD0r
+         OOX3spMYawQdmdWIrcSZxKJMKRCq3icueLI8My8fapbn9LQNi1cPS3j2FmAX83AM3wdV
+         R0x/pYZ9jxsMkU0lhqWLmoDH9odU49ICTcp/cF/qei7+d4+poNnLD/kob8DBQ56VIcdE
+         yvec/gO/uQwE3WV9YRujOpNROwnHpeqCEI8L35UuZy/z02qkh0KA0W5mCogUFo12i8iw
+         87yw==
+X-Gm-Message-State: AGi0PuYzwb5dKMKGPbo+fG0GjHUb90fB1XsEeOjzSU1RKxCQwpC8SWrp
+        OeQ/FLDPEMHdZpEFWy/YPn/1a77v8df6kWBzGKJUug==
+X-Google-Smtp-Source: APiQypJIhrNrQ+oaUJ5NP4QQvPil4l3MmkC57hDze40HmsjQNpb70nI3ajhIbXVp601g+fxmmSsaOiIc+ymo3FzTcC0=
+X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr18355448ljm.39.1588081737490;
+ Tue, 28 Apr 2020 06:48:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200420172752.33588-1-andriy.shevchenko@linux.intel.com>
- <20200421130300.GK185537@smile.fi.intel.com> <CAMpxmJVVDUN6ei__wt5z+hOJQ0w0r9TZjhN9HCtpCA8Vrud0qg@mail.gmail.com>
- <CACRpkdYDHiscnm0BrSTwG6=-SCWZeqVfnEEkMAeQcco77GM8kg@mail.gmail.com> <20200428124129.GR185537@smile.fi.intel.com>
-In-Reply-To: <20200428124129.GR185537@smile.fi.intel.com>
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Tue, 28 Apr 2020 09:09:03 -0400
-Message-ID: <CAD56B7cR9asgW-6PS7V+jZ8O7AYeYuH9egnF1G0uoQQaS9GhMA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] gpio: pca953x: Rewrite ->get_multiple() function
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
+References: <20200424141432.11400-1-geert+renesas@glider.be>
+In-Reply-To: <20200424141432.11400-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 15:48:46 +0200
+Message-ID: <CACRpkdYozdZZN5OB_tYOizFynWAXGSuRMbA1HmfBh0cZJ4J9aA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Improve kernel messages
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 8:41 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Apr 28, 2020 at 02:13:21PM +0200, Linus Walleij wrote:
-> > On Tue, Apr 21, 2020 at 5:42 PM Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com> wrote:
-> > > wt., 21 kwi 2020 o 15:03 Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
-> > > > On Mon, Apr 20, 2020 at 08:27:50PM +0300, Andy Shevchenko wrote:
->
-> ...
->
-> > I don't mind trying to put in code to optimize use cases
-> > when accessing single bytes here either. But I'd like there
-> > to be explicit comments in the code saying why these
-> > optimizations are there. Can we do those on top of
-> > this (hopefully) known working base?
-For the record my original get_multiple patch was a known working base.
+On Fri, Apr 24, 2020 at 4:14 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
+> Simplify the printing of kernel messages and make the messages more
+> accurate by using the most appropriate {dev,chip,gpiod}_*() helpers.
 >
-> As I pointed out to Paul, the optimization like he proposed is not bad th=
-ing
-> per se, the implementation is. On top of that I suggested to take a look =
-to IRQ
-> status bits, which presumable will leverage from this optimization as wel=
-l.
+> Sample impact:
 >
-> So, After applying this series it would be matter of change one line in t=
-he
-> ->get_multiple() to replace read_regs() with optimized version or so alon=
-g with
-> IRQ bits changes.
+>     -gpiochip_setup_dev: registered GPIOs 496 to 511 on device: gpiochip0 (e6050000.gpio)
+>     +gpio gpiochip0: registered GPIOs 496 to 511 on e6050000.gpio
+>
+>     -no flags found for gpios
+>     +gpio-953 (?): no flags found for gpios
+>
+>     -GPIO line 355 (PCIE/SATA switch) hogged as output/low
+>     +gpio-355 (PCIE/SATA switch): hogged as output/low
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This new function would then at least need to be called with mask as
-an additional argument right? Then the bitmap_replace() will set
-everything regardless of if it was read, this is fine I suppose
-because it doesn't matter if it's setting bits outside of mask. You
-just have two loops one in the new function and one in
-bitmap_replace(). If this is what people would like to see I can work
-on it. I did look into the sparse reads and it seems as though regmap
-has a gather_write, but not a gather_read and gather_write isn't in
-regmap-i2c.c anyway.
+Patch applied.
 
--Paul
+Yours,
+Linus Walleij
