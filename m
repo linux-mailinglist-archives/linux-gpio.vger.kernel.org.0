@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC2491BBA29
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:44:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A42A01BBA72
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgD1Joh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 05:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45856 "EHLO
+        id S1727030AbgD1J5c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 05:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727025AbgD1Jog (ORCPT
+        by vger.kernel.org with ESMTP id S1726971AbgD1J5c (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:44:36 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DD0C03C1A9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:44:36 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id g10so16262896lfj.13
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:44:35 -0700 (PDT)
+        Tue, 28 Apr 2020 05:57:32 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9CC5C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:57:31 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id w145so16388918lff.3
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0UwsKd6vtLSCO+MFkJGwQlziNOURozUhwGk20R/4vuY=;
-        b=UzrziHufYg2IV1lUy1O45fipzDSH8BPk7s1ZbmSWgXVN+n9GnxcaReQ5cGUslhnEQZ
-         4JHya+bD2zeWKzi5H+7AWh9YMUGX4C0zRrSSTdK8A77cLK8VLkrABNliLF/p6/hW92e1
-         /MbDwESeW1WeukvySmU40LWggL/BNtzT6ahJ4+kwARYu3vKv49zUWPRhFH4SS0Z69N10
-         pT1vn221GFY80EXfMZTxIn+R1Z0no2h7rpBwqlcb4i1er0vk78o1WfxjfsxrV8Z9AEoz
-         5X0F3toGKfs7VvYB0Rx7v/8GpbJ4zQcMReY68MDfGFUwmZmm7WyG0TGxef4LuoWqFlHR
-         LU9w==
+        bh=emWSYXlvaLYbUsqppuZRW0WW307P6cdu3tUygZ7HsUs=;
+        b=ChNa+MI0PV5AUDk2WT90eheZaHg4vbnI7AgBQqrVkxc5FbNbdO8bUyDRfkz4xfd7qh
+         B8eLVgLCuz8hw7Y7NtRavExkKSYkvBtNYTO+0+OneUAwAqSPHViwww5B9SnPtX4AT4GQ
+         +l8J3ogATy5QJ4REzSbRX5DEmakF30Vni1zZIjJERr3uLcOs9LyHA9tlX+2HxAvp3jz7
+         uj6z7JKeexUzdUcsPZdMi/OBLpJK7IghB4i83rZOIZokHOfL0jrQa39lvcs9PTHymNGf
+         xHa5aVSZotzwPPMJ5yoPs4XspfcDeh7LivOGta5gHoHf14Sm2PWEuASHNorKGFyDvmZQ
+         EWSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0UwsKd6vtLSCO+MFkJGwQlziNOURozUhwGk20R/4vuY=;
-        b=VwUadob88THbXlCBo7pEKjSG9FR0n4jeM9jgDVXvvQxKsFdCq7pifXbV424If5c/KR
-         Gr7ynPzogt31m/fUOWsMuyGEkpfFeI0jHjEkp9AATZD4XLm8fvPfjOb1bAWKciV8BiEq
-         fD3Ss/tX29RGBIEzhcV997asYao0jilulmpJTx/UcFkOPuCLe6su0bqqOYMBwbqLAmFl
-         6XjgIFQ//ESCnhN1hiK6mUZzt1Uj44Clrar/w9T6hrf8gyDfpCKmIt1XOVbJPGQPad/M
-         SNKbPSYzJIAP5CsWhxaKrmgvsumV0De5Lu1tkbNIrNEtVSofHFxwFmDrIMKjvZCuPXVJ
-         70Fw==
-X-Gm-Message-State: AGi0PuaCkIYIehkt1VYi1f0qJwjKePOk4ahS+THaeiS7hsoz93KRe3jy
-        aSnD9IxjLA3yoczEhQlX/Oa40JDPXc8=
-X-Google-Smtp-Source: APiQypIBKhDUiLxNAiSUtFtMDDZwJ8vw1Zk/y3Q8O4xhflXGe24Z5uCiL+QpLZQ1GNBGzp7zOzFjdQ==
-X-Received: by 2002:a19:f70c:: with SMTP id z12mr19177901lfe.78.1588067074270;
-        Tue, 28 Apr 2020 02:44:34 -0700 (PDT)
+        bh=emWSYXlvaLYbUsqppuZRW0WW307P6cdu3tUygZ7HsUs=;
+        b=EU4Af5KbovRJwvBiLfj4qeWo33crfA63iYQVacHBgd2HyFor80qtIPgG8zsyAKoVjI
+         O0edNAwGIki0en4n2F6Od0Hypg3GEomWZhYJK1k0fIGoHYXLweocCj0BEH1CbyafRvpW
+         ghl8iLfF90Iwy6aa+3NgmgqikrB10dN6+Q4mFkWNSErZf8Dofw2vovDT4wHEx1tvf9Im
+         polPt0gEZZNHZ9m6KpEGVbhxiHtai/xS46wMPNRyY22yW2oWCK5tPYW1u5gq/qcNHPps
+         nxh/Fwvje1Ba2xm+qMtcWZgeMmvRc9KmdSuyS10+3A7qMNHNA1ID5at5MpMg/73ErTwM
+         aBLw==
+X-Gm-Message-State: AGi0PuYpvPjbSjva6subsuYJcHGtHeseUVLnhtc/Tp1Kh9QW6lZvwXZa
+        9muEbJ2bVISUSI/vHbBMU6AxIw/+RjY=
+X-Google-Smtp-Source: APiQypLzRbRv2WMOdSl7GImhlcTFvhciJkHhLYTBgDJUD5ABVnxRwjRD8eytiFb8Q2LzP2uYtXrZ5w==
+X-Received: by 2002:a19:f614:: with SMTP id x20mr18462531lfe.84.1588067849877;
+        Tue, 28 Apr 2020 02:57:29 -0700 (PDT)
 Received: from localhost.localdomain (c-f3d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.243])
-        by smtp.gmail.com with ESMTPSA id y9sm12213747ljm.11.2020.04.28.02.44.32
+        by smtp.gmail.com with ESMTPSA id x80sm14037760lff.23.2020.04.28.02.57.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 02:44:33 -0700 (PDT)
+        Tue, 28 Apr 2020 02:57:29 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Patrice Chotard <patrice.chotard@st.com>,
         Hulk Robot <hulkci@huawei.com>, Jason Yan <yanaijie@huawei.com>
-Subject: [PATCH] pinctrl: ab8505: Define group for GPIO pin 50
-Date:   Tue, 28 Apr 2020 11:42:29 +0200
-Message-Id: <20200428094229.843531-1-linus.walleij@linaro.org>
+Subject: [PATCH] pinctrl: db8500: Fix some old bugs
+Date:   Tue, 28 Apr 2020 11:55:26 +0200
+Message-Id: <20200428095526.854974-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,36 +64,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Hulk robot reports an usused varible:
+The Hulk robot reports these build warnings:
 
-drivers/pinctrl/nomadik/pinctrl-ab8505.c:137:23: warning:
-‘gpio50_a_1_pins’ defined but not used [-Wunused-const-variable=]
- static const unsigned gpio50_a_1_pins[] = { AB8505_PIN_L4 };
+drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:899:20: warning:
+‘sbag_groups’ defined but not used [-Wunused-const-variable=]
+ DB8500_FUNC_GROUPS(sbag, "sbag_oc2_1", "sbag_oc4_1");
+                    ^
+drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:570:23: warning:
+‘ipgpio6_c_2_pins’ defined but not used [-Wunused-const-variable=]
+ static const unsigned ipgpio6_c_2_pins[] = { DB8500_PIN_G3 };
+                       ^~~~~~~~~~~~~~~~
+drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:472:23: warning:
+‘mc1dir_a_1_pins’ defined but not used [-Wunused-const-variable=]
+ static const unsigned mc1dir_a_1_pins[] = { DB8500_PIN_AH13,
+DB8500_PIN_AG12,
                        ^~~~~~~~~~~~~~~
+drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:453:23: warning:
+‘modem_a_1_pins’ defined but not used [-Wunused-const-variable=]
+ static const unsigned modem_a_1_pins[] = { DB8500_PIN_D22,
+DB8500_PIN_C23,
+                       ^~~~~~~~~~~~~~
+drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c:430:23: warning:
+‘kpskaskb_a_1_pins’ defined but not used [-Wunused-const-variable=]
+ static const unsigned kpskaskb_a_1_pins[] = { DB8500_PIN_D17,
+DB8500_PIN_D16 };
+                       ^~~~~~~~~~~~~~~~~
 
-This variable actually should be used. Probably an oversight
-by the driver author.
+They are just very old bugs in seldomly used pin groups.
+Fix the problem by using the pins and referencing the
+function.
 
-Cc: Patrice Chotard <patrice.chotard@st.com>
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Reported-by: Jason Yan <yanaijie@huawei.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/pinctrl/nomadik/pinctrl-ab8505.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-ab8505.c b/drivers/pinctrl/nomadik/pinctrl-ab8505.c
-index 5e6e7d28390a..b93af1fb37f0 100644
---- a/drivers/pinctrl/nomadik/pinctrl-ab8505.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-ab8505.c
-@@ -178,6 +178,7 @@ static const struct abx500_pingroup ab8505_groups[] = {
- 	AB8505_PIN_GROUP(gpio40_a_1, ABX500_ALT_A),
- 	AB8505_PIN_GROUP(gpio41_a_1, ABX500_ALT_A),
- 	AB8505_PIN_GROUP(uartrxdata_a_1, ABX500_ALT_A),
-+	AB8505_PIN_GROUP(gpio50_a_1, ABX500_ALT_A),
- 	AB8505_PIN_GROUP(gpio52_a_1, ABX500_ALT_A),
- 	AB8505_PIN_GROUP(gpio53_a_1, ABX500_ALT_A),
- 	AB8505_PIN_GROUP(pdmdata_b_1, ABX500_ALT_B),
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+index b9246e0b4fe2..acad3887cc74 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik-db8500.c
+@@ -691,18 +691,21 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
+ 	DB8500_PIN_GROUP(lcd_d8_d11_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(lcd_d12_d23_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(kp_a_1, NMK_GPIO_ALT_A),
++	DB8500_PIN_GROUP(kpskaskb_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(mc2_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(ssp1_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(ssp0_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(i2c0_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(ipgpio0_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(ipgpio1_a_1, NMK_GPIO_ALT_A),
++	DB8500_PIN_GROUP(modem_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(kp_a_2, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(msp2sck_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(msp2_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(mc4_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(mc1_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(mc1_a_2, NMK_GPIO_ALT_A),
++	DB8500_PIN_GROUP(mc1dir_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(hsir_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(hsit_a_1, NMK_GPIO_ALT_A),
+ 	DB8500_PIN_GROUP(hsit_a_2, NMK_GPIO_ALT_A),
+@@ -760,7 +763,7 @@ static const struct nmk_pingroup nmk_db8500_groups[] = {
+ 	DB8500_PIN_GROUP(u0_c_1, NMK_GPIO_ALT_C),
+ 	DB8500_PIN_GROUP(ipgpio4_c_1, NMK_GPIO_ALT_C),
+ 	DB8500_PIN_GROUP(ipgpio5_c_1, NMK_GPIO_ALT_C),
+-	DB8500_PIN_GROUP(ipgpio6_c_1, NMK_GPIO_ALT_C),
++	DB8500_PIN_GROUP(ipgpio6_c_2, NMK_GPIO_ALT_C),
+ 	DB8500_PIN_GROUP(ipgpio7_c_1, NMK_GPIO_ALT_C),
+ 	DB8500_PIN_GROUP(smcleale_c_1, NMK_GPIO_ALT_C),
+ 	DB8500_PIN_GROUP(stmape_c_1, NMK_GPIO_ALT_C),
+@@ -955,6 +958,7 @@ static const struct nmk_function nmk_db8500_functions[] = {
+ 	FUNCTION(spi0),
+ 	FUNCTION(spi2),
+ 	FUNCTION(remap),
++	FUNCTION(sbag),
+ 	FUNCTION(ptm),
+ 	FUNCTION(rf),
+ 	FUNCTION(hx),
 -- 
 2.25.2
 
