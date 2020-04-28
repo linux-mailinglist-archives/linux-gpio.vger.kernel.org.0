@@ -2,90 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B0601BC3B8
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 17:30:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 382FC1BC423
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 17:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgD1Pab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 11:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43846 "EHLO
+        id S1728224AbgD1Px1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 11:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727981AbgD1Pab (ORCPT
+        by vger.kernel.org with ESMTP id S1728083AbgD1Px0 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 11:30:31 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7C2C03C1AB;
-        Tue, 28 Apr 2020 08:30:31 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r4so10475280pgg.4;
-        Tue, 28 Apr 2020 08:30:31 -0700 (PDT)
+        Tue, 28 Apr 2020 11:53:26 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC8EC03C1AB;
+        Tue, 28 Apr 2020 08:53:26 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so10855243pfx.6;
+        Tue, 28 Apr 2020 08:53:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6PjGg3UbaqxfVPgULOkWJWIszbc0cWBSzi6BaU2Kh6M=;
-        b=nKLcbFM/dz/5pfMj+s2SkAwYS78K/cZLtnkGzt3F3FB7NdZn4FsWdVpI/wJR5FOYTO
-         qaT9nTWlFDPzgnRLR+yQj+YzKCkFC2ba7BlyQERQW3n/b6aN24Ug9FpE9gG2r2s/yqnQ
-         0P3rg8CPNj+xmrRXySCCGFOCyO+093tkJ+/cXnyNkKDHVhkil6CMJar9Wn8Wua2kxi/P
-         4sz8AD1U536RvHmXqTZe8/Aj+aYv45i7mZ2eVOOtOKP8nBJ6LhIkG4hQ8PGNWi+LE1z8
-         QNbM+3JRNXMja3UADJpgAuU37MITMO1FYpVsxqIg0osNd6ZDZhi6RzJlnHUPOqBshVQm
-         yjzg==
+         :cc:content-transfer-encoding;
+        bh=4Dhg0+RCUg11ejc9Q1N+f7+gMXXeAVYfvKm1BhfoLmA=;
+        b=JQYZducCGPFz2N8/fn4DsjPaw5tXH7cerckhDV74yHRZ6tAj5g+UQBXcvjLrXCjGmb
+         +11lZ0NeiQXAC6/lWBsC2aJemHrcgUywTQuV3JiNe8dShink+PnjdqCViJNwhBh26coD
+         8Pmd1dfvsdYIwWenuU1fKuOH5/tXjkjclCA+xme9q7IzL/XdrtP1dEsKOXttJx3wde3e
+         KeMIJd1BOZU03/sBg1GQW9qZocKAk4dkGGTPNu08zaZYgx/OLJEB4yGGBjp9+GStrCrG
+         NLUbwkJopSgh9V5LZFdMJN2SI+e5i03Aq3kglchAlXoK6L8seVUVBbcx4peeDImXPE59
+         F3vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6PjGg3UbaqxfVPgULOkWJWIszbc0cWBSzi6BaU2Kh6M=;
-        b=d3Lnsp/mePUBfUjc5z8px4DDeiqMaSGqMXKb0JHBkdQRzJaX5639/G4MwRzUVFla5a
-         F7Nfv9QqxrC+U53+6D/DfyfZderBD4rivREPUdqV9E1D4CT1TsJTo0tHHz05MPlldLHU
-         q4QHU8xi4tuKqP7IhvvlEAiO0y4uQZSj7Kw6IwW+2bY2atVLmNAskwLnAn2Zc1vy1eIL
-         yRdKSmVyMG/fFGPo0CkWbpmyty5ioihWd94kFj/5misYlbLiDSRkseVDKoPBhJV+LEw7
-         a+BTV5jSZOH1ou3Y/92Bib2JgNcvXQTNiLsf0PpF6TNqSAtT+6/41VKZy+JgOv9umaLE
-         cRPA==
-X-Gm-Message-State: AGi0PuYbXERnEortaCB8j7WQxMW+hYRvgXxfWwgvr44KvkrJVhiULs+I
-        mkvLyHD0KlsoY3xRW6WapKakku+irWnf422wNfg=
-X-Google-Smtp-Source: APiQypJtNDV9iExHzJU8YiVUP9l/NCa9z28YI5f6UtRB/lVB0A6v8hOtpV8C7MQ3/486tioY+E+OOeJN5JSFKz5HI4Y=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr29960076pgb.203.1588087830620;
- Tue, 28 Apr 2020 08:30:30 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4Dhg0+RCUg11ejc9Q1N+f7+gMXXeAVYfvKm1BhfoLmA=;
+        b=Kerv7oHyngeTaJnLXEA1/dXydGNKMNAooAUTS4+zIZTDqcHjuDquQXlwo+hHGwoH+q
+         135gOLYWU6HKWcVETMT0lBw6P714DmdTJ/jMxD/gJILbBdkKFDQ3k63/Vb1fCLk/kbig
+         8mzyBopTGp7aY7zSl8Q5wd0ELGMX5v4Urh0KtK3YiKI+2xBTmbftNKSmrk6BI4+jzHKv
+         NUH9ZmF2wkEP6s7FlvyTZ8D5MzofGC4pNCcPse8YVlf1w3maSN8iIvYtwhGEe8OMU4Pw
+         D+K58p/HXH2I2sTFaPyOKExR7P4VSX2+gtHNc3aVeWbX03UV215hvB0ZquncU2sErVZt
+         yu2Q==
+X-Gm-Message-State: AGi0PuZIbQcnnzhFNkqpQvrzTGfheoTmDA/1XArMX32l+KKpyjH93xbr
+        sXBMkS4TEtYL/33ptYZGMptrYLezIIDMnUc0GN0FNKbX
+X-Google-Smtp-Source: APiQypKFWwHJLH6rk36Yj9+OOyvIsOtqeqDNnRaG86QWUlI8Ip6WptGnO9jj24PozbAY27uk1GCjwktDh8vWj8HQwaI=
+X-Received: by 2002:a63:5511:: with SMTP id j17mr28068937pgb.4.1588089206109;
+ Tue, 28 Apr 2020 08:53:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200424154103.10311-1-zhengdejin5@gmail.com> <20200424154103.10311-3-zhengdejin5@gmail.com>
- <CACRpkdY5_+_n8qfUxAGtG16QW_VoVcpSFZuoBR8A6iuCbmsrFw@mail.gmail.com>
-In-Reply-To: <CACRpkdY5_+_n8qfUxAGtG16QW_VoVcpSFZuoBR8A6iuCbmsrFw@mail.gmail.com>
+References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
+ <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
+In-Reply-To: <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 28 Apr 2020 18:30:24 +0300
-Message-ID: <CAHp75VfmMJEFo8gcoESg9Zh6dBuzn7tB8iquaNBVU_nyTx-LMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: mm-lantiq: Fix small typo
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Tue, 28 Apr 2020 18:53:19 +0300
+Message-ID: <CAHp75Vdpb=hNiR3c7G_yTeSt70Vcy3DWHin0B5+WYV1hbRMBJQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 4:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Tue, Apr 14, 2020 at 6:35 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
 >
-> On Fri, Apr 24, 2020 at 5:41 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
->
-> > Fix a spelling typo in gpio-mm-lantiq.c by codespell
-> > s/dont/don't/
+> wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
 > >
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> > v1 -> v2:
-> >         - split patch v1 (only one patch) into patches for each driver
-> >           by Bartosz's suggestion. thanks Bartosz.
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Andy: since this is an Intel product are you picking it up?
-> I think this Intel-MIPS platform is a bit of a special case so
-> I can also handle it if you prefer.
+> > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> >
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock taken
+> > > as it takes a mutex internally. Let's move the call before taking the
+> > > spinlock and store the return value.
+> > >
+> > > This isn't perfect - there's a moment between calling
+> > > pinctrl_gpio_can_use_line() and taking the spinlock where the situati=
+on
+> > > can change but it isn't a regression either: previously this part was=
+n't
+> > > protected at all and it only affects the information user-space is
+> > > seeing.
 
-I only collecting stuff for x86 base Intel, this one is MIPS, so,
-please take it directly if you are okay with it.
+It seems I have no original at hand, so, commenting here.
 
--- 
+It looks like we need a mutex less function which can be used here and
+in the call you are considering racy.
+Note, mutex followed by spin lock is fine, other way around is not.
+
+So, here you should have something like
+
+mutex_lock
+ok_for_gpio =3D ...
+spin_lock
+...
+spin_unlock
+mutex_unlock.
+
+
+--=20
 With Best Regards,
 Andy Shevchenko
