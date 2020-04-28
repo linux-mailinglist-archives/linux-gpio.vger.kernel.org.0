@@ -2,83 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 014921BBA15
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2491BBA29
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 11:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgD1JmH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 05:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45468 "EHLO
+        id S1727086AbgD1Joh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 05:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726486AbgD1JmG (ORCPT
+        by vger.kernel.org with ESMTP id S1727025AbgD1Jog (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 05:42:06 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51003C03C1AB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:42:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e25so20764108ljg.5
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:42:06 -0700 (PDT)
+        Tue, 28 Apr 2020 05:44:36 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DD0C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:44:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g10so16262896lfj.13
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 02:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WT6mF0IwJRAWJibfVj6jkV3JG6t831H/TM7wsxX5kmk=;
-        b=Oc8uD1mS503FcEMlkUqEA6u5te4rKpMM/UsnhiU+pzKrxq6vCg8ReWomPx9ySZjDJr
-         +Upu1NQfJO+9N/qO+diiboHKlAuEJqt9aZ34HX/ZsPFxm7O5vOSC3B8Rwi2sfl2TcR45
-         oq9TMx8Y30Anq/gkwzDocYWGUdVgj9/lmWha+za55Aoq9wVaZP22v4DdjzkOAP0plN1V
-         KumbSL9f451cSixc4MIxZOBdo+1+k+YAMuF1d2Svjh8djlHUICTmr/SGlky8XOl49+Cb
-         Pf1WGvOF+fGJjYSzYy2u403Vg+4dsi6C5uSxe2QqlhAJlD48Vqs+BiUvJuRW0EFZ7g3H
-         VMlA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0UwsKd6vtLSCO+MFkJGwQlziNOURozUhwGk20R/4vuY=;
+        b=UzrziHufYg2IV1lUy1O45fipzDSH8BPk7s1ZbmSWgXVN+n9GnxcaReQ5cGUslhnEQZ
+         4JHya+bD2zeWKzi5H+7AWh9YMUGX4C0zRrSSTdK8A77cLK8VLkrABNliLF/p6/hW92e1
+         /MbDwESeW1WeukvySmU40LWggL/BNtzT6ahJ4+kwARYu3vKv49zUWPRhFH4SS0Z69N10
+         pT1vn221GFY80EXfMZTxIn+R1Z0no2h7rpBwqlcb4i1er0vk78o1WfxjfsxrV8Z9AEoz
+         5X0F3toGKfs7VvYB0Rx7v/8GpbJ4zQcMReY68MDfGFUwmZmm7WyG0TGxef4LuoWqFlHR
+         LU9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WT6mF0IwJRAWJibfVj6jkV3JG6t831H/TM7wsxX5kmk=;
-        b=JCSCD0XMQI3W+tWkb+clKIvBdWhqwQpkIYClBwNpnXK5Ce5u4E6xB0Nl1DHVrZD6fd
-         wIOiarwwWZa4dlh9b/iJAmK2H0jlbCJtS2lsih8sHiOEdTSf1Y4Mh5fuGAKNhoN0rUEw
-         mE1n716Sjg+3TMT+OlXYrWw56KGTLTmbcDEw71AxxOi+K0s0J9gcx5wI2iLlL/x1CZ+r
-         iJX0Ix1BPRpHLmUWYOPvyROaabS15cOCfRZhe4K4h+BoiFwDcZwJ/4qhXX5U+B2dt/m+
-         5nKKS1zAWUBgRpwwBJeGALatvl2Kiamb8N9j0PO9oasWHRIIPeqJdPtrijZoB2mdImaS
-         UT+w==
-X-Gm-Message-State: AGi0PuZNsssjrqec84duTBx3SZnoTMANrASm/a216CUuUkjKNXNKcNdT
-        OsZvoTWi15QO1LWT1vphjNe1DUnRlzUV/oBFdfuzKQ==
-X-Google-Smtp-Source: APiQypJWdiCBwLqc2g8Irmc7/w41rf19eHaus5+KTPDZiZJ8NEqF3rSuv3WOFk23DG+Abnjohh4H216Y6yGgj84RaY4=
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr8261669ljq.125.1588066924774;
- Tue, 28 Apr 2020 02:42:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200417073455.42146-1-yanaijie@huawei.com>
-In-Reply-To: <20200417073455.42146-1-yanaijie@huawei.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0UwsKd6vtLSCO+MFkJGwQlziNOURozUhwGk20R/4vuY=;
+        b=VwUadob88THbXlCBo7pEKjSG9FR0n4jeM9jgDVXvvQxKsFdCq7pifXbV424If5c/KR
+         Gr7ynPzogt31m/fUOWsMuyGEkpfFeI0jHjEkp9AATZD4XLm8fvPfjOb1bAWKciV8BiEq
+         fD3Ss/tX29RGBIEzhcV997asYao0jilulmpJTx/UcFkOPuCLe6su0bqqOYMBwbqLAmFl
+         6XjgIFQ//ESCnhN1hiK6mUZzt1Uj44Clrar/w9T6hrf8gyDfpCKmIt1XOVbJPGQPad/M
+         SNKbPSYzJIAP5CsWhxaKrmgvsumV0De5Lu1tkbNIrNEtVSofHFxwFmDrIMKjvZCuPXVJ
+         70Fw==
+X-Gm-Message-State: AGi0PuaCkIYIehkt1VYi1f0qJwjKePOk4ahS+THaeiS7hsoz93KRe3jy
+        aSnD9IxjLA3yoczEhQlX/Oa40JDPXc8=
+X-Google-Smtp-Source: APiQypIBKhDUiLxNAiSUtFtMDDZwJ8vw1Zk/y3Q8O4xhflXGe24Z5uCiL+QpLZQ1GNBGzp7zOzFjdQ==
+X-Received: by 2002:a19:f70c:: with SMTP id z12mr19177901lfe.78.1588067074270;
+        Tue, 28 Apr 2020 02:44:34 -0700 (PDT)
+Received: from localhost.localdomain (c-f3d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.243])
+        by smtp.gmail.com with ESMTPSA id y9sm12213747ljm.11.2020.04.28.02.44.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 02:44:33 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 11:41:53 +0200
-Message-ID: <CACRpkdZv4W3LVxRqDx2EaqATW7a-dhZeDjzoa2iQu+dDtpkfww@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: ab8505: remove unused 'gpio50_a_1_pins'
-To:     Jason Yan <yanaijie@huawei.com>,
-        Patrice CHOTARD <patrice.chotard@st.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Hulk Robot <hulkci@huawei.com>, Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] pinctrl: ab8505: Define group for GPIO pin 50
+Date:   Tue, 28 Apr 2020 11:42:29 +0200
+Message-Id: <20200428094229.843531-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.25.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 9:08 AM Jason Yan <yanaijie@huawei.com> wrote:
+The Hulk robot reports an usused varible:
 
-> Fix the following gcc warning:
->
-> drivers/pinctrl/nomadik/pinctrl-ab8505.c:137:23: warning:
-> =E2=80=98gpio50_a_1_pins=E2=80=99 defined but not used [-Wunused-const-va=
-riable=3D]
->  static const unsigned gpio50_a_1_pins[] =3D { AB8505_PIN_L4 };
->                        ^~~~~~~~~~~~~~~
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+drivers/pinctrl/nomadik/pinctrl-ab8505.c:137:23: warning:
+‘gpio50_a_1_pins’ defined but not used [-Wunused-const-variable=]
+ static const unsigned gpio50_a_1_pins[] = { AB8505_PIN_L4 };
+                       ^~~~~~~~~~~~~~~
 
-This should not be deleted, it should be used. I will send an alternative
-patch with you as Reported-by.
+This variable actually should be used. Probably an oversight
+by the driver author.
 
-Yours,
-Linus Walleij
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Reported-by: Jason Yan <yanaijie@huawei.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/nomadik/pinctrl-ab8505.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pinctrl/nomadik/pinctrl-ab8505.c b/drivers/pinctrl/nomadik/pinctrl-ab8505.c
+index 5e6e7d28390a..b93af1fb37f0 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-ab8505.c
++++ b/drivers/pinctrl/nomadik/pinctrl-ab8505.c
+@@ -178,6 +178,7 @@ static const struct abx500_pingroup ab8505_groups[] = {
+ 	AB8505_PIN_GROUP(gpio40_a_1, ABX500_ALT_A),
+ 	AB8505_PIN_GROUP(gpio41_a_1, ABX500_ALT_A),
+ 	AB8505_PIN_GROUP(uartrxdata_a_1, ABX500_ALT_A),
++	AB8505_PIN_GROUP(gpio50_a_1, ABX500_ALT_A),
+ 	AB8505_PIN_GROUP(gpio52_a_1, ABX500_ALT_A),
+ 	AB8505_PIN_GROUP(gpio53_a_1, ABX500_ALT_A),
+ 	AB8505_PIN_GROUP(pdmdata_b_1, ABX500_ALT_B),
+-- 
+2.25.2
+
