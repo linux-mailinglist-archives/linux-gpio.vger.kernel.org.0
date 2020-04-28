@@ -2,87 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C8E41BBC5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 13:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 499E71BBC70
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 13:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgD1L1l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 07:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
+        id S1726658AbgD1La7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 07:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgD1L1l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 07:27:41 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9945C03C1AB
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 04:27:40 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id j3so21007859ljg.8
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 04:27:40 -0700 (PDT)
+        with ESMTP id S1726545AbgD1La6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Apr 2020 07:30:58 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D02C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 04:30:58 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n11so2068557pgl.9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 04:30:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w4DBB5klIf0QGN/n9IvG0hKMODa1zR1xeD/KT5pKouk=;
-        b=IlC/VOx7VfCTd5g54ZVjw1O2wowU46ZNSWyKU7C2o/3/+KitIdB8TuO0aNjIEXy/b3
-         1CYsDa6aMA5AxnQMibCFECQw+g+U0px/vFoGMbzWNC/cjx3oVVU+3an0ngq/2hnxrMor
-         1TRCEwFybe93aUXkf5s3QErJqGxX0H9v90MR4x+K/AKQlHer0jyoCZXIr7J57Kjr31h7
-         iXi6D8HBLXmlRPYMg36hO4SczFFUE0PNBb/8EDLDuf0W8rP6Yyg+joeqAyoNORCOVwOE
-         1Odn5dRJqRXNdpW6I/EfW4woZUUzM27PsCMtVOGBOikvLw8i2+QgctW5kmr9OUL13ORw
-         vOtA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7mluZ8A4I9xD33tssLfMPlz8TFvmTBj7H//FiLCwMKQ=;
+        b=Uzz6rxf2M+0uA0gqifTALGQks4hWRLyGGLFFT02xEl0ZpUVciIXpgIq1gLWPdfAZ5N
+         5yy8L64gbdCHAqkLOXIH5OnuIedLJ0Zvhv4fpsYM5iQjhPkeQpNIfXRz1NH0+UW3dx8y
+         svQWYO809ihQXo7WeYTtvcjEPZYLHdfasSMCPzy4ko0SYKhoEDGD80hzwFffKVrcwfhC
+         14f6c1qi+Xuk4D31slGnBdu3nOYteQ3OBHuc/WX2rWNVW0jfDoIL2mKF9BW41MfZJseD
+         HUldHwkxqtRtPIdRaoZgIcOHdCxjGOTYUJvwvRnPM6eSB1zdDNrZ8UQuBshdv3hpvnsC
+         H1CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w4DBB5klIf0QGN/n9IvG0hKMODa1zR1xeD/KT5pKouk=;
-        b=G3G01qJdXrvMBljCqrFV3wwVq5uIzUfM7aQjHa+7xOfVYWJBqeBOlREK8JFFgoE7Gd
-         I9V+dMbswl1M/3oWz41w6nAYT2/GYLtsGqeIOw0m3QyitE8yJk3wcFRTDesAvuJxUEN+
-         0jQb2kFrug6bq2CujDHvnoroxKagzdtc/VGwe34nhhickmz/2e9WkKW6rkP1EYaBYfz8
-         AOEPyIyl7YO2cMfbId7fVEHkqvtGekp0dpV9A0vJVJw3dcOHoNVN4GQjs2OdIs1KOWio
-         og+gMjF1wG3xYmtKZOg1aStdzotyYIZhqKiKG2+GCPkHn9npuJIJ70tAMeVmGCTjZikG
-         hJ0Q==
-X-Gm-Message-State: AGi0Pub7uSeAAtOGq7OkFTZIc53zSemAxFucG8tNIrxiX+hQ8z/I668Q
-        vFab3URaSm0BpfAsVG7Fg29mMSo2awW+7gxFJ42osA==
-X-Google-Smtp-Source: APiQypKV704QjuX9brkHXyi9vW51TMuZXm1a3RD2HH//58wkwqAcG575ohaDZ1tUc941Eh8di8C386pjHZ1m4wCHMpE=
-X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr17947683ljm.39.1588073259176;
- Tue, 28 Apr 2020 04:27:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200421142402.9524-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200421142402.9524-1-zhengdejin5@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Apr 2020 13:27:28 +0200
-Message-ID: <CACRpkdaM88YebrRWPF=0navD8P9cEFYfepmEYb2+mw8LyNc5mw@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: fix several typos
-To:     Dejin Zheng <zhengdejin5@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7mluZ8A4I9xD33tssLfMPlz8TFvmTBj7H//FiLCwMKQ=;
+        b=WeIYC7jQB/JAF0yLMMkEBSroylNR0r2tIHPw6sbiy1XMCJMdAYOHdpqL5hC2f1rldr
+         HGP4pTfXScmtlJyJ3gqyb67gI3GKD6Vm2I2q1KUeaCUsXMkOE5IzDcKpmT7f9gdq2aQb
+         vcrd4m+GqtYT42TKwPhpo5xDGVeJp74roSn+aaGDJGxvt9wRXCbymqla2ICB0i2fSm7X
+         DvlciHtheZuFrL26nQc6urp22QZFoX/wku/k/Ef1zuikSrAqMqs40TrIveshiEBDPf1b
+         KKMSRILYWJ3ZmVPJXHJ8z5GDL78nGe3ONfz5XlkZF6goYBrM478o4L/gxGd1UHMo6D+m
+         BNHg==
+X-Gm-Message-State: AGi0PuY5fdhfp6HX7OYqbFUZwLMRsiY0fAN4q+fiIO5ycQecEhIfrlaD
+        udO4YiJEC+0zLN1G7rxjb2Ri
+X-Google-Smtp-Source: APiQypL9Kkbnieket+vePrygfOB6d5NB7/ZBGTCpfca9KeSGImCWXC/JlcXcQDHRS2TXxne/Tg0jMw==
+X-Received: by 2002:aa7:94a3:: with SMTP id a3mr29670332pfl.101.1588073457999;
+        Tue, 28 Apr 2020 04:30:57 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:816:a859:6d8a:8338:74e:a3d1])
+        by smtp.gmail.com with ESMTPSA id y25sm13511710pgc.36.2020.04.28.04.30.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 28 Apr 2020 04:30:57 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 17:00:49 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jason Yan <yanaijie@huawei.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Joe Perches <joe@perches.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] pinctrl: remove unused 'pwm37_pins'
+Message-ID: <20200428113049.GA5259@Mani-XPS-13-9360>
+References: <20200417092112.12303-1-yanaijie@huawei.com>
+ <CACRpkdb5Ozz_MKAUDoyOxdnu_NkN72vRu=ZY7j_Lb5uMAiS3SA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdb5Ozz_MKAUDoyOxdnu_NkN72vRu=ZY7j_Lb5uMAiS3SA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 4:24 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
+On Tue, Apr 28, 2020 at 11:58:01AM +0200, Linus Walleij wrote:
+> On Fri, Apr 17, 2020 at 10:54 AM Jason Yan <yanaijie@huawei.com> wrote:
+> 
+> > Fix the following gcc warning:
+> >
+> > drivers/pinctrl/pinctrl-bm1880.c:263:27: warning: ‘pwm37_pins’ defined
+> > but not used [-Wunused-const-variable=]
+> >  static const unsigned int pwm37_pins[] = { 110 };
+> >                            ^~~~~~~~~~
+> >
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> 
+> I'm sceptic about this. I think PWM37 exists and just need to be
+> properly defined.
+> 
+> Mani will know the right solution to this.
+> 
 
-> use codespell to fix lots of typos over frontends.
->
-> CC: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> ---
-> v2 -> v3:
->         - remove the changed of "thru -> through" in the
->           pinctrl-nomadik-db8500.c by Joe's suggestion.
+Sorry for missing this thread before. The original patch didn't land in my
+inbox.
 
-Patch applied.
+Anyway the issue is, pwm37 is not added to BM1880_PINCTRL_GRP. So the proper
+fix would be to add it.
 
-Yours,
-Linus Walleij
+Jason, will you be able to send a patch for adding it? Otherwise I'll do that.
+
+Thanks,
+Mani
+
+> Yours,
+> Linus Walleij
