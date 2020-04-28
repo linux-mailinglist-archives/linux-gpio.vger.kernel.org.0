@@ -2,99 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 522C81BBE36
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 14:51:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C654B1BBE49
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Apr 2020 14:53:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgD1Muy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Apr 2020 08:50:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54668 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727071AbgD1Mux (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Apr 2020 08:50:53 -0400
-IronPort-SDR: 1rgqmyF9lNl2HI94eQaItmlRhjx/XyFIfLfHwvOOC4hprRprkUAMequgZnX9YTBmoYifi+FVUR
- WdVifkj72xkA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 05:50:52 -0700
-IronPort-SDR: SCQqSllUydQSHNN+qQ7dk5wAut5zz6fYbhReVhnikxqFFMRrSYFI7FjQSqPzVDIbL7k/3aJrl1
- wfTwI3PK4ZWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,327,1583222400"; 
-   d="scan'208";a="292845050"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Apr 2020 05:50:47 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTPhJ-003YnF-8d; Tue, 28 Apr 2020 15:50:49 +0300
-Date:   Tue, 28 Apr 2020 15:50:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200428125049.GU185537@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc>
+        id S1726746AbgD1Mxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Apr 2020 08:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726620AbgD1Mxq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Apr 2020 08:53:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65699C03C1A9
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:53:46 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id g4so21360480ljl.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 05:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GkyvKjKNK03AzUDznXq6B377jPCAHw2AW858bfdJpEQ=;
+        b=rPqZrwnntv3yGBTDEXOqjn7PV6xiz65X/8tbA4PdJ/ugELdB7/tjZA1Oqll1T/2/ad
+         P5YZY4EC6os9IJte1fAju3f1wFZgSNqYnDmMiup0szBGBAw4BVotQj9UN6B5deJYmbvF
+         hEpNE4aiaUDTpgOihQ0aiXw5nxwmz5fYcdPhEuXfrJLsYj8hy11lAzRT5b4n9/hIhZBf
+         kOFX7phtZPAo/XjZj2MFgMS4Yuilkr75Uz8a/xmAE7RhT0wUOSy/CtLKruzNGypJ60RZ
+         3QZjXuyrpiUGuvKv3R6NYesLXc/h41kX8RF6LgROYXEjkcLb50/5WhL4FwotTusWdkRs
+         hobQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GkyvKjKNK03AzUDznXq6B377jPCAHw2AW858bfdJpEQ=;
+        b=XysaleyGTbSmn3XEQJaptEcCU6oXYJPrmPGLn2W+3OTzq31Rg+laVU8CUqvlh6Q1H4
+         WpNFEeOX3wXZCllKBDdRAzMTLKBfjf8W6vwxA/0XcGIVs5PtUYygGXAv0B92ozqC+qrq
+         y9zv1B0EAKLFrYG4JFkVyqbvg5pu5Sm72sgTJYf9Dt9jWQ7PFAnC2e5vJpNT5OaOOnps
+         GwBDH999HE90dNHy8MOhaZ2JiVndMseuDxcB8FFuZYK9xb7lsyMHNXYNMnE84FcjBOY/
+         IM2Ttqsp4MthEB64tzqZWS7688xwl8pHI0Do1ar98bY4IYKpWDB8lj8U0sy8wXb5u8AK
+         hdTA==
+X-Gm-Message-State: AGi0PuYc4cmYr5vUjPRFaE1LSj6inl//CqmOzl3XjypqIGkildmimDVT
+        TLE/TcL9wFyDS6vjIqTocJz57MCZuOA3lUGBsATnS4pK
+X-Google-Smtp-Source: APiQypJ8qBlnfzDAPIHlciPKNX5ODn9RL+X2g17vXsNNReKqMsV1yCKP1sDRsVuOw5gnPqQg5lwjqJPj3zqxXqbHPN8=
+X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr8767479ljq.125.1588078424801;
+ Tue, 28 Apr 2020 05:53:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423174543.17161-6-michael@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200422110654.23442-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200422110654.23442-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 28 Apr 2020 14:53:33 +0200
+Message-ID: <CACRpkdbxdafkjSJVqSLeafm7N4jQ+D98_GKecA0Atm1KEqMd6Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpio: dwapb: Get rid of unnecessary conjunction
+ over 32-bit value
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
-> This patch adds core support for the board management controller found
-> on the SMARC-sAL28 board. It consists of the following functions:
->  - watchdog
->  - GPIO controller
->  - PWM controller
->  - fan sensor
->  - interrupt controller
+On Wed, Apr 22, 2020 at 1:06 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-...
+> When we mask interrupts before sleep, there is no need to have a conjunction
+> with 0xffffffff since the accepted by dwapb_write() value is 32-bit.
+>
+> Cc: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
->  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->  
->  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> +
-> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+Both patches applied with Sergey's review tags, thanks!
 
-Perhaps keep an order?
-
-...
-
-> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
-
--1 has its own definition.
-
-> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
-> +				    i2c->irq, NULL);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
