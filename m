@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE591BD024
+	by mail.lfdr.de (Postfix) with ESMTP id D50DB1BD025
 	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 00:47:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgD1Wrr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1725934AbgD1Wrr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 28 Apr 2020 18:47:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:64029 "EHLO mga12.intel.com"
+Received: from mga01.intel.com ([192.55.52.88]:50353 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbgD1Wrq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1726042AbgD1Wrq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Tue, 28 Apr 2020 18:47:46 -0400
-IronPort-SDR: OnSZfeexg8ifeRHSMrf9oOjsCxYGBAokuPBXWGQfcea2MnWKN77fMCtQFnqtVsf3d37JdCZICt
- VxQ2yYhfGFpg==
+IronPort-SDR: ACfRl6r6NieTzR7v7ZWmAa+qatCCnqSlvjlg3bhchyHePKR51imfSe/5SObsA0cUcBRaYNIZz4
+ C0R0kDKCKIIw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:47:45 -0700
-IronPort-SDR: KH7htA6LCGLVgP2Z4q9FHjMlq8v0+51vquVwVybggJdm7J6IGArHnDUGKnuplqund6YaDqQ0pp
- BQw5Ctx0GrKQ==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 15:47:45 -0700
+IronPort-SDR: KicszqypYNrLVP6+HjOiDsJ5Xjx5XAIcYQj6kxVxk+wFa5ImKa7PHO2JE6sBpNCRjdcbgzSBOb
+ xKl+PJ+/KxgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
-   d="scan'208";a="246653268"
+   d="scan'208";a="293999863"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 28 Apr 2020 15:47:44 -0700
+  by orsmga008.jf.intel.com with ESMTP; 28 Apr 2020 15:47:44 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jTZ0x-0006L5-JI; Wed, 29 Apr 2020 06:47:43 +0800
-Date:   Wed, 29 Apr 2020 06:47:29 +0800
+        id 1jTZ0x-0006LU-LO; Wed, 29 Apr 2020 06:47:43 +0800
+Date:   Wed, 29 Apr 2020 06:47:31 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:devel] BUILD SUCCESS
- 32c8a94660e8f00fb81849de8f109951118532aa
-Message-ID: <5ea8b281.TnO4O8QRr3jCkVSf%lkp@intel.com>
+Subject: [gpio:fixes] BUILD SUCCESS
+ 0cf253eed5d2bdf7bb3152457b38f39b012955f7
+Message-ID: <5ea8b283.PoQyDMR8HvxEFjl/%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,8 +43,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
-branch HEAD: 32c8a94660e8f00fb81849de8f109951118532aa  pinctrl: db8500: Fix some old bugs
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
+branch HEAD: 0cf253eed5d2bdf7bb3152457b38f39b012955f7  gpio: tegra: mask GPIO IRQs during IRQ shutdown
 
 elapsed time: 487m
 
