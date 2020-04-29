@@ -2,149 +2,289 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B85721BDD83
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 15:25:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8D441BDFE4
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 16:02:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgD2NZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 09:25:00 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:58085 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgD2NY7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Apr 2020 09:24:59 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MN5W9-1jmHai06Xl-00J200; Wed, 29 Apr 2020 15:24:45 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Wang <sean.wang@mediatek.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] pinctrl: mediatek: fix mtk_eint link error
-Date:   Wed, 29 Apr 2020 15:24:22 +0200
-Message-Id: <20200429132443.1295194-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        id S1727112AbgD2OCq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 10:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726861AbgD2OCq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 Apr 2020 10:02:46 -0400
+X-Greylist: delayed 356 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 29 Apr 2020 07:02:45 PDT
+Received: from mail.bugwerft.de (mail.bugwerft.de [IPv6:2a03:6000:1011::59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E37FBC03C1AD;
+        Wed, 29 Apr 2020 07:02:45 -0700 (PDT)
+Received: from [192.168.178.106] (pD95EF83B.dip0.t-ipconnect.de [217.94.248.59])
+        by mail.bugwerft.de (Postfix) with ESMTPSA id 28621401E5C;
+        Wed, 29 Apr 2020 13:54:14 +0000 (UTC)
+From:   Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 2/2] gpio: xilinx: Add irq support to the driver
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        bgolaszewski@baylibre.com, michal.simek@xilinx.com,
+        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        git@xilinx.com
+References: <1581937039-12964-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1581937039-12964-2-git-send-email-srinivas.neeli@xilinx.com>
+Message-ID: <0a640ab8-37db-6dea-2909-3eebbb3f2519@zonque.org>
+Date:   Wed, 29 Apr 2020 15:56:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:b2K8SGt0tNbKweRcNNd5na2gw56bnc7GqSkapPSRkiyRREMbXnV
- mXoroDsDHSuU5UDemW+096Q1oGLBjSb9A8Q0oGheHoi6a2eWYKpL9j2P6FuZgQX7IeczDrW
- dwxi0yxqo0aWJTzwXgrZJ/4d15zI6Rog4TWtotc5l3cB8KfW+IoAMQzurz+hLhsY3jkN6mR
- YdY+2SSUVRM3JY69A4Ilg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tIEy99GNx+8=:kozTZI20UsvqYUvArP7lrr
- CVSueE5VSluslq5ErNIWyj2CWFhgMtHmXt3v/rGC9X/UHxPaqC6LLL5noG0k4Dq5j41EXHWCb
- PMCNwTdKHUWN7fgmBpIjU4XPqpfHUH7QjTCqCZ5VnwonmySixRq/IaLaahcEMNm+XBu5NVV7h
- ROxryqcjmRKSV1UYN1qIEVJ6hSQEaHnkncCnI/ytOdhIZcz5LzUlvCE4Lir6+xxNkpB344DM7
- ljN/nt5iPRp+jhgNSvTe+zFPC8IURT295IA1JzDCSL9t4ueK+qD3QiuK57tJnHlITjKTqwN96
- F6KAPbHCFr/8pswmCN1jvldq/Z+76YbCHp+O2rSTTgaTTtzyM8IhfOKSW2PnP6iAfU0/qtvUc
- wAn+TTxJsVRKcHwW6DB/WQTbw3uRrJXs8OIUbqzVCq2BFazyT+12LVD2iEiZ0WFMTKEkRfCpX
- FTeFLNHCNkEOZ2V3gyE5XZcK0A8h+hHbjg2CvXmWyqrVDLkyf6ulkl8J3ZaBy8DD7i6iYs1SF
- NLDTEZrh5IRuSqTzXGjHdZ4BAcT+7k4CaiWVYGiLPHAOo5iy0bhN1962tmSTdUKH2f/yl6gUv
- qZxwcFLKnqH1cLBdstIpvMOo98khu7iN5Ae3ffSf12Lfzqq7W5tD72pU12fmGOa3ScgKo++eV
- rlKjKWK9To2C68fLzv0YtoPT190SQ0/2hGz4P5iSl4kVdtqg2lzNtCYAyKKj3GZfqF3QvpKVW
- 7z1cbRxFdgv2pbmIdbkW4gC5TLeHnAkMZ7SbwAsr/FtwiodtzHLJdfMR2m+bkNPRRUsuQv75P
- 0xarjRVA9hEnrsUt/yUbISYhgeHa+OrMmkGh8ORCnQZWR5f9Wg=
+In-Reply-To: <1581937039-12964-2-git-send-email-srinivas.neeli@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In a configuration with CONFIG_PINCTRL_MTK_MOORE=y and CONFIG_PINCTRL_MTK_PARIS=m,
-we end up with the mtk_eint driver as a loadable module that cannot be
-linked from built-in code:
+Hi Srinivas,
 
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.o: in function `mtk_build_eint':
-(.text+0x304): undefined reference to `mtk_eint_do_init'
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_set_config':
-pinctrl-moore.c:(.text+0xf80): undefined reference to `mtk_eint_set_debounce'
-aarch64-linux-ld: drivers/pinctrl/mediatek/pinctrl-moore.o: in function `mtk_gpio_to_irq':
-pinctrl-moore.c:(.text+0x1028): undefined reference to `mtk_eint_find_irq'
+Thanks for these patches. We're using them on a custom board, and I have
+some remarks as they didn't work as intended. See below.
 
-Simplify the Kconfig logic to always select EINT_MTK when it is needed, and
-remove the 'default' statements.
 
-Fixes: 8174a8512e3e ("pinctrl: mediatek: make MediaTek pinctrl v2 driver ready for buidling loadable module")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pinctrl/mediatek/Kconfig    |  4 +---
- drivers/pinctrl/mediatek/mtk-eint.h | 28 ----------------------------
- 2 files changed, 1 insertion(+), 31 deletions(-)
+On 2/17/20 11:57 AM, Srinivas Neeli wrote:
+> Allocate single chip for both channels.
+> Add irq support to the driver.
+> Supporting rising edge interrupts and in cascade mode supporting
+> first channel for interrupts on 32bit machines.
+> 
+> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c | 233 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 232 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 26753ae58295..f6dd316b2c62 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
 
-diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-index f32d3644c509..b6a8d91f4885 100644
---- a/drivers/pinctrl/mediatek/Kconfig
-+++ b/drivers/pinctrl/mediatek/Kconfig
-@@ -7,8 +7,6 @@ config EINT_MTK
- 	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
- 	select GPIOLIB
- 	select IRQ_DOMAIN
--	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
--	default PINCTRL_MTK_PARIS
- 
- config PINCTRL_MTK
- 	bool
-@@ -20,6 +18,7 @@ config PINCTRL_MTK
- 	select OF_GPIO
- 
- config PINCTRL_MTK_V2
-+	select EINT_MTK
- 	tristate
- 
- config PINCTRL_MTK_MOORE
-@@ -38,7 +37,6 @@ config PINCTRL_MTK_PARIS
- 	select PINMUX
- 	select GENERIC_PINCONF
- 	select GPIOLIB
--	select EINT_MTK
- 	select OF_GPIO
- 	select PINCTRL_MTK_V2
- 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
-index 48468d0fae68..f40dab50a5f3 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.h
-+++ b/drivers/pinctrl/mediatek/mtk-eint.h
-@@ -68,7 +68,6 @@ struct mtk_eint {
- 	const struct mtk_eint_xt *gpio_xlate;
- };
- 
--#if IS_ENABLED(CONFIG_EINT_MTK)
- int mtk_eint_do_init(struct mtk_eint *eint);
- int mtk_eint_do_suspend(struct mtk_eint *eint);
- int mtk_eint_do_resume(struct mtk_eint *eint);
-@@ -76,31 +75,4 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
- 			  unsigned int debounce);
- int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n);
- 
--#else
--static inline int mtk_eint_do_init(struct mtk_eint *eint)
--{
--	return -EOPNOTSUPP;
--}
--
--static inline int mtk_eint_do_suspend(struct mtk_eint *eint)
--{
--	return -EOPNOTSUPP;
--}
--
--static inline int mtk_eint_do_resume(struct mtk_eint *eint)
--{
--	return -EOPNOTSUPP;
--}
--
--static inline int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
--			  unsigned int debounce)
--{
--	return -EOPNOTSUPP;
--}
--
--static inline int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
--{
--	return -EOPNOTSUPP;
--}
--#endif
- #endif /* __MTK_EINT_H */
--- 
-2.26.0
+[...]
 
+>  /**
+> + * xgpiops_irq_mask - Write the specified signal of the GPIO device.
+> + * @irq_data: per irq and chip data passed down to chip functions
+> + */
+> +static void xgpio_irq_mask(struct irq_data *irq_data)
+> +{
+> +	unsigned long flags;
+> +	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
+> +	u32 offset = irq_data->irq - chip->irq_base;
+> +	u32 temp;
+> +	s32 val;
+> +	int index = xgpio_index(chip, 0);
+> +
+> +	pr_debug("%s: Disable %d irq, irq_enable_mask 0x%x\n",
+> +		 __func__, offset, chip->irq_enable);
+> +
+> +	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> +
+> +	chip->irq_enable &= ~BIT(offset);
+> +
+> +	if (!chip->irq_enable) {
+> +		/* Enable per channel interrupt */
+> +		temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
+> +		val = offset - chip->gpio_width[0] + 1;
+> +		if (val > 0)
+> +			temp &= 1;
+> +		else
+> +			temp &= 2;
+
+
+This is a bit confusing. Why not write
+
+  if (offset <= chip->gpio_width[0])
+	temp &= 1;
+  else
+        temp &= 2;
+
+?
+
+> +		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
+> +
+> +		/* Disable global interrupt if channel interrupts are unused */
+> +		temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
+
+You know that interrupts are unused when you get here, right? Why this
+extra check?
+
+> +		if (!temp)
+> +			xgpio_writereg(chip->regs + XGPIO_GIER_OFFSET,
+> +				       ~XGPIO_GIER_IE);
+> +	}
+> +	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> +}
+> +
+> +/**
+> + * xgpio_irq_unmask - Write the specified signal of the GPIO device.
+> + * @irq_data: per irq and chip data passed down to chip functions
+> + */
+> +static void xgpio_irq_unmask(struct irq_data *irq_data)
+> +{
+> +	unsigned long flags;
+> +	struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
+> +	u32 offset = irq_data->irq - chip->irq_base;
+> +	u32 temp;
+> +	s32 val;
+> +	int index = xgpio_index(chip, 0);
+> +
+> +	pr_debug("%s: Enable %d irq, irq_enable_mask 0x%x\n",
+> +		 __func__, offset, chip->irq_enable);
+> +
+> +	/* Setup pin as input */
+> +	xgpio_dir_in(&chip->gc, offset);
+> +
+> +	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> +
+> +	chip->irq_enable |= BIT(offset);
+> +
+> +	if (chip->irq_enable) {
+
+As you set a bit in the instruction above, this condition will always be
+true. So I guess the check can be omitted.
+
+> +		/* Enable per channel interrupt */
+> +		temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
+> +		val = offset - (chip->gpio_width[0] - 1);
+
+This is different from the the statement in the mask function, but it
+can be simplified as noted above.
+
+> +		if (val > 0)
+> +			temp |= 2;
+> +		else
+> +			temp |= 1;
+> +		xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
+> +
+> +		/* Enable global interrupts */
+> +		xgpio_writereg(chip->regs + XGPIO_GIER_OFFSET, XGPIO_GIER_IE);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> +}
+
+[...]
+
+> +/**
+> + * xgpio_irqhandler - Gpio interrupt service routine
+> + * @desc: Pointer to interrupt description
+> + */
+> +static void xgpio_irqhandler(struct irq_desc *desc)
+> +{
+> +	unsigned int irq = irq_desc_get_irq(desc);
+> +	struct xgpio_instance *chip = (struct xgpio_instance *)
+> +		irq_get_handler_data(irq);
+> +	struct irq_chip *irqchip = irq_desc_get_chip(desc);
+> +	u32 offset, status, channel = 1;
+> +	unsigned long val;
+> +
+> +	chained_irq_enter(irqchip, desc);
+> +
+> +	val = xgpio_readreg(chip->regs);
+> +	if (!val) {
+> +		channel = 2;
+> +		val = xgpio_readreg(chip->regs + XGPIO_CHANNEL_OFFSET);
+> +		val = val << chip->gpio_width[0];
+> +	}
+> +
+> +	/* Only rising edge is supported */
+> +	val &= chip->irq_enable;
+> +	for_each_set_bit(offset, &val, chip->gc.ngpio) {
+> +		generic_handle_irq(chip->irq_base + offset);
+
+This needs to include irq_find_mapping(chip->irq_domain, gpio).
+
+> +	}
+> +
+> +	status = xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
+
+The value assigned here is not used. Typo?
+
+> +	xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, channel);
+
+This function causes issues of general IRQ handling that makes the
+entire system deadlock for reasons I don't fully grok. I changed the
+logic to the following to make it work:
+
+1. Read IPISR
+2. Write the read value back to IPISR
+3. Depending on the value of IPISR, read the state of either channel 1
+   or 2
+4. chained_irq_enter()
+5. Iterate over bits and call generic_handle_irq()
+6. chained_irq_exit()
+
+> +
+> +	chained_irq_exit(irqchip, desc);
+> +}
+> +
+> +static struct lock_class_key gpio_lock_class;
+> +static struct lock_class_key gpio_request_class;
+> +
+> +/**
+> + * xgpio_irq_setup - Allocate irq for gpio and setup appropriate functions
+> + * @np: Device node of the GPIO chip
+> + * @chip: Pointer to private gpio channel structure
+> + *
+> + * Return:
+> + * 0 if success, otherwise -1
+> + */
+> +static int xgpio_irq_setup(struct device_node *np, struct xgpio_instance *chip)
+> +{
+> +	u32 pin_num;
+> +	struct resource res;
+> +	int ret = of_irq_to_resource(np, 0, &res);
+> +
+> +	if (ret <= 0) {
+> +		pr_info("GPIO IRQ not connected\n");
+> +		return 0;
+> +	}
+> +
+> +	chip->gc.to_irq = xgpio_to_irq;
+> +	chip->irq_base = irq_alloc_descs(-1, 0, chip->gc.ngpio, 0);
+
+This should use the devm_ variant to automatically free the resources.
+
+> +	if (chip->irq_base < 0) {
+> +		pr_err("Couldn't allocate IRQ numbers\n");
+> +		return -1;
+> +	}
+> +	chip->irq_domain = irq_domain_add_legacy(np, chip->gc.ngpio,
+> +						 chip->irq_base, 0,
+> +						 &irq_domain_simple_ops, NULL);
+
+This can fail, so the return value should be checked for NULL.
+
+> +	/*
+> +	 * set the irq chip, handler and irq chip data for callbacks for
+> +	 * each pin
+> +	 */
+> +	for (pin_num = 0; pin_num < chip->gc.ngpio; pin_num++) {
+> +		u32 gpio_irq = irq_find_mapping(chip->irq_domain, pin_num);
+> +
+> +		irq_set_lockdep_class(gpio_irq, &gpio_lock_class,
+> +				      &gpio_request_class);
+> +		pr_debug("IRQ Base: %d, Pin %d = IRQ %d\n",
+> +			 chip->irq_base, pin_num, gpio_irq);
+> +		irq_set_chip_and_handler(gpio_irq, &xgpio_irqchip,
+> +					 handle_simple_irq);
+> +		irq_set_chip_data(gpio_irq, (void *)chip);
+> +	}
+> +	irq_set_handler_data(res.start, (void *)chip);
+> +	irq_set_chained_handler(res.start, xgpio_irqhandler);
+
+I guess all this can be achieved by setting chip->gc.irq* and let the
+GPIO core handle the IRQ chip allocation and setup. There are some
+examples in Documentation/driver-api/gpio/driver.rst.
+
+I'm happy to test the next iteration of these patches.
+
+
+Thanks,
+Daniel
