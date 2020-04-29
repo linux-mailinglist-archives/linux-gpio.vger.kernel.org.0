@@ -2,73 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 114711BD974
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 12:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 905F41BDA06
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 12:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgD2KVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 06:21:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:51286 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgD2KVO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Apr 2020 06:21:14 -0400
-IronPort-SDR: UQsTIgWKefsUMXqtPLXQxg6ouBAnKfC0T2foVfLRiD30WX95Ib0np7GaTcmizyElBwiCEyDIb7
- iFP1BcBj7tgg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 03:21:13 -0700
-IronPort-SDR: ySQ0rVq4vj1Kw0NWsqMA+zUA61ak4m1l5gWDv1p/wODWBKx+zsg31IJqEqxh6l7ecsbszvc/KA
- dDhAkfJSz4uA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,331,1583222400"; 
-   d="scan'208";a="404999202"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 29 Apr 2020 03:21:11 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jTjq6-003hwH-5E; Wed, 29 Apr 2020 13:21:14 +0300
-Date:   Wed, 29 Apr 2020 13:21:14 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-Message-ID: <20200429102114.GF185537@smile.fi.intel.com>
-References: <cover.1588112714.git.syednwaris@gmail.com>
- <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
+        id S1726678AbgD2KpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 06:45:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58770 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726676AbgD2KpW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Apr 2020 06:45:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588157121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CfchcXkhkrZSiqgfVUqdKBtxhVgWGmRJOsKZunO02Ds=;
+        b=Ej94sUyZJ+EAz8+b/W4tVmVxkF/TuHK2uw6VHprFOSaRYv9PPws28vS8ysar9+wqwavENk
+        sEql6TzI4FA21Y1kevGeUezFjADnBeSKLPKEwN9Nc2z3GqFT9lbRlh+Lf4F2d807XKJIWy
+        V9GGSoJM8ymjZu2mVwBtU7PS1STVORM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-433-4K8GpWTkNcGThkaEvporDg-1; Wed, 29 Apr 2020 06:45:19 -0400
+X-MC-Unique: 4K8GpWTkNcGThkaEvporDg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C7451B2C983;
+        Wed, 29 Apr 2020 10:45:18 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-57.ams2.redhat.com [10.36.115.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 349EB5D9E5;
+        Wed, 29 Apr 2020 10:45:17 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH] platform/x86: intel-vbtn: Use acpi_evaluate_integer()
+Date:   Wed, 29 Apr 2020 12:45:15 +0200
+Message-Id: <20200429104515.63570-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
-> This patch reimplements the xgpio_set_multiple function in
-> drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
-> Instead of looping for each bit in xgpio_set_multiple
-> function, now we can check each channel at a time and save cycles.
+Use acpi_evaluate_integer() instead of open-coding it.
 
-> +	const unsigned long state_size = BITS_PER_TYPE(*state);
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel-vbtn.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-This '*state' is unneeded complication, use BITS_PER_U32.
-
-> +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
-
-This macro makes code uglier, besides the fact of absence of #undef.
-And also see above.
-
-> +	DECLARE_BITMAP(old, TOTAL_BITS);
-> +	DECLARE_BITMAP(new, TOTAL_BITS);
-> +	DECLARE_BITMAP(changed, TOTAL_BITS);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/int=
+el-vbtn.c
+index b5880936d785..191894d648bb 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -119,28 +119,21 @@ static void detect_tablet_mode(struct platform_devi=
+ce *device)
+ 	const char *chassis_type =3D dmi_get_system_info(DMI_CHASSIS_TYPE);
+ 	struct intel_vbtn_priv *priv =3D dev_get_drvdata(&device->dev);
+ 	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
+-	struct acpi_buffer vgbs_output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
++	unsigned long long vgbs;
+ 	acpi_status status;
+ 	int m;
+=20
+ 	if (!(chassis_type && strcmp(chassis_type, "31") =3D=3D 0))
+-		goto out;
++		return;
+=20
+-	status =3D acpi_evaluate_object(handle, "VGBS", NULL, &vgbs_output);
++	status =3D acpi_evaluate_integer(handle, "VGBS", NULL, &vgbs);
+ 	if (ACPI_FAILURE(status))
+-		goto out;
+-
+-	obj =3D vgbs_output.pointer;
+-	if (!(obj && obj->type =3D=3D ACPI_TYPE_INTEGER))
+-		goto out;
++		return;
+=20
+-	m =3D !(obj->integer.value & TABLET_MODE_FLAG);
++	m =3D !(vgbs & TABLET_MODE_FLAG);
+ 	input_report_switch(priv->input_dev, SW_TABLET_MODE, m);
+-	m =3D (obj->integer.value & DOCK_MODE_FLAG) ? 1 : 0;
++	m =3D (vgbs & DOCK_MODE_FLAG) ? 1 : 0;
+ 	input_report_switch(priv->input_dev, SW_DOCK, m);
+-out:
+-	kfree(vgbs_output.pointer);
+ }
+=20
+ static int intel_vbtn_probe(struct platform_device *device)
+--=20
+2.26.0
 
