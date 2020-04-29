@@ -2,106 +2,228 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1FC71BEB66
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 00:03:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAF291BEBFD
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 00:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgD2WDw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 18:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
+        id S1726554AbgD2WS7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 18:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2WDv (ORCPT
+        by vger.kernel.org with ESMTP id S1726481AbgD2WS7 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Apr 2020 18:03:51 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3163C03C1AE;
-        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id k133so3304123oih.12;
-        Wed, 29 Apr 2020 15:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
-        b=jYjww6TRFcRX3Y23g1fUDaSBixBCmtlAr7R6Tr647wYfD6+VQtLpQyI3KQy3e9YvVZ
-         GpcxE8fFEo6OWVSKuQwuHBjMY4thiSIdKoHlvitdIYxmtyZpsMeQejW1hdtDaMB4wmk0
-         F7jHmJII2Gtb6LCbj5zCojkV1FYAgJwh+xYKpP2RtNrp7FRaObjHYxH9sg/TrRzwJHs6
-         li/TE2Nx2Vs6kvMJWzIHQzUj7Egf5+H/qSp0aglmR2A/9ci3Mcn2ZBQRk2z4sNW5E2k8
-         wD3tk7bVwZl351JxP4iOxPoHCGy92KYF/3XHy2wtZdSpGhHG4SJRGO7npCeAVQIm061u
-         6Yyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VuIJyUBI77A7IsS+UOzXlF4URqxn4aKY6yPSfUat6bs=;
-        b=opHnCCv31KSe3tij6f2edWlhbQTyl5/QXOpvA6VaQwxUmOynVhmDvCHVRdvrqbY0Va
-         HRVnyRCNALvkrobdZGy00F9vCf8zX/INnGtaqejZxTVQqEvhXahhbP6E9GdtCxkyK8h6
-         Z1wOXWw3Vg0q6xqmgKXHjwB86LmpdUVOgfW6NE+i0yWpC7z4bJzhNLp5zZQ8uVl8HHIy
-         QYJoJ49KNQuJQj+7PJ0o/AHKxEGHhtoOcGrY1rghwNuDLH+p8c0BOlG1wehMqOv1S1XL
-         Db1PsfvzsCPGJxDGuZrqy3tyMTvidYxsnsUK0N4UKcH0HimbP2eZ70eT3BYGj/OiuYwO
-         9mZg==
-X-Gm-Message-State: AGi0PubxZtVmnuJIuBysxBdsg+4Iad8lmdOg6KVQqidwayxuO1WfiNre
-        Hxv12kJhmnY+9ccTxS6YU3m1UB1GU+b9S3YLGfbq/OEC
-X-Google-Smtp-Source: APiQypJ3zwVfJk2nMrXMJzcY0A34yx8sFc7iQq4Qt4G4w6K/OJdPad49V5wxoF+Zc/LWhjYb6zlkiutTqfBQpvdh7bQ=
-X-Received: by 2002:aca:b783:: with SMTP id h125mr349467oif.62.1588197830734;
- Wed, 29 Apr 2020 15:03:50 -0700 (PDT)
+        Wed, 29 Apr 2020 18:18:59 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29877C03C1AE;
+        Wed, 29 Apr 2020 15:18:59 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CC72422F54;
+        Thu, 30 Apr 2020 00:18:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1588198733;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmNmiJrBqjSomX4a3GYQTKJyBa1w0mCqW3xG6X4r7JU=;
+        b=Z/PwLy3ofPJI0xZH8IT5HibD+o80mve3lOqDxmcoLl5fAWYxiphkS3L+FlMZ3hwjqkPVXe
+        FWyxmaG79Gwm3M+Y76olNlSWLCYjY+suQcs/NAmXlgNRFpGqjE3p9qgeG7IWOdSSjMV0EB
+        tuVu73gv8gmi36GFiF4+cMEP6WC8huQ=
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200429215955.GN1551@shell.armlinux.org.uk>
-In-Reply-To: <20200429215955.GN1551@shell.armlinux.org.uk>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 29 Apr 2020 23:03:24 +0100
-Message-ID: <CA+V-a8syz--q7MCNL_5TZmnYqgc7W6nuXJOt6VJhJutuS3seKQ@mail.gmail.com>
-Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 30 Apr 2020 00:18:48 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
+ reg property
+In-Reply-To: <20200423174543.17161-4-michael@walle.cc>
+References: <20200423174543.17161-1-michael@walle.cc>
+ <20200423174543.17161-4-michael@walle.cc>
+Message-ID: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Spam-Level: *
+X-Rspamd-Server: web
+X-Spam-Status: No, score=1.40
+X-Spam-Score: 1.40
+X-Rspamd-Queue-Id: CC72422F54
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[24];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[linux.intel.com,linaro.org,baylibre.com,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net,linuxfoundation.org,vger.kernel.org,lists.infradead.org];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Lee,
 
-Thank you for the review.
+Am 2020-04-23 19:45, schrieb Michael Walle:
+> There might be multiple children with the device tree compatible, for
+> example if a MFD has multiple instances of the same function. In this
+> case only the first is matched and the other children get a wrong
+> of_node reference.
+> Add a new option to match also against the unit address of the child
+> node. Additonally, a new helper OF_MFD_CELL_REG is added.
 
-On Wed, Apr 29, 2020 at 11:00 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Wed, Apr 29, 2020 at 10:56:41PM +0100, Lad Prabhakar wrote:
-> > @@ -1701,6 +1709,7 @@ config DEBUG_UART_PHYS
-> >       default 0xe6e60000 if DEBUG_RCAR_GEN2_SCIF0
-> >       default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
-> >       default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
-> > +     default 0xe6c60000 if DEBUG_RCAR_GEN2_SCIFA2
->
-> Hi,
->
-> This is ordered by address.  Please keep it so.
->
-Sure will do that.
 
-Cheers,
---Prabhakar
+Do you think this is feasible? I guess this is the biggest uncertainty
+for me at the moment in this patch series.
 
-> Thanks.
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+-michael
+
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
+>  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
+>  2 files changed, 40 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index e735565969b3..4ecb376338f7 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, 
+> int id,
+>  	struct device_node *np = NULL;
+>  	int ret = -ENOMEM;
+>  	int platform_id;
+> +	u32 of_reg;
+>  	int r;
+> 
+>  	if (id == PLATFORM_DEVID_AUTO)
+> @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent, 
+> int id,
+> 
+>  	if (parent->of_node && cell->of_compatible) {
+>  		for_each_child_of_node(parent->of_node, np) {
+> -			if (of_device_is_compatible(np, cell->of_compatible)) {
+> -				if (!of_device_is_available(np)) {
+> -					/* Ignore disabled devices error free */
+> -					ret = 0;
+> -					goto fail_alias;
+> -				}
+> -				pdev->dev.of_node = np;
+> -				pdev->dev.fwnode = &np->fwnode;
+> -				break;
+> +			if (!of_device_is_compatible(np, cell->of_compatible))
+> +				continue;
+> +
+> +			/* also match the unit address if set */
+> +			if (cell->of_reg & MFD_OF_REG_VALID) {
+> +				if (of_property_read_u32(np, "reg", &of_reg))
+> +					continue;
+> +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
+> +					continue;
+>  			}
+> +
+> +			if (!of_device_is_available(np)) {
+> +				/* Ignore disabled devices error free */
+> +				ret = 0;
+> +				goto fail_alias;
+> +			}
+> +
+> +			pdev->dev.of_node = np;
+> +			pdev->dev.fwnode = &np->fwnode;
+> +			break;
+>  		}
+>  	}
+> 
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index d01d1299e49d..c2c0ad6b14f3 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -13,8 +13,11 @@
+>  #include <linux/platform_device.h>
+> 
+>  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> +#define MFD_OF_REG_VALID	BIT(31)
+> +#define MFD_OF_REG_MASK		GENMASK(30, 0)
+> 
+> -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 
+> _match)\
+> +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     _of_reg, _match)					\
+>  	{								\
+>  		.name = (_name),					\
+>  		.resources = (_res),					\
+> @@ -22,24 +25,32 @@
+>  		.platform_data = (_pdata),				\
+>  		.pdata_size = (_pdsize),				\
+>  		.of_compatible = (_compat),				\
+> +		.of_reg = (_of_reg),					\
+>  		.acpi_match = (_match),					\
+>  		.id = (_id),						\
+>  	}
+> 
+> +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +			_of_reg)					\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
+> +
+>  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
+> +		     0, NULL)						\
+> 
+>  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
+> +		     _match)						\
+> 
+>  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
+> -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
+> +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
+> 
+>  #define MFD_CELL_RES(_name, _res)					\
+> -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
+> +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
+> 
+>  #define MFD_CELL_NAME(_name)						\
+> -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
+> +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
+> 
+>  struct irq_domain;
+>  struct property_entry;
+> @@ -78,6 +89,9 @@ struct mfd_cell {
+>  	 */
+>  	const char		*of_compatible;
+> 
+> +	/* matching the reg property if set */
+> +	unsigned int		of_reg;
+> +
+>  	/* Matches ACPI */
+>  	const struct mfd_cell_acpi_match	*acpi_match;
