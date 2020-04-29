@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 176DD1BE5D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 20:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E4F01BE7F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 22:00:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgD2SGi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 14:06:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:64907 "EHLO mga05.intel.com"
+        id S1726887AbgD2UAX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 16:00:23 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9729 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726423AbgD2SGi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Apr 2020 14:06:38 -0400
-IronPort-SDR: bWoLJsHGeDrCtuejjsZALdG/II9L7agqjYvoBvJZLrvQDWN4/EY9ThLuTqyl01W76HhGGdfOKx
- 3KPDqkU1LfTg==
+        id S1726456AbgD2UAX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 Apr 2020 16:00:23 -0400
+IronPort-SDR: eOCvIcq6mZLrrQ9r1ClLfqlj/2hFEND52+2IUf9jPemefgrRTyPFSUDJRiLt+bsgp83sR8Hmxv
+ Nl+axIV6xK/g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 11:06:35 -0700
-IronPort-SDR: vrUdgQCwPSJDZ6Dm7i/RWKVTAka4eVkziqXLw7KJvtxNkvlzKHxD31KORvnhr+wizdlWDsL+Jf
- 3JYuGCfBo9SQ==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 13:00:22 -0700
+IronPort-SDR: Kc44swzA17ijr/IUaG66xTLVBWPM6KajiAbWTcWvk8QzuYqy19398MyU/enlELwdGVG854sulE
+ C9/5spvBtaZA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,332,1583222400"; 
-   d="scan'208";a="261509084"
+X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
+   d="scan'208";a="246953032"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 29 Apr 2020 11:06:34 -0700
+  by orsmga007.jf.intel.com with ESMTP; 29 Apr 2020 13:00:20 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jTr6P-0002Qg-DZ; Thu, 30 Apr 2020 02:06:33 +0800
-Date:   Thu, 30 Apr 2020 02:05:54 +0800
+        id 1jTssW-000FKe-6o; Thu, 30 Apr 2020 04:00:20 +0800
+Date:   Thu, 30 Apr 2020 03:59:40 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- dc5c1439376de8e107396ff5bdbc05af3b04ff0b
-Message-ID: <5ea9c202.03J1O4N5m6fSLPq/%lkp@intel.com>
+Subject: [gpio:for-next] BUILD SUCCESS
+ 9e581cd14663a665c32039acb0577f0ea2653f46
+Message-ID: <5ea9dcac.flCocDX23sPpxl/J%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,12 +43,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: dc5c1439376de8e107396ff5bdbc05af3b04ff0b  gpio: mm-lantiq: Fix small typo
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: 9e581cd14663a665c32039acb0577f0ea2653f46  Merge branch 'devel' into for-next
 
-elapsed time: 625m
+elapsed time: 739m
 
-configs tested: 178
+configs tested: 173
 configs skipped: 0
 
 The following configs have been built successfully.
@@ -73,9 +73,9 @@ s390                                defconfig
 ia64                              allnoconfig
 sparc64                             defconfig
 mips                      fuloong2e_defconfig
+nds32                               defconfig
+sparc                               defconfig
 s390                          debug_defconfig
-ia64                        generic_defconfig
-m68k                          multi_defconfig
 xtensa                          iss_defconfig
 h8300                     edosk2674_defconfig
 sh                  sh7785lcr_32bit_defconfig
@@ -86,6 +86,7 @@ i386                                defconfig
 i386                              debian-10.3
 ia64                             allmodconfig
 ia64                                defconfig
+ia64                        generic_defconfig
 ia64                          tiger_defconfig
 ia64                         bigsur_defconfig
 ia64                             allyesconfig
@@ -94,13 +95,13 @@ m68k                       m5475evb_defconfig
 m68k                             allmodconfig
 m68k                       bvme6000_defconfig
 m68k                           sun3_defconfig
+m68k                          multi_defconfig
 nios2                         3c120_defconfig
 nios2                         10m50_defconfig
 c6x                        evmc6678_defconfig
 c6x                              allyesconfig
 openrisc                 simple_smp_defconfig
 openrisc                    or1ksim_defconfig
-nds32                               defconfig
 nds32                             allnoconfig
 csky                                defconfig
 alpha                               defconfig
@@ -159,11 +160,6 @@ csky                 randconfig-a001-20200429
 s390                 randconfig-a001-20200429
 xtensa               randconfig-a001-20200429
 openrisc             randconfig-a001-20200429
-s390                 randconfig-a001-20200430
-xtensa               randconfig-a001-20200430
-csky                 randconfig-a001-20200430
-openrisc             randconfig-a001-20200430
-sh                   randconfig-a001-20200430
 i386                 randconfig-b002-20200429
 i386                 randconfig-b001-20200429
 x86_64               randconfig-b001-20200429
@@ -218,7 +214,6 @@ sh                          rsk7269_defconfig
 sh                               allmodconfig
 sh                            titan_defconfig
 sh                                allnoconfig
-sparc                               defconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                          allmodconfig
