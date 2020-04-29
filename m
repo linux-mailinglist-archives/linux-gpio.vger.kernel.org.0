@@ -2,232 +2,229 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E4F01BE7F8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 22:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 127961BEA02
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 23:35:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgD2UAX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 16:00:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9729 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726456AbgD2UAX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Apr 2020 16:00:23 -0400
-IronPort-SDR: eOCvIcq6mZLrrQ9r1ClLfqlj/2hFEND52+2IUf9jPemefgrRTyPFSUDJRiLt+bsgp83sR8Hmxv
- Nl+axIV6xK/g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 13:00:22 -0700
-IronPort-SDR: Kc44swzA17ijr/IUaG66xTLVBWPM6KajiAbWTcWvk8QzuYqy19398MyU/enlELwdGVG854sulE
- C9/5spvBtaZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="246953032"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 29 Apr 2020 13:00:20 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jTssW-000FKe-6o; Thu, 30 Apr 2020 04:00:20 +0800
-Date:   Thu, 30 Apr 2020 03:59:40 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:for-next] BUILD SUCCESS
- 9e581cd14663a665c32039acb0577f0ea2653f46
-Message-ID: <5ea9dcac.flCocDX23sPpxl/J%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726960AbgD2Ve5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 17:34:57 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:46150 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726910AbgD2Ve4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Apr 2020 17:34:56 -0400
+Received: by mail-oo1-f65.google.com with SMTP id x16so777184oop.13;
+        Wed, 29 Apr 2020 14:34:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3wI+m3Lp4Msfhx+NZFQZQ19Jr5Ux1UxLifKvOMueVA0=;
+        b=ihOS09fb0gXUQmecNGTNcYEnD0AAax9ALpoCfJAEGV1/GpZmX9w7ofGtYSLdK2lfOZ
+         S6nJiYBOcb8VfpdpUAW8G34nnCMgwW3vYMgqvD5WrkKCX5Yemsg9lObyMJ5eA2ih3d+5
+         Nk4FR3BJi8zCf2cEr82gWFv0tKw5NGqiwIPt83k0sFAt7J+TXbkAtsLLy7s20urn65fP
+         YTBlinKFZM3Yx6mABJYwPpzh3Nhg2qndh5gnifw/4fWqCZRdr488Vm1ZwYEQs1WhlkEE
+         O6E/joJwu/yZ5dtAzFpJHUyb0mBe9BY4LZjJFmLZLvwPvyvtwywFPSQirnZAA2AIINmP
+         s9CA==
+X-Gm-Message-State: AGi0PuYv1rERRIWXtfqcZaRVhGoysDVpfaKADKOEDQgQSoMShvw6/Asw
+        WZX+L/dFPvlinf62WXKhjJUgOMU=
+X-Google-Smtp-Source: APiQypJz49rbWZlmdBvylWBwgLTfqZmjszuSuHIp91zs1eOOfCrntkS2nHsD2thdWFZSrECHIb/kgQ==
+X-Received: by 2002:a4a:b489:: with SMTP id b9mr64185ooo.71.1588196094960;
+        Wed, 29 Apr 2020 14:34:54 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l21sm775644ooq.18.2020.04.29.14.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 14:34:54 -0700 (PDT)
+Received: (nullmailer pid 5820 invoked by uid 1000);
+        Wed, 29 Apr 2020 21:34:53 -0000
+Date:   Wed, 29 Apr 2020 16:34:53 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
+ bindings
+Message-ID: <20200429213453.GA32114@bogus>
+References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
+ <20200417061907.1226490-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200417061907.1226490-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
-branch HEAD: 9e581cd14663a665c32039acb0577f0ea2653f46  Merge branch 'devel' into for-next
+On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
+> Add device tree binding Documentation details for Qualcomm SM8250
+> pinctrl driver.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 147 ++++++++++++++++++
+>  1 file changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..6dc3b52f47cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> @@ -0,0 +1,147 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm8250-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SM8250 TLMM block
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  SM8250 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sm8250-pinctrl
+> +
+> +  reg:
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    items:
+> +      - const: "west"
+> +      - const: "south"
+> +      - const: "north"
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  wakeup-parent:
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
+> +    then:
 
-elapsed time: 739m
+Needs a $ref to the standard properties.
 
-configs tested: 173
-configs skipped: 0
+Would be good to show a child node in the example too. (And try having 
+an error in a standard property type to verify you get an error).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-sparc                            allyesconfig
-s390                                defconfig
-ia64                              allnoconfig
-sparc64                             defconfig
-mips                      fuloong2e_defconfig
-nds32                               defconfig
-sparc                               defconfig
-s390                          debug_defconfig
-xtensa                          iss_defconfig
-h8300                     edosk2674_defconfig
-sh                  sh7785lcr_32bit_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                        generic_defconfig
-ia64                          tiger_defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-m68k                       bvme6000_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-c6x                              allyesconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                       common_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-mips                      malta_kvm_defconfig
-mips                            ar7_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-mips                malta_kvm_guest_defconfig
-mips                         tb0287_defconfig
-mips                       capcella_defconfig
-mips                           ip32_defconfig
-mips                  decstation_64_defconfig
-mips                      loongson3_defconfig
-mips                          ath79_defconfig
-mips                        bcm63xx_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                      chrp32_defconfig
-powerpc                             defconfig
-powerpc                       holly_defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-powerpc                           allnoconfig
-powerpc                  mpc866_ads_defconfig
-powerpc                    amigaone_defconfig
-powerpc                    adder875_defconfig
-powerpc                     ep8248e_defconfig
-powerpc                          g5_defconfig
-powerpc                     mpc512x_defconfig
-parisc               randconfig-a001-20200429
-m68k                 randconfig-a001-20200429
-alpha                randconfig-a001-20200429
-mips                 randconfig-a001-20200429
-nds32                randconfig-a001-20200429
-riscv                randconfig-a001-20200429
-nios2                randconfig-a001-20200429
-h8300                randconfig-a001-20200429
-c6x                  randconfig-a001-20200429
-sparc64              randconfig-a001-20200429
-microblaze           randconfig-a001-20200429
-sh                   randconfig-a001-20200429
-csky                 randconfig-a001-20200429
-s390                 randconfig-a001-20200429
-xtensa               randconfig-a001-20200429
-openrisc             randconfig-a001-20200429
-i386                 randconfig-b002-20200429
-i386                 randconfig-b001-20200429
-x86_64               randconfig-b001-20200429
-i386                 randconfig-b003-20200429
-x86_64               randconfig-b002-20200429
-x86_64               randconfig-b003-20200429
-i386                 randconfig-c002-20200429
-i386                 randconfig-c001-20200429
-x86_64               randconfig-c002-20200429
-x86_64               randconfig-c001-20200429
-i386                 randconfig-c003-20200429
-x86_64               randconfig-c003-20200429
-x86_64               randconfig-d001-20200429
-x86_64               randconfig-d002-20200429
-i386                 randconfig-d002-20200429
-i386                 randconfig-d001-20200429
-x86_64               randconfig-d003-20200429
-i386                 randconfig-d003-20200429
-x86_64               randconfig-e002-20200429
-i386                 randconfig-e003-20200429
-i386                 randconfig-e002-20200429
-x86_64               randconfig-e003-20200429
-i386                 randconfig-e001-20200429
-x86_64               randconfig-e001-20200429
-i386                 randconfig-f002-20200429
-i386                 randconfig-f003-20200429
-x86_64               randconfig-f003-20200429
-i386                 randconfig-f001-20200429
-x86_64               randconfig-f001-20200429
-x86_64               randconfig-h001-20200429
-i386                 randconfig-h003-20200429
-x86_64               randconfig-h003-20200429
-i386                 randconfig-h002-20200429
-i386                 randconfig-h001-20200429
-sparc                randconfig-a001-20200429
-ia64                 randconfig-a001-20200429
-powerpc              randconfig-a001-20200429
-arm                  randconfig-a001-20200429
-arc                  randconfig-a001-20200429
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                                allnoconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +      properties:
+> +        pins:
+> +          description:
+> +            List of gpio pins affected by the properties specified in this
+> +            subnode.
+> +          items:
+> +            oneOf:
+> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
+> +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
+> +          minItems: 1
+> +          maxItems: 36
+> +
+> +        function:
+> +          description:
+> +            Specify the alternative function to be configured for the specified
+> +            pins.
+> +
+> +          enum: [ aoss_cti, atest, audio_ref, cam_mclk, cci_async, cci_i2c,
+> +            cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
+> +            cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
+> +            ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
+> +            ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
+> +            mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
+> +            mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck, mi2s1_ws,
+> +            mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, pci_e0, pci_e1,
+> +            pci_e2, phase_flag, pll_bist, pll_bypassnl, pll_clk, pll_reset,
+> +            pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qspi0, qspi1, qspi2, qspi3,
+> +            qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14,
+> +            qup15, qup16, qup17, qup18, qup19, qup2, qup3, qup4, qup5, qup6,
+> +            qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41,
+> +            sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu, tgu_ch0, tgu_ch1,
+> +            tgu_ch2, tgu_ch3, tsense_pwm1, tsense_pwm2, tsif0_clk, tsif0_data,
+> +            tsif0_en, tsif0_error, tsif0_sync, tsif1_clk, tsif1_data, tsif1_en,
+> +            tsif1_error, tsif1_sync, usb2phy_ac, usb_phy, vsense_trigger ]
+> +
+> +        drive-strength:
+> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +          default: 2
+> +          description:
+> +            Selects the drive strength for the specified pins, in mA.
+> +
+> +        bias-pull-down: true
+> +
+> +        bias-pull-up: true
+> +
+> +        bias-disable: true
+> +
+> +        output-high: true
+> +
+> +        output-low: true
+> +
+> +      required:
+> +        - pins
+> +        - function
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        pinctrl@1f00000 {
+> +                compatible = "qcom,sm8250-pinctrl";
+> +                reg = <0x0f100000 0x300000>,
+> +                      <0x0f500000 0x300000>,
+> +                      <0x0f900000 0x300000>;
+> +                reg-names = "west", "south", "north";
+> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +                gpio-ranges = <&tlmm 0 0 180>;
+> +                wakeup-parent = <&pdc>;
+> +        };
+> -- 
+> 2.24.0
+> 
