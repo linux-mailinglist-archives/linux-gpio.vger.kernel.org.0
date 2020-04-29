@@ -2,77 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54AE01BDBE1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 14:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F58B1BDC42
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 14:33:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgD2MTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 08:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40832 "EHLO
+        id S1727044AbgD2MdI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 08:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726524AbgD2MTu (ORCPT
+        by vger.kernel.org with ESMTP id S1726686AbgD2MdI (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Apr 2020 08:19:50 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A0A4C03C1AD
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Apr 2020 05:19:48 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u10so1454790lfo.8
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Apr 2020 05:19:48 -0700 (PDT)
+        Wed, 29 Apr 2020 08:33:08 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365E5C03C1AD
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Apr 2020 05:33:08 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d24so784820pll.8
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Apr 2020 05:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C1Ts4DfOpbqwNmKAyV/9/Lll4n9YArjQ/mn7brU53Ks=;
-        b=HeQpH7rxp/Oyh4cRIDkKuEC/nrOQkmhe2swtarQuUReEO9o8Fgc5g5gq10VX8AQ9Ca
-         9FUz0xLE0yzVF97yDlEt5U8ogfTQLqmFS5CBYqICi2zKUeyYtLnU/dG73H3PEFPr4uzg
-         O7fEBhpMIUKX1MZfGlQ3RPfC8YI+3CQ4CWCQ2+9tqLp6xSNSavLwClNKF9av4efRAURB
-         KeARE2/mJ0kKPp8hy5nuL4+z4J2kd9NG229n7jc0ndiQF1qA1xFeAMNAHoETBgACTXeB
-         QqIgG/CQ1UTq3Q8vG88ewPteWzXsxqDvel6D9PYwVvaXXYsiFAA8QiKShxdQzqvsKXpw
-         IdMg==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=51zTxEbThs7H4tIpbmr7Xe8Supd/EOnvZp7GhH16Y8I=;
+        b=dg4YDhtBLBUaTqmmqTkS6Ql+RJucCHz+UvY6XhLUcTJVaEG529UDOsMjAF5bJMG2rE
+         ec5yYimFbf5oPH4ZAvcyDXGr8CMRbPoCT58Vau1mMhU/JsCvmUBKKzfCZkazjqQRBqmy
+         aqC+Ibm8f48HeTVe1Tosmkv8Q9OqXBsCxaHlg7+E1aqGU4lTZlWbfqELnTHXp6S32oTf
+         NX9K4v0W5Ab2bNVmwAxjllJX81K89jeRF2ZovSqv6Vy4UVgPsMzF4suJLxNh4GoqWX5a
+         Hq0mYzDfo7t5V+dOV0P8YpT4Wmhnh1OdhJI60WneDr+nSQQIZg1ZTFKwNxq8CwTN/jA3
+         anNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C1Ts4DfOpbqwNmKAyV/9/Lll4n9YArjQ/mn7brU53Ks=;
-        b=QshG3OoHaaOZliTsF61rv7o2c27s3tT3tTLM09uSvgh6iGuzxsyMakjhThsW/5gDDj
-         +DKzCL2k/OQQZM9eqKpihkD/R3vSJnWUG03kAZjEQ3dDJyIc/VyD3HqDhemYoPtnp8WK
-         brxAU6AsdNp91C22mSW/Qmm9lQxACMh4erk+Sl6TM1KzjFbCMD4ogVajNh78VjhrOldo
-         PHMdxeckKWi+m/r4MyLXeDX8OOgtwoMr42g+dE71W7maIdBx/EqJvhefmwFb6pp03jXX
-         NAqq339eu0yqP5BjRYhsY9ocD/qYlKEXMZma9vmw6zXPy/n2haoXuM3nkAB1mYw55JEI
-         hCJw==
-X-Gm-Message-State: AGi0PuYl69EDkE8iwkEhWXLlln0OQfe6aNHwbGFxtazdbKykUCGh0dT8
-        qRO1fpqeRU9iitNME0VHP72JWGVrjvP/PUK/RJ5FSniw
-X-Google-Smtp-Source: APiQypJ2jgIIIfWcY9D1adj1uOLPdacJazusj6aGHmHvzzde6RhBsWaPWv8/f2ZwRjyszUh2zAlZgyz1YZbk16iyJ9M=
-X-Received: by 2002:ac2:4a9d:: with SMTP id l29mr21464343lfp.4.1588162786702;
- Wed, 29 Apr 2020 05:19:46 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=51zTxEbThs7H4tIpbmr7Xe8Supd/EOnvZp7GhH16Y8I=;
+        b=pSNulwWKAShU55FK0NV/rtlkP2+5ixitfFbFiI9YRCWXckK/8ifq2HKp8TffQXVUQZ
+         vgZWkvUf+WtsGuOdp0sY2y7dXBP96LF0fc0p3IqMICjUZclTO4zC+0sOFh6XJIUtot8G
+         OinmXxaC4rcBU8PTzKTA8HJZk72/L1Q9z34L5N+mBG3xXKMhJQG11aG3x3xAoL0oN9Xd
+         GhNu2Im/Bi2EuyHAMq3w8ASg1mH3BX9b2xVD1DP5bThZUz+arfmhIvYWcbCl9R3SguWg
+         IgTVQrbVBfeER30IfkFxE6q2ZXpJbF8nXHItjO/BgOx/zrMuiJ8WUp6S1HoGKXoiMyfP
+         J/Fw==
+X-Gm-Message-State: AGi0PuYcQ9FfBgKmkM+O/oLCUuaVFpYQyrdRJSEuTASs51Ed21jv/uBb
+        zeRvtlaIxA3SMrP/cOA92xlbUogMnJU=
+X-Google-Smtp-Source: APiQypK0S/+63iKQ1QMMzan6mwveUtj3sebojONL2o2YtYkQgava13FNesDPBHmj0VbktjEClXYERQ==
+X-Received: by 2002:a17:902:7687:: with SMTP id m7mr27795692pll.34.1588163587314;
+        Wed, 29 Apr 2020 05:33:07 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id 23sm4549074pjb.11.2020.04.29.05.33.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 05:33:06 -0700 (PDT)
+Message-ID: <5ea97402.1c69fb81.fc5f2.f480@mx.google.com>
+Date:   Wed, 29 Apr 2020 05:33:06 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
- <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
-In-Reply-To: <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Apr 2020 14:19:35 +0200
-Message-ID: <CACRpkdaT_G=Wa7iYhfBVGrcViy7EbDH1+Qme+UQTGTWybu7Fzg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Kernel: v5.7-rc2-34-g9e581cd14663
+X-Kernelci-Report-Type: boot
+Subject: linusw/for-next boot: 66 boots: 2 failed,
+ 64 passed (v5.7-rc2-34-g9e581cd14663)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 2:24 AM Douglas Anderson <dianders@chromium.org> wrote:
+linusw/for-next boot: 66 boots: 2 failed, 64 passed (v5.7-rc2-34-g9e581cd14=
+663)
 
-> When I copied the function prototypes from the GPIO header file into
-> my own driver, checkpatch yelled at me saying that I shouldn't use use
-> "unsigned" but instead should say "unsigned int".  Let's make the
-> header file use "unsigned int" so others who copy like I did won't get
-> yelled at.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
+/kernel/v5.7-rc2-34-g9e581cd14663/
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.7-rc2-34-g9e581cd14663/
 
-Patch applied. Nice cleanup!
+Tree: linusw
+Branch: for-next
+Git Describe: v5.7-rc2-34-g9e581cd14663
+Git Commit: 9e581cd14663a665c32039acb0577f0ea2653f46
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Tested: 58 unique boards, 14 SoC families, 3 builds out of 6
 
-Yours,
-Linus Walleij
+Boot Regressions Detected:
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8:
+          bcm2836-rpi-2-b:
+              lab-collabora: failing since 77 days (last pass: gpio-v5.5-4-=
+45-gd18fddff061d - first fail: v5.6-rc1-12-g612e35e76ec8)
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          sun50i-a64-pine64-plus:
+              lab-baylibre: new failure (last pass: v5.7-rc1-20-g9f676e5313=
+c1)
+
+Boot Failures Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            sun50i-a64-pine64-plus: 1 failed lab
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            bcm2836-rpi-2-b: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
