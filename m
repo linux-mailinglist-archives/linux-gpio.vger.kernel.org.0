@@ -2,124 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62ECB1BD49A
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 08:27:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA9C01BD4C0
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Apr 2020 08:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgD2G1c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Apr 2020 02:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42404 "EHLO
+        id S1726426AbgD2GkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Apr 2020 02:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgD2G1b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Apr 2020 02:27:31 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0ECC035495
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j1so1058811wrt.1
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 23:27:29 -0700 (PDT)
+        with ESMTP id S1726158AbgD2GkP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Apr 2020 02:40:15 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9ADC03C1AD
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 23:40:15 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id c23so969082qtp.11
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Apr 2020 23:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
-        b=I4vZV4PACb5f7K2uxifM99GPqkcfyrpLc74PzSrCUF61KrqkAGgKNBFNHr+XiC1Zzr
-         XqIjNrgmZ91TIAda8FEWPq1gg3Xaa84/0qQWu5Ae3sW4csU35iEp2O/nwCWdMpbr7El6
-         eoZD/tvPP5RteAWgnhbWIY/PMqJ+ssDOZvekrrEimOB3ENhCiVutsoNIJ5zLGgynqmXb
-         8Rc5rpcdAkqbshwzs7C11AcGOjJ9hcJFu+NIFlqEadlAtAupqh+9vJ50K1QkhtgQmjWR
-         R9djt4X9WtAHl95Nhhfz3sSbWTT0MATduTJ2F9hJdP0sNOI+tsziWlYROFDtUt7Fy1Op
-         uYQA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yG9vpPKDzpfRJJCk2llJaWFnWsJYaiICHL0xvUKSsXA=;
+        b=Bs7BV2nsK5MflmzjP5qR1H1SKL2RyWuvjV5dRy4PwylwWd2puZuGbhRmxG2Tjfc7pK
+         6v1lAYPstBsxTH7gSPFHpwMI9kd5ppsETqxsuEkfbeNJu84FZXDqKGejIE50RbaBS1p8
+         YV+SxL9CDCR+XMf6lga3L5RTanyFYXyJ4Vk4RMYqZ1N9kgb//Wt0YHItFB79+qWRXg68
+         SHQhvxi088v7r8mtiNy4+ld8CCovMYlh0RezNiduUHlfZuF7sXVQrwUkSlGj3tlpiiOu
+         zgYHvkt3wJw9UKbX8z2TDmXDcP0iWw9qnLHv6Fj/qnNbRyE3x82dH6Q9D/hREX60J0Ug
+         5vag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wv05h1X7qRrPjYPf9y0VD7+PHwezUYitVP0Fh0igQuY=;
-        b=JBIILmB8QlIen8SFmyvhM7+ijTR6gEdDR4/N+nLm+ZTDb/HvBPMCgtVbJU9gRRnnQu
-         9T3XN1qPdhQvDSnZEw2zeNXEHps2xIJwV/vXBJaY+ODJD93t6RgeupopJEjQQOSzdM/Q
-         RUlUFWHIeBHv4tAv64EWG2o4Xo6ihJ45KpBijW1CXAaF45uzjjAuIA5pF0FiShnTl5xl
-         153LNrgji7z0dfoMpMzfvFVBV5mWQiralbfzQH/88a6dFAY/GHUNXXwaHcV1dN0/tB/A
-         BKn7NJNMUsXLePUV0Z8biUnYjB3u0OKrm4uQubls41tr6cbJQpSzVtJmczMUYNKgh/rb
-         fm2Q==
-X-Gm-Message-State: AGi0PuaiP2enK8kFeC00vzuyVJ51VcEvrVUQteFXWdDjKBAoPlUZhhXk
-        ZSJiJliAp49Nsom+wNfDta3YAw==
-X-Google-Smtp-Source: APiQypKTqIt46QQB2nB/SSJZXWRFVeB9A294fdRkNMgBYLOeiiFcpBnVXBSKVh/jOHoB1iCbHHyjSA==
-X-Received: by 2002:adf:f187:: with SMTP id h7mr37818290wro.331.1588141648280;
-        Tue, 28 Apr 2020 23:27:28 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id t17sm27729510wro.2.2020.04.28.23.27.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Apr 2020 23:27:27 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 07:27:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Michael Walle <michael@walle.cc>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200429062725.GU3559@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc>
- <20200428125049.GU185537@smile.fi.intel.com>
- <5e2d486077f9e2ce8bd9b171cf806fd9@walle.cc>
- <20200428144958.GZ185537@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yG9vpPKDzpfRJJCk2llJaWFnWsJYaiICHL0xvUKSsXA=;
+        b=BAk39/PuMpSqFbX2lD/7t6b5HN1mX7RrJ16zyXBm2Ovk+0iUnvpnXzV6XuVrRGsq2i
+         O/7qFA/tVQs890nw/agtjtfKyqrxHSvriOU3NCepq1xY9Iz9KF14jGn45CIyP6UOZAha
+         oKfPYV6fI5gotBHK85DqCM0tF8sg3lOZejg1P4qz9uFxpjYcUZGIRg7smKe/rc9YUOAZ
+         p1r1GVkyJ0B+N+XCL9zOFwiuJQY3ip8EG/irthujl4AzLwkyU7ca52bku+gKptuQJ2d+
+         BIYF46LjCdrXlhGxy8TDAKmVIqrpgmcrfxDAt+4VRuv+/do2DyHwzbeUnw3quwA59XuU
+         1cIQ==
+X-Gm-Message-State: AGi0PuaFBJCkZaWVkGdfegAqzEkPHVh6NgKCzHE/vatyA1EDB7B9sehD
+        OPpHIjAtwcOlCvNda8R+RRrc3MT069VhDzKXHESgXnqn
+X-Google-Smtp-Source: APiQypLel6yd42EX4hCUgJ2g2Y4ZLCLoCH0juyg1zdK4uk7xQQ8uHZN/7SJaLSvNB3C9dIMq2LoGdqu106l9KFNjX6k=
+X-Received: by 2002:aed:2a43:: with SMTP id k3mr32657429qtf.208.1588142414184;
+ Tue, 28 Apr 2020 23:40:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200428144958.GZ185537@smile.fi.intel.com>
+References: <20200320093125.23092-1-brgl@bgdev.pl> <CACRpkdZgWUwmmuXn12DS3TsQS0yQxcweqK6HGxBm=V_2LBLBMw@mail.gmail.com>
+ <CAMpxmJUb09KGreHw6Bdz79rbnQE7oZnWg_5qN_FhzoS2-XccFA@mail.gmail.com> <CAHp75Vdpb=hNiR3c7G_yTeSt70Vcy3DWHin0B5+WYV1hbRMBJQ@mail.gmail.com>
+In-Reply-To: <CAHp75Vdpb=hNiR3c7G_yTeSt70Vcy3DWHin0B5+WYV1hbRMBJQ@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 29 Apr 2020 08:40:03 +0200
+Message-ID: <CAMpxmJVT4wm26hQB-_BV73tC5_nqH5JG9KmDuNQ2OJe+tE+gLg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't call sleeping functions with a spinlock taken
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 28 Apr 2020, Andy Shevchenko wrote:
+wt., 28 kwi 2020 o 17:53 Andy Shevchenko <andy.shevchenko@gmail.com> napisa=
+=C5=82(a):
+>
+> On Tue, Apr 14, 2020 at 6:35 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> >
+> > wt., 14 kwi 2020 o 14:00 Linus Walleij <linus.walleij@linaro.org> napis=
+a=C5=82(a):
+> > >
+> > > On Fri, Mar 20, 2020 at 10:31 AM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+> > >
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > We must not call pinctrl_gpio_can_use_line() with the gpio_lock tak=
+en
+> > > > as it takes a mutex internally. Let's move the call before taking t=
+he
+> > > > spinlock and store the return value.
+> > > >
+> > > > This isn't perfect - there's a moment between calling
+> > > > pinctrl_gpio_can_use_line() and taking the spinlock where the situa=
+tion
+> > > > can change but it isn't a regression either: previously this part w=
+asn't
+> > > > protected at all and it only affects the information user-space is
+> > > > seeing.
+>
+> It seems I have no original at hand, so, commenting here.
+>
+> It looks like we need a mutex less function which can be used here and
+> in the call you are considering racy.
 
-> On Tue, Apr 28, 2020 at 04:43:24PM +0200, Michael Walle wrote:
-> > Am 2020-04-28 14:50, schrieb Andy Shevchenko:
-> > > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
-> > > > This patch adds core support for the board management controller found
-> > > > on the SMARC-sAL28 board. It consists of the following functions:
-> > > >  - watchdog
-> > > >  - GPIO controller
-> > > >  - PWM controller
-> > > >  - fan sensor
-> > > >  - interrupt controller
-> > > 
-> > > ...
-> > > 
-> > > >  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
-> > > > 
-> > > >  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> > > > +
-> > > > +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-> > > 
-> > > Perhaps keep an order?
-> > 
-> > I don't see any order in that makefile. Looked to me like every new
-> > file was added at the end.
-> 
-> Okay, just didn't note from above context.
+The thing is this mutex is in pinctrl - we'd need to export it too so
+that gpio can use it.
 
-Yes, this is historical.  I've been meaning to visit this for ~7 years!
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Bart
