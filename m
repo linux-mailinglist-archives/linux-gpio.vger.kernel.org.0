@@ -2,90 +2,294 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F28A51C02B8
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 18:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 656CA1C0527
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 20:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgD3QjC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Apr 2020 12:39:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30305 "EHLO mga12.intel.com"
+        id S1726477AbgD3Str (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Apr 2020 14:49:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgD3QjC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:39:02 -0400
-IronPort-SDR: s1/X7CvdGxPyXDk8DbROCbtkFZQsR7tP9i+JAxhlmxfOtjuTX36Rqu8Iau7ay4ufZ+oaGtZa18
- yguDMghOXyXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 09:38:59 -0700
-IronPort-SDR: ME5Ydnoy+OAr2lFUJblXA0A6ioZNOJkRmsQr7GxyMwPdnz/fSx/zy5+Unt5y3JubqY9W4wfgY3
- OHFKiMXFCseg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
-   d="scan'208";a="261836945"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 09:38:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jUCD9-003x70-2a; Thu, 30 Apr 2020 19:38:55 +0300
-Date:   Thu, 30 Apr 2020 19:38:55 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
-Message-ID: <20200430163855.GU185537@smile.fi.intel.com>
-References: <cover.1588112714.git.syednwaris@gmail.com>
- <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
- <20200429102114.GF185537@smile.fi.intel.com>
- <20200430161514.GA7107@syed>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430161514.GA7107@syed>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1726520AbgD3Stq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 30 Apr 2020 14:49:46 -0400
+Received: from localhost.localdomain (unknown [157.46.61.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC87F2082E;
+        Thu, 30 Apr 2020 18:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588272585;
+        bh=Z6DECa7N8G4+bwjZsfqnOxuuzgQZyt8hmyoOawef5xs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FpLxQ6NR39VtsF7sVE7koAHKegDdLo317LgxLx6dQHfz5lvwHPrTqQ3So9NUuLaSE
+         76TfWZBSHsdO4MfDUu0PZNOgir/Fy/OxSwocrA00jYrJlUEx5Oez0kDqcmPGu/9rLz
+         8S75MG8mWvu65KDHrBoipBMLFdVybMw6KUbstnaA=
+From:   mani@kernel.org
+To:     johan@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patong.mxl@gmail.com, Manivannan Sadhasivam <mani@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 2/2] usb: serial: xr_serial: Add gpiochip support
+Date:   Fri,  1 May 2020 00:19:24 +0530
+Message-Id: <20200430184924.31690-3-mani@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200430184924.31690-1-mani@kernel.org>
+References: <20200430184924.31690-1-mani@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 09:45:14PM +0530, Syed Nayyar Waris wrote:
-> On Wed, Apr 29, 2020 at 01:21:14PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
+From: Manivannan Sadhasivam <mani@kernel.org>
 
-...
+Add gpiochip support for Maxlinear/Exar USB to serial converter
+for controlling the available gpios.
 
-> > > +	const unsigned long state_size = BITS_PER_TYPE(*state);
-> > 
-> > This '*state' is unneeded complication, use BITS_PER_U32.
-> > 
-> > > +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
-> > 
-> > This macro makes code uglier, besides the fact of absence of #undef.
-> > And also see above.
-> 
-> Thank you for your review comments. Just want to clarify, you want
->  a new macro to be created - 'BITS_PER_U32' ?
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+---
+ drivers/usb/serial/xr_serial.c | 199 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 198 insertions(+), 1 deletion(-)
 
-It's already there (read bits.h).
-
-> Also, don't you think that with BITS_PER_TYPE(), in case later the type
-> of 'state' changes, it will be reflected in this code without any code
-> change?
-
-If it changes the bits per type will be least issues there. The rationale
-behind is to have code readable. In proposed change it is not.
-
-> Let me know if I have misunderstood something.
-> 
-> > 
-> > > +	DECLARE_BITMAP(old, TOTAL_BITS);
-> > > +	DECLARE_BITMAP(new, TOTAL_BITS);
-> > > +	DECLARE_BITMAP(changed, TOTAL_BITS);
-
+diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
+index fdb9ddf8bd95..255a30540b52 100644
+--- a/drivers/usb/serial/xr_serial.c
++++ b/drivers/usb/serial/xr_serial.c
+@@ -7,6 +7,7 @@
+  * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
+  */
+ 
++#include <linux/gpio/driver.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -32,6 +33,11 @@ struct xr_uart_regs {
+ };
+ 
+ struct xr_port_private {
++#ifdef CONFIG_GPIOLIB
++	struct gpio_chip gc;
++	bool gpio_registered;
++	u8 gpio_altfunc;
++#endif
+ 	const struct xr_uart_regs *regs;
+ };
+ 
+@@ -562,6 +568,196 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
+ 		   state);
+ }
+ 
++#ifdef CONFIG_GPIOLIB
++
++static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++
++	/* Check if the requested GPIO is occupied */
++	if (port_priv->gpio_altfunc & BIT(offset))
++		return -ENODEV;
++
++	return 0;
++}
++
++static int xr_gpio_get(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	int ret;
++	u8 gpio_status;
++
++	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_status, &gpio_status);
++	if (ret)
++		return ret;
++
++	return !!(gpio_status & BIT(gpio));
++}
++
++static void xr_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++
++	if (val)
++		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
++			   port_priv->regs->gpio_set, BIT(gpio));
++	else
++		xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
++			   port_priv->regs->gpio_clr, BIT(gpio));
++}
++
++static int xr_gpio_direction_get(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	int ret;
++	u8 gpio_dir;
++
++	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_dir, &gpio_dir);
++	if (ret)
++		return ret;
++
++	/* Logic 0 = input and Logic 1 = output */
++	return !(gpio_dir & BIT(gpio));
++}
++
++static int xr_gpio_direction_input(struct gpio_chip *gc, unsigned int gpio)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	int ret;
++	u8 gpio_dir;
++
++	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_dir, &gpio_dir);
++	if (ret)
++		return ret;
++
++	gpio_dir &= ~BIT(gpio);
++
++	return xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
++			  port_priv->regs->gpio_dir, gpio_dir);
++}
++
++static int xr_gpio_direction_output(struct gpio_chip *gc, unsigned int gpio,
++				    int val)
++{
++	struct usb_serial_port *port = gpiochip_get_data(gc);
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	int ret;
++	u8 gpio_dir;
++
++	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_dir, &gpio_dir);
++	if (ret)
++		return ret;
++
++	gpio_dir |= BIT(gpio);
++
++	ret = xr_set_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_dir, gpio_dir);
++	if (ret)
++		return ret;
++
++	xr_gpio_set(gc, gpio, val);
++
++	return 0;
++}
++
++static int xr21v141x_gpio_init(struct usb_serial_port *port)
++{
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	int ret;
++	u8 gpio_mode;
++
++	port_priv->gc.ngpio = 6;
++
++	ret = xr_get_reg(port, XR21V141X_UART_REG_BLOCK,
++			 port_priv->regs->gpio_mode, &gpio_mode);
++	if (ret)
++		return ret;
++
++	/* Mark all pins which are not in GPIO mode */
++	if (gpio_mode & UART_MODE_RTS_CTS)
++		port_priv->gpio_altfunc |= (BIT(4) | BIT(5));
++	else if (gpio_mode & UART_MODE_DTR_DSR)
++		port_priv->gpio_altfunc |= (BIT(2) | BIT(3));
++	else if (gpio_mode & UART_MODE_RS485)
++		port_priv->gpio_altfunc |= BIT(5);
++	else if (gpio_mode & UART_MODE_RS485_ADDR)
++		port_priv->gpio_altfunc |= BIT(5);
++	else
++		port_priv->gpio_altfunc = 0; /* All GPIOs are available */
++
++	return ret;
++}
++
++static int xr_gpio_init(struct usb_serial_port *port)
++{
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++	struct usb_serial *serial = port->serial;
++	int ret = 0;
++	u16 pid;
++
++	/* Don't register gpiochip for interface 0 */
++	if (port->minor == 0)
++		return ret;
++
++	pid = le16_to_cpu(serial->dev->descriptor.idProduct);
++
++	ret = xr21v141x_gpio_init(port);
++	if (ret < 0)
++		return ret;
++
++	port_priv->gc.label = devm_kasprintf(&port->dev, GFP_KERNEL, "XR%04x",
++					     pid);
++	port_priv->gc.request = xr_gpio_request;
++	port_priv->gc.get_direction = xr_gpio_direction_get;
++	port_priv->gc.direction_input = xr_gpio_direction_input;
++	port_priv->gc.direction_output = xr_gpio_direction_output;
++	port_priv->gc.get = xr_gpio_get;
++	port_priv->gc.set = xr_gpio_set;
++	port_priv->gc.owner = THIS_MODULE;
++	port_priv->gc.parent = &port->dev;
++	port_priv->gc.base = -1;
++	port_priv->gc.can_sleep = true;
++
++	ret = gpiochip_add_data(&port_priv->gc, port);
++	if (!ret)
++		port_priv->gpio_registered = true;
++
++	return ret;
++}
++
++static void xr_gpio_remove(struct usb_serial_port *port)
++{
++	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
++
++	if (port_priv->gpio_registered) {
++		gpiochip_remove(&port_priv->gc);
++		port_priv->gpio_registered = false;
++	}
++}
++
++#else
++
++static int xr_gpio_init(struct usb_serial_port *port)
++{
++	return 0;
++}
++
++static void xr_gpio_remove(struct usb_serial_port *port)
++{
++	/* Nothing to do */
++}
++
++#endif
++
+ static int xr_port_probe(struct usb_serial_port *port)
+ {
+ 	struct xr_port_private *port_priv;
+@@ -575,13 +771,14 @@ static int xr_port_probe(struct usb_serial_port *port)
+ 
+ 	usb_set_serial_port_data(port, port_priv);
+ 
+-	return 0;
++	return xr_gpio_init(port);
+ }
+ 
+ static int xr_port_remove(struct usb_serial_port *port)
+ {
+ 	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
+ 
++	xr_gpio_remove(port);
+ 	kfree(port_priv);
+ 
+ 	return 0;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
