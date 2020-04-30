@@ -2,91 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C5691C0254
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 18:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F28A51C02B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 18:39:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgD3QW5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Apr 2020 12:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726411AbgD3QW5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Apr 2020 12:22:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4F8C035494;
-        Thu, 30 Apr 2020 09:22:55 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id q124so2959543pgq.13;
-        Thu, 30 Apr 2020 09:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6hCrcx7D1IDeNZAz3WM653SH5Zf1li3FyaYMgWSZV10=;
-        b=khVobuD+wLTE4Vvd7irrCNwIATVVxx7BODKqed/nvfb3jaKN0Q9GDkfdJmkhc7NFFi
-         w8e9KCeKqgbrVN7D5MeL8v7DwyUWF3UXnx+2qFFr8jxS3Q1qN3Czf/7pnXcEWeSW9kSw
-         pHvra7EV+7IMRR84eg5q5QRCqs3ewkhsDaetsNTPPoXhVUah5c+ktzzxfFa30qRmlC9T
-         FEZi7+WMls4qiMh6sCWMMndyRyUu49dWtGkVIR5rmheWxu5SoZR+3gCDqtM5wrNWHzG+
-         5qeQGGheakucxv/8CdAu3JAU2xM3xwKqG8D+U5cakfUfqFHjL0yxCGcRR9YVaY5xQi4M
-         lY9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6hCrcx7D1IDeNZAz3WM653SH5Zf1li3FyaYMgWSZV10=;
-        b=cXZcqAeHqdsLTJOXVIn473z855RioLib5eK+GvFsTCfNd9gY56Flu6hozlnl7bQR0Y
-         fgTAkn5NxjXTUtkTBurvXxl5PGbXvZHOssGfpCwm3iGc/P48ewfrx8uY27n/qMDsLjEO
-         S9l6g+JEaKtJ4mqziv2dRwafvv0qw35ZdFsIkslg4qZ7DrQ11k26ccv3vWbjtUwk7p/o
-         5gNcI3Fs9HymBLDREBaIGjBi+CMnDUPU57xixK81FxMxeXt4TaLeE1C0n5oWid3lYaeT
-         SLUTACorYjj3re4JqCzVNsguWz+dVH2tb00DqHhx5s5g9mQLFjiQd0cMeF0visg8zKdN
-         SjjQ==
-X-Gm-Message-State: AGi0PuaLLHwSO0rwydCdZQDhpSbWzNFr4PLp7eQ5U23r7mXaX6XWpft5
-        rGSyG/Uhk5TSr+u86+rRKa8=
-X-Google-Smtp-Source: APiQypKil4wboZhZaqbn4ZNNa/Myyh4nU79jYWxti5AstyRCUBDfoX54ExdlU3opgxCQm7GlLRShow==
-X-Received: by 2002:a62:158f:: with SMTP id 137mr58768pfv.219.1588263775318;
-        Thu, 30 Apr 2020 09:22:55 -0700 (PDT)
-Received: from syed ([106.210.97.7])
-        by smtp.gmail.com with ESMTPSA id 3sm258099pfo.27.2020.04.30.09.22.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 Apr 2020 09:22:54 -0700 (PDT)
-Date:   Thu, 30 Apr 2020 21:52:46 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726285AbgD3QjC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Apr 2020 12:39:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30305 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgD3QjC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 30 Apr 2020 12:39:02 -0400
+IronPort-SDR: s1/X7CvdGxPyXDk8DbROCbtkFZQsR7tP9i+JAxhlmxfOtjuTX36Rqu8Iau7ay4ufZ+oaGtZa18
+ yguDMghOXyXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 09:38:59 -0700
+IronPort-SDR: ME5Ydnoy+OAr2lFUJblXA0A6ioZNOJkRmsQr7GxyMwPdnz/fSx/zy5+Unt5y3JubqY9W4wfgY3
+ OHFKiMXFCseg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,336,1583222400"; 
+   d="scan'208";a="261836945"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 09:38:52 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jUCD9-003x70-2a; Thu, 30 Apr 2020 19:38:55 +0300
+Date:   Thu, 30 Apr 2020 19:38:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
 Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
-        rrichter@marvell.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <20200430162246.GB7107@syed>
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+Message-ID: <20200430163855.GU185537@smile.fi.intel.com>
 References: <cover.1588112714.git.syednwaris@gmail.com>
- <ea25f5cbe03a3bb4bf5d976b004d87c4bab178e3.1588112716.git.syednwaris@gmail.com>
- <20200429101742.GE185537@smile.fi.intel.com>
+ <80745504d15c87aa1da0d4be3c16d1279f48615b.1588112716.git.syednwaris@gmail.com>
+ <20200429102114.GF185537@smile.fi.intel.com>
+ <20200430161514.GA7107@syed>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429101742.GE185537@smile.fi.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200430161514.GA7107@syed>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 01:17:42PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 29, 2020 at 04:37:41AM +0530, Syed Nayyar Waris wrote:
-> > This patch reimplements the thunderx_gpio_set_multiple function in
-> > drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-> > Instead of looping for each bank in thunderx_gpio_set_multiple
-> > function, now we can skip bank which is not set and save cycles.
-> 
-> > +	const unsigned long bank_size = 64;
-> 
-> Shouldn't be rather definition?
+On Thu, Apr 30, 2020 at 09:45:14PM +0530, Syed Nayyar Waris wrote:
+> On Wed, Apr 29, 2020 at 01:21:14PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 29, 2020 at 04:39:47AM +0530, Syed Nayyar Waris wrote:
 
-Thanks. I think you mean macro definition. I will incorporate this in my
-next version.
+...
 
+> > > +	const unsigned long state_size = BITS_PER_TYPE(*state);
+> > 
+> > This '*state' is unneeded complication, use BITS_PER_U32.
+> > 
+> > > +#define TOTAL_BITS BITS_PER_TYPE(chip->gpio_state)
+> > 
+> > This macro makes code uglier, besides the fact of absence of #undef.
+> > And also see above.
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> Thank you for your review comments. Just want to clarify, you want
+>  a new macro to be created - 'BITS_PER_U32' ?
+
+It's already there (read bits.h).
+
+> Also, don't you think that with BITS_PER_TYPE(), in case later the type
+> of 'state' changes, it will be reflected in this code without any code
+> change?
+
+If it changes the bits per type will be least issues there. The rationale
+behind is to have code readable. In proposed change it is not.
+
+> Let me know if I have misunderstood something.
 > 
-> 
+> > 
+> > > +	DECLARE_BITMAP(old, TOTAL_BITS);
+> > > +	DECLARE_BITMAP(new, TOTAL_BITS);
+> > > +	DECLARE_BITMAP(changed, TOTAL_BITS);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
