@@ -2,93 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 477671BF90E
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 15:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 135681BF98D
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Apr 2020 15:32:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD3NRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Apr 2020 09:17:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45616 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgD3NRP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Apr 2020 09:17:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so4803502otk.12;
-        Thu, 30 Apr 2020 06:17:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYuSc1eBkZJQojwW+mycEWGyCJ0BWkp4Uav1Yp+waH4=;
-        b=undtWtvT2mHdlVAjkAxpA6HjFxe07ox1UQKkExR4jfUjZIDVL1bVpAwaQiAPvL6zEk
-         EpZYpRm6vNziyuj6hmp5Rc5FEGdq8XEVZokGpVopJqdDFhA0O771cvfOuGrzE9D/hWn5
-         AEdK1zyOz/sYzMTBBoeAUj6sHYmNh7liv6lbbu1rRGiBwoRThxh3FTEVK++zPOLagWkr
-         SvxlnmOSiXt1rmd8ailRb3CB+3jf+A3OpIH9BUAFu7aFihk9ZMQ0iJxzyNW+zJ6ZFZiY
-         5qQh27i0hGWqE4E01QweWMIRp2ea6lKyqPoZaYeOjdFozX1AybtnSYqMsaw6liV8X27A
-         eWzQ==
-X-Gm-Message-State: AGi0PubbWhzngmYMl2/PR2e08Zu2FRwmwRf/l0wxx7Mim/Z+rmjo7vo5
-        2EtinPMk0SHObdbdV9fpNpzN8axcuAD0lTOpzxc=
-X-Google-Smtp-Source: APiQypIgBXU9BSTQiGJjGVpm37UKzZ3o3uIg7xCulwGQee8j0/6+X/C6FX1fA+tIeRv6xErPA9HMWzTT4VA6MAkCalo=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2302946otn.107.1588252634888;
- Thu, 30 Apr 2020 06:17:14 -0700 (PDT)
+        id S1726577AbgD3Ncc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Apr 2020 09:32:32 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.3]:35464 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbgD3Ncc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:32:32 -0400
+Received: from [100.112.131.139] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.us-west-2.aws.symcld.net id 9D/DB-39995-B63DAAE5; Thu, 30 Apr 2020 13:32:27 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRWlGSWpSXmKPExsXi5LtOQDf78qo
+  4g9WPBSx2PdjGZjHlz3Imi83z/zBaXN41h81iY8tWRgdWj8XXbrN67Jx1l93jzrU9bB6fN8kF
+  sESxZuYl5VcksGYs+XKYseCyTkX7rJVsDYwdOl2MnBxCAqsYJfYe8u5i5AKy9zJKLH/6nRUkw
+  SZgKHF33ho2EFtEIEji8r8GFpAiZoG5jBIzmyexdzFycAgLWEr0fwqAqLGSeDJ9FlS9k8SE3a
+  eYQWwWAVWJOWvugsV5BXwlLn09wwSxrJ9JYlP3NRaQBKdAoMTLKSsZQWxGATGJ76fWMIHYzAL
+  iEreezAezJQQEJJbsOc8MYYtKvHz8jxXCVpD48/ERE8g9zAKaEut36UO0KkpM6X7IDrFXUOLk
+  zCcsEA+rSBzr6GOZwCg6C8mGWQjds5B0z0LSvYCRZRWjRVJRZnpGSW5iZo6uoYGBrqGhka6hs
+  YGukYm5XmKVbqJeabFueWpxia6RXmJ5sV5xZW5yTopeXmrJJkZgRKYUNH3fwfhvzXu9Q4ySHE
+  xKorwGF1bFCfEl5adUZiQWZ8QXleakFh9ilOHgUJLg1bsIlBMsSk1PrUjLzAEmB5i0BAePkgh
+  vGUiat7ggMbc4Mx0idYrRkmPCy7mLmDmOzF0KJK+/37uUWYglLz8vVUqcVxqkQQCkIaM0D24c
+  LIFdYpSVEuZlZGBgEOIpSC3KzSxBlX/FKM7BqCTM6wQyhSczrwRu6yugg5iADsoWXg5yUEkiQ
+  kqqgclufTcrzwQWaef9idcy35ne5tvjcH+m7HnmW6unLG5aEJ1TGPFHdRKf1ZakyWsSrWaYxn
+  bofnV8x5tb5OOudWrnhWMm3Gt/mrn8c+HP8jqeJD/Lne3VIf572VFqz/IqW2TVN9abvJJ78Xj
+  Zr32izPtvNyxIyLB/Ou2Y8LR9J9iEt5xN0meMPPn555anZ3eUXH18yme/6gmF26qNW2Ozq0Q0
+  eIxkBA0EjLh52neVc5m+eqmTnXejop09cRl/1TIO7onVGbPW689hmxIuIpdxVsK2dVO6gMo0W
+  0nhrUrXP9+Mr87s2iYxs+/h8Wuh3XvtvpZf+XNVmf18z2KFW2JTbSK7r3NtUtATOu9mkmAmq8
+  RSnJFoqMVcVJwIAOPpBQTbAwAA
+X-Env-Sender: Hector.Bujanda@digi.com
+X-Msg-Ref: server-9.tower-334.messagelabs.com!1588253545!4559525!1
+X-Originating-IP: [66.77.174.16]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 15158 invoked from network); 30 Apr 2020 13:32:27 -0000
+Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
+  by server-9.tower-334.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 30 Apr 2020 13:32:26 -0000
+Received: from DOR-VMS-XCH01.digi.com (10.49.8.98) by MCL-VMS-XCH01.digi.com
+ (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 30 Apr 2020
+ 08:32:25 -0500
+Received: from DOR-SMS-XCH01.digi.com ([fe80::894b:3bdc:74ae:6efc]) by
+ DOR-VMS-XCH01.digi.com ([fe80::c47f:be41:1dc7:5ab8%11]) with mapi id
+ 14.03.0468.000; Thu, 30 Apr 2020 15:32:22 +0200
+From:   "Bujanda, Hector" <Hector.Bujanda@digi.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>
+Subject: RE: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Thread-Topic: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Thread-Index: AQHWHh6gJMEg5Ts3+keUs6HKGkhEuqiP6FOAgAAF9ICAAYs1UA==
+Date:   Thu, 30 Apr 2020 13:32:22 +0000
+Message-ID: <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+In-Reply-To: <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.101.2.152]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:17:03 +0200
-Message-ID: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
-Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
-
-Thanks for your patch!
-
-On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
-
-but lacks several automotive-specific peripherals.
-So please split the pinmux groups and functions in common and automotive
-parts.  From a quick look, for now the latter is limited to MLB
-groups/functions.
-
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-The rest looks good to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+VGhhbmtzIGFsbCBmb3IgeW91ciBndWlkYW5jZSENCg0KRmlyc3Qgc2F5aW5nIHRoYXQgdGhpcyBw
+YXRjaCByZXF1ZXN0IHdhcyBzZW50IGhhdmluZyBvdXIgcGxhdGZvcm1zIGluIGs0LjE0IGluIHRo
+ZSB3YXkgb2YgdXBncmFkaW5nIHRvIGs1LjQuDQpJbiB0aG9zZSB2ZXJzaW9ucyB0aGUgY29tbWl0
+IGU1ODhiYjFlYWUzMWJlNzNmYmVjMmI3MzFiZTk4NmE3YzA5NjM1YTQgImdwaW86IGFkZCBuZXcg
+U0VUX0NPTkZJRyBpb2N0bCgpIHRvIGdwaW8gY2hhcmRldiIgYnkgS2VudCBHaWJzb24gd2FzIG5v
+dCBhdmFpbGFibGUuDQoNCkkgc2VlIHRoYXQgeW91IGNsZWFybHkgdW5kZXJzdGFuZCB0aGUgbmVj
+ZXNzaXR5IG9mIGhhdmluZyBhIHdheSBvZiBjb25maWd1cmluZyBkZWJvdW5jZSBmcm9tIHRoZSB1
+c2Vyc3BhY2UuDQpPdXIgcGxhdGZvcm1zIG1ha2UgdXNlIG9mIGhhcmR3YXJlIGRlYm91bmNpbmcg
+ZmlsdGVyaW5nLiBVcCB0byBub3cgd2Ugd2VyZSB1c2luZyB0aGUgc3lzZmlsZXN5c3RlbSB0byBs
+ZXQgdGhlIHVzZXIgaGFuZGxlIGdwaW9zIChpbmNsdWRpbmcgZGVib3VuY2UgY29uZmlndXJhdGlv
+bikuDQpXZSB3YW50ZWQgbm93IHRvIGdldCByaWQgb2Ygc3lzZmlsZXN5c3RlbSBhbmQgc3RhcnQg
+dXNpbmcgZ3Bpb2xpYi9saWJncGlvZC4uLi4gYnV0IGNvbmZpZ3VyaW5nIGRlYm91bmNlIGlzIGJs
+b2NraW5nIHVzLg0KDQpOb3cgSSBjbGVhcmx5IHNlZSAoYXMgcG9pbnRlZCBieSBCYXJ0b3N6IEdv
+bGFzemV3c2tpKSB0aGF0IG15IHN1Z2dlc3RlZCBHUElPX1NFVF9ERUJPVU5DRV9JT0NUTCBpcyB3
+cm9uZyBhcyBpdCBoaXRzIHRoZSBjaGlwIGZpbGUgZGVzY3JpcHRvciB3aGlsZSAnTW9kaWZ5aW5n
+IGFueSBjb25maWcgc2V0dGluZ3MgY2FuIG9ubHkgaGFwcGVuIG9uIGxpbmVzIHByZXZpb3VzbHkg
+cmVxdWVzdGVkIHRvbyBpbiB1c2VyLXNwYWNlJy4NCg0KSSBhZ3JlZSB3aXRoIGFsbCB0aGF0IGEg
+ZmxhZyBpcyBuZWVkZWQgdG8gYWxsb3cgY29uZmlndXJpbmcgZGVib3VuY2UgdG8gJzAnIHdoaWNo
+IGhhcyBhbHdheXMgbWVhbnQgZGlzYWJsaW5nIGl0Lg0KDQpBbHNvIGFncmVlIHdpdGggJ0tlbnQg
+R2lic29uJyBzdWdnZXN0aW9uIG9mICAnWW91IG1pZ2h0IHdhbnQgdG8gYWRkIGEgZmxhZyB0byB0
+aGUgR1BJT0xJTkVfRkxBR3MgdG8gaW5kaWNhdGUgaWYgZGVib3VuY2UgaXMgc2V0Jy4NCg0KSSBo
+YXZlIG15IGRvdWJ0cyBpZiBpdCBpcyBjb21wdWxzb3J5IHRvIGV4dGVuZCBkZWJvdW5jZSBjb25m
+aWd1cmF0aW9uIHRvIHRoZSBncGlvZXZlbnRfcmVxdWVzdHMgc2luY2UgdGhlIGRlYm91bmNlIHZh
+bHVlIGNvbmZpZ3VyZWQgYnkgYSB1c2VyIGlzIG5vcm1hbGx5IGxpbmtlZCB0byBhIGhhcmR3YXJl
+IG5vaXNlIGluIGEgbGluZTsgYW5kIHRoYXQgZG9lcyBub3QgY2hhbmdlIGZyb20gb25lIGdwaW9l
+dmVudF9yZXF1ZXN0cyB0byBhbm90aGVyLiBTbyBJIHRoaW5rIHRoaXMgY29uZmlndXJhdGlvbiB3
+b3VsZCBiZSB1c2VmdWwgYnV0IG5vdCBjb21wdWxzb3J5Lg0KDQpJIGFncmVlIHdpdGggTGludXMg
+V2FsbGVpaiB0aGF0ICd0aGVyZSBpcyBhIHNlcmlvdXMgdXNlci1mYWNpbmcgcHJvYmxlbSBoZXJl
+IHRob3VnaCwgYmVjYXVzZSBub3QgYWxsIEdQSU8gY29udHJvbGxlcnMgc3VwcG9ydHMgZGVib3Vu
+Y2UnLg0KT3VyIHBsYXRmb3JtcyBoYXZlIG5hdGl2ZSBmcmVlc2NhbGUvTlhQIGdwaW9jaGlwcyBu
+b3Qgc3VwcG9ydGluZyBoYXJkd2FyZSBkZWJvdW5jZSBhbmQgb3VyIG93biBncGlvY2hpcHMgaGF2
+aW5nIGhhcmR3YXJlIGRlYm91bmNlLg0KV2UgaGF2ZSBhbHNvIG5vdGljZWQgdGhhdCAnZHJpdmVy
+cy9pbnB1dC9rZXlib2FyZC9ncGlvX2tleXMuYyBjb250YWlucyBnZW5lcmljIGRlYm91bmNlIGNv
+ZGUgdXNpbmcga2VybmVsIHRpbWVycyBpZiB0aGUgR1BJTyBkcml2ZXIgY2Fubm90IHByb3ZpZGUg
+ZGVib3VuY2luZycuIFRoYXQgZmVhdHVyZSBpcyBub3Qgb2Ygb3VyIGludGVyZXN0IChiZWNhdXNl
+IG9mIGhhdmluZyBoYXJkd2FyZSBkZWJvdW5jZSBmaWx0ZXJzKSBidXQgaXQgd291bGQgY2xlYXJs
+eSBiZSBhIHZlcnkgZ29vZCBvdmVyYWxsIGZ1bmN0aW9uYWxpdHkuDQoNCkhhdmluZyBzYWlkIGFs
+bCBhYm92ZSwgSSB3b25kZXIgaG93IHlvdSB3YW50IHRvIHByb2NlZWQuDQpPdXIgY3VycmVudCBk
+ZXZlbG9wbWVudCBpbiBrNS40IGFuZCBsaWJncGlvZDEuNC4xIGlzIG11Y2ggYmVoaW5kIG1hc3Rl
+ci4uLiB3aGF0IG1ha2VzIGNvbGxhYm9yYXRpb24gKGFuZCByZXVzYWJpbGl0eSkgYSBiaXQgbW9y
+ZSBjb21wbGV4Lg0KQWxzbyBJIHNlZSB0aGUgaW1wbGVtZW50YXRpb24gcmVxdWlyZXMgYSBiaWdn
+ZXIgcGljdHVyZSB0aGFuIEkgaW5pdGlhbGx5IGV4cGVjdGVkLg0KU28gSSB3b25kZXIgaWYgeW91
+IHdhbnQgbWUgdG8gZG8gdGhlIGluaXRpYWwgc3RlcHMgb2YgdGhlIGRldmVsb3BtZW50ICh3aGF0
+IEkgZm9yZXNlZSB3aWxsIHJlcXVpcmUgc29tZSBiYWNrIGFuZCBmb3J0aCkgb3IgeW91IHByZWZl
+ciBpbXBsZW1lbnRpbmcgYWxsIHBpZWNlcy4NCg0KUmVnYXJkcywgSGVjdG9yLg0KDQoNCi0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmdsQGJn
+ZGV2LnBsPiANClNlbnQ6IG1pw6lyY29sZXMsIDI5IGRlIGFicmlsIGRlIDIwMjAgMTU6MDANClRv
+OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQpDYzogQnVqYW5kYSwg
+SGVjdG9yIDxIZWN0b3IuQnVqYW5kYUBkaWdpLmNvbT47IG9wZW4gbGlzdDpHUElPIFNVQlNZU1RF
+TSA8bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0
+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgS2VudCBHaWJzb24gPHdhcnRob2c2MThA
+Z21haWwuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSF0gZ3Bpb2xpYjogYWRkIEdQSU9fU0VUX0RF
+Qk9VTkNFX0lPQ1RMDQoNCsWbci4sIDI5IGt3aSAyMDIwIG8gMTQ6MzggTGludXMgV2FsbGVpaiA8
+bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiBuYXBpc2HFgihhKToNCj4NCj4gT24gV2VkLCBBcHIg
+MjksIDIwMjAgYXQgMjowNiBQTSBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmdsQGJnZGV2LnBsPiB3
+cm90ZToNCj4NCj4gPiBJIHVuZGVyc3RhbmQgdGhlIG5lZWQgdG8gc2V0IGRlYm91bmNlIHRpbWUg
+dG8gbWFrZSBsaW5lIGV2ZW50cyANCj4gPiByZWxpYWJsZS4gQXMgSSBzZWUgaXQ6IHRoZXJlJ2xs
+IGJlIGEgY291cGxlIHN0ZXBzIHRvIGFkZCB0aGlzLg0KPg0KPiBJIHRoaW5rIHRoZXJlIGlzIGEg
+c2VyaW91cyB1c2VyLWZhY2luZyBwcm9ibGVtIGhlcmUgdGhvdWdoLCBiZWNhdXNlIA0KPiBub3Qg
+YWxsIEdQSU8gY29udHJvbGxlcnMgc3VwcG9ydHMgZGVib3VuY2UsIHNvIHRoZSBjYWxsIG1heSBy
+ZXR1cm4gDQo+ICJub3BlIiAoZXJyb3IgY29kZSkuDQo+DQo+IEkgdGhpbmsgdGhhdCBpcyB1bmF2
+b2lkYWJsZSB3aXRoIHRoaW5ncyBsaWtlIHB1bGwtdXAvZG93biBvciBkcml2ZSANCj4gc3RyZW5n
+dGgsIGJ1dCBmb3IgZGVib3VuY2UgSSB0aGluayB3ZSBjb3VsZCBkbyBiZXR0ZXIuDQoNCkZvciBi
+aWFzIHdlIGRvbid0IHJldHVybiBhbiBlcnJvciBpZiB0aGUgb3BlcmF0aW9uIGlzIG5vdCBzdXBw
+b3J0ZWQgYnkgdGhlIGRyaXZlci4NCg0KPiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL2dwaW9fa2V5
+cy5jIGNvbnRhaW5zIGdlbmVyaWMgZGVib3VuY2UgY29kZSANCj4gdXNpbmcga2VybmVsIHRpbWVy
+cyBpZiB0aGUgR1BJTyBkcml2ZXIgY2Fubm90IHByb3ZpZGUgZGVib3VuY2luZywgYW5kIA0KPiBJ
+IGhhdmUgdGhvdWdodCBmb3IgYSBsb25nIHRpbWUgdGhhdCBpdCB3b3VsZCBiZSBuaWNlIGlmIHdl
+IGNvdWxkIGRvIA0KPiB0aGlzIGdlbmVyaWMsIHNvIHRoYXQgd2UgYWx3YXlzIHByb3ZpZGUgZGVi
+b3VuY2luZyBpZiByZXF1ZXN0ZWQsIGV2ZW4gDQo+IGZvciBpbi1rZXJuZWwgY29uc3VtZXJzIGJ1
+dCBtb3N0IGNlcnRhaW5seSBmb3IgdXNlcnNwYWNlIGNvbnN1bWVycywgDQo+IGVsc2UgdXNlcnNw
+YWNlIHdpbGwganVzdCBzdGFydCB0byByZWludmVudCB0aGlzIHRvby4NCj4NCg0KVGhhbmtzIGZv
+ciBicmluZ2luZyB0aGlzIHRvIG15IGF0dGVudGlvbi4gVGhpcyBkZWZpbml0ZWx5IGxvb2tzIGxp
+a2Ugc29tZXRoaW5nIHdlIGNvdWxkIHB1bGwgaW50byBncGlvbGliIGZvciBvdGhlcnMgdG8gdXNl
+Lg0KDQpCYXJ0DQo=
