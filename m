@@ -2,116 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2CF81C0E34
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2020 08:31:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4FB1C0F25
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 May 2020 10:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgEAGbW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 May 2020 02:31:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50862 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728304AbgEAGbW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 May 2020 02:31:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1588314681; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=+ZeZENPKHRVIAyX18Mb1d2RgeUC/KuHefKXYMNBHvno=; b=mKUxJ140H56/k+WV3z+MP4t+uVDAeWS1JWATbl3Idfn2ynk3cH1M3uaBJfhSXfDjXE4uD+wl
- TdZdbiXX1KDxPeKl9QCP5aYKlSRZqM8kvTPRx/Tj49NNxbcq0N+3MEthDFtLTwuCKk0MKCqc
- oSkG60yZdjP5Hu0d7WyQyfQ7oqk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eabc22c.7f0f9389e3e8-smtp-out-n01;
- Fri, 01 May 2020 06:31:08 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 885D1C433CB; Fri,  1 May 2020 06:31:07 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2741C433D2;
-        Fri,  1 May 2020 06:31:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2741C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     andy.gross@linaro.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, dianders@chromium.org,
-        swboyd@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org,
-        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH] pinctrl: qcom: Add affinity callbacks to msmgpio IRQ chip
-Date:   Fri,  1 May 2020 12:00:17 +0530
-Message-Id: <1588314617-4556-1-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S1728345AbgEAIJH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 May 2020 04:09:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgEAIJD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 May 2020 04:09:03 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C51C035494;
+        Fri,  1 May 2020 01:09:03 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id i13so2095034oie.9;
+        Fri, 01 May 2020 01:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
+        b=YhXnbMYvvL2NERhKKxsDO4eX9F2iF5QES+58BPMPdkDa7+HWnKRPXBtihaQRlx5jhJ
+         ZJ+u6PNVJetL8DPyXrHPuRXEcd5/bi3d1s+fxldrozxvCiSxYrfbkwMuRZOHt7so1kAn
+         aiEHVbhCFKQAXa1VhD+k4dfmV7tkNmjJFq0NAXNXDGY0lueDa1Gg4pPmbic0IFrkPRlN
+         MIr4KPcfXB2XLJFMMuVotJ6iBWmim1etULPjiMGfMuxcGrgUBWdsfJIZUHIjejVd2NMD
+         zLRXjnFO6JT8OhAo0LD0S9lYl11vXLyJc2xc2LLFyC1GgYs46wc1cH263vVfeZ8MTfER
+         CRtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
+        b=ParBG8551fVXdvJgmfb9CwMd5zAxRTHOSIEJZDXc/0yR8BIx1tgpm/n2L5x4R8F22L
+         3N/4vtM7rmziXk/SOshOoICm13/k4RPZ8CT9KL+lLlImInI+Lnshx5slslsS51KHdvRd
+         GMDXxbcprAB2/QXd03DEog+F14+fuGcGFuzsw9bzR/IOGf4OWt/4UctxIgEG6b/vt3RB
+         VcYSSuIY8ia9fxK+ss45xnoHiBC/9adoPUPstk+76kxLmth6kwB1Dv/f6Ee9gW1lR5Ay
+         aFLvNqLM/jfkWDBa/0fyKvOi1o7k2l0S/fRlcsfYcd+uJ1OCutVF1oy8M5wWlhRF9qyD
+         njug==
+X-Gm-Message-State: AGi0PubXLoX1c+QFSn2WFa7KR2f+6KXBjCOJAZS+DzSZ6U67UrCg6mEk
+        UnkZm6Tl066FwJoXpX+Tz/8sDrPfnN6oxktxkvs=
+X-Google-Smtp-Source: APiQypL4tkkgblP6s79WD1Ii4byJ0FZw7ndmwSXmo65KLcrLpTxyQBgTjG8TlCh5OP8wJ/Y3Cf7Oky6dSkWu7P5a6UQ=
+X-Received: by 2002:aca:b18b:: with SMTP id a133mr2294802oif.142.1588320542697;
+ Fri, 01 May 2020 01:09:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 1 May 2020 09:08:36 +0100
+Message-ID: <CA+V-a8s7s7=kxOp9ohrMp+o6KDuO-Vn6P7YX2L6fC1=_A9kVwg@mail.gmail.com>
+Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Hi Geert,
 
-Wakeup capable GPIO IRQs routed via PDC are not being migrated when a CPU
-is hotplugged. Add affinity callbacks to msmgpio IRQ chip to update the
-affinity of wakeup capable IRQs.
+Thank you for the review.
 
-Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-[mkshah: updated commit text and minor code fixes]
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+On Thu, Apr 30, 2020 at 2:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> Thanks for your patch!
+>
+> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
+>
+> but lacks several automotive-specific peripherals.
+> So please split the pinmux groups and functions in common and automotive
+> parts.  From a quick look, for now the latter is limited to MLB
+> groups/functions.
+>
+Yes I can confirm its just limited to MLBP, Ill split up into common
+and automotive parts and send v2.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 29259fe..83b7d64 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1033,6 +1033,29 @@ static void msm_gpio_irq_relres(struct irq_data *d)
- 	module_put(gc->owner);
- }
- 
-+static int msm_gpio_irq_set_affinity(struct irq_data *d,
-+				const struct cpumask *dest, bool force)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+
-+	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+		return irq_chip_set_affinity_parent(d, dest, force);
-+
-+	return 0;
-+}
-+
-+static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+
-+	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+		return irq_chip_set_vcpu_affinity_parent(d, vcpu_info);
-+
-+	return 0;
-+}
-+
- static void msm_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-@@ -1131,6 +1154,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
- 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
- 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
- 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
-+	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
-+	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
- 
- 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
- 	if (np) {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Cheers,
+--Prabhakar
+
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> The rest looks good to me.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
