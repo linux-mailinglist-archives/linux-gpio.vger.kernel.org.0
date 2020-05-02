@@ -2,81 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D256E1C2674
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 May 2020 17:13:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E751C273C
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 May 2020 19:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgEBPNF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 May 2020 11:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgEBPNF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 May 2020 11:13:05 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43071C061A0C
-        for <linux-gpio@vger.kernel.org>; Sat,  2 May 2020 08:13:05 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so5286215lje.10
-        for <linux-gpio@vger.kernel.org>; Sat, 02 May 2020 08:13:05 -0700 (PDT)
+        id S1728383AbgEBRWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 May 2020 13:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726400AbgEBRWq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 May 2020 13:22:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71DFDC061A0C
+        for <linux-gpio@vger.kernel.org>; Sat,  2 May 2020 10:22:43 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f11so5567937ljp.1
+        for <linux-gpio@vger.kernel.org>; Sat, 02 May 2020 10:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nFQAZ17rW5dEK0S1Q3shZ62tcOLwgxbbt4Gs2MOss7s=;
-        b=FjR606AszpzTeuxe0bdn1z0EydsA9bo45b/YYUD8KOP3ZViRVYQWsVFeqXcufMruCB
-         VhUppkrcpSBZ2wWx2UQMcORxpbmDOy5GOVKV76BwuM9SKRJcBY/73+gLRVz1XR2zr9jh
-         URDHMHTrpxwBvO9vJnweQXMpxEwyp2CtpIE4XQ/1DT/CpU+USlzzdwkYpgZ/eI7vWujd
-         ZGyghNtq6UOh4MNlFTXiRpzzbk+c+T1ZM5fVTa7cNTJZjmMpYfiF0YjKR9TQMULXb2cA
-         GgMMFWUOIYI+lxHB1tHn1X206MsLmWCiFmwM/1R3cSckyju6rEGdFa6IPsN63F/na9dG
-         57dQ==
+        d=kiho-fi.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=SQVKZYyDlpOHs6iMr+1/4kxXWmP2kmVeVd0xRrV7hng=;
+        b=bvb/ukky9X41WtzQFHp9/Dyrs2Z6532E5++DYK8Y+jD9I8JPSyR3d70TLFH/0qJDBD
+         YR367kJ9DuheeOwxFSmH7QJYsMNfs+eBr63gsKfXg7c4Rv8ewhk1hRlB5SkjQAFsT81+
+         Zy9uYnfo1bHBojpK8wDxPhxVtMkgMFQmAPRRlHydoN8//ntvaHF5ARx1eZ2NjIGuujF/
+         4RytCj/632AyHiYLyTBHIwb/uJwuop6vdCC2eipNbSTwj7eQ7m8W+GtJuyVU5LjMMduh
+         ZN0UBGcqkOj3VoxFtIayIIM4Fej+BExaU+AhHQPS9eBMHllf0SjyLqJI+JMtdM8uomta
+         aj6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=nFQAZ17rW5dEK0S1Q3shZ62tcOLwgxbbt4Gs2MOss7s=;
-        b=OnQdt6jTA7ixPjBz537lQ/cfh1R3F3dWlcdN+6PN/RJsT02CTvrwyEmX1vOXDF98IE
-         h5pCDJKld0++w1lOXN9DocWP5VbuPGGIcQpEYseLVsDPLqJItJrRJ7Iqxe2OVncnI61j
-         u9GAo9pdk3gVzZh9g61rE0TKuVAA4TA3dPMrpRq4kcKvG4gKls8vi8cIKLe2ANElmSxy
-         ZVxzUJKzEg9xKO+jdrhjy3JkOlHmUNEU1u+XEQ/P+XCz+qC5ILbXmg4V3yxq9GHbnulH
-         ShuozSnN7cpdea6/2SR8Lv9/7c57jrZcgORmS+5DviErmQGLjX1mIWnhbbKwWB8kk0kU
-         AmOg==
-X-Gm-Message-State: AGi0Puau4FU3LUS/tZE1eEZv6WWyk84CMTq9ftsrnydO9wajzUszg/W0
-        x/rXqXtiygb88+d24KI1xW6snA+XCqPWLB24zj0=
-X-Google-Smtp-Source: APiQypIrEMM+apBievUUYez2QosF6dINuWPrOSBdF00wO0B71EvrBxfxVOP4J27j/NfXa8FTPMyn6siQK5pQx5EJuYc=
-X-Received: by 2002:a05:651c:97:: with SMTP id 23mr5603738ljq.17.1588432383739;
- Sat, 02 May 2020 08:13:03 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=SQVKZYyDlpOHs6iMr+1/4kxXWmP2kmVeVd0xRrV7hng=;
+        b=qiM+VXHqy7UzpfeVfwCgtU25NK3fon8Jriwz58k9hxwJy7AoKcZP4nQcWDTZgoPnpX
+         By74I4RvD51qBHmXcewNh/me40ylgfyY7chMs5pXXznTIKxz/ac8guQL7L/OzqW8cK11
+         tirIGrqiqaoA/4TyfccHELryY4o0Fm6flq8FkS5MbCRGYgp6svjw8EJ5rGIRsXUDzGiR
+         pPJvfDYLJv+qz8gyaADnIdysBIvyyRkD5r5OLcsLIcjofEIiCSnHzbWTX611Bx6JAzAt
+         WnCGgKMwwdKd40Yo7D5IRuf2EiHF39hIFHdzQZxUnnPNb+pDuMvM68UJfvQ1jh6gGT1E
+         ND4g==
+X-Gm-Message-State: AGi0PuaeHlEwpe3wHVGHqlkyiq4L3bIlfhnRqLvDrYwTbzLShLnK1KC8
+        byIhsS7U2YbFfFLTcO8o3QBSQg==
+X-Google-Smtp-Source: APiQypL6anjjjWSN6V+XYxJy+PFkZKLOCHjH2Gs85AOPKUSIbrkf713J120ogeIEH7Bp6v0YgaCNNw==
+X-Received: by 2002:a2e:80d2:: with SMTP id r18mr5539992ljg.269.1588440161810;
+        Sat, 02 May 2020 10:22:41 -0700 (PDT)
+Received: from [192.168.100.210] (dsl-kpobng12-58c361-73.dhcp.inet.fi. [88.195.97.73])
+        by smtp.gmail.com with ESMTPSA id c20sm4328925ljk.59.2020.05.02.10.22.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 02 May 2020 10:22:41 -0700 (PDT)
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Petteri Jokinen <petteri@kiho.fi>
+Subject: [PATCH] gpio-f7188x: Add GPIO support for F81865
+Message-ID: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
+Date:   Sat, 2 May 2020 20:22:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Received: by 2002:ab3:710d:0:0:0:0:0 with HTTP; Sat, 2 May 2020 08:13:03 -0700 (PDT)
-Reply-To: ahmedghazi720@yahoo.com
-From:   "Mr.Ghazi Ahmed" <ghaziahmed538@gmail.com>
-Date:   Sat, 2 May 2020 08:13:03 -0700
-Message-ID: <CAF+M2O5JZrW2F-9Wxw4Vq28q7wzZqv-M1LDZHngixeDWSMMZ-A@mail.gmail.com>
-Subject: YOUR URGENT RESPONSE IS NEEDED
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I have a business proposal in the tune of $10.2m USD for you to handle
-with me. I have opportunity to transfer this abandon fund to your bank
-account in your country which belongs to our client.
+Add GPIO support for Fintek F81865 chip.
 
-I am inviting you in this transaction where this money can be shared
-between us at ratio of 50/50% and help the needy around us don=E2=80=99t be
-afraid of anything I am with you I will instruct you what you will do
-to maintain this fund.
+Datasheet: http://www.hardwaresecrets.com/datasheets/F81865_V028P.pdf
 
-Please kindly contact me with your information's if you are interested
-in this tranasction for more details(ahmedghazi720@yahoo.com)
+Signed-off-by: Petteri Jokinen <petteri@kiho.fi>
+---
+ drivers/gpio/gpio-f7188x.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-1. Your Full Name.....................
-2. Your Address......................
-3. Your Country of Origin.............
-4. What do you do for living ...............
-5. Your Age..........................
-6. Gender.........................
-7. Your ID card copy and telephone number for easy communication...........=
-....
+diff --git a/drivers/gpio/gpio-f7188x.c b/drivers/gpio/gpio-f7188x.c
+index cadd02993539..18a3147f5a42 100644
+--- a/drivers/gpio/gpio-f7188x.c
++++ b/drivers/gpio/gpio-f7188x.c
+@@ -36,9 +36,19 @@
+ #define SIO_F71889A_ID		0x1005	/* F71889A chipset ID */
+ #define SIO_F81866_ID		0x1010	/* F81866 chipset ID */
+ #define SIO_F81804_ID		0x1502  /* F81804 chipset ID, same for f81966 */
+-
+-
+-enum chips { f71869, f71869a, f71882fg, f71889a, f71889f, f81866, f81804 };
++#define SIO_F81865_ID		0x0704	/* F81865 chipset ID */
++
++
++enum chips {
++	f71869,
++	f71869a,
++	f71882fg,
++	f71889a,
++	f71889f,
++	f81866,
++	f81804,
++	f81865,
++};
 
-Mr.Ghazi Ahmed
+ static const char * const f7188x_names[] = {
+ 	"f71869",
+@@ -48,6 +58,7 @@ static const char * const f7188x_names[] = {
+ 	"f71889f",
+ 	"f81866",
+ 	"f81804",
++	"f81865",
+ };
+
+ struct f7188x_sio {
+@@ -233,6 +244,15 @@ static struct f7188x_gpio_bank f81804_gpio_bank[] = {
+ 	F7188X_GPIO_BANK(90, 8, 0x98),
+ };
+
++static struct f7188x_gpio_bank f81865_gpio_bank[] = {
++	F7188X_GPIO_BANK(0, 8, 0xF0),
++	F7188X_GPIO_BANK(10, 8, 0xE0),
++	F7188X_GPIO_BANK(20, 8, 0xD0),
++	F7188X_GPIO_BANK(30, 8, 0xC0),
++	F7188X_GPIO_BANK(40, 8, 0xB0),
++	F7188X_GPIO_BANK(50, 8, 0xA0),
++	F7188X_GPIO_BANK(60, 5, 0x90),
++};
+
+ static int f7188x_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ {
+@@ -425,6 +445,10 @@ static int f7188x_gpio_probe(struct platform_device *pdev)
+ 		data->nr_bank = ARRAY_SIZE(f81804_gpio_bank);
+ 		data->bank = f81804_gpio_bank;
+ 		break;
++	case f81865:
++		data->nr_bank = ARRAY_SIZE(f81865_gpio_bank);
++		data->bank = f81865_gpio_bank;
++		break;
+ 	default:
+ 		return -ENODEV;
+ 	}
+@@ -490,6 +514,9 @@ static int __init f7188x_find(int addr, struct f7188x_sio *sio)
+ 	case SIO_F81804_ID:
+ 		sio->type = f81804;
+ 		break;
++	case SIO_F81865_ID:
++		sio->type = f81865;
++		break;
+ 	default:
+ 		pr_info(DRVNAME ": Unsupported Fintek device 0x%04x\n", devid);
+ 		goto err;
+--
+2.26.2
+
