@@ -2,88 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D29B1C2E02
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2020 18:45:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29FF31C2EBE
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2020 21:20:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgECQp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 May 2020 12:45:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:57366 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbgECQpz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 May 2020 12:45:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588524353; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=Nhog8Xykrxx5yzjacYpj9MUuwiqwMw3Yyy5MMiDcsjY=;
-        b=AXQDWN/ygi3g/SbExXFq7AWcd0xxz07yH7DK3znUyFA0rD8GuMRs89nDa4q6/3meN06bon
-        s+V9/Q3oUFji2wOXyihJIwpOli1l06YyCSjVB7fnDQ7/53OPd2VDSPMcSVyD2n/KwR6iGG
-        QaGnhEwPH2zez67rDFwu4uxuSR/C96A=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] pinctrl: ingenic: Add irq_{request,release}_resources callbacks
-Date:   Sun,  3 May 2020 18:45:49 +0200
-Message-Id: <20200503164549.163884-1-paul@crapouillou.net>
+        id S1729027AbgECTUh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 May 2020 15:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgECTUh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 May 2020 15:20:37 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07BFC061A0E;
+        Sun,  3 May 2020 12:20:36 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 145so4473156pfw.13;
+        Sun, 03 May 2020 12:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sdFNGTDLDdIBEa4zPq8Xb5v+CQ78ZHRP0MSZwCJG7Do=;
+        b=X6cEz+J00Dq2b2asHfmODYZSaa/w43mmilEx5Ql7+Y7rRGQGJ0W/7uDnrdcEtJJyV0
+         mmaATfO9H1UOTBcvK4/+Xoov9wHC+WGFFT2R7zpTO4RisLNFN1HUW9UtmSTmbgnf+BXS
+         L0GBO/sm+gmefaMXeLQ5v6VP4/8SxFSrCzL2rquGIJSIegXpoHqwgPJAQhNLTJk0+jUc
+         x0RvUF4BhbaEhrb4hnV28s4mkeFwnGgLE7EM9ImGOGAzvFN1TEWkSCT1xQIXNB27kseO
+         VDSs4JxNoZqnkMie/Ih0wooxUUdb01RrTOWrvd+8anm1FOCiFN3xg7BPE+QKS9FKW2+o
+         H8LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sdFNGTDLDdIBEa4zPq8Xb5v+CQ78ZHRP0MSZwCJG7Do=;
+        b=IzU2fYDm7zSYUC00KLJ/jNZWSwMmu6MhiARQ6OkXwVhsnVrlKXG3bl4SkOa92c48gx
+         k3bCdhRCBH58oRclVmi3D2lqK0AfS8N+U8qCnAYmrAPLCZj05bTunK9e02HJZjHeBUKK
+         P1X6uqM3WEC+ntqdczn0Vp3YT30+Gtdcl4bjrLf1/2EI5GCe+Gx8Z4xMS3vdwYp1VkeL
+         EbhHqt0F2CiJE+L6a2q6vlrMtt5GoDfhbrU16oIhpKDl9BnvYfpbgHXf+Wr3OJ74aG4l
+         C0UonjTcrSTUdlBMIaXTt0y0FAaLdITj/SDlrZlsmwjR0jpU+jmEY5q5iNM5hZgdobzy
+         xVvw==
+X-Gm-Message-State: AGi0PuZclSjEYFEaSVoFOMdO/ZPCXGnlOS4PUWx7umuRdjmedWGr29RM
+        9aaYb7RUx+DQ6vphTnoHQcOb7TGJf9HJUc/6FXc=
+X-Google-Smtp-Source: APiQypJiGYeeGCHG1x0MvKwInlqyR0rKQgNUGscccAeZ21vwMf1rDvUTzMn6TDOcJsNlun19U2aKwuLUcK7j/ZiXkgA=
+X-Received: by 2002:a62:f908:: with SMTP id o8mr14017471pfh.170.1588533636386;
+ Sun, 03 May 2020 12:20:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 3 May 2020 22:20:23 +0300
+Message-ID: <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These are called when a GPIO is to be used as IRQ.
+On Sun, May 3, 2020 at 1:54 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> functions but can also manage the intensity on each of its ports with
+> PWM. Each output is independent and may be tuned with 16 values (4
+> bits per output). The period is always 32kHz, only the duty-cycle may
+> be changed. One can use any output as GPIO or PWM.
 
-Without these custom callbacks, when an interrupt is requested directly
-and not through gpiod_to_irq(), the request fails because the GPIO is
-not necesarily in input mode. These callbacks simply enforce that the
-requested GPIO is in input mode.
+Besides the messing with parameter types (int vs. bool) it should be
+rebased on top of Bartosz's tree.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/pinctrl/pinctrl-ingenic.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Also, it might be that we can instantiate a kind of device (MFD?) that
+will share same regmap between two and have naturally different
+drivers for GPIO and PWM.
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 96f04d121ebd..f2b95ee31ffe 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1933,6 +1933,25 @@ static const struct pinctrl_ops ingenic_pctlops = {
- 	.dt_free_map = pinconf_generic_dt_free_map,
- };
- 
-+static int ingenic_gpio_irq_request(struct irq_data *data)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-+	int ret;
-+
-+	ret = ingenic_gpio_direction_input(gpio_chip, data->hwirq);
-+	if (ret)
-+		return ret;
-+
-+	return gpiochip_reqres_irq(gpio_chip, data->hwirq);
-+}
-+
-+static void ingenic_gpio_irq_release(struct irq_data *data)
-+{
-+	struct gpio_chip *gpio_chip = irq_data_get_irq_chip_data(data);
-+
-+	return gpiochip_relres_irq(gpio_chip, data->hwirq);
-+}
-+
- static int ingenic_pinmux_set_pin_fn(struct ingenic_pinctrl *jzpc,
- 		int pin, int func)
- {
-@@ -2296,6 +2315,8 @@ static int __init ingenic_gpio_probe(struct ingenic_pinctrl *jzpc,
- 	jzgc->irq_chip.irq_ack = ingenic_gpio_irq_ack;
- 	jzgc->irq_chip.irq_set_type = ingenic_gpio_irq_set_type;
- 	jzgc->irq_chip.irq_set_wake = ingenic_gpio_irq_set_wake;
-+	jzgc->irq_chip.irq_request_resources = ingenic_gpio_irq_request;
-+	jzgc->irq_chip.irq_release_resources = ingenic_gpio_irq_release;
- 	jzgc->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND;
- 
- 	girq = &jzgc->gc.irq;
+Side note: I still think this should be a function of the pin when
+driver will be converted to pin control. Now this change delays the
+conversion and better approach. But as I said before, if GPIO
+maintainers consider this good enough to go like this, I won't object.
+
+Some background. It's known that some pin control devices may have PWM
+function (limited, like blinking led or so, or full) and it would be
+nice to have a pin mux option which enables PWM on a requested pin. Or
+PWM tries to enable proper pin muxing (this sounds even better in
+order of sharing same API from pin control, like "pin is available for
+GPIO").
+
 -- 
-2.26.2
-
+With Best Regards,
+Andy Shevchenko
