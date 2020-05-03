@@ -2,99 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9AF1C2ED1
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2020 21:41:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 395D91C2F8A
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 May 2020 23:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgECTle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 May 2020 15:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728847AbgECTle (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 May 2020 15:41:34 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62758C061A0F
-        for <linux-gpio@vger.kernel.org>; Sun,  3 May 2020 12:41:34 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVKUR-0006UJ-9b; Sun, 03 May 2020 21:41:27 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jVKUQ-0005cK-AR; Sun, 03 May 2020 21:41:26 +0200
-Date:   Sun, 3 May 2020 21:41:26 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        id S1729162AbgECVrM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 May 2020 17:47:12 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:8668 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729104AbgECVrL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 May 2020 17:47:11 -0400
+X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
+   d="scan'208";a="46019240"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 06:47:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 39AB94006DF9;
+        Mon,  4 May 2020 06:47:06 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200503194126.wlwuide5q2oxzlwt@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vcg9kdgr=AXxwmXO-rmL5z9nq=zJvCww8wG7i1B3BQNYg@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 00/10] Add initial support for R8A7742/RZG1H SoC and iW-RainboW-G21D-Qseven development board support
+Date:   Sun,  3 May 2020 22:46:44 +0100
+Message-Id: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy, hello Miquel,
+Hi All,
 
-On Sun, May 03, 2020 at 10:20:23PM +0300, Andy Shevchenko wrote:
-> On Sun, May 3, 2020 at 1:54 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >
-> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > functions but can also manage the intensity on each of its ports with
-> > PWM. Each output is independent and may be tuned with 16 values (4
-> > bits per output). The period is always 32kHz, only the duty-cycle may
-> > be changed. One can use any output as GPIO or PWM.
-> 
-> Besides the messing with parameter types (int vs. bool) it should be
-> rebased on top of Bartosz's tree.
-> 
-> Also, it might be that we can instantiate a kind of device (MFD?) that
-> will share same regmap between two and have naturally different
-> drivers for GPIO and PWM.
-> 
-> Side note: I still think this should be a function of the pin when
-> driver will be converted to pin control. Now this change delays the
-> conversion and better approach. But as I said before, if GPIO
-> maintainers consider this good enough to go like this, I won't object.
-> 
-> Some background. It's known that some pin control devices may have PWM
-> function (limited, like blinking led or so, or full) and it would be
-> nice to have a pin mux option which enables PWM on a requested pin. Or
-> PWM tries to enable proper pin muxing (this sounds even better in
-> order of sharing same API from pin control, like "pin is available for
-> GPIO").
+This patch set adds initial support for R8A7742 SoC and 
+iW-RainboW-G21D-Qseven development board.
 
-There is one thing I see as a pre-condition to the abstraction of
-pin-controller + GPIO + PWM: If I configure the PWM with certain
-parameters while the pin is still configured as GPIO there must be no
-visible effect on the pin. The setting must then be active when the pin
-is changed to PWM mode. (And vice versa: The GPIO setting must not
-influence the PWM output ...) I didn't check the hardware manual (or the
-patch), but if this needs caching of pwm and gpio parameters I would
-take that as a strong hint that the abstraction is wrong.
+Cheers,
+--Prabhakar
 
-Best regards
-Uwe
+Changes for v2:
+* Dropped patches 1-5 from v1[1] as they have been already queued.
+* Split up the pfc for r8a7790 as common and automotive.
+* Enabled dmac and scifa2 as part of initial SoC dtsi so that by default
+  board can be booted from eMMC.
+* New patches 4, 7-10
+* Dropped patches 12, 14-18 from v1[1] and will be posted after acceptance
+  of this series.
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=279727
+
+Lad Prabhakar (10):
+  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+  dt-bindings: renesas,rcar-dmac: Document r8a7742 support
+  ARM: dts: r8a7742: Initial SoC device tree
+  dt-bindings: arm: Document iW-RainboW-G21M-Qseven-RZG1H system on
+    module
+  dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H board
+  ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H Qseven SOM
+  ARM: dts: r8a7742-iwg21d-q7: Add support for iWave G21D-Q7 board based
+    on RZ/G1H
+
+ .../devicetree/bindings/arm/renesas.yaml      |  10 +
+ .../bindings/dma/renesas,rcar-dmac.yaml       |   1 +
+ .../devicetree/bindings/mmc/renesas,mmcif.txt |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
+ .../bindings/serial/renesas,scifa.yaml        |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       |  37 +
+ arch/arm/boot/dts/r8a7742-iwg21m.dtsi         |  53 ++
+ arch/arm/boot/dts/r8a7742.dtsi                | 389 +++++++++
+ drivers/pinctrl/sh-pfc/Kconfig                |   4 +
+ drivers/pinctrl/sh-pfc/Makefile               |   1 +
+ drivers/pinctrl/sh-pfc/core.c                 |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c          | 744 +++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
+ 14 files changed, 898 insertions(+), 352 deletions(-)
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+ create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
