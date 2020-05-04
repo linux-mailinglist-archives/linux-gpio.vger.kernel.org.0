@@ -2,93 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8A01C397B
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2020 14:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E03701C3ABE
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2020 15:01:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEDMhb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 May 2020 08:37:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEDMhb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 May 2020 08:37:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E349C061A0E;
-        Mon,  4 May 2020 05:37:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 145so5410602pfw.13;
-        Mon, 04 May 2020 05:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6gbrmq6FrgNGtrSILlAV+rPedEwu6SsSkZaNYC9dK3U=;
-        b=PsWKHA+QtU+Ahl8eGOiKkZmaiTmeVH9ebW3Mzff6eslXqeukM0nd0GZ28yIirvxZrX
-         t6oVDs/0VbyEPaTDqFQuJfmyK7uNhfX2ztgh0tYlJQIbKQ49aXwRPOSradUlAQiW1oPo
-         7LwHiYgNAxBs0/9biBCFVOrq6503SCk2tH5o93Wr5c1BjxyLsUY3KCpHTse1X6tQ1Zfz
-         Or3oj5Te2J698TzqiyNB96Zr8cIbvxzSgXKimIc/ciXOF4Y4N7UJlu7TmsppQsdx0BZZ
-         GIubu2zBnskGSaI2Y2ID43KlFHemHf85pEriaduOPPdCXJrNqaOQc12HBSLx5vpqgTWa
-         HMng==
+        id S1726906AbgEDNBi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 May 2020 09:01:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40080 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbgEDNBi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 May 2020 09:01:38 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i27so8726990ota.7;
+        Mon, 04 May 2020 06:01:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6gbrmq6FrgNGtrSILlAV+rPedEwu6SsSkZaNYC9dK3U=;
-        b=G+ro1haGyiy09PSpoT8mDu/3CchWfbaKLToilkYGjSkHCvykFGvkb1Lk0o7K6TlbCf
-         q31EGX8hbJsyyv7iiPkyWDbbI3jjGJ0ht5N7hdgKw6UwL2BCFVOFyspvtEvEvDof5hy5
-         BwBwgxbkpbL0TReqIUHVXeKp7jjnYvPKKJb+7/4AROvTIGAB10cw78pLjhJhzxdKITCx
-         HE9MuVZwmCSRkCxHkKwr66MVCa0V9Ip8P6RRi3XqSeK+98EMp+u+8DnJ2dxs7sMKwBEm
-         6cEpXvUarpDkfT1poAj2sKriHUdOccDrnooPX3PbZD4Aqc/cOBK3J5eS444nkoQEQj5/
-         Xz4Q==
-X-Gm-Message-State: AGi0PuaQY7YHWqrpFNYwF6JjkSSrlK6tyY0r0IzOgteLXbs61Y7Au99W
-        jHshC1EadZgj/WvlXPQVi31avrxj2F1XMe7IaSU=
-X-Google-Smtp-Source: APiQypIbWMNMFqZ9xa++2jx9gxWODbg6xRneVFnCqtkRlHYTL0ouTAxlrvffkp+pfeyKIKsVPKNNI0ancl9ZxwDnCmk=
-X-Received: by 2002:aa7:8f26:: with SMTP id y6mr17686564pfr.36.1588595850616;
- Mon, 04 May 2020 05:37:30 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=r8zKT+xBy6Gq3229RJb69rkd2OBVlAkNbEfst/RgefA=;
+        b=KfF12E/IZIihS4TWketVaJZ7kTbDFIldK6a/1jpvdh4GHmUsihU+D3ODdQH0PuAQQd
+         scHwckLZYiyx54FCqqATx1Fy51yHJnxYn+IU9nNAaNeJaQDDXJr8PGA93FWAzEb0gLcG
+         CIS6aAhX4n2XJZihF/EvhdUEQz8tv4jSSBPj/U/Pj+9qnJ4yvC/31siAf5xtoSqbfa4R
+         /aoqCqoqIVm6tMgz53gBSI1Bnlx9Cn3Rn9pnU7azUe75AEmAGeq72rZ8eDWTCNOexF8K
+         cU9+/wMY7f5iEteK3AliLGfmXjTXLL2DKMyi5AcSi2l0xPOhfSmo1yVOBEjwJqG1TGb8
+         9LiA==
+X-Gm-Message-State: AGi0PuZADTvlFFCaDRnf2lNGM+RWmJAlMod3N9b63lENUYvBLfhXGecY
+        dRCVRR0mLfYZM2WDF/rBd9GeiC/lNZVGU92GTV7E72TH
+X-Google-Smtp-Source: APiQypJP/gXg+0E7M667GPtseOWpTQreTWWvphkLLyjHkVYI3HGEFPTzknIou3giyAvzYzckPosD7dJMqX44H6jCAfM=
+X-Received: by 2002:a9d:7990:: with SMTP id h16mr13691328otm.145.1588597296834;
+ Mon, 04 May 2020 06:01:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200419001858.105281-1-hector.bujanda@digi.com> <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 May 2020 15:37:24 +0300
-Message-ID: <CAHp75VeFCFbjr02BiwbKOAHim-xys3N1Lieyfr99xgwN5GoVLA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Hector Bujanda <hector.bujanda@digi.com>,
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 15:01:25 +0200
+Message-ID: <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
+ Qseven SOM
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 3:09 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> niedz., 19 kwi 2020 o 02:19 Hector Bujanda <hector.bujanda@digi.com> napi=
-sa=C5=82(a):
+Hi Prabhakar,
 
-...
+On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for iWave RZ/G1H Qseven System On Module.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-> Finally: we can extend the gpiohandle_config structure with a field
-> containing the debounce time which would be read by the kernel if the
-> debounce flag is set in gpiohandle_config.flags.
+Thanks for your patch!
 
-Don't forget the 64/32 ABI.
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the iWave RZ/G1H Qseven SOM
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +#include "r8a7742.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       compatible = "iwave,g21m", "renesas,r8a7742";
+> +
+> +       memory@40000000 {
+> +               device_type = "memory";
+> +               reg = <0 0x40000000 0 0x40000000>;
+> +       };
+> +
+> +       memory@200000000 {
+> +               device_type = "memory";
+> +               reg = <2 0x00000000 0 0x20000000>;
 
-The configuration structure has padding / endianess issues
+According to the schematics, the second bank is also 1 GiB, so the
+reg length should be 0x40000000.
 
-Should be something like
+> +       };
 
-{
-u32 x;
-u8 y;
-u8 padding8[3];
-u32 padding32[2*z];
-}
+> +&pfc {
+> +       mmc1_pins: mmc1 {
+> +               groups = "mmc1_data4", "mmc1_ctrl";
+> +               function = "mmc1";
+> +       };
+> +};
+> +
+> +&mmcif1 {
+> +       pinctrl-0 = <&mmc1_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&reg_3p3v>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +};
 
-I.O.W. each member must have padding / endianess agnostic place along
-with whole structure to be multiple of 64-bit words.
+The eMMC has an 8-bit data path.  Is there any specific reason you use
+bus-width = <4>, and the "mmc1_data4" pin group?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
