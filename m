@@ -2,99 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B381C3115
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2020 03:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EDBF1C36A0
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 May 2020 12:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgEDBdO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 May 2020 21:33:14 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:58868 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgEDBdO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 May 2020 21:33:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1588555991; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s3kVnM/pt0oggUIsiHNmQoFutX1dSCYY6TB3Lm6oLFE=;
-        b=mxItMKtRyij5x/wPWOz13FGJPQjbal6rSoJWpgE2O0yRMR788cFDS8oY/lU7J32gz/QGX9
-        wZTwogoNRBP8FYfj7KyPbrYAqfdVnWIPCIzTR9T3oCM4x5478uCuGUeYjZPuPKUYltHhOe
-        hRlxtN57Okse4d6QbeTj8le1efh8CVs=
-Date:   Mon, 04 May 2020 03:32:58 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [RFC v3 2/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com
-Message-Id: <YM9S9Q.3YCM1LVLIS2O3@crapouillou.net>
-In-Reply-To: <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
-        <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
+        id S1726660AbgEDKUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 May 2020 06:20:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36177 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgEDKUs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 May 2020 06:20:48 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t3so4583219otp.3;
+        Mon, 04 May 2020 03:20:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aGRMnuTg/l5w0maHVGEcneYHQFdFGNPfiCYfIWkTR0o=;
+        b=JDi7a1+k4nDIQ2X2u7vfsWkL8tk/b85acH4ZTdmB1bwLUQNKhJfb//dPxIPNcgljhm
+         jOTigMo6x1Q5lEAD7ZYe8RvzVrD5gxmJVBT4HdxH2/GfjjOO7pdK2W7nxiSzaQy+FBN2
+         9npqFZe7t5nM4HsGGHyGb34zmXkN85egcixHyEtHSk4vnOEzAJEIjB5ZA9rYCijfGoGo
+         pfCHnTdi3gJZxDk64F0uW4fDZj0N9Zta0SjT0bzkKV4R817Fi21w0QWPWcqkYL4TSTlI
+         kJpuJQMc1HxwzuxCWoqjdKKwZ8ClEVc5HnnBnau4oEK2ZzAbDhuLvPLvVirzCvpn7Mz0
+         IQQw==
+X-Gm-Message-State: AGi0PubxR6DnC7gYGJtUCTCQGM/dXeVBj5JslidJOUZvwO/hrIYM7yr4
+        W23D8Z4SZGcHzxnb43AZySrW7wmi/hgiPJwwuWE=
+X-Google-Smtp-Source: APiQypKI/tnpEasz9c6NjgVI5Zv53OBORTXWD6v5yxAV42kvA/cHTjT9UpDrC7tAkI9k8UoXntXphLbQKxc99tQWof8=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr12887666otn.107.1588587644541;
+ Mon, 04 May 2020 03:20:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 May 2020 12:20:33 +0200
+Message-ID: <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Nikolaus,
+Hi Prabhakar,
 
+Thanks for the update!
 
-Le dim. 29 mars 2020 =E0 19:35, H. Nikolaus Schaller <hns@goldelico.com>=20
-a =E9crit :
-> so that the driver can load by matching the device tree
-> if compiled as module.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790),
+> however it doesn't have several automotive specific peripherals. Add
+> a r8a7790 specific pin groups/functions along with common pin
 
-Please add:
+s/a r8a7790/automotive/?
 
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+> groups/functions for supporting both r8a7790 and r8a7742 SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-And re-send this patch alone, then I can merge it ASAP.
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
 
-Cheers,
--Paul
-
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
-> b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> index 6d47ef7b148c..bcba2f024842 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-> @@ -843,6 +843,7 @@ static const struct of_device_id=20
-> ingenic_drm_of_match[] =3D {
->  	{ .compatible =3D "ingenic,jz4770-lcd", .data =3D &jz4770_soc_info },
->  	{ /* sentinel */ },
+> @@ -5736,6 +5750,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
+>         .pin_to_pocctrl = r8a7790_pin_to_pocctrl,
 >  };
-> +MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
->=20
->  static struct platform_driver ingenic_drm_driver =3D {
->  	.driver =3D {
-> --
-> 2.25.1
->=20
+>
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7790
+>  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>         .name = "r8a77900_pfc",
+>         .ops = &r8a7790_pinmux_ops,
+> @@ -5745,13 +5760,38 @@ const struct sh_pfc_soc_info r8a7790_pinmux_info = {
+>
+>         .pins = pinmux_pins,
+>         .nr_pins = ARRAY_SIZE(pinmux_pins),
+> -       .groups = pinmux_groups,
+> -       .nr_groups = ARRAY_SIZE(pinmux_groups),
+> -       .functions = pinmux_functions,
+> -       .nr_functions = ARRAY_SIZE(pinmux_functions),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common) +
+> +               ARRAY_SIZE(pinmux_groups.automotive),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common) +
+> +               ARRAY_SIZE(pinmux_functions.automotive),
+> +
+> +       .cfg_regs = pinmux_config_regs,
+> +
+> +       .pinmux_data = pinmux_data,
+> +       .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+> +};
+> +#endif
+> +
+> +#ifdef CONFIG_PINCTRL_PFC_R8A7742
+> +const struct sh_pfc_soc_info r8a7742_pinmux_info = {
+> +       .name = "r8a77420_pfc",
+> +       .ops = &r8a7790_pinmux_ops,
+> +       .unlock_reg = 0xe6060000, /* PMMR */
+> +
+> +       .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+> +
+> +       .pins = pinmux_pins,
+> +       .nr_pins = ARRAY_SIZE(pinmux_pins),
+> +       .groups = pinmux_groups.common,
+> +       .nr_groups = ARRAY_SIZE(pinmux_groups.common),
+> +       .functions = pinmux_functions.common,
+> +       .nr_functions = ARRAY_SIZE(pinmux_functions.common),
+>
+>         .cfg_regs = pinmux_config_regs,
+>
+>         .pinmux_data = pinmux_data,
+>         .pinmux_data_size = ARRAY_SIZE(pinmux_data),
+>  };
+> +#endif
 
+The r8a7742 section should be inserted before the r8a7790 section,
+to preserve sort order.
 
+No need to resend, will fix up while applying.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in sh-pfc-for-v5.8.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
