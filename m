@@ -2,55 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9CC1C50BC
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 10:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1DAB1C55E1
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 14:46:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgEEIpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 May 2020 04:45:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41140 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgEEIpS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 May 2020 04:45:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E94A4ADD5;
-        Tue,  5 May 2020 08:45:18 +0000 (UTC)
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     thierry.reding@gmail.com, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Subject: [PATCH] gpio: tegra186: export MODULE_DEVICE_TABLE
-Date:   Tue,  5 May 2020 10:45:01 +0200
-Message-Id: <20200505084501.13170-1-ykaukab@suse.de>
-X-Mailer: git-send-email 2.25.0
+        id S1728834AbgEEMqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 May 2020 08:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728642AbgEEMqX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 08:46:23 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ED3C061A10
+        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 05:46:23 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id i16so1199071ybq.9
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 05:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=fc+MXE4FnDyI/M7DzSMWcV2sG95i5jYofTFq/NTOHl4=;
+        b=VflapWUGMGTLP61m2hfLfgx4pJdbqf7bEynstWVQCO7wwQKYUu9dvUbMTNV5rPmdWu
+         tzy+QPLm5LMPS5JD7jt3jTwNJFtZJQd1aVtaO0oKRmEJ3USm8WZUxlOBtske7rNv2pgl
+         vvS0EOR6ph1UFARP4oge4FPJ0GIpQpmHeAXwISr85PLQePZinZqTUaiO6xTKarc8GPyV
+         O4zP8ERa+l9EP/0j4MGouv6luZJUbHP+VtTRNC1lQugieJ4hmzdgP61ALrr3UP9cQ4LI
+         cApQSf9ERePFlrfgCD5ktUS/MgRr3J3aVrnFaxNu1IfhQraJwzWTrsrrSawQwm4Es1nE
+         I+9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=fc+MXE4FnDyI/M7DzSMWcV2sG95i5jYofTFq/NTOHl4=;
+        b=j/sf/WivP56TwyXnzxX4HZ+TwHC+NOfPYVlgSEMc2XVqc6UOd5AuuophX/45S0fq/t
+         FeUhc8yYetfg8/01fQW0ZCYfK44DLz4E5y53zuXN6DY2uJcXWgkn8LnMu6FzAfKeF/Wf
+         z/xxqmXSLOUXHjkRl+pVYWAQaBzABpF0L6fvQZnsVcrfnKhQKOF6mvRsAYMxf5C20z8r
+         mGnYqg5ScIGISTtMWOX/D2/4ngsMn6oDCgyKZU60PvjPsnn1tLh0SobPH/qzG/9xk03t
+         77mEPUjI/zmw4K+VwtQ4atBw6rY7cOvpC1hSlID/T8TSrol168duQG54FxQk+UQHUXLB
+         31Bg==
+X-Gm-Message-State: AGi0PuYMRwnU/x3NSLsXNyctX1tq2LcmFKI/r5GbP1mZNuXAr2tXuTEM
+        uXBdCS0luXD/ObGhUg81lRThoDqqGeKca4BtqWs=
+X-Google-Smtp-Source: APiQypLycPEYbvilHFRoLVT4ca/E7stM5uiWaeDtCIPFDi6wHPk8eYUbKs5jZEUt5/7j2dLZMuSTHcfPcTTO+5v5UMk=
+X-Received: by 2002:a5b:706:: with SMTP id g6mr4304392ybq.485.1588682782616;
+ Tue, 05 May 2020 05:46:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a81:6ac1:0:0:0:0:0 with HTTP; Tue, 5 May 2020 05:46:22 -0700 (PDT)
+From:   "Mrs. Marian" <mrsmarian246@gmail.com>
+Date:   Tue, 5 May 2020 05:46:22 -0700
+X-Google-Sender-Auth: Hxhocd7XpRol3i-OFmVAxzyMNYU
+Message-ID: <CAH7w7mVfJh+5wH=btZLh_iT2w3boTPx2w1yp2-didRPbUPq+Vw@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Export MODULE_DEVICE_TABLE since the driver can be built as a module.
+Compliment of the day to you. I am Mrs. Marian, I am sending this
+brief  letter to solicit your partnership to transfer $10.7 Million US
+ Dollars. I will send you more information and procedures when I
+receive positive response from you. Please send me a message in my
+private email address is ( mrsmarian246@gmail.com )
 
-Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
----
- drivers/gpio/gpio-tegra186.c | 1 +
- 1 file changed, 1 insertion(+)
+Best Regards
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 79b553dc39a3..178e9128ded0 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -894,6 +894,7 @@ static const struct of_device_id tegra186_gpio_of_match[] = {
- 		/* sentinel */
- 	}
- };
-+MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
- 
- static struct platform_driver tegra186_gpio_driver = {
- 	.driver = {
--- 
-2.25.0
-
+Mrs. Marian
