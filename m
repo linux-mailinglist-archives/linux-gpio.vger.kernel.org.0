@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C75451C5D6E
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 18:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10C701C5D91
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 18:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgEEQZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 May 2020 12:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        id S1730388AbgEEQ1y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 May 2020 12:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbgEEQZl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 12:25:41 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84908C061A10
-        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 09:25:41 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c10so2912845qka.4
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 09:25:41 -0700 (PDT)
+        with ESMTP id S1729981AbgEEQ1y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 12:27:54 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD75C061A10
+        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 09:27:53 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id b1so2473298qtt.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 09:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=UY/NVbvy0jUH1oe5m6J3EeGv70DJDE0UW3gaQi7+53w=;
-        b=e3hvcYNBhR3uTaY0xynvVRREMNwCB9JyCpaPGbngvSzrXREV7mL8g3lpQR3wWaJXwS
-         WYXIIaBJ+uUME2tO0kkCco4KPee3tHN39eQD/RiIEcNPbpNrnNVwtH1qC3y7KCBbDezC
-         ARWqaMZIEWTIjbA6ahAhOHIyz5CyMCy6pUjJnhFb+yAWjwF0OZKUNrMGFsIuezFKh73Q
-         eLDKmL86IOksgBJJjNLVcW3NhW/tUJWX3dO/tj4egwmZPmcWaWOJVZZGMoGafcc7DILr
-         QMD29OC2vBKKDjruk7piNzZOUrpgLPxjbQPJct8iI2t2FmSl/iWBoScSKlgqVD0eD6uy
-         9u8A==
+        bh=qEFIrk8I4x+Pe/UX6dmyNmgUh3ccSPdNfMqmW/bFJxY=;
+        b=sk4WaohlKQtyYNrc6QHMgyHesOEY6lH9TMMmiBdrnAwFt1Wzv8LHqXzRwY632/F/st
+         oVWWyF+7UeCucrHKMA4uvADq/Zdjnq9q0n+YTsLYRJ5bEaKr0nTjbHclZgSl/zNhahTc
+         lrUpYQNR3z60hinHazOAPzNScS0hJ2fVJx7hJ6oHy/jf3gvgl23BRc5GDx9gJsK5/bwX
+         pduBBIxWLIi4J0M5ovRTM14SGgzhuE7ZvurfFJ3IuQgY8HvWwKT75ItzgiDUEXkZXva5
+         K48L3rHysP0gP3bAfjYM+gmh3s+ewgOt/R03WmJL1mcV4kPQ/Zf8Q+pqgFFNmlkIbh2V
+         59Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UY/NVbvy0jUH1oe5m6J3EeGv70DJDE0UW3gaQi7+53w=;
-        b=Ay0B2FW1H7e+F0XkFXH24gGA9ZT0o/+fG/TirG4H9G9zHSZDChENR+Fa4EmEgU3/ij
-         OM/RDN3BhJtmFgAN/+Mu71YWHyHNxqZ+1Vkgyqrz2tFcIqo4G/osfVCh5+pxywxsoQh6
-         H7fc7PCRkUzjqFI3b0QG5+GFNzDCaowfPUoQyRTWpxB5Q1AfbyIBnDc4hUv+wUgoYVRy
-         FAcHSTPmwuONQwANBbiVIgUQvkEOVqTZf0+ugzcpyhuFrF+G/ti/MPanUJ0kwwAtwbi8
-         mBYtfMGrdcCdY77Q6fiLh5/EabStsSh+gTTBOQzi5kBqzyB6YnY9hLgEliIjskm+pJDn
-         wgTA==
-X-Gm-Message-State: AGi0PuY1lqp7aUqz9WDuA1Z+9gg5up1PJgWfy+GSCj0hCIDQBsor5aZl
-        wgoNM/o/6jc/Xm9LBFnheEgjD3lywis6ks9ObySFFg==
-X-Google-Smtp-Source: APiQypLqgtPcnpgxGc2jGD8qsguBpbnG6jZ+F/5eo+Igm20nElK33fVb7JZ0XLKsuSa6Op7louZ3zMNi3nNYiXFZwu0=
-X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr4346176qki.120.1588695940818;
- Tue, 05 May 2020 09:25:40 -0700 (PDT)
+        bh=qEFIrk8I4x+Pe/UX6dmyNmgUh3ccSPdNfMqmW/bFJxY=;
+        b=FEALlaUYwd9OHcjMD2XuZ2ERAffjaurVtuxb117uf1o79uJsqOdZBwTPc77Rdkckn5
+         jQnOPMssSU8nc1QRz1oW5FZhMmwNjNVotHj0oKg9fEGq8xgqUvA8h0h+RTQ7oyuXaPHD
+         30VclNJnhb5GZ3aYHF45i94uD5waaZuyvdPUJCHwZJC3D/8r7pUJfW1SQWwXk0QwKVsb
+         LnT2OxRoHBd4bDCividgicHJ0lUmo2IF6HVwh3qxM5Q++EgkS0ZtG3LaD6omLdWMPUGH
+         Va4PMDHa7MqGnt2/q6XBpwrBQvswyZdqDmnC/vVPz7VryIE7Hx+x19Gg8q93J48t4VXi
+         DRsA==
+X-Gm-Message-State: AGi0PuZe6WXfKha1StyYcq9SK4/SZFxfe1VLDZvYSM8+HjRohXc8Gc9M
+        fuhfVFjhlIp/yAg0bWRHMtEshltZCjCqu0DJhL9eJg==
+X-Google-Smtp-Source: APiQypIDdY/RPDHOS6aSjrmaca8BOHQEL/JYupW+oHH4dRImVr5/u8HEH7uPOGlk6S2dC7Pdx6xiVkMu+uENsvuZl4s=
+X-Received: by 2002:ac8:7b8b:: with SMTP id p11mr3528956qtu.131.1588696072959;
+ Tue, 05 May 2020 09:27:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200429135654.30120-1-tiwai@suse.de>
-In-Reply-To: <20200429135654.30120-1-tiwai@suse.de>
+References: <20200430000916.8880-1-warthog618@gmail.com>
+In-Reply-To: <20200430000916.8880-1-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 5 May 2020 18:25:30 +0200
-Message-ID: <CAMpxmJU+6K-tGMCoTsz-6RzbNqhL-hnuTnY5T7Y0jQ4rr5u62A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: exar: Fix bad handling for ida_simple_get error path
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kangjie Lu <kjlu@umn.edu>,
+Date:   Tue, 5 May 2020 18:27:42 +0200
+Message-ID: <CAMpxmJXh6G0F1guJkPMJWwj_+Vk8D+k6y4MybVYOf7x9Cf-adA@mail.gmail.com>
+Subject: Re: [PATCH] tools/gpio: add bias flags to lsgpio
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,22 +61,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 29 kwi 2020 o 15:56 Takashi Iwai <tiwai@suse.de> napisa=C5=82(a):
+czw., 30 kwi 2020 o 02:10 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a=
+):
 >
-> The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
-> of ida_simple_get fails") added a goto jump to the common error
-> handler for ida_simple_get() error, but this is wrong in two ways:
-> it doesn't set the proper return code and, more badly, it invokes
-> ida_simple_remove() with a negative index that shall lead to a kernel
-> panic via BUG_ON().
+> Add display of the bias flags.
 >
-> This patch addresses those two issues.
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  tools/gpio/lsgpio.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 >
-> Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida=
-_simple_get fails")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
+> index e1430f504c13..8a71ad36f83b 100644
+> --- a/tools/gpio/lsgpio.c
+> +++ b/tools/gpio/lsgpio.c
+> @@ -49,6 +49,18 @@ struct gpio_flag flagnames[] =3D {
+>                 .name =3D "open-source",
+>                 .mask =3D GPIOLINE_FLAG_OPEN_SOURCE,
+>         },
+> +       {
+> +               .name =3D "pull-up",
+> +               .mask =3D GPIOLINE_FLAG_BIAS_PULL_UP,
+> +       },
+> +       {
+> +               .name =3D "pull-down",
+> +               .mask =3D GPIOLINE_FLAG_BIAS_PULL_DOWN,
+> +       },
+> +       {
+> +               .name =3D "bias-disabled",
+> +               .mask =3D GPIOLINE_FLAG_BIAS_DISABLE,
+> +       },
+>  };
+>
+>  void print_flags(unsigned long flags)
+> --
+> 2.26.2
+>
 
-Patch applied for fixes, thanks!
+Patch applied, thanks!
 
 Bart
