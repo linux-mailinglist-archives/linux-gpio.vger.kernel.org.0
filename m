@@ -2,60 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB2231C5D44
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 18:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 747921C5D67
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 18:24:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgEEQTM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 May 2020 12:19:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40364 "EHLO
+        id S1729998AbgEEQYH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 May 2020 12:24:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729377AbgEEQTK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 12:19:10 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2444EC061A0F
-        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 09:19:09 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x12so2409643qts.9
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 09:19:09 -0700 (PDT)
+        with ESMTP id S1729365AbgEEQYH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 12:24:07 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A797C061A10
+        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 09:24:07 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g185so2886356qke.7
+        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 09:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=A/Wm3UHNM4qlX8DljPnma9j6lm5XESNuL8D71GdjV38=;
-        b=1UfbGhRxXGz3GBtcxR9UNxM68oHkaj/WYVq1O0d/Pzl/wG0nhFdC8YkkSQk7lAfdvH
-         5Ak4p4yujEG9sGUn6s8vbQyWJjfBr+jTiWZjH3JkLVJOPH/X0sby/bdWoNE24sm7Ct4u
-         FWKT/jmiSIkJO/Tpqt2U+UXw5gSxKbmkry5EDE6mxveyCwgCeSprywvT2XvZob4BTVa/
-         e04gJRelogulBVELpi7p7SvrDBnpA/8MZPhnhM+bIV42lT15R3Gjgt1c013K60Yne6VP
-         yUpOU4KuQeRRl4T2kKhdlnbD9rTCeGeHobk3zfQ7ulhjY3A0zHfntGGHxEsIfXdU2wvt
-         2qLw==
+        bh=URyHbD0b6VvGXIAxJMtFkLfSxA+pJ99LyvYiCEW+Gvw=;
+        b=sUkReXunZvh2bYEUD2/LaykRe129h0P5H5gZUPSANBLDCWkmySs2Uo73yXHbIDLFih
+         zEuOip4QQWVXcz2XFh5Wi0n9wps37xfAWgzKCxEcWaqkqJu8X7RbML/jyquRs2uaZHZ2
+         Tg64yy96y/vvenBNLjcYjRZojl4bWo/RIiYdFdQtfsBtf7hjSsC1c8+tRPLFQpCLnnZv
+         /o3L9XxkrYoHT6UiA4+FiFHXYMGdn6ycRgUD+mWfnCy2Z6UZWxdlAhj9m1Xp3nJ5TLLj
+         eYVwzrEfhT4AZHPwUPPUz0AReVA7E4q1NlOiSg8pl6a5hteljqLUpMb9AZDF8zAkQ226
+         LQ6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A/Wm3UHNM4qlX8DljPnma9j6lm5XESNuL8D71GdjV38=;
-        b=rOLK+DIwoxhglakfWABcyNo7dz55ux2m53eUFmy1vIKRZsJB0DqOgjv1/yjCA8aI3F
-         OM5EY0nr19BVFCT/AIX84+eZCot4xIcDkq9JZabP7UQd922ZHGIbRA8KrRsgazo09CLe
-         0DB4NQ2AH94+47ORXsi0C+ImaKjGWx47Pm24gOr5x9mjT7x4525/5FeUH3sDqMTUyO/t
-         rtrnlkG0bdsE2Fok/7T+m7C3b6XOir79nVm5if6ONNJAW5p8R7I5uE9imWdLABla1hc9
-         0VK3/T3KiJhYTGxwDoCrIwYJc8BRta+0nbVd+7LYU/0qGuuHAipefSz4YRJRCbw2dQEa
-         Ycjw==
-X-Gm-Message-State: AGi0Puae1CKt+a3cXRUj9ZEvhnjzNisQPw+TctEvzG4CQo1g3KQnbil4
-        NJc00NY3y6B5EzjPs4tF3tVKcqDdsbmVKh4PAJcK0Q==
-X-Google-Smtp-Source: APiQypLAizKoTqwFtOBKN/f1gzlwNVdkvxN9mo2b50TEgRtyqk55O3/9/e15NFeEPw0uW3ZQMHmqeBZnpb7i4CROJ3I=
-X-Received: by 2002:ac8:346f:: with SMTP id v44mr3419058qtb.27.1588695548443;
- Tue, 05 May 2020 09:19:08 -0700 (PDT)
+        bh=URyHbD0b6VvGXIAxJMtFkLfSxA+pJ99LyvYiCEW+Gvw=;
+        b=W1zB2MyylpVHHv4jRdIom8x667ZDN7FGWbyWgCg2cpMVlCt0ygfFwTS94bFHLvN+ip
+         RswCZtH86OzGXOD6M37kIB4D6xKMr/FgUsYujAmFxhJ7urxEBG8Lgq3I5mPXGzU+Tsjl
+         UEuWMlKHPWK4s5cJ61dEu2S308qWLoSh+QMfqtzHBRe3uPwHZUIQ3Lhe9eDmnUp5Qk3z
+         2NMGNyjMsDozzm7zHsxsKvp+PUWas54Va1ti/Rh99mJB2OL8eeg2Xi79wHYWB07y5LsP
+         TOJTioKN5K9FesT6ZAr56RKq0C+hkhan4EpNEtFVjTzas4xA97bAkwFppPw0cb8Yt0LP
+         IudQ==
+X-Gm-Message-State: AGi0PuZzOZNClxwOAY5aiaWKnAvzi1MQz6kUhKRYBK68rtD4IPXeO6em
+        3MsUZxXAK1XQqpWs2XnIWnj+fFV4j6LKZgBgXmLNxA==
+X-Google-Smtp-Source: APiQypKmH4QXCDccUEG7B64ooa0b5Bx+mw9OszfIv/3xB2iMzegem6Yn83znXSgFEK56y6AoEaM733iPBrf93ND74Fo=
+X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr4338823qki.120.1588695846247;
+ Tue, 05 May 2020 09:24:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505084501.13170-1-ykaukab@suse.de>
-In-Reply-To: <20200505084501.13170-1-ykaukab@suse.de>
+References: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
+In-Reply-To: <4340a212-89f5-8c62-db61-f061e494d6b1@kiho.fi>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 5 May 2020 18:18:57 +0200
-Message-ID: <CAMpxmJXp9uZp=Q5Sm==_d720mg=aYSC1K1=V-P5Tz10gnLYuUQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra186: export MODULE_DEVICE_TABLE
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+Date:   Tue, 5 May 2020 18:23:55 +0200
+Message-ID: <CAMpxmJWytUARKF_2N4vkUcFbX7P6Lf=oaRYOn8BP_b3eKrEp9A@mail.gmail.com>
+Subject: Re: [PATCH] gpio-f7188x: Add GPIO support for F81865
+To:     Petteri Jokinen <petteri@kiho.fi>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,32 +61,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 5 maj 2020 o 10:45 Mian Yousaf Kaukab <ykaukab@suse.de> napisa=C5=82(a=
-):
+sob., 2 maj 2020 o 19:22 Petteri Jokinen <petteri@kiho.fi> napisa=C5=82(a):
 >
-> Export MODULE_DEVICE_TABLE since the driver can be built as a module.
+> Add GPIO support for Fintek F81865 chip.
 >
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-> ---
->  drivers/gpio/gpio-tegra186.c | 1 +
->  1 file changed, 1 insertion(+)
+> Datasheet: http://www.hardwaresecrets.com/datasheets/F81865_V028P.pdf
 >
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 79b553dc39a3..178e9128ded0 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -894,6 +894,7 @@ static const struct of_device_id tegra186_gpio_of_mat=
-ch[] =3D {
->                 /* sentinel */
->         }
->  };
-> +MODULE_DEVICE_TABLE(of, tegra186_gpio_of_match);
->
->  static struct platform_driver tegra186_gpio_driver =3D {
->         .driver =3D {
-> --
-> 2.25.0
->
+> Signed-off-by: Petteri Jokinen <petteri@kiho.fi>
 
 Patch applied, thanks!
 
