@@ -2,145 +2,479 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A49001C5DCE
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 18:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52F0D1C631F
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 23:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgEEQqG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 May 2020 12:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729541AbgEEQqF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 12:46:05 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F11C061A0F
-        for <linux-gpio@vger.kernel.org>; Tue,  5 May 2020 09:46:04 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y4so3324509wrm.11
-        for <linux-gpio@vger.kernel.org>; Tue, 05 May 2020 09:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S646eQTnniB9I7JJikIvYbw6i9E5ngc4i9xmsf7XoRY=;
-        b=W8vNFLwbprfqHEUSOVvtgjdtyhR4KYrUNqF/nENqnyRqkP/S/Shi+5QCiq1G5fxEyw
-         5eLevq2jHqeUfObrbzSDfb8Y34qtJcmgyiwkvbbzR3FqN2/TxdIM9S9EfRPbjVZ0Kocv
-         7hL/kV3Jv4aW8ZPO5W+SYeiisDP0vVsZqfJEz8oZbAoDU5eK4KVt0ptYRnorqvii4kIj
-         uUtiyXA3CK5sawTrWh0Z3fhNYnTyjiTmKtgmH0qosLEwSxqcuCMWZo9Qele5/UtqM54m
-         g7hyMk/oK8TcZs5vR71D1SEFFCZdNkgaYuwA1RzV2vuaZbfmAkdYV6iFkOj8VKbsB51f
-         cgFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S646eQTnniB9I7JJikIvYbw6i9E5ngc4i9xmsf7XoRY=;
-        b=EMPTTHzc7aiQ9nflSe03tpEs3KAfZksc7HDMD8LazgPSdclqnuxrkUyraGDWAvmmS/
-         RsM51XtNt/1YZK1mPrOmsHRH01hGvyVKzB+cro2FLl9ZvXE0dlIZo0bYEkNSWgLFinqj
-         GmatQQLcTXilxZr81ir9zzcut7UOOOZY01QTWAWe/0Xwp6T67Un6jDYpAyyrNhXB58gT
-         voYdflqsHfRLa2nPH6yuv6fNbHwsSb4cdawv8DBzdv6PeiStUS+tgypOnYJmVqa460+4
-         /4qsP3WoIxbkYCMTSYjqJIrxvpEw0xl+YQ3xDYOQYQioNl2/0C5priMOZSEceISy0gXc
-         i+ZQ==
-X-Gm-Message-State: AGi0PuYxyqeQI5EF/rNw9/zNAF1EVhgnSDf/axh8OAmYP54wSjfmD7yc
-        FieI2++hEGwfg9XDeJFruWsFwg==
-X-Google-Smtp-Source: APiQypLxllf5NKyXsh+lHjZgzUz1uJ2QWlBaJ4x1ugzzwR64dKWPmeQvM549+tc1oeDyE2zGRi7tMg==
-X-Received: by 2002:adf:8401:: with SMTP id 1mr4842785wrf.241.1588697162771;
-        Tue, 05 May 2020 09:46:02 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 19sm4589890wmo.3.2020.05.05.09.46.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 09:46:02 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.8-rc1 (part 1)
-Date:   Tue,  5 May 2020 18:45:59 +0200
-Message-Id: <20200505164559.2143-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        id S1728569AbgEEVfA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 May 2020 17:35:00 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60696 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgEEVe7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 May 2020 17:34:59 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 89788542;
+        Tue,  5 May 2020 23:34:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1588714495;
+        bh=YHDjkXDnsDM+j5ADChCoJFyfuFCYqoFVwlxnuVKc0ko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L4sOPRmLgUFQomj1r2bs1jYXkG0njixlxc4uDGiEVt0Wcz3JUIMKlzri13aRYUetW
+         wuxDrbSMkcoXt2MODTB/OQ8xTaVYxMX0r6XBPMmDrId6vu0juZGjYKxcIPsIr5UILz
+         koRwuj1kKAlKWa7EkG+zIj0wAyT+zV3jQFloOEnc=
+Date:   Wed, 6 May 2020 00:34:50 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        narmstrong@baylibre.com, a.hajda@samsung.com,
+        spanda@codeaurora.org, linux-gpio@vger.kernel.org, jonas@kwiboo.se,
+        robdclark@chromium.org, bjorn.andersson@linaro.org,
+        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
+ yaml
+Message-ID: <20200505213450.GA8640@pendragon.ideasonboard.com>
+References: <20200430194617.197510-1-dianders@chromium.org>
+ <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Doug,
 
-Linus,
+Thank you for the patch.
 
-please pull the following batch of updates for v5.8 I picked up into
-my tree.
+On Thu, Apr 30, 2020 at 12:46:15PM -0700, Douglas Anderson wrote:
+> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
+> Unless there's someone known to be better, I've set the maintainer in
+> the yaml as the first person to submit bindings.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - specification => specifier.
+> - power up => power.
+> - Added back missing suspend-gpios.
+> - data-lanes and lane-polarities are are the right place now.
+> - endpoints don't need to be patternProperties.
+> - Specified more details for data-lanes and lane-polarities.
+> - Added old example back in, fixing bugs in it.
+> - Example i2c bus is just called "i2c", not "i2c1" now.
+> 
+>  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml | 279 ++++++++++++++++++
+>  2 files changed, 279 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> deleted file mode 100644
+> index 8ec4a7f2623a..000000000000
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -SN65DSI86 DSI to eDP bridge chip
+> ---------------------------------
+> -
+> -This is the binding for Texas Instruments SN65DSI86 bridge.
+> -http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> -
+> -Required properties:
+> -- compatible: Must be "ti,sn65dsi86"
+> -- reg: i2c address of the chip, 0x2d as per datasheet
+> -- enable-gpios: gpio specification for bridge_en pin (active high)
+> -
+> -- vccio-supply: A 1.8V supply that powers up the digital IOs.
+> -- vpll-supply: A 1.8V supply that powers up the displayport PLL.
+> -- vcca-supply: A 1.2V supply that powers up the analog circuits.
+> -- vcc-supply: A 1.2V supply that powers up the digital core.
+> -
+> -Optional properties:
+> -- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
+> -
+> -- gpio-controller: Marks the device has a GPIO controller.
+> -- #gpio-cells    : Should be two. The first cell is the pin number and
+> -                   the second cell is used to specify flags.
+> -                   See ../../gpio/gpio.txt for more information.
+> -- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
+> -               the cell formats.
+> -
+> -- clock-names: should be "refclk"
+> -- clocks: Specification for input reference clock. The reference
+> -	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> -
+> -- data-lanes: See ../../media/video-interface.txt
+> -- lane-polarities: See ../../media/video-interface.txt
+> -
+> -- suspend-gpios: specification for GPIO1 pin on bridge (active low)
+> -
+> -Required nodes:
+> -This device has two video ports. Their connections are modelled using the
+> -OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
+> -
+> -- Video port 0 for DSI input
+> -- Video port 1 for eDP output
+> -
+> -Example
+> --------
+> -
+> -edp-bridge@2d {
+> -	compatible = "ti,sn65dsi86";
+> -	#address-cells = <1>;
+> -	#size-cells = <0>;
+> -	reg = <0x2d>;
+> -
+> -	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
+> -	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
+> -
+> -	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
+> -
+> -	vccio-supply = <&pm8916_l17>;
+> -	vcca-supply = <&pm8916_l6>;
+> -	vpll-supply = <&pm8916_l17>;
+> -	vcc-supply = <&pm8916_l6>;
+> -
+> -	clock-names = "refclk";
+> -	clocks = <&input_refclk>;
+> -
+> -	ports {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		port@0 {
+> -			reg = <0>;
+> -
+> -			edp_bridge_in: endpoint {
+> -				remote-endpoint = <&dsi_out>;
+> -			};
+> -		};
+> -
+> -		port@1 {
+> -			reg = <1>;
+> -
+> -			edp_bridge_out: endpoint {
+> -				data-lanes = <2 1 3 0>;
+> -				lane-polarities = <0 1 0 1>;
+> -				remote-endpoint = <&edp_panel_in>;
+> -			};
+> -		};
+> -	};
+> -}
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> new file mode 100644
+> index 000000000000..6d7d40ad45ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+> @@ -0,0 +1,279 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SN65DSI86 DSI to eDP bridge chip
+> +
+> +maintainers:
+> +  - Sandeep Panda <spanda@codeaurora.org>
+> +
+> +description: |
+> +  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
+> +  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,sn65dsi86
+> +
+> +  reg:
+> +    const: 0x2d
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for bridge_en pin (active high).
+> +
+> +  suspend-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for GPIO1 pin on bridge (active low).
+> +
+> +  vccio-supply:
+> +    description: A 1.8V supply that powers the digital IOs.
+> +
+> +  vpll-supply:
+> +    description: A 1.8V supply that powers the DisplayPort PLL.
+> +
+> +  vcca-supply:
+> +    description: A 1.2V supply that powers the analog circuits.
+> +
+> +  vcc-supply:
+> +    description: A 1.2V supply that powers the digital core.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      Clock specifier for input reference clock. The reference clock rate must
+> +      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
+> +
+> +  clock-names:
+> +    const: refclk
+> +
+> +  gpio-controller: true
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      First cell is pin number, second cell is flags.  GPIO pin numbers are
+> +      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
+> +      information.
+> +
+> +  '#pwm-cells':
+> +    const: 1
+> +    description: See ../../pwm/pwm.yaml for description of the cell formats.
+> +
+> +  ports:
+> +    type: object
 
-Bart
+Maybe
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+    additionalProperties: false
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+here ?
 
-are available in the Git repository at:
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for MIPI DSI input
+> +
+> +        properties:
+> +          reg:
+> +            const: 0
+> +
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                    - 2
+> +                    - 3
+> +                description: See ../../media/video-interface.txt
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.8-part1
+And maybe
+                uniqueItems: true
 
-for you to fetch changes up to 3831c051dfbf58595085e432acc00ad4efcf54cc:
+? Same for port@1.
 
-  tools: gpio: add bias flags to lsgpio (2020-05-05 18:27:09 +0200)
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-----------------------------------------------------------------
-gpio updates for v5.8-rc1 - part1
+> +
+> +              lane-polarities:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                description: See ../../media/video-interface.txt
+> +
+> +            dependencies:
+> +              data-lanes: [lane-polarities]
+> +
+> +        required:
+> +          - reg
+> +
+> +      port@1:
+> +        type: object
+> +        additionalProperties: false
+> +
+> +        description:
+> +          Video port for eDP output (panel or connector).
+> +
+> +        properties:
+> +          reg:
+> +            const: 1
+> +
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              remote-endpoint: true
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                    - 2
+> +                    - 3
+> +                description: See ../../media/video-interface.txt
+> +
+> +              lane-polarities:
+> +                minItems: 1
+> +                maxItems: 4
+> +                items:
+> +                  enum:
+> +                    - 0
+> +                    - 1
+> +                description: See ../../media/video-interface.txt
+> +
+> +            dependencies:
+> +              data-lanes: [lane-polarities]
+> +
+> +        required:
+> +          - reg
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +      - port@0
+> +      - port@1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - enable-gpios
+> +  - vccio-supply
+> +  - vpll-supply
+> +  - vcca-supply
+> +  - vcc-supply
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@2d {
+> +        compatible = "ti,sn65dsi86";
+> +        reg = <0x2d>;
+> +
+> +        interrupt-parent = <&tlmm>;
+> +        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+> +
+> +        vpll-supply = <&src_pp1800_s4a>;
+> +        vccio-supply = <&src_pp1800_s4a>;
+> +        vcca-supply = <&src_pp1200_l2a>;
+> +        vcc-supply = <&src_pp1200_l2a>;
+> +
+> +        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
+> +        clock-names = "refclk";
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +            endpoint {
+> +              remote-endpoint = <&dsi0_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +            endpoint {
+> +              remote-endpoint = <&panel_in_edp>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      bridge@2d {
+> +        compatible = "ti,sn65dsi86";
+> +        reg = <0x2d>;
+> +
+> +        enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
+> +        suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
+> +
+> +        interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +        vccio-supply = <&pm8916_l17>;
+> +        vcca-supply = <&pm8916_l6>;
+> +        vpll-supply = <&pm8916_l17>;
+> +        vcc-supply = <&pm8916_l6>;
+> +
+> +        clock-names = "refclk";
+> +        clocks = <&input_refclk>;
+> +
+> +        ports {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          port@0 {
+> +            reg = <0>;
+> +
+> +            edp_bridge_in: endpoint {
+> +              remote-endpoint = <&dsi_out>;
+> +            };
+> +          };
+> +
+> +          port@1 {
+> +            reg = <1>;
+> +
+> +            edp_bridge_out: endpoint {
+> +              data-lanes = <2 1 3 0>;
+> +              lane-polarities = <0 1 0 1>;
+> +              remote-endpoint = <&edp_panel_in>;
+> +            };
+> +          };
+> +        };
+> +      };
+> +    };
 
-- correct the IRQ type used in to_irq() in gpio-xgene-sb
-- add new item to the TODO list
-- support building gpio-pl061 as module
-- improve pull-up/down support on GPIO expanders in device-tree
-- several improvements in gpio-pca953x
-- emit a warning for too long GPIO line names
-- add MODULE_DEVICE_TABLE to gpio-tegra186
-- add support for new variant to gpio-f7188x
-- lsgpio can now display bias flags
+-- 
+Regards,
 
-----------------------------------------------------------------
-Adam Ford (1):
-      gpiolib: of: improve gpiolib-of support of pull up/down on expanders
-
-Andy Shevchenko (2):
-      gpio: Extend TODO to cover code duplication avoidance
-      gpio: pca953x: Rewrite ->get_multiple() function
-
-Bartosz Golaszewski (1):
-      gpio: pca953x: disable regmap locking
-
-Brian Masney (1):
-      gpio: xgene-sb: set valid IRQ type in to_irq()
-
-Kent Gibson (1):
-      tools: gpio: add bias flags to lsgpio
-
-Mian Yousaf Kaukab (1):
-      gpio: tegra186: export MODULE_DEVICE_TABLE
-
-Paul Thomas (1):
-      gpio: gpio-pca953x, Add get_multiple function
-
-Petteri Jokinen (1):
-      gpio-f7188x: Add GPIO support for F81865
-
-Rob Herring (1):
-      gpio: pl061: Support building as module
-
-Stephen Boyd (1):
-      gpiolib: devprop: Warn if gpio-line-names is too long
-
-Uwe Kleine-König (2):
-      gpio: pca953x: fix handling of automatic address incrementing
-      gpio: pca953x: drop unused parameters of pca953x_recalc_addr()
-
- drivers/gpio/Kconfig           |  2 +-
- drivers/gpio/TODO              |  4 ++
- drivers/gpio/gpio-f7188x.c     | 33 +++++++++++++--
- drivers/gpio/gpio-pca953x.c    | 94 ++++++++++++++++++++++++++----------------
- drivers/gpio/gpio-pl061.c      |  9 ++--
- drivers/gpio/gpio-tegra186.c   |  1 +
- drivers/gpio/gpio-xgene-sb.c   |  2 +-
- drivers/gpio/gpiolib-devprop.c |  5 ++-
- drivers/gpio/gpiolib-of.c      | 10 +++++
- tools/gpio/lsgpio.c            | 12 ++++++
- 10 files changed, 125 insertions(+), 47 deletions(-)
+Laurent Pinchart
