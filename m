@@ -2,85 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A681C5AC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 17:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D62861C5BC2
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 May 2020 17:41:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbgEEPM6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 May 2020 11:12:58 -0400
-Received: from sauhun.de ([88.99.104.3]:34206 "EHLO pokefinder.org"
+        id S1730238AbgEEPlg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 May 2020 11:41:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15617 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgEEPM6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 May 2020 11:12:58 -0400
-Received: from localhost (p54B335A1.dip0.t-ipconnect.de [84.179.53.161])
-        by pokefinder.org (Postfix) with ESMTPSA id 7F2872C0892;
-        Tue,  5 May 2020 17:12:56 +0200 (CEST)
-Date:   Tue, 5 May 2020 17:12:56 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        ludovic.desroches@microchip.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com,
-        linux@armlinux.org.uk, linus.walleij@linaro.org, alan@softiron.com
-Subject: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for bus
- recovery
-Message-ID: <20200505151256.GF2468@ninjato>
-References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+        id S1729398AbgEEPlg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 May 2020 11:41:36 -0400
+IronPort-SDR: kL3i5/dE+LLkejljAgC7LbAIgbaHC7YRtCP3U/CAT+EMJdCzLhn5TukSPoBcSOg9nYkI9+ykp4
+ JCp7zv4XH6AQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 08:41:35 -0700
+IronPort-SDR: jJkmnoYMRdO4Xpdqwud5ysq5xL3z4x/9rNWJCba2AxrNNR0+EpdOnOfvcS6LFzjp57RSniYg6G
+ H4lyf+wXG/sQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,355,1583222400"; 
+   d="scan'208";a="263209128"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2020 08:41:33 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jVzhQ-004q9S-08; Tue, 05 May 2020 18:41:36 +0300
+Date:   Tue, 5 May 2020 18:41:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] ACPI / hotplug / PCI: Use the new
+ acpi_evaluate_reg() helper
+Message-ID: <20200505154135.GQ185537@smile.fi.intel.com>
+References: <20200505132128.19476-1-hdegoede@redhat.com>
+ <20200505132128.19476-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505132128.19476-3-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, May 05, 2020 at 03:21:27PM +0200, Hans de Goede wrote:
+> Use the new acpi_evaluate_reg() helper in the acpiphp_glue.c code.
 
---twz1s1Hj1O0rHoT0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> -		/* _REG is optional, we don't care about if there is failure */
 
-On Wed, Apr 15, 2020 at 10:06:43AM +0300, Codrin Ciubotariu wrote:
-> devm_gpiod_get() usually calls gpio_request_enable() for non-strict pinmux
-> drivers. These puts the pins in GPIO mode, whithout notifying the pinctrl
-> driver. At this point, the I2C bus no longer owns the pins. To mux the
-> pins back to the I2C bus, we use the pinctrl driver to change the state
-> of the pins to GPIO, before using devm_gpiod_get(). After the pins are
-> received as GPIOs, we switch theer pinctrl state back to the default
-> one,
->=20
-> Fixes: d3d3fdcc4c90 ("i2c: at91: implement i2c bus recovery")
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+This may be left.
 
-Applied to for-current, thanks!
-
-This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
-pinctrl_state pointers into bus_recovery_info and handle all this in the
-core. I will try this later this week if noone is super-eager to try it
-out before.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---twz1s1Hj1O0rHoT0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6xgnQACgkQFA3kzBSg
-KbbY+xAArfL/iEHhieAsZoajJ8HCWqBjKMu523a4uPpmSCk4jP9UIqOQqtUac4tK
-wUCJg3LXJvbT8pfvfxAcSTHYjgVIvh0br6N44vO5zWz6uTlyEH0LXrg8NP9qrECb
-B5HHfsFxVWhTMuFTgcqRHel1qHzhd3rWCebhfdiFrBcHpM6xmeB9VlYyXoq4/qx5
-p3/5LwgKJW4xo4AT2J3PCfX5h/zVdIzeWW9qPX+xyUtCJ0MpCxsVxStpUXwudIH2
-rJahIU7t0NL0MtKLa4Waf8PjQULKShZc1vrQ/QQhi50kLicGkPwQSJnkFe+lLnjS
-aMGEKiJajucG8tz1nqsg8A2CsXpUC70f7bwQP7kGlUVPqEPp13soeor9qoKIClfX
-LleANdq18XOlIIRKGtcLKvg/abHXk1/OQ9efNx8Aa4G30im3rozCwbR+Fpn+mLZC
-oANKeX7VJ+DmuYqiWaD23Iz/j3M2skgBmUeuzAMYvA+OX6lERmWWnBqEMAqb0si2
-nngZTQcBg1s8HEbeDMkH7N9zu47bEdXAARoFE9ys16uZK3A7RRNnv46NSjZAph1b
-uepFxAB8QGm9a+sLjLY4Ym/G6vBAv9CRh5FCLDxZ1ODzYZfEiPtt3umtz7DFfGKp
-/9wolNpCGqYXQHYwgmakJq5f9MEASvhl4GNag81Qi1AHgRJeDqs=
-=kQ/H
------END PGP SIGNATURE-----
-
---twz1s1Hj1O0rHoT0--
