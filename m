@@ -2,108 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D961C9D64
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 23:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3A51C9E8F
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2020 00:41:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgEGVfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 May 2020 17:35:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59262 "EHLO
+        id S1726538AbgEGWlZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 May 2020 18:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbgEGVfh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 17:35:37 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8488C05BD0A
-        for <linux-gpio@vger.kernel.org>; Thu,  7 May 2020 14:35:35 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so3224053pjd.1
-        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2020 14:35:35 -0700 (PDT)
+        with ESMTP id S1726518AbgEGWlY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 18:41:24 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB0AC05BD0A
+        for <linux-gpio@vger.kernel.org>; Thu,  7 May 2020 15:41:24 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id b8so3818803ybn.0
+        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2020 15:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4v4vnXxurYJQOROnZvnzfPloWHp2bwE01an31yUPp4o=;
-        b=jsEDGiwhIeWeIH5fsxZpLrFy4wAWrwHVPQ0Th5YaMdW+DiPGF2V2BrQMyLzoKF17KF
-         qOZcFB9rQwZ1ibCZZ7iw4wbdZFNITQzkcLMUR6z/TFf0zAHfWY2lf/cGJq0O1FOcsMFr
-         KWwrbKtdHEusvC97ESZz7VfnP6l0eiZX9wXIg=
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=15pRIylywvMGvtrJCDOTg+VPNTtiBCmmaIlSjw1OTgk=;
+        b=i6r7L94Xbxk2mrmd/n7Gx0MKdUteaI3n3lpD7e+QFJ/ZVh3+imu2aLLMCMoh/MziUT
+         6o1v/0zpp2xHgDOhyygh7NzM7DXQk2Jt/CZPYGmNEGlpEtqaKI3Hel9oBwsIQkKqnSoZ
+         w0K7bZv7DxPYTPBAZ4JSdOBnnl5nJEwjrI71iuq0SsWCQHDvpR2YBVWsyJ18bamChJWR
+         o5v/09nOfErmbuW4XXsz7bGqYKZ9iLLhLySLWaFTQT15AfH0e1AWErzJYKT0b9Ts5kM2
+         sBUlh7xnexEPVNO+kVICmI8x1t8+UquL/KyRQNHjbPfG/sFaE6hD3PPW2DBls8j6RTb4
+         k4JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4v4vnXxurYJQOROnZvnzfPloWHp2bwE01an31yUPp4o=;
-        b=nRSCZukCqxQHAyjfMsyO1TfRAoXlPgGcc93gVHbpyrhEXWq8mDYQdLlrann1jfI6i5
-         pX+UHmGtqeU/ECZ5n8GTTC9bj4G0dpFO47FpARynBESfOkwOQtqmi6psrd+qTMWLoqVB
-         +MUYcbLItKZRoGiBhgwlm9jSR8n5xHRlbC3x7xiw6AmIL8C+iCYZhj5gjkwPotMp0bHs
-         SasCgy/O1iXiud+7Nlh+1l6ZKu3PJQrmTnun6NvH+90m9s9obtWpe8Btj5Tdm+g6D5zP
-         q1U+lJxxFxeB0W7q2AU8nPRqETioLkme9d/J8XCyckBXI7lsmKxWobI5RxsQuKmpRLp4
-         n76A==
-X-Gm-Message-State: AGi0PuYqwKMtyZd+nR2+tImpNPIP2MBrJBalriQVR4sHimJstqPg6bJi
-        46M6CMy3JAexLE0q9KDbCZN0xg==
-X-Google-Smtp-Source: APiQypJrX9Sds2V0tZ/XbcQs1N2tNz4bQqjgUQgoczdv15D6aqrUlNeX63mmz/+P2v3/w/VqhJ8N3w==
-X-Received: by 2002:a17:902:9f90:: with SMTP id g16mr15528385plq.215.1588887335252;
-        Thu, 07 May 2020 14:35:35 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i10sm5884860pfa.166.2020.05.07.14.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2020 14:35:34 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
-Cc:     jonas@kwiboo.se, jeffrey.l.hugo@gmail.com,
-        linux-gpio@vger.kernel.org, bjorn.andersson@linaro.org,
-        swboyd@chromium.org, jernej.skrabec@siol.net,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/6] arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
-Date:   Thu,  7 May 2020 14:35:00 -0700
-Message-Id: <20200507143354.v5.6.I89df9b6094549b8149aa8b8347f7401c678055b0@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200507213500.241695-1-dianders@chromium.org>
-References: <20200507213500.241695-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=15pRIylywvMGvtrJCDOTg+VPNTtiBCmmaIlSjw1OTgk=;
+        b=Y2lQsNB/JpfhXqnGfvtORggNcEPTr7Uwe63YrCjleX+gy/pp5Grv5CJaNSRIECoFMk
+         2s7KvQFsyYZWOAN8d0AAdDZoMgSVPhY7ozAsD0UO8LfQl0PrIo/QVu6rbHcaWtIjppk+
+         kIgqnWgAvy4JQkNiwKt/of4W218cgRx2z9ZkzD3p/Sbg/E2IbQGEi9QgfJ41P1qtPRYJ
+         vJPIw3+KA8m3swkcv67ooJCKU1+pSoK1pQRQlTbj9QS1c5urpG8xiz6x/XMMa4OPi3Do
+         LV/YTDKYA83y/n6Ifsl2UPjgiLIghlIYt+v/vxDSRz0JEKOS7qrvXcfUj4gBKiBGgd90
+         VSwA==
+X-Gm-Message-State: AGi0PuZkk/djtmqJe9/8FZnM2aHN0vEE2TMzmoOsj6efVGKZOvveYssH
+        VAp3zcPlkGqBYU1QAUCYsb4Y4u8ir17BPDDEo7w=
+X-Google-Smtp-Source: APiQypJnEQ2o+5AAZGJJ+fugGIBokiH9PcxL32HL3KogAEZHqMcgi90EZ26t37Y7FzoZJ4Rbm4m+Re5bNgn3YoiScrM=
+X-Received: by 2002:a25:e54a:: with SMTP id c71mr26618805ybh.139.1588891283167;
+ Thu, 07 May 2020 15:41:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a25:396:0:0:0:0:0 with HTTP; Thu, 7 May 2020 15:41:22 -0700 (PDT)
+Reply-To: gi625900@gmail.com
+From:   "Mr. Scott Donald" <globalscrtcmpn@gmail.com>
+Date:   Thu, 7 May 2020 15:41:22 -0700
+Message-ID: <CANCHYtv8zORX=kEXDMojzU8EFop+U8cpjZPbRVDJ4XTqAsJ+dA@mail.gmail.com>
+Subject: Very Urgent,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We don't have the HPD line hooked up to the bridge chip.  Add it as
-suggested in the patch ("dt-bindings: drm/bridge: ti-sn65dsi86:
-Document no-hpd").
+Dear Friend,
+I'm Mr. Scott Donald a Successful business Man. dealing=C2=A0with
+Exportation, I got your email contact through search=C2=A0to let you know
+my Ugly Situation Am a dying Man here in=C2=A0California Los Angeles
+Hospital Bed in (USA), I Lost my=C2=A0Wife and my only Daughter for Corona
+virus and my Doctor said to me that i don't have enough time to live
+any=C2=A0more, i have a project that am about to handover to you.=C2=A0i ha=
+ve
+already instructed the Barclay Bank of London to=C2=A0transfer my fund sum
+of =C2=A33,7M GBP to you as to enable you=C2=A0give 50% to Charitable Home =
+and
+take 50% and i have=C2=A0already given all i have here in America to
+Charitable=C2=A0home I also ask my Doctor to help me get to you in case=C2=
+=A0you
+did not hear from me again, i want to you see on video very urgent
+here is my Doctor Whatsapp Number for urgent notice +13019692737
 
-NOTE: this patch isn't expected to have any effect but just keeps us
-cleaner for the future.  Currently the driver in Linux just assumes
-that nobody has HPD hooked up.  This change allows us to later
-implement HPD support in the driver without messing up sdm845-cheza.
+Hope To Hear From You. i really want to see you on Video call very
+urgent please.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
+you can reach me through this gmail id: globalinvestmentinvestment61@
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
+Regards
 
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9070be43a309..5938f8b2aa2f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -548,6 +548,8 @@ sn65dsi86_bridge: bridge@2d {
- 		clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
- 		clock-names = "refclk";
- 
-+		no-hpd;
-+
- 		ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.26.2.645.ge9eca65c58-goog
-
+Mr. Scott Donald
