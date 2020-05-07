@@ -2,69 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C581C8886
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 13:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 608261C88BB
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 13:46:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgEGLlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 May 2020 07:41:15 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:33637 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgEGLlP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 07:41:15 -0400
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 849B420000E;
-        Thu,  7 May 2020 11:39:26 +0000 (UTC)
-Date:   Thu, 7 May 2020 13:42:38 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
+        id S1725914AbgEGLpz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 May 2020 07:45:55 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:58981 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgEGLpz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 07:45:55 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C8CFFFF815;
+        Thu,  7 May 2020 11:45:25 +0000 (UTC)
+Date:   Thu, 7 May 2020 13:45:25 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rza1: Fix flag name in comment
-Message-ID: <20200507114238.k4zeunp3z4yedpzk@uno.localdomain>
-References: <20200507074516.29903-1-geert+renesas@glider.be>
+        Arnd Bergmann <arnd@arndb.de>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: ocelot: Add platform dependency
+Message-ID: <20200507114525.GE34497@piout.net>
+References: <20200507114015.24461-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507074516.29903-1-geert+renesas@glider.be>
+In-Reply-To: <20200507114015.24461-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert
+Hi,
 
-On Thu, May 07, 2020 at 09:45:16AM +0200, Geert Uytterhoeven wrote:
-> rza1_swio_pin relates to the swio flag instead of the bidir flag.
->
+On 07/05/2020 13:40:15+0200, Geert Uytterhoeven wrote:
+> The Microsemi Ocelot pin controller is only present on Microsemi Ocelot
+> and Jaguar2 SoCs.  Add a platform dependency to the PINCTRL_OCELOT
+> config symbol, to avoid asking the user about it when configuring a
+> kernel without Ocelot or Jaguar2 support.
+> 
+
+I have to NAK here because there are upcoming (hopefully this cycle)
+SoCs using this driver.
+
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
-
 > ---
-> To be queued in sh-pfc for v5.8.
->
->  drivers/pinctrl/pinctrl-rza1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-> index ff4a7fb518bb3d84..38a14bbced5f60e7 100644
-> --- a/drivers/pinctrl/pinctrl-rza1.c
-> +++ b/drivers/pinctrl/pinctrl-rza1.c
-> @@ -93,7 +93,7 @@ struct rza1_bidir_entry {
->  };
->
->  /**
-> - * rza1_swio_pin - describe a single pin that needs bidir flag applied.
-> + * rza1_swio_pin - describe a single pin that needs swio flag applied.
->   */
->  struct rza1_swio_pin {
->  	u16 pin: 4;
-> --
+>  drivers/pinctrl/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index f0ce4ce3e0f52456..bed67c08a0892240 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -394,8 +394,8 @@ config PINCTRL_RK805
+>  
+>  config PINCTRL_OCELOT
+>  	bool "Pinctrl driver for the Microsemi Ocelot and Jaguar2 SoCs"
+> -	depends on OF
+> -	depends on HAS_IOMEM
+> +	depends on OF && HAS_IOMEM
+> +	depends on MSCC_OCELOT || COMPILE_TEST
+>  	select GPIOLIB
+>  	select GPIOLIB_IRQCHIP
+>  	select GENERIC_PINCONF
+> -- 
 > 2.17.1
->
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
