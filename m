@@ -2,100 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E04721C8740
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 12:49:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 805EE1C87C6
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 13:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgEGKt3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 May 2020 06:49:29 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47559 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726625AbgEGKt3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 06:49:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588848567;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8d5UnaBrJ94u+C+q660aZhujQBvIyXQp2TJsVImovW0=;
-        b=ZZSowXstbjMaPV/rq6RCHfzW/VyivqVlR3DMzK9RfbJRVWJo294REpvRFXFxx5XaNPDxxl
-        RFSCVtMx9RnHSElwfiy+lwpH2n/73fSp6QetFi3JYYxYCPbkWU0ALc4MKmqY+p+EwHIJeI
-        hGioSFTBH0VXng/E9Y5KYF5lsfxdt88=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-lz4kF447Oz2oW5jkCD2Ktg-1; Thu, 07 May 2020 06:49:24 -0400
-X-MC-Unique: lz4kF447Oz2oW5jkCD2Ktg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C2F51030985;
-        Thu,  7 May 2020 10:49:22 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-115-120.ams2.redhat.com [10.36.115.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 872E960C81;
-        Thu,  7 May 2020 10:49:20 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 2/2] ACPI / hotplug / PCI: Use the new acpi_evaluate_reg() helper
-Date:   Thu,  7 May 2020 12:49:17 +0200
-Message-Id: <20200507104917.116589-2-hdegoede@redhat.com>
-In-Reply-To: <20200507104917.116589-1-hdegoede@redhat.com>
-References: <20200507104917.116589-1-hdegoede@redhat.com>
+        id S1725903AbgEGLNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 May 2020 07:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgEGLNg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 May 2020 07:13:36 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18CEC05BD43
+        for <linux-gpio@vger.kernel.org>; Thu,  7 May 2020 04:13:36 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 23so5528258qkf.0
+        for <linux-gpio@vger.kernel.org>; Thu, 07 May 2020 04:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iILzUb916EgutYDcIgI/xSm4YIGbMvYcWtp7OsyVVfE=;
+        b=suJvfqeSlQTohtjnyDDJvicZXejWfvwoPGX0Lpli5EN/xKF4AgzWc4EreI+9QPKmX9
+         DeVapG5CjEhIk1uHT/vAUodqd8C7BzWqd+9bVmfJ1YHVGRYULDmFJNxL3GBvhFbOP+jd
+         dZKWg0bOsdsRDAUv3Q514xbA6krj4zxyldz8QyGb5+vPGybNQkRbG4+0yIxyhoWc2MwV
+         ewi0IEr1nVVtGaQj3IiwPIL5DpE+9l1qNzp4Y/8ibmHaFq/AW8QOciPHx07zc4W55Lhh
+         iPS0idX9Yw+UWBMJooZxUCBn1qU9V6Q9LOi9pfgo5zCQ2dFKuLMvNpUDVLq4l03SKzD0
+         xiBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iILzUb916EgutYDcIgI/xSm4YIGbMvYcWtp7OsyVVfE=;
+        b=WPRdxdTIao08OI9NyIlz8vFYMLFcugf40ru9pVIQAZKLushL+UsRJrlxHBh46Ln4du
+         rbaAAV8KJZ6n9W5vaYcMhr8fISWv+XToPlQ+egzJELknYVU6qhgD00JvHs8JMFGvyrb/
+         GtP/ah7H6tczDtC8Fc3RfB1vcTt5Mni+rv46FW4N9KHsL+YsGPdVL5JogZL7UpvPUX4t
+         8bug4cjsEIJ2zEc4gmO7EsSr5Cwy74boBrW/GVPkm2KqzG5pUAnPY+xx+fQf+fUq3N3D
+         6j5oYC2h3kR4/V3VlyeSpYLxbk2AMvdWbAXMJUJbKkHXAgfnOa2CNA1C8AZbPFBHbhrJ
+         zaCQ==
+X-Gm-Message-State: AGi0PuYPvi1np/PBULoOe2kYOiiqTmHiBTlJ1ogdhW1SyxmJmzEk7uDg
+        bMu0i+FfY4DyrFEnbEalnJrnQrppe5ak8p71Bp1hQA==
+X-Google-Smtp-Source: APiQypKy/HxL/kKChlxsdqcGGCiw2sMuaxq1Z0JMLoV4zr0YX9pwiSplug5DLkcu7RiDX7JjIENsk6iOvU7viNKfq6g=
+X-Received: by 2002:a05:620a:1395:: with SMTP id k21mr13725272qki.120.1588850015861;
+ Thu, 07 May 2020 04:13:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200506124256.87628-1-weiyongjun1@huawei.com>
+In-Reply-To: <20200506124256.87628-1-weiyongjun1@huawei.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 7 May 2020 13:13:24 +0200
+Message-ID: <CAMpxmJVuqJyvm92Siv6CLgmphGf36A_fjHmEOzH3h1ct=ypC3Q@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: exar: Fix error return code in gpio_exar_probe()
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kangjie Lu <kjlu@umn.edu>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use the new acpi_evaluate_reg() helper in the acpiphp_glue.c code.
+=C5=9Br., 6 maj 2020 o 14:39 Wei Yongjun <weiyongjun1@huawei.com> napisa=C5=
+=82(a):
+>
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+>
+> Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida=
+_simple_get fails")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  drivers/gpio/gpio-exar.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+> index da1ef0b1c291..c5c3fa5b519f 100644
+> --- a/drivers/gpio/gpio-exar.c
+> +++ b/drivers/gpio/gpio-exar.c
+> @@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *p=
+dev)
+>         mutex_init(&exar_gpio->lock);
+>
+>         index =3D ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
+> -       if (index < 0)
+> +       if (index < 0) {
+> +               ret =3D index;
+>                 goto err_destroy;
+> +       }
+>
+>         sprintf(exar_gpio->name, "exar_gpio%d", index);
+>         exar_gpio->gpio_chip.label =3D exar_gpio->name;
+>
+>
+>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Leave comment about not caring about _REG errors in place
-- Add Bjorn's Acked-by
-- Add Andy's Reviewed-by
----
- drivers/pci/hotplug/acpiphp_glue.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+This is already fixed in my for-current branch.
 
-diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-index b3869951c0eb..b4c92cee13f8 100644
---- a/drivers/pci/hotplug/acpiphp_glue.c
-+++ b/drivers/pci/hotplug/acpiphp_glue.c
-@@ -385,19 +385,12 @@ static unsigned char acpiphp_max_busnr(struct pci_bus *bus)
- static void acpiphp_set_acpi_region(struct acpiphp_slot *slot)
- {
- 	struct acpiphp_func *func;
--	union acpi_object params[2];
--	struct acpi_object_list arg_list;
- 
- 	list_for_each_entry(func, &slot->funcs, sibling) {
--		arg_list.count = 2;
--		arg_list.pointer = params;
--		params[0].type = ACPI_TYPE_INTEGER;
--		params[0].integer.value = ACPI_ADR_SPACE_PCI_CONFIG;
--		params[1].type = ACPI_TYPE_INTEGER;
--		params[1].integer.value = 1;
- 		/* _REG is optional, we don't care about if there is failure */
--		acpi_evaluate_object(func_to_handle(func), "_REG", &arg_list,
--				     NULL);
-+		acpi_evaluate_reg(func_to_handle(func),
-+				  ACPI_ADR_SPACE_PCI_CONFIG,
-+				  ACPI_REG_CONNECT);
- 	}
- }
- 
--- 
-2.26.0
-
+Bart
