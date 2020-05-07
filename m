@@ -2,362 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8AFA1C7BF0
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 May 2020 23:05:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866591C8091
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 May 2020 05:40:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgEFVFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 May 2020 17:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        id S1726320AbgEGDkC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 May 2020 23:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729162AbgEFVF3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 May 2020 17:05:29 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67447C061A0F
-        for <linux-gpio@vger.kernel.org>; Wed,  6 May 2020 14:05:29 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id y10so1060626uao.8
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2020 14:05:29 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1725857AbgEGDkC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 May 2020 23:40:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BF7C061A0F;
+        Wed,  6 May 2020 20:40:02 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f15so1512349plr.3;
+        Wed, 06 May 2020 20:40:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DbG3gx1nov18ZF9OivrbC97qSSzMco18O7zWYm3eR5c=;
-        b=Hyl6RtwnTMb8q8VCar5V3J6/SYeT4cHB3ePoizRu1S0Aq4kvoXdK4tew5iBcqCIVBz
-         Eror3fGvoP7xkha8aBipm+P5yxcGXbiVM78O+HatzYLizfDZ8kF6pN5qTtgCOkmlPHTe
-         S+1LJYyQiI9Wbq8rBiv4dpZq1knF7rXiOZn4c=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hJIjIJDMn8AVxnWxL/QZhgDXlLBiX6hRFdp/Px6tg5w=;
+        b=Z+EutZN3jfvopaKwJ1zq0tVBNDRWaNHXlG9VbPE67509xe+6veO34An7Ts/bt0hnDy
+         870GPDMqwV/qwJ2qtXqtnAiqY0izMYF810zVps+v5OE79sWDBk452NhrPu/+ZAucLmQB
+         DslMv4INmO47bOoC12JJo/g5aueFiDDnY0+OsVq0mre0lu58qh24K5AmLQMyqv0uowvv
+         X9iY3/X+D9HURpOHpjEuSLyUj2uwrxBxhPAcwJag9dEkqw4S7tYTD2AbWmwOqTf23IrC
+         yI+FwpUYye2kv2+wGTj0aZi9aV5ttmZoUBydW07KSjqJx4fhwJcTvYy9j20h5yQylXaE
+         TtIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DbG3gx1nov18ZF9OivrbC97qSSzMco18O7zWYm3eR5c=;
-        b=WNxiCrZlHtvk3bIwjHXO9z+Jrn6zWt4vWi39+6RM5UvAFoyLpztslkcGKbVlDHp5Eb
-         r1tOflWUKrKUSYmFBFyn1uEegPgIDiW4+1YvwwlJZHXQpKYfNtFSN7gY46b+mv/3cqur
-         zG4UjYxyeapkrhowTRksvT/rM7sALTcXAnD75kq7Q6ccHyGvqjDtC71/qy01E634w97q
-         QvcDkCgcetI5JLY2ozccEZqvp1aJJ5dmRTGBP+OjgmFOMVcI/M42HB5FEgUz6G9aIcCB
-         TAgWrulF3DLTBLRrF3UymCNKh226NIk7Qk5vl6ZkicRz7IJAuZQqZVqZSMHDbEasM5gf
-         vT8g==
-X-Gm-Message-State: AGi0PuYnF7jZmY+x9/7hkdqSuTz/CsUPH6VvWBQ3Mc4DccGpg/3+QbKK
-        XB8kaciBqq5MO88ExCProU9DSMFx/Ls=
-X-Google-Smtp-Source: APiQypL2EpEW46ZgLmHKis15yXqeFSvzYS3negH9sgxuX2zRrwzJFzTtVoSUIVF9FbnpC3JvgPr7dA==
-X-Received: by 2002:ab0:7025:: with SMTP id u5mr8252755ual.130.1588799127570;
-        Wed, 06 May 2020 14:05:27 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id a18sm1270606vsq.7.2020.05.06.14.05.26
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 May 2020 14:05:26 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id y185so1968070vsy.8
-        for <linux-gpio@vger.kernel.org>; Wed, 06 May 2020 14:05:26 -0700 (PDT)
-X-Received: by 2002:a67:bd07:: with SMTP id y7mr10016333vsq.109.1588799125882;
- Wed, 06 May 2020 14:05:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200430194617.197510-1-dianders@chromium.org>
- <20200430124442.v4.4.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
- <20200505213450.GA8640@pendragon.ideasonboard.com> <CAD=FV=VZKJg0TE4nyJY8LifFzMPR3XPzdbY=NuSOBBHBeUmtNw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VZKJg0TE4nyJY8LifFzMPR3XPzdbY=NuSOBBHBeUmtNw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 6 May 2020 14:05:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WG=Qujrh4uovGigPOZsVWuLuRtY=VD5-MddEcwRMYs7g@mail.gmail.com>
-Message-ID: <CAD=FV=WG=Qujrh4uovGigPOZsVWuLuRtY=VD5-MddEcwRMYs7g@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     LinusW <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hJIjIJDMn8AVxnWxL/QZhgDXlLBiX6hRFdp/Px6tg5w=;
+        b=fSPBsA7JWeqOVQ26t3amhyaInE/mn2g3zcpWJuTZC/Ag/M3XrNyNTAfE64+gjZhAFk
+         qWe+ZL947uE7FWao3jlUJhNUIZUzZyu0H0SRnvQb7nauxiFvsOnCPeDFxgqO4c5M3Tio
+         8m0imvr8cf95+fbmMtQvuPZm5fjZWHYOZ5SMSQV6UvOt60BJg7Z2u12Cqlax2t/aueIW
+         CxLCdwbgHVpk6y+3iQcD6HiKThWKzTfFfA1mCtQI+U7RNinqWHPF0C7XzQu80p7LcBva
+         7UDlqkAgIwDacqkO41VUZI4IwfB1L+E2s04I9LUSjjaX677J82EPyK5WMp2nRhKv6cgu
+         RWcQ==
+X-Gm-Message-State: AGi0PuY8w7on/Kx3iml86rPUxJ0pW1Qu98ZNZUOMIIrMnf/qXyHZU6+L
+        /d2eWo2RMTwxq80dAcc82uDOfxj6+8inmQ==
+X-Google-Smtp-Source: APiQypJB+6P5EWmx/T9RdTLwgJY1OJ+FNX5Pg4aoBuvhzhPoTLrlxCXHYJfEOI7UD4UQskw3P7Ry6A==
+X-Received: by 2002:a17:90b:3444:: with SMTP id lj4mr13631790pjb.37.1588822801382;
+        Wed, 06 May 2020 20:40:01 -0700 (PDT)
+Received: from sol (220-235-85-217.dyn.iinet.net.au. [220.235.85.217])
+        by smtp.gmail.com with ESMTPSA id v9sm5920755pju.3.2020.05.06.20.39.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 May 2020 20:40:00 -0700 (PDT)
+Date:   Thu, 7 May 2020 11:39:54 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "Bujanda, Hector" <Hector.Bujanda@digi.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Clark <robdclark@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Message-ID: <20200507033954.GA13974@sol>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+ <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+ <20200430145844.GA28588@sol>
+ <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Mon, May 04, 2020 at 12:31:57PM +0200, Bartosz Golaszewski wrote:
+> czw., 30 kwi 2020 o 16:58 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > On Thu, Apr 30, 2020 at 01:32:22PM +0000, Bujanda, Hector wrote:
+> > > Thanks all for your guidance!
+> > >
+> > > First saying that this patch request was sent having our platforms in k4.14 in the way of upgrading to k5.4.
+> > > In those versions the commit e588bb1eae31be73fbec2b731be986a7c09635a4 "gpio: add new SET_CONFIG ioctl() to gpio chardev" by Kent Gibson was not available.
+> > >
+> > > I see that you clearly understand the necessity of having a way of configuring debounce from the userspace.
+> > > Our platforms make use of hardware debouncing filtering. Up to now we were using the sysfilesystem to let the user handle gpios (including debounce configuration).
+> > > We wanted now to get rid of sysfilesystem and start using gpiolib/libgpiod.... but configuring debounce is blocking us.
+> > >
+> > > Now I clearly see (as pointed by Bartosz Golaszewski) that my suggested GPIO_SET_DEBOUNCE_IOCTL is wrong as it hits the chip file descriptor while 'Modifying any config settings can only happen on lines previously requested too in user-space'.
+> > >
+> > > I agree with all that a flag is needed to allow configuring debounce to '0' which has always meant disabling it.
+> > >
+> > > Also agree with 'Kent Gibson' suggestion of  'You might want to add a flag to the GPIOLINE_FLAGs to indicate if debounce is set'.
+> > >
+> > > I have my doubts if it is compulsory to extend debounce configuration to the gpioevent_requests since the debounce value configured by a user is normally linked to a hardware noise in a line; and that does not change from one gpioevent_requests to another. So I think this configuration would be useful but not compulsory.
+> > >
+> >
+> > Just to clarify on this point, the reason the SET_CONFIG would have to
+> > be extended to events is not to alter the debounce on the fly but to set
+> > it at all.  Lines are requested as either handles (for outputs or polled inputs)
+> > or events (for asynchronous edge events on inputs). We cannot extend
+> > either the handle or event request ioctls themselves as there is no provision
+> > in their data structures for future expansion.  There is in the
+> > SET_CONFIG ioctl - but that doesn't apply to event requests yet...
+> >
+> 
+> Indeed. And as I was thinking about it over the weekend I realized
+> that exposing a setter for a config option that's not settable at
+> request-time seems wrong. Together with the lineevent structure which
+> doesn't work on 64-bit kernel with 32-bit user-space this all makes me
+> think we should design v2 of several of the ioctl() calls with more
+> care.
+> 
+> >
+> > > I agree with Linus Walleij that 'there is a serious user-facing problem here though, because not all GPIO controllers supports debounce'.
+> > > Our platforms have native freescale/NXP gpiochips not supporting hardware debounce and our own gpiochips having hardware debounce.
+> > > We have also noticed that 'drivers/input/keyboard/gpio_keys.c contains generic debounce code using kernel timers if the GPIO driver cannot provide debouncing'. That feature is not of our interest (because of having hardware debounce filters) but it would clearly be a very good overall functionality.
+> > >
+> > > Having said all above, I wonder how you want to proceed.
+> > > Our current development in k5.4 and libgpiod1.4.1 is much behind master... what makes collaboration (and reusability) a bit more complex.
+> > > Also I see the implementation requires a bigger picture than I initially expected.
+> > > So I wonder if you want me to do the initial steps of the development (what I foresee will require some back and forth) or you prefer implementing all pieces.
+> > >
+> >
+> > I totally agree with you on the widening scope.
+> >
+> > Bart - how do you want to go forward with this?  I'm available to work
+> > on it, in part or full.
+> >
+> 
+> Personally I'm super busy with my actual job and adding support for
+> line watch ioctl() to libgpiod ATM. I can't really spare any time on
+> this. I have some crazy ideas: like storing the debounce time in the
+> 16 most significant bits of the flags field but this is just papering
+> over bad ABI.
+> 
+> Ideally we'd have to introduce new versions of gpioevent_request,
+> gpioline_request, gpioline_info and gpioevent_data structs - this time
+> with enough additional padding and no alignment issues. Then we could
+> add the debounce properly.
+> 
 
-On Tue, May 5, 2020 at 3:21 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Laurent,
->
-> On Tue, May 5, 2020 at 2:35 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Doug,
-> >
-> > Thank you for the patch.
-> >
-> > On Thu, Apr 30, 2020 at 12:46:15PM -0700, Douglas Anderson wrote:
-> > > This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-> > > Unless there's someone known to be better, I've set the maintainer in
-> > > the yaml as the first person to submit bindings.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > ---
-> > >
-> > > Changes in v4: None
-> > > Changes in v3: None
-> > > Changes in v2:
-> > > - specification => specifier.
-> > > - power up => power.
-> > > - Added back missing suspend-gpios.
-> > > - data-lanes and lane-polarities are are the right place now.
-> > > - endpoints don't need to be patternProperties.
-> > > - Specified more details for data-lanes and lane-polarities.
-> > > - Added old example back in, fixing bugs in it.
-> > > - Example i2c bus is just called "i2c", not "i2c1" now.
-> > >
-> > >  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
-> > >  .../bindings/display/bridge/ti,sn65dsi86.yaml | 279 ++++++++++++++++++
-> > >  2 files changed, 279 insertions(+), 87 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> > > deleted file mode 100644
-> > > index 8ec4a7f2623a..000000000000
-> > > --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-> > > +++ /dev/null
-> > > @@ -1,87 +0,0 @@
-> > > -SN65DSI86 DSI to eDP bridge chip
-> > > ---------------------------------
-> > > -
-> > > -This is the binding for Texas Instruments SN65DSI86 bridge.
-> > > -http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-> > > -
-> > > -Required properties:
-> > > -- compatible: Must be "ti,sn65dsi86"
-> > > -- reg: i2c address of the chip, 0x2d as per datasheet
-> > > -- enable-gpios: gpio specification for bridge_en pin (active high)
-> > > -
-> > > -- vccio-supply: A 1.8V supply that powers up the digital IOs.
-> > > -- vpll-supply: A 1.8V supply that powers up the displayport PLL.
-> > > -- vcca-supply: A 1.2V supply that powers up the analog circuits.
-> > > -- vcc-supply: A 1.2V supply that powers up the digital core.
-> > > -
-> > > -Optional properties:
-> > > -- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
-> > > -
-> > > -- gpio-controller: Marks the device has a GPIO controller.
-> > > -- #gpio-cells    : Should be two. The first cell is the pin number and
-> > > -                   the second cell is used to specify flags.
-> > > -                   See ../../gpio/gpio.txt for more information.
-> > > -- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
-> > > -               the cell formats.
-> > > -
-> > > -- clock-names: should be "refclk"
-> > > -- clocks: Specification for input reference clock. The reference
-> > > -       clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-> > > -
-> > > -- data-lanes: See ../../media/video-interface.txt
-> > > -- lane-polarities: See ../../media/video-interface.txt
-> > > -
-> > > -- suspend-gpios: specification for GPIO1 pin on bridge (active low)
-> > > -
-> > > -Required nodes:
-> > > -This device has two video ports. Their connections are modelled using the
-> > > -OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> > > -
-> > > -- Video port 0 for DSI input
-> > > -- Video port 1 for eDP output
-> > > -
-> > > -Example
-> > > --------
-> > > -
-> > > -edp-bridge@2d {
-> > > -     compatible = "ti,sn65dsi86";
-> > > -     #address-cells = <1>;
-> > > -     #size-cells = <0>;
-> > > -     reg = <0x2d>;
-> > > -
-> > > -     enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
-> > > -     suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
-> > > -
-> > > -     interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
-> > > -
-> > > -     vccio-supply = <&pm8916_l17>;
-> > > -     vcca-supply = <&pm8916_l6>;
-> > > -     vpll-supply = <&pm8916_l17>;
-> > > -     vcc-supply = <&pm8916_l6>;
-> > > -
-> > > -     clock-names = "refclk";
-> > > -     clocks = <&input_refclk>;
-> > > -
-> > > -     ports {
-> > > -             #address-cells = <1>;
-> > > -             #size-cells = <0>;
-> > > -
-> > > -             port@0 {
-> > > -                     reg = <0>;
-> > > -
-> > > -                     edp_bridge_in: endpoint {
-> > > -                             remote-endpoint = <&dsi_out>;
-> > > -                     };
-> > > -             };
-> > > -
-> > > -             port@1 {
-> > > -                     reg = <1>;
-> > > -
-> > > -                     edp_bridge_out: endpoint {
-> > > -                             data-lanes = <2 1 3 0>;
-> > > -                             lane-polarities = <0 1 0 1>;
-> > > -                             remote-endpoint = <&edp_panel_in>;
-> > > -                     };
-> > > -             };
-> > > -     };
-> > > -}
-> > > diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > > new file mode 100644
-> > > index 000000000000..6d7d40ad45ac
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> > > @@ -0,0 +1,279 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: SN65DSI86 DSI to eDP bridge chip
-> > > +
-> > > +maintainers:
-> > > +  - Sandeep Panda <spanda@codeaurora.org>
-> > > +
-> > > +description: |
-> > > +  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
-> > > +  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: ti,sn65dsi86
-> > > +
-> > > +  reg:
-> > > +    const: 0x2d
-> > > +
-> > > +  enable-gpios:
-> > > +    maxItems: 1
-> > > +    description: GPIO specifier for bridge_en pin (active high).
-> > > +
-> > > +  suspend-gpios:
-> > > +    maxItems: 1
-> > > +    description: GPIO specifier for GPIO1 pin on bridge (active low).
-> > > +
-> > > +  vccio-supply:
-> > > +    description: A 1.8V supply that powers the digital IOs.
-> > > +
-> > > +  vpll-supply:
-> > > +    description: A 1.8V supply that powers the DisplayPort PLL.
-> > > +
-> > > +  vcca-supply:
-> > > +    description: A 1.2V supply that powers the analog circuits.
-> > > +
-> > > +  vcc-supply:
-> > > +    description: A 1.2V supply that powers the digital core.
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      Clock specifier for input reference clock. The reference clock rate must
-> > > +      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-> > > +
-> > > +  clock-names:
-> > > +    const: refclk
-> > > +
-> > > +  gpio-controller: true
-> > > +  '#gpio-cells':
-> > > +    const: 2
-> > > +    description:
-> > > +      First cell is pin number, second cell is flags.  GPIO pin numbers are
-> > > +      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
-> > > +      information.
-> > > +
-> > > +  '#pwm-cells':
-> > > +    const: 1
-> > > +    description: See ../../pwm/pwm.yaml for description of the cell formats.
-> > > +
-> > > +  ports:
-> > > +    type: object
-> >
-> > Maybe
-> >
-> >     additionalProperties: false
-> >
-> > here ?
->
-> Ah, this is to keep people from adding "additionalProperties" under
-> the ports node.  I will hold off on sending v5 for now.  If there
-> happens to be nothing else wrong I'm happy for this to be added by a
-> maintainer when landing or I can quickly spin a v5.
->
->
-> > > +
-> > > +    properties:
-> > > +      "#address-cells":
-> > > +        const: 1
-> > > +
-> > > +      "#size-cells":
-> > > +        const: 0
-> > > +
-> > > +      port@0:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > > +
-> > > +        description:
-> > > +          Video port for MIPI DSI input
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            const: 0
-> > > +
-> > > +          endpoint:
-> > > +            type: object
-> > > +            additionalProperties: false
-> > > +
-> > > +            properties:
-> > > +              remote-endpoint: true
-> > > +
-> > > +              data-lanes:
-> > > +                minItems: 1
-> > > +                maxItems: 4
-> > > +                items:
-> > > +                  enum:
-> > > +                    - 0
-> > > +                    - 1
-> > > +                    - 2
-> > > +                    - 3
-> > > +                description: See ../../media/video-interface.txt
-> >
-> > And maybe
-> >                 uniqueItems: true
-> >
-> > ? Same for port@1.
->
-> Sounds good.  Again, I'll hold off on sending v5 for now and (if no
-> other problems) happy if this gets done when applied.
->
->
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Agreed - adding setting only via the SET_CONFIG ioctl is a bit of a
+hack, and a v2 of the uAPI is required to add it to the requests, and
+to add the debounce value to the info.
 
-I didn't want to churn the whole series, so I ended up posting a patch
-that addressed the issues you mentioned and a few others.  It could be
-squashed into this patch if desired.  I'm also happy to re-post this
-series with that patch squashed in.  See:
+> This would of course add a lot of cruft to the uAPI code. I'd start by
+> moving it out of drivers/gpio/gpiolib.c into a new file:
+> drivers/gpio/gpiolib-cdev.c. This way we'd have everything related to
+> the character device in one place. It would make it easier to: a) add
+> a config option for disabling it entirely and b) add a config option
+> to disable the v1 of the ioctl()s.
+> 
 
-https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid
+Ok, that is widening the scope of the change again, but I'm still willing
+to have a go at it.  Wrt a v2, I was considering re-organising how the
+flag field works, generally using it to indicate the presence of other
+fields in the request, rather than trying to encode a capability just in
+the flags.  e.g. direction, drive, bias and debounce would each have a
+single flag as well as a field, or fields, containing their actual value.
+
+For requests and sets, the flags indicate the capabilities being
+explicitly set.  For info it would indicate the fields populated.
+
+This would simplify and clarify what combinations of flags actually make
+sense and what is actually being set or left unchanged.
+
+Polarity (ActiveLow) is a bit different, as it is purely a binary and is
+always set, one way or the other, so it could remain just a flag.
+
+If we need to add a new capability then we use the next bit in the flags
+and some of the padding reserved for future use for the field(s).
+
+Does that make sense?
+
+I am also wondering if we could merge the handle and event requests by
+making edge detection just another capability?  Maybe there is something
+I'm missing here.  What was the rationale for them being separate?
+
+Cheers,
+Kent.
+
+> I also Cc'ed Andy who may have some better ideas.
+> 
+> Linus: about the software-debounce you mentioned: do you think it
+> somehow plugs the hole we identified here?
+> 
+> Bart
