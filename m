@@ -2,69 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A05501CBAC5
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 May 2020 00:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D0D51CBAD2
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 May 2020 00:37:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgEHWer (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 May 2020 18:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39584 "EHLO
+        id S1727787AbgEHWh5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 May 2020 18:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726843AbgEHWeq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 May 2020 18:34:46 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65C26C061A0C
-        for <linux-gpio@vger.kernel.org>; Fri,  8 May 2020 15:34:46 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id a21so3314584ljb.9
-        for <linux-gpio@vger.kernel.org>; Fri, 08 May 2020 15:34:46 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1727774AbgEHWh4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 May 2020 18:37:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B4AC05BD43
+        for <linux-gpio@vger.kernel.org>; Fri,  8 May 2020 15:37:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id a21so3320767ljb.9
+        for <linux-gpio@vger.kernel.org>; Fri, 08 May 2020 15:37:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BXwbWaHXMtb8aBEDEibSiOBVYwNW7SPw/Ax2lzczNs8=;
-        b=Qii0m1KDqgMTZAEfPBuv5upZmPTjwDVGpQVNeBRr5tjK2vq0rm/bWI/fdqrRMe68A6
-         7WftQXv9fRiogg4svXJYLeoXZ/B8TTR0x3mMCJFcunLCyK+N/+eewX91sZrw/uVCJIea
-         dvvosWt2jO98SLDkkzvcKL3cc8jaHyOKBPCrwx6U09j9O+cOWWXZ6OVFtpuPK+a6vM9g
-         Gxf+qJQ0PLqAFuNTXKmc/i81K0rMvg1/454x1jbrRgdmB0UJ6Q6KXPdM/KJQrhckDeRp
-         FUYnsPgDEfjoYxh42+P70hrJBX/Rzv3Uug7HHoK5lcAzC5NFHW8NUhRNJVIdf5btcsEt
-         FElw==
+        bh=ZlYo6LZ2gpdvKx2XP7UDcJkPEoiNb0owpdOZ1yEc1Mg=;
+        b=r0n6p4DB0bWrlcjLZw0RSl3bAyAzRXd/zLX7d0rs4qadWsSsdFsQvAc4wycpHhd4YO
+         FoU7YYDi7P9iavRROvBNdXjoQETN/jOU5/4xC7jHu7q8Rq6xO7Id4EC9dgbQQL9zIXAv
+         QtmeP0BMlwAsv/+b0XCeI/Py0x92giTi6Bzze1lbvf000MouECQTn+GTuwTvlI2Zaumo
+         3Lf6rIzPjl3fLqraHDnXDvORWf+tDz9ui6KwDApwETx0LhjqExvI5vuGNMxMFjOqdiEK
+         E0s+GhMGHozYDM1qmoXckawjGNjkcAIxzNSaCxpMy5dlaxWIWfGFGrokciZfx7aEWUf7
+         KbOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BXwbWaHXMtb8aBEDEibSiOBVYwNW7SPw/Ax2lzczNs8=;
-        b=P2fU+kiUe2udSpAs5iU/H6SNlMlkHh84Vc7swGT79TZJY7aW+9AYSfU21jWN8ifF//
-         NaIO7UKISnzQTJlwNtyUnwXreQ3mh3ek1u5Fg8qCR2NEKUzMLQUsB6yuFzeRIKoUPWJ7
-         3WVfdlj0Qd1FH+UgNYlMyCpLN67bllfThu7pZ9z6YS/NFQPFewvGauDUa6mmaTym69Bv
-         CrCK0+5rTOX4eI/kBre+tzMTOqgoruOqg7ElgyFZIv+PP49CQLZ1+GsRLxNfgOkQ+c5R
-         3CovURRZ7BgtTsAXEzwC17XQnCSDJ3qC4UU3mtg+jJ6dFswBHR8UVZ1rWU+zX2I5ow3B
-         O9eg==
-X-Gm-Message-State: AOAM530GQhqgHj58fLlusld+fPyUf7LMa18as9kr28qCE5837dUqvuZG
-        0nTG7RsYlOWtDSwKtXNljioJvzKXQHZwwe2kzXqKzg==
-X-Google-Smtp-Source: ABdhPJyqdy8GVt242YW9aRv0VDsu2KW/zyvl1R0dzJZGYXaywhb25l9p5qI2mp4n0+hwrOagsZygnypxTny8fKlhri0=
-X-Received: by 2002:a2e:2ac2:: with SMTP id q185mr2996899ljq.125.1588977284548;
- Fri, 08 May 2020 15:34:44 -0700 (PDT)
+        bh=ZlYo6LZ2gpdvKx2XP7UDcJkPEoiNb0owpdOZ1yEc1Mg=;
+        b=bUW/KmlJ4bNcF47k9sG1o4eOLC26YPyY2qb+mkLdFYG4YFO5ELoBzKHTtTBENF+Z9g
+         z4dSutjMmTwIc8HU8se1fG6M/lRJ0skpocjYsYw/rTrMsrhQJcthEfTpI/TNxvgeUbZR
+         TmBBhUagK55gN8j8pLzVgti2xVNbs7XMUStetZOBYa9sDr/ZXvbDN/nATZodqCDMPwMc
+         Eb0GlQWDeccYp/pjysHAnfG0C9w7VTWzIgQjMsiiCZ+5R95izHpncTtSCzEGnv+JVglB
+         8ZmzAUnB8s9cF2x5p/gb8x/rohq6LQG/ogauvSx3RYidNka0vYs34f5913osHCZfkJD9
+         /MHQ==
+X-Gm-Message-State: AOAM53251Fnd04BVePv6f66QmrMubPeuXYN4Mf8/7ZPCNlyQAbXz+U74
+        6ruulHGHPyuMGXBx5sKx1ZhS1bMu+E2I4lnIcrm8NA==
+X-Google-Smtp-Source: ABdhPJwDt7XzSPqwCMNilNpy09YDkKREai65X3sDGcBHM2TEacPehqO+GwHDIh/0lGk9YRvw8iDzZDUlUbMHBuvKTjA=
+X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr3239576ljm.39.1588977474765;
+ Fri, 08 May 2020 15:37:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505164559.2143-1-brgl@bgdev.pl>
-In-Reply-To: <20200505164559.2143-1-brgl@bgdev.pl>
+References: <20200430084909.1599-1-geert+renesas@glider.be>
+In-Reply-To: <20200430084909.1599-1-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 9 May 2020 00:34:33 +0200
-Message-ID: <CACRpkdYVtaEKsdWOZz7t3bEQyPpQ8UXksOqOUXMuvC=-A7LXHA@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: updates for v5.8-rc1 (part 1)
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 9 May 2020 00:37:43 +0200
+Message-ID: <CACRpkdaz12TVFhggYMWGDeiSD+AJHRjsLE5WGOZCpcWK_-FqWg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.8
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 5, 2020 at 6:46 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Apr 30, 2020 at 10:49 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> please pull the following batch of updates for v5.8 I picked up into
-> my tree.
+> The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+>
+>   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.8-tag1
+>
+> for you to fetch changes up to 41fe32ecc7aff4527a4ee477870d9b1164be95a4:
+>
+>   MAINTAINERS: Add DT Bindings for Renesas Pin Function Controllers (2020-04-20 13:14:05 +0200)
 
-Pulled in to my devel branch, thanks a ton!
+Pulled in to my devel branch, thanks!
 
 Yours,
 Linus Walleij
