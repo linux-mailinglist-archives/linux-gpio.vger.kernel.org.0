@@ -2,129 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3FD11CB415
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2020 17:55:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6C51CB571
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2020 19:13:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgEHPzP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 May 2020 11:55:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57011 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726770AbgEHPzO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 May 2020 11:55:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588953313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o2NuVDMsNek1XqDZ23KXOT0aYU3U9mtuti+eij0cQ3Y=;
-        b=HTy0LP80TBlJ0td1X6hUOfBc0VINV17hEJUBeOoqpmYBDJ5iV72NaVB8nREn37l0OCHTU8
-        KrsIqbd0GeyrM/rC4YgsDVPFx1UUSX1JRfddT+4tUAIDhvGZJMvaoyiNDo7IY6r0TmgO7/
-        y5iPg2bDQCjQGMV3BaakDuiKxYs0vTM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-tB1ktjf7Nd6ZDjXX8AJRsw-1; Fri, 08 May 2020 11:55:11 -0400
-X-MC-Unique: tB1ktjf7Nd6ZDjXX8AJRsw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727859AbgEHRNc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 May 2020 13:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbgEHRNb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 8 May 2020 13:13:31 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59A41107ACCA;
-        Fri,  8 May 2020 15:55:09 +0000 (UTC)
-Received: from w520.home (ovpn-113-111.phx2.redhat.com [10.3.113.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 615F6341E3;
-        Fri,  8 May 2020 15:55:08 +0000 (UTC)
-Date:   Fri, 8 May 2020 09:55:07 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 08/12] vfio: use __anon_inode_getfd
-Message-ID: <20200508095507.54051943@w520.home>
-In-Reply-To: <20200508153634.249933-9-hch@lst.de>
-References: <20200508153634.249933-1-hch@lst.de>
-        <20200508153634.249933-9-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6892192A;
+        Fri,  8 May 2020 17:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588958011;
+        bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=pSqawFDd76MgRyToBM4GrmZnPrfhoRCCqOjCZp1j9YT7EJe1vdGGbozD9MIXSdw/L
+         FGR6AumafkY52sb47IYMlOE06dvz2uBlovSRPbvHswEFpV2Z1mMPEN7M57zpugdQOo
+         e7CH7dlCgzb3mD5q68T8j6b8yZsHdPRdACerkg4A=
+Date:   Fri, 08 May 2020 18:13:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     robh@kernel.org, linus.walleij@linaro.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        lee.jones@linaro.org
+Cc:     linux-gpio@vger.kernel.org, bgoswami@codeaurora.org,
+        linux-kernel@vger.kernel.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        spapothi@codeaurora.org
+In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 00/12] ASoC: Add support to WCD9340/WCD9341 codec
+Message-Id: <158895800277.30774.11001800526381716360.b4-ty@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri,  8 May 2020 17:36:30 +0200
-Christoph Hellwig <hch@lst.de> wrote:
-
-> Use __anon_inode_getfd instead of opencoding the logic using
-> get_unused_fd_flags + anon_inode_getfile.
+On Thu, 21 Nov 2019 17:04:57 +0000, Srinivas Kandagatla wrote:
+> This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
+> is a standalone Hi-Fi audio codec IC.
+> This codec supports both I2S/I2C and SLIMbus audio interfaces.
+> On slimbus interface it supports two data lanes; 16 Tx ports
+> and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
+> Multibutton headset control (MBHC), Active noise cancellation,
+> Sidetone paths, MAD (mic activity detection) and codec processing engine.
+> It supports Class-H differential earpiece out and stereo single
+> ended headphones out.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/vfio/vfio.c | 37 ++++++++-----------------------------
->  1 file changed, 8 insertions(+), 29 deletions(-)
+> [...]
 
+Applied to
+
+   local tree regulator/for-5.7
 
 Thanks!
 
-Acked-by: Alex Williamson <alex.williamson@redhat.com>
+[01/12] dt-bindings: SLIMBus: add slim devices optional properties
+        (no commit info)
+[02/12] ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
+        (no commit info)
+[03/12] mfd: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[04/12] ASoC: wcd934x: add support to wcd9340/wcd9341 codec
+        (no commit info)
+[05/12] ASoC: wcd934x: add basic controls
+        (no commit info)
+[06/12] ASoC: wcd934x: add playback dapm widgets
+        (no commit info)
+[07/12] ASoC: wcd934x: add capture dapm widgets
+        (no commit info)
+[08/12] ASoC: wcd934x: add audio routings
+        (no commit info)
+[09/12] dt-bindings: gpio: wcd934x: Add bindings for gpio
+        (no commit info)
+[10/12] gpio: wcd934x: Add support to wcd934x gpio controller
+        (no commit info)
+[11/12] ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
+        (no commit info)
+[12/12] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
+        (no commit info)
 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index 765e0e5d83ed9..33a88103f857f 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -1451,42 +1451,21 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
->  		return ret;
->  	}
->  
-> -	/*
-> -	 * We can't use anon_inode_getfd() because we need to modify
-> -	 * the f_mode flags directly to allow more than just ioctls
-> -	 */
-> -	ret = get_unused_fd_flags(O_CLOEXEC);
-> -	if (ret < 0) {
-> -		device->ops->release(device->device_data);
-> -		vfio_device_put(device);
-> -		return ret;
-> -	}
-> -
-> -	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
-> -				   device, O_RDWR);
-> -	if (IS_ERR(filep)) {
-> -		put_unused_fd(ret);
-> -		ret = PTR_ERR(filep);
-> -		device->ops->release(device->device_data);
-> -		vfio_device_put(device);
-> -		return ret;
-> -	}
-> -
-> -	/*
-> -	 * TODO: add an anon_inode interface to do this.
-> -	 * Appears to be missing by lack of need rather than
-> -	 * explicitly prevented.  Now there's need.
-> -	 */
-> +	ret = __anon_inode_getfd("[vfio-device]", &vfio_device_fops,
-> +				   device, O_CLOEXEC | O_RDWR, &filep);
-> +	if (ret < 0)
-> +		goto release;
->  	filep->f_mode |= (FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE);
-> -
->  	atomic_inc(&group->container_users);
-> -
->  	fd_install(ret, filep);
->  
->  	if (group->noiommu)
->  		dev_warn(device->dev, "vfio-noiommu device opened by user "
->  			 "(%s:%d)\n", current->comm, task_pid_nr(current));
-> -
-> +	return ret;
-> +release:
-> +	device->ops->release(device->device_data);
-> +	vfio_device_put(device);
->  	return ret;
->  }
->  
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
