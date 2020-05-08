@@ -2,104 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6C51CB571
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2020 19:13:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DACC1CB60C
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 May 2020 19:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgEHRNc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 May 2020 13:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbgEHRNb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 May 2020 13:13:31 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6892192A;
-        Fri,  8 May 2020 17:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588958011;
-        bh=gLM9qUvxrYiPMfAOqRJ1PoOf5M7hFr7u2n4CEILO50I=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pSqawFDd76MgRyToBM4GrmZnPrfhoRCCqOjCZp1j9YT7EJe1vdGGbozD9MIXSdw/L
-         FGR6AumafkY52sb47IYMlOE06dvz2uBlovSRPbvHswEFpV2Z1mMPEN7M57zpugdQOo
-         e7CH7dlCgzb3mD5q68T8j6b8yZsHdPRdACerkg4A=
-Date:   Fri, 08 May 2020 18:13:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     robh@kernel.org, linus.walleij@linaro.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        lee.jones@linaro.org
-Cc:     linux-gpio@vger.kernel.org, bgoswami@codeaurora.org,
-        linux-kernel@vger.kernel.org, vinod.koul@linaro.org,
-        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        spapothi@codeaurora.org
-In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
-References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 00/12] ASoC: Add support to WCD9340/WCD9341 codec
-Message-Id: <158895800277.30774.11001800526381716360.b4-ty@kernel.org>
+        id S1726913AbgEHRcx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 May 2020 13:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726746AbgEHRcx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 May 2020 13:32:53 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62700C061A0C;
+        Fri,  8 May 2020 10:32:53 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id h26so1926535qtu.8;
+        Fri, 08 May 2020 10:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8u1vbu5bJ69YihL8GWipXODDQVOvMStlxTqzIrRkPUQ=;
+        b=CevGhA3drB9rx9GAhf7Jd40EnNtr3XglCd18jTPTpJsgn56s0Q9ZugmY0aQqMnSGTH
+         7aagHQfF3X78TVXApqMaxjd66mhtOXvmL/4HYUWJW/adXA8e8n5GfPBPmQNAL19OfDE5
+         LKmSVl8km7PxkynymVQEPV4lk577a7G6pryLd8OTLGPtsbCEaAV29/jnVDoGOchK+oXF
+         ADZkHhl+hkYYLZCeFVTd3IXBBgi7Vcs9qr0dwPmfQ9/ULwOPvDSa/PgxDmkfuyvSzJ6H
+         sC+yukRWl+pPdTIl3k+mflFAJ1SndgezVfhRdzQGFW2qCsOZjs94dn27Zb6+yY1dofoM
+         xFPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8u1vbu5bJ69YihL8GWipXODDQVOvMStlxTqzIrRkPUQ=;
+        b=RN422PLdjE8go6AuR72FJuTgiBzmtnpYBWzaGZYP3BNaZGF4ofuRufgeE4QXVRyFXS
+         wT6Uqp4sZb8OzRfgzSlVEHpCPSzJHK4+SX0n2pLrZTG7qjNKk0W3Rvri0CJYSilJXc/H
+         4kL8nlGnSVgj6O0wEhLFBWL3sMvvQtsNBfHfbyLPqFUpfCXSsojm9Bi/u2vKBWbxJyUZ
+         5Rbzwv+mK39nx495fsByG58gzAwTOXGSK9UwSEBZJuJ1VYo5iWkDVYK3k/kBBMfEoXM6
+         eR17In0P35gkRK9xxc8aYddKHScusjFhJYNdGmUDIIBnISNwRrS1TqFdXqG+HzTdAwDP
+         E0kA==
+X-Gm-Message-State: AGi0PuZ/W84N46cblyjD6WQwXcQ/wTq7XnqgYu3XaKJNd1Qcr0JiEJ15
+        xLZnwcQyn9sZVQX4X0JqcqDx0CoSRnww8Z3Mk1kJPgN0
+X-Google-Smtp-Source: APiQypI1ltj7u5Bq7am8qePoEo4cQ/trbraNCdyogcK0LAAg4BY0jq2I7/GsLnM1GzSePjDroYbXz+4CAgFA1/GrFDU=
+X-Received: by 2002:ac8:51d3:: with SMTP id d19mr4033765qtn.141.1588959172426;
+ Fri, 08 May 2020 10:32:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508153634.249933-1-hch@lst.de> <20200508153634.249933-5-hch@lst.de>
+In-Reply-To: <20200508153634.249933-5-hch@lst.de>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 8 May 2020 10:32:41 -0700
+Message-ID: <CAEf4BzZ-gE87RVLPHGBfoNhHB+H7AnPbb7UUE7EGq8T5p_en_w@mail.gmail.com>
+Subject: Re: [PATCH 04/12] bpf: use __anon_inode_getfd
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-integrity@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 21 Nov 2019 17:04:57 +0000, Srinivas Kandagatla wrote:
-> This patchset adds support to Qualcomm WCD9340/WCD9341 Codec which
-> is a standalone Hi-Fi audio codec IC.
-> This codec supports both I2S/I2C and SLIMbus audio interfaces.
-> On slimbus interface it supports two data lanes; 16 Tx ports
-> and 8 Rx ports. It has Five DACs and seven dedicated interpolators,
-> Multibutton headset control (MBHC), Active noise cancellation,
-> Sidetone paths, MAD (mic activity detection) and codec processing engine.
-> It supports Class-H differential earpiece out and stereo single
-> ended headphones out.
-> 
-> [...]
+On Fri, May 8, 2020 at 8:39 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Use __anon_inode_getfd instead of opencoding the logic using
+> get_unused_fd_flags + anon_inode_getfile.  Also switch the
+> bpf_link_new_file calling conventions to match __anon_inode_getfd.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/bpf.h  |  2 +-
+>  kernel/bpf/cgroup.c  |  6 +++---
+>  kernel/bpf/syscall.c | 31 +++++++++----------------------
+>  3 files changed, 13 insertions(+), 26 deletions(-)
+>
 
-Applied to
+[...]
 
-   local tree regulator/for-5.7
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 64783da342020..cb2364e17423c 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -2307,23 +2307,10 @@ int bpf_link_new_fd(struct bpf_link *link)
+>   * complicated and expensive operations and should be delayed until all the fd
+>   * reservation and anon_inode creation succeeds.
+>   */
 
-Thanks!
+The comment above explains the reason why we do want to split getting
+fd, getting file, and installing fd later. I'd like to keep it this
+way. Also, this code was refactored in bpf-next by [0] (it still uses
+get_unused_fd_flag + anon_inode_getfile + fd_install, by design).
 
-[01/12] dt-bindings: SLIMBus: add slim devices optional properties
-        (no commit info)
-[02/12] ASoC: dt-bindings: add dt bindings for WCD9340/WCD9341 audio codec
-        (no commit info)
-[03/12] mfd: wcd934x: add support to wcd9340/wcd9341 codec
-        (no commit info)
-[04/12] ASoC: wcd934x: add support to wcd9340/wcd9341 codec
-        (no commit info)
-[05/12] ASoC: wcd934x: add basic controls
-        (no commit info)
-[06/12] ASoC: wcd934x: add playback dapm widgets
-        (no commit info)
-[07/12] ASoC: wcd934x: add capture dapm widgets
-        (no commit info)
-[08/12] ASoC: wcd934x: add audio routings
-        (no commit info)
-[09/12] dt-bindings: gpio: wcd934x: Add bindings for gpio
-        (no commit info)
-[10/12] gpio: wcd934x: Add support to wcd934x gpio controller
-        (no commit info)
-[11/12] ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
-        (no commit info)
-[12/12] ASoC: qcom: sdm845: add support to DB845c and Lenovo Yoga
-        (no commit info)
+  [0] https://patchwork.ozlabs.org/project/netdev/patch/20200429001614.1544-3-andriin@fb.com/
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+> -struct file *bpf_link_new_file(struct bpf_link *link, int *reserved_fd)
+> +int bpf_link_new_file(struct bpf_link *link, struct file **file)
+>  {
+> -       struct file *file;
+> -       int fd;
+> -
+> -       fd = get_unused_fd_flags(O_CLOEXEC);
+> -       if (fd < 0)
+> -               return ERR_PTR(fd);
+> -
+> -       file = anon_inode_getfile("bpf_link", &bpf_link_fops, link, O_CLOEXEC);
+> -       if (IS_ERR(file)) {
+> -               put_unused_fd(fd);
+> -               return file;
+> -       }
+> -
+> -       *reserved_fd = fd;
+> -       return file;
+> +       return __anon_inode_getfd("bpf_link", &bpf_link_fops, link, O_CLOEXEC,
+> +                       file);
+>  }
+>
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+[...]
