@@ -2,69 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F31C91CC07D
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 May 2020 12:44:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E33D91CC093
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 May 2020 12:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgEIKom (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 May 2020 06:44:42 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46222 "EHLO inva021.nxp.com"
+        id S1726017AbgEIK4z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 9 May 2020 06:56:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4290 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728130AbgEIKoj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 9 May 2020 06:44:39 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D9AF7200102;
-        Sat,  9 May 2020 12:44:37 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3F772002EE;
-        Sat,  9 May 2020 12:44:34 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 90B0540302;
-        Sat,  9 May 2020 18:44:30 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     u-boot@linux.nxdi.nxp.com, jiafei.pan@nxp.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        "hui.song" <hui.song_1@nxp.com>
-Subject: [PATCH v1 3/3] dm: armv8: gpio: include <asm/arch/gpio.h> for fsl-layerscape
-Date:   Sat,  9 May 2020 18:39:56 +0800
-Message-Id: <20200509103956.26038-3-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200509103956.26038-1-hui.song_1@nxp.com>
-References: <20200509103956.26038-1-hui.song_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725920AbgEIK4y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 9 May 2020 06:56:54 -0400
+IronPort-SDR: Z27Gc4PkcG43JNePMpXX7YYqdjl/0itEjtYlff5gzykCtBq+RKfKuxwjPxptGho+xUfcSb0BIF
+ n5fz8KBmcmSg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2020 03:56:54 -0700
+IronPort-SDR: Np/EVguwn9niHRc1/sz8xi4/Mc1zaHSmcmS+d/9HMlimLZE/EMwGl/wBukUn91YrXHl7HHWlJ6
+ ZCEM8U7pzkKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,371,1583222400"; 
+   d="scan'208";a="305731355"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 May 2020 03:56:52 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jXNA4-0001nZ-4S; Sat, 09 May 2020 18:56:52 +0800
+Date:   Sat, 09 May 2020 18:56:03 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:for-next] BUILD SUCCESS
+ aa0334bd4c82739553e96a60c732279e4bc643c5
+Message-ID: <5eb68c43.wSTvDSglu57gff0G%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: "hui.song" <hui.song_1@nxp.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: aa0334bd4c82739553e96a60c732279e4bc643c5  Merge branch 'devel' into for-next
 
-Enable the gpio feature on fsl-layerscape platform.
+elapsed time: 731m
 
-Signed-off-by: hui.song <hui.song_1@nxp.com>
+configs tested: 98
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+alpha                            allyesconfig
+nds32                               defconfig
+sparc64                             defconfig
+parisc                              defconfig
+csky                                defconfig
+nios2                               defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+microblaze                       allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a005-20200509
+i386                 randconfig-a004-20200509
+i386                 randconfig-a003-20200509
+i386                 randconfig-a002-20200509
+i386                 randconfig-a001-20200509
+i386                 randconfig-a006-20200509
+x86_64               randconfig-a015-20200509
+x86_64               randconfig-a014-20200509
+x86_64               randconfig-a011-20200509
+x86_64               randconfig-a013-20200509
+x86_64               randconfig-a012-20200509
+x86_64               randconfig-a016-20200509
+i386                 randconfig-a012-20200509
+i386                 randconfig-a014-20200509
+i386                 randconfig-a016-20200509
+i386                 randconfig-a011-20200509
+i386                 randconfig-a013-20200509
+i386                 randconfig-a015-20200509
+riscv                            allyesconfig
+riscv                               defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+sparc                               defconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
 ---
- arch/arm/include/asm/gpio.h | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
-index 333e407b66..7715a01706 100644
---- a/arch/arm/include/asm/gpio.h
-+++ b/arch/arm/include/asm/gpio.h
-@@ -1,12 +1,8 @@
- #if !defined(CONFIG_ARCH_UNIPHIER) && !defined(CONFIG_ARCH_STI) && \
- 	!defined(CONFIG_ARCH_K3) && !defined(CONFIG_ARCH_BCM68360) && \
- 	!defined(CONFIG_ARCH_BCM6858) && !defined(CONFIG_ARCH_BCM63158) && \
--	!defined(CONFIG_ARCH_ROCKCHIP) && !defined(CONFIG_ARCH_LX2160A) && \
--	!defined(CONFIG_ARCH_LS1028A) && !defined(CONFIG_ARCH_LS2080A) && \
--	!defined(CONFIG_ARCH_LS1088A) && !defined(CONFIG_ARCH_ASPEED) && \
--	!defined(CONFIG_ARCH_LS1012A) && !defined(CONFIG_ARCH_LS1043A) && \
--	!defined(CONFIG_ARCH_LS1046A) && !defined(CONFIG_ARCH_U8500) && \
--	!defined(CONFIG_CORTINA_PLATFORM)
-+	!defined(CONFIG_ARCH_ROCKCHIP) && !defined(CONFIG_ARCH_ASPEED) && \
-+	!defined(CONFIG_ARCH_U8500) && !defined(CONFIG_CORTINA_PLATFORM)
- #include <asm/arch/gpio.h>
- #endif
- #include <asm-generic/gpio.h>
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
