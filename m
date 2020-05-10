@@ -2,207 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C6921CC502
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 May 2020 00:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332B61CCD27
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 May 2020 21:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgEIWs6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 9 May 2020 18:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        id S1728763AbgEJTFv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 10 May 2020 15:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgEIWs6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 9 May 2020 18:48:58 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F52C061A0C
-        for <linux-gpio@vger.kernel.org>; Sat,  9 May 2020 15:48:57 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id 47so2052422uaj.12
-        for <linux-gpio@vger.kernel.org>; Sat, 09 May 2020 15:48:57 -0700 (PDT)
+        with ESMTP id S1728385AbgEJTFu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 10 May 2020 15:05:50 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4567C061A0C;
+        Sun, 10 May 2020 12:05:50 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d22so3495231pgk.3;
+        Sun, 10 May 2020 12:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=n1z6oppBATgO51fKBm6uoe5dBY+8qJAJ+NcU9svBiBE=;
-        b=UDXkhZzqvn6HISO/zwZFZ7FZVudKN1BUwwPpa1bhMiQAp57zi77qXCZkWGSGbJnaj+
-         CpidWsT8xIRgF3KBvMaUmHntjppKEZZbn2EZCUsY4wsc5xKCasW7y1lBeLcBAmQozU70
-         +WBgYOmN9SKxTya/oya8RORLtmXdR1BuD2x84=
+        bh=TrDysAnyzIqn5Cn1iMOx1jHu5Zp3yUHwKX37t/G/0oo=;
+        b=Tusd/kAIJ93DCgBlGio6JGtGTJMloGM3X+oLDhyeqDPqSqCXLICnX9B8HMn/Jd0Tik
+         +k7rp+0JfNDOaOh23t8jMPC6KRZz/xaa8oDPLQ+uXPvlcS1bGZ1DLNaxEcN5K35fNAUQ
+         K4+XmSRSvOCSjx8VciY3xSCCEOJy8x4ot1c6rf6Kzelxqy31GZ+6vunnB01XxySlLljG
+         nKgOxJLV8Qb0HRTMNhZNqOejR93rP3pryODWevJvGCthrkNvR2P1xPBlvkfvmDyxSxTH
+         wJlGEMaTgD4KvDzqEGV1cq7HxVl6HOFnLM2W1f9zS4HlohudcR0q29xfWtlTGa7bPjpw
+         Je0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=n1z6oppBATgO51fKBm6uoe5dBY+8qJAJ+NcU9svBiBE=;
-        b=OZ5cb/QYJGWNjGYPinah3cg6VDinf+LASYucNsRPQBmGGE5oQ7QWS9K0Ar0flBZVDg
-         eeLNZqiHVxXWv78e2ZwMvnA5ySri7ODGYohk2547xGZdP1ClY5fEiXJiaK9BnMMWAk4M
-         WwABskU4BTZv5hTdvJtROmf5zLzIzwbXAnv6D7+zX3gNtrpiQpZ2FP+S9DK0bmQXofOb
-         xT52GxzqavXQGIg0mm/Iu+KI56rPN+JStTBbDZtMH551ihkYk9epgb765QTtQSva6p6Q
-         Lxakq8yFfD2spuxswjqnscyUqOgqk9pO4S6aJi84/VSsOmEpXdWDHvkhjms6iT1rTw8t
-         CnBw==
-X-Gm-Message-State: AGi0PuZnUYUcaKCAwNP+Pz24pZ1r5sL0xdNHyS1uPDdVmHagdBtQiFVk
-        +OoXY2qn8LyHFp/s1b4hNTIqXoaRp/Y=
-X-Google-Smtp-Source: APiQypIetQeRrdwf2gEKTZNxGN19T/OsWKPFvKdZTQV+GFlp+c04wqJUqccPp9hnE34SvqIg84bhzw==
-X-Received: by 2002:ab0:634c:: with SMTP id f12mr6582137uap.55.1589064536382;
-        Sat, 09 May 2020 15:48:56 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id 64sm5342179vkx.12.2020.05.09.15.48.54
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 May 2020 15:48:55 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id 36so2046718uaf.9
-        for <linux-gpio@vger.kernel.org>; Sat, 09 May 2020 15:48:54 -0700 (PDT)
-X-Received: by 2002:ab0:b13:: with SMTP id b19mr6914696uak.91.1589064534355;
- Sat, 09 May 2020 15:48:54 -0700 (PDT)
+        bh=TrDysAnyzIqn5Cn1iMOx1jHu5Zp3yUHwKX37t/G/0oo=;
+        b=nU3K3FfvENJIKEtD5yCrNbaiuNwQbD91+pmL60KA3Kz6h6+pohF9PfK3yrhVifU8LA
+         W7AAgVwMgBp/2MMqZE2vq5nMuZ0+6OjwO2bGoAmqXtrMc0PolQwXdlwORb6nvU4bIiMz
+         kGp10xYT+YDmZbMtJoxuXQ2aJSFErjHLpoEkesjnyK9ipabcFdM8LKLglOrq22MpVpup
+         WA1128OOgT0MVCWgCCVOBzIvo1Ugr4lOAuZwzFfbghSbMO01wBo2rGS4KzvMDjG+C5LW
+         mX+yvpOX+g6n1ZpvDNMdLi0497Qxhr+BHq4ABwuAzK9tylffTogQW+4DWsaREJwOd0m5
+         hcSw==
+X-Gm-Message-State: AGi0PuZncimxjfZ58V9lpjl7wxFboiksifoxXxSDedQErzw2tXLPuw7D
+        pJYaZWDaMi18vK1P2cZGgRpakmF1V15WTn3Modw=
+X-Google-Smtp-Source: APiQypLeReEsRK6CfvZljwNh3sLkBBj5r2qTM7yV0oIgFRo3EmuOUB97cNaBFdGIXnDDJM4DwzZIgvCMuvjhuSRGYZ8=
+X-Received: by 2002:a65:6251:: with SMTP id q17mr11271737pgv.4.1589137550161;
+ Sun, 10 May 2020 12:05:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200507213500.241695-1-dianders@chromium.org> <20200509201511.GD30802@ravnborg.org>
-In-Reply-To: <20200509201511.GD30802@ravnborg.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Sat, 9 May 2020 15:48:42 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
-Message-ID: <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for Hot
- Plug Detect
-To:     Sam Ravnborg <sam@ravnborg.org>, LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+References: <cover.1588460322.git.syednwaris@gmail.com> <20200504114109.GE185537@smile.fi.intel.com>
+ <20200504143638.GA4635@shinobu> <CAHp75Vf_vP1qM9x81dErPeaJ4-cK-GOMnmEkxkhPY2gCvtmVbA@mail.gmail.com>
+ <20200505145250.GA5979@shinobu> <CACG_h5pcb3uOn+or-6L8bMk3bBNFXWJre9C9pRi3hNgFxGkd_g@mail.gmail.com>
+In-Reply-To: <CACG_h5pcb3uOn+or-6L8bMk3bBNFXWJre9C9pRi3hNgFxGkd_g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 10 May 2020 22:05:38 +0300
+Message-ID: <CAHp75VcRztO-DPnUin-2TU9e10k0VViD7=S3ypQ0vQ=ittxNkw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Introduce the for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Sat, May 9, 2020 at 7:36 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+> On Tue, May 5, 2020 at 8:24 PM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
+> > On Tue, May 05, 2020 at 04:51:56PM +0300, Andy Shevchenko wrote:
+> > > On Mon, May 4, 2020 at 5:41 PM William Breathitt Gray
+> > > <vilhelm.gray@gmail.com> wrote:
+> > > > On Mon, May 04, 2020 at 02:41:09PM +0300, Andy Shevchenko wrote:
+> > > > > On Sun, May 03, 2020 at 04:38:36AM +0530, Syed Nayyar Waris wrote:
 
-On Sat, May 9, 2020 at 1:15 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Douglas.
->
-> On Thu, May 07, 2020 at 02:34:54PM -0700, Douglas Anderson wrote:
-> >
-> > As talked about in commit c2bfc223882d ("drm/bridge: ti-sn65dsi86:
-> > Remove the mystery delay"), the normal HPD pin on ti-sn65dsi86 is
-> > kinda useless, at least for embedded DisplayPort (eDP).  However,
-> > despite the fact that the actual HPD pin on the bridge is mostly
-> > useless for eDP, the concept of HPD for eDP still makes sense.  It
-> > allows us to optimize out a hardcoded delay that many panels need if
-> > HPD isn't hooked up.  Panel timing diagrams show HPD as one of the
-> > events to measure timing from and we have to assume the worst case if
-> > we can't actually read HPD.
-> >
-> > One way to use HPD for eDP without using the mostly useless HPD pin on
-> > ti-sn65dsi86 is to route the panel's HPD somewhere else in the system,
-> > like to a GPIO.  This works great because eDP panels aren't physically
-> > hotplugged.  That means the debouncing logic that caused us problems
-> > wasn't really needed and a raw GPIO works great.
-> >
-> > As per the above, a smart board designer would realize the value of
-> > HPD and choose to route it to a GPIO somewhere on the board to avoid
-> > the silly sn65dsi86 debouncing.  While said "smart designer" could
-> > theoretically route HPD anywhere on the board, a really smart designer
-> > would realize that there are several GPIOs on the bridge itself that
-> > are nearly useless for anything but this purpose and route HPD to one
-> > of those.
-> >
-> > This series of patches is intended to allow the scenario described
-> > above.
-> >
-> > This patch has been tested on a board that is not yet mainline.  On
-> > the hardware I have:
-> > - Panel spec says HPD could take up to 200 ms to come up, so without
-> >   HPD hooked up we need to delay 200 ms.
-> > - On my board the panel is powered by the same rail as the
-> >   touchscreen.  By chance of probe order the touchscreen comes up
-> >   first.  This means by the time we check HPD in ti_sn_bridge_enable()
-> >   it's already up.  Thus we can use the panel on 200 ms earlier.
-> > - If I measure HPD on this pane it comes up ~56 ms after the panel is
-> >   powered.  This means I can save 144 ms of delay.
-> >
-> > Side effects (though not main goals) of this series are:
-> > - ti-sn65dsi86 GPIOs are now exported in Linux.
-> > - ti-sn65dsi86 bindings are converted to yaml.
-> > - Common panel bindings now have "hpd-gpios" listed.
-> > - The simple-panel driver in Linux can delay in prepare based on
-> >   "hpd-gpios"
-> > - ti-sn65dsi86 bindings (and current user) now specifies "no-hpd"
-> >   if HPD isn't hooked up.
-> >
-> > Changes in v5:
-> > - Use of_xlate so that numbers in dts start at 1, not 0.
-> > - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-> >
-> > Changes in v4:
-> > - Don't include gpio.h
-> > - Use gpiochip_get_data() instead of container_of() to get data.
-> > - GPIOF_DIR_XXX => GPIO_LINE_DIRECTION_XXX
-> > - Use Linus W's favorite syntax to read a bit from a bitfield.
-> > - Define and use SN_GPIO_MUX_MASK.
-> > - Add a comment about why we use a bitmap for gchip_output.
-> > - Tacked on "or is otherwise unusable." to description.
-> >
-> > Changes in v3:
-> > - Becaue => Because
-> > - Add a kernel-doc to our pdata to clarify double-duty of gchip_output.
-> > - More comments about how powering off affects us (get_dir, dir_input).
-> > - Cleanup tail of ti_sn_setup_gpio_controller() to avoid one "return".
-> > - Use a bitmap rather than rolling my own.
-> > - Remind how gpio_get_optional() works in the commit message.
-> > - useful implement => useful to implement
-> >
-> > Changes in v2:
-> > - ("Export...GPIOs") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> > - ("dt-bindings: display: Add hpd-gpios to panel-common...") new for v2
-> > - ("simple...hpd-gpios") is 1/2 of replacement for ("Allow...bridge GPIOs")
-> > - specification => specifier.
-> > - power up => power.
-> > - Added back missing suspend-gpios.
-> > - data-lanes and lane-polarities are are the right place now.
-> > - endpoints don't need to be patternProperties.
-> > - Specified more details for data-lanes and lane-polarities.
-> > - Added old example back in, fixing bugs in it.
-> > - Example i2c bus is just called "i2c", not "i2c1" now.
-> > - ("dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd") new for v2.
-> > - ("arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza") new for v2.
-> >
-> > Douglas Anderson (6):
-> >   drm/bridge: ti-sn65dsi86: Export bridge GPIOs to Linux
-> >   dt-bindings: display: Add hpd-gpios to panel-common bindings
-> >   drm/panel-simple: Support hpd-gpios for delaying prepare()
-> >   dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-> >   dt-bindings: drm/bridge: ti-sn65dsi86: Document no-hpd
-> >   arm64: dts: sdm845: Add "no-hpd" to sn65dsi86 on cheza
->
-> Applied:
-> >   dt-bindings: display: Add hpd-gpios to panel-common bindings
-> >   drm/panel-simple: Support hpd-gpios for delaying prepare()
-> to drm-misc-next.
->
-> The others was missing reviews so we need to wait for feedback.
+...
 
-Thanks!
+> > > > > Looking into the last patches where we have examples I still do not see a
+> > > > > benefit of variadic clump sizes. power of 2 sizes would make sense (and be
+> > > > > optimized accordingly (64-bit, 32-bit).
 
-Given the previous feedback from Linus W, Stephen, and Laurent I
-expect things are good enough to land now, but it'd be good to get
-confirmation (I removed some of the previous tags just to get
-confirmation).  If we can get review tags early next week maybe it'll
-still be in time to land for 5.8?
+> > > > There is of course benefit in defining for_each_set_clump with clump
+> > > > sizes of powers of 2 (we can optimize for 32 and 64 bit sizes and avoid
+> > > > boundary checks that we know will not occur), but at the very least the
+> > > > variable size bitmap_set_value and bitmap_get_value provide significant
+> > > > benefit for the readability of the gpio-xilinx code:
+> > > >
+> > > >         bitmap_set_value(old, state[0], 0, width[0]);
+> > > >         bitmap_set_value(old, state[1], width[0], width[1]);
+> > > >         ...
+> > > >         state[0] = bitmap_get_value(new, 0, width[0]);
+> > > >         state[1] = bitmap_get_value(new, width[0], width[1]);
+> > > >
+> > > > These lines are simple and clear to read: we know immediately what they
+> > > > do. But if we did not have bitmap_set_value/bitmap_get_value, we'd have
+> > > > to use several bitwise operations for each line; the obfuscation of the
+> > > > code would be an obvious hinderance here.
+> > >
+> > > Do I understand correctly that width[0] and width[1] may not be power
+> > > of two and it's actually the case?
 
--Doug
+> > I'm under the impression that width[0] and width[1] are arbitrarily
+> > chosen by the user and could be any integer. I have never used this
+> > hardware so I'm hoping one of the gpio-xilinx or GPIO subsystem
+> > maintainers in this thread will respond with some guidance.
+> >
+> > If the values of width[0] and width[1] are restricted to powers of 2,
+> > then I agree that there is no need for generic bitmap_set_value and
+> > bitmap_get_value functions and we can instead use more optimized power
+> > of 2 versions.
+
+> Regarding the question that whether width[0] and width[1] can have any
+> value or they are restricted to power-of-2.
+>
+> Referring to the document (This xilinx GPIO IP was mentioned in the
+> gpio-xilinx.c file):
+> https://www.xilinx.com/support/documentation/ip_documentation/axi_gpio/v2_0/pg144-axi-gpio.pdf
+>
+> On page 8, we can see that the GPIO widths for the 2 channels can have
+> values different from power-of-2.For example: 5, 15 etc.
+>
+> So, I think we should keep the 'for_each_set_clump',
+> 'bitmap_get_value' and 'bitmap_set_value' as completely generic.
+>
+> I am proceeding further for my next patchset submission keeping above
+> findings in mind. If you guys think something else or would like to
+> add something, let me know.
+
+Thank you for investigation. So, if Xilinx is okay with the change, I
+have no objections.
+
+-- 
+With Best Regards,
+Andy Shevchenko
