@@ -2,117 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 629EB1CD64A
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2020 12:18:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EBD01CD64E
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2020 12:19:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbgEKKSi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 May 2020 06:18:38 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41077 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgEKKSf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 May 2020 06:18:35 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 19so14615110oiy.8;
-        Mon, 11 May 2020 03:18:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dhHEh+pNrtrDrMKnU82n0ghqaec/6dzj+ojpD1sC6tU=;
-        b=un/cVaLel2W3SxT+qj0wyFwQaFU2JAXahi2YRif47BWsQx0bZ5ArA8gTAbv7/oBil2
-         v1UfMY/4kmadVoy6sxrt6aP8Ke0rrALV+44qXqdf0Zki8kNsNcT2+lxmX3YWRPXmcuQR
-         BbjOpXkghxF5BGXgJ8eYTyh3OkF6gXD58PeFaqfeaG0s3WQ25+ZRK1q8jPuiSNggzEB3
-         LGVzFHxNSSX1yaVsnphUiwGP7+c7hjJlko6A1P0teryGZs7Gj0+CyMfn11yGb51O5c9F
-         IkOnlSM7nJpbnoAleIaC7/fFre+NnZzsZlrNHcB7rn1IgmYqS5dUNYWcz7U/V/t8iDiE
-         V30g==
-X-Gm-Message-State: AGi0PuZzEGSVXZswo2XR8GgvRyEetPbFC2O2M2PcNWkZ+0W/6piuD4GL
-        ZvqDgs5aczx+AUvKeWIiu1N3sxOs+xDWArX15LY=
-X-Google-Smtp-Source: APiQypLbjyTZbvqRLGoc90pFkCHUbFvz5HgFxZ0FoH+dKrKDX/RlQwLNKA9fzQii+Qv4ryb+mU1sZeCNokwWcDCIukA=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr18420359oih.148.1589192313970;
- Mon, 11 May 2020 03:18:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324135328.5796-1-geert+renesas@glider.be>
- <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-4-geert+renesas@glider.be>
- <CACRpkdbN82n3B+Q-QVjB1jLpJAYS19fKukkDXQm3gZsuFFFM_w@mail.gmail.com>
-In-Reply-To: <CACRpkdbN82n3B+Q-QVjB1jLpJAYS19fKukkDXQm3gZsuFFFM_w@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 11 May 2020 12:18:22 +0200
-Message-ID: <CAMuHMdXskE8_A4gbFVWfPVdcxBO-CfaMDEehSxGAK_aC0MQ7=A@mail.gmail.com>
-Subject: Re: [PATCH v6 4/8] gpiolib: Add support for GPIO lookup by line name
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1729296AbgEKKSf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 May 2020 06:18:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729287AbgEKKSe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 11 May 2020 06:18:34 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586D7C061A0E
+        for <linux-gpio@vger.kernel.org>; Mon, 11 May 2020 03:18:34 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:702c:fb99:3097:2049])
+        by albert.telenet-ops.be with bizsmtp
+        id dNJW220070GoAb606NJWfT; Mon, 11 May 2020 12:18:30 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY5W2-0002Q8-4k; Mon, 11 May 2020 12:18:30 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jY5W2-0007pN-1T; Mon, 11 May 2020 12:18:30 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpiolib: Document that GPIO line names are not globally unique
+Date:   Mon, 11 May 2020 12:18:28 +0200
+Message-Id: <20200511101828.30046-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+gpiochip_set_desc_names() no longer rejects GPIO line name collisions.
+Hence GPIO line names are not guaranteed to be globally unique.
+In case of multiple GPIO lines with the same name, gpio_name_to_desc()
+will return the first match found.
 
-On Thu, Mar 26, 2020 at 10:18 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Currently a GPIO lookup table can only refer to a specific GPIO by a
-> > tuple, consisting of a GPIO controller label and a GPIO offset inside
-> > the controller.
-> >
-> > However, a GPIO may also carry a line name, defined by DT or ACPI.
-> > If present, the line name is the most use-centric way to refer to a
-> > GPIO.  Hence add support for looking up GPIOs by line name.
-> >
-> > Implement this by reusing the existing gpiod_lookup infrastructure.
-> > Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
-> > that this field can have two meanings, and update the kerneldoc and
-> > GPIO_LOOKUP*() macros.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> > Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
->
-> I kind of like this approach, however there are things here that
-> need to be considered: the line name is in no way globally unique,
-> and I think there are already quite a few GPIO chips that
-> have the same line names assigned for every instance of that
-> chip.
->
-> gpiochip_set_desc_names() only warns if there is a line with
-> the same name on the same gpio_chip.
+Update the comments for gpio_name_to_desc() and
+gpiochip_set_desc_names() to match reality.
 
-on a _different_ gpio chip.
+Fixes: f881bab038c9667d ("gpio: keep the GPIO line names internal")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/gpio/gpiolib.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-> I suppose we need to document that the line name look-up
-> will be on a first-come-first-served basis: whatever line
-> we find first with this name is what you will get a reference
-> to, no matter what chip it is on, and it is possible albeit
-> not recommended that some other chip has a line with the
-> same name.
-
-Agreed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 99533f4cb5d332a9..98822412f565073a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -296,6 +296,9 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
+ 
+ /*
+  * Convert a GPIO name to its descriptor
++ * Note that there is no guarantee that GPIO names are globally unique!
++ * Hence this function will return, if it exists, a reference to the first GPIO
++ * line found that matches the given name.
+  */
+ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ {
+@@ -329,10 +332,12 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
+ }
+ 
+ /*
+- * Takes the names from gc->names and checks if they are all unique. If they
+- * are, they are assigned to their gpio descriptors.
++ * Take the names from gc->names and assign them to their GPIO descriptors.
++ * Warn if a name is already used for a GPIO line on a different GPIO chip.
+  *
+- * Warning if one of the names is already used for a different GPIO.
++ * Note that:
++ *   1. Non-unique names are still accepted,
++ *   2. Name collisions within the same GPIO chip are not reported.
+  */
+ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+ {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
