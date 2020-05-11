@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2411CD4C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2020 11:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2022A1CD4D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 May 2020 11:25:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgEKJWr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 May 2020 05:22:47 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:44774 "EHLO
+        id S1727873AbgEKJZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 May 2020 05:25:12 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:44866 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgEKJWr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 May 2020 05:22:47 -0400
+        with ESMTP id S1726071AbgEKJZM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 May 2020 05:25:12 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04B9MbiO6009310, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04B9P5KN0009655, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04B9MbiO6009310
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04B9P5KN0009655
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 11 May 2020 17:22:37 +0800
+        Mon, 11 May 2020 17:25:05 +0800
 Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
  RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 11 May 2020 17:22:37 +0800
-Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
+ 15.1.1779.2; Mon, 11 May 2020 17:25:05 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
  RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 11 May 2020 17:22:36 +0800
+ 15.1.1779.2; Mon, 11 May 2020 17:25:05 +0800
 Received: from localhost.localdomain (172.21.252.101) by
- RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Mon, 11 May 2020 17:22:36 +0800
+ RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
+ 15.1.1779.2 via Frontend Transport; Mon, 11 May 2020 17:25:05 +0800
 From:   TY Chang <tychang@realtek.com>
 To:     <tychang@realtek.com>
 CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 Subject: [PATCH 0/7] pinctrl: update realtek DHC pinctrl driver
-Date:   Mon, 11 May 2020 17:22:29 +0800
-Message-ID: <20200511092236.4554-1-tychang@realtek.com>
+Date:   Mon, 11 May 2020 17:24:58 +0800
+Message-ID: <20200511092505.4799-1-tychang@realtek.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
