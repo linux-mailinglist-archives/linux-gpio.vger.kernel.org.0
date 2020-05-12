@@ -2,83 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9616F1CFC8E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 19:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272801CFCAE
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 19:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgELRq2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 13:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40616 "EHLO
+        id S1725987AbgELRz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 13:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgELRq2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 May 2020 13:46:28 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE71C061A0C
-        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 10:46:26 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x73so11309754lfa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 10:46:26 -0700 (PDT)
+        with ESMTP id S1725950AbgELRzz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 May 2020 13:55:55 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65121C061A0F
+        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id g4so14723071ljl.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ES33Ff/hX9Lt7ZdWNFhLgXbSOeoiO7TlTuuemLOLyZE=;
-        b=G1lTNsXayueOOgZODxtiixitMWMAt+sxOQROXajaPEa3506KQWhca7dS3ckLE80uJ0
-         5tv4hEWPNB2qquqnlxCpG29ECGWb9pkioi7+cmFVAEorXNRSA8eGGcvaNsKP1UEq/TjR
-         WhYlTjvMBqoV1UF+LMz+DAXwGnfkizpEQ/sXSPXaenKTL6b6EJewzI7z6eS0tZ2qHXs1
-         DC77oF6aVjFp7Y12phf9605AKVHRU+xhgDf6pIAidV35qg4wjY5ZKbkO1OVBJfRRpfPy
-         s0vCtqVy8MF/McSvXVmrZh3PrBo8fa9st6FgwShWrf2NwmF4eMtqijC2ECUmMTTqZgNw
-         +HSA==
+        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
+        b=CWdQqBq1nuGjhJoclSNUa09Dolztaz1qyxLzybRgOWH7y6Ivq+vHLMs+I0nOQr1YiA
+         uoujI+0guXsvOyLdafj1E2h+Zf6USlqbOJXX7UD0YJoir1Wy4RBNAnnV9Y3CI3Bgp2Uw
+         AsIEhnHzYauu2pddTvUCz0gmyPah5iLyZepsNGIILsejF5o3R6JY5cAfkis56zOAJpk6
+         9ri55ILWUPS510A6izprONAhGJKX0CLsIsNnkzX38ikEbtPpYognCa5YSKjWnHEOWBw7
+         UUBnCe5svoHBKfW+O14ceTksj/JOIll6zDZCTuaDoXxPCsT4fhof5njy4pdAASe0IY15
+         88Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ES33Ff/hX9Lt7ZdWNFhLgXbSOeoiO7TlTuuemLOLyZE=;
-        b=JiwdSTLXBKSUXx/VkoKvfbhyxSGijBAwzWsK8/6EB/cKjr1MSvfB1Oo9t4t8Z++NoP
-         DJlYRNkAjfV9LqcfbIeWqmhrYBkQmOugI6FEVMQ4aQAPC/0oh2HRXtOvgG6HOm7ybgPe
-         3MA8hhpa/9/NVkHrOJ3fYvxqgrJT1jC3e+W+qdsPvYDLxD7gZlu6EwF0IDQ5lnBxTqNq
-         7g/1ZHQTg09DCLWI0ItTy4Zwvv5WYMDchFEEhUU2UdfARNZKmm/OG88ojLzkf66EG2eY
-         GrVrLrk1VOTT58HqVILZ7d9G/BUmZDu7aeGyU0ue333KRZPN/NHkCFlGx2awsVxlKAHC
-         8faA==
-X-Gm-Message-State: AOAM530aTfbAvrm3YgHcK4DWOMOp/SR/b9rHHRPOc1VG4hs8Ng9mDjIE
-        YMOnjW2zzNeG1KdUH/a9RIP1PUWpUq+hTZ/b8nM96A==
-X-Google-Smtp-Source: ABdhPJxXirLllM+MHpLQOCLbGmzUdj2o3E13tCmeTCphn+zn945vIqHpGCJygj9ebntSTSBCtW7KVu8W2be0SK6V4qE=
-X-Received: by 2002:ac2:414c:: with SMTP id c12mr15075075lfi.47.1589305584834;
- Tue, 12 May 2020 10:46:24 -0700 (PDT)
+        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
+        b=fKI2ssOtjBP/pC2llu2qDDfC7WmLPnLCN2TzUWS+KribM0ucnt0tUuVS9Z00som6nz
+         FVCMf0ve+iKGPzpZ2iIBzQJuewVeW1uqR4TmqjvdxwWpZlpkKxmajuz6PRkE9h2GCNBN
+         Jn06DD0jNddR4pgdwKNZ0zxw/SSs6eB919jkTA+o+uwMVxEG84/eqGRobANUjBE6oKpT
+         pqw3UrIBeHakOfMjdAEhwMiVxLEQp3zRo9mGKwmSPwZDA2jg73ZLDbeDUufgWx6RCAOj
+         RF5Yvlxws8e2d7kxh1dAZF5kFAcLZbsP6h7N5m3k+MiwVLSfRO5euCdDjkN5nqaiThJ2
+         crIQ==
+X-Gm-Message-State: AOAM531Cwc7ZlrdSY0ZMlBwmZT0aBpgJF0JtczhrJl+fb+C6g68MwJ2+
+        Kzdr3tC0WS9tAi5AIV9Y1I64sMgjiwRsBpfFXFv1lewJ
+X-Google-Smtp-Source: ABdhPJzZacOxTdIXmG/y1xsQxdbn3Gu8/UFKbgfmJOJX/ZNurJQYUVI8JZg3cgz/pPjpbuDDAZX5z8N5dh2UjcLF3g8=
+X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr13942720ljo.168.1589306153711;
+ Tue, 12 May 2020 10:55:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200506100903.15420-1-dafna.hirschfeld@collabora.com>
-In-Reply-To: <20200506100903.15420-1-dafna.hirschfeld@collabora.com>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+ <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+ <20200430145844.GA28588@sol> <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+In-Reply-To: <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 19:46:13 +0200
-Message-ID: <CACRpkdZ7QSNfMSm1NEFC9zbH8tkOieoPr39Fx3kzxgmER1cqAw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        dafna3@gmail.com, kernel@collabora.com,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Date:   Tue, 12 May 2020 19:55:42 +0200
+Message-ID: <CACRpkdbZPhkzuUvwDnBWTvweBukQRcWx0w=2seQsVBEP8Fv_BA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "Bujanda, Hector" <Hector.Bujanda@digi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 6, 2020 at 12:09 PM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
+On Mon, May 4, 2020 at 12:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> In function rockchip_dt_node_to_map, a new_map variable is
-> allocated by:
->
-> new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
->                        GFP_KERNEL);
->
-> This uses devres and attaches new_map to the pinctrl driver.
-> This cause a leak since new_map is not released when the probed
-> driver is removed. Fix it by using kcalloc to allocate new_map
-> and free it in `rockchip_dt_free_map`
->
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Ideally we'd have to introduce new versions of gpioevent_request,
+> gpioline_request, gpioline_info and gpioevent_data structs - this time
+> with enough additional padding and no alignment issues. Then we could
+> add the debounce properly.
 
-Patch applied.
+Hm that sounds massive. Is it really that bad?
 
-Yours,
-Linus Walleij
+> This would of course add a lot of cruft to the uAPI code. I'd start by
+> moving it out of drivers/gpio/gpiolib.c into a new file:
+> drivers/gpio/gpiolib-cdev.c. This way we'd have everything related to
+> the character device in one place. It would make it easier to: a) add
+> a config option for disabling it entirely and b) add a config option
+> to disable the v1 of the ioctl()s.
+
+Its good to break out for code maintenance no matter what we do
+with it :)
+
+I would however not make it in any way totally optional, because the
+big win with the character device over the legacy sysfs is to always
+be available.
+
+> Linus: about the software-debounce you mentioned: do you think it
+> somehow plugs the hole we identified here?
+
+Hm, I don't quite understand what the hole is I guess...
+
+Linus
