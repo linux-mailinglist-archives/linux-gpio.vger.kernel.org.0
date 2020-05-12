@@ -2,54 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BD7D1CEF25
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 10:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC2B51CEFE0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 10:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgELI3F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 04:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
+        id S1729241AbgELI7e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 04:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729242AbgELI3E (ORCPT
+        by vger.kernel.org with ESMTP id S1726067AbgELI7d (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 May 2020 04:29:04 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA90C061A0E
-        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 01:29:04 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so11537776ljp.4
-        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 01:29:04 -0700 (PDT)
+        Tue, 12 May 2020 04:59:33 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA1BC061A0E
+        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 01:59:27 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id d22so3844030lfm.11
+        for <linux-gpio@vger.kernel.org>; Tue, 12 May 2020 01:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yKjBrHMVrYH11njH9u5nD+okiu5q1SOdbCQwts/no00=;
-        b=m+TbK+SZq+zPcB/7S4UMMKdG7yj1h8fj/nsg36jNwxcjebDpBPaO2Aa0Bq8kA69uLM
-         63oV5O21HAJuCgAchgNuMmPC3hNa3RMLLE1sOEd8Dw49wRhENvrW6lqDWsY5BgIIXGzo
-         F/LMFiFEL0qjnEPnnZjCYxabFo1TI5YDV04tgmglaC22X46owly1HwbO232aAeX6E8s3
-         JSJnKe7kqt/UC2aFM3dTTjGJaBfSidGXxWZi8wTfTsqZJEHVXRAPDoC5md1q9driUmO2
-         9l7/dZMC9uLOub23fVrqZwCHHB2lg1HAGF2zZbgMp1jCmG7zU0uVGEGNLHzlISGJRS60
-         XV6w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FtTPdGUOTolZ1ZLFUQTSg7EYpfQ8425FVj9aTYf/Yu8=;
+        b=MqEzPru7satdnTw4/7xDfRXbz6Jk0vGgsATTZxQc8EEv9xqS1n4RiuwTVNjeDWrZwt
+         fmDIpGEm6Z2rswJ5D5F2nZU+0S3NNAl1YRYlum/bKi2fxyZFm8xCfXBRpc4x9Am1pnqT
+         1BzCzopxt1ykc4rrprgeriuXXpN7uaYdAC9x5+y3W6ZzY/XFI8OGTddNPQCeaOHxKHTi
+         Ey6sJziXMaz2MMk+lxxq70wpLJdxFfxWYCUe+GInbrfFVc0SPJDdt86hNpDOBJZm0+/p
+         lRK+hDXTXbsJtDIP5Pe33T82nz8SLVWloYW7qgNNGBLDH966uEquC26p1wUe9DaN9bgl
+         LmDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yKjBrHMVrYH11njH9u5nD+okiu5q1SOdbCQwts/no00=;
-        b=b7VdR86zY5NTCT9Nm0v4X78545l7xyuK6/kIcxkUs6FRTeuPzX3FHbfY6JRwy5yS/5
-         GYhKme2DF6etipZK+gxgK0aaxijHuBPzr/CqJ6TZH1Lggg7OXfPEvENPL6boeniTV2u1
-         UdpwQ+haJVI54L+gylpBZqSw/uTStVy6zHoRMdpUtiQF8gCNacvLeLlU3wcnFfb18iCm
-         H7FOaMFSDxS6uS4iVA+sFOSvpZRatnwiagTkQbuAXB6yxZTHNjwhzP9VGnbvyZQ6EYMy
-         tEH/iW9rv25DPtRhiWr2c1OiTCEsA6ECZNZwfr/xiQOzaj/RHrB9i8C1fywpd9B/pFp3
-         +pxg==
-X-Gm-Message-State: AOAM532/1S4oAh+ea8/1tr3pEy00hqIb0sNvke+ZYgI47bzTMmcN+pAY
-        doZ0tkkb4HShsmXSspp5yYnyS43b4nJeCPNy/PRab7OcXKk=
-X-Google-Smtp-Source: ABdhPJyN3Q0EKdr+y6yVrRivbVl+fbwgrsuJQCdxpprQWH9cmGf+3VhzPRFPlhf9aER7AtwepwLVT1CnNjV6YBOqzrM=
-X-Received: by 2002:a2e:81d5:: with SMTP id s21mr12698843ljg.258.1589272142969;
- Tue, 12 May 2020 01:29:02 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FtTPdGUOTolZ1ZLFUQTSg7EYpfQ8425FVj9aTYf/Yu8=;
+        b=VWP5qplSrgRkLT/ZmhBcZywEb7FmUeniZ4KjSwWM3hHc01pDmHnXcb+07/dP6nnr8H
+         fdSATNHKildeuvrV4PSfkvO1Reqa0JmTlVNySJjoL20jnpuo01vWShXl7pBtB0MfX2yz
+         X0XAEaaFwplT4Ss4P2v2TKCL8pvBKiZKnzQvw0hTa3TCxJCva6lxxu46FqFDqjqlSPSv
+         Qfl1dWin+UrY+p4ouGU2NWyoiirhRoKbSYYziAmt+Cvbx8VzcrKCFbQeW96Au6HJwS4l
+         7F9JWb9TssRxR08J3g8uS/TyZaL1C+VVKBNtpVTS3l5q0BvGxn8JCoWsy2NrBdlTT3t8
+         A9wA==
+X-Gm-Message-State: AOAM5301yVs6L+gdNs/G4OE7lyMLYLlJ2btpmWJIoNkDSfOlI/Y2i6of
+        EPgVsVjbfyr7KetjlEx0l51nLWyhmeloy0Wf2Jil7g==
+X-Google-Smtp-Source: ABdhPJxSFhDR275G/NDbPfJQvsucBzf/u54hkaewZOa8qR3685f4JC5VadgrZkHgN/ddRrcZHMZHedHvoJkYT7zQSIc=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr13830411lfi.21.1589273964850;
+ Tue, 12 May 2020 01:59:24 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200511143512.GA11655@black.fi.intel.com>
+In-Reply-To: <20200511143512.GA11655@black.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 10:28:50 +0200
-Message-ID: <CACRpkdafEGdhvn9kgBp7SAXw=JwqWRRoHu9CmytcWGeOYoixzQ@mail.gmail.com>
-Subject: [GIT PULL] GPIO fixes for the v5.7 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Tue, 12 May 2020 10:59:13 +0200
+Message-ID: <CACRpkdYy5csmByjVVGPYO7dae8GgjMWuhMb232y2F4K+2neABA@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.8-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
@@ -57,59 +60,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Mon, May 11, 2020 at 4:35 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-some GPIO fixes for v5.7, slightly overdue. Been learning
-MMUs and KASan that is why it's late. Bartosz helped me
-out, luckily!
+> Intel GPIO fixes and cleanups so far for v5.8-rc1. I don't expect something
+> coming soon into that cycle.
 
-Details are in the signed tag, please pull it in!
+Pulled in!
+
+Thanks for excellent work as usual.
 
 Yours,
 Linus Walleij
-
-The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
-
-  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.7-2
-
-for you to fetch changes up to 0cf253eed5d2bdf7bb3152457b38f39b012955f7:
-
-  gpio: tegra: mask GPIO IRQs during IRQ shutdown (2020-04-28 16:22:33 +0200)
-
-----------------------------------------------------------------
-Some GPIO fixes for the v5.7 kernel:
-
-- Fix pin configuration in the PCA953x driver.
-- Ruggedize the watch/unwatch ioctl().
-- Possible call to a sleeping function when holding a spinlock,
-  avoid this.
-- Fix UML builds with DT overlays.
-- Mask Tegra GPIO IRQs during shutdown().
-
-----------------------------------------------------------------
-Adam Ford (1):
-      gpio: pca953x: Fix pca953x_gpio_set_config
-
-Bartosz Golaszewski (2):
-      gpiolib: improve the robustness of watch/unwatch ioctl()
-      gpiolib: don't call sleeping functions with a spinlock taken
-
-David Gow (1):
-      gpio: of: Build fails if CONFIG_OF_DYNAMIC enabled without CONFIG_OF_GPIO
-
-Linus Walleij (1):
-      Merge tag 'gpio-fixes-for-v5.7-rc3' of
-git://git.kernel.org/.../brgl/linux into fixes
-
-Stephen Warren (1):
-      gpio: tegra: mask GPIO IRQs during IRQ shutdown
-
- drivers/gpio/gpio-pca953x.c |  2 +-
- drivers/gpio/gpio-tegra.c   |  1 +
- drivers/gpio/gpiolib.c      | 34 +++++++++++++++++++++++++++++-----
- 3 files changed, 31 insertions(+), 6 deletions(-)
