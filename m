@@ -2,107 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C998E1CFF6B
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 22:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1712D1D0028
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 23:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgELUfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 16:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38684 "EHLO
+        id S1728165AbgELVJX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 17:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731183AbgELUfi (ORCPT
+        by vger.kernel.org with ESMTP id S1726324AbgELVJW (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 May 2020 16:35:38 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7434AC061A0C;
-        Tue, 12 May 2020 13:35:37 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y16so10366156wrs.3;
-        Tue, 12 May 2020 13:35:37 -0700 (PDT)
+        Tue, 12 May 2020 17:09:22 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4386EC061A0C;
+        Tue, 12 May 2020 14:09:21 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id w6so13901732ilg.1;
+        Tue, 12 May 2020 14:09:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=B1auPUCQJ6jnhcwlo7ZQktJWdnEzk2MQBv9Xkb5qeSw=;
-        b=nceJPZeojs6qraZ8fSw/SYQJlTdlVDPgIYgLp301owRsMMVQaScvhpVAbEBY7DoCen
-         hM6a+G6qSjNbGrcDnjjcTJVIOaUysZAmQi5H/IFhXPUL82iFLfqDtCYuocwh9pXjU/Dc
-         2g2Noow6pWxBbO/xkfGqnDoUXDqtf+EkarqnDTP5Ob4t7zFEP4nu850SIu8tX1gRL31d
-         Hlxj23K5dXKqFmbKlaw3c9/AIOF83gCJgyq5LY+nYIn6SXGYLavTaxRPJ7HUoqQZpPLn
-         6PONYfvWuCpA02crwLMom9YiLzUOXwRmFlhZ84fQdsI/cgNwjgTFs1hOanrSQzkktKMy
-         HjgA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YA8zNP4b5D3ILHHzh+PoKh6Aq9QfuIQ/xBD90HQx3wM=;
+        b=kqKa0iCLug4Ge+sm7fKli2nz0vkdO+EuZS+hztljWSLCTd7ktmaXvBKx8Ej81F5Q50
+         AMJvhXN4CmbAoihmr6CO4xLbbWJS22UQ15ahaAIuUWiSbsYFZSHEMlxF9TgRn51FSrjh
+         rsSUMrjL7Dxnn4/2Ti6nV8XkG/wR+lzMsO3INwDkhYzG0qH7pV1GSfMTQ9bEKPsTUemm
+         aUNVkyHYCnd84UUIiTf5hHx8aXwSIPh7UNnPNSoIvQesreI7glfl5YH3kOhRe/pFLK1M
+         iibxp2VtIt9A0vu9j68bB1TOBlrKDMCPnZ4JquL2G4j1nZruY96PrUQkeL8Kgd+mOtH/
+         iC0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=B1auPUCQJ6jnhcwlo7ZQktJWdnEzk2MQBv9Xkb5qeSw=;
-        b=o52x9CMlAWTVg1WW9S8jG1Au0gpEuoiUi3dj+1X9eFHAl5kL5fchzFlgfstSiAtinl
-         OadpWYfpd9XbWE2lRaEFNAmdgI37nzZQVhJw8yXx6SXrFimJ1Gfx1Qtpa9vyMN7JIK+p
-         a1T3+SEJi8RrDqJvCILJyotAkQ/wqzHWL2/DGEXcn0T4skBDLyZZ8Vw85gn/dGlfENc4
-         tvXke0we20wOhjWvWZV1QRhDy5HMEI4tJcdnV6Ud5cKwmH76tGASqvc6CHNUDrugyz2q
-         2ZVTBmENNJRga9UIDNvnOMOpF15BQLCs6Rq5zYu+cF0LnEZYlAdewTKjkQMQH7l344TU
-         k8+A==
-X-Gm-Message-State: AGi0Pua/H7WzjsmhKM/WcfTt3EHmY3T1QP9GPgqdqx26IoIgdRFqfj9X
-        jd1xxwXOVvlYp4gWWypB3C4=
-X-Google-Smtp-Source: APiQypLmrnkToJDCa/tZNLkmV4SRoLb0lnQbv6DphIFu9wMNPlB73GP2mZkrvbhGxQJldgXB7izfsA==
-X-Received: by 2002:a5d:400f:: with SMTP id n15mr15743833wrp.419.1589315736169;
-        Tue, 12 May 2020 13:35:36 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k131sm418219wma.2.2020.05.12.13.35.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 13:35:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] include: dt-bindings: rockchip: remove unused defines
-Date:   Tue, 12 May 2020 22:35:24 +0200
-Message-Id: <20200512203524.7317-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200512203524.7317-1-jbx6244@gmail.com>
-References: <20200512203524.7317-1-jbx6244@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YA8zNP4b5D3ILHHzh+PoKh6Aq9QfuIQ/xBD90HQx3wM=;
+        b=RjjcZ93yZxvnl7+SqBsWPBnBSeZqKnbXd/X4gScRZ4sYs02IHGDHlsIydyiaHesiIX
+         3M9QAjLDpGkgL3HmLndhRaXKeEaUu/25igngtfYrzrBGLJdVCqvJp9VvOw/vrbI4qZ9M
+         cXoCcZpw7f3lbJvJ5cFjG9CGvanT60a5jk/sEqeY3SclVx+qQfca5pSJLo37H17t7h94
+         7haOytnn8O64Or+AMfuwdAP61rjGmN2AwMWngxAsJMmaihVqLIvacOuy++qWXVkwYUcn
+         ZwG/tZ7OZHKjZsNa7CkEm420FMtuTnI+JLe+oP1IWHar4dG2lgqBbcmXfX7XNYaJ/PVM
+         tnBQ==
+X-Gm-Message-State: AGi0PuZfQnQ7VJw1E9XEbhBdNKexRD6RhAEuN+BACQa0+DmdOYQFVzaS
+        P4cL0WAeybIXuI1CXXAy/VEgcdHRJ07Z5kdJea0=
+X-Google-Smtp-Source: APiQypIWzLFfm9ywTEcxOxyz1qFQvElK5xmP5/DecFMolM7jE40MUushb26pwgZUzyMX/wxkLEO6bN4B5/09tPX0ypY=
+X-Received: by 2002:a92:7a07:: with SMTP id v7mr24375024ilc.238.1589317760606;
+ Tue, 12 May 2020 14:09:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200428172322.1.I396f351e364f3c09df7c7606e79abefb8682c092@changeid>
+ <20200428172322.2.Iacb3c8152c3cf9015a91308678155a578b0cc050@changeid> <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+In-Reply-To: <a23b7a97f349e6f74b993a4e127564ad3f7d6929.camel@perches.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 00:09:07 +0300
+Message-ID: <CAHp75VewDvjDJjvKgQ_5v_=Kxp6B1js0J+PrsfP-WC+qa=ogtQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Make "offset" and "unsigned int", not just "unsigned"
+To:     Joe Perches <joe@perches.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Rockchip dtsi and dts files have been bulk-converted for the
-remaining raw gpio numbers into their descriptive counterparts and
-also got rid of the unhelpful RK_FUNC_x -> x and RK_GPIOx -> x
-mappings, so remove the unused defines in 'rockchip.h' to prevent
-that someone start using them again.
+On Wed, Apr 29, 2020 at 3:40 AM Joe Perches <joe@perches.com> wrote:
+> On Tue, 2020-04-28 at 17:23 -0700, Douglas Anderson wrote:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- include/dt-bindings/pinctrl/rockchip.h | 11 -----------
- 1 file changed, 11 deletions(-)
+...
 
-diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
-index 6d6bac1c2..5f291045e 100644
---- a/include/dt-bindings/pinctrl/rockchip.h
-+++ b/include/dt-bindings/pinctrl/rockchip.h
-@@ -9,13 +9,6 @@
- #ifndef __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
- #define __DT_BINDINGS_ROCKCHIP_PINCTRL_H__
- 
--#define RK_GPIO0	0
--#define RK_GPIO1	1
--#define RK_GPIO2	2
--#define RK_GPIO3	3
--#define RK_GPIO4	4
--#define RK_GPIO6	6
--
- #define RK_PA0		0
- #define RK_PA1		1
- #define RK_PA2		2
-@@ -50,9 +43,5 @@
- #define RK_PD7		31
- 
- #define RK_FUNC_GPIO	0
--#define RK_FUNC_1	1 /* deprecated */
--#define RK_FUNC_2	2 /* deprecated */
--#define RK_FUNC_3	3 /* deprecated */
--#define RK_FUNC_4	4 /* deprecated */
- 
- #endif
+> +       int     (*request)(struct gpio_chip *gc, unsigned int offset);
+> +       void    (*free)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*get_direction)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*direction_input)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*direction_output)(struct gpio_chip *gc,
+> +                                   unsigned int offset, int value);
+
+Here...
+
+> +       int     (*get)(struct gpio_chip *gc, unsigned int offset);
+> +       int     (*get_multiple)(struct gpio_chip *gc,
+> +                               unsigned long *mask, unsigned long *bits);
+> +       void    (*set)(struct gpio_chip *gc, unsigned int offset, int value);
+> +       void    (*set_multiple)(struct gpio_chip *gc,
+> +                               unsigned long *mask, unsigned long *bits);
+> +       int     (*set_config)(struct gpio_chip *gc,
+> +                             unsigned int offset, unsigned long config);
+
+...and here perhaps offset to move to previous line despite checkpatch warnings.
+
+> +       int     (*to_irq)(struct gpio_chip *gc, unsigned int offset);
+> +       void    (*dbg_show)(struct seq_file *s, struct gpio_chip *gc);
+> +       int     (*init_valid_mask)(struct gpio_chip *gc,
+> +                                  unsigned long *valid_mask,
+> +                                  unsigned int ngpios);
+> +       int     (*add_pin_ranges)(struct gpio_chip *gc);
+
 -- 
-2.11.0
-
+With Best Regards,
+Andy Shevchenko
