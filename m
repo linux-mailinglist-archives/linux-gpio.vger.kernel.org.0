@@ -2,90 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA181CF80A
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 16:56:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF931CF957
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 17:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgELO4P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 10:56:15 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34703 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELO4P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 May 2020 10:56:15 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c12so17460328oic.1;
-        Tue, 12 May 2020 07:56:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/N06xotf8iar1D4UgdTjomlZyumlZDa21O+nxsz7Gs=;
-        b=Bw5aMtaTY7Ai1hy3njXmlZXnmCGDgmdN/uvMraVZ6fQwIASR9Y5Qawssgs/8Mpcmh/
-         SRuGZaIKXlBrXQYAkjgBhsA8cD/JtTc1Ajt6/H22/zHebXoPQLQac9YRYSjNbu2hVu6I
-         K+WgJdcPhAgSKEhB1gB0gNVNcgOl4pOFWmS1948U5o0pbju6m7+oNESWi2ykxYg6o6+x
-         jKVTW5Gar7NU5gxKXhFg1wjXRlEkcDKs0D6VJQOiHQWa04WVOi8LWkXIRUsYfEZZByrA
-         sCPYeVuxkLQFHgWlI6nm1S3/6kU48aeY2mAbv4Xe0YC+9i7ho4wbml4gggj86G6iBS5h
-         86lw==
-X-Gm-Message-State: AGi0Pua6MeG6zKDwGy718FdSJwn7kQzinRNiAVftsrrEbCJCa8VmqcLz
-        8zbwRd7T/Pt3Pvx9XuxzUvmPUTxGIxYTo3mOXlAj1kOX
-X-Google-Smtp-Source: APiQypLPHII6upk6iNYoZD9pYfWhiPJxDNt/TH7BuAvFbVXWIAt/4KdUs8x3tA8y610NHj/T3IkbGJwtxVll7YHTVaA=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr23734306oig.54.1589295373790;
- Tue, 12 May 2020 07:56:13 -0700 (PDT)
+        id S1730722AbgELPhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 11:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727847AbgELPhR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 12 May 2020 11:37:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D895206CC;
+        Tue, 12 May 2020 15:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589297836;
+        bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fqwakY8meehODH74gpckFTa+Mh+b6xO0w7sFxmlOy9XVG4nwxGnTy6d/fTPn2KKM2
+         FpnaUhXQ4zcFpBOJudkbcySubJ2+F+jCEnuxGUDYz6Hh3Axo6CPTcFQ7NCAH24bj08
+         0hH/vzANpANCy0xlayV1dZeLa4UcnByWyMsY1C90=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jYWy2-00Bh0h-Rd; Tue, 12 May 2020 16:37:14 +0100
 MIME-Version: 1.0
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200512145256.GA25121@bogus>
-In-Reply-To: <20200512145256.GA25121@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 May 2020 16:56:01 +0200
-Message-ID: <CAMuHMdXzeJdBqjshm5eEqTF05GZC1HS02=oJ2VG+B0r16=gkeQ@mail.gmail.com>
-Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 May 2020 16:37:14 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
         Jason Cooper <jason@lakedaemon.net>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
+In-Reply-To: <20200430143019.1704-3-brgl@bgdev.pl>
+References: <20200430143019.1704-1-brgl@bgdev.pl>
+ <20200430143019.1704-3-brgl@bgdev.pl>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com, Jonathan.Cameron@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+Bartosz,
 
-On Tue, May 12, 2020 at 4:53 PM Rob Herring <robh@kernel.org> wrote:
-> On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
-> > Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> > family. Add support for its GPIO controllers.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Acked-by: Rob Herring <robh@kernel.org>
+On 2020-04-30 15:30, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The interrupt simulator API exposes a lot of custom data structures and
+> functions and doesn't reuse the interfaces already exposed by the irq
+> subsystem. This patch tries to address it.
+> 
+> We hide all the simulator-related data structures from users and 
+> instead
+> rely on the well-known irq domain. When creating the interrupt 
+> simulator
+> the user receives a pointer to a newly created irq_domain and can use 
+> it
+> to create mappings for simulated interrupts.
+> 
+> It is also possible to pass a handle to fwnode when creating the 
+> simulator
+> domain and retrieve it using irq_find_matching_fwnode().
+> 
+> The irq_sim_fire() function now only takes the virtual interrupt number
+> as argument - there's no need anymore to pass it any data structure 
+> linked
+> to the simulator.
+> 
+> We modify the two modules that use the simulator at the same time as
+> adding these changes in order to reduce the intermediate bloat that 
+> would
+> result when trying to migrate the drivers in separate patches.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
+> ---
+>  drivers/gpio/gpio-mockup.c          |  47 ++++--
+>  drivers/iio/dummy/iio_dummy_evgen.c |  32 ++--
+>  include/linux/irq_sim.h             |  34 ++---
+>  kernel/irq/Kconfig                  |   1 +
+>  kernel/irq/irq_sim.c                | 225 +++++++++++++++++-----------
+>  5 files changed, 202 insertions(+), 137 deletions(-)
 
-Note that you've just applied 7f7d408e5a00d515 ("dt-bindings: gpio: rcar:
-Convert to json-schema"), so this no longer applies.
+[...]
 
-Gr{oetje,eeting}s,
+>  /**
+>   * irq_sim_fire - Enqueue an interrupt.
+>   *
+> - * @sim:        The interrupt simulator object.
+> - * @offset:     Offset of the simulated interrupt which should be 
+> fired.
+> + * @virq:       Virtual interrupt number to fire. It must be 
+> associated with
+> + *              an existing interrupt simulator.
+>   */
+> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
+> +void irq_sim_fire(int virq)
+>  {
+> -	if (sim->irqs[offset].enabled) {
+> -		set_bit(offset, sim->work_ctx.pending);
+> -		irq_work_queue(&sim->work_ctx.work);
+> +	struct irq_sim_irq_ctx *irq_ctx;
+> +	struct irq_data *irqd;
+> +
+> +	irqd = irq_get_irq_data(virq);
+> +	if (!irqd) {
+> +		pr_warn_ratelimited("%s: invalid irq number\n", __func__);
+> +		return;
+>  	}
+> -}
+> -EXPORT_SYMBOL_GPL(irq_sim_fire);
+> 
+> -/**
+> - * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
+> - *
+> - * @sim:        The interrupt simulator object.
+> - * @offset:     Offset of the simulated interrupt for which to 
+> retrieve
+> - *              the number.
+> - */
+> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
+> -{
+> -	return sim->irqs[offset].irqnum;
+> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
+> +
+> +	if (irq_ctx->enabled) {
+> +		set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
+> +		irq_work_queue(&irq_ctx->work_ctx->work);
+> +	}
+>  }
+> -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
+> +EXPORT_SYMBOL_GPL(irq_sim_fire);
 
-                        Geert
+Rather than using an ad-hoc API to queue an interrupt, why don't you
+actually implement the interface that already exists for this at
+the irqchip level (irq_set_irqchip_state, which allows the pending
+state to be set)?
 
+Thanks,
+
+         M.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead. It just smells funny...
