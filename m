@@ -2,164 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF931CF957
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 17:37:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D76921CFAC9
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 18:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbgELPhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 11:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
+        id S1726889AbgELQdn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 12:33:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:53380 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727847AbgELPhR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 May 2020 11:37:17 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D895206CC;
-        Tue, 12 May 2020 15:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589297836;
-        bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fqwakY8meehODH74gpckFTa+Mh+b6xO0w7sFxmlOy9XVG4nwxGnTy6d/fTPn2KKM2
-         FpnaUhXQ4zcFpBOJudkbcySubJ2+F+jCEnuxGUDYz6Hh3Axo6CPTcFQ7NCAH24bj08
-         0hH/vzANpANCy0xlayV1dZeLa4UcnByWyMsY1C90=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jYWy2-00Bh0h-Rd; Tue, 12 May 2020 16:37:14 +0100
+        id S1725904AbgELQdm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 12 May 2020 12:33:42 -0400
+IronPort-SDR: ftaKATL8KXiIixWQmdl+PKePtRiV3bpdm1Nlkms1KwgEoju/0LuymqehJ7DxK/3oyp+thR/9Vz
+ SGXQsSlPHKyw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 09:33:42 -0700
+IronPort-SDR: oI64b9qveQtPx1AiZuhCNo8VBjF0NQEo5QTB6RwQa/gK9DScUOWSSSzD16ztsHaRgMKmQa2Kfe
+ 4KfmgZo6nVbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="280189043"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 12 May 2020 09:33:35 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jYXqY-0007MD-Jl; Wed, 13 May 2020 00:33:34 +0800
+Date:   Wed, 13 May 2020 00:33:01 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-backlight] BUILD SUCCESS
+ 379b6563f68558fcf54b329ca8e601c923064cc8
+Message-ID: <5ebacfbd.PwiPNHCdVdRvHgvJ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 12 May 2020 16:37:14 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
-In-Reply-To: <20200430143019.1704-3-brgl@bgdev.pl>
-References: <20200430143019.1704-1-brgl@bgdev.pl>
- <20200430143019.1704-3-brgl@bgdev.pl>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com, Jonathan.Cameron@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Bartosz,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-backlight
+branch HEAD: 379b6563f68558fcf54b329ca8e601c923064cc8  backlight: lms283gf05: Convert to GPIO descriptors
 
-On 2020-04-30 15:30, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The interrupt simulator API exposes a lot of custom data structures and
-> functions and doesn't reuse the interfaces already exposed by the irq
-> subsystem. This patch tries to address it.
-> 
-> We hide all the simulator-related data structures from users and 
-> instead
-> rely on the well-known irq domain. When creating the interrupt 
-> simulator
-> the user receives a pointer to a newly created irq_domain and can use 
-> it
-> to create mappings for simulated interrupts.
-> 
-> It is also possible to pass a handle to fwnode when creating the 
-> simulator
-> domain and retrieve it using irq_find_matching_fwnode().
-> 
-> The irq_sim_fire() function now only takes the virtual interrupt number
-> as argument - there's no need anymore to pass it any data structure 
-> linked
-> to the simulator.
-> 
-> We modify the two modules that use the simulator at the same time as
-> adding these changes in order to reduce the intermediate bloat that 
-> would
-> result when trying to migrate the drivers in separate patches.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
-> ---
->  drivers/gpio/gpio-mockup.c          |  47 ++++--
->  drivers/iio/dummy/iio_dummy_evgen.c |  32 ++--
->  include/linux/irq_sim.h             |  34 ++---
->  kernel/irq/Kconfig                  |   1 +
->  kernel/irq/irq_sim.c                | 225 +++++++++++++++++-----------
->  5 files changed, 202 insertions(+), 137 deletions(-)
+elapsed time: 485m
 
-[...]
+configs tested: 112
+configs skipped: 4
 
->  /**
->   * irq_sim_fire - Enqueue an interrupt.
->   *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt which should be 
-> fired.
-> + * @virq:       Virtual interrupt number to fire. It must be 
-> associated with
-> + *              an existing interrupt simulator.
->   */
-> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
-> +void irq_sim_fire(int virq)
->  {
-> -	if (sim->irqs[offset].enabled) {
-> -		set_bit(offset, sim->work_ctx.pending);
-> -		irq_work_queue(&sim->work_ctx.work);
-> +	struct irq_sim_irq_ctx *irq_ctx;
-> +	struct irq_data *irqd;
-> +
-> +	irqd = irq_get_irq_data(virq);
-> +	if (!irqd) {
-> +		pr_warn_ratelimited("%s: invalid irq number\n", __func__);
-> +		return;
->  	}
-> -}
-> -EXPORT_SYMBOL_GPL(irq_sim_fire);
-> 
-> -/**
-> - * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
-> - *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt for which to 
-> retrieve
-> - *              the number.
-> - */
-> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
-> -{
-> -	return sim->irqs[offset].irqnum;
-> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
-> +
-> +	if (irq_ctx->enabled) {
-> +		set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
-> +		irq_work_queue(&irq_ctx->work_ctx->work);
-> +	}
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
-> +EXPORT_SYMBOL_GPL(irq_sim_fire);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Rather than using an ad-hoc API to queue an interrupt, why don't you
-actually implement the interface that already exists for this at
-the irqchip level (irq_set_irqchip_state, which allows the pending
-state to be set)?
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+m68k                        stmark2_defconfig
+arm                       aspeed_g4_defconfig
+h8300                     edosk2674_defconfig
+sh                           se7751_defconfig
+i386                                defconfig
+arm                           tegra_defconfig
+sh                            hp6xx_defconfig
+arm64                            alldefconfig
+arm                        vexpress_defconfig
+m68k                        m5272c3_defconfig
+sh                             sh03_defconfig
+riscv                            allyesconfig
+arm                         lpc32xx_defconfig
+sh                            titan_defconfig
+arc                           tb10x_defconfig
+powerpc                         wii_defconfig
+s390                                defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200512
+i386                 randconfig-a005-20200512
+i386                 randconfig-a003-20200512
+i386                 randconfig-a001-20200512
+i386                 randconfig-a004-20200512
+i386                 randconfig-a002-20200512
+x86_64               randconfig-a016-20200512
+x86_64               randconfig-a012-20200512
+x86_64               randconfig-a015-20200512
+x86_64               randconfig-a013-20200512
+x86_64               randconfig-a014-20200512
+x86_64               randconfig-a011-20200512
+i386                 randconfig-a012-20200512
+i386                 randconfig-a016-20200512
+i386                 randconfig-a014-20200512
+i386                 randconfig-a011-20200512
+i386                 randconfig-a013-20200512
+i386                 randconfig-a015-20200512
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
