@@ -2,97 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FA371CFF5C
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 22:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E419A1CFF5F
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 May 2020 22:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbgELUfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 May 2020 16:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38678 "EHLO
+        id S1726885AbgELUfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 May 2020 16:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728882AbgELUfg (ORCPT
+        by vger.kernel.org with ESMTP id S1728882AbgELUfi (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 May 2020 16:35:36 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA314C061A0C;
-        Tue, 12 May 2020 13:35:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e1so3599768wrt.5;
-        Tue, 12 May 2020 13:35:34 -0700 (PDT)
+        Tue, 12 May 2020 16:35:38 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAEE1C061A0E;
+        Tue, 12 May 2020 13:35:37 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id m24so14098124wml.2;
+        Tue, 12 May 2020 13:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=I9uvG2eCuivrXNCRIMZW/mu9KPh6v7hx44Xi50W3e7M=;
-        b=SIYsMCCpNn9yTurKHtC9iaFOvGRu2pSw4QAtSl6kVos739KlbXvBFbl6wwuJYTfwfh
-         Qrfz2hCU+q8L58f4ZFCWTKAyn83O5P9Z/WnrtTMP1/3rb6geJNlw4kiBzQXvOav7indi
-         az5I2I8lUCLDpd+TB9b94PKqgdReAg02RWeXZiMqjU9mQjDJHQuueFZvdbPNMhi8mQpY
-         jD2a86Mwd1cocsWcImudYIrO78SMZR8GLP1Z9b+KqouGHYmiHNj+WXNEYVTpnYPa1ORP
-         AqijUUxHr2gAwe0Wa3ORtu8tZ3i2G57v9VxHMieGZcuh96NFSBYe7oUkewZMYPTyzocO
-         iFxw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=gfYE1e6W8kjaePoAQJvSuLN/OYX7PHv4LVzW2vnvs4U=;
+        b=I3BtlE50IX115X0cHcjGheao2fxSRSlgpqWGc8ZET71/zj63DBUKXHE/Wieum6e4c4
+         VGdiXNtHVJBKEdPIuvVBf1ytH/bVZxmIr4ahCHaIFeNiUhS+rOMVJQqsiOv7l3IoPJoO
+         A2VYw8mXegEyhDe5gjVmAOScnkhEaFkMEyq6sbUaB73qoGmqaQ5SpwvMNhz3m3QxWRji
+         swhTBh8fq7iT3hZQem31dUbr9LXAf4EdqeG0nrvJAe7pz2ldzoziCtCUAKZ1K+/vvejU
+         wSgCPwRtIEB78tyLvUk90dAy8K+qIrddX0ocsUJLtEUWTdfbLRBfgZE4LM9dBsQ/spzU
+         zyHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=I9uvG2eCuivrXNCRIMZW/mu9KPh6v7hx44Xi50W3e7M=;
-        b=JrX4UUIIbMJWVCl5vLxZONJfum+LE4ZsCoc8/fyBYRM6BImbXzXN7T3eTApnAwaO2F
-         0NC1/fwjqFKNtRRS5iMAjZFMML39kqP4GizfpspUQSF96oKwxwRL1Om/gJLXEpldB9SU
-         JH+uapPec8hBUnmc7mh4Mic/N8MTGmmkV9nssL2Ee+ThMrxW2qJEsW3Vx4376mcfAxyA
-         ntZZ+gUeLg8p3I8hwAT3iYHkv9jQ8VIITpYwjsWzNAj8B9GR1j7wPeHg0b1VhIDKXJxa
-         hTBCnQToMKZQbSbq8QdSGRofQwMyQStMijVhP5QIrfPaLPYcJxM/9ABuxF1Q1AwZVZ2j
-         12Lg==
-X-Gm-Message-State: AGi0PuZX5Blc8YHcqqzCmGArvEAbvm0ztTAhNUnq9Cj1USDhnZprCbjr
-        CSW8Y309LYGzCzlFgTSBmnU=
-X-Google-Smtp-Source: APiQypKWLZsLTHLSTYERhLF5tW5EgNJ4+bDKF6Dsed3mTcw4kEbRCC24LhQ+8c+LiLB3dde9aQzP6Q==
-X-Received: by 2002:adf:ecc3:: with SMTP id s3mr18769535wro.301.1589315733685;
-        Tue, 12 May 2020 13:35:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=gfYE1e6W8kjaePoAQJvSuLN/OYX7PHv4LVzW2vnvs4U=;
+        b=fjR/Ql1DCijc48G/gBDWQCGiXWg4uB9GqPVoaGiWUbNWqpafBRl2Ek7gDCi2u2q4ie
+         dQiWy5zgO1kVhVwpzJYVNOkOODUxlgJdyumYz2Nyt68vvnjm53rN5Uc09ej7JSxPzG7z
+         tMy9cSEj3G7fIb6tc/wWcWUxAv53PexjWjr3bET3HNCU6F9sIqLafE/sefUra/4+fG+c
+         7kftMud4FnwX8j1z6v0W09WtI2/rJlpJQJQ/IIjrcal5WVqNFeK4hRShIiBVe72gl9gA
+         kZMXag+o6v6MkOq22TW/5ax5ddWPMNFSoIHQV78SSMcYNhEr+11SfLhba33h1jsRB6Sw
+         V1NQ==
+X-Gm-Message-State: AGi0PuYEETlyQilmCN42Ctqjjmmpo7qUhyGsjb0klMiUxUWhph9OlvZN
+        hw6c7WI75cR00kdfMM+AN+Q=
+X-Google-Smtp-Source: APiQypKMLhrmlE4mch02mKHfNsvLNU5k6H13Y813A4y7x5vB6uvf/fomIIo8HMl3YQ+LDfVL83lRmw==
+X-Received: by 2002:a1c:1d41:: with SMTP id d62mr18782392wmd.79.1589315734959;
+        Tue, 12 May 2020 13:35:34 -0700 (PDT)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k131sm418219wma.2.2020.05.12.13.35.32
+        by smtp.gmail.com with ESMTPSA id k131sm418219wma.2.2020.05.12.13.35.33
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 13:35:32 -0700 (PDT)
+        Tue, 12 May 2020 13:35:34 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] arm64: dts: rockchip: replace RK_FUNC defines in rk3326-odroid-go2.dts
-Date:   Tue, 12 May 2020 22:35:22 +0200
-Message-Id: <20200512203524.7317-1-jbx6244@gmail.com>
+Subject: [PATCH 2/3] dt-bindings: pinctrl: rockchip: update example
+Date:   Tue, 12 May 2020 22:35:23 +0200
+Message-Id: <20200512203524.7317-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200512203524.7317-1-jbx6244@gmail.com>
+References: <20200512203524.7317-1-jbx6244@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The defines RK_FUNC_1 and RK_FUNC_2 are deprecated,
-so replace them with the preferred form.
-Restyle properties in the same line.
+The Rockchip dtsi and dts files have been bulk-converted for the
+remaining raw gpio numbers into their descriptive counterparts and
+also got rid of the unhelpful RK_FUNC_x -> x and RK_GPIOx -> x
+mappings, so update the example as well.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-index fe253669b..46826b6e2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3326-odroid-go2.dts
-@@ -543,18 +543,15 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 2113cfaa2..d3eae61a3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -110,8 +110,8 @@ pinctrl@20008000 {
  
- 		soc_slppin_gpio: soc_slppin_gpio {
--			rockchip,pins =
--				<0 RK_PA4 RK_FUNC_GPIO &pcfg_output_low>;
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_output_low>;
- 		};
- 
- 		soc_slppin_rst: soc_slppin_rst {
--			rockchip,pins =
--				<0 RK_PA4 RK_FUNC_2 &pcfg_pull_none>;
-+			rockchip,pins = <0 RK_PA4 2 &pcfg_pull_none>;
- 		};
- 
- 		soc_slppin_slp: soc_slppin_slp {
--			rockchip,pins =
--				<0 RK_PA4 RK_FUNC_1 &pcfg_pull_none>;
-+			rockchip,pins = <0 RK_PA4 1 &pcfg_pull_none>;
+ 	uart2 {
+ 		uart2_xfer: uart2-xfer {
+-			rockchip,pins = <RK_GPIO1 8 1 &pcfg_pull_default>,
+-					<RK_GPIO1 9 1 &pcfg_pull_default>;
++			rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
++					<1 RK_PB1 1 &pcfg_pull_default>;
  		};
  	};
  };
