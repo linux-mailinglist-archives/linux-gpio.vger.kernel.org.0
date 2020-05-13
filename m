@@ -2,85 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0C991D1334
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 14:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67BD51D1356
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 14:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbgEMMvx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 May 2020 08:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731779AbgEMMvw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 May 2020 08:51:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C33F6206B7;
-        Wed, 13 May 2020 12:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589374312;
-        bh=1SBdssmchS7etFt8Hcpk8fQ7VCPg4FYqBUt6sF72B5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OhEM8JhEn/lJos7yaxYu6g2ZU9D8JyDCADcM+2ZZ+L7kaoQ5Kqjgr6WE63xVWYNm3
-         PUttciyF4c3ojFT2P7SWDpwh9M+5487VZWdWYsKiwzfT2RiIbNvQTFc1NPVbEwcaxQ
-         ybwWLmTXc9XexFxejMYj2YDLQq5vGFBcBi5e8Nk8=
-Date:   Wed, 13 May 2020 14:51:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     kernelci@groups.io, kernel-build-reports@lists.linaro.org,
-        automated-testing@lists.yoctoproject.org,
-        linux-next@vger.kernel.org, stable@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>, agross@kernel.org,
-        qcomlt-patches@lists.linaro.org,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>, ulf.hansson@linaro.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org,
-        vireshk@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        kernel@collabora.com, kernelci@baylibre.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: kernelci.org transitioning to functional testing
-Message-ID: <20200513125150.GA1084253@kroah.com>
-References: <66aae710-1ee9-fb67-1a1b-997eeb70dc04@collabora.com>
+        id S1733014AbgEMMz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 May 2020 08:55:56 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:29476 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733012AbgEMMz4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 May 2020 08:55:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589374555; x=1620910555;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=71agoK2Lf2NcrvRKduazxlxfbvYG5gjDX3+0wemNjCw=;
+  b=kEw7j3J8Lg4DwRYfGV4TWwm19Mi5fvwPznVCKoEhCeosxX4cMtq5qGpK
+   5HlVLaiwltFUBGV92YyJ8C8zcDZs/emt3ZLnGKrVcHuVLKwpiYbWiVDrB
+   SrTbJKssRFhxo4USE4C+StM+E9hu5BnLsO5wNwbCF8HA8Z8IqJOMvNeyF
+   jded16ChrSfnEEAEelXXXtdHHrXx2TcjpHPuTYjpewkYnaBqp/P2gzjDI
+   LnV3MBHL6J9NNvTOXGC1NXs36/q6RXLs9bZLRMVooNmVqTGJ3fMoUtBd+
+   yaTpJUjvEb4crVCUr3dfvC/DUa4JK3k7Cyw2Ojtp/Jncvz4Pk4t3pwoRL
+   Q==;
+IronPort-SDR: 3Bbqq+3ueyuEU0vcFJ63If04Fklj8PCnVSsmtda/MfpzXzLeqBZv06fQHy9pyyPmCnNbtRr+0a
+ WKD8Sfn8OkWwYsBSil4fsWOrrGRJoDowIhYPnCMK08AvJmX7pZ/EXNgGSYq79ci5/nEx5RWj70
+ mwSIziKMbOkRgj/N237z1EX/Kkra6yNHUeCsDuY7rS9uKCqDBBXbGr8dzn9k6No+gjmoT8Cw3I
+ R7cuwk+XjmQNHshM9gm7mEbUFj8srYBXqe4n0XXL58LCAGSjnt3RhOmuz/UFFD9kWdP7Pu2Cdt
+ iUk=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="76494509"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:55:55 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 05:55:57 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:55:52 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/14] Adding support for Microchip Sparx5 SoC
+Date:   Wed, 13 May 2020 14:55:18 +0200
+Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <66aae710-1ee9-fb67-1a1b-997eeb70dc04@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:13:24PM +0100, Guillaume Tucker wrote:
-> As kernelci.org is expanding its functional testing
-> capabilities, the concept of boot testing is now being
-> deprecated.
-> 
-> Next Monday 18th May, the web dashboard on https://kernelci.org
-> will be updated to primarily show functional test results
-> rather than boot results.  The Boots tab will still be
-> available until 5th June to ease the transition.
-> 
-> The new equivalent to boot testing is the *baseline* test suite
-> which also runs sanity checks using dmesg and bootrr[1].
-> 
-> Boot email reports will eventually be replaced with baseline
-> reports.  For those of you already familiar with the test email
-> reports, they will be simplified to only show regressions with
-> links to the dashboard for all the details.
-> 
-> Some functional tests are already being run by kernelci.org,
-> results have only been shared by email so far but they will
-> become visible on the web dashboard next week.  In particular:
-> v4l2-compliance, i-g-t for DRM/KMS and Panfrost,
-> suspend/resume...
-> 
-> And of course, a lot of functional test suites are in the
-> process of being added: kselftest, KUnit, LTP, xfstests,
-> extended i-g-t coverage and many more.
-> 
-> The detailed schedule is available on a GitHub issue[2].
+This patch series adds support for Microchip Sparx5 SoC, the CPU
+system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+x 2 CPU core (A53).
 
-Very cool stuff, thanks so much to everyone involved for making this
-happen, it's really helpful.
+Although this is an ARM core, it shares some peripherals with the
+Microsemi Ocelot SoC.
 
-greg k-h
+This is the first official revision of the series.
+
+Lars Povlsen (14):
+  pinctrl: ocelot: Should register GPIO's even if not irq controller
+  pinctrl: ocelot: Remove instance number from pin functions
+  pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
+  arm64: sparx5: Add support for Microchip 2xA53 SoC
+  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+  arm64: dts: sparx5: Add basic cpu support
+  dt-bindings: pinctrl: ocelot: Add Sparx5 SoC support
+  arm64: dts: sparx5: Add pinctrl support
+  pinctrl: ocelot: Add Sparx5 SoC support
+  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+  dt-bindings: clock: sparx5: Add bindings include file
+  clk: sparx5: Add Sparx5 SoC DPLL clock driver
+  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+  arm64: dts: sparx5: Add i2c devices, i2c muxes
+
+ .../bindings/arm/microchip,sparx5.yaml        |  87 +++
+ .../bindings/clock/microchip,sparx5-dpll.yaml |  46 ++
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  |   4 +-
+ MAINTAINERS                                   |   9 +
+ arch/arm64/Kconfig.platforms                  |  14 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   4 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 202 +++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+ .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 +++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-sparx5.c                      | 269 +++++++++
+ drivers/pinctrl/pinctrl-ocelot.c              | 558 +++++++++++++++---
+ include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+ 20 files changed, 1587 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+ create mode 100644 drivers/clk/clk-sparx5.c
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+
+--
+2.26.2
