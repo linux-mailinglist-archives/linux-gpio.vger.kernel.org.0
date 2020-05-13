@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D30691D1B1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 18:34:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A9041D1B1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 18:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389658AbgEMQec (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 May 2020 12:34:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64986 "EHLO mga11.intel.com"
+        id S1730472AbgEMQe0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 May 2020 12:34:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21363 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728780AbgEMQec (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 May 2020 12:34:32 -0400
-IronPort-SDR: RU0bS1DYG6k/a2rcgI0CsHzWQS7k2Jw4CVonSoyj/SgrTEPZPpCzwx3cMAl97eoQYHmIFe6tDB
- GkFSVrVVRVqg==
+        id S1728780AbgEMQe0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 May 2020 12:34:26 -0400
+IronPort-SDR: WTXX6jsTTBL2PFz+5cew9m7FKN1zN1sS56/iRu4aca8/IWGQcJAo2AJvd8i6gclEcRIjX2lf8b
+ 3vv72GbvVRiA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 09:34:31 -0700
-IronPort-SDR: bKPkJopIpTtGeu56oEn3c9KshxLMpJfx9UMdv33nYSgWKjsNqOjM9moJB9iDTeeFt6ix2gYKGp
- JUB1oGuYNyEg==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 09:34:25 -0700
+IronPort-SDR: lNIYhNcyQv2/dJP7RY/22yed0oO0sp8jJdbd8nA1vUrdz62EvbCWrs5hmvCPMmb7LObzb6TNIz
+ 2NdFnwTM359g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
-   d="scan'208";a="297725154"
+   d="scan'208";a="262542739"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 09:34:30 -0700
+  by orsmga003.jf.intel.com with ESMTP; 13 May 2020 09:34:24 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jYuKz-0004XR-Tg; Thu, 14 May 2020 00:34:29 +0800
-Date:   Thu, 14 May 2020 00:33:57 +0800
+        id 1jYuKt-0003oA-Qs; Thu, 14 May 2020 00:34:23 +0800
+Date:   Thu, 14 May 2020 00:34:02 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- ed43f2b4e78069ee02687e5a562e1ecd15cbef4f
-Message-ID: <5ebc2175.2LEI+UlzkK7xB0NM%lkp@intel.com>
+Subject: [gpio:for-next] BUILD SUCCESS
+ ccec57d2a1fbc5b2c2e75647fab08a2b8a662c68
+Message-ID: <5ebc217a.iV8WqP3XvqCFHFXd%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,13 +43,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: ed43f2b4e78069ee02687e5a562e1ecd15cbef4f  Merge tag 'intel-gpio-v5.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into devel
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: ccec57d2a1fbc5b2c2e75647fab08a2b8a662c68  Merge branch 'devel' into for-next
 
 elapsed time: 481m
 
-configs tested: 123
-configs skipped: 7
+configs tested: 124
+configs skipped: 6
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -62,7 +62,6 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
-m68k                             allyesconfig
 sparc                            allyesconfig
 mips                          rm200_defconfig
 riscv                    nommu_virt_defconfig
@@ -83,11 +82,6 @@ sh                            titan_defconfig
 mips                       capcella_defconfig
 arm                       spear13xx_defconfig
 arc                        nsimosci_defconfig
-arm                         shannon_defconfig
-nios2                            alldefconfig
-arm                           corgi_defconfig
-arm                         lpc32xx_defconfig
-mips                      loongson3_defconfig
 arc                          axs101_defconfig
 mips                     loongson1c_defconfig
 c6x                        evmc6472_defconfig
@@ -108,6 +102,7 @@ m68k                             allmodconfig
 m68k                              allnoconfig
 m68k                           sun3_defconfig
 m68k                                defconfig
+m68k                             allyesconfig
 nios2                               defconfig
 nios2                            allyesconfig
 openrisc                            defconfig
@@ -153,6 +148,12 @@ i386                 randconfig-a003-20200513
 i386                 randconfig-a001-20200513
 i386                 randconfig-a004-20200513
 i386                 randconfig-a002-20200513
+i386                 randconfig-a012-20200513
+i386                 randconfig-a016-20200513
+i386                 randconfig-a014-20200513
+i386                 randconfig-a011-20200513
+i386                 randconfig-a013-20200513
+i386                 randconfig-a015-20200513
 riscv                            allyesconfig
 riscv                               defconfig
 riscv                            allmodconfig
