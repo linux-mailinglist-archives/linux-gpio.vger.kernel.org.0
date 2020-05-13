@@ -2,178 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 108D71D1730
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 16:11:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03AF71D17B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 May 2020 16:36:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388846AbgEMOLv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 May 2020 10:11:51 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38182 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388793AbgEMOLu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 May 2020 10:11:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589379109; x=1620915109;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Dj/tqGjjDtj2A9PaqeSsjiB8UtDRZ0jP0v5pZdM7/yE=;
-  b=GvvFdOv5hDTqp67Lz8INK4LbULY9nuhbZyPIe0mBJfw1DlRt3IsV8q3D
-   0fb77ocElGgMP5+BnxyleRYXmmTWnbodcIJzmnyM5c399+qEtWQmwfAiz
-   y6aABiZjhd9AYEnxgIhRv/P+t6Rk2H2nDEmmRzQUJ7ZBNYuEG7C8mt4me
-   Tw0NYhTJ957KC47PO94+89ggGz993dMu1PEERGHu6NAJEwMA5/yy17SHn
-   CvwyPySaCGobqMkkBZQZApmUzvYnW/gyIMNOHNvo8VywetuD/2EMj3YMv
-   /H2CoiPCCcfN0uemTRpo3RkRZtaH7cOpR7ghwo3vqBfsSE2MbxPZ0iH4C
-   A==;
-IronPort-SDR: GCvGB2O5qzhphdVtjFPJUTIZwX2bvDRmVC5jMlmG08bTSDE/UpKDexka79h8f1+0xeh1otbyAS
- ghS/6GRQIEWmYOv/ttTRyTxh4LlbTxjfg/O1nb25iLprkvGj1M+29RjIJKU0wpTvahP2fcP798
- n69qE+4Vxm1x/zXGZlttuXMmFPYDnsyz48p/qNSvlug9HzZzkh5o7OHIWdZ7gRVoaOG4S9Fm1i
- J+hXXCqMsuOaO/y72T+Wop97ARfagWMWYzDwbNqi8QHJN1Ln/Pfp8C39B+0TnD9/0dAEgy2VUP
- 5rQ=
-X-IronPort-AV: E=Sophos;i="5.73,388,1583218800"; 
-   d="scan'208";a="76510168"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:11:49 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 07:11:48 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 07:11:46 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     SoC Team <soc@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/3] arm64: dts: sparx5: Add SGPIO devices
-Date:   Wed, 13 May 2020 16:11:34 +0200
-Message-ID: <20200513141134.25819-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513141134.25819-1-lars.povlsen@microchip.com>
-References: <20200513141134.25819-1-lars.povlsen@microchip.com>
+        id S2388899AbgEMOg1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 May 2020 10:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732972AbgEMOg0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 May 2020 10:36:26 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2BA4C061A0C
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 07:36:24 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id y3so21179189wrt.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 07:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ED/rV/e5loFvJYb5vErCztn0syUYserC98I6IETlsDc=;
+        b=lmOX5cIrXVmRIE3aXQWY0Ac/BJ5/tS/IY+BPJBPLWHUSnrrLFnb+JCysGxqq2nWqaF
+         h4KOFCgucqDDSt6Ec0WeFpXDbouOM0QMX9QTy4BVy4pe9KNG5D9J1NIXq2iyS5tM2rm/
+         +ExxmG6qjfRTmma44NoX3e5vKdLuP4c9RO+CYrqt/6kdkFNWXz1e7O3tkclG4z81bba3
+         DS4ujq/SlGNV7sCs3eSmuh3edTcxMxW5D6lOLqztHeaUq6r1sddkvVAJjy28dKGTkZEj
+         bBUiMQhru0sws1x2jEvcn7P0qdzWcI/4YiSL3mwpUDS+qbR0ST/TuBSz/o/bqW7QK5wT
+         Fkqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ED/rV/e5loFvJYb5vErCztn0syUYserC98I6IETlsDc=;
+        b=Gc708j/iusKFxOw6No6VIdLqmHLHuIhQ/IQEra/M+bt71xOEBrs/zwYPK/FKtS+WzP
+         8Qti7A8c1/iUet6Z9TWq1LhE6/XVYegwHWLip5APf3NjLts0+G0tLaUvcToeZ0rTlEp8
+         VJfYP9ARPATcEV18q0Bp7SUIauSL5YZpuNWfiv6lJR42nxpXRw9yJGfyEOQwpfAfZjEs
+         GimDPeSD/0OuDkNY03Ieop0JxmW4NMECDcrkTG4zmfQkH36TvQ1OzJGdiVgqdtNjGl5P
+         T+zsZy+EJAQLGuUkT38VYg1NghhSbjVdjjLLnH1hI7ps8S1A4f5fTGKG4ouP2v/Rtgkn
+         MKdQ==
+X-Gm-Message-State: AGi0PuYXfNSfgy5TUMYj8BEwzlJ5gk3oUYbQG9gSNosx3XNZTiNRiXiE
+        DZ2EQQpXNohJeWY9slSKRGd1Rg==
+X-Google-Smtp-Source: APiQypLWfnbeXHjqIcCUHNCKrowfdLXkgmajZDMAwN6M3geajVlWXZw+u+wMNjWHWyilwDaGYcpoyw==
+X-Received: by 2002:adf:eac8:: with SMTP id o8mr15780242wrn.268.1589380583465;
+        Wed, 13 May 2020 07:36:23 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z18sm16614041wmk.46.2020.05.13.07.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 07:36:22 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.7-rc6
+Date:   Wed, 13 May 2020 16:36:19 +0200
+Message-Id: <20200513143619.20565-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds SGPIO devices for the Sparx5 SoC and configures it for the
-applicable reference boards.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 52 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      |  5 ++
- .../dts/microchip/sparx5_pcb134_board.dtsi    |  5 ++
- 3 files changed, 62 insertions(+)
+Linus,
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 60629861a5157..b4fda5616536c 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -213,6 +213,22 @@ si2_pins: si2-pins {
- 				function = "si2";
- 			};
+please pull the following batch of fixes I picked up since v5.7-rc3.
 
-+			sgpio0_pins: sgpio-pins {
-+				pins = "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
-+				function = "sg0";
-+			};
-+
-+			sgpio1_pins: sgpio1-pins {
-+				pins = "GPIO_4", "GPIO_5", "GPIO_12", "GPIO_13";
-+				function = "sg1";
-+			};
-+
-+			sgpio2_pins: sgpio2-pins {
-+				pins = "GPIO_30", "GPIO_31", "GPIO_32",
-+				       "GPIO_33";
-+				function = "sg2";
-+			};
-+
- 			uart_pins: uart-pins {
- 				pins = "GPIO_10", "GPIO_11";
- 				function = "uart";
-@@ -243,6 +259,42 @@ emmc_pins: emmc-pins {
- 			};
- 		};
+Bart
 
-+		sgpio0: gpio@61101036c {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio0_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101036c 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 64 64>;
-+		};
-+
-+		sgpio1: gpio@611010484 {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio1_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x11010484 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 128 64>;
-+		};
-+
-+		sgpio2: gpio@61101059c {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio2_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101059c 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 192 64>;
-+		};
-+
- 		i2c0: i2c@600101000 {
- 			compatible = "snps,designware-i2c";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 94c4c3fd5a786..fd4f5b3ddcc49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -55,6 +55,11 @@ spi-flash@1 {
- 	};
- };
+The following changes since commit 6409d049ce28bef35e13dfb8699fc7ee27469ba1:
 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-ports = <0x00FFFFFF>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 628a05d3f57ce..2f781258f8c99 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -47,6 +47,11 @@ spi-flash@0 {
- 	};
- };
+  gpiolib: don't call sleeping functions with a spinlock taken (2020-04-23 17:55:27 +0200)
 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-ports = <0x00FFFFFF>;
-+};
-+
- &gpio {
- 	i2cmux_pins_i: i2cmux-pins-i {
- 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
---
-2.26.2
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.7-rc6
+
+for you to fetch changes up to 9fefca775c8ddbbbcd97f2860218188b8641819d:
+
+  gpiolib: notify user-space about line status changes after flags are set (2020-05-13 16:25:20 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.7-rc6
+
+- fix probing for chips without PWM in gpio-mvebu
+- fix ida_simple_get() error path in gpio-exar
+- fix user-space notifications for line state changes
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpiolib: notify user-space about line status changes after flags are set
+
+Sascha Hauer (1):
+      gpio: mvebu: Fix probing for chips without PWM
+
+Takashi Iwai (1):
+      gpio: exar: Fix bad handling for ida_simple_get error path
+
+ drivers/gpio/gpio-exar.c  |  7 +++++--
+ drivers/gpio/gpio-mvebu.c | 15 +++++++++------
+ drivers/gpio/gpiolib.c    | 15 +++++++++++++--
+ 3 files changed, 27 insertions(+), 10 deletions(-)
