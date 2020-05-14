@@ -2,21 +2,21 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C761D2B32
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 11:22:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EB3B1D2B2F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 11:22:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgENJWB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 May 2020 05:22:01 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:52965 "EHLO
+        id S1726265AbgENJVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 05:21:54 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:52961 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgENJVz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 05:21:55 -0400
+        with ESMTP id S1725878AbgENJVw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 05:21:52 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04E9LQV70025255, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 04E9LRV20025255, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04E9LQV70025255
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 04E9LRV20025255
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 14 May 2020 17:21:26 +0800
+        Thu, 14 May 2020 17:21:27 +0800
 Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
  RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -33,1038 +33,827 @@ To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
 CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
         <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/7] pinctrl: realtek: DHC: Fix pinctrl driver coding style according to checkpatch.pl.
-Date:   Thu, 14 May 2020 17:21:23 +0800
-Message-ID: <20200514092125.6875-6-tychang@realtek.com>
+Subject: [PATCH 6/7] pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and rename.
+Date:   Thu, 14 May 2020 17:21:24 +0800
+Message-ID: <20200514092125.6875-7-tychang@realtek.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200514092125.6875-1-tychang@realtek.com>
 References: <20200514092125.6875-1-tychang@realtek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix Realtek DHC SoC pinctrl driver coding style.
+Move Realtek DHC SoC pinctrl drivers to realtek directory and
+rename pinctrl-rtd119x.c to pinctrl-rtd.c.
 
 Signed-off-by: TY Chang <tychang@realtek.com>
 ---
- drivers/pinctrl/pinctrl-rtd1195.h | 131 +++++++---
- drivers/pinctrl/pinctrl-rtd119x.c | 124 +++++----
- drivers/pinctrl/pinctrl-rtd1295.h | 407 ++++++++++++++++++++++--------
- 3 files changed, 466 insertions(+), 196 deletions(-)
+ drivers/pinctrl/Kconfig                       |  10 +-
+ drivers/pinctrl/Makefile                      |   2 +-
+ drivers/pinctrl/realtek/Kconfig               |  14 ++
+ drivers/pinctrl/realtek/Makefile              |   3 +
+ .../pinctrl-rtd.c}                            | 166 +++++++++---------
+ .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   |  20 +--
+ .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   |  40 ++---
+ 7 files changed, 132 insertions(+), 123 deletions(-)
+ create mode 100644 drivers/pinctrl/realtek/Kconfig
+ create mode 100644 drivers/pinctrl/realtek/Makefile
+ rename drivers/pinctrl/{pinctrl-rtd119x.c => realtek/pinctrl-rtd.c} (69%)
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (98%)
+ rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (98%)
 
-diff --git a/drivers/pinctrl/pinctrl-rtd1195.h b/drivers/pinctrl/pinctrl-rtd1195.h
-index 9f3471d02221..f0dd91f416e8 100644
---- a/drivers/pinctrl/pinctrl-rtd1195.h
-+++ b/drivers/pinctrl/pinctrl-rtd1195.h
-@@ -1,3 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
-+
-+/*
-+ * Realtek RTD1195 pin controller driver
-+ *
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
- #ifndef PINCTRL_RTD1195_H
- #define PINCTRL_RTD1195_H
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 311fe1eafe76..a3e1d45a604c 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -198,15 +198,6 @@ config PINCTRL_OXNAS
+ 	select GPIOLIB_IRQCHIP
+ 	select MFD_SYSCON
  
-@@ -76,15 +84,20 @@ static const unsigned int rtd1195_ur1_cts_n_pins[] = { RTD1195_ISO_UR1_CTS_N };
- static const unsigned int rtd1195_ur1_rts_n_pins[] = { RTD1195_ISO_UR1_RTS_N };
- static const unsigned int rtd1195_i2c_scl_0_pins[] = { RTD1195_ISO_I2C_SCL_0 };
- static const unsigned int rtd1195_i2c_sda_0_pins[] = { RTD1195_ISO_I2C_SDA_0 };
--static const unsigned int rtd1195_etn_led_link_pins[] = { RTD1195_ISO_ETN_LED_LINK };
--static const unsigned int rtd1195_etn_led_rxtx_pins[] = { RTD1195_ISO_ETN_LED_RXTX };
-+static const unsigned int rtd1195_etn_led_link_pins[] = {
-+				RTD1195_ISO_ETN_LED_LINK };
-+static const unsigned int rtd1195_etn_led_rxtx_pins[] = {
-+				RTD1195_ISO_ETN_LED_RXTX };
- static const unsigned int rtd1195_i2c_scl_6_pins[] = { RTD1195_ISO_I2C_SCL_6 };
- static const unsigned int rtd1195_i2c_sda_6_pins[] = { RTD1195_ISO_I2C_SDA_6 };
- static const unsigned int rtd1195_ai_loc_pins[] = { RTD1195_ISO_AI_LOC };
--static const unsigned int rtd1195_ejtag_avcpu_loc_pins[] = { RTD1195_ISO_EJTAG_AVCPU_LOC };
-+static const unsigned int rtd1195_ejtag_avcpu_loc_pins[] = {
-+				RTD1195_ISO_EJTAG_AVCPU_LOC };
- static const unsigned int rtd1195_ur1_loc_pins[] = { RTD1195_ISO_UR1_LOC };
--static const unsigned int rtd1195_pwm_01_open_drain_pins[] = { RTD1195_ISO_PWM_01_OPEN_DRAIN };
--static const unsigned int rtd1195_pwm_23_open_drain_pins[] = { RTD1195_ISO_PWM_23_OPEN_DRAIN };
-+static const unsigned int rtd1195_pwm_01_open_drain_pins[] = {
-+				RTD1195_ISO_PWM_01_OPEN_DRAIN };
-+static const unsigned int rtd1195_pwm_23_open_drain_pins[] = {
-+				RTD1195_ISO_PWM_23_OPEN_DRAIN };
- 
- 
- #define RTD1195_GROUP(_name) \
-@@ -148,26 +161,46 @@ static const char * const rtd1195_iso_avcpu_ejtag_misc_loc_groups[] = {
- 	"ejtag_avcpu_loc"
- };
- 
+-config PINCTRL_REALTEK
+-	bool "Realtek RTD129x pinctrl driver"
+-	depends on OF
+-	depends on ARCH_REALTEK || COMPILE_TEST
+-	select GENERIC_PINCONF
+-	select PINMUX
+-	help
+-	  This selects pinctrl driver for Realtek RTD1295 platforms.
 -
--static const char * const rtd1195_iso_etn_led_groups[] = { "etn_led_link", "etn_led_rxtx" };
--static const char * const rtd1195_iso_i2c0_groups[] = { "i2c_scl_0", "i2c_sda_0" };
-+static const char * const rtd1195_iso_etn_led_groups[] = {
-+	"etn_led_link", "etn_led_rxtx"
-+};
-+static const char * const rtd1195_iso_i2c0_groups[] = {
-+	"i2c_scl_0", "i2c_sda_0"
-+};
- static const char * const rtd1195_iso_i2c2_groups[] = { "vfd_d" };
- static const char * const rtd1195_iso_i2c3_groups[] = { "ir_tx" };
--static const char * const rtd1195_iso_i2c6_groups[] = { "i2c_scl_6", "i2c_sda_6" };
-+static const char * const rtd1195_iso_i2c6_groups[] = {
-+	"i2c_scl_6", "i2c_sda_6"
-+};
- static const char * const rtd1195_iso_ir_rx_groups[] = { "ir_rx" };
- static const char * const rtd1195_iso_ir_tx_groups[] = { "ir_tx" };
- static const char * const rtd1195_iso_pwm_groups[] = {
- 	"ur0_rx", "ur0_tx", "ur1_rx", "ur1_tx", "etn_led_link", "etn_led_rxtx"
- };
--static const char * const rtd1195_iso_standby_dbg_groups[] = { "ir_rx", "usb0", "usb1" };
-+static const char * const rtd1195_iso_standby_dbg_groups[] = {
-+	"ir_rx", "usb0", "usb1"
-+};
- static const char * const rtd1195_iso_uart0_groups[] = { "ur0_rx", "ur0_tx" };
--static const char * const rtd1195_iso_uart1_groups[] = { "ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n", "ur1_loc" };
-+static const char * const rtd1195_iso_uart1_groups[] = {
-+	"ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n", "ur1_loc"
-+};
- static const char * const rtd1195_iso_ur1_misc_groups[] = { "ur1_loc" };
--static const char * const rtd1195_iso_vfd_groups[] = { "vfd_cs_n", "vfd_clk", "vfd_d" };
--static const char * const rtd1195_iso_pwm_01_normal_groups[] = { "pwm_01_open_drain" };
--static const char * const rtd1195_iso_pwm_23_normal_groups[] = { "pwm_23_open_drain" };
--static const char * const rtd1195_iso_pwm_01_open_drain_groups[] = { "pwm_01_open_drain" };
--static const char * const rtd1195_iso_pwm_23_open_drain_groups[] = { "pwm_23_open_drain" };
-+static const char * const rtd1195_iso_vfd_groups[] = {
-+	"vfd_cs_n", "vfd_clk", "vfd_d"
-+};
-+static const char * const rtd1195_iso_pwm_01_normal_groups[] = {
-+	"pwm_01_open_drain"
-+};
-+static const char * const rtd1195_iso_pwm_23_normal_groups[] = {
-+	"pwm_23_open_drain"
-+};
-+static const char * const rtd1195_iso_pwm_01_open_drain_groups[] = {
-+	"pwm_01_open_drain"
-+};
-+static const char * const rtd1195_iso_pwm_23_open_drain_groups[] = {
-+	"pwm_23_open_drain"
+ config PINCTRL_ROCKCHIP
+ 	bool
+ 	select PINMUX
+@@ -430,6 +421,7 @@ source "drivers/pinctrl/mediatek/Kconfig"
+ source "drivers/pinctrl/zte/Kconfig"
+ source "drivers/pinctrl/meson/Kconfig"
+ source "drivers/pinctrl/cirrus/Kconfig"
++source "drivers/pinctrl/realtek/Kconfig"
+ 
+ config PINCTRL_XWAY
+ 	bool
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index d4bec880c9bc..2bda2e19da8b 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -27,7 +27,6 @@ obj-$(CONFIG_PINCTRL_OXNAS)	+= pinctrl-oxnas.o
+ obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
+ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
+ obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+-obj-$(CONFIG_PINCTRL_REALTEK)	+= pinctrl-rtd119x.o
+ obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+ obj-$(CONFIG_PINCTRL_RZA1)	+= pinctrl-rza1.o
+ obj-$(CONFIG_PINCTRL_RZA2)	+= pinctrl-rza2.o
+@@ -73,3 +72,4 @@ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
+ obj-y				+= mediatek/
+ obj-$(CONFIG_PINCTRL_ZX)	+= zte/
+ obj-y				+= cirrus/
++obj-y				+= realtek/
+\ No newline at end of file
+diff --git a/drivers/pinctrl/realtek/Kconfig b/drivers/pinctrl/realtek/Kconfig
+new file mode 100644
+index 000000000000..12c05799d223
+--- /dev/null
++++ b/drivers/pinctrl/realtek/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +
-+};
- 
- 
- 
-@@ -527,12 +560,17 @@ static const unsigned int rtd1195_i2c_scl_1_pins[] = { RTD1195_I2C_SCL_1 };
- static const unsigned int rtd1195_i2c_sda_1_pins[] = { RTD1195_I2C_SDA_1 };
- static const unsigned int rtd1195_i2c_scl_4_pins[] = { RTD1195_I2C_SCL_4 };
- static const unsigned int rtd1195_i2c_sda_4_pins[] = { RTD1195_I2C_SDA_4 };
--static const unsigned int rtd1195_sensor_cko_0_pins[] = { RTD1195_SENSOR_CKO_0 };
--static const unsigned int rtd1195_sensor_cko_1_pins[] = { RTD1195_SENSOR_CKO_1 };
-+static const unsigned int rtd1195_sensor_cko_0_pins[] = {
-+					RTD1195_SENSOR_CKO_0 };
-+static const unsigned int rtd1195_sensor_cko_1_pins[] = {
-+					RTD1195_SENSOR_CKO_1 };
- static const unsigned int rtd1195_sensor_rst_pins[] = { RTD1195_SENSOR_RST };
--static const unsigned int rtd1195_sensor_stb_0_pins[] = { RTD1195_SENSOR_STB_0 };
--static const unsigned int rtd1195_sensor_stb_1_pins[] = { RTD1195_SENSOR_STB_1 };
--static const unsigned int rtd1195_ejtag_scpu_loc_pins[] = { RTD1195_EJTAG_SCPU_LOC };
-+static const unsigned int rtd1195_sensor_stb_0_pins[] = {
-+					RTD1195_SENSOR_STB_0 };
-+static const unsigned int rtd1195_sensor_stb_1_pins[] = {
-+					RTD1195_SENSOR_STB_1 };
-+static const unsigned int rtd1195_ejtag_scpu_loc_pins[] = {
-+					RTD1195_EJTAG_SCPU_LOC };
- static const unsigned int rtd1195_hif_loc_pins[] = { RTD1195_HI_LOC };
- static const unsigned int rtd1195_ao_loc_pins[] = { RTD1195_AO_LOC };
- 
-@@ -617,11 +655,14 @@ static const struct rtd119x_pin_group_desc rtd1195_crt_pin_groups[] = {
- static const char * const rtd1195_crt_gpio_groups[] = {
- 	"gpio_0", "gpio_1", "gpio_2", "gpio_3",
- 	"gpio_4", "gpio_5", "gpio_6", "gpio_7", "gpio_8",
--	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
--	"nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale", "nf_cle", "nf_ce_n_0", "nf_ce_n_1",
-+	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3",
-+	"nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
-+	"nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale",
-+	"nf_cle", "nf_ce_n_0", "nf_ce_n_1",
- 	"mmc_data_0", "mmc_data_1", "mmc_data_2", "mmc_data_3",
- 	"mmc_clk", "mmc_cmd", "mmc_wp", "mmc_cd",
--	"sdio_clk", "sdio_data_0", "sdio_data_1", "sdio_data_2", "sdio_data_3", "sdio_cmd",
-+	"sdio_clk", "sdio_data_0", "sdio_data_1",
-+	"sdio_data_2", "sdio_data_3", "sdio_cmd",
- 	"i2c_scl_5", "i2c_sda_5",
- 	"tp1_data", "tp1_clk", "tp1_valid", "tp1_sync",
- 	"tp0_data", "tp0_clk", "tp0_valid", "tp0_sync",
-@@ -649,7 +690,8 @@ static const char * const rtd1195_crt_avcpu_ejtag_misc_groups[] = {
- };
- static const char * const rtd1195_crt_cpu_loop_groups[] = { "usb_id" };
- static const char * const rtd1195_crt_emmc_groups[] = {
--	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
-+	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3",
-+	"nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
- 	"nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale", "nf_cle",
- };
- static const char * const rtd1195_crt_gspi_groups[] = {
-@@ -664,30 +706,45 @@ static const char * const rtd1195_crt_hif_misc_groups[] = {
- };
- 
- 
--static const char * const rtd1195_crt_i2c1_groups[] = { "i2c_scl_1", "i2c_sda_1" };
--static const char * const rtd1195_crt_i2c2_groups[] = { "tp1_sync", "tp1_clk" };
--static const char * const rtd1195_crt_i2c3_groups[] = { "tp1_data", "tp1_valid" };
--static const char * const rtd1195_crt_i2c4_groups[] = { "i2c_scl_4", "i2c_sda_4" };
--static const char * const rtd1195_crt_i2c5_groups[] = { "i2c_scl_5", "i2c_sda_5" };
-+static const char * const rtd1195_crt_i2c1_groups[] = {
-+	"i2c_scl_1", "i2c_sda_1"
-+};
-+static const char * const rtd1195_crt_i2c2_groups[] = {
-+	"tp1_sync", "tp1_clk"
-+};
-+static const char * const rtd1195_crt_i2c3_groups[] = {
-+	"tp1_data", "tp1_valid" };
-+static const char * const rtd1195_crt_i2c4_groups[] = {
-+	"i2c_scl_4", "i2c_sda_4"
-+};
-+static const char * const rtd1195_crt_i2c5_groups[] = {
-+	"i2c_scl_5", "i2c_sda_5"
-+};
- static const char * const rtd1195_crt_mmc_groups[] = {
- 	"mmc_data_0", "mmc_data_1", "mmc_data_2", "mmc_data_3",
- 	"mmc_clk", "mmc_cmd", "mmc_wp", "mmc_cd",
- };
- static const char * const rtd1195_crt_nand_groups[] = {
--	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
--	"nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale", "nf_cle", "nf_ce_n_0", "nf_ce_n_1",
-+	"nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3",
-+	"nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7",
-+	"nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale",
-+	"nf_cle", "nf_ce_n_0", "nf_ce_n_1",
- };
- static const char * const rtd1195_crt_scpu_ejtag_gpio_groups[] = {
- 	"gpio_4", "gpio_5", "gpio_6", "gpio_7", "gpio_8", "ejtag_scpu_loc"
- };
- static const char * const rtd1195_crt_scpu_ejtag_cr_groups[] = {
--	"mmc_data_0", "mmc_data_3", "mmc_clk", "mmc_cmd", "mmc_wp", "ejtag_scpu_loc"
-+	"mmc_data_0", "mmc_data_3", "mmc_clk",
-+	"mmc_cmd", "mmc_wp", "ejtag_scpu_loc"
- };
- 
- static const char * const rtd1195_crt_sdio_groups[] = {
--	"sdio_clk", "sdio_data_0", "sdio_data_1", "sdio_data_2", "sdio_data_3", "sdio_cmd",
-+	"sdio_clk", "sdio_data_0", "sdio_data_1",
-+	"sdio_data_2", "sdio_data_3", "sdio_cmd",
-+};
-+static const char * const rtd1195_crt_sensor_groups[] = {
-+	"sensor_cko_0", "sensor_cko_1"
- };
--static const char * const rtd1195_crt_sensor_groups[] = { "sensor_cko_0", "sensor_cko_1" };
- static const char * const rtd1195_crt_spdif_groups[] = { "spdif" };
- static const char * const rtd1195_crt_tp0_groups[] = {
- 	"tp0_data", "tp0_clk", "tp0_valid", "tp0_sync",
-@@ -695,7 +752,9 @@ static const char * const rtd1195_crt_tp0_groups[] = {
- static const char * const rtd1195_crt_tp1_groups[] = {
- 	"tp1_data", "tp1_clk", "tp1_valid", "tp1_sync",
- };
--static const char * const rtd1195_crt_uart1_groups[] = { "gpio_0", "gpio_1", "gpio_2", "gpio_3" };
-+static const char * const rtd1195_crt_uart1_groups[] = {
-+	"gpio_0", "gpio_1", "gpio_2", "gpio_3"
-+};
- static const char * const rtd1195_crt_usb_groups[] = { "sensor_cko_1" };
- 
- #define RTD1195_FUNC(_name) \
-diff --git a/drivers/pinctrl/pinctrl-rtd119x.c b/drivers/pinctrl/pinctrl-rtd119x.c
-index 52b16d610e13..bda0d1328eb8 100644
++config PINCTRL_REALTEK_DHC
++	bool "Realtek DHC pinctrl driver"
++	depends on OF
++	depends on ARCH_REALTEK || COMPILE_TEST
++	select GENERIC_PINCONF
++	select PINMUX
++	help
++	  This is the pinctrl, pinmux, pinconf driver for
++	  Realtek DHC SoC platforms.
++
++
++
+diff --git a/drivers/pinctrl/realtek/Makefile b/drivers/pinctrl/realtek/Makefile
+new file mode 100644
+index 000000000000..0d18245ead77
+--- /dev/null
++++ b/drivers/pinctrl/realtek/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++# Realtek pin control drivers
++obj-$(CONFIG_PINCTRL_REALTEK_DHC)	+= pinctrl-rtd.o
+diff --git a/drivers/pinctrl/pinctrl-rtd119x.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+similarity index 69%
+rename from drivers/pinctrl/pinctrl-rtd119x.c
+rename to drivers/pinctrl/realtek/pinctrl-rtd.c
+index bda0d1328eb8..4d9740f875ff 100644
 --- a/drivers/pinctrl/pinctrl-rtd119x.c
-+++ b/drivers/pinctrl/pinctrl-rtd119x.c
-@@ -1,9 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause
-+
- /*
-- * Copyright (c) 2017 Andreas Färber
-+ * Realtek DHC pin controller driver
-  *
-- * SPDX-License-Identifier: GPL-2.0+
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-  */
++++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
+@@ -19,27 +19,27 @@
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+-#include "core.h"
+-#include "pinctrl-utils.h"
++#include "../core.h"
++#include "../pinctrl-utils.h"
  
-+
- #include <linux/bitops.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -120,7 +123,7 @@ static int rtd119x_pinctrl_get_groups_count(struct pinctrl_dev *pcdev)
+-struct rtd119x_pin_group_desc {
++struct rtd_pin_group_desc {
+ 	const char *name;
+ 	const unsigned int *pins;
+ 	unsigned int num_pins;
+ };
+ 
+-struct rtd119x_pin_func_desc {
++struct rtd_pin_func_desc {
+ 	const char *name;
+ 	const char * const *groups;
+ 	unsigned int num_groups;
+ };
+ 
+-struct rtd119x_pin_mux_desc {
++struct rtd_pin_mux_desc {
+ 	const char *name;
+ 	u32 mux_value;
+ };
+ 
+-struct rtd119x_pin_config_desc {
++struct rtd_pin_config_desc {
+ 	const char *name;
+ 	unsigned int reg_offset;
+ 	unsigned int base_bit;
+@@ -50,11 +50,11 @@ struct rtd119x_pin_config_desc {
+ 	unsigned int curr_type;
+ };
+ 
+-struct rtd119x_pin_desc {
++struct rtd_pin_desc {
+ 	const char *name;
+ 	unsigned int mux_offset;
+ 	u32 mux_mask;
+-	const struct rtd119x_pin_mux_desc *functions;
++	const struct rtd_pin_mux_desc *functions;
+ };
+ 
+ #define RTK_PIN_CONFIG(_name, _reg_off, _base_bit, _pud_en_off, \
+@@ -76,7 +76,7 @@ struct rtd119x_pin_desc {
+ 		.name = # _name, \
+ 		.mux_offset = _mux_off, \
+ 		.mux_mask = _mux_mask, \
+-		.functions = (const struct rtd119x_pin_mux_desc []) { \
++		.functions = (const struct rtd_pin_mux_desc []) { \
+ 			__VA_ARGS__, { } \
+ 		}, \
+ 	}
+@@ -87,16 +87,16 @@ struct rtd119x_pin_desc {
+ 		.mux_value = _mux_val, \
+ 	}
+ 
+-struct rtd119x_pinctrl_desc {
++struct rtd_pinctrl_desc {
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int num_pins;
+-	const struct rtd119x_pin_group_desc *groups;
++	const struct rtd_pin_group_desc *groups;
+ 	unsigned int num_groups;
+-	const struct rtd119x_pin_func_desc *functions;
++	const struct rtd_pin_func_desc *functions;
+ 	unsigned int num_functions;
+-	const struct rtd119x_pin_desc *muxes;
++	const struct rtd_pin_desc *muxes;
+ 	unsigned int num_muxes;
+-	const struct rtd119x_pin_config_desc *configs;
++	const struct rtd_pin_config_desc *configs;
+ 	unsigned int num_configs;
+ };
+ 
+@@ -108,33 +108,33 @@ struct rtd119x_pinctrl_desc {
+ #include "pinctrl-rtd1195.h"
+ #include "pinctrl-rtd1295.h"
+ 
+-struct rtd119x_pinctrl {
++struct rtd_pinctrl {
+ 	struct pinctrl_dev *pcdev;
+ 	void __iomem *base;
+ 	struct pinctrl_desc desc;
+-	const struct rtd119x_pinctrl_desc *info;
++	const struct rtd_pinctrl_desc *info;
+ };
+ 
+-static int rtd119x_pinctrl_get_groups_count(struct pinctrl_dev *pcdev)
++static int rtd_pinctrl_get_groups_count(struct pinctrl_dev *pcdev)
+ {
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+ 
+ 	return data->info->num_groups;
  }
  
- static const char *rtd119x_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
--		unsigned selector)
-+		unsigned int selector)
+-static const char *rtd119x_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
++static const char *rtd_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
+ 		unsigned int selector)
  {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
  
-@@ -128,7 +131,8 @@ static const char *rtd119x_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
+ 	return data->info->groups[selector].name;
  }
  
- static int rtd119x_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
--		unsigned selector, const unsigned **pins, unsigned *num_pins)
-+		unsigned int selector, const unsigned int **pins,
-+		unsigned int *num_pins)
+-static int rtd119x_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
++static int rtd_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
+ 		unsigned int selector, const unsigned int **pins,
+ 		unsigned int *num_pins)
  {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
  
-@@ -154,7 +158,7 @@ static int rtd119x_pinctrl_get_functions_count(struct pinctrl_dev *pcdev)
- }
- 
- static const char *rtd119x_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
--		unsigned selector)
-+		unsigned int selector)
- {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
-@@ -162,8 +166,8 @@ static const char *rtd119x_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
- }
- 
- static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
--		unsigned selector, const char * const **groups,
--		unsigned * const num_groups)
-+		unsigned int selector, const char * const **groups,
-+		unsigned int * const num_groups)
- {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
-@@ -173,7 +177,8 @@ static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
+ 	*pins		= data->info->groups[selector].pins;
+ 	*num_pins	= data->info->groups[selector].num_pins;
+@@ -142,34 +142,34 @@ static int rtd119x_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
  	return 0;
  }
  
--static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(struct rtd119x_pinctrl *data, int number)
-+static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(
-+		struct rtd119x_pinctrl *data, int number)
+-static const struct pinctrl_ops rtd119x_pinctrl_ops = {
++static const struct pinctrl_ops rtd_pinctrl_ops = {
+ 	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+ 	.dt_free_map = pinctrl_utils_free_map,
+-	.get_groups_count = rtd119x_pinctrl_get_groups_count,
+-	.get_group_name = rtd119x_pinctrl_get_group_name,
+-	.get_group_pins = rtd119x_pinctrl_get_group_pins,
++	.get_groups_count = rtd_pinctrl_get_groups_count,
++	.get_group_name = rtd_pinctrl_get_group_name,
++	.get_group_pins = rtd_pinctrl_get_group_pins,
+ };
+ 
+-static int rtd119x_pinctrl_get_functions_count(struct pinctrl_dev *pcdev)
++static int rtd_pinctrl_get_functions_count(struct pinctrl_dev *pcdev)
+ {
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+ 
+ 	return data->info->num_functions;
+ }
+ 
+-static const char *rtd119x_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
++static const char *rtd_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
+ 		unsigned int selector)
+ {
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+ 
+ 	return data->info->functions[selector].name;
+ }
+ 
+-static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
++static int rtd_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
+ 		unsigned int selector, const char * const **groups,
+ 		unsigned int * const num_groups)
+ {
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+ 
+ 	*groups		= data->info->functions[selector].groups;
+ 	*num_groups	= data->info->functions[selector].num_groups;
+@@ -177,8 +177,8 @@ static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
+ 	return 0;
+ }
+ 
+-static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(
+-		struct rtd119x_pinctrl *data, int number)
++static const struct pinctrl_pin_desc *rtd_pinctrl_get_pin_by_number(
++		struct rtd_pinctrl *data, int number)
  {
  	int i;
  
-@@ -185,7 +190,8 @@ static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(struct r
+@@ -190,8 +190,8 @@ static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(
  	return NULL;
  }
  
--static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(struct rtd119x_pinctrl *data, const char *name)
-+static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(
-+		struct rtd119x_pinctrl *data, const char *name)
+-static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(
+-		struct rtd119x_pinctrl *data, const char *name)
++static const struct rtd_pin_desc *rtd_pinctrl_find_mux(
++		struct rtd_pinctrl *data, const char *name)
  {
  	int i;
  
-@@ -197,7 +203,8 @@ static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(struct rtd119x_pi
+@@ -203,8 +203,8 @@ static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(
  	return NULL;
  }
  
--static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(struct rtd119x_pinctrl *data, const char *name)
-+static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(
-+		struct rtd119x_pinctrl *data, const char *name)
+-static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(
+-		struct rtd119x_pinctrl *data, const char *name)
++static const struct rtd_pin_config_desc *rtd_pinctrl_find_config(
++		struct rtd_pinctrl *data, const char *name)
  {
  	int i;
  
-@@ -231,7 +238,8 @@ static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
+@@ -217,23 +217,23 @@ static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(
+ }
+ 
+ 
+-static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
++static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
+ 	unsigned int pin, const char *func_name)
+ {
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+ 	const struct pinctrl_pin_desc *pin_desc;
+-	const struct rtd119x_pin_desc *mux;
++	const struct rtd_pin_desc *mux;
+ 	const char *pin_name;
+ 	u32 val;
+ 	int i;
+ 
+-	pin_desc = rtd119x_pinctrl_get_pin_by_number(data, pin);
++	pin_desc = rtd_pinctrl_get_pin_by_number(data, pin);
+ 	if (!pin_desc)
  		return -ENOTSUPP;
  
- 	if (!mux->functions) {
--		dev_err(pcdev->dev, "No functions available for pin %s\n", pin_name);
-+		dev_err(pcdev->dev,
-+			"No functions available for pin %s\n", pin_name);
+ 	pin_name = pin_desc->name;
+ 
+-	mux = rtd119x_pinctrl_find_mux(data, pin_name);
++	mux = rtd_pinctrl_find_mux(data, pin_name);
+ 	if (!mux)
  		return -ENOTSUPP;
- 	}
  
-@@ -246,12 +254,13 @@ static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
- 		return 0;
- 	}
- 
--	dev_err(pcdev->dev, "No function %s available for pin %s\n", func_name, pin_name);
-+	dev_err(pcdev->dev, "No function %s available for pin %s\n",
-+			func_name, pin_name);
+@@ -259,10 +259,10 @@ static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
  	return -EINVAL;
  }
  
- static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
--		unsigned function, unsigned group)
-+		unsigned int function, unsigned int group)
+-static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
++static int rtd_pinctrl_set_mux(struct pinctrl_dev *pcdev,
+ 		unsigned int function, unsigned int group)
  {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
  	const unsigned int *pins;
-@@ -265,7 +274,8 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
+ 	unsigned int num_pins;
+ 	const char *func_name;
+@@ -272,7 +272,7 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
+ 	func_name = data->info->functions[function].name;
+ 	group_name = data->info->groups[group].name;
  
- 	ret = rtd119x_pinctrl_get_group_pins(pcdev, group, &pins, &num_pins);
+-	ret = rtd119x_pinctrl_get_group_pins(pcdev, group, &pins, &num_pins);
++	ret = rtd_pinctrl_get_group_pins(pcdev, group, &pins, &num_pins);
  	if (ret) {
--		dev_err(pcdev->dev, "Getting pins for group %s failed\n", group_name);
-+		dev_err(pcdev->dev, "Getting pins for group %s failed\n",
-+			group_name);
- 		return ret;
+ 		dev_err(pcdev->dev, "Getting pins for group %s failed\n",
+ 			group_name);
+@@ -280,7 +280,7 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
  	}
  
-@@ -279,7 +289,7 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
- }
- 
- static int rtd119x_pinctrl_gpio_request_enable(struct pinctrl_dev *pcdev,
--	struct pinctrl_gpio_range *range, unsigned offset)
-+	struct pinctrl_gpio_range *range, unsigned int offset)
- {
- 	return rtd119x_pinctrl_set_one_mux(pcdev, offset, "gpio");
- }
-@@ -292,10 +302,9 @@ static const struct pinmux_ops rtd119x_pinmux_ops = {
- 	.gpio_request_enable = rtd119x_pinctrl_gpio_request_enable,
- };
- 
--
- static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
--	const struct rtd119x_pin_config_desc *config_desc, enum pin_config_param param,
--	enum pin_config_param arg)
-+	const struct rtd119x_pin_config_desc *config_desc,
-+	enum pin_config_param param, enum pin_config_param arg)
- {
- 	u8 set_val = 0;
- 	u16 strength;
-@@ -341,9 +350,9 @@ static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
- 				return -EINVAL;
- 			break;
- 		case PCONF_UNSUPP:
--			pr_err("[%s] not support drive strength\n", config_desc->name);
-+			dev_err(data->pcdev->dev, "[%s] not support drive strength\n",
-+				config_desc->name);
- 			return -ENOTSUPP;
--			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -383,7 +392,7 @@ static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
+ 	for (i = 0; i < num_pins; i++) {
+-		ret = rtd119x_pinctrl_set_one_mux(pcdev, pins[i], func_name);
++		ret = rtd_pinctrl_set_one_mux(pcdev, pins[i], func_name);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -288,22 +288,22 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
  	return 0;
  }
  
--static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned pinnr,
-+static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
+-static int rtd119x_pinctrl_gpio_request_enable(struct pinctrl_dev *pcdev,
++static int rtd_pinctrl_gpio_request_enable(struct pinctrl_dev *pcdev,
+ 	struct pinctrl_gpio_range *range, unsigned int offset)
+ {
+-	return rtd119x_pinctrl_set_one_mux(pcdev, offset, "gpio");
++	return rtd_pinctrl_set_one_mux(pcdev, offset, "gpio");
+ }
+ 
+-static const struct pinmux_ops rtd119x_pinmux_ops = {
+-	.get_functions_count = rtd119x_pinctrl_get_functions_count,
+-	.get_function_name = rtd119x_pinctrl_get_function_name,
+-	.get_function_groups = rtd119x_pinctrl_get_function_groups,
+-	.set_mux = rtd119x_pinctrl_set_mux,
+-	.gpio_request_enable = rtd119x_pinctrl_gpio_request_enable,
++static const struct pinmux_ops rtd_pinmux_ops = {
++	.get_functions_count = rtd_pinctrl_get_functions_count,
++	.get_function_name = rtd_pinctrl_get_function_name,
++	.get_function_groups = rtd_pinctrl_get_function_groups,
++	.set_mux = rtd_pinctrl_set_mux,
++	.gpio_request_enable = rtd_pinctrl_gpio_request_enable,
+ };
+ 
+-static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
+-	const struct rtd119x_pin_config_desc *config_desc,
++static int rtd_pconf_parse_conf(struct rtd_pinctrl *data,
++	const struct rtd_pin_config_desc *config_desc,
+ 	enum pin_config_param param, enum pin_config_param arg)
+ {
+ 	u8 set_val = 0;
+@@ -392,7 +392,7 @@ static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
+ 	return 0;
+ }
+ 
+-static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
++static int rtd_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
  		unsigned long *config)
  {
  	unsigned int param = pinconf_to_config_param(*config);
-@@ -398,8 +407,8 @@ static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned pinnr,
+@@ -407,26 +407,26 @@ static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
  	return 0;
  }
  
--static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned pinnr,
--		unsigned long *configs, unsigned num_configs)
-+static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
-+		unsigned long *configs, unsigned int num_configs)
+-static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
++static int rtd_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
+ 		unsigned long *configs, unsigned int num_configs)
  {
- 	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 	const struct rtd119x_pin_config_desc *config_desc;
-@@ -436,55 +445,66 @@ static const struct pinconf_ops rtd119x_pinconf_ops = {
- static void rtd119x_pinctrl_selftest(struct rtd119x_pinctrl *data)
+-	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
+-	const struct rtd119x_pin_config_desc *config_desc;
++	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
++	const struct rtd_pin_config_desc *config_desc;
+ 	const struct pinctrl_pin_desc *pin_desc;
+ 	const char *pin_name;
+ 	int i;
+ 
+-	pin_desc = rtd119x_pinctrl_get_pin_by_number(data, pinnr);
++	pin_desc = rtd_pinctrl_get_pin_by_number(data, pinnr);
+ 	if (!pin_desc)
+ 		return -ENOTSUPP;
+ 
+ 	pin_name = pin_desc->name;
+-	config_desc = rtd119x_pinctrl_find_config(data, pin_name);
++	config_desc = rtd_pinctrl_find_config(data, pin_name);
+ 	if (!config_desc)
+ 		return -ENOTSUPP;
+ 
+ 	for (i = 0; i < num_configs; i++) {
+-		rtd119x_pconf_parse_conf(data, config_desc,
++		rtd_pconf_parse_conf(data, config_desc,
+ 			pinconf_to_config_param(configs[i]),
+ 			pinconf_to_config_argument(configs[i]));
+ 	}
+@@ -436,16 +436,16 @@ static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
+ 
+ 
+ 
+-static const struct pinconf_ops rtd119x_pinconf_ops = {
++static const struct pinconf_ops rtd_pinconf_ops = {
+ 	.is_generic = true,
+-	.pin_config_get = rtd119x_pin_config_get,
+-	.pin_config_set = rtd119x_pin_config_set,
++	.pin_config_get = rtd_pin_config_get,
++	.pin_config_set = rtd_pin_config_set,
+ };
+ 
+-static void rtd119x_pinctrl_selftest(struct rtd119x_pinctrl *data)
++static void rtd_pinctrl_selftest(struct rtd_pinctrl *data)
  {
  	int i, j, k;
-+	const struct rtd119x_pinctrl_desc *info = data->info;
+-	const struct rtd119x_pinctrl_desc *info = data->info;
++	const struct rtd_pinctrl_desc *info = data->info;
  
--	for (i = 0; i < data->info->num_muxes; i++) {
-+	for (i = 0; i < info->num_muxes; i++) {
+ 	for (i = 0; i < info->num_muxes; i++) {
  		/* Check for pin */
--		for (j = 0; j < data->info->num_pins; j++) {
--			if (strcmp(data->info->pins[j].name, data->info->muxes[i].name) == 0)
-+		for (j = 0; j < info->num_pins; j++) {
-+			if (strcmp(info->pins[j].name,
-+				info->muxes[i].name) == 0)
- 				break;
- 		}
--		if (j == data->info->num_pins)
-+		if (j == info->num_pins)
- 			dev_warn(data->pcdev->dev, "Mux %s lacking matching pin\n",
--				 data->info->muxes[i].name);
-+				info->muxes[i].name);
- 
- 		/* Check for group */
--		for (j = 0; j < data->info->num_groups; j++) {
--			if (strcmp(data->info->groups[j].name, data->info->muxes[i].name) == 0)
-+		for (j = 0; j < info->num_groups; j++) {
-+			if (strcmp(info->groups[j].name,
-+				info->muxes[i].name) == 0)
- 				break;
- 		}
--		if (j == data->info->num_groups)
-+		if (j == info->num_groups)
- 			dev_warn(data->pcdev->dev, "Mux %s lacking matching group\n",
--				 data->info->muxes[i].name);
-+				 info->muxes[i].name);
- 
--		for (j = 0; data->info->muxes[i].functions[j].name; j++) {
-+		for (j = 0; info->muxes[i].functions[j].name; j++) {
- 			/* Check for function */
--			for (k = 0; k < data->info->num_functions; k++) {
--				if (strcmp(data->info->functions[k].name,
--					data->info->muxes[i].functions[j].name) == 0)
-+			for (k = 0; k < info->num_functions; k++) {
-+				if (strcmp(info->functions[k].name,
-+					info->muxes[i].functions[j].name) == 0)
- 					break;
- 			}
--			if (k == data->info->num_functions)
-+			if (k == info->num_functions)
- 				dev_warn(data->pcdev->dev, "Mux %s lacking function %s\n",
--					 data->info->muxes[i].name,
--					 data->info->muxes[i].functions[j].name);
--
--			/* Check for duplicate mux value - assumption: ascending order */
--			if (j > 0 && data->info->muxes[i].functions[j].mux_value
--				< data->info->muxes[i].functions[j - 1].mux_value)
-+					 info->muxes[i].name,
-+					 info->muxes[i].functions[j].name);
-+
-+			/* Check for duplicate mux value
-+			 *- assumption: ascending order
-+			 */
-+			if (j > 0 && info->muxes[i].functions[j].mux_value
-+				< info->muxes[i].functions[j - 1].mux_value)
- 				dev_warn(data->pcdev->dev, "Mux %s function %s has unexpected value\n",
--					 data->info->muxes[i].name,
--					 data->info->muxes[i].functions[j].name);
-+					 info->muxes[i].name,
-+					 info->muxes[i].functions[j].name);
- 		}
+@@ -492,7 +492,7 @@ static void rtd119x_pinctrl_selftest(struct rtd119x_pinctrl *data)
  	}
  }
  
- static const struct of_device_id rtd119x_pinctrl_dt_ids[] = {
--	 { .compatible = "realtek,rtd1195-iso-pinctrl", .data = &rtd1195_iso_pinctrl_desc },
--	 { .compatible = "realtek,rtd1195-crt-pinctrl", .data = &rtd1195_crt_pinctrl_desc },
--	 { .compatible = "realtek,rtd1295-iso-pinctrl", .data = &rtd1295_iso_pinctrl_desc },
--	 { .compatible = "realtek,rtd1295-sb2-pinctrl", .data = &rtd1295_sb2_pinctrl_desc },
--	 { .compatible = "realtek,rtd1295-disp-pinctrl", .data = &rtd1295_disp_pinctrl_desc },
--	 { .compatible = "realtek,rtd1295-cr-pinctrl", .data = &rtd1295_cr_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1195-iso-pinctrl",
-+		.data = &rtd1195_iso_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1195-crt-pinctrl",
-+		.data = &rtd1195_crt_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1295-iso-pinctrl",
-+		.data = &rtd1295_iso_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1295-sb2-pinctrl",
-+		.data = &rtd1295_sb2_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1295-disp-pinctrl",
-+		.data = &rtd1295_disp_pinctrl_desc },
-+	 { .compatible = "realtek,rtd1295-cr-pinctrl",
-+		.data = &rtd1295_cr_pinctrl_desc },
+-static const struct of_device_id rtd119x_pinctrl_dt_ids[] = {
++static const struct of_device_id rtd_pinctrl_dt_ids[] = {
+ 	 { .compatible = "realtek,rtd1195-iso-pinctrl",
+ 		.data = &rtd1195_iso_pinctrl_desc },
+ 	 { .compatible = "realtek,rtd1195-crt-pinctrl",
+@@ -508,12 +508,12 @@ static const struct of_device_id rtd119x_pinctrl_dt_ids[] = {
  	 { }
  };
  
-@@ -537,3 +557,5 @@ static struct platform_driver rtd119x_pinctrl_driver = {
+-static int rtd119x_pinctrl_probe(struct platform_device *pdev)
++static int rtd_pinctrl_probe(struct platform_device *pdev)
+ {
+-	struct rtd119x_pinctrl *data;
++	struct rtd_pinctrl *data;
+ 	const struct of_device_id *match;
+ 
+-	match = of_match_node(rtd119x_pinctrl_dt_ids, pdev->dev.of_node);
++	match = of_match_node(rtd_pinctrl_dt_ids, pdev->dev.of_node);
+ 	if (!match)
+ 		return -EINVAL;
+ 
+@@ -529,9 +529,9 @@ static int rtd119x_pinctrl_probe(struct platform_device *pdev)
+ 	data->desc.name = "foo";
+ 	data->desc.pins = data->info->pins;
+ 	data->desc.npins = data->info->num_pins;
+-	data->desc.pctlops = &rtd119x_pinctrl_ops;
+-	data->desc.pmxops = &rtd119x_pinmux_ops;
+-	data->desc.confops = &rtd119x_pinconf_ops;
++	data->desc.pctlops = &rtd_pinctrl_ops;
++	data->desc.pmxops = &rtd_pinmux_ops;
++	data->desc.confops = &rtd_pinconf_ops;
+ 	data->desc.custom_params = NULL;
+ 	data->desc.num_custom_params = 0;
+ 	data->desc.owner = THIS_MODULE;
+@@ -542,20 +542,20 @@ static int rtd119x_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
+-	rtd119x_pinctrl_selftest(data);
++	rtd_pinctrl_selftest(data);
+ 
+ 	dev_info(&pdev->dev, "probed\n");
+ 
+ 	return 0;
+ }
+ 
+-static struct platform_driver rtd119x_pinctrl_driver = {
+-	.probe = rtd119x_pinctrl_probe,
++static struct platform_driver rtd_pinctrl_driver = {
++	.probe = rtd_pinctrl_probe,
+ 	.driver = {
+-		.name = "rtd1295-pinctrl",
+-		.of_match_table	= rtd119x_pinctrl_dt_ids,
++		.name = "rtd-pinctrl",
++		.of_match_table	= rtd_pinctrl_dt_ids,
  	},
  };
- builtin_platform_driver(rtd119x_pinctrl_driver);
-+MODULE_DESCRIPTION("rtk pinctrl driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/pinctrl-rtd1295.h b/drivers/pinctrl/pinctrl-rtd1295.h
-index 0232c5d8b353..f27debc96bb6 100644
+-builtin_platform_driver(rtd119x_pinctrl_driver);
+-MODULE_DESCRIPTION("rtk pinctrl driver");
++builtin_platform_driver(rtd_pinctrl_driver);
++MODULE_DESCRIPTION("rtd pinctrl driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/pinctrl/pinctrl-rtd1195.h b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
+similarity index 98%
+rename from drivers/pinctrl/pinctrl-rtd1195.h
+rename to drivers/pinctrl/realtek/pinctrl-rtd1195.h
+index f0dd91f416e8..74139345083c 100644
+--- a/drivers/pinctrl/pinctrl-rtd1195.h
++++ b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
+@@ -107,7 +107,7 @@ static const unsigned int rtd1195_pwm_23_open_drain_pins[] = {
+ 		.num_pins = ARRAY_SIZE(rtd1195_ ## _name ## _pins), \
+ 	}
+ 
+-static const struct rtd119x_pin_group_desc rtd1195_iso_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1195_iso_pin_groups[] = {
+ 	RTD1195_GROUP(iso_gpio_0),
+ 	RTD1195_GROUP(iso_gpio_1),
+ 	RTD1195_GROUP(usb0),
+@@ -212,7 +212,7 @@ static const char * const rtd1195_iso_pwm_23_open_drain_groups[] = {
+ 		.num_groups = ARRAY_SIZE(rtd1195_iso_ ## _name ## _groups), \
+ 	}
+ 
+-static const struct rtd119x_pin_func_desc rtd1195_iso_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1195_iso_pin_functions[] = {
+ 	RTD1195_FUNC(gpio),
+ 	RTD1195_FUNC(ai_ur1),
+ 	RTD1195_FUNC(ai_vfd),
+@@ -239,7 +239,7 @@ static const struct rtd119x_pin_func_desc rtd1195_iso_pin_functions[] = {
+ 
+ #undef RTD1195_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1195_iso_muxes[] = {
++static const struct rtd_pin_desc rtd1195_iso_muxes[] = {
+ 	RTK_PIN_MUX(vfd_d, 0x10, GENMASK(1, 0),
+ 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 0, "vfd"),
+@@ -337,7 +337,7 @@ static const struct rtd119x_pin_desc rtd1195_iso_muxes[] = {
+ 		RTK_PIN_FUNC(0x2 << 30, "ai_vfd")),
+ };
+ 
+-static const struct rtd119x_pin_config_desc rtd1195_iso_configs[] = {
++static const struct rtd_pin_config_desc rtd1195_iso_configs[] = {
+ 	RTK_PIN_CONFIG(ir_rx, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(vfd_cs_n, 0x0, 12, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(vfd_clk, 0x0, 16, 1, 0, 2, 3, PADDRI_2_4),
+@@ -358,7 +358,7 @@ static const struct rtd119x_pin_config_desc rtd1195_iso_configs[] = {
+ };
+ 
+ 
+-static const struct rtd119x_pinctrl_desc rtd1195_iso_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
+ 	.pins = rtd1195_iso_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1195_iso_pins),
+ 	.groups = rtd1195_iso_pin_groups,
+@@ -586,7 +586,7 @@ static const unsigned int rtd1195_ao_loc_pins[] = { RTD1195_AO_LOC };
+ 		.num_pins = ARRAY_SIZE(rtd1195_ ## _name ## _pins), \
+ 	}
+ 
+-static const struct rtd119x_pin_group_desc rtd1195_crt_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1195_crt_pin_groups[] = {
+ 	RTD1195_GROUP(gpio_0),
+ 	RTD1195_GROUP(gpio_1),
+ 	RTD1195_GROUP(gpio_2),
+@@ -764,7 +764,7 @@ static const char * const rtd1195_crt_usb_groups[] = { "sensor_cko_1" };
+ 		.num_groups = ARRAY_SIZE(rtd1195_crt_ ## _name ## _groups), \
+ 	}
+ 
+-static const struct rtd119x_pin_func_desc rtd1195_crt_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1195_crt_pin_functions[] = {
+ 	RTD1195_FUNC(gpio),
+ 	RTD1195_FUNC(ao_tp0),
+ 	RTD1195_FUNC(ao_gpio),
+@@ -794,7 +794,7 @@ static const struct rtd119x_pin_func_desc rtd1195_crt_pin_functions[] = {
+ 
+ #undef RTD1195_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1195_crt_muxes[] = {
++static const struct rtd_pin_desc rtd1195_crt_muxes[] = {
+ 	RTK_PIN_MUX(nf_rdy, 0x60, GENMASK(3, 2),
+ 		RTK_PIN_FUNC(0x0 << 2, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 2, "nand"),
+@@ -1045,7 +1045,7 @@ static const struct rtd119x_pin_desc rtd1195_crt_muxes[] = {
+ 		RTK_PIN_FUNC(0x2 << 2, "ao_gpio")),
+ };
+ 
+-static const struct rtd119x_pin_config_desc rtd1195_crt_configs[] = {
++static const struct rtd_pin_config_desc rtd1195_crt_configs[] = {
+ 	RTK_PIN_CONFIG(nf_ale, 0x78, 4, 1, 0, 2, 3, PADDRI_4_8),
+ 	RTK_PIN_CONFIG(nf_ce_n_0, 0x78, 8, 1, 0, 2, 3, PADDRI_4_8),
+ 	RTK_PIN_CONFIG(nf_ce_n_1, 0x78, 12, 1, 0, 2, 3, PADDRI_4_8),
+@@ -1111,7 +1111,7 @@ static const struct rtd119x_pin_config_desc rtd1195_crt_configs[] = {
+ };
+ 
+ 
+-static const struct rtd119x_pinctrl_desc rtd1195_crt_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
+ 	.pins = rtd1195_crt_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1195_crt_pins),
+ 	.groups = rtd1195_crt_pin_groups,
+diff --git a/drivers/pinctrl/pinctrl-rtd1295.h b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
+similarity index 98%
+rename from drivers/pinctrl/pinctrl-rtd1295.h
+rename to drivers/pinctrl/realtek/pinctrl-rtd1295.h
+index f27debc96bb6..14d46baa97d8 100644
 --- a/drivers/pinctrl/pinctrl-rtd1295.h
-+++ b/drivers/pinctrl/pinctrl-rtd1295.h
-@@ -1,3 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later OR BSD-2-Clause */
-+
-+/*
-+ * Realtek pin controller driver
-+ *
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
- #ifndef PINCTRL_RTD1295_H
- #define PINCTRL_RTD1295_H
++++ b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
+@@ -171,7 +171,7 @@ static const unsigned int rtd1295_uart2_1_pins[] = {
+ 		.num_pins = ARRAY_SIZE(rtd1295_ ## _name ## _pins), \
+ 	}
  
-@@ -116,8 +124,10 @@ static const unsigned int rtd1295_iso_gpio_23_pins[] = { RTD1295_ISO_GPIO_23 };
- static const unsigned int rtd1295_iso_gpio_24_pins[] = { RTD1295_ISO_GPIO_24 };
- static const unsigned int rtd1295_iso_gpio_25_pins[] = { RTD1295_ISO_GPIO_25 };
- static const unsigned int rtd1295_i2c_sda_6_pins[] = { RTD1295_I2C_SDA_6 };
--static const unsigned int rtd1295_etn_led_link_pins[] = { RTD1295_ETN_LED_LINK };
--static const unsigned int rtd1295_etn_led_rxtx_pins[] = { RTD1295_ETN_LED_RXTX };
-+static const unsigned int rtd1295_etn_led_link_pins[] = {
-+				RTD1295_ETN_LED_LINK };
-+static const unsigned int rtd1295_etn_led_rxtx_pins[] = {
-+				RTD1295_ETN_LED_RXTX };
- static const unsigned int rtd1295_nat_led_0_pins[] = { RTD1295_NAT_LED_0 };
- static const unsigned int rtd1295_nat_led_1_pins[] = { RTD1295_NAT_LED_1 };
- static const unsigned int rtd1295_nat_led_2_pins[] = { RTD1295_NAT_LED_2 };
-@@ -128,16 +138,31 @@ static const unsigned int rtd1295_pwm_23_loc0_pins[] = { RTD1295_PWM_23_LOC0 };
- static const unsigned int rtd1295_pwm_01_loc0_pins[] = { RTD1295_PWM_01_LOC0 };
- static const unsigned int rtd1295_pwm_23_loc1_pins[] = { RTD1295_PWM_23_LOC1 };
- static const unsigned int rtd1295_pwm_01_loc1_pins[] = { RTD1295_PWM_01_LOC1 };
--static const unsigned int rtd1295_ejtag_avcpu_loc_pins[] = { RTD1295_EJTAG_AVCPU_LOC };
-+static const unsigned int rtd1295_ejtag_avcpu_loc_pins[] = {
-+				RTD1295_EJTAG_AVCPU_LOC };
- static const unsigned int rtd1295_ur2_loc_pins[] = { RTD1295_UR2_LOC };
+-static const struct rtd119x_pin_group_desc rtd1295_iso_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1295_iso_pin_groups[] = {
+ 	RTD1295_GROUP(iso_gpio_0),
+ 	RTD1295_GROUP(iso_gpio_1),
+ 	RTD1295_GROUP(iso_gpio_2),
+@@ -317,7 +317,7 @@ static const char * const rtd1295_iso_acpu_ejtag_loc_nf_groups[] = {
+ 		.num_groups = ARRAY_SIZE(rtd1295_iso_ ## _name ## _groups), \
+ 	}
  
--static const unsigned int rtd1295_i2c0_pins[] = { RTD1295_I2C_SCL_0, RTD1295_I2C_SDA_0 };
--static const unsigned int rtd1295_i2c1_pins[] = { RTD1295_I2C_SCL_1, RTD1295_I2C_SDA_1 };
--static const unsigned int rtd1295_i2c6_pins[] = { RTD1295_I2C_SCL_6, RTD1295_I2C_SDA_6 };
--static const unsigned int rtd1295_uart0_pins[] = { RTD1295_UR0_RX, RTD1295_UR0_TX };
--static const unsigned int rtd1295_uart1_pins[] = { RTD1295_UR1_RX, RTD1295_UR1_TX };
--static const unsigned int rtd1295_uart2_0_pins[] = { RTD1295_ISO_GPIO_2, RTD1295_ISO_GPIO_3, RTD1295_ISO_GPIO_4, RTD1295_ISO_GPIO_5 };
--static const unsigned int rtd1295_uart2_1_pins[] = { RTD1295_ISO_GPIO_23, RTD1295_ISO_GPIO_24, RTD1295_ISO_GPIO_33, RTD1295_ISO_GPIO_34 };
-+static const unsigned int rtd1295_i2c0_pins[] = {
-+	RTD1295_I2C_SCL_0, RTD1295_I2C_SDA_0
-+};
-+static const unsigned int rtd1295_i2c1_pins[] = {
-+	RTD1295_I2C_SCL_1, RTD1295_I2C_SDA_1
-+};
-+static const unsigned int rtd1295_i2c6_pins[] = {
-+	RTD1295_I2C_SCL_6, RTD1295_I2C_SDA_6
-+};
-+static const unsigned int rtd1295_uart0_pins[] = {
-+				RTD1295_UR0_RX, RTD1295_UR0_TX };
-+static const unsigned int rtd1295_uart1_pins[] = {
-+				RTD1295_UR1_RX, RTD1295_UR1_TX };
-+static const unsigned int rtd1295_uart2_0_pins[] = {
-+	RTD1295_ISO_GPIO_2, RTD1295_ISO_GPIO_3,
-+	RTD1295_ISO_GPIO_4, RTD1295_ISO_GPIO_5
-+};
-+static const unsigned int rtd1295_uart2_1_pins[] = {
-+	RTD1295_ISO_GPIO_23, RTD1295_ISO_GPIO_24,
-+	RTD1295_ISO_GPIO_33, RTD1295_ISO_GPIO_34
-+};
+-static const struct rtd119x_pin_func_desc rtd1295_iso_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1295_iso_pin_functions[] = {
+ 	RTD1295_FUNC(gpio),
+ 	RTD1295_FUNC(acpu_ejtag_loc_iso),
+ 	RTD1295_FUNC(edp_hpd),
+@@ -350,7 +350,7 @@ static const struct rtd119x_pin_func_desc rtd1295_iso_pin_functions[] = {
  
- #define RTD1295_GROUP(_name) \
- 	{ \
-@@ -199,41 +224,90 @@ static const struct rtd119x_pin_group_desc rtd1295_iso_pin_groups[] = {
+ #undef RTD1295_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1295_iso_muxes[] = {
++static const struct rtd_pin_desc rtd1295_iso_muxes[] = {
+ 	RTK_PIN_MUX(iso_gpio_4, 0x10, GENMASK(1, 0),
+ 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 0, "uart2_0"),
+@@ -489,7 +489,7 @@ static const struct rtd119x_pin_desc rtd1295_iso_muxes[] = {
+ 		RTK_PIN_FUNC(0x2 << 12, "uart2_1")),
  };
  
- static const char * const rtd1295_iso_gpio_groups[] = {
--	"iso_gpio_2", "iso_gpio_3", "iso_gpio_4", "iso_gpio_5", "hdmi_hpd", "iso_gpio_7",
--	"ir_rx", "ir_tx", "ur0_rx", "ur0_tx", "ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n",
-+	"iso_gpio_2", "iso_gpio_3", "iso_gpio_4",
-+	"iso_gpio_5", "hdmi_hpd", "iso_gpio_7",
-+	"ir_rx", "ir_tx", "ur0_rx", "ur0_tx",
-+	"ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n",
- 	"i2c_scl_0", "i2c_sda_0", "i2c_scl_1", "i2c_sda_1", "i2c_scl_6",
--	"iso_gpio_21", "iso_gpio_22", "iso_gpio_23", "iso_gpio_24", "iso_gpio_25",
-+	"iso_gpio_21", "iso_gpio_22", "iso_gpio_23",
-+	"iso_gpio_24", "iso_gpio_25",
- 	"i2c_sda_6", "etn_led_link", "etn_led_rxtx",
- 	"nat_led_0", "nat_led_1", "nat_led_2", "nat_led_3",
- 	"iso_gpio_33", "iso_gpio_34"
- };
--static const char * const rtd1295_iso_acpu_ejtag_loc_iso_groups[] = { "iso_gpio_2", "iso_gpio_3", "iso_gpio_4", "iso_gpio_5", "iso_gpio_7" };
-+static const char * const rtd1295_iso_acpu_ejtag_loc_iso_groups[] = {
-+	"iso_gpio_2", "iso_gpio_3", "iso_gpio_4", "iso_gpio_5", "iso_gpio_7"
-+};
- static const char * const rtd1295_iso_edp_hpd_groups[] = { "iso_gpio_7" };
--static const char * const rtd1295_iso_etn_led_groups[] = { "etn_led_link", "etn_led_rxtx" };
--static const char * const rtd1295_iso_i2c0_groups[] = { "i2c_scl_0", "i2c_sda_0", "i2c0" };
--static const char * const rtd1295_iso_i2c1_groups[] = { "i2c_scl_1", "i2c_sda_1", "i2c1" };
--static const char * const rtd1295_iso_i2c6_groups[] = { "i2c_scl_6", "i2c_sda_6", "i2c6" };
-+static const char * const rtd1295_iso_etn_led_groups[] = {
-+	"etn_led_link", "etn_led_rxtx"
-+};
-+static const char * const rtd1295_iso_i2c0_groups[] = {
-+	"i2c_scl_0", "i2c_sda_0", "i2c0"
-+};
-+static const char * const rtd1295_iso_i2c1_groups[] = {
-+	"i2c_scl_1", "i2c_sda_1", "i2c1"
-+};
-+static const char * const rtd1295_iso_i2c6_groups[] = {
-+	"i2c_scl_6", "i2c_sda_6", "i2c6"
-+};
- static const char * const rtd1295_iso_ir_rx_groups[] = { "ir_rx" };
- static const char * const rtd1295_iso_ir_tx_groups[] = { "ir_tx" };
--static const char * const rtd1295_iso_nat_led_groups[] = { "nat_led_0", "nat_led_1", "nat_led_2", "nat_led_3" };
--static const char * const rtd1295_iso_pwm_1_groups[] = { "etn_led_link", "etn_led_rxtx", "nat_led_0", "nat_led_1" };
--static const char * const rtd1295_iso_pwm_0_groups[] = { "iso_gpio_21", "iso_gpio_22", "iso_gpio_23", "iso_gpio_24" };
-+static const char * const rtd1295_iso_nat_led_groups[] = {
-+	"nat_led_0", "nat_led_1", "nat_led_2", "nat_led_3"
-+};
-+static const char * const rtd1295_iso_pwm_1_groups[] = {
-+	"etn_led_link", "etn_led_rxtx", "nat_led_0", "nat_led_1"
-+};
-+static const char * const rtd1295_iso_pwm_0_groups[] = {
-+	"iso_gpio_21", "iso_gpio_22", "iso_gpio_23", "iso_gpio_24"
-+};
- static const char * const rtd1295_iso_rtc_groups[] = { "iso_gpio_25" };
--static const char * const rtd1295_iso_sc_groups[] = { "nat_led_0", "nat_led_1", "nat_led_2", "nat_led_3" };
--static const char * const rtd1295_iso_standby_dbg_groups[] = { "iso_gpio_2", "iso_gpio_3", "ir_rx" };
--static const char * const rtd1295_iso_uart0_groups[] = { "ur0_rx", "ur0_tx", "uart0" };
--static const char * const rtd1295_iso_uart1_groups[] = { "ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n", "uart1" };
--static const char * const rtd1295_iso_uart2_0_groups[] = { "iso_gpio_2", "iso_gpio_3", "iso_gpio_4", "iso_gpio_5", "ur2_loc" };
--static const char * const rtd1295_iso_uart2_1_groups[] = { "iso_gpio_23", "iso_gpio_24", "iso_gpio_33", "iso_gpio_34", "ur2_loc" };
--static const char * const rtd1295_iso_pwm_01_loc0_normal_groups[] = { "pwm_01_loc0" };
--static const char * const rtd1295_iso_pwm_23_loc0_normal_groups[] = { "pwm_23_loc0" };
--static const char * const rtd1295_iso_pwm_01_loc0_open_drain_groups[] = { "pwm_01_loc0" };
--static const char * const rtd1295_iso_pwm_23_loc0_open_drain_groups[] = { "pwm_23_loc0" };
--static const char * const rtd1295_iso_pwm_01_loc1_normal_groups[] = { "pwm_01_loc1" };
--static const char * const rtd1295_iso_pwm_23_loc1_normal_groups[] = { "pwm_23_loc1" };
--static const char * const rtd1295_iso_pwm_01_loc1_open_drain_groups[] = { "pwm_01_loc1" };
--static const char * const rtd1295_iso_pwm_23_loc1_open_drain_groups[] = { "pwm_23_loc1" };
--static const char * const rtd1295_iso_acpu_ejtag_loc_nf_groups[] = { "ejtag_avcpu_loc" };
-+static const char * const rtd1295_iso_sc_groups[] = {
-+	"nat_led_0", "nat_led_1", "nat_led_2", "nat_led_3"
-+};
-+static const char * const rtd1295_iso_standby_dbg_groups[] = {
-+	"iso_gpio_2", "iso_gpio_3", "ir_rx"
-+};
-+static const char * const rtd1295_iso_uart0_groups[] = {
-+	"ur0_rx", "ur0_tx", "uart0"
-+};
-+static const char * const rtd1295_iso_uart1_groups[] = {
-+	"ur1_rx", "ur1_tx", "ur1_cts_n", "ur1_rts_n", "uart1"
-+};
-+static const char * const rtd1295_iso_uart2_0_groups[] = {
-+	"iso_gpio_2", "iso_gpio_3", "iso_gpio_4", "iso_gpio_5", "ur2_loc"
-+};
-+static const char * const rtd1295_iso_uart2_1_groups[] = {
-+	"iso_gpio_23", "iso_gpio_24", "iso_gpio_33", "iso_gpio_34", "ur2_loc"
-+};
-+static const char * const rtd1295_iso_pwm_01_loc0_normal_groups[] = {
-+	"pwm_01_loc0"
-+};
-+static const char * const rtd1295_iso_pwm_23_loc0_normal_groups[] = {
-+	"pwm_23_loc0"
-+};
-+static const char * const rtd1295_iso_pwm_01_loc0_open_drain_groups[] = {
-+	"pwm_01_loc0"
-+};
-+static const char * const rtd1295_iso_pwm_23_loc0_open_drain_groups[] = {
-+	"pwm_23_loc0"
-+};
-+static const char * const rtd1295_iso_pwm_01_loc1_normal_groups[] = {
-+	"pwm_01_loc1"
-+};
-+static const char * const rtd1295_iso_pwm_23_loc1_normal_groups[] = {
-+	"pwm_23_loc1"
-+};
-+static const char * const rtd1295_iso_pwm_01_loc1_open_drain_groups[] = {
-+	"pwm_01_loc1"
-+};
-+static const char * const rtd1295_iso_pwm_23_loc1_open_drain_groups[] = {
-+	"pwm_23_loc1"
-+};
-+static const char * const rtd1295_iso_acpu_ejtag_loc_nf_groups[] = {
-+	"ejtag_avcpu_loc"
-+};
+-static const struct rtd119x_pin_config_desc rtd1295_iso_configs[] = {
++static const struct rtd_pin_config_desc rtd1295_iso_configs[] = {
+ 	RTK_PIN_CONFIG(iso_gpio_2, 0x0, 0, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(iso_gpio_3, 0x0, 4, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(ir_rx, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
+@@ -527,7 +527,7 @@ static const struct rtd119x_pin_config_desc rtd1295_iso_configs[] = {
  
  
- #define RTD1295_FUNC(_name) \
-@@ -608,11 +682,15 @@ static const unsigned int rtd1295_i2c_sda_4_pins[] = { RTD1295_I2C_SDA_4 };
- static const unsigned int rtd1295_i2c_scl_5_pins[] = { RTD1295_I2C_SCL_5 };
- static const unsigned int rtd1295_i2c_sda_5_pins[] = { RTD1295_I2C_SDA_5 };
- static const unsigned int rtd1295_usb_id_pins[] = { RTD1295_USB_ID };
--static const unsigned int rtd1295_sensor_cko_0_pins[] = { RTD1295_SENSOR_CKO_0 };
--static const unsigned int rtd1295_sensor_cko_1_pins[] = { RTD1295_SENSOR_CKO_1 };
-+static const unsigned int rtd1295_sensor_cko_0_pins[] = {
-+				RTD1295_SENSOR_CKO_0 };
-+static const unsigned int rtd1295_sensor_cko_1_pins[] = {
-+				RTD1295_SENSOR_CKO_1 };
- static const unsigned int rtd1295_sensor_rst_pins[] = { RTD1295_SENSOR_RST };
--static const unsigned int rtd1295_sensor_stb_0_pins[] = { RTD1295_SENSOR_STB_0 };
--static const unsigned int rtd1295_sensor_stb_1_pins[] = { RTD1295_SENSOR_STB_1 };
-+static const unsigned int rtd1295_sensor_stb_0_pins[] = {
-+				RTD1295_SENSOR_STB_0 };
-+static const unsigned int rtd1295_sensor_stb_1_pins[] = {
-+				RTD1295_SENSOR_STB_1 };
- static const unsigned int rtd1295_tp0_data_pins[] = { RTD1295_TP0_DATA };
- static const unsigned int rtd1295_tp0_clk_pins[] = { RTD1295_TP0_CLK };
- static const unsigned int rtd1295_tp0_valid_pins[] = { RTD1295_TP0_VALID };
-@@ -621,33 +699,54 @@ static const unsigned int rtd1295_tp1_data_pins[] = { RTD1295_TP1_DATA };
- static const unsigned int rtd1295_tp1_clk_pins[] = { RTD1295_TP1_CLK };
- static const unsigned int rtd1295_tp1_valid_pins[] = { RTD1295_TP1_VALID };
- static const unsigned int rtd1295_rgmii0_txc_pins[] = { RTD1295_RGMII0_TXC };
--static const unsigned int rtd1295_rgmii0_tx_ctl_pins[] = { RTD1295_RGMII0_TX_CTL };
--static const unsigned int rtd1295_rgmii0_txd_0_pins[] = { RTD1295_RGMII0_TXD_0 };
--static const unsigned int rtd1295_rgmii0_txd_1_pins[] = { RTD1295_RGMII0_TXD_1 };
--static const unsigned int rtd1295_rgmii0_txd_2_pins[] = { RTD1295_RGMII0_TXD_2 };
--static const unsigned int rtd1295_rgmii0_txd_3_pins[] = { RTD1295_RGMII0_TXD_3 };
-+static const unsigned int rtd1295_rgmii0_tx_ctl_pins[] = {
-+				RTD1295_RGMII0_TX_CTL };
-+static const unsigned int rtd1295_rgmii0_txd_0_pins[] = {
-+				RTD1295_RGMII0_TXD_0 };
-+static const unsigned int rtd1295_rgmii0_txd_1_pins[] = {
-+				RTD1295_RGMII0_TXD_1 };
-+static const unsigned int rtd1295_rgmii0_txd_2_pins[] = {
-+				RTD1295_RGMII0_TXD_2 };
-+static const unsigned int rtd1295_rgmii0_txd_3_pins[] = {
-+				RTD1295_RGMII0_TXD_3 };
- static const unsigned int rtd1295_rgmii0_rxc_pins[] = { RTD1295_RGMII0_RXC };
--static const unsigned int rtd1295_rgmii0_rx_ctl_pins[] = { RTD1295_RGMII0_RX_CTL };
--static const unsigned int rtd1295_rgmii0_rxd_0_pins[] = { RTD1295_RGMII0_RXD_0 };
--static const unsigned int rtd1295_rgmii0_rxd_1_pins[] = { RTD1295_RGMII0_RXD_1 };
--static const unsigned int rtd1295_rgmii0_rxd_2_pins[] = { RTD1295_RGMII0_RXD_2 };
--static const unsigned int rtd1295_rgmii0_rxd_3_pins[] = { RTD1295_RGMII0_RXD_3 };
-+static const unsigned int rtd1295_rgmii0_rx_ctl_pins[] = {
-+				RTD1295_RGMII0_RX_CTL };
-+static const unsigned int rtd1295_rgmii0_rxd_0_pins[] = {
-+				RTD1295_RGMII0_RXD_0 };
-+static const unsigned int rtd1295_rgmii0_rxd_1_pins[] = {
-+				RTD1295_RGMII0_RXD_1 };
-+static const unsigned int rtd1295_rgmii0_rxd_2_pins[] = {
-+				RTD1295_RGMII0_RXD_2 };
-+static const unsigned int rtd1295_rgmii0_rxd_3_pins[] = {
-+				RTD1295_RGMII0_RXD_3 };
- static const unsigned int rtd1295_rgmii0_mdio_pins[] = { RTD1295_RGMII0_MDIO };
- static const unsigned int rtd1295_rgmii0_mdc_pins[] = { RTD1295_RGMII0_MDC };
- static const unsigned int rtd1295_rgmii1_txc_pins[] = { RTD1295_RGMII1_TXC };
--static const unsigned int rtd1295_rgmii1_tx_ctl_pins[] = { RTD1295_RGMII1_TX_CTL };
--static const unsigned int rtd1295_rgmii1_txd_0_pins[] = { RTD1295_RGMII1_TXD_0 };
--static const unsigned int rtd1295_rgmii1_txd_1_pins[] = { RTD1295_RGMII1_TXD_1 };
--static const unsigned int rtd1295_rgmii1_txd_2_pins[] = { RTD1295_RGMII1_TXD_2 };
--static const unsigned int rtd1295_rgmii1_txd_3_pins[] = { RTD1295_RGMII1_TXD_3 };
-+static const unsigned int rtd1295_rgmii1_tx_ctl_pins[] = {
-+				RTD1295_RGMII1_TX_CTL };
-+static const unsigned int rtd1295_rgmii1_txd_0_pins[] = {
-+				RTD1295_RGMII1_TXD_0 };
-+static const unsigned int rtd1295_rgmii1_txd_1_pins[] = {
-+				RTD1295_RGMII1_TXD_1 };
-+static const unsigned int rtd1295_rgmii1_txd_2_pins[] = {
-+				RTD1295_RGMII1_TXD_2 };
-+static const unsigned int rtd1295_rgmii1_txd_3_pins[] = {
-+				RTD1295_RGMII1_TXD_3 };
- static const unsigned int rtd1295_rgmii1_rxc_pins[] = { RTD1295_RGMII1_RXC };
--static const unsigned int rtd1295_rgmii1_rx_ctl_pins[] = { RTD1295_RGMII1_RX_CTL };
--static const unsigned int rtd1295_rgmii1_rxd_0_pins[] = { RTD1295_RGMII1_RXD_0 };
--static const unsigned int rtd1295_rgmii1_rxd_1_pins[] = { RTD1295_RGMII1_RXD_1 };
--static const unsigned int rtd1295_rgmii1_rxd_2_pins[] = { RTD1295_RGMII1_RXD_2 };
--static const unsigned int rtd1295_rgmii1_rxd_3_pins[] = { RTD1295_RGMII1_RXD_3 };
-+static const unsigned int rtd1295_rgmii1_rx_ctl_pins[] = {
-+				RTD1295_RGMII1_RX_CTL };
-+static const unsigned int rtd1295_rgmii1_rxd_0_pins[] = {
-+				RTD1295_RGMII1_RXD_0 };
-+static const unsigned int rtd1295_rgmii1_rxd_1_pins[] = {
-+				RTD1295_RGMII1_RXD_1 };
-+static const unsigned int rtd1295_rgmii1_rxd_2_pins[] = {
-+				RTD1295_RGMII1_RXD_2 };
-+static const unsigned int rtd1295_rgmii1_rxd_3_pins[] = {
-+				RTD1295_RGMII1_RXD_3 };
- static const unsigned int rtd1295_hif_loc_pins[] = { RTD1295_HI_LOC };
--static const unsigned int rtd1295_ejtag_scpu_loc_pins[] = { RTD1295_EJTAG_SCPU_LOC };
-+static const unsigned int rtd1295_ejtag_scpu_loc_pins[] = {
-+				RTD1295_EJTAG_SCPU_LOC };
- static const unsigned int rtd1295_sf_en_pins[] = { RTD1295_SF_EN };
- static const unsigned int rtd1295_tp0_loc_pins[] = { RTD1295_TP0_LOC };
- static const unsigned int rtd1295_tp1_loc_pins[] = { RTD1295_TP1_LOC };
-@@ -720,46 +819,96 @@ static const struct rtd119x_pin_group_desc rtd1295_sb2_pin_groups[] = {
+ 
+-static const struct rtd119x_pinctrl_desc rtd1295_iso_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
+ 	.pins = rtd1295_iso_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1295_iso_pins),
+ 	.groups = rtd1295_iso_pin_groups,
+@@ -756,7 +756,7 @@ static const unsigned int rtd1295_tp1_loc_pins[] = { RTD1295_TP1_LOC };
+ 
+ 
+ 
+-static const struct rtd119x_pin_group_desc rtd1295_sb2_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1295_sb2_pin_groups[] = {
+ 	RTD1295_GROUP(gpio_0),
+ 	RTD1295_GROUP(gpio_1),
+ 	RTD1295_GROUP(gpio_2),
+@@ -921,7 +921,7 @@ static const char * const rtd1295_sb2_hif_loc_nf_groups[] = { "hif_loc" };
+ 		.num_groups = ARRAY_SIZE(rtd1295_sb2_ ## _name ## _groups), \
+ 	}
+ 
+-static const struct rtd119x_pin_func_desc rtd1295_sb2_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1295_sb2_pin_functions[] = {
+ 	RTD1295_FUNC(gpio),
+ 	RTD1295_FUNC(ai),
+ 	RTD1295_FUNC(dc_fan_sensor),
+@@ -951,7 +951,7 @@ static const struct rtd119x_pin_func_desc rtd1295_sb2_pin_functions[] = {
+ 
+ #undef RTD1295_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1295_sb2_muxes[] = {
++static const struct rtd_pin_desc rtd1295_sb2_muxes[] = {
+ 	RTK_PIN_MUX(tp0_data, 0x08, GENMASK(2, 0),
+ 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 0, "tp0_loc_tp0"),
+@@ -1168,7 +1168,7 @@ static const struct rtd119x_pin_desc rtd1295_sb2_muxes[] = {
+ 		RTK_PIN_FUNC(0x1 << 22, "rgmii")),
  };
  
- static const char * const rtd1295_sb2_gpio_groups[] = {
--	"gpio_0", "gpio_1", "gpio_2", "gpio_3", "gpio_4", "gpio_5", "gpio_6", "gpio_7", "gpio_8", "gpio_9",
-+	"gpio_0", "gpio_1", "gpio_2", "gpio_3", "gpio_4",
-+	"gpio_5", "gpio_6", "gpio_7", "gpio_8", "gpio_9",
- 	"i2c_scl_4", "i2c_sda_4", "i2c_scl_5", "i2c_sda_5", "usb_id",
--	"sensor_cko_0", "sensor_cko_1", "sensor_rst", "sensor_stb_0", "sensor_stb_1",
-+	"sensor_cko_0", "sensor_cko_1", "sensor_rst",
-+	"sensor_stb_0", "sensor_stb_1",
- 	"tp0_data", "tp0_clk", "tp0_valid", "tp0_sync",
- 	"tp1_data", "tp1_clk", "tp1_valid", "tp1_sync",
--	"rgmii0_txc", "rgmii0_tx_ctl", "rgmii0_txd_0", "rgmii0_txd_1", "rgmii0_txd_2", "rgmii0_txd_3",
--	"rgmii0_rxc", "rgmii0_rx_ctl", "rgmii0_rxd_0", "rgmii0_rxd_1", "rgmii0_rxd_2", "rgmii0_rxd_3",
-+	"rgmii0_txc", "rgmii0_tx_ctl", "rgmii0_txd_0",
-+	"rgmii0_txd_1", "rgmii0_txd_2", "rgmii0_txd_3",
-+	"rgmii0_rxc", "rgmii0_rx_ctl", "rgmii0_rxd_0",
-+	"rgmii0_rxd_1", "rgmii0_rxd_2", "rgmii0_rxd_3",
- 	"rgmii0_mdio", "rgmii0_mdc",
--	"rgmii1_txc", "rgmii1_tx_ctl", "rgmii1_txd_0", "rgmii1_txd_1", "rgmii1_txd_2", "rgmii1_txd_3",
--	"rgmii1_rxc", "rgmii1_rx_ctl", "rgmii1_rxd_0", "rgmii1_rxd_1", "rgmii1_rxd_2", "rgmii1_rxd_3",
-+	"rgmii1_txc", "rgmii1_tx_ctl", "rgmii1_txd_0",
-+	"rgmii1_txd_1", "rgmii1_txd_2", "rgmii1_txd_3",
-+	"rgmii1_rxc", "rgmii1_rx_ctl", "rgmii1_rxd_0",
-+	"rgmii1_rxd_1", "rgmii1_rxd_2", "rgmii1_rxd_3",
-+};
-+static const char * const rtd1295_sb2_ai_groups[] = {
-+	"tp0_data", "tp0_sync", "tp0_valid", "tp0_clk"
- };
--static const char * const rtd1295_sb2_ai_groups[] = { "tp0_data", "tp0_sync", "tp0_valid", "tp0_clk" };
- static const char * const rtd1295_sb2_dc_fan_sensor_groups[] = { "gpio_9" };
--static const char * const rtd1295_sb2_eth_gpy_groups[] = { "rgmii0_mdio", "rgmii0_mdc" };
--static const char * const rtd1295_sb2_gspi_groups[] = { "gpio_4", "gpio_5", "gpio_6", "gpio_7" };
--static const char * const rtd1295_sb2_i2c2_groups[] = { "tp1_sync", "tp1_clk" };
--static const char * const rtd1295_sb2_i2c3_groups[] = { "tp1_data", "tp1_valid" };
--static const char * const rtd1295_sb2_i2c4_groups[] = { "i2c_scl_4", "i2c_sda_4" };
--static const char * const rtd1295_sb2_i2c5_groups[] = { "i2c_scl_5", "i2c_sda_5" };
--static const char * const rtd1295_sb2_nand_groups[] = { "i2c_sda_5", "i2c_scl_5" };
-+static const char * const rtd1295_sb2_eth_gpy_groups[] = {
-+	"rgmii0_mdio", "rgmii0_mdc"
-+};
-+static const char * const rtd1295_sb2_gspi_groups[] = {
-+	"gpio_4", "gpio_5", "gpio_6", "gpio_7"
-+};
-+static const char * const rtd1295_sb2_i2c2_groups[] = {
-+	"tp1_sync", "tp1_clk"
-+};
-+static const char * const rtd1295_sb2_i2c3_groups[] = {
-+	"tp1_data", "tp1_valid"
-+};
-+static const char * const rtd1295_sb2_i2c4_groups[] = {
-+	"i2c_scl_4", "i2c_sda_4"
-+};
-+static const char * const rtd1295_sb2_i2c5_groups[] = {
-+	"i2c_scl_5", "i2c_sda_5"
-+};
-+static const char * const rtd1295_sb2_nand_groups[] = {
-+	"i2c_sda_5", "i2c_scl_5"
-+};
- static const char * const rtd1295_sb2_rgmii_groups[] = {
--	"rgmii0_txc", "rgmii0_tx_ctl", "rgmii0_txd_0", "rgmii0_txd_1", "rgmii0_txd_2", "rgmii0_txd_3",
--	"rgmii0_rxc", "rgmii0_rx_ctl", "rgmii0_rxd_0", "rgmii0_rxd_1", "rgmii0_rxd_2", "rgmii0_rxd_3",
-+	"rgmii0_txc", "rgmii0_tx_ctl", "rgmii0_txd_0",
-+	"rgmii0_txd_1", "rgmii0_txd_2", "rgmii0_txd_3",
-+	"rgmii0_rxc", "rgmii0_rx_ctl", "rgmii0_rxd_0",
-+	"rgmii0_rxd_1", "rgmii0_rxd_2", "rgmii0_rxd_3",
- 	"rgmii0_mdio", "rgmii0_mdc",
--	"rgmii1_txc", "rgmii1_tx_ctl", "rgmii1_txd_0", "rgmii1_txd_1", "rgmii1_txd_2", "rgmii1_txd_3",
--	"rgmii1_rxc", "rgmii1_rx_ctl", "rgmii1_rxd_0", "rgmii1_rxd_1", "rgmii1_rxd_2", "rgmii1_rxd_3",
-+	"rgmii1_txc", "rgmii1_tx_ctl", "rgmii1_txd_0",
-+	"rgmii1_txd_1", "rgmii1_txd_2", "rgmii1_txd_3",
-+	"rgmii1_rxc", "rgmii1_rx_ctl", "rgmii1_rxd_0",
-+	"rgmii1_rxd_1", "rgmii1_rxd_2", "rgmii1_rxd_3",
+-static const struct rtd119x_pin_config_desc rtd1295_sb2_configs[] = {
++static const struct rtd_pin_config_desc rtd1295_sb2_configs[] = {
+ 	RTK_PIN_CONFIG(tp0_clk, 0x28, 0, 1, 0, 2, 3, PADDRI_4_8),
+ 	RTK_PIN_CONFIG(tp0_sync, 0x28, 4, 1, 0, 2, 3, PADDRI_4_8),
+ 	RTK_PIN_CONFIG(tp0_valid, 0x28, 8, 1, 0, 2, 3, PADDRI_4_8),
+@@ -1226,7 +1226,7 @@ static const struct rtd119x_pin_config_desc rtd1295_sb2_configs[] = {
  };
  
--static const char * const rtd1295_sb2_scpu_ejtag_loc_gpio_groups[] = { "gpio_4", "gpio_5", "gpio_6", "gpio_7", "gpio_8", "ejtag_scpu_loc" };
--static const char * const rtd1295_sb2_scpu_ejtag_loc_cr_groups[] = { "ejtag_scpu_loc" };
--static const char * const rtd1295_sb2_sensor_cko_output_groups[] = { "sensor_cko_0", "sensor_cko_1" };
--static const char * const rtd1295_sb2_spi_groups[] = { "gpio_0", "gpio_1", "gpio_2", "gpio_3" };
-+static const char * const rtd1295_sb2_scpu_ejtag_loc_gpio_groups[] = {
-+	"gpio_4", "gpio_5", "gpio_6", "gpio_7", "gpio_8", "ejtag_scpu_loc"
-+};
-+static const char * const rtd1295_sb2_scpu_ejtag_loc_cr_groups[] = {
-+	"ejtag_scpu_loc"
-+};
-+static const char * const rtd1295_sb2_sensor_cko_output_groups[] = {
-+	"sensor_cko_0", "sensor_cko_1"
-+};
-+static const char * const rtd1295_sb2_spi_groups[] = {
-+	"gpio_0", "gpio_1", "gpio_2", "gpio_3"
-+};
- static const char * const rtd1295_sb2_test_loop_dis_groups[] = { "usb_id" };
--static const char * const rtd1295_sb2_tp0_loc_rgmii0_tx_groups[] = { "rgmii0_txd_0", "rgmii0_txd_1", "rgmii0_txd_2", "rgmii0_txd_3", "tp0_loc" };
--static const char * const rtd1295_sb2_tp0_loc_tp0_groups[] = { "tp0_data", "tp0_sync", "tp0_valid", "tp0_clk", "tp0_loc" };
--static const char * const rtd1295_sb2_tp0_loc_tp1_groups[] = { "tp0_data", "tp0_sync", "tp0_valid", "tp0_clk", "tp0_loc" };
--static const char * const rtd1295_sb2_tp1_loc_rgmii0_rx_groups[] = { "rgmii0_rxd_0", "rgmii0_rxd_1", "rgmii0_rxd_2", "rgmii0_rxd_3", "tp1_loc" };
--static const char * const rtd1295_sb2_tp1_loc_tp0_groups[] = { "tp1_data", "tp1_sync", "tp1_valid", "tp1_clk", "tp1_loc" };
--static const char * const rtd1295_sb2_tp1_loc_tp1_groups[] = { "tp1_data", "tp1_sync", "tp1_valid", "tp1_clk", "tp1_loc" };
--static const char * const rtd1295_sb2_usb_clock_output_groups[] = { "sensor_cko_1" };
-+static const char * const rtd1295_sb2_tp0_loc_rgmii0_tx_groups[] = {
-+	"rgmii0_txd_0", "rgmii0_txd_1", "rgmii0_txd_2",
-+	"rgmii0_txd_3", "tp0_loc"
-+};
-+static const char * const rtd1295_sb2_tp0_loc_tp0_groups[] = {
-+	"tp0_data", "tp0_sync", "tp0_valid", "tp0_clk", "tp0_loc"
-+};
-+static const char * const rtd1295_sb2_tp0_loc_tp1_groups[] = {
-+	"tp0_data", "tp0_sync", "tp0_valid", "tp0_clk", "tp0_loc"
-+};
-+static const char * const rtd1295_sb2_tp1_loc_rgmii0_rx_groups[] = {
-+	"rgmii0_rxd_0", "rgmii0_rxd_1", "rgmii0_rxd_2",
-+	"rgmii0_rxd_3", "tp1_loc"
-+};
-+static const char * const rtd1295_sb2_tp1_loc_tp0_groups[] = {
-+	"tp1_data", "tp1_sync", "tp1_valid", "tp1_clk", "tp1_loc"
-+};
-+static const char * const rtd1295_sb2_tp1_loc_tp1_groups[] = {
-+	"tp1_data", "tp1_sync", "tp1_valid", "tp1_clk", "tp1_loc"
-+};
-+static const char * const rtd1295_sb2_usb_clock_output_groups[] = {
-+	"sensor_cko_1"
-+};
- static const char * const rtd1295_sb2_hif_loc_misc_groups[] = { "hif_loc" };
- static const char * const rtd1295_sb2_hif_loc_nf_groups[] = { "hif_loc" };
  
-@@ -1146,9 +1295,15 @@ static const char * const rtd1295_disp_gpio_groups[] = {
- 	"spdif", "dmic_clk", "dmic_data",
- 	"ao_lrck", "ao_bck", "aock", "ao_sd_0", "ao_sd_1", "ao_sd_2", "ao_sd_3",
+-static const struct rtd119x_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
+ 	.pins = rtd1295_sb2_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1295_sb2_pins),
+ 	.groups = rtd1295_sb2_pin_groups,
+@@ -1278,7 +1278,7 @@ static const unsigned int rtd1295_ao_sd_1_pins[] = { RTD1295_AO_SD_1 };
+ static const unsigned int rtd1295_ao_sd_2_pins[] = { RTD1295_AO_SD_2 };
+ static const unsigned int rtd1295_ao_sd_3_pins[] = { RTD1295_AO_SD_3 };
+ 
+-static const struct rtd119x_pin_group_desc rtd1295_disp_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1295_disp_pin_groups[] = {
+ 	RTD1295_GROUP(spdif),
+ 	RTD1295_GROUP(dmic_clk),
+ 	RTD1295_GROUP(dmic_data),
+@@ -1313,7 +1313,7 @@ static const char * const rtd1295_disp_spdif_out_groups[] = { "spdif" };
+ 		.num_groups = ARRAY_SIZE(rtd1295_disp_ ## _name ## _groups), \
+ 	}
+ 
+-static const struct rtd119x_pin_func_desc rtd1295_disp_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1295_disp_pin_functions[] = {
+ 	RTD1295_FUNC(gpio),
+ 	RTD1295_FUNC(ai),
+ 	RTD1295_FUNC(ao),
+@@ -1323,7 +1323,7 @@ static const struct rtd119x_pin_func_desc rtd1295_disp_pin_functions[] = {
+ 
+ #undef RTD1295_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1295_disp_muxes[] = {
++static const struct rtd_pin_desc rtd1295_disp_muxes[] = {
+ 	RTK_PIN_MUX(spdif, 0x08, GENMASK(1, 0),
+ 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 0, "spdif_out")),
+@@ -1360,7 +1360,7 @@ static const struct rtd119x_pin_desc rtd1295_disp_muxes[] = {
+ 		RTK_PIN_FUNC(0x2 << 18, "ai")),
  };
--static const char * const rtd1295_disp_ai_groups[] = { "dmic_clk", "dmic_data", "ao_sd_2", "ao_sd_3" };
--static const char * const rtd1295_disp_ao_groups[] = { "ao_lrck", "ao_bck", "aock", "ao_sd_0", "ao_sd_1", "ao_sd_2", "ao_sd_3" };
--static const char * const rtd1295_disp_dmic_groups[] = { "dmic_clk", "dmic_data" };
-+static const char * const rtd1295_disp_ai_groups[] = {
-+	"dmic_clk", "dmic_data", "ao_sd_2", "ao_sd_3"
-+};
-+static const char * const rtd1295_disp_ao_groups[] = {
-+	"ao_lrck", "ao_bck", "aock", "ao_sd_0", "ao_sd_1", "ao_sd_2", "ao_sd_3"
-+};
-+static const char * const rtd1295_disp_dmic_groups[] = {
-+	"dmic_clk", "dmic_data"
-+};
- static const char * const rtd1295_disp_spdif_out_groups[] = { "spdif" };
  
- #define RTD1295_FUNC(_name) \
-@@ -1347,8 +1502,10 @@ static const unsigned int rtd1295_sdio_data_0_pins[] = { RTD1295_SDIO_DATA_0 };
- static const unsigned int rtd1295_sdio_data_1_pins[] = { RTD1295_SDIO_DATA_1 };
- static const unsigned int rtd1295_sdio_data_2_pins[] = { RTD1295_SDIO_DATA_2 };
- static const unsigned int rtd1295_sdio_data_3_pins[] = { RTD1295_SDIO_DATA_3 };
--static const unsigned int rtd1295_pcie_clkreq_0_pins[] = { RTD1295_PCIE_CLKREQ_0 };
--static const unsigned int rtd1295_pcie_clkreq_1_pins[] = { RTD1295_PCIE_CLKREQ_1 };
-+static const unsigned int rtd1295_pcie_clkreq_0_pins[] = {
-+				RTD1295_PCIE_CLKREQ_0 };
-+static const unsigned int rtd1295_pcie_clkreq_1_pins[] = {
-+				RTD1295_PCIE_CLKREQ_1 };
- static const unsigned int rtd1295_prob_0_pins[] = { RTD1295_PROB_0 };
- static const unsigned int rtd1295_prob_1_pins[] = { RTD1295_PROB_1 };
- static const unsigned int rtd1295_prob_2_pins[] = { RTD1295_PROB_2 };
-@@ -1399,25 +1556,57 @@ static const struct rtd119x_pin_group_desc rtd1295_cr_pin_groups[] = {
- 
- static const char * const rtd1295_cr_gpio_groups[] = {
- 	"nf_cle", "nf_ale", "nf_rd_n", "nf_wr_n", "nf_rdy",
--	"nf_dd_7", "nf_dd_6", "nf_dd_5", "nf_dd_4", "nf_dd_3", "nf_dd_2", "nf_dd_1", "nf_dd_0",
-+	"nf_dd_7", "nf_dd_6", "nf_dd_5", "nf_dd_4",
-+	"nf_dd_3", "nf_dd_2", "nf_dd_1", "nf_dd_0",
- 	"nf_dqs", "nf_ce_n_0", "nf_ce_n_1",
- 	"emmc_dd_sb",
--	"mmc_cmd", "mmc_clk", "mmc_wp", "mmc_cd", "mmc_data_0", "mmc_data_1", "mmc_data_2", "mmc_data_3",
--	"sdio_cmd", "sdio_clk", "sdio_data_0", "sdio_data_1", "sdio_data_2", "sdio_data_3",
-+	"mmc_cmd", "mmc_clk", "mmc_wp", "mmc_cd", "mmc_data_0",
-+	"mmc_data_1", "mmc_data_2", "mmc_data_3",
-+	"sdio_cmd", "sdio_clk", "sdio_data_0", "sdio_data_1",
-+	"sdio_data_2", "sdio_data_3",
- 	"pcie_clkreq_0", "pcie_clkreq_1",
- 	"prob_0", "prob_1", "prob_2", "prob_3",
+-static const struct rtd119x_pin_config_desc rtd1295_disp_configs[] = {
++static const struct rtd_pin_config_desc rtd1295_disp_configs[] = {
+ 	RTK_PIN_CONFIG(spdif, 0x0, 0, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(dmic_clk, 0x0, 4, 1, 0, 2, 3, PADDRI_2_4),
+ 	RTK_PIN_CONFIG(dmic_data, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
+@@ -1374,7 +1374,7 @@ static const struct rtd119x_pin_config_desc rtd1295_disp_configs[] = {
  };
--static const char * const rtd1295_cr_avcpu_ej_groups[] = { "nf_rdy", "nf_rd_n", "nf_dd_5", "nf_dd_6", "nf_dd_7" };
--static const char * const rtd1295_cr_emmc_groups[] = { "nf_rdy", "nf_rd_n", "nf_cle", "nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7", "emmc_dd_db" };
--static const char * const rtd1295_cr_hif_groups[] = { "nf_wr_n", "nf_ale", "nf_cle", "nf_dd_4" };
--static const char * const rtd1295_cr_nand_groups[] = { "nf_dqs", "nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale", "nf_cle", "nf_ce_n_0", "nf_ce_n_1", "nf_dd_0", "nf_dd_1", "nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7" };
--static const char * const rtd1295_cr_p2s_groups[] = { "prob_0", "prob_1" };
--static const char * const rtd1295_cr_pcie_groups[] = { "pcie_clkreq_0", "pcie_clkreq_1" };
--static const char * const rtd1295_cr_pll_test_groups[] = { "prob_0", "prob_1", "prob_2", "prob_3" };
--static const char * const rtd1295_cr_scpu_ejtag_loc_cr_groups[] = { "mmc_cmd", "mmc_clk", "mmc_wp", "mmc_data_0", "mmc_data_3" };
--static const char * const rtd1295_cr_sd_card_groups[] = { "mmc_cmd", "mmc_clk", "mmc_wp", "mmc_cd", "mmc_data_0", "mmc_data_1", "mmc_data_2", "mmc_data_3" };
--static const char * const rtd1295_cr_sdio_0_groups[] = { "sdio_cmd", "sdio_clk", "sdio_data_0", "sdio_data_1", "sdio_data_2", "sdio_data_3" };
--static const char * const rtd1295_cr_sdio_1_groups[] = { "mmc_cmd", "mmc_clk", "mmc_data_0", "mmc_data_1", "mmc_data_2", "mmc_data_3" };
-+static const char * const rtd1295_cr_avcpu_ej_groups[] = {
-+	"nf_rdy", "nf_rd_n", "nf_dd_5", "nf_dd_6", "nf_dd_7"
-+};
-+static const char * const rtd1295_cr_emmc_groups[] = {
-+	"nf_rdy", "nf_rd_n", "nf_cle", "nf_dd_0", "nf_dd_1",
-+	"nf_dd_2", "nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6",
-+	"nf_dd_7", "emmc_dd_db"
-+};
-+static const char * const rtd1295_cr_hif_groups[] = {
-+	"nf_wr_n", "nf_ale", "nf_cle", "nf_dd_4"
-+};
-+static const char * const rtd1295_cr_nand_groups[] = {
-+	"nf_dqs", "nf_rdy", "nf_rd_n", "nf_wr_n", "nf_ale", "nf_cle",
-+	"nf_ce_n_0", "nf_ce_n_1", "nf_dd_0", "nf_dd_1", "nf_dd_2",
-+	"nf_dd_3", "nf_dd_4", "nf_dd_5", "nf_dd_6", "nf_dd_7"
-+};
-+static const char * const rtd1295_cr_p2s_groups[] = {
-+	"prob_0", "prob_1"
-+};
-+static const char * const rtd1295_cr_pcie_groups[] = {
-+	"pcie_clkreq_0", "pcie_clkreq_1"
-+};
-+static const char * const rtd1295_cr_pll_test_groups[] = {
-+	"prob_0", "prob_1", "prob_2", "prob_3"
-+};
-+static const char * const rtd1295_cr_scpu_ejtag_loc_cr_groups[] = {
-+	"mmc_cmd", "mmc_clk", "mmc_wp", "mmc_data_0", "mmc_data_3"
-+};
-+static const char * const rtd1295_cr_sd_card_groups[] = {
-+	"mmc_cmd", "mmc_clk", "mmc_wp", "mmc_cd", "mmc_data_0",
-+	"mmc_data_1", "mmc_data_2", "mmc_data_3"
-+};
-+static const char * const rtd1295_cr_sdio_0_groups[] = {
-+	"sdio_cmd", "sdio_clk", "sdio_data_0",
-+	"sdio_data_1", "sdio_data_2", "sdio_data_3"
-+};
-+static const char * const rtd1295_cr_sdio_1_groups[] = {
-+	"mmc_cmd", "mmc_clk", "mmc_data_0",
-+	"mmc_data_1", "mmc_data_2", "mmc_data_3"
-+};
  
  
- #define RTD1295_FUNC(_name) \
+-static const struct rtd119x_pinctrl_desc rtd1295_disp_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
+ 	.pins = rtd1295_disp_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1295_disp_pins),
+ 	.groups = rtd1295_disp_pin_groups,
+@@ -1513,7 +1513,7 @@ static const unsigned int rtd1295_prob_3_pins[] = { RTD1295_PROB_3 };
+ static const unsigned int rtd1295_sdio_loc_pins[] = { RTD1295_SDIO_LOC };
+ 
+ 
+-static const struct rtd119x_pin_group_desc rtd1295_cr_pin_groups[] = {
++static const struct rtd_pin_group_desc rtd1295_cr_pin_groups[] = {
+ 	RTD1295_GROUP(nf_cle),
+ 	RTD1295_GROUP(nf_ale),
+ 	RTD1295_GROUP(nf_rd_n),
+@@ -1616,7 +1616,7 @@ static const char * const rtd1295_cr_sdio_1_groups[] = {
+ 		.num_groups = ARRAY_SIZE(rtd1295_cr_ ## _name ## _groups), \
+ 	}
+ 
+-static const struct rtd119x_pin_func_desc rtd1295_cr_pin_functions[] = {
++static const struct rtd_pin_func_desc rtd1295_cr_pin_functions[] = {
+ 	RTD1295_FUNC(gpio),
+ 	RTD1295_FUNC(avcpu_ej),
+ 	RTD1295_FUNC(emmc),
+@@ -1633,7 +1633,7 @@ static const struct rtd119x_pin_func_desc rtd1295_cr_pin_functions[] = {
+ 
+ #undef RTD1295_FUNC
+ 
+-static const struct rtd119x_pin_desc rtd1295_cr_muxes[] = {
++static const struct rtd_pin_desc rtd1295_cr_muxes[] = {
+ 	RTK_PIN_MUX(nf_dqs, 0x00, GENMASK(1, 0),
+ 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
+ 		RTK_PIN_FUNC(0x1 << 0, "nand")),
+@@ -1785,7 +1785,7 @@ static const struct rtd119x_pin_desc rtd1295_cr_muxes[] = {
+ 		RTK_PIN_FUNC(0x1 << 12, "pll_test")),
+ };
+ 
+-static const struct rtd119x_pin_config_desc rtd1295_cr_configs[] = {
++static const struct rtd_pin_config_desc rtd1295_cr_configs[] = {
+ 	RTK_PIN_CONFIG(nf_dqs, 0x8, 0, 1, 0, 2, 3, PCONF_UNSUPP),
+ 	RTK_PIN_CONFIG(nf_ale, 0x8, 4, 1, 0, 2, 3, PCONF_UNSUPP),
+ 	RTK_PIN_CONFIG(nf_ce_n_0, 0x8, 8, 1, 0, 2, 3, PCONF_UNSUPP),
+@@ -1826,7 +1826,7 @@ static const struct rtd119x_pin_config_desc rtd1295_cr_configs[] = {
+ };
+ 
+ 
+-static const struct rtd119x_pinctrl_desc rtd1295_cr_pinctrl_desc = {
++static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
+ 	.pins = rtd1295_cr_pins,
+ 	.num_pins = ARRAY_SIZE(rtd1295_cr_pins),
+ 	.groups = rtd1295_cr_pin_groups,
 -- 
 2.26.2
 
