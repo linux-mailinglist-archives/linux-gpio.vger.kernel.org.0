@@ -2,116 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7978D1D3188
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 15:42:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DA2A1D325C
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 16:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgENNmt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 May 2020 09:42:49 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61750 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgENNmt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 14 May 2020 09:42:49 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EDgMxu028132;
-        Thu, 14 May 2020 15:42:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=tD1qvdb0EwmAv9XocfBUyYNcHtOhYgnwwbYe5684NcY=;
- b=lpZCseNN1q8B2O++L5FqZEfrupQp8UmuSICipi2VpYbbXdKqjviuS4uNBmOQ1Qk1/JYn
- FC0+aT7IZOR+0AaKhzk+Ozpgl88d1a5y1MBWH1j0sjx/T8Vy7mAFxLIZkKAuH5DBT24e
- w8vnJeOoFwf7/cYeADMBCKg6OvlIrAm70cghUtpnyO8Px5h4+ovsh1x/0sNyYzBPay55
- GNVpTBzYrzgrxIYjV346YgPOw8M8x1YuBl3tdk9ASS/dhGkQVptEBfcXiG2r4Y/3xJqM
- b1YktOvA+/Pa6WYvOrUBAuOptDbM+z10mLDDQLjERCoYWeW9MwohkWsITtdfWVTKKrAK eQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vnbg0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 15:42:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CF2C100034;
-        Thu, 14 May 2020 15:42:33 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA8332BE24D;
-        Thu, 14 May 2020 15:42:32 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
- 2020 15:42:27 +0200
-Subject: Re: [PATCH 00/15] Fix STM32 DT issues on v5.7-rc4
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <caef6641-b7c2-881a-a331-3d05f6f4bba6@st.com>
-Date:   Thu, 14 May 2020 15:42:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727940AbgENOM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 10:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbgENOMZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 10:12:25 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA80C061A0C
+        for <linux-gpio@vger.kernel.org>; Thu, 14 May 2020 07:12:24 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id b26so2761056lfa.5
+        for <linux-gpio@vger.kernel.org>; Thu, 14 May 2020 07:12:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DkzKtHfHzDrv9acZGYhRUV9tmRVRbn6arGIc1dXkxBI=;
+        b=XottLg9cQaTSjBHR11pedGRx+Glhzf+8Usg9K//kY6W0jNVJL1plss0LJBLgC3nXhz
+         M7/NBircuUPinVKCHjYMUacfV2lTSjNWOTELV64WKqTIb+VoAHkWrKK+LyXiKxtTc91H
+         EkpxcjLeryrGNDHr3ahfTehONNWh2vDTvJC3KrUAVwr5ekDS6uVYv5S8fYzsZqRMeDcg
+         U9QIPtq8KUiqElnQ2rNtYXfrfX1ML51sOsdTUPKMJPSEfu+9xo31LZcyI4nCectwBKUP
+         tA1N9H4f3nEE3y6yZE9MxWwkMpIknY1ov4rh2crp5UPVHztPX919W+E1wCHPIKL0EBRz
+         aJ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DkzKtHfHzDrv9acZGYhRUV9tmRVRbn6arGIc1dXkxBI=;
+        b=gYft7sxCoMog13nLQHo6L74lkA7PylVbTK++yP171qNpDmeZIz9c16zNwhqtP5gUSO
+         NLulHa0DrN61vde9gDxF6Samz37uSA0/dcL5n5u6VYLxRGtOioGkla1wiRDSfVBhR4O2
+         Y28Na6V2eEIJyXzegXdN1rmyt4TmQT5FOELZ4NE2cxtUNVi8XGFXEiSaMJzIolKeNEHj
+         HX5MWiq3IryQw+UNyLNjmJ3Mg/GpWeIHkQm5LrYCaufKA2qdhgKdPCihNeBDHiqNM+hV
+         0aISsQ4ScdG4+O5sPYyFbvpiKFp0WgvhZxDW+kGwsXaCfUna79pdE5vqz13Khyev79wq
+         P1EQ==
+X-Gm-Message-State: AOAM530W/bDKJLx29zjYsak6vOnmget0SsGiwzmnkgdxe4+RfztEnAux
+        EbWIIQB6pasGnt/AT9HAbeTg94OsM933gK2AoSr0mw==
+X-Google-Smtp-Source: ABdhPJzbFJbGyW1QIZoQeEMNyecliP3FhYfrVVsA0/vlx9bAuXukGyGD9ZMmozQ02I6kOFg4AohML8Hs61aAnqoqEGA=
+X-Received: by 2002:ac2:5e70:: with SMTP id a16mr3507458lfr.77.1589465542377;
+ Thu, 14 May 2020 07:12:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_04:2020-05-14,2020-05-14 signatures=0
+References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
+ <20200417061907.1226490-2-bjorn.andersson@linaro.org> <20200429213453.GA32114@bogus>
+ <20200514060422.GL1302550@yoga>
+In-Reply-To: <20200514060422.GL1302550@yoga>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 May 2020 16:12:10 +0200
+Message-ID: <CACRpkdZpfgb0wwt2FUwqPab4XhtLXfDWOvZLdCc+NF-mVJkKYw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl bindings
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Benjamin
+On Thu, May 14, 2020 at 8:04 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
+> > On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
+> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+> [..]
+> > > +#PIN CONFIGURATION NODES
+> > > +patternProperties:
+> > > +  '^.*$':
+> > > +    if:
+> > > +      type: object
+> > > +    then:
+> >
+> > Needs a $ref to the standard properties.
+> >
+> > Would be good to show a child node in the example too. (And try having
+> > an error in a standard property type to verify you get an error).
+> >
+>
+> Finally looked into this.
 
-On 5/13/20 4:59 PM, Benjamin Gaignard wrote:
-> This series fixes issues hight lighted by dtbs_check on STM32 devicetrees.
-> The patches has been developped on top of v5.7-rc4 tag.
-> 
-> Benjamin Gaignard (15):
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f429
->    ARM: dts: stm32: update pwm pinctrl node names for stm32f4
->    ARM: dts: stm32: update led nodes names for stm32f249-disco
->    ARM: dts: stm32: update led nodes names for stm32f469-disco
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f746
->    ARM: dts: stm32: update led nodes names for stm32f429-eval
->    ARM: dts: stm32: update led nodes names for stm32f769-disco
->    ARM: dts: stm32: update led nodes names for stm32f746-eval
->    ARM: dts: stm32: remove useless interrupt-names property on stm32f743
->    ARM: dts: stm32: Update nodes names for stm32h743 pinctrl
->    ARM: dts: stm32: Update nodes names for stm32mp15 pinctrl
->    ARM: dts: stm32: Add missing #address and #size cells on spi node for
->      stm32mp151
->    ARM: dts: stm32: update led nodes names for stm32f746-eval
->    dt-bindings: pinctrl: stm32: Add missing interrupts property
->    dt-bindings: usb: dwc2: Fix issues for stm32mp15x SoC
+Can you send an incremental patch because otherwise I have
+to revert the patch that I merged (maybe to trigger happy, mea culpa).
 
-For dts(i) part, it looks good to me. I let Rob to review before taking 
-the whole series.
+(If it's too hard I can just revert it.)
 
-thanks
-alex
-
-
-> 
->   .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          |  3 +++
->   Documentation/devicetree/bindings/usb/dwc2.yaml                |  6 ++++--
->   arch/arm/boot/dts/stm32429i-eval.dts                           |  8 ++++----
->   arch/arm/boot/dts/stm32746g-eval.dts                           |  8 ++++----
->   arch/arm/boot/dts/stm32f4-pinctrl.dtsi                         |  4 ++--
->   arch/arm/boot/dts/stm32f429-disco.dts                          |  4 ++--
->   arch/arm/boot/dts/stm32f429.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32f469-disco.dts                          |  8 ++++----
->   arch/arm/boot/dts/stm32f746.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32f769-disco.dts                          |  4 ++--
->   arch/arm/boot/dts/stm32h743-pinctrl.dtsi                       | 10 +++++-----
->   arch/arm/boot/dts/stm32h743.dtsi                               |  1 -
->   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi                       |  6 +++---
->   arch/arm/boot/dts/stm32mp151.dtsi                              |  2 ++
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi                         |  2 +-
->   15 files changed, 36 insertions(+), 32 deletions(-)
-> 
+Yours,
+Linus Walleij
