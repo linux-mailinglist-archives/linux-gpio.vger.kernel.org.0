@@ -2,154 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C0C41D21CE
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 00:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA0D41D26FA
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 08:04:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbgEMWPa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 May 2020 18:15:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        id S1725974AbgENGE1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 02:04:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730532AbgEMWP3 (ORCPT
+        by vger.kernel.org with ESMTP id S1725818AbgENGE0 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 May 2020 18:15:29 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A1EC061A0C;
-        Wed, 13 May 2020 15:15:29 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5752922FEC;
-        Thu, 14 May 2020 00:15:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1589408125;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IjMyCHfdnLjEuVo++xDGBWjambq+Fde/qc+KEJNfdSc=;
-        b=eKf0mnWxRhNAeHVKoNWCeiV9u0yLpbJAusnkLK3vNXKHhQeGeNYWKXQ++zSpwJbX38tbdU
-        2EJap+54vaZnLGcacA4UH6AZs5fGtsgB2NmyXR2hFOrHme+LDvtC1sdogLUw19sHNQKzAs
-        BwssZiT/tIG61qYJfOLJ1Eowufi8hK0=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 14 May 2020 00:15:22 +0200
-From:   Michael Walle <michael@walle.cc>
+        Thu, 14 May 2020 02:04:26 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E1EC061A0E
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b190so852260pfg.6
+        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
+        b=t+81K8xIWHZAb+qZy4b/CyLYaDJEC3buGiFxgEM+vGGtP3OpgN/uRorgVQdklsZolt
+         fUMiHNpNafAs3xthBI978lkA1NzlDyGuLkTuTs++Fwos6trlUHlOCcWOLT51P/tbaPa8
+         EMAX6Xneovwlf0jYO+DSG7ju4bF4ps5Pnu6r04J47Kkq3Jn9Yqr0qHK99/QnLcb9TWOe
+         ELDo+1d9D3l3uzm0ltFq+Gz3mTRDd7+gli5UHpqztRYjkZV+BL79pSaa/x1f/AvQIBqA
+         eMHOSwaYnIjuc0cY0Fbh7YoccJUt6COcV9CoG13JZrx4h1P3lnzkrDoHP+bYr+91ROv4
+         5yDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
+        b=rZlP4ONQTwPfQoNy5G/KtAxARZ5DJd+kwRFLW5t2rgeuGTQ9NCLQCV1UOwEp7erVHI
+         iEvTGvguGd3DNqdfqTvzXxPDoC8XRpKJTbWed29vtMxOWCn4PCui9SfBfYR3tmoLSdaX
+         U1Uv/KzRyZrokQamh4ou4lioz5ZkugkJRBm9Fw/zMrzd8zytY0NEAKXHcf2aKEW1Eh90
+         NH1QdxW7jWy7tUQkRUm3mZn8KTz2Dphy267nIlGx/NB1n9gWE1z3D8mb4IP1ICEkHIqO
+         CXZ3/y+3qnduu3R6jA3nYecvymiUJ1v4mui6qkSDzia1jnxvyADSrrrsCIGBZ+osraUC
+         2oDQ==
+X-Gm-Message-State: AOAM533ef1RMsq4Sxf9tkQCt2fitzx44hLzYJmx4GfNnAdnrOyLJ8FI7
+        NKLneyrBdaNDRES1G6KIhaiCIDlKqi4=
+X-Google-Smtp-Source: ABdhPJy8/5JndA1WeHN8nNz8gCYQDDpjdxcICz8QbFZopFUpG6xUKfXZ6hED2rLKq8OOCHvu7Dtn/w==
+X-Received: by 2002:a62:6dc3:: with SMTP id i186mr2697519pfc.273.1589436265605;
+        Wed, 13 May 2020 23:04:25 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v189sm1218271pfv.176.2020.05.13.23.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 23:04:24 -0700 (PDT)
+Date:   Wed, 13 May 2020 23:04:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <CAL_JsqJBAghgdKmH1OfpH0B508st7Gx3GMtjufjZvBWM_c6GAQ@mail.gmail.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-6-michael@walle.cc> <20200511211359.GB3518@bogus>
- <f0fafa63047f00e912013b137e4db15c@walle.cc>
- <CAL_JsqJBAghgdKmH1OfpH0B508st7Gx3GMtjufjZvBWM_c6GAQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <c170d7ad3874567e624bb827c1eac661@walle.cc>
-X-Sender: michael@walle.cc
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
+ bindings
+Message-ID: <20200514060422.GL1302550@yoga>
+References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
+ <20200417061907.1226490-2-bjorn.andersson@linaro.org>
+ <20200429213453.GA32114@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200429213453.GA32114@bogus>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-05-12 23:59, schrieb Rob Herring:
-> On Mon, May 11, 2020 at 4:45 PM Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-05-11 23:13, schrieb Rob Herring:
->> > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
->> >> +#define SL28CPLD_VERSION    0x03
->> >> +#define SL28CPLD_WATCHDOG_BASE      0x04
->> >> +#define SL28CPLD_HWMON_FAN_BASE     0x0b
->> >> +#define SL28CPLD_PWM0_BASE  0x0c
->> >> +#define SL28CPLD_PWM1_BASE  0x0e
->> >> +#define SL28CPLD_GPIO0_BASE 0x10
->> >> +#define SL28CPLD_GPIO1_BASE 0x15
->> >> +#define SL28CPLD_GPO_BASE   0x1a
->> >> +#define SL28CPLD_GPI_BASE   0x1b
->> >> +#define SL28CPLD_INTC_BASE  0x1c
->> >
->> > If you want to use 'reg' in the binding, these are the numbers you
->> > should be using rather than making up numbering!
->> 
->> My motivation is that I don't want to hardcode the internal addresses
->> of the management controller in the device tree. For example if they
->> will move around with a later update of the controller, so a driver 
->> can
->> be compatible with both the old and the new version. If they are in 
->> the
->> device tree, only one register layout is possible.
+On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
+> On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
+[..]
+> > +#PIN CONFIGURATION NODES
+> > +patternProperties:
+> > +  '^.*$':
+> > +    if:
+> > +      type: object
+> > +    then:
 > 
-> I don't understand, if the addresses change, then the above defines
-> have to change. So your driver is only compatible with 1 version. If
-> you change the CPLD, then that's a h/w change and your h/w description
-> (DT) should change. That can either be the compatible string changing
-> and updating the driver with new match data such as register offsets
-> or all the differences are in DT and there's no kernel change.
-
-The CPLD and the board is designed in a way that it is possible to
-update and/or change its function (or parts of it). It must not be
-a hardware change, although I admit thats a bit of a grey area wether
-you treat it as hardware or "firmware". Anyway, yes you'd have to
-change the register offsets, but as this is code it might support
-different register offsets. For example you could dynamically add
-functionality, if there is a newer controller version while still
-being compatible with older versions.
-
->> > However, I still don't think you need any child nodes. All the data in
->> > the DT binding is right here in the driver already. There's no
->> > advantage
->> > to putting child nodes in DT, because this driver still has to be
->> > updated if you add more nodes.
->> 
->> But then any phandle will reference the mfd device. And for example
->> there
->> are two different interrupt controllers, that is the INTC and the
->> GPIO[01],
->> which will then be combined into one device tree node, right?
+> Needs a $ref to the standard properties.
 > 
-> You either have to add a cell for 'bank' or divide the 1st cell into a
-> bank and index. Both have been done before.
+> Would be good to show a child node in the example too. (And try having 
+> an error in a standard property type to verify you get an error).
+> 
 
-But this won't work with watchdogs, correct? See
-https://lore.kernel.org/linux-devicetree/7acbb6d9b2240b1856136fa35c1318bf@walle.cc/
+Finally looked into this. By $ref'ing pinmux-node.yaml I can drop pins
+and function from below properties, and by $ref'ing pincfg-node.yaml I
+can drop the pinconf entries listed.
 
-> To go the other direction, AIUI you shouldn't need OF_MFD_CELL_REG
-> entries if you have the child devices in DT.
+But how do I $ref both?
 
-This is a general problem IMHO. There are mfd drivers which have mfd
-cells and a device tree node associated with each cell. But it just
-works as long as there is only one sub device per unique compatible
-string. So you cannot have multiple mfd cells with the same
-compatible string.
+What's the appropriate method for amending pins, function and
+drive-strength with the more specific value set? Should I both $ref them
+and list them here?
 
-That being said, I can try to reimplement it using
-of_platform_populate() and its internal offset as its unit address.
+How do I limit which standard properties are actually supported in this
+binding?
 
-> Pick one way or the
-> other. It's ultimately a judgement call. For a one-off device, sub
-> devices in DT doesn't really buy you anything. If you have sub-blocks
-> showing up multiple devices, then sub devices makes sense. If there's
-> only 2-3 combinations, then it's a toss up.
+Thanks,
+Bjorn
 
--michael
+> > +      properties:
+> > +        pins:
+> > +          description:
+> > +            List of gpio pins affected by the properties specified in this
+> > +            subnode.
+> > +          items:
+> > +            oneOf:
+> > +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
+> > +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
+> > +          minItems: 1
+> > +          maxItems: 36
+> > +
+> > +        function:
+> > +          description:
+> > +            Specify the alternative function to be configured for the specified
+> > +            pins.
+> > +
+> > +          enum: [ aoss_cti, atest, audio_ref, cam_mclk, cci_async, cci_i2c,
+> > +            cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
+> > +            cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
+> > +            ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
+> > +            ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
+> > +            mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
+> > +            mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck, mi2s1_ws,
+> > +            mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, pci_e0, pci_e1,
+> > +            pci_e2, phase_flag, pll_bist, pll_bypassnl, pll_clk, pll_reset,
+> > +            pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qspi0, qspi1, qspi2, qspi3,
+> > +            qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14,
+> > +            qup15, qup16, qup17, qup18, qup19, qup2, qup3, qup4, qup5, qup6,
+> > +            qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41,
+> > +            sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu, tgu_ch0, tgu_ch1,
+> > +            tgu_ch2, tgu_ch3, tsense_pwm1, tsense_pwm2, tsif0_clk, tsif0_data,
+> > +            tsif0_en, tsif0_error, tsif0_sync, tsif1_clk, tsif1_data, tsif1_en,
+> > +            tsif1_error, tsif1_sync, usb2phy_ac, usb_phy, vsense_trigger ]
+> > +
+> > +        drive-strength:
+> > +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> > +          default: 2
+> > +          description:
+> > +            Selects the drive strength for the specified pins, in mA.
+> > +
+> > +        bias-pull-down: true
+> > +
+> > +        bias-pull-up: true
+> > +
+> > +        bias-disable: true
+> > +
+> > +        output-high: true
+> > +
+> > +        output-low: true
+> > +
+> > +      required:
+> > +        - pins
+> > +        - function
+> > +
+> > +      additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +  - interrupts
+> > +  - interrupt-controller
+> > +  - '#interrupt-cells'
+> > +  - gpio-controller
+> > +  - '#gpio-cells'
+> > +  - gpio-ranges
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +        pinctrl@1f00000 {
+> > +                compatible = "qcom,sm8250-pinctrl";
+> > +                reg = <0x0f100000 0x300000>,
+> > +                      <0x0f500000 0x300000>,
+> > +                      <0x0f900000 0x300000>;
+> > +                reg-names = "west", "south", "north";
+> > +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > +                gpio-controller;
+> > +                #gpio-cells = <2>;
+> > +                interrupt-controller;
+> > +                #interrupt-cells = <2>;
+> > +                gpio-ranges = <&tlmm 0 0 180>;
+> > +                wakeup-parent = <&pdc>;
+> > +        };
+> > -- 
+> > 2.24.0
+> > 
