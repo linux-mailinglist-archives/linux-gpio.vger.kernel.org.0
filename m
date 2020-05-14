@@ -2,88 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C48C1D2EFB
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 13:59:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 001341D3080
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 15:00:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgENL7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 May 2020 07:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENL7l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 07:59:41 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D460CC061A0C
-        for <linux-gpio@vger.kernel.org>; Thu, 14 May 2020 04:59:40 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id h188so1643080lfd.7
-        for <linux-gpio@vger.kernel.org>; Thu, 14 May 2020 04:59:40 -0700 (PDT)
+        id S1726117AbgENNA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 09:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726056AbgENNA2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 14 May 2020 09:00:28 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A114C061A0C;
+        Thu, 14 May 2020 06:00:27 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id p12so2664983qtn.13;
+        Thu, 14 May 2020 06:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cq4YDoKxv+Q3T5Dn5K6+1xRpSkx8zziLBhh588R6AP0=;
-        b=WTjp9I7QTWVtl3rkw8ifQR1BpRtYiO7nPRppNf+bMXC1LDsD5niJJ2rtEQJSa+4L21
-         1x/bXlMrWJa5FyLuNVJ3dfg0rXZ9YHgOpmLj8cDliWBXENSyqHloLb6iqGLJUh++PLYn
-         lhzgO6fDM6v5fa1Gtu4v3WX/1oV+qtnnXJfQy6pg7LqHQ4COtkauFU6ildGzdlF4zY3X
-         qNCrOm8tm0X17V2e33RClrT9MLy0NSNfAacpmRSJB2982pyshJ9Q6MeiABvw1HAmhe3z
-         RqZ3kA7t0QNX3aXTHts9a+n9TjNoJNmKLpEtswDiv0HhdlauY9pjFXI2ZkHeqMYIf28w
-         38DQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=z6WOKhYc3LBk7MDZUdCfkm93NHPFxuz30hVZ9EsTSJY=;
+        b=eT6a31lXMYbpMmePM3w2g8mpZeu+6ZCGfi+ihbQIGZB7mp5akrcERZJ+d7tWh3PUSi
+         YsJdlUB5atJGK2D819evYElM3lRGMXzxV+ND2Dnj/8NzSTry7i4ZuZZ+BYhVV4PyA9mR
+         FEbabEsHZm91Bp8fCfg6cbediwk95zq0Ui0hW+CV+7/PD8hUVgFM0erv9wMET337qpO0
+         Pw0JgikhQlg4pabcMmoekfFN80ViwxYE88FGJa2VvKDzREiYb6sXkTAnCxX9uNCH5fVl
+         6/CBD08zoqwII5v8DGI9Cwy1wosGT6zKsKbSDd/RUfKv94IvHYUbitUOrpwgW70BgzSZ
+         kz+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cq4YDoKxv+Q3T5Dn5K6+1xRpSkx8zziLBhh588R6AP0=;
-        b=ulpMTCjUdI67kExwznTwtc+dP08cLYGsOjvo2Onegu7aPC2yXrZ7x2NRlYnIV7KhFm
-         PnFjHkBJVixiHjKB/0H50GUwWYkODgmezDvFO8PLOZXA0ALYhPwVd9sYK9s3CzlM3X8G
-         fzwsdVsWNcoZPpFcIQd/40FpdFu0TNdXT4ULUBAC68V0oBoCzpSnWnAUH0KIykHaLmI2
-         heaWNJQpO1asCKv7yK/pK4CHG+Pt53OIyjoTd28sGkyeTt+vpUWDyzNrE5VFZepnuZO2
-         CatN7xItdj26W7Y76ZS+A+nUlrnD3VhstGxWM5SSW89jkIh2ybpRSNop5gm27/EbShYQ
-         Gkqw==
-X-Gm-Message-State: AOAM533Vs47r167jveEYNddzwoVLf3OA19UFbo+D4LRpfDJiyt9LFC+y
-        DG6Xd6vrW1Xfktc3ukuRp/o=
-X-Google-Smtp-Source: ABdhPJwIL2BkMoIqQu/zTfxX6g3jofgO5Rur9vgrPsYTAiS55lhAThxRWXgrsO8Bt3BBpCjcKZW95Q==
-X-Received: by 2002:ac2:4a70:: with SMTP id q16mr3064426lfp.79.1589457579321;
-        Thu, 14 May 2020 04:59:39 -0700 (PDT)
-Received: from mobilestation ([95.79.139.244])
-        by smtp.gmail.com with ESMTPSA id v4sm1386140ljj.104.2020.05.14.04.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 04:59:38 -0700 (PDT)
-Date:   Thu, 14 May 2020 14:59:36 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] gpio: dwapb: avoid error message for optional IRQ
-Message-ID: <20200514115936.nfjwwfifo2leddtu@mobilestation>
-References: <20200512184513.86883-1-andriy.shevchenko@linux.intel.com>
- <20200513144349.GP185537@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513144349.GP185537@smile.fi.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z6WOKhYc3LBk7MDZUdCfkm93NHPFxuz30hVZ9EsTSJY=;
+        b=JFgrxm3L4AgHbzUZ44/hqaPwUHlIa86fXryfffc1k5HW0j87jTUcTMAM5QWUnnFfsj
+         KlfmNbC3hJthGTR1Iy4AShSuzL1RjBBb81tgijn2m+d/Vwc4SP+9TLYM8Ujq9/2pgYgf
+         5sD7oiUnyXDvv1xixH/QavR5LaMzQlJe0HfQK2qIOqK3azd+F/gzkJvsk+MKDKQbfqDi
+         VkaLH5qdEwHUnBVw7TaXnI8mtMbfQ/zeUqo77KkWpi9GOyJO1sCHK5j8/SE1fdYATH+i
+         x+62OrrBuTu3E3RVrHgcx6dkASvymv04zZZEhoQ0R6VfGYAJA6mLbuuXda8kIqYJ/wVZ
+         OxHA==
+X-Gm-Message-State: AOAM533G6qzIUVc4IuBr3U81X1Wa1kZ/oSCBx8Xg/i2GYpqx0mUZfgkj
+        KiCMNRXxhrbbUcN5V255PL742LxvWurxRQ==
+X-Google-Smtp-Source: ABdhPJwUPArE3/PN49KiSxkIfZTbNFqpTHDn0QvN073tvinjkho7qc4/vmlunVwycSLNmjQVWrSleQ==
+X-Received: by 2002:ac8:4e56:: with SMTP id e22mr4363384qtw.185.1589461226336;
+        Thu, 14 May 2020 06:00:26 -0700 (PDT)
+Received: from sca.dev ([201.17.110.164])
+        by smtp.gmail.com with ESMTPSA id g144sm2473724qke.18.2020.05.14.06.00.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 06:00:25 -0700 (PDT)
+From:   Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+To:     linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org,
+        Rodrigo Alencar <alencar.fmce@imbel.gov.br>,
+        Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Subject: [PATCH] gpio: gpio-max730x: bring gpiochip_add_data after port config
+Date:   Thu, 14 May 2020 10:00:12 -0300
+Message-Id: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
+X-Mailer: git-send-email 1.9.3
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Andy
+gpiochip_add_data being called before might cause premature calls of
+the gpiochip operations before the port_config values are initialized,
+which would possibily write zeros to port gonfiguration registers,
+an operation not allowed. For example, if there are gpio-hog nodes
+in a device-tree, the sequence of function calls are performed
 
-On Wed, May 13, 2020 at 05:43:49PM +0300, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 09:45:10PM +0300, Andy Shevchenko wrote:
-> > platform_get_irq() will generate an error message if the requested IRQ
-> > is not present. Use platform_get_irq_optional() to avoid the error message
-> > being generated.
-> 
-> I will wait for Serge and others to comment before I'll send v2 with a fix to
-> the last patch.
+gpiochip_add_data
+of_gpiochip_add
+of_gpiochip_scan_gpios
+of_gpiochip_add_hog
+gpiod_hog
+gpiochip_request_own_desc
+gpiod_configure_flags
+gpiod_direction_output/gpiod_direction_input
 
-Thanks for the patchset. I'll have it reviewed it in a few days.
+which would call later the gpiochip operation direction_output or
+direction_input prior the port_config[] initialization.
 
--Sergey
+Moreover, gpiochip_get_data is replaced by the container_of macro
+inside the gpiochip operations, which would allow the calling of
+max7301_direction_input prior to gpiochip_add_data
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+---
+ drivers/gpio/gpio-max730x.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpio/gpio-max730x.c b/drivers/gpio/gpio-max730x.c
+index 1e1935c51096..b8c1fe20f49a 100644
+--- a/drivers/gpio/gpio-max730x.c
++++ b/drivers/gpio/gpio-max730x.c
+@@ -47,7 +47,7 @@
+ 
+ static int max7301_direction_input(struct gpio_chip *chip, unsigned offset)
+ {
+-	struct max7301 *ts = gpiochip_get_data(chip);
++	struct max7301 *ts = container_of(chip, struct max7301, chip);
+ 	u8 *config;
+ 	u8 offset_bits, pin_config;
+ 	int ret;
+@@ -89,7 +89,7 @@ static int __max7301_set(struct max7301 *ts, unsigned offset, int value)
+ static int max7301_direction_output(struct gpio_chip *chip, unsigned offset,
+ 				    int value)
+ {
+-	struct max7301 *ts = gpiochip_get_data(chip);
++	struct max7301 *ts = container_of(chip, struct max7301, chip);
+ 	u8 *config;
+ 	u8 offset_bits;
+ 	int ret;
+@@ -189,10 +189,6 @@ int __max730x_probe(struct max7301 *ts)
+ 	ts->chip.parent = dev;
+ 	ts->chip.owner = THIS_MODULE;
+ 
+-	ret = gpiochip_add_data(&ts->chip, ts);
+-	if (ret)
+-		goto exit_destroy;
+-
+ 	/*
+ 	 * initialize pullups according to platform data and cache the
+ 	 * register values for later use.
+@@ -214,7 +210,9 @@ int __max730x_probe(struct max7301 *ts)
+ 		}
+ 	}
+ 
+-	return ret;
++	ret = gpiochip_add_data(&ts->chip, ts);
++	if (!ret)
++		return ret;
+ 
+ exit_destroy:
+ 	mutex_destroy(&ts->lock);
+-- 
+2.23.0.rc1
+
