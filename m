@@ -2,193 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA0D41D26FA
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 08:04:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B41E11D28F0
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 09:40:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725974AbgENGE1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 May 2020 02:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725818AbgENGE0 (ORCPT
+        id S1725974AbgENHkS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 03:40:18 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44234 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725911AbgENHkS (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 14 May 2020 02:04:26 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E1EC061A0E
-        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b190so852260pfg.6
-        for <linux-gpio@vger.kernel.org>; Wed, 13 May 2020 23:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
-        b=t+81K8xIWHZAb+qZy4b/CyLYaDJEC3buGiFxgEM+vGGtP3OpgN/uRorgVQdklsZolt
-         fUMiHNpNafAs3xthBI978lkA1NzlDyGuLkTuTs++Fwos6trlUHlOCcWOLT51P/tbaPa8
-         EMAX6Xneovwlf0jYO+DSG7ju4bF4ps5Pnu6r04J47Kkq3Jn9Yqr0qHK99/QnLcb9TWOe
-         ELDo+1d9D3l3uzm0ltFq+Gz3mTRDd7+gli5UHpqztRYjkZV+BL79pSaa/x1f/AvQIBqA
-         eMHOSwaYnIjuc0cY0Fbh7YoccJUt6COcV9CoG13JZrx4h1P3lnzkrDoHP+bYr+91ROv4
-         5yDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fdmSIWMsCpUW7wJAjQcM04l5EV2d38V1LLlFH56zh/Q=;
-        b=rZlP4ONQTwPfQoNy5G/KtAxARZ5DJd+kwRFLW5t2rgeuGTQ9NCLQCV1UOwEp7erVHI
-         iEvTGvguGd3DNqdfqTvzXxPDoC8XRpKJTbWed29vtMxOWCn4PCui9SfBfYR3tmoLSdaX
-         U1Uv/KzRyZrokQamh4ou4lioz5ZkugkJRBm9Fw/zMrzd8zytY0NEAKXHcf2aKEW1Eh90
-         NH1QdxW7jWy7tUQkRUm3mZn8KTz2Dphy267nIlGx/NB1n9gWE1z3D8mb4IP1ICEkHIqO
-         CXZ3/y+3qnduu3R6jA3nYecvymiUJ1v4mui6qkSDzia1jnxvyADSrrrsCIGBZ+osraUC
-         2oDQ==
-X-Gm-Message-State: AOAM533ef1RMsq4Sxf9tkQCt2fitzx44hLzYJmx4GfNnAdnrOyLJ8FI7
-        NKLneyrBdaNDRES1G6KIhaiCIDlKqi4=
-X-Google-Smtp-Source: ABdhPJy8/5JndA1WeHN8nNz8gCYQDDpjdxcICz8QbFZopFUpG6xUKfXZ6hED2rLKq8OOCHvu7Dtn/w==
-X-Received: by 2002:a62:6dc3:: with SMTP id i186mr2697519pfc.273.1589436265605;
-        Wed, 13 May 2020 23:04:25 -0700 (PDT)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v189sm1218271pfv.176.2020.05.13.23.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 23:04:24 -0700 (PDT)
-Date:   Wed, 13 May 2020 23:04:22 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+        Thu, 14 May 2020 03:40:18 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E7X8dr013496;
+        Thu, 14 May 2020 09:40:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=SpEvreKtB+MBazylqO4KkqjFJKRyk5rMPdajWCqdW74=;
+ b=yCM4XEEXFY9SoRsTSHZEY9AEh57E74V74fmTZXm3ck9QbjUUud4TOF6GD4yR33DLlOC4
+ 3MlDS1Y/SNxkbP3U9iYJiwjihRZ4AguTw6iLZxUmefK9etQZphd0rK1DIE3yKtaFKOSy
+ CTzIAKDrjVaBA3H388fZT29cVei7U/T/btNO+CO56VPMk/Y+gY0XGDLLPgNFUMER/AM+
+ wt0ewGUjoWttF5l8Zr+LzseFAzU6K1KK5XRJMWMCxF+6+nj1DzY8MrdxVntnS8tQggYx
+ uofT9FaTm2lVVxeqc7LFLn2CJ8YS7EjV6CeOBfXEEMeyNYjoO6NJ7kge80OCiyZDPybq 1w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vyhjd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 09:40:05 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AC3A10002A;
+        Thu, 14 May 2020 09:39:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E1C3C2A594D;
+        Thu, 14 May 2020 09:39:55 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
+ 2020 09:39:55 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 14 May 2020 09:39:55 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sm8250 pinctrl
- bindings
-Message-ID: <20200514060422.GL1302550@yoga>
-References: <20200417061907.1226490-1-bjorn.andersson@linaro.org>
- <20200417061907.1226490-2-bjorn.andersson@linaro.org>
- <20200429213453.GA32114@bogus>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.co" <mark.rutland@arm.co>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Thread-Topic: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Thread-Index: AQHV6An9BN3fbiJe+Uu+wK6+EyGnQqgtoL2AgHnzXwA=
+Date:   Thu, 14 May 2020 07:39:55 +0000
+Message-ID: <70ee04c9-4f65-6909-32bc-a379c21a031e@st.com>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
+ <20200226162125.GA13349@bogus>
+In-Reply-To: <20200226162125.GA13349@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <38B5556472D33343A6C2240B0D499256@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200429213453.GA32114@bogus>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed 29 Apr 14:34 PDT 2020, Rob Herring wrote:
-> On Thu, Apr 16, 2020 at 11:19:06PM -0700, Bjorn Andersson wrote:
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-[..]
-> > +#PIN CONFIGURATION NODES
-> > +patternProperties:
-> > +  '^.*$':
-> > +    if:
-> > +      type: object
-> > +    then:
-> 
-> Needs a $ref to the standard properties.
-> 
-> Would be good to show a child node in the example too. (And try having 
-> an error in a standard property type to verify you get an error).
-> 
-
-Finally looked into this. By $ref'ing pinmux-node.yaml I can drop pins
-and function from below properties, and by $ref'ing pincfg-node.yaml I
-can drop the pinconf entries listed.
-
-But how do I $ref both?
-
-What's the appropriate method for amending pins, function and
-drive-strength with the more specific value set? Should I both $ref them
-and list them here?
-
-How do I limit which standard properties are actually supported in this
-binding?
-
-Thanks,
-Bjorn
-
-> > +      properties:
-> > +        pins:
-> > +          description:
-> > +            List of gpio pins affected by the properties specified in this
-> > +            subnode.
-> > +          items:
-> > +            oneOf:
-> > +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
-> > +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
-> > +          minItems: 1
-> > +          maxItems: 36
-> > +
-> > +        function:
-> > +          description:
-> > +            Specify the alternative function to be configured for the specified
-> > +            pins.
-> > +
-> > +          enum: [ aoss_cti, atest, audio_ref, cam_mclk, cci_async, cci_i2c,
-> > +            cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4, cri_trng,
-> > +            cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> > +            ddr_pxi2, ddr_pxi3, dp_hot, dp_lcd, gcc_gp1, gcc_gp2, gcc_gp3, gpio,
-> > +            ibi_i3c, jitter_bist, lpass_slimbus, mdp_vsync, mdp_vsync0,
-> > +            mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s0_data0, mi2s0_data1,
-> > +            mi2s0_sck, mi2s0_ws, mi2s1_data0, mi2s1_data1, mi2s1_sck, mi2s1_ws,
-> > +            mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, pci_e0, pci_e1,
-> > +            pci_e2, phase_flag, pll_bist, pll_bypassnl, pll_clk, pll_reset,
-> > +            pri_mi2s, prng_rosc, qdss_cti, qdss_gpio, qspi0, qspi1, qspi2, qspi3,
-> > +            qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14,
-> > +            qup15, qup16, qup17, qup18, qup19, qup2, qup3, qup4, qup5, qup6,
-> > +            qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41,
-> > +            sdc42, sdc43, sdc4_clk, sdc4_cmd, sec_mi2s, sp_cmu, tgu_ch0, tgu_ch1,
-> > +            tgu_ch2, tgu_ch3, tsense_pwm1, tsense_pwm2, tsif0_clk, tsif0_data,
-> > +            tsif0_en, tsif0_error, tsif0_sync, tsif1_clk, tsif1_data, tsif1_en,
-> > +            tsif1_error, tsif1_sync, usb2phy_ac, usb_phy, vsense_trigger ]
-> > +
-> > +        drive-strength:
-> > +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> > +          default: 2
-> > +          description:
-> > +            Selects the drive strength for the specified pins, in mA.
-> > +
-> > +        bias-pull-down: true
-> > +
-> > +        bias-pull-up: true
-> > +
-> > +        bias-disable: true
-> > +
-> > +        output-high: true
-> > +
-> > +        output-low: true
-> > +
-> > +      required:
-> > +        - pins
-> > +        - function
-> > +
-> > +      additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +  - interrupts
-> > +  - interrupt-controller
-> > +  - '#interrupt-cells'
-> > +  - gpio-controller
-> > +  - '#gpio-cells'
-> > +  - gpio-ranges
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +        pinctrl@1f00000 {
-> > +                compatible = "qcom,sm8250-pinctrl";
-> > +                reg = <0x0f100000 0x300000>,
-> > +                      <0x0f500000 0x300000>,
-> > +                      <0x0f900000 0x300000>;
-> > +                reg-names = "west", "south", "north";
-> > +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> > +                gpio-controller;
-> > +                #gpio-cells = <2>;
-> > +                interrupt-controller;
-> > +                #interrupt-cells = <2>;
-> > +                gpio-ranges = <&tlmm 0 0 180>;
-> > +                wakeup-parent = <&pdc>;
-> > +        };
-> > -- 
-> > 2.24.0
-> > 
+DQoNCk9uIDIvMjYvMjAgNToyMSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgMjAg
+RmViIDIwMjAgMTc6MjI6NDYgKzAxMDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4gQ29u
+dmVydCBzdG1meCBiaW5kaW5ncyB0byBqc29uLXNjaGVtYQ0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
+IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+PiAtLS0NCj4+
+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bWZ4LnlhbWwgICAgICAgICAgfCAx
+MjQgKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZmQvc3RtZngudHh0ICAgIHwgIDI4IC0tLS0tDQo+PiAgIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQgIHwgMTE2IC0tLS0tLS0tLS0tLS0t
+LS0tLS0NCj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9ucygrKSwgMTQ0IGRlbGV0
+aW9ucygtKQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21mZC9zdCxzdG1meC55YW1sDQo+PiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bWZ4LnR4dA0KPj4gICBkZWxldGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGlu
+Y3RybC1zdG1meC50eHQNCj4+DQpIaSBMZWUsIFJvYiwNCg0KSSBoYXZlbid0IGJlZW4gYWJsZSB0
+byBmb3VuZCB0aGlzIHBhdGNoIGluIC1uZXh0IGJyYW5jaGVzLCBjYW4gb25lIG9mIA0KeW91IG1l
+cmdlIGl0ID8NCg0KVGhhbmtzLA0KQmVuamFtaW4NCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQo=
