@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E2A11D30A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 15:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4EE51D3133
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 May 2020 15:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgENNIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 May 2020 09:08:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33628 "EHLO
+        id S1726117AbgENNYm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 May 2020 09:24:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36143 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENNIE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 09:08:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o24so24466565oic.0;
-        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+        with ESMTP id S1726011AbgENNYl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 May 2020 09:24:41 -0400
+Received: by mail-oi1-f195.google.com with SMTP id x7so23585945oic.3;
+        Thu, 14 May 2020 06:24:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fbQaej0+IJeKYT0mug72y3TFgNAGh3pGBDCTmds+4Dg=;
-        b=ggKxPgTE5lsEr2Lp9mtxlQaGy9V5W46OIASq8eTGlIKRtUWAQMZ9Rv8Cbf4vTUSHdq
-         kOWfW4N9COBe9b1BLrLqzn4zBgGI3VhMS08Lhj6bb1t05rBHyoTNMdCU/dZKe42lgwIc
-         C/qbdU6/l93p+hl8epFdr6cn7tDZKyh4w5wQO6iP1+SCqwVZnCL9thCiUBflTOKkYpw6
-         KOJrIwyWWnlO8GFElD+dmMjE9eT7Y5X2dFbY0kFgiuJjKayj96XRgbaKT/QIntkQqdd9
-         2A6IrjtgYVMciuIBp55Br5AMKpEF4aGDsacjMqU9W5s7RTA3c2cvXwH6esSSB9BziaSb
-         S09w==
-X-Gm-Message-State: AOAM530LVQtpFYCTazIu0gt7ORlYb/jkwRY14/TQM2bFd1e1qr59tbtX
-        46gAvd9CAC2omOyg+hEZ2w==
-X-Google-Smtp-Source: ABdhPJw9GMygDyZnfEXw9k49JWUj2GYlVgzzt4Ko7/p8rxdjnplLymQ5zNFFIPHAyaQ6bZG1qZsHbQ==
-X-Received: by 2002:aca:af94:: with SMTP id y142mr4549151oie.111.1589461682497;
-        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+        bh=mV1gDXAu3PHj2qz8NxRMN80UJwMB7imwalApGyVK3E0=;
+        b=rDlcZMRT8ZFy0X7uHFdkSZKCNdaDLNy4xKlFadQg8bTr9KP1Y/pRZppJJFHf3UZHB+
+         EefEkFnSRzjkCjP0zJheirTviEGXaOhqNho41j3Dh1xKGW+sYY26D+2hpjt8Z49ghSuy
+         Q79AeKDseVuWDnyy0y8xuqvAiPwFSmqnB4jyRpuM8aIB6180vF9BCxESJv2sXxE2x4l4
+         3SlviqGS7yYxKEqoCkX0EJd7JuwIzq8MZQwjBg6xTSce06n3UXN38DLXahBKUpO5hLMn
+         zf7iybh3381wdNvPflCKLUtc8e8SMEBqhPFhvxIfGzh1buRNxt3AqaZJHArhW7B5pmgv
+         pvPg==
+X-Gm-Message-State: AOAM533bHrwdkXsOuS+EzAlgXw4YuYIYe5DG+Q0Su5qaPDEShdOtWHQF
+        qnhzETBG41zaxdvPve+Jmw==
+X-Google-Smtp-Source: ABdhPJzvIYVfE92YPp93du6vUI1pwaY/vFWHWgAMhu5qICOSPCQPcgESncNedDAP0dRa0QJKVz0y2A==
+X-Received: by 2002:aca:cdc6:: with SMTP id d189mr809229oig.19.1589462680705;
+        Thu, 14 May 2020 06:24:40 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l89sm757614otc.32.2020.05.14.06.08.01
+        by smtp.gmail.com with ESMTPSA id l196sm1634201oih.25.2020.05.14.06.24.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:08:01 -0700 (PDT)
-Received: (nullmailer pid 23923 invoked by uid 1000);
-        Thu, 14 May 2020 13:08:01 -0000
-Date:   Thu, 14 May 2020 08:08:01 -0500
+        Thu, 14 May 2020 06:24:39 -0700 (PDT)
+Received: (nullmailer pid 14823 invoked by uid 1000);
+        Thu, 14 May 2020 13:24:39 -0000
+Date:   Thu, 14 May 2020 08:24:39 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     TY Chang <tychang@realtek.com>
-Cc:     robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org
+Cc:     linux-realtek-soc@lists.infradead.org, afaerber@suse.de,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
  rtd1195 and rtd1295.
-Message-ID: <20200514130801.GA23147@bogus>
+Message-ID: <20200514132439.GB23147@bogus>
 References: <20200514092125.6875-1-tychang@realtek.com>
  <20200514092125.6875-5-tychang@realtek.com>
 MIME-Version: 1.0
@@ -56,7 +56,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 14 May 2020 17:21:22 +0800, TY Chang wrote:
+On Thu, May 14, 2020 at 05:21:22PM +0800, TY Chang wrote:
 > Add compatible string for RTD1195 and RTD1295.
 > 
 > Signed-off-by: TY Chang <tychang@realtek.com>
@@ -65,24 +65,74 @@ On Thu, 14 May 2020 17:21:22 +0800, TY Chang wrote:
 >  1 file changed, 59 insertions(+)
 >  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..5af5fc8fe633
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Realtek DHC pin control
+> +
+> +maintainers:
+> +  - Andreas Farber <afaerber@suse.de>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - realtek,rtd1195-iso-pinctrl
+> +      - realtek,rtd1195-crt-pinctrl
+> +      - realtek,rtd1295-iso-pinctrl
+> +      - realtek,rtd1295-sb2-pinctrl
+> +      - realtek,rtd1295-disp-pinctrl
+> +      - realtek,rtd1295-cr-pinctrl
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    iso_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1195-iso-pinctrl";
+> +        reg = <0x300 0x14>;
 
+Aren't there child nodes with pin settings? They need to be documented.
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Error: Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dts:24.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1290046
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+> +    }
+> +  - |
+> +    crt_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1195-crt-pinctrl";
+> +        reg = <0x300 0x78>;
+> +    }
+> +  - |
+> +    iso_pinctrl: pinctrl@300 {
+> +        compatible = "realtek,rtd1295-iso-pinctrl";
+> +        reg = <0x300 0x24>;
+> +    }
+> +  - |
+> +    sb2_pinctrl: pinctrl@900 {
+> +        compatible = "realtek,rtd1295-sb2-pinctrl";
+> +        reg = <0x900 0x100>;
+> +    }
+> +  - |
+> +    disp_pinctrl: pinctrl@4d000 {
+> +        compatible = "realtek,rtd1295-disp-pinctrl";
+> +        reg = <0x4d000 0x100>;
+> +    };
+> +  - |
+> +    cr_pinctrl: pinctrl@12600 {
+> +        compatible = "realtek,rtd1295-cr-pinctrl";
+> +        reg = <0x12600 0x100>;
+> +    };
+> +
+> -- 
+> 2.26.2
+> 
