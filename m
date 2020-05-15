@@ -2,76 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A781D54AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2020 17:30:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88CD41D54FD
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2020 17:45:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgEOPal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 May 2020 11:30:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:58186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726249AbgEOPak (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 15 May 2020 11:30:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26C1D2F;
-        Fri, 15 May 2020 08:30:40 -0700 (PDT)
-Received: from [10.57.27.64] (unknown [10.57.27.64])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C26B23F71E;
-        Fri, 15 May 2020 08:30:37 -0700 (PDT)
-Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
-To:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Marc Zyngier <maz@misterjones.org>
-Cc:     devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, SoC Team <soc@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Olof Johansson <olof@lixom.net>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>
-References: <20200513125532.24585-1-lars.povlsen@microchip.com>
- <20200513125532.24585-7-lars.povlsen@microchip.com>
- <2d230dab95ee96727a42f9c242c93c18@misterjones.org>
- <871rnlp740.fsf@soft-dev15.microsemi.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-Date:   Fri, 15 May 2020 16:30:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <871rnlp740.fsf@soft-dev15.microsemi.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        id S1726254AbgEOPpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 May 2020 11:45:38 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:4710 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726227AbgEOPpi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 May 2020 11:45:38 -0400
+X-IronPort-AV: E=Sophos;i="5.73,395,1583161200"; 
+   d="scan'208";a="47189538"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 16 May 2020 00:45:36 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id D721F4004BC1;
+        Sat, 16 May 2020 00:45:34 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3] dt-bindings: gpio: renesas,rcar-gpio: Add r8a7742 (RZ/G1H) support
+Date:   Fri, 15 May 2020 16:45:27 +0100
+Message-Id: <1589557527-6057-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-05-15 16:09, Lars Povlsen wrote:
-[...]
->>> +             cpu0: cpu@0 {
->>> +                     compatible = "arm,cortex-a53", "arm,armv8";
+Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
+family. Add support for its GPIO controllers.
 
-Side note: only one compatible string for the real CPU please, running a 
-DT bindings check should complain about that.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v2->v3:
+1: Rebased the patch as binding were converted into json format.
+   I have restored the Acks' from Geert and Rob
+   (https://patchwork.kernel.org/patch/11518759/).
 
->>> +                     device_type = "cpu";
->>> +                     reg = <0x0 0x0>;
->>> +                     enable-method = "spin-table";
->>
->> Really? This is 2020, not 2012 any more. Surely a new platform
->> boots using PSCI, and not *this*.
->>
-> 
-> We don't currently support PSCI. The platform does not have TrustZone,
-> hence we don't use ATF.
-AIUI, part of the purpose of ATF is to provide a nice standardised 
-platform interface regardless of whether you care about Secure software 
-or not. It shouldn't take much to knock up a trivial ATF port that just 
-uses an internal spin-table for its PSCI backend - in fact I suspect 
-that's probably just a copy-paste from the RPi3 port ;)
+v1->v2:
+* No change
+---
+ Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Robin.
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+index bcece7e..397d938 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+@@ -20,6 +20,7 @@ properties:
+ 
+       - items:
+          - enum:
++             - renesas,gpio-r8a7742      # RZ/G1H
+              - renesas,gpio-r8a7743      # RZ/G1M
+              - renesas,gpio-r8a7744      # RZ/G1N
+              - renesas,gpio-r8a7745      # RZ/G1E
+-- 
+2.7.4
+
