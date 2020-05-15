@@ -2,244 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 246B71D4AED
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2020 12:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEB081D4CA3
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 May 2020 13:33:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgEOK24 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 May 2020 06:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbgEOK2y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 May 2020 06:28:54 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317EFC05BD0D
-        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i15so2876777wrx.10
-        for <linux-gpio@vger.kernel.org>; Fri, 15 May 2020 03:28:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=CXEYEEqcvkty6QbjHU8IC9+4m00nYkEX+SNv9RcxVR5/SFF+YXke+BvJ6oVoOabQdZ
-         zNfD971SDDWzHM8i6tMy7Ide1qyTwoimukooCDQG010KoMF5GvG2qiwCDrJzTOJ/ST1J
-         prbm8Ynnzt8vqseddRKMMZbinTDqtdohbq4rUwGgpc6TUwZFSsD+mzok7VbjTnaA+NPE
-         7SxmiCj38OP6B2dbzDqJc0ZqywE58/rTxvAnd+HOSQ/e7PuK5vIet7N3V1P5fBuJTFqx
-         810hQ3AwpINxJ1EOF2q5K54I50ZckVeqd/fsfxWyzTJVbsxau3rGuKWQxQF/tGuS+Hp3
-         egGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xpA4uoROidais1iNpnkNzF9vq5C6X235V0wZ35uHdEI=;
-        b=p5Re8W1TOOzUdKu61BgDxyOLdXE2rVZ2Zc/QY3CQ0seVhdrBx9SpZmW0e+bYdBpqM8
-         NZqOvND3wFQ05SH1+JFQzLobTkAE14O0h89+HgS0ODh5+h+dXUXOrfheYaBnGDyTSKwd
-         21VC2aRGt74By5zon3cFj1KR5T3UJfYBbh9pTf0f4VJAj3bBQl/y8oSkA7ufq/LUdtYt
-         Rkj1inkjy1BTUMdjXoIzAlYYLZJ9HlK+vWRbbBLxr/Y4InU7XKz6a1f8GHQpGLHywDvA
-         TESvRMgb7ygLShd0Kk0z/Aq7z5midhJFBQcOLo/GkWyRVJiyvOtA9z6PlkPR0HvvozY/
-         wpng==
-X-Gm-Message-State: AOAM532TOqKIGvc9yRkA9y3Gk8DH/+MKth+Pg37ojmPTi3Sm/NNpyos4
-        YH0op//HWjT0+CzqQz/yPe0IAp1f7jM=
-X-Google-Smtp-Source: ABdhPJxTv+9YnkgoMuYBGuW3wQDNEiVk0bNzw09WJsjwgIV7JP0J+YUnU47dJL1yqsEb92xCMVOBXw==
-X-Received: by 2002:adf:a1d7:: with SMTP id v23mr3514719wrv.155.1589538531500;
-        Fri, 15 May 2020 03:28:51 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id j16sm2878629wru.13.2020.05.15.03.28.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 03:28:50 -0700 (PDT)
-Date:   Fri, 15 May 2020 11:28:48 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200515102848.GH271301@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+        id S1726064AbgEOLdA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 May 2020 07:33:00 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20782 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725986AbgEOLc7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 15 May 2020 07:32:59 -0400
+IronPort-SDR: XqeWr7S/fqOBGflO8ApSAhWwiaBR2ZEZjVT78CRk11D6mgUgoqR6Zfnxghtl5zZvaiwWCdOH1T
+ i6BerGzpoS/g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2020 04:32:58 -0700
+IronPort-SDR: 0gS0OaFJiuv3OfG2ljoqjSB4HKx6CLP4K3KFhfm6vWhg8PAp9Nw/f+wW4k3a8VLZLakldEI3/w
+ +/CncU4PobkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,395,1583222400"; 
+   d="scan'208";a="464700264"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 15 May 2020 04:32:55 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZYaH-006qe0-KA; Fri, 15 May 2020 14:32:57 +0300
+Date:   Fri, 15 May 2020 14:32:57 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     akpm@linux-foundation.org, vilhelm.gray@gmail.com,
+        michal.simek@xilinx.com, arnd@arndb.de, rrichter@marvell.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        yamada.masahiro@socionext.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        linux-arch@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] Introduce the for_each_set_clump macro
+Message-ID: <20200515113257.GP185537@smile.fi.intel.com>
+References: <cover.1589497311.git.syednwaris@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
+In-Reply-To: <cover.1589497311.git.syednwaris@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 30 Apr 2020, Michael Walle wrote:
-
-> Hi Lee,
+On Fri, May 15, 2020 at 04:46:03AM +0530, Syed Nayyar Waris wrote:
+> This patchset introduces a new generic version of for_each_set_clump. 
+> The previous version of for_each_set_clump8 used a fixed size 8-bit
+> clump, but the new generic version can work with clump of any size but
+> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro 
+> in several GPIO drivers.
 > 
-> Am 2020-04-23 19:45, schrieb Michael Walle:
-> > There might be multiple children with the device tree compatible, for
-> > example if a MFD has multiple instances of the same function. In this
-> > case only the first is matched and the other children get a wrong
-> > of_node reference.
-> > Add a new option to match also against the unit address of the child
-> > node. Additonally, a new helper OF_MFD_CELL_REG is added.
+> The earlier 8-bit for_each_set_clump8 facilitated a
+> for-loop syntax that iterates over a memory region entire groups of set
+> bits at a time.
+> 
+> For example, suppose you would like to iterate over a 32-bit integer 8
+> bits at a time, skipping over 8-bit groups with no set bit, where
+> XXXXXXXX represents the current 8-bit group:
+> 
+>     Example:        10111110 00000000 11111111 00110011
+>     First loop:     10111110 00000000 11111111 XXXXXXXX
+>     Second loop:    10111110 00000000 XXXXXXXX 00110011
+>     Third loop:     XXXXXXXX 00000000 11111111 00110011
+> 
+> Each iteration of the loop returns the next 8-bit group that has at
+> least one set bit.
+> 
+> But with the new for_each_set_clump the clump size can be different from 8 bits.
+> Moreover, the clump can be split at word boundary in situations where word 
+> size is not multiple of clump size. Following are examples showing the working 
+> of new macro for clump sizes of 24 bits and 6 bits.
+> 
+> Example 1:
+> clump size: 24 bits, Number of clumps (or ports): 10
+> bitmap stores the bit information from where successive clumps are retrieved.
+> 
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x000000aa000000aa;
+>         0xbbbbabcdeffedcba;  /* Least significant bits */
+> 
+> Different iterations of for_each_set_clump:-
+> 'offset' is the bit position and 'clump' is the 24 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 0 clump: 0xfedcba
+> Iteration second:       offset: 24 clump: 0xabcdef
+> Iteration third:        offset: 48 clump: 0xaabbbb
+> Iteration fourth:       offset: 96 clump: 0xaa
+> Iteration fifth:        offset: 144 clump: 0xff
+> Iteration sixth:        offset: 168 clump: 0xaaaaaa
+> Iteration seventh:      offset: 216 clump: 0xff
+> Loop breaks because in the end the remaining bits (0x00aa) size was less
+> than clump size of 24 bits.
+> 
+> In above example it can be seen that in iteration third, the 24 bit clump
+> that was retrieved was split between bitmap[0] and bitmap[1]. This example 
+> also shows that 24 bit zeroes if present in between, were skipped (preserving
+> the previous for_each_set_macro8 behaviour). 
+> 
+> Example 2:
+> clump size = 6 bits, Number of clumps (or ports) = 3.
+> 
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x0f00000000000000;
+>         0x0000000000000ac0;  /* Least significant bits */
+> 
+> Different iterations of for_each_set_clump:
+> 'offset' is the bit position and 'clump' is the 6 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 6 clump: 0x2b
+> Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+> Here 6 * 3 is clump size * no. of clumps.
+
+Thank you!
+
+Overall looks good to me, though I gave tags per individual patches (I'm not
+familiar with that GPIO drivers, so, I may not tag them).
+
+> 
+> Changes in v6:
+>  - [Patch 2/4]: Make 'for loop' inside test_for_each_set_clump more
+>    succinct.
+> 
+> Changes in v5:
+>  - [Patch 4/4]: Minor change: Hardcode value for better code readability.
+> 
+> Changes in v4:
+>  - [Patch 2/4]: Use 'for' loop in test function of for_each_set_clump.
+>  - [Patch 3/4]: Minor change: Inline value for better code readability.
+>  - [Patch 4/4]: Minor change: Inline value for better code readability.
+> 
+> Changes in v3:
+>  - [Patch 3/4]: Change datatype of some variables from u64 to unsigned long
+>    in function thunderx_gpio_set_multiple.
+> 
+> CHanges in v2:
+>  - [Patch 2/4]: Unify different tests for 'for_each_set_clump'. Pass test data as
+>    function parameters.
+>  - [Patch 2/4]: Remove unnecessary bitmap_zero calls.
+> 
+> Syed Nayyar Waris (4):
+>   bitops: Introduce the the for_each_set_clump macro
+>   lib/test_bitmap.c: Add for_each_set_clump test cases
+>   gpio: thunderx: Utilize for_each_set_clump macro
+>   gpio: xilinx: Utilize for_each_set_clump macro
+> 
+>  drivers/gpio/gpio-thunderx.c      |  11 ++-
+>  drivers/gpio/gpio-xilinx.c        |  62 ++++++-------
+>  include/asm-generic/bitops/find.h |  19 ++++
+>  include/linux/bitmap.h            |  61 +++++++++++++
+>  include/linux/bitops.h            |  13 +++
+>  lib/find_bit.c                    |  14 +++
+>  lib/test_bitmap.c                 | 142 ++++++++++++++++++++++++++++++
+>  7 files changed, 288 insertions(+), 34 deletions(-)
 > 
 > 
-> Do you think this is feasible? I guess this is the biggest uncertainty
-> for me at the moment in this patch series.
-
-I think it sounds fine in principle.  So long as it doesn't change the
-existing behaviour when of_reg isn't set.
-
-> > Signed-off-by: Michael Walle <michael@walle.cc>
-> > ---
-> >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
-> >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
-> >  2 files changed, 40 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index e735565969b3..4ecb376338f7 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -117,6 +117,7 @@ static int mfd_add_device(struct device *parent, int
-> > id,
-> >  	struct device_node *np = NULL;
-> >  	int ret = -ENOMEM;
-> >  	int platform_id;
-> > +	u32 of_reg;
-> >  	int r;
-> > 
-> >  	if (id == PLATFORM_DEVID_AUTO)
-> > @@ -151,16 +152,26 @@ static int mfd_add_device(struct device *parent,
-> > int id,
-> > 
-> >  	if (parent->of_node && cell->of_compatible) {
-> >  		for_each_child_of_node(parent->of_node, np) {
-> > -			if (of_device_is_compatible(np, cell->of_compatible)) {
-> > -				if (!of_device_is_available(np)) {
-> > -					/* Ignore disabled devices error free */
-> > -					ret = 0;
-> > -					goto fail_alias;
-> > -				}
-> > -				pdev->dev.of_node = np;
-> > -				pdev->dev.fwnode = &np->fwnode;
-> > -				break;
-> > +			if (!of_device_is_compatible(np, cell->of_compatible))
-> > +				continue;
-> > +
-> > +			/* also match the unit address if set */
-
-Please use correct grammar in comments (leaving off the full-stop).
-
-> > +			if (cell->of_reg & MFD_OF_REG_VALID) {
-> > +				if (of_property_read_u32(np, "reg", &of_reg))
-> > +					continue;
-> > +				if ((cell->of_reg & MFD_OF_REG_MASK) != of_reg)
-> > +					continue;
-> >  			}
-> > +
-> > +			if (!of_device_is_available(np)) {
-> > +				/* Ignore disabled devices error free */
-> > +				ret = 0;
-> > +				goto fail_alias;
-> > +			}
-> > +
-> > +			pdev->dev.of_node = np;
-> > +			pdev->dev.fwnode = &np->fwnode;
-> > +			break;
-> >  		}
-> >  	}
-> > 
-> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > index d01d1299e49d..c2c0ad6b14f3 100644
-> > --- a/include/linux/mfd/core.h
-> > +++ b/include/linux/mfd/core.h
-> > @@ -13,8 +13,11 @@
-> >  #include <linux/platform_device.h>
-> > 
-> >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
-> > +#define MFD_OF_REG_VALID	BIT(31)
-
-What about 64bit platforms?
-
-> > +#define MFD_OF_REG_MASK		GENMASK(30, 0)
-> > 
-> > -#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,
-> > _match)\
-> > +#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     _of_reg, _match)					\
-> >  	{								\
-> >  		.name = (_name),					\
-> >  		.resources = (_res),					\
-> > @@ -22,24 +25,32 @@
-> >  		.platform_data = (_pdata),				\
-> >  		.pdata_size = (_pdsize),				\
-> >  		.of_compatible = (_compat),				\
-> > +		.of_reg = (_of_reg),					\
-> >  		.acpi_match = (_match),					\
-> >  		.id = (_id),						\
-> >  	}
-> > 
-> > +#define OF_MFD_CELL_REG(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +			_of_reg)					\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     ((_of_reg) | MFD_OF_REG_VALID), NULL)		\
-> > +
-> >  #define OF_MFD_CELL(_name, _res, _pdata, _pdsize,_id, _compat)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-> > +		     0, NULL)						\
-> > 
-> >  #define ACPI_MFD_CELL(_name, _res, _pdata, _pdsize, _id, _match)	\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, _match)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0,	\
-> > +		     _match)						\
-> > 
-> >  #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id)		\
-> > -	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, NULL)	\
-> > +	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, NULL) \
-> > 
-> >  #define MFD_CELL_RES(_name, _res)					\
-> > -	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  #define MFD_CELL_NAME(_name)						\
-> > -	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, NULL)		\
-> > +	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, NULL)		\
-> > 
-> >  struct irq_domain;
-> >  struct property_entry;
-> > @@ -78,6 +89,9 @@ struct mfd_cell {
-> >  	 */
-> >  	const char		*of_compatible;
-> > 
-> > +	/* matching the reg property if set */
-
-Proper grammar please.
-
-"OF unit address for device matching"
-
-> > +	unsigned int		of_reg;
-> > +
-> >  	/* Matches ACPI */
-> >  	const struct mfd_cell_acpi_match	*acpi_match;
+> base-commit: 5f458e572071a54841b93f41e25fbe8ded82df79
+> -- 
+> 2.26.2
+> 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
+
+
