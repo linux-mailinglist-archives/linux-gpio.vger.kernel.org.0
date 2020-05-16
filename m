@@ -2,75 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C4851D5FF7
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 11:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ADD81D6002
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 11:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbgEPJXq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 May 2020 05:23:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
+        id S1726989AbgEPJaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 May 2020 05:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726264AbgEPJXq (ORCPT
+        by vger.kernel.org with ESMTP id S1726271AbgEPJau (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 16 May 2020 05:23:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B39C061A0C
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:23:45 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u15so4757429ljd.3
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:23:45 -0700 (PDT)
+        Sat, 16 May 2020 05:30:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70FDC061A0C
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:30:48 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b6so4777622ljj.1
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ng5C8qf/Nt+8gpVeeV4P3Xvp8a/ob86c/GdMNuqDnds=;
-        b=K/Y9pUOQ+3Oupn6rhtT42v7jtiCAWeqgGanLpPXiMh4aj6FAqRAtC5UAY3WAbP3KtI
-         CFW16Zc6qogMxR5H3AK8E6Ev/WW3ybIZ+KdP//x+Mn6qrufOb8WkBqfVzu6Gik7YKCwr
-         CWb29z82DXXcUpo5iJJKQSszV5vEoCKFN0+hPrkyieBhp/m97Ayi+ztUjgc4AIg+j7UX
-         lCq7Kour3guwwSX42EXHSENPZMuA5ZCTX1CLpbmO2aAzo1mc3QDNrgJym4wZjTps7vYH
-         SAa3OdWFaflfKLcvIhhr+nMutpNj8Aqk9sKcbAZM1MDTWq+3C3VfgePmbYGsnuFFnY7J
-         xSbw==
+        bh=X5T9hQMIe1D/f51iIfhrDEL/PLl5vY2+2w0v+LSamN4=;
+        b=m691b3txDQl92upzOLE5lEnAeh4PYLToC1WZu/Q634s005NwQPzSoRWsyERlxc985m
+         5PgFGMyBLl1zI+KK35wTSO0kJMTfqCJ8A3MsMCC02ynymU8xYwE7Vr54aw0e3jJ1A9AV
+         GCgjEb7pZgsXTBc1YMgWLSia2SVHDu/gRX3RziqDZpGgc7zkZetAwoOY9cK1UYuaSHsP
+         MBH60IcnXnza4nQuwLMK7nOuoRn4QZdJRCE7uT8Lh+uH43AtNwNZ/A+Z4p36cd+AnnHu
+         68TVjCZdzFpYZnhzmfeEpgpnqq/YrBdl8ZfdAm2pGBWybxOlNUODAAMX0FyDuCMZO8NU
+         hgUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ng5C8qf/Nt+8gpVeeV4P3Xvp8a/ob86c/GdMNuqDnds=;
-        b=GpIOQxpwSTZ6KICZAZSiTWp9yL+DWlahGhKIIBwPipYKhWn/0ZMReuqp2o1CDYL+V3
-         b1Z+tmTsL4/0fbaGG5/5JGz8UhY5ffyB2tg6xEgyyj27pTVXS4CSVZt+wM7KbVz7PJqJ
-         DwF3TlArWp8O5lgpybu4nflttB8XYk80DZNTMpftsJD92i/vzUOoNtKREoLN+RNjqe1G
-         tFb8xZC8+zQivWp5M5rsHbneaXnJIdzOeAdRBOyfBINXuUwpbLDfbGFUgEKmdUcrdcOy
-         8QrUKD93c3FSQ+NfXAUcXinPQKfuFJdq0ja5BClr4nZxvmzjBqHk0TOnrVw3nlNEL38A
-         22ZA==
-X-Gm-Message-State: AOAM5326dXiY/Nyl6BoLmEEsilmDINfNjRIWvTfOrqhcdrODTUVgQwAm
-        GbVqNEKVjTb9/XCJWE/4A+9097IOKNqxExTvS3Tq9g==
-X-Google-Smtp-Source: ABdhPJwBG6Jia5zGuqqYIE6pBh0mzFfZbFFdRkhraTVqK4iU7vgT8wBplSbDrH9vt+rZxavtaUJF3CQ24QqoHRBy+W4=
-X-Received: by 2002:a2e:b609:: with SMTP id r9mr4699485ljn.125.1589621024005;
- Sat, 16 May 2020 02:23:44 -0700 (PDT)
+        bh=X5T9hQMIe1D/f51iIfhrDEL/PLl5vY2+2w0v+LSamN4=;
+        b=RszS6VIK+sl0G3Kekb4Dw7y64Dm37U+VgHnu0kClE5IaTF8cy1dUh75zUpWCIzHwxB
+         B5HUgSip0Qw0cSKOFxBYxKX0rjgT5trblazprYOpNNQFf2Zt+EccmLktNsLQmmLenylo
+         mTQ3A7ue9LY0ZpwJ//81vAMNZEPeQq7cJuP5h4UaLeeqSTCBWedy6M0WcGuuIjvAMXFQ
+         8Un52jWC4+juavkSeo9kvCPu/qX9+RdXAJ0rNuiCPYCqWXBjSOmI//0FHogTM8RNuOhl
+         gg8PRvq7pu2DrL57IdDcM6JOCyGkLDooB02dg4Rwv5Psfxmnv012TmH5lBYWxloWgnf5
+         XL3w==
+X-Gm-Message-State: AOAM530eVYX/3YfVT/T4R7+Fc4qPtJ+LL2UrFoqPCx1jWahB7BrMavM8
+        Aaxm/ymU3hHXBygIBoarnV5LzvQe1zAIzorhPNwUQg==
+X-Google-Smtp-Source: ABdhPJwhNNHCnYEN5PX+Rf8+hr4dw2XtQ7VKh1pmMRbupDUV3DJpSTVJkZZmN9FsC0GxfweAWevclSfnBL/rZ0Vm6zw=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr4987823ljh.223.1589621447199;
+ Sat, 16 May 2020 02:30:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200507113751.24213-1-geert+renesas@glider.be>
-In-Reply-To: <20200507113751.24213-1-geert+renesas@glider.be>
+References: <20200509141507.19531-1-brgl@bgdev.pl>
+In-Reply-To: <20200509141507.19531-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:23:33 +0200
-Message-ID: <CACRpkdboTjDZ+=MGJD74u2OrMHGRjmDQyUsEKJ3+KOSfU-x14w@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Add ACPI dependency
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Ken Xue <Ken.Xue@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+Date:   Sat, 16 May 2020 11:30:36 +0200
+Message-ID: <CACRpkdZ2WGs=aWjwS=vk6-PDMvXMLppfBBF-8rs42F=ko3biNg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: notify user-space about line status changes
+ after flags are set
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 7, 2020 at 1:37 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Sat, May 9, 2020 at 4:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Currently the AMD pin controller driver supports ACPI platform only.
-> Make the PINCTRL_AMD config symbol depend on ACPI, to avoid asking the
-> user about it when configuring a kernel without ACPI support.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Since the flags can be configured in different ways depending on how the
+> line is being requested - we need to call the notifier chain in different
+> places separately.
 
-Patch applied!
+Ooops.
+
+> This comes late in the release cycle but I only recently got down to
+> writing libgpiod support for this new ioctl(). When writing test cases
+> I noticed this doesn't really work as expected.
+
+This is why I am so grateful about the tests you are doing with
+libgpiod! We actually find these problems quickly and not after
+years. Thanks!
+
+> This patch fixes the
+> issue I identified this week. There may be more coming the following
+> week though...
+
+I will pull in your pull request once the next -rc is out as I had already
+sent my first pull request, but do not hesitate to bug me about this.
 
 Yours,
 Linus Walleij
