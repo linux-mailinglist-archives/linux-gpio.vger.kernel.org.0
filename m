@@ -2,80 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA4571D600E
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 11:39:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CDE1D6014
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 11:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgEPJiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 May 2020 05:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        id S1726296AbgEPJlo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 May 2020 05:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726202AbgEPJiL (ORCPT
+        by vger.kernel.org with ESMTP id S1725997AbgEPJlo (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 16 May 2020 05:38:11 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98105C061A0C
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:38:10 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id e125so3084701lfd.1
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:38:10 -0700 (PDT)
+        Sat, 16 May 2020 05:41:44 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFA7C061A0C
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:41:42 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id d21so4756311ljg.9
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:41:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CHmw4w5JEiE5ORUUkfCSurvfpTUlqUQrUJG2AzzYQ1M=;
-        b=DppmAWrU75NFH2IFxxnS77sqE8wLtGku2N6i3Y/3yUu5EFHK08UmkR22QRrWU58Ngf
-         Xv+MUMZH8B/hB4sYuDMMfMwg1cQJNeZRiKgsvpHUpMcY4VGutwkqpjKGpxojnAY6f+GG
-         NnrtQ8jBin5gf1yBf+Xf2dEQArLHY5ldTEUaEMd+mRQph9Ulv6ZDyKtSzBgsVqqq2L/A
-         kNPlX+XkUtynhKPRhgXXchXfb08k3t6eeJi3I2OoxzmM5fdwaQD24JtzVQ3SOxpXRs6F
-         DNNvF8xlkTejQIGceaFFOCh00vrsNj+9o3aq7eD1sQmiKiwT8Fj2hGX1gVxyMCHkUJtj
-         BBzQ==
+         :cc:content-transfer-encoding;
+        bh=ETnQEurEj2D9S0skz5vWgXCGMnqttYf8X7vq+AyGws4=;
+        b=hbdzU3b1sUtVTpY94DKNXrGnHP3CM6+4lLyAdYNx6YAjjHqouc3xqKHTr1Kora27l8
+         s+PGJ/ZkScqc5OhvSCPkV40a/pB2zVYyJ4k7SlmIs1O71UYd27JLlmN0EVhourGSv2kJ
+         GR7Jd+MZqulDetVv923CZqSAmratk3mzrAawCcTdNNNPtcXOjL8ro4Z9S4scL0CHunwv
+         aiK6LXOUXNNdlWwbNsQkqm4RMrRR10z/NKwzL0wPK2vJ06ACPNFoVi6OirpuEnOCrwoH
+         WhTQKduxvKAkMo4jyO7pDUZFCth2yvlIGaD3Igog/6fpitpBsqJjNvQ3vn8OGGdRhmrj
+         /r2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CHmw4w5JEiE5ORUUkfCSurvfpTUlqUQrUJG2AzzYQ1M=;
-        b=MTK72oSNXhMdmv+WETKJntnxwAclXMs7Kh+5Eo7tCZ+lfSPd3F4CvprVdlpxY7A+no
-         B9i5GZbnFS1xPifp8tuu68G/oL8xlExEsUpukzbmWl2AJTgkKCtmTNIKnMiZ4kw5etdV
-         RDQI2Jmsw6rQppqmUbrkRsnedgOPP1p0hztYfM++KffkFvJ+GlhM0SvSrYShxcMSY4hY
-         0V37ECPV1gY/axSORTIGEhcLoOt4ucxD8xIRqFR8VgqtClHlucN9d9GbpFL/fCDFAr3n
-         +zz2UAIqDv5enfdZ0toqw2BAHSxS+VVux8+DRWWp7d+yAZHDtXUF6rEaY1i1DtGYMZun
-         fbdQ==
-X-Gm-Message-State: AOAM533cSWzUQlIgGGfDMt/T9jBuedzBlhD8wzuV1ZopzAHDvYqx2LQs
-        a+shGvQMupemQOJOhpt5j30ztKzXFHOT6JscNRNTEQ==
-X-Google-Smtp-Source: ABdhPJzvOQYUwSPgJVbH714U6jTmUQp30DtEaiw0gOF4osugn9OIRVGIimHqGxRyFV+DWuX2dXBR2pI1BQ9Fhvlzoqo=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr789130lfn.21.1589621888936;
- Sat, 16 May 2020 02:38:08 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ETnQEurEj2D9S0skz5vWgXCGMnqttYf8X7vq+AyGws4=;
+        b=K31x8M0UXF6tZWhzWAvBTBxg0NuCy1+XIqcV9t2q8Kms3qAwufxBi/8Xg1EuLG7b1t
+         rcerLst99qBGng/hfjh1YSIOubVnqaTSlGBVl4/OS+RuU9Q3gEGDOPx0CnugFWD2pDlr
+         5T/u34H/MzsI55al6DBT3nUajWKx3JertPdR5Oo0bkJY3zSawzYz4RmMmq2fpiReTR/W
+         e3fx6vhKv0zZOwLBg9vv1R9rO05L5Vbhxhljqv+k1slDgt6EqEVM6On8c8D3hJJSuAYG
+         Er6AnkBNeZl5fIZ0S5SB6XsYI9anG/olCsJFCQSejuIKm5MycgcUOpELDgPgeQtYNsLY
+         0+xA==
+X-Gm-Message-State: AOAM533+fiALkbnzbScwackOZoyvLcTCukKeOx4Pp26nqybN5khBHRxk
+        PaUKxgL+VImSQIGKHt8qvg7WnAYJSxXaM6M3KBkDQQ==
+X-Google-Smtp-Source: ABdhPJxDkwfUTvewS4ROJo+TNf5A2Ro2WwL7rcwxC/8KOUEXpWDdaTekM+CoT//aGEX0bP7RFp6SZcRNMEiVw0qQ2+Y=
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr5010874ljh.223.1589622100904;
+ Sat, 16 May 2020 02:41:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511101828.30046-1-geert+renesas@glider.be>
-In-Reply-To: <20200511101828.30046-1-geert+renesas@glider.be>
+References: <20200511101828.30046-1-geert+renesas@glider.be> <CAMpxmJXD9WgrFnKvS2a=iOCVuYiqdTGwp+r2BjOv2RJH2R=s1Q@mail.gmail.com>
+In-Reply-To: <CAMpxmJXD9WgrFnKvS2a=iOCVuYiqdTGwp+r2BjOv2RJH2R=s1Q@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:37:58 +0200
-Message-ID: <CACRpkdbEhcF-bGfM=ur-M3eByZ2vPhZqofMwxJ+QQS1Evhs62Q@mail.gmail.com>
+Date:   Sat, 16 May 2020 11:41:30 +0200
+Message-ID: <CACRpkdaJk2G8MF6UMVSc2LdFPdpm9L2hox3c-rxD6RhyMg_25Q@mail.gmail.com>
 Subject: Re: [PATCH] gpiolib: Document that GPIO line names are not globally unique
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 11, 2020 at 12:18 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Tue, May 12, 2020 at 12:43 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pon., 11 maj 2020 o 12:18 Geert Uytterhoeven <geert+renesas@glider.be>
+> napisa=C5=82(a):
+> >
+> > gpiochip_set_desc_names() no longer rejects GPIO line name collisions.
+> > Hence GPIO line names are not guaranteed to be globally unique.
+> > In case of multiple GPIO lines with the same name, gpio_name_to_desc()
+> > will return the first match found.
+(...)
+> This makes me wonder whether I should do something about this in
+> libgpiod? Looks to me like gpiod_chip_find_line() and the global
+> gpiod_line_find() are no longer reliable and should probably return
+> all lines whose names match.
 
-> gpiochip_set_desc_names() no longer rejects GPIO line name collisions.
-> Hence GPIO line names are not guaranteed to be globally unique.
-> In case of multiple GPIO lines with the same name, gpio_name_to_desc()
-> will return the first match found.
->
-> Update the comments for gpio_name_to_desc() and
-> gpiochip_set_desc_names() to match reality.
->
-> Fixes: f881bab038c9667d ("gpio: keep the GPIO line names internal")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hm. You probably know how consumers of libgpiod work better than me.
 
-Patch applied.
+The background is historical and this happens because gpiolib had a
+mechanism to name lines before I even took over maintenance, and
+that did not require line names to be unique. So
+when I created the character device I had to face the fact.
+
+We also had to deal with the fact that when naming lines, the
+"NULL alternative" (no name on the line at all) is always a valid
+fallback.
+
+And all lines named NULL are still valid and all have the same name
+so...
 
 Yours,
 Linus Walleij
