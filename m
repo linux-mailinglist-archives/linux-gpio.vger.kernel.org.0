@@ -2,89 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27B751D601E
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 11:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889B51D617C
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 May 2020 15:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgEPJvA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 May 2020 05:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
+        id S1726362AbgEPN6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 May 2020 09:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726188AbgEPJu7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726302AbgEPN6v (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 16 May 2020 05:50:59 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B92C05BD09
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:50:57 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id u6so4786503ljl.6
-        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 02:50:57 -0700 (PDT)
+        Sat, 16 May 2020 09:58:51 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98504C05BD09
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 06:58:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g11so2139209plp.1
+        for <linux-gpio@vger.kernel.org>; Sat, 16 May 2020 06:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1GD9cgKsC79o9xJsFY0Rns6nb+f4FHwgFZwwSnHIkTc=;
-        b=sb2u9OnlDoL8lkNLTwelDEfXi/WEWCJjI3l+P0QcJOHgy9wSzCLwwc1VkUZa/OoGnA
-         DUue2YQa+84RNibQpALhfGWyLO8ISaZJBZ1i14d3Bhsg3yV4Xc+OFzhPNdhl4rYe2Djb
-         fBewE/WyObg4MkP3XmpHGrl8BoGlq6sLUMPkJciEZ+nkRZgpOy1xSOpdFjmRzqhveq9O
-         FHDUEd1RqoBo7lNAbzOR4vGEWR2FTJXpv70HrrPfekZeZEE6PLmHRR7P76kOM+FaQcMK
-         2FUlRXgnq+TCik3LC9RMsq2UCen8+25JIeP8m2wepXbgzJzUM6wk076iGwXin06dzd39
-         UVSw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2BY2MeLSpblRsT2HXMrnj+8RTEHYsF/7I5WsuiZ4e0A=;
+        b=g23b0tzlxh5U/Q+b1TlCSIoFD1b7ijt7m+aIeCA9SmYHEzdY0luaNze2zJdRrpMGYr
+         B0IixNNgblhDV3KwWKPwxo6txNaJt917whiSTfAkaEKCtn4mxJSGBczM99kjjb5EtBsJ
+         hBLmZuc2ZTs2OI7V5xn1DgiSnCc25UNiDNjWSH40q2aHTHYzavuXkvYd50hLFOqtOHoz
+         pps0oqMLkRADJDbb5rwOURa9EWn2lYR29+WM6pSmPD+0VJpUjjtOIjjiEHGqUDNjET5p
+         4WLI2GW8IrOiFCu3J31zav+oS9Z6u5LbYy/4dzfnqIlrpQanCJOtWpyOUasQztmsYjpq
+         NXcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1GD9cgKsC79o9xJsFY0Rns6nb+f4FHwgFZwwSnHIkTc=;
-        b=eBGp3ftwakxQ/CxEFu8zb5oxJiPMqOG/vHVfzbiHuBGhqPEeOVu1R9dJOInbttOjfh
-         o7LHxG94Sy/O1OiR5UjpGiug0eLNJ6b5luTUgS/jBI45FezICLjCDRgJC3NjjQ6IE2ej
-         f0MYHZRdbDJh7mkTy4xYIm1F5ns5Wd2H7XLnCT6lvNje4zb6hvDTge0q+U4AYT7jINO1
-         Yvhp7oA53bXUPH7rtV8DV3+FR9S+Z4dJ/A46BGiJG4PrdLRWdZYNRhiZ6M7RaCgMN6/j
-         UkMsh3Icy5F8VGxQz9YgHkQr62whZMwm4jPqoivgWgSOVzzqep+ozo1lm2dqfhKSNZ6w
-         upaQ==
-X-Gm-Message-State: AOAM530h8YxykuP+j5iqtlDkZ0trtRq3WciLhu+5OCznQDrEMHCWwol5
-        5tk9NY8xVUTTiVPrbD3CNH3mu76crBqH3RCO/6xKSw==
-X-Google-Smtp-Source: ABdhPJwkRrLnDqSZW2Mpi1EcGqJXQJ6amPZbPk+Px2GETB6jrwczKWRBcTjwl8q/ztLfiuhOzxTwXKsTf9W3DppXQkU=
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr4472762ljd.99.1589622655910;
- Sat, 16 May 2020 02:50:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
- <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com>
- <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
- <CAMRc=Mf5cYtWxAVeMQmxwyoi9oxtVSidBQsdRV9H2E52H1TqKQ@mail.gmail.com> <CAMRc=MenC3i-jQYPMdnOfpvNvs1GzCo-B5oem3osdaZZ9mULag@mail.gmail.com>
-In-Reply-To: <CAMRc=MenC3i-jQYPMdnOfpvNvs1GzCo-B5oem3osdaZZ9mULag@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 16 May 2020 11:50:45 +0200
-Message-ID: <CACRpkdaAYox65p9=Aheu5iomJRGPBc7CvnxJqPeqXdNdunAXPg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2BY2MeLSpblRsT2HXMrnj+8RTEHYsF/7I5WsuiZ4e0A=;
+        b=CZ2EOLSsyUfCBQKtmQsTimipito0r3QYaLPn4HU4eTdWzA+/0INCDU6XqinGqaSf5R
+         IrXFGNWbw2RDM5PRIMIJ7gQnfxjsFmZOPt68DXPFI/RWwg6rRj1jF0cyakAqVIINaLvQ
+         kcaROIyTPTBvBGp2xa9Y/iJjyo1+yOBEOcwbdn2LpYCR+jkxBpJPpXMYsvmROAhOmnKB
+         zAq9U4vbM5MwpLeWlrY9L46bKbGvNE1qcv4jOo75lrNvXVLk7eIGGBy8wkSJoZBUY82w
+         9QxP1WrUiSpg9vtd0TaXDsquCaf2jnr3ZM11uXf2i+gWuuIvWYsY12P6X8IUbVooyz2w
+         e7lg==
+X-Gm-Message-State: AOAM530eRjF/ig0VhzTkow52UbbQxVSz8WFqxJRbI7x86gxLSZ/Ur2a9
+        JSf1RUksH+nxTSIf6dFVMKsE
+X-Google-Smtp-Source: ABdhPJxtjTOQlMVwHc6XBjCPMpxiD+/uWxir6Qcgj72yx4sXRkrxQB9IhupN/NwOTUwgwgSHAQeZbg==
+X-Received: by 2002:a17:90a:ee85:: with SMTP id i5mr8866034pjz.165.1589637530724;
+        Sat, 16 May 2020 06:58:50 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:216:faa9:20af:7888:5f3d:69ce])
+        by smtp.gmail.com with ESMTPSA id d35sm3914205pgd.29.2020.05.16.06.58.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 16 May 2020 06:58:49 -0700 (PDT)
+Date:   Sat, 16 May 2020 19:28:42 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] gpiolib: notify user-space about line status changes
+ after flags are set
+Message-ID: <20200516135842.GA17153@Mani-XPS-13-9360>
+References: <20200509141507.19531-1-brgl@bgdev.pl>
+ <CACRpkdZ2WGs=aWjwS=vk6-PDMvXMLppfBBF-8rs42F=ko3biNg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZ2WGs=aWjwS=vk6-PDMvXMLppfBBF-8rs42F=ko3biNg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 14, 2020 at 3:42 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Sat, May 16, 2020 at 11:30:36AM +0200, Linus Walleij wrote:
+> On Sat, May 9, 2020 at 4:15 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> > Since the flags can be configured in different ways depending on how the
+> > line is being requested - we need to call the notifier chain in different
+> > places separately.
+> 
+> Ooops.
+> 
+> > This comes late in the release cycle but I only recently got down to
+> > writing libgpiod support for this new ioctl(). When writing test cases
+> > I noticed this doesn't really work as expected.
+> 
+> This is why I am so grateful about the tests you are doing with
+> libgpiod! We actually find these problems quickly and not after
+> years. Thanks!
+> 
 
-> So this "numbing down" of the chip works - in that I don't see any
-> splat in the above use-case but right now if nvmem takes an existing
-> GPIO descriptor over nvmem_config, then it will call gpiod_put() on it
-> and we'll do the same in the provider driver leading to the following
-> warning:
+This forces me to add tests for chardev in MRAA ;) (Don't ask me about other
+interfaces)
 
-Isn't that the WARN_ON(extra_checks) in gpiod_free()?
-What part of the if() clause is causing this? I.e.:
-if (desc && desc->gdev && gpiod_free_commit(desc)) ...
+Thanks,
+Mani
 
-I suspect gpiod_free_commit() is causing it by returning nonzero.
-We could essentially ignore that if and only if the gpio_chip
-has been detached from the gpio_device.
-
-This should fix the problem if I'm right.
-
-Yours,
-Linus Walleij
+> > This patch fixes the
+> > issue I identified this week. There may be more coming the following
+> > week though...
+> 
+> I will pull in your pull request once the next -rc is out as I had already
+> sent my first pull request, but do not hesitate to bug me about this.
+> 
+> Yours,
+> Linus Walleij
