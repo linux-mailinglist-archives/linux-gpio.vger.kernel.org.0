@@ -2,147 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C3C01D6879
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2020 16:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25EB21D6BC3
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 May 2020 20:35:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgEQOrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 May 2020 10:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgEQOrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 May 2020 10:47:42 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF6AC061A0C
-        for <linux-gpio@vger.kernel.org>; Sun, 17 May 2020 07:47:41 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id v5so5720531lfp.13
-        for <linux-gpio@vger.kernel.org>; Sun, 17 May 2020 07:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vmvBd2EJ8YKPq1cQ4V4w5I8K4gVTIIFWHUspErvVGxk=;
-        b=t+SSpMzrZJ4HglpKhAVCRm/AkYqoBFkjwcTtB5snXWqO4yPCi9ZBN2GbM4be8LZZQ2
-         aEAcqFVpImyG63dA9a43d+8jAqM4oAYkRzgpckhArKoMBwKVsSa2FhsuD4hSSgGYGWJa
-         DBDA+qokiPlb15WIufaRhAv+getWOo5clmgUXcqHKwVNce57+dmqJtLSY4Tb+DSnMJBu
-         TFZtlsCcl5afzj/m8tLZjukDQYc49G7pDmPnVzsmhiqPrHlpxozM/1DA8hVniDhoiDyA
-         BLMbe9Em9tLNWROFIYTOqEJkEW185mv58eyKqcNzgluRkSCzvModxiROE3bDFHlIkYEz
-         H12Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vmvBd2EJ8YKPq1cQ4V4w5I8K4gVTIIFWHUspErvVGxk=;
-        b=DGfP+bFdoXS840lBWkJ8VjkJuwRBeTUtltB881XR8pjvXsEoRhosf5U8xGr+iJ4/eR
-         in0GGiTPBq7Yc73+4BsLwgOTNJqO1otb/FO34i9BrDQBy5tM/3lNBLrfmcTP1NggVxBD
-         5K5nu/mgGzazgX1F5OjXZ/3msgAKL1zNXL/6Iw4GdYNINmUdb3DOc0FAIj15TOPxdnDm
-         rN+GY4D5JICAvFbR6hx1C5P8nc39szmgo5erA/36NoTeWZrUkurWb6oQED9Awf81kpba
-         nRBOSf1F/ZHo1e2eyoSU8yReOpSzXElxAZtFyFMNwDILpTSofPP7Qmr5H12S2G2/nAfg
-         Y2Cw==
-X-Gm-Message-State: AOAM533XcDLINURj5Epdc/tBgsTmAloQJgLJ6rAFLyMz6rqEp0J12xyj
-        KndSCLHcvrW7ekInaVjr8sQ=
-X-Google-Smtp-Source: ABdhPJwSHrLuWKhilT6ZSUDShXkwWfjjYE1hB5X/VEOog+1jGRGBGTmmE2wke5gzEQdGDK7eBnt8tQ==
-X-Received: by 2002:ac2:59c3:: with SMTP id x3mr2136130lfn.117.1589726860112;
-        Sun, 17 May 2020 07:47:40 -0700 (PDT)
-Received: from mobilestation ([95.79.192.151])
-        by smtp.gmail.com with ESMTPSA id i124sm4231288lji.95.2020.05.17.07.47.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2020 07:47:39 -0700 (PDT)
-Date:   Sun, 17 May 2020 17:47:37 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726299AbgEQSfs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 May 2020 14:35:48 -0400
+Received: from v6.sk ([167.172.42.174]:56754 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726259AbgEQSfr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 17 May 2020 14:35:47 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id BAE55610A8;
+        Sun, 17 May 2020 18:35:43 +0000 (UTC)
+Date:   Sun, 17 May 2020 20:35:41 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] gpio: dwapb: Drop extra check to call
- acpi_gpiochip_request_interrupts()
-Message-ID: <20200517144737.zii4c22rbyzxckob@mobilestation>
-References: <20200512184513.86883-1-andriy.shevchenko@linux.intel.com>
- <20200512184513.86883-3-andriy.shevchenko@linux.intel.com>
- <20200517135521.tnz6uegenoh77bfl@mobilestation>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 19/28] dt-bindings: mmc: Convert sdhci-pxa to json-schema
+Message-ID: <20200517183541.GA1695525@furthur.local>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317093922.20785-20-lkundrak@v3.sk>
+ <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517135521.tnz6uegenoh77bfl@mobilestation>
+In-Reply-To: <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 17, 2020 at 04:55:24PM +0300, Serge Semin wrote:
-> On Tue, May 12, 2020 at 09:45:12PM +0300, Andy Shevchenko wrote:
-> > There is no need to have an additional check to call
-> > acpi_gpiochip_request_interrupts(). Even without any interrupts available
-> > the registered ACPI Event handlers can be useful for debugging purposes.
-> > 
-> > While at it, add missed acpi_gpiochip_free_interrupts() call when
-> > unregistering ports.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Serge Semin <fancer.lancer@gmail.com>
+On Wed, Mar 18, 2020 at 04:37:55PM -0600, Rob Herring wrote:
+> On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> >
+> > Convert the sdhci-pxa binding to DT schema format using json-schema.
+> 
+> Ignore what my bot said, I see you addressed that earlier in the series.
+> 
+> > At the same time, fix a couple of issues with the examples discovered by
+> > the validation tool -- a semicolon instead of a comma and wrong node names.
+> >
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > > ---
-
-[nip]
-
-> > -	if (pp->has_irq)
-> > -		acpi_gpiochip_request_interrupts(&port->gc);
-> > +	acpi_gpiochip_request_interrupts(&port->gc);
-> 
-> Hm, perhaps replacing it with:
-> +	if (pp->idx == 0)
-> +		acpi_gpiochip_request_interrupts(&port->gc);
-> could be more appropriate seeing Port A only supports IRQs, which we'd point
-> out by the (idx == 0) conditional statement. So we don't have to call
-> the method at most four times for each available port. Though judging by the
-> acpi_gpiochip_request_interrupts() function internals it will just ignore
-> GPIO chips with no IRQ support. Andy, It's up to you to decide. I'm not against
-> the change the way it is, but if you agree that signifying the IRQs affiliation
-> would be better, then please fill free to add the conditional statement I
-> suggested.
-> 
-
-Please see my comment below, before you decide what to do with this part of the
-patch.
-
-[nip]
-
-> 
-> >  static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
-> >  {
-> >  	unsigned int m;
-> >  
-> > -	for (m = 0; m < gpio->nr_ports; ++m)
-> > -		if (gpio->ports[m].is_registered)
-> > -			gpiochip_remove(&gpio->ports[m].gc);
-> > +	for (m = 0; m < gpio->nr_ports; ++m) {
-> > +		struct dwapb_gpio_port *port = &gpio->ports[m];
+> >  .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
+> >  .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 101 ++++++++++++++++++
+> >  2 files changed, 101 insertions(+), 50 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> > deleted file mode 100644
+> > index 3d1b449d6097d..0000000000000
+> > --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> > +++ /dev/null
+> > @@ -1,50 +0,0 @@
+> > -* Marvell sdhci-pxa v2/v3 controller
+> > -
+> > -This file documents differences between the core properties in mmc.txt
+> > -and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+> > -
+> > -Required properties:
+> > -- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
+> > -  "marvell,armada-380-sdhci".
+> > -- reg:
+> > -  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
+> > -    the SDHCI registers.
+> > -
+> > -  * for "marvell,armada-380-sdhci", three register areas. The first
+> > -    one for the SDHCI registers themselves, the second one for the
+> > -    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
+> > -    SDIO3 Configuration register
+> > -- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
+> > -  for "marvell,armada-380-sdhci"
+> > -- clocks: Array of clocks required for SDHCI; requires at least one for
+> > -    I/O clock.
+> > -- clock-names: Array of names corresponding to clocks property; shall be
+> > -    "io" for I/O clock and "core" for optional core clock.
+> > -
+> > -Optional properties:
+> > -- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+> > -
+> > -Example:
+> > -
+> > -sdhci@d4280800 {
+> > -       compatible = "mrvl,pxav3-mmc";
+> > -       reg = <0xd4280800 0x800>;
+> > -       bus-width = <8>;
+> > -       interrupts = <27>;
+> > -       clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> > -       clock-names = "io", "core";
+> > -       non-removable;
+> > -       mrvl,clk-delay-cycles = <31>;
+> > -};
+> > -
+> > -sdhci@d8000 {
+> > -       compatible = "marvell,armada-380-sdhci";
+> > -       reg-names = "sdhci", "mbus", "conf-sdio3";
+> > -       reg = <0xd8000 0x1000>,
+> > -               <0xdc000 0x100>;
+> > -               <0x18454 0x4>;
+> > -       interrupts = <0 25 0x4>;
+> > -       clocks = <&gateclk 17>;
+> > -       clock-names = "io";
+> > -       mrvl,clk-delay-cycles = <0x1F>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+> > new file mode 100644
+> > index 0000000000000..4ae0926ac294f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+> > @@ -0,0 +1,101 @@
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +		if (!port->is_registered)
-> > +			continue;
+> > +title: Marvell PXA SDHCI v2/v3 bindings
 > > +
-> > +		acpi_gpiochip_free_interrupts(&port->gc);
-> > +		gpiochip_remove(&port->gc);
-> > +	}
-> >  }
+> > +maintainers:
+> > +  - devicetree@vger.kernel.org
+> > +
+> > +allOf:
+> > +  - $ref: mmc-controller.yaml#
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: marvell,armada-380-sdhci
+> > +    then:
+> > +      properties:
+> > +        regs:
+> > +          minItems: 3
+> > +          maxItems: 3
 > 
-> Could you please move this change to a dedicated patch? It seems to me this
-> alteration might be appropriate to be ported to the stable kernels seeing it
-> fixes e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support").
-> Linus, what do you think?
+> Here, you just need minItems.
 > 
-> -Sergey
+> > +        reg-names:
+> > +          items:
+> > +            - const: sdhci
+> > +            - const: mbus
+> > +            - const: conf-sdio3
 > 
+> This should be under the main definition of 'reg-names' and then just
+> 'minItems: 3' here.
+> 
+> > +      required:
+> > +        - reg-names
+> > +    else:
+> > +      properties:
+> > +        regs:
+> > +          minItems: 1
+> > +          maxItems: 1
+> 
+> Just 'maxItems' is sufficient.
+> 
+> > +        reg-names:
+> > +          minItems: 1
+> > +          maxItems: 1
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - mrvl,pxav2-mmc
+> > +      - mrvl,pxav3-mmc
+> > +      - marvell,armada-380-sdhci
+> > +
+> > +  reg: true
+> 
+> Here you should have:
+> 
+> minItems: 1
+> maxItems: 3
+> 
+> > +
+> > +  reg-names: true
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: io
+> > +      - const: core
+> > +
+> > +  mrvl,clk-delay-cycles:
+> > +    description: Specify a number of cycles to delay for tuning.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> No range of valid values?
 
-BTW after moving the change with acpi_gpiochip_free_interrupts() into a
-dedicated patch, you can freely merge the rest of this patch into the
-last one of this series. So the has_irq flag cleanup would be performed in a
-single commit. Especially if you implement the comment I provided above regarding
-conditional (idx == 0) calling of the acpi_gpiochip_request_interrupts() method.
+No. The document I'm converting didn't specify a range. For some of the
+hardware supported Marvell doesn't provide documentation, and the
+drivers that use this seem to accept any u32 number.
 
-So your series will look like this:
-gpio: dwapb: avoid error message for optional IRQ
-gpio: dwapb: Don't use 0 as valid Linux interrupt number
-gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration (<= This commit can be moved to the head of the series as being marked by the
-Fixes tag)
-gpio: dwapb: Remove redundant has_irq flag support
+If this needs a range, then I need to make something up. I can do that,
+but it will be difficult to defend that number if anyone asks.
 
--Sergey
+Lubo
