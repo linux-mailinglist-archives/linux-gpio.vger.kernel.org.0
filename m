@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 131F51D7E44
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 18:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACEB11D7E43
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 18:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgERQVu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 12:21:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:14853 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbgERQVt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1728439AbgERQVt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 18 May 2020 12:21:49 -0400
-IronPort-SDR: NMO4rB1bLWaMXYVAaniDrDqfixAvNHAf8oer8XOpHqWZ8AOS3cTU3jbEl/VEIKIl93UWZ7WNUX
- 5TlP3VUyN/JQ==
+Received: from mga14.intel.com ([192.55.52.115]:47614 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728142AbgERQVt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 May 2020 12:21:49 -0400
+IronPort-SDR: xzPcpZdxK2vvqoPK2RQEETLzv6LeA3BPGx4qyKCZNvjw4Z1/GdwdB6GWDxcs947mGsOASskpec
+ ZlxO0a+QPQ9A==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:21:49 -0700
-IronPort-SDR: eC5FUg8x7/usQjEgctJoJ5fZX4y2EIge3FZmBxtEEgpQZtidZg2IsdGcwbn06DLwvRUh5Plo9C
- /fyGv5n1u9Cg==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:21:49 -0700
+IronPort-SDR: 4WWVByUTvB7BXpW2dwayG0xDckbPBQhe+8ThjUBkn/FrbJmH2V9pjex/oBsGILCmPSdJCIUrpN
+ VLtOkVCGsM7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="373434142"
+   d="scan'208";a="299272250"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 18 May 2020 09:21:48 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 18 May 2020 09:21:48 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jaiWR-0006Sh-EO; Tue, 19 May 2020 00:21:47 +0800
-Date:   Tue, 19 May 2020 00:21:06 +0800
+        id 1jaiWR-0006SV-AG; Tue, 19 May 2020 00:21:47 +0800
+Date:   Tue, 19 May 2020 00:21:07 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:ib-gpio-aggregator] BUILD SUCCESS
- d9646a4866b008538dca327095c1b5e5f0204d4f
-Message-ID: <5ec2b5f2.z94e23sm/HbpfRMB%lkp@intel.com>
+Subject: [gpio:fixes] BUILD SUCCESS
+ e75dfba311f478f1c2bf928284e1949c20594336
+Message-ID: <5ec2b5f3.UCoat5R19/Gw6syV%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -43,13 +43,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  ib-gpio-aggregator
-branch HEAD: d9646a4866b008538dca327095c1b5e5f0204d4f  MAINTAINERS: Add GPIO Aggregator section
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
+branch HEAD: e75dfba311f478f1c2bf928284e1949c20594336  Merge tag 'gpio-fixes-for-v5.7-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
 
 elapsed time: 484m
 
-configs tested: 123
-configs skipped: 4
+configs tested: 127
+configs skipped: 6
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -63,8 +63,8 @@ arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
 sparc                            allyesconfig
-mips                             allyesconfig
 m68k                             allyesconfig
+mips                             allyesconfig
 powerpc                      tqm8xx_defconfig
 arm                       omap2plus_defconfig
 sh                         apsh4a3a_defconfig
@@ -89,6 +89,10 @@ mips                     decstation_defconfig
 arm                          iop32x_defconfig
 mips                       lemote2f_defconfig
 powerpc                      ppc44x_defconfig
+mips                           gcw0_defconfig
+ia64                        generic_defconfig
+powerpc                  storcenter_defconfig
+arm                       multi_v4t_defconfig
 nds32                               defconfig
 arm                          moxart_defconfig
 um                               allyesconfig
