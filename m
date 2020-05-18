@@ -2,111 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAD131D721E
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D1A1D72C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 10:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgERHnZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 03:43:25 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25993 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgERHnZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:43:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589787804; x=1621323804;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=FKJAh1HkVv8d/p5YjXylM2nem6uVcaMiV5E5Xj3YJxg=;
-  b=N/Mo9gOdr8dLG92VO2vspqYTdC6ybwy06MNDNqrb1h5K4v4ruEkCkND2
-   cu0mZo4ozsdylQg/voj7wziwalD74fTzC4IMIyACbyyecFeOtwRyzEi9N
-   KbyGKXlPtFU3qM/y/WdEUaYyGmmDr6Vcw7og6K3x+WYJugwkF/lFSPCPo
-   Zk5f8N1qrsFCjQf0gcqKGCriHJFBmulpA103J1MKUZDHkpXSJEv83QGGr
-   z9bZiF3T8i7eiR5uFXkifdto6TQIulSIllcLw45pcNZvW2MQdntXxG7Av
-   CJddKWzosR+z76xtTrSM9/5AZKAj3T4CtK1+RkmYrl/GSBabx5+Cvrwq2
-   A==;
-IronPort-SDR: 9nIYTc6j7tSmHkUO/HDAiU7Hl4ptKImLP7FdPLXeUtwqYerLqPzqdExoE6E93pFxzBah3KHWWG
- Q9JPG+I2MEL3gHJXGrutIvVYPjZUo1UEB3ylMVbpbguzVvgclguDsT6B3iZUd/aTMSYKFy83vM
- CmUy67KdBD33r96EVfEhNlaspRBqwP35OdPswMyZsL8Gqtsd2knoZobWdvb4W8vZXCFq31c9xV
- fWceeyx3oQjJyQHT8TKz77OVnpKjLO40OSg3akb7hIM2OYZrCRcRG94HfDVpY9JW6g17CLZwRG
- ScA=
-X-IronPort-AV: E=Sophos;i="5.73,406,1583218800"; 
-   d="scan'208";a="73738900"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 00:43:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 18 May 2020 00:43:22 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 18 May 2020 00:43:17 -0700
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-7-lars.povlsen@microchip.com> <2d230dab95ee96727a42f9c242c93c18@misterjones.org> <871rnlp740.fsf@soft-dev15.microsemi.net> <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Marc Zyngier <maz@misterjones.org>,
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, SoC Team <soc@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Olof Johansson" <olof@lixom.net>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>
-Subject: Re: [PATCH 06/14] arm64: dts: sparx5: Add basic cpu support
-In-Reply-To: <18c0d9ef-9a2b-31d0-b317-f051bb26a907@arm.com>
-Date:   Mon, 18 May 2020 09:43:16 +0200
-Message-ID: <87wo59ofhn.fsf@soft-dev15.microsemi.net>
+        id S1726990AbgERIRb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 04:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgERIR3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 04:17:29 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CED9C05BD0A
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 01:17:29 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id k5so2244243lji.11
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 01:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KgB5iCRiDY1xUpzvcmt2qA5qOxhIvxFlroLwQSWXKVk=;
+        b=cEeYQ8sMtfIcnqhDnaBX58ozf3oJI5XHFUC7g3rtIUDyqFXqr/s6o9QnE2+uFP1k/J
+         LILQgdSPbgh22hGw180ItVeDUD7AU7RWmUS7tnKBpMk9U4t2JKNxq2pw8DY0Dr0glxoc
+         9h935pnTmgCgvB8iSgullSwo71ZCKnR3oJERR89JnjUG0THbBdRQXx1WxsyFErA0JpzB
+         b4NIVLEPTvVtsFQqcbTuJ4CrynyFpmf8ZXHARe3MZX3xlqHCX9g+ZlZpXgYibNMcuvu5
+         SuKbidv7OF9jh3VrmN4uc7XV48TL9pRc4TJevPeF2eMsNSiYx4LoZTRVZTp2C4Vyh1/N
+         SVcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KgB5iCRiDY1xUpzvcmt2qA5qOxhIvxFlroLwQSWXKVk=;
+        b=HBSU3SjT/988YvxFwRotfFi680sKmUP+VP1F/y1m028TWqv7A/01GH8+2f/od2ykuG
+         CktnQEOFBL7hSrEQLwh2PSuwE/OSI4Ttr9acuPbNkknGkixdoCnCg+IaHd1/HXKlIR2v
+         8s89KPocrq+knLI8gEASW51CLnKLB1BHMZOT+mMmd/7YDT1XRRWbrTS5zLterE1oO9m1
+         Ij0dlNxw9cQ4aQ0JdkcW8zfQU21h3JBhK+xM1vfV+WEDI4YhSWsGrSuts6LRFpae4KEO
+         s5MZPyQdzqbvIcwbW0URPPTHyMedLsdxXjXYO5WdLFcl5IkvNySHsVH2HBkVccriePCO
+         gUSw==
+X-Gm-Message-State: AOAM532oBfQZ2TqnHHYLRINezmJY7c7X2d+Dxs7R2PD6sg6QsvQL2it/
+        IznreXi0K7LQv5I03DEsVTR2L1PQXic5YswQoWKF0A==
+X-Google-Smtp-Source: ABdhPJwh1h7WOq2+DVADM4reEeAZtZ0+Bi37spSD7MX9/2PvrGxVJ5a7SXExxc9Et8QUQoYjFbtIPHqiLPfc0Ni3lug=
+X-Received: by 2002:a2e:b609:: with SMTP id r9mr9513452ljn.125.1589789846527;
+ Mon, 18 May 2020 01:17:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200511145257.22970-1-geert+renesas@glider.be>
+In-Reply-To: <20200511145257.22970-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 18 May 2020 10:17:15 +0200
+Message-ID: <CACRpkdaz34Bc_EzcXKMEVCCCUt82_c2+t4X6YSLW2b59oi+9gA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Geert,
 
-Robin Murphy writes:
+I have queued this v7 patch set in an immutable branch for testing and also
+merged to my "devel" branch for testing.
 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->
-> On 2020-05-15 16:09, Lars Povlsen wrote:
-> [...]
->>>> +             cpu0: cpu@0 {
->>>> +                     compatible = "arm,cortex-a53", "arm,armv8";
->
-> Side note: only one compatible string for the real CPU please, running a
-> DT bindings check should complain about that.
->
+If all goes well it also hits linux-next soon.
 
-I'll change this.
-
->>>> +                     device_type = "cpu";
->>>> +                     reg = <0x0 0x0>;
->>>> +                     enable-method = "spin-table";
->>>
->>> Really? This is 2020, not 2012 any more. Surely a new platform
->>> boots using PSCI, and not *this*.
->>>
->>
->> We don't currently support PSCI. The platform does not have TrustZone,
->> hence we don't use ATF.
-> AIUI, part of the purpose of ATF is to provide a nice standardised
-> platform interface regardless of whether you care about Secure software
-> or not. It shouldn't take much to knock up a trivial ATF port that just
-> uses an internal spin-table for its PSCI backend - in fact I suspect
-> that's probably just a copy-paste from the RPi3 port ;)
->
-
-I'll change this to PSCI if that's whats expected these days. We
-actually already have an ATF port. I fully understand the desire to
-standardize on PSCI.
-
-> Robin.
-
--- 
-Lars Povlsen,
-Microchip
+Yours,
+Linus Walleij
