@@ -2,82 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9099F1D71AB
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98DDF1D71D0
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:29:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgERHWO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 03:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
+        id S1726876AbgERH3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 03:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERHWO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:22:14 -0400
+        with ESMTP id S1726729AbgERH3z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:29:55 -0400
 Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9725C05BD0A
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:22:13 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a9so7092782lfb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:22:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A68C05BD09
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:29:53 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so7120704lfb.3
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ta2gbgUnTd9cjAo8d+iXtIxCCmOdQ9s25dbiJxtxN7c=;
-        b=H45b10GoSvrnbPb2a/o3lK9Nl0HuYne+YFGpSvMJiNjwcxbVxcZeeUrjPUQx7sXW+R
-         hQWjYwS51Nsn9o3d6QmcnVszrfyH2pFc5Wjwa0dzvxsSdLHpcpLTJI/d6cGHheznDOWr
-         aw+OrGy8tPVKae29pfSJi/RecDYQKtqV1KUlNJI2vPPJ4iide2fNvyqfk9HlxzuTBOnU
-         EPQklZ2sqMCZL9m0Tj2/hWeJ/WdYq14P0TDpxlWB5tUtgZbtOshsuI5mqiPEJ0x89Eje
-         unpR6vch5DGld+UnoJprw33lXuot+0VyLHHf+qLgbZnvm8/Lp/tDq/xbkMgZRftxIgaa
-         3dyg==
+        bh=0QQj8C5JeEmDZ6ZApGtOW1NT9hev78BCGty9WyW8HQU=;
+        b=KdzqRAP43Jx15JsBd7CMIo/2/+5tguTprPLSwNIyfoZQ0+ufPuN6S/BANnhJsjrhDD
+         DtP3v+cVRz1H4W7gZemFOLYygUe9Nnqc8CiVseZ1qH7MkopzW0uYIM/6QDifbVQUaEzY
+         I9Io5hrtK55gyaPukpP3UulY28GmqBr7704IEqyzsek9z5cWKXKh+nj6/8N35gBEzKLB
+         z7UbsMop5bQJkCqzM/P6qv2TYsuzenpxX9AvppK/Ewkg0FlUbL6cOIGLnAWxK13GtB1K
+         pL1FPAWkCnhD9H5FlvEDJp4hPMXkM7uAmjEi0J/HlDU7NpDvA7JOV3+ynsGeu4wzmRsg
+         XxWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ta2gbgUnTd9cjAo8d+iXtIxCCmOdQ9s25dbiJxtxN7c=;
-        b=H9BndYFVvJrxbNTRVwDT9thQGl6wvLHYDPgd98xWzCMTLQt/Ym3S3ASWeFm6u+sPRE
-         tzR8yvdtBDejHPhf/ho9Unw5V7MciJSJy6xlwsP8SUtRnf0AzCOsQivNjnkb5Uk6HqkT
-         /gx7pbTk/0ihCP3Z9NY1WVAlHEyBIgT7F1cdfVdM1AHD0DT9LIdTWnH6QKiSw/fGl2vt
-         BUgkl8mO2apcekVVCo46ymzqa1OXxds+L+AN+MZCXgFQY4noe4svUcCVxQkzo3EndaDz
-         oehAazeAKUVsytcrvA8iuRdDbd4GgZiY0kTYbnYma+bQFd6kibz1k3W41VsQm80FbKlf
-         FmkQ==
-X-Gm-Message-State: AOAM530r+cGn5dsfaiwdzKkHBJhDUOBX82rQsNbvx2ykQnELACXr8SWC
-        zNLEVm+80W6pd8grZUTgAntQS88+xOXmpaah/BIjLw==
-X-Google-Smtp-Source: ABdhPJwjBRm7gpLqIiY05Psy2U6dlWExnKINR/oAoQ5mkgDD5QtubFG19R6MFzkv42RekuXIOYC1qPLmFToR58V7Wmg=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr6307358lfn.21.1589786532265;
- Mon, 18 May 2020 00:22:12 -0700 (PDT)
+        bh=0QQj8C5JeEmDZ6ZApGtOW1NT9hev78BCGty9WyW8HQU=;
+        b=MtWf5E7GE6Qr4JmkZuT55w5wwNFWbuZ/pfZaOkjlKBrMimOSIr6XAqmzTDB99ySZWF
+         PY/OYwgQDJkQCJ36sIpy1ti1Gx4fnFVg4pKCxORU7ybaxj5ArXm6enP7yAUWwMq7bTZ2
+         ta8dH/nNGrl5R9d8pb49XhFrGWqpuzJmrkgNg62xWQ4VLYoAXuREb3YriQryfb4a+2vF
+         5YRdYZlXP9Mk33qVz0dbCF6uvkGAI3apMVkWgQWRbNcWjkot0fdcCJ7uSTDu5QeRQZF7
+         mh4IoHtmzbIe7b+Nd7rOWyw902rIDkRgJ3BovofPWjZwsZUgEtNJzbeLi0sCFN5ZajU/
+         IUgA==
+X-Gm-Message-State: AOAM533VEiOupgumaFZbpggTI2+OYGp9L6e5l8Zn/tGNScylbF4p/d9K
+        W80PEh5SB80PMTZCQsx8mO9Du4I8VKaRm/TEsGO1QQ==
+X-Google-Smtp-Source: ABdhPJx6fCXx6eAlYEP7owDMWFfg7cz4sOJv/yQfCTAhywTwMqJW95DyJ7NsllwioD8AhEiAVzPb9dcty/D6ToHML3U=
+X-Received: by 2002:a19:c8cb:: with SMTP id y194mr7741076lff.89.1589786992310;
+ Mon, 18 May 2020 00:29:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512203524.7317-1-jbx6244@gmail.com> <20200512203524.7317-3-jbx6244@gmail.com>
-In-Reply-To: <20200512203524.7317-3-jbx6244@gmail.com>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-2-lars.povlsen@microchip.com>
+In-Reply-To: <20200513125532.24585-2-lars.povlsen@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 09:22:01 +0200
-Message-ID: <CACRpkdaN4tMcsOmsERdtcwC+Cw6SjTtSENxNRjTOeMU9rdU+RA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] include: dt-bindings: rockchip: remove unused defines
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 18 May 2020 09:29:41 +0200
+Message-ID: <CACRpkdZF++0AExBvDHNT+whKP2sNKnbczV4w9SXksG2Dyctecw@mail.gmail.com>
+Subject: Re: [PATCH 01/14] pinctrl: ocelot: Should register GPIO's even if not
+ irq controller
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:35 PM Johan Jonker <jbx6244@gmail.com> wrote:
+On Wed, May 13, 2020 at 2:56 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-> The Rockchip dtsi and dts files have been bulk-converted for the
-> remaining raw gpio numbers into their descriptive counterparts and
-> also got rid of the unhelpful RK_FUNC_x -> x and RK_GPIOx -> x
-> mappings, so remove the unused defines in 'rockchip.h' to prevent
-> that someone start using them again.
+> This fixes the situation where the GPIO controller is not used as an
+> interrupt controller as well.
 >
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Previously, the driver would silently fail to register even the
+> GPIO's. With this change, the driver will only register as an
+> interrupt controller if a parent interrupt is provided.
+>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-I think patch 1 & 3 needs to be applied to the Rockchip tree.
+This patch applied to the pinctrl tree.
 
 Yours,
 Linus Walleij
