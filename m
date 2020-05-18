@@ -2,139 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89DD51D7CA4
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 17:20:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 626271D7D57
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 17:50:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgERPU0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 11:20:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgERPU0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 May 2020 11:20:26 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727973AbgERPuw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 11:50:52 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17464 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726958AbgERPuw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 May 2020 11:50:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589817051; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=MA7x95uTokqN/aU7nVR9VOVc4EF74ZFKJm4hvl9kPak=; b=WUlRjf5jDjPPwPDaLpabOSgUsNHq1H7HP4oGlYiHBjK0z8AfYRjFQhylkaGULMh53+b+AQcW
+ a2lUV8zOGxyS2dSkPwV5l5ACNi5oqYzshTyN2wEb9dc9AnEosLpmP3GtsEyynFJtyE5G7mr1
+ /J2m9dt4BhSrg4vUM8WRe8OuhF4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ec2aecd.7fd5868fa960-smtp-out-n01;
+ Mon, 18 May 2020 15:50:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B71BDC433D2; Mon, 18 May 2020 15:50:37 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from groverm-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BE2F20709;
-        Mon, 18 May 2020 15:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589815225;
-        bh=tSws2kjDhXaAFNWN68OWyjCdK+4AcxFyLFLzGGQxyNU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kZz+KHtEmx4LXcyztl4rmU2EAXazJQFb7E8mHywQvhoHn1/5wVi5TmH9zFMDLS4W/
-         MiKmt+x10Jms6pej2MZzFDOjkYSYEcoSMNblOS5IKOq3bv9ecuPNIZRnnJBSu7GCXv
-         mI5P/vnVxOyhBlbFI4Ezj8NA2S5v8JeiuE3LjRFQ=
-Received: by mail-ot1-f42.google.com with SMTP id x22so4751556otq.4;
-        Mon, 18 May 2020 08:20:25 -0700 (PDT)
-X-Gm-Message-State: AOAM532AXu2+ODHrVl/USjh57gFEjBKY3Xj6/SQBQi8niO4Abx/WAKpk
-        JP4+SsdoEdntaT89YyW0M+vGxKJxzww1f7hjMQ==
-X-Google-Smtp-Source: ABdhPJzAqhRdGybXpwpC/ZOQ7F9CQ8eOmJxxxyRMv1ENHmR6X3dhaIAFrOd3PP9Ko0YHK3CdCi+5NlS47TBiLzZklxs=
-X-Received: by 2002:a9d:5c8a:: with SMTP id a10mr8596315oti.129.1589815224353;
- Mon, 18 May 2020 08:20:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-29-lkundrak@v3.sk>
- <20200327195520.GA2235@bogus> <20200517193451.GG1695525@furthur.local>
-In-Reply-To: <20200517193451.GG1695525@furthur.local>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 18 May 2020 09:20:13 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+oQSk=xGBiQ73SyGggo=gBOmH6xvTv1QBAUfbnt42E0A@mail.gmail.com>
-Message-ID: <CAL_Jsq+oQSk=xGBiQ73SyGggo=gBOmH6xvTv1QBAUfbnt42E0A@mail.gmail.com>
-Subject: Re: [PATCH 28/28] dt-bindings: usb: Convert ehci-mv to json-schema
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        (Authenticated sender: groverm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C9E4C43636;
+        Mon, 18 May 2020 15:50:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C9E4C43636
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=groverm@codeaurora.org
+From:   Mayank Grover <groverm@codeaurora.org>
+To:     linus.walleij@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, neeraju@codeaurora.org,
+        Mayank Grover <groverm@codeaurora.org>
+Subject: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
+Date:   Mon, 18 May 2020 21:20:25 +0530
+Message-Id: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 17, 2020 at 1:34 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> On Fri, Mar 27, 2020 at 01:55:20PM -0600, Rob Herring wrote:
-> > On Tue, Mar 17, 2020 at 10:39:22AM +0100, Lubomir Rintel wrote:
-> > > A straightforward conversion of the ehci-mv binding to DT schema format
-> > > using json-schema.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > ---
-> > >  .../devicetree/bindings/usb/ehci-mv.txt       | 23 -------
-> > >  .../bindings/usb/marvell,pxau2o-ehci.yaml     | 60 +++++++++++++++++++
-> > >  2 files changed, 60 insertions(+), 23 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/usb/ehci-mv.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/ehci-mv.txt b/Documentation/devicetree/bindings/usb/ehci-mv.txt
-> > > deleted file mode 100644
-> > > index 335589895763e..0000000000000
-> > > --- a/Documentation/devicetree/bindings/usb/ehci-mv.txt
-> > > +++ /dev/null
-> > > @@ -1,23 +0,0 @@
-> > > -* Marvell PXA/MMP EHCI controller.
-> > > -
-> > > -Required properties:
-> > > -
-> > > -- compatible: must be "marvell,pxau2o-ehci"
-> > > -- reg: physical base addresses of the controller and length of memory mapped region
-> > > -- interrupts: one EHCI controller interrupt should be described here
-> > > -- clocks: phandle list of usb clocks
-> > > -- clock-names: should be "USBCLK"
-> > > -- phys: phandle for the PHY device
-> > > -- phy-names: should be "usb"
-> > > -
-> > > -Example:
-> > > -
-> > > -   ehci0: usb-ehci@d4208000 {
-> > > -           compatible = "marvell,pxau2o-ehci";
-> > > -           reg = <0xd4208000 0x200>;
-> > > -           interrupts = <44>;
-> > > -           clocks = <&soc_clocks MMP2_CLK_USB>;
-> > > -           clock-names = "USBCLK";
-> > > -           phys = <&usb_otg_phy>;
-> > > -           phy-names = "usb";
-> > > -   };
-> > > diff --git a/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
-> > > new file mode 100644
-> > > index 0000000000000..189025ef1e92e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/marvell,pxau2o-ehci.yaml
-> > > @@ -0,0 +1,60 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> >
-> > Same license comment.
->
-> I wrote that binding document and chose that license.
+The list of reserved gpio pins for platform are populated
+in gpiochip valid_mask.
 
-Okay, but please make it GPL-2.0-only instead of or-later. If everyone
-was attentive to licensing picking their own variations would be fine,
-but they aren't and just copy-n-paste. So there's 2 choices
-GPL-2.0-only (for converted bindings) or (GPL-2.0-only OR
-BSD-2-Clause) for new or re-licensed bindings.
+Here on MSM common driver introduce ability to check if
+pingroup is valid, by parsing pins in pingroup against
+reserved pins for gpios. This does not handle non-gpio
+pingroups.
 
-Rob
+Signed-off-by: Mayank Grover <groverm@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 85858c1..b6ebe26 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -261,6 +261,24 @@ static unsigned msm_regval_to_drive(u32 val)
+ 	return (val + 1) * 2;
+ }
+ 
++static bool msm_pingroup_is_valid(struct msm_pinctrl *pctrl,
++				  const struct msm_pingroup *g)
++{
++	const unsigned int *pins = g->pins;
++	unsigned int num_pins = g->npins;
++	struct gpio_chip *chip = &pctrl->chip;
++	unsigned int max_gpios = chip->ngpio;
++	unsigned int i;
++
++	for (i = 0; i < num_pins; i++) {
++		/* Doesn't handle non-gpio pingroups */
++		if (pins[i] < max_gpios &&
++		    !gpiochip_line_is_valid(chip, pins[i]))
++			return false;
++	}
++	return true;
++}
++
+ static int msm_config_group_get(struct pinctrl_dev *pctldev,
+ 				unsigned int group,
+ 				unsigned long *config)
+@@ -276,6 +294,10 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
+ 
+ 	g = &pctrl->soc->groups[group];
+ 
++	/* Check if group has all valid pins */
++	if (!msm_pingroup_is_valid(pctrl, g))
++		return -EINVAL;
++
+ 	ret = msm_config_reg(pctrl, g, param, &mask, &bit);
+ 	if (ret < 0)
+ 		return ret;
+@@ -355,6 +377,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
+ 
+ 	g = &pctrl->soc->groups[group];
+ 
++	/* Check if group has all valid pins */
++	if (!msm_pingroup_is_valid(pctrl, g))
++		return -EINVAL;
++
+ 	for (i = 0; i < num_configs; i++) {
+ 		param = pinconf_to_config_param(configs[i]);
+ 		arg = pinconf_to_config_argument(configs[i]);
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
