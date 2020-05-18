@@ -2,73 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A031D71A2
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:18:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BC731D71A6
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:20:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgERHSN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 03:18:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
+        id S1726957AbgERHUq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 03:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgERHSN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:18:13 -0400
+        with ESMTP id S1726127AbgERHUp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:20:45 -0400
 Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7626DC061A0C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:18:12 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 82so7110387lfh.2
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:18:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9645C05BD0A
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:20:44 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z22so7115180lfd.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oWVcktWaJtd0MCaPkCSQN+j0nvJMyQkpqX8UMijLaOM=;
-        b=mNZObYfp1fhi9LDIrOyM0SF0xXLACV6xZUSfZSzMmutx7FqWJQre1VBT9qJ7rRUnec
-         45bmrZtdhRrXc2l0VWT4n1wTFqmiNu43emuESgv9rkn8x0fS6Cd8pE+6hVMihj7/F2xR
-         NqHUGbQ1hTIO61+yQRA6LtHMP8w9HLv+r1eN0854T22IjndjfZ3kw9pUvmdYMaP87lK0
-         T1CFwtSrkP7sx+KzQ6c3Ijkkhuh0KT6w9DrreBqovwZkzzisati9ec0ygKXUnsJGB3KA
-         0uGDFriUBb1VCSIU0k3vlFAZjONKX4auZ/ZF0UlYv0unHcQRvScdqIOAURnXyPppMjfQ
-         nRPw==
+        bh=srjDyr9S0oB/6VDYDy70mCau/zVOnj84hKg9e/vKVUc=;
+        b=UmO/e8bHlXbOw6t5litf5UhEV90GLZNKTvruCwSC9H28yYSU/xOoYiclTIFgm3pdnO
+         G2mJQ3KyMOKPyxPHdDN0tPhEj22mLv03EN6NEHH+nuquSeVze0Ec3cxhipC/zAyQBbvi
+         fNOIkvZANckbPP2uhRAYt7O9BSVI/SbbzeYgycvK4gtnAV+iC6Q0nzy96a5/JGg8E/Ve
+         /rtn1LovXJiq6BnEV32NdI6aqSsAOskxgHGNSwF3BdMJLlsPqH2SZfaJ8TJ+2e9pNE7R
+         ts0J69gQDaEeKH3Q/j7cgPk+y8d2ApLd5urmJ+WiPGV+0UM70Twzx0MwclzzJc0DIJch
+         Hycw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oWVcktWaJtd0MCaPkCSQN+j0nvJMyQkpqX8UMijLaOM=;
-        b=WzBXxNQ6SQjuVpi24gYvODheOMzTSTjtrbxrR/2DjuBNCeRapDvJBWiJ5YRdUi+YW6
-         QjnawvcaXWGjTEVU60DFt4MkkgCU/oqFc9yY20+4nguoWbYqKnnm4OA/ZhorIoh7X+yA
-         0ea0+4NAuxeM47SdAkfUxndWKHwfXmhTiVz4S3WqAaVVj2FeySlidFbE/wEZct2/ul6F
-         8dOHXspTKMa9rgX+0CR66Ebmz5MCf9t/4C++pUtZTkfuhKWSY3vQ4ilOaLZIKWjLLKzL
-         umMWCJ3VuV7vaXzY22Uh112NBo/a580Cy6ti9E8nHuU+XtKZMYiEeUxzPRP7HkGLdHxD
-         A0Rw==
-X-Gm-Message-State: AOAM531tj1paBqoFcWEkkST2+umnwepngjzyfCIbeLjkBeZae5I9JbDl
-        eiSMUaC+UR3zROQm8wTnFCXd6aYpaGwNcgzADn2vDR3s
-X-Google-Smtp-Source: ABdhPJyvYCxSfP4Wubrba2LuTqI2PAa/FsmpYWNvp8Pjnxbvi7pmJEFXGIOdaWh58fMwJMVLi4M/OGY3jjox4vA2FV0=
-X-Received: by 2002:ac2:5588:: with SMTP id v8mr10356359lfg.217.1589786291005;
- Mon, 18 May 2020 00:18:11 -0700 (PDT)
+        bh=srjDyr9S0oB/6VDYDy70mCau/zVOnj84hKg9e/vKVUc=;
+        b=Mtvs542nB3rcA6fZjXCNUnUvjspiwVy/cloINKM/J3302nb+DpimZwHrbJq91rqakk
+         eO8q1ntE7rEd278FR583wFDRBnz+EpokCbO3e1rTOAH6YBrOb9y3d5/PSWSFME/sBnYI
+         0rAiowl7mYtL2JM20MUJqSYEyRzrznwfrCRQqywaeqA2i4sN8L/VIVzMoR4Oc8aNPnLa
+         NeFWfBAGOsojFzI74Po+sUbxP5A9B/yVbXAmDWSVDhbwX79z1CBMXIfRai7Sfl493u9O
+         Pb7PRC0VKpuRLoyWs1cWZv7ni1PmDY6CPv5bG+36y5xG+NuWOs7Yc8sCIsX5v2iSKR12
+         lC4Q==
+X-Gm-Message-State: AOAM530/Nkqql3oT9I/KJjsHiQC5Y37yFD4LM6EiMed/JzyF4fC6BrqK
+        XowA95avDYQdwVzIOpCBRwkWL+p/+CbWaJg2cDFmSw==
+X-Google-Smtp-Source: ABdhPJzRfqaofRPumXvphn7M6BnSMfYofnElhrI84EAZ3W5otCYBNBiXOugxiFN46j+QphGtW23HA+cXFzEqTcDNw+s=
+X-Received: by 2002:ac2:4823:: with SMTP id 3mr10546757lft.194.1589786443287;
+ Mon, 18 May 2020 00:20:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512182721.55127-1-andriy.shevchenko@linux.intel.com> <20200512182721.55127-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200512182721.55127-3-andriy.shevchenko@linux.intel.com>
+References: <20200512203524.7317-1-jbx6244@gmail.com> <20200512203524.7317-2-jbx6244@gmail.com>
+In-Reply-To: <20200512203524.7317-2-jbx6244@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 09:18:00 +0200
-Message-ID: <CACRpkda06VaUSROeRMtDF1vP=dYEq=MtsewPE1suYG3W3fr2pQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] gpio: xgene-sb: Drop extra check to call acpi_gpiochip_request_interrupts()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Mon, 18 May 2020 09:20:32 +0200
+Message-ID: <CACRpkdYrDHNp7esSYw9y7CQoZ1aZojWkhAU_MG4uvmk7nVJbOQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: rockchip: update example
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 12, 2020 at 8:27 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, May 12, 2020 at 10:35 PM Johan Jonker <jbx6244@gmail.com> wrote:
 
-> There is no need to have an additional check to call
-> acpi_gpiochip_request_interrupts(). Even without any interrupts available
-> the registered ACPI Event handlers can be useful for debugging purposes.
+> The Rockchip dtsi and dts files have been bulk-converted for the
+> remaining raw gpio numbers into their descriptive counterparts and
+> also got rid of the unhelpful RK_FUNC_x -> x and RK_GPIOx -> x
+> mappings, so update the example as well.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-Patch applied.
+This patch applied to the pinctrl tree.
 
 Yours,
 Linus Walleij
