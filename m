@@ -2,65 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D498E1D843E
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 20:11:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33E9C1D86FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 20:31:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732910AbgERSKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 14:10:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24163 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732933AbgERSKr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 May 2020 14:10:47 -0400
-IronPort-SDR: IgNVX2cO94RRW3a+z6srI0VuZpO26Q/BFhlBIFbdJ9LhaPUOHoU1QVBcCEFCgsk3pxsr4TXQTT
- DxUuewcvV23Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:10:45 -0700
-IronPort-SDR: AYODz6xl/G0TH+eLwV0cv3rSSAV/EJ2Q6Jg3gsp6WaU/ERSe1td6IV1PWCrwVJfHJSrarnNgDx
- Kjwzxgvjqmkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="288664579"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2020 11:10:43 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jakDv-007U8O-3u; Mon, 18 May 2020 21:10:47 +0300
-Date:   Mon, 18 May 2020 21:10:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1730614AbgERS2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 14:28:34 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:44046 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgERS2d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 14:28:33 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 4C81380674;
+        Mon, 18 May 2020 20:28:27 +0200 (CEST)
+Date:   Mon, 18 May 2020 20:28:25 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Serge Semin <fancer.lancer@gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: dwapb: Don't use 0 as valid Linux interrupt
- number
-Message-ID: <20200518181047.GR1634618@smile.fi.intel.com>
-References: <20200518174138.19367-1-andriy.shevchenko@linux.intel.com>
- <20200518174138.19367-3-andriy.shevchenko@linux.intel.com>
+        Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 0/6] drm: Prepare to use a GPIO on ti-sn65dsi86 for
+ Hot Plug Detect
+Message-ID: <20200518182825.GA862982@ravnborg.org>
+References: <20200507213500.241695-1-dianders@chromium.org>
+ <20200509201511.GD30802@ravnborg.org>
+ <CAD=FV=VBU7JmTdvgWjyj_ytrFmz6Gkx2OjVr1FxLh9DBG_jN6w@mail.gmail.com>
+ <CAD=FV=UNuwb+YYJKw9+HNMKUNfuNFxj+Gr+yB9tXANbXAvDgCg@mail.gmail.com>
+ <20200518175939.GA770425@ravnborg.org>
+ <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518174138.19367-3-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAD=FV=XmUrF3nCZF4dDom5RrWrdVe-iJocenU3cJEDx-gGkDRA@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
+        a=hm5wBbS1sMirQhL_k6wA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 18, 2020 at 08:41:37PM +0300, Andy Shevchenko wrote:
-> 0 is not valid IRQ number in Linux interrupt number space.
-> Refactor the code with this kept in mind.
+Hi Douglas,
+On Mon, May 18, 2020 at 11:05:58AM -0700, Doug Anderson wrote:
+> Sam,
+> 
+> On Mon, May 18, 2020 at 10:59 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Douglas.
+> >
+> > > > Given the previous feedback from Linus W, Stephen, and Laurent I
+> > > > expect things are good enough to land now, but it'd be good to get
+> > > > confirmation (I removed some of the previous tags just to get
+> > > > confirmation).  If we can get review tags early next week maybe it'll
+> > > > still be in time to land for 5.8?
+> > >
+> > > I think all the others have reviews now.  Is there anything blocking
+> > > them from getting applied?
+> > Applied, including the small fix pointed out by Linus.
+> 
+> Thanks!  Ugh, I just realized what the problem was.  I posted a v6
+> with this fix but insanely somehow didn't CC you (!!!).  It was here:
+> 
+> https://lore.kernel.org/r/20200513215902.261547-1-dianders@chromium.org
+> 
+> I'm super sorry about that and thanks for fixing the nit.  That was
+> the only difference between v5 and v6.  I just checked what you pushed
+> and it looks great, thank you.
+No worries as long as what hits drm-misc-next is OK, which it was in
+this case.
 
->  		if (pp->irq[j] >= 0)
-
-Oops, missed this one to drop >= 0.
-I'll wait for your and Lee's comments / tags for the rest and then send v3.
-
->  			pp->has_irq = true;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+	Sam
