@@ -2,83 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF6121D73CD
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 11:21:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D81E1D76E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 13:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbgERJVS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 05:21:18 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42035 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgERJVS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 05:21:18 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z3so5789158otp.9;
-        Mon, 18 May 2020 02:21:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kAa2psThKQ7YN1P9hrBIVOheMSQY5tyl7YTngLsSf9s=;
-        b=VNIFVRJo5d1tgf+kX2RCdcuftoXDm343EvYZzCOCOwr60plK6XZdHYeNBA06gIVc2c
-         Kv/Pd9dZeYE8Jh0mjzv3UXfkT9z+YVATN1/ztg4s36V8Tm8MluhLD5hB/Z09i6bZ3RPM
-         tGX4liSEWImVljBCUewTv/lqtaXM6LnaJMxHlxQOzXQRb28nZsJTU5PFGtwyFlbEwNgS
-         YFHO6UKLrN4aNjdNn+PhCvQDYp7RySzDbbvwdu13YXmW6yO5Czi62VuIzN53MRVRtBdb
-         0G39qXu0bQdBzNfx9hGs0agM+SfJKSulzJbCw9ReNxzj5SnN8Z3RCRuh+/ZwCJUizAQc
-         yOsQ==
-X-Gm-Message-State: AOAM532GI0DRsRNC45CKrBTdKMzJeU3A4+Ftwp1st7fDASlrqcKQp304
-        RnrJ4CbLrokPTPk1K8BHuRtSrYGtrOpy4lrJXFg=
-X-Google-Smtp-Source: ABdhPJy/jYVzr4UFhMG3XsAuCDffsP6l/ymaV+byoPvr3DO7/Hr0St2Gcq6sQ6SCaJT6ercVH1Hg1rifAgCbjYjrD3Q=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr11298557otp.145.1589793676622;
- Mon, 18 May 2020 02:21:16 -0700 (PDT)
+        id S1727989AbgERLZE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 07:25:04 -0400
+Received: from vps.dvp24.com ([79.170.91.140]:47508 "EHLO vps.dvp24.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727926AbgERLZE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 May 2020 07:25:04 -0400
+X-Greylist: delayed 1238 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 May 2020 07:25:02 EDT
+Received: from localhost ([127.0.0.1] helo=dvp24.com)
+        by vps.dvp24.com with esmtpa (Exim 4.77)
+        (envelope-from <abhay@dvp24.com>)
+        id 1jadYi-0006sv-08; Mon, 18 May 2020 13:03:48 +0200
 MIME-Version: 1.0
-References: <20200511145257.22970-1-geert+renesas@glider.be> <CACRpkdaz34Bc_EzcXKMEVCCCUt82_c2+t4X6YSLW2b59oi+9gA@mail.gmail.com>
-In-Reply-To: <CACRpkdaz34Bc_EzcXKMEVCCCUt82_c2+t4X6YSLW2b59oi+9gA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 18 May 2020 11:20:59 +0200
-Message-ID: <CAMuHMdUtNVfAnQODjWaDo_+ncFBwq=cNLMt=hsMqiVbqx-1XVg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/6] gpio: Add GPIO Aggregator
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 18 May 2020 12:03:47 +0100
+From:   pedro hills <abhay@dvp24.com>
+To:     undisclosed-recipients:;
+Subject: (DONATION) $2 Million Has Been Donated
+Reply-To: <pedrohills@outlook.es>
+Mail-Reply-To: <pedrohills@outlook.es>
+Message-ID: <48fae56db7d72b6c8944f63bdd887348@dvp24.com>
+X-Sender: abhay@dvp24.com
+User-Agent: Roundcube Webmail/0.7.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
 
-On Mon, May 18, 2020 at 10:17 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> I have queued this v7 patch set in an immutable branch for testing and also
-> merged to my "devel" branch for testing.
->
-> If all goes well it also hits linux-next soon.
-
-Thank a lot!
-
-Back to the QEMU side...
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+$2 Million Has Been Donated To You,By PEDRO this is Real For More Info
+  Contact PEDRO immediately for your clame This Email:
+  pedrohills@outlook.es
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+  Contact phone number +34632232897
+  Send Your Response To: pedrohills@outlook.es
+
+  2 Millionen US-Dollar wurden an Sie gespendet. Von PEDRO ist dies für
+weitere Informationen real
+  Wenden Sie sich umgehend an PEDRO. Diese E-Mail:
+  pedrohills@outlook.es
+
+  Kontakttelefonnummer +34632232897
+  Senden Sie Ihre Antwort an: pedrohills@outlook.es
