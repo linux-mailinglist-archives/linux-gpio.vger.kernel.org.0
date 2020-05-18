@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98DDF1D71D0
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:29:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E0621D71D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgERH3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 03:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48454 "EHLO
+        id S1726895AbgERHbO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 03:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgERH3z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:29:55 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A68C05BD09
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:29:53 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c21so7120704lfb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:29:53 -0700 (PDT)
+        with ESMTP id S1726880AbgERHbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:31:14 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE40BC05BD0A
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:31:13 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id v5so7086113lfp.13
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:31:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0QQj8C5JeEmDZ6ZApGtOW1NT9hev78BCGty9WyW8HQU=;
-        b=KdzqRAP43Jx15JsBd7CMIo/2/+5tguTprPLSwNIyfoZQ0+ufPuN6S/BANnhJsjrhDD
-         DtP3v+cVRz1H4W7gZemFOLYygUe9Nnqc8CiVseZ1qH7MkopzW0uYIM/6QDifbVQUaEzY
-         I9Io5hrtK55gyaPukpP3UulY28GmqBr7704IEqyzsek9z5cWKXKh+nj6/8N35gBEzKLB
-         z7UbsMop5bQJkCqzM/P6qv2TYsuzenpxX9AvppK/Ewkg0FlUbL6cOIGLnAWxK13GtB1K
-         pL1FPAWkCnhD9H5FlvEDJp4hPMXkM7uAmjEi0J/HlDU7NpDvA7JOV3+ynsGeu4wzmRsg
-         XxWg==
+        bh=uh6U4dZDkbJvSpWnsBIA2oI3GollY7EReC9a0+QL8ds=;
+        b=fn+435nTT2iQwLK5/3IA7H4r47HpNUn5YBHSB+1i2lkrJx9KrtWfql0W22bANgDWw5
+         L+MnwKFA0pBFg2ZykU7CHeBPNSJlNsXD4oq9wb64di1dAgA/DLCvWUzMGsZZiHOpJn4w
+         sdj7TJpIOJhma0T9ExyDAW9vsJxto9cpcDC2gNsExVzImla6dOG4PThs9V+fZS3puNcm
+         IYvoNztUspqoRABag4wKI3CTCltF+XNU7FLKsLq8hWkwpeG3kDeFRarJZf/aYQloYKVX
+         k2rwKJHcNK+axSzVLvl1quy/Etht9cPCUxdvWfKXkKbRJVAvkKAcKv4Fo2J4e2g414lq
+         39IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0QQj8C5JeEmDZ6ZApGtOW1NT9hev78BCGty9WyW8HQU=;
-        b=MtWf5E7GE6Qr4JmkZuT55w5wwNFWbuZ/pfZaOkjlKBrMimOSIr6XAqmzTDB99ySZWF
-         PY/OYwgQDJkQCJ36sIpy1ti1Gx4fnFVg4pKCxORU7ybaxj5ArXm6enP7yAUWwMq7bTZ2
-         ta8dH/nNGrl5R9d8pb49XhFrGWqpuzJmrkgNg62xWQ4VLYoAXuREb3YriQryfb4a+2vF
-         5YRdYZlXP9Mk33qVz0dbCF6uvkGAI3apMVkWgQWRbNcWjkot0fdcCJ7uSTDu5QeRQZF7
-         mh4IoHtmzbIe7b+Nd7rOWyw902rIDkRgJ3BovofPWjZwsZUgEtNJzbeLi0sCFN5ZajU/
-         IUgA==
-X-Gm-Message-State: AOAM533VEiOupgumaFZbpggTI2+OYGp9L6e5l8Zn/tGNScylbF4p/d9K
-        W80PEh5SB80PMTZCQsx8mO9Du4I8VKaRm/TEsGO1QQ==
-X-Google-Smtp-Source: ABdhPJx6fCXx6eAlYEP7owDMWFfg7cz4sOJv/yQfCTAhywTwMqJW95DyJ7NsllwioD8AhEiAVzPb9dcty/D6ToHML3U=
-X-Received: by 2002:a19:c8cb:: with SMTP id y194mr7741076lff.89.1589786992310;
- Mon, 18 May 2020 00:29:52 -0700 (PDT)
+        bh=uh6U4dZDkbJvSpWnsBIA2oI3GollY7EReC9a0+QL8ds=;
+        b=J7fll1Q037qV05GU3ONqgEHLPaHRF5oNymN6eKuWL8/a2WKyMrQ/Vkd01ofH7WYXJr
+         ynjGntY9E2KgZJJfpV2eGwVxtTDIydmB6jHJ2AAL6FZkKSuq40hE37tHEkap0iyTcN0o
+         W0mAeM1rgyPr0ht11sWgX5Ov2YRT5nBl5V9Qtoj/tiHTdIgmL24S6v02TkD7vuZ4ibFF
+         2RocJa/kbqTjrMyBGXQSzkL7q0LlT8LdHx4pRDm/AIjRN7s8XAXpimZipwdqD8ciaZ9k
+         yeaSmE4b6daB8mWiBZTOKIzX3JI4SgL1X//QyAbmu9a6QqWD/rL81Pqe+Tlk/d2o83CX
+         fQCw==
+X-Gm-Message-State: AOAM532qDXk1Upx4QsM590hGdXxs/9O64/xTyQIr6gDofTPU+mUmmEva
+        D/xlKhJTg5snVEwLEKFLWKCJd2iGkdnPDxUqP107cQ==
+X-Google-Smtp-Source: ABdhPJznbrsFsG8QKFvYdy2XwjkDX2MMyM6frFix0Prjjj2ufcZwEICHddKXiikVCWz07ysLLhFYASma4iKq36dcOmQ=
+X-Received: by 2002:ac2:5588:: with SMTP id v8mr10393421lfg.217.1589787072183;
+ Mon, 18 May 2020 00:31:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-2-lars.povlsen@microchip.com>
-In-Reply-To: <20200513125532.24585-2-lars.povlsen@microchip.com>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-3-lars.povlsen@microchip.com>
+In-Reply-To: <20200513125532.24585-3-lars.povlsen@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 09:29:41 +0200
-Message-ID: <CACRpkdZF++0AExBvDHNT+whKP2sNKnbczV4w9SXksG2Dyctecw@mail.gmail.com>
-Subject: Re: [PATCH 01/14] pinctrl: ocelot: Should register GPIO's even if not
- irq controller
+Date:   Mon, 18 May 2020 09:31:01 +0200
+Message-ID: <CACRpkdaZjjxfnRPNxOZghyY=pFMwEsd8GqRYxt1QsU3Qhm79mA@mail.gmail.com>
+Subject: Re: [PATCH 02/14] pinctrl: ocelot: Remove instance number from pin functions
 To:     Lars Povlsen <lars.povlsen@microchip.com>
 Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -73,12 +72,12 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, May 13, 2020 at 2:56 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-> This fixes the situation where the GPIO controller is not used as an
-> interrupt controller as well.
+> This patch removes the instance number from the "miim", "reco_clk" and
+> "sfp" pin function.
 >
-> Previously, the driver would silently fail to register even the
-> GPIO's. With this change, the driver will only register as an
-> interrupt controller if a parent interrupt is provided.
+> The change needed is to prepare the driver for adding new platforms
+> with more of these instances. The instance number is also redundant,
+> as this is implicit for each pin.
 >
 > Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
