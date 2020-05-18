@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67FE81D8865
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 21:45:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C6301D8992
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 22:51:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgERTo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 15:44:29 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:26771 "EHLO
+        id S1726367AbgERUuB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 16:50:01 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:21974 "EHLO
         esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbgERTo2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 15:44:28 -0400
+        with ESMTP id S1726270AbgERUuB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 16:50:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589831067; x=1621367067;
+  t=1589835000; x=1621371000;
   h=references:from:to:cc:subject:in-reply-to:date:
    message-id:mime-version;
-  bh=wxnhkrmgjXbFZjBhp2Jh1xtXIMosSoFaC85IUlH8TjM=;
-  b=yWwVLyaeyYIB9B0RS8MFNcW0n9mkocm4Q0P35EwmJlRywMoQ0g0s4ul3
-   D6Oses4GBOxD5HVKqGdvb29HV42Tbdo4M28Q1xx52hs1OACcAs4vgDH+N
-   /XHdmgWFhf7+RBdE+3IS35VFh54WNjAcanXry3CCjNjGnkYRtmAKN0KyD
-   91aoxMpiGNUp287R4R6fjJjlVLebfvISHjhvrzDVFwniZRKxijV/DPIRl
-   EPG3jieUQXp6p5KJ5dcxucxx9bUS2MWE6ZiX+CvHpiFVmYtuVldVtz4l6
-   mYCiBwFNGXOHrf6qO8+TEoeK6OFTTpVAQCcd6CFJevPw8wHrXBKZf4uu/
-   Q==;
-IronPort-SDR: r8hrXvhyK3C3fi+2a7q4FTOBFtDKrKx6VGxTQkjSEAeEDUCAJCqQfp4/WRgPgMvbwakgtEdoVa
- qxie3UXw0rJhQxXJZ2gseB8Xgtg6nlvYthbHEuPDAmLcfO9XzcR0wvnN/wiwWB2Dr/qmnAdPat
- XglkI7TMmFT3ahQbvh08sbB5IgmYFj70IHpT6rCwTVrniolui6TA+/b60x8Zmccq/EWjdyJFak
- 54Ef/3TxbsCnpmnlRBq0fm4Axttz4PCDx4hod6zo5MOwwaJZoFl4lKQQC0Chx5z/vOPAVO0lTW
- qO8=
+  bh=p0UV94Wfg4Hsk7gV7KfpL3Af6oDCzE1nvORnnmrZVjQ=;
+  b=dgaHF1YOhiuxFtp8aNO8V0tLzFVD3tfJoFsX/ZPZON0YmmT2bBhqw1In
+   z8OthfF4UnMRh2fIh2FmMU9Pm0UE/fDIja/Vc5lvaDRnTIlPtL1KDYR3Y
+   YnE8jMgB/u5iWdPoij1WT5ugIZvoZ+gX+xEdWECVeaxizEc0wun1pKpgm
+   vwytFw/aF9EaoLC3Zql9LyQC47nO44sMNidQjUA6gqmw8S/m9qBMsFOHC
+   0gBcOX95B9igx3HVFk3IefyU5Dr/VA52AYH2Rh4Z9+A+NNgmLvb9UmuQ2
+   N930LuiESJUsht4JaUZyW5z9wOfOS75Gnh4jgjPc/mWC0NflDLM3XlQwS
+   g==;
+IronPort-SDR: XK4Y3Cpypu+/lG6igc25WaLSMNHfNiJU8wcvIUd22VrAzGtyAbepys2YnUOt7tXVe9MRiUBOcN
+ 10TdXQlx0YZLYcDxmvF2U+wORsVU6HdcRsRjH4/aLQ0v72QTa1xldQ8H72kTJhbjWh03hvN+76
+ 2Hx89f/nIXp5W+0PeeA2W3KznJjcXS/uhVEEqLSnSuGkS8qYj6Kc1RaeeUsjWzyMxLiGukFEbf
+ IJ9ZAyEVbUHLyccLNsdjhz4vexVk6o8gXIFG1gQumVu+bogcb8869N3ULiUlBXuaaT4qAn4okY
+ /fM=
 X-IronPort-AV: E=Sophos;i="5.73,407,1583218800"; 
-   d="scan'208";a="77076220"
+   d="scan'208";a="77082876"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 12:44:27 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 May 2020 13:50:00 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 18 May 2020 12:44:28 -0700
+ 15.1.1713.5; Mon, 18 May 2020 13:49:59 -0700
 Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 18 May 2020 12:44:26 -0700
-References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-3-lars.povlsen@microchip.com> <fb104436-69c1-3f5a-85d9-af0aee35547f@infradead.org>
+ via Frontend Transport; Mon, 18 May 2020 13:49:57 -0700
+References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
 From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
 CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] pinctrl: mchp-sgpio: Add pinctrl driver for Microsemi Serial GPIO
-In-Reply-To: <fb104436-69c1-3f5a-85d9-af0aee35547f@infradead.org>
-Date:   Mon, 18 May 2020 21:44:23 +0200
-Message-ID: <87r1vhni3s.fsf@soft-dev15.microsemi.net>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+In-Reply-To: <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
+Date:   Mon, 18 May 2020 22:49:56 +0200
+Message-ID: <87pnb1nf2j.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
@@ -64,45 +65,69 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-Randy Dunlap writes:
+Linus Walleij writes:
 
-> On 5/13/20 7:11 AM, Lars Povlsen wrote:
->> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->> index 834c59950d1cf..2b0e9021fd7e0 100644
->> --- a/drivers/pinctrl/Kconfig
->> +++ b/drivers/pinctrl/Kconfig
->> @@ -396,6 +396,23 @@ config PINCTRL_OCELOT
->>       select OF_GPIO
->>       select REGMAP_MMIO
+> On Wed, May 13, 2020 at 4:11 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> This adds DT bindings for the Microsemi SGPIO controller, bindings
+>> mscc,ocelot-sgpio and mscc,luton-sgpio.
 >>
->> +config PINCTRL_MSCC_SGPIO
->> +     bool "Pinctrl driver for Microsemi Serial GPIO"
->> +     depends on OF
->> +     depends on HAS_IOMEM
->> +     select GPIOLIB
->> +     select GENERIC_PINCONF
->> +     select GENERIC_PINCTRL_GROUPS
->> +     select GENERIC_PINMUX_FUNCTIONS
->> +     select OF_GPIO
->> +     help
->> +          Support for the VCoreIII SoC serial GPIO device. By using a
+>> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 >
-> Line above should be indented with one tab + 2 spaces...
-> like the lines below.
+>> +  microchip,sgpio-ports:
+>> +    description: This is a 32-bit bitmask, configuring whether a
+>> +      particular port in the controller is enabled or not. This allows
+>> +      unused ports to be removed from the bitstream and reduce latency.
+>> +    $ref: "/schemas/types.yaml#/definitions/uint32"
+>
+> I don't know about this.
+>
+> You are saying this pin controller can have up to 32 GPIO "ports"
+> (also known as banks).
+>
+> Why can't you just represent each such port as a separate GPIO
+> node:
+>
+> pinctrl@nnn {
+>     gpio@0 {
+>         ....
+>     };
+>     gpio@1 {
+>         ....
+>     };
+>     ....
+>     gpio@31 {
+>         ....
+>     };
+> };
+>
+> Then if some of them are unused just set it to status = "disabled";
+>
+> This also makes your Linux driver simpler because each GPIO port
+> just becomes a set of 32bit registers and you can use
+> select GPIO_GENERIC and bgpio_init() and save a whole
+> slew of standard stock code.
 >
 
-Well spotted...
+Linus, thank you for your input.
 
->> +       serial interface, the SIO controller significantly extends
->> +       the number of available GPIOs with a minimum number of
->> +       additional pins on the device. The primary purpose of the
->> +       SIO controller is to connect control signals from SFP
->> +       modules and to act as an LED controller.
->> +
->
-> thanks.
+The controller handles an array of 32*n signals, where n >= 1 && n <=
+4.
 
-Thank you for your comments.
+The problem with the above approach is that the ports are disabled
+*port*-wise - so they remove all (upto) 4 bits. That would be across the
+banks.
+
+You could of course have the "implied" semantics that a disabled port at
+any bit position disabled all (bit positions for the same port).
+
+But I don't know if this would be easier to understand, DT-wise.
+
+What do you think...?
+
+> Yours,
+> Linus Walleij
 
 -- 
 Lars Povlsen,
