@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 278DE1D718F
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:16:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 837A41D719C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 09:18:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgERHQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 03:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46252 "EHLO
+        id S1726573AbgERHRS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 03:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgERHQN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:16:13 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA3B7C061A0C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:16:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so8653207ljl.2
-        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:16:12 -0700 (PDT)
+        with ESMTP id S1726127AbgERHRS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 May 2020 03:17:18 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A82C061A0C
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:17:18 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id e125so6311627lfd.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 May 2020 00:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rKubmRO7B6ZJH2nTSWi+19cjgs+G10d8Vl7/a67wm4A=;
-        b=T5KLTC/RcOldGQVKiQ7WH7+7cu5xVXrfBPWPQi2+/X3qH0sC1rFEXGDVuGHim/aKQl
-         fBHuWzKInnBJqVAPeTpVH3YJFOaa9jeD3ncOv1+D/SVxzD6bFNXJyHZQXkvUrV6ZN2I8
-         9yb7JmLgAI/DG3UY22QQ72E0TWpOsRH+hrPzmHHw9jm40V868i1YLMvxuAVm6VK4ruBL
-         /EuYa8YQnl0tSqTdvI7NkrAX8CVVrXcwhkcAYZZtiLQYjnC2DNa2n8X9nlHXJYhXWIa0
-         SS4juRoMIP9HM6L0X7GcItjdcgDmaL7pG5jiD29xghqolNjOx8M0mxiR4EqrnlC1EBbf
-         s91w==
+        bh=kbVcXJSHBUEKZSSGyj/DRkAv14rsMqLE2kjnxXBmOA8=;
+        b=TiY1SpQCWfGea3I7E9IdXmJzygQ9DP3M2pn8NIa3V1raBrgkNJwfTRMC/LbbDb6OYT
+         A9Q5rSIduaXG4jNa92EfhyIxRB3HGLNP+VBkZCdqePOq4bhvjcFfS0xjxmx/p+exnJag
+         x7wYIrUk9ruxbiAzDDdm3hfPKyGdyTISRnbr7DwXcEOWkSCZwFso0y+Y0+HGiqZumBxf
+         JsBov/UTkOJAGpuxzgeckBHvda4/9X3MRQnISLi2uDahAedJ8egh2nZLM8GltfiSvfpc
+         4mTQ4NHDTBKTyzcWUvKF2ifSX1DZRX+V1+7UVIca/LPJkIn/J/LN8IstGDPKVAUffyTd
+         Xc+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rKubmRO7B6ZJH2nTSWi+19cjgs+G10d8Vl7/a67wm4A=;
-        b=NOzf5Yr5e+tdMd4D8XFPrHFif6JzoByuMjEm4RKNosNv53l7v4/UbQfLGlOxiPbm7J
-         suWvN9wxTP9al9syiXeQJ2L6oowRD01bbuuY00K3B1TUcB2lMMu5j5/qacKphcM76CBS
-         sUtpC3XzIZUFvI31YtNksJLMLk660DRfcvmVB+GLMu6QcwuorZaueMTPslLdlLZkrNxp
-         wds4NvMYwqwohc2DSU2BA+mZjObbVrc32ty5fjT9dvblqMPkzkd40zw9f1fwAS9xXtlK
-         j2LARZM8KQ7VM5SmK0YjeU00qTdG29XAFf/4XQ9m/wJGCDWQMyttijOHvxWT3SA9xAm9
-         oWOw==
-X-Gm-Message-State: AOAM5314aMkuASJbYLvlkZpOhkDxiCinZI54b1Ve9XbV57Nig+Djezs5
-        Kp6DfLzT4q2RB2ApY2Gt2KvuAVSlaFds5gH77gmWHQ==
-X-Google-Smtp-Source: ABdhPJzcA9cyidr2tc1VD8cfd0B3HvHJdCg0TKpKLPqsE4V1kEjrb+zWHfIJTuBOdJt4Hz+wzCh5IzrJdFKolCeepiU=
-X-Received: by 2002:a05:651c:154:: with SMTP id c20mr8877477ljd.99.1589786170726;
- Mon, 18 May 2020 00:16:10 -0700 (PDT)
+        bh=kbVcXJSHBUEKZSSGyj/DRkAv14rsMqLE2kjnxXBmOA8=;
+        b=fcwjHLywkhlojwHT3MsBynWZvbS2/PvRGYLyrHW1++xU8rqR0XM2fXTSGy4A6MvQpf
+         qaTubnAirhY+L/pVOZ5WLY+AEZr+7lnwRHDl+iYLxXrf7B9OKXYi+8++shG4fg3EWi9c
+         pD/IAOh5JwCzsTWzwAN/a38Xpsd59YhmYVfYn/Y3cLrdwu+np5xyckz13WsvQAAmD3eK
+         5758vj68GqNutjA0J4SWiptZfEnCP6itx9+S8HdxfZvVpoJhpp9PPdMYUCoyyO7Akyak
+         h+gbj7wSdenf3k+PZ9S6fA3sh48hZ7D4zOPzAxpGxvtwA3drMu8aQWjEXnZo2lFN9WGr
+         b64w==
+X-Gm-Message-State: AOAM532pRaLYTS5KG0AN6aOErlALE9DKV+LeXpvK/mraONbuDZuGa169
+        5ZbS27uiQ9d0D07/5wxzPitKHUmQP/1WpdNrHwYN2A==
+X-Google-Smtp-Source: ABdhPJy0OlmIXe71/0Rx6SnxKBcL0Ty0fR7e6LKP7gdqyclgJmq/XKeWk+HjfFvEasf0wCiIi+35PbdDMxtcMOY4opI=
+X-Received: by 2002:a19:c8cb:: with SMTP id y194mr7704588lff.89.1589786236533;
+ Mon, 18 May 2020 00:17:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512182623.54990-1-andriy.shevchenko@linux.intel.com> <20200512182623.54990-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200512182623.54990-2-andriy.shevchenko@linux.intel.com>
+References: <20200512182721.55127-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200512182721.55127-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 18 May 2020 09:16:00 +0200
-Message-ID: <CACRpkdbHdTt2CsV3R4ro0b9dTwVUg4T3CdgyK9XjE3yiarB6pw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] gpio: mb86s7x: Remove superfluous test for ACPI companion
+Date:   Mon, 18 May 2020 09:17:05 +0200
+Message-ID: <CACRpkdYzYLyjYdE1tvZGGnM6-nSJ=GhE1zVpEpmmOiOAawa8HQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] gpio: xgene-sb: Drop redundant OF_GPIO dependency
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
@@ -59,17 +59,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 12, 2020 at 8:26 PM Andy Shevchenko
+On Tue, May 12, 2020 at 8:27 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> acpi_gpiochip_request_interrupts() will check for ACPI handle of
-> the GPIO chip parent device and bail out if there is none defined.
-> Thus, has_acpi_companion() is effectively repeating above and
-> is not needed in the individual driver.
+> There is nothing in the driver requires OF_GPIO. Moreover, driver
+> supports ACPI and OF_GPIO may be a quite overhead on such configurations.
 >
-> Assigning ->to_irq() unconditionally doesn't change anything, except
-> an error code, but this we fix as well by propagating it from
-> platform_get_irq().
+> Drop dependency for good and replace of_gpio.h to of.h since we have
+> one function to be defined from there.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
