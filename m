@@ -2,121 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 626271D7D57
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 17:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 873D31D7E03
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 May 2020 18:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgERPuw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 May 2020 11:50:52 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:17464 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726958AbgERPuw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 May 2020 11:50:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589817051; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=MA7x95uTokqN/aU7nVR9VOVc4EF74ZFKJm4hvl9kPak=; b=WUlRjf5jDjPPwPDaLpabOSgUsNHq1H7HP4oGlYiHBjK0z8AfYRjFQhylkaGULMh53+b+AQcW
- a2lUV8zOGxyS2dSkPwV5l5ACNi5oqYzshTyN2wEb9dc9AnEosLpmP3GtsEyynFJtyE5G7mr1
- /J2m9dt4BhSrg4vUM8WRe8OuhF4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec2aecd.7fd5868fa960-smtp-out-n01;
- Mon, 18 May 2020 15:50:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B71BDC433D2; Mon, 18 May 2020 15:50:37 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from groverm-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: groverm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C9E4C43636;
-        Mon, 18 May 2020 15:50:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C9E4C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=groverm@codeaurora.org
-From:   Mayank Grover <groverm@codeaurora.org>
-To:     linus.walleij@linaro.org, agross@kernel.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, neeraju@codeaurora.org,
-        Mayank Grover <groverm@codeaurora.org>
-Subject: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
-Date:   Mon, 18 May 2020 21:20:25 +0530
-Message-Id: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        id S1728110AbgERQME (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 May 2020 12:12:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:18649 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbgERQME (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 May 2020 12:12:04 -0400
+IronPort-SDR: rVzpAtkwxWImQH9bE0RHGbPnQA4M8tu7ld+X+Ht0fAxdHuoF8kzAyLseIxAKeNaASQGRMDr4Xs
+ tZVO7sQBRHQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 09:12:04 -0700
+IronPort-SDR: qUS5oLTDrxSZ0bH/AOEQB4rLaYfif3OfmJCvbAzRM4X88RzGWxanx8l5H9zXoahrwqplDrk+rH
+ JcaUqIox48BQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
+   d="scan'208";a="465632150"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 18 May 2020 09:12:02 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jaiN2-007SoE-Ry; Mon, 18 May 2020 19:12:04 +0300
+Date:   Mon, 18 May 2020 19:12:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] gpio: dwapb: Don't use 0 as valid Linux interrupt
+ number
+Message-ID: <20200518161204.GJ1634618@smile.fi.intel.com>
+References: <20200512184513.86883-1-andriy.shevchenko@linux.intel.com>
+ <20200512184513.86883-2-andriy.shevchenko@linux.intel.com>
+ <20200517125244.oayqjhhq5755b4cg@mobilestation>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200517125244.oayqjhhq5755b4cg@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The list of reserved gpio pins for platform are populated
-in gpiochip valid_mask.
+On Sun, May 17, 2020 at 03:52:44PM +0300, Serge Semin wrote:
+> On Tue, May 12, 2020 at 09:45:11PM +0300, Andy Shevchenko wrote:
+> > 0 is not valid IRQ number in Linux interrupt number space.
+> > Refactor the code with this kept in mind.
 
-Here on MSM common driver introduce ability to check if
-pingroup is valid, by parsing pins in pingroup against
-reserved pins for gpios. This does not handle non-gpio
-pingroups.
+Serge, thanks for review, my answers below.
 
-Signed-off-by: Mayank Grover <groverm@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+...
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 85858c1..b6ebe26 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -261,6 +261,24 @@ static unsigned msm_regval_to_drive(u32 val)
- 	return (val + 1) * 2;
- }
- 
-+static bool msm_pingroup_is_valid(struct msm_pinctrl *pctrl,
-+				  const struct msm_pingroup *g)
-+{
-+	const unsigned int *pins = g->pins;
-+	unsigned int num_pins = g->npins;
-+	struct gpio_chip *chip = &pctrl->chip;
-+	unsigned int max_gpios = chip->ngpio;
-+	unsigned int i;
-+
-+	for (i = 0; i < num_pins; i++) {
-+		/* Doesn't handle non-gpio pingroups */
-+		if (pins[i] < max_gpios &&
-+		    !gpiochip_line_is_valid(chip, pins[i]))
-+			return false;
-+	}
-+	return true;
-+}
-+
- static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 				unsigned int group,
- 				unsigned long *config)
-@@ -276,6 +294,10 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 
- 	g = &pctrl->soc->groups[group];
- 
-+	/* Check if group has all valid pins */
-+	if (!msm_pingroup_is_valid(pctrl, g))
-+		return -EINVAL;
-+
- 	ret = msm_config_reg(pctrl, g, param, &mask, &bit);
- 	if (ret < 0)
- 		return ret;
-@@ -355,6 +377,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 
- 	g = &pctrl->soc->groups[group];
- 
-+	/* Check if group has all valid pins */
-+	if (!msm_pingroup_is_valid(pctrl, g))
-+		return -EINVAL;
-+
- 	for (i = 0; i < num_configs; i++) {
- 		param = pinconf_to_config_param(configs[i]);
- 		arg = pinconf_to_config_argument(configs[i]);
+> > +	int err, j;
+> 
+> Err might be used uninitialized here. The compiler also says so:
+> 
+> drivers/gpio/gpio-dwapb.c:560:14: warning: ‘err’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>    pp->irq[j] = err;
+> 
+> drivers/gpio/gpio-dwapb.c:547:6: note: ‘err’ was declared here
+>   int err, j;
+
+Good catch! I'm puzzled how I missed it :-(
+I usually compile with W=1.
+
+Hmm... gcc (Debian 9.3.0-12) 9.3.0 building for i386, doesn't give me a
+warning, but I see that there is potentially possible that scenario, so, I'm
+going to fix it.
+
+> Could you please make it initialized with error number like -ENXIO by default?
+
+Will do.
+
+> Also if it was just a single issue in my mind, I wouldn't have probably payed
+> much attention to this. But since you need to send v2 anyway, I'd prefer to have
+> a positive naming here since normally both of_irq_get() and
+> platform_get_irq_optional() return IRQ number, and error is returned only on
+> failure. So checking an erroneous value of a positively named variable seems
+> more natural, rather than copying an error-named variable to a normal variable.
+> To cut it short could you please rename err to something like irq?
+
+Makes sense.
+
+...
+
+> > +	pp->has_irq = memchr_inv(pp->irq, 0, sizeof(pp->irq)) != NULL;
+> 
+> Sorry, but I don't see why is setting the has_irq flag in the loop above worse than
+> using memchr_inv()? As I see it since we need to perform the loop above anyway, it
+> would be normal to update the flag synchronously there instead of traversing the
+> irq's array byte-by-byte again in the memchr_inv() method. Moreover
+> (memchr_inv() != NULL) seems harder to read. A kernel hacker needs to keep in
+> mind the method semantics, that it returns non-null if unmatched character found
+> in the array, to get the line logic. Setting "has_irq = true" is straightforward -
+> if IRQ's found then set the flag to true. So if you don't have a strong opinion
+> against my reasoning could you please get the setting the has_irq flag back in to
+> the loop above?
+
+It's done in that way for a reason of the next clean ups, i.e. moving this to
+the actual user of it. I hope you already read further patches to see the
+intention behind this change. So, I prefer to leave it as is, however I agree
+with you in general.
+
+Btw, we may also leave the domain when even no IRQ is available as some other
+drivers do, but I consider it less plausible than using memchr_inv().
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
