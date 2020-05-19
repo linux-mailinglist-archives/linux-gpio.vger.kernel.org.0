@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 362491D9746
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A0811D9744
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgESNMk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 May 2020 09:12:40 -0400
+        id S1728845AbgESNMj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 May 2020 09:12:39 -0400
 Received: from mga02.intel.com ([134.134.136.20]:10267 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbgESNMi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1728954AbgESNMi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Tue, 19 May 2020 09:12:38 -0400
-IronPort-SDR: 0YmVRXfBSuxxeea/Nkae2tVCwVaSNT+VwST+Z22eaDE8WccEAixqY3I8EmaPtix2PpcBmN9dw6
- zX6z9jpkk+jg==
+IronPort-SDR: IF/wTzaU6rNuyF+MWdcCXhoQMPk7gBNKKIMEGB8UBNfSyIxLGXJYnO/zf8HExSLMyogHb1oSdS
+ lVeZ2/l957KQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 06:12:37 -0700
-IronPort-SDR: GXyJHo0OZg+0iA1K6TGdWhCVLUn45IR1AkhcYU7rDi/zv6DEers5bhVSedogKpWnGP8JoNKq1q
- rDuBfeCTpTZA==
+IronPort-SDR: 3yjeVBPOeSPga8QLAeqkXpib26FpwWCh53goDAoQUCfyHmaum4RROKsAH5ccm9KI/1WZ4IlP9I
+ jtptPSJQleGw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="439613509"
+   d="scan'208";a="439613510"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orsmga005.jf.intel.com with ESMTP; 19 May 2020 06:12:35 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9BA24BD; Tue, 19 May 2020 16:12:34 +0300 (EEST)
+        id A9AD919E; Tue, 19 May 2020 16:12:34 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-gpio@vger.kernel.org
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH v3 2/4] gpio: dwapb: avoid error message for optional IRQ
-Date:   Tue, 19 May 2020 16:12:31 +0300
-Message-Id: <20200519131233.59032-2-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 3/4] gpio: dwapb: Don't use IRQ 0 as valid Linux interrupt
+Date:   Tue, 19 May 2020 16:12:32 +0300
+Message-Id: <20200519131233.59032-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
 References: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
@@ -45,33 +45,58 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-platform_get_irq() will generate an error message if the requested IRQ
-is not present. Use platform_get_irq_optional() to avoid the error message
-being generated.
+IRQ 0 is not valid in Linux interrupt number space.
+Refactor the code with this kept in mind.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Acked-by: Serge Semin <fancer.lancer@gmail.com>
 Tested-by: Serge Semin <fancer.lancer@gmail.com>
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 ---
 v3: appended tags (Serge)
 
- drivers/gpio/gpio-dwapb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-dwapb.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index e5d844304f8d..944dae80d687 100644
+index 944dae80d687..d3765672c42b 100644
 --- a/drivers/gpio/gpio-dwapb.c
 +++ b/drivers/gpio/gpio-dwapb.c
-@@ -549,7 +549,7 @@ static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
- 		if (np)
- 			pp->irq[j] = of_irq_get(np, j);
- 		else if (has_acpi_companion(dev))
--			pp->irq[j] = platform_get_irq(to_platform_device(dev), j);
-+			pp->irq[j] = platform_get_irq_optional(to_platform_device(dev), j);
+@@ -417,7 +417,7 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+ 		int i;
  
- 		if (pp->irq[j] >= 0)
+ 		for (i = 0; i < pp->ngpio; i++) {
+-			if (pp->irq[i] >= 0)
++			if (pp->irq[i])
+ 				irq_set_chained_handler_and_data(pp->irq[i],
+ 						dwapb_irq_handler, gpio);
+ 		}
+@@ -538,20 +538,20 @@ static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
+ 			  struct dwapb_port_property *pp)
+ {
+ 	struct device_node *np = NULL;
+-	int j;
++	int irq = -ENXIO, j;
+ 
+ 	if (fwnode_property_read_bool(fwnode, "interrupt-controller"))
+ 		np = to_of_node(fwnode);
+ 
+ 	for (j = 0; j < pp->ngpio; j++) {
+-		pp->irq[j] = -ENXIO;
+-
+ 		if (np)
+-			pp->irq[j] = of_irq_get(np, j);
++			irq = of_irq_get(np, j);
+ 		else if (has_acpi_companion(dev))
+-			pp->irq[j] = platform_get_irq_optional(to_platform_device(dev), j);
++			irq = platform_get_irq_optional(to_platform_device(dev), j);
++		if (irq > 0)
++			pp->irq[j] = irq;
+ 
+-		if (pp->irq[j] >= 0)
++		if (pp->irq[j])
  			pp->has_irq = true;
+ 	}
+ 
 -- 
 2.26.2
 
