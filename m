@@ -2,124 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 099C71D972E
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B32841D9745
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgESNJl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 May 2020 09:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728818AbgESNJl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 May 2020 09:09:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC19EC08C5C0
-        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2020 06:09:39 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id j21so6366097pgb.7
-        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2020 06:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=l8Rkl0mneQHUoj1YuCY0F16z2UA8Qf72ZIYuviDCb60=;
-        b=VvT/vm9zR4CZnFyv3vUt7nX3SyOtGJfXFT/A0n+10mw/M3KqugBYfIAVWyfQurDFU+
-         bLxM0FgTdeIqpr0ZJ4/TcxgPiAlNoMTv7+4fgIbBbny4liUWgc7TC6xn1aS3kYP3Mckn
-         eMsdSOj+++ky+R4e9eqHypEqZvdXS9srVAOZlgoCDk9cfqpwvWPJEsg/CYgLxbpUUZSu
-         ZI0bn2NhHsY2OIUCaVcJKwFov6+z0MFEX4pqoquhVqFVRXKNT/GtiRvaC2B+1CD2de8v
-         JexgrhQhY3nubZV4Pitr7IdLCd4+C74smdT30M16fhFqB05uv/O8MSuuGruKdpBkzqYf
-         z3kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=l8Rkl0mneQHUoj1YuCY0F16z2UA8Qf72ZIYuviDCb60=;
-        b=MAqebVsyERNeccfsB4rp/IaNpMl1QmqVreJJbLnl6W0yiCRc2HlUyILfBARazDtfzp
-         AHBCnMySTO9XrNjNzg9kGSxjCm+jaZVPoH+Ch4jRrSlCYbn8luh7CgJTl1XAyP23hoxR
-         NU4O77Nnpi9tcm+l6LCQ4oAVWrFiaE+ad6TsX7CAi7EKlJKfCFr9HJ1MT6hD3Wbe3ODH
-         /frWV/gFe2eYeCO1fCpoZ49VEv31fLCBzeDw23CPI6BF2Ri2Pt19CdkEKm3ayIQL2aMY
-         6rFaAtWeFXDv217M+87oybcggDA0vBQA6xm1+VjEVckHUFEEosoaBm3UgSUyPoY9+Ez9
-         iMaw==
-X-Gm-Message-State: AOAM533GCs6sTVkWfOmMBGrgtBeGi+mzguD+GlfpU5icNQ/pJvs/F8fT
-        h87IaJ1ByC6UYvmkxjDLEUynKX6STy8=
-X-Google-Smtp-Source: ABdhPJwQDkPZlwXjJuWF7QX1UaBTIdjTPh7zuF7El4Z3/tmPo3dPP0GEHDMpuS3daZPvYWgv4cK98w==
-X-Received: by 2002:a63:e010:: with SMTP id e16mr18671033pgh.283.1589893778807;
-        Tue, 19 May 2020 06:09:38 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id a2sm11311062pfi.208.2020.05.19.06.09.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2020 06:09:37 -0700 (PDT)
-Message-ID: <5ec3da91.1c69fb81.bb271.3cd1@mx.google.com>
-Date:   Tue, 19 May 2020 06:09:37 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1728945AbgESNMk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 May 2020 09:12:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57663 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728929AbgESNMh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 19 May 2020 09:12:37 -0400
+IronPort-SDR: RU2AAmTyWDxFo4YQ66EEFki0LOFlvdZFpcF8gNwQLTW7hXsmD88GxuZPQ7Gb4iRtgkj88V0MOV
+ 5FfnH3jxaKxQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 06:12:36 -0700
+IronPort-SDR: GUoTArgsRTb1BoeozF4CG2bcQSS9ESAaeTdTS+/u8mwy6ehHacuWI5waxk/s/hk84gFGrpLk4B
+ qFl30sfWkfVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
+   d="scan'208";a="299566066"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 19 May 2020 06:12:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8CAE3D2; Tue, 19 May 2020 16:12:34 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>
+Subject: [PATCH v3 1/4] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
+Date:   Tue, 19 May 2020 16:12:30 +0300
+Message-Id: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.7-rc6-69-ga3bc02eb6fe3
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: for-next
-Subject: linusw/for-next boot: 40 boots: 1 failed,
- 39 passed (v5.7-rc6-69-ga3bc02eb6fe3)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-******************************************
-* WARNING: Boot tests are now deprecated *
-******************************************
+Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
 
-As kernelci.org is expanding its functional testing capabilities, the conce=
-pt
-of boot testing is now deprecated.  Boot results are scheduled to be droppe=
-d on
-*5th June 2020*.  The full schedule for boot tests deprecation is available=
- on
-this GitHub issue: https://github.com/kernelci/kernelci-backend/issues/238
+While at it, drop extra check to call acpi_gpiochip_request_interrupts().
+There is no need to have an additional check to call
+acpi_gpiochip_request_interrupts(). Even without any interrupts available
+the registered ACPI Event handlers can be useful for debugging purposes.
 
-The new equivalent is the *baseline* test suite which also runs sanity chec=
-ks
-using dmesg and bootrr: https://github.com/kernelci/bootrr
-
-See the *baseline results for this kernel revision* on this page:
-https://kernelci.org/test/job/linusw/branch/for-next/kernel/v5.7-rc6-69-ga3=
-bc02eb6fe3/plan/baseline/
-
----------------------------------------------------------------------------=
-----
-
-linusw/for-next boot: 40 boots: 1 failed, 39 passed (v5.7-rc6-69-ga3bc02eb6=
-fe3)
-
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/for-next=
-/kernel/v5.7-rc6-69-ga3bc02eb6fe3/
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.7-rc6-69-ga3bc02eb6fe3/
-
-Tree: linusw
-Branch: for-next
-Git Describe: v5.7-rc6-69-ga3bc02eb6fe3
-Git Commit: a3bc02eb6fe3a86e4157815b86f243fb6bb6e2d0
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 40 unique boards, 12 SoC families, 2 builds out of 6
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxm-khadas-vim2:
-              lab-baylibre: new failure (last pass: gpio-v5.7-2-52-gccec57d=
-2a1fb)
-
-Boot Failure Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxm-khadas-vim2: 1 failed lab
-
+Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
 ---
-For more info write to <info@kernelci.org>
+v3: appended tags (Serge)
+ drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 8639c4a7f469..e5d844304f8d 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -505,26 +505,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 		dwapb_configure_irqs(gpio, port, pp);
+ 
+ 	err = gpiochip_add_data(&port->gc, port);
+-	if (err)
++	if (err) {
+ 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
+ 			port->idx);
+-	else
+-		port->is_registered = true;
++		return err;
++	}
+ 
+ 	/* Add GPIO-signaled ACPI event support */
+-	if (pp->has_irq)
+-		acpi_gpiochip_request_interrupts(&port->gc);
++	acpi_gpiochip_request_interrupts(&port->gc);
+ 
+-	return err;
++	port->is_registered = true;
++
++	return 0;
+ }
+ 
+ static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
+ {
+ 	unsigned int m;
+ 
+-	for (m = 0; m < gpio->nr_ports; ++m)
+-		if (gpio->ports[m].is_registered)
+-			gpiochip_remove(&gpio->ports[m].gc);
++	for (m = 0; m < gpio->nr_ports; ++m) {
++		struct dwapb_gpio_port *port = &gpio->ports[m];
++
++		if (!port->is_registered)
++			continue;
++
++		acpi_gpiochip_free_interrupts(&port->gc);
++		gpiochip_remove(&port->gc);
++	}
+ }
+ 
+ static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
+-- 
+2.26.2
+
