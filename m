@@ -2,131 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533E91D9742
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:12:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F77E1D97EF
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 May 2020 15:38:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgESNMi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 May 2020 09:12:38 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57663 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgESNMh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 May 2020 09:12:37 -0400
-IronPort-SDR: B4K+W8etJxGyy4hcPrS2jOR+yfTWZILN124gNbN1ynkFkxQn96oKKEJd5Bsw+dwfOUHXNWVHW3
- QhAGE1CDGvLQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2020 06:12:37 -0700
-IronPort-SDR: lKMBbY1m2wyM1LVTk34zsGak6nW8W8vtDRdSeJOdvIrRr7Nus7CAjYFiZf2CzMSSgLeybkcVwx
- oS/J0m0yu07A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,410,1583222400"; 
-   d="scan'208";a="411628739"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 19 May 2020 06:12:35 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B3A5B1D6; Tue, 19 May 2020 16:12:34 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1727904AbgESNiS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 May 2020 09:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgESNiS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 May 2020 09:38:18 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C83C08C5C1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2020 06:38:17 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id m18so5357915ljo.5
+        for <linux-gpio@vger.kernel.org>; Tue, 19 May 2020 06:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uAKZAwd0Bsu5eMrKgCGYzypp282aFndHsMyiyLkrN6U=;
+        b=i1O08/bxxOIrq419RAam2H5dwyFSgdcXiVSWk/U9KA3KeR3RWo8ArMEwsE8E3RWSYe
+         Nd9/wMHI6sKfImJVRIxqWMaH/J27XjwU6drh068zhHNWyw2vm2xpQ6PTymfvKYwLWGv2
+         chtMjuj/0I0ek1LnDJpo4paJ4t4JrcMBhtFd1HDgVouQ7J1j+NK72ChYsO+ai/fNmQhi
+         T1hMIS1C/Ad0kLQzK6GW57GzRmpc8W80CHkP5DrAHBW7wRe51TvZQw6OzOBTMCxWC5Ik
+         8q5GVlxdufQ2S4U8p9aO5ZKPbfNi8aQiiGXVEYhVClV1yHipzINJiyMsCgK2j/2BGCb8
+         QFvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uAKZAwd0Bsu5eMrKgCGYzypp282aFndHsMyiyLkrN6U=;
+        b=rUGNMp05JBPlCujtDhx7VLfGQtwYvDedrAxhnrNY7Vka7voeFKPiqWLGWeyeiWFz31
+         JXFe6tTKOzVO7KBSBG/ja2F3fxWK13F6DZg5DAfRUyg9wSc1qtlY3OkhrP41KGHJcaV7
+         FiCN5U8upVTxp2UlLeSKoIlhmoEKagl7gxdObq/CWccmVezKJRf2U4Ya9PeoKWHZcMPn
+         cefNhZlRfkhnEC00XVJFK5WlmIpkY6nkTEbNFM/E17pvYnEB0rTbpvViVlmY+1tROSfI
+         nrVSqMMTO38CVB9J8mDwHABA2GdIL8TUIuWefbKHh01ZmBLy2uSy2xgqFSef50RLFjxx
+         vXXg==
+X-Gm-Message-State: AOAM531t5Ky2puT5it+z+dglTcB1xm9/Gl17kgdvyIPy5k2EUl6LL9YR
+        oKsKYLfSi0XPD1y69WEbT4PXmw==
+X-Google-Smtp-Source: ABdhPJz1M+HZa6KTbp/Wm84AK/1i26pnGh8Q1KoAtFwzKht/E1RMhyzFVXiOnhMnaUCobafo0iBHiQ==
+X-Received: by 2002:a2e:b4d0:: with SMTP id r16mr13906902ljm.129.1589895495703;
+        Tue, 19 May 2020 06:38:15 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id w14sm4834468lfe.65.2020.05.19.06.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2020 06:38:15 -0700 (PDT)
+Date:   Tue, 19 May 2020 15:38:14 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>
-Subject: [PATCH v3 4/4] gpio: dwapb: Remove unneeded has_irq member in struct dwapb_port_property
-Date:   Tue, 19 May 2020 16:12:33 +0300
-Message-Id: <20200519131233.59032-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
-References: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: Add renesas,em-gio bindings
+Message-ID: <20200519133814.GE470768@oden.dyn.berto.se>
+References: <20200519081157.29095-1-geert+renesas@glider.be>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200519081157.29095-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-has_irq member of struct dwapb_port_property is used only in one place,
-so, make it local test instead and remove from the structure.
-This local test is using memchr_inv() which is quite efficient in comparison
-to the original loop and possible little overhead can be neglected.
+Hi Geert,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
----
-v3: appended tags (Serge, Lee)
+Thanks for your patch.
 
- drivers/gpio/gpio-dwapb.c                | 14 +++++++-------
- drivers/mfd/intel_quark_i2c_gpio.c       |  1 -
- include/linux/platform_data/gpio-dwapb.h |  1 -
- 3 files changed, 7 insertions(+), 9 deletions(-)
+On 2020-05-19 10:11:57 +0200, Geert Uytterhoeven wrote:
+> Document Device Tree bindings for the Renesas EMMA Mobile General
+> Purpose I/O Interface.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index d3765672c42b..1d8d55bd63aa 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -366,6 +366,11 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
- 	irq_hw_number_t hwirq;
- 	int err, i;
- 
-+	if (memchr_inv(pp->irq, 0, sizeof(pp->irq)) == NULL) {
-+		dev_warn(gpio->dev, "no IRQ for port%d\n", pp->idx);
-+		return;
-+	}
-+
- 	gpio->domain = irq_domain_create_linear(fwnode, ngpio,
- 						 &irq_generic_chip_ops, gpio);
- 	if (!gpio->domain)
-@@ -501,7 +506,8 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	if (pp->idx == 0)
- 		port->gc.set_config = dwapb_gpio_set_config;
- 
--	if (pp->has_irq)
-+	/* Only port A can provide interrupts in all configurations of the IP */
-+	if (pp->idx == 0)
- 		dwapb_configure_irqs(gpio, port, pp);
- 
- 	err = gpiochip_add_data(&port->gc, port);
-@@ -550,13 +556,7 @@ static void dwapb_get_irq(struct device *dev, struct fwnode_handle *fwnode,
- 			irq = platform_get_irq_optional(to_platform_device(dev), j);
- 		if (irq > 0)
- 			pp->irq[j] = irq;
--
--		if (pp->irq[j])
--			pp->has_irq = true;
- 	}
--
--	if (!pp->has_irq)
--		dev_warn(dev, "no irq for port%d\n", pp->idx);
- }
- 
- static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
-diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
-index 41326b48da55..84ca7902e1df 100644
---- a/drivers/mfd/intel_quark_i2c_gpio.c
-+++ b/drivers/mfd/intel_quark_i2c_gpio.c
-@@ -216,7 +216,6 @@ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
- 	pdata->properties->ngpio	= INTEL_QUARK_MFD_NGPIO;
- 	pdata->properties->gpio_base	= INTEL_QUARK_MFD_GPIO_BASE;
- 	pdata->properties->irq[0]	= pdev->irq;
--	pdata->properties->has_irq	= true;
- 	pdata->properties->irq_shared	= true;
- 
- 	cell->platform_data = pdata;
-diff --git a/include/linux/platform_data/gpio-dwapb.h b/include/linux/platform_data/gpio-dwapb.h
-index 3c606c450d05..ff1be737bad6 100644
---- a/include/linux/platform_data/gpio-dwapb.h
-+++ b/include/linux/platform_data/gpio-dwapb.h
-@@ -12,7 +12,6 @@ struct dwapb_port_property {
- 	unsigned int	ngpio;
- 	unsigned int	gpio_base;
- 	int		irq[32];
--	bool		has_irq;
- 	bool		irq_shared;
- };
- 
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  .../bindings/gpio/renesas,em-gio.yaml         | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml b/Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml
+> new file mode 100644
+> index 0000000000000000..8bdef812c87c3771
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/renesas,em-gio.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/renesas,em-gio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas EMMA Mobile General Purpose I/O Interface
+> +
+> +maintainers:
+> +  - Magnus Damm <magnus.damm@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,em-gio
+> +
+> +  reg:
+> +    items:
+> +      - description: First set of contiguous registers
+> +      - description: Second set of contiguous registers
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Interrupt for the first set of 16 GPIO ports
+> +      - description: Interrupt for the second set of 16 GPIO ports
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  ngpios:
+> +    minimum: 1
+> +    maximum: 32
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +  - ngpios
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    gpio0: gpio@e0050000 {
+> +            compatible = "renesas,em-gio";
+> +            reg = <0xe0050000 0x2c>, <0xe0050040 0x20>;
+> +            interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&pfc 0 0 32>;
+> +            ngpios = <32>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +    };
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.26.2
-
+Regards,
+Niklas Söderlund
