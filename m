@@ -2,287 +2,286 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D6E1DA692
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 02:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6F61DA663
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 02:22:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgETAa0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 May 2020 20:30:26 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:56780 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgETAa0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 May 2020 20:30:26 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 948661A0210;
-        Wed, 20 May 2020 02:30:23 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7BF0F1A0237;
-        Wed, 20 May 2020 02:30:18 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2401F402BB;
-        Wed, 20 May 2020 08:30:12 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: gpio: Convert mxs to json-schema
-Date:   Wed, 20 May 2020 08:20:35 +0800
-Message-Id: <1589934035-5309-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726898AbgETAW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 May 2020 20:22:56 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41836 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbgETAW4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 May 2020 20:22:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1589934174; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=S4TMOQR23TFpFNf/Gdrrq65wyImfAOA6VASHODQN8A8=;
+        b=pFXsq/qv/ySG1OgqJMAkj47v1iFVwABNrhzagp24huDrvQQD7/2MOGfDRL8kP21Pv7ixuC
+        YqzHiUe9AvbE+hvbSjuBo8cgHvQYq2EZzDV+6T6G1QxIlG9TkztILSEs8uwYgQth4/w1fw
+        7Y33eInpQqi0G3I/Hzs0azYubnoc1rQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt to YAML
+Date:   Wed, 20 May 2020 02:22:32 +0200
+Message-Id: <20200520002234.418025-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the MXS GPIO binding to DT schema format using json-schema.
+Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+In the process, some compatible strings now require a fallback, as the
+corresponding SoCs are pin-compatible with their fallback variant.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../devicetree/bindings/gpio/gpio-mxs.txt          |  88 -------------
- .../devicetree/bindings/gpio/gpio-mxs.yaml         | 136 +++++++++++++++++++++
- 2 files changed, 136 insertions(+), 88 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt b/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+Notes:
+    v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+        - remove 'additionalProperties: false' since we will have pin conf nodes
+
+ .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
+ .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
+ 2 files changed, 136 insertions(+), 81 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
 deleted file mode 100644
-index 1e677a4..0000000
---- a/Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+index d9b2100c98e8..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
 +++ /dev/null
-@@ -1,88 +0,0 @@
--* Freescale MXS GPIO controller
+@@ -1,81 +0,0 @@
+-Ingenic XBurst pin controller
 -
--The Freescale MXS GPIO controller is part of MXS PIN controller.  The
--GPIOs are organized in port/bank.  Each port consists of 32 GPIOs.
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
 -
--As the GPIO controller is embedded in the PIN controller and all the
--GPIO ports share the same IO space with PIN controller, the GPIO node
--will be represented as sub-nodes of MXS pinctrl node.
+-For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
+-be used as GPIOs, multiplexed device functions are configured within the
+-GPIO port configuration registers and it is typical to refer to pins using the
+-naming scheme "PxN" where x is a character identifying the GPIO port with
+-which the pin is associated and N is an integer from 0 to 31 identifying the
+-pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
+-PB31 is the last pin in GPIO port B. The jz4740, the x1000 and the x1830
+-contains 4 GPIO ports, PA to PD, for a total of 128 pins. The jz4760, the
+-jz4770 and the jz4780 contains 6 GPIO ports, PA to PF, for a total of 192 pins.
 -
--Required properties for GPIO node:
--- compatible : Should be "fsl,<soc>-gpio".  The supported SoCs include
--  imx23 and imx28.
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- gpio-controller : Marks the device node as a gpio controller.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--- interrupt-controller: Marks the device node as an interrupt controller.
--- #interrupt-cells : Should be 2.  The first cell is the GPIO number.
--  The second cell bits[3:0] is used to specify trigger type and level flags:
--      1 = low-to-high edge triggered.
--      2 = high-to-low edge triggered.
--      4 = active high level-sensitive.
--      8 = active low level-sensitive.
 -
--Note: Each GPIO port should have an alias correctly numbered in "aliases"
--node.
+-Required properties:
+---------------------
 -
--Examples:
+- - compatible: One of:
+-    - "ingenic,jz4740-pinctrl"
+-    - "ingenic,jz4725b-pinctrl"
+-    - "ingenic,jz4760-pinctrl"
+-    - "ingenic,jz4760b-pinctrl"
+-    - "ingenic,jz4770-pinctrl"
+-    - "ingenic,jz4780-pinctrl"
+-    - "ingenic,x1000-pinctrl"
+-    - "ingenic,x1000e-pinctrl"
+-    - "ingenic,x1500-pinctrl"
+-    - "ingenic,x1830-pinctrl"
+- - reg: Address range of the pinctrl registers.
 -
--aliases {
--	gpio0 = &gpio0;
--	gpio1 = &gpio1;
--	gpio2 = &gpio2;
--	gpio3 = &gpio3;
--	gpio4 = &gpio4;
--};
 -
--pinctrl@80018000 {
--	compatible = "fsl,imx28-pinctrl", "simple-bus";
--	reg = <0x80018000 2000>;
+-Required properties for sub-nodes (GPIO chips):
+------------------------------------------------
 -
--	gpio0: gpio@0 {
--		compatible = "fsl,imx28-gpio";
--		interrupts = <127>;
+- - compatible: Must contain one of:
+-    - "ingenic,jz4740-gpio"
+-    - "ingenic,jz4760-gpio"
+-    - "ingenic,jz4770-gpio"
+-    - "ingenic,jz4780-gpio"
+-    - "ingenic,x1000-gpio"
+-    - "ingenic,x1830-gpio"
+- - reg: The GPIO bank number.
+- - interrupt-controller: Marks the device node as an interrupt controller.
+- - interrupts: Interrupt specifier for the controllers interrupt.
+- - #interrupt-cells: Should be 2. Refer to
+-   ../interrupt-controller/interrupts.txt for more details.
+- - gpio-controller: Marks the device node as a GPIO controller.
+- - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
+-    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
+-    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+- - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
+-   ../gpio/gpio.txt for more details.
+-
+-
+-Example:
+---------
+-
+-pinctrl: pin-controller@10010000 {
+-	compatible = "ingenic,jz4740-pinctrl";
+-	reg = <0x10010000 0x400>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	gpa: gpio@0 {
+-		compatible = "ingenic,jz4740-gpio";
+-		reg = <0>;
+-
 -		gpio-controller;
+-		gpio-ranges = <&pinctrl 0 0 32>;
 -		#gpio-cells = <2>;
+-
 -		interrupt-controller;
 -		#interrupt-cells = <2>;
--	};
 -
--	gpio1: gpio@1 {
--		compatible = "fsl,imx28-gpio";
--		interrupts = <126>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--
--	gpio2: gpio@2 {
--		compatible = "fsl,imx28-gpio";
--		interrupts = <125>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--
--	gpio3: gpio@3 {
--		compatible = "fsl,imx28-gpio";
--		interrupts = <124>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--
--	gpio4: gpio@4 {
--		compatible = "fsl,imx28-gpio";
--		interrupts = <123>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
+-		interrupt-parent = <&intc>;
+-		interrupts = <28>;
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
 new file mode 100644
-index 0000000..ccf5b50
+index 000000000000..5be2b1e95b36
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
 @@ -0,0 +1,136 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpio/gpio-mxs.yaml#
++$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale MXS GPIO controller
++title: Ingenic SoCs pin controller devicetree bindings
++
++description: >
++  Please refer to pinctrl-bindings.txt in this directory for details of the
++  common pinctrl bindings used by client devices, including the meaning of the
++  phrase "pin configuration node".
++
++  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
++  may be used as GPIOs, multiplexed device functions are configured within the
++  GPIO port configuration registers and it is typical to refer to pins using the
++  naming scheme "PxN" where x is a character identifying the GPIO port with
++  which the pin is associated and N is an integer from 0 to 31 identifying the
++  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
++  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
++  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
++  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
++  pins.
 +
 +maintainers:
-+  - Shawn Guo <shawn.guo@linaro.org>
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description: |
-+  The Freescale MXS GPIO controller is part of MXS PIN controller.
-+  The GPIOs are organized in port/bank, each port consists of 32 GPIOs.
-+  As the GPIO controller is embedded in the PIN controller and all the
-+  GPIO ports share the same IO space with PIN controller, the GPIO node
-+  will be represented as sub-nodes of MXS pinctrl node.
++  - Paul Cercueil <paul@crapouillou.net>
 +
 +properties:
-+  compatible:
-+    enum:
-+      - fsl,imx23-pinctrl
-+      - fsl,imx28-pinctrl
++  nodename:
++    pattern: "^pinctrl@[0-9a-f]+$"
 +
-+  '#address-cells':
-+    const: 1
-+  '#size-cells':
-+    const: 0
++  compatible:
++    oneOf:
++      - enum:
++        - ingenic,jz4740-pinctrl
++        - ingenic,jz4725b-pinctrl
++        - ingenic,jz4760-pinctrl
++        - ingenic,jz4770-pinctrl
++        - ingenic,jz4780-pinctrl
++        - ingenic,x1000-pinctrl
++        - ingenic,x1500-pinctrl
++        - ingenic,x1830-pinctrl
++      - items:
++        - const: ingenic,jz4760b-pinctrl
++        - const: ingenic,jz4760-pinctrl
++      - items:
++        - const: ingenic,x1000e-pinctrl
++        - const: ingenic,x1000-pinctrl
 +
 +  reg:
 +    maxItems: 1
 +
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
 +patternProperties:
-+  "gpio@[0-9]+$":
++  "^gpio@[0-9]$":
 +    type: object
 +    properties:
 +      compatible:
 +        enum:
-+          - fsl,imx23-gpio
-+          - fsl,imx28-gpio
++          - ingenic,jz4740-gpio
++          - ingenic,jz4725b-gpio
++          - ingenic,jz4760-gpio
++          - ingenic,jz4770-gpio
++          - ingenic,jz4780-gpio
++          - ingenic,x1000-gpio
++          - ingenic,x1500-gpio
++          - ingenic,x1830-gpio
 +
 +      reg:
-+        maxItems: 1
++        items:
++          - description: The GPIO bank number
 +
-+      interrupts:
-+        description: Should be the port interrupt shared by all 32 pins.
++      gpio-controller: true
++
++      "#gpio-cells":
++        const: 2
++
++      gpio-ranges:
 +        maxItems: 1
 +
 +      interrupt-controller: true
 +
 +      "#interrupt-cells":
 +        const: 2
++        description:
++          Refer to ../interrupt-controller/interrupts.txt for more details.
 +
-+      "#gpio-cells":
-+        const: 2
-+
-+      gpio-controller: true
++      interrupts:
++        maxItems: 1
 +
 +    required:
 +      - compatible
 +      - reg
++      - gpio-controller
++      - "#gpio-cells"
 +      - interrupts
 +      - interrupt-controller
 +      - "#interrupt-cells"
-+      - "#gpio-cells"
-+      - gpio-controller
 +
 +    additionalProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+additionalProperties: false
++  - "#address-cells"
++  - "#size-cells"
 +
 +examples:
 +  - |
-+    pinctrl@80018000 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "fsl,imx28-pinctrl";
-+        reg = <0x80018000 0x2000>;
++    pin-controller@10010000 {
++      compatible = "ingenic,jz4770-pinctrl";
++      reg = <0x10010000 0x600>;
 +
-+        gpio@0 {
-+                compatible = "fsl,imx28-gpio";
-+                reg = <0>;
-+                interrupts = <127>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+        };
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+        gpio@1 {
-+                compatible = "fsl,imx28-gpio";
-+                reg = <1>;
-+                interrupts = <126>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+        };
++      gpio@0 {
++        compatible = "ingenic,jz4770-gpio";
++        reg = <0>;
 +
-+        gpio@2 {
-+                compatible = "fsl,imx28-gpio";
-+                reg = <2>;
-+                interrupts = <125>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+        };
++        gpio-controller;
++        gpio-ranges = <&pinctrl 0 0 32>;
++        #gpio-cells = <2>;
 +
-+        gpio@3 {
-+                compatible = "fsl,imx28-gpio";
-+                reg = <3>;
-+                interrupts = <124>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+        };
++        interrupt-controller;
++        #interrupt-cells = <2>;
 +
-+        gpio@4 {
-+                compatible = "fsl,imx28-gpio";
-+                reg = <4>;
-+                interrupts = <123>;
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+        };
++        interrupt-parent = <&intc>;
++        interrupts = <17>;
++      };
 +    };
 -- 
-2.7.4
+2.26.2
 
