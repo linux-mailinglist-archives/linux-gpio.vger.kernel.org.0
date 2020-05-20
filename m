@@ -2,32 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B6F61DA663
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 02:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1C951DA666
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 02:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgETAW4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 May 2020 20:22:56 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:41836 "EHLO
+        id S1726348AbgETAXE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 May 2020 20:23:04 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41846 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgETAW4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 May 2020 20:22:56 -0400
+        with ESMTP id S1726178AbgETAXE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 May 2020 20:23:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1589934174; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1589934175; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=S4TMOQR23TFpFNf/Gdrrq65wyImfAOA6VASHODQN8A8=;
-        b=pFXsq/qv/ySG1OgqJMAkj47v1iFVwABNrhzagp24huDrvQQD7/2MOGfDRL8kP21Pv7ixuC
-        YqzHiUe9AvbE+hvbSjuBo8cgHvQYq2EZzDV+6T6G1QxIlG9TkztILSEs8uwYgQth4/w1fw
-        7Y33eInpQqi0G3I/Hzs0azYubnoc1rQ=
+         in-reply-to:in-reply-to:references:references;
+        bh=GMx7lv+DuafqUFovOJSTconzAY08KKqmrXSIWvOA/qs=;
+        b=LkHAgOV2Sel6NGZWS7aXsULgZo5z6ylN72iuA+9Tt5iO/EExdgfaDzVKCgf+FBRupGrMnk
+        tNnCS/sfqHpP+SauEmofSmfTRw2FkRGkez5+Cjop2T0S28273m/aKPIYqAmQ9YddkuG30v
+        Dn9CVVgmZtLt0RMGaTT0BNKwxeZVhd4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org,
         Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt to YAML
-Date:   Wed, 20 May 2020 02:22:32 +0200
-Message-Id: <20200520002234.418025-1-paul@crapouillou.net>
+Subject: [PATCH v2 2/3] dt-bindings: memory: Convert ingenic,jz4780-nemc.txt to YAML
+Date:   Wed, 20 May 2020 02:22:33 +0200
+Message-Id: <20200520002234.418025-2-paul@crapouillou.net>
+In-Reply-To: <20200520002234.418025-1-paul@crapouillou.net>
+References: <20200520002234.418025-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -35,251 +38,237 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
+Convert the ingenic,jz4780-nemc.txt doc file to ingenic,nemc.yaml.
 
-In the process, some compatible strings now require a fallback, as the
-corresponding SoCs are pin-compatible with their fallback variant.
+The ingenic,jz4725b-nemc compatible string was added in the process,
+with a fallback to ingenic,jz4740-nemc.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
-    v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
-        - remove 'additionalProperties: false' since we will have pin conf nodes
+    v2: - Inline content of ingenic,nemc-client.yaml inside ingenic,nemc.yaml
+    	- Add missing 'reg' property to sub-nodes and mark it as required
+    	- Use a more generic wildcard to match all sub-nodes.
 
- .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
- .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
- 2 files changed, 136 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+ .../ingenic,jz4780-nemc.txt                   |  76 -----------
+ .../memory-controllers/ingenic,nemc.yaml      | 126 ++++++++++++++++++
+ 2 files changed, 126 insertions(+), 76 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
 deleted file mode 100644
-index d9b2100c98e8..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+index 59b8dcc118ee..000000000000
+--- a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
 +++ /dev/null
-@@ -1,81 +0,0 @@
--Ingenic XBurst pin controller
+@@ -1,76 +0,0 @@
+-* Ingenic JZ4780 NAND/external memory controller (NEMC)
 -
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
--
--For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
--be used as GPIOs, multiplexed device functions are configured within the
--GPIO port configuration registers and it is typical to refer to pins using the
--naming scheme "PxN" where x is a character identifying the GPIO port with
--which the pin is associated and N is an integer from 0 to 31 identifying the
--pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
--PB31 is the last pin in GPIO port B. The jz4740, the x1000 and the x1830
--contains 4 GPIO ports, PA to PD, for a total of 128 pins. The jz4760, the
--jz4770 and the jz4780 contains 6 GPIO ports, PA to PF, for a total of 192 pins.
--
+-This file documents the device tree bindings for the NEMC external memory
+-controller in Ingenic JZ4780
 -
 -Required properties:
----------------------
+-- compatible: Should be set to one of:
+-    "ingenic,jz4740-nemc" (JZ4740)
+-    "ingenic,jz4780-nemc" (JZ4780)
+-- reg: Should specify the NEMC controller registers location and length.
+-- clocks: Clock for the NEMC controller.
+-- #address-cells: Must be set to 2.
+-- #size-cells: Must be set to 1.
+-- ranges: A set of ranges for each bank describing the physical memory layout.
+-  Each should specify the following 4 integer values:
 -
-- - compatible: One of:
--    - "ingenic,jz4740-pinctrl"
--    - "ingenic,jz4725b-pinctrl"
--    - "ingenic,jz4760-pinctrl"
--    - "ingenic,jz4760b-pinctrl"
--    - "ingenic,jz4770-pinctrl"
--    - "ingenic,jz4780-pinctrl"
--    - "ingenic,x1000-pinctrl"
--    - "ingenic,x1000e-pinctrl"
--    - "ingenic,x1500-pinctrl"
--    - "ingenic,x1830-pinctrl"
-- - reg: Address range of the pinctrl registers.
+-    <cs number> 0 <physical address of mapping> <size of mapping>
 -
+-Each child of the NEMC node describes a device connected to the NEMC.
 -
--Required properties for sub-nodes (GPIO chips):
-------------------------------------------------
+-Required child node properties:
+-- reg: Should contain at least one register specifier, given in the following
+-  format:
 -
-- - compatible: Must contain one of:
--    - "ingenic,jz4740-gpio"
--    - "ingenic,jz4760-gpio"
--    - "ingenic,jz4770-gpio"
--    - "ingenic,jz4780-gpio"
--    - "ingenic,x1000-gpio"
--    - "ingenic,x1830-gpio"
-- - reg: The GPIO bank number.
-- - interrupt-controller: Marks the device node as an interrupt controller.
-- - interrupts: Interrupt specifier for the controllers interrupt.
-- - #interrupt-cells: Should be 2. Refer to
--   ../interrupt-controller/interrupts.txt for more details.
-- - gpio-controller: Marks the device node as a GPIO controller.
-- - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
--    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
--    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-- - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
--   ../gpio/gpio.txt for more details.
+-    <cs number> <offset> <size>
 -
+-  Multiple registers can be specified across multiple banks. This is needed,
+-  for example, for packaged NAND devices with multiple dies. Such devices
+-  should be grouped into a single node.
 -
--Example:
----------
+-Optional child node properties:
+-- ingenic,nemc-bus-width: Specifies the bus width in bits. Defaults to 8 bits.
+-- ingenic,nemc-tAS: Address setup time in nanoseconds.
+-- ingenic,nemc-tAH: Address hold time in nanoseconds.
+-- ingenic,nemc-tBP: Burst pitch time in nanoseconds.
+-- ingenic,nemc-tAW: Access wait time in nanoseconds.
+-- ingenic,nemc-tSTRV: Static memory recovery time in nanoseconds.
 -
--pinctrl: pin-controller@10010000 {
--	compatible = "ingenic,jz4740-pinctrl";
--	reg = <0x10010000 0x400>;
--	#address-cells = <1>;
--	#size-cells = <0>;
+-If a child node references multiple banks in its "reg" property, the same value
+-for all optional parameters will be configured for all banks. If any optional
+-parameters are omitted, they will be left unchanged from whatever they are
+-configured to when the NEMC device is probed (which may be the reset value as
+-given in the hardware reference manual, or a value configured by the boot
+-loader).
 -
--	gpa: gpio@0 {
--		compatible = "ingenic,jz4740-gpio";
--		reg = <0>;
+-Example (NEMC node with a NAND child device attached at CS1):
 -
--		gpio-controller;
--		gpio-ranges = <&pinctrl 0 0 32>;
--		#gpio-cells = <2>;
+-nemc: nemc@13410000 {
+-	compatible = "ingenic,jz4780-nemc";
+-	reg = <0x13410000 0x10000>;
 -
--		interrupt-controller;
--		#interrupt-cells = <2>;
+-	#address-cells = <2>;
+-	#size-cells = <1>;
 -
--		interrupt-parent = <&intc>;
--		interrupts = <28>;
+-	ranges = <1 0 0x1b000000 0x1000000
+-		  2 0 0x1a000000 0x1000000
+-		  3 0 0x19000000 0x1000000
+-		  4 0 0x18000000 0x1000000
+-		  5 0 0x17000000 0x1000000
+-		  6 0 0x16000000 0x1000000>;
+-
+-	clocks = <&cgu JZ4780_CLK_NEMC>;
+-
+-	nand: nand@1 {
+-		compatible = "ingenic,jz4780-nand";
+-		reg = <1 0 0x1000000>;
+-
+-		ingenic,nemc-tAS = <10>;
+-		ingenic,nemc-tAH = <5>;
+-		ingenic,nemc-tBP = <10>;
+-		ingenic,nemc-tAW = <15>;
+-		ingenic,nemc-tSTRV = <100>;
+-
+-		...
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
 new file mode 100644
-index 000000000000..5be2b1e95b36
+index 000000000000..9b478da0c479
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-@@ -0,0 +1,136 @@
++++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,nemc.yaml
+@@ -0,0 +1,126 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
++$id: http://devicetree.org/schemas/memory-controllers/ingenic,nemc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Ingenic SoCs pin controller devicetree bindings
-+
-+description: >
-+  Please refer to pinctrl-bindings.txt in this directory for details of the
-+  common pinctrl bindings used by client devices, including the meaning of the
-+  phrase "pin configuration node".
-+
-+  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
-+  may be used as GPIOs, multiplexed device functions are configured within the
-+  GPIO port configuration registers and it is typical to refer to pins using the
-+  naming scheme "PxN" where x is a character identifying the GPIO port with
-+  which the pin is associated and N is an integer from 0 to 31 identifying the
-+  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
-+  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
-+  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
-+  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
-+  pins.
++title: Ingenic SoCs NAND / External Memory Controller (NEMC) devicetree bindings
 +
 +maintainers:
 +  - Paul Cercueil <paul@crapouillou.net>
 +
 +properties:
-+  nodename:
-+    pattern: "^pinctrl@[0-9a-f]+$"
++  $nodename:
++    pattern: "^memory-controller@[0-9a-f]+$"
 +
 +  compatible:
 +    oneOf:
 +      - enum:
-+        - ingenic,jz4740-pinctrl
-+        - ingenic,jz4725b-pinctrl
-+        - ingenic,jz4760-pinctrl
-+        - ingenic,jz4770-pinctrl
-+        - ingenic,jz4780-pinctrl
-+        - ingenic,x1000-pinctrl
-+        - ingenic,x1500-pinctrl
-+        - ingenic,x1830-pinctrl
++        - ingenic,jz4740-nemc
++        - ingenic,jz4780-nemc
 +      - items:
-+        - const: ingenic,jz4760b-pinctrl
-+        - const: ingenic,jz4760-pinctrl
-+      - items:
-+        - const: ingenic,x1000e-pinctrl
-+        - const: ingenic,x1000-pinctrl
++        - const: ingenic,jz4725b-nemc
++        - const: ingenic,jz4740-nemc
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 1
++
++  ranges: true
 +
 +  reg:
 +    maxItems: 1
 +
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
++  clocks:
++    maxItems: 1
 +
 +patternProperties:
-+  "^gpio@[0-9]$":
++  ".*@[0-9]+$":
 +    type: object
 +    properties:
-+      compatible:
-+        enum:
-+          - ingenic,jz4740-gpio
-+          - ingenic,jz4725b-gpio
-+          - ingenic,jz4760-gpio
-+          - ingenic,jz4770-gpio
-+          - ingenic,jz4780-gpio
-+          - ingenic,x1000-gpio
-+          - ingenic,x1500-gpio
-+          - ingenic,x1830-gpio
-+
 +      reg:
-+        items:
-+          - description: The GPIO bank number
++        minItems: 1
++        maxItems: 255
 +
-+      gpio-controller: true
++      ingenic,nemc-bus-width:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32
++          - enum: [8, 16]
++        description: Specifies the bus width in bits.
 +
-+      "#gpio-cells":
-+        const: 2
++      ingenic,nemc-tAS:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Address setup time in nanoseconds.
 +
-+      gpio-ranges:
-+        maxItems: 1
++      ingenic,nemc-tAH:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Address hold time in nanoseconds.
 +
-+      interrupt-controller: true
++      ingenic,nemc-tBP:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Burst pitch time in nanoseconds.
 +
-+      "#interrupt-cells":
-+        const: 2
-+        description:
-+          Refer to ../interrupt-controller/interrupts.txt for more details.
++      ingenic,nemc-tAW:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Address wait time in nanoseconds.
 +
-+      interrupts:
-+        maxItems: 1
++      ingenic,nemc-tSTRV:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Static memory recovery time in nanoseconds.
 +
 +    required:
-+      - compatible
 +      - reg
-+      - gpio-controller
-+      - "#gpio-cells"
-+      - interrupts
-+      - interrupt-controller
-+      - "#interrupt-cells"
-+
-+    additionalProperties: false
 +
 +required:
 +  - compatible
-+  - reg
 +  - "#address-cells"
 +  - "#size-cells"
++  - ranges
++  - reg
++  - clocks
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    pin-controller@10010000 {
-+      compatible = "ingenic,jz4770-pinctrl";
-+      reg = <0x10010000 0x600>;
++    #include <dt-bindings/clock/jz4780-cgu.h>
++    #include <dt-bindings/gpio/gpio.h>
++    nemc: memory-controller@13410000 {
++      compatible = "ingenic,jz4780-nemc";
++      reg = <0x13410000 0x10000>;
++      #address-cells = <2>;
++      #size-cells = <1>;
++      ranges = <1 0 0x1b000000 0x1000000>,
++         <2 0 0x1a000000 0x1000000>,
++         <3 0 0x19000000 0x1000000>,
++         <4 0 0x18000000 0x1000000>,
++         <5 0 0x17000000 0x1000000>,
++         <6 0 0x16000000 0x1000000>;
 +
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++      clocks = <&cgu JZ4780_CLK_NEMC>;
 +
-+      gpio@0 {
-+        compatible = "ingenic,jz4770-gpio";
-+        reg = <0>;
++      ethernet@6 {
++        compatible = "davicom,dm9000";
++        davicom,no-eeprom;
 +
-+        gpio-controller;
-+        gpio-ranges = <&pinctrl 0 0 32>;
-+        #gpio-cells = <2>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&pins_nemc_cs6>;
 +
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
++        reg = <6 0 1>, /* addr */
++              <6 2 1>; /* data */
 +
-+        interrupt-parent = <&intc>;
-+        interrupts = <17>;
++        ingenic,nemc-tAS = <15>;
++        ingenic,nemc-tAH = <10>;
++        ingenic,nemc-tBP = <20>;
++        ingenic,nemc-tAW = <50>;
++        ingenic,nemc-tSTRV = <100>;
++
++        reset-gpios = <&gpf 12 GPIO_ACTIVE_HIGH>;
++        vcc-supply = <&eth0_power>;
++
++        interrupt-parent = <&gpe>;
++        interrupts = <19 4>;
 +      };
 +    };
 -- 
