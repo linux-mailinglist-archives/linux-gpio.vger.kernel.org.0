@@ -2,83 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FE281DB5E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 16:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3486B1DB944
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 18:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgETOFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 May 2020 10:05:15 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36594 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgETOFP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 May 2020 10:05:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id h7so2545164otr.3;
-        Wed, 20 May 2020 07:05:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y468/OM102awg1cAk5FSerug9LG6wCGV6DEAq6G9WYA=;
-        b=DPkicKz8QuBB1JTi6QvwlwNi7joyjLkO6xvQz8SpUwzF1OwpnX/271eqXP1gYlQ+lR
-         bmKM/n6SAClMMlSTTfEKOxSVbXQU7CPREnbc9i69TXkL/VOQXrSv05D4Ydwvlgkb63LV
-         WaJoHuQvV8brZhYIOH6y6ChvxrnOnE2Fo5sa2aee9euOTUbRx1sWSbAJD3ZvZYvaZP26
-         vbLgggtrMERT1qUvA7Vgi7qAdFdVPOyPY7RIi/m9BsUg9Ksyv0C1nbOva5yfPoPXiVsT
-         zn4leMEHB9MpfITbjEaw1Jal6JUJmsCUVVXTIpz0K9b3au1VoqBOzVt5977dwMV1nEtK
-         B/lg==
-X-Gm-Message-State: AOAM531JxM3N1Aa2nGTeLLovmhmQBFjx0HjTppMqYf+ylgXqqViBPFUr
-        6aLVOG5t3n+OAeN9KQGanJAdpnbTx2HSaMzta6xHIA==
-X-Google-Smtp-Source: ABdhPJw4aD6qMweeU/cwOlh80J1NHOz26SKIhals5FPRKOQG0UpAFGUp18CDWMU+Do3JAlyWEtW7goBLnDRzWs6VjCI=
-X-Received: by 2002:a9d:7e92:: with SMTP id m18mr3205845otp.145.1589983514344;
- Wed, 20 May 2020 07:05:14 -0700 (PDT)
+        id S1726545AbgETQ11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 May 2020 12:27:27 -0400
+Received: from sauhun.de ([88.99.104.3]:39468 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726443AbgETQ11 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 20 May 2020 12:27:27 -0400
+Received: from localhost (p5486cd24.dip0.t-ipconnect.de [84.134.205.36])
+        by pokefinder.org (Postfix) with ESMTPSA id 9119C2C1FD1;
+        Wed, 20 May 2020 18:27:24 +0200 (CEST)
+Date:   Wed, 20 May 2020 18:27:24 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com,
+        linux@armlinux.org.uk, linus.walleij@linaro.org, alan@softiron.com
+Subject: Re: Re: [RFC PATCH] i2c: at91: Fix pinmux after devm_gpiod_get() for
+ bus recovery
+Message-ID: <20200520162724.GG5759@ninjato>
+References: <20200415070643.23663-1-codrin.ciubotariu@microchip.com>
+ <20200505151256.GF2468@ninjato>
+ <c7a35978-03dd-3c73-6e7d-15ed40b5c57c@microchip.com>
 MIME-Version: 1.0
-References: <20200520125357.16281-1-geert+renesas@glider.be> <83cb2005-c9e6-7711-5b78-44080256e52e@cogentembedded.com>
-In-Reply-To: <83cb2005-c9e6-7711-5b78-44080256e52e@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 May 2020 16:05:03 +0200
-Message-ID: <CAMuHMdW-u+z4Eqhkj5ZD_i8SOTM3f09Vi2uCufEyZVW8s4Kvrw@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.8 (take two)
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
+Content-Disposition: inline
+In-Reply-To: <c7a35978-03dd-3c73-6e7d-15ed40b5c57c@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sergei,
 
-On Wed, May 20, 2020 at 3:47 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 20.05.2020 15:53, Geert Uytterhoeven wrote:
-> > The following changes since commit 41fe32ecc7aff4527a4ee477870d9b1164be95a4:
-> >
-> >    MAINTAINERS: Add DT Bindings for Renesas Pin Function Controllers (2020-04-20 13:14:05 +0200)
-> >
-> > are available in the Git repository at:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.8-tag2
-> >
-> > for you to fetch changes up to dfae0422de12265ae7c9bf57b34990200dea0c83:
-> >
-> >    MAINTAINERS: Renesas Pin Controllers are supported (2020-05-20 14:02:00 +0200)
-> >
-> > ----------------------------------------------------------------
-> > pinctrl: sh-pfc: Updates for v5.8 (take two)
-> >
-> >    - Add support for the new RZ/H1G (r8a7742) SoC,
->
->     I think it's rather RZ/G1H. :-)
+--DWg365Y4B18r8evw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, retagged and resent.
 
-Gr{oetje,eeting}s,
+> > This will do for 5.7. For 5.8 or 5.9, I can imagine to take the two
+> > pinctrl_state pointers into bus_recovery_info and handle all this in the
+> > core. I will try this later this week if noone is super-eager to try it
+> > out before.
+> >=20
+>=20
+> By 'all this' you mean to move the entire function in the core, right?=20
+> Having just these two pointers bus_recinovery_info won't help much. I=20
+> can try it, if you haven't already started...
 
-                        Geert
+I mean to add those two pointers to bus_recinovery_info and if they are
+populated, then the I2C core is doing the necessary magic (or maybe just
+the pinctrl handle and assume the states have fixed names?). Russell
+just sent patches to add it to the PXA driver, so we could now double
+check how much could be factored out.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I haven't started yet, let's keep in touch who started first :)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+--DWg365Y4B18r8evw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7FWmgACgkQFA3kzBSg
+KbYxwRAAmUjg/PPDIGnjUCza3uhJUYZsY2bgkfy5OcjxXVotYkKYSBhrtw26GG33
+DU2gPBQzDKZWB3T0kZo54GA6ZvzxRGuLKhfWLvLhbDdzz/hy94jX+DpoNJQ8mzr5
+VPpn61UjFAd8/+W+DkpYzovXAQP78o2luuhnFuoqNZbhyEGJ4yWfHY+qICUJd1Ac
+bdtL8oikCf653etM0rtpUPQQ6x/iw1cMH4u6xmtFSFi56jzdVnZB0MJKnc//t7VT
+HfCkBiuOBu78HE007oPG0ylKU7TL8f5a2QCd0cLt87oDr2frfHTTVpLj+n7m8BAY
+VEqc4bchKi58nHL8nD3h1kqFFjSxN08AFRcd6gWeUxyfVUTeuNhhxrzHnGObWJVp
+ZKXcCnS6dgfKm2o/589Qo6I5H6VzYPTGUSwNLrSwUizT8sdqPawhQaKE3CE5sLYs
+8OC7B/QmHT3+jk7Zlz0rQDT9w5mmvyP600CczkK+6ZXNFMuKjDz67X8IERmWoH6e
+lp/7qtxPKxAXSPJ4qTNa3oIW2LIWNJ2dZJVSHGXPi/CuKwJMvJZs8HnXAY6BIWFj
+MEFg1qbTxQ8fn3DNyRwf2iFkmS20RHoh2m80TsNcv71LYoq0ioASu/U4swiPh249
+KnaM3i59M9VIN8cvqnpiAQCmgNJv+hzJifmd8tVpfswSfprOJgk=
+=IUMo
+-----END PGP SIGNATURE-----
+
+--DWg365Y4B18r8evw--
