@@ -2,132 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A7A31DC13D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 May 2020 23:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 483AF1DC4F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2020 03:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgETVTZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 May 2020 17:19:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:62119 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgETVTZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 May 2020 17:19:25 -0400
-IronPort-SDR: RJC3jIs/lfqrMKXnWXA7/xApBSk2Te93GAyVS/MabAvmHS6/52mXRMeE4n5126lMotPOX0aS5u
- 8IluGkQE4nng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2020 14:19:23 -0700
-IronPort-SDR: bzpDiYVGjg1C84wFwOLdYXtwQZpqqrBrQQFurl4/mkkJHJitwmDeloWbm1V774Vs9fHGlCc0uY
- cqLHz9sv3/+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,415,1583222400"; 
-   d="scan'208";a="253740025"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 May 2020 14:19:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E8AE21ED; Thu, 21 May 2020 00:19:17 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726840AbgEUB5Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 May 2020 21:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgEUB5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 May 2020 21:57:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F65C061A0E
+        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2020 18:57:23 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q9so2248260pjm.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2020 18:57:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=swBHuwbGTAKrXfbO+COnYs003ZQtWEFH/MzYZEQhbwg=;
+        b=UPw4ynXmgF9cRZrXacrzQoz8r2kt4j8HWL3T8f/PUjq8WmXdZMhVsDkAdLATGlxyqU
+         Zh8kdxKfJNn8SvDSHDHVd63NATCJyAMqjIPy2jXsckunvxMnU5+6mH7nLrrICw6vAhQo
+         xS7iB6Ao1vwv/LwbmCznr2Q6dlAqpwtjoiZe9U2zG/GIlC7HuwhYgrnHVcQIy4yrQ6wQ
+         0ElUcVujXXoSv1Qj4P1HY49aBGtrNRZgpUoGvnwn5l4woSTMHyILIq2tHwCjv3r7VLqu
+         JBuEjmUcnmisct7HBtzT2Ziby3v8mOZXeq0D88xGCtsExrykZF73zkUvpVh7OF8Ws4sP
+         u+Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=swBHuwbGTAKrXfbO+COnYs003ZQtWEFH/MzYZEQhbwg=;
+        b=m4V53VJslSB9D3PxuNZV3JYKn5taRc9cYRfmeu9tjd2939dwP2l5ZfDxB3N+VlHUn8
+         5Jb9XSv9tlffvGtosjVc8m8HFPgDrzDsLoIBv0rDQejaGnj91uEZ1qBfODDpUNqk0k7O
+         20J5VmGrJghErTk8UKV+CoSk3qlY+S4zl9L6iR1MLiFTaB+pUtKkJXeaq08AG3QiU3Ou
+         9QpYmDg26Vs31P/0Qg3llAvzp96KmS7SvnIdn4SbxqojScPpUtk82fi07VV9qeKoZTP1
+         /OwIXDnN6QwMLvZqyITFWLqBEw/JhFVv0Cv0BNly7Nj8BdWcxPUxy32HCWX20zzC7QI2
+         9+kQ==
+X-Gm-Message-State: AOAM531l8CPtHbp6ji0hhidQex/S/M6L9KLkCydXso6o39R468mQnkMS
+        895WA93SyjkfJzYbJpWX8QY4dlEg/T7tdg==
+X-Google-Smtp-Source: ABdhPJyJIWEE3OIXYQ308peUbLV3oSeTiSvisc3AmMt5YZgJ7HnZt031e3kH/vWxl5kLdDUpH/WorQ==
+X-Received: by 2002:a17:90a:fa91:: with SMTP id cu17mr7909565pjb.149.1590026242274;
+        Wed, 20 May 2020 18:57:22 -0700 (PDT)
+Received: from localhost.localdomain (36-239-220-3.dynamic-ip.hinet.net. [36.239.220.3])
+        by smtp.gmail.com with ESMTPSA id gn20sm3021994pjb.24.2020.05.20.18.57.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2020 18:57:21 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-acpi@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel Galileo Gen 2
-Date:   Thu, 21 May 2020 00:19:16 +0300
-Message-Id: <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
-References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Axel Lin <axel.lin@ingics.com>
+Subject: [RFT][PATCH] gpio: mlxbf2: Fix sleeping while holding spinlock
+Date:   Thu, 21 May 2020 09:57:13 +0800
+Message-Id: <20200521015713.2206065-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
-of one of the I²C GPIO expanders. ACPI GPIO library provides a special
-quirk which we may use in this case. With help of it, override GpioInt()
-pin for the affected platform.
+mutex_lock() can sleep, don't call mutex_lock() while holding spin_lock.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: bc0ae0e737f5 ("gpio: add driver for Mellanox BlueField 2 GPIO controller")
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/gpio/gpio-pca953x.c | 44 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Hi Asmaa,
+I don't have this h/w to test, please help to review and test this patch.
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 1fca8dd7824f..2014563309be 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -10,6 +10,7 @@
+Thanks,
+Axel
+
+ drivers/gpio/gpio-mlxbf2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
+index fca6a50d9308..94d5efce1721 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -126,8 +126,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
+ {
+ 	u32 arm_gpio_lock_val;
  
- #include <linux/acpi.h>
- #include <linux/bitmap.h>
-+#include <linux/dmi.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-@@ -113,6 +114,39 @@ static const struct acpi_device_id pca953x_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
+-	spin_lock(&gs->gc.bgpio_lock);
+ 	mutex_lock(yu_arm_gpio_lock_param.lock);
++	spin_lock(&gs->gc.bgpio_lock);
  
-+#ifdef CONFIG_GPIO_PCA953X_IRQ
-+static const struct acpi_gpio_params pca953x_interrupt_gpios = { 0, 0, true };
-+
-+static const struct acpi_gpio_mapping pca953x_acpi_interrupt_gpios[] = {
-+	{ "interrupt-gpios", &pca953x_interrupt_gpios, 1, ACPI_GPIO_QUIRK_FORCE_PIN, 1 },
-+	{ }
-+};
-+
-+static int pca953x_acpi_interrupt_get_irq(struct device *dev)
-+{
-+	struct gpio_desc *desc;
-+
-+	if (devm_acpi_dev_add_driver_gpios(dev, pca953x_acpi_interrupt_gpios))
-+		dev_warn(dev, "can't add GPIO ACPI mapping\n");
-+
-+	desc = devm_gpiod_get(dev, "interrupt", GPIOD_IN);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+
-+	return gpiod_to_irq(desc);
-+}
-+
-+static const struct dmi_system_id pca953x_dmi_acpi_interrupt_info[] = {
-+	{
-+		.ident = "Intel Galileo Gen 2",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
-+		},
-+	},
-+	{}
-+};
-+#endif
-+
- #define MAX_BANK 5
- #define BANK_SZ 8
- #define MAX_LINE	(MAX_BANK * BANK_SZ)
-@@ -750,8 +784,18 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- 	struct irq_chip *irq_chip = &chip->irq_chip;
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
-+	const struct dmi_system_id *id;
- 	int ret;
+ 	arm_gpio_lock_val = readl(yu_arm_gpio_lock_param.io);
  
-+	id = dmi_first_match(pca953x_dmi_acpi_interrupt_info);
-+	if (id) {
-+		dev_info(&client->dev, "Applying ACPI interrupt quirk\n");
-+
-+		ret = pca953x_acpi_interrupt_get_irq(&client->dev);
-+		if (ret > 0)
-+			client->irq = ret;
-+	}
-+
- 	if (!client->irq)
- 		return 0;
+@@ -135,8 +135,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
+ 	 * When lock active bit[31] is set, ModeX is write enabled
+ 	 */
+ 	if (YU_LOCK_ACTIVE_BIT(arm_gpio_lock_val)) {
+-		mutex_unlock(yu_arm_gpio_lock_param.lock);
+ 		spin_unlock(&gs->gc.bgpio_lock);
++		mutex_unlock(yu_arm_gpio_lock_param.lock);
+ 		return -EINVAL;
+ 	}
  
+@@ -151,8 +151,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
+ static void mlxbf2_gpio_lock_release(struct mlxbf2_gpio_context *gs)
+ {
+ 	writel(YU_ARM_GPIO_LOCK_RELEASE, yu_arm_gpio_lock_param.io);
+-	mutex_unlock(yu_arm_gpio_lock_param.lock);
+ 	spin_unlock(&gs->gc.bgpio_lock);
++	mutex_unlock(yu_arm_gpio_lock_param.lock);
+ }
+ 
+ /*
 -- 
-2.26.2
+2.25.1
 
