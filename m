@@ -2,116 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 483AF1DC4F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2020 03:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 942911DCACE
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 May 2020 12:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgEUB5Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 May 2020 21:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgEUB5Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 May 2020 21:57:24 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F65C061A0E
-        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2020 18:57:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q9so2248260pjm.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 May 2020 18:57:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=swBHuwbGTAKrXfbO+COnYs003ZQtWEFH/MzYZEQhbwg=;
-        b=UPw4ynXmgF9cRZrXacrzQoz8r2kt4j8HWL3T8f/PUjq8WmXdZMhVsDkAdLATGlxyqU
-         Zh8kdxKfJNn8SvDSHDHVd63NATCJyAMqjIPy2jXsckunvxMnU5+6mH7nLrrICw6vAhQo
-         xS7iB6Ao1vwv/LwbmCznr2Q6dlAqpwtjoiZe9U2zG/GIlC7HuwhYgrnHVcQIy4yrQ6wQ
-         0ElUcVujXXoSv1Qj4P1HY49aBGtrNRZgpUoGvnwn5l4woSTMHyILIq2tHwCjv3r7VLqu
-         JBuEjmUcnmisct7HBtzT2Ziby3v8mOZXeq0D88xGCtsExrykZF73zkUvpVh7OF8Ws4sP
-         u+Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=swBHuwbGTAKrXfbO+COnYs003ZQtWEFH/MzYZEQhbwg=;
-        b=m4V53VJslSB9D3PxuNZV3JYKn5taRc9cYRfmeu9tjd2939dwP2l5ZfDxB3N+VlHUn8
-         5Jb9XSv9tlffvGtosjVc8m8HFPgDrzDsLoIBv0rDQejaGnj91uEZ1qBfODDpUNqk0k7O
-         20J5VmGrJghErTk8UKV+CoSk3qlY+S4zl9L6iR1MLiFTaB+pUtKkJXeaq08AG3QiU3Ou
-         9QpYmDg26Vs31P/0Qg3llAvzp96KmS7SvnIdn4SbxqojScPpUtk82fi07VV9qeKoZTP1
-         /OwIXDnN6QwMLvZqyITFWLqBEw/JhFVv0Cv0BNly7Nj8BdWcxPUxy32HCWX20zzC7QI2
-         9+kQ==
-X-Gm-Message-State: AOAM531l8CPtHbp6ji0hhidQex/S/M6L9KLkCydXso6o39R468mQnkMS
-        895WA93SyjkfJzYbJpWX8QY4dlEg/T7tdg==
-X-Google-Smtp-Source: ABdhPJyJIWEE3OIXYQ308peUbLV3oSeTiSvisc3AmMt5YZgJ7HnZt031e3kH/vWxl5kLdDUpH/WorQ==
-X-Received: by 2002:a17:90a:fa91:: with SMTP id cu17mr7909565pjb.149.1590026242274;
-        Wed, 20 May 2020 18:57:22 -0700 (PDT)
-Received: from localhost.localdomain (36-239-220-3.dynamic-ip.hinet.net. [36.239.220.3])
-        by smtp.gmail.com with ESMTPSA id gn20sm3021994pjb.24.2020.05.20.18.57.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2020 18:57:21 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Axel Lin <axel.lin@ingics.com>
-Subject: [RFT][PATCH] gpio: mlxbf2: Fix sleeping while holding spinlock
-Date:   Thu, 21 May 2020 09:57:13 +0800
-Message-Id: <20200521015713.2206065-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.25.1
+        id S1728188AbgEUKQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 May 2020 06:16:30 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:36607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbgEUKQ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 May 2020 06:16:29 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MYe6H-1jWzOK1H0t-00VkSJ; Thu, 21 May 2020 12:16:27 +0200
+Received: by mail-qk1-f177.google.com with SMTP id i14so6600881qka.10;
+        Thu, 21 May 2020 03:16:26 -0700 (PDT)
+X-Gm-Message-State: AOAM530DifCmGMR7y9BEpyEIqVzhQugXIb8cf7wNozVDCSJKD03eOxtQ
+        hTwja+7TnyKyfRF31GnkdzzkC2BJshtG/9O4FSo=
+X-Google-Smtp-Source: ABdhPJzG0yZLoO02lBv/GjHkHvx0xY0LzpxpTesxhUjbNmnX8hm9pN92rchECm8L89+atAf/Z7jq0U8pXKnfGDJcMoo=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr9600780qka.352.1590056185859;
+ Thu, 21 May 2020 03:16:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 May 2020 12:16:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0wYbVcerL9OEfAs+jJ-9xR7ryZwmsvi4Kt4yXOHaNefw@mail.gmail.com>
+Message-ID: <CAK8P3a0wYbVcerL9OEfAs+jJ-9xR7ryZwmsvi4Kt4yXOHaNefw@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Adding support for Microchip Sparx5 SoC
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:mu+e+kbYTEnKpI2tlcVsOeSxZO5G1rR6VAhSMX0JEEfW+3f9d/I
+ UjAUyLgeyHw7AgZuSEDfn5BL2g23N+YkjbFG2fPieOPyPuaoRiuWMYanrBmZjZcTZ6NI52L
+ jYDQHGLLLIXBSrXw1Tm0pmP5+LQKJXaNS+BOU4CRmtdCiJy4peqV4UZTGNbTNp07paoERlT
+ PoxtjQUUtxmv1GgJsP+qQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:KTa0gpbTUK0=:xKT6TgWW7YqukhFqwtI4+h
+ AngOvVkzdZFoEEv8uJGKiYdRPWBNZ+HlLeh23V0ldjsORekLJLyGsb1cuIypaB1Pi0QkTbX5a
+ yr+c2KsipfGniVhCVIFWq3VbyUpBX1kT5jf7+tzTNZTkEZKXDwoajtAlDMkZN1aq1h4ywIUVz
+ 6WausWDDBZjVSwWuYPf4hI5PP+qHOm2Qbb5pZBzc0AyIFv6RaxfiEIOf2COVV9D1wDrBF4IHM
+ 0ULshmunA3BhrfgKam0Q3GCeyDvr40PJA5EI0wiEW9ran+JP0UuiJKe6PcRcdfvvw3PqtWpPv
+ hUAh6qChjvsqzPZx0Qpp703X7xe2UbDU2zHP9F10EH8If26ayMNUs0/vV4RHpk/SLqD/m0oHU
+ pSJ80QRC8mHCGzPnTtQg/Hej7Ivym+sCuXR23zYnPnJUvzjbwHFq6F6OJ0bqELl37iO/u5eHC
+ T5yYr3z3UbtJlcoXw9AD9vuDLNo5sIhWdN1N8VP5v/aQJJT7aZR4w1JRCix0JeDZTC3396a+5
+ 4MtySEzaru1mYcmowAv59Tk6CPqzK273nD2R1aMJ49X7LpCaiKLKQmi0eP3YYc3wR8DRnk4WE
+ MVdy+BkA12Ji+XhLPBmltGm/emcCmafrXu4pg3Ms2fm08I93Zrbjm9feksSIHrCd+wOi2S8du
+ O4/459gpWBoW/5Y5rSVWPrY2Jru/q368v0ClrgfEsuSvoPzyNeFgGFCdUDR4yMo80z53xNjIf
+ JjIfiG6MazCkZ3h+De66rig97e9yhY5idWfKP9h4ioaYz9htVaoyervOd6W/H30V/suzQva4R
+ /5IZ9dTnDaSPQ75WXm3scgBsVLmkhd0VyB5WJrnF2mjDJKeWmQ=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-mutex_lock() can sleep, don't call mutex_lock() while holding spin_lock.
+On Wed, May 13, 2020 at 2:55 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+> This patch series adds support for Microchip Sparx5 SoC, the CPU
+> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+> x 2 CPU core (A53).
+>
+> Although this is an ARM core, it shares some peripherals with the
+> Microsemi Ocelot SoC.
+>
+> This is the first official revision of the series.
 
-Fixes: bc0ae0e737f5 ("gpio: add driver for Mellanox BlueField 2 GPIO controller")
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
-Hi Asmaa,
-I don't have this h/w to test, please help to review and test this patch.
+I see you sent multiple series to soc@kernel.org for review. This is the
+correct address for getting the initial soc support merged, but as the patches
+are still being reviewed by subsystem maintainers, please leave it off
+for now, until you are confident that they are ready to get merged for the
+following merge window and have received the appropriate Acks.
 
-Thanks,
-Axel
+For each subsystem, there is generally the choice between merging
+code through the subsystem maintainer tree, or through the soc tree
+on an initial submission, as going through multiple trees is particularly
+hard to do for the devicetree files.
 
- drivers/gpio/gpio-mlxbf2.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+For the moment, I have marked all sparx5 patches as "Not Applicable"
+in patchwork at https://patchwork.kernel.org/project/linux-soc/list/
+as it is still unclear who is merging which parts, and they are under
+active review, but please do send them again after the review is
+complete.
 
-diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-index fca6a50d9308..94d5efce1721 100644
---- a/drivers/gpio/gpio-mlxbf2.c
-+++ b/drivers/gpio/gpio-mlxbf2.c
-@@ -126,8 +126,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
- {
- 	u32 arm_gpio_lock_val;
- 
--	spin_lock(&gs->gc.bgpio_lock);
- 	mutex_lock(yu_arm_gpio_lock_param.lock);
-+	spin_lock(&gs->gc.bgpio_lock);
- 
- 	arm_gpio_lock_val = readl(yu_arm_gpio_lock_param.io);
- 
-@@ -135,8 +135,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
- 	 * When lock active bit[31] is set, ModeX is write enabled
- 	 */
- 	if (YU_LOCK_ACTIVE_BIT(arm_gpio_lock_val)) {
--		mutex_unlock(yu_arm_gpio_lock_param.lock);
- 		spin_unlock(&gs->gc.bgpio_lock);
-+		mutex_unlock(yu_arm_gpio_lock_param.lock);
- 		return -EINVAL;
- 	}
- 
-@@ -151,8 +151,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_context *gs)
- static void mlxbf2_gpio_lock_release(struct mlxbf2_gpio_context *gs)
- {
- 	writel(YU_ARM_GPIO_LOCK_RELEASE, yu_arm_gpio_lock_param.io);
--	mutex_unlock(yu_arm_gpio_lock_param.lock);
- 	spin_unlock(&gs->gc.bgpio_lock);
-+	mutex_unlock(yu_arm_gpio_lock_param.lock);
- }
- 
- /*
--- 
-2.25.1
+If you have a lot of patches, sending pull requests is sometimes easier,
+but it also takes a bit of practice to know how exactly to structure
+those. Let me know if you have questions about them. You an also
+contact me and most of the other maintainers on IRC using the
+#armlinux channel on irc.freenode.net.
 
+Sorry for not having been able to review the patches myself yet, I
+hope to get to that soon.
+
+     Arnd
