@@ -2,93 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8421DEB65
+	by mail.lfdr.de (Postfix) with ESMTP id 9891D1DEB66
 	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2020 17:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgEVPCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 May 2020 11:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730307AbgEVPCc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 May 2020 11:02:32 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30145C05BD43
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2020 08:02:32 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 190so11041236qki.1
-        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2020 08:02:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dkxEj1coOfFtDRdGk3SHlsiZ4KhnaU7casF53YxwhU0=;
-        b=Q68AtwCbz8IXixg1Uv4JuWkQ/dS2CfBaNQlV3gMnByIVeI6j/GvmAfME+iKXxJ0KDB
-         nnwMs2C8RhJ/lGobWxPffVUcGTzVwRhI7bmIinrBQIVwE9PD+hwyBH1MQ1mIlG1o0Lrg
-         k3yKlXRa7zUNA0osoCCV4GAbD6XdNd/IkBBOM/gWIhTs7azCEzkx0yi6NwlLwffLOoyW
-         twVYFHZ46gAUn6FmFpdhPIMPjv4OzLlyHosrBX+kmE3Gj4sNZO2VCnjV+CL2ad69b4Z4
-         9VxRkUDHFjzarPLdcJ8I7fWevXAwuekDxAXylXfy2NuO4ZpDcWL4KKk5l7VuwWNI8tl6
-         fCYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dkxEj1coOfFtDRdGk3SHlsiZ4KhnaU7casF53YxwhU0=;
-        b=pAbQheKlM3RSGekKN5owvfplDHHly7aEuKV5W3SgXw9SrHflUMZpPyRb9QzY0FalRm
-         o8svZTALhL7kPsG0M+rw/asO1B4Id4k60iHkzYwRT9EIbBpKdvpU+rWujf0e6XUHk3FF
-         Kg5q9nYzUmEBEwRoti7/eKOCRyR40ttiPAXyKO9Zsl+fSxEVDP6aQ2QmI4daNNIuKFoN
-         37EYVacDeS1M9HuaPAb5ALKG4rF8JRUVvZ2HyaoIFn0v94C2oX8KzGh/DO/WuqKrsPGb
-         YQ4sYx+Nb1oExq6mayIj6TGdIaK9PpbpsXL2+M2GHejSTtHnRiirhEow/nisVqa6gI80
-         4Vcg==
-X-Gm-Message-State: AOAM531YZ/z3htoftYFdXmm+fx3bmJM5NeqViWKoAoJrBAtqWylAAfGk
-        GghhYQRtkA24PL/FBwest2V5aJnQAaUnrV+4uA7g4gk0
-X-Google-Smtp-Source: ABdhPJxePnh+DCaZ9Lz/G9eTquabOUYZMu3bEyC+yNH7arwpZItl5eI97xafp7tSps5d0QkUa/ya6COnAk8O0yMuNic=
-X-Received: by 2002:a05:620a:6bc:: with SMTP id i28mr15831334qkh.330.1590159751249;
- Fri, 22 May 2020 08:02:31 -0700 (PDT)
+        id S1730390AbgEVPCy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 May 2020 11:02:54 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:39399 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730012AbgEVPCx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 May 2020 11:02:53 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 9F181C3C;
+        Fri, 22 May 2020 11:02:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 22 May 2020 11:02:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=dfruM1ppk6Jsi8d5RYiHeO1vXHS
+        Akp8G8O5mgdM6/xo=; b=LtbtjjjjDuXYgfePn0K5MsfFT2gid1rkkn4yPxRmpyC
+        Ja2/pqSydi/MssZ46qfuonGbmtuApaCGsqGbIyftHN3kTbWODhr1zOVeeHTbVKuo
+        DGwksOQ7Vd8F64xM1LZtkh6mw0WkMJ1/gQATPu08AyaBdVRLOYJEY2wOy8UXwTcp
+        Atv9OtTj8+4IImBpRdTZ0S3TPPjGAXM7i54aXSZUQSoWS7UHw4XqqN8HSZcVJZMi
+        H2pd57jtQgLZDg8M8L6O4ez/dDu1pf573Ecu2OECFumcUXN3jqzwPyo2bpHWCaQb
+        P9eY1MrxMk5g9L0krA751di6cfV8KaFbXzmqyBKLeeQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=dfruM1
+        ppk6Jsi8d5RYiHeO1vXHSAkp8G8O5mgdM6/xo=; b=IFHnadejj8QV1XyZnNVZXV
+        hOVKNxQTmJ4z8u/2XDSeAowasn6hEyvBzn2rxcM1h1jOxkWu0BwGYe8vxtDw77TS
+        KNqRlCq4nw4Og/z6E+rjtrTGo2WJSuoGhstQZEX7HQbVjHDRxYkEZwQ3KWOo4mbs
+        1jrBdMuykNI4b1XeyIwKK1le9nApTPLf2IRFmxb+sp1o7SeZbitOT66RP5f8H2FH
+        dYXJDLBfxyvpCQ5PSjqt2WBoG/Db0G+faNPKvz2ml5ZS5JH2e6nltcjnm0HhKLgV
+        +VaKOoTbP7VXVgcXF67mnnqx4ybajd+skiXRlAxrCCZ6W1OWrVsxS29RUQOsCbdA
+        ==
+X-ME-Sender: <xms:mOnHXrDWPnWZ8dtDqYDzbHVE4OkJn8-4thFQpNh58MyOiCSAJTBfGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddufedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:mOnHXhil2TKMKBpEsL2QuCL5qVyyg6EdizKBdyQHKazv81-MGWLzzg>
+    <xmx:mOnHXmkzfypkKiGRfXpwGpkHXshqHMkyc2kGNpGPz5p2lkNtc_-Xfw>
+    <xmx:mOnHXtylCBiROuTeRLZrUQzDOXVcR21rVLyyexzKnQi4h4xC5Jiq6A>
+    <xmx:m-nHXlJmlXed546T9v03WLlQoP7V4H7Jrab9Zf1uPOsMCffDZ69IgxwY98M>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 25EC8328006B;
+        Fri, 22 May 2020 11:02:48 -0400 (EDT)
+Date:   Fri, 22 May 2020 17:02:46 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     wens@csie.org, robh+dt@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+        huangshuosheng@allwinnertech.com, tiny.windzz@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/4] Allwinner A100 Initial support
+Message-ID: <20200522150246.s4sjfaijq3rnz6af@gilmour.lan>
+References: <20200522030743.10204-1-frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
-In-Reply-To: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 22 May 2020 17:02:19 +0200
-Message-ID: <CAMpxmJXwS21ByzGTsZf6MC-ar-ajUeCCxzP-vNrBEWSLKD9+sw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: gpio-max730x: bring gpiochip_add_data after port config
-To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rodrigo Alencar <alencar.fmce@imbel.gov.br>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hs5jysifm647f22e"
+Content-Disposition: inline
+In-Reply-To: <20200522030743.10204-1-frank@allwinnertech.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 14 maj 2020 o 15:00 Rodrigo Alencar
-<455.rodrigo.alencar@gmail.com> napisa=C5=82(a):
->
-> gpiochip_add_data being called before might cause premature calls of
-> the gpiochip operations before the port_config values are initialized,
-> which would possibily write zeros to port gonfiguration registers,
-> an operation not allowed. For example, if there are gpio-hog nodes
-> in a device-tree, the sequence of function calls are performed
->
-> gpiochip_add_data
-> of_gpiochip_add
-> of_gpiochip_scan_gpios
-> of_gpiochip_add_hog
-> gpiod_hog
-> gpiochip_request_own_desc
-> gpiod_configure_flags
-> gpiod_direction_output/gpiod_direction_input
->
-> which would call later the gpiochip operation direction_output or
-> direction_input prior the port_config[] initialization.
->
-> Moreover, gpiochip_get_data is replaced by the container_of macro
-> inside the gpiochip operations, which would allow the calling of
-> max7301_direction_input prior to gpiochip_add_data
->
-> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 
-Applied with some tweaks to the commit message.
+--hs5jysifm647f22e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Bartosz
+Hi,
+
+On Fri, May 22, 2020 at 11:07:39AM +0800, Frank Lee wrote:
+> This patch set adds initial support for allwinner a100 soc,
+> which is a 64-bit tablet chip.
+
+The patches are mostly good for a first iteration, thanks!
+
+Could you provide a bit more context on what that SoC is and if the user manual
+is available somewhere? It will be pretty hard to review without it.
+
+Also, is that perf1 board available somewhere?
+
+Thanks!
+Maxime
+
+--hs5jysifm647f22e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXsfplgAKCRDj7w1vZxhR
+xRIRAQCEPS4vnOuSb5F2eHXxHbKMAf2dx5SdnadegmmYj+WVGgD/XtExiVLDPTh4
+qD+Ft5Xf7Pn5KSkCrN9LzsLLvaypVwE=
+=3Zpr
+-----END PGP SIGNATURE-----
+
+--hs5jysifm647f22e--
