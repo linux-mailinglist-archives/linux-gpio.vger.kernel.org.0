@@ -2,106 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 227081DDDAB
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2020 05:08:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C351B1DDE92
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2020 06:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgEVDI0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 May 2020 23:08:26 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:50923 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727876AbgEVDI0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 21 May 2020 23:08:26 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2008003|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.101682-0.00181878-0.8965;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=15;RT=15;SR=0;TI=SMTPD_---.HbxBGFJ_1590116882;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HbxBGFJ_1590116882)
-          by smtp.aliyun-inc.com(10.147.41.178);
-          Fri, 22 May 2020 11:08:22 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linus.walleij@linaro.org, p.zabel@pengutronix.de,
-        frank@allwinnertech.com, huangshuosheng@allwinnertech.com,
-        tiny.windzz@gmail.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 4/4] arm64: allwinner: A100: add support for Allwinner Perf1 board
-Date:   Fri, 22 May 2020 11:07:43 +0800
-Message-Id: <20200522030743.10204-5-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200522030743.10204-1-frank@allwinnertech.com>
-References: <20200522030743.10204-1-frank@allwinnertech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726666AbgEVEND (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 May 2020 00:13:03 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56832 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725859AbgEVENC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 22 May 2020 00:13:02 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9AxZuolUcdeFrA3AA--.1237S2;
+        Fri, 22 May 2020 12:12:21 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 1/3] gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
+Date:   Fri, 22 May 2020 12:12:18 +0800
+Message-Id: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9AxZuolUcdeFrA3AA--.1237S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruw18Zw1xXFykArW5JFW8Zwb_yoWfGFc_ZF
+        s5Cr4fXryDGr1vqFnFyay3Zry2yF9Y9rn7CFn2vay3twnrXr1I9ry5urn3Xrs8Ww45CryU
+        JFn0qr12vrs3KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gryl
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUnHqcUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A100 perf1 is an Allwinner A100-based SBC, with the following features:
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-- 1GiB DDR3 DRAM
-- AXP803 PMIC
-- 2 USB 2.0 ports
-- MicroSD slot and on-board eMMC module
-- on-board Nand flash
-- ···
-
-Adds initial support for it, including the UART.
-
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
+Fixes: 72d8cb715477 ("drivers: gpio: bcm-kona: use devm_platform_ioremap_resource()")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- arch/arm64/boot/dts/allwinner/Makefile        |  1 +
- .../allwinner/sun50i-a100-allwinner-perf1.dts | 27 +++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
+ drivers/gpio/gpio-bcm-kona.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e4d3cd0ac5bb..ab780dbdd17b 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-new file mode 100644
-index 000000000000..32c9986920ed
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Frank Lee <frank@allwinner.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a100.dtsi"
-+
-+/{
-+	model = "A100 perf1";
-+	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
+diff --git a/drivers/gpio/gpio-bcm-kona.c b/drivers/gpio/gpio-bcm-kona.c
+index baee8c3..cf3687a 100644
+--- a/drivers/gpio/gpio-bcm-kona.c
++++ b/drivers/gpio/gpio-bcm-kona.c
+@@ -625,7 +625,7 @@ static int bcm_kona_gpio_probe(struct platform_device *pdev)
+ 
+ 	kona_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(kona_gpio->reg_base)) {
+-		ret = -ENXIO;
++		ret = PTR_ERR(kona_gpio->reg_base);
+ 		goto err_irq_domain;
+ 	}
+ 
 -- 
-2.24.0
+2.1.0
 
