@@ -2,77 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69B551DEA31
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2020 16:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C8421DEB65
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 May 2020 17:03:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbgEVOwA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 May 2020 10:52:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgEVOv7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 22 May 2020 10:51:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2CB20756;
-        Fri, 22 May 2020 14:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590159119;
-        bh=QCGs2VJ3mgj3c/lTVvzLSLDvK8wWgrR4q8YaSeox8lI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ympEjN+/gYMXe9aRUf66guFkJKO4mtI+6Us+C0f4sjGBzyzwJm/l04QusCiXH38jR
-         PL2BQ8VIv5x6prkU18t81obvZAfszBTDt7pb8zWXytpjxnmmIPZVy0mJ50ANWZGb4c
-         nFTj8UxvStAPPlWsCUEhmrN/XU5Sdn0O2X/z0J6Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/8] gpio: tegra: mask GPIO IRQs during IRQ shutdown
-Date:   Fri, 22 May 2020 10:51:50 -0400
-Message-Id: <20200522145157.435215-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1730188AbgEVPCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 May 2020 11:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730307AbgEVPCc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 May 2020 11:02:32 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30145C05BD43
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2020 08:02:32 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 190so11041236qki.1
+        for <linux-gpio@vger.kernel.org>; Fri, 22 May 2020 08:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dkxEj1coOfFtDRdGk3SHlsiZ4KhnaU7casF53YxwhU0=;
+        b=Q68AtwCbz8IXixg1Uv4JuWkQ/dS2CfBaNQlV3gMnByIVeI6j/GvmAfME+iKXxJ0KDB
+         nnwMs2C8RhJ/lGobWxPffVUcGTzVwRhI7bmIinrBQIVwE9PD+hwyBH1MQ1mIlG1o0Lrg
+         k3yKlXRa7zUNA0osoCCV4GAbD6XdNd/IkBBOM/gWIhTs7azCEzkx0yi6NwlLwffLOoyW
+         twVYFHZ46gAUn6FmFpdhPIMPjv4OzLlyHosrBX+kmE3Gj4sNZO2VCnjV+CL2ad69b4Z4
+         9VxRkUDHFjzarPLdcJ8I7fWevXAwuekDxAXylXfy2NuO4ZpDcWL4KKk5l7VuwWNI8tl6
+         fCYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dkxEj1coOfFtDRdGk3SHlsiZ4KhnaU7casF53YxwhU0=;
+        b=pAbQheKlM3RSGekKN5owvfplDHHly7aEuKV5W3SgXw9SrHflUMZpPyRb9QzY0FalRm
+         o8svZTALhL7kPsG0M+rw/asO1B4Id4k60iHkzYwRT9EIbBpKdvpU+rWujf0e6XUHk3FF
+         Kg5q9nYzUmEBEwRoti7/eKOCRyR40ttiPAXyKO9Zsl+fSxEVDP6aQ2QmI4daNNIuKFoN
+         37EYVacDeS1M9HuaPAb5ALKG4rF8JRUVvZ2HyaoIFn0v94C2oX8KzGh/DO/WuqKrsPGb
+         YQ4sYx+Nb1oExq6mayIj6TGdIaK9PpbpsXL2+M2GHejSTtHnRiirhEow/nisVqa6gI80
+         4Vcg==
+X-Gm-Message-State: AOAM531YZ/z3htoftYFdXmm+fx3bmJM5NeqViWKoAoJrBAtqWylAAfGk
+        GghhYQRtkA24PL/FBwest2V5aJnQAaUnrV+4uA7g4gk0
+X-Google-Smtp-Source: ABdhPJxePnh+DCaZ9Lz/G9eTquabOUYZMu3bEyC+yNH7arwpZItl5eI97xafp7tSps5d0QkUa/ya6COnAk8O0yMuNic=
+X-Received: by 2002:a05:620a:6bc:: with SMTP id i28mr15831334qkh.330.1590159751249;
+ Fri, 22 May 2020 08:02:31 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
+In-Reply-To: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 22 May 2020 17:02:19 +0200
+Message-ID: <CAMpxmJXwS21ByzGTsZf6MC-ar-ajUeCCxzP-vNrBEWSLKD9+sw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-max730x: bring gpiochip_add_data after port config
+To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+czw., 14 maj 2020 o 15:00 Rodrigo Alencar
+<455.rodrigo.alencar@gmail.com> napisa=C5=82(a):
+>
+> gpiochip_add_data being called before might cause premature calls of
+> the gpiochip operations before the port_config values are initialized,
+> which would possibily write zeros to port gonfiguration registers,
+> an operation not allowed. For example, if there are gpio-hog nodes
+> in a device-tree, the sequence of function calls are performed
+>
+> gpiochip_add_data
+> of_gpiochip_add
+> of_gpiochip_scan_gpios
+> of_gpiochip_add_hog
+> gpiod_hog
+> gpiochip_request_own_desc
+> gpiod_configure_flags
+> gpiod_direction_output/gpiod_direction_input
+>
+> which would call later the gpiochip operation direction_output or
+> direction_input prior the port_config[] initialization.
+>
+> Moreover, gpiochip_get_data is replaced by the container_of macro
+> inside the gpiochip operations, which would allow the calling of
+> max7301_direction_input prior to gpiochip_add_data
+>
+> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 
-[ Upstream commit 0cf253eed5d2bdf7bb3152457b38f39b012955f7 ]
+Applied with some tweaks to the commit message.
 
-The driver currently leaves GPIO IRQs unmasked even when the GPIO IRQ
-client has released the GPIO IRQ. This allows the HW to raise IRQs, and
-SW to process them, after shutdown. Fix this by masking the IRQ when it's
-shut down. This is usually taken care of by the irqchip core, but since
-this driver has a custom irq_shutdown implementation, it must do this
-explicitly itself.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Link: https://lore.kernel.org/r/20200427232605.11608-1-swarren@wwwdotorg.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpio-tegra.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 05d3241ad20b..9d763557a105 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -341,6 +341,7 @@ static void tegra_gpio_irq_shutdown(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = bank->tgi;
- 	int gpio = d->hwirq;
- 
-+	tegra_gpio_irq_mask(d);
- 	gpiochip_unlock_as_irq(&tgi->gc, gpio);
- }
- 
--- 
-2.25.1
-
+Bartosz
