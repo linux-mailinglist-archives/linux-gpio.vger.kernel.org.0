@@ -2,155 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF8E31DF89D
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2020 19:13:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A58D1DF9E0
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 May 2020 20:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgEWRMC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 23 May 2020 13:12:02 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50558 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388039AbgEWRMB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 23 May 2020 13:12:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590253921; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Xa/qM4zqWRu1/eInpOYfgqH291JWzSNfqUyeAVg2f5M=; b=IDc3IkOY1aBPNwqLV1hLXLzCjHyBPoKDjD7C3J9L6RjD0NcNXcMoa4smuUdK9eh9PQ/8lID5
- 139wVnAmb74hB/0sebBkcH89VWu6AHtCz51dmCREV2gSM0OuQ+WNrd2J3pvixy5ygIAJcvss
- OntlBw7+YF3+eEtDYyqpCSXqUkI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ec95955.7fbc61f829d0-smtp-out-n05;
- Sat, 23 May 2020 17:11:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 42AB3C43391; Sat, 23 May 2020 17:11:49 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A9FA1C433CB;
-        Sat, 23 May 2020 17:11:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A9FA1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, maz@kernel.org,
-        linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-Date:   Sat, 23 May 2020 22:41:13 +0530
-Message-Id: <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+        id S2387851AbgEWSAb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 23 May 2020 14:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388213AbgEWSAW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 23 May 2020 14:00:22 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F639C02A1A0
+        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2020 11:00:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k7so6391718pjs.5
+        for <linux-gpio@vger.kernel.org>; Sat, 23 May 2020 11:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=DLUdlLdqK1bsV3DbEuTTyBWxouo7TOwyxri4APWQD3NqiMSIjirU+KuWgkxjC+SPXd
+         U5bKcUrFxXkujPWjXtLFF/k/nfilKzP5EjBajrS/8510fneO07cpMqdcHCxwrpi40/q7
+         /O0e1HoJlTbh5NB1junI0CHT5u7OlL96wLc3EVtoU1jy6h6mu/94Ij3+HmmWjDrdLWVh
+         jTwO4Rc/jE6wel14tPJDJsn6k0/UDkI9Or/XCFS691xyvyogoxyI2h7yK06Suh6ePv/U
+         +lZz7VywgsFgSxYL/B5mLPOXcZ0fktkIkUnyPxHg9tbmvqat4Bb8GZAodniIxvBVB3XB
+         mJxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=F3NMDrR9dummcUXdRfruEEfbIS6yB2vx68nB8Asq/5Q=;
+        b=S+wJEmN64yyffHj3yR42NcRZuGnKtp2IpCusOq3tkEaodLHTDqbne5Bza50AicMqTj
+         o3ZtZPwkZAhKQH/rPMC3TChhJL8cJAPHYt7cX1zTKgNbaNw3cUtt0ldyTKyU1ZH8qRTx
+         hFX8m14B9mLt2KcqfRleiqdbSdAgPIxu/EJR5VPw0Imb0YSJdq3rwu4PO9OVem0SZAMS
+         XgRSLpKXpq1TZKGaEJ1hBlEZuJzSUw5y+y67eLK6UZWDAy9/qfAI+WYqxpUQmtGrKvGt
+         +TmPzXu8BdDad2yO5e9DY0QaLuSVfNCJ0HvoY12sBCUTbb5pR/sYiaj+n8UY+mzXD6HI
+         0VfQ==
+X-Gm-Message-State: AOAM5307yzfi/5KdpLzp2Q1epzavOUR9TfSd/rx8Mx9FLSnoTuQHBOqt
+        kfxoa44b6KQ740loIQsI4mzYtISXA9O3OCMDdzyXFYZR
+X-Google-Smtp-Source: ABdhPJxI0GNvtYFRzubiNKehFnBmeNa8IdxO7hQ3TxAldsg7mTxyy0v9X6v2Fayhxp/lnxt7tCbB9QFJVJ60H98MgEQ=
+X-Received: by 2002:a0c:ed4b:: with SMTP id v11mr9120627qvq.179.1590256818769;
+ Sat, 23 May 2020 11:00:18 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:aed:3ac5:0:0:0:0:0 with HTTP; Sat, 23 May 2020 11:00:18
+ -0700 (PDT)
+Reply-To: mrs.chantala2055@gmail.com
+From:   mrs chantal <mrs.chantaltwo@gmail.com>
+Date:   Sat, 23 May 2020 18:00:18 +0000
+Message-ID: <CAGVwK0UnqGdMqCxvjeR06i5Ca=SScOHB3E1kfQEUa4_tgZN-cQ@mail.gmail.com>
+Subject: jjCompliment
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove irq_disable callback to allow lazy disable for pdc interrupts.
-
-Add irq_set_wake callback that unmask interrupt in HW when drivers
-mark interrupt for wakeup. Interrupt will be cleared in HW during
-lazy disable if its not marked for wakeup.
-
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f..f7c0662 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -36,6 +36,7 @@ struct pdc_pin_region {
- 	u32 cnt;
- };
- 
-+DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
- static struct pdc_pin_region *pdc_region;
-@@ -87,22 +88,20 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 	raw_spin_unlock(&pdc_lock);
- }
- 
--static void qcom_pdc_gic_disable(struct irq_data *d)
-+static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
- {
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
--
--	pdc_enable_intr(d, false);
--	irq_chip_disable_parent(d);
--}
-+		return 0;
- 
--static void qcom_pdc_gic_enable(struct irq_data *d)
--{
--	if (d->hwirq == GPIO_NO_WAKE_IRQ)
--		return;
-+	if (on) {
-+		pdc_enable_intr(d, true);
-+		irq_chip_enable_parent(d);
-+		set_bit(d->hwirq, pdc_wake_irqs);
-+	} else {
-+		clear_bit(d->hwirq, pdc_wake_irqs);
-+	}
- 
--	pdc_enable_intr(d, true);
--	irq_chip_enable_parent(d);
-+	return irq_chip_set_wake_parent(d, on);
- }
- 
- static void qcom_pdc_gic_mask(struct irq_data *d)
-@@ -110,6 +109,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	if (!test_bit(d->hwirq, pdc_wake_irqs))
-+		pdc_enable_intr(d, false);
-+
- 	irq_chip_mask_parent(d);
- }
- 
-@@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	pdc_enable_intr(d, true);
- 	irq_chip_unmask_parent(d);
- }
- 
-@@ -197,15 +200,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_eoi		= irq_chip_eoi_parent,
- 	.irq_mask		= qcom_pdc_gic_mask,
- 	.irq_unmask		= qcom_pdc_gic_unmask,
--	.irq_disable		= qcom_pdc_gic_disable,
--	.irq_enable		= qcom_pdc_gic_enable,
- 	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
- 	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
-+	.irq_set_wake		= qcom_pdc_gic_set_wake,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
--				  IRQCHIP_SET_TYPE_MASKED |
--				  IRQCHIP_SKIP_SET_WAKE,
-+				  IRQCHIP_SET_TYPE_MASKED,
- 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- };
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+     Compliment of the day to you. I am Mrs.CHANTAL I am sending this brief
+    letter to solicit your partnership to transfer $13.5 Million US
+    Dollars.I shall send you more information and procedures when I receive
+    positive response From you. Please send me a message in My private
+    email address is ( mrschantal066@gmail.com  )
+    Best Regards
+    MrS.Chantal
