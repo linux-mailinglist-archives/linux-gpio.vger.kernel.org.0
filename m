@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07CB61DFD46
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2020 07:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19B5B1DFD49
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 May 2020 07:07:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgEXFGH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 May 2020 01:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        id S1728619AbgEXFHP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 May 2020 01:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgEXFGG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 May 2020 01:06:06 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4738C061A0E;
-        Sat, 23 May 2020 22:06:05 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id l73so3104593pjb.1;
-        Sat, 23 May 2020 22:06:05 -0700 (PDT)
+        with ESMTP id S1725856AbgEXFHO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 May 2020 01:07:14 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E0DC061A0E;
+        Sat, 23 May 2020 22:07:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ci21so6932288pjb.3;
+        Sat, 23 May 2020 22:07:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=N37O+pr53y/nXNB0kPDxzL7CBkwWMjKmCQt99s9fxR4=;
-        b=IohXGaSgUmcuMILfqS0tqSOtNc8JXbAmNZhFX7NjPxP9mKU+RqpewoeEe5w3kMj0sp
-         mzPzeyix1AN9FClMFrjEEnIT07qELaXfihqFbjjikcYK71Me59+MsoANbwb/mMAdFk28
-         P9+ChpwSwMyi37TC9Ai+J8WCBoJgRpanZlAJzuULz+uRZ2fVChPYcA71pktommDCbh/E
-         0KejFOcie3ulDzyPJAsE92KXqHEKVMI3rLN72rZci2EQdKBG6olBp0rLEG2esEYbdCCk
-         3Rb6MJpJ5xVxkUrT7hIeJQ/W7GZ5p2+vZGTuJik7C4eXXAopJ5+s5ZZWu/X6VXAej2Yz
-         kkgw==
+        bh=mvYhtqV1U4qqhDVOWFjEaTG959+IGNH15YQtyFmwOMk=;
+        b=NK9MXfpY/j07O5SEzOIz6vmM8uitKXAVhNCl78GoFuyoMSl3Ju3Y1LOp1r5n3k3Uti
+         qAId0zGO/uQmZoPLTK2fv0F9VJR1JCG87zsD5AEGCEfaTUXH+F+9JQORk//ZvioDaf21
+         I7cN4ryMBsN/FZ/Vdh0c0WnC58sJ8tvFzyYFjAXB9ADZC1b0z6eZ6L4KITmyNJ5OycL6
+         VIAHI0Wl8TQ36rlBEuAg1n4nd+7Lly0BD/+0N3YIBYJLHrKIm330hRmVWPDYdhCBm2V9
+         U/g8lqbwi0Z1/UpEj3tslj9qgTX0lGCrnbYsRh3DmqfjEKT9ZGC5OVymv6Mmt/N2HCsW
+         z0Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N37O+pr53y/nXNB0kPDxzL7CBkwWMjKmCQt99s9fxR4=;
-        b=TlZg8r2GvyoCzLGhqhXNL5CZOKGOQF3lhPmiPE8iXxw93EJ0lpHpQJIdtJ0GZnD+aY
-         u/2WUE3q2kXywmiWBLldYgeDHeN233VxWSJAs+/x+fLgYddLJFsKvqUjqAaiwSyh/3bj
-         vNKFa35v355Yt+RPO0QwMWwQ+Q36sw2utACYIhQU9+E9n3WGPoxRKWQ2l3EfEi4agipL
-         hciIYfqsDs41IKpwkoEc+KC7BA7l0oh/FDFHpTHMYAmme00aVpaO4cLcWWbUi7DFJmVz
-         er4INICuapmF8XC3Fh89ZwQajpXd29vVbW/DnTHQKeuqmNfKRfKcVKvm5zKPx6atK0+B
-         2+IA==
-X-Gm-Message-State: AOAM5317Nykwn5bHup8apKscCrdkjZY5obySv0PRhPq0K7+3OIaq6Yfa
-        lJLtgNr8TEwR1oKXrcen/ww=
-X-Google-Smtp-Source: ABdhPJw6IKQUTeAS9sK90M6zkd49MXkYklNowk7FXCzXAeaj2CVUG++2r/tA1zCiOAUM5QrDiSq78w==
-X-Received: by 2002:a17:90a:17e1:: with SMTP id q88mr466750pja.187.1590296765560;
-        Sat, 23 May 2020 22:06:05 -0700 (PDT)
+        bh=mvYhtqV1U4qqhDVOWFjEaTG959+IGNH15YQtyFmwOMk=;
+        b=sb/Bjn8DTIdFijfvtHkPlU5ldIX1DS6lgDx84jWTlA0imXO+1gr2A9wGbZFOkBHcdK
+         7AMa7yn8JTwmeizUSjemtENWrSzQzs2nr8tSif5VacLFJYcEmyEPYkbtE5rUn0sDz9ib
+         A+DUGru4pxK39ofWtjJDtOPvIX94hLL6QGdSC3Xz0s0pkn97EOgU2bwNfpFdbuz9VLAj
+         v9rcM1HOcAarAgNyo8ks9g2Menbo+dTaYlS51jpKhVGVzewKRqkFi4/YMzn8TBfV4rE6
+         0n2Gue7VwmeHmty6f7jD4bXKTFpG0V5gSbvcGY/JqWZW6VGq5bOIwG7cFsEM2iESNmZw
+         sl9Q==
+X-Gm-Message-State: AOAM533wcFZxQInm1qgDujL5zPNzTJUlEaElWZODXvnz0sPdRXIdwDf6
+        LkkeJqa+NnoiDoTHtzU10II=
+X-Google-Smtp-Source: ABdhPJwu4ENvd3yDcG8988brVGHraIQrJeOh4O49kmpFQr7sJeqeLJebPf41K5Zy9eSurQOaa2czwQ==
+X-Received: by 2002:a17:902:6b09:: with SMTP id o9mr21058970plk.100.1590296834091;
+        Sat, 23 May 2020 22:07:14 -0700 (PDT)
 Received: from syed ([106.223.122.111])
-        by smtp.gmail.com with ESMTPSA id gv4sm9953015pjb.6.2020.05.23.22.06.01
+        by smtp.gmail.com with ESMTPSA id h7sm8985165pgn.60.2020.05.23.22.07.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 23 May 2020 22:06:05 -0700 (PDT)
-Date:   Sun, 24 May 2020 10:35:49 +0530
+        Sat, 23 May 2020 22:07:13 -0700 (PDT)
+Date:   Sun, 24 May 2020 10:36:56 +0530
 From:   Syed Nayyar Waris <syednwaris@gmail.com>
 To:     linus.walleij@linaro.org, akpm@linux-foundation.org
 Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        rrichter@marvell.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v7 3/4] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <d5abec5c4d256db921d5fe103c7079580c8b7ef1.1590017578.git.syednwaris@gmail.com>
+        bgolaszewski@baylibre.com, michal.simek@xilinx.com,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v7 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+Message-ID: <c0c47f777522aa16c31248e9b8c75d2b96c7b652.1590017578.git.syednwaris@gmail.com>
 References: <cover.1590017578.git.syednwaris@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -66,13 +67,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch reimplements the thunderx_gpio_set_multiple function in
-drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-Instead of looping for each bank in thunderx_gpio_set_multiple
-function, now we can skip bank which is not set and save cycles.
+This patch reimplements the xgpio_set_multiple function in
+drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
+Instead of looping for each bit in xgpio_set_multiple
+function, now we can check each channel at a time and save cycles.
 
-Cc: Robert Richter <rrichter@marvell.com>
 Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
 Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
 Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 ---
@@ -83,45 +84,98 @@ Changes in v6:
  - No change.
 
 Changes in v5:
- - No change.
+ - Minor change: Inline values '32' and '64' in code for better
+   code readability.
 
 Changes in v4:
- - Minor change: Inline value '64' in code for better code readability.
+ - Minor change: Inline values '32' and '64' in code for better
+   code readability.
 
 Changes in v3:
- - Change datatype of some variables from u64 to unsigned long
-   in function thunderx_gpio_set_multiple.
+ - No change.
 
 Changes in v2:
  - No change.
 
- drivers/gpio/gpio-thunderx.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-xilinx.c | 62 ++++++++++++++++++++------------------
+ 1 file changed, 32 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 9f66deab46ea..58c9bb25a377 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -275,12 +275,15 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
- 				       unsigned long *bits)
+diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+index 67f9f82e0db0..e81092dea27e 100644
+--- a/drivers/gpio/gpio-xilinx.c
++++ b/drivers/gpio/gpio-xilinx.c
+@@ -136,39 +136,41 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+ static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 			       unsigned long *bits)
  {
- 	int bank;
--	u64 set_bits, clear_bits;
-+	unsigned long set_bits, clear_bits, gpio_mask;
-+	unsigned long offset;
+-	unsigned long flags;
++	unsigned long flags[2];
+ 	struct xgpio_instance *chip = gpiochip_get_data(gc);
+-	int index = xgpio_index(chip, 0);
+-	int offset, i;
+-
+-	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+-
+-	/* Write to GPIO signals */
+-	for (i = 0; i < gc->ngpio; i++) {
+-		if (*mask == 0)
+-			break;
+-		/* Once finished with an index write it out to the register */
+-		if (index !=  xgpio_index(chip, i)) {
+-			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+-				       index * XGPIO_CHANNEL_OFFSET,
+-				       chip->gpio_state[index]);
+-			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+-			index =  xgpio_index(chip, i);
+-			spin_lock_irqsave(&chip->gpio_lock[index], flags);
+-		}
+-		if (__test_and_clear_bit(i, mask)) {
+-			offset =  xgpio_offset(chip, i);
+-			if (test_bit(i, bits))
+-				chip->gpio_state[index] |= BIT(offset);
+-			else
+-				chip->gpio_state[index] &= ~BIT(offset);
+-		}
++	u32 *const state = chip->gpio_state;
++	unsigned int *const width = chip->gpio_width;
++	unsigned long offset, clump;
++	size_t index;
 +
- 	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
- 
--	for (bank = 0; bank <= chip->ngpio / 64; bank++) {
--		set_bits = bits[bank] & mask[bank];
--		clear_bits = ~bits[bank] & mask[bank];
-+	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, 64) {
-+		bank = offset / 64;
-+		set_bits = bits[bank] & gpio_mask;
-+		clear_bits = ~bits[bank] & gpio_mask;
- 		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
- 		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
++	DECLARE_BITMAP(old, 64);
++	DECLARE_BITMAP(new, 64);
++	DECLARE_BITMAP(changed, 64);
++
++	spin_lock_irqsave(&chip->gpio_lock[0], flags[0]);
++	spin_lock_irqsave(&chip->gpio_lock[1], flags[1]);
++
++	bitmap_set_value(old, state[0], 0, width[0]);
++	bitmap_set_value(old, state[1], width[0], width[1]);
++	bitmap_replace(new, old, bits, mask, gc->ngpio);
++
++	bitmap_set_value(old, state[0], 0, 32);
++	bitmap_set_value(old, state[1], 32, 32);
++	state[0] = bitmap_get_value(new, 0, width[0]);
++	state[1] = bitmap_get_value(new, width[0], width[1]);
++	bitmap_set_value(new, state[0], 0, 32);
++	bitmap_set_value(new, state[1], 32, 32);
++	bitmap_xor(changed, old, new, 64);
++
++	for_each_set_clump(offset, clump, changed, 64, 32) {
++		index = offset / 32;
++		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
++				index * XGPIO_CHANNEL_OFFSET,
++				state[index]);
  	}
+ 
+-	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+-		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+-
+-	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
++	spin_unlock_irqrestore(&chip->gpio_lock[1], flags[1]);
++	spin_unlock_irqrestore(&chip->gpio_lock[0], flags[0]);
+ }
+ 
+ /**
 -- 
 2.26.2
 
