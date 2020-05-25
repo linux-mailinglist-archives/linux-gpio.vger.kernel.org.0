@@ -2,116 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 618A71E0FC5
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 15:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53F3E1E1053
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 16:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403867AbgEYNrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 09:47:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:29880 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403812AbgEYNrv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 09:47:51 -0400
-IronPort-SDR: Vbvot8XxJ6XjaHgLyChHmUr2gn/Ska++hVWUlm/BjriuZbb7iw1E9hykxEA3S7HIow6oe4Sc37
- FPb+vrOXqTOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:47:51 -0700
-IronPort-SDR: UwavZKxpXzpHRnoIZgA7VoHgZF7MJqRVv4WLno/GCEaXpVrGQ7RZDW3Z3crzRZPID1HToUmjeC
- PfM+OYVEfgIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="375437164"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 25 May 2020 06:47:49 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 25 May 2020 16:47:48 +0300
-Date:   Mon, 25 May 2020 16:47:48 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel
- Galileo Gen 2
-Message-ID: <20200525134748.GW247495@lahna.fi.intel.com>
-References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
- <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
- <20200525092028.GQ247495@lahna.fi.intel.com>
- <20200525093150.GL1634618@smile.fi.intel.com>
- <20200525094553.GR247495@lahna.fi.intel.com>
- <20200525101335.GN1634618@smile.fi.intel.com>
- <20200525110556.GT247495@lahna.fi.intel.com>
- <20200525113551.GR1634618@smile.fi.intel.com>
- <20200525122136.GV247495@lahna.fi.intel.com>
- <20200525130108.GU1634618@smile.fi.intel.com>
+        id S2390897AbgEYOTJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 10:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390870AbgEYOTJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 10:19:09 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CA5C061A0E;
+        Mon, 25 May 2020 07:19:09 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v63so8874252pfb.10;
+        Mon, 25 May 2020 07:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OLgmeYVGZXrkZOzVtobLf8KYagc1Ru99Oter6TayP28=;
+        b=McRwpMFwL2GwANU7i7pPIJzTK2vBJL3q6oU1JordXmOja9i5MfCP2WuX52WLeahfb+
+         cErAfgipDSrgbQ3AqtdhRvi/KTj3VYiazno1w8qrcUK12yf4HtrmUtVV3e8f6YE4o3DX
+         XsKUh3XU4Xcxr6Vv9PfK2stlH9TWR7Ek5JXMqrXat27ggjSKSz+C2ud+ms4qJmw/hDqK
+         kypGSQalnAlAtE7edTtljJUTmT0vmK+bwiTGMsqpL+09DeL5S9msSoEp7WwJGyz0HpS4
+         s6eI+Pjzwh43sAbjyPKCdOTpiO2QhURw0nDjRhq2YiROu7/QAgBFcya8CMqRmNaHsZFM
+         B68Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OLgmeYVGZXrkZOzVtobLf8KYagc1Ru99Oter6TayP28=;
+        b=lFx7u+UokrejwKIvj21QykGWrNMeDpUhKLWuCFAqsLI+7SwtJJy3dxxfeShspTepCU
+         w5Daga4CKXrxmGer1R0s/rIQKDykBIWqoSKy4l/cD6OEkYzc99yv9kHw84QUYonWWWWJ
+         c/AiEd7HbVLcYqg8eq6TCMhbUN3zlbNM/gmphkEC3EANbBCzAwa4s754Lc6figT7iv7y
+         rfxnzj7c8s0zebEIKCJ0vI6oBAyei38ShcXSArwW07EDXT8HKDvYd4TtRF7XWeT66CkO
+         130uhBWShj3ciU83WHHvAQ8WMGaZdpX5FXWSx/YFbe88KO6IKq2k+DWJcvWGoqmf4PHy
+         18tQ==
+X-Gm-Message-State: AOAM531qAfQV/UA/UoxYdfoC1BwsRJsWX4uxbwDAoOauBOn8prGQGfYN
+        kFjg9njUlA9SQt6EMIm6jVJye2O9eTI=
+X-Google-Smtp-Source: ABdhPJw6oiFgQzylvXFpXW6V+V8h0Ie8cogLaZCO/NgLDd53stGrJrlj8hCAv+ulcteLnMqvQkrogw==
+X-Received: by 2002:a62:e419:: with SMTP id r25mr17238043pfh.82.1590416348655;
+        Mon, 25 May 2020 07:19:08 -0700 (PDT)
+Received: from sol (220-235-68-201.dyn.iinet.net.au. [220.235.68.201])
+        by smtp.gmail.com with ESMTPSA id n2sm13147723pfe.161.2020.05.25.07.19.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 25 May 2020 07:19:07 -0700 (PDT)
+Date:   Mon, 25 May 2020 22:19:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+Message-ID: <20200525141902.GA27938@sol>
+References: <20200516064507.19058-1-warthog618@gmail.com>
+ <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525130108.GU1634618@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:01:08PM +0300, Andy Shevchenko wrote:
-> On Mon, May 25, 2020 at 03:21:36PM +0300, Mika Westerberg wrote:
-> > On Mon, May 25, 2020 at 02:35:51PM +0300, Andy Shevchenko wrote:
-> > > On Mon, May 25, 2020 at 02:05:56PM +0300, Mika Westerberg wrote:
-> > > > On Mon, May 25, 2020 at 01:13:35PM +0300, Andy Shevchenko wrote:
-> > > > > Due to parsing of ACPI tables. I don't want to copy'n'paste 25% of
-> > > > > gpiolib-acpi.c in here. I think provided solution is cleaner and (more)
-> > > > > flexible in terms of maintenance.
-> > > > 
-> > > > Hmm, you seem to pass a hard-coded pin number (1) to the core that then
-> > > > passes it back to the driver. Why you can't simple use that number here
-> > > > directly? You don't need to parse anything. What I'm missing? :-)
-> > > 
-> > > Okay, so, AFAIU you are proposing something like this:
-> > > 
-> > > 1) find a GPIO controller by the ACPI path (somehow, I guess by finding a
-> > >    handle followed by physical device behind it); 2) somehow to request a
-> > >    pin from that device by number;
-> > > 3) convert to IRQ and use.
-> > > 
-> > > Is it correct?
-> > 
-> > Well, no. In the first patch you do this:
-> > 
-> >   pin = lookup->info.quirks_data;
-> > 
-> > and this essentially becomes 1 so you know the pin number upfront in the
-> > driver. Why not simply get GPIO number 1 in the driver and use it as an
-> > interrupt? You know already that this particular board with the matching
-> > DMI identifier always uses the this number anyway.
+On Mon, May 25, 2020 at 10:39:42AM +0200, Linus Walleij wrote:
+> On Sat, May 16, 2020 at 8:45 AM Kent Gibson <warthog618@gmail.com> wrote:
 > 
-> But GPIO (relative!) number is not enough. We need to understand more, i.e.:
-> 1) from which GPIO controller it comes from (okay, for this particular platform I know it);
-> 2) which expander does have this resource (they all have same ACPI HID).
+> > Add a new version of the uAPI to address existing 32/64bit alignment
+> > issues, add support for debounce, and provide some future proofing by
+> > adding padding reserved for future use.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > 
-> So, second one means to count GpioInt() resources (I don't remember if we have
-> helper for that, probably we can add one). For the first we need to get a GPIO
-> controller something (gpiochip?) And this first one I have no idea how we can
-> perform without talking to the core.
+> I don't see any major problems with it, just some comments:
 > 
-> Basically, it may be done by reimplementing acpi_dev_gpio_irq_get(), followed
-> by acpi_get_gpiod_by_index(), followed by acpi_gpio_resource_lookup(), followed
-> by acpi_populate_gpio_lookup(), where at last this quirk should be applied.
+> + * @padding: reserved for future use and should be zero filled
 > 
-> It seems for me like an over duplicated solution.
+> *MUST* be zerofilled is what it should say.
 > 
-> I really don't understand how we can shortcut all these. What am I missing?
+> > +struct gpioline_config {
+> > +       __u8 default_values[GPIOLINES_MAX];
+> 
+> So 32 bytes
+> 
 
-Why for example following would not work? If it is using global GPIO numbers
-anyway.
+Actually that one is 64 bytes, which is the same as v1, i.e. GPIOLINES_MAX
+is the same as GPIOHANDLES_MAX - just renamed.
 
-static int pca953x_acpi_interrupt_get_irq(struct device *dev)
-{
-        struct gpio_desc *desc;                                                          
- 
-        desc = gpio_to_desc(1);
-        if (!desc)
-                return -ENODEV;
+On the subject of values, is there any reason to use a byte for each line
+rather value than a bit?
 
-        return gpiod_to_irq(desc);
-}
+> > +       __u32 flags;
+> > +       __u8 direction;
+> > +       __u8 drive;
+> > +       __u8 bias;
+> > +       __u8 edge_detection;
+> 
+> Some comment in the struc that this adds up to 32 bits?
+> 
+> > +       __u32 debounce;
+> > +       __u32 padding[7]; /* for future use */
+> 
+> What we need to do inside the kernel with all of these
+> is to ascertain that they are 0 for now when they are
+> sent in and refuse them otherwise, I think it was Lars-Peter
+> Clausen who said that they had to retire a whole slew of
+> ioctl()s because some userspace just used unallocated
+> memory for this and since that was random bytes it needed to
+> be supported with that content forever and the reserved
+> padding could never be used for the reserved purpose.
+> 
+> This kind of comment goes for all the structs.
+> 
+
+OK, I wasn't sure how strict the validation should be on the kernel
+side, but I'll take a strict stance and check the whole struct.
+
+Having said that, when adding future fields, the idea was to have a bit
+in the flags that indicates that the corresponding field is now valid.
+If the flag is not set then whatever value is there is irrelevant.
+e.g. the debounce field value is irrelevent and ignored unless the
+GPIOLINE_FLAG_V2_DEBOUNCE is set in flags.
+OTOH, if the bit is set then the field would have to be set correctly.
+And the current kernel would reject a future request with an unsupported
+bit set in flags.
+
+But definitely better to play it safe - will check the padding is
+zeroed as well, as well as any field for which the flag bit is clear.
+
+> But mostly it is a question about the kernel code receiving
+> or emitting these.
+> 
+
+For sure - all the structs returned will be zeroed before use so as not
+to leak kernel stack - unless they originate from userspace of course.
+
+Back on retired ioctls, I notice that 5, 6, and 7 are missing from gpio.
+Have those been retired, or just skipped over by accident?
+
+Cheers,
+Kent.
