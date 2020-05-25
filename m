@@ -2,115 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 481B21E0E52
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 14:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD4A1E0EDC
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 14:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390509AbgEYMWf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 08:22:35 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:34673 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390488AbgEYMWe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 08:22:34 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id dC7fj8fagdPgTdC7ijaZQo; Mon, 25 May 2020 14:22:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590409351; bh=B004EXCgq5FrmDeibsrHD2vF8zO47mml9XuJ8YnmPBQ=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=iKYRZLN0U0CQNPfS5AXa4jjimA9eaomJkUa2wkjeWE5ZnZkSI4PTbjCVhKKJCSddh
-         rMwqG3oGB0g7RzXqBaxUrsvGJl+upwNmlzpHl05FZo96sREURbXOZboeJDjjQLgpYH
-         mYEEKAffzQ3n9IisUK/1R49OMQvrnSTYkDSNdUu4qqVIbbQX+Tq4xBsxgfSVF4drcM
-         7VPhkkhNuJqsTTCdddpphL9rl23YZLjpwBn1gZDNTEK5Hl6m14RknIoF8hCgsMYCXu
-         jn2ENJSmwtQdilS7ZiE6pDsNg0qIL2XCfimgSFm8FG32gchMQIckSd8u683IH/cNCU
-         ylym6wnDvFgmA==
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
-Date:   Mon, 25 May 2020 14:22:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2388756AbgEYM6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 08:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388738AbgEYM6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 08:58:11 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C2CC061A0E
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 05:58:11 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z13so10976513ljn.7
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 05:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DweVMDnkssdJ1l/E3hLMWpoz4bkGZXDi9+0Yqeu/ZaE=;
+        b=UZq6s2clM1RD2mh4utZxk9t3iiXA0X6d8NpVc7y+TF2ljeXpnMglq4bsDoZgePeqxf
+         N0qJxb644qs7A4pQD5coU5bzcVyFTXbXI2hTAG/VKwgp6TYs67/Ajf4jwFSTY8YT8hFj
+         hZDZwYpHFDCeBvnqa3wCOepvvWo9UAGRK1fF+rh0/wmVdQZydGJOP1N9GN9lhASdLxid
+         P+bUDkpMkMV3Y7v4JC6mnmMLjPJJGObca9Ysxr3Bh5zUo4hd6Di0sMeJPl+y81/EWd8F
+         bvJ6zq+pYttjMkOz00BvOXTq8e91zxPAZZYDViXpYglFhqYUYthUtTn1yM3V2HD1lEmQ
+         Njeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DweVMDnkssdJ1l/E3hLMWpoz4bkGZXDi9+0Yqeu/ZaE=;
+        b=r66g/rNVhHcHEMWrKZc2WHmlI/DVZCj0Ba0q0nlKNDyfe0+PIf28560R4wKFVMRsxp
+         EgfB5CLh8BNSnccWpqQn3T8hcWyAtPQNJ+BsjvK4RqtvEHUfVmcHwNyWFTjcMog++i6S
+         qzlNGQF7muJkBh8x3m0UkAnqQwo97aWfFZIyidd0CYL8lQ55lF5EkZ34lM7vQa7XYl2k
+         LdvorxbA3InpSjHZC4uiLLZA7HH5LMphZzB1I27UOgwfi9bptKLiP7+XcHwsrdIm4HKs
+         Ucen7BYUySRisXzy7CphK6r/CbCEHfsdBQ6m/VdtlkiA2uvIpmljynZDGIUaXPdzXTkl
+         qTyw==
+X-Gm-Message-State: AOAM531/sRJb/QZ3ticWHiTL66tbhMuybf9GxfCqbAp6UYRHSbaCrFjj
+        WRTBWR3C0BTzko2fwD0P52KlzrVcOO+rfwNwToKt4w==
+X-Google-Smtp-Source: ABdhPJxY5iSfVemzA70OTL8vZ69zYNg69QkGeS8B/GEkcQKh5USuFDIdV0i8H/pMUGGqMw+Rph8p+i1nFXzs4uIufUg=
+X-Received: by 2002:a2e:9716:: with SMTP id r22mr14401276lji.293.1590411489701;
+ Mon, 25 May 2020 05:58:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOGdb2RJOxdUV50pu4jnoPs5bZNeYuMlblQqlhIhssLZRmK5wQA0xb9Rm7/40hdvblQdz0Kb59N1KM362w7jtAh4KEHh2xtaGge1gIv38uJ9stTMJ+fB
- 2d9RBuCzmC/HvkVoNwEEa77G16IuQpXqcpdojxRMeFgz0I2MLZbUyKK99Fpbl/fQYNzrKG5DX1sQqJS5Isq1hH+NjuwTG9BOp2YM2NMzYglSYxylS0RVf17X
- VVq6+QAWQf55rXB1yf9ahsKGJjZZm0HchaQA794/RPJDZA9hxsTO427mQ2leGiGA8eGMDSpOqc8G5g8P9iJbhMi6zljI+4W+836MCc0Rp5Sp7U0frjwS3eDL
- z39sMoL3JFrSCbPHhIKpGwYWAV39eF8ftDzL1rEUyjkqRhIwxMMtA920vVuFIhXzBRsUuvBaR/8VHczH9QLuZujouYmyvj4KL9x9aEjSD4wmg4TVUMldOxAQ
- Yd9bbgJ5D4YIZ0bmGu/5fVWb60+++5VQvjQSeNJdMCTj4dl/xqOXoAMW1Dw7PYaS0RQ4Nw6exPIzzICGKbGaQmVEp9nxROHF6XufAKunk+Z98sVPccrN2a7M
- nZNSetq3KERNU5rc9Tyl7WWSgAVDsaeTJkqzhyyZ3Rvd2jM5meMyfytFPz3Uoy0kK8skMVIZdYeqk/dRLY1QuuXCZvIGydMUmO8IS+zlUJ9FxcnUtdGUwGkP
- ayqvEtVpjJA=
+References: <20200525054833.28995-1-saraon640529@gmail.com>
+In-Reply-To: <20200525054833.28995-1-saraon640529@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 14:57:59 +0200
+Message-ID: <CACRpkdbubY-DjuTx=-vj9rrLuSGgZekDw0J4DHpnU5bf5BorZw@mail.gmail.com>
+Subject: Re: [PATCH] GPIO: Submit a new GPIO driver
+To:     Richard Hsu <saraon640529@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Andrew_Su@asmedia.com.tw,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/05/2020 13:55, Linus Walleij wrote:
-> On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
-> 
->> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
->> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
->> callback is implemented then genirq takes unlazy path to disable irq.
->>
->> Underlying irqchip may not want to implement irq_disable callback to lazy
->> disable irq when client drivers invokes disable_irq(). By overriding
->> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
->>
->> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
->> if irqchip implemented irq_disable. In cases where irq_disable is not
->> implemented irq_mask is overridden. Similarly override irq_enable callback
->> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
->>
->> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> 
-> I definitely want Hans Verkuils test and review on this, since it
-> is a usecase that he is really dependent on.
+Hi Richard!
 
-Maulik, since I am no longer subscribed to linux-gpio, can you mail the
-series to me?
+Thanks for your patch!
 
-I have two use-cases, but I can only test one (I don't have access to the
-SBC I need to test the other use-case for the next few months).
+On Mon, May 25, 2020 at 7:48 AM Richard Hsu <saraon640529@gmail.com> wrote:
 
-Once I have the whole series I'll try to test the first use-case and at
-least look into the code if this series could affect the second use-case.
+> This driver provide GPIO functionality on Asmedia 28XX and 18XX PCI-E
+> Bridge
+>
+> Signed-off-by: Richard Hsu <saraon640529@gmail.com>
+> ---
+>  patch | 312 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Regards,
+There is something off with how this patch is generated.
 
-	Hans
+> diff --git a/patch b/patch
+> index 0000000..a713f91
+> --- /dev/null
+> +++ b/patch
+> @@ -0,0 +1,312 @@
+> +diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpio/gpio-asm28xx-18xx.c linux-5.7.0-rc6-patch/drivers/gpio/gpio-asm28xx-18xx.c
+> +--- linux-5.7.0-rc6/drivers/gpio/gpio-asm28xx-18xx.c   1970-01-01 08:00:00.000000000 +0800
+> ++++ linux-5.7.0-rc6-patch/drivers/gpio/gpio-asm28xx-18xx.c     2020-05-22 11:55:13.736272177 +0800
 
-> 
-> Also the irqchip people preferredly.
-> 
-> But it does seem to mop up my mistakes and fix this up properly!
-> 
-> So with some testing I'll be happy to merge it, even this one
-> patch separately if Hans can verify that it works.
-> 
-> Yours,
-> Linus Walleij
-> 
+Definitely off. Can't you just generate it from the git repo using
+git format-patch HEAD^..HEAD or something?
 
+> ++#include <linux/module.h>
+> ++#include <linux/kernel.h>
+> ++#include <linux/gpio/driver.h>
+> ++#include <linux/pci.h>
+> ++#include <linux/spinlock.h>
+> ++#include <linux/pm_runtime.h>
+
+#include <linux/bits.h>
+Because you use BIT().
+
+Maybe the PCI maintainer could look at how the pci_* accessors are
+used in this driver because that beats me.
+
+Yours.
+Linus Walleij
