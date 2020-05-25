@@ -2,104 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2691E0DF1
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:55:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E8611E0E02
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 14:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390306AbgEYLzu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 07:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390286AbgEYLzu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 07:55:50 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD3AC05BD43
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:55:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z18so20407961lji.12
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:55:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+mkEBPdVGpBGFyoI8j8HFLVKYs4hB0Ze1NrDN+H9//4=;
-        b=Dl9TrwmQPeoE3jaUpcbhwTsZJCgQoRRdu4baaLsu04TpdTNzaqoI6O3YXQ+GOf6Sjp
-         FB0MZ0UTIz1JjeI1Z2dk6xN2Fp9Fmkmep7JxkbmiabYb5gilLzb3dxM5Rrm8qBIsa7ku
-         sPaakWkOAr6eIqCD+XlAJbUP3W0TuDCwK2BNkVndEMiBbKxXGomN4j7kaLJgKZwbWXc9
-         8jHHyW8egtFvlYcDOvqFxk4kjTXOovA6bT1z7CQKYB/RMjnSuSE9M8bzVT5c8PHdel3b
-         zBhhIdRVdIa0/32PC73lIN8+gsj0wVNTOdl7Gg51WLQgMJB6sTWXu9c7Da+QEorLu53m
-         dxMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+mkEBPdVGpBGFyoI8j8HFLVKYs4hB0Ze1NrDN+H9//4=;
-        b=iZfNOmBnFO7R4M2IK0BFr2i0q21YhA0Q3aspoo1SCr2eNrccV0PqGojCtuvcnP45Nz
-         7kKC24GUzJyupMwEl9+VkhALEwv4HHUoTJve/p1K5PN215Zrjvu2/H/n1K6HO8AsKrvS
-         inyTh5ud2wopd5J6x7tC5eTr5uM4fLMgyJXV78MoOsyIgWg13n2ezVgaJOiABOz9aRk5
-         PIDI3C7Mw0FiCki0p6BAWuE1emC1RON+VTNNxraDH3OB5Xqd0OpTWFxXN8o36bqTR5Sb
-         6yBJ80C1gupYHZLUKVEpGGMe5dBgda+pVxRp16uVD51JsZVrUEtwAzRFYaUcU6LVxfAP
-         yKPg==
-X-Gm-Message-State: AOAM5319qb5JWG/0do8H/odbLrCSXmag0QspX8P0bSjQLIdpPs4ekAqn
-        b1XDSGwZV/4cwESst/xN8f6hLHALMoBtnTY211vX+A==
-X-Google-Smtp-Source: ABdhPJyCykHTiRF9bx/CWTPtp2I0DZ+jTkLxBQaoNUbWITp445SBYxAQbXbtO2c017bHBytURvA27YjWsWZBsXSIrME=
-X-Received: by 2002:a2e:8e91:: with SMTP id z17mr10762076ljk.144.1590407748281;
- Mon, 25 May 2020 04:55:48 -0700 (PDT)
+        id S2390312AbgEYMBM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 08:01:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23928 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390299AbgEYMBM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 May 2020 08:01:12 -0400
+IronPort-SDR: l3VAbRYm1OE6EofGXVXNWceZtlE76ovRMaCi33giAhsfrNBb8c36hArAe/CTJZBuWcKST2JYcV
+ aw4isDZG07Kg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 05:01:12 -0700
+IronPort-SDR: nQwnq3Y/NM045CWwUEFauUJBiYdrhecUTI0GSZIADEAFMUqm/CyD/zWqIBNc39JyVEdeEWrFjP
+ iWQzSBQfOghg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
+   d="scan'208";a="441708809"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 25 May 2020 05:01:09 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdBn6-008mUt-U4; Mon, 25 May 2020 15:01:12 +0300
+Date:   Mon, 25 May 2020 15:01:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel
+ Galileo Gen 2
+Message-ID: <20200525120112.GT1634618@smile.fi.intel.com>
+References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+ <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
+ <20200525092028.GQ247495@lahna.fi.intel.com>
+ <20200525093150.GL1634618@smile.fi.intel.com>
+ <20200525094553.GR247495@lahna.fi.intel.com>
+ <20200525101335.GN1634618@smile.fi.intel.com>
+ <20200525110556.GT247495@lahna.fi.intel.com>
+ <20200525113551.GR1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 13:55:37 +0200
-Message-ID: <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Maulik Shah <mkshah@codeaurora.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525113551.GR1634618@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Mon, May 25, 2020 at 02:35:51PM +0300, Andy Shevchenko wrote:
+> On Mon, May 25, 2020 at 02:05:56PM +0300, Mika Westerberg wrote:
+> > On Mon, May 25, 2020 at 01:13:35PM +0300, Andy Shevchenko wrote:
+> > > Due to parsing of ACPI tables. I don't want to copy'n'paste 25% of
+> > > gpiolib-acpi.c in here. I think provided solution is cleaner and (more)
+> > > flexible in terms of maintenance.
+> > 
+> > Hmm, you seem to pass a hard-coded pin number (1) to the core that then
+> > passes it back to the driver. Why you can't simple use that number here
+> > directly? You don't need to parse anything. What I'm missing? :-)
+> 
+> Okay, so, AFAIU you are proposing something like this:
+> 
+> 1) find a GPIO controller by the ACPI path (somehow, I guess by finding a
+>    handle followed by physical device behind it); 2) somehow to request a
+>    pin from that device by number;
+> 3) convert to IRQ and use.
+> 
+> Is it correct?
 
-> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
-> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
-> callback is implemented then genirq takes unlazy path to disable irq.
->
-> Underlying irqchip may not want to implement irq_disable callback to lazy
-> disable irq when client drivers invokes disable_irq(). By overriding
-> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
->
-> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
-> if irqchip implemented irq_disable. In cases where irq_disable is not
-> implemented irq_mask is overridden. Similarly override irq_enable callback
-> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
->
-> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Ah, and before all these, to detect properly the IO expander that actually has
+that resource in the table (something like gpiod_count() or do we have better
+approach to answer the question "does this device has a GpioInt() resource?").
 
-I definitely want Hans Verkuils test and review on this, since it
-is a usecase that he is really dependent on.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Also the irqchip people preferredly.
 
-But it does seem to mop up my mistakes and fix this up properly!
-
-So with some testing I'll be happy to merge it, even this one
-patch separately if Hans can verify that it works.
-
-Yours,
-Linus Walleij
