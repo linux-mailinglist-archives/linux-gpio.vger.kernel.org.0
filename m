@@ -2,59 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D2E1E0C6F
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02ADE1E0C96
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:12:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389939AbgEYLGA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 07:06:00 -0400
-Received: from mga09.intel.com ([134.134.136.24]:38845 "EHLO mga09.intel.com"
+        id S2390069AbgEYLMG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 07:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389897AbgEYLGA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 07:06:00 -0400
-IronPort-SDR: N678tr+mMfA1FPgLkcyN8OCToH/ipR5ewJrnryIQ5E+wmGO0h0d59u9PMJ4Pi1WxXlnYJwJ5Dw
- yuJooq5Gwx2Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 04:05:59 -0700
-IronPort-SDR: 9yVBloa/6ipEfhAtgF4ynUDXQ0ep6cGV2iadMezKZ8XtKnHMboNbY+x/dxoGhwr8YFdM/iSxP5
- CHACaIpHS2zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="375408146"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 25 May 2020 04:05:57 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 25 May 2020 14:05:56 +0300
-Date:   Mon, 25 May 2020 14:05:56 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel
- Galileo Gen 2
-Message-ID: <20200525110556.GT247495@lahna.fi.intel.com>
-References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
- <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
- <20200525092028.GQ247495@lahna.fi.intel.com>
- <20200525093150.GL1634618@smile.fi.intel.com>
- <20200525094553.GR247495@lahna.fi.intel.com>
- <20200525101335.GN1634618@smile.fi.intel.com>
+        id S2390003AbgEYLMG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 May 2020 07:12:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF0F20723;
+        Mon, 25 May 2020 11:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590405125;
+        bh=vRFVXyIsmXnGGPyWv/9BQ79AvtKwa530dOjUkPXl8WM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m/XxOHBDQOiPx2mx/lu6b+Em6kLEldYgVbgV039cMwBhdP5FcTvg7e6IAvV+Ty3vW
+         ohH4JaIWQUajJj1vhstYuNy6Vyd0ua32NwzrXliQC7L4r0IdB4J+W4n0aEr/glI33v
+         +wrSsS79xmKZ3Y9nK/Tsk10aFdLjKmQO/6DQiQIE=
+Date:   Mon, 25 May 2020 13:12:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200525111203.GB279021@kroah.com>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-3-mani@kernel.org>
+ <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
+ <20200429124918.GC6443@Mani-XPS-13-9360>
+ <20200519085703.GB27787@localhost>
+ <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525101335.GN1634618@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 01:13:35PM +0300, Andy Shevchenko wrote:
-> Due to parsing of ACPI tables. I don't want to copy'n'paste 25% of
-> gpiolib-acpi.c in here. I think provided solution is cleaner and (more)
-> flexible in terms of maintenance.
+On Mon, May 25, 2020 at 10:59:59AM +0200, Linus Walleij wrote:
+> On Tue, May 19, 2020 at 10:57 AM Johan Hovold <johan@kernel.org> wrote:
+> > > On Wed, Apr 29, 2020 at 02:12:24PM +0200, Linus Walleij wrote:
+> 
+> > > > to something that is device-unique, like "xr-gpios-<serial number>"
+> > > > which makes it easy to locate the GPIOs on a specific serial converter
+> > > > for lab use. However the USB serial maintainers know better what
+> > > > to use here. Whatever makes a USB-to-serial unique from a TTY
+> > > > point of view is probably fine with me too.
+> > > >
+> > > > My idea is that people might want to know which USB cable
+> > > > this is sitting on, so I have this USB cable and from this label
+> > > > I can always figure out which GPIO device it is.
+> >
+> > I think we've had this discussion before. First, not every device has a
+> > unique serial number. Second, we already have a universal way of
+> > distinguishing devices namely by using the bus topology. That's
+> > available through sysfs and shouldn't have to be be re-encoded by every
+> > driver in the gpiochip name.
+> 
+> I remember I even referred to this myself, but I've been waning a bit
+> on it recently, because it turns out that userspace/users aren't very
+> good at parsing sysfs for topology.
 
-Hmm, you seem to pass a hard-coded pin number (1) to the core that then
-passes it back to the driver. Why you can't simple use that number here
-directly? You don't need to parse anything. What I'm missing? :-)
+Which is why they could use libudev :)
+
+thanks,
+
+greg k-h
