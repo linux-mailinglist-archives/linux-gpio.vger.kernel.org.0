@@ -2,86 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 965191E0D62
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:35:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1291F1E0D65
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbgEYLe6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 07:34:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390073AbgEYLe6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 07:34:58 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EA3C08C5C0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:34:58 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w10so20455968ljo.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wi+gk3CC8jugnfSNVoMn5WXhzhJYTbdK21k8+STJk6k=;
-        b=Y+pESXNupJYz2M2etZnKieO/VeNhDEch9p7SVInZEB86XRO8h8M0GoDFaLeaBHge/W
-         Xp9kIUqUEkWWSw7pjtUsHwOtULbYumcsJXagBz9Ug1w/NyvSgP0CQ3BbjxCv+HgrB1fH
-         v0FMESlvZPYhwTC1m2O/dm7zggf8bAm563//moUatJJH3uVnOVQ1G5LKgQlw+V4pmaQE
-         nFAU4UIJmnE5qEc7JF6agjan+4tXxbuDF5lKRg0yWE12MncRS99VJLMnqTN2QXnDp6Ne
-         9pZ90O0+wuTvskb5fFW0cpQxlH0kvGuiwxPPgcUyNGvUm478ynq1TcZi70/WmqqsQyp4
-         NTyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wi+gk3CC8jugnfSNVoMn5WXhzhJYTbdK21k8+STJk6k=;
-        b=AOIMquPHt/RDg6qg2zfpGiTs5hafCnm2ILemzIdMsBmF3hE3RHKJB8E+zq1qS2Czmg
-         DLi2d5EVHxD4fAPUcH/KG/7FD/FmS6U2FsS6LUAxUQWUtzxEqBdtPti1Q5+kH/rH4rdC
-         81DUE06mSiFqnAS9Q+hyDhQEeCuq4oMKVLByL4M6KZpZr2lAeNgIMy0zFt7R//y9JC6A
-         dMhv4U2AY1CThwKdPuINFyXEqdTdJeX5KFLZhG7KD32HkYdri5OQPR5Tx4ucONigo8zc
-         nybwRY99FFnw2DLQM7VWYMvtBIMIN83JL5btorDLs+IBj6al2sz/O8BFk5rb1NZZHmMO
-         Yx/g==
-X-Gm-Message-State: AOAM531mXu+RMR6fsMNt8GctOXhmYHhvkedr/MXA45n1ek4zSkVwJ5pY
-        rqh1vIXuQZQ+q0Gi/t67jkxdu3B8sFjOGF9ipNKnPw==
-X-Google-Smtp-Source: ABdhPJxFW58LmjFQ2sV+aQMAz5AdRkRbkgO4NOt9cugPGtvFDYY4xWr6++WnNjKk6nO+SbTF8QVEWA7J+F6+Lk6vtb4=
-X-Received: by 2002:a2e:8703:: with SMTP id m3mr14339462lji.286.1590406496492;
- Mon, 25 May 2020 04:34:56 -0700 (PDT)
+        id S2390198AbgEYLfu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 07:35:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40100 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388733AbgEYLfu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 May 2020 07:35:50 -0400
+IronPort-SDR: iK9GiUyjX02C+Mq8J0LQ6NvAwCcM3PWRL5ZaEGm/uuYbroY9bx3kh+8Ubx9U/MBx9zNtOJHjrq
+ 9NKPqtnf5wQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 04:35:49 -0700
+IronPort-SDR: LU/Nt3wyDiaHAgasmeOYk4PGz1/yfR5AWHnEG+nZe5kQL557l4B66MrXRgQOttyAsIElmkpmdh
+ 5tnZjNk1GHyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
+   d="scan'208";a="266123246"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 04:35:47 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdBOZ-008mHs-2o; Mon, 25 May 2020 14:35:51 +0300
+Date:   Mon, 25 May 2020 14:35:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel
+ Galileo Gen 2
+Message-ID: <20200525113551.GR1634618@smile.fi.intel.com>
+References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+ <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
+ <20200525092028.GQ247495@lahna.fi.intel.com>
+ <20200525093150.GL1634618@smile.fi.intel.com>
+ <20200525094553.GR247495@lahna.fi.intel.com>
+ <20200525101335.GN1634618@smile.fi.intel.com>
+ <20200525110556.GT247495@lahna.fi.intel.com>
 MIME-Version: 1.0
-References: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1590153569-21706-1-git-send-email-mkshah@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 13:34:45 +0200
-Message-ID: <CACRpkdbpbOPfMfgjF17C=ET1SCiY49Wu55fgO6-kjBwR0mmQrg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] irqchip: qcom: pdc: Introduce irq_set_wake call
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525110556.GT247495@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, May 22, 2020 at 3:20 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Mon, May 25, 2020 at 02:05:56PM +0300, Mika Westerberg wrote:
+> On Mon, May 25, 2020 at 01:13:35PM +0300, Andy Shevchenko wrote:
+> > Due to parsing of ACPI tables. I don't want to copy'n'paste 25% of
+> > gpiolib-acpi.c in here. I think provided solution is cleaner and (more)
+> > flexible in terms of maintenance.
+> 
+> Hmm, you seem to pass a hard-coded pin number (1) to the core that then
+> passes it back to the driver. Why you can't simple use that number here
+> directly? You don't need to parse anything. What I'm missing? :-)
 
->   pinctrl: qcom: Remove irq_disable callback from msmgpio irqchip
->   pinctrl: qcom: Add msmgpio irqchip flags
+Okay, so, AFAIU you are proposing something like this:
 
-For these two:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-so the irqchip maintainers can merge them.
+1) find a GPIO controller by the ACPI path (somehow, I guess by finding a
+   handle followed by physical device behind it); 2) somehow to request a
+   pin from that device by number;
+3) convert to IRQ and use.
 
-But you ideally also need Bj=C3=B6rn's ACKs.
+Is it correct?
 
-Yours,
-Linus Walleij
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
