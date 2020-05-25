@@ -2,77 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1EC1E098A
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:02:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56C6F1E099E
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:05:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389207AbgEYJC1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 05:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51414 "EHLO
+        id S2388611AbgEYJFt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 05:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388854AbgEYJC1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:02:27 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2FCC08C5C0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:02:26 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v16so19948379ljc.8
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:02:26 -0700 (PDT)
+        with ESMTP id S2388182AbgEYJFt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:05:49 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2647FC061A0E
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:05:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so19929910ljo.5
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2hg/OH74DORU9tQYyoK6Bqm4fFp4PsuIpQ1XLjl+5O0=;
-        b=nJgmdmXKEcK518FOp+NQL3H6U+rX+6T2vs7v/hbMr9J7mT+2oqY5KESoJrLLAjOUG9
-         uZQP1RTQZ59BZRCli+A8sOYo+oCK7EjHGwWIJD7hMZeI49fs0lVC7oMvLSsrEaCdeYd7
-         D9ftD2zAvSNkl8FFKRMqVMuY2uWNqV+eUM+Ubhy8lyZ4Oan76ifF3HzMV80DsH0eWWwe
-         z/RYZU/PENhp4FyyFK+yA0dUh5joa/UuWAWxgcBchUTn1H5kvYWb/pD1B55BLWpj9Rb9
-         Q12oVhjQlXXxI49ZU5keD+FfG/wX4BZr6dj+DxxLXS2e8op5jpfTGZw4yAuPM+OtzzYX
-         mPBQ==
+        bh=ULQ0C4Z8YG2DDBGrPOoLRiKZ8GIiUXMQgIJE2wsdX9U=;
+        b=fatdWwToYQqxQ39058dHUjbr2e734cnwJtlLvWqTnEPGx47xhEVtC9ey3Pbg8eN1Gn
+         liwptiU8gUqN0OKUKoYJn8nHv1ieiSHrVaLm9xHcF+mHwXahJ9l+PUO91XjXp2vZt3o6
+         pnIJWNJTIF8H/3WBsRyxv0JTNTLAQLa5k/XyeoB6aifu+SCKPqOn3oY5LBAy9EulFFnp
+         JmxVm6ERpk/uH3nX/gQEyU86vvFVYWSfbWFyJZIS73re6rhQMaUDBdw3ONtHYB9pGHkU
+         rvyCPuJoC3zkWlm4VaWxcCx5pUQnTjJ2ggeU8k0I8DRyfz8gAq/ec7m9Np5uaH0f9vh/
+         Sn6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2hg/OH74DORU9tQYyoK6Bqm4fFp4PsuIpQ1XLjl+5O0=;
-        b=WW86i41iK/c4qxkT6Yb5eggD1i5AsRI+ndTDzjAhptlllQXkldOXxXEwS7lKG4ycUH
-         5SWWaXrA2FHGKihyUQ4HDRODgnu6LdZmGx8pVwyIGx7TeYrFMZV/uFlk8lcj/a4O8nUE
-         si2sQuLHuPcq+4Vpz+7ChTwGhCpgkksLorjQolajU2GaKlphaekY2PqlFCiW37USowli
-         t14Q2fIRoPsR/JJdcHrM1PS2QA7Ulp7ZZYwqhXz/YPo5xz9+/ceIBJtarhu8D8j6LoRZ
-         64JgH3vs1t60nMqkPo64LBKv6TBgDzTXGcHv51x5kMOfPNQ8xPMyT7x8Pxhn+OMbwf50
-         sG+Q==
-X-Gm-Message-State: AOAM530idbbIQRixv8FjrYwTNevIhxWuoGZFtRRZ7lexcFtNXv1DDHMA
-        sV5LGl/fg7aKIJYRFbsNt3HLs+Bx3lvwCOowWmkwQQ==
-X-Google-Smtp-Source: ABdhPJwWFwfymHIMrEwH+BYN7cjY1SJ5pJ5xBRDS9aLWhYF4MaLelR7tHM5Ct+bMfDm+2aOeyWd13ahqyngusi6HRaY=
-X-Received: by 2002:a2e:9716:: with SMTP id r22mr13965648lji.293.1590397344884;
- Mon, 25 May 2020 02:02:24 -0700 (PDT)
+        bh=ULQ0C4Z8YG2DDBGrPOoLRiKZ8GIiUXMQgIJE2wsdX9U=;
+        b=iJeqPYn6YxOqbzHJAXpYWFMC7zSO8G7q/NnXplRRc7iMPA6WSBPjYRE+1WpW76V+5X
+         mJft1XE48fgaKW0bNsNwaOKQ7nYosKrGa9qf192EOjhLy/wSb6d+3gGrXDJ+yOwdZc1Q
+         gThSuDileK799kWdTt+Zv92UZI73GzGJaj6w8KtJQPSnRJ8dHBOnHSm5wxtj749jmOab
+         bV6N4hpsnO8QyvdtSTuVwO2KU4rIpcKOxm+akiHWTYYbWHP3Bsz6TnF2HxUINt5wULYF
+         g/dO+ATZBPmfnSXKwsiWIwOOxkSHvpZI0qT1FBhR9Ep6RdTispIpirFKSeNYKRbti3s/
+         MK4Q==
+X-Gm-Message-State: AOAM5311OywhhwFpLijwo+44ajb5c+dBnV+JEmZam1ykwFHG/GCzNDHl
+        Ldb2Ld9ISTE7G8GhsV9Rad8D49RFqwpGY1/z1EHorA==
+X-Google-Smtp-Source: ABdhPJwvXVub1lKhMRE5xfouk0IV0hQodcZKcYvoyPn5kAg9Cj1rVP0qYhXcmdmw2R986sdTeYrmqyI63FJ3SdMk8ug=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr14067583lji.286.1590397547673;
+ Mon, 25 May 2020 02:05:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1589817025-21886-1-git-send-email-groverm@codeaurora.org> <20200519013813.GU2165@builder.lan>
-In-Reply-To: <20200519013813.GU2165@builder.lan>
+References: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200519131233.59032-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 11:02:14 +0200
-Message-ID: <CACRpkdbSsVcy=6Bo42SnPqgKoa+jNanmBEXix_yv6aNK8VcreQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Mayank Grover <groverm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
+Date:   Mon, 25 May 2020 11:05:37 +0200
+Message-ID: <CACRpkdbBVg7JL2_2VTxC-WcH5nj9-Gi=h+fA8ZqRfGBxveZqTA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] gpio: dwapb: Call acpi_gpiochip_free_interrupts()
+ on GPIO chip de-registration
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Neeraj Upadhyay <neeraju@codeaurora.org>
+        Serge Semin <fancer.lancer@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 19, 2020 at 3:39 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Tue, May 19, 2020 at 3:12 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> @Linus, we started off with something similar for GPIOs and ended up
-> with the logic in the core code. Should we somehow try to do the same
-> for pinctrl?
+> Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
+>
+> While at it, drop extra check to call acpi_gpiochip_request_interrupts().
+> There is no need to have an additional check to call
+> acpi_gpiochip_request_interrupts(). Even without any interrupts available
+> the registered ACPI Event handlers can be useful for debugging purposes.
+>
+> Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+> v3: appended tags (Serge)
 
-msm_pingroup_is_valid() looks very reusable but I'm afraid I do not
-understand the implicit assumptions around it, but I guess yes,
-if it can be properly documented etc.
+All four patches applied, thanks!
 
 Yours,
 Linus Walleij
