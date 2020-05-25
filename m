@@ -2,131 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B72041E117E
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 17:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 275771E1258
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 18:07:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391001AbgEYPRn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 11:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390998AbgEYPRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 11:17:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45459C061A0E;
-        Mon, 25 May 2020 08:17:43 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 131so561044pfv.13;
-        Mon, 25 May 2020 08:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JgdxX2C74TdDmjeVY9HQN2a/yq7wOSbOdwxkkYCYXyQ=;
-        b=N9adz5zOwkTSECpw8gScK2pWCHzS2JXKrK0SWR5uk5+0ARWhw5rdzsPascizMaKx5J
-         Mi5jklMWhTLlXpSZWJPhU8KLwex4X+dJUT8dpDlpb5vwIcWUPbBNi3uz38tNQZKXPSX5
-         SLdsG+G5/FitBcp28xwyWZXm+CnuzG/428JvNVcXov2lVq3dd9vNC6mx7j1tgByf2SYl
-         Op8bvijIDGefF5eWmo4yx5mh8TbKlHwdmi96W5eqaF3eZm/Wge/ZCZxL8nPIvXaNI19h
-         iZMjs0rjfgJ+26iiQK02Hzvvxz9FcTe3qgtqTIkHEchq6EXIVJdjg6xv+6qe3WG/qfVl
-         7REg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JgdxX2C74TdDmjeVY9HQN2a/yq7wOSbOdwxkkYCYXyQ=;
-        b=b67OcIOQKKuPYSF99W6jaYxI8/D/XsC9D7komow8yw+8w4QUEursWOKJHA/Haz8yIY
-         OOgKGknbvKsgeao86SQ5xVkVQfpFCjvZ8/+naknou0PZ91c7UOy2ryL3En2vcVowT8/o
-         jVh+V2yz7VaJgDjDMvSXfzSSWrX+M+TdoRib9PHKdDEskj95PUDVFibm5MMGTsezyV4r
-         8b33dJM/lTWz0AIrXkm+kcJFMJRj/J++x/8jtPcUEz21D2ASlSHsdh/PH0JKTM7eFkS9
-         1sv8HoRKsDdnijPzWIcSpJlENfOaCxxyzlTG0xJjBfd31RD3JuJSQX3sS4uBpdRmzSMY
-         /+kA==
-X-Gm-Message-State: AOAM5324RIA6JBslBR7EWctrWYHPOHvla2VdVLPOHoJlDBmetoMJqXY+
-        2zk18GI8qEwMd2wQoNFCeLYh41CDbWA=
-X-Google-Smtp-Source: ABdhPJzyrvfjMW1Z89guWcSUG6SP/b4006FtLKB7GKkz56yag7CQCPbh+mpzA+Z+rDjLdjAdA6JcQw==
-X-Received: by 2002:aa7:9aa8:: with SMTP id x8mr16954629pfi.182.1590419862613;
-        Mon, 25 May 2020 08:17:42 -0700 (PDT)
-Received: from sol (220-235-68-201.dyn.iinet.net.au. [220.235.68.201])
-        by smtp.gmail.com with ESMTPSA id k4sm5288767pfp.173.2020.05.25.08.17.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 25 May 2020 08:17:41 -0700 (PDT)
-Date:   Mon, 25 May 2020 23:17:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Bujanda <hector.bujanda@digi.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
-Message-ID: <20200525151736.GA32461@sol>
-References: <20200419001858.105281-1-hector.bujanda@digi.com>
- <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
- <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
- <20200525022252.GA22956@sol>
- <CACRpkdagkhbULGVGJqcS55m=X2EaH_iK0Khr8+6M7ATWrC3hOQ@mail.gmail.com>
+        id S2391181AbgEYQH4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 12:07:56 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:45263 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391148AbgEYQHz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 12:07:55 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8E99422F2E;
+        Mon, 25 May 2020 18:07:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590422873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Lhl17HX17vWOiAlEkuHl4r5UHiKHh3vCeJE3HYnlJGQ=;
+        b=iZsC/fm+utR+kq8WB1bSsEV+ti1j0PGfpqToTT0yvfxt4vjP4VNICJHj6tNi7Xb+gQ738S
+        40gsMGgXg6w/OdqzyKa8M8A1muCd8G4HEymcAbQF1ZgNQGhQDUe6XwN9BVvR9Od1G15HYT
+        GlTBceIx4Oc404S0p5xAWSb01XxPn+k=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v4 0/2] gpio: generic regmap implementation
+Date:   Mon, 25 May 2020 18:07:39 +0200
+Message-Id: <20200525160741.21729-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdagkhbULGVGJqcS55m=X2EaH_iK0Khr8+6M7ATWrC3hOQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 02:17:41PM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 4:22 AM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> > You mention timers for the gpio pins that cannot provide debounce,
-> > so I'm confused. Could you clarify which strategy you have in mind?
-> 
-> My idea is that the callback gpiod_set_debounce() for in-kernel consumers
-> should more or less always return success. Either the hardware does
-> the debounce,  or gpiolib sets up a timer.
-> 
-> > I've also had a quick look at the possibility of providing the software
-> > debounce for in-kernel consumers.
-> 
-> That is where I think it should start.
-> 
-> >  Are you anticipating new API for
-> > that?  e.g. allowing consumers to request gpio events?  Cos, gpio_keys
-> > grabs the irq itself - and that would bypass the software debouncer,
-> > or even conflict with it.
-> 
-> It may be hard or impossible.
-> 
-> I suppose gpiolib would have to steal or intercept the interrupt
-> by using e.g. IRQF_SHARED and then just return IRQ_HANDLED
-> on the first IRQ so the underlying irq handler does not get called.
-> 
+This series is a split off of the sl28cpld series:
+https://lore.kernel.org/linux-gpio/20200423174543.17161-1-michael@walle.cc/
 
-And how would gpiolib ensure that it was first in the chain?
+I wasn't sure if I should also include the gpiochip_irqchip_add_domain()
+patch here. So feel free to skip it. OTOH if you use interrupts with
+gpio-regmap it is quite handy.
 
-> After the timer times out it needs to retrigger the IRQ.
-> 
-> So the consuming driver would se a "debounced and ready"
-> IRQ so when it gets this IRQ it knows for sure there is
-> no bounciness on it because gpiolib already took care
-> of that.
-> 
-> The above is in no way trivial, but it follows the design pattern
-> of "narrow and deep" APIs.
-> 
+For an actual user see the patch 11/16 ("gpio: add support for the sl28cpld
+GPIO controller") of the series above.
 
-Totally agree with the concept - just trying to work out how to
-implement it seemlessly given the existing API and usage, and given my
-limited knowledge of the kernel internals.
+Changes since v3:
+ - set reg_dat_base, that was actually broken
+ - fix typo
+ - fix swapped reg_in_dir/reg_out_dir documentation
+ - use "goto err" in error path in gpio_regmap_register()
 
-> Failure is an option! Sorry if I push too complex ideas.
-> 
+Changes since v2:
+ See changelog in the former patch series.
 
-I'm not as concerned about complexity as I am about fragility.
+Michael Walle (2):
+  gpiolib: Introduce gpiochip_irqchip_add_domain()
+  gpio: add a reusable generic gpio_chip using regmap
 
-I don't see any problem adding debounce for gpiolib-cdev.
-Adding a more complete solution to gpiolib itself is certainly
-non-trivial, if it is possible at all. 
+ drivers/gpio/Kconfig        |   4 +
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-regmap.c  | 343 ++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.c      |  20 +++
+ include/linux/gpio-regmap.h |  69 ++++++++
+ include/linux/gpio/driver.h |   3 +
+ 6 files changed, 440 insertions(+)
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 include/linux/gpio-regmap.h
 
-The path I'll probably be taking is adding a debouncer to gpiolib-cdev,
-so at least we have a solution for userspace, then take a longer look at
-the more general solution.
+-- 
+2.20.1
 
-Cheers,
-Kent.
