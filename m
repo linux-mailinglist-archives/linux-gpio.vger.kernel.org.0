@@ -2,173 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F581E09A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:06:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 022A11E09B2
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389201AbgEYJGF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 05:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51982 "EHLO
+        id S2389330AbgEYJHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 05:07:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388660AbgEYJGF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:06:05 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B976EC08C5C0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 205so3784055qkg.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:06:03 -0700 (PDT)
+        with ESMTP id S2389329AbgEYJHo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:07:44 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45412C061A0E
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:07:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id x22so10125064lfd.4
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=nO2zcmFBdCWzlGqLw1pR2ThUuz31GiwsX9FmLMPWXkIRbISIRdArAGzOKpkV7Qzv10
-         5VetiQSFGmqqkEyKB7+SGACaU0qLz2m+9iyUgPiDy2IDRCPxhwFx8/5DMtWUHYRsjtlL
-         0atWQF/ahgFhsYQYAzdXXs0aRQhob0wySOVyDYs2DXpouokBCqB6slqb/TvDM+I33ev8
-         yk0brFmDMsprGHiwBPRLvyh/NVcy/OCFMiVYdFYc4bQaZFP6VvDRpzKRyp0zTf5FOVWN
-         aSAJO9abuoljXUYQUaIMlrcVwRxlonf00RVbuDaEI1E+vkonNYosmqgXcWB0HgzUmBS7
-         NMpg==
+         :cc;
+        bh=o89YSgHgcTaBTFg8kSTEtu5uSTSya1YFzL9l/HGPI9U=;
+        b=YlN12nX1NHZPKLk7yt+0r9zb+2BjRNJtbaz++sXUiesxUslZFemNMfuuSkIemfbRT3
+         IQXkU+BAHxfljUVwI9ADCeWwrlqIuqjlYZ4DQJ5UqtxtknIsqWuVXMzmM9tdQeKVQIuQ
+         U/uO4t8vUdzGuA9tqbhOIGzW3cMHMh2bv9R/bWSdrvrOAa0t6KvWZUtMJqn4tqzvpD0T
+         GirZ/je/NTvM2Ny7J0C/lkSOj3pRY+Gey/bt0DsSoCBs+p3AOGoU9pZ4kcXoMhtsOp++
+         JMa1mcq3XNbgMyxcHgOsBc0s8/Yig3k9ZVt4klCu2i3JIq585F+Sj/UdmjuAPEPizM6F
+         +2+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dPuZPyJHL9y310jCMBab1+wUqEyxBpL9sxzRpIMUcDw=;
-        b=DFBDfn6kXZlARczif6Qh7/VVe+CcUCTE6ici0JplAYUqhvOxq+Xc/cjhJCrahhiqWe
-         c/KXIu/xuNT2m0P7Dv+NzPKpnjKrecZJNOulCh42svOV+Lcp5pZja6SEkIBEeN5qN8mN
-         fVzKM0RiZrIRblYLJXoeugnRrTIjwJMR6AdsvfXbYYhuJxKuT8Yw1i6zrcM91oJorNMg
-         FvpKLNmathQvc4+CUHYTmZb7xMUZNOYZKkMNBXPFDa28DMCQEYfsDqFc4VL6IhsOp+Oo
-         AmY83/ui5F5OyQbUsnCe27bANToVBlVEizkOtPeC8NxpwNAmzx40yHGgxKd0zFPN56j4
-         /rOQ==
-X-Gm-Message-State: AOAM533mlmFiaBq9UX4FkZteoPRYJew8bA0DNr8xTfI6I2xTHYOpwVVl
-        InAOmaeEQK3SQmPu3D1mn6y5Y2CkHZ9m7BpsDc8Blg==
-X-Google-Smtp-Source: ABdhPJwwogx5lD1d892oBsZ0UV12gKR+k0N+3QkhwPrACB1IANnU5OS7w1qWs680sMYLIO0JDYTSL1iYK1byj+QAdpM=
-X-Received: by 2002:a37:5b47:: with SMTP id p68mr26336785qkb.120.1590397562647;
- Mon, 25 May 2020 02:06:02 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=o89YSgHgcTaBTFg8kSTEtu5uSTSya1YFzL9l/HGPI9U=;
+        b=eBMJnScMXDrfxSnzBse7DmBLM1ZX/UkbkWogCljmZEmmn0d2sm2v9cLAs7XfSyBz0q
+         aBu7YxiJt6aQImjUfTNBma/n7PxRZaXpFnntloXR9JP0yqmPk6R0QMcC3A71KhgL2yXo
+         htOybMNAmSOgAtbjoYGiGSK0cagJs95fizkmO7r9bzevj42C0BZqG+viIXRIioFIWq5w
+         /TPTdagGP+qTO0NY47P6lwAwezDhMiYmhrk3fO1yY5PbQBk9ATz5iXQD4+pEm1NKcC++
+         hWmDxLOfGk4UIf0DC7/0w+Bg+8MMxN7CgtoXmWReNbSpWFrizkV9IOqCMFdW0mAuyzrx
+         JTVg==
+X-Gm-Message-State: AOAM5327qqugCyc8Envij2kqlGI1kN1MmYTNjpIaSZDXGuqxuVy7onou
+        fXr1rEI0Sz9hfrXP+NLlQ9GrzEFkHw2atWXHbHIo3A==
+X-Google-Smtp-Source: ABdhPJy/AT6zyTak59N1xLSdRb6XGMmAHYxOO0NNAMXkgOgnxXyfRzG0yc0Un0CFMckQadJrKzvg9uMwEmTjdAIbnMQ=
+X-Received: by 2002:a19:be87:: with SMTP id o129mr10368301lff.217.1590397662771;
+ Mon, 25 May 2020 02:07:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com> <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-In-Reply-To: <75bff2917be1badd36af9f980cf59d2c@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 25 May 2020 11:05:51 +0200
-Message-ID: <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200520120955.68427-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200520120955.68427-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 11:07:32 +0200
+Message-ID: <CACRpkdZ_sL9Fe8AfU+tQxUF_iHZNBU=AUq01-y30AfpW=PqLkA@mail.gmail.com>
+Subject: Re: [PATCH v1] MAINTAINERS: Fix file name for DesignWare GPIO DT schema
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 12 maj 2020 o 16:41 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> >> +
-> >> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> >> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
-> >> +MODULE_LICENSE("GPL");
-> >> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
-> >> new file mode 100644
-> >> index 000000000000..a868cbcde6e9
-> >> --- /dev/null
-> >> +++ b/include/linux/gpio-regmap.h
-> >> @@ -0,0 +1,69 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0-only */
-> >> +
-> >> +#ifndef _LINUX_GPIO_REGMAP_H
-> >> +#define _LINUX_GPIO_REGMAP_H
-> >> +
-> >> +struct gpio_regmap;
-> >> +
-> >> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
-> >> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
-> >> +
-> >
-> > What if the addr is actually 0?
->
-> Then the driver has to set GPIO_REGMAP_ADDR_ZERO or use the convenience
-> macro GPIO_REGMAP_ADDR.
->
-> So you can have
->
->    struct gpio_regmap_config config =3D { 0 };
->    config.reg_dat_base =3D 0x10;
->    config.reg_dir_out_base =3D 0x20;
->
-> or
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR_ZERO;
->
-> or if you can't be sure if the RHS value might be zero:
->
->    config.reg_dat_base =3D GPIO_REGMAP_ADDR(reg);
->
->
-> > Maybe drop GPIO_REGMAP_ADDR and require users to set unused registers
-> > to GPIO_REGMAP_ADDR_ZERO?
->
-> Thats bad because:
->   * you'd have to set plenty of unused base registers for a simple driver
->   * if there will be additional properties in the future, you have to
-> touch
->     all other drivers, because they are initialized as 0 (ie. valid reg
-> 0).
->
-> >> +/**
-> >> + * struct gpio_regmap_config - Description of a generic regmap
-> >> gpio_chip.
-> >> + *
-> >> + * @parent:            The parent device
-> >> + * @regmap:            The regmap used to access the registers
-> >> + *                     given, the name of the device is used
-> >> + * @label:             (Optional) Descriptive name for GPIO
-> >> controller.
-> >> + *                     If not given, the name of the device is used.
-> >> + * @ngpio:             Number of GPIOs
-> >> + * @reg_dat_base:      (Optional) (in) register base address
-> >> + * @reg_set_base:      (Optional) set register base address
-> >> + * @reg_clr_base:      (Optional) clear register base address
-> >> + * @reg_dir_in_base:   (Optional) out setting register base address
-> >> + * @reg_dir_out_base:  (Optional) in setting register base address
-> >
-> > The two above are inverted I think?
-> good catch.
->
-> > Also: why the limitation of only supporting one at a time?
->
-> they should be exclusive, either you have a register where you set the
-> output bits to one, or the input bits. Maybe this need a bit more
-> context
-> above. in gpio-mmio.c you can set both and both are used in
-> set_direction(), but only one is read in get_direction().
->
-> That being said, I have no strong opinion wether they should be
-> exclusive
-> or not, besides the symmetry of set_/get_direction().
->
-> -michael
->
+On Wed, May 20, 2020 at 2:10 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Sorry for the late response, your comments make sense to me. Are you
-going to submit a v4 before the v5.8 merge window?
+> The commit 657a06df993c
+>   ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
+> missed MAINTAINERS update.
+>
+> Fixes: 657a06df993c ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
+> Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Bart
+Patch applied with Serge's review tag.
+
+Yours,
+Linus Walleij
