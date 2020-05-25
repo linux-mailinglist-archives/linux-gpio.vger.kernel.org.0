@@ -2,90 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39F331E0F6C
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 15:25:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60ACC1E0F96
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 15:35:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388794AbgEYNZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 09:25:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30274 "EHLO mga04.intel.com"
+        id S2390754AbgEYNfg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 09:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388685AbgEYNZ0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 09:25:26 -0400
-IronPort-SDR: rObcf0Q+uMIrYGvWdq4suARQfM082pAeOrZ9MwQauxJR1VgRNk69YlABge4Fay0XfQHVWih/d4
- a755zuDuo7bw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 06:25:25 -0700
-IronPort-SDR: 2+jbuk/O7v+ofuIpI3sxz4UMMXRzsN+jsUGJhAsU1ZG1GsQPSA1cVKS5b9oU+XZSwuMIBZqQtN
- c4lQR60f+phA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="441730138"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 25 May 2020 06:25:19 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdD6X-008nCW-92; Mon, 25 May 2020 16:25:21 +0300
-Date:   Mon, 25 May 2020 16:25:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Pierre-louis Bossart <pierre-louis.bossart@intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 10/16] gpio: add a reusable generic gpio_chip using
- regmap
-Message-ID: <20200525132521.GZ1634618@smile.fi.intel.com>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-11-michael@walle.cc>
- <CAMpxmJV3XTOxuoKeV-z2d75qWqHkgvV9419tfe3idDeKwoeoLA@mail.gmail.com>
- <75bff2917be1badd36af9f980cf59d2c@walle.cc>
- <CAMpxmJXctc5cbrjSeJxa7DfmjiVsbyhqAbEKt-gtayKhQj0Cnw@mail.gmail.com>
- <951244aab2ff553a463f7431ba09bf27@walle.cc>
- <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
+        id S2388794AbgEYNfg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 May 2020 09:35:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE842073B;
+        Mon, 25 May 2020 13:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590413736;
+        bh=/72aYS03PTgitMRbLEoL5VA6pHsNsvFhgWo3DmnTBUk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M7rUk/qH6pK6wkXGpKOMB88gQbPwbxTegUUWc+4soZXGF7fZEIcCa2GiTtz1GoNXG
+         V0FCUI9SbMhnNEe1S3fODwvTXeE+5/+AelvaEHTZKHKRs6Z+/1F2CnFKi8C3jcZwPO
+         piHAKD7HSFePdX1nmuBdHKrUQKITLBgW1pxWHhtI=
+Date:   Mon, 25 May 2020 15:35:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
+Message-ID: <20200525133533.GA872869@kroah.com>
+References: <20200428195651.6793-1-mani@kernel.org>
+ <20200428195651.6793-3-mani@kernel.org>
+ <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
+ <20200429124918.GC6443@Mani-XPS-13-9360>
+ <20200519085703.GB27787@localhost>
+ <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
+ <20200525111203.GB279021@kroah.com>
+ <CACRpkdaQLmZEDm4nFxtAiyOJVgUMp7tDgAv8-Bwk=G_SV5jf-g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZYEZk7o+Y2-AqnHGsY8N7KGGmPGSuSS=H7YY8VLZ3jZw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CACRpkdaQLmZEDm4nFxtAiyOJVgUMp7tDgAv8-Bwk=G_SV5jf-g@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 02:59:36PM +0200, Linus Walleij wrote:
-> On Mon, May 25, 2020 at 12:20 PM Michael Walle <michael@walle.cc> wrote:
+On Mon, May 25, 2020 at 03:02:15PM +0200, Linus Walleij wrote:
+> On Mon, May 25, 2020 at 1:12 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> > If you like I could submit this patch on its own. But then there
-> > wouldn't be a user for it.
+> > > I remember I even referred to this myself, but I've been waning a bit
+> > > on it recently, because it turns out that userspace/users aren't very
+> > > good at parsing sysfs for topology.
+> >
+> > Which is why they could use libudev :)
 > 
-> I'm pretty much fine with that, we do merge code that has no
-> users if we anticipate they will be around the corner.
+> Yet they insist on using things like Busybox' mdev (e.g. OpenWrt)
+> or Android ... or is Android using libudev now? I'd be delighted
+> if they did.
 
-I remember we discussed with Pierre to use it for his ASoC work.
-Pierre, does it sound useful for you?
+No, Android is not using libudev yet, they seem to be reinventing the
+same thing, slowly, over time :(
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+greg k-h
