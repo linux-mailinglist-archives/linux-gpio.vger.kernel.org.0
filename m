@@ -2,79 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02ADE1E0C96
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5BA11E0D2A
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 13:31:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390069AbgEYLMG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 07:12:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390003AbgEYLMG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 07:12:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF0F20723;
-        Mon, 25 May 2020 11:12:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590405125;
-        bh=vRFVXyIsmXnGGPyWv/9BQ79AvtKwa530dOjUkPXl8WM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m/XxOHBDQOiPx2mx/lu6b+Em6kLEldYgVbgV039cMwBhdP5FcTvg7e6IAvV+Ty3vW
-         ohH4JaIWQUajJj1vhstYuNy6Vyd0ua32NwzrXliQC7L4r0IdB4J+W4n0aEr/glI33v
-         +wrSsS79xmKZ3Y9nK/Tsk10aFdLjKmQO/6DQiQIE=
-Date:   Mon, 25 May 2020 13:12:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 2/2] usb: serial: xr_serial: Add gpiochip support
-Message-ID: <20200525111203.GB279021@kroah.com>
-References: <20200428195651.6793-1-mani@kernel.org>
- <20200428195651.6793-3-mani@kernel.org>
- <CACRpkdZ3b-VLvxN06H_4cDOtUEQTVbe=Zw+NA=YjssMzK2d2sQ@mail.gmail.com>
- <20200429124918.GC6443@Mani-XPS-13-9360>
- <20200519085703.GB27787@localhost>
- <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
+        id S2390387AbgEYLbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 07:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390143AbgEYLbP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 07:31:15 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2023C05BD43
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:31:14 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z13so10713480ljn.7
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 04:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jH3BTO4OaLIgfrhXrll41GqJ8j6vlfXlN+l6Q0SbCkk=;
+        b=jo7Vn4e5TVXYw42XMs4yncszg3khjtfiTt9MmOySiJywQInpoDyZdPkuWOmWYG+x9V
+         poYskqWO3dxaTQL8TziyfGdYfEqS4OJme+QvbTt82QsPlenWAdGh3gjTnHmrMlTxBm5E
+         1k4B5IXlGNZIukjWDoQZMZ49avEuVvCen1E3bih46FRs3Du5nlVFkQFDbWi4C/pi2VfO
+         rgihfDdMTc7b0DKmflceZ/YmKZ5PkPlb68cZ9rYnqNoHAPkiswQeyzZ8C5cqIk8V2vQS
+         +Jwx6DHqw0eySmWyTw7XaAT2CEKH/VDdubFkWkNfXhLYCF2HfXrkLYz7l/bBzfZy6a+5
+         zfNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jH3BTO4OaLIgfrhXrll41GqJ8j6vlfXlN+l6Q0SbCkk=;
+        b=e0/Uo0lm5ceLNJActlpM3EhM5t9eqQHeob+hhyjEZACNuaasm6hSXZdjXb7SNmIsSt
+         ZyiZSQKQ60h4kUxJdGRFJYzD5Vn3VNO8GAfU0/ffEbNI5UwjSg7zMowRHBtlAel4/5qN
+         MJzd7kXCXkcPkIZ9dv4HSHvI/dhR6tGcRE16+hgDUjgHCCx03iDfsdCD1wBtpXwRsopg
+         Vd6DWBSbHTuRLpr2bEJWM38VseWLVgXECyjhX4DouHv/YTPeWOED0BmWJDagT6kGXBAx
+         TVQ3NN1uH+QaJVuUl6V1yCt7jkREi/d6e2cwjBwIC9QK3PBvxll1YaNigbVadsOYRQu0
+         ITrA==
+X-Gm-Message-State: AOAM532PuKewrMrY3YPb0Kh4NxRLiqOS6ZRrTf/o3Yh9rfhUuEiVdcrM
+        eUiqye1C8fhivO0Pk3vV2q5e62gornwhCErvJZz3tkuV
+X-Google-Smtp-Source: ABdhPJx7Da3aXta7XwCCKYM29dZF6eBtJ4NMtIZQOG4fT6BwoWWfIhe/OCu9vqTrIuP+2W3IgRkAIhSEw2J1qOsEN60=
+X-Received: by 2002:a2e:8703:: with SMTP id m3mr14332878lji.286.1590406273412;
+ Mon, 25 May 2020 04:31:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdapMuMs_mEUHheGtaKYg97=nL1bH3zq4Tc3cnX9Jbw-Ew@mail.gmail.com>
+References: <20200522080839.32612-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200522080839.32612-1-dinghao.liu@zju.edu.cn>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 25 May 2020 13:31:02 +0200
+Message-ID: <CACRpkdbwwZm+FF1cOxJ0xuKi=BmmV49Xno2y6A2QqMCctin=ag@mail.gmail.com>
+Subject: Re: [PATCH] gpio: rcar: Fix runtime PM imbalance on error
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Kangjie Lu <kjlu@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 10:59:59AM +0200, Linus Walleij wrote:
-> On Tue, May 19, 2020 at 10:57 AM Johan Hovold <johan@kernel.org> wrote:
-> > > On Wed, Apr 29, 2020 at 02:12:24PM +0200, Linus Walleij wrote:
-> 
-> > > > to something that is device-unique, like "xr-gpios-<serial number>"
-> > > > which makes it easy to locate the GPIOs on a specific serial converter
-> > > > for lab use. However the USB serial maintainers know better what
-> > > > to use here. Whatever makes a USB-to-serial unique from a TTY
-> > > > point of view is probably fine with me too.
-> > > >
-> > > > My idea is that people might want to know which USB cable
-> > > > this is sitting on, so I have this USB cable and from this label
-> > > > I can always figure out which GPIO device it is.
-> >
-> > I think we've had this discussion before. First, not every device has a
-> > unique serial number. Second, we already have a universal way of
-> > distinguishing devices namely by using the bus topology. That's
-> > available through sysfs and shouldn't have to be be re-encoded by every
-> > driver in the gpiochip name.
-> 
-> I remember I even referred to this myself, but I've been waning a bit
-> on it recently, because it turns out that userspace/users aren't very
-> good at parsing sysfs for topology.
+On Fri, May 22, 2020 at 10:08 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
 
-Which is why they could use libudev :)
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
+>
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-thanks,
+Patch applied.
 
-greg k-h
+Yours,
+Linus Walleij
