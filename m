@@ -2,98 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDCA81E0AF3
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:46:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABF91E0B70
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 12:09:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389437AbgEYJp5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 05:45:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17285 "EHLO mga01.intel.com"
+        id S2389651AbgEYKJx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 06:09:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54391 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389333AbgEYJp5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 May 2020 05:45:57 -0400
-IronPort-SDR: 72Tc90R/Rw6Qfz8h9RKOUpyDCt8yvW2GYvgQM/1R+NkNpb9gK5t18YBfnSkFmmrY/XYCpGqAGD
- v3Yf6MLUu5ZQ==
+        id S2389398AbgEYKJx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 25 May 2020 06:09:53 -0400
+IronPort-SDR: YwMnsldVoelR13YrRc6pw2WzPvl2SEswwwnIQJ08y7+7LS3UKPSBOEDuxQAfSaOigbuUywnz7G
+ +o8wjTLleslA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 02:45:56 -0700
-IronPort-SDR: 1/LaF9NS5EC2dcKZUXBSXsWJjHMQOsjStXBXmQP79plwqrxNoOwTYAidgs3nVUTdGEDHGiO8+1
- m93kaBhQFEkA==
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 03:09:49 -0700
+IronPort-SDR: UsYmB046x+P4gwRnG3gmNDXFzhBXSNFKte831o4xoMJOtg/LzZh/LreJyWoPg+Xv+GPooOF56f
+ ZLzWQaYKV6Pg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,433,1583222400"; 
-   d="scan'208";a="375393282"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 25 May 2020 02:45:54 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 25 May 2020 12:45:53 +0300
-Date:   Mon, 25 May 2020 12:45:53 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="301783605"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 25 May 2020 03:09:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdA3L-008lWa-Af; Mon, 25 May 2020 13:09:51 +0300
+Date:   Mon, 25 May 2020 13:09:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] gpio: pca953x: Override GpioInt() pin for Intel
- Galileo Gen 2
-Message-ID: <20200525094553.GR247495@lahna.fi.intel.com>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 4/5] gpio: pca935x: Allow IRQ support for driver built
+ as a module
+Message-ID: <20200525100951.GM1634618@smile.fi.intel.com>
 References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
- <20200520211916.25727-5-andriy.shevchenko@linux.intel.com>
- <20200525092028.GQ247495@lahna.fi.intel.com>
- <20200525093150.GL1634618@smile.fi.intel.com>
+ <20200520211916.25727-4-andriy.shevchenko@linux.intel.com>
+ <CAMpxmJVEav8tOBoMWoekfQUaLOfCNOdj6N8fYx5UQ5e_VtHs5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200525093150.GL1634618@smile.fi.intel.com>
+In-Reply-To: <CAMpxmJVEav8tOBoMWoekfQUaLOfCNOdj6N8fYx5UQ5e_VtHs5w@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, May 25, 2020 at 12:31:50PM +0300, Andy Shevchenko wrote:
-> On Mon, May 25, 2020 at 12:20:28PM +0300, Mika Westerberg wrote:
-> > On Thu, May 21, 2020 at 12:19:16AM +0300, Andy Shevchenko wrote:
-> > > ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
-> > > of one of the I�C GPIO expanders. ACPI GPIO library provides a special
-> > > quirk which we may use in this case. With help of it, override GpioInt()
-> > > pin for the affected platform.
+On Mon, May 25, 2020 at 11:38:32AM +0200, Bartosz Golaszewski wrote:
+> śr., 20 maj 2020 o 23:19 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisał(a):
+> >
+> > Perhaps by some historical reasons the IRQ support has been allowed
+> > only for built-in driver. However, there is nothing prevents us
+> > to build it as module an use as IRQ chip.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> ...
-> 
-> > > +static const struct acpi_gpio_params pca953x_interrupt_gpios = { 0, 0, true };
-> > > +
-> > > +static const struct acpi_gpio_mapping pca953x_acpi_interrupt_gpios[] = {
-> > > +	{ "interrupt-gpios", &pca953x_interrupt_gpios, 1, ACPI_GPIO_QUIRK_FORCE_PIN, 1 },
-> > > +	{ }
-> > > +};
-> > > +
-> > > +static int pca953x_acpi_interrupt_get_irq(struct device *dev)
-> > > +{
-> > > +	struct gpio_desc *desc;
-> > > +
-> > > +	if (devm_acpi_dev_add_driver_gpios(dev, pca953x_acpi_interrupt_gpios))
-> > > +		dev_warn(dev, "can't add GPIO ACPI mapping\n");
-> > > +
-> > > +	desc = devm_gpiod_get(dev, "interrupt", GPIOD_IN);
-> > > +	if (IS_ERR(desc))
-> > > +		return PTR_ERR(desc);
-> > > +
-> > > +	return gpiod_to_irq(desc);
-> > > +}
-> > > +
-> > > +static const struct dmi_system_id pca953x_dmi_acpi_interrupt_info[] = {
-> > > +	{
-> > > +		.ident = "Intel Galileo Gen 2",
-> > > +		.matches = {
-> > > +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
-> > > +		},
-> > > +	},
-> > > +	{}
-> > 
-> > Since you do everything already in this driver, I think we can live
-> > without adding ACPI_GPIO_QUIRK_FORCE_PIN to the core code at all.
-> 
-> Hmm... I don't see how (perhaps need morning coffee). Any pointers?
+> This may have been a stand-alone patch as well,
 
-Well you already know all the details in this driver, no? Why you need
-to pass any of this information to the core and the back to the same
-driver?
+Yes.
+
+>	so I went ahead and applied it for next.
+
+Thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
