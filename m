@@ -2,76 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 022A11E09B2
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:07:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2B471E09C1
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 May 2020 11:10:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389330AbgEYJHp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 05:07:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52242 "EHLO
+        id S1726222AbgEYJKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 May 2020 05:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389329AbgEYJHo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:07:44 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45412C061A0E
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:07:44 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x22so10125064lfd.4
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:07:44 -0700 (PDT)
+        with ESMTP id S1725809AbgEYJKt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 05:10:49 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5859C061A0E
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:10:49 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id x13so7775064qvr.2
+        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 02:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o89YSgHgcTaBTFg8kSTEtu5uSTSya1YFzL9l/HGPI9U=;
-        b=YlN12nX1NHZPKLk7yt+0r9zb+2BjRNJtbaz++sXUiesxUslZFemNMfuuSkIemfbRT3
-         IQXkU+BAHxfljUVwI9ADCeWwrlqIuqjlYZ4DQJ5UqtxtknIsqWuVXMzmM9tdQeKVQIuQ
-         U/uO4t8vUdzGuA9tqbhOIGzW3cMHMh2bv9R/bWSdrvrOAa0t6KvWZUtMJqn4tqzvpD0T
-         GirZ/je/NTvM2Ny7J0C/lkSOj3pRY+Gey/bt0DsSoCBs+p3AOGoU9pZ4kcXoMhtsOp++
-         JMa1mcq3XNbgMyxcHgOsBc0s8/Yig3k9ZVt4klCu2i3JIq585F+Sj/UdmjuAPEPizM6F
-         +2+g==
+         :cc:content-transfer-encoding;
+        bh=lhgITogm3wNdDkyll38UukGrwlXQ0TAASl58Hhp1S4s=;
+        b=qYprTas/88FCDOtbmZDDea0RZy6ywvj2YiSMcgOXQWJrQUd06fiHOWDrJ4Ar59pqyE
+         YpLrN+qDmL1H2fw4vcjRJJ9QUklgARNThpot+VGb76+yf5dFr6hF2NXftk/vnCuDJhGL
+         CSF9CG0tTGcXaUCzF+aTJLTVSU5XZOFQ3JgqTxqlMYLZ3w/Al+66CUsOlEAgm0mGNo1R
+         AwZGAIL6FysFm9R3h1jJpvSPYwh4VaqY8UZtMFAWbitxY+tUqblKIuQa39RnX5jEaWB0
+         nr/VjmemK5YvIeHSMVksGoo1zv4LmXMXX1zyJ4mo22mwtewA1jcwp33/Wu+kaI2CyDPC
+         qOCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o89YSgHgcTaBTFg8kSTEtu5uSTSya1YFzL9l/HGPI9U=;
-        b=eBMJnScMXDrfxSnzBse7DmBLM1ZX/UkbkWogCljmZEmmn0d2sm2v9cLAs7XfSyBz0q
-         aBu7YxiJt6aQImjUfTNBma/n7PxRZaXpFnntloXR9JP0yqmPk6R0QMcC3A71KhgL2yXo
-         htOybMNAmSOgAtbjoYGiGSK0cagJs95fizkmO7r9bzevj42C0BZqG+viIXRIioFIWq5w
-         /TPTdagGP+qTO0NY47P6lwAwezDhMiYmhrk3fO1yY5PbQBk9ATz5iXQD4+pEm1NKcC++
-         hWmDxLOfGk4UIf0DC7/0w+Bg+8MMxN7CgtoXmWReNbSpWFrizkV9IOqCMFdW0mAuyzrx
-         JTVg==
-X-Gm-Message-State: AOAM5327qqugCyc8Envij2kqlGI1kN1MmYTNjpIaSZDXGuqxuVy7onou
-        fXr1rEI0Sz9hfrXP+NLlQ9GrzEFkHw2atWXHbHIo3A==
-X-Google-Smtp-Source: ABdhPJy/AT6zyTak59N1xLSdRb6XGMmAHYxOO0NNAMXkgOgnxXyfRzG0yc0Un0CFMckQadJrKzvg9uMwEmTjdAIbnMQ=
-X-Received: by 2002:a19:be87:: with SMTP id o129mr10368301lff.217.1590397662771;
- Mon, 25 May 2020 02:07:42 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lhgITogm3wNdDkyll38UukGrwlXQ0TAASl58Hhp1S4s=;
+        b=U/fXmNqcoPIMMxtuLNXVzjjhjlsa4KO3k+d5x/aLXPCv8uU3KOuFRSoS0wNIApBo78
+         7r7huHXGJjgdow1ip3mRB0d6HzF9z9BW7D0mXgbSS+fJ0uapGaqb+wza+1RaXBWsY/C/
+         Yc2QwurLqLTxKjYSM4Tzj7V/d5YZsZIycTItt+DOsZ2hEk34wVwCYELea+I2V7/8HB5f
+         QOmLdXnMAGamuZIRgWYY32AWoYsXrgwpuO9X0v0uIU3J4iqtbSBXDalGEN6LNw0st6g8
+         /Gb8iaadGQb9r/NxaLPglNLGLTmaqQzpe54oc+vgU3hg4Rj1L9OOHVnDd72LbTH8Z93t
+         li4A==
+X-Gm-Message-State: AOAM531Uhl9CKSYoeQ+mf2iniCUD9PkDFvlYyvpHGslGPGJ8j1bvUfi7
+        1NZCuXTg2TWESMyW12s5lafDJ7EIMp4lYMWXpV9psw==
+X-Google-Smtp-Source: ABdhPJzG1FSq+3B5OPDiqXe3hmcmV4BJqFWi5fGdrSXCfovS8bvHpC4Rg2AUasLJLcvDl0WeS6eBgwTi2pU7XLiTzlI=
+X-Received: by 2002:a0c:e5cc:: with SMTP id u12mr8506531qvm.134.1590397848814;
+ Mon, 25 May 2020 02:10:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200520120955.68427-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200520120955.68427-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 May 2020 11:07:32 +0200
-Message-ID: <CACRpkdZ_sL9Fe8AfU+tQxUF_iHZNBU=AUq01-y30AfpW=PqLkA@mail.gmail.com>
-Subject: Re: [PATCH v1] MAINTAINERS: Fix file name for DesignWare GPIO DT schema
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+References: <20200521015713.2206065-1-axel.lin@ingics.com>
+In-Reply-To: <20200521015713.2206065-1-axel.lin@ingics.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 25 May 2020 11:10:37 +0200
+Message-ID: <CAMpxmJVEucQ84kVrGVg231T9KE+7CaJMQzECdG520pMfDcvoUw@mail.gmail.com>
+Subject: Re: [RFT][PATCH] gpio: mlxbf2: Fix sleeping while holding spinlock
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Asmaa Mnebhi <Asmaa@mellanox.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 20, 2020 at 2:10 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> The commit 657a06df993c
->   ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
-> missed MAINTAINERS update.
+czw., 21 maj 2020 o 03:57 Axel Lin <axel.lin@ingics.com> napisa=C5=82(a):
 >
-> Fixes: 657a06df993c ("dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema")
-> Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> mutex_lock() can sleep, don't call mutex_lock() while holding spin_lock.
+>
+> Fixes: bc0ae0e737f5 ("gpio: add driver for Mellanox BlueField 2 GPIO cont=
+roller")
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
 
-Patch applied with Serge's review tag.
+Applied for fixes, thanks!
 
-Yours,
-Linus Walleij
+Bartosz
