@@ -2,164 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B261E3130
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2020 23:28:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E9331E3209
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 00:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390398AbgEZV2A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 May 2020 17:28:00 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:39417 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390211AbgEZV17 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 17:27:59 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1E4162304C;
-        Tue, 26 May 2020 23:27:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590528477;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v1prg2AxKlPkUY+YRJw3VW568pjZYParmSiyD+lvqy4=;
-        b=C41jJIgiWGa3naA6SPxOtWInxa4SXpkUwdeU9rmO4SvzAgfOeYc6sTjGKBzIkmgZegYZev
-        A6Y5Tvniz+HuZXZRtKBs18F4CWWtiYZ1OTpnIKtbxD9eoDbFfCDPoRyvOcgC49bvsq7vcq
-        8uOdm4qngOvyLCsdb0Q9Wch1K3JTkP8=
+        id S2389638AbgEZWIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 May 2020 18:08:13 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35962 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389342AbgEZWIN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 18:08:13 -0400
+Received: by mail-io1-f68.google.com with SMTP id y18so3370683iow.3;
+        Tue, 26 May 2020 15:08:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mXe3eMhOfw8Yi0mzveU2UUdf9WbJiPX68762lf2f3m8=;
+        b=lnGpxnl4Ptsii9Oal3CfKvRrQ6E70G0Es5XwkC6aYwMTShppiSQ48V2buS2xEMJp6n
+         n4foNO7lb0Uc7qLZ0usrc3jicmeTmeeP4PTChZbNlACtK+7zrJiwMYFYL0JaVhRd0yLe
+         R3iA1MagoO3zpwnt2OJrlbNjN0e0Q+9HxnTAN0VCylBabiegqtd7QLTd+zxeAkKByrjE
+         wYmryKC5xRhvPvJBes4T5RW2v2bK9R0hsvC+YNiJR6N88MqISKcW/bWDggbIqV+KXb7Q
+         skAnadg8HoE/Z/iRTVZM+jw1Jqp4vo+7yY5czD10RjY+T9ZXeohDV9kbqS8Bwc0fjGlm
+         52Dg==
+X-Gm-Message-State: AOAM532IsBhhZ2JVWIK7JNQXwfKh0tOtgAKH9tZxtA/80Aacwiz3OXgt
+        zSqSIkDytsg8jsDa/D51nw==
+X-Google-Smtp-Source: ABdhPJxua5/2ASeh+JDi3H6ENvlO5duKzfxD0bd/FxftWvnUVDU7fZZVP6RJWTWfF7tnoEbMyFvyDA==
+X-Received: by 2002:a02:b782:: with SMTP id f2mr3009396jam.91.1590530891856;
+        Tue, 26 May 2020 15:08:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o70sm677282ild.3.2020.05.26.15.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 15:08:10 -0700 (PDT)
+Received: (nullmailer pid 467130 invoked by uid 1000);
+        Tue, 26 May 2020 22:08:08 -0000
+Date:   Tue, 26 May 2020 16:08:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     daniel@ffwll.ch, linux-arm-msm@vger.kernel.org, jonas@kwiboo.se,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, a.hajda@samsung.com,
+        narmstrong@baylibre.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        robdclark@chromium.org, jeffrey.l.hugo@gmail.com,
+        jernej.skrabec@siol.net, airlied@linux.ie, spanda@codeaurora.org,
+        Laurent.pinchart@ideasonboard.com, swboyd@chromium.org,
+        bgolaszewski@baylibre.com, bjorn.andersson@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
+ yaml
+Message-ID: <20200526220808.GA467074@bogus>
+References: <20200513215902.261547-1-dianders@chromium.org>
+ <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 May 2020 23:27:57 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
-References: <20200525160741.21729-1-michael@walle.cc>
- <20200525160741.21729-3-michael@walle.cc>
- <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-Am 2020-05-26 19:29, schrieb Pierre-Louis Bossart:
->> +struct gpio_regmap {
->> +    struct device *parent;
->> +    struct regmap *regmap;
->> +    struct gpio_chip gpio_chip;
->> +
->> +    int reg_stride;
->> +    int ngpio_per_reg;
->> +    unsigned int reg_dat_base;
->> +    unsigned int reg_set_base;
->> +    unsigned int reg_clr_base;
->> +    unsigned int reg_dir_in_base;
->> +    unsigned int reg_dir_out_base;
+On Wed, 13 May 2020 14:59:01 -0700, Douglas Anderson wrote:
+> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
+> Unless there's someone known to be better, I've set the maintainer in
+> the yaml as the first person to submit bindings.
 > 
-> I wonder if a base is enough, shouldn't there be a 'last' or something
-> that constrains the range of regmap addresses to be used for gpios?
-
-This should be covered on the regmap, shouldn't it?
-
-> related question since I couldn't figure out how to convert my PCM512x
-> example, where there are 6 GPIOs configured with 3 regmap-visible
-> registers [1], to this mapping.
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> I removed Stephen's review tag on v5 since I squashed in a bunch of
+> other stuff.
 > 
-> GPIO_EN defines if the GPIO is used or not (each bitfield is tied to a
-> GPIO)
+> Changes in v6: None
+> Changes in v5:
+> - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
 > 
-> GPIO_CONTROL_1 defines the level (each bitfield is tied to a GPIO)
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2:
+> - specification => specifier.
+> - power up => power.
+> - Added back missing suspend-gpios.
+> - data-lanes and lane-polarities are are the right place now.
+> - endpoints don't need to be patternProperties.
+> - Specified more details for data-lanes and lane-polarities.
+> - Added old example back in, fixing bugs in it.
+> - Example i2c bus is just called "i2c", not "i2c1" now.
 > 
-> GPIO_OUTPUT_1+offset defines what signal is routed to each GPIO. I am
-> really not sure how this part would be handled?
+>  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
+>  .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
+>  2 files changed, 285 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
 > 
-> That's 8 registers total to deal with GPIOs.
 
-Looks like you need a custom xlate function:
-
-int pcm512x_gpio_regmap_xlate(struct gpio_regmap *gpio, unsigned int 
-base,
-                               unsigned int offset, unsigned int *reg,
-                               unsigned int *mask)
-{
-   switch (base)
-   case GPIO_EN:
-   case GPIO_CONTROL_1:
-      *reg = base;
-      *mask = (1 << offset);
-      break;
-   case GPIO_OUTPUT_1:
-      *reg = base + offset;
-      *mask = ...
-      break;
-}
-
-base is always one of the xx_base properties in the "struct
-gpio_regmap_config".
-
->> +/**
->> + * struct gpio_regmap_config - Description of a generic regmap
->> gpio_chip.
->> + *
->> + * @parent:        The parent device
->> + * @regmap:        The regmap used to access the registers
->> + *            given, the name of the device is used
->> + * @label:        (Optional) Descriptive name for GPIO controller.
->> + *            If not given, the name of the device is used.
->> + * @ngpio:        Number of GPIOs
->> + * @reg_dat_base:    (Optional) (in) register base address
->> + * @reg_set_base:    (Optional) set register base address
->> + * @reg_clr_base:    (Optional) clear register base address
->> + * @reg_dir_in_base:    (Optional) in setting register base address
->> + * @reg_dir_out_base:    (Optional) out setting register base
->> address
->> + * @reg_stride:        (Optional) May be set if the registers (of
->> the
->> + *            same type, dat, set, etc) are not consecutive.
->> + * @ngpio_per_reg:    Number of GPIOs per register
->> + * @irq_domain:        (Optional) IRQ domain if the controller is
->> + *            interrupt-capable
->> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
->> + *            offset to a register/bitmask pair. If not
->> + *            given the default gpio_regmap_simple_xlate()
->> + *            is used.
->> + *
->> + * The reg_mask_xlate translates a given base address and GPIO
->> offset to
->> + * register and mask pair. The base address is one of the given
->> reg_*_base.
->> + *
->> + * All base addresses may have the special value
->> GPIO_REGMAP_ADDR_ZERO
->> + * which forces the address to the value 0.
->> + */
->> +struct gpio_regmap_config {
->> +    struct device *parent;
->> +    struct regmap *regmap;
->> +
->> +    const char *label;
->> +    int ngpio;
-> 
-> could we add a .names field for the gpio_chip, I found this useful for
-> PCM512x GPIO support, e.g.
-
-Sure, I have the names in the device tree.
-
-But I'd prefer that you'd do a patch on top of this (assuming it is
-applied soon), because you can actually test it and there might be
-missing more.
-
-[snip]
-
--michael
+Reviewed-by: Rob Herring <robh@kernel.org>
