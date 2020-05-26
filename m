@@ -2,98 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64FBF1E19BC
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2020 05:12:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 147C01E1A78
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2020 06:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388552AbgEZDMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 May 2020 23:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388534AbgEZDMP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 May 2020 23:12:15 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E44C03E96A
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 20:12:14 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 202so11466011lfe.5
-        for <linux-gpio@vger.kernel.org>; Mon, 25 May 2020 20:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=CknBwaUFtv0qxcVtdA7R6Jj4nDGs83jnlaCAHY8tFtSKP1xCU7pzaNlKPl8Tuzr6Ur
-         vSH43RyRXnD80fgK+5tXGSGbhXwMMjLTu4Csncj1uGERJ2SjbHNSHb+LuGvY6EYwCOyX
-         RWV+ji7MYgpakoMt9kdkX9yZqifYO55ScahlCTG1u4+NYXw7gZzI3L1dSe7kcUHcQKsF
-         pq0rpUA4hTUL9875uQ9b0gjd+IG/gdM0TK/wZHQZMJ1yEiID2bRJt/WGX2M4cK86RvZE
-         A1JARcnVJYfsfo1h0fSWgpJMyOWRFwFncmtzBhxSZpYKj9yzdQrdvtx465LsOPaV5Qpv
-         i6rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=S24eK1JQdVASTMyoPw1niYUoYcGXnivJlLAXJRCkVNnbywchr93b0qW0lcRi3kho2h
-         EdqVuRSNot76FT8allCjtWPJtj8TbGc4m3fsFyR8hc42ZR1B6VUU8pMGaJqMqJGXgLsg
-         wvGO52wsif0gtY0l2QM9QtijlnDrbvUo6XaH+QckV9Z6po11Z41vQAOc19W34/4Kx93j
-         Km12sg0M3QFMGsOU1nRIZ90LzJ3KpObcfIFiEvxCr33zgYDU9HYrsmAfvycywO/Q8W/J
-         g8t3hCPtlWDbr4bd/TCEceMww5UnxX6pYrff781k/FpaV7UPd18+BndZSGS2/mEMQJwM
-         FiIw==
-X-Gm-Message-State: AOAM533AiFEHxsND68LH+283J10qknGJhclWukVwyoLBz2rwVnA39+nS
-        9SuFXAPRxzvvBJaS9uCqPka2lALRHpxE6MXKKog=
-X-Google-Smtp-Source: ABdhPJy2qPB46BILmPyKqosm8Z7szM2RrpD11173aPrpY4SjufCQmGWqqjboWELjfnGcjKpIgv8pYh937w8d074ItNg=
-X-Received: by 2002:a19:6e0e:: with SMTP id j14mr4718488lfc.155.1590462731699;
- Mon, 25 May 2020 20:12:11 -0700 (PDT)
+        id S1725294AbgEZEpr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 May 2020 00:45:47 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:20461 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725773AbgEZEpr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 26 May 2020 00:45:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590468346; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=pOqLTEYmcv/1WZ4CUindBKPntxB4V+2joT4aCQzD+kc=; b=bh4WBNHCUaFV1nP7s7LvZzNw525+shifY2LGvCGmkSA7DP4unc8PAQ/FXSahrb+beFfvF2qa
+ GRIBuDh8xVMTJWKd7D4jaMpwENjg+0+llJNj51BACIQnG2jzALTAxJRy2Jcn1Ve4BOTNr9ni
+ 4V0seQlqLb2vx067T5Xel7yyHCk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ecc9eedb4f0a9ae22756c4a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 04:45:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 14837C43395; Tue, 26 May 2020 04:45:33 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.43.129] (unknown [157.32.229.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 56C60C433C9;
+        Tue, 26 May 2020 04:45:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 56C60C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
+ <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8bae16f8-2f03-0d44-fe29-ee9451c4be23@codeaurora.org>
+Date:   Tue, 26 May 2020 10:15:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Received: by 2002:a05:6504:11d9:0:0:0:0 with HTTP; Mon, 25 May 2020 20:12:11
- -0700 (PDT)
-Reply-To: ayishagddafio@mail.ru
-From:   AISHA GADDAFI <bunny2320123@gmail.com>
-Date:   Mon, 25 May 2020 20:12:11 -0700
-Message-ID: <CA+z0umGrhjTnmwKm_p=TV=2zRBA2F_qwUvgFOWGTCtzBoDZuGQ@mail.gmail.com>
-Subject: Lieber Freund (Assalamu Alaikum),?
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e4ebd476-1c34-0c58-bba0-14dfd4d31941@xs4all.nl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-Lieber Freund (Assalamu Alaikum),
+Hi,
 
-Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
-Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
-Mutter und eine Witwe
-mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
-hen
-Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
+On 5/25/2020 5:52 PM, Hans Verkuil wrote:
+> On 25/05/2020 13:55, Linus Walleij wrote:
+>> On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>>
+>>> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
+>>> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+>>> callback is implemented then genirq takes unlazy path to disable irq.
+>>>
+>>> Underlying irqchip may not want to implement irq_disable callback to lazy
+>>> disable irq when client drivers invokes disable_irq(). By overriding
+>>> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>>>
+>>> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
+>>> if irqchip implemented irq_disable. In cases where irq_disable is not
+>>> implemented irq_mask is overridden. Similarly override irq_enable callback
+>>> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
+>>>
+>>> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> I definitely want Hans Verkuils test and review on this, since it
+>> is a usecase that he is really dependent on.
+> Maulik, since I am no longer subscribed to linux-gpio, can you mail the
+> series to me?
+>
+> I have two use-cases, but I can only test one (I don't have access to the
+> SBC I need to test the other use-case for the next few months).
+>
+> Once I have the whole series I'll try to test the first use-case and at
+> least look into the code if this series could affect the second use-case.
+>
+> Regards,
+>
+> 	Hans
 
-Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
-f=C3=BCnfhunderttausend
-United State Dollar ($ 27.500.000.00) und ich brauche eine
-vertrauensw=C3=BCrdige Investition
-Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
-jedoch
-M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
-von
-Investitionsprojekten in Ihrem Land
-Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
-bauen.
+Hi Hans,
 
-Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
-n und
-Unternehmensgewinn zu verhandeln
-Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+Mailed you the entire series.
 
-Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
-antworten Sie bitte dringend
-Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
-.
+Thanks,
+Maulik
+>
+>> Also the irqchip people preferredly.
+>>
+>> But it does seem to mop up my mistakes and fix this up properly!
+>>
+>> So with some testing I'll be happy to merge it, even this one
+>> patch separately if Hans can verify that it works.
+>>
+>> Yours,
+>> Linus Walleij
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
-esse (
-ayishagddafio@mail.ru ) zur weiteren Diskussion.
-
-Freundliche Gr=C3=BC=C3=9Fe
-Frau Aisha Al-Qaddafi
