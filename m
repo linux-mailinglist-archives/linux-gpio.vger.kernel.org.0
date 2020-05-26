@@ -2,192 +2,211 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80BE21E1D0C
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2020 10:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D98961E1DB7
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 May 2020 10:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgEZIP7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 May 2020 04:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45082 "EHLO
+        id S1731485AbgEZI7j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 May 2020 04:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIP7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 04:15:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34DC0C03E97E
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 01:15:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id z15so4572829pjb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 01:15:59 -0700 (PDT)
+        with ESMTP id S1726926AbgEZI7j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 04:59:39 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEEBC03E97E
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 01:59:38 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id l17so9502440ybk.1
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 01:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CvQOwDaca6EGCpgZKmqED62Ipjg/GnmnTO0HT5H7xns=;
-        b=ZFEJtdNURaNlDsAZN791eES6Q9OyYY5z5cuh5nwl2g2SSoF9gmeI7+1CnbkK5RFG0y
-         C2H51nAdpQcnxSWimbf/PW+NH8e8YcLsP/72Gi/8243fp6irJsa1asVMGXwi2arGSnmc
-         P13SsXTgdLxezQ5oJOyi4Gj7Q/0ibpfYagUcJFHTigUd43YAw3J/NGXX8iC8ujTWrUl0
-         eWFRyYMPjPk3Z857nSi/O3Kl+CuXUobMxPMSLbYff9XOZLT4L6MSLSIfs4gMEs1aHM+U
-         mb33sCqdztNvIuBUXpszqiJI6N0FV9vsmOyFe2K8lM9CRA4QLNnWYg1uKPihy1Mw9VYO
-         2bBw==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=FwleX6FavJvI4llVuloDJkYuBtDEYvQjFoEF0h/WDec=;
+        b=d42Z2z35eDN/4Wtj+0fjCWtjCd3lB3wQoe4pVGBmajo6nlyDebcZtoSenenpNrLPJZ
+         gBT1nan8b28THEHBwcf0AoUpBEBZqmjVya7hBFq+oy+LC4IvNMF6hANyJaVdbye4R7SF
+         dVHN7UwMmwnb5PEbILXL1lBzhypGVQxmiBI/4tAp4H2X8KE53aQ5EAWP1CgIjbbkrA6K
+         6meHmGEZN1xCAgBLPVR0XuWw8NmOmLk3290flkNTKoLHM/uSDzc8S8dbQZI9FW+akic7
+         VXCT3eBkrJBKc3rDVxfxAY9Qn0Fp+BD7NQRqnWfW3sgECf98NMyw5gyjrZJSf3nsZMDY
+         Fj2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CvQOwDaca6EGCpgZKmqED62Ipjg/GnmnTO0HT5H7xns=;
-        b=AUY5WPpwsTLMcF18ZkmpFe+cW0Czg0+DXPevQhWUKm91ltlG++GYlL7gdhCp4Ew18K
-         ySthtP2bhoUv+hA7t2ufpJUs/F0ATI7C/hGkSqTMUGEvIvTXPuT2tXy2Txg28BfqRrko
-         vuLI8PbMCWcX1gVGlPHtexqbLLkNZA6cvgPFswIL5syVTf8S6KV6AOjSWjtMLOU2VRcu
-         KQH8h168ITqWiS8gwUPbWBKT3llJSjFD5Atb0VyPyxte0Ydc5P6bavmqeQ/LKRgUq5PO
-         Ig9wWIvD615hbqI5A2jCTVD8oWGBcetu5eLrTvygg8WBfA5nBovqpgkMyInh5K4lpYxU
-         tF+w==
-X-Gm-Message-State: AOAM531ShU7bpIboHQVB7YNlYPdIOvMLoKzcQX3d/lzBfmfbZbLwsP2R
-        K6H6u/Ab6l2JNDRRSF/elIx1KaLtd5Y=
-X-Google-Smtp-Source: ABdhPJy2UZP9BS37mcfhmIRWR2RFYIP74a1/DAl4b7ggRU2awi4GLddYODmlwajouxFv11HihQlpJA==
-X-Received: by 2002:a17:902:c213:: with SMTP id 19mr31754227pll.190.1590480958622;
-        Tue, 26 May 2020 01:15:58 -0700 (PDT)
-Received: from localhost.localdomain ([49.216.48.63])
-        by smtp.gmail.com with ESMTPSA id go1sm13835951pjb.26.2020.05.26.01.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 01:15:57 -0700 (PDT)
-From:   Richard Hsu <saraon640529@gmail.com>
-To:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
-        Jesse1_Chang@asmedia.com.tw, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, Richard Hsu <saraon640529@gmail.com>
-Subject: [PATCH] gpio:gpio-asm28xx-18xx: new driver
-Date:   Tue, 26 May 2020 16:15:39 +0800
-Message-Id: <20200526081539.3518-1-saraon640529@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=FwleX6FavJvI4llVuloDJkYuBtDEYvQjFoEF0h/WDec=;
+        b=cQWsABqUgICGAi4McE6TqmkaiBRyjF4Iqn07CDSB5OsQJFrKfOKpKPBCZurTUHATRn
+         h59DHER3tEi1J9SoODdX3vh4ScA03J/qoxb1gi/NldG2T3lpYYTyp+4odO5uBeqN/k9h
+         l/N7T1Ax6DzJf9vIjZ08Os3+iGMdl60r5Xf2ccKJ0a0kURSfMWMIcI/4ahHR2g03Hi1J
+         RIOVPERd9S6SEbskzGUpxZc8JdjnUytuWQA4gn5vYAHZICIk5gJYrilmqCJHdYasdv+J
+         259gmXPiHbu/gTn3aMjr0sB/3Z0rGpmZzvcjIqMSx5oqJsYEvUXn7Wp3OJgMbKTnNbwT
+         CCPw==
+X-Gm-Message-State: AOAM531BsFjzYCyE0aVcjYDML5IDFaTyNHqGJ8Xzk8LjT3E/+KhJuSje
+        HHxmetB4HO7+gPgi3sEo6i/grU9qu36P8bWprtM=
+X-Google-Smtp-Source: ABdhPJxlLmR9pDn/Ih8P9bQKPIF8hxrnfU5p3Zx9f8Sy/ZoEyWRMhmmZP+m/YYyERkfNks/8MkrCl7imjuOCa9pgzUQ=
+X-Received: by 2002:a5b:f48:: with SMTP id y8mr47645278ybr.115.1590483577979;
+ Tue, 26 May 2020 01:59:37 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a25:1454:0:0:0:0:0 with HTTP; Tue, 26 May 2020 01:59:37
+ -0700 (PDT)
+Reply-To: irenezakari88@gmail.com
+From:   Irene Zakari <irenezakarai24@gmail.com>
+Date:   Tue, 26 May 2020 01:59:37 -0700
+Message-ID: <CAHUZdv74wS+N2pGFH2xV4x3RrfBQJJWyLbD6-XkCx8-P_ATT=Q@mail.gmail.com>
+Subject: PLEASE I NEED YOUR HELP.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bartosz Golaszewski and Linux Walleij,
-  Thanks for your reply.I have modified it according to your
-suggestions.And our device is silmilar as AMD South Bridge(amd8111),
-then i just take gpio-amd8111.c in kernel driver source as reference.
-It says that we can't use plain pci_driver mechanism, as the device
-is really a multiple function device,main driver that binds to the
-pci_device is a bus driver.It seems reasonable then i follow it.
-
-Signed-off-by: Richard Hsu <saraon640529@gmail.com>
----
- patch | 44 +++++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 21 deletions(-)
-
-diff --git a/patch b/patch
-index a713f91..220a8cf 100644
---- a/patch
-+++ b/patch
-@@ -1,7 +1,7 @@
- diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpio/gpio-asm28xx-18xx.c linux-5.7.0-rc6-patch/drivers/gpio/gpio-asm28xx-18xx.c
- --- linux-5.7.0-rc6/drivers/gpio/gpio-asm28xx-18xx.c	1970-01-01 08:00:00.000000000 +0800
--+++ linux-5.7.0-rc6-patch/drivers/gpio/gpio-asm28xx-18xx.c	2020-05-22 11:55:13.736272177 +0800
--@@ -0,0 +1,282 @@
-++++ linux-5.7.0-rc6-patch/drivers/gpio/gpio-asm28xx-18xx.c	2020-05-26 10:41:11.401349769 +0800
-+@@ -0,0 +1,281 @@
- +// SPDX-License-Identifier: GPL-2.0-only
- +/*
- + * Asmedia 28xx/18xx GPIO driver
-@@ -17,6 +17,7 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +#include <linux/pci.h>
- +#include <linux/spinlock.h>
- +#include <linux/pm_runtime.h>
-++#include <linux/bits.h>
- +
- +
- +/* GPIO registers offsets */
-@@ -63,7 +64,6 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +};
- +MODULE_DEVICE_TABLE(pci, pci_tbl);
- +
--+
- +struct asm28xx_gpio {
- +	struct gpio_chip	chip;
- +	struct pci_dev		*pdev;
-@@ -104,20 +104,12 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +
- +static int asm28xx_gpio_request(struct gpio_chip *chip, unsigned offset)
- +{
--+
--+	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx gpio %d request\n", offset);
--+
- +	if (offset == ASM_GPIO_PIN5)
- +		return -ENODEV;
- +
- +	return 0;
- +}
- +
--+static void asm28xx_gpio_free(struct gpio_chip *chip, unsigned offset)
--+{
--+	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx gpio %d free\n", offset);
--+}
--+
- +static void asm28xx_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- +{
- +	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
-@@ -196,7 +188,6 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +		.owner		= THIS_MODULE,
- +		.ngpio		= 8,
- +		.request	= asm28xx_gpio_request,
--+		.free		= asm28xx_gpio_free,
- +		.set		= asm28xx_gpio_set,
- +		.get		= asm28xx_gpio_get,
- +		.direction_output = asm28xx_gpio_dirout,
-@@ -213,6 +204,16 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +	unsigned long flags;
- +	int type;
- +
-++	/* We look for our device - Asmedia 28XX and 18XX Bridge
-++	 * I don't know about a system with two such bridges,
-++	 * so we can assume that there is max. one device.
-++	 *
-++	 * We can't use plain pci_driver mechanism,
-++	 * as the device is really a multiple function device,
-++	 * main driver that binds to the pci_device is an bus
-++	 * driver and have to find & bind to the device this way.
-++	 */
-++
- +	for_each_pci_dev(pdev) {
- +		ent = pci_match_id(pci_tbl, pdev);
- +		if (ent) {
-@@ -282,11 +283,9 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +MODULE_LICENSE("GPL");
- +MODULE_AUTHOR("Richard Hsu <Richard_Hsu@asmedia.com.tw>");
- +MODULE_DESCRIPTION("Asmedia 28xx 18xx GPIO Driver");
--+
--+
- diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpio/Kconfig linux-5.7.0-rc6-patch/drivers/gpio/Kconfig
- --- linux-5.7.0-rc6/drivers/gpio/Kconfig	2020-05-22 11:54:00.862644198 +0800
--+++ linux-5.7.0-rc6-patch/drivers/gpio/Kconfig	2020-05-22 11:55:13.680270929 +0800
-++++ linux-5.7.0-rc6-patch/drivers/gpio/Kconfig	2020-05-26 09:42:21.777312685 +0800
- @@ -113,6 +113,14 @@ config GPIO_AMDPT
-  	  driver for GPIO functionality on Promontory IOHub
-  	  Require ACPI ASL code to enumerate as a platform device.
-@@ -296,7 +295,7 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
- +	depends on PCI
- +	select GPIO_GENERIC
- +	help
--+	  driver for GPIO functionality on Asmedia 28XX and 18XX PCI-E Bridge.
-++	  Driver for GPIO functionality on Asmedia 28XX and 18XX PCI-E Bridge.
- +
- +
-  config GPIO_ASPEED
-@@ -304,9 +303,12 @@ diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpi
-  	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
- diff -uprN -X linux-5.7.0-rc6/Documentation/dontdiff linux-5.7.0-rc6/drivers/gpio/Makefile linux-5.7.0-rc6-patch/drivers/gpio/Makefile
- --- linux-5.7.0-rc6/drivers/gpio/Makefile	2020-05-22 11:54:00.862644198 +0800
--+++ linux-5.7.0-rc6-patch/drivers/gpio/Makefile	2020-05-22 11:55:13.680270929 +0800
--@@ -176,3 +176,4 @@ obj-$(CONFIG_GPIO_XTENSA)		+= gpio-xtens
-- obj-$(CONFIG_GPIO_ZEVIO)		+= gpio-zevio.o
-- obj-$(CONFIG_GPIO_ZX)			+= gpio-zx.o
-- obj-$(CONFIG_GPIO_ZYNQ)			+= gpio-zynq.o
-++++ linux-5.7.0-rc6-patch/drivers/gpio/Makefile	2020-05-26 09:45:42.092095882 +0800
-+@@ -31,6 +31,7 @@ obj-$(CONFIG_GPIO_AMD8111)		+= gpio-amd8
-+ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
-+ obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
-+ obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
- +obj-$(CONFIG_GPIO_ASM28XX)		+= gpio-asm28xx-18xx.o
-+ obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
-+ obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+= gpio-aspeed-sgpio.o
-+ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
--- 
-2.17.1
-
+5L2g5aW9ICAuLg0KDQrkvaDpgqPovrnmgI7kuYjmoLfmiJHluIzmnJvkvaDkuIDliIfpg73lpb3l
+kJfvvJ8NCuaIkeWPq+iJvueQs+Wls+Wjq+OAgiDvvIgyOOWyge+8ie+8jOaIkeaYr+Wmu+WtkOWG
+iOavlOS6mueahOWvoeWmhw0K55qE5ZCO5pyf5bel56iL44CC5Lyv57qz5b63wrflt7TljaHph4zC
+t+aJjuWNoemHjOS6mu+8iEJlcm5hcmQgQmFrYXJ5IFpha2FyaWHvvInjgIIgQmFqYW0gRW50ZXJw
+cmlzZeS4u+euoQ0K77yI5YaI5q+U5Lqa55qE5bu6562R5YWs5Y+477yJ5Lmf5pivQmVybmFyZOea
+hOmmluW4reaJp+ihjOWumA0K6L+b5Ye65Y+j77yIR0FNQklB77yJ44CCDQoNCuS6i+WunuS4iu+8
+jOaIkeS4iOWkq+S4uuatpOatu+S6juWGoOeKtueXheavkjE5DQrku5bliY3lvoDms5Xlm73mraPl
+vI/ml4XooYzkuYvlkI7nmoTml6XmnJ/kuLoyMDE55bm0MTLmnIg15pelDQrop4HpnaLlkI7vvIzk
+u5bluKbnnYDmiJEy5bKB6Zu2NuS4quaciOeahOWls+WEv+emu+W8gOS6huaIke+8jA0K5Zyo5oiR
+5LiI5aSr5Zug5Yag54q255eF5q+SMTnmrbvkuqHlkI7vvIzku5bnmoTlhYTlvJ/vvIgNCuaIkeW3
+suaVheeahOi0remUgOmUgOWUrue7j+eQhg0K5LiI5aSr5YWs5Y+477yI6Km55aeG5pavwrfmiZjm
+mIbljZrCt+WlpemHjOS6muW+t8K35omO5Y2h6YeM5Lqa5YWI55Sf77yJ5oOz6KaBDQrlsIbmiJHl
+t7LmlYXkuIjlpKvnmoTmiYDmnInotKLkuqflkozotYTmupDovazmjaLmiJDku5bnmoQNCuW4kOaI
+t++8jOeUseS6jui/meS4quWOn+WboO+8jOaIkeehruWunuacieS4gOS4quS4juaIkeWQteaetuea
+hOeUt+WtqQ0K5LuW77yM6L+Z5L2/5LuW5a+55oiR5Y+R54GrDQrpm4fnlKjliLrlrqLmnYDmrbvm
+iJHnmoTnqIvluqbvvIzkvYbmiJHopoHojaPogIDlvZLmiJENCuWJjeW+gOWPpuS4gOS4quWQjeS4
+uuW4g+Wfuue6s+azlee0oueahOWbveWutuaIkOWKnw0K5oiR5Lus5L2P5Zyo5pWZ5aCC6YeM6L+H
+552A5oiR5Lus5Lqy54ix55qE55Sf5rS744CCDQrogIHlrp7or7TvvIzljbPkvb/lnKjluIPln7rn
+urPms5XntKLvvIzmiJHku6znmoTnoa7ov4fnnYDku6TkurrmgZDmg6fnmoTnlJ/mtLvvvIzlm6Dk
+uLoNCumCo+S6m+WIuuWuoui/veWHu+aIkeS7rOOAgg0KDQrlrp7pmYXkuIrvvIzmiJHmg7PkuI7m
+gqjorqjorrrnmoTmmK/lhbPkuo7miJHnmoTkuKrkurrpl67popgNCuWFs+azqOaIkeW3suaVheS4
+iOWkq+WtmOWFpeaIkeS7peWklumTtuihjOeahOi1hOmHkQ0K5Zu95a625Lym5pWm5Lul5oiR55qE
+5ZCN5LmJ5oiQ5Li65Lu35YC8NDUw5LiH576O5YWD55qE6L+R5LqyDQrnvo7lm73nvo7lhYPvvIwN
+CuaIkemcgOimgeaCqOeahOW4ruWKqe+8jOS7peW4ruWKqeaIkeWwhui/meS6m+mSsei9rOWFpeaC
+qOeahA0K5biQ5oi377yM5bm25bCG6L+Z5Lqb6LWE6YeR5oqV6LWE5Yiw5oKo55qE5Zu95a62L+Wc
+sOWMuu+8jOWboOS4uuaIkeaDs+imgei/meS6mw0K5rGH5YWl5Zu95aSW55qE6ZKxDQrmiJHlt7Ln
+u4/pgJrov4fpgq7ku7bpgJrnn6Xpk7booYzmiJHnmoTmrbvkuqENCuS4iOWkq+WSjOaIkeeahOeb
+ruagh+aYr+Wwhui/meS6m+i1hOmHkei9rOWFpeWPpuS4gOS4quW4kOaItw0K5LuW5Lus5Li65LuW
+55qE5q275oSf5Yiw5oOK6K6277yM5LuW5Lus5ZCR5oiR6K+B5a6e5LqG5oiR55qEDQrkuIjlpKvm
+mK/ku5bku6znmoTlpb3pob7lrqLvvIzku5bku6zkuZ/lkJHmiJHor4Hlrp4NCuacieS4gOS4quaI
+keWQjeWtl+eahOS6suaImui0puaIt++8jOS7luS7rOWRiuivieaIkQ0K5LuL57uN5LiA5Liq5Luj
+6KGo5oiR5L2c5Li65oiR55qE5Y+X5omY5Lq65ZKM5oiR55qE5Y+X5omY5Lq655qE5Lq6DQrku5bk
+u6zlsIbov5nkupvotYTph5HovazlhaXmiJHnmoTku7vkvZXluJDmiLfnmoTlkIjkvZzkvJnkvLQN
+CumAieaLqe+8jA0KDQror7forqnmiJHluK7liqnmgqjmiJDkuLrmiJHnmoTlj5fmiZjkurrlkozm
+iJHnmoTlkIjkvJnkuroNCumTtuihjOS8muWwhui/meS6m+i1hOmHkei9rOWFpeaCqOeahOW4kOaI
+t++8jOS7peS+v+aIkeS7rA0K5Y+v5Lul5p2l6LS15Zu96YeN6I636Ieq55Sx77yM6K+35LiN6KaB
+DQrmg7PopoHku7vkvZXkvJrkvKTlrrPliLDmiJHnmoTkuroNCg0K6K+35biu5Yqp5oiR77yM5oiR
+5a+55L2g5b6I55yf6K+a77yM5oiR5oOz5oiQ5Li65L2g55qE5LiA5ZGYDQrlpoLmnpzmgqjkuI3k
+u4vmhI/mjqXlj5fmiJHku6zlubbluKbpoobmiJHku6zotbDlkJHmm7Tlpb3nmoTlrrbluq0NCui0
+teWbveeahOacquadpeOAgg0KDQrlm6DmraTvvIzmiJHlsIbnu5nmgqjpk7booYzogZTns7vmlrnl
+vI/lkozlhbbku5blv4XopoHnmoQNCuWmguaenOaCqOWPquetlOW6lOaIkeWwhuWcqOaIkeeahOS4
+i+S4gOWwgeeUteWtkOmCruS7tuS4reaPkOS+m+S/oeaBr++8jA0K5LiNL+S7juacquiDjOWPm+aI
+keaIluWHuuS6juWuieWFqOebrueahOWQkeS7u+S9leS6uumAj+mcsuatpOS6iw0K5Zug5Li66L+Z
+5Lqb6ZKx5piv5oiR55Sf5a2Y55qE5ZSv5LiA5biM5pybDQroh6rku47miJHlpLHljrvkuIjlpKvk
+u6XmnaXvvIzmiJHlkozlpbPlhL/kuIDotbfmnaXliLDkuoblnLDnkIPjgIINCg0K5q2k5aSW77yM
+5Zyo5oiR5ZCR5oKo5Y+R6YCB6ZO26KGM5ZKM5biQ5oi36K+m57uG5L+h5oGv5LmL5YmN77yM5oiR
+6ZyA6KaBDQrmgqjlj6/ku6XlnKjkuIvpnaLlkJHmiJHlj5HpgIHmgqjnmoTmlbDmja7vvIzku6Xk
+vr/miJHlrozlhajnoa7lrproh6rlt7HmmK8NCuS4jeS/oeS7u+mUmeivr+eahOS6uuOAgg0K6ICM
+5LiU77yM6L+Z5Lmf5L2/5oiR6IO95aSf5Li65oKo5Y+R6YCB6ZO26KGM6IGU57O75pa55byPDQrk
+uI7ku5bku6zmsp/pgJrku6Xov5vooYzmm7TlpJrpqozor4Hlubborqnmgqjnoa7orqQNCuS7jumT
+tuihjOmCo+mHjOiOt+W+l+acieWFs+i/meeslOi1hOmHkeeahOS/oeaBr+OAguWSjA0K5pu05aW9
+5Zyw5LqG6Kej5oKo77yM5oiR5bCG57uZ5oKo5oC75pWw55qEMjXvvIUNCui9rOenu+WQjueahOmS
+seS9nOS4uuihpeWBvw0KDQoNCjEu5YWo5ZCN77yaLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQoy
+LuWcsOWdgO+8mi4uLi4uLi4uLi4uLi4uLi4uLg0KMy7lm73nsY3vvJouLi4uLi4uLi4uLuaAp+WI
+qy4uLi4uLi4uLi4uLi4uLi4NCjQu5bm06b6E77yaLi4uLi4uLi4u5Ye655Sf5pel5pyf77yaLi4u
+Li4NCjUu6IGM5Lia77yaLi4uLi4uLi4uLi4uLi4uLi4u44CCDQouLi4uLg0KNi7nlLXor53vvJou
+Li4uLi4uLi7kvKDnnJ/vvJouLi4uLi4uLi4uLi4uLi4uLi4uLi4NCjcu5Y6f5Lqn5Zu977yaLi4u
+Li4uLuWbveWutu+8mi4uLi4uLi4uLi4uLi4uDQo4LuiBjOS4mu+8mi4uLi4uLi4uLi4uLi4uLi4u
+LuOAgg0KLi4uLi4uLi4uLi4uLi4uLg0KOS7lqZrlp7vnirblhrUuLi4uLi4uLi4uLueUteWtkOmC
+ruS7tuWcsOWdgO+8mi4uLi4uLi4uLi4uLg0KMTAu5omr5o+P5oKo55qE6Lqr5Lu96K+B5oiW6am+
+6am25omn54WnL+eFp+eJh+eahOWJr+acrO+8mi4uLi4uLi4uLi4uLg0K5a6j6KiA77yaDQoNCuWQ
+jOaXtu+8jOaCqOWPr+S7pemAmui/h+aIkeeahOeJp+W4iOS4juaIkeiBlOezu++8jOS7lueahOWQ
+jeWtl+WPq+S/nee9l+eJp+W4iOOAgg0K5q+P5b2T5oKo5omT55S16K+d5pe277yM5ZGK6K+J5LuW
+5oKo5oOz5ZKM5oiR6K+06K+d77yM5Zug5Li6DQrnjrDlnKjmiJHkvY/lnKjluIPln7rnurPms5Xn
+tKLnmoTmlZnloILph4zvvIzmiJHkuI0NCuaDs+imgeWGjeWRhuWcqOi/memHjO+8jOS7lueahOeU
+teivneaYr+i/meS4qu+8iCsyMjYgNzUyMTM2NDbvvIkNCg0K5oiR5bCG5Zyo6L+Z6YeM5YGc5q2i
+77yM5oiR5bCG562J5b6F5oKo55qE5Zue5aSN77yM6ZqP5pe25Y+v5LulDQror6Lpl67ku7vkvZXm
+gqjmg7Pnn6XpgZPnmoTlhbPkuo7miJHnmoTkv6Hmga/vvIzlubblsIbmgqjnmoTmlbDmja7kvZzk
+uLrmiJHlj5HpgIHnu5nmiJENCuimgeaxgu+8jOS7peS+v+aIkeWPr+S7peWQkeaCqOWPkemAgeW4
+puacieivpeW4kOaIt+eahOmTtuihjOS/oeaBrw0K6K+m57uG5L+h5oGv77yM5Lul5L6/5oKo5ZCR
+6ZO26KGM56Gu6K6k77yMDQoNCuivt+W4ruWKqeaIke+8jOaIkeWwhuS4jeiDnOaEn+a/gA0K56Wd
+5L2g5pyJ576O5aW955qE5LiA5aSp44CCDQrku47oib7nkLMNCg0KDQpIZWxsbyAgLi4NCg0KSG93
+IGRvIHlvdSBkbyBvdmVyIHRoZXJlPyBJIGhvcGUgeW91IGFyZSBkb2luZyB3ZWxsPw0KTXkgbmFt
+ZSBpcyBNYWRhbSBJcmVuZS4gKDI4IHllYXJzIG9sZCApLCBpIGFtIGEgd2lkb3cgZnJvbSBHYW1i
+aWEsIHRoZSB3aWZlDQpvZiBsYXRlIEVuZy4gQmVybmFyZCBCYWthcnkgWmFrYXJpYS4gdGhlIERp
+cmVjdG9yIG9mIEJhamFtIEVudGVycHJpc2UNCihCdWlsZGluZyBDb25zdHJ1Y3Rpb24gQ29tcGFu
+eSBpbiBHYW1iaWEpIGFsc28gdGhlIENFTyBvZiBCZXJuYXJkDQpJbXBvcnQgYW5kIEV4cG9ydCAo
+R0FNQklBKS4NCg0KQXMgYSBtYXR0ZXIgb2YgZmFjdCBteSBodXNiYW5kIGRpZWQgZHVlIHRvIHRo
+ZSBDb3JvbmFsIHZpcnVzMTkgb24gdGhpcw0KZGF0ZSA1dGggb2YgRGVjZW1iZXIgMjAxOSBhZnRl
+ciBoZSB0cmF2ZWxlZCB0byBGcmFuY2UgZm9yIGFuIG9mZmljaWFsDQptZWV0aW5nIGFuZCBoZSBs
+ZWZ0IG1lIHdpdGggb3VyIDJ5ZWFycyBhbmQgNiBtb250aHMgZGF1Z2h0ZXIsDQpBZnRlciB0aGUg
+ZGVhdGggb2YgbXkgaHVzYmFuZCAgYXMgYSByZXN1bHQgb2YgQ29yb25hbC12aXJ1cyAxOSwgaGlz
+IGJyb3RoZXIgKE15DQpIdXNiYW5kIGJyb3RoZXIgKSB3aG8gaXMgdGhlIHB1cmNoYXNpbmcgYW5k
+IG1hcmtldGluZyBzYWxlIG1hbmFnZXIgb2YgbXkgbGF0ZQ0KSHVzYmFuZHMgY29tcGFueSBuYW1l
+ZCAoTXIuIEphbWVzIFRva3VuYm8gT3JpYWRlIFpha2FyaWEpIHdhbnRlZCB0bw0KY29udmVydCBh
+bGwgdGhlIHByb3BlcnRpZXMgYW5kIHJlc291cmNlcyBvZiBteSBsYXRlIEh1c2JhbmQgaW50byBo
+aXMNCmFjY291bnQgYW5kIGR1ZSB0byB0aGF0IGkgZGlkIGhhdmUgYSBtYWxlIGNoaWxkIHdoaWNo
+IGkgcXVhcnJlbGVkIHdpdGgNCmhpbSBhbmQgaXQgbWFkZSBoaW0gdG8gbGF5IGhpcyBhbmdlciBv
+biBtZSB0bw0KdGhlIGV4dGVudCBvZiBoaXJpbmcgYW4gYXNzYXNzaW5zIHRvIGtpbGwgbWUgYnV0
+IHRvIEdvZCBiZSB0aGUgZ2xvcnkgaQ0Kc3VjY2VlZGVkIGJ5IG1ha2luZyBteSB3YXkgdG8gYW5v
+dGhlciBjb3VudHJ5IGNhbGxlZCAgQnVya2luYSBmYXNvDQp3aGVyZSB3ZSBhcmUgbGl2aW5nIGlu
+IGEgY2h1cmNoICBmb3Igb3VyIGRlYXIgbGlmZS4NCkhvbmVzdGx5IHdlIGRvIGxpdmUgYSBmZWFy
+ZnVsIGxpZmUgZXZlbiBoZXJlIGluIEJ1cmtpbmEgZmFzbyBiZWNhdXNlDQpvZiB0aG9zZSBBc3Nh
+c3NpbnMgY29taW5nIGFmdGVyIHVzIC4NCg0KQWN0dWFsbHkgd2hhdCBJIHdhbnQgdG8gZGlzY3Vz
+cyB3aXRoIHlvdSBpcyBhYm91dCBteSBwZXJzb25hbCBpc3N1ZQ0KY29uY2VybiB0aGUgIGZ1bmQg
+dGhhdCAgbXkgbGF0ZSBIdXNiYW5kIGRlcG9zaXRlZCBpbiBhIGJhbmsgb3V0c2lkZSBteQ0KY291
+bnRyeSBMb25kb24gb24gbXkgbmFtZSBhcyB0aGUgbmV4dCBvZiBraW5zIHdvcnRoICQ0LjUgTWls
+bGlvbg0KdW5pdGVkIHN0YXRlIGRvbGxhcnMgLA0KSSBuZWVkIHlvdXIgYXNzaXN0YW5jZSB0byBo
+ZWxwIG1lIHRvIHRyYW5zZmVyIHRoZXNlIG1vbmV5IGludG8geW91cg0KYWNjb3VudCBhbmQgdG8g
+aW52ZXN0IHRoZXNlIGZ1bmRzIGluIHlvdXIgY291bnRyeSBhcyBpIHdhbnQgdGhlc2UNCm1vbmV5
+IHRvIGJlIHRyYW5zZmVycmVkIGludG8gZm9yZWlnbiBjb3VudHJ5DQpJICBoYXZlIGFscmVhZHkg
+IG5vdGlmaWVkICB0aGUgYmFuayBvbiBtYWlsIGFib3V0IHRoZSBkZWF0aCBvZiBteQ0KSHVzYmFu
+ZCBhbmQgbXkgYWltIHRvIHRyYW5zZmVyIHRoZXNlIGZ1bmQgaW50byBhbm90aGVyIGFjY291bnQg
+d2hpY2gNCnRoZXkgd2VyZSAgc3VycHJpc2UgZm9yIGhpcyBkZWF0aCBhbmQgdGhleSBjb25maXJt
+ZWQgdG8gbWUgdGhhdCBteQ0KSHVzYmFuZCAgd2FzIHRoZWlyIGdvb2QgY3VzdG9tZXIgYW5kIHRo
+ZXkgYWxzbyBjb25maXJtZWQgdG8gbWUgdGhhdA0KdGhlcmUgaXMgYW4gYWNjb3VudCBvbiBteSBu
+YW1lIGFzIHRoZSBuZXh0IG9mIGtpbnMgYW5kIHRoZXkgdG9sZCBtZSB0bw0KcHJlc2VudCBzb21l
+b25lIHdobyB3aWxsIHN0YW5kIG9uIG15IGJlaGFsZiBhcyBteSAgdHJ1c3RlZSBhbmQgbXkNCnBh
+cnRuZXIgZm9yIHRoZW0gdG8gdHJhbnNmZXIgdGhlc2UgbW9uZXkgaW50byBhbnkgYWNjb3VudCBv
+ZiBteQ0KY2hvaWNlLA0KDQpQbGVhc2UgaSB3YW50IHlvdSB0byBoZWxwIG1lIHRvIHN0YW5kIGFz
+IG15IHRydXN0ZWUgYW5kIG15IHBhcnRuZXIgc28NCnRoYXQgdGhlIGJhbmsgd2lsbCB0cmFuc2Zl
+ciB0aGVzZSBtb25leSBpbnRvIHlvdXIgYWNjb3VudCBzbyB0aGF0IHdlDQpjYW4gY29tZSBvdmVy
+IHRvIHlvdXIgY291bnRyeSAgdG8gcmVnYWluIG91ciBmcmVlZG9tIHBsZWFzZSBpIGRvbnQNCndh
+bnQgYW55dGhpbmcgdGhhdCB3aWxsIGhhcm0gdGhpcyBteSBkdWFnaHRlcg0KDQpQbGVhc2UgaGVs
+cCBtZSwgSSBhbSBzaW5jZXJlIHRvIHlvdSBhbmQgSSB3YW50IHRvIGJlIG1lbWJlciBvZiB5b3Vy
+DQpmYW1pbHkgYXMgd2VsbCBpZiB5b3Ugd291bGRuJ3QgbWluZCB0byBhY2NlcHQgdXMgYW5kIGxl
+YWQgdXMgIHRvIGEgIGJldHRlcg0KZnV0dXJlIGluIHlvdXIgY291bnRyeS4NCg0KVGhlcmVmb3Jl
+LCBJIHNoYWxsIGdpdmUgeW91IHRoZSBiYW5rIGNvbnRhY3QgYW5kIG90aGVyIG5lY2Vzc2FyeQ0K
+aW5mb3JtYXRpb24gaW4gbXkgbmV4dCBlbWFpbCBpZiB5b3Ugd2lsbCBvbmx5IHByb21pc2UgbWUg
+dGhhdCB5b3Ugd2lsbA0Kbm90L25ldmVyIGJldHJheSBtZSAgb3IgZGlzY2xvc2VkIHRoaXMgbWF0
+dGVyIHRvIGFueWJvZHkgZm9yIHNlY3VyaXR5DQpyZWFzb24gYmVjdWFzZSAgdGhlc2UgbW9uZXkg
+aXMgdGhlIG9ubHkgaG9wZSBpIGhhdmUgZm9yIHN1cnZpdmFsIG9uDQplYXJ0aCB3aXRoIG15IGRh
+dWdodGVyIHNpbmNlIEkgaGF2ZSBsb3N0IG15IEh1c2JhbmQuDQoNCk1vcmVvdmVyIGJlZm9yZSBp
+IHNlbmQgeW91IHRoZSBiYW5rIGFuZCBhY2NvdW50IGRldGFpbHMgaSB3aWxsIGxpa2UNCnlvdSB0
+byBzZW5kIG1lIHlvdXIgZGF0YSBiZWxvdyBzbyB0aGF0IGkgd2lsbCBiZSBmdWxseSBzdXJlIHRo
+YXQgaSBhbQ0Kbm90IHRydXN0aW5nIHRoZSB3cm9uZyBwZXJzb24uDQphbmQgaXQgd2lsbCBhbHNv
+IGdpdmUgbWUgdGhlIG1pbmQgdG8gc2VuZCB5b3UgdGhlIGJhbmsgY29udGFjdCBmb3IgeW91DQp0
+byBjb21tdW5pY2F0ZSB3aXRoIHRoZW0gZm9yIG1vcmUgdmVyaWZpY2F0aW9uIGFuZCBmb3IgeW91
+IHRvIGNvbmZpcm0NCmZyb20gdGhlIGJhbmsgYWJvdXQgdGhpcyBmdW5kLiBhbmQNCnRvIGtub3cg
+eW91IG1vcmUgYmV0dGVyIGFuZCBpIHNoYWxsIGdpdmUgeW91IDI1IHBlcmNlbnQgb2YgdGhlIHRv
+dGFsDQptb25leSBhZnRlciB0aGUgdGhlIHRyYW5zZmVyIGFzIGFzIGEgY29tcGVuc2F0aW9uDQoN
+Cg0KMS4gRnVsbCBOYW1lOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCjIuIEFkZHJlc3M6IC4u
+Li4uLi4uLi4uLi4uLi4uLg0KMy4gTmF0aW9uYWxpdHk6IC4uLi4uLi4uLi4uIFNleC4uLi4uLi4u
+Li4uLi4uLi4NCjQuIEFnZTouLi4uLi4uLi4uLiBEYXRlIG9mIEJpcnRoOi4uLi4uLi4uLi4uLi4u
+Li4NCjUuIE9jY3VwYXRpb246Li4uLi4uLi4uLi4uLi4uLi4uLg0KLi4uLi4NCjYuIFBob25lOiAu
+Li4uLi4uLi4uLiBGYXg6Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KNy4gU3RhdGUgb2YgT3Jp
+Z2luOiAuLi4uLi4uQ291bnRyeTouLi4uLi4uLi4uLi4uLg0KOC4gT2NjdXBhdGlvbjouLi4uLi4u
+Li4uLi4uLi4uLi4uDQouLi4uLi4uLi4uLi4uLi4uDQo5LiBNYXJpdGFsIHN0YXR1cy4uLi4uLi4u
+Li4uIEUtbWFpbCBhZGRyZXNzJ3M6IC4uLi4uLi4uLi4uLg0KMTAuIFNjYW4gY29weSBvZiB5b3Vy
+IElEIGNhcmQgb3IgRHJpdmluZyBMaWNlbnNlL1Bob3RvOi4uLi4uLi4uLi4uLg0KREVDTEFSQVRJ
+T046DQoNCk1lYW53aGlsZSwgeW91IGNhbiByZWFjaCBtZSB0aHJvdWdoIG15IHBhc3RvcixoaXMg
+bmFtZSBpcyBQYXN0b3IgUGF1bA0KYW55IHRpbWUgeW91IGNhbGwsIHRlbGwgaGltIHRoYXQgeW91
+IHdhbnQgdG8gc3BlYWsgd2l0aCBtZSBiZWNhdXNlDQpyaWdodCBub3cgaSBhbSBsaXZpbmcgaW4g
+dGhlIGNodXJjaCBoZXJlIGluIEJ1cmtpbmEgZmFzbyBhbmQgaSBkb24ndA0Kd2FudCB0byBzdGF5
+IGhlcmUgYW55IGxvbmdlciBoaXMgcGhvbmUgbnVtYmVyIGlzIHRoaXMoKzIyNiA3NTIxMzY0NikN
+Cg0KSSB3aWxsIHN0b3AgaGVyZSBhbmQgaSB3aWxsIGJlIHdhaXRpbmcgZm9yIHlvdXIgcmVwbHkg
+YW5kIGZlZWwgZnJlZSB0bw0KYXNrIGFueSB0aGluZyB5b3Ugd2FudCB0byBrbm93IGFib3V0IG1l
+IGFuZCBzZW5kIG1lIHlvdXIgZGF0YSBhcyBpDQpyZXF1ZXN0ZWQgc28gdGhhdCBpIGNhbiBzZW5k
+IHlvdSB0aGUgYmFuayBpbmZvcm1hdGlvbiB3aXRoIHRoZSBhY2NvdW50DQpkZXRhaWxzIHNvIHRo
+YXQgeW91IHdpbGwgY29uZmlybSBmcm9tIHRoZSBiYW5rLA0KDQpQbGVhc2UgaGVscCBtZSwgSSB3
+b3VsZCBiZSBoaWdobHkgYXBwcmVjaWF0ZWQNCkhhdmUgbmljZSBkYXkuDQpGcm9tIElyZW5lDQo=
