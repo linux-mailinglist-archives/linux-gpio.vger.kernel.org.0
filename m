@@ -2,90 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73EF31E3D4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:13:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85F391E3DB2
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgE0JNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 05:13:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56096 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgE0JNg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 May 2020 05:13:36 -0400
-IronPort-SDR: ewX9jHX19QV2WF5V52TqisHBC8ToPcfRkKGpLI1pGKPkGltSDAbVqAwFIf8e9Fifb08MBssm8w
- Gzqn8OxiQDiA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:13:36 -0700
-IronPort-SDR: 80OKM0LK1Yc455nkBE1Zy3E60a334VEw1cscuNPYqnGAFZe9T3ujfc+EYzc9jdmISILim/JASd
- sIVk40p4pkaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="310526898"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 May 2020 02:13:34 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jds81-009BVe-CG; Wed, 27 May 2020 12:13:37 +0300
-Date:   Wed, 27 May 2020 12:13:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S1726761AbgE0JjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 05:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgE0JjD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 05:39:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE30C061A0F
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:39:01 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x6so9701487wrm.13
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:39:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HuTzUQHBjzdBav/SqyDAlnPVVzvxtNWxsYv38ESVl/g=;
+        b=u2pE53DJyq4YjjqU+rf4tUX1iZYLctgFpSXN848IKwnr+KC2MjzXGQzqZ02UI6oqkA
+         3AXy8qIkSLuLgjcRxlQ84ehiCy/ctGlD1+s77fvNUHgZNb6qn4SwLWAVHm567+VyT+h7
+         bwsM/UMK5wJkAkLUoHPDB0LF+0MCE8y2CzJxomuQ+QG/jiYkYDna6IGVN1HWzfjtnjwz
+         UO43o1Xyh1Of524esC2Rd/3R8TK0a4ex/bUnMELC8tYIsPn2qmu9ls9EpvhamNesgYvX
+         xsSLDH99T1mJAQlYiq52JVUpt/27wMyaVxjBKgbauQwD9TspaH0O84flbk5VMwVtJLap
+         YGcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HuTzUQHBjzdBav/SqyDAlnPVVzvxtNWxsYv38ESVl/g=;
+        b=lp95xoyS/4pPxHtycJQIKQj5Zk3aduEdxH4RvtkHvV0Ff/jtjdnBVbJFA3QvrJ5nSS
+         nCSg/PG9G2n4rNDqsoS5RQb64KlNd5smOzvcbSxp/ITDnWKxquThsr8jjNncSuQSe2fh
+         QxuM7bhnzPUN/eJ/2SkzI2qHGyzpK6W1ens5N4HWIPLKeL7sMImbcdQmDvAQR85hQyw1
+         +fQXQ7ZldJwyBg3SMVCkWbYhFMUJPS6T+GkN3icDv8l0eb0fw/fkmbHoDZtxfd3iIO0Y
+         bniNKsyxG5HJcyx8YZkv/MspY6Opr06kLzVztcMMCmhurMAgNHDpPTatK/9Y/ySudbtQ
+         huIA==
+X-Gm-Message-State: AOAM533S3rPzAFipHpY/ivcAtznJXOszKgyk1BQA10GMivnyo/TcWn+A
+        Ms6LBlHG0yoEo7G1jYzu5Mkjfw==
+X-Google-Smtp-Source: ABdhPJxsjct/WnTXKksP9VnskcL17cgYExNQGs2rVTGxg86ljSTPYmEyIkC77UZllKFI2U5Vl4JQeA==
+X-Received: by 2002:a5d:5492:: with SMTP id h18mr23468247wrv.330.1590572339994;
+        Wed, 27 May 2020 02:38:59 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id w10sm2340198wrp.16.2020.05.27.02.38.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 02:38:59 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
- on Galileo Gen 2
-Message-ID: <20200527091337.GG1634618@smile.fi.intel.com>
-References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdY8yXJUcWBG2ACHPmu4-+h4fY7Fuvbn69sFny2uZNrQmw@mail.gmail.com>
- <20200527090846.GE1634618@smile.fi.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: fixes for v5.7
+Date:   Wed, 27 May 2020 11:38:55 +0200
+Message-Id: <20200527093855.31024-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527090846.GE1634618@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:08:46PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 07:46:55AM +0200, Linus Walleij wrote:
-> > On Tue, May 26, 2020 at 7:12 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > > +static int pca953x_acpi_get_irq(struct device *dev)
-> > > +{
-> > > +       int pin, ret;
-> > > +
-> > > +       pin = pca953x_acpi_find_pin(dev);
-> > > +       if (pin < 0)
-> > > +               return pin;
-> > > +
-> > > +       dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
-> > > +
-> > > +       if (!gpio_is_valid(pin))
-> > > +               return -EINVAL;
-> > > +
-> > > +       ret = gpio_request(pin, "pca953x interrupt");
-> > > +       if (ret)
-> > > +               return ret;
-> > 
-> > So would it work to do
-> > gpiochip_request_own_desc() here in some form?
-> 
-> It would but it will be wrong. We don't request own pin, we request pin from
-> upper GPIO (IRQ) chip.
-> 
-> > I.e. can you figure out the hardware offset number?
-> 
-> That's what this quirk basically does, it takes it from ACPI.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Ah, sorry, I meant absolute number. We can, of course, calculate an offset, but
-then it will have hard coded number no better than hard coded from ACPI table.
+Hi Linus,
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is the last batch for fixes I'm sending your way in this release
+cycle. Please pull.
 
+Bartosz
 
+The following changes since commit e75dfba311f478f1c2bf928284e1949c20594336:
+
+  Merge tag 'gpio-fixes-for-v5.7-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes (2020-05-18 09:40:50 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.7
+
+for you to fetch changes up to 98f7d1b15e87c84488b30ecc4ec753b0690b9dbf:
+
+  gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe() (2020-05-25 11:17:18 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.7
+
+- fix mutex and spinlock ordering in gpio-mlxbf2
+- fix the return value checks on devm_platform_ioremap_resource in
+  gpio-pxa and gpio-bcm-kona
+
+----------------------------------------------------------------
+Axel Lin (1):
+      gpio: mlxbf2: Fix sleeping while holding spinlock
+
+Tiezhu Yang (2):
+      gpio: pxa: Fix return value of pxa_gpio_probe()
+      gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
+
+ drivers/gpio/gpio-bcm-kona.c | 2 +-
+ drivers/gpio/gpio-mlxbf2.c   | 6 +++---
+ drivers/gpio/gpio-pxa.c      | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
