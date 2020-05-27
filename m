@@ -2,163 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA92B1E3B36
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 10:05:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71F901E3D48
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729323AbgE0IF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 04:05:27 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7398 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729292AbgE0IF0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 04:05:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590566725; x=1622102725;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=PVXzxMF9Vqjr2PV3qWdmGql8cs4THQnOC1D9NN8NFjI=;
-  b=d51hFciozFX3EFMx7R42XBJJdXmhf8VcH/Ay7Jpubckv/b1tWutdNQtP
-   1I9INmswMsBa0LSvTn+6hBTswi8IeMzJDCRhYgl1TACqkE/bMOP9ykD/W
-   /1jg8HggMN1UsMlFFWg15clmaMJ+VoypmqC9/iuAVFs221gHkBdLwF6EG
-   JCcg49LT8dsctZQfyaczj1gfQd5tA5kXOa9mHAPW6H1ALe3mLmXFysPD2
-   JW74w9yJepkz+SJqePqk40hmDhR4ZGZOsnDxj0PDXoSm8xJCV+M3IqgrF
-   rScU1jH0fJ+hfONA8/8Pt9T7ulnna2nVneqWcnTuWYsJXnKIUC6DcccZs
-   w==;
-IronPort-SDR: wg7qi6vKQlAMeUaLNnYr/pgQElF/mppTRVRdDs9j6PL/VdSfGQovFxd2A5lvqEM0HL/Ak6SWnd
- ajiqm0f2b17I3CEQkkBX2KqN9Qqxg5p/Q8wLzRN0jfPwJMHJFvYjz7hs5Ur4MGRcXojOH/HKbs
- qwbkThrcDH62qSlTpCfcrRcwCppPObutq2XoZRMqMTvY2iTGXWTgRnBE6QwtZZ3MvtvBHfLiMz
- B0KEQqOfwbBq7msr+yB8KK/1kjFe07ov25eqns6rasTXxFBJrGetBF5DDmXjml6pxyGrC+gVJb
- ccM=
-X-IronPort-AV: E=Sophos;i="5.73,440,1583218800"; 
-   d="scan'208";a="13635860"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 May 2020 01:05:25 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 27 May 2020 01:05:24 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 27 May 2020 01:05:22 -0700
-References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com> <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com> <87r1v8oz9f.fsf@soft-dev15.microsemi.net> <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
+        id S2388376AbgE0JIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 05:08:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:19973 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388408AbgE0JIp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 May 2020 05:08:45 -0400
+IronPort-SDR: pfRj2ryNa7UqDRvoR6DUCC4cf7QuiBpsCXTWv7vYT4o8RWsUj5Xmu2H9tE1B4g1fIoc/R6IW6B
+ UABIJHDMV6Kg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:08:44 -0700
+IronPort-SDR: a0oMfH+ZzF96LyeH++dk+4s34Y17+iJdrFSCRnNgJT2kzWM1/+btpudNnKIpgkCt92yfXfZF/7
+ 0Mz6UYsbJZ1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
+   d="scan'208";a="291528194"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004.fm.intel.com with ESMTP; 27 May 2020 02:08:43 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jds3K-009BSC-7n; Wed, 27 May 2020 12:08:46 +0300
+Date:   Wed, 27 May 2020 12:08:46 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
-In-Reply-To: <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
-Date:   Wed, 27 May 2020 10:05:20 +0200
-Message-ID: <87pnappzun.fsf@soft-dev15.microsemi.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
+ on Galileo Gen 2
+Message-ID: <20200527090846.GE1634618@smile.fi.intel.com>
+References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdY8yXJUcWBG2ACHPmu4-+h4fY7Fuvbn69sFny2uZNrQmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY8yXJUcWBG2ACHPmu4-+h4fY7Fuvbn69sFny2uZNrQmw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, May 27, 2020 at 07:46:55AM +0200, Linus Walleij wrote:
+> On Tue, May 26, 2020 at 7:12 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > +static int pca953x_acpi_get_irq(struct device *dev)
+> > +{
+> > +       int pin, ret;
+> > +
+> > +       pin = pca953x_acpi_find_pin(dev);
+> > +       if (pin < 0)
+> > +               return pin;
+> > +
+> > +       dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
+> > +
+> > +       if (!gpio_is_valid(pin))
+> > +               return -EINVAL;
+> > +
+> > +       ret = gpio_request(pin, "pca953x interrupt");
+> > +       if (ret)
+> > +               return ret;
+> 
+> So would it work to do
+> gpiochip_request_own_desc() here in some form?
 
-Linus Walleij writes:
+It would but it will be wrong. We don't request own pin, we request pin from
+upper GPIO (IRQ) chip.
 
-> On Mon, May 25, 2020 at 4:38 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
->> Yes, the problem is they're not in sequence. F.ex. you could have ports
->> 0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
->
-> Just use disabled nodes.
->
-> That would look like this in my idea of a device tree:
->
-> pinctrl@nnn {
->     gpio0: gpio@0 {
->         compatible = "foo";
->         status = "ok";
->         ....
->     };
->     gpio1: gpio@1 {
->         compatible = "foo";
->         status = "ok";
->         ....
->     };
->     gpio2: gpio@2 {
->         compatible = "foo";
->         status = "disabled";
->         ....
->     };
->     gpio3: gpio@3 {
->         compatible = "foo";
->         status = "disabled";
->         ....
->     };
->     gpio4: gpio@4 {
->         compatible = "foo";
->         status = "disabled";
->         ....
->     };
->     gpio5: gpio@5 {
->         compatible = "foo";
->         status = "ok";
->         ....
->     };
->     gpio6: gpio@6 {
->         compatible = "foo";
->         status = "ok";
->         ....
->     };
->     gpio7: gpio@7 {
->         compatible = "foo";
->         status = "ok";
->         ....
->     };
-> };
->
-> It is common to use the status to enable/disable nodes like this.
->
-> In the Linux kernel is is possible to iterate over these subnodes and
-> check which ones are enabled and disabled while keeping the
-> index by using something like:
->
-> i = 0;
-> struct device_node *np, *child;
-> for_each_child_of_node(np, child) {
->     if (of_device_is_available(child)) {
->         pr_info("populating device %d\n", i);
->     }
->     i++;
-> }
->
-> Certainly you can use i in the above loop to populate your registers
-> etc from an indexed array.
->
-> This way the consumers can pick their GPIO from the right port
-> and everything just using e.g.
-> my-gpios = <&gpio6 4 GPIO_OUT_LOW>;
->
+> I.e. can you figure out the hardware offset number?
 
-Linux, thank you for your input, it is much appreciated. I will use the
-pattern in the driver in the next revision.
-
-The only issue is that the gpios on the same "port" have restrictions on
-their status - they can only be enabled "all" or "none" for gpios that
-map to the same port. F.ex. gpio0, gpio32, gpio64 and gpio96 must all be
-enabled or disabled because at the hardware level you control the
-_port_. But as I noted earlier, that could just be the driver enforcing
-this.
-
-Thanks again.
-
----Lars
-
-> Yours,
-> Linus Walleij
+That's what this quirk basically does, it takes it from ACPI.
 
 -- 
-Lars Povlsen,
-Microchip
+With Best Regards,
+Andy Shevchenko
+
+
