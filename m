@@ -2,155 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05A811E3FF5
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 13:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5B51E4000
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 13:27:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgE0L0f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 07:26:35 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:62289 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730009AbgE0L0d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 May 2020 07:26:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590578793; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=P25q6ipZ3riPqbhrRJ+PtUgnCNFkPSplK5OpM68AuG8=; b=fV7hmTw5QDMH6BhqKe0FMigoJ7XbY4kEXr7y9ABKaCm58ry2Z+0/qBza8/Bxwmt8ekhJOiuQ
- rMkOHo3FK7gyEFNWosSqPmX3YGZgGpDCK3ThFO02Wzimcy1m/Mk53TR7PMj26jdJCveYp7zw
- oEbUHtTcLni7J72/o4nRypiejhg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ece4e6037a454afcbcfe36f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 11:26:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A0AF8C433B1; Wed, 27 May 2020 11:26:24 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.43.129] (unknown [106.222.1.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AFE3C433C9;
-        Wed, 27 May 2020 11:26:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AFE3C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
-Date:   Wed, 27 May 2020 16:56:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726968AbgE0L1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 07:27:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39209 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726742AbgE0L1w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 May 2020 07:27:52 -0400
+IronPort-SDR: YL3JkITWj5jqM6B7N2t96ozt6q8JHs7hJLOfu/teYfwU/HBK2TKiZdi76Z2WP7sgsuZ4Wy60Di
+ rokvD6ZSoJrA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 04:27:52 -0700
+IronPort-SDR: kt8pBOURmsU5kL4GDjAXMaO4iaI6RyyEkDnLYPJiqZ3670aA9BqZ7VzeI2nr6BmH/ymL6FbYFf
+ WwcPskZll35Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="376000992"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 27 May 2020 04:27:50 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 27 May 2020 14:27:49 +0300
+Date:   Wed, 27 May 2020 14:27:49 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
+ on Galileo Gen 2
+Message-ID: <20200527112749.GS247495@lahna.fi.intel.com>
+References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Tue, May 26, 2020 at 08:12:22PM +0300, Andy Shevchenko wrote:
+> ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
+> of one of the I²C GPIO expanders. Since we know what that number is and
+> luckily have GPIO bases fixed for SoC's controllers, we may use a simple
+> DMI quirk to match the platform and retrieve GpioInt() pin on it for
+> the expander in question.
+> 
+> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v3: used legacy API (Mika)
+>  drivers/gpio/gpio-pca953x.c | 83 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 1fca8dd7824f..eeb91b27a52f 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -10,11 +10,13 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/bitmap.h>
+> +#include <linux/dmi.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_data/pca953x.h>
+> @@ -107,6 +109,79 @@ static const struct i2c_device_id pca953x_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, pca953x_id);
+>  
+> +#ifdef CONFIG_GPIO_PCA953X_IRQ
+> +
+> +#include <linux/gpio.h>
+> +
+> +static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
+> +	{
+> +		/*
+> +		 * On Intel Galileo Gen 2 board the IRQ pin of one of
+> +		 * the I²C GPIO expanders, which has GpioInt() resource,
+> +		 * is provided as an absolute number instead of being
+> +		 * relative. Since first controller (gpio-sch.c) and
+> +		 * second (gpio-dwapb.c) are at the fixed bases, we may
+> +		 * safely refer to the number in the global space to get
+> +		 * an IRQ out of it.
+> +		 */
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+> +#ifdef CONFIG_ACPI
+> +static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
+> +{
+> +	struct acpi_resource_gpio *agpio;
+> +	int *pin = data;
+> +
+> +	if (!acpi_gpio_get_irq_resource(ares, &agpio))
+> +		return 1;
+> +
+> +	*pin = agpio->pin_table[0];
 
-On 5/27/2020 3:14 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-23 10:11:10)
->> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
->> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
->> callback is implemented then genirq takes unlazy path to disable irq.
->>
->> Underlying irqchip may not want to implement irq_disable callback to lazy
->> disable irq when client drivers invokes disable_irq(). By overriding
->> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
->>
->> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
->> if irqchip implemented irq_disable. In cases where irq_disable is not
->> implemented irq_mask is overridden. Similarly override irq_enable callback
->> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
->>
->> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
-> This isn't a proper Fixes line. Should have quotes
->
-> Fixes: 461c1a7d4733 ("gpiolib: override irq_enable/disable")
-Thanks for pointing this, i will address in next revision.
->
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   drivers/gpio/gpiolib.c      | 55 +++++++++++++++++++++++++++++----------------
->>   include/linux/gpio/driver.h | 13 +++++++++++
->>   2 files changed, 49 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
->> index eaa0e20..3810cd0 100644
->> --- a/drivers/gpio/gpiolib.c
->> +++ b/drivers/gpio/gpiolib.c
->> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
->>          gpiochip_relres_irq(gc, d->hwirq);
->>   }
->>   
->> +static void gpiochip_irq_mask(struct irq_data *d)
->> +{
->> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +       if (gc->irq.irq_mask)
->> +               gc->irq.irq_mask(d);
->> +       gpiochip_disable_irq(gc, d->hwirq);
-> How does this work in the lazy case when I want to drive the GPIO? Say I
-> have a GPIO that is also an interrupt. The code would look like
->
->   struct gpio_desc *gpio = gpiod_get(...)
->   unsigned int girq = gpiod_to_irq(gpio)
->
->   request_irq(girq, ...);
->
->   disable_irq(girq);
->   gpiod_direction_output(gpio, 1);
->
-> In the lazy case genirq wouldn't call the mask function until the first
-> interrupt arrived on the GPIO line. If that never happened then wouldn't
-> we be blocked in gpiod_direction_output() when the test_bit() sees
-> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
-> gpios?
+Writing it like below looks better IMHO:
 
-The client driver can decide to unlazy disable IRQ with below API...
+	if (acpi_gpio_get_irq_resource(ares, &agpio))
+		*pin = agpio->pin_table[0];
+	return 1;
 
- Â irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
 
-This will immediatly invoke mask function (unlazy disable) from genirq, 
-even though irq_disable is not implemented.
+> +}
+> +
+> +static int pca953x_acpi_find_pin(struct device *dev)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +	LIST_HEAD(r);
+> +	int pin = -ENOENT, ret;
 
-Thanks,
-Maulik
->
->> +}
->> +
->> +static void gpiochip_irq_unmask(struct irq_data *d)
->> +{
->> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +       gpiochip_enable_irq(gc, d->hwirq);
->> +       if (gc->irq.irq_unmask)
->> +               gc->irq.irq_unmask(d);
->> +}
->> +
+Hmm, reverse christmas tree?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+	struct acpi_device *adev = ACPI_COMPANION(dev);
+	int pin = -ENOENT, ret;
+	LIST_HEAD(r);
 
+> +
+> +	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
+> +	acpi_dev_free_resource_list(&r);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return pin;
+
+Or
+	return ret < 0 ? ret : pin;
+
+> +}
+> +#else
+> +static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
+> +#endif
+> +
+> +static int pca953x_acpi_get_irq(struct device *dev)
+> +{
+> +	int pin, ret;
+> +
+> +	pin = pca953x_acpi_find_pin(dev);
+> +	if (pin < 0)
+> +		return pin;
+
+Since you don't actually check the error value you may also return
+simply 0 here (invalid IRQ) and other places.
+
+> +
+> +	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
+> +
+> +	if (!gpio_is_valid(pin))
+> +		return -EINVAL;
+> +
+> +	ret = gpio_request(pin, "pca953x interrupt");
+> +	if (ret)
+> +		return ret;
+> +
+> +	return gpio_to_irq(pin);
+> +}
+> +#endif
+> +
+>  static const struct acpi_device_id pca953x_acpi_ids[] = {
+>  	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
+>  	{ }
+> @@ -750,8 +825,16 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
+>  	struct irq_chip *irq_chip = &chip->irq_chip;
+>  	DECLARE_BITMAP(reg_direction, MAX_LINE);
+>  	DECLARE_BITMAP(irq_stat, MAX_LINE);
+> +	const struct dmi_system_id *id;
+>  	int ret;
+>  
+> +	id = dmi_first_match(pca953x_dmi_acpi_irq_info);
+> +	if (id) {
+
+Also here since you don't actually use id for anything you can simplify
+this like:
+
+	if (dmi_check_system(pca953x_dmi_acpi_irq_info)) {
+		ret = pca953x_acpi_get_irq(&client->dev);
+		if (ret > 0)
+			client->irq = ret;
+	}
+
+> +		ret = pca953x_acpi_get_irq(&client->dev);
+> +		if (ret > 0)
+> +			client->irq = ret;
+> +	}
+> +
+>  	if (!client->irq)
+>  		return 0;
+>  
+> -- 
+> 2.26.2
