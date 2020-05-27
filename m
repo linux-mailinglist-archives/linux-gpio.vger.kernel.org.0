@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85F391E3DB2
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9D0E1E3DC7
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgE0JjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 05:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        id S1728033AbgE0JnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 05:43:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgE0JjD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 05:39:03 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE30C061A0F
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:39:01 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x6so9701487wrm.13
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:39:01 -0700 (PDT)
+        with ESMTP id S1725320AbgE0JnH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 05:43:07 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DDFC061A0F
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:43:07 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r15so2358540wmh.5
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HuTzUQHBjzdBav/SqyDAlnPVVzvxtNWxsYv38ESVl/g=;
-        b=u2pE53DJyq4YjjqU+rf4tUX1iZYLctgFpSXN848IKwnr+KC2MjzXGQzqZ02UI6oqkA
-         3AXy8qIkSLuLgjcRxlQ84ehiCy/ctGlD1+s77fvNUHgZNb6qn4SwLWAVHm567+VyT+h7
-         bwsM/UMK5wJkAkLUoHPDB0LF+0MCE8y2CzJxomuQ+QG/jiYkYDna6IGVN1HWzfjtnjwz
-         UO43o1Xyh1Of524esC2Rd/3R8TK0a4ex/bUnMELC8tYIsPn2qmu9ls9EpvhamNesgYvX
-         xsSLDH99T1mJAQlYiq52JVUpt/27wMyaVxjBKgbauQwD9TspaH0O84flbk5VMwVtJLap
-         YGcQ==
+        bh=9hMMpVF8hfH5g++2ej/MQ5G8qsXItcOYI6IEQOshvSU=;
+        b=15caA7a/J1BKvQm0jV6wSj4kgrsaDTaZbgNg/P7qFypGE/KETNKDna0/J+jxTjIaKX
+         /nBhcKnnwuxZaqFoq5vTrgj/1YFQXTv8vKQs4+LNKaslR0FNoc+NLsK0UZzAaozpKnW8
+         4DBEDadbiAYUBAUjrk+fY/GoDtf5ump869CaSpv+jy8oEuRaHQL0H86i0KqYGv6bz9OF
+         DnkCMdaXeUCxTHCvYL5KhKTe8MZaZVzEH94ch9g/0k1mI72NBOx/rTn5ibyTPbL1yc9I
+         4lDVyxxTppQk9LBSsvdFkJYBAtIIffFIUptDyOdQ9uPG1vSSgVdmr7ws9CZ8VGRxXehw
+         A0Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HuTzUQHBjzdBav/SqyDAlnPVVzvxtNWxsYv38ESVl/g=;
-        b=lp95xoyS/4pPxHtycJQIKQj5Zk3aduEdxH4RvtkHvV0Ff/jtjdnBVbJFA3QvrJ5nSS
-         nCSg/PG9G2n4rNDqsoS5RQb64KlNd5smOzvcbSxp/ITDnWKxquThsr8jjNncSuQSe2fh
-         QxuM7bhnzPUN/eJ/2SkzI2qHGyzpK6W1ens5N4HWIPLKeL7sMImbcdQmDvAQR85hQyw1
-         +fQXQ7ZldJwyBg3SMVCkWbYhFMUJPS6T+GkN3icDv8l0eb0fw/fkmbHoDZtxfd3iIO0Y
-         bniNKsyxG5HJcyx8YZkv/MspY6Opr06kLzVztcMMCmhurMAgNHDpPTatK/9Y/ySudbtQ
-         huIA==
-X-Gm-Message-State: AOAM533S3rPzAFipHpY/ivcAtznJXOszKgyk1BQA10GMivnyo/TcWn+A
-        Ms6LBlHG0yoEo7G1jYzu5Mkjfw==
-X-Google-Smtp-Source: ABdhPJxsjct/WnTXKksP9VnskcL17cgYExNQGs2rVTGxg86ljSTPYmEyIkC77UZllKFI2U5Vl4JQeA==
-X-Received: by 2002:a5d:5492:: with SMTP id h18mr23468247wrv.330.1590572339994;
-        Wed, 27 May 2020 02:38:59 -0700 (PDT)
+        bh=9hMMpVF8hfH5g++2ej/MQ5G8qsXItcOYI6IEQOshvSU=;
+        b=AT951NGXRNhbyY6lm5R8sHLhkakbL71azY9F/sKFdqen2VeM6NlQFeJvzqVT7cmaXl
+         LmJCvNRQphDu/BHG5qxRsohJyZCAidruvSERVzYv6c5o1LOVQEb0e3neGasXSaXnbSZV
+         g1GfhYQ7jI5y+KI1SFdAxoqFvrbzBtKjeS0ajT+JUFO6gRWCHWyGlKJBCMjoUFXWm35l
+         OCZBVtHHnjbYRG93JZ4cKjm6K6Ikcb82aWJVX3bm/6U/2eiFdVIluPcuLcqeR9RTHuQ9
+         t+C199yO9UOyoMLRScuoRnEfpCwQB1juhR0Jjb1xeymPSipTydGunkvV4nMEgKHAwg4I
+         807A==
+X-Gm-Message-State: AOAM530vYZv18CYBayjZjG+Jrj5DOfUi4VuBbZGEiYc8YeaDjCUrYd7r
+        Lux7eExIyfcAIPaMGUO7SIZ4PA==
+X-Google-Smtp-Source: ABdhPJzcaysFT7VvjHLUmv/qgkbHgT75ezn13cAoQE5YDYwhU0x0i9JEX0EvP3hLuM0xwN9yYGIUNA==
+X-Received: by 2002:a1c:5541:: with SMTP id j62mr3281787wmb.64.1590572586062;
+        Wed, 27 May 2020 02:43:06 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id w10sm2340198wrp.16.2020.05.27.02.38.58
+        by smtp.gmail.com with ESMTPSA id 1sm2390343wmz.13.2020.05.27.02.43.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 02:38:59 -0700 (PDT)
+        Wed, 27 May 2020 02:43:05 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: fixes for v5.7
-Date:   Wed, 27 May 2020 11:38:55 +0200
-Message-Id: <20200527093855.31024-1-brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: updates for v5.8 - part 2
+Date:   Wed, 27 May 2020 11:43:02 +0200
+Message-Id: <20200527094302.6235-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -66,39 +66,39 @@ From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
 Hi Linus,
 
-This is the last batch for fixes I'm sending your way in this release
-cycle. Please pull.
+Here are the remaining patches I picked up for v5.8. Please pull.
 
 Bartosz
 
-The following changes since commit e75dfba311f478f1c2bf928284e1949c20594336:
+The following changes since commit 3831c051dfbf58595085e432acc00ad4efcf54cc:
 
-  Merge tag 'gpio-fixes-for-v5.7-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes (2020-05-18 09:40:50 +0200)
+  tools: gpio: add bias flags to lsgpio (2020-05-05 18:27:09 +0200)
 
 are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.7
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.8-part2
 
-for you to fetch changes up to 98f7d1b15e87c84488b30ecc4ec753b0690b9dbf:
+for you to fetch changes up to e33a58a29c6ad6f844cdc184210aa1feb5e2fbe0:
 
-  gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe() (2020-05-25 11:17:18 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.7
-
-- fix mutex and spinlock ordering in gpio-mlxbf2
-- fix the return value checks on devm_platform_ioremap_resource in
-  gpio-pxa and gpio-bcm-kona
+  gpio: pca935x: Allow IRQ support for driver built as a module (2020-05-25 11:37:56 +0200)
 
 ----------------------------------------------------------------
-Axel Lin (1):
-      gpio: mlxbf2: Fix sleeping while holding spinlock
+gpio: updates for v5.8 - part 2
 
-Tiezhu Yang (2):
-      gpio: pxa: Fix return value of pxa_gpio_probe()
-      gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
+- fix the initialization ordering in gpio-max730x
+- make gpio-pxa buildable for compile testing
+- make gpio-pca953x buildable as a module
 
- drivers/gpio/gpio-bcm-kona.c | 2 +-
- drivers/gpio/gpio-mlxbf2.c   | 6 +++---
- drivers/gpio/gpio-pxa.c      | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      gpio: pca935x: Allow IRQ support for driver built as a module
+
+Rodrigo Alencar (1):
+      gpio: max730x: bring gpiochip_add_data after port config
+
+Tiezhu Yang (1):
+      gpio: pxa: Add COMPILE_TEST support
+
+ drivers/gpio/Kconfig        |  4 ++--
+ drivers/gpio/gpio-max730x.c | 12 +++++-------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
