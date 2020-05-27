@@ -2,127 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32A301E4254
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 14:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17B331E4305
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 15:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgE0MbU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 08:31:20 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:11164 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbgE0MbT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 May 2020 08:31:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590582678; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=a0pH7dQyq4r9sJKjE/07Ll+1aMct4+PM140OnxeMnLs=; b=a/MbcuNJbd0FJIvRLQmgWNeSY+jLvuUOoOcBZHiE+k/LJRHQ1iy9wWdYGz1ntUEIIir70AcC
- TvY5gHhnyKRyz6CMn2TakHNjhfMToxE1qJifbShBZizbdr5NTEjhr9AGVZIHrJOmWLq8G1md
- lAX2qYmFgYq5w47Qsgv54lkRG3Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ece5d8d2738686126ff3b54 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 12:31:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6182C43391; Wed, 27 May 2020 12:31:08 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.43.129] (unknown [106.222.1.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85F4BC433C6;
-        Wed, 27 May 2020 12:31:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85F4BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 3/4] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-4-git-send-email-mkshah@codeaurora.org>
- <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <65c86165-5956-5340-1f40-6426c6aec743@codeaurora.org>
-Date:   Wed, 27 May 2020 18:00:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2387518AbgE0NNY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 09:13:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730210AbgE0NNX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 09:13:23 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80883C08C5C2
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 06:13:23 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b27so14208891qka.4
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 06:13:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W8Wp5Vcg8Shxvh02rtp//fSQyOO7mc0Dh1ryTtDSaFY=;
+        b=eYHFnwj6M3RYQoPnToNTdlvWzrJHt6QqlRhV6QOEklF/5+0ZPGH1i+KTumI9se/Ix2
+         apiYbl7kNvdL0fEO0Zq3pWFqxLiHv0FMBuBQPSFoZYh5uV6Bx3RmVGTJ4obkRF75SA4k
+         fgTG4uo5clo7aH2orbEXlocGnNo2Wed8Xdd+lIGwms+6T8tFdES29KKEn6pZQvO5sPYL
+         7XJe2MPPEzR+czLk+z7LgAamSzJomKZiSudFBq3GX3wkf3WIy/UK6DnQ/Olb2NCRFjRg
+         xeVpocblb+dg+LDjU7TWx9hrZZikipwgAqZ1e/8enLmO7FJIsDeiyC5Hp2Q8ifAedI5x
+         KHeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W8Wp5Vcg8Shxvh02rtp//fSQyOO7mc0Dh1ryTtDSaFY=;
+        b=qnk5IHK71nryWXJWpNfpUZtPugRjIEPU9d9HXFjyc//jl8OghJl0FTQoot5ZRFLfxI
+         oAovXdxWlJbT24XqQs2yEbPAwxRtLwIAV1VS6rj4GSxrd4+A8BCvXtf0WTohwht8RpCU
+         dIK1SpApE4zPT3Lw+BVpINnCcLTmZio79fQo8EyBD6DShpDz2XpzD/VqC8DC6SQIrA+T
+         9vk0emRpX4NvWQTjxAGKBKUVG54n0yvPTbWRWlEgxtRCpu5twuUa9vzPLMKFV563eha/
+         ZhhbmxZ3pIk9/JVKuDQRxEYYSJ7+Hjcn+yGMg4m7VhdjxvrQzZD819Fig73cPJCGMLkY
+         PWMw==
+X-Gm-Message-State: AOAM5304I8SjLuG9kMbb4LkHI1+wUWtfkzl1dUUZK75/zIBY16ly+bbS
+        h1zZdFvVLLKlYXWqjXSNIh3cCR1He7EZtcGFL5uc2Be3
+X-Google-Smtp-Source: ABdhPJxofls6X6p3Yv3wostc+q2QUxJw61VdkyuBZpGV8cnknebyv28yszuoypfJfYqH3rjbtz6hFW2WYFfbHFCZUck=
+X-Received: by 2002:a37:dd6:: with SMTP id 205mr3768475qkn.323.1590585202733;
+ Wed, 27 May 2020 06:13:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+ <20200520211916.25727-3-andriy.shevchenko@linux.intel.com> <20200525175819.GH1634618@smile.fi.intel.com>
+In-Reply-To: <20200525175819.GH1634618@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 27 May 2020 15:13:11 +0200
+Message-ID: <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] gpio: pca953x: Drop unneeded ACPI_PTR()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 5/27/2020 3:17 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-23 10:11:12)
->> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
->> during suspend and mask before setting irq type.
-> Why do we need to mask before setting irq type? Does something go wrong?
-> Can you explain in the commit text?
-
-i don't think anything goes wrong but there might be a case where some 
-driver changing type at runtime,
-
-masking before changing type should make sure any spurious interrupt is 
-not detected during this operation.
-
+pon., 25 maj 2020 o 19:58 Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
 >
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Does this need a Fixes tag?
-Thanks i will add.
+> On Thu, May 21, 2020 at 12:19:14AM +0300, Andy Shevchenko wrote:
+> > ACPI_PTR() becomes a no-op when !CONFIG_ACPI. This is not needed since
+> > we always have ID table enabled. Moreover, in the mentioned case compil=
+er
+> > will complain about defined but not used variable.
 >
->> ---
->>   drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 2419023..b909ffe 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>          pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->>          pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
->>          pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
->> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
-> This is sort of sad. We have to set the IRQCHIP_MASK_ON_SUSPEND flag
-> here so that genirq can call the mask op during suspend for the parent
-> irqchip (pdc)?
-During suspend, suspend_device_irq() will check this flag in msmgpio 
-irqchip and then call it to mask if its not marked for wakeup.
-
-in this case, setting this flag will call first invoke gpiolib's 
-callback  (we override in first patch of this series), then it goes to 
-msmgpio chip's mask callback,
-
-this call will then get forwarded to its parent PDC and then to PDC's 
-parent GIC.
-
-This seems the way hierarchical irqchip works. i don't see any issue 
-with this.
-> Is there some way to not need to do that and instead let
-> genirq do mask on suspend at the chip level instead of the irq level?
+> Bart, are you going to apply this one, or should I resend it as a part of=
+ v2?
 >
->> +                               | IRQCHIP_SET_TYPE_MASKED;
->>   
->>          np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->>          if (np) {
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Ugh, I already sent my last PRs to Linus both for v5.7 fixes & v5.8
+updates. I'll let Linus pick it up once he pulls from my tree.
 
+Bart
