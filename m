@@ -2,141 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 908741E439E
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 15:28:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59EC11E43F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 15:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbgE0N2q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 09:28:46 -0400
-Received: from mga05.intel.com ([192.55.52.43]:31439 "EHLO mga05.intel.com"
+        id S2388076AbgE0Nik (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 09:38:40 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20358 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387821AbgE0N2q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 May 2020 09:28:46 -0400
-IronPort-SDR: u0VlAUO/2uViVVm56G2d1TQFx2vFV1Kj8bNYFd8sy9R/gM+8cC6JAqOUhXqX6c+f1EY83MMrjQ
- N3zD+/IUIBlg==
+        id S2387682AbgE0Nij (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 May 2020 09:38:39 -0400
+IronPort-SDR: 1BPYe+QGgMx3Cs8X75fJtVvlurpNdD0NDS8I4GO4+ip/HzChmM/JTRKLNVyNwTvG78ksu4njJ4
+ eHGULXw0JRZg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:28:45 -0700
-IronPort-SDR: lLFgMtmHWMkUZV4n7EnxnpZVvx4/QvybVQB+K1rtZXE7zjWG3MLEZEHrN33sOKdvEab2c+3bJq
- OQg2Cyy08RiQ==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:38:38 -0700
+IronPort-SDR: 9wiXZQKOKEpsbCVuTvsZnBbLhroxgRwrkByu4IMGDRTpTFSit9r0Xs933YXNcqUgLxeHQwRJby
+ hariVD/SN8Eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="345531764"
+   d="scan'208";a="345534383"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 06:28:44 -0700
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 06:38:37 -0700
 Received: from andy by smile with local (Exim 4.93)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdw6x-009Ebv-EN; Wed, 27 May 2020 16:28:47 +0300
-Date:   Wed, 27 May 2020 16:28:47 +0300
+        id 1jdwGW-009Ehv-94; Wed, 27 May 2020 16:38:40 +0300
+Date:   Wed, 27 May 2020 16:38:40 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
- on Galileo Gen 2
-Message-ID: <20200527132847.GS1634618@smile.fi.intel.com>
-References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
- <20200527112749.GS247495@lahna.fi.intel.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 3/5] gpio: pca953x: Drop unneeded ACPI_PTR()
+Message-ID: <20200527133840.GW1634618@smile.fi.intel.com>
+References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+ <20200520211916.25727-3-andriy.shevchenko@linux.intel.com>
+ <20200525175819.GH1634618@smile.fi.intel.com>
+ <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200527112749.GS247495@lahna.fi.intel.com>
+In-Reply-To: <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 27, 2020 at 02:27:49PM +0300, Mika Westerberg wrote:
-> On Tue, May 26, 2020 at 08:12:22PM +0300, Andy Shevchenko wrote:
-> > ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
-> > of one of the I²C GPIO expanders. Since we know what that number is and
-> > luckily have GPIO bases fixed for SoC's controllers, we may use a simple
-> > DMI quirk to match the platform and retrieve GpioInt() pin on it for
-> > the expander in question.
-
-...
-
-> > +static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
-> > +{
-> > +	struct acpi_resource_gpio *agpio;
-> > +	int *pin = data;
-> > +
-> > +	if (!acpi_gpio_get_irq_resource(ares, &agpio))
-> > +		return 1;
-> > +
-> > +	*pin = agpio->pin_table[0];
+On Wed, May 27, 2020 at 03:13:11PM +0200, Bartosz Golaszewski wrote:
+> pon., 25 maj 2020 o 19:58 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisaÅ‚(a):
+> >
+> > On Thu, May 21, 2020 at 12:19:14AM +0300, Andy Shevchenko wrote:
+> > > ACPI_PTR() becomes a no-op when !CONFIG_ACPI. This is not needed since
+> > > we always have ID table enabled. Moreover, in the mentioned case compiler
+> > > will complain about defined but not used variable.
+> >
+> > Bart, are you going to apply this one, or should I resend it as a part of v2?
+> >
 > 
-> Writing it like below looks better IMHO:
-> 
-> 	if (acpi_gpio_get_irq_resource(ares, &agpio))
-> 		*pin = agpio->pin_table[0];
-> 	return 1;
+> Ugh, I already sent my last PRs to Linus both for v5.7 fixes & v5.8
+> updates. I'll let Linus pick it up once he pulls from my tree.
 
-Actually this reveals a suboptimal behaviour in comparison to
-acpi_walk_resources(), i.e. there is no way to stop traversing when
-(1st) resource is found.
+No problem, thanks!
 
-But okay, I will rewrite.
-
-> > +}
-
-...
-
-> > +	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
-> > +	acpi_dev_free_resource_list(&r);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return pin;
-> 
-> Or
-> 	return ret < 0 ? ret : pin;
-
-I think former is better to read since it has been grouped appropriately.
-
-...
-
-> > +static int pca953x_acpi_get_irq(struct device *dev)
-> > +{
-> > +	int pin, ret;
-> > +
-> > +	pin = pca953x_acpi_find_pin(dev);
-> > +	if (pin < 0)
-> > +		return pin;
-> 
-> Since you don't actually check the error value you may also return
-> simply 0 here (invalid IRQ) and other places.
-
-I don't think it is a good idea, because...
-
-> > +	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
-> > +
-> > +	if (!gpio_is_valid(pin))
-> > +		return -EINVAL;
-> > +
-> > +	ret = gpio_request(pin, "pca953x interrupt");
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return gpio_to_irq(pin);
-
-... this will become to something like
-
-	ret = gpio_to_irq();
-	if (ret < 0)
-		return 0;
-
-	return ret;
-
-> > +}
-
-...
-
-I agree on the rest.
-
+P.S. The patch is pretty much independent and can be applied even before that
+(I suppose), but let Linus decide what is better for him.
 
 -- 
 With Best Regards,
