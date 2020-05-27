@@ -2,117 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E8D01E39B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 08:53:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA92B1E3B36
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 10:05:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgE0Gxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 02:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbgE0Gxs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 02:53:48 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506D6C03E97C
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u188so1927315wmu.1
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 23:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
-        b=cPWisZ+A4SR3iQJ6RsEDeDne0OUCVjnfpAGxMjkPrCxzFO71csUJv0xmdBRl7npeZh
-         AeFPi1ZmAv1VwihKmOwSRiZrJsJ1i6kwIn8Nkt2Ls6PrSh4pmaZSr97snzWfE0Tn5x79
-         bn5tQlmvjopqjhhwA+8717mpKH4FIRbM2wsps9Yaybn+1Sbdk7PQ6e6xPJok7tTW3hQT
-         6R8cBzso9tSPzo2k0UZJPVj9XZDBCfP717btD4AxbyDHH0f/x517SgR/trJkcSQlO6BB
-         UekgSoUHoJVz0M2m9h5Iu/ibOmd2JCvlYeh977CW4E0Cm+pKuCkVczG89O4X7pFde+o4
-         gPzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=KaQOkQA7F9aEmTtrQs4AHoVIEVINLPeKbMlE71dR8YI=;
-        b=qfmU8aqIeioBqPY4mq3Au6ZpNjW2wUWhTL+oJ18x4bGQIO0Ef2uOoGhbwKZRPSQAEQ
-         IP8uOJl+vgOG+ME9BQTCPt2zHRfTZm6XdAJYVa1A2bHzRn174gX8A1FhcsjoxQswr2I+
-         HqQWDbb6Nn5ysMNg/6uwKlpLVmwLLSa66n3TACHIr+Rz6hdxYP7MQIHmV7vd1E7u9XCf
-         gqQywIUnq8sG1BEB/v5tt7c9sjjMq7QsplvvbYwWv8rGpDqFidI7xsS2YMC77pi/E8Rs
-         d7+xP3r9CFzKgl3ROA2D7Z3G88pRFdmLayzvViBHKvKugEsIP4N5QrGApv5+T7UixVvK
-         BgpQ==
-X-Gm-Message-State: AOAM530qPhzDSm0XzAqU8t6PjflzPc7LbgFFU8LubcjR6p8qZsJPWsuk
-        BMa/Q+1Qr8shbDG69I2NG31ZDg==
-X-Google-Smtp-Source: ABdhPJzEz2uP3oWCohWVrLCnTYgAhvZIGv77IRU3z+lWX42qdjUmDcj2EC+NMT9wwZk7n/CATpsnBg==
-X-Received: by 2002:a1c:25c3:: with SMTP id l186mr2814857wml.103.1590562426704;
-        Tue, 26 May 2020 23:53:46 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id p23sm1900743wma.17.2020.05.26.23.53.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 23:53:46 -0700 (PDT)
-Date:   Wed, 27 May 2020 07:53:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-Message-ID: <20200527065344.GP3628@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc>
- <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc>
- <20200526072427.GC3628@dell>
- <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
- <20200526160336.GV1634618@smile.fi.intel.com>
+        id S1729323AbgE0IF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 04:05:27 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7398 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729292AbgE0IF0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 04:05:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590566725; x=1622102725;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=PVXzxMF9Vqjr2PV3qWdmGql8cs4THQnOC1D9NN8NFjI=;
+  b=d51hFciozFX3EFMx7R42XBJJdXmhf8VcH/Ay7Jpubckv/b1tWutdNQtP
+   1I9INmswMsBa0LSvTn+6hBTswi8IeMzJDCRhYgl1TACqkE/bMOP9ykD/W
+   /1jg8HggMN1UsMlFFWg15clmaMJ+VoypmqC9/iuAVFs221gHkBdLwF6EG
+   JCcg49LT8dsctZQfyaczj1gfQd5tA5kXOa9mHAPW6H1ALe3mLmXFysPD2
+   JW74w9yJepkz+SJqePqk40hmDhR4ZGZOsnDxj0PDXoSm8xJCV+M3IqgrF
+   rScU1jH0fJ+hfONA8/8Pt9T7ulnna2nVneqWcnTuWYsJXnKIUC6DcccZs
+   w==;
+IronPort-SDR: wg7qi6vKQlAMeUaLNnYr/pgQElF/mppTRVRdDs9j6PL/VdSfGQovFxd2A5lvqEM0HL/Ak6SWnd
+ ajiqm0f2b17I3CEQkkBX2KqN9Qqxg5p/Q8wLzRN0jfPwJMHJFvYjz7hs5Ur4MGRcXojOH/HKbs
+ qwbkThrcDH62qSlTpCfcrRcwCppPObutq2XoZRMqMTvY2iTGXWTgRnBE6QwtZZ3MvtvBHfLiMz
+ B0KEQqOfwbBq7msr+yB8KK/1kjFe07ov25eqns6rasTXxFBJrGetBF5DDmXjml6pxyGrC+gVJb
+ ccM=
+X-IronPort-AV: E=Sophos;i="5.73,440,1583218800"; 
+   d="scan'208";a="13635860"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 May 2020 01:05:25 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 27 May 2020 01:05:24 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 27 May 2020 01:05:22 -0700
+References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com> <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com> <87r1v8oz9f.fsf@soft-dev15.microsemi.net> <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+In-Reply-To: <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
+Date:   Wed, 27 May 2020 10:05:20 +0200
+Message-ID: <87pnappzun.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526160336.GV1634618@smile.fi.intel.com>
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 26 May 2020, Andy Shevchenko wrote:
 
-> On Tue, May 26, 2020 at 05:54:38PM +0200, Michael Walle wrote:
-> > Am 2020-05-26 09:24, schrieb Lee Jones:
-> 
-> ...
-> 
-> > Like I said, in the long term I would like to have support for
-> > different versions of the board management controller
-> 
-> > without having to change the device tree and have device tree bindings for the
-> > subdevices at the same time.
-> 
-> But isn't device tree to describe *very specific platform* rather than *class
-> of platforms*?
+Linus Walleij writes:
 
-Yes.  Device Tree describes the hardware.
+> On Mon, May 25, 2020 at 4:38 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> Yes, the problem is they're not in sequence. F.ex. you could have ports
+>> 0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
+>
+> Just use disabled nodes.
+>
+> That would look like this in my idea of a device tree:
+>
+> pinctrl@nnn {
+>     gpio0: gpio@0 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio1: gpio@1 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio2: gpio@2 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio3: gpio@3 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio4: gpio@4 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio5: gpio@5 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio6: gpio@6 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio7: gpio@7 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+> };
+>
+> It is common to use the status to enable/disable nodes like this.
+>
+> In the Linux kernel is is possible to iterate over these subnodes and
+> check which ones are enabled and disabled while keeping the
+> index by using something like:
+>
+> i = 0;
+> struct device_node *np, *child;
+> for_each_child_of_node(np, child) {
+>     if (of_device_is_available(child)) {
+>         pr_info("populating device %d\n", i);
+>     }
+>     i++;
+> }
+>
+> Certainly you can use i in the above loop to populate your registers
+> etc from an indexed array.
+>
+> This way the consumers can pick their GPIO from the right port
+> and everything just using e.g.
+> my-gpios = <&gpio6 4 GPIO_OUT_LOW>;
+>
 
-If the hardware changes, so must the Device Tree.
+Linux, thank you for your input, it is much appreciated. I will use the
+pattern in the driver in the next revision.
+
+The only issue is that the gpios on the same "port" have restrictions on
+their status - they can only be enabled "all" or "none" for gpios that
+map to the same port. F.ex. gpio0, gpio32, gpio64 and gpio96 must all be
+enabled or disabled because at the hardware level you control the
+_port_. But as I noted earlier, that could just be the driver enforcing
+this.
+
+Thanks again.
+
+---Lars
+
+> Yours,
+> Linus Walleij
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Lars Povlsen,
+Microchip
