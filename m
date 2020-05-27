@@ -2,110 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A52BE1E3260
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 00:22:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07E931E3417
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 02:35:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389911AbgEZWW0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 May 2020 18:22:26 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44464 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389382AbgEZWWZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 18:22:25 -0400
-Received: by mail-il1-f193.google.com with SMTP id j3so22070110ilk.11;
-        Tue, 26 May 2020 15:22:24 -0700 (PDT)
+        id S1726946AbgE0AfP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 May 2020 20:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbgE0AfP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 May 2020 20:35:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AC3C061A0F;
+        Tue, 26 May 2020 17:35:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 185so2668856pgb.10;
+        Tue, 26 May 2020 17:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NbLwGpRXN+x1Po6XCiN+i0tEPW5kURnpgHBXzY97LRY=;
+        b=n8knze2OUmHWz3XNrfjgVRi4h6emSpsN0zZQuh13TAlcnGrsEwlkMo3L9L8jTLg7Fv
+         zGIe6yAyLE/zEsypQDFRQwxQpvviZKIO6vwtYfR6LOQdOK1Tf6hk91l0jCr8jO7iN4NU
+         Cs/cFYjAjxwmO0NgSWklvUfkjCyqqi6dmJoUcZ+e2IoktbfO/ncjidXAwzWqGM7AXdxB
+         KZxYe9DlIvBw3X7D9oQX5gs5DmV11R5509PyCFC8UtQeIs8Z8aAPPmwHLLcIxwJLPbIb
+         TIGt4DPAUK6cvZvwp8rr77yfIKMoG0cGhhhdRCLSbMKNlEYEvoXQXvhAJGcjb0Uq0Q6h
+         n+Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ynq91C3bWjCUnWc0GV/GZg7ncDaeExN2lTxhHszV0qY=;
-        b=YwusBZrMl4oejzhHGUEizHwgyFhuSMgKTXKMnBK4/kHx6uLOZiBBNP6Y6EtAHyuJJn
-         +il9kMVjxm1/nBGzh+XqeyHwSyciJ7KPCOo5fNDUnBJra9g8tnNHU/UHlBz9bwZPU/rb
-         R+TvRWxJmivgpaJfD6TXs67abV1uZTmfv6hQHxMq0feV/6DzaUHomxHxGr4yO6CMAivs
-         XX74UUqQo5WxlNbzQ2/3NCaQEcMtdlSFcHrpU2SoGKWFUZOJFRIIueP4NaCT+H6ViLYO
-         WSG9jjgFg87zX/XaP6b19neHGXh+V/5ZraUKjNMacoSHbDWg3wy3rkhVHgupcnwjcD80
-         H/OQ==
-X-Gm-Message-State: AOAM533u3K00Q1KwP7ZrhDhYAUf/W1rqQbCuWXrvEx42eN+Zw1k/OfVB
-        6rPmdT8Th/hxdUxipLkcXw==
-X-Google-Smtp-Source: ABdhPJz4zwTFycpM7xWxPlcIjR9So1dYYKyguqhio4ecnACld0RI8Pfko2UrIAIq7kJ0pfTEHAQqMw==
-X-Received: by 2002:a05:6e02:e46:: with SMTP id l6mr3316013ilk.1.1590531744025;
-        Tue, 26 May 2020 15:22:24 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b18sm609005ilh.77.2020.05.26.15.22.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:22:23 -0700 (PDT)
-Received: (nullmailer pid 489202 invoked by uid 1000);
-        Tue, 26 May 2020 22:22:22 -0000
-Date:   Tue, 26 May 2020 16:22:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, narmstrong@baylibre.com,
-        a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        spanda@codeaurora.org, bjorn.andersson@linaro.org,
-        dri-devel@lists.freedesktop.org, swboyd@chromium.org,
-        devicetree@vger.kernel.org, jeffrey.l.hugo@gmail.com,
-        jernej.skrabec@siol.net, linux-arm-msm@vger.kernel.org,
-        robdclark@chromium.org, jonas@kwiboo.se,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] dt-bindings: drm/bridge: ti-sn65dsi86: Document
- no-hpd
-Message-ID: <20200526222222.GA467364@bogus>
-References: <20200513215902.261547-1-dianders@chromium.org>
- <20200513145807.v6.3.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NbLwGpRXN+x1Po6XCiN+i0tEPW5kURnpgHBXzY97LRY=;
+        b=OvQis321TlHsKj/LaYKLt+32wMP6kixlLVR463/3789z2n6/3+bqZNR9NByvegoBrp
+         CiOJ/B1C6n6x8mT1gahV7Jy3SKzIRAXavPOWvn7NMgTlA3Q6yvV5zbyS8iWS8jHLJIzt
+         ryaJseXh7MkBmpLJtVfeoQhCIY4iVpvQnYZjiHj+KiU29Fa+4egXSlUn0250xaN0j5Mh
+         NFvV5Ux8LU0jVIaLQeEJJsoljcT2vi08zLx9wpy8PiZx5RHEhvqKhlmxlQB4GM4oKEPb
+         /CtuGiwVdatwNWdn0+be71GK63nhNuX0PKWUunxc96esp8AyGEn/3lNvTxKMx2N7MOuq
+         gI5A==
+X-Gm-Message-State: AOAM531a4iu+0U2nw8VJMPWeScLP/x07lzfkq4CiNm7YIr3NKZIPL+Qj
+        GY4KixNFD+zTum5L6jKzP0SgnDJMUB4=
+X-Google-Smtp-Source: ABdhPJxj4r3Sq+QbuiYd4E3lg192kPfvPJagvsEQoc+pslDJr2dYm/3YXDcEwaOQG0fCtTJ5mqIB4A==
+X-Received: by 2002:a62:1e84:: with SMTP id e126mr1379483pfe.67.1590539714525;
+        Tue, 26 May 2020 17:35:14 -0700 (PDT)
+Received: from sol (220-235-68-201.dyn.iinet.net.au. [220.235.68.201])
+        by smtp.gmail.com with ESMTPSA id k4sm622454pgg.88.2020.05.26.17.35.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 17:35:13 -0700 (PDT)
+Date:   Wed, 27 May 2020 08:35:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+Message-ID: <20200527003508.GA9040@sol>
+References: <20200516064507.19058-1-warthog618@gmail.com>
+ <CAMpxmJX51PNHucOUnZ3GbA+RxmZto9NXruBmjUYoFHz5D1Nbqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200513145807.v6.3.I72892d485088e57378a4748c86bc0f6c2494d807@changeid>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJX51PNHucOUnZ3GbA+RxmZto9NXruBmjUYoFHz5D1Nbqw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 13, 2020 at 02:59:02PM -0700, Douglas Anderson wrote:
-> The ti-sn65dsi86 MIPI DSI to eDP bridge chip has a dedicated hardware
-> HPD (Hot Plug Detect) pin on it, but it's mostly useless for eDP
-> because of excessive debouncing in hardware.  Specifically there is no
-> way to disable the debouncing and for eDP debouncing hurts you because
-> HPD is just used for knowing when the panel is ready, not for
-> detecting physical plug events.
+On Mon, May 25, 2020 at 06:24:04PM +0200, Bartosz Golaszewski wrote:
+> sob., 16 maj 2020 o 08:45 Kent Gibson <warthog618@gmail.com> napisał(a):
+> >
+> > Add a new version of the uAPI to address existing 32/64bit alignment
+> > issues, add support for debounce, and provide some future proofing by
+> > adding padding reserved for future use.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> >
+> > ---
+> >
+> > This patch is a proposal to replace the majority of the uAPI, so some
+> > background and justification is in order.
+> >
+> > The alignment issue relates to the gpioevent_data, which packs to different
+> > sizes on 32bit and 64bit platforms. That creates problems for 32bit apps
+> > running on 64bit kernels.  The patch addresses that particular issue, and
+> > the problem more generally, by adding pad fields that explicitly pad
+> > structs out to 64bit boundaries, so they will pack to the same size now,
+> > and even if some of the reserved padding is used for __u64 fields in the
+> > future.
+> >
+> > The lack of future proofing in v1 makes it impossible to, for example,
+> > add the debounce feature that is included in v2.
+> > The future proofing is addressed by providing reserved padding in all
+> > structs for future features.  Specifically, the line request,
+> > config and info structs get updated versions and ioctls.
+> >
+> > I haven't added any padding to gpiochip_info, as I haven't seen any calls
+> > for new features for the corresponding ioctl, but I'm open to updating that
+> > as well.
+> >
+> > As the majority of the structs and ioctls were being replaced, it seemed
+> > opportune to rework some of the other aspects of the uAPI.
+> >
+> > Firstly, I've reworked the flags field throughout.  v1 has three different
+> > flags fields, each with their own separate bit definitions.  In v2 that is
+> > collapsed to one.  Further, the bits of the v2 flags field are used
+> > as feature enable flags, with any other necessary configuration fields encoded
+> > separately.  This is simpler and clearer, while also providing a foundation
+> > for adding features in the future.
+> >
+> > I've also merged the handle and event requests into a single request, the
+> > line request, as the two requests where mostly the same, other than the
+> > edge detection provided by event requests.  As a byproduct, the v2 uAPI
+> > allows for multiple lines producing edge events on the same line handle.
+> > This is a new capability as v1 only supports a single line in an event request.
+> >
+> > This means there are now only two types of file handle to be concerned with,
+> > the chip and the line, and it is clearer which ioctls apply to which type
+> > of handle.
+> >
+> > There is also some minor renaming of fields for consistency compared to their
+> > v1 counterparts, e.g. offset rather than lineoffset or line_offset, and
+> > consumer rather than consumer_label.
+> >
+> > And v1 GPIOHANDLES_MAX and gpiohandle_data become GPIOLINES_MAX and
+> > gpioline_values for v2 - the only change being the renaming for clarity.
+> >
+> > The v2 uAPI is mostly just a reorganisation of v1, so userspace code,
+> > particularly libgpiod, should easily port to it.
+> >
+> > This patch is obviously only one patch in a much bigger series that
+> > will actually implement it, but I would appreciate a review and any feedback,
+> > as it is foundational to the rest of that series.
+> >
+> > Thanks,
+> > Kent.
+> >
 > 
-> Currently the driver in Linux just assumes that nobody has HPD hooked
-> up.  It relies on folks setting the "no-hpd" property in the panel
-> node to specify that HPD isn't hooked up and then the panel driver
-> using this to add some worst case delays when turning on the panel.
+> Hi Kent,
 > 
-> Apparently it's also useful to specify "no-hpd" in the bridge node so
-> that the bridge driver can make sure it's doing the right thing
-> without peeking into the panel [1].  This would be used if anyone ever
-> found it useful to implement support for the HW HPD pin on the bridge.
-> Let's add this property to the bindings.
+> Thanks for posting this. I like the general direction a lot. I'll
+> review this in detail later this week.
 > 
-> NOTES:
-> - This is somewhat of a backward-incompatible change.  All current
->   known users of ti-sn65dsi86 didn't have "no-hpd" specified in the
->   bridge node yet none of them had HPD hooked up.  This worked because
->   the current Linux driver just assumed that HPD was never hooked up.
->   We could make it less incompatible by saying that for this bridge
->   it's assumed HPD isn't hooked up _unless_ a property is defined, but
->   "no-hpd" is much more standard and it's unlikely to matter unless
->   someone quickly goes and implements HPD in the driver.
-> - It is sensible to specify "no-hpd" at the bridge chip level and
->   specify "hpd-gpios" at the panel level.  That would mean HPD is
->   hooked up to some other GPIO in the system, just not the hardware
->   HPD pin on the bridge chip.
+> Seeing the speed at which you make progress I think I won't be
+> implementing support for the v1 of the watch ioctl() in libgpiod after
+> all. Once the v2 is live I will probably bump the API version in
+> libgpiod to v2.0.0 and make some non-compatible changes anyway.
+> 
 
-I would say 'no-hpd' belongs wherever HPD is broken. So it may still 
-make sense in the panel. (Otherwise, it needs to be removed from 
-panel-common.yaml and some panel bindings, right?)
- 
-> [1] https://lore.kernel.org/r/20200417180819.GE5861@pendragon.ideasonboard.com
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
+Yeah, libgpiod has similar problems to the v1 uAPI - there is no
+easy way to extend it without causing breakage.
 
-In any case,
+I've got a patch that ports libgpiod to the v2 uAPI, though it only goes
+as far as v1 parity.  That is passing all existing tests.  The patch
+doesn't address debounce as that will require libgpiod API changes.  Nor
+does it make use of the bulk event capability, as that would change
+behaviour and break some of the tests - the wait_multiple test was the
+sticking point there.  Those are probably best combined with the v2.0.0
+changes you are planning.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I've also got a couple of patches for minor things that I noticed while I
+was in there.  I'll post them shortly.
+
+Cheers,
+Kent.
