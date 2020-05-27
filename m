@@ -2,210 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE5B51E4000
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 13:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39C611E4167
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 14:08:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgE0L1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 07:27:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:39209 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbgE0L1w (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 27 May 2020 07:27:52 -0400
-IronPort-SDR: YL3JkITWj5jqM6B7N2t96ozt6q8JHs7hJLOfu/teYfwU/HBK2TKiZdi76Z2WP7sgsuZ4Wy60Di
- rokvD6ZSoJrA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 04:27:52 -0700
-IronPort-SDR: kt8pBOURmsU5kL4GDjAXMaO4iaI6RyyEkDnLYPJiqZ3670aA9BqZ7VzeI2nr6BmH/ymL6FbYFf
- WwcPskZll35Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="376000992"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 27 May 2020 04:27:50 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 27 May 2020 14:27:49 +0300
-Date:   Wed, 27 May 2020 14:27:49 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
- on Galileo Gen 2
-Message-ID: <20200527112749.GS247495@lahna.fi.intel.com>
-References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
+        id S1729796AbgE0MH5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 08:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729731AbgE0MHy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 08:07:54 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA74BC08C5C1
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 05:07:52 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id l17so639176qvd.9
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 05:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2If1fEd2k/S8gKcGUgkONwpDgH8ehjOCm3CLevDRaX4=;
+        b=IWc/IH8Ot43Ce9SSOWllmsqapoaIn3IkPQ8KFFexclKx9OWVAKc5j+6r/RIjAsWwja
+         7qCALstjxujZHv2mLdo3fAE5/pk6Tm3+x6pkyh9gqePodErO28GsnseXKdRJY20wZniR
+         lEBkQsVac/wXq0FDpoLhEj4oGCWvX4St6MyS+4HRZaoKR4LyXKjQbid2qrb3/Cr6Rdvr
+         aNx8SkQxOqMiNF6tl2qkSSAb+GG9dwx3gse2it6/reCJNW7BC1MH02SaAqKzrwrMAz12
+         QtcFiwoQWVn2LKPA8IL1YjmN7UradAtBMrHpbuO+3Ek+KXInRpENEJ4Oi7zWMb+9qJkd
+         8Z3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2If1fEd2k/S8gKcGUgkONwpDgH8ehjOCm3CLevDRaX4=;
+        b=kV5++ss6u1+jNOV7MgmRJNjoBLCTkb5Wx1EdLaTDg/3QHQOYEzqw0Hx6+hezfzS2gd
+         hNgx2p4p4zYCRySkKsJN7BA9lfPDdQaByJUzPDUI3xQnory8zfQVpHfcNdZnZeMNd91T
+         C2obWRBX0LHvxMq57vw74jsZ2JZlr4dKnI6lEq6JkrId0wGIzCmJoCGd005GaO9RhtIl
+         GA23GXOuaSzawg7t4zs5tejsxJ2+5VYNJeHAE48+tdLkVNKFkl70JMTFrJyySvpw+kLD
+         o84NuE2gk8VudmbbDEwQ8Ur69Yuhr97yBbuAwIIWqHD/t9MUvOPyyHEvEtyv0Vezl8X3
+         8bVw==
+X-Gm-Message-State: AOAM531SC6afsRDLnjSKD68Q43mf2bG4QBC7qQKm2bCxbkUXoJnKHvgP
+        elH+agvpEp7M0PA8wRoAiNRlM5UYsKKcoh/kE2H8yrPu
+X-Google-Smtp-Source: ABdhPJyg5a+B3CEE8mo3AZPCE1Hb8RZWliGJ1qzj+1qVQvFJz9Eoawaq8S9aAaOqiJ2+S7elsJ1NDsRQNah/csjKl1Q=
+X-Received: by 2002:a0c:fecf:: with SMTP id z15mr24183007qvs.76.1590581272225;
+ Wed, 27 May 2020 05:07:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200527011055.12726-1-warthog618@gmail.com>
+In-Reply-To: <20200527011055.12726-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 27 May 2020 14:07:41 +0200
+Message-ID: <CAMpxmJWQA4q=XhFQq2c+v2c-rpqcbLDNXL6_oHcYE5Niyop3Ow@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] doc: fix comment mix up in gpiod.h
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:12:22PM +0300, Andy Shevchenko wrote:
-> ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
-> of one of the I²C GPIO expanders. Since we know what that number is and
-> luckily have GPIO bases fixed for SoC's controllers, we may use a simple
-> DMI quirk to match the platform and retrieve GpioInt() pin on it for
-> the expander in question.
-> 
-> Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+=C5=9Br., 27 maj 2020 o 03:11 Kent Gibson <warthog618@gmail.com> napisa=C5=
+=82(a):
+>
+> A couple of the doc comments for GPIOD_LINE_REQUEST_XX values
+> document the wrong value.
+> Switch them so that they document the appropriate value.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
-> v3: used legacy API (Mika)
->  drivers/gpio/gpio-pca953x.c | 83 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 1fca8dd7824f..eeb91b27a52f 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -10,11 +10,13 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/bitmap.h>
-> +#include <linux/dmi.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
-> +#include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_data/pca953x.h>
-> @@ -107,6 +109,79 @@ static const struct i2c_device_id pca953x_id[] = {
+>  include/gpiod.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/gpiod.h b/include/gpiod.h
+> index 3af97c4..f03ce95 100644
+> --- a/include/gpiod.h
+> +++ b/include/gpiod.h
+> @@ -956,11 +956,11 @@ enum {
+>         GPIOD_LINE_REQUEST_DIRECTION_OUTPUT,
+>         /**< Request the line(s) for setting the GPIO line state. */
+>         GPIOD_LINE_REQUEST_EVENT_FALLING_EDGE,
+> -       /**< Monitor both types of events. */
+> +       /**< Only watch falling edge events. */
+>         GPIOD_LINE_REQUEST_EVENT_RISING_EDGE,
+>         /**< Only watch rising edge events. */
+>         GPIOD_LINE_REQUEST_EVENT_BOTH_EDGES,
+> -       /**< Only watch falling edge events. */
+> +       /**< Monitor both types of events. */
 >  };
->  MODULE_DEVICE_TABLE(i2c, pca953x_id);
->  
-> +#ifdef CONFIG_GPIO_PCA953X_IRQ
-> +
-> +#include <linux/gpio.h>
-> +
-> +static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
-> +	{
-> +		/*
-> +		 * On Intel Galileo Gen 2 board the IRQ pin of one of
-> +		 * the I²C GPIO expanders, which has GpioInt() resource,
-> +		 * is provided as an absolute number instead of being
-> +		 * relative. Since first controller (gpio-sch.c) and
-> +		 * second (gpio-dwapb.c) are at the fixed bases, we may
-> +		 * safely refer to the number in the global space to get
-> +		 * an IRQ out of it.
-> +		 */
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +
-> +#ifdef CONFIG_ACPI
-> +static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
-> +{
-> +	struct acpi_resource_gpio *agpio;
-> +	int *pin = data;
-> +
-> +	if (!acpi_gpio_get_irq_resource(ares, &agpio))
-> +		return 1;
-> +
-> +	*pin = agpio->pin_table[0];
-
-Writing it like below looks better IMHO:
-
-	if (acpi_gpio_get_irq_resource(ares, &agpio))
-		*pin = agpio->pin_table[0];
-	return 1;
-
-
-> +}
-> +
-> +static int pca953x_acpi_find_pin(struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +	LIST_HEAD(r);
-> +	int pin = -ENOENT, ret;
-
-Hmm, reverse christmas tree?
-
-	struct acpi_device *adev = ACPI_COMPANION(dev);
-	int pin = -ENOENT, ret;
-	LIST_HEAD(r);
-
-> +
-> +	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
-> +	acpi_dev_free_resource_list(&r);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return pin;
-
-Or
-	return ret < 0 ? ret : pin;
-
-> +}
-> +#else
-> +static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
-> +#endif
-> +
-> +static int pca953x_acpi_get_irq(struct device *dev)
-> +{
-> +	int pin, ret;
-> +
-> +	pin = pca953x_acpi_find_pin(dev);
-> +	if (pin < 0)
-> +		return pin;
-
-Since you don't actually check the error value you may also return
-simply 0 here (invalid IRQ) and other places.
-
-> +
-> +	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
-> +
-> +	if (!gpio_is_valid(pin))
-> +		return -EINVAL;
-> +
-> +	ret = gpio_request(pin, "pca953x interrupt");
-> +	if (ret)
-> +		return ret;
-> +
-> +	return gpio_to_irq(pin);
-> +}
-> +#endif
-> +
->  static const struct acpi_device_id pca953x_acpi_ids[] = {
->  	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
->  	{ }
-> @@ -750,8 +825,16 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
->  	struct irq_chip *irq_chip = &chip->irq_chip;
->  	DECLARE_BITMAP(reg_direction, MAX_LINE);
->  	DECLARE_BITMAP(irq_stat, MAX_LINE);
-> +	const struct dmi_system_id *id;
->  	int ret;
->  
-> +	id = dmi_first_match(pca953x_dmi_acpi_irq_info);
-> +	if (id) {
-
-Also here since you don't actually use id for anything you can simplify
-this like:
-
-	if (dmi_check_system(pca953x_dmi_acpi_irq_info)) {
-		ret = pca953x_acpi_get_irq(&client->dev);
-		if (ret > 0)
-			client->irq = ret;
-	}
-
-> +		ret = pca953x_acpi_get_irq(&client->dev);
-> +		if (ret > 0)
-> +			client->irq = ret;
-> +	}
-> +
->  	if (!client->irq)
->  		return 0;
->  
-> -- 
+>
+>  /**
+> --
 > 2.26.2
+>
+
+Applied, thanks!
+
+Bartosz
