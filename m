@@ -2,88 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 252341E3872
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 07:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1FD01E38B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 07:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725681AbgE0FrI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 01:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48106 "EHLO
+        id S1727054AbgE0F65 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 01:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0FrH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 01:47:07 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C38DC061A0F
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 22:47:07 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m12so24969288ljc.6
-        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 22:47:07 -0700 (PDT)
+        with ESMTP id S1725267AbgE0F65 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 01:58:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B81C061A0F
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 22:58:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w10so27453259ljo.0
+        for <linux-gpio@vger.kernel.org>; Tue, 26 May 2020 22:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0vbClyMx5TYGfqb4n9vTWCrpjeClZWLtPJ8NtG2vwKo=;
-        b=PMqtX4Tf2QdfwA7Y/oCNz5uo1onqPJhW+dvGH8XeGwSNSHEH3l0gLjrABXY8//QuHu
-         LTKmC79E6MJknT+SN052hfeh+QSxLKfJet+K+mk8CKFMX6c7QmGruUZGwkI2t8fK1vBB
-         4WozqztK7Xgx1K+Y1Nlj6KIVt52yVZmuoUNcPGT1UZLmBstgWLcIVVIhJ0Mqzi2gC98f
-         /8OfNSsSIOr1Ddld30g5Bwo19zSF/RifzESB9JGxZSU5wCxIB/fjEI6IQGsewIVKGuG/
-         Rieog1tIPUf9W0rgvZSP0h3bKXG/7Sj01PbIWYZPiomrTl8fw4VSq/oGZrVHfMaIGnuJ
-         5BQg==
+        bh=GZrxLWEv2RQwIV4nFIWedkkizU0DIsRXfRmjD6gFnTY=;
+        b=dJUTgpiMkJ1s0zS0iy9nBJ3IHP5NHvdqW4eA3+0tV/Yadk+ve6GdDgBLTP79aXub38
+         ekh0+PedTpGyJNu7HvTuXYznrJlYsAAK1Q4YyDCvkE7JuopBTUyqyQKc3+J9gv5YQKaE
+         mPckQgv/SXPxD60SABLLSqZPksIKZy1wYsmvDFgvaor9LdiCR2ferynQ5R9rQF6XOVC9
+         cQGBG4Sr9NotnvZY5brGYP4Cg+Yx+/Va9OYrRzmsmNtdWBRSP9UusWScDhgE/pEUJ8VF
+         8LK8Kh87YrgFCh1yp7n1iEyOBHg2Uaj/zqt0vUJ3eJecVUPOPauj17f/Zdopj8qfG9oV
+         iqJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0vbClyMx5TYGfqb4n9vTWCrpjeClZWLtPJ8NtG2vwKo=;
-        b=DWUX42kP32DDMXgccKIFkTC+bO2pskDcQeob0EZiLop39c+TsXNVWkOokU7B9IrzQQ
-         QYI1FNla2I2+gONXBur7bMpsuWoia8YgwN+xQ9rfp0m21uelHR6OEgWqNA2VKaSYYd3Y
-         D36or0hbD+bnb2D6t61OnQw8FSGrjB2AQJa+0xSSqipBxVKr1IJX+9rh+IogftGIZGM1
-         ruIv20NC66Tb6ra9UyW2JcJ7TzmwE1ERKMgn7TeTB3qz3Rsza4IMvQkBVaDX6kxQJTNB
-         Li+vrH5Lk73Cb2u7P+tuYEWOgjMNgZHvIAsRTtpNMi8SIbxxuY+mDZExkK9tid4wW8EE
-         4Eag==
-X-Gm-Message-State: AOAM533ALbTPiFcGy7mNAMb7yTmWrZ9YREUtH9+89eJDsKHYe1l92ll1
-        cbqm7xVGfrQeFiuCtYWVAX2wmudysQf5QCBncmb4Ow==
-X-Google-Smtp-Source: ABdhPJyv3bPK4eBrl7Q8xFwA5cyGPrOlHm9mYwvexO9lbBBjBYk+CVr0EJCiN/7CZ3fREvcRtkUolQAUTN5T1mgeato=
-X-Received: by 2002:a05:651c:32d:: with SMTP id b13mr2236669ljp.283.1590558425866;
- Tue, 26 May 2020 22:47:05 -0700 (PDT)
+        bh=GZrxLWEv2RQwIV4nFIWedkkizU0DIsRXfRmjD6gFnTY=;
+        b=V3AKJd0Eh7Zfb+V+mEFZniJBw6YbzG3hhmn5v2nWnPk4AK37HsYR9CS1lxQlvvenKD
+         TtIVZh7kbGChlC4f8sxzy5/di/hN31lH/WlSy4PyaP0zrcyXHOY2bn0CM6+cscxFVJb4
+         Dct7njhb0jIS3P5hTkR7SyeUsQekIHpJFiA9TZsknOCBpAU6x6tksvRzcd48Uyv4HMjE
+         SPeJBsQ2qKOJt6Ae30sJVUb+ICHi3rOfOf4eCwDlvsGmvkySLHACPoRsW1Mri4J4J7pt
+         j8y9Cua+mwwNWI1ptRO0OXwLG9SiAZdWBcDgUtY13y1xsxOZJGbsUPqVPzBqSrkCeeOG
+         Gdfg==
+X-Gm-Message-State: AOAM5323xVwygUpm4FY2vFFepwTHsnnrizJzjeT0LIVJM6gE02SnkrP4
+        uccIhu880ktoNDjJX2XYj8H+ob9D5XpNvO1KZZDpo89v
+X-Google-Smtp-Source: ABdhPJyGcOO7k15GXBI4U9yp14BYnpfxbNWQD5wYC44Hid+bFIymEYNGNVKU6kUy+bEnmzAzciNLCRQ3ybuZ8NtGOMo=
+X-Received: by 2002:a2e:b5b0:: with SMTP id f16mr2362794ljn.100.1590559134977;
+ Tue, 26 May 2020 22:58:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200526171222.14835-1-andriy.shevchenko@linux.intel.com>
+References: <20200516064507.19058-1-warthog618@gmail.com> <CACRpkdbputuoHFWL_FhUNR-ZywvJt=qYdaa+i2cLt-Odmgxe2w@mail.gmail.com>
+ <20200525141902.GA27938@sol>
+In-Reply-To: <20200525141902.GA27938@sol>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 May 2020 07:46:55 +0200
-Message-ID: <CACRpkdY8yXJUcWBG2ACHPmu4-+h4fY7Fuvbn69sFny2uZNrQmw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Override IRQ for one of the expanders
- on Galileo Gen 2
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Wed, 27 May 2020 07:58:43 +0200
+Message-ID: <CACRpkda4PEYd5UGbLkq9w1RBbtOdZxuMQ75k-nu5YfoKTZ_azA@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, May 26, 2020 at 7:12 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, May 25, 2020 at 4:19 PM Kent Gibson <warthog618@gmail.com> wrote:
 
-> +static int pca953x_acpi_get_irq(struct device *dev)
-> +{
-> +       int pin, ret;
-> +
-> +       pin = pca953x_acpi_find_pin(dev);
-> +       if (pin < 0)
-> +               return pin;
-> +
-> +       dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
-> +
-> +       if (!gpio_is_valid(pin))
-> +               return -EINVAL;
-> +
-> +       ret = gpio_request(pin, "pca953x interrupt");
-> +       if (ret)
-> +               return ret;
+> > > +struct gpioline_config {
+> > > +       __u8 default_values[GPIOLINES_MAX];
+> >
+> > So 32 bytes
+> >
+>
+> Actually that one is 64 bytes, which is the same as v1, i.e. GPIOLINES_MAX
+> is the same as GPIOHANDLES_MAX - just renamed.
+>
+> On the subject of values, is there any reason to use a byte for each line
+> rather value than a bit?
 
-So would it work to do
-gpiochip_request_own_desc() here in some form?
-I.e. can you figure out the hardware offset number?
+Not really, other than making things simple for userspace.
+
+> when adding future fields, the idea was to have a bit
+> in the flags that indicates that the corresponding field is now valid.
+> If the flag is not set then whatever value is there is irrelevant.
+
+You would need to document that idea, say in the kerneldoc,
+else when someone else comes along to do this they will
+get it wrong.
+
+> But definitely better to play it safe - will check the padding is
+> zeroed as well, as well as any field for which the flag bit is clear.
+
+Yeah better like that. You can write a comment in the code too,
+such like "when adding new parameters, update this validation code
+to accept it".
+
+> Back on retired ioctls, I notice that 5, 6, and 7 are missing from gpio.
+> Have those been retired, or just skipped over by accident?
+
+Just thought it was nice to use jump to 8 for line info.
+They should be used when adding generic chip information ioctls().
 
 Yours,
 Linus Walleij
