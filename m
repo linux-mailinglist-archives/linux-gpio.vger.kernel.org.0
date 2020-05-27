@@ -2,103 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9D0E1E3DC7
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DCD01E3DCC
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 11:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgE0JnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 05:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
+        id S1726593AbgE0JoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 05:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgE0JnH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 05:43:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DDFC061A0F
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:43:07 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id r15so2358540wmh.5
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:43:07 -0700 (PDT)
+        with ESMTP id S1725320AbgE0JoE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 05:44:04 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768E3C03E96E
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:44:04 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so8958075plv.9
+        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 02:44:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9hMMpVF8hfH5g++2ej/MQ5G8qsXItcOYI6IEQOshvSU=;
-        b=15caA7a/J1BKvQm0jV6wSj4kgrsaDTaZbgNg/P7qFypGE/KETNKDna0/J+jxTjIaKX
-         /nBhcKnnwuxZaqFoq5vTrgj/1YFQXTv8vKQs4+LNKaslR0FNoc+NLsK0UZzAaozpKnW8
-         4DBEDadbiAYUBAUjrk+fY/GoDtf5ump869CaSpv+jy8oEuRaHQL0H86i0KqYGv6bz9OF
-         DnkCMdaXeUCxTHCvYL5KhKTe8MZaZVzEH94ch9g/0k1mI72NBOx/rTn5ibyTPbL1yc9I
-         4lDVyxxTppQk9LBSsvdFkJYBAtIIffFIUptDyOdQ9uPG1vSSgVdmr7ws9CZ8VGRxXehw
-         A0Bw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=awlaMQxYcrWZ+y35tNsqCu+m6+L2nOp+p5IYqcH4jSs=;
+        b=S4JtBKVy7hNG1X43FKaF2Ca7I/E8fFPqNBs8HF+GuDwR7ijsU+VoviQHpVSeX5hVOJ
+         pW1MG0+xPVb32wophvE8HkYzNNrlOYf8XaRBt3coCBIZ7VF/abNRMLozYx2slClzcjLW
+         lgI1KisANNImp12uyhhbYxkMPXngQ3aPvfsY0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9hMMpVF8hfH5g++2ej/MQ5G8qsXItcOYI6IEQOshvSU=;
-        b=AT951NGXRNhbyY6lm5R8sHLhkakbL71azY9F/sKFdqen2VeM6NlQFeJvzqVT7cmaXl
-         LmJCvNRQphDu/BHG5qxRsohJyZCAidruvSERVzYv6c5o1LOVQEb0e3neGasXSaXnbSZV
-         g1GfhYQ7jI5y+KI1SFdAxoqFvrbzBtKjeS0ajT+JUFO6gRWCHWyGlKJBCMjoUFXWm35l
-         OCZBVtHHnjbYRG93JZ4cKjm6K6Ikcb82aWJVX3bm/6U/2eiFdVIluPcuLcqeR9RTHuQ9
-         t+C199yO9UOyoMLRScuoRnEfpCwQB1juhR0Jjb1xeymPSipTydGunkvV4nMEgKHAwg4I
-         807A==
-X-Gm-Message-State: AOAM530vYZv18CYBayjZjG+Jrj5DOfUi4VuBbZGEiYc8YeaDjCUrYd7r
-        Lux7eExIyfcAIPaMGUO7SIZ4PA==
-X-Google-Smtp-Source: ABdhPJzcaysFT7VvjHLUmv/qgkbHgT75ezn13cAoQE5YDYwhU0x0i9JEX0EvP3hLuM0xwN9yYGIUNA==
-X-Received: by 2002:a1c:5541:: with SMTP id j62mr3281787wmb.64.1590572586062;
-        Wed, 27 May 2020 02:43:06 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 1sm2390343wmz.13.2020.05.27.02.43.04
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=awlaMQxYcrWZ+y35tNsqCu+m6+L2nOp+p5IYqcH4jSs=;
+        b=hsWTyD7wLiENtJvY2XE3MYV8thmmdbM8YfeiY4BcU8Elxk7PoZ6JoYf5wUMuuBrbga
+         WobGdNhlhYyuGkGxDH39S1UlP0DVQioJcV9OdCwseD7rdTleNeDL0Z8FOTD2hYL/+J/G
+         Ou6l4MHmFgvsRZsPMLwnWHTuK6v5lNx+qGL1oY0y8qxN7K/HYbnAvU84Jj4xnpkwnius
+         hzkyvs6b3zY4b6+u1PJCL2Knk+lMIBvkyN5L7+kiqysZZS0RbuhAulkJ98dnpccigNdS
+         0+bsFGI+U2zefQmUdlKAhQg64ouXT+esHHERJAEZIr36HLiVirnFE4sNphHzlToNgIum
+         D+bw==
+X-Gm-Message-State: AOAM531SRdJkJkqTVTKP1JUZ6UVk3ddPO6VGaiV8TmyEgTBelMMwi7R9
+        vNog+enBrDTPt7JBpwJ5q2sgPw==
+X-Google-Smtp-Source: ABdhPJxbNROSi0VGdE9OOJ9to01YkQqHSCDiJrVCpOSg+S2t+wr9Q12IB2h39kYxFJP2CAs3B7ekWw==
+X-Received: by 2002:a17:90a:2009:: with SMTP id n9mr3628561pjc.81.1590572643896;
+        Wed, 27 May 2020 02:44:03 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id k18sm1648198pfg.217.2020.05.27.02.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 02:43:05 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.8 - part 2
-Date:   Wed, 27 May 2020 11:43:02 +0200
-Message-Id: <20200527094302.6235-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        Wed, 27 May 2020 02:44:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Wed, 27 May 2020 02:44:02 -0700
+Message-ID: <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Quoting Maulik Shah (2020-05-23 10:11:10)
+> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiol=
+ib
+> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+> callback is implemented then genirq takes unlazy path to disable irq.
+>=20
+> Underlying irqchip may not want to implement irq_disable callback to lazy
+> disable irq when client drivers invokes disable_irq(). By overriding
+> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>=20
+> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
+> if irqchip implemented irq_disable. In cases where irq_disable is not
+> implemented irq_mask is overridden. Similarly override irq_enable callback
+> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
+>=20
+> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
 
-Hi Linus,
+This isn't a proper Fixes line. Should have quotes
 
-Here are the remaining patches I picked up for v5.8. Please pull.
+Fixes: 461c1a7d4733 ("gpiolib: override irq_enable/disable")
 
-Bartosz
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  drivers/gpio/gpiolib.c      | 55 +++++++++++++++++++++++++++++----------=
+------
+>  include/linux/gpio/driver.h | 13 +++++++++++
+>  2 files changed, 49 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index eaa0e20..3810cd0 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *=
+d)
+>         gpiochip_relres_irq(gc, d->hwirq);
+>  }
+> =20
+> +static void gpiochip_irq_mask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +
+> +       if (gc->irq.irq_mask)
+> +               gc->irq.irq_mask(d);
+> +       gpiochip_disable_irq(gc, d->hwirq);
 
-The following changes since commit 3831c051dfbf58595085e432acc00ad4efcf54cc:
+How does this work in the lazy case when I want to drive the GPIO? Say I
+have a GPIO that is also an interrupt. The code would look like
 
-  tools: gpio: add bias flags to lsgpio (2020-05-05 18:27:09 +0200)
+ struct gpio_desc *gpio =3D gpiod_get(...)
+ unsigned int girq =3D gpiod_to_irq(gpio)
 
-are available in the Git repository at:
+ request_irq(girq, ...);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.8-part2
+ disable_irq(girq);
+ gpiod_direction_output(gpio, 1);
 
-for you to fetch changes up to e33a58a29c6ad6f844cdc184210aa1feb5e2fbe0:
+In the lazy case genirq wouldn't call the mask function until the first
+interrupt arrived on the GPIO line. If that never happened then wouldn't
+we be blocked in gpiod_direction_output() when the test_bit() sees
+FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
+gpios?
 
-  gpio: pca935x: Allow IRQ support for driver built as a module (2020-05-25 11:37:56 +0200)
-
-----------------------------------------------------------------
-gpio: updates for v5.8 - part 2
-
-- fix the initialization ordering in gpio-max730x
-- make gpio-pxa buildable for compile testing
-- make gpio-pca953x buildable as a module
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpio: pca935x: Allow IRQ support for driver built as a module
-
-Rodrigo Alencar (1):
-      gpio: max730x: bring gpiochip_add_data after port config
-
-Tiezhu Yang (1):
-      gpio: pxa: Add COMPILE_TEST support
-
- drivers/gpio/Kconfig        |  4 ++--
- drivers/gpio/gpio-max730x.c | 12 +++++-------
- 2 files changed, 7 insertions(+), 9 deletions(-)
+> +}
+> +
+> +static void gpiochip_irq_unmask(struct irq_data *d)
+> +{
+> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+> +
+> +       gpiochip_enable_irq(gc, d->hwirq);
+> +       if (gc->irq.irq_unmask)
+> +               gc->irq.irq_unmask(d);
+> +}
+> +
