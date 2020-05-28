@@ -2,81 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482BA1E6C0C
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 22:07:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 484101E6D94
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 23:24:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406897AbgE1UGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 May 2020 16:06:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43352 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406875AbgE1UGp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 16:06:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id h10so31544920iob.10;
-        Thu, 28 May 2020 13:06:43 -0700 (PDT)
+        id S2436535AbgE1VYj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 May 2020 17:24:39 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45259 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436519AbgE1VYh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 17:24:37 -0400
+Received: by mail-il1-f194.google.com with SMTP id 9so369569ilg.12;
+        Thu, 28 May 2020 14:24:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=alQRvIslSpoIEoACN2wgbbq5NpfmtJxPULKC8RXWn7c=;
-        b=RqfIamkvy15C//LGF2QBPv/RD+Ff3IgupXNYASFghzxMNbT+W/hVSIVork2qLYoFXl
-         QfaXWMb9F4ek9e4GZViuQbWNrjnP5xnJCyhdlyVAGKDB7W4MoCa1z2nU5rJOqHogjW7F
-         HlKFygekZ/7E6SGd0PZnRHE+rFTEkgeM0r9wL7wt6gnU4YxvfwVnEe0w/uhiDQdT7xr+
-         RrnRA3HJqf3uD1csiORvMVvla9xvBeqd3Klz33ULoBtEFGFi1CBsTe28UeIG5+uuPseu
-         NhRE14v3iYA3qppENlr1GafioFKBeIyUg3XEDZCJxFB0CVvDT7NX4wPfe7nOQKLTdbLn
-         vkWw==
-X-Gm-Message-State: AOAM5333rWV6glcflKcL3/0SQA/ayepgHxLNOd/iDPUrmvec2HhOFdbx
-        O9cPPaX7bo7sn2DOSskokw==
-X-Google-Smtp-Source: ABdhPJyr03xCLZdtHeWGTNv1Qq8K/J3sq/Ku9AL1uvBEt9HD1IoWyB9VMTGmkFHQ2GOkMh+/h75cdg==
-X-Received: by 2002:a05:6638:11c6:: with SMTP id g6mr4060864jas.134.1590696403582;
-        Thu, 28 May 2020 13:06:43 -0700 (PDT)
+        bh=e1ym1YauAZZrFVqJD4LN1RKW6wk5ShihqT0BZZ1ZIYA=;
+        b=sMG4PFDVH0fcse4mdM50MFlD9oiyGGakPH76IuLZcvS+WtR6Wikibyq3T5XbXkrwdH
+         VtRUPDC4I21gb/D0iLwNMBQky1Hgeoe+lajFd3LfnmaZuM2u9F/W3hV27P1MqQDQiAB1
+         ilYvHWZNWUYBZNALurrfrnTTZGerwqB3GEwMvaZ76fmVKUOK7I6QWC9LgPn1Bh0srb01
+         OK4WSfaV+IFzPvMXDpJ1Hf5EWMP43D41LK+Hftmbt08Pr4by9JD5+sL9VA7+I2aKunO0
+         gq5Dv0fCQUjgGxqKhDVBY2KCcH1dv1jySV8yFI4NJUfqMiVhAdX9WhRRD64LdI/t5Ke9
+         ax4w==
+X-Gm-Message-State: AOAM531HIW1KTUmZWOSD9HcwEdCzmv0YjxZQdSIekkFnGQkBq/k1S3F+
+        uj0IGs5m2H7W9eRPi76Z1Q==
+X-Google-Smtp-Source: ABdhPJzLys4LqNNTM+uXr3P8ZG3ucUPZYA0MiBD/sMuIalmC121EG5wOG16FEhWuQR9/riSxL5LU9Q==
+X-Received: by 2002:a92:850c:: with SMTP id f12mr4799867ilh.86.1590701075373;
+        Thu, 28 May 2020 14:24:35 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s71sm3747140ilc.32.2020.05.28.13.06.42
+        by smtp.gmail.com with ESMTPSA id 17sm3730810ill.14.2020.05.28.14.24.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:06:42 -0700 (PDT)
-Received: (nullmailer pid 594100 invoked by uid 1000);
-        Thu, 28 May 2020 20:06:40 -0000
-Date:   Thu, 28 May 2020 14:06:40 -0600
+        Thu, 28 May 2020 14:24:34 -0700 (PDT)
+Received: (nullmailer pid 711562 invoked by uid 1000);
+        Thu, 28 May 2020 21:24:33 -0000
+Date:   Thu, 28 May 2020 15:24:33 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3] dt-bindings: gpio: renesas,rcar-gpio: Add r8a7742
- (RZ/G1H) support
-Message-ID: <20200528200640.GA594044@bogus>
-References: <1589557527-6057-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bgolaszewski@baylibre.com, s.hauer@pengutronix.de,
+        festevam@gmail.com, linux-gpio@vger.kernel.org,
+        shawnguo@kernel.org, linus.walleij@linaro.org,
+        kernel@pengutronix.de, robh+dt@kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: Convert mxs to json-schema
+Message-ID: <20200528212433.GA711514@bogus>
+References: <1589934035-5309-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589557527-6057-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1589934035-5309-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 15 May 2020 16:45:27 +0100, Lad Prabhakar wrote:
-> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
+On Wed, 20 May 2020 08:20:35 +0800, Anson Huang wrote:
+> Convert the MXS GPIO binding to DT schema format using json-schema.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> v2->v3:
-> 1: Rebased the patch as binding were converted into json format.
->    I have restored the Acks' from Geert and Rob
->    (https://patchwork.kernel.org/patch/11518759/).
-> 
-> v1->v2:
-> * No change
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/gpio/gpio-mxs.txt          |  88 -------------
+>  .../devicetree/bindings/gpio/gpio-mxs.yaml         | 136 +++++++++++++++++++++
+>  2 files changed, 136 insertions(+), 88 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
 > 
 
 Applied, thanks!
