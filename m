@@ -2,117 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5205E1E4D16
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 May 2020 20:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AAF31E523E
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 02:31:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389304AbgE0S0l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 14:26:41 -0400
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:20290 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388887AbgE0S0l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 14:26:41 -0400
-Received: from belgarion ([86.210.245.36])
-        by mwinf5d11 with ME
-        id juSb220020nqnCN03uSbp8; Wed, 27 May 2020 20:26:39 +0200
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Wed, 27 May 2020 20:26:39 +0200
-X-ME-IP: 86.210.245.36
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1725385AbgE1Abz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 20:31:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16111 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgE1Aby (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 May 2020 20:31:54 -0400
+IronPort-SDR: CGy527Wuk5WeOcrnlswysdsYJm0YtFVEtbmLPdfWqEybi2YoMndvI0zTXXJlkog7ATXLKYJeg6
+ ubGJnj05BAlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 17:31:54 -0700
+IronPort-SDR: tLEA/8+WuVhsDH+0shAy53CoIe07pXIm0cqqZvLhsVhXkoklT8nWc8rN7lK0svuK6+pcIlbXEc
+ EYOO29erypBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="345723262"
+Received: from robithx-mobl.amr.corp.intel.com (HELO [10.254.66.2]) ([10.254.66.2])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 17:31:53 -0700
+Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using
+ regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH 2/3] gpio: pxa: Fix return value of pxa_gpio_probe()
-References: <1590120740-22912-1-git-send-email-yangtiezhu@loongson.cn>
-        <1590120740-22912-2-git-send-email-yangtiezhu@loongson.cn>
-        <874ks7okk4.fsf@belgarion.home>
-        <3382c1df-1429-ecd3-70b6-35bc00343608@loongson.cn>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Wed, 27 May 2020 20:26:07 +0200
-In-Reply-To: <3382c1df-1429-ecd3-70b6-35bc00343608@loongson.cn> (Tiezhu Yang's
-        message of "Sat, 23 May 2020 11:24:46 +0800")
-Message-ID: <87zh9tmdz4.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200525160741.21729-1-michael@walle.cc>
+ <20200525160741.21729-3-michael@walle.cc>
+ <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
+ <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com>
+Date:   Wed, 27 May 2020 19:31:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+Hi Michael,
 
-> On 05/23/2020 03:07 AM, Robert Jarzmik wrote:
->> Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+>>> +struct gpio_regmap_config {
+>>> +    struct device *parent;
+>>> +    struct regmap *regmap;
+>>> +
+>>> +    const char *label;
+>>> +    int ngpio;
 >>
->>> When call function devm_platform_ioremap_resource(), we should use IS_ERR()
->>> to check the return value and return PTR_ERR() if failed.
->>>
->>> Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
->>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>> ---
->>>   drivers/gpio/gpio-pxa.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
->>> index 1361270..0cb6600 100644
->>> --- a/drivers/gpio/gpio-pxa.c
->>> +++ b/drivers/gpio/gpio-pxa.c
->>> @@ -660,8 +660,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
->>>   	pchip->irq1 = irq1;
->>>     	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
->>> -	if (!gpio_reg_base)
->>> -		return -EINVAL;
->>> +	if (IS_ERR(gpio_reg_base))
->>> +		return PTR_ERR(gpio_reg_base);
->> As far as I know, devm_platform_ioremap_resource() could return NULL which is
->> not handled by this test (unless __devm_ioremap() semantics changed since I had
->> a look).
->
-> Hi Robert,
->
-> In the function __devm_ioremap_resource(), if __devm_ioremap returns NULL,
-> it will return IOMEM_ERR_PTR(-ENOMEM).
->
-> devm_platform_ioremap_resource()
->         devm_ioremap_resource()
->                 __devm_ioremap_resource()
->                        __devm_ioremap()
->
-> static void __iomem *
-> __devm_ioremap_resource(struct device *dev, const struct resource *res,
->             enum devm_ioremap_type type)
-> {
-> ...
->     dest_ptr = __devm_ioremap(dev, res->start, size, type);
->     if (!dest_ptr) {
->         dev_err(dev, "ioremap failed for resource %pR\n", res);
->         devm_release_mem_region(dev, res->start, size);
->         dest_ptr = IOMEM_ERR_PTR(-ENOMEM);
->     }
->
->     return dest_ptr;
-> }
->
-> And also, we can see the comment of devm_ioremap_resource():
->
-> Usage example:
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         base = devm_ioremap_resource(&pdev->dev, res);
->         if (IS_ERR(base))
->                 return PTR_ERR(base);
->
->>
->> Therefore, this patch is incorrect, or rather incomplete.
->
-> So I think this patch is correct, do I miss something?
-You're right, my bad, didn't see the test in __devm_ioremap_resource().
+>> could we add a .names field for the gpio_chip, I found this useful for
+>> PCM512x GPIO support, e.g.
+> 
+> Sure, I have the names in the device tree.
+> 
+> But I'd prefer that you'd do a patch on top of this (assuming it is
+> applied soon), because you can actually test it and there might be
+> missing more.
 
-Cheers.
+I am happy to report that this gpio-regmap worked like a charm for me, 
+after I applied the minor diff below (complete code at 
+https://github.com/plbossart/sound/tree/fix/regmap-gpios).
 
--- 
-Robert
+I worked around my previous comments by forcing the GPIO internal 
+routing directly in regmap, and that allowed me to only play with the 
+_set and _dir bases. I see the LEDs and clock selected as before, quite 
+nice indeed.
+
+The chip->label test is probably wrong, since the gpio_chip structure is 
+zeroed out if(!chip->label) is always true so the label is always set to 
+the device name. I don't know what the intent was so just removed that 
+test - maybe the correct test should be if (!config->label) ?
+
+I added the names support as well, and btw I don't understand how one 
+would get them through device tree?
+
+I still have a series of odd warnings I didn't have before:
+
+[  101.400263] WARNING: CPU: 3 PID: 1129 at drivers/gpio/gpiolib.c:4084 
+gpiod_set_value+0x3f/0x50
+
+This seems to come from
+	/* Should be using gpiod_set_value_cansleep() */
+	WARN_ON(desc->gdev->chip->can_sleep);
+
+so maybe we need an option here as well? Or use a different function?
+
+Anyways, that gpio-regmap does simplify my code a great deal so thanks 
+for this work, much appreciated.
+-Pierre
+
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 3cb0e8493835..678d644a0a4b 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -251,10 +251,8 @@ struct gpio_regmap *gpio_regmap_register(const 
+struct gpio_regmap_config *config
+         chip->ngpio = config->ngpio;
+         chip->can_sleep = true;
+
+-       if (!chip->label)
+-               chip->label = dev_name(config->parent);
+-       else
+-               chip->label = config->label;
++       chip->label = config->label;
++       chip->names = config->names;
+
+         chip->get = gpio_regmap_get;
+         if (gpio->reg_set_base && gpio->reg_clr_base)
+diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+index bbdb2d79ef8f..c1f3e36ebf33 100644
+--- a/include/linux/gpio-regmap.h
++++ b/include/linux/gpio-regmap.h
+@@ -16,6 +16,7 @@ struct gpio_regmap;
+   *                     given, the name of the device is used
+   * @label:             (Optional) Descriptive name for GPIO controller.
+   *                     If not given, the name of the device is used.
++ * @names:             (Optional) Array of names for gpios
+   * @ngpio:             Number of GPIOs
+   * @reg_dat_base:      (Optional) (in) register base address
+   * @reg_set_base:      (Optional) set register base address
+@@ -43,6 +44,7 @@ struct gpio_regmap_config {
+         struct regmap *regmap;
+
+         const char *label;
++       const char *const *names;
+         int ngpio;
+
+         unsigned int reg_dat_base;
