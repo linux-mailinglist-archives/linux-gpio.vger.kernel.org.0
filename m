@@ -2,117 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5248F1E52AA
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 03:08:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53B271E53B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 04:11:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgE1BIt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 21:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgE1BIt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 21:08:49 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C21C05BD1E
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 18:08:48 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 131so4279248pfv.13
-        for <linux-gpio@vger.kernel.org>; Wed, 27 May 2020 18:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CL/IKWXXhgD7nYIcRM77gSNJoAiFSfa9BaKCTrGTTAY=;
-        b=PVn9xmlsNpJBnmTG7486QBKPU4B72Pcbl2qmBfKYmIXiMih8cpnIr3UIEpPyUgvs2Z
-         sKYYsC88fgKW9B9veGnXrBl1ICYi6SsNl5Q2Dytzu4A9uAB8LJ/qT8rYmMA54tSxalB3
-         DQw+lWyS2VDPILubigwUOR2Liw263AYeZhrVE=
+        id S1725901AbgE1CLm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 22:11:42 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46712 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgE1CLm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 22:11:42 -0400
+Received: by mail-il1-f194.google.com with SMTP id h3so3581561ilh.13;
+        Wed, 27 May 2020 19:11:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CL/IKWXXhgD7nYIcRM77gSNJoAiFSfa9BaKCTrGTTAY=;
-        b=B5c2HIdXSVU1usg8eP6dIbhZ3s39xW6HX0GsLGzvNf4SKTjEba/VGNiQuTQ+fg39/8
-         p3eUSvWBEAOomKZ7CBBaCpH06MJzW0AjEXCaiLf5MWxVYnPrjblRFlOT6flbULDAlcG0
-         hMhpq8ibQV1xGrFuBARS5hAQvT4QLNbNPFsltyhRoaZe0DaIijTqm1Q+lL0sasHnIFpy
-         5lxCJ2RcWns2q7JIYSSUeb9PlCQRqxdBCnWwYs4Y8T9q+qCBoMXXAX4aZHsMbgE9rPjI
-         zR6eOnnp8goxdgoTnfVfcFfcfOYuAXnimBsOIY5716we3V9XpbLFlcuzLu3UelSAo08M
-         +viA==
-X-Gm-Message-State: AOAM532P6SiO+OTAtXhxeLAK5RuSWktch0WN7uwZjxb6ef+QTfEC135R
-        ymR542yZhZuxCBHoc0zLtLLF9w==
-X-Google-Smtp-Source: ABdhPJxIemgLPr3D6mtUM3FpmOsuWeq5aNiqkRnMIlOzQPkgTmCeYfEj0EISKOoBynt6RLBuPAu8VQ==
-X-Received: by 2002:a62:e402:: with SMTP id r2mr501008pfh.300.1590628128117;
-        Wed, 27 May 2020 18:08:48 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e1sm3033758pgj.0.2020.05.27.18.08.47
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8/7AtcVQnogEJMITKMjo/+NbsrcSCHvci6t4MVh9Kc8=;
+        b=d5LCXuCw9SWG3qJRvbpPLoPX1fFN0k4rSS+k2b8ciZ5tLE7LW9rVeDljwHKt9HwMoA
+         eM61FFhMlHVN64eSvJR5u/HQoNULb5gbqImMZbJo5PvmXVkKDJ2h6cn86Sgsh04DThd8
+         97VEYkK+vGvbd9unwiqtfnQ2HBOaoMHZjHKm6KxfOduTUMGko90uCLYw0bn1kHCM6Yu3
+         cxXDurYVoUWSleiS2WVJMsZmjvDrnGiDH8UATpGIQWQWNM2ujKy6akwRcgi9q7WeIq4M
+         Y6sgDzTFzcDX0LL9ijawjdCj30I7K97QcHL/I+OTdAUH8doYLC/cV4TiuyVoE/jBu+18
+         IWtw==
+X-Gm-Message-State: AOAM531dUBirf/D4cLh3LG/F1Wus7fGl1zqBFkhbePHwf0SIveYPD0N7
+        hWUBbVuCy55tujqk8YRqaQ==
+X-Google-Smtp-Source: ABdhPJyarlfDg0topsEF4LLMlLljnAFIUiSejKfnwzERU46ep1pIjMA9nxf26wH/i1HT1FPTA9wZsg==
+X-Received: by 2002:a92:2907:: with SMTP id l7mr1061985ilg.48.1590631899776;
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b18sm2458167ilh.77.2020.05.27.19.11.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 18:08:47 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
+Received: (nullmailer pid 3220699 invoked by uid 1000);
+        Thu, 28 May 2020 02:11:37 -0000
+Date:   Wed, 27 May 2020 20:11:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 05/14] dt-bindings: arm: sparx5: Add documentation for
+ Microchip Sparx5 SoC
+Message-ID: <20200528021137.GA3214411@bogus>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+ <20200513125532.24585-6-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-2-git-send-email-mkshah@codeaurora.org> <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com> <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Wed, 27 May 2020 18:08:46 -0700
-Message-ID: <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513125532.24585-6-lars.povlsen@microchip.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Maulik Shah (2020-05-27 04:26:14)
-> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-05-23 10:11:10)
-> >> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> >> index eaa0e20..3810cd0 100644
-> >> --- a/drivers/gpio/gpiolib.c
-> >> +++ b/drivers/gpio/gpiolib.c
-> >> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_dat=
-a *d)
-> >>          gpiochip_relres_irq(gc, d->hwirq);
-> >>   }
-> >>  =20
-> >> +static void gpiochip_irq_mask(struct irq_data *d)
-> >> +{
-> >> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-> >> +
-> >> +       if (gc->irq.irq_mask)
-> >> +               gc->irq.irq_mask(d);
-> >> +       gpiochip_disable_irq(gc, d->hwirq);
-> > How does this work in the lazy case when I want to drive the GPIO? Say I
-> > have a GPIO that is also an interrupt. The code would look like
-> >
-> >   struct gpio_desc *gpio =3D gpiod_get(...)
-> >   unsigned int girq =3D gpiod_to_irq(gpio)
-> >
-> >   request_irq(girq, ...);
-> >
-> >   disable_irq(girq);
-> >   gpiod_direction_output(gpio, 1);
-> >
-> > In the lazy case genirq wouldn't call the mask function until the first
-> > interrupt arrived on the GPIO line. If that never happened then wouldn't
-> > we be blocked in gpiod_direction_output() when the test_bit() sees
-> > FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
-> > gpios?
->=20
-> The client driver can decide to unlazy disable IRQ with below API...
->=20
->  =C2=A0irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
->=20
-> This will immediatly invoke mask function (unlazy disable) from genirq,=20
-> even though irq_disable is not implemented.
->=20
+On Wed, May 13, 2020 at 02:55:23PM +0200, Lars Povlsen wrote:
+> This adds the main Sparx5 SoC DT documentation file, with information
+> abut the supported board types.
+> 
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  .../bindings/arm/microchip,sparx5.yaml        | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> new file mode 100644
+> index 0000000000000..83b36d1217988
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip Sparx5 Boards Device Tree Bindings
+> +
+> +maintainers:
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +description: |+
+> +   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
+> +   gigabit TSN-capable gigabit switches.
+> +
+> +   The SparX-5 Ethernet switch family provides a rich set of switching
+> +   features such as advanced TCAM-based VLAN and QoS processing
+> +   enabling delivery of differentiated services, and security through
+> +   TCAM-based frame processing using versatile content aware processor
+> +   (VCAP)
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - description: The Sparx5 pcb125 board is a modular board,
+> +          which has both spi-nor and eMMC storage. The modular design
+> +          allows for connection of different network ports.
+> +        items:
+> +          - const: microchip,sparx5-pcb125
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb134 is a pizzabox form factor
+> +          gigabit switch with 20 SFP ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb134
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb135 is a pizzabox form factor
+> +          gigabit switch with 48+4 Cu ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb135
+> +          - const: microchip,sparx5
+> +
+> +  axi@600000000:
+> +    type: object
+> +    description: the root node in the Sparx5 platforms must contain
+> +      an axi bus child node. They are always at physical address
+> +      0x600000000 in all the Sparx5 variants.
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: simple-bus
+> +      reg:
+> +        maxItems: 1
 
-Sure a consumer can disable the lazy feature, but that shouldn't be
-required to make this work. The flag was introduced in commit
-e9849777d0e2 ("genirq: Add flag to force mask in
-disable_irq[_nosync]()") specifically to help devices that can't disable
-the interrupt in their own device avoid a double interrupt.
+simple-bus doesn't have 'reg'. If there's bus registers, then it's not 
+simple.
+
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +patternProperties:
+> +  "^syscon@[0-9a-f]+$":
+
+This should be under a bus node.
+
+> +    description: All Sparx5 boards must provide a system controller,
+> +      typically under the axi bus node. It contain reset registers and
+> +      other system control.
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: microchip,sparx5-cpu-syscon
+> +          - const: syscon
+
+This probably should be in its own document. If really this simple, 
+there's already syscon.yaml you can add to. 
+
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - axi@600000000
+> +  - syscon@600000000
+> +
+> +...
+> --
+> 2.26.2
