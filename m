@@ -2,98 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AA8F1E639D
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 16:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A785C1E645E
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 16:45:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390954AbgE1OUa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 May 2020 10:20:30 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:58367 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390924AbgE1OU2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 28 May 2020 10:20:28 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id eJOQjnPsJDazBeJOTjriE7; Thu, 28 May 2020 16:20:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590675626; bh=RLMkUvwdHzJ0rkII+qmpdU3AJCwc8eOQShgJ6HasaAw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=XUhRFuuIFgZ0gqAf6RiTS/ZFTBiFtN97X52Ra2X0+cApgbFv1hmiJTmbzgNdRS9kZ
-         NqCmnCPiAIQLJRerRZnJGXDwlAaTGsqZVXDqUHIqmghWG/jVJAe72UFeMn4ZGbS20E
-         L5rXDW3R+WWfH+kZRziubw7b6dwPDnu2uboDCefa5+bjGvDUnJ3D7ZLlbugNLKsm0N
-         TZhDcW/A062lQXE3NHK4sCpRgx6PjQ6PR2T7rs3P3QHFvovCDg3dMfnq44F60e4pws
-         AfIMfWlrFTsVgpKS8WfOKZCa/Jue/9aim5PwRwhz4Fh1OZkElliQQMawAJPvHl30zG
-         o52CSVH2aaDFQ==
-Subject: Re: [PATCH] gpio: fix locking open drain IRQ lines
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable <stable@vger.kernel.org>
-References: <20200527140758.162280-1-linus.walleij@linaro.org>
- <20200527141807.GQ1551@shell.armlinux.org.uk>
- <CACRpkdbnLS2G6UH3L5u71RvP-heDqoOk+k9cW=9_4pJ_u3w0zg@mail.gmail.com>
- <20200528135825.GV1551@shell.armlinux.org.uk>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <fb7fd3d3-ad77-aefc-b257-d48777027ea7@xs4all.nl>
-Date:   Thu, 28 May 2020 16:20:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728510AbgE1Opy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 May 2020 10:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728490AbgE1Opx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 10:45:53 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F91DC05BD1E
+        for <linux-gpio@vger.kernel.org>; Thu, 28 May 2020 07:45:53 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so11647490plt.5
+        for <linux-gpio@vger.kernel.org>; Thu, 28 May 2020 07:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=WidaMQ+nOIi9LZ9I8XhCFOl7nZw8RaeJLIl0G6bWv78=;
+        b=nzt8DHsg6TGBWDPP5aqutLzEW8nQU0b5IkIUQGhh8f7HZSZN15KXDlpR6xwdLTLiZD
+         GWpb76k2w74R25NVUkg/w1rJQ0yoC/g89qk9yYL3KknIhz6lTopZEHWTQsE0k+5IOvrU
+         0vSfMTnyl39QoXp0FK+w502M68zaezkdPR3SsP2A1NdGwqoz2rlN4DsM9BnF+O1GBbHU
+         d5iRej4xH2OyQwVGCB98NHyUK89aY4D2lN0qWu1R9bKaWShVNg/pyNeNa3CqKAtqFfl7
+         p5xQ3pw2GiCzbcOlarPgjfXCQg5ICtZrIZuUPmNuTJzcQ5muhwQZAEyoouCjJTHLT4/H
+         iiJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=WidaMQ+nOIi9LZ9I8XhCFOl7nZw8RaeJLIl0G6bWv78=;
+        b=Tg+efubP89vbU29+RMqpmN7j3r2OmIvnGj0ersXTSaY+WTkw81+vEiMPF0CBEZMQNo
+         Jyj3UDiH0Q5QLlAeOITRhL/cF86FcaAJDBfEMErMtUJf6i/PJ1P3M3Uo2hc9jVmQXD+c
+         iTYoD86UpQukn4pVdEDp7y5qNC+OewaCMLJYI0fup0GxlGysC4682mwhs66eEbUK2z4w
+         YvCzSuQMC01x5/3q04DXTainvcs9mlR/3gNkzpOxqknBZRxeRrAuJj7tnL+WINEyciEL
+         GwdmRNAYwHo1wtcE46I8wCY42z9WL6kzjNjzGd+W/Aoq4nKpro8VQf0+YRC4qlGQv9Ot
+         hMpQ==
+X-Gm-Message-State: AOAM532paULJlDRtpkixorHKMpMT13E778Bp+1De08TgWAz2DW5rH1Sw
+        /NpyamB7tJTwnCqm5Mo8+dUXbj2ANTI=
+X-Google-Smtp-Source: ABdhPJyqdI0ZAbUPDKk08pZooXuyo3kaOpwYQM3cz/jK7n7kqhBBlmExQE/mQ6f7N180fvgYHdXUqg==
+X-Received: by 2002:a17:90a:fe83:: with SMTP id co3mr4103434pjb.62.1590677152484;
+        Thu, 28 May 2020 07:45:52 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id a71sm5429014pje.0.2020.05.28.07.45.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:45:51 -0700 (PDT)
+Message-ID: <5ecfce9f.1c69fb81.59ef8.d36b@mx.google.com>
+Date:   Thu, 28 May 2020 07:45:51 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200528135825.GV1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAsgfI+GHk9CH3sLeIcTXQYh1PNZiQHWSmlxic8QvMHL8euuH3lUnzID+rACzasfPRHVNUDYTFXGd9y22Povgk/ypaepbogV5AlOqDvfGE0YSxccpEDb
- so1xo76106F+M0TIWuBMqdXDD8mGMfNPvFfJsRSpzMJyGUyw0vt36XUkD8mqcGjSgSsu8ZNy9GKnfTApaBzoGEJXv2Y5STgbX/tYDMTtVMioLU7zDaqhyZL+
- Rl08RfOLmJlIDLvl+5PMNqbOxjKmAlGNXqsphDimJgn5DVeXjnHITGk+Ru9+12XDE71JrAYINrG+OlpozipKPA==
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: fixes
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.7-rc6-8-gad3073bcb903
+Subject: linusw/fixes build: 5 builds: 0 failed, 5 passed,
+ 24 warnings (v5.7-rc6-8-gad3073bcb903)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/05/2020 15:58, Russell King - ARM Linux admin wrote:
-> On Thu, May 28, 2020 at 03:46:04PM +0200, Linus Walleij wrote:
->> On Wed, May 27, 2020 at 4:18 PM Russell King - ARM Linux admin
->> <linux@armlinux.org.uk> wrote:
->>> On Wed, May 27, 2020 at 04:07:58PM +0200, Linus Walleij wrote:
->>
->>>> We provided the right semantics on open drain lines being
->>>> by definition output but incidentally the irq set up function
->>>> would only allow IRQs on lines that were "not output".
->>>>
->>>> Fix the semantics to allow output open drain lines to be used
->>>> for IRQs.
->>>>
->>>> Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
->>>> Cc: Russell King <linux@armlinux.org.uk>
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: 256efaea1fdc ("gpiolib: fix up emulated open drain outputs")
->>>
->>> As I've pointed out in the reporting thread, I don't think it can be
->>> justified as a regression - it's a bug in its own right that has been
->>> discovered by unifying the gpiolib semantics, since the cec-gpio code
->>> will fail on hardware that can provide real open-drain outputs
->>> irrespective of that commit.
->>>
->>> So, you're really fixing a deeper problem that was never discovered
->>> until gpiolib's semantics were fixed to be more uniform.
->>
->> You're right, I was thinking of Fixes: as more of a mechanical
->> instruction to the stable kernel maintainers administrative machinery.
->>
->> I will use the other way to signal to stable where to apply this.
-> 
-> I think it makes sense to apply this patch to stable kernels prior to
-> the commit mentioned in the Fixes tag - but how far back is a good
-> question.  Certainly to the point that we ended up with code relying
-> on this behaviour (so when cec-gpio was introduced?)
-> 
+linusw/fixes build: 5 builds: 0 failed, 5 passed, 24 warnings (v5.7-rc6-8-g=
+ad3073bcb903)
 
-For the record, cec-gpio started to rely on this behavior in kernel 5.3.
-There is no need to go back to pre-5.3 kernels.
+Full Build Summary: https://kernelci.org/build/linusw/branch/fixes/kernel/v=
+5.7-rc6-8-gad3073bcb903/
 
-Regards,
+Tree: linusw
+Branch: fixes
+Git Describe: v5.7-rc6-8-gad3073bcb903
+Git Commit: ad3073bcb903674b11ba3395361f3b94806bb2b6
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
 
-	Hans
+Warnings Detected:
+
+arm64:
+    defconfig (gcc-8): 24 warnings
+
+arm:
+
+mips:
+
+riscv:
+
+x86_64:
+
+
+Warnings summary:
+
+    16   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (=
+dma_ranges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" p=
+roperty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, chil=
+d #address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #size-cells (1) differs from / (2)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #address-cells (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
+ (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
+lls (1) differs from / (2)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 24 warnings, 0 section m=
+ismatches
+
+Warnings:
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
+1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
+differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
