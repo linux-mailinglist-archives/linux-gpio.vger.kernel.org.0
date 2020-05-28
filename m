@@ -2,414 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A59011E618A
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 15:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8761E61D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 15:11:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389978AbgE1NAg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 May 2020 09:00:36 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:59287 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389878AbgE1NAg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 09:00:36 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390228AbgE1NLr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 May 2020 09:11:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:38661 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390171AbgE1NLq (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 28 May 2020 09:11:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590671505; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=5KCsj0GEfP6+olt7t0wTZsy18p2KiqTY5awAccURH8k=; b=d0Z/2UNjKRXpT75UfaxtYInVXR+GuKhx/K0xtBtR7Kn09Gz/LMoIp0NRDQRdV1s/E/HRaSM9
+ zj4l0fMxRRPcQTcMOnnhSjsapt5bMniIuQYqIGRDhNmLBc+I26TC26U/qNxkB/qdsVYObKgm
+ 1G9LG94mhzi8i2SuCk3adGQI2+Q=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5ecfb885c6d4683243305c55 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 13:11:33
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 06B27C433C6; Thu, 28 May 2020 13:11:32 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.43.129] (unknown [106.222.4.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A28B823E46;
-        Thu, 28 May 2020 15:00:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590670832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HnqwSqhEfKKElfbZhUYwQVFtjv0Sl5IiykXrrYQU2XU=;
-        b=H+JUuohNjLZKG96hq3MTWzHEeHxlhZayBSCaOxLImMPoPyqvtiG+t2D2i21i3bku4fiYjo
-        amw1JAGtdq6bE9XSUhEsfwkCCAtzFAaxU8hDBdEFpxI2R7ijTJk6sUmcu2pPAQ7Wa1gftP
-        A6rK6cg+LxpOl1wFP/IUxI1cJBe6zMU=
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBE80C433C9;
+        Thu, 28 May 2020 13:11:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBE80C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+ <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
+ <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <948defc1-5ea0-adbb-185b-5f5a81f2e28a@codeaurora.org>
+Date:   Thu, 28 May 2020 18:41:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 May 2020 15:00:32 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
-Subject: Re: [PATCH v5 2/2] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <CAHp75VfQ64iz3qVPsZ+8z4fMQWphruB0FzzCTQPqZ9LkuhV6Ww@mail.gmail.com>
-References: <20200528035841.16800-1-michael@walle.cc>
- <20200528035841.16800-3-michael@walle.cc>
- <CAHp75VfQ64iz3qVPsZ+8z4fMQWphruB0FzzCTQPqZ9LkuhV6Ww@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <fe83fd615eaae323dcc3d578b0e7d75a@walle.cc>
-X-Sender: michael@walle.cc
+In-Reply-To: <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-05-28 13:45, schrieb Andy Shevchenko:
-> On Thu, May 28, 2020 at 7:04 AM Michael Walle <michael@walle.cc> wrote:
->> 
->> There are quite a lot simple GPIO controller which are using regmap to
->> access the hardware. This driver tries to be a base to unify existing
->> code into one place. This won't cover everything but it should be a 
->> good
->> starting point.
->> 
->> It does not implement its own irq_chip because there is already a
->> generic one for regmap based devices. Instead, the irq_chip will be
->> instantiated in the parent driver and its irq domain will be associate
->> to this driver.
->> 
->> For now it consists of the usual registers, like set (and an optional
->> clear) data register, an input register and direction registers.
->> Out-of-the-box, it supports consecutive register mappings and mappings
->> where the registers have gaps between them with a linear mapping 
->> between
->> GPIO offset and bit position. For weirder mappings the user can 
->> register
->> its own .xlate().
-> 
-> More comments from me below.
+Hi,
 
-Thanks for the review.
+On 5/28/2020 6:38 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-27 04:26:14)
+>> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
+>>> Quoting Maulik Shah (2020-05-23 10:11:10)
+>>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>>>> index eaa0e20..3810cd0 100644
+>>>> --- a/drivers/gpio/gpiolib.c
+>>>> +++ b/drivers/gpio/gpiolib.c
+>>>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
+>>>>           gpiochip_relres_irq(gc, d->hwirq);
+>>>>    }
+>>>>    
+>>>> +static void gpiochip_irq_mask(struct irq_data *d)
+>>>> +{
+>>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>>> +
+>>>> +       if (gc->irq.irq_mask)
+>>>> +               gc->irq.irq_mask(d);
+>>>> +       gpiochip_disable_irq(gc, d->hwirq);
+>>> How does this work in the lazy case when I want to drive the GPIO? Say I
+>>> have a GPIO that is also an interrupt. The code would look like
+>>>
+>>>    struct gpio_desc *gpio = gpiod_get(...)
+>>>    unsigned int girq = gpiod_to_irq(gpio)
+>>>
+>>>    request_irq(girq, ...);
+>>>
+>>>    disable_irq(girq);
+>>>    gpiod_direction_output(gpio, 1);
+>>>
+>>> In the lazy case genirq wouldn't call the mask function until the first
+>>> interrupt arrived on the GPIO line. If that never happened then wouldn't
+>>> we be blocked in gpiod_direction_output() when the test_bit() sees
+>>> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
+>>> gpios?
+>> The client driver can decide to unlazy disable IRQ with below API...
+>>
+>>    irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
+>>
+>> This will immediatly invoke mask function (unlazy disable) from genirq,
+>> even though irq_disable is not implemented.
+>>
+> Sure a consumer can disable the lazy feature, but that shouldn't be
+> required to make this work. The flag was introduced in commit
+> e9849777d0e2 ("genirq: Add flag to force mask in
+> disable_irq[_nosync]()") specifically to help devices that can't disable
+> the interrupt in their own device avoid a double interrupt.
+i don't think this will be a problem.
 
-> 
-> ...
-> 
-> 
->>  # Device drivers. Generally keep list sorted alphabetically
-> 
-> Hmm...
-> 
->> +obj-$(CONFIG_GPIO_REGMAP)      += gpio-regmap.o
->>  obj-$(CONFIG_GPIO_GENERIC)     += gpio-generic.o
-> 
-> ...is it?
+Case 1) Client driver have locked gpio to be used as IRQ using 
+gpiochip_lock_as_irq()
 
-That's because gpio-regmap.o seems not be a driver and more of a generic
-thing (like gpio-generic.o) and gpio-generic.o has another rule two 
-lines
-below and I don't want to put gpio-regmap.o in between.
+In this case, When client driver want to change the direction for a 
+gpio, they will invoke gpiod_direction_output().
+I see it checks for two flags (pasted below), if GPIO is used as IRQ and 
+whether its enabled IRQ or not.
 
-> 
-> ...
-> 
->> + * Copyright 2019 Michael Walle <michael@walle.cc>
-> 
-> 2020?
-> 
-> ...
-> 
->> +#include <linux/gpio/driver.h>
->> +#include <linux/gpio-regmap.h>
-> 
-> Yes, I would like to see this as gpio/regmap.h (in gpio folder).
-> 
-> ...
-> 
->> +static unsigned int gpio_regmap_addr(unsigned int addr)
->> +{
->> +       return (addr == GPIO_REGMAP_ADDR_ZERO) ? 0 : addr;
-> 
-> I would prefer rather to have
-> if (...)
->  return 0;
-> 
-> return addr;
-> 
-> here, but any of them fine.
+        /* GPIOs used for enabled IRQs shall not be set as output */
+         if (test_bit(FLAG_USED_AS_IRQ, &desc->flags) &&
+             test_bit(FLAG_IRQ_IS_ENABLED, &desc->flags)) {
 
-yes looks nicer.
+The first one (FLAG_USED_AS_IRQ) is set only if client driver in past 
+have locked gpio to use as IRQ with a call to gpiochip_lock_as_irq()
+then it never gets unlocked until clients invoke gpiochip_unlock_as_irq().
 
-> 
->> +}
-> 
-> ...
-> 
->> +/**
->> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
-> 
-> Don't you get plenty of complains from kernel doc validation script?
+So i presume the client driver which in past locked gpio to be used as 
+IRQ, now wants to change direction then it will
+a. first unlock to use as IRQ
+b. then change the direction.
 
-now that I know there is one, yes. there are many complains.
+Once it unlocks in step (a), both these flags will be cleared and there 
+won't be any error in changing direction in step (b).
 
-> 
-> You forgot to describe all function parameters here.
-> 
->> + *
->> + * Use a simple linear mapping to translate the offset to the 
->> bitmask.
->> + */
+Case 2) Client driver did not lock gpio to be used as IRQ.
 
-This is a leftover, I'm actually gonna remove it since its not exported
-anymore.
+In this case, it will be straight forward to change the direction, as 
+FLAG_USED_AS_IRQ is never set.
 
-> 
-> ...
-> 
->> +       return (val & mask) ? 1 : 0;
-> 
-> Hmm... many (new!) GPIO drivers are using !! instead of ternary. Can
-> we do the same here?
+Thanks,
+Maulik
 
-ok
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-> 
-> ...
-> 
->> +static int gpio_regmap_get_direction(struct gpio_chip *chip,
->> +                                    unsigned int offset)
->> +{
-> 
->> +       if (gpio->reg_dir_out_base) {
->> +               base = gpio_regmap_addr(gpio->reg_dir_out_base);
->> +               invert = 0;
->> +       } else if (gpio->reg_dir_in_base) {
->> +               base = gpio_regmap_addr(gpio->reg_dir_in_base);
->> +               invert = 1;
->> +       } else {
-> 
->> +               return GPIO_LINE_DIRECTION_IN;
-> 
-> Hmm... Doesn't it an erroneous case and we basically shouldn't be here?
-
-yeah, I'll return -EOPNOTSUPP. Better than just ignoring, right?
-
-> 
->> +       }
-> 
->> +       if (!!(val & mask) ^ invert)
->> +               return GPIO_LINE_DIRECTION_OUT;
-> 
->> +       else
-> 
-> Redundant 'else'.
-
-IMHO, That looks really strange. like it has nothing to do with the
-if statement. I'd like to keep that one.
-
-> 
->> +               return GPIO_LINE_DIRECTION_IN;
->> +}
-> 
->> +static int gpio_regmap_set_direction(struct gpio_chip *chip,
->> +                                    unsigned int offset, bool output)
->> +{
-> 
->> +       if (gpio->reg_dir_out_base) {
->> +               base = gpio_regmap_addr(gpio->reg_dir_out_base);
->> +               invert = 0;
->> +       } else if (gpio->reg_dir_in_base) {
->> +               base = gpio_regmap_addr(gpio->reg_dir_in_base);
->> +               invert = 1;
->> +       } else {
-> 
->> +               return 0;
-> 
-> Question as above.
-
-same answer ;)
-
-> 
->> +       }
-> 
->> +       if (!invert)
->> +               val = (output) ? mask : 0;
->> +       else
->> +               val = (output) ? 0 : mask;
-> 
-> Why not positive conditional?
-> Also, too many parentheses.
-
-ok
-
-> 
->> +       return regmap_update_bits(gpio->regmap, reg, mask, val);
->> +}
-> 
-> ...
-> 
->> +/**
->> + * gpio_regmap_register() - Register a generic regmap GPIO controller
-> 
->> + *
-> 
-> Extra blank line.
-
-didn't know that. so ok for all kind of these comments.
-
-> 
->> + * @gpio: gpio_regmap device to register
->> + *
->> + * Returns 0 on success or an errno on failure.
->> + */
-> 
-> ...
-> 
->> +       if (!config->label)
->> +               chip->label = dev_name(config->parent);
->> +       else
->> +               chip->label = config->label;
-> 
-> Why not positive or here even ternary may look good
-> 
->         chip->label = config->label ?: dev_name(config->parent);
-
-ok
-
-> 
-> ...
-> 
->> +               ret = gpiochip_irqchip_add_domain(chip, 
->> config->irq_domain);
-> 
->> +               if (ret < 0)
-> 
-> Does ' < 0' make sense?
-
-more or less, I'll change it to "if (ret)"
-
-> 
->> +                       goto err_remove_gpiochip;
-> 
-> ...
-> 
->> +/**
->> + * gpio_regmap_unregister() - Unregister a generic regmap GPIO 
->> controller
-> 
->> + *
-> 
-> Extra blank line
-> 
->> + * @gpio: gpio_regmap device to unregister
->> + */
-> 
-> ...
-> 
->> +/**
->> + * devm_gpio_regmap_register() - resource managed 
->> gpio_regmap_register()
-> 
->> + *
-> 
-> Ditto.
-> 
->> + * @dev: device that is registering this GPIO device
->> + * @gpio: gpio_regmap device to register
->> + *
->> + * Managed gpio_regmap_register(). For generic regmap GPIO device 
->> registered by
->> + * this function, gpio_regmap_unregister() is automatically called on 
->> driver
->> + * detach. See gpio_regmap_register() for more information.
->> + */
-> 
-> ...
-> 
->> +       gpio = gpio_regmap_register(config);
-> 
->> +
-> 
-> Extra blank line.
-
-ok
-
->> +       if (!IS_ERR(gpio)) {
->> +               *ptr = gpio;
->> +               devres_add(dev, ptr);
->> +       } else {
->> +               devres_free(ptr);
->> +       }
-> 
-> ...
-> 
->> +#ifndef _LINUX_GPIO_REGMAP_H
->> +#define _LINUX_GPIO_REGMAP_H
->> +
-> 
-> Missed a lot, i.e.
-> 
-> struct device;
-> struct irq_domain;
-> struct regmap;
-
-oops. right.
-
-> 
->> +struct gpio_regmap;
->> +
->> +#define GPIO_REGMAP_ADDR_ZERO ((unsigned long)(-1))
->> +#define GPIO_REGMAP_ADDR(addr) ((addr) ? : GPIO_REGMAP_ADDR_ZERO)
->> +
->> +/**
->> + * struct gpio_regmap_config - Description of a generic regmap 
->> gpio_chip.
-> 
->> + *
-> 
-> Extra blank line.
-> 
->> + * @parent:            The parent device
->> + * @regmap:            The regmap used to access the registers
->> + *                     given, the name of the device is used
->> + * @label:             (Optional) Descriptive name for GPIO 
->> controller.
->> + *                     If not given, the name of the device is used.
->> + * @ngpio:             Number of GPIOs
-> 
->> + * @names:             (Optional) Array of names for gpios
-> 
-> I don't see it. You really need to enable kernel doc validation 
-> warnings.
-
-I've already noticed that in another mail.
-
-> 
->> + * @reg_dat_base:      (Optional) (in) register base address
->> + * @reg_set_base:      (Optional) set register base address
->> + * @reg_clr_base:      (Optional) clear register base address
->> + * @reg_dir_in_base:   (Optional) in setting register base address
->> + * @reg_dir_out_base:  (Optional) out setting register base address
->> + * @reg_stride:                (Optional) May be set if the registers 
->> (of the
->> + *                     same type, dat, set, etc) are not consecutive.
->> + * @ngpio_per_reg:     Number of GPIOs per register
->> + * @irq_domain:                (Optional) IRQ domain if the 
->> controller is
->> + *                     interrupt-capable
->> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
->> + *                     offset to a register/bitmask pair. If not
->> + *                     given the default gpio_regmap_simple_xlate()
->> + *                     is used.
->> + *
->> + * The reg_mask_xlate translates a given base address and GPIO offset 
->> to
-> 
-> 'reg_mask_xlate' ->  '->reg_mask_xlate()' or '@reg_mask_xlate' or
-> special C function reference for kernel doc.
-> 
->> + * register and mask pair. The base address is one of the given 
->> reg_*_base.
-> 
-> 'reg_*_base' -> 'register base addresses in this structure' ?
-> 
->> + *
->> + * All base addresses may have the special value 
->> GPIO_REGMAP_ADDR_ZERO
->> + * which forces the address to the value 0.
-> 
-> Also, since we have no separate documentation, describe the rules,
-> that some of the registers are actually required, and some maybe in
-> conflict (these rules you have in register function).
-
-ok
-
--michael
