@@ -2,131 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 137AD1E6283
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 15:43:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 140D41E62A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 15:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbgE1NnQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 May 2020 09:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
+        id S2390469AbgE1NqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 May 2020 09:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390468AbgE1NnP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 09:43:15 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E83C05BD1E;
-        Thu, 28 May 2020 06:43:15 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so11583788plt.5;
-        Thu, 28 May 2020 06:43:15 -0700 (PDT)
+        with ESMTP id S2390399AbgE1NqS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 May 2020 09:46:18 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B6BC05BD1E
+        for <linux-gpio@vger.kernel.org>; Thu, 28 May 2020 06:46:17 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z206so12959529lfc.6
+        for <linux-gpio@vger.kernel.org>; Thu, 28 May 2020 06:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=azWiRUhHjCo2o19V2ZlFG7W2kgi9DZuQbiyov+RmyJQ=;
-        b=fu44bgllL7AZZXPGj53xfJU/X4VwelM5xRXvj95LeFILkWue6PCVnMXr2GhDrn9qRm
-         XeKjMW8J7y/NP+tbAsHgYJZLzCk52iZm7hSxdv0SBqQ0/TKmoIh3FzbxtRthPCC1CanV
-         cLZQWRZOrw8zZJ0z3tolbLROCIh7FrN+0zEA5abMACwkxnFttA1uLht5a81YYLQNaYeO
-         274H2gCF8eOpO4Eio2PWUGSbNLaAobuakh2T7F8z7C0oksJhr0FN1TACNlQs345pooEX
-         g0p+DMad0TLw4nzbGSaOt/d0LyGuW4aS6Cgti31qbm0Wphkt6Ao8aYPTDfmEg3gk35wP
-         pmmA==
+        bh=a5cB0NbuDsxv1LE6rwuUS39uCXX4xdBTOu6HLynTTas=;
+        b=Qt98mT5/AOP+AfWfkc+cELybWsFxMDdr1feaA0rFBtYRz02IVmBtfKCI/Jsaf052BM
+         uTFMcHNGUutwp3hKVYoMeSHb/opGOciVnTc8Go4TA5NwiG6tjZsvYj2Q6ygHct5Xyye0
+         f+Rm8jGxm+1bVc3FthRmhuDmin+doIggWs98MJdgRV5ALC7UzGcEtigPZkZ6rggXRRdn
+         vfI7KhrY1Qv8NhGZU4Nr78tz0h9YOnRfH/Wp+cjhYA6DtSoiLlTd/mmRChQoUYAfHuEB
+         2tdHrKe083DAevC3Aeidzt4HZNSYQgsKyYHKLH3THg4PRK1WTV3+QPJbtRYigEAHQh/6
+         Dr8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=azWiRUhHjCo2o19V2ZlFG7W2kgi9DZuQbiyov+RmyJQ=;
-        b=Z1Ij/0LTgBjdy50WnQ8jdLTpm4mSl/be28dQ8U41kfbQtDAgt9WUrx9D6/1kfAQZv1
-         3hLkMJMD/Pv2o6uWOCkIzKY9jO40Nz5eBAVLFNWBZehQ7HIvkd49IwCt4xuWaekkbUnI
-         atAI0egc4Ts9yL68LqRfDm3cJS25hHBRdCrYaj/MwXZRwWq7/i4fK5i3NZb5rVmahoIy
-         49PcaGozO10l9jGOUXAyP9jcbe97oBexbIKWWMG/E3S/twOrznaJZvr4xdfb6SMV9oz8
-         AFCK1546aJ739AZXf+/sbwpiDMRSpL5e7RAFh+9q72WXbHlcj59AG594Dm+vsPqEOEWD
-         bbYQ==
-X-Gm-Message-State: AOAM5301RpD3e2iCtWz06VkUbvFrDuZ68dSplwqkNtEwyewh/nxkfyjM
-        lpn+law6E0D5ShPjSkniNGpaemk7V2Tk6aW1VIE=
-X-Google-Smtp-Source: ABdhPJzN52Ft8oXOZKiVCu8qos5NLsdiNjdUFwARDB1LrsLGeVdHj6yzu20k/+pMnYuOIah+jVpsjcl8y6ouPKo6Lu8=
-X-Received: by 2002:a17:90b:113:: with SMTP id p19mr4005458pjz.129.1590673393623;
- Thu, 28 May 2020 06:43:13 -0700 (PDT)
+        bh=a5cB0NbuDsxv1LE6rwuUS39uCXX4xdBTOu6HLynTTas=;
+        b=LraXLfrzWrHsbtN0+PpXLV97NnA+uhrFqvzLM1H/DGg4z5r3dJwgfVdvctrSps6Q9g
+         3GXBmpLg4JXitOlCu7xsClFVgpcyxIEI8Sr0eq1y6Ln/7XGv00vhrLP1FWQGaPXOUFN9
+         jJ448krUm8LNPQinvrdEbcl3p5iqILqSmiQd7InH1u+/UQS6CdLqSrfbuMyr+gxT3/dg
+         RyXvgR8SxQ7YnEOXy/NrP6QpdCbyj0cQdcnVqE+d6q9K/Njgi07/9g1nksR6/0JBSszG
+         BzLwr7CSuCMyCrRVp24q0pd4F+2GMWMVJJpaPcNONQexDvzPo6LW3TZDdwNJZjhgH2Ei
+         6zyA==
+X-Gm-Message-State: AOAM531UQM4eqve0YmAXW0d+u9ZIDB3uQAE1YSmTOGhc8qsNyyvC2HcQ
+        mTfxUo+FMV867H3XAMuyI7oJ93ISO8v4qqYf1yfXyA==
+X-Google-Smtp-Source: ABdhPJyk9xAp+CpqjeydaKkAnmtPe+DWC21Luks26S6xTsBghpxHKp5CwMPajqaQuY3W5kwNQQ45FS4twhaG7Elxf10=
+X-Received: by 2002:ac2:5473:: with SMTP id e19mr1730336lfn.21.1590673576010;
+ Thu, 28 May 2020 06:46:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200528035841.16800-1-michael@walle.cc> <20200528035841.16800-3-michael@walle.cc>
- <CAHp75VfQ64iz3qVPsZ+8z4fMQWphruB0FzzCTQPqZ9LkuhV6Ww@mail.gmail.com> <fe83fd615eaae323dcc3d578b0e7d75a@walle.cc>
-In-Reply-To: <fe83fd615eaae323dcc3d578b0e7d75a@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 16:43:01 +0300
-Message-ID: <CAHp75Vdh6ngva4CgWY8bfQXJMjoFYDHOx0Q7c+9wOD1eebb8qA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] gpio: add a reusable generic gpio_chip using regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20200527140758.162280-1-linus.walleij@linaro.org> <20200527141807.GQ1551@shell.armlinux.org.uk>
+In-Reply-To: <20200527141807.GQ1551@shell.armlinux.org.uk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 28 May 2020 15:46:04 +0200
+Message-ID: <CACRpkdbnLS2G6UH3L5u71RvP-heDqoOk+k9cW=9_4pJ_u3w0zg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: fix locking open drain IRQ lines
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, May 28, 2020 at 4:00 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-05-28 13:45, schrieb Andy Shevchenko:
-> > On Thu, May 28, 2020 at 7:04 AM Michael Walle <michael@walle.cc> wrote:
+On Wed, May 27, 2020 at 4:18 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Wed, May 27, 2020 at 04:07:58PM +0200, Linus Walleij wrote:
 
-> > More comments from me below.
+> > We provided the right semantics on open drain lines being
+> > by definition output but incidentally the irq set up function
+> > would only allow IRQs on lines that were "not output".
+> >
+> > Fix the semantics to allow output open drain lines to be used
+> > for IRQs.
+> >
+> > Reported-by: Hans Verkuil <hverkuil@xs4all.nl>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: stable@vger.kernel.org
+> > Fixes: 256efaea1fdc ("gpiolib: fix up emulated open drain outputs")
 >
-> Thanks for the review.
-
-You are welcome! Thanks for doing this actually.
-
-(So, the not commented points I think you agreed with)
-
-...
-
-> >>  # Device drivers. Generally keep list sorted alphabetically
-> >
-> > Hmm...
-> >
-> >> +obj-$(CONFIG_GPIO_REGMAP)      += gpio-regmap.o
-> >>  obj-$(CONFIG_GPIO_GENERIC)     += gpio-generic.o
-> >
-> > ...is it?
+> As I've pointed out in the reporting thread, I don't think it can be
+> justified as a regression - it's a bug in its own right that has been
+> discovered by unifying the gpiolib semantics, since the cec-gpio code
+> will fail on hardware that can provide real open-drain outputs
+> irrespective of that commit.
 >
-> That's because gpio-regmap.o seems not be a driver and more of a generic
-> thing (like gpio-generic.o) and gpio-generic.o has another rule two
-> lines
-> below and I don't want to put gpio-regmap.o in between.
+> So, you're really fixing a deeper problem that was never discovered
+> until gpiolib's semantics were fixed to be more uniform.
 
-OK!
+You're right, I was thinking of Fixes: as more of a mechanical
+instruction to the stable kernel maintainers administrative machinery.
 
-...
+I will use the other way to signal to stable where to apply this.
 
-> >> +       if (gpio->reg_dir_out_base) {
-> >> +               base = gpio_regmap_addr(gpio->reg_dir_out_base);
-> >> +               invert = 0;
-> >> +       } else if (gpio->reg_dir_in_base) {
-> >> +               base = gpio_regmap_addr(gpio->reg_dir_in_base);
-> >> +               invert = 1;
-> >> +       } else {
-> >
-> >> +               return GPIO_LINE_DIRECTION_IN;
-> >
-> > Hmm... Doesn't it an erroneous case and we basically shouldn't be here?
->
-> yeah, I'll return -EOPNOTSUPP. Better than just ignoring, right?
-
-Yes, that's what I meant.
-
-...
-
-> >> +       if (!!(val & mask) ^ invert)
-> >> +               return GPIO_LINE_DIRECTION_OUT;
-> >
-> >> +       else
-> >
-> > Redundant 'else'.
->
-> IMHO, That looks really strange. like it has nothing to do with the
-> if statement. I'd like to keep that one.
-
-We have many drivers done like that, but it's minor, so, up to you and
-maintainers.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
