@@ -2,71 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C57DF1E53F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 04:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 316551E54D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 May 2020 05:59:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgE1Ced (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 May 2020 22:34:33 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46712 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgE1Ced (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 22:34:33 -0400
-Received: by mail-io1-f67.google.com with SMTP id j8so28319109iog.13;
-        Wed, 27 May 2020 19:34:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n/FH6mJ3fikdqE4Zcc+b5bEIYmcTN5k726IIFViGyw8=;
-        b=FnNfNJ/XDdrHN6zNsoA/ynN072qhJu1oq/gguPHKnIQw7ObKzhz+HaKuKB21X0EVKP
-         jju+0+LMNaYQEIF0sy2qMGCcjFYZSV9f3GIM9axfkzfVGSr+RGFXjhT4OyNDcDbt1bde
-         Ih2JMYPL1qnko1NMyDrhJYgNUVZw/K9AP+y2rUZ3fuCVDqru39BTwre+YwTNWvAesPUI
-         8izRt4exD2Qf5/lNsKKsTMgq4vl+JX+LKNTQkGK3Mbvkp7/6NYqla3hPDN7d0z7z/ruI
-         0FijIGpKTCfMcVeZsmxUmsdkSZIvaDpWBDdyLzUgXEgZvOJGim6b6NmVHGBR/rMshg5h
-         nrSA==
-X-Gm-Message-State: AOAM533dmIDZ3ZqQ9r/1ORvgTcPiqUa1pucw1EWjSq7HgG8QhL324Ko6
-        FQYEUnMdqk/iERMnuRGx2CD2ej4=
-X-Google-Smtp-Source: ABdhPJzlRpRHQMmZDZLj/tYbF7cnyKdNiYI4MRq2hMn5XR8oW8DZfDevLNinGnIjZkv6csK9kUeBLA==
-X-Received: by 2002:a05:6602:2ac9:: with SMTP id m9mr710941iov.68.1590633271819;
-        Wed, 27 May 2020 19:34:31 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id l21sm2658506ili.8.2020.05.27.19.34.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:34:31 -0700 (PDT)
-Received: (nullmailer pid 3250747 invoked by uid 1000);
-        Thu, 28 May 2020 02:34:30 -0000
-Date:   Wed, 27 May 2020 20:34:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     alexandre.torgue@st.com, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/15] dt-bindings: usb: dwc2: Fix issues for stm32mp15x
- SoC
-Message-ID: <20200528023430.GA3250641@bogus>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
- <20200513145935.22493-16-benjamin.gaignard@st.com>
+        id S1727088AbgE1D6w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 May 2020 23:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgE1D6v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 May 2020 23:58:51 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A791CC08C5C1;
+        Wed, 27 May 2020 20:58:51 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3BCC322FB3;
+        Thu, 28 May 2020 05:58:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590638328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+u8MPYyDbcYv6Fo7V2HtH4lLlTB3DxELMaeS5MGUiiY=;
+        b=EPZ4yD7toYFs8BVoOdBNPpoiXQaLSgPG2arBFC3LaZzXluEIpLIibpTQ+f+zdK+3W4qjO4
+        qZDavCGC7/c2sbb3lK2BLQO/5NhmFA0AEVmzl1JXRo248XOdzTrETPLS/tRnk/uqZL+kEg
+        wJ6w1kVg4Vx/QpYXDNEHL9ZtIt+fztE=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v5 0/2] gpio: generic regmap implementation
+Date:   Thu, 28 May 2020 05:58:39 +0200
+Message-Id: <20200528035841.16800-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513145935.22493-16-benjamin.gaignard@st.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 13 May 2020 16:59:35 +0200, Benjamin Gaignard wrote:
-> Correct the compatible list for stm32mp15x SoC.
-> Fix the name of the stm32mp15x dedicated supply to be aligned with
-> what the driver use.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+This series is a split off of the sl28cpld series:
+https://lore.kernel.org/linux-gpio/20200423174543.17161-1-michael@walle.cc/
 
-Acked-by: Rob Herring <robh@kernel.org>
+I wasn't sure if I should also include the gpiochip_irqchip_add_domain()
+patch here. So feel free to skip it. OTOH if you use interrupts with
+gpio-regmap it is quite handy.
+
+For an actual user see the patch 11/16 ("gpio: add support for the sl28cpld
+GPIO controller") of the series above.
+
+Changes since v4:
+ - add comment about can_sleep
+ - fix config->label typo
+ - add config->names property
+
+Changes since v3:
+ - set reg_dat_base, that was actually broken
+ - fix typo
+ - fix swapped reg_in_dir/reg_out_dir documentation
+ - use "goto err" in error path in gpio_regmap_register()
+
+Changes since v2:
+ See changelog in the former patch series.
+
+Michael Walle (2):
+  gpiolib: Introduce gpiochip_irqchip_add_domain()
+  gpio: add a reusable generic gpio_chip using regmap
+
+ drivers/gpio/Kconfig        |   4 +
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-regmap.c  | 352 ++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.c      |  20 ++
+ include/linux/gpio-regmap.h |  70 +++++++
+ include/linux/gpio/driver.h |   3 +
+ 6 files changed, 450 insertions(+)
+ create mode 100644 drivers/gpio/gpio-regmap.c
+ create mode 100644 include/linux/gpio-regmap.h
+
+-- 
+2.20.1
+
