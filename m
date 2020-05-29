@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C30D81E7931
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 11:20:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E4301E79F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 11:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725306AbgE2JUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 May 2020 05:20:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:21975 "EHLO m43-7.mailgun.net"
+        id S1726563AbgE2J6Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 May 2020 05:58:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47201 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725562AbgE2JUr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 29 May 2020 05:20:47 -0400
+        id S1726529AbgE2J6X (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 29 May 2020 05:58:23 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590744046; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1590746302; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=gtTL96xroM0cMRUy1kb2dBW2tNzxqYj7hRbU9Vw34yY=; b=Rdx+L950bMKg1i/1y0mD+Mm1zxJoDmAo3+lmHsREAcSaqNyz//baYcX81AM43vv+9plVWpLL
- 82fgdKe5GWxh3EUGu5MgotOOA+5zLb1e1lG/Uu4vI0R/kRljzQ2VKR0qYVC3tNBWjVFGoJ49
- n43DjemBCVFRsCt2wKjMJI+oa/0=
+ Subject: Sender; bh=WpevIkTJ1MbRahbSDCiGvaiXrFgelDxdUivkVyI7CxE=; b=KfL3OBQvaDTGdeOxJse8cMiwMSvDTfCNjDKGXmSS/yQ/x2Mjg+MgZ9uNeSTJzcBXJtbyu+Ej
+ +KznTGj/ErniLhAhXFDqNm7uZ0QR4DvlL6pHS4AucecLP+X2OA9srfePPhvMUnFMrtcNU76W
+ xwUwhng2CdvOt2rGxWf8yrrQQWY=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ed0d3eb44a25e005206a629 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 09:20:43
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ed0dcabcb0458693383a808 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 29 May 2020 09:58:03
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59565C43391; Fri, 29 May 2020 09:20:42 +0000 (UTC)
+        id AA186C43395; Fri, 29 May 2020 09:58:02 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from [192.168.43.129] (unknown [106.222.19.5])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F2202C433C9;
-        Fri, 29 May 2020 09:20:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F2202C433C9
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBEA7C433C9;
+        Fri, 29 May 2020 09:57:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CBEA7C433C9
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
 To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
         evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
         mka@chromium.org
@@ -50,17 +50,21 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org
 References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
- <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+ <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
+ <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
+ <948defc1-5ea0-adbb-185b-5f5a81f2e28a@codeaurora.org>
+ <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
 From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org>
-Date:   Fri, 29 May 2020 14:50:32 +0530
+Message-ID: <513b9bec-2a9e-3306-32d1-6cc500206645@codeaurora.org>
+Date:   Fri, 29 May 2020 15:27:52 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
+In-Reply-To: <159070452036.69627.17850758520477366824@swboyd.mtv.corp.google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -69,151 +73,133 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 5/27/2020 3:45 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-23 10:11:13)
->> Remove irq_disable callback to allow lazy disable for pdc interrupts.
+On 5/29/2020 3:52 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-28 06:11:23)
+>> Hi,
 >>
->> Add irq_set_wake callback that unmask interrupt in HW when drivers
->> mark interrupt for wakeup. Interrupt will be cleared in HW during
->> lazy disable if its not marked for wakeup.
+>> On 5/28/2020 6:38 AM, Stephen Boyd wrote:
+>>> Quoting Maulik Shah (2020-05-27 04:26:14)
+>>>> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
+>>>>> Quoting Maulik Shah (2020-05-23 10:11:10)
+>>>>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>>>>>> index eaa0e20..3810cd0 100644
+>>>>>> --- a/drivers/gpio/gpiolib.c
+>>>>>> +++ b/drivers/gpio/gpiolib.c
+>>>>>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
+>>>>>>            gpiochip_relres_irq(gc, d->hwirq);
+>>>>>>     }
+>>>>>>     
+>>>>>> +static void gpiochip_irq_mask(struct irq_data *d)
+>>>>>> +{
+>>>>>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>>>>>> +
+>>>>>> +       if (gc->irq.irq_mask)
+>>>>>> +               gc->irq.irq_mask(d);
+>>>>>> +       gpiochip_disable_irq(gc, d->hwirq);
+>>>>> How does this work in the lazy case when I want to drive the GPIO? Say I
+>>>>> have a GPIO that is also an interrupt. The code would look like
+>>>>>
+>>>>>     struct gpio_desc *gpio = gpiod_get(...)
+>>>>>     unsigned int girq = gpiod_to_irq(gpio)
+>>>>>
+>>>>>     request_irq(girq, ...);
+>>>>>
+>>>>>     disable_irq(girq);
+>>>>>     gpiod_direction_output(gpio, 1);
+>>>>>
+>>>>> In the lazy case genirq wouldn't call the mask function until the first
+>>>>> interrupt arrived on the GPIO line. If that never happened then wouldn't
+>>>>> we be blocked in gpiod_direction_output() when the test_bit() sees
+>>>>> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
+>>>>> gpios?
+>>>> The client driver can decide to unlazy disable IRQ with below API...
+>>>>
+>>>>     irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
+>>>>
+>>>> This will immediatly invoke mask function (unlazy disable) from genirq,
+>>>> even though irq_disable is not implemented.
+>>>>
+>>> Sure a consumer can disable the lazy feature, but that shouldn't be
+>>> required to make this work. The flag was introduced in commit
+>>> e9849777d0e2 ("genirq: Add flag to force mask in
+>>> disable_irq[_nosync]()") specifically to help devices that can't disable
+>>> the interrupt in their own device avoid a double interrupt.
+>> i don't think this will be a problem.
 >>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   drivers/irqchip/qcom-pdc.c | 33 +++++++++++++++++----------------
->>   1 file changed, 17 insertions(+), 16 deletions(-)
+>> Case 1) Client driver have locked gpio to be used as IRQ using
+>> gpiochip_lock_as_irq()
 >>
->> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->> index 6ae9e1f..f7c0662 100644
->> --- a/drivers/irqchip/qcom-pdc.c
->> +++ b/drivers/irqchip/qcom-pdc.c
->> @@ -36,6 +36,7 @@ struct pdc_pin_region {
->>          u32 cnt;
->>   };
->>   
->> +DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
-> static?
-Thanks i will declare as static in v3.
->
->>   static DEFINE_RAW_SPINLOCK(pdc_lock);
->>   static void __iomem *pdc_base;
->>   static struct pdc_pin_region *pdc_region;
->> @@ -87,22 +88,20 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->>          raw_spin_unlock(&pdc_lock);
->>   }
->>   
->> -static void qcom_pdc_gic_disable(struct irq_data *d)
->> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
->>   {
->>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> -               return;
->> -
->> -       pdc_enable_intr(d, false);
->> -       irq_chip_disable_parent(d);
->> -}
->> +               return 0;
-> Shouldn't this fail if we can't set for wake?
+>> In this case, When client driver want to change the direction for a
+>> gpio, they will invoke gpiod_direction_output().
+>> I see it checks for two flags (pasted below), if GPIO is used as IRQ and
+>> whether its enabled IRQ or not.
+>>
+>>          /* GPIOs used for enabled IRQs shall not be set as output */
+>>           if (test_bit(FLAG_USED_AS_IRQ, &desc->flags) &&
+>>               test_bit(FLAG_IRQ_IS_ENABLED, &desc->flags)) {
+>>
+>> The first one (FLAG_USED_AS_IRQ) is set only if client driver in past
+>> have locked gpio to use as IRQ with a call to gpiochip_lock_as_irq()
+>> then it never gets unlocked until clients invoke gpiochip_unlock_as_irq().
+>>
+>> So i presume the client driver which in past locked gpio to be used as
+>> IRQ, now wants to change direction then it will
+>> a. first unlock to use as IRQ
+>> b. then change the direction.
+> How does a client driver unlock to use as an IRQ though? I don't
+> understand how that is done. gpiochip_lock_as_irq() isn't a gpio
+> consumer API, it's a gpiochip/gpio provider API.
 
-we return success/failure from parent chip with below call at end of 
-set_wake.
+>>In the lazy case genirq wouldn't call the mask function until the first
+>>interrupt arrived on the GPIO line. If that never happened then wouldn't
+>>we be blocked in gpiod_direction_output() when the test_bit() sees
+>>FLAG_USED_AS_IRQ?
 
-return irq_chip_set_wake_parent(d, on);
+What i was trying to explain in above two cases is..
+FLAG_USED_AS_IRQ is set only when client driver locks GPIO to be used as IRQ
+with gpiochip_lock_as_irq() API call.
 
->
->>   
->> -static void qcom_pdc_gic_enable(struct irq_data *d)
->> -{
->> -       if (d->hwirq == GPIO_NO_WAKE_IRQ)
->> -               return;
->> +       if (on) {
->> +               pdc_enable_intr(d, true);
->> +               irq_chip_enable_parent(d);
->> +               set_bit(d->hwirq, pdc_wake_irqs);
->> +       } else {
->> +               clear_bit(d->hwirq, pdc_wake_irqs);
->> +       }
->>   
->> -       pdc_enable_intr(d, true);
->> -       irq_chip_enable_parent(d);
->> +       return irq_chip_set_wake_parent(d, on);
->>   }
->>   
->>   static void qcom_pdc_gic_mask(struct irq_data *d)
-> The diff is really hard to read too. Maybe set_wake can be added first
-> and then the enable/disable functions removed?
-i think should be ok in same patch, if you insist i can split this 
-change in to two.
->
->> @@ -110,6 +109,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
->>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>                  return;
->>   
->> +       if (!test_bit(d->hwirq, pdc_wake_irqs))
->> +               pdc_enable_intr(d, false);
->> +
->>          irq_chip_mask_parent(d);
->>   }
->>   
->> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
->>          if (d->hwirq == GPIO_NO_WAKE_IRQ)
->>                  return;
->>   
->> +       pdc_enable_intr(d, true);
->>          irq_chip_unmask_parent(d);
->>   }
->>   
-> I find these two hunks deeply confusing. I'm not sure what the
-> maintainers think though. I hope it would be simpler to always enable
-> the hwirqs in the pdc when an irq is requested and only disable it in
-> the pdc when the system goes to suspend and the pdc pin isn't for an irq
-> that's marked for wakeup. Does that break somehow?
-PDC monitors interrupts during CPUidle as well, in cases where deepest 
-low power mode happened from cpuidle where GIC is not active.
-If we keep PDC IRQ always enabled/unmasked during idle and then 
-disable/mask when entering to suspend, it will break cpuidle.
+Coming to query of test_bit() seeing this flag as set won't be a problem.
+Lets take an example...
 
->
-> My understanding of the hardware is that the GPIO controller has lines
-> directly connected to various SPI lines on the GIC and PDC has a way to
-> monitor those direct connections and wakeup the CPUs when they trigger
-> the detection logic in the PDC. The enable/disable bit in PDC gates that
-> logic for each wire between the GPIO controller and the GIC.
->
-> So isn't it simpler to leave the PDC monitoring pins that we care about
-> all the time and only stop monitoring when we enter and leave suspend?
+1. Client driver locks gpio to be used as IRQ gpiochip_lock_as_irq()
+    This makes gpiolib set two flags..
+    a. FLAG_USED_AS_IRQ
+    b. FLAG_IRQ_IS_ENABLED
+    
+    Note that this is the only API which sets the flag (a) FLAG_USED_AS_IRQ.
+    
+2. During gpiochip_disable_irq() it only clears the flag (b) but the flag (a) is still set.
 
-it can affect idle path as explained above.
+3. Now client driver does disable_irq()...
+    With this patch, in case the irq_chip did not implement irq_disable callback then irq_mask will be overridden.
+    so during first disable_irq() call, the gpiolib won't come to immediatly know that interrupt is disabled (lazy disable)
+    hence both these flags are still set.
 
-> And shouldn't the driver set something sane in qcom_pdc_init() to
-> disable all the pdc pins so that we don't rely on boot state to
-> configure pins for wakeup?
+4. After disabling irq, client driver want to change the direction, so it wants to now call gpiod_direction_output()
+    But before calling this, client driver knows that in step (1), client driver locked GPIO to be used only as IRQ.
+    So GPIO cannot be used as any other purpose other than IRQ till the point its locked.
+	
+    hence before calling  gpiod_direction_output(), it has to first invoke gpiochip_unlock_as_irq().
+    Calling this will clear both flags and allow GPIO to change the direction.
+	
+    Now client can invoke gpiod_direction_output() and the test_bit() check inside this won't complain.
 
-We don't rely on boot state, by default all interrupt will be disabled.
+Case 1) in my previous mail was where in above example client driver did step (1) which locks the gpio as IRQ then
+its expected to do unlock in step (4) before changing direction.
+so no issue in case 1) regarding test_bit complain.
 
-This is same to GIC driver having GICD_ISENABLER register, where all 
-bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
-
-Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
+Case 2) is where driver didn't even do step-1, so in step-4, they can directly invoke gpiod_direction_output()
+client didn't lock, so the flag FLAG_USED_AS_IRQ is never set, so test_bit for this flag won't complain.
+    
+So in both cases it looks to be working as expected to me.
+Hope that its answers your query.
 
 Thanks,
 Maulik
->
->> @@ -197,15 +200,13 @@ static struct irq_chip qcom_pdc_gic_chip = {
->>          .irq_eoi                = irq_chip_eoi_parent,
->>          .irq_mask               = qcom_pdc_gic_mask,
->>          .irq_unmask             = qcom_pdc_gic_unmask,
->> -       .irq_disable            = qcom_pdc_gic_disable,
->> -       .irq_enable             = qcom_pdc_gic_enable,
->>          .irq_get_irqchip_state  = qcom_pdc_gic_get_irqchip_state,
->>          .irq_set_irqchip_state  = qcom_pdc_gic_set_irqchip_state,
->>          .irq_retrigger          = irq_chip_retrigger_hierarchy,
->>          .irq_set_type           = qcom_pdc_gic_set_type,
->> +       .irq_set_wake           = qcom_pdc_gic_set_wake,
->>          .flags                  = IRQCHIP_MASK_ON_SUSPEND |
->> -                                 IRQCHIP_SET_TYPE_MASKED |
->> -                                 IRQCHIP_SKIP_SET_WAKE,
->> +                                 IRQCHIP_SET_TYPE_MASKED,
->>          .irq_set_vcpu_affinity  = irq_chip_set_vcpu_affinity_parent,
->>          .irq_set_affinity       = irq_chip_set_affinity_parent,
+
+>> Once it unlocks in step (a), both these flags will be cleared and there
+>> won't be any error in changing direction in step (b).
 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
