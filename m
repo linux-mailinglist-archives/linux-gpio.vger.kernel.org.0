@@ -2,153 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 474421E7F9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 16:04:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF32E1E81BE
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 17:24:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgE2OEj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 May 2020 10:04:39 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:8703 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726898AbgE2OEi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 May 2020 10:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590761078; x=1622297078;
-  h=references:from:to:cc:subject:in-reply-to:date:
-   message-id:mime-version;
-  bh=sAGWaqia1JF0ryeRDXVzFPeaOltQyl1NGW+wvlqDi/E=;
-  b=URWVUOZqjoRzONnnH/q05xZjn/+tJ5OFy7pO4A+Xk04NClzFwzEmk4o0
-   oCWnUXvIo8Wr+e7NX4gZd3ZxcXRAD91ziqCgppCunRr+bfiTFYkbpxvnr
-   yRJPrOPmoTdwXF89Mps9VhpjPZi0eYEoLE9KGjR2p9lCx2JEm2MTt6Kpi
-   1dNTJhotEvcLn4RhZUA0Q1SRj3UuAhNBR2cur/hAD4kAbfpqiyUtRjhSV
-   8GYqQJw47Wu3LzpeGDd1dAwwUKdE5YkCycXSX2rgERb7R6YAmHsEcSCIb
-   h++3ncSfc75VYDZJ0DWPYwEwcmUVFsLrokUlKsOY7EfsbW+oN3GThFvoF
-   Q==;
-IronPort-SDR: xpzqGjpyykV5Ih2wHq02FXx0AqsGr/X8yLZnO6sUmywda4kivT2QCL6RfgUMu/+Mo7l9o/BFdz
- eE5+qVqCa2lVZL5SDnAKAB9ZWgFApKonr+D6Tn6LKVvhGj0EMsHHtXKOQO4hBQk4pAhpJdC3/T
- oSeo8ia8aXe0OQprk4ftk7b2Q5mkFCr7fBh1lEuOKj3veab6yAchm6/zODKBhgT3fNGupVkkZX
- NyNMfNrLKlKmDbgry41qbg+dHhM/zAN07j+tX4W+FU0kPMqY2yjRRAJZ5m8BXBRwZSwDb8/s93
- CCI=
-X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
-   d="scan'208";a="76764161"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 07:04:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 29 May 2020 07:04:40 -0700
-Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 29 May 2020 07:04:25 -0700
-References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-11-lars.povlsen@microchip.com> <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, SoC Team <soc@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 10/14] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
-In-Reply-To: <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
-Date:   Fri, 29 May 2020 16:04:32 +0200
-Message-ID: <87lflaq1lb.fsf@soft-dev15.microsemi.net>
+        id S1726849AbgE2PYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 May 2020 11:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbgE2PYT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 May 2020 11:24:19 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D74C08C5C6
+        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2020 08:24:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh7so1269216plb.11
+        for <linux-gpio@vger.kernel.org>; Fri, 29 May 2020 08:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=sCLWMyTbEd/1hZj7Ja6Y4svnW4l7PV6RC1NEKkHXSZ8=;
+        b=H7WKBP9V6/l87G1TQmaISBqxpvqiVoSKcSSjXRxDOcbFwt1fDn43u07HnMvRKr15dX
+         w+LWVnkeAlhyoqQ0fkI7rg4hvR2nnwTxxMt+O3q5N+UDxXo5tYx5pIJUl8ZamXNYKfBD
+         avOGAC4pa0regtCoo4tMTvV1OQXHmR1nnvSIPstKg6hIxHYHFLcVQkM/XA1tX94RO/MA
+         FAo+EpyWoQaxGLcQZuLPzqn6jBdrqjCqn/sEQXC9Bka97LQ/AR4a5XMzE3FwaYAazHx0
+         Bk5OcUMhQOFY4uB5+WHJWt3tF121FXF3TdbjzjDUl3A37bM2IbOuveXEg4kBirq2cids
+         ejlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=sCLWMyTbEd/1hZj7Ja6Y4svnW4l7PV6RC1NEKkHXSZ8=;
+        b=dU77zZxKfJ1ygB5C6jX7Lvw1dH9NGQPHk8J8x32giTS75iN/PRl29OWYlayVYTD8Z9
+         XpudtvPKavpXpucgRmFnCixO0LRQruRVy+91DcVJN0oe7EyEzmSbIKt4c0h+pjnbRzr3
+         b3jtahlvZOuQ25U/RkBnGWN2vsdrGUlaELKDOzSif+Gv+FgukmmqEQXte/UbrppgrdIR
+         65Sbey8Yld1X8ZSoDpfMEkNUMmOyHEauG6U9/c6aDWflGVZ6+ZkoiVYXRROL/IEQV1yK
+         6W79o65X6iV6TYudXnIkDmOK7frpo+YhQB6EPBaK9+33zcl8lh4kU2kY/WzKE1zxHMLp
+         0SEQ==
+X-Gm-Message-State: AOAM532PUFmlcVUryanXPL7rs1izDtJmlt92IqffNilUQmF+p+aL42+d
+        +7BLVAgxRSpZxJICaAFzbpiuXKIu1RA=
+X-Google-Smtp-Source: ABdhPJzNkBSXW5aPltZVkd2tb9Mv+QEGon3u+aNpJT/NCTrHyRPgFDWUAVL4ipnoLDDeSoWQLhbYqQ==
+X-Received: by 2002:a17:90a:ba18:: with SMTP id s24mr10486023pjr.192.1590765858798;
+        Fri, 29 May 2020 08:24:18 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id v13sm6209359pff.27.2020.05.29.08.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 08:24:15 -0700 (PDT)
+Message-ID: <5ed1291f.1c69fb81.99678.1d76@mx.google.com>
+Date:   Fri, 29 May 2020 08:24:15 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Tree: linusw
+X-Kernelci-Report-Type: build
+X-Kernelci-Kernel: v5.7-rc7-88-g5e9fc19f525b
+Subject: linusw/for-next build: 5 builds: 0 failed, 5 passed,
+ 24 warnings (v5.7-rc7-88-g5e9fc19f525b)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+linusw/for-next build: 5 builds: 0 failed, 5 passed, 24 warnings (v5.7-rc7-=
+88-g5e9fc19f525b)
 
-Stephen Boyd writes:
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.7-rc7-88-g5e9fc19f525b/
 
-> Quoting Lars Povlsen (2020-05-13 05:55:28)
->> diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> new file mode 100644
->> index 0000000000000..594007d8fc59a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
->> @@ -0,0 +1,46 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Microchip Sparx5 DPLL Clock
->> +
->> +maintainers:
->> +  - Lars Povlsen <lars.povlsen@microchip.com>
->> +
->> +description: |
->> +  The Sparx5 DPLL clock controller generates and supplies clock to
->> +  various peripherals within the SoC.
->> +
->> +  This binding uses common clock bindings
->> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->
-> I don't think we need this sentence. Please drop it.
+Tree: linusw
+Branch: for-next
+Git Describe: v5.7-rc7-88-g5e9fc19f525b
+Git Commit: 5e9fc19f525b67967cc10d3ca8e85214fc3c26bd
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 5 unique architectures
 
-OK. (Assuming the "This binding ..." part).
+Warnings Detected:
 
->
->> +
->> +properties:
->> +  compatible:
->> +    const: microchip,sparx5-dpll
->> +
->> +  reg:
->> +    items:
->> +      - description: dpll registers
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  # Clock provider for eMMC:
->> +  - |
->> +    clks: clks@61110000c {
->
-> Node name should be clock-controller@61110000c
+arc:
 
-Ok.
+arm64:
+    defconfig (gcc-8): 24 warnings
 
->
->> +         compatible = "microchip,sparx5-dpll";
->> +         #clock-cells = <1>;
->> +         reg = <0x1110000c 0x24>;
->
-> Does it consume any clks itself? I'd expect to see some sort of 'clocks'
-> property in this node.
->
->> +    };
+arm:
 
-I changed the driver to use a fixed-rate input clock, replacing the
-BASE_CLOCK define(s). Additionally, I made the ahb_clock into
-fixed-factor clock using the A53 cpu clock as a base.
+mips:
 
-So I updated the example and added 'clocks' to the schema.
+riscv:
 
-I will send you a new series shortly.
 
-Thank you for the comments.
+Warnings summary:
 
---
-Lars Povlsen,
-Microchip
+    16   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (=
+dma_ranges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" p=
+roperty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, chil=
+d #address-cells =3D=3D 2, #size-cells =3D=3D 1)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #size-cells (1) differs from / (2)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #address-cells (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
+ (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
+lls (1) differs from / (2)
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Detailed per-defconfig build reports:
+
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 section mi=
+smatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 24 warnings, 0 section m=
+ismatches
+
+Warnings:
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi:1068.4-52: Warning (dma_r=
+anges_format): /soc/dram-controller@1c62000:dma-ranges: "dma-ranges" proper=
+ty has invalid length (12 bytes) (parent #address-cells =3D=3D 1, child #ad=
+dress-cells =3D=3D 2, #size-cells =3D=3D 1)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
+1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
+differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sec=
+tion mismatches
+
+---
+For more info write to <info@kernelci.org>
