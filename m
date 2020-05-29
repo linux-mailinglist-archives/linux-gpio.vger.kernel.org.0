@@ -2,160 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98EAC1E7EC0
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 15:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 474421E7F9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 May 2020 16:04:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgE2NbA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 May 2020 09:31:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34291 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgE2Na7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 29 May 2020 09:30:59 -0400
-IronPort-SDR: G+T4Ikq2qOSu6o/loLHCEOn9gbt9H6lZ5IFvqhWIeYQoF79kgGiheHdlqmQcmFcZ8jrSbyoCbb
- cVEOY+3yBdfw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 06:30:58 -0700
-IronPort-SDR: 0D01yCu/SIf1gW2VMoKoiDmkVsaSyrNTg27kcgM1hS4UZx7RuASiD+9NQF+BxSaDsCpeJGQSGE
- QmOcV0ycjp8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,448,1583222400"; 
-   d="scan'208";a="469507476"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 29 May 2020 06:30:55 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E8FEBFC; Fri, 29 May 2020 16:30:54 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-gpio@vger.kernel.org,
+        id S1726968AbgE2OEj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 May 2020 10:04:39 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:8703 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726898AbgE2OEi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 May 2020 10:04:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590761078; x=1622297078;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=sAGWaqia1JF0ryeRDXVzFPeaOltQyl1NGW+wvlqDi/E=;
+  b=URWVUOZqjoRzONnnH/q05xZjn/+tJ5OFy7pO4A+Xk04NClzFwzEmk4o0
+   oCWnUXvIo8Wr+e7NX4gZd3ZxcXRAD91ziqCgppCunRr+bfiTFYkbpxvnr
+   yRJPrOPmoTdwXF89Mps9VhpjPZi0eYEoLE9KGjR2p9lCx2JEm2MTt6Kpi
+   1dNTJhotEvcLn4RhZUA0Q1SRj3UuAhNBR2cur/hAD4kAbfpqiyUtRjhSV
+   8GYqQJw47Wu3LzpeGDd1dAwwUKdE5YkCycXSX2rgERb7R6YAmHsEcSCIb
+   h++3ncSfc75VYDZJ0DWPYwEwcmUVFsLrokUlKsOY7EfsbW+oN3GThFvoF
+   Q==;
+IronPort-SDR: xpzqGjpyykV5Ih2wHq02FXx0AqsGr/X8yLZnO6sUmywda4kivT2QCL6RfgUMu/+Mo7l9o/BFdz
+ eE5+qVqCa2lVZL5SDnAKAB9ZWgFApKonr+D6Tn6LKVvhGj0EMsHHtXKOQO4hBQk4pAhpJdC3/T
+ oSeo8ia8aXe0OQprk4ftk7b2Q5mkFCr7fBh1lEuOKj3veab6yAchm6/zODKBhgT3fNGupVkkZX
+ NyNMfNrLKlKmDbgry41qbg+dHhM/zAN07j+tX4W+FU0kPMqY2yjRRAJZ5m8BXBRwZSwDb8/s93
+ CCI=
+X-IronPort-AV: E=Sophos;i="5.73,448,1583218800"; 
+   d="scan'208";a="76764161"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 May 2020 07:04:37 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 29 May 2020 07:04:40 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 29 May 2020 07:04:25 -0700
+References: <20200513125532.24585-1-lars.povlsen@microchip.com> <20200513125532.24585-11-lars.povlsen@microchip.com> <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v4 2/2] gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2
-Date:   Fri, 29 May 2020 16:30:54 +0300
-Message-Id: <20200529133054.20136-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200529133054.20136-1-andriy.shevchenko@linux.intel.com>
-References: <20200529133054.20136-1-andriy.shevchenko@linux.intel.com>
+        Rob Herring <robh+dt@kernel.org>, SoC Team <soc@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 10/14] dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+In-Reply-To: <159054759981.88029.2630901114208720574@swboyd.mtv.corp.google.com>
+Date:   Fri, 29 May 2020 16:04:32 +0200
+Message-ID: <87lflaq1lb.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ACPI table on Intel Galileo Gen 2 has wrong pin number for IRQ resource
-of one of the I²C GPIO expanders. Since we know what that number is and
-luckily have GPIO bases fixed for SoC's controllers, we may use a simple
-DMI quirk to match the platform and retrieve GpioInt() pin on it for
-the expander in question.
 
-Suggested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v4: addressed some concerns, made code compact (Mika)
- drivers/gpio/gpio-pca953x.c | 79 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+Stephen Boyd writes:
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 1fca8dd7824f..e2f637dbc61a 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -107,6 +107,79 @@ static const struct i2c_device_id pca953x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, pca953x_id);
- 
-+#ifdef CONFIG_GPIO_PCA953X_IRQ
-+
-+#include <linux/dmi.h>
-+#include <linux/gpio.h>
-+#include <linux/list.h>
-+
-+static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
-+	{
-+		/*
-+		 * On Intel Galileo Gen 2 board the IRQ pin of one of
-+		 * the I²C GPIO expanders, which has GpioInt() resource,
-+		 * is provided as an absolute number instead of being
-+		 * relative. Since first controller (gpio-sch.c) and
-+		 * second (gpio-dwapb.c) are at the fixed bases, we may
-+		 * safely refer to the number in the global space to get
-+		 * an IRQ out of it.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "GalileoGen2"),
-+		},
-+	},
-+	{}
-+};
-+
-+#ifdef CONFIG_ACPI
-+static int pca953x_acpi_get_pin(struct acpi_resource *ares, void *data)
-+{
-+	struct acpi_resource_gpio *agpio;
-+	int *pin = data;
-+
-+	if (acpi_gpio_get_irq_resource(ares, &agpio))
-+		*pin = agpio->pin_table[0];
-+	return 1;
-+}
-+
-+static int pca953x_acpi_find_pin(struct device *dev)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	int pin = -ENOENT, ret;
-+	LIST_HEAD(r);
-+
-+	ret = acpi_dev_get_resources(adev, &r, pca953x_acpi_get_pin, &pin);
-+	acpi_dev_free_resource_list(&r);
-+	if (ret < 0)
-+		return ret;
-+
-+	return pin;
-+}
-+#else
-+static inline int pca953x_acpi_find_pin(struct device *dev) { return -ENXIO; }
-+#endif
-+
-+static int pca953x_acpi_get_irq(struct device *dev)
-+{
-+	int pin, ret;
-+
-+	pin = pca953x_acpi_find_pin(dev);
-+	if (pin < 0)
-+		return pin;
-+
-+	dev_info(dev, "Applying ACPI interrupt quirk (GPIO %d)\n", pin);
-+
-+	if (!gpio_is_valid(pin))
-+		return -EINVAL;
-+
-+	ret = gpio_request(pin, "pca953x interrupt");
-+	if (ret)
-+		return ret;
-+
-+	return gpio_to_irq(pin);
-+}
-+#endif
-+
- static const struct acpi_device_id pca953x_acpi_ids[] = {
- 	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
- 	{ }
-@@ -752,6 +825,12 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- 	DECLARE_BITMAP(irq_stat, MAX_LINE);
- 	int ret;
- 
-+	if (dmi_first_match(pca953x_dmi_acpi_irq_info)) {
-+		ret = pca953x_acpi_get_irq(&client->dev);
-+		if (ret > 0)
-+			client->irq = ret;
-+	}
-+
- 	if (!client->irq)
- 		return 0;
- 
--- 
-2.26.2
+> Quoting Lars Povlsen (2020-05-13 05:55:28)
+>> diff --git a/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>> new file mode 100644
+>> index 0000000000000..594007d8fc59a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>> @@ -0,0 +1,46 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/microchip,sparx5-dpll.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Microchip Sparx5 DPLL Clock
+>> +
+>> +maintainers:
+>> +  - Lars Povlsen <lars.povlsen@microchip.com>
+>> +
+>> +description: |
+>> +  The Sparx5 DPLL clock controller generates and supplies clock to
+>> +  various peripherals within the SoC.
+>> +
+>> +  This binding uses common clock bindings
+>> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>
+> I don't think we need this sentence. Please drop it.
 
+OK. (Assuming the "This binding ..." part).
+
+>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: microchip,sparx5-dpll
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: dpll registers
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  # Clock provider for eMMC:
+>> +  - |
+>> +    clks: clks@61110000c {
+>
+> Node name should be clock-controller@61110000c
+
+Ok.
+
+>
+>> +         compatible = "microchip,sparx5-dpll";
+>> +         #clock-cells = <1>;
+>> +         reg = <0x1110000c 0x24>;
+>
+> Does it consume any clks itself? I'd expect to see some sort of 'clocks'
+> property in this node.
+>
+>> +    };
+
+I changed the driver to use a fixed-rate input clock, replacing the
+BASE_CLOCK define(s). Additionally, I made the ahb_clock into
+fixed-factor clock using the A53 cpu clock as a base.
+
+So I updated the example and added 'clocks' to the schema.
+
+I will send you a new series shortly.
+
+Thank you for the comments.
+
+--
+Lars Povlsen,
+Microchip
