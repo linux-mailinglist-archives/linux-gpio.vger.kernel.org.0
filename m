@@ -2,244 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A7C1E90AC
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2020 13:04:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A66191E90BC
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2020 13:10:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgE3LEp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 May 2020 07:04:45 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40094 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbgE3LEo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 May 2020 07:04:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590836681; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YjKCJ0RKBPq+ZLWgI0sSnhwddRzJYbPqfTycyNegHHA=;
-        b=hKqIgArY3Qz31Jz7Z5FSPBZQA7Wq0yYnCcAXAI4DLvRVWkwwDxxMDDgFzdI1uxoKaeYoZQ
-        9byBGT5tZ4s2tzTOtRJgCmGqEc5pFQupBQ7mCW4JLvjnV1v+BojxV34S5vYYGzoAGL/+hG
-        Ep6KuqIxiR4vN9ZPLCE2RDvW2B+OvVk=
-Date:   Sat, 30 May 2020 13:04:30 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt
- to YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org
-Message-Id: <IF55BQ.VGY5UC52BWPU1@crapouillou.net>
-In-Reply-To: <20200528214243.GA711753@bogus>
-References: <20200520002234.418025-1-paul@crapouillou.net>
-        <20200528214243.GA711753@bogus>
+        id S1728923AbgE3LKK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 May 2020 07:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgE3LKJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 May 2020 07:10:09 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CA2C08C5C9
+        for <linux-gpio@vger.kernel.org>; Sat, 30 May 2020 04:10:09 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 202so1203255lfe.5
+        for <linux-gpio@vger.kernel.org>; Sat, 30 May 2020 04:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=3zCIMZZqOkqtw8tYA7qkkVDOJkyv5YdgBPoC2XudPdo=;
+        b=it9ROSDwskKiDLT8YE6GR5gmZO8qRiITGXfHU/8Y/YtDR7zpIqW1zmT4HHgCbW5Ie2
+         1h/HhNqlM5Bqmz2fpdSjaY/gkamEIHk9ZvO+Mb+tUW9xg3Fe+tYEcemsUhJ/Ub7cOGtP
+         y/zwwUE0tfGTOGFgrEHUeJlWcBrt8U/da/UUe2e5m3QiTkkoFasegdc4ropGuJuD+tF2
+         hZCGg+x3jRWtEPrflfgbKKQibvxKc/vLFoe8rEaD5pHqGeiP6mC7VCp3ohKmV5G4OEyG
+         ACwkC2iPHiVU2P9o0PymSyVZbtn84lAzUv2hH9N4jiRQRZNewCPfgrLKHRbzL+WekjHg
+         80xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=3zCIMZZqOkqtw8tYA7qkkVDOJkyv5YdgBPoC2XudPdo=;
+        b=U5gcxAm0qTK4osI5ihFbHAnlk+MTDK8NjSJqYWVk1NKgEsXgkHdYJE8IeQoNFb4Gee
+         hzStjOyY38/8GML68PxZ6Brxdb8Yoa+gC6Rz+qPKExji3+9WfBctpKL9GlFDpOdtXcd+
+         zSyaofSximx8fHnh++gS3V3wHtuG65NCGNmAJX7YASVqYAwfCFTZjUwf9+PY2Bk+4HUP
+         yW8Bw3sNLUGwfCvHEjzkzAcAsXIY7QUbkO+BfBsI1GTulUu2zbMGFv/yUD0wuPGlcwHg
+         daAHW6issq4ilk6bC5wgig0qKqy9DIT/K+1EX0eaUwjZE79tqHRgZ+Naoe+gyKilbDC5
+         k7ew==
+X-Gm-Message-State: AOAM530RirQJ+nLOM/R44gbBXI/iCp9K5dKTeE9862ZhExOyeCu4cEzk
+        xYjLhBPVK6YtkMpNVAXLZcGrov+D87gpIZJz0xEtZw==
+X-Google-Smtp-Source: ABdhPJzOXC4tWnBw9pLoCQCIx1Vcb9BdODA2t/626/hppIuTdlPL29VLS4IMkMnbcyrZJXuTlrDQ2EfFj6hbHa+qmcI=
+X-Received: by 2002:ac2:4823:: with SMTP id 3mr6557879lft.194.1590837007857;
+ Sat, 30 May 2020 04:10:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 30 May 2020 13:09:56 +0200
+Message-ID: <CACRpkdY0are=TC79q_4vP9R1tzSjRU4aiqOGd1-5CXDbhpMj0A@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+Hi Linus,
 
-Le jeu. 28 mai 2020 =E0 15:42, Rob Herring <robh@kernel.org> a =E9crit :
-> On Wed, May 20, 2020 at 02:22:32AM +0200, Paul Cercueil wrote:
->>  Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
->>=20
->>  In the process, some compatible strings now require a fallback, as=20
->> the
->>  corresponding SoCs are pin-compatible with their fallback variant.
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>=20
->>  Notes:
->>      v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
->>          - remove 'additionalProperties: false' since we will have=20
->> pin conf nodes
->=20
-> You need to describe those nodes and not just allow anything.
+here are some (very) late fixes for GPIO, none of them very
+serious except the one tagged for stable for enabling IRQ on
+open drain lines.
 
-These nodes don't have any constraint on their name, so I would need a=20
-wildcard property for children nodes. That's not something I can=20
-express in YAML right now, is it?
+Please pull it in!
 
--Paul
+Yours,
+Linus Walleij
 
->>=20
->>   .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
->>   .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136=20
->> ++++++++++++++++++
->>   2 files changed, 136 insertions(+), 81 deletions(-)
->>   delete mode 100644=20
->> Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
->>   create mode 100644=20
->> Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
->=20
->=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml=20
->> b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
->>  new file mode 100644
->>  index 000000000000..5be2b1e95b36
->>  --- /dev/null
->>  +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
->>  @@ -0,0 +1,136 @@
->>  +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>  +%YAML 1.2
->>  +---
->>  +$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
->>  +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>  +
->>  +title: Ingenic SoCs pin controller devicetree bindings
->>  +
->>  +description: >
->>  +  Please refer to pinctrl-bindings.txt in this directory for=20
->> details of the
->>  +  common pinctrl bindings used by client devices, including the=20
->> meaning of the
->>  +  phrase "pin configuration node".
->>  +
->>  +  For the Ingenic SoCs, pin control is tightly bound with GPIO=20
->> ports. All pins
->>  +  may be used as GPIOs, multiplexed device functions are=20
->> configured within the
->>  +  GPIO port configuration registers and it is typical to refer to=20
->> pins using the
->>  +  naming scheme "PxN" where x is a character identifying the GPIO=20
->> port with
->>  +  which the pin is associated and N is an integer from 0 to 31=20
->> identifying the
->>  +  pin within that GPIO port. For example PA0 is the first pin in=20
->> GPIO port A,
->>  +  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000=20
->> and the X1830
->>  +  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The=20
->> JZ4760, the
->>  +  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a=20
->> total of 192
->>  +  pins.
->>  +
->>  +maintainers:
->>  +  - Paul Cercueil <paul@crapouillou.net>
->>  +
->>  +properties:
->>  +  nodename:
->=20
-> It's $nodename as that's not a real property. And that will expose the
-> error in the example for you.
->=20
->>  +    pattern: "^pinctrl@[0-9a-f]+$"
->>  +
->>  +  compatible:
->>  +    oneOf:
->>  +      - enum:
->>  +        - ingenic,jz4740-pinctrl
->>  +        - ingenic,jz4725b-pinctrl
->>  +        - ingenic,jz4760-pinctrl
->>  +        - ingenic,jz4770-pinctrl
->>  +        - ingenic,jz4780-pinctrl
->>  +        - ingenic,x1000-pinctrl
->>  +        - ingenic,x1500-pinctrl
->>  +        - ingenic,x1830-pinctrl
->>  +      - items:
->>  +        - const: ingenic,jz4760b-pinctrl
->>  +        - const: ingenic,jz4760-pinctrl
->>  +      - items:
->>  +        - const: ingenic,x1000e-pinctrl
->>  +        - const: ingenic,x1000-pinctrl
->>  +
->>  +  reg:
->>  +    maxItems: 1
->>  +
->>  +  "#address-cells":
->>  +    const: 1
->>  +
->>  +  "#size-cells":
->>  +    const: 0
->>  +
->>  +patternProperties:
->>  +  "^gpio@[0-9]$":
->>  +    type: object
->>  +    properties:
->>  +      compatible:
->>  +        enum:
->>  +          - ingenic,jz4740-gpio
->>  +          - ingenic,jz4725b-gpio
->>  +          - ingenic,jz4760-gpio
->>  +          - ingenic,jz4770-gpio
->>  +          - ingenic,jz4780-gpio
->>  +          - ingenic,x1000-gpio
->>  +          - ingenic,x1500-gpio
->>  +          - ingenic,x1830-gpio
->>  +
->>  +      reg:
->>  +        items:
->>  +          - description: The GPIO bank number
->>  +
->>  +      gpio-controller: true
->>  +
->>  +      "#gpio-cells":
->>  +        const: 2
->>  +
->>  +      gpio-ranges:
->>  +        maxItems: 1
->>  +
->>  +      interrupt-controller: true
->>  +
->>  +      "#interrupt-cells":
->>  +        const: 2
->>  +        description:
->>  +          Refer to ../interrupt-controller/interrupts.txt for more=20
->> details.
->>  +
->>  +      interrupts:
->>  +        maxItems: 1
->>  +
->>  +    required:
->>  +      - compatible
->>  +      - reg
->>  +      - gpio-controller
->>  +      - "#gpio-cells"
->>  +      - interrupts
->>  +      - interrupt-controller
->>  +      - "#interrupt-cells"
->>  +
->>  +    additionalProperties: false
->>  +
->>  +required:
->>  +  - compatible
->>  +  - reg
->>  +  - "#address-cells"
->>  +  - "#size-cells"
->>  +
->>  +examples:
->>  +  - |
->>  +    pin-controller@10010000 {
->>  +      compatible =3D "ingenic,jz4770-pinctrl";
->>  +      reg =3D <0x10010000 0x600>;
->>  +
->>  +      #address-cells =3D <1>;
->>  +      #size-cells =3D <0>;
->>  +
->>  +      gpio@0 {
->>  +        compatible =3D "ingenic,jz4770-gpio";
->>  +        reg =3D <0>;
->>  +
->>  +        gpio-controller;
->>  +        gpio-ranges =3D <&pinctrl 0 0 32>;
->>  +        #gpio-cells =3D <2>;
->>  +
->>  +        interrupt-controller;
->>  +        #interrupt-cells =3D <2>;
->>  +
->>  +        interrupt-parent =3D <&intc>;
->>  +        interrupts =3D <17>;
->>  +      };
->>  +    };
->>  --
->>  2.26.2
->>=20
+The following changes since commit b9bbe6ed63b2b9f2c9ee5cbd0f2c946a2723f4ce:
 
+  Linux 5.7-rc6 (2020-05-17 16:48:37 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.7-3
+
+for you to fetch changes up to e9bdf7e655b9ee81ee912fae1d59df48ce7311b6:
+
+  gpio: fix locking open drain IRQ lines (2020-05-29 14:01:49 +0200)
+
+----------------------------------------------------------------
+GPIO fixes for the v5.7 series:
+- Fix proving of mvebu chips without PWM
+- Fix errorpath on ida_get_simple() on the exar driver
+- Notify userspace properly about line status changes
+  when flags are changed on lines.
+- Fix a sleeping while holding spinlock in the mellanox
+  driver.
+- Fix return value of the PXA and Kona probe calls.
+- Fix IRQ locking of open drain lines, it is fine to
+  have IRQs on open drain lines flagged for output.
+
+----------------------------------------------------------------
+Axel Lin (1):
+      gpio: mlxbf2: Fix sleeping while holding spinlock
+
+Bartosz Golaszewski (1):
+      gpiolib: notify user-space about line status changes after flags are set
+
+Linus Walleij (3):
+      Merge tag 'gpio-fixes-for-v5.7-rc6' of
+git://git.kernel.org/.../brgl/linux into fixes
+      Merge tag 'gpio-fixes-for-v5.7' of
+git://git.kernel.org/.../brgl/linux into fixes
+      gpio: fix locking open drain IRQ lines
+
+Sascha Hauer (1):
+      gpio: mvebu: Fix probing for chips without PWM
+
+Takashi Iwai (1):
+      gpio: exar: Fix bad handling for ida_simple_get error path
+
+Tiezhu Yang (2):
+      gpio: pxa: Fix return value of pxa_gpio_probe()
+      gpio: bcm-kona: Fix return value of bcm_kona_gpio_probe()
+
+ drivers/gpio/gpio-bcm-kona.c |  2 +-
+ drivers/gpio/gpio-exar.c     |  7 +++++--
+ drivers/gpio/gpio-mlxbf2.c   |  6 +++---
+ drivers/gpio/gpio-mvebu.c    | 15 +++++++++------
+ drivers/gpio/gpio-pxa.c      |  4 ++--
+ drivers/gpio/gpiolib.c       | 26 ++++++++++++++++++++++----
+ 6 files changed, 42 insertions(+), 18 deletions(-)
