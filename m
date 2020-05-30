@@ -2,55 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 473381E9371
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2020 21:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A15B81E938B
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 May 2020 22:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgE3TfC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 May 2020 15:35:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgE3TfC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 30 May 2020 15:35:02 -0400
-Subject: Re: [GIT PULL] GPIO fixes for v5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590867302;
-        bh=eZNpktKbozxPhlkU450anxPh5BNvA1kHTGvrbYG93BA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KhRmm+WD1i9O4mvygXjoflIIPozQm22wAMYk5d+j/Xfjn7RpovcCzyyxwxT0AQ2+2
-         onpsrl9pGsyPAM+PWk95MRWFGLMW1ErizrvFY6oJjQgq4kzZiybi7NUoI1nljdbZey
-         8He2gXZfyhVBX1FSyD5ovfG7B4TvDWo0knrtEH3g=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdY0are=TC79q_4vP9R1tzSjRU4aiqOGd1-5CXDbhpMj0A@mail.gmail.com>
-References: <CACRpkdY0are=TC79q_4vP9R1tzSjRU4aiqOGd1-5CXDbhpMj0A@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdY0are=TC79q_4vP9R1tzSjRU4aiqOGd1-5CXDbhpMj0A@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.7-3
-X-PR-Tracked-Commit-Id: e9bdf7e655b9ee81ee912fae1d59df48ce7311b6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 900db15047044ef50b32e23630880f4780ec5b9e
-Message-Id: <159086730207.6123.7590365123806333324.pr-tracker-bot@kernel.org>
-Date:   Sat, 30 May 2020 19:35:02 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        id S1729319AbgE3UUH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 May 2020 16:20:07 -0400
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:60434 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbgE3UUH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 May 2020 16:20:07 -0400
+Received: from localhost.localdomain ([93.22.132.31])
+        by mwinf5d08 with ME
+        id l8Kx220050gnv2t038Kxe4; Sat, 30 May 2020 22:20:05 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 30 May 2020 22:20:05 +0200
+X-ME-IP: 93.22.132.31
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-imx@nxp.com, ldewangan@nvidia.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
+Date:   Sat, 30 May 2020 22:19:52 +0200
+Message-Id: <20200530201952.585798-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sat, 30 May 2020 13:09:56 +0200:
+When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
+an error handling path has not been updated.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.7-3
+Axe a now unneeded 'pinctrl_unregister()'.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/900db15047044ef50b32e23630880f4780ec5b9e
+Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thank you!
-
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+index 0c1c0e72fa8e..08d110078c43 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
+@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+ 
+ 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+ 	if (ret) {
+-		pinctrl_unregister(ipctl->pctl);
+ 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
+ 		return ret;
+ 	}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
+
