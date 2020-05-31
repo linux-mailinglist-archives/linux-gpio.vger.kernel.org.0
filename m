@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7063B1E94A5
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 May 2020 02:11:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53F9D1E94A7
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 May 2020 02:11:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgEaALP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 May 2020 20:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44374 "EHLO
+        id S1729587AbgEaALU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 May 2020 20:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbgEaALP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 May 2020 20:11:15 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B9DC03E969;
-        Sat, 30 May 2020 17:11:14 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so7757312wru.12;
-        Sat, 30 May 2020 17:11:14 -0700 (PDT)
+        with ESMTP id S1729522AbgEaALT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 May 2020 20:11:19 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04404C03E969;
+        Sat, 30 May 2020 17:11:18 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y17so7779352wrn.11;
+        Sat, 30 May 2020 17:11:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eeOtfUnNMqcaG7SNioiM08zG3B07ZSO5p4wZgemPb6U=;
-        b=r8kDQ9TJ/zw/d+P+7AZ8A5uYtTUJYxPwGpcpXIvEhKkzP3sN9gf54eX9zHYYcfV2p/
-         7eChzNehPkaG8nsoUdBF27Ahn/JWJPkr6HovLW3KnqhRg3DF0HBROEojt2LZp79L/NGx
-         FsZArpt31Z9JNRPbxPbwdCzl8ESFndplykUDPRZca6ojdSice5KfEi36Wd6/BiOXPPL4
-         xHtI0DrP9gfRyAI1WT9vmxS2lVAHyLOlUNH3kw2/Pa83NsC1pclE1fkgO1gcsEBW9CvO
-         NOo0lqGKCmtVAVvd1qhtzizjKgxQwm7AF7+TD6Mofce6q2+ZshsVb9Llpf8o+Ao8gje2
-         qAVQ==
+        bh=vX2j+ZqsOynp+SkPgzqmgQI0qHfSmxvzrYIfKti767U=;
+        b=cy1f+p4dDAWjMTLoinEhGQay6sqfyhmfWAy2m/5zqhP8Zv2jj1rifHH2ZepjX+OU6f
+         mcuxW9yKPbz6l8RrL9oI7pJsKdFS8sdWXlI9mbyBgQLLOoJQWc/itzxxwXBd0bCrYuBP
+         2Vax7Sxw5XUq0STfJiY2eEVMoB6VP8CP+HdnCFSul20CYrKj30DpVWYGiQAl0irSZcF1
+         21OISGHPNSrvXf7w5S2/QHBzm/0YwRWlG1ZNQzOXl35spVVu6NkOEuANQ8yvcaSM0Hjc
+         tf9o6EyL7lNmR21NOcBpIyhRwpb8DEK1iJja9+y0FaSvtfbUd1lz3shmOappEFNA6ssm
+         DiYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=eeOtfUnNMqcaG7SNioiM08zG3B07ZSO5p4wZgemPb6U=;
-        b=GpfQJUdPilAOPReMF7oBOtbfLba8+pwo92CsGSI0XusnXF6V42Hug6WKWN73Q1tQBJ
-         z22zQvwL9sIzbx2mM+kOGlP5P3QaQsKl71JrFZftnPR2/GWVeCxyOHgv7Z3wVy3r7QJB
-         0Cp3Bt4m+eQY04sACoUMCrlhq2d1Ac2LTC7lvKcYo9W3H+HRpaG9eEsgu9O3sDZOU6Wd
-         ed24MUAm7+bbmiMFgORxDknnhrKYRLoxHvUfQlhLGVXiDFbsJgFhpPGhYhMvdOqkItgG
-         +5u6Suy+oDhk8ysCBGFzltH4GCwzO4YsIWTWqfcB0HI4NHpG4pPPEAmmpHr3TIlWitRd
-         wxZw==
-X-Gm-Message-State: AOAM5337Rn+87lgv5cUB7A0msYH1AXjMruJrrzchzZ8Llua+mFurbK1n
-        x5afKW7QftdPNmb2lt73wc428Kw0
-X-Google-Smtp-Source: ABdhPJzgqbBmeJjv5bbxJymjCkeb6LrQ6AVgLDZTVItGXROWg1+X/8xllqQJJ84cmk3A7+qnAYJMfQ==
-X-Received: by 2002:a5d:490f:: with SMTP id x15mr15033799wrq.259.1590883873134;
-        Sat, 30 May 2020 17:11:13 -0700 (PDT)
+        bh=vX2j+ZqsOynp+SkPgzqmgQI0qHfSmxvzrYIfKti767U=;
+        b=V3KZCH7WM5OTomOY6xbhuBSgVAA22i47vcQ1FOo7J7cxr9Mamorp7eNj7EEqnIx8sM
+         BFyse4xV1Z6nwWcptFzhdf/uINeHDKi2+/j0r4oXNXJLLDPc/QJ10kcguPKQ9RkpWNYh
+         PJ5uOaN8r2gwSFFnjqJmszoleVqTwHrTMrMYvC62rmvAodav9rHtRpTjlSPrEIxL9Dmq
+         5GFNUbhswXnoyUsLImUlHpWGOERdBJqcOSULNRgowTJN9QO5ybm2cExEnsL0PR+di6bB
+         JXSz/Dq/6wcGt7L13Dku+MNznPCxL86hQGmhCcDPrwmeKR3LjFiNCS27cPchKlmNh9Sl
+         mdZA==
+X-Gm-Message-State: AOAM533qFCrmT69xtdrYREEnRjq04z9cb2Vd2PAV6mOdd62/k0ZLa9SB
+        cVe852pHz4QxMe3u1nHK5Mh0Jp7y
+X-Google-Smtp-Source: ABdhPJzmvV0vOAPA3dfn1ipknELjJg2/sLbGGdqcF12/Qa5dIVvV0XqsPfu44CCicBEqCvBSQ2Vi2A==
+X-Received: by 2002:adf:e749:: with SMTP id c9mr16433368wrn.25.1590883876451;
+        Sat, 30 May 2020 17:11:16 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d17sm15455807wrg.75.2020.05.30.17.11.10
+        by smtp.gmail.com with ESMTPSA id d17sm15455807wrg.75.2020.05.30.17.11.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 17:11:12 -0700 (PDT)
+        Sat, 30 May 2020 17:11:15 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -65,9 +65,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         BCM2711/BCM2835 ARM ARCHITECTURE),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH v3 1/4] dt-bindings: pinctrl: Document 7211 compatible for brcm,bcm2835-gpio.txt
-Date:   Sat, 30 May 2020 17:10:58 -0700
-Message-Id: <20200531001101.24945-2-f.fainelli@gmail.com>
+Subject: [PATCH v3 2/4] dt-bindings: pinctrl: Document optional BCM7211 wake-up interrupts
+Date:   Sat, 30 May 2020 17:10:59 -0700
+Message-Id: <20200531001101.24945-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200531001101.24945-1-f.fainelli@gmail.com>
 References: <20200531001101.24945-1-f.fainelli@gmail.com>
@@ -76,27 +76,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document the brcm,bcm7211-gpio compatible string in the
-brcm,bcm2835-gpio.txt document.
+BCM7211 supports wake-up interrupts in the form of optional interrupt
+lines, one per bank, plus the "all banks" interrupt line.
 
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt         | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-index 3cab7336a326..dfc67b90591c 100644
+index dfc67b90591c..5682b2010e50 100644
 --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
 +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-@@ -9,6 +9,7 @@ Required properties:
-   "brcm,bcm2835-gpio" - BCM2835 compatible pinctrl
-   "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
-   "brcm,bcm2711-gpio" - BCM2711 compatible pinctrl
-+  "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
- - reg: Should contain the physical address of the GPIO module's registers.
- - gpio-controller: Marks the device node as a GPIO controller.
- - #gpio-cells : Should be two. The first cell is the pin number and the
+@@ -16,7 +16,9 @@ Required properties:
+   second cell is used to specify optional parameters:
+   - bit 0 specifies polarity (0 for normal, 1 for inverted)
+ - interrupts : The interrupt outputs from the controller. One interrupt per
+-  individual bank followed by the "all banks" interrupt.
++  individual bank followed by the "all banks" interrupt. For BCM7211, an
++  additional set of per-bank interrupt line and an "all banks" wake-up
++  interrupt may be specified.
+ - interrupt-controller: Marks the device node as an interrupt controller.
+ - #interrupt-cells : Should be 2.
+   The first cell is the GPIO number.
 -- 
 2.17.1
 
