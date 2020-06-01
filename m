@@ -2,214 +2,420 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D25F1E9DC9
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2020 08:00:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 774A01E9F5C
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Jun 2020 09:36:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgFAGA6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Jun 2020 02:00:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11411 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgFAGA6 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 1 Jun 2020 02:00:58 -0400
-IronPort-SDR: Z8ufFPPbn54rhdIPt+9AWW/9UUvPjBdvB6Nn3OTiB+ddWvz2EyGv3dR736WE6Vq/aI76kAWOxQ
- DdL4vMKP4L4w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2020 23:00:55 -0700
-IronPort-SDR: VzaSbQzJZZdFnhZCE7pHup0JLWtI9r3RgVj91x7y/VQbDpXTshv5LY6EPhuj9UpZts5sOVfkK1
- 8m4V3EU79wfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,459,1583222400"; 
-   d="scan'208";a="346928753"
-Received: from lkp-server01.sh.intel.com (HELO 49d03d9b0ee7) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 31 May 2020 23:00:54 -0700
-Received: from kbuild by 49d03d9b0ee7 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jfdVF-0000a6-Dq; Mon, 01 Jun 2020 06:00:53 +0000
-Date:   Mon, 01 Jun 2020 13:59:48 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:fixes] BUILD SUCCESS
- e9bdf7e655b9ee81ee912fae1d59df48ce7311b6
-Message-ID: <5ed49954.ESZkirnEvWXbNbm+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        id S1726011AbgFAHgX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Jun 2020 03:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgFAHgX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Jun 2020 03:36:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038BCC061A0E;
+        Mon,  1 Jun 2020 00:36:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id w68so2257685pfb.3;
+        Mon, 01 Jun 2020 00:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=q3NTTsQFKZ4hMjP2eqJhNI9pBK8Rfe+kjRBcs7DOkXQ=;
+        b=At7bTKSUSK+ldpbk0YAp6ixR5vIwBzlo00V23/Lne2e2bAlHq6ml03fLXRdnXrAIx/
+         05j96qf3V6w8nUdpBAL8I7OtMwkNyZDjFzvF1PnvHR/v7+HRcKg7Tm6cVFVSgnPNs9b4
+         M/AunGMXnkQdh2zyibqIW/MOH2ywun6kbBVR0qFrsQYhNarXq1OjkAA+lbOqvENmAu+P
+         IfV1RNQZJP1dx7NZNZqLmcCcKP5ES5vc372srePfGnbbTFeiDm+K1btfIDjonx9C/qnz
+         +m5YDZpvuWOSqrHkHpXsZPr3LkhwKlYDcPzvXDmYxbXNMD3xo4XCnyNftIParMuQGRWj
+         1Mtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=q3NTTsQFKZ4hMjP2eqJhNI9pBK8Rfe+kjRBcs7DOkXQ=;
+        b=h/K9Z+vekM45c4YphNR8MHkFW4UQbc9KLZsfv2P6JuHNEt8o4MF/v7wPPi+wTa6SyI
+         EqVpPXf6lOFYyMrz6M6teTwcDoB94Epm9+Asuyxc7Anbm7JZHAfd07CzDgeNSrhH9DvM
+         adQDOgNS/87dKrc4tIRQy3FJBTTB3y+oukiQpIxEydmXsXf1vOU80LytKLOVw4L2CyR2
+         Uvg4BaDDi7GCcD8TaGz7poUvtLAQk/CWTFj1rd6kD2EmecgDb1J3kS1anjb4PqVHgcph
+         OcPzqezQE0NzJm3Hmj1ElwCgn93zIGwI+riFFzjMJxboZrm+FiL3nVwP7sUIEQ6GhzUk
+         hg7w==
+X-Gm-Message-State: AOAM5307XOgs6EGyJvqOnHcBrcTRIqo9+wK9Wl2YI1RkP/ORvz4jDwXZ
+        JrqT1qBB7yqs9YcjzTBIUmg=
+X-Google-Smtp-Source: ABdhPJwWqTg3zCaYfCb9oT0C5BmccJpQQPIBlIucjBdjc4EMdW9eGZB2KFH+FyVhxfACBkNgyt9WnA==
+X-Received: by 2002:a63:454c:: with SMTP id u12mr18381241pgk.153.1590996982359;
+        Mon, 01 Jun 2020 00:36:22 -0700 (PDT)
+Received: from localhost.localdomain ([101.12.48.8])
+        by smtp.gmail.com with ESMTPSA id r3sm6469603pjj.21.2020.06.01.00.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 00:36:21 -0700 (PDT)
+From:   Richard Hsu <saraon640529@gmail.com>
+To:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Jesse1_Chang@asmedia.com.tw, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, bhelgaas@google.com
+Cc:     linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
+        Richard Hsu <saraon640529@gmail.com>
+Subject: [PATCH] gpio:asm28xx-18xx: new driver
+Date:   Mon,  1 Jun 2020 15:36:04 +0800
+Message-Id: <20200601073604.26289-1-saraon640529@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  fixes
-branch HEAD: e9bdf7e655b9ee81ee912fae1d59df48ce7311b6  gpio: fix locking open drain IRQ lines
+Hi Bjorn Helgaas,
+ 1. What are the other functions and where is the other driver?
+ >PCI bus and GPIO can be considered as two functions independently.
+ And the driver is located at drivers/gpio/gpio-amd8111.c
 
-elapsed time: 3737m
+ 2.We end up with multiple drivers controlling the device without
+any coordination between them?
+ >Yes,because two functions are independently in the device,and
+the main driver for PCI bus function is more important.We wish
+they can't be affected and coordinated between two drivers
+as much as possible.If main driver is affected,it is more
+serious.
+ In our case,we have gpio registers on pci configuration space
+of asm28xx pci-e bridge(with main pci bus driver).If we want
+to use it by another driver that use gpio subsystem /sys/class/
+gpio/(sysfs interface).I find the driver(gpio-amd8111.c) that
+meet our request.Sorry! i am not best friend with git,and
+reply mail in the same way. 
 
-configs tested: 155
-configs skipped: 6
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi Bartosz Golaszewski,
+ Thank you.And i have studied PCI MFD device in drivers/mfd.
+Maybe,it is not what i am looking for.This type of device
+include core and miscellaneous function drivers.And function
+drivers export resources(io/mem/dma) to sysfs.Fist,we can't
+implement another pci bus driver as core driver,and secondly,
+it don't use gpio subsystem with /sys/class/gpio/(sysfs
+interface).
+ So,you will review this driver and upstream to mainline
+kernel?
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                          pxa3xx_defconfig
-arm                         palmz72_defconfig
-sh                            shmin_defconfig
-ia64                            zx1_defconfig
-riscv                          rv32_defconfig
-powerpc                      pasemi_defconfig
-sparc                       sparc64_defconfig
-mips                  decstation_64_defconfig
-mips                          ath79_defconfig
-sh                        sh7763rdp_defconfig
-s390                              allnoconfig
-mips                         tb0226_defconfig
-m68k                          multi_defconfig
-h8300                            allyesconfig
-sh                             sh03_defconfig
-sh                           se7343_defconfig
-arm                          badge4_defconfig
-sh                           se7780_defconfig
-mips                         bigsur_defconfig
-arc                 nsimosci_hs_smp_defconfig
-mips                      bmips_stb_defconfig
-parisc                generic-64bit_defconfig
-arm                            mps2_defconfig
-sh                          rsk7269_defconfig
-ia64                        generic_defconfig
-mips                             allyesconfig
-xtensa                           allyesconfig
-sh                          sdk7780_defconfig
-mips                        jmr3927_defconfig
-riscv                               defconfig
-sh                           cayman_defconfig
-powerpc                    adder875_defconfig
-mips                            ar7_defconfig
-ia64                              allnoconfig
-arm                        keystone_defconfig
-arm                           viper_defconfig
-arm                            pleb_defconfig
-sh                             espt_defconfig
-arm                           omap1_defconfig
-arm                       spear13xx_defconfig
-sparc64                          allyesconfig
-microblaze                    nommu_defconfig
-arc                          axs101_defconfig
-powerpc                       maple_defconfig
-nds32                             allnoconfig
-sh                               allmodconfig
-powerpc                             defconfig
-arc                           tb10x_defconfig
-arm                        mvebu_v7_defconfig
-powerpc                mpc7448_hpc2_defconfig
-xtensa                              defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allmodconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a004-20200529
-i386                 randconfig-a001-20200529
-i386                 randconfig-a002-20200529
-i386                 randconfig-a006-20200529
-i386                 randconfig-a003-20200529
-i386                 randconfig-a005-20200529
-i386                 randconfig-a004-20200531
-i386                 randconfig-a003-20200531
-i386                 randconfig-a006-20200531
-i386                 randconfig-a002-20200531
-i386                 randconfig-a005-20200531
-i386                 randconfig-a001-20200531
-x86_64               randconfig-a011-20200531
-x86_64               randconfig-a016-20200531
-x86_64               randconfig-a012-20200531
-x86_64               randconfig-a014-20200531
-x86_64               randconfig-a013-20200531
-x86_64               randconfig-a015-20200531
-x86_64               randconfig-a002-20200529
-x86_64               randconfig-a006-20200529
-x86_64               randconfig-a005-20200529
-x86_64               randconfig-a001-20200529
-x86_64               randconfig-a004-20200529
-x86_64               randconfig-a003-20200529
-i386                 randconfig-a013-20200529
-i386                 randconfig-a011-20200529
-i386                 randconfig-a012-20200529
-i386                 randconfig-a015-20200529
-i386                 randconfig-a016-20200529
-i386                 randconfig-a014-20200529
-i386                 randconfig-a013-20200531
-i386                 randconfig-a012-20200531
-i386                 randconfig-a015-20200531
-i386                 randconfig-a011-20200531
-i386                 randconfig-a016-20200531
-i386                 randconfig-a014-20200531
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+ BR,
+ Richard
 
+Signed-off-by: Richard Hsu <saraon640529@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/gpio/Kconfig             |   7 +
+ drivers/gpio/Makefile            |   1 +
+ drivers/gpio/gpio-asm28xx-18xx.c | 278 +++++++++++++++++++++++++++++++
+ 3 files changed, 286 insertions(+)
+ create mode 100644 drivers/gpio/gpio-asm28xx-18xx.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 1b96169d84f7..932f128f18c9 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -113,6 +113,13 @@ config GPIO_AMDPT
+ 	  driver for GPIO functionality on Promontory IOHub
+ 	  Require ACPI ASL code to enumerate as a platform device.
+ 
++config GPIO_ASM28XX
++	tristate "Asmedia 28XX/18XX GPIO support"
++	depends on PCI
++	select GPIO_GENERIC
++	help
++	  Driver for GPIO functionality on Asmedia 28XX and 18XX PCI-E Bridge.
++
+ config GPIO_ASPEED
+ 	tristate "Aspeed GPIO support"
+ 	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index b2cfc21a97f3..0cee016f9d2f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -31,6 +31,7 @@ obj-$(CONFIG_GPIO_AMD8111)		+= gpio-amd8111.o
+ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
+ obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
+ obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
++obj-$(CONFIG_GPIO_ASM28XX)		+= gpio-asm28xx-18xx.o
+ obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
+ obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+= gpio-aspeed-sgpio.o
+ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+diff --git a/drivers/gpio/gpio-asm28xx-18xx.c b/drivers/gpio/gpio-asm28xx-18xx.c
+new file mode 100644
+index 000000000000..8c1972044c80
+--- /dev/null
++++ b/drivers/gpio/gpio-asm28xx-18xx.c
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Asmedia 28xx/18xx GPIO driver
++ *
++ * Copyright (C) 2020 ASMedia Technology Inc.
++ * Author: Richard Hsu <Richard_Hsu@asmedia.com.tw>
++ */
++
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/gpio/driver.h>
++#include <linux/pci.h>
++#include <linux/spinlock.h>
++#include <linux/pm_runtime.h>
++#include <linux/bits.h>
++
++
++/* GPIO registers offsets */
++#define ASM_GPIO_CTRL		0x920
++#define ASM_GPIO_OUTPUT		0x928
++#define ASM_GPIO_INPUT		0x930
++#define ASM_REG_SWITCH		0xFFF
++
++#define ASM_REG_SWITCH_CTL	0x01
++
++#define ASM_GPIO_PIN5		5
++#define ASM_GPIO_DEFAULT	0
++
++
++#define PCI_DEVICE_ID_ASM_28XX_PID1	0x2824
++#define PCI_DEVICE_ID_ASM_28XX_PID2	0x2812
++#define PCI_DEVICE_ID_ASM_28XX_PID3	0x2806
++#define PCI_DEVICE_ID_ASM_18XX_PID1	0x1824
++#define PCI_DEVICE_ID_ASM_18XX_PID2	0x1812
++#define PCI_DEVICE_ID_ASM_18XX_PID3	0x1806
++#define PCI_DEVICE_ID_ASM_81XX_PID1	0x812a
++#define PCI_DEVICE_ID_ASM_81XX_PID2	0x812b
++#define PCI_DEVICE_ID_ASM_80XX_PID1	0x8061
++
++/*
++ * Data for PCI driver interface
++ *
++ * This data only exists for exporting the supported
++ * PCI ids via MODULE_DEVICE_TABLE.  We do not actually
++ * register a pci_driver, because someone else might one day
++ * want to register another driver on the same PCI id.
++ */
++static const struct pci_device_id pci_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_80XX_PID1), 0 },
++	{ 0, },	/* terminate list */
++};
++MODULE_DEVICE_TABLE(pci, pci_tbl);
++
++struct asm28xx_gpio {
++	struct gpio_chip	chip;
++	struct pci_dev		*pdev;
++	spinlock_t		lock;
++};
++
++void pci_config_pm_runtime_get(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	if (parent)
++		pm_runtime_get_sync(parent);
++	pm_runtime_get_noresume(dev);
++	/*
++	 * pdev->current_state is set to PCI_D3cold during suspending,
++	 * so wait until suspending completes
++	 */
++	pm_runtime_barrier(dev);
++	/*
++	 * Only need to resume devices in D3cold, because config
++	 * registers are still accessible for devices suspended but
++	 * not in D3cold.
++	 */
++	if (pdev->current_state == PCI_D3cold)
++		pm_runtime_resume(dev);
++}
++
++void pci_config_pm_runtime_put(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	pm_runtime_put(dev);
++	if (parent)
++		pm_runtime_put_sync(parent);
++}
++
++static int asm28xx_gpio_request(struct gpio_chip *chip, unsigned offset)
++{
++	if (offset == ASM_GPIO_PIN5)
++		return -ENODEV;
++
++	return 0;
++}
++
++static void asm28xx_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_OUTPUT, &temp);
++	if (value)
++		temp |= BIT(offset);
++	else
++		temp &= ~BIT(offset);
++
++	pci_write_config_byte(agp->pdev, ASM_GPIO_OUTPUT, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx gpio %d set %d reg=%02x\n", offset, value, temp);
++}
++
++static int asm28xx_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_INPUT, &temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx GPIO Pin %d get reg=%02x\n", offset, temp);
++	return (temp & BIT(offset)) ? 1 : 0;
++}
++
++static int asm28xx_gpio_dirout(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp |= BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirout gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static int asm28xx_gpio_dirin(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp &= ~BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirin gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static struct asm28xx_gpio gp = {
++	.chip = {
++		.label		= "ASM28XX-18XX GPIO",
++		.owner		= THIS_MODULE,
++		.ngpio		= 8,
++		.request	= asm28xx_gpio_request,
++		.set		= asm28xx_gpio_set,
++		.get		= asm28xx_gpio_get,
++		.direction_output = asm28xx_gpio_dirout,
++		.direction_input = asm28xx_gpio_dirin,
++	},
++};
++
++static int __init asm28xx_gpio_init(void)
++{
++	int err = -ENODEV;
++	struct pci_dev *pdev = NULL;
++	const struct pci_device_id *ent;
++	u8 temp;
++	unsigned long flags;
++	int type;
++
++	/* We look for our device - Asmedia 28XX and 18XX Bridge
++	 * I don't know about a system with two such bridges,
++	 * so we can assume that there is max. one device.
++	 *
++	 * We can't use plain pci_driver mechanism,
++	 * as the device is really a multiple function device,
++	 * main driver that binds to the pci_device is an bus
++	 * driver and have to find & bind to the device this way.
++	 */
++
++	for_each_pci_dev(pdev) {
++		ent = pci_match_id(pci_tbl, pdev);
++		if (ent) {
++			/* Because GPIO Registers only work on Upstream port. */
++			type = pci_pcie_type(pdev);
++			if (type == PCI_EXP_TYPE_UPSTREAM) {
++				dev_info(&pdev->dev, "ASMEDIA-28xx/18xx Init Upstream detected\n");
++				goto found;
++			}
++		}
++	}
++	goto out;
++
++found:
++	gp.pdev = pdev;
++	gp.chip.parent = &pdev->dev;
++
++	spin_lock_init(&gp.lock);
++
++	err = gpiochip_add_data(&gp.chip, &gp);
++	if (err) {
++		dev_err(&pdev->dev, "GPIO registering failed (%d)\n", err);
++		goto out;
++	}
++
++	pci_config_pm_runtime_get(pdev);
++
++	/* Set PCI_CFG_Switch bit = 1,then we can access GPIO Registers. */
++	spin_lock_irqsave(&gp.lock, flags);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	temp |= ASM_REG_SWITCH_CTL;
++	pci_write_config_byte(pdev, ASM_REG_SWITCH, temp);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	spin_unlock_irqrestore(&gp.lock, flags);
++
++	pci_config_pm_runtime_put(pdev);
++	dev_err(&pdev->dev, "ASMEDIA-28xx/18xx Init SWITCH = 0x%x\n", temp);
++out:
++	return err;
++}
++
++static void __exit asm28xx_gpio_exit(void)
++{
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(gp.pdev);
++
++	spin_lock_irqsave(&gp.lock, flags);
++	/* Set GPIO Registers to default value. */
++	pci_write_config_byte(gp.pdev, ASM_GPIO_OUTPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_INPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_CTRL, ASM_GPIO_DEFAULT);
++	/* Clear PCI_CFG_Switch bit = 0,then we can't access GPIO Registers. */
++	pci_write_config_byte(gp.pdev, ASM_REG_SWITCH, ASM_GPIO_DEFAULT);
++	spin_unlock_irqrestore(&gp.lock, flags);
++	pci_config_pm_runtime_put(gp.pdev);
++
++	gpiochip_remove(&gp.chip);
++}
++
++module_init(asm28xx_gpio_init);
++module_exit(asm28xx_gpio_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Richard Hsu <Richard_Hsu@asmedia.com.tw>");
++MODULE_DESCRIPTION("ASMedia 28xx 18xx GPIO Driver");
+-- 
+2.17.1
+
