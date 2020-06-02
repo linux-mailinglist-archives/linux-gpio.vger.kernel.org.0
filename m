@@ -2,178 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E288A1EBB83
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2020 14:21:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13A11EBBA2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2020 14:26:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgFBMVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jun 2020 08:21:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59946 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725940AbgFBMVj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jun 2020 08:21:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591100497;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=dP3Z215jKRkD2MMCLmT1lRDppPme6bQ1QPgE98zN7XU=;
-        b=NoxWALguF3DhRJ5X+ZdCnTltJWvV8MZonMpLrFZcmI3DcxWS+ozM0fqAWbbn3CR1+f2w5S
-        JXUwj/CaJRq8/oz/72gEJDIcy/PXFcUdIurtX7pAeGIJcF4QE7yuBXZmurYfo4OYLwOog9
-        gT7f54hORDKgnna0B0+tQ2zbV6/F3dA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-aD_OFs4HNyCrcnMJkfrXng-1; Tue, 02 Jun 2020 08:21:36 -0400
-X-MC-Unique: aD_OFs4HNyCrcnMJkfrXng-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726636AbgFBM0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jun 2020 08:26:46 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:10643 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727921AbgFBM0q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jun 2020 08:26:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1591100805; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=C4vFOy2XJsfD6EIUJxjhKj637Wme6MC/O/edb1rZV9s=; b=RBBr0pHh35KSbJVFA/16w8UOcOLLgNCH2iBjuyyt/0MlOGSWlFvZP7SQSqdeduuyIYOj4eLb
+ 9XtwpXqFQM2GEOyAJeUL51BOOJgy7irIux8a9pvHMkq9EtKu5DyI9BR9CfW90pE1Z0r6a5qq
+ mFwscC7SxfgrQk6bYkpRcFlBpfk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5ed6456eeca06aba7ef97484 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 02 Jun 2020 12:26:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F03CC43387; Tue,  2 Jun 2020 12:26:21 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9768A0C0B;
-        Tue,  2 Jun 2020 12:21:34 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-114-90.ams2.redhat.com [10.36.114.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A2D32E026;
-        Tue,  2 Jun 2020 12:21:32 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] pinctrl: baytrail: Fix pin being driven low for a while on gpiod_get(..., GPIOD_OUT_HIGH)
-Date:   Tue,  2 Jun 2020 14:21:30 +0200
-Message-Id: <20200602122130.45630-1-hdegoede@redhat.com>
+        (Authenticated sender: groverm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 875C2C433C6;
+        Tue,  2 Jun 2020 12:26:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 875C2C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=groverm@codeaurora.org
+Date:   Tue, 2 Jun 2020 17:56:00 +0530
+From:   Mayank Grover <groverm@codeaurora.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: Re: [PATCH] pinctrl: msm: Add check for pinctrl group is valid
+Message-ID: <20200602122600.GA10584@codeaurora.org>
+References: <1589817025-21886-1-git-send-email-groverm@codeaurora.org>
+ <20200519013813.GU2165@builder.lan>
+ <CACRpkdbSsVcy=6Bo42SnPqgKoa+jNanmBEXix_yv6aNK8VcreQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbSsVcy=6Bo42SnPqgKoa+jNanmBEXix_yv6aNK8VcreQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pins on the Bay Trail SoC have separate input-buffer and output-buffer
-enable bits and a read of the level bit of the value register will always
-return the value from the input-buffer.
+On Mon, May 25, 2020 at 11:02:14AM +0200, Linus Walleij wrote:
+> On Tue, May 19, 2020 at 3:39 AM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> 
+> > @Linus, we started off with something similar for GPIOs and ended up
+> > with the logic in the core code. Should we somehow try to do the same
+> > for pinctrl?
+> 
+> msm_pingroup_is_valid() looks very reusable but I'm afraid I do not
+> understand the implicit assumptions around it, but I guess yes,
+> if it can be properly documented etc.
+> 
+> Yours,
+> Linus Walleij
 
-The BIOS of a device may configure a pin in output-only mode, only enabling
-the output buffer, and write 1 to the level bit to drive the pin high.
-This 1 written to the level bit will be stored inside the data-latch of the
-output buffer.
+Hi Bjorn,
 
-But a subsequent read of the value register will return 0 for the level bit
-because the input-buffer is disabled. This causes a read-modify-write as
-done by byt_gpio_set_direction() to write 0 to the level bit, driving the
-pin low!
+Can you please help guide further on this ?
+we can validate group using request calls similar to pinmux_ops here.
 
-Before this commit byt_gpio_direction_output() relied on
-pinctrl_gpio_direction_output() to set the direction, followed by a call
-to byt_gpio_set() to apply the selected value. This causes the pin to
-go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
-calls.
-
-Change byt_gpio_direction_output() to directly make the register
-modifications itself instead. Replacing the 2 subsequent writes to the
-value register with a single write.
-
-Note that the pinctrl code does not keep track internally of the direction,
-so not going through pinctrl_gpio_direction_output() is not an issue.
-
-This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
-already on at boot (no external monitor connected), then the i915 driver
-does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
-temporarily going low of that GPIO was causing the panel to reset itself
-after which it would not show an image until it was turned off and back on
-again (until a full modeset was done on it). This commit fixes this.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Note the factoring out of the direct IRQ mode warning is deliberately not
-split into a separate patch to make backporting this easier.
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 46 +++++++++++++++++-------
- 1 file changed, 33 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 9b821c9cbd16..83be13b83eb5 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -800,6 +800,21 @@ static void byt_gpio_disable_free(struct pinctrl_dev *pctl_dev,
- 	pm_runtime_put(vg->dev);
- }
- 
-+static void byt_gpio_direct_irq_check(struct intel_pinctrl *vg,
-+				      unsigned int offset)
-+{
-+	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
-+
-+	/*
-+	 * Before making any direction modifications, do a check if gpio is set
-+	 * for direct IRQ.  On baytrail, setting GPIO to output does not make
-+	 * sense, so let's at least inform the caller before they shoot
-+	 * themselves in the foot.
-+	 */
-+	if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
-+		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
-+}
-+
- static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- 				  struct pinctrl_gpio_range *range,
- 				  unsigned int offset,
-@@ -807,7 +822,6 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- {
- 	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctl_dev);
- 	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
--	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
- 	unsigned long flags;
- 	u32 value;
- 
-@@ -817,14 +831,8 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- 	value &= ~BYT_DIR_MASK;
- 	if (input)
- 		value |= BYT_OUTPUT_EN;
--	else if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
--		/*
--		 * Before making any direction modifications, do a check if gpio
--		 * is set for direct IRQ.  On baytrail, setting GPIO to output
--		 * does not make sense, so let's at least inform the caller before
--		 * they shoot themselves in the foot.
--		 */
--		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
-+	else
-+		byt_gpio_direct_irq_check(vg, offset);
- 
- 	writel(value, val_reg);
- 
-@@ -1171,13 +1179,25 @@ static int byt_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- static int byt_gpio_direction_output(struct gpio_chip *chip,
- 				     unsigned int offset, int value)
- {
--	int ret = pinctrl_gpio_direction_output(chip->base + offset);
-+	struct intel_pinctrl *vg = gpiochip_get_data(chip);
-+	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
-+	unsigned long flags;
-+	u32 reg;
- 
--	if (ret)
--		return ret;
-+	raw_spin_lock_irqsave(&byt_lock, flags);
- 
--	byt_gpio_set(chip, offset, value);
-+	byt_gpio_direct_irq_check(vg, offset);
- 
-+	reg = readl(val_reg);
-+	reg &= ~BYT_DIR_MASK;
-+	if (value)
-+		reg |= BYT_LEVEL;
-+	else
-+		reg &= ~BYT_LEVEL;
-+
-+	writel(reg, val_reg);
-+
-+	raw_spin_unlock_irqrestore(&byt_lock, flags);
- 	return 0;
- }
- 
--- 
-2.26.2
-
+-Mayank
