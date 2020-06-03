@@ -2,91 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE2941ECFA1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 14:19:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906161ECFC5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 14:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgFCMRo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 08:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
+        id S1725971AbgFCMb1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 08:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgFCMRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 08:17:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D746EC08C5C2
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 05:17:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m18so2422368ljo.5
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 05:17:41 -0700 (PDT)
+        with ESMTP id S1725936AbgFCMb0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 08:31:26 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC70C08C5C1
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 05:31:26 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id n23so2471273ljh.7
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 05:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=D41G1t3TtndFsp3Fk5xdy8Udf6eOJ1N1fW5sl9opBC4=;
-        b=yo8aKusFH8rjFRbst7Pd2XRO5OM0uzRQkbHZ/REysSt9JSXHyjarMKg82fb2fZueI4
-         Z6uU6ik1Rmgp6EzdDMlfumXvHOZzogk0BRn+cCt/EXdVKlybK1MJsj7dfXCgIcJNdw5e
-         uchM2b4rb4v09XFMhxn9alZQilyh6w/79e9HBFCgj15Di6/OqD5GRdhwneCO9SKflWb5
-         7PzvnUPscIJpoV87H0jipvwdMBb5k+NZG0JtHsl/YMxDbDh8qiiKDTzaGa8VxchlwGH/
-         fVkdhjK+sVIpM3Ho2VmmHLERJKhRfsYPBhTQg+sc+oXWusQdFDiToZ61BvLaLBlfZnYD
-         Kj1Q==
+        bh=L1NJYuTKReAQCzwmp21v6oxd6VH6o0/1AXhj3Xbp+FA=;
+        b=GYLRyR3OR2you4gt5Qoe94eTqGpHQxHxJtDqtMFwAwycpFKpORilUHJ+cpxeyB10dZ
+         HZZIncnj4Nc5euIkBmYg91PiCtTZXQoWLM//bJq/8ljVCqKGsEkudebxu1rD/xFge7XX
+         gUcQtcfaYyLClnFKKSzUJFm9UdTCKp09CFDZ/ll0z2c+BjIUHXiTXK0/xIsaBmZFPgzW
+         5PcPHAb51hM1T8b69zqjgmxhk7njDjDVmtYtpuT0xSkK8+vIbM4iI1M6M5/VlhCf0/Sn
+         7xxUT6j3nTgizmvd+kLannVm19nUGA+BXHohp50BOfs5E71QhnvSDS02jxYWWK3eWHCv
+         fbxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D41G1t3TtndFsp3Fk5xdy8Udf6eOJ1N1fW5sl9opBC4=;
-        b=jD710TZ18MyQtJWP9vLa2pHgtp507V/Q0EM9VYXq5MljkGiwsxB8yWDGtDgxrs0SVr
-         REojvSUKO4mG/Bp8AxXOw5f94fkdrZOPhw4rihY/Dbv0dbtdOuQ+29+wr8J6piPYFTQr
-         OCf6vi1vQ3EbahV02ZNH5mjqzXlVDyjZNg1Kc1XJ2yDyzx/I8PHmwFjlh9smIWHhXCj7
-         KmrPyvlWskH8LMtMXCx41e6/eDp+MvB80z1vJ1GA77UJWDEAg+heA1BvvRWdUw0p7jj6
-         8fsFSR7+IQPXvsOjm76fxyTR7oiEO1R9InsJ66BuzVaMxgk+8OqzCmdWa9cNW7EnDiMj
-         87Xg==
-X-Gm-Message-State: AOAM532qA/Yiyr+8m1+9mYcIl7oxIJ2kXJL2P8zHgzCbvA6hm75qybPS
-        I+wi9ijlsL7zYDgOoK/CX3XJYGju2jCeiU57nc6reg==
-X-Google-Smtp-Source: ABdhPJyoeZrNepeqk+9jgqLKZrt7i+C1qWTwwmCR1qtAPIbZRcMnPhJXEc9R2F8Y1mjnsppMks/wRXFQe154ZzFwVB8=
-X-Received: by 2002:a2e:a40f:: with SMTP id p15mr1143186ljn.286.1591186660293;
- Wed, 03 Jun 2020 05:17:40 -0700 (PDT)
+        bh=L1NJYuTKReAQCzwmp21v6oxd6VH6o0/1AXhj3Xbp+FA=;
+        b=FeeM/3/3jbsVsW6IgbIjfCZqUkcQzomPCFuuebTHiZss5BYr+nT02cDJDnMNF+e1dR
+         282z904GKnZ7YfsfP10CZkFkrFRjtWj/fGJSDD2aLsWcYsKSZ+ZvUtMk6KIqPD3FY9r3
+         uw5wkBNtdpdw40aDCPvbBEZH5B2X60esx82bK2QWqU5z3bSyAnwCkuno6038gp47/4hn
+         lDURVd2Jj+i/Ie1ZRqpb9tO599b0FIWsqosi+c5jdupl2kW1wRgaJHWXASSxS+xVjQGa
+         C0NWzDndzXejbvkJ7sYJQvjVlz7/s9NbjFKqCanncCS0bABbTPx8KR7UXGoQUu8JDaQ5
+         FUzw==
+X-Gm-Message-State: AOAM530ostIwP7hCbockE0Ku18VsMtFB7Zs7uZPtqkhQIYeLMojMDiBK
+        d+Yn7QSdaYtg9pakhXGjrPGUxmTD32ES9ePuUyuiHA==
+X-Google-Smtp-Source: ABdhPJzeYHCrqoAKbg/iXMZc2UHkSMqVGpsvQRy6zx+BK4rdk3W1fxIGP76BKw3wR0/nVnq2bumPP8UA4bGzDwuUJyc=
+X-Received: by 2002:a2e:350a:: with SMTP id z10mr1920234ljz.104.1591187484286;
+ Wed, 03 Jun 2020 05:31:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200531001101.24945-1-f.fainelli@gmail.com>
-In-Reply-To: <20200531001101.24945-1-f.fainelli@gmail.com>
+References: <20200530201952.585798-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200530201952.585798-1-christophe.jaillet@wanadoo.fr>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jun 2020 14:17:29 +0200
-Message-ID: <CACRpkdad8K-uDpYWOwxOW33YM3yWsKOS-Fr4OjkXhNoVxJv1jg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] pinctrl: bcm2835: Add support for wake-up interrupts
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 3 Jun 2020 14:31:13 +0200
+Message-ID: <CACRpkdYvoe8o8Db1mszfgcHA3XZF7LJ3P1u5pnKOfEfS99F0Ew@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 31, 2020 at 2:11 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+On Sat, May 30, 2020 at 10:20 PM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
 
-> This patch series updates the bcm2835 pinctrl driver to support
-> the BCM7211 SoC which is quite similar to 2711 (Raspberry Pi 4)
-> except that it also supports wake-up interrupts.
+> When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
+> an error handling path has not been updated.
 >
-> Thanks!
+> Axe a now unneeded 'pinctrl_unregister()'.
 >
-> Changes in v3:
->
-> - added Rob's Acked-by for the binding patches (#1 and #2)
-> - correct check on the number of GPIOs in irq_set_irq_wake (Stefan)
+> Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Applied this v3 version right in time for the merge window.
+Patch applied.
 
 Yours,
 Linus Walleij
