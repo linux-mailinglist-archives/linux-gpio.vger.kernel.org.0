@@ -2,76 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09A0F1ECCDD
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 11:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B03DC1ECCEB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 11:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgFCJol (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 05:44:41 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42018 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725854AbgFCJok (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 05:44:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1363638|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0250509-0.000374926-0.974574;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=frank@allwinnertech.com;NM=1;PH=DW;RN=14;RT=14;SR=0;TI=W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856;
-Received: from WS-web (frank@allwinnertech.com[W4_5899425_DEFAULT_0AC2668F_1591177476445_o7001c856]) by e01l07394.eu6 at Wed, 03 Jun 2020 17:44:36 +0800
-Date:   Wed, 03 Jun 2020 17:44:36 +0800
-From:   "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-To:     "Maxime Ripard" <maxime@cerno.tech>
-Cc:     "wens" <wens@csie.org>, "robh+dt" <robh+dt@kernel.org>,
-        "mturquette" <mturquette@baylibre.com>, "sboyd" <sboyd@kernel.org>,
+        id S1726759AbgFCJtC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 3 Jun 2020 05:49:02 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34297 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgFCJtB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 05:49:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id e125so923673lfd.1;
+        Wed, 03 Jun 2020 02:48:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PMOVHnGEcXL7cxNnZJH62mImVMlDJ7z1JOGvnBRid68=;
+        b=Cx7zxwU/XozHp29LQsWwlrR022t3k0/nEIMwP/y+msZSnQSvfFfPQQgoBiKlkdDehC
+         e+T2ITdho5p2bxpH8zvbWRCNh4gRMxqYgL9ooOpM0Cio2B0sog0Oro4lcvLM8mrMuvrr
+         c5KVL55I+lFL19w5YnT2wlnZBNYC7Q32yNHusu2ocO3YiEHulcTLIAyVt/dKi0Y4Wjg7
+         hw2aNGm9Tiv9zA2Lkv0sTOyn7VMYKrXsSYkHknDORLNNX/k3c9tDhh6l6xvQwpedGpxG
+         jXeIADnJSMid+PPhnLsOLqRxyAREW40zG2jXlNTJi8ootzh4NenajJs7Kx78DuXyGLA7
+         dIng==
+X-Gm-Message-State: AOAM533qS9GAtx/twYWxsZW/Jc6chjNpandsbS++5fsbTtlxZ9G1Ya0h
+        1laBCK2bOjEy3wQdcDXbuklaC0PuxAk=
+X-Google-Smtp-Source: ABdhPJyyaIyuOWNBAgIVj2qkE/YvtIT3cQ3jw7VMWldMfAnKzXsjU0EcLF1XQ31/gR9QLsXZ2QN1sg==
+X-Received: by 2002:ac2:5f82:: with SMTP id r2mr1952220lfe.119.1591177738122;
+        Wed, 03 Jun 2020 02:48:58 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id l16sm331057lji.138.2020.06.03.02.48.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2020 02:48:57 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id s1so1931460ljo.0;
+        Wed, 03 Jun 2020 02:48:56 -0700 (PDT)
+X-Received: by 2002:a2e:8047:: with SMTP id p7mr1551215ljg.190.1591177736679;
+ Wed, 03 Jun 2020 02:48:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200522030743.10204-1-frank@allwinnertech.com>
+ <20200522030743.10204-2-frank@allwinnertech.com> <20200522151403.7ovbdza2o3cjrb7a@gilmour.lan>
+ <d7d6ee84-bfbb-4fef-9ed8-1f7045494594.frank@allwinnertech.com>
+In-Reply-To: <d7d6ee84-bfbb-4fef-9ed8-1f7045494594.frank@allwinnertech.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 3 Jun 2020 17:48:44 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66rZpX-+DK_MnP7RRp7LL7GrXTd1ExpE6z_AjKDVjVwNg@mail.gmail.com>
+Message-ID: <CAGb2v66rZpX-+DK_MnP7RRp7LL7GrXTd1ExpE6z_AjKDVjVwNg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] clk: sunxi-ng: add support for the Allwinner A100 CCU
+To:     =?UTF-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>
+Cc:     Maxime Ripard <maxime@cerno.tech>, "robh+dt" <robh+dt@kernel.org>,
+        mturquette <mturquette@baylibre.com>, sboyd <sboyd@kernel.org>,
         "linus.walleij" <linus.walleij@linaro.org>,
         "p.zabel" <p.zabel@pengutronix.de>,
-        "=?UTF-8?B?6buE54OB55Sf?=" <huangshuosheng@allwinnertech.com>,
+        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
         "tiny.windzz" <tiny.windzz@gmail.com>,
-        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-        "devicetree" <devicetree@vger.kernel.org>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "linux-clk" <linux-clk@vger.kernel.org>,
-        "linux-gpio" <linux-gpio@vger.kernel.org>
-Reply-To: "=?UTF-8?B?5p2O5oms6Z+s?=" <frank@allwinnertech.com>
-Message-ID: <8c7a8eeb-f4ea-4df7-b381-5aeab6dd170a.frank@allwinnertech.com>
-Subject: =?UTF-8?B?5Zue5aSN77yaW1BBVENIIDIvNF0gcGluY3RybDogc3VueGk6IGFkZCBzdXBwb3J0IGZvciB0?=
-  =?UTF-8?B?aGUgQWxsd2lubmVyIEExMDAgcGluIGNvbnRyb2xsZXI=?=
-X-Mailer: [Alimail-Mailagent revision 4][W4_5899425][DEFAULT][Chrome]
-MIME-Version: 1.0
-References: <20200522030743.10204-1-frank@allwinnertech.com> <20200522030743.10204-3-frank@allwinnertech.com>,<20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-In-Reply-To: <20200522152803.twvfvuhd6ztunvll@gilmour.lan>
-x-aliyun-mail-creator: W4_5899425_DEFAULT_LjMTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzU2LjAuMjkyNC44NyBTYWZhcmkvNTM3LjM2TM
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Pj4gKyBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oRiwgMCksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MCwgImdwaW9faW4iKSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQi
-KSwKPj4gKyAgU1VOWElfRlVOQ1RJT04oMHgyLCAibW1jMCIpLCAgLyogRDEgKi8KPj4gKyAgU1VO
-WElfRlVOQ1RJT04oMHgzLCAianRhZyIpLCAgLyogTVMxICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9O
-KDB4NCwgImp0YWciKSwgIC8qIE1TX0dQVSAqLwo+Cj5XZSBzaG91bGQgdXNlIGFub3RoZXIgbmFt
-ZSBoZXJlLCBzaW5jZSB0aGUgY29kZSB3aWxsIGp1c3QgcGljayB0aGUgZmlyc3Qgb25lIGFuZAo+
-aWdub3JlIHRoZSBzZWNvbmQuIFdoYXQgYWJvdXQganRhZy1ncHU/CgpUaGUgdW5kZXJzY29yZXMg
-YXJlIHVzZWQgaW4gZnJvbnQsIHNvIGNoYW5naW5nIGl0IHRvIGp0YWdfZ3B1IG1heSBiZSBtb3Jl
-IGNvbnNpc3RlbnQuCgo+PiArIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihCLCA3KSwKPj4g
-KyAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+PiArICBTVU5YSV9GVU5DVElPTigw
-eDEsICJncGlvX291dCIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDIsICJzcGRpZiIpLCAgLyog
-RElOICovCj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MywgImkyczAiKSwgIC8qIERPVVQwICovCj4+
-ICsgIFNVTlhJX0ZVTkNUSU9OKDB4NCwgImkyczAiKSwgIC8qIERJTjEgKi8KPgo+SSBndWVzcyB0
-aGUgc2Vjb25kIG9uZSB3b3VsZCBiZSBpMnMxPwoKTm8sIGVhY2ggaTJzIG1heSBoYXZlIG1hbnkg
-aW5wdXRzIGFuZCBvdXRwdXRzLiAKCiBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oSCwgMTkp
-LAogICAgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwKICAgICAgICAgICAgICBTVU5Y
-SV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAogICAgICAgICAgICAgIFNVTlhJX0ZVTkNUSU9O
-KDB4MiwgImNpcjAiKSwgICAgICAgICAgLyogSU4gKi8KICAgICAgICAgICAgICBTVU5YSV9GVU5D
-VElPTigweDMsICJpMnMzX2RvdXQzIiksICAgICAgIC8qIERPVVQzICovCiAgICAgICAgICAgICAg
-U1VOWElfRlVOQ1RJT04oMHg0LCAiaTJzM19kaW4zIiksICAgICAgIC8qIERJTjMgKi8KICAgICAg
-ICAgICAgICBTVU5YSV9GVU5DVElPTigweDUsICJsZWRjIiksCiAgICAgICAgICAgICAgU1VOWElf
-RlVOQ1RJT05fSVJRX0JBTksoMHg2LCA2LCAxOSkpLAoKQ29uc2lkZXJpbmcgdGhhdCB0aGUgc2Ft
-ZSBwaW4gaGFzIG11bHRpcGxlIHNhbWUgZnVuY3Rpb25zLCAKc28gYWRkIGEgc3VmZml4LCBsaWtl
-IGkyczNfZG91dDMgYW5kIGkyczNfZGluMz8gICAKCk9yIHNwZWNpZnkgbXV4c2VsIGluIHRoZSBk
-ZXZpY2UgdHJlZSBtYXkgYmUgYW5vdGhlciBzb2x1dGlvbi4KCj4+ICsgU1VOWElfUElOKFNVTlhJ
-X1BJTkNUUkxfUElOKEgsIDIpLAo+PiArICBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiks
-Cj4+ICsgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+ICsgIFNVTlhJX0ZVTkNU
-SU9OKDB4MiwgImkyYzEiKSwgIC8qIFNDSyAqLwo+PiArICBTVU5YSV9GVU5DVElPTigweDMsICJj
-cHUiKSwgIC8qIENVUl9XICovCj4KPldoYXQgaXMgImNwdSIgc3VwcG9zZWQgdG8gYmU/CgpBcyBm
-YXIgYXMgSSBrbm93LCB0aGlzIGlzIGEgZnVuY3Rpb24gdGhhdCBoYXMgbmV2ZXIgYmVlbiB1c2Vk
-LgpUaGUgaGFyZHdhcmUgZ3V5IHNhaWQgdGhhdCBpdCBjYW4gYmUgdXNlZCB0byBjb250cm9sIHRo
-ZSBDUFUgdG8gcmVkdWNlIHRoZSBjdXJyZW50LgoKVGh4LApZYW5ndGFv
+On Wed, Jun 3, 2020 at 5:42 PM 李扬韬 <frank@allwinnertech.com> wrote:
+>
+> >> + /* Enable the lock bits on all PLLs */
+> >> + for (i = 0; i < ARRAY_SIZE(pll_regs); i++) {
+> >> +  val = readl(reg + pll_regs[i]);
+> >> +  val |= BIT(29);
+> >
+> >Having a define for that would be nice here
+> >
+> >> +  writel(val, reg + pll_regs[i]);
+> >> + }
+> >> +
+> >> + /*
+> >> +  * In order to pass the EMI certification, the SDM function of
+> >> +  * the peripheral 1 bus is enabled, and the frequency is still
+> >> +  * calculated using the previous division factor.
+> >> +  */
+> >> + writel(0xd1303333, reg + SUN50I_A100_PLL_PERIPH1_PATTERN0_REG);
+> >
+> >Same here
+>
+> Having a define? I don’t quite understand what you mean,
+> can you give me an example?
+
+What Maxime means is that 0xd1303333 is a magic number.
+It is better to make a properly named macro, or many macros
+that you then bitwise-OR together. So you should make macros
+for each bitfield in that register, which would likely include
+the SDM calculation factors, the enable bit, and any other fields.
+
+ChenYu
+
+> MBR,
+> Yangtao
