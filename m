@@ -2,88 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AC8F1ECF63
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 14:05:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 324011ECF7F
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 14:11:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgFCMFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 08:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
+        id S1725937AbgFCMLM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 08:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgFCMFf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 08:05:35 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9685BC08C5C0
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 05:05:34 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m18so2374835ljo.5
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 05:05:34 -0700 (PDT)
+        with ESMTP id S1725833AbgFCMLM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 08:11:12 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A58CC08C5C0
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 05:11:11 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s1so2436780ljo.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 05:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9SpwZSDLLoRDpRZcnQb1YhQ1cJLsVFtPtxsWAHnQ96E=;
-        b=KYrSN3XwqTd8l8UwldrI1/Xoa180XrwAEd3HoPYcGOcF1OtHgwG2KM8YX8FeCtaFTd
-         8ahXFHa91KoxEyi8GVnbzui9KOKtt67Dd+G9SMTglFKY+VulzeK9LrvX84Qmiwm+6r3o
-         f5aqKrGsMqkyUmAJbcGAdfmDqLHTnWoV5xHBn1H1EjoAvudRzRC2oNHxYS80aLQoHsv9
-         R3Gm6SvV7oaf8dKPcTglPfcbwsSCDKve6gKmcClChHS9NfnT7eLmA3dM26zj1SdPSxcH
-         iuZar9OURVCj6SxBcaSn3sFVNIqNgfoNBVw/y9xGwlXdLdZ/NedX5E90lhOKXB4bKeUh
-         Jolw==
+         :cc;
+        bh=YfIwoVqhINbM8JX02JQVBFl5UwDmm1K0R0OAHvfku4E=;
+        b=aWqv3ou5Qov3U3msHumGanAGhQDq5piVnxaH/XWJmipKJsOeWVNQIztptBeNCtMWG6
+         99b3l7r9pG46qUjWpv+WoQs+yVkeYL+OHYfJzjhbwlgDHanfANKMk5J6k2xrDF0jApcs
+         ITr+QKkVRhH2NduIS0rGnMoa1juq/PSUMUe+/Vobm+ot+3yv1cd8yFBR8RpnGpZzbD/i
+         KGvscj/DzzzJcfsZ/B2RW2XxwxgRgDyru1kGkFLZGIOB4klILxvqMmjRjUexshZjeou7
+         IWTl2Oef6qF/8FD3/+nq6Ege6qhULB4qLz6/BgG3qQflgRe1nkZ+ZiOB0fEUutqZ2TNb
+         CrWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9SpwZSDLLoRDpRZcnQb1YhQ1cJLsVFtPtxsWAHnQ96E=;
-        b=VWfo0KjfB4dyJyakbr+hfh8XWIp0vw1xTMXWEx0vRuXxHULTYESPw3vRYAH6a9dLPs
-         btArzUpk+xvTk8m4hPcJujo0bxqHbW4JzsRzBwGyEZMsliRv8bv5glc7RkZWsTsMy0X1
-         1yZDNDRwAuVaTbxdEbrOmmDrYmYdWth0B/CFH0muMNBqB8mAQxBm45j07H6MkFfLq0QO
-         ywGpSFXDmHaWvYkdPXNp7RnX/IBHjF8vXclsULcBe/IflO5srzCmUK3Sr6nYAZfFO+wx
-         n7mKTbKMHSqayLV0DvDt/7HHKC+AJNZDFFZlDdOPPsFH/zlPwWO+KtwcZ7oHh/n5fCIW
-         PKZA==
-X-Gm-Message-State: AOAM531hBxBI0a12Dc2sqBPyGU7UUUvJqN7bnPaPY1qlkjVCUAmLDBcn
-        6AyIjGH6apfMl27pJ0IT54QwjnNiFdlIttnXxuEtshEH
-X-Google-Smtp-Source: ABdhPJxDCM7eTXfshTCW0cR2ch2sO9/HZ5Y8fKiawF1it8noQiKNIEyjHGxZZjLrUdt6kJkQZ3iC2x8o4EwfT93tX/Y=
-X-Received: by 2002:a2e:974a:: with SMTP id f10mr1978577ljj.283.1591185933049;
- Wed, 03 Jun 2020 05:05:33 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=YfIwoVqhINbM8JX02JQVBFl5UwDmm1K0R0OAHvfku4E=;
+        b=Yqbi2cINBKOhw7/gJS3gqFAU/Brz/+zKv5axXp4ePEIaidkiHRi4fX2s24fN0FOFjo
+         /o/iAnLZjCo9KPJy4iJcI8m+QXGhDQaaz/BsPCmvDkIsKIwaM9U+GegV8Kd47y2Oht1i
+         yH4gdSi3+pCi3NFjvoslfh97RoG/nWMAkxcGLSIxF5lf3giuxTKbsPeTAFC5RVGSBaGu
+         Dc/AbZwY/ow+uwPDzz47NvfihiVa8zY4zpr37IfdnmmJ4EGlYIzReNHGMbdNWepUVj/j
+         paEJ8EfcaIZ+DFd/qWv8jnHNuzcwk44+qFo7fZxg7IZMG8SiARE8rREfCAYjuI3i4DbI
+         fjGQ==
+X-Gm-Message-State: AOAM531/kj2m15V+4iAKe1LeMkhVuNDrb0SXhENnk7V1SDmKk2k2x+Am
+        i/ghpYi6Y5xiYADCNnvGLITpwe6O+UXtT0CGASljWg==
+X-Google-Smtp-Source: ABdhPJwGPqax4Ku+Y+HnI5jIvzA/eJkmp5Pc0XM9c3bmnH0a+2++YRcBgL324sT+NutIXiJsU51+xCLtJmEUSqS/sw4=
+X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr1798631ljo.338.1591186270117;
+ Wed, 03 Jun 2020 05:11:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
- <20200520211916.25727-3-andriy.shevchenko@linux.intel.com>
- <20200525175819.GH1634618@smile.fi.intel.com> <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
-In-Reply-To: <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
+References: <20200513145935.22493-1-benjamin.gaignard@st.com> <20200513145935.22493-15-benjamin.gaignard@st.com>
+In-Reply-To: <20200513145935.22493-15-benjamin.gaignard@st.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 3 Jun 2020 14:05:22 +0200
-Message-ID: <CACRpkdYZjmzEY04_qSZtAqU6od+kAr=_Sk+PMVFj2UOjXxNVFQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] gpio: pca953x: Drop unneeded ACPI_PTR()
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Date:   Wed, 3 Jun 2020 14:10:59 +0200
+Message-ID: <CACRpkdYu2As27M60ogUoLfX1z=XZSCSx5qTLwm5ADdf9Jy7HGQ@mail.gmail.com>
+Subject: Re: [PATCH 14/15] dt-bindings: pinctrl: stm32: Add missing interrupts property
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-usb <linux-usb@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:13 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pon., 25 maj 2020 o 19:58 Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
-> >
-> > On Thu, May 21, 2020 at 12:19:14AM +0300, Andy Shevchenko wrote:
-> > > ACPI_PTR() becomes a no-op when !CONFIG_ACPI. This is not needed sinc=
-e
-> > > we always have ID table enabled. Moreover, in the mentioned case comp=
-iler
-> > > will complain about defined but not used variable.
-> >
-> > Bart, are you going to apply this one, or should I resend it as a part =
-of v2?
-> >
->
-> Ugh, I already sent my last PRs to Linus both for v5.7 fixes & v5.8
-> updates. I'll let Linus pick it up once he pulls from my tree.
+On Wed, May 13, 2020 at 5:00 PM Benjamin Gaignard
+<benjamin.gaignard@st.com> wrote:
 
-I cherry-picked this one (patch 3) on top of my devel branch.
+> Driver use interrupt-parent field so update the bindings to allow it.
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+
+Patch applied.
 
 Yours,
 Linus Walleij
