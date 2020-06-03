@@ -2,72 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC551EC36D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jun 2020 22:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDCB61EC672
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 03:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgFBUIF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jun 2020 16:08:05 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:23547 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727773AbgFBUIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Jun 2020 16:08:05 -0400
-Received: from [192.168.42.210] ([93.22.133.243])
-        by mwinf5d52 with ME
-        id mL83220025FEkrh03L83SZ; Tue, 02 Jun 2020 22:08:04 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 02 Jun 2020 22:08:04 +0200
-X-ME-IP: 93.22.133.243
-Subject: Re: [PATCH] pinctrl: freescale: imx: Fix an error handling path in
- 'imx_pinctrl_probe()'
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, linus.walleij@linaro.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stefan@agner.ch, gary.bisson@boundarydevices.com,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-References: <20200530204955.588962-1-christophe.jaillet@wanadoo.fr>
- <20200602101346.GW30374@kadam>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <9e186840-aece-cfcc-918a-8441db9f6f7b@wanadoo.fr>
-Date:   Tue, 2 Jun 2020 22:08:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726839AbgFCBMd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Jun 2020 21:12:33 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41730 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726112AbgFCBMd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 2 Jun 2020 21:12:33 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 71F915A433E1043B5189;
+        Wed,  3 Jun 2020 09:12:31 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.204) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
+ 09:12:22 +0800
+Subject: Re: [PATCH] pinctrl: sirf: Add missing put_device() call in
+ sirfsoc_gpio_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Yi Zhang" <yi.zhang@huawei.com>, Barry Song <baohua@kernel.org>
+References: <01abac73-2107-daf2-d7bd-bef9d73d554a@web.de>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <0c3372cf-342f-81c7-fab8-4a68e59ebbd2@huawei.com>
+Date:   Wed, 3 Jun 2020 09:12:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200602101346.GW30374@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <01abac73-2107-daf2-d7bd-bef9d73d554a@web.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Originating-IP: [10.166.215.204]
+X-CFilter-Loop: Reflected
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le 02/06/2020 à 12:13, Dan Carpenter a écrit :
-> On Sat, May 30, 2020 at 10:49:55PM +0200, Christophe JAILLET wrote:
->> 'pinctrl_unregister()' should not be called to undo
->> 'devm_pinctrl_register_and_init()', it is already handled by the framework.
->>
->> This simplifies the error handling paths of the probe function.
->> The 'imx_free_resources()' can be removed as well.
->>
->> Fixes: a51c158bf0f7 ("pinctrl: imx: use radix trees for groups and functions")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
-> You didn't introduce this but the:
->
-> 	ipctl->input_sel_base = of_iomap(np, 0);
->
-> should be changed to devm_of_iomap().
-Done as a separated patch.
+On 2020/6/3 2:56, Markus Elfring wrote:
+>> in sirfsoc_gpio_probe(), if of_find_device_by_node() succeed,
+>> put_device() is missing in the error handling patch.
+> 
+> How do you think about another wording variant?
+> 
+>     A coccicheck run provided information like the following.
+> 
+>     drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
+>     call of_find_device_by_node on line 792, but without a corresponding
+>     object release within this function.
+> 
+>     Generated by: scripts/coccinelle/free/put_device.cocci
+> 
+>     Thus add a jump target to fix the exception handling for this
+>     function implementation.
+> 
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> 
+Will do, thanks for your advise!
 
-Thx for the review and the comment.
-
-
-CJ
-
-> regards,
-> dan carpenter
-
+Yu Kuai
 
