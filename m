@@ -2,67 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55F7F1EC6DC
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 03:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3A51ECBE3
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 10:51:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgFCBjZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Jun 2020 21:39:25 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:46684 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbgFCBjZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 2 Jun 2020 21:39:25 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A46B814FC0DD979B3531;
-        Wed,  3 Jun 2020 09:39:23 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.204) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 3 Jun 2020
- 09:39:16 +0800
-Subject: Re: [PATCH V2] pinctrl: sirf: add missing put_device() call in
- sirfsoc_gpio_probe()
-To:     <linus.walleij@linaro.org>, <baohua@kernel.org>,
-        <yuping.luo@csr.com>, <Markus.Elfring@web.de>
-CC:     <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
-References: <20200603013532.755220-1-yukuai3@huawei.com>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <c68e435a-30f7-c7ba-ec2e-93bcb17d2d26@huawei.com>
-Date:   Wed, 3 Jun 2020 09:39:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726565AbgFCIur (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 04:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgFCIun (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 04:50:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B76C05BD43
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 01:50:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id o9so1691324ljj.6
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 01:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eDEdHw6LDRuGgcUmAT25W9TXRRB0f6WQXb9BxD6EOp8=;
+        b=BbLO+P/mutWqkVKp4Vanmt5nZK0RWWKwRKb34gVK7SNNxKS1Yk16cVaX114PM21y9J
+         cVTkuQOVI2+qR4v1b+DeJ9XsbLHdlHJwrX1aXvtWMw7+H0XLpE/QgwndakgnTn3xdFou
+         axfr9gG1UCJiYfG3a6pWEL307+48LsO1cmck1iBPe9QK0as5SoGDxoPIzrfmmtdf0xe/
+         k8CnIB0e43i51JVgZCwVeUjycE6yBbmna9PaSZGKOBIf8YaRTFkpYbtt4OaePNwafI3A
+         0xw/aQBimcoztV0YumEGxAWsufVjOgLVtYNuAJQD00Y3bM+qrkh5I5rOt5RDESCX5ww/
+         2Z5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eDEdHw6LDRuGgcUmAT25W9TXRRB0f6WQXb9BxD6EOp8=;
+        b=NcK24KNwEry/8UmXgb6vb7GHVroTTKm47D1SpMLGNyL8imo51a3xAagLvRSR1gRpKV
+         rhN0Kf/387BzREK4bGj7TtF7Sn7Fb2ONpEPN0xVucwtXhl6dbGqJuK4z6J0xDBYbepeT
+         8cCZHFAYJJyMZugNwE/85vNB6+HmsHu6ZJNqAJ+FS5elEMRE58NhONdFAFGS+5dYd5X3
+         jQ0NtNT82a48vCEoljI8/KGopFnf+9S0L7FgfUsr6SoE1uhTl+G55i7DcHTsODFSxXDb
+         BSXFlTzR9T/8M9Z8IIbpZxgFTxevDknBIh7YOIUWvET8vQxK4cnJ+6Y/7ysgueWD3SV1
+         6q3Q==
+X-Gm-Message-State: AOAM533CTcjuN9qytQz+uCgh7BOFv5BTlZerKXrefwa3oYHhwiPinIIe
+        RGh7mZfhdxXRa+/aNlkmuK+3+EnFFAnIpDvDkpXVS3hB
+X-Google-Smtp-Source: ABdhPJy8VQ4fp8xmv45stx/+eVoknbhxSQ5Cl/g9F/qzdkvop9q9bTKqMVh106e59bacchCZaCIpkqoFxhlOmcdQeL8=
+X-Received: by 2002:a2e:351a:: with SMTP id z26mr1541181ljz.144.1591174240794;
+ Wed, 03 Jun 2020 01:50:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200603013532.755220-1-yukuai3@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.204]
-X-CFilter-Loop: Reflected
+References: <20200528145845.31436-1-michael@walle.cc>
+In-Reply-To: <20200528145845.31436-1-michael@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jun 2020 10:50:30 +0200
+Message-ID: <CACRpkdbAeF6bVDvcMAXguFpHeEnq7DnmWswRnXjByNkH7t3Bhg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] gpio: generic regmap implementation
+To:     Michael Walle <michael@walle.cc>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020/6/3 9:35, yu kuai wrote:
-> A coccicheck run provided information like the following:
-> 
-> drivers/pinctrl/sirf/pinctrl-sirf.c:798:2-8: ERROR: missing put_device;
-> call of_find_device_by_node on line 792, but without a corresponding
-> object release within this function.
-> 
-> Generated by: scripts/coccinelle/free/put_device.cocci
-> 
-> Thus add a jump target to fix the exception handling for this
-> function implementation.
-> 
-> Fixes: 5130216265f6 ("PINCTRL: SiRF: add GPIO and GPIO irq support in CSR SiRFprimaII")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->   drivers/pinctrl/sirf/pinctrl-sirf.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
-Sorry about the missing change log:
+On Thu, May 28, 2020 at 4:59 PM Michael Walle <michael@walle.cc> wrote:
 
-Changes in V2:
-  change the variant of commit message suggested by Markus.
+> This series is a split off of the sl28cpld series:
+> https://lore.kernel.org/linux-gpio/20200423174543.17161-1-michael@walle.cc/
+>
+> I wasn't sure if I should also include the gpiochip_irqchip_add_domain()
+> patch here. So feel free to skip it. OTOH if you use interrupts with
+> gpio-regmap it is quite handy.
+>
+> For an actual user see the patch 11/16 ("gpio: add support for the sl28cpld
+> GPIO controller") of the series above.
 
-Best Regards,
-Yu Kuai
+Patches applied as some of the last stuff before sending my pull
+requests :)
 
+Let's work with this as a base, and thanks a *LOT* for your work
+so far!
+
+Yours,
+Linus Walleij
