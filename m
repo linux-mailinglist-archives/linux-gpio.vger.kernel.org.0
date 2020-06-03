@@ -2,90 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 79BF51ECDDB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 12:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AC8F1ECF63
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 14:05:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgFCKxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 06:53:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:49378 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgFCKxM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 06:53:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053AqjCt035816;
-        Wed, 3 Jun 2020 10:52:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=B4fOgwsHy+LjALGBYT8wqUSIN+UcrBa3FHE50266vaw=;
- b=Ak7WDeEg+oq55cj0x+RWYyRlILZV1obyiLiwEE+Y/b1oZT3A92a7gNIV/mCnX6NMv9vb
- P/DRsVjCyk/hUHVZyayIV8fxwcQlhUzeaQTiTICM8IZ4LPDFuvK97E/88wdDXU41Wjvc
- Lvk9NpGQcL8j0DHej4LpntP/4JEGgTY1rdTJnjn3ymDpLr3pdncN2g48qwAj3dfgHd+L
- vZVuIhkp6TD45Gj/OdOol68YF8FWWn6iafYjjYMdcslhOZqUflvNha/U+A4ExfsYRFU0
- EFOyzzS3FkFZk4Hf15THzMqucNkmQ9EGSfApe8h0PU5ajv12IOrsPxme2zTSDIlVX+KJ yg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 31bfem8j91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 03 Jun 2020 10:52:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Am2qn061746;
-        Wed, 3 Jun 2020 10:52:49 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 31dju31th3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 03 Jun 2020 10:52:49 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053AqhAn011739;
-        Wed, 3 Jun 2020 10:52:43 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 03 Jun 2020 03:52:42 -0700
-Date:   Wed, 3 Jun 2020 13:52:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-imx@nxp.com, aalonso@freescale.com,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] pinctrl: freescale: imx: Use 'devm_of_iomap()' to avoid
- a resource leak in case of error in 'imx_pinctrl_probe()'
-Message-ID: <20200603105234.GA22511@kadam>
-References: <20200602200626.677981-1-christophe.jaillet@wanadoo.fr>
+        id S1725881AbgFCMFf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 08:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgFCMFf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 08:05:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9685BC08C5C0
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 05:05:34 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m18so2374835ljo.5
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 05:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9SpwZSDLLoRDpRZcnQb1YhQ1cJLsVFtPtxsWAHnQ96E=;
+        b=KYrSN3XwqTd8l8UwldrI1/Xoa180XrwAEd3HoPYcGOcF1OtHgwG2KM8YX8FeCtaFTd
+         8ahXFHa91KoxEyi8GVnbzui9KOKtt67Dd+G9SMTglFKY+VulzeK9LrvX84Qmiwm+6r3o
+         f5aqKrGsMqkyUmAJbcGAdfmDqLHTnWoV5xHBn1H1EjoAvudRzRC2oNHxYS80aLQoHsv9
+         R3Gm6SvV7oaf8dKPcTglPfcbwsSCDKve6gKmcClChHS9NfnT7eLmA3dM26zj1SdPSxcH
+         iuZar9OURVCj6SxBcaSn3sFVNIqNgfoNBVw/y9xGwlXdLdZ/NedX5E90lhOKXB4bKeUh
+         Jolw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9SpwZSDLLoRDpRZcnQb1YhQ1cJLsVFtPtxsWAHnQ96E=;
+        b=VWfo0KjfB4dyJyakbr+hfh8XWIp0vw1xTMXWEx0vRuXxHULTYESPw3vRYAH6a9dLPs
+         btArzUpk+xvTk8m4hPcJujo0bxqHbW4JzsRzBwGyEZMsliRv8bv5glc7RkZWsTsMy0X1
+         1yZDNDRwAuVaTbxdEbrOmmDrYmYdWth0B/CFH0muMNBqB8mAQxBm45j07H6MkFfLq0QO
+         ywGpSFXDmHaWvYkdPXNp7RnX/IBHjF8vXclsULcBe/IflO5srzCmUK3Sr6nYAZfFO+wx
+         n7mKTbKMHSqayLV0DvDt/7HHKC+AJNZDFFZlDdOPPsFH/zlPwWO+KtwcZ7oHh/n5fCIW
+         PKZA==
+X-Gm-Message-State: AOAM531hBxBI0a12Dc2sqBPyGU7UUUvJqN7bnPaPY1qlkjVCUAmLDBcn
+        6AyIjGH6apfMl27pJ0IT54QwjnNiFdlIttnXxuEtshEH
+X-Google-Smtp-Source: ABdhPJxDCM7eTXfshTCW0cR2ch2sO9/HZ5Y8fKiawF1it8noQiKNIEyjHGxZZjLrUdt6kJkQZ3iC2x8o4EwfT93tX/Y=
+X-Received: by 2002:a2e:974a:: with SMTP id f10mr1978577ljj.283.1591185933049;
+ Wed, 03 Jun 2020 05:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602200626.677981-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030085
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
- impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006030085
+References: <20200520211916.25727-1-andriy.shevchenko@linux.intel.com>
+ <20200520211916.25727-3-andriy.shevchenko@linux.intel.com>
+ <20200525175819.GH1634618@smile.fi.intel.com> <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
+In-Reply-To: <CAMpxmJW71t5Vy6q+wdRO1dkmZbeDKZcP-_9W=CKXX69A866n8g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 3 Jun 2020 14:05:22 +0200
+Message-ID: <CACRpkdYZjmzEY04_qSZtAqU6od+kAr=_Sk+PMVFj2UOjXxNVFQ@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] gpio: pca953x: Drop unneeded ACPI_PTR()
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 10:06:26PM +0200, Christophe JAILLET wrote:
-> Use 'devm_of_iomap()' instead 'of_iomap()' to avoid a resource leak in
-> case of error.
-> 
-> Update the error handling code accordingly.
-> 
-> Fixes: 26d8cde5260b ("pinctrl: freescale: imx: add shared input select reg support")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Wed, May 27, 2020 at 3:13 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pon., 25 maj 2020 o 19:58 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
+> >
+> > On Thu, May 21, 2020 at 12:19:14AM +0300, Andy Shevchenko wrote:
+> > > ACPI_PTR() becomes a no-op when !CONFIG_ACPI. This is not needed sinc=
+e
+> > > we always have ID table enabled. Moreover, in the mentioned case comp=
+iler
+> > > will complain about defined but not used variable.
+> >
+> > Bart, are you going to apply this one, or should I resend it as a part =
+of v2?
+> >
+>
+> Ugh, I already sent my last PRs to Linus both for v5.7 fixes & v5.8
+> updates. I'll let Linus pick it up once he pulls from my tree.
 
-Thanks!  You are a hero!
+I cherry-picked this one (patch 3) on top of my devel branch.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-regards,
-dan carpenter
-
+Yours,
+Linus Walleij
