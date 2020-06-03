@@ -2,101 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B03DC1ECCEB
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 11:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79BF51ECDDB
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jun 2020 12:53:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgFCJtC convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 3 Jun 2020 05:49:02 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34297 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgFCJtB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 05:49:01 -0400
-Received: by mail-lf1-f66.google.com with SMTP id e125so923673lfd.1;
-        Wed, 03 Jun 2020 02:48:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PMOVHnGEcXL7cxNnZJH62mImVMlDJ7z1JOGvnBRid68=;
-        b=Cx7zxwU/XozHp29LQsWwlrR022t3k0/nEIMwP/y+msZSnQSvfFfPQQgoBiKlkdDehC
-         e+T2ITdho5p2bxpH8zvbWRCNh4gRMxqYgL9ooOpM0Cio2B0sog0Oro4lcvLM8mrMuvrr
-         c5KVL55I+lFL19w5YnT2wlnZBNYC7Q32yNHusu2ocO3YiEHulcTLIAyVt/dKi0Y4Wjg7
-         hw2aNGm9Tiv9zA2Lkv0sTOyn7VMYKrXsSYkHknDORLNNX/k3c9tDhh6l6xvQwpedGpxG
-         jXeIADnJSMid+PPhnLsOLqRxyAREW40zG2jXlNTJi8ootzh4NenajJs7Kx78DuXyGLA7
-         dIng==
-X-Gm-Message-State: AOAM533qS9GAtx/twYWxsZW/Jc6chjNpandsbS++5fsbTtlxZ9G1Ya0h
-        1laBCK2bOjEy3wQdcDXbuklaC0PuxAk=
-X-Google-Smtp-Source: ABdhPJyyaIyuOWNBAgIVj2qkE/YvtIT3cQ3jw7VMWldMfAnKzXsjU0EcLF1XQ31/gR9QLsXZ2QN1sg==
-X-Received: by 2002:ac2:5f82:: with SMTP id r2mr1952220lfe.119.1591177738122;
-        Wed, 03 Jun 2020 02:48:58 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id l16sm331057lji.138.2020.06.03.02.48.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jun 2020 02:48:57 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id s1so1931460ljo.0;
-        Wed, 03 Jun 2020 02:48:56 -0700 (PDT)
-X-Received: by 2002:a2e:8047:: with SMTP id p7mr1551215ljg.190.1591177736679;
- Wed, 03 Jun 2020 02:48:56 -0700 (PDT)
+        id S1725975AbgFCKxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 06:53:12 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49378 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgFCKxM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 06:53:12 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053AqjCt035816;
+        Wed, 3 Jun 2020 10:52:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=B4fOgwsHy+LjALGBYT8wqUSIN+UcrBa3FHE50266vaw=;
+ b=Ak7WDeEg+oq55cj0x+RWYyRlILZV1obyiLiwEE+Y/b1oZT3A92a7gNIV/mCnX6NMv9vb
+ P/DRsVjCyk/hUHVZyayIV8fxwcQlhUzeaQTiTICM8IZ4LPDFuvK97E/88wdDXU41Wjvc
+ Lvk9NpGQcL8j0DHej4LpntP/4JEGgTY1rdTJnjn3ymDpLr3pdncN2g48qwAj3dfgHd+L
+ vZVuIhkp6TD45Gj/OdOol68YF8FWWn6iafYjjYMdcslhOZqUflvNha/U+A4ExfsYRFU0
+ EFOyzzS3FkFZk4Hf15THzMqucNkmQ9EGSfApe8h0PU5ajv12IOrsPxme2zTSDIlVX+KJ yg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 31bfem8j91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 03 Jun 2020 10:52:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 053Am2qn061746;
+        Wed, 3 Jun 2020 10:52:49 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 31dju31th3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Jun 2020 10:52:49 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 053AqhAn011739;
+        Wed, 3 Jun 2020 10:52:43 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 03 Jun 2020 03:52:42 -0700
+Date:   Wed, 3 Jun 2020 13:52:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-imx@nxp.com, aalonso@freescale.com,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pinctrl: freescale: imx: Use 'devm_of_iomap()' to avoid
+ a resource leak in case of error in 'imx_pinctrl_probe()'
+Message-ID: <20200603105234.GA22511@kadam>
+References: <20200602200626.677981-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-References: <20200522030743.10204-1-frank@allwinnertech.com>
- <20200522030743.10204-2-frank@allwinnertech.com> <20200522151403.7ovbdza2o3cjrb7a@gilmour.lan>
- <d7d6ee84-bfbb-4fef-9ed8-1f7045494594.frank@allwinnertech.com>
-In-Reply-To: <d7d6ee84-bfbb-4fef-9ed8-1f7045494594.frank@allwinnertech.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 3 Jun 2020 17:48:44 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66rZpX-+DK_MnP7RRp7LL7GrXTd1ExpE6z_AjKDVjVwNg@mail.gmail.com>
-Message-ID: <CAGb2v66rZpX-+DK_MnP7RRp7LL7GrXTd1ExpE6z_AjKDVjVwNg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] clk: sunxi-ng: add support for the Allwinner A100 CCU
-To:     =?UTF-8?B?5p2O5oms6Z+s?= <frank@allwinnertech.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>, "robh+dt" <robh+dt@kernel.org>,
-        mturquette <mturquette@baylibre.com>, sboyd <sboyd@kernel.org>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        =?UTF-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        "tiny.windzz" <tiny.windzz@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602200626.677981-1-christophe.jaillet@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 mlxscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9640 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006030085
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 5:42 PM 李扬韬 <frank@allwinnertech.com> wrote:
->
-> >> + /* Enable the lock bits on all PLLs */
-> >> + for (i = 0; i < ARRAY_SIZE(pll_regs); i++) {
-> >> +  val = readl(reg + pll_regs[i]);
-> >> +  val |= BIT(29);
-> >
-> >Having a define for that would be nice here
-> >
-> >> +  writel(val, reg + pll_regs[i]);
-> >> + }
-> >> +
-> >> + /*
-> >> +  * In order to pass the EMI certification, the SDM function of
-> >> +  * the peripheral 1 bus is enabled, and the frequency is still
-> >> +  * calculated using the previous division factor.
-> >> +  */
-> >> + writel(0xd1303333, reg + SUN50I_A100_PLL_PERIPH1_PATTERN0_REG);
-> >
-> >Same here
->
-> Having a define? I don’t quite understand what you mean,
-> can you give me an example?
+On Tue, Jun 02, 2020 at 10:06:26PM +0200, Christophe JAILLET wrote:
+> Use 'devm_of_iomap()' instead 'of_iomap()' to avoid a resource leak in
+> case of error.
+> 
+> Update the error handling code accordingly.
+> 
+> Fixes: 26d8cde5260b ("pinctrl: freescale: imx: add shared input select reg support")
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-What Maxime means is that 0xd1303333 is a magic number.
-It is better to make a properly named macro, or many macros
-that you then bitwise-OR together. So you should make macros
-for each bitfield in that register, which would likely include
-the SDM calculation factors, the enable bit, and any other fields.
+Thanks!  You are a hero!
 
-ChenYu
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> MBR,
-> Yangtao
+regards,
+dan carpenter
+
