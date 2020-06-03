@@ -2,84 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B8B1ED862
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 00:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DAF41ED869
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 00:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgFCWGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 18:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42344 "EHLO
+        id S1726614AbgFCWJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 18:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgFCWGL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 18:06:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A6FC08C5C2
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 15:06:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e4so4776154ljn.4
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 15:06:09 -0700 (PDT)
+        with ESMTP id S1726460AbgFCWJC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 18:09:02 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73103C08C5C0
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 15:09:02 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z206so2323627lfc.6
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 15:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kZqWRAwkoZGm0MT0LhnL1ITCWUWQqRFExLfdOqT2sHM=;
-        b=ifeeWNzF4wAPFHd21i1T7hZ+XQ6kUW4qhTa1hOviPEAn2zLRmxrTk+PNyY6YzjnT0W
-         wrZnnAVGSZDC/eVD9dmypYQTNtVP7cklzWMfI8aP1cmBXiCBALQKH6+NOZTaZgRtegxa
-         Jur7UHc1fR6FnuJNg+Df8haSfvODK8uVx5mIDjKH9QZkWiSKhsEe+5K0y4f9tn1dlvBQ
-         hVpSSx3uugyxrCir29UzLvNT3zb41Z2ALoA/SSslvhH5zGTlUpAuVwqZs7JdaF9+dhnl
-         GbGo+7g3eL+Uxl3b6SOexC57gwx1Suz5jvxY0KLHuYBHcBLeTNtFhdDkkjcpv0pRigsT
-         RpVA==
+         :cc:content-transfer-encoding;
+        bh=cGmwYW9BzpYkE3b5BXMa4x8r+iWYDMrACAFEn5/TXJs=;
+        b=HKtt7Ce2T/uv0uuk+ikmeaezZFR7KV+O78D0r/pRwJ/pvjEvYLfSpoVYCPmGMlXgAH
+         vklJDoXat2X4tk+UWGiPrV1fAJzjDYjto173ALf43iPuLmlA7XTETrfM1n42QfDFYA6G
+         lybqZRxRsnxahb0rFMHSsWDGaHfUwLYJcRCM3DQs1xpf/3lnHy6DC75yQNYuwQT7hyC7
+         aI3VznFrKb81GMJMV34Mg5laOi3kTzCSe4MyP4nCHPbGBrMF/l/O5CUyDc96d9qfMTyw
+         /u1HgOiHC0+TbH7IDV7ts5kgOQS0aTGs9WtayvOuKAcQsbrJtu+D4ZrcZ7BbOqgXazYA
+         Sdzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZqWRAwkoZGm0MT0LhnL1ITCWUWQqRFExLfdOqT2sHM=;
-        b=bn+8/efd/ygitdrFV+AH5KbNKAERz4Hfw92ybQXKJTN6TRUUb49S5BxMgC7ZtcOck2
-         5W5bsEfwhXbyARIRlq+kNUstJniwW0ks6Wq5uLOpL51+yWxGzS5iv8AWtndxHDQC0WRe
-         LzcU+7sPIHUsBgAfWcZOVY5aQP2rxIyQ1YBdymWOIwUZMJQWeae1OS+e9amWlbMzAddG
-         C5Uzxuz5m68gOldRuY7S+Y1KHt/gYUQNvtCVhL1aHOOlLW6bWxYgW4MGCV28wZ2KfP2t
-         cjUSF1TtKQgK9GHJyJ22bW4VXvVei45L2YNYdDBbTuEYcgLbkQ1V5kXX6VnHyL3LoQ/u
-         fQiA==
-X-Gm-Message-State: AOAM533B3cP23mdRjo5hfMZbJ9Y28pcDVihtvVsozZS0IVnJQp9h4eFB
-        ySdVaNTFcWRX5vw6zI+35CuCEGK5lyQnXqngnfnEog==
-X-Google-Smtp-Source: ABdhPJxVc4P8kuV8rJARiopGCBcGT0QqtREKnWBawX5I9+sY0Q0Qd0KfCLEAs0rplFWBOdvE+GE+YbcX9BpW+DwedR8=
-X-Received: by 2002:a2e:a40f:: with SMTP id p15mr665797ljn.286.1591221967893;
- Wed, 03 Jun 2020 15:06:07 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cGmwYW9BzpYkE3b5BXMa4x8r+iWYDMrACAFEn5/TXJs=;
+        b=lKtTh8IQS+2VdUzStAeRu+Cd4loaw2P5wqmTZrjb3BCotuiitvm0+hYscf34zFCvvW
+         4hBQNOYCAxHKGLRc/EwkUKEGKJagt4M9fwO5rsF0elXIu6dXJjI20uGUyBwlECTTaoqP
+         7AQn5+M7zyj6m+nQ9y+b2ZpYGsKfw+FDKMlpBhRANXSidfrORyuJZTNH5mArkX5rJyit
+         lPrDAe173+HXY/W3lPohj2RM+DYmLZcLgupxqFfL2Rw6hEBkIFFTaIql4YGNSEyeqAZK
+         S7I6aClUNAK603giIcOQYS2Ct38J+nsRWPgh/ThKeEbWs2Bw+xFIkXDgRru0e/pJ4S/4
+         dWPw==
+X-Gm-Message-State: AOAM533LQJ20oUDVk2DnZnH3AlO1wsJCfquyrUqAcPzAW7YlsdDBIW94
+        CaNd80vtCYGpIIvGgJPMI7gtKwfcsI4achjdQwHjqA==
+X-Google-Smtp-Source: ABdhPJyk+KPR2lsjSvLKNRHP6aN4z/UirZhICS+CEfRNQ+r3j4K/FSNVE284NtSnzx9V5dXUQyG8xe1LglaugjNvlLo=
+X-Received: by 2002:a19:c8cb:: with SMTP id y194mr820722lff.89.1591222140898;
+ Wed, 03 Jun 2020 15:09:00 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
+ <87h7vvb1s3.fsf@belgarion.home> <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
+ <20200601183102.GS30374@kadam>
+In-Reply-To: <20200601183102.GS30374@kadam>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jun 2020 00:05:56 +0200
-Message-ID: <CACRpkdax2rFLnqY2pBEjfV6GH+wCHOrc4bQ7iYZEzWo=Fmi0NA@mail.gmail.com>
+Date:   Thu, 4 Jun 2020 00:08:49 +0200
+Message-ID: <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
  which is unused and broken
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, May 31, 2020 at 9:37 AM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
-
-> Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for pinctrl registration")
-> has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
-> 'pxa2xx_pinctrl_init()'.
-> However, the corresponding 'pinctrl_unregister()' call in
-> 'pxa2xx_pinctrl_exit()' has not been removed.
+On Mon, Jun 1, 2020 at 8:31 PM Dan Carpenter <dan.carpenter@oracle.com> wro=
+te:
+> On Mon, Jun 01, 2020 at 01:31:23PM +0200, Christophe JAILLET wrote:
+> > Le 01/06/2020 =C3=A0 10:58, Robert Jarzmik a =C3=A9crit :
+> > > Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
+> > >
+> > > > Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for=
+ pinctrl registration")
+> > > > has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
+> > > > 'pxa2xx_pinctrl_init()'.
+> > > > However, the corresponding 'pinctrl_unregister()' call in
+> > > > 'pxa2xx_pinctrl_exit()' has not been removed.
+> > > >
+> > > > This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
+> > > > Remove it now to avoid some wondering in the future and save a few =
+LoC.
+> > > >
+> > > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> > >
+> > > Would be even a better patch with a :
+> > > Fixes: 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for p=
+inctrl registration")
+> >
+> > I was wondering it was was needed in this case.
+> > The patch does not really fix anything, as the function is unused. Or i=
+t
+> > fixes things on a theoretical point of view.
 >
-> This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
-> Remove it now to avoid some wondering in the future and save a few LoC.
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> There is no concensus...  We should call a vote on this at Kernel
+> Summit.  :P
 
-Patch applied.
+Fixes means it fixes something that was wrong in that commit.
+That's all. Whether syntactic or semantic or regression or
+serious or not does not matter. It is also not compulsory to
+add it is just helpful.
+
+If it is a regression or critical bug, we also add Cc: stable.
 
 Yours,
 Linus Walleij
