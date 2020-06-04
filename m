@@ -2,117 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A04D71EDABB
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 03:48:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 457B21EDCD6
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 07:59:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgFDBsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 21:48:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
+        id S1726104AbgFDF7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 01:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgFDBsw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 21:48:52 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4602AC03E96D
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 18:48:52 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id w20so2801624pga.6
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 18:48:52 -0700 (PDT)
+        with ESMTP id S1726877AbgFDF7G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 01:59:06 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418C5C05BD1E
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 22:59:06 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y11so1736742plt.12
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 22:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=5tFZYJZLMd0R3LxxEYv+RdHaD5pIiQBOLfJ2EINS32U=;
-        b=CYiO8YJIMZcQU2DG4nTVIxjQTr/kjyEBIqdI7HXr8E0e11nf0EQ5XQ0yMgjZTN+05C
-         vAE7Rt9HqCvao05ObTG/Ulhk6mvRfAkUPgZ4pWsRIFp5R+BTdHGWhWygpK2l7BNxvzeg
-         HxHTzJmAqGbqMrnh1AZlNZp8HuocTbWiP/xX0tYF+hVYHkeYQ5ZAOdXYeqTB1p3349D3
-         uepYLCzMhBt3prHHdQMqIeC/Ug9dbKxC+l7RTrON4Bi9nEIya79M1xCiHIdo3ASKuGpM
-         HsOFJ0GIS+scN3hWqBByOYzDh6iBB/mpiwA+R5mJWZzv//pID56d6g++a7EGpsNnXhAo
-         qs1g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=By+Ck34N0juDcsNjVQjcVB/W81woPkNbqxwa+46XLSY=;
+        b=OOqP5FVhVMo3SomJAuv8JvADgc2eXlcDFEmFY6zF6MToCByEXk8otH9JbBVBikNQYJ
+         z7okGV09MZ2r2y1L0ZTdsGEHqJz4xD+0kT1Ao89YgBs4Pca580YBleh8dIlufFYpehdi
+         hw+/gMEYN3MZLVDPYpgwXhqrl+7Jqc8geIRWccWa/VG8TzWuvmkQq9d/W6rgt4Kp2E9f
+         euxIzsQu8ZBT4gZzXIHx/In/+otaBCaada/yP+Bg+pq87J53qrIH/zALR1OfAffYhJlE
+         6hOir++6qpU9ehf8TwouMX4LDNguO7jFf2Cxh6QtlnPwo0qZl+3uaTajLadexOkUdBbT
+         oOmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=5tFZYJZLMd0R3LxxEYv+RdHaD5pIiQBOLfJ2EINS32U=;
-        b=pThle42sQtZqk0rXxiNkbWZoVb6AwCtXgMIUhia9yxC/sktfcfGCI23MScF2vB2DAx
-         Bain65f+zLVVqWQ9FCsXtLcjal8OYz6DNYL8jdrS1Q6XUzA0oa/By8DSk+IzGMUUUUL8
-         WjnK+a/m5Fv5sAAz9iwUhSHJ8jJTPww0kMcnmicZNkWyrsCrB6MsAtGd4YX0rlEfcR8L
-         n7WbatY0Q3IY4iP7Q0V2T6Yh6z85I1G0a5qmumTITkK+46PV6ZyXc6eCeMtAnZuFkFbZ
-         Gk/zqRbHd40myo8J5pKkeCqUNmlAzEZFj8DBoDwkab25LVqJql7itcff/554RwBxLrvk
-         WzSg==
-X-Gm-Message-State: AOAM530GM7M6BEGSFCIQ+DqVbzvg4dMDhYMf18K+SDXxQNFKzxhaxaku
-        SIFxLQRYUhDWk7vNhlbZ1Bh/kWYlnP8=
-X-Google-Smtp-Source: ABdhPJwTEvnR5PZzCXUli1s7crhygZqvgKXzkBG34VdfRUadIIDPs0NV8j5vujI9w6eUrXequPsrnw==
-X-Received: by 2002:a65:52c3:: with SMTP id z3mr2152573pgp.146.1591235330819;
-        Wed, 03 Jun 2020 18:48:50 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id n3sm2494760pgq.30.2020.06.03.18.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2020 18:48:50 -0700 (PDT)
-Message-ID: <5ed85302.1c69fb81.494a1.7462@mx.google.com>
-Date:   Wed, 03 Jun 2020 18:48:50 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=By+Ck34N0juDcsNjVQjcVB/W81woPkNbqxwa+46XLSY=;
+        b=Tg5lpIz5RGj93oFTxJ2sVHDLOt8/71nFmt65pZaDCc3sLi6TvKN6mSoLV75SVqyiz4
+         E/Dcz+ZD4Cu2260Pqhpxvw0VSrtCV0vGiDtj2zajoZuaOqid90z99JIVXClBu8+Rf2Dz
+         3t5CpcVhVUQ7L2C0XkGaxZUp1nG8C7icKJNqFAixXlFAuSuOA9G+cqt8V+V1zu2alelP
+         Ufo/SzPnQP1uOOOUnasg5pLir9K9VU6nkwpG4vkmx3gbYy3aoajQzEcCAkhw7h19ufRM
+         TJ+d7Oh+UhaFgnbW5Ld9hfBrOiZQbe6+89SM++UwJUhbMATpEcu8gBXE/sIvgz2JwZCu
+         RHZw==
+X-Gm-Message-State: AOAM5331TJ05CdvJVdtTXYxAbEhoQCescZSPDA1AGZykokeyC9Fa3/FR
+        C1VeMVUCsdqy/pLrBfIXs2gD
+X-Google-Smtp-Source: ABdhPJysW9E7iGx+3UnXD1D+/8TRwPDtQ79KQc4ECiPVS7KT2m1vzuf1wg9bjAIEoeAvIWgjIeo/XQ==
+X-Received: by 2002:a17:90b:91:: with SMTP id bb17mr4039465pjb.110.1591250345618;
+        Wed, 03 Jun 2020 22:59:05 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e90:f3d4:c404:4d38:8396:d1ee])
+        by smtp.gmail.com with ESMTPSA id w186sm3564691pff.83.2020.06.03.22.58.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 03 Jun 2020 22:59:04 -0700 (PDT)
+Date:   Thu, 4 Jun 2020 11:28:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, patches@linaro.org,
+        linaro-kernel@lists.linaro.org
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: fix warning about irq chip
+ reusage
+Message-ID: <20200604055856.GA16719@Mani-XPS-13-9360>
+References: <20200604002817.667160-1-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.7-rc7-82-g74910e15ab25
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: devel
-X-Kernelci-Tree: linusw
-Subject: linusw/devel boot: 47 boots: 0 failed,
- 46 passed with 1 untried/unknown (v5.7-rc7-82-g74910e15ab25)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200604002817.667160-1-dmitry.baryshkov@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-******************************************
-* WARNING: Boot tests are now deprecated *
-******************************************
+On Thu, Jun 04, 2020 at 03:28:17AM +0300, Dmitry Baryshkov wrote:
+> Fix the following warnings caused by reusage of the same irq_chip
+> instance for all spmi-gpio gpio_irq_chip instances. Instead embed
+> irq_chip into pmic_gpio_state struct.
+> 
+> gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+> gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+> gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-As kernelci.org is expanding its functional testing capabilities, the conce=
-pt
-of boot testing is now deprecated.  Boot results are scheduled to be droppe=
-d on
-*5th June 2020*.  The full schedule for boot tests deprecation is available=
- on
-this GitHub issue: https://github.com/kernelci/kernelci-backend/issues/238
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-The new equivalent is the *baseline* test suite which also runs sanity chec=
-ks
-using dmesg and bootrr: https://github.com/kernelci/bootrr
+Thanks,
+Mani
 
-See the *baseline results for this kernel revision* on this page:
-https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.7-rc7-82-g74910=
-e15ab25/plan/baseline/
-
----------------------------------------------------------------------------=
-----
-
-linusw/devel boot: 47 boots: 0 failed, 46 passed with 1 untried/unknown (v5=
-.7-rc7-82-g74910e15ab25)
-
-Full Boot Summary: https://kernelci.org/boot/all/job/linusw/branch/devel/ke=
-rnel/v5.7-rc7-82-g74910e15ab25/
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/v=
-5.7-rc7-82-g74910e15ab25/
-
-Tree: linusw
-Branch: devel
-Git Describe: v5.7-rc7-82-g74910e15ab25
-Git Commit: 74910e15ab25f95f162bc4d4a634d029186543ce
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Tested: 47 unique boards, 13 SoC families, 3 builds out of 6
-
-Boot Regressions Detected:
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s905x-khadas-vim:
-              lab-baylibre: new failure (last pass: v5.7-rc7-78-ga8173820f4=
-41)
-
----
-For more info write to <info@kernelci.org>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index fe0be8a6ebb7..092a48e4dff5 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -170,6 +170,7 @@ struct pmic_gpio_state {
+>  	struct regmap	*map;
+>  	struct pinctrl_dev *ctrl;
+>  	struct gpio_chip chip;
+> +	struct irq_chip irq;
+>  };
+>  
+>  static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+> @@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+>  	return 0;
+>  }
+>  
+> -static struct irq_chip pmic_gpio_irq_chip = {
+> -	.name = "spmi-gpio",
+> -	.irq_ack = irq_chip_ack_parent,
+> -	.irq_mask = irq_chip_mask_parent,
+> -	.irq_unmask = irq_chip_unmask_parent,
+> -	.irq_set_type = irq_chip_set_type_parent,
+> -	.irq_set_wake = irq_chip_set_wake_parent,
+> -	.flags = IRQCHIP_MASK_ON_SUSPEND,
+> -};
+> -
+>  static int pmic_gpio_domain_translate(struct irq_domain *domain,
+>  				      struct irq_fwspec *fwspec,
+>  				      unsigned long *hwirq,
+> @@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+>  	if (!parent_domain)
+>  		return -ENXIO;
+>  
+> +	state->irq.name = "spmi-gpio",
+> +	state->irq.irq_ack = irq_chip_ack_parent,
+> +	state->irq.irq_mask = irq_chip_mask_parent,
+> +	state->irq.irq_unmask = irq_chip_unmask_parent,
+> +	state->irq.irq_set_type = irq_chip_set_type_parent,
+> +	state->irq.irq_set_wake = irq_chip_set_wake_parent,
+> +	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
+> +
+>  	girq = &state->chip.irq;
+> -	girq->chip = &pmic_gpio_irq_chip;
+> +	girq->chip = &state->irq;
+>  	girq->default_type = IRQ_TYPE_NONE;
+>  	girq->handler = handle_level_irq;
+>  	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
+> -- 
+> 2.26.2
+> 
