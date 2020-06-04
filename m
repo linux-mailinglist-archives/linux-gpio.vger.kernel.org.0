@@ -2,83 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1ED1EE9C7
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 19:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B5B1EE9DA
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 19:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgFDRtm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 13:49:42 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10847 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730124AbgFDRtm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 13:49:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ed9342a0002>; Thu, 04 Jun 2020 10:49:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 04 Jun 2020 10:49:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 04 Jun 2020 10:49:42 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jun
- 2020 17:49:42 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 4 Jun 2020 17:49:41 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ed934320001>; Thu, 04 Jun 2020 10:49:41 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <linus.walleij@linaro.org>, <treding@nvidia.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <skomatineni@nvidia.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH] pinctrl: tegra: Use noirq suspend/resume callbacks
-Date:   Thu, 4 Jun 2020 23:19:35 +0530
-Message-ID: <20200604174935.26560-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-X-NVConfidentiality: public
+        id S1730326AbgFDRzU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 13:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730314AbgFDRzT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Jun 2020 13:55:19 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB32206DC;
+        Thu,  4 Jun 2020 17:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591293318;
+        bh=MT5qKU/iMjw6YreBb1u2uotYSev1lMfE5vRFN/e38l8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KA/1zd7/QKhgnl/GXFWFNaJ+yzz0htCDijcndCocNBLefqCfL/9Ai+wbn2If6Ehhz
+         a/nV/sP2XmrhTf/xan8OVGlECkUlt/dGEv+//LTEtLVHkcRRzjQye4bt0GCNUawE4Q
+         eH+qz1a3JxfZLCoxIqHGvzs1peLRXo6OSzqLoaCA=
+Date:   Thu, 4 Jun 2020 12:55:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Richard Hsu <saraon640529@gmail.com>, Richard_Hsu@asmedia.com.tw,
+        Yd_Tseng@asmedia.com.tw, Jesse1_Chang@asmedia.com.tw,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
+Message-ID: <20200604175515.GA1076951@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1591292970; bh=xR23JKq5v+Y6Duxl7O+LbjwVq9ym59WYyqYJNuSpFnE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=G+5QrvzdGeBeATKiBXZ27jl8h0KEUryWdnUytfQr0AkRRBf1GOFFnli4Uxb52cVJj
-         x856B1WVsEKiAqEAwDm5o4c42dC9OPAYgURs0LtQk1YqXcvROzdLi4VQ3ZWHowpOV1
-         +N/j3dlFQWQ00BsBWf+j/0ZL+MAkd1xzA6bftYTyMCwg93f7dkCeiuiTlY0ZgXGwS+
-         cQ+WO6qNjLxgzvhWc498YczQFDu9hFyIUM13BOvVhzZ1sAdiTOdW2ItuYaMbJZDYmo
-         nKWlrKY5mgGrR/0Xl8+3AluLwZGbpC49PHJKKLTov9H4mGdPClpXCnFM6eTk+QQFpe
-         p9K15NeVich0w==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJX8U-uNYJPQxmkox=YTSvXVPrWss2y5MS81_bg43Co8Lg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use noirq suspend/resume callbacks as other drivers which implement
-noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
-configure the signals used by their respective devices in the noirq phase.
+On Thu, Jun 04, 2020 at 01:54:21PM +0200, Bartosz Golaszewski wrote:
+> czw., 4 cze 2020 o 09:33 Richard Hsu <saraon640529@gmail.com> napisał(a):
+> >
+> > Hi Linus Walleij,Bartosz Golaszewski and kbuild test robot,
+> >    I have fixed the warnings(make W=1 ARCH=i386) by replace two functions
+> > with static type,and resend the patch.
+> > line 69:
+> > <<void pci_config_pm_runtime_get(struct pci_dev *pdev)
+> > >>static void pci_config_pm_runtime_get(struct pci_dev *pdev)
+> > line 91:
+> > <<void pci_config_pm_runtime_put(struct pci_dev *pdev)
+> > >>static void pci_config_pm_runtime_put(struct pci_dev *pdev)
+> >
+> > Thanks
+> >
+> > BR,
+> >   Richard
+> > Signed-off-by: Richard Hsu <saraon640529@gmail.com>
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> > +       /* We look for our device - Asmedia 28XX and 18XX Bridge
+> > +        * I don't know about a system with two such bridges,
+> > +        * so we can assume that there is max. one device.
+> > +        *
+> > +        * We can't use plain pci_driver mechanism,
+> > +        * as the device is really a multiple function device,
+> > +        * main driver that binds to the pci_device is an bus
+> > +        * driver and have to find & bind to the device this way.
+> > +        */
+> > +
+> > +       for_each_pci_dev(pdev) {
+> > +               ent = pci_match_id(pci_tbl, pdev);
+> > +               if (ent) {
+> > +                       /* Because GPIO Registers only work on Upstream port. */
+> > +                       type = pci_pcie_type(pdev);
+> > +                       if (type == PCI_EXP_TYPE_UPSTREAM) {
+> > +                               dev_info(&pdev->dev, "ASMEDIA-28xx/18xx Init Upstream detected\n");
+> > +                               goto found;
+> > +                       }
+> > +               }
+> > +       }
+> > +       goto out;
+> > +
+> 
+> Bjorn: is this approach really correct? It looks very strange to me
+> and even if we were to do this kind of lookup I'd expect there to be a
+> real pci device registered as child of pdev here so that we can have a
+> proper driver in place with probe() et al.
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index 21661f6490d6..195cfe557511 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
- }
- 
- const struct dev_pm_ops tegra_pinctrl_pm = {
--	.suspend = &tegra_pinctrl_suspend,
--	.resume = &tegra_pinctrl_resume
-+	.suspend_noirq = &tegra_pinctrl_suspend,
-+	.resume_noirq = &tegra_pinctrl_resume
- };
- 
- static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
--- 
-2.17.1
+No, this is pretty broken.  The model is that one PCI device goes with
+one driver.  If there are two bits of functionality associated with a
+single PCI device, it's up to the single PCI driver to sort that out.
 
+The comment above mentions "multiple function device," which may lead
+to some confusion about the terminology.  In the PCI specs, the
+smallest addressable unit of PCI hardware is the "Function."  A
+"Device" may consist of one or more Functions.  A Device with more
+than one Function is referred to in the spec as a "Multi-Function
+Device".
+
+These PCI Functions are addressed by a (domain, bus, device, function)
+tuple.  For example, my system has these:
+
+  0000:00:14.0 Intel USB 3.0 xHCI Controller
+  0000:00:14.2 Intel Thermal Subsystem
+
+These two Functions are parts of the 0000:00:14 Multi-Function Device.
+
+In Linux, a "struct pci_dev" refers to a single Function, so there's
+a pci_dev for 0000:00:14.0 and another for 0000:00:14.2.  These are
+pretty much independent, and can be claimed by two separate drivers.
+
+But I think the "multiple function device" comment in *this* patch
+probably doesn't refer to a "Multi-Function Device" as used in the PCI
+specs.  It probably means a single PCI Function that has two kinds of
+functionality.
+
+In the Linux model, that means the Function should be claimed by a
+single driver, and that driver is responsible for coordinating the two
+pieces of functionality.
+
+Bjorn
