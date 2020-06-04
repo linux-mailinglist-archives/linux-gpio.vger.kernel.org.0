@@ -2,85 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C8F1EE84B
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 18:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C69901EE87D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 18:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgFDQIw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 12:08:52 -0400
-Received: from smtprelay0134.hostedemail.com ([216.40.44.134]:48196 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726026AbgFDQIu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 12:08:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 5DEAF1810F261;
-        Thu,  4 Jun 2020 16:08:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3867:3868:3870:3871:3872:3874:4321:5007:10004:10400:10848:11232:11658:11914:12297:12663:12740:12760:12895:13069:13095:13160:13229:13255:13311:13357:13439:14096:14097:14659:21080:21433:21627:21740:21790:30012:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: joke87_4e0d58826d98
-X-Filterd-Recvd-Size: 2786
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jun 2020 16:08:47 +0000 (UTC)
-Message-ID: <0749ac5e3868c6ba50728ced8366bfd86b0b8500.camel@perches.com>
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Julia Lawall <julia.lawall@inria.fr>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Date:   Thu, 04 Jun 2020 09:08:44 -0700
-In-Reply-To: <20200604123038.GG22511@kadam>
-References: <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
-         <20200601183102.GS30374@kadam>
-         <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-         <20200604083120.GF22511@kadam>
-         <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
-         <alpine.DEB.2.21.2006041147360.2577@hadrien>
-         <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>
-         <alpine.DEB.2.21.2006041228520.2577@hadrien>
-         <10e54ee84bd44171ef329bed9e7e6a946bae61ba.camel@perches.com>
-         <alpine.DEB.2.21.2006041328570.2577@hadrien> <20200604123038.GG22511@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        id S1729811AbgFDQXD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 12:23:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbgFDQXC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 12:23:02 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D7AC08C5C1
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Jun 2020 09:23:01 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w9so5741739qtv.3
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jun 2020 09:23:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nqdDkPxs64ydqRZazVkSDcMKoD2Di9Ao1rMLrjlRa40=;
+        b=lIGU5Nixoiwye1ScjlGD3/K2YeYoQabVSjX04sSyQxDyvPaxKRT8TJj3xMOoOYk6yI
+         81H5zLY2Bw16UbLU9Yg92hwWYnsCfRzMIYUvDKcVdQfkH+neTuaT7i3zrYwt023gjKHz
+         YU2+uHXxTJaaQJ2Z7cgPvgNKV3LwmHsAWgog29FTR3ZQVbPOrfpqxElHvLq+VuIup8h+
+         D95gQsIz3GGBSMcA+AkXywLvMguY0E5nHWqPAG8nzYOkrfT2h/0Vw9E/b7dn+QzLET2k
+         egVe7UAUsf2Qn1efCfL6k9n2r2gtOV30t0i3RBkkp/qFnDkFXrbWLMUZA5YTP6fwumI+
+         L+Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nqdDkPxs64ydqRZazVkSDcMKoD2Di9Ao1rMLrjlRa40=;
+        b=pfZcABiGnVOuEQLqwKLo3TI/Pv3THwLfplorxdi8IrlpUHdTkBRGzIBupGvmgtt5MP
+         qFwW+hNVxfPO+Zw4AZ7ULVtGfwqsjM00DBT/MJPXeYLvJYmtfKnrARkIv2I4+ag01+9R
+         j+KtBJ6tfq5W1dWQb+nLn0FqFoF284vBQpGvZl2jWB5h/z7X2oQRS7QXu04E3sjunDFo
+         n4PHsQkN8jmE+hcIHnMKze/4E48HOkFrgFpvvqXK/20fbWgKYXJs0UouVtkhsnI4ixQB
+         cHoTkqBI8G3ZBDEM8EWNbcuNouN4SXhn6M32kjINWI837OmUXszSSKq2gxFatvwSeFfl
+         nUqA==
+X-Gm-Message-State: AOAM533IYv8prHCbvgYEV9zvrqA8lr5fPVQdRbIVZNHxppYvT9LBOUa8
+        Cvdf0LQSxryu+q0JvT5wGKvbkXQLyPVzyUIKfvj1sr3b
+X-Google-Smtp-Source: ABdhPJy4d7VT76E7k/ybcQ/SJ9K8NuFI9ReH3yPrZWlYI9gyMK/Mv0CjdvOtx3sY+E7UfFZlglY0CFoFUiaU4uJE7wU=
+X-Received: by 2002:a37:5b47:: with SMTP id p68mr5596853qkb.120.1591287774973;
+ Thu, 04 Jun 2020 09:22:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200602141048.1995-1-warthog618@gmail.com> <CAMpxmJUjYn5SHg3BpCeKbYc_OpCjd8d943yfYL_TF15wyTenfA@mail.gmail.com>
+ <20200604141804.GA5050@sol>
+In-Reply-To: <20200604141804.GA5050@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 4 Jun 2020 18:22:43 +0200
+Message-ID: <CAMpxmJXyVO4unLQOzC0xf47CTmK6VurTk+Q=9RDWhcP0pu73pQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 2020-06-04 at 15:30 +0300, Dan Carpenter wrote:
-> On Thu, Jun 04, 2020 at 01:42:12PM +0200, Julia Lawall wrote:
-> > OK, I recall a discussion with Dan where he suggested that some things
-> > that were not actually bug fixes could also merit a Fixes tag.  But it's
-> > probably better if he weighs in directly.
-> 
-> I generally think Fixes should only be used for "real bug" fixes.
-> 
-> The one exception is when I'm reviewing a patch that fixes an "unused
-> assignment" static checker warning is that I know which commit
-> introduced the warning.  I don't have strong feelings if it's in the
-> Fixes tag or if it's just mentioned in the commit message.
+czw., 4 cze 2020 o 16:18 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
+>
+> >
+> > Is this comment relevant for the character device?
+> >
+>
+> True - that comment should stay in gpiolib, and gpiolib-cdev should get
+> one of it's own.
+>
+> Any suggestions on how to maintain line history?
+> I know you can trick git by moving the original file into two new ones,
+> then moving one of those back to the old name, but not sure if that is
+> what you would want to see in a patch.
+>
 
-My view is that changes that silence compiler warnings are
-not fixing bugs and that these changes should generally not
-be backported.
+People don't seem to care much about this in the kernel. Files get
+moved and git blame results get lost all the time. Don't stress about
+it.
 
-Compiler silencing changes marked as fixes can introduce other
-defects in working code.
-
-Backporting patches to stable trees should be conservatively
-rather than liberally applied.
-
-It seems that the actual backport maintainers disagree though.
-
-
+Bart
