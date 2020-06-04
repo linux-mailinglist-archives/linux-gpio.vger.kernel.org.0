@@ -2,140 +2,367 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 457B21EDCD6
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 07:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C322B1EDE68
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 09:33:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgFDF7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 01:59:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58938 "EHLO
+        id S1727961AbgFDHdF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 03:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgFDF7G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 01:59:06 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418C5C05BD1E
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 22:59:06 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y11so1736742plt.12
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 22:59:06 -0700 (PDT)
+        with ESMTP id S1727940AbgFDHdF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 03:33:05 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1C0C05BD1E;
+        Thu,  4 Jun 2020 00:33:05 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y18so1869543plr.4;
+        Thu, 04 Jun 2020 00:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=By+Ck34N0juDcsNjVQjcVB/W81woPkNbqxwa+46XLSY=;
-        b=OOqP5FVhVMo3SomJAuv8JvADgc2eXlcDFEmFY6zF6MToCByEXk8otH9JbBVBikNQYJ
-         z7okGV09MZ2r2y1L0ZTdsGEHqJz4xD+0kT1Ao89YgBs4Pca580YBleh8dIlufFYpehdi
-         hw+/gMEYN3MZLVDPYpgwXhqrl+7Jqc8geIRWccWa/VG8TzWuvmkQq9d/W6rgt4Kp2E9f
-         euxIzsQu8ZBT4gZzXIHx/In/+otaBCaada/yP+Bg+pq87J53qrIH/zALR1OfAffYhJlE
-         6hOir++6qpU9ehf8TwouMX4LDNguO7jFf2Cxh6QtlnPwo0qZl+3uaTajLadexOkUdBbT
-         oOmQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G1TWi6JPyNVe7bv/I+K/eUE8jAY2IrEwwJWBp9E1Myw=;
+        b=VRcVw7/kavSZf9rj9+yUaUledA3UiyitgYdZpkJuRaBPZiv/XxfruamYsKBTg2Knnt
+         UctwoJTPrpGbyz10pLkfpQ7gZJDR06iuWDOGCELz8egWA2p7pv3CfC5e/uo80YgBDvv2
+         +p2yQ0nJtrBg77fxX+2lS3fplBaxX2jhXuOFsXQc1haRlU//UQkUExofqZUTLEv+tYUf
+         0HPpsXpyMNfp7prPgQJTrKe7AoQy+NMlVR7mxCKwXTXaI8ffpd/Beq1QtfJoZePiSTAP
+         luH/EELtbU2b3Ogyu+6mNauz0PBwM2N1JT4oeLiet15070TLnfJ5MpidyCqv9jzvGXxp
+         tD9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=By+Ck34N0juDcsNjVQjcVB/W81woPkNbqxwa+46XLSY=;
-        b=Tg5lpIz5RGj93oFTxJ2sVHDLOt8/71nFmt65pZaDCc3sLi6TvKN6mSoLV75SVqyiz4
-         E/Dcz+ZD4Cu2260Pqhpxvw0VSrtCV0vGiDtj2zajoZuaOqid90z99JIVXClBu8+Rf2Dz
-         3t5CpcVhVUQ7L2C0XkGaxZUp1nG8C7icKJNqFAixXlFAuSuOA9G+cqt8V+V1zu2alelP
-         Ufo/SzPnQP1uOOOUnasg5pLir9K9VU6nkwpG4vkmx3gbYy3aoajQzEcCAkhw7h19ufRM
-         TJ+d7Oh+UhaFgnbW5Ld9hfBrOiZQbe6+89SM++UwJUhbMATpEcu8gBXE/sIvgz2JwZCu
-         RHZw==
-X-Gm-Message-State: AOAM5331TJ05CdvJVdtTXYxAbEhoQCescZSPDA1AGZykokeyC9Fa3/FR
-        C1VeMVUCsdqy/pLrBfIXs2gD
-X-Google-Smtp-Source: ABdhPJysW9E7iGx+3UnXD1D+/8TRwPDtQ79KQc4ECiPVS7KT2m1vzuf1wg9bjAIEoeAvIWgjIeo/XQ==
-X-Received: by 2002:a17:90b:91:: with SMTP id bb17mr4039465pjb.110.1591250345618;
-        Wed, 03 Jun 2020 22:59:05 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e90:f3d4:c404:4d38:8396:d1ee])
-        by smtp.gmail.com with ESMTPSA id w186sm3564691pff.83.2020.06.03.22.58.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 03 Jun 2020 22:59:04 -0700 (PDT)
-Date:   Thu, 4 Jun 2020 11:28:56 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, patches@linaro.org,
-        linaro-kernel@lists.linaro.org
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: fix warning about irq chip
- reusage
-Message-ID: <20200604055856.GA16719@Mani-XPS-13-9360>
-References: <20200604002817.667160-1-dmitry.baryshkov@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604002817.667160-1-dmitry.baryshkov@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G1TWi6JPyNVe7bv/I+K/eUE8jAY2IrEwwJWBp9E1Myw=;
+        b=g1OmXYGBNqg7ebZU5I3quzunq4OAtlBnfAGbPJevrwgxMHk+3qwMDiys6QTK+0r6KU
+         u8aUonZMkq9qSwEEpwfz5lDhcrWjjzOn1aHMVPRkDSSVMfeQF70BQneVZZQ3x04c5J0B
+         zqcog6SJCfTLXw81h00On7kvwZfPjzWhEgC6Ys9p6cNqq5w5RDBS76F5/MDHASXQrcl3
+         bQ0bfAyB8O/oQ09Nauwwbsl2Ftfh8FToNiIRb/AmdArolz+9EZmXN/rtd7PAPOko0MAq
+         IF0OUGS0oeex/tyuNWANLF4h6C6zzy4IH/ClJL/B4AZ/4MBzHpaYuNAVDwnheZ52W/AV
+         cn5g==
+X-Gm-Message-State: AOAM531Uf0VbYpZdvJQQUh62kN7DOdQCyMkxtWHD5ME+dkvfJSmVpNhm
+        Tb54SY2YKOA94mn8sv4yMvU=
+X-Google-Smtp-Source: ABdhPJzmK48ZXy8KIsztR1dHR6JZ9+RmkxY2h7FTcbObWg9zRB8hAbN2E4ASzpUToFxtUV37ZKGx4w==
+X-Received: by 2002:a17:902:868b:: with SMTP id g11mr3497107plo.225.1591255984657;
+        Thu, 04 Jun 2020 00:33:04 -0700 (PDT)
+Received: from localhost.localdomain ([101.12.48.8])
+        by smtp.gmail.com with ESMTPSA id mp15sm5073224pjb.45.2020.06.04.00.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 00:33:03 -0700 (PDT)
+From:   Richard Hsu <saraon640529@gmail.com>
+To:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Jesse1_Chang@asmedia.com.tw, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, bhelgaas@google.com, lkp@intel.com
+Cc:     kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        linux-pci@vger.kernel.org, Richard Hsu <saraon640529@gmail.com>
+Subject: [PATCH] gpio:asm28xx-18xx: new driver
+Date:   Thu,  4 Jun 2020 15:32:43 +0800
+Message-Id: <20200604073243.19280-1-saraon640529@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 03:28:17AM +0300, Dmitry Baryshkov wrote:
-> Fix the following warnings caused by reusage of the same irq_chip
-> instance for all spmi-gpio gpio_irq_chip instances. Instead embed
-> irq_chip into pmic_gpio_state struct.
-> 
-> gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-> gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-> gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Hi Linus Walleij,Bartosz Golaszewski and kbuild test robot,
+   I have fixed the warnings(make W=1 ARCH=i386) by replace two functions
+with static type,and resend the patch.
+line 69:
+<<void pci_config_pm_runtime_get(struct pci_dev *pdev)
+>>static void pci_config_pm_runtime_get(struct pci_dev *pdev)
+line 91:
+<<void pci_config_pm_runtime_put(struct pci_dev *pdev)
+>>static void pci_config_pm_runtime_put(struct pci_dev *pdev)
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Thanks
 
-Thanks,
-Mani
+BR,
+  Richard
+Signed-off-by: Richard Hsu <saraon640529@gmail.com>
+---
+ drivers/gpio/gpio-asm28xx-18xx.c | 278 +++++++++++++++++++++++++++++++
+ 1 file changed, 278 insertions(+)
+ create mode 100644 drivers/gpio/gpio-asm28xx-18xx.c
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
->  1 file changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index fe0be8a6ebb7..092a48e4dff5 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -170,6 +170,7 @@ struct pmic_gpio_state {
->  	struct regmap	*map;
->  	struct pinctrl_dev *ctrl;
->  	struct gpio_chip chip;
-> +	struct irq_chip irq;
->  };
->  
->  static const struct pinconf_generic_params pmic_gpio_bindings[] = {
-> @@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
->  	return 0;
->  }
->  
-> -static struct irq_chip pmic_gpio_irq_chip = {
-> -	.name = "spmi-gpio",
-> -	.irq_ack = irq_chip_ack_parent,
-> -	.irq_mask = irq_chip_mask_parent,
-> -	.irq_unmask = irq_chip_unmask_parent,
-> -	.irq_set_type = irq_chip_set_type_parent,
-> -	.irq_set_wake = irq_chip_set_wake_parent,
-> -	.flags = IRQCHIP_MASK_ON_SUSPEND,
-> -};
-> -
->  static int pmic_gpio_domain_translate(struct irq_domain *domain,
->  				      struct irq_fwspec *fwspec,
->  				      unsigned long *hwirq,
-> @@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
->  	if (!parent_domain)
->  		return -ENXIO;
->  
-> +	state->irq.name = "spmi-gpio",
-> +	state->irq.irq_ack = irq_chip_ack_parent,
-> +	state->irq.irq_mask = irq_chip_mask_parent,
-> +	state->irq.irq_unmask = irq_chip_unmask_parent,
-> +	state->irq.irq_set_type = irq_chip_set_type_parent,
-> +	state->irq.irq_set_wake = irq_chip_set_wake_parent,
-> +	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
-> +
->  	girq = &state->chip.irq;
-> -	girq->chip = &pmic_gpio_irq_chip;
-> +	girq->chip = &state->irq;
->  	girq->default_type = IRQ_TYPE_NONE;
->  	girq->handler = handle_level_irq;
->  	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
-> -- 
-> 2.26.2
-> 
+diff --git a/drivers/gpio/gpio-asm28xx-18xx.c b/drivers/gpio/gpio-asm28xx-18xx.c
+index 000000000000..0cf8d0df5407
+--- /dev/null
++++ b/drivers/gpio/gpio-asm28xx-18xx.c
+@@ -0,0 +1,278 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Asmedia 28xx/18xx GPIO driver
++ *
++ * Copyright (C) 2020 ASMedia Technology Inc.
++ * Author: Richard Hsu <Richard_Hsu@asmedia.com.tw>
++ */
++
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/gpio/driver.h>
++#include <linux/pci.h>
++#include <linux/spinlock.h>
++#include <linux/pm_runtime.h>
++#include <linux/bits.h>
++
++
++/* GPIO registers offsets */
++#define ASM_GPIO_CTRL		0x920
++#define ASM_GPIO_OUTPUT		0x928
++#define ASM_GPIO_INPUT		0x930
++#define ASM_REG_SWITCH		0xFFF
++
++#define ASM_REG_SWITCH_CTL	0x01
++
++#define ASM_GPIO_PIN5		5
++#define ASM_GPIO_DEFAULT	0
++
++
++#define PCI_DEVICE_ID_ASM_28XX_PID1	0x2824
++#define PCI_DEVICE_ID_ASM_28XX_PID2	0x2812
++#define PCI_DEVICE_ID_ASM_28XX_PID3	0x2806
++#define PCI_DEVICE_ID_ASM_18XX_PID1	0x1824
++#define PCI_DEVICE_ID_ASM_18XX_PID2	0x1812
++#define PCI_DEVICE_ID_ASM_18XX_PID3	0x1806
++#define PCI_DEVICE_ID_ASM_81XX_PID1	0x812a
++#define PCI_DEVICE_ID_ASM_81XX_PID2	0x812b
++#define PCI_DEVICE_ID_ASM_80XX_PID1	0x8061
++
++/*
++ * Data for PCI driver interface
++ *
++ * This data only exists for exporting the supported
++ * PCI ids via MODULE_DEVICE_TABLE.  We do not actually
++ * register a pci_driver, because someone else might one day
++ * want to register another driver on the same PCI id.
++ */
++static const struct pci_device_id pci_tbl[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_28XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_18XX_PID3), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID1), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_81XX_PID2), 0 },
++	{ PCI_DEVICE(PCI_VENDOR_ID_ASMEDIA, PCI_DEVICE_ID_ASM_80XX_PID1), 0 },
++	{ 0, },	/* terminate list */
++};
++MODULE_DEVICE_TABLE(pci, pci_tbl);
++
++struct asm28xx_gpio {
++	struct gpio_chip	chip;
++	struct pci_dev		*pdev;
++	spinlock_t		lock;
++};
++
++static void pci_config_pm_runtime_get(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	if (parent)
++		pm_runtime_get_sync(parent);
++	pm_runtime_get_noresume(dev);
++	/*
++	 * pdev->current_state is set to PCI_D3cold during suspending,
++	 * so wait until suspending completes
++	 */
++	pm_runtime_barrier(dev);
++	/*
++	 * Only need to resume devices in D3cold, because config
++	 * registers are still accessible for devices suspended but
++	 * not in D3cold.
++	 */
++	if (pdev->current_state == PCI_D3cold)
++		pm_runtime_resume(dev);
++}
++
++static void pci_config_pm_runtime_put(struct pci_dev *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device *parent = dev->parent;
++
++	pm_runtime_put(dev);
++	if (parent)
++		pm_runtime_put_sync(parent);
++}
++
++static int asm28xx_gpio_request(struct gpio_chip *chip, unsigned offset)
++{
++	if (offset == ASM_GPIO_PIN5)
++		return -ENODEV;
++
++	return 0;
++}
++
++static void asm28xx_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_OUTPUT, &temp);
++	if (value)
++		temp |= BIT(offset);
++	else
++		temp &= ~BIT(offset);
++
++	pci_write_config_byte(agp->pdev, ASM_GPIO_OUTPUT, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx gpio %d set %d reg=%02x\n", offset, value, temp);
++}
++
++static int asm28xx_gpio_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_INPUT, &temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx GPIO Pin %d get reg=%02x\n", offset, temp);
++	return (temp & BIT(offset)) ? 1 : 0;
++}
++
++static int asm28xx_gpio_dirout(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp |= BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirout gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static int asm28xx_gpio_dirin(struct gpio_chip *chip, unsigned offset)
++{
++	struct asm28xx_gpio *agp = gpiochip_get_data(chip);
++	u8 temp;
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(agp->pdev);
++	spin_lock_irqsave(&agp->lock, flags);
++	pci_read_config_byte(agp->pdev, ASM_GPIO_CTRL, &temp);
++	temp &= ~BIT(offset);
++	pci_write_config_byte(agp->pdev, ASM_GPIO_CTRL, temp);
++	spin_unlock_irqrestore(&agp->lock, flags);
++	pci_config_pm_runtime_put(agp->pdev);
++	dev_dbg(chip->parent, "ASMEDIA-28xx/18xx dirin gpio %d  reg=%02x\n", offset, temp);
++
++	return 0;
++}
++
++static struct asm28xx_gpio gp = {
++	.chip = {
++		.label		= "ASM28XX-18XX GPIO",
++		.owner		= THIS_MODULE,
++		.ngpio		= 8,
++		.request	= asm28xx_gpio_request,
++		.set		= asm28xx_gpio_set,
++		.get		= asm28xx_gpio_get,
++		.direction_output = asm28xx_gpio_dirout,
++		.direction_input = asm28xx_gpio_dirin,
++	},
++};
++
++static int __init asm28xx_gpio_init(void)
++{
++	int err = -ENODEV;
++	struct pci_dev *pdev = NULL;
++	const struct pci_device_id *ent;
++	u8 temp;
++	unsigned long flags;
++	int type;
++
++	/* We look for our device - Asmedia 28XX and 18XX Bridge
++	 * I don't know about a system with two such bridges,
++	 * so we can assume that there is max. one device.
++	 *
++	 * We can't use plain pci_driver mechanism,
++	 * as the device is really a multiple function device,
++	 * main driver that binds to the pci_device is an bus
++	 * driver and have to find & bind to the device this way.
++	 */
++
++	for_each_pci_dev(pdev) {
++		ent = pci_match_id(pci_tbl, pdev);
++		if (ent) {
++			/* Because GPIO Registers only work on Upstream port. */
++			type = pci_pcie_type(pdev);
++			if (type == PCI_EXP_TYPE_UPSTREAM) {
++				dev_info(&pdev->dev, "ASMEDIA-28xx/18xx Init Upstream detected\n");
++				goto found;
++			}
++		}
++	}
++	goto out;
++
++found:
++	gp.pdev = pdev;
++	gp.chip.parent = &pdev->dev;
++
++	spin_lock_init(&gp.lock);
++
++	err = gpiochip_add_data(&gp.chip, &gp);
++	if (err) {
++		dev_err(&pdev->dev, "GPIO registering failed (%d)\n", err);
++		goto out;
++	}
++
++	pci_config_pm_runtime_get(pdev);
++
++	/* Set PCI_CFG_Switch bit = 1,then we can access GPIO Registers. */
++	spin_lock_irqsave(&gp.lock, flags);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	temp |= ASM_REG_SWITCH_CTL;
++	pci_write_config_byte(pdev, ASM_REG_SWITCH, temp);
++	pci_read_config_byte(pdev, ASM_REG_SWITCH, &temp);
++	spin_unlock_irqrestore(&gp.lock, flags);
++
++	pci_config_pm_runtime_put(pdev);
++	dev_err(&pdev->dev, "ASMEDIA-28xx/18xx Init SWITCH = 0x%x\n", temp);
++out:
++	return err;
++}
++
++static void __exit asm28xx_gpio_exit(void)
++{
++	unsigned long flags;
++
++	pci_config_pm_runtime_get(gp.pdev);
++
++	spin_lock_irqsave(&gp.lock, flags);
++	/* Set GPIO Registers to default value. */
++	pci_write_config_byte(gp.pdev, ASM_GPIO_OUTPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_INPUT, ASM_GPIO_DEFAULT);
++	pci_write_config_byte(gp.pdev, ASM_GPIO_CTRL, ASM_GPIO_DEFAULT);
++	/* Clear PCI_CFG_Switch bit = 0,then we can't access GPIO Registers. */
++	pci_write_config_byte(gp.pdev, ASM_REG_SWITCH, ASM_GPIO_DEFAULT);
++	spin_unlock_irqrestore(&gp.lock, flags);
++	pci_config_pm_runtime_put(gp.pdev);
++
++	gpiochip_remove(&gp.chip);
++}
++
++module_init(asm28xx_gpio_init);
++module_exit(asm28xx_gpio_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Richard Hsu <Richard_Hsu@asmedia.com.tw>");
++MODULE_DESCRIPTION("ASMedia 28xx 18xx GPIO Driver");
+-- 
+2.17.1
+
