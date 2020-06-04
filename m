@@ -2,111 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DAF41ED869
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 00:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 180651EDA02
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 02:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgFCWJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Jun 2020 18:09:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
+        id S1726429AbgFDA2X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Jun 2020 20:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726460AbgFCWJC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 18:09:02 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73103C08C5C0
-        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 15:09:02 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id z206so2323627lfc.6
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 15:09:02 -0700 (PDT)
+        with ESMTP id S1726260AbgFDA2W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Jun 2020 20:28:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABB1C03E96D
+        for <linux-gpio@vger.kernel.org>; Wed,  3 Jun 2020 17:28:20 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z9so5029644ljh.13
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jun 2020 17:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cGmwYW9BzpYkE3b5BXMa4x8r+iWYDMrACAFEn5/TXJs=;
-        b=HKtt7Ce2T/uv0uuk+ikmeaezZFR7KV+O78D0r/pRwJ/pvjEvYLfSpoVYCPmGMlXgAH
-         vklJDoXat2X4tk+UWGiPrV1fAJzjDYjto173ALf43iPuLmlA7XTETrfM1n42QfDFYA6G
-         lybqZRxRsnxahb0rFMHSsWDGaHfUwLYJcRCM3DQs1xpf/3lnHy6DC75yQNYuwQT7hyC7
-         aI3VznFrKb81GMJMV34Mg5laOi3kTzCSe4MyP4nCHPbGBrMF/l/O5CUyDc96d9qfMTyw
-         /u1HgOiHC0+TbH7IDV7ts5kgOQS0aTGs9WtayvOuKAcQsbrJtu+D4ZrcZ7BbOqgXazYA
-         Sdzw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3VHOWfgLhQyccmK4q8Ldz2IqVj7g3f2Klhib240tNYU=;
+        b=HBJAvwNzUOXRnGbLcgIQFhS+ttFVgf08OzqhzrjyAZaqK3Ei9sKm7hM0fTAvvD6wIQ
+         ukZAaxFfk440BT3uIQ0YeySkqiFAh90P8Wm7OSPF+s4Dlz2Kfz39JfAErWI6KcrCfN+f
+         WBkEMFn9RyXVa6RxL0ITT4Iq8JiLyfuW1uSH1qsBDQAC9Lk2aYHvezfFP/NcURtfiDAi
+         c4+ee+YYDRKYNrtobJ8mOmoFzTQJIu/fQNCmozJWZHh+SfDEvDDx7XRLnizvu1EdJucE
+         MZhhyrnc0ienyLmEdkT4Op2ip3ZLRvGR6azoaY44LNVzvyTmL7JPs2u0Dm3v0fjTnplG
+         M+TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cGmwYW9BzpYkE3b5BXMa4x8r+iWYDMrACAFEn5/TXJs=;
-        b=lKtTh8IQS+2VdUzStAeRu+Cd4loaw2P5wqmTZrjb3BCotuiitvm0+hYscf34zFCvvW
-         4hBQNOYCAxHKGLRc/EwkUKEGKJagt4M9fwO5rsF0elXIu6dXJjI20uGUyBwlECTTaoqP
-         7AQn5+M7zyj6m+nQ9y+b2ZpYGsKfw+FDKMlpBhRANXSidfrORyuJZTNH5mArkX5rJyit
-         lPrDAe173+HXY/W3lPohj2RM+DYmLZcLgupxqFfL2Rw6hEBkIFFTaIql4YGNSEyeqAZK
-         S7I6aClUNAK603giIcOQYS2Ct38J+nsRWPgh/ThKeEbWs2Bw+xFIkXDgRru0e/pJ4S/4
-         dWPw==
-X-Gm-Message-State: AOAM533LQJ20oUDVk2DnZnH3AlO1wsJCfquyrUqAcPzAW7YlsdDBIW94
-        CaNd80vtCYGpIIvGgJPMI7gtKwfcsI4achjdQwHjqA==
-X-Google-Smtp-Source: ABdhPJyk+KPR2lsjSvLKNRHP6aN4z/UirZhICS+CEfRNQ+r3j4K/FSNVE284NtSnzx9V5dXUQyG8xe1LglaugjNvlLo=
-X-Received: by 2002:a19:c8cb:: with SMTP id y194mr820722lff.89.1591222140898;
- Wed, 03 Jun 2020 15:09:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3VHOWfgLhQyccmK4q8Ldz2IqVj7g3f2Klhib240tNYU=;
+        b=WRpu2A5Zzfw0nx8D0rs4e2oUN7FGiWv9V51UNhsxuAkwGHmRkGdR76p989DWndtaA6
+         bTmJ/rE98tZR7VF0XdTTev0U7+H5ydnfoTGNJL7S5jHllhGjHmx3bjrSrHiYQkklH5Qo
+         Ynu8uAzvZ0byiHSkiwHOS+kp9WhMoshgBM0+LE8gMrKej1gXgu0sbs1KpZRw2/kjtOB+
+         Gdg4U+HEUjGfVQRbquYfu3ceVB7aT1lnExpekSzEdcW+CfTVnN9NUsNMV5FSmVqWrCpF
+         Hh8oSX2XBDpNkxgjG9A4zwj0ZKobgPdwwi0sOwY0wveHJJ0woI9CK8sYqZzEmxFJiIgM
+         7caQ==
+X-Gm-Message-State: AOAM533ErZAY1IjmKF0ZY/YuKGvsyjIK+amgg8gYF3DbLjYeOmC4uU73
+        qIcHZFpgsAnSRA0sFiBSRS/3oaTt7x8=
+X-Google-Smtp-Source: ABdhPJy0NDg5HUyn9p7YobjUOZLS9dC/88XxBVGszvY1kZmURhjaoLE7/mPc6dli1TKekNQUUaUciQ==
+X-Received: by 2002:a05:651c:112b:: with SMTP id e11mr859787ljo.134.1591230499361;
+        Wed, 03 Jun 2020 17:28:19 -0700 (PDT)
+Received: from eriador.lan ([188.162.64.226])
+        by smtp.gmail.com with ESMTPSA id q4sm1061357lfm.93.2020.06.03.17.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 17:28:18 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        patches@linaro.org, linaro-kernel@lists.linaro.org
+Subject: [PATCH] pinctrl: qcom: spmi-gpio: fix warning about irq chip reusage
+Date:   Thu,  4 Jun 2020 03:28:17 +0300
+Message-Id: <20200604002817.667160-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>
- <87h7vvb1s3.fsf@belgarion.home> <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>
- <20200601183102.GS30374@kadam>
-In-Reply-To: <20200601183102.GS30374@kadam>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 4 Jun 2020 00:08:49 +0200
-Message-ID: <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 1, 2020 at 8:31 PM Dan Carpenter <dan.carpenter@oracle.com> wro=
-te:
-> On Mon, Jun 01, 2020 at 01:31:23PM +0200, Christophe JAILLET wrote:
-> > Le 01/06/2020 =C3=A0 10:58, Robert Jarzmik a =C3=A9crit :
-> > > Christophe JAILLET <christophe.jaillet@wanadoo.fr> writes:
-> > >
-> > > > Commit 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for=
- pinctrl registration")
-> > > > has turned a 'pinctrl_register()' into 'devm_pinctrl_register()' in
-> > > > 'pxa2xx_pinctrl_init()'.
-> > > > However, the corresponding 'pinctrl_unregister()' call in
-> > > > 'pxa2xx_pinctrl_exit()' has not been removed.
-> > > >
-> > > > This is not an issue, because 'pxa2xx_pinctrl_exit()' is unused.
-> > > > Remove it now to avoid some wondering in the future and save a few =
-LoC.
-> > > >
-> > > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > > Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-> > >
-> > > Would be even a better patch with a :
-> > > Fixes: 6d33ee7a0534 ("pinctrl: pxa: Use devm_pinctrl_register() for p=
-inctrl registration")
-> >
-> > I was wondering it was was needed in this case.
-> > The patch does not really fix anything, as the function is unused. Or i=
-t
-> > fixes things on a theoretical point of view.
->
-> There is no concensus...  We should call a vote on this at Kernel
-> Summit.  :P
+Fix the following warnings caused by reusage of the same irq_chip
+instance for all spmi-gpio gpio_irq_chip instances. Instead embed
+irq_chip into pmic_gpio_state struct.
 
-Fixes means it fixes something that was wrong in that commit.
-That's all. Whether syntactic or semantic or regression or
-serious or not does not matter. It is also not compulsory to
-add it is just helpful.
+gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
 
-If it is a regression or critical bug, we also add Cc: stable.
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index fe0be8a6ebb7..092a48e4dff5 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -170,6 +170,7 @@ struct pmic_gpio_state {
+ 	struct regmap	*map;
+ 	struct pinctrl_dev *ctrl;
+ 	struct gpio_chip chip;
++	struct irq_chip irq;
+ };
+ 
+ static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+@@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+ 	return 0;
+ }
+ 
+-static struct irq_chip pmic_gpio_irq_chip = {
+-	.name = "spmi-gpio",
+-	.irq_ack = irq_chip_ack_parent,
+-	.irq_mask = irq_chip_mask_parent,
+-	.irq_unmask = irq_chip_unmask_parent,
+-	.irq_set_type = irq_chip_set_type_parent,
+-	.irq_set_wake = irq_chip_set_wake_parent,
+-	.flags = IRQCHIP_MASK_ON_SUSPEND,
+-};
+-
+ static int pmic_gpio_domain_translate(struct irq_domain *domain,
+ 				      struct irq_fwspec *fwspec,
+ 				      unsigned long *hwirq,
+@@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	if (!parent_domain)
+ 		return -ENXIO;
+ 
++	state->irq.name = "spmi-gpio",
++	state->irq.irq_ack = irq_chip_ack_parent,
++	state->irq.irq_mask = irq_chip_mask_parent,
++	state->irq.irq_unmask = irq_chip_unmask_parent,
++	state->irq.irq_set_type = irq_chip_set_type_parent,
++	state->irq.irq_set_wake = irq_chip_set_wake_parent,
++	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
++
+ 	girq = &state->chip.irq;
+-	girq->chip = &pmic_gpio_irq_chip;
++	girq->chip = &state->irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
+-- 
+2.26.2
+
