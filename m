@@ -2,107 +2,221 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB961EEA09
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 20:02:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD111EED1F
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 23:12:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgFDSCa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 14:02:30 -0400
-Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:59524 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730055AbgFDSCa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 14:02:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 99980F4D1E;
-        Thu,  4 Jun 2020 18:02:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:960:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:2892:2911:3138:3139:3140:3141:3142:3354:3622:3865:3866:3867:3868:3870:3871:3872:3874:4321:4425:5007:6119:7903:10004:10400:10848:11232:11658:11914:12297:12663:12679:12740:12760:12895:13069:13095:13255:13311:13357:13439:14096:14097:14659:21080:21433:21451:21627:21790:21939:21987:30054:30075:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: sugar90_6017dc626d99
-X-Filterd-Recvd-Size: 3603
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  4 Jun 2020 18:02:25 +0000 (UTC)
-Message-ID: <c925d033cf566743a1f6255da7843d1b85451d2f.camel@perches.com>
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-From:   Joe Perches <joe@perches.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Julia Lawall <julia.lawall@inria.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Date:   Thu, 04 Jun 2020 11:02:23 -0700
-In-Reply-To: <20200604173500.GI22511@kadam>
-References: <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-         <20200604083120.GF22511@kadam>
-         <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
-         <alpine.DEB.2.21.2006041147360.2577@hadrien>
-         <32232229031e02edcc268b1074c9bac44012ee35.camel@perches.com>
-         <alpine.DEB.2.21.2006041228520.2577@hadrien>
-         <10e54ee84bd44171ef329bed9e7e6a946bae61ba.camel@perches.com>
-         <alpine.DEB.2.21.2006041328570.2577@hadrien> <20200604123038.GG22511@kadam>
-         <0749ac5e3868c6ba50728ced8366bfd86b0b8500.camel@perches.com>
-         <20200604173500.GI22511@kadam>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        id S1726450AbgFDVLT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 17:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgFDVLT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 17:11:19 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38EEC08C5C0;
+        Thu,  4 Jun 2020 14:11:18 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 67D4B22708;
+        Thu,  4 Jun 2020 23:11:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591305074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=dfBAK5buwUbNri4/Cpv7vZflGHwzc1zt++Q49F+L4Sk=;
+        b=BUavk4KOaVLu6b0yy/JrUOH+f8S+yP9N7RFB9x4HPaKKkwYPMRq5Y97HAwXJJefjWsMP3X
+        5p+UlwqvcBs9fQgN7yUcJoDV/Icy5/wizYDb/IjWVGCYHiKXMXfgOw1iMf0zqL/NJKcI9p
+        Nq2WSUQO2QN/YvnQSINASUnsosNCt/0=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v4 00/11] Add support for Kontron sl28cpld
+Date:   Thu,  4 Jun 2020 23:10:28 +0200
+Message-Id: <20200604211039.12689-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 2020-06-04 at 20:35 +0300, Dan Carpenter wrote:
-> On Thu, Jun 04, 2020 at 09:08:44AM -0700, Joe Perches wrote:
-> > On Thu, 2020-06-04 at 15:30 +0300, Dan Carpenter wrote:
-> > > On Thu, Jun 04, 2020 at 01:42:12PM +0200, Julia Lawall wrote:
-> > > > OK, I recall a discussion with Dan where he suggested that some things
-> > > > that were not actually bug fixes could also merit a Fixes tag.  But it's
-> > > > probably better if he weighs in directly.
-> > > 
-> > > I generally think Fixes should only be used for "real bug" fixes.
-> > > 
-> > > The one exception is when I'm reviewing a patch that fixes an "unused
-> > > assignment" static checker warning is that I know which commit
-> > > introduced the warning.
+The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+monitoring and an interrupt controller. For now this controller is used on
+the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+might also be used on other boards in the future. The individual blocks
+(like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+then instantiates different (or multiple of the same) blocks. It also
+provides the register layout so it might be updated in the future without a
+device tree change; and support other boards with a different layout or
+functionalities.
 
-Sometimes those warnings are introduced by new compiler
-versions.
+See also [1] for more information.
 
-That's why I don't care for -Werror use in Makefiles.
+This is my first take of a MFD driver. I don't know whether the subsystem
+maintainers should only be CCed on the patches which affect the subsystem
+or on all patches for this series. I've chosen the latter so you can get a
+more complete picture.
 
-> > > I don't have strong feelings if it's in the
-> > > Fixes tag or if it's just mentioned in the commit message.
-> > 
-> > My view is that changes that silence compiler warnings are
-> > not fixing bugs and that these changes should generally not
-> > be backported.
-> > 
-> The Fixes tag is useful for backports but that's not whole the point of
-> it.  It's also for collecting metrics.
+[1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
 
-Hmm, how are these metrics used?
+Changes since v3:
+ - use of_platform_populate() to populate internal devices using the
+   internal register offsets as unit-addresses
+ - because we don't use mfd_cells anymore, we cannot use IORESOURCE_REG,
+   but instead parse the reg property in each individual driver
+ - dropped the following patches because they were already merged:
+     gpiolib: Introduce gpiochip_irqchip_add_domain()
+     gpio: add a reusable generic gpio_chip using regmap
+ - dropped the following patches because they are no longer needed:
+     include/linux/ioport.h: add helper to define REG resource constructs
+     mfd: mfd-core: Don't overwrite the dma_mask of the child device
+     mfd: mfd-core: match device tree node against reg property
+ - rephrase commit messages, as suggested by Thomas Gleixner
 
-> Also sometimes we fix the bug
-> before the kernel is released so the Fixes tag means we can automatically
-> ignore those ones when we look at which patches to backport.
-> 
-> I don't care if the "unused assignment" patches use a Fixes tag or just
-> mention the commit.  Either way the information is there for when I
-> review the patch.
+Changes since v2:
+As suggested by Guenter Roeck:
+ - added sl28cpld.rst to index.rst
+ - removed sl28cpld_wdt_status()
+ - reverse christmas tree local variable ordering
+ - assign device_property_read_bool() retval directly
+ - introduce WDT_DEFAULT_TIMEOUT and use it if the hardware reports
+   0 as timeout.
+ - set WDOG_HW_RUNNING if applicable
+ - remove platform_set_drvdata() leftover
 
-Perhaps there could/should be some distinction between
-"real bug" fixes and trivialities like "unused assignment"
+As suggested by Bartosz Golaszewski:
+ - don't export gpio_regmap_simple_xlate()
+ - combine local variable declaration of the same type
+ - drop the "struct gpio_regmap_addr", instead use -1 to force an address
+   offset of zero
+ - fix typo
+ - use "struct gpio_regmap_config" pattern, keep "struct gpio_regmap"
+   private. this also means we need a getter/setter for the driver_data
+   element.
 
-Maybe something like:
-	Updates: <commit> ("commit description")
-vs
-	Fixes: <commit> ("commit description")
+As suggested by Linus Walleij:
+ - don't store irq_domain in gpio-regmap. drop to_irq() altogether for now.
+   Instead there is now a new patch which lets us set the irqdomain of the
+   gpiochip_irqchip and use its .to_irq() function. This way we don't have
+   to expose the gpio_chip inside the gpio-regmap to the user.
 
+Changes since v1:
+ - use of_match_table in all drivers, needed for automatic module loading,
+   when using OF_MFD_CELL()
+ - add new gpio-regmap.c which adds a generic regmap gpio_chip
+   implementation
+ - new patch for reqmap_irq, so we can reuse its implementation
+ - remove almost any code from gpio-sl28cpld.c, instead use gpio-regmap and
+   regmap-irq
+ - change the handling of the mfd core vs device tree nodes; add a new
+   property "of_reg" to the mfd_cell struct which, when set, is matched to
+   the unit-address of the device tree nodes.
+ - fix sl28cpld watchdog when it is not initialized by the bootloader.
+   Explicitly set the operation mode.
+ - also add support for kontron,assert-wdt-timeout-pin in sl28cpld-wdt.
+
+As suggested by Bartosz Golaszewski:
+ - define registers as hex
+ - make gpio enum uppercase
+ - move parent regmap check before memory allocation
+ - use device_property_read_bool() instead of the of_ version
+ - mention the gpio flavors in the bindings documentation
+
+As suggested by Guenter Roeck:
+ - cleanup #includes and sort them
+ - use devm_watchdog_register_device()
+ - use watchdog_stop_on_reboot()
+ - provide a Documentation/hwmon/sl28cpld.rst
+ - cleaned up the weird tristate->bool and I2C=y issue. Instead mention
+   that the MFD driver is bool because of the following intc patch
+ - removed the SL28CPLD_IRQ typo
+
+As suggested by Rob Herring:
+ - combine all dt bindings docs into one patch
+ - change the node name for all gpio flavors to "gpio"
+ - removed the interrupts-extended rule
+ - cleaned up the unit-address space, see above
+
+Michael Walle (11):
+  dt-bindings: mfd: Add bindings for sl28cpld
+  mfd: Add support for Kontron sl28cpld management controller
+  irqchip: add sl28cpld interrupt controller support
+  watchdog: add support for sl28cpld watchdog
+  pwm: add support for sl28cpld PWM controller
+  gpio: add support for the sl28cpld GPIO controller
+  hwmon: add support for the sl28cpld hardware monitoring controller
+  arm64: dts: freescale: sl28: enable sl28cpld
+  arm64: dts: freescale: sl28: map GPIOs to input events
+  arm64: dts: freescale: sl28: enable LED support
+  arm64: dts: freescale: sl28: enable fan support
+
+ .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 ++++
+ .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++
+ .../kontron,sl28cpld-intc.yaml                |  54 ++++
+ .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++
+ .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 +++
+ .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 +++
+ Documentation/hwmon/index.rst                 |   1 +
+ Documentation/hwmon/sl28cpld.rst              |  36 +++
+ .../fsl-ls1028a-kontron-kbox-a-230-ls.dts     |  14 ++
+ .../fsl-ls1028a-kontron-sl28-var3-ads2.dts    |   9 +
+ .../freescale/fsl-ls1028a-kontron-sl28.dts    | 134 ++++++++++
+ drivers/gpio/Kconfig                          |  11 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sl28cpld.c                  | 180 ++++++++++++++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sl28cpld-hwmon.c                | 150 ++++++++++++
+ drivers/irqchip/Kconfig                       |   3 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-sl28cpld.c                | 102 ++++++++
+ drivers/mfd/Kconfig                           |  21 ++
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/sl28cpld.c                        |  79 ++++++
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sl28cpld.c                    | 201 +++++++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/sl28cpld_wdt.c               | 231 ++++++++++++++++++
+ 29 files changed, 1568 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
+ create mode 100644 Documentation/hwmon/sl28cpld.rst
+ create mode 100644 drivers/gpio/gpio-sl28cpld.c
+ create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+ create mode 100644 drivers/irqchip/irq-sl28cpld.c
+ create mode 100644 drivers/mfd/sl28cpld.c
+ create mode 100644 drivers/pwm/pwm-sl28cpld.c
+ create mode 100644 drivers/watchdog/sl28cpld_wdt.c
+
+-- 
+2.20.1
 
