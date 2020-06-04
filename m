@@ -2,108 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67CED1EE1DC
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 11:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8531EE1D7
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jun 2020 11:52:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgFDJwt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 05:52:49 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:54088 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728313AbgFDJwt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 05:52:49 -0400
-X-IronPort-AV: E=Sophos;i="5.73,471,1583190000"; 
-   d="scan'208";a="452941151"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 11:52:17 +0200
-Date:   Thu, 4 Jun 2020 11:52:17 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Joe Perches <joe@perches.com>
-cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        id S1728030AbgFDJw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Jun 2020 05:52:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45098 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbgFDJw3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:52:29 -0400
+IronPort-SDR: nqSPO534JOfYu5gvbShwtZvbYcp5WQ3W3AAnySNp0/lD956iiJn1Z1kQ2dL7t5rfSzm9GTgT+I
+ skHYzEeGGWqQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2020 02:52:28 -0700
+IronPort-SDR: 2fRFjaqnmVnAgs8MloW7pvIeeTr2Da57f3xQAECY/ol3kDbPIgp8b4eTToZ6XB/UqXLAk0oVle
+ nljA2i+KXdhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,471,1583222400"; 
+   d="scan'208";a="378366963"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Jun 2020 02:52:25 -0700
+Received: by lahna (sSMTP sendmail emulation); Thu, 04 Jun 2020 12:52:24 +0300
+Date:   Thu, 4 Jun 2020 12:52:24 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: pxa: pxa2xx: Remove 'pxa2xx_pinctrl_exit()'
- which is unused and broken
-In-Reply-To: <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
-Message-ID: <alpine.DEB.2.21.2006041147360.2577@hadrien>
-References: <20200531073716.593343-1-christophe.jaillet@wanadoo.fr>         <87h7vvb1s3.fsf@belgarion.home>         <a2e34c9a-676f-d83f-f395-7428af038c16@wanadoo.fr>         <20200601183102.GS30374@kadam>         <CACRpkdasbS-4_ZwC-Ucm8tkSUW5tAQdUrXjxHXQ3J0goVYfgHw@mail.gmail.com>
-         <20200604083120.GF22511@kadam> <2aa49a543e6f48a6f428a37b63a06f9149870225.camel@perches.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        mouse <xllacyx@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH v1] pintctrl: =?iso-8859-1?Q?me?=
+ =?iso-8859-1?Q?rrifield=3A_Add_I=B2S?= bus 2 pins to groups and functions
+Message-ID: <20200604095224.GN247495@lahna.fi.intel.com>
+References: <20200604092807.67283-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604092807.67283-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jun 04, 2020 at 12:28:07PM +0300, Andy Shevchenko wrote:
+> It is useful to control I²S bus 2 pins if we would like to connect
+> an audio codec.
+> 
+> Reported-by: mouse <xllacyx@gmail.com>
+> Reported-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-
-On Thu, 4 Jun 2020, Joe Perches wrote:
-
-> On Thu, 2020-06-04 at 11:31 +0300, Dan Carpenter wrote:
-> > On Thu, Jun 04, 2020 at 12:08:49AM +0200, Linus Walleij wrote:
-> []
-> > > Fixes means it fixes something that was wrong in that commit.
-> > > That's all. Whether syntactic or semantic or regression or
-> > > serious or not does not matter. It is also not compulsory to
-> > > add it is just helpful.
-> >
-> > Fixes tag should be compulsory for actual bug fixes.  We had a the
-> > Bad Binder exploit last year because commit f5cb779ba163
-> > ("ANDROID: binder: remove waitqueue when thread exits.") had no Fixes
-> > tag and wasn't backported to Android kernels.
->
-> Fixes tags IMO should be exclusively for actual bug fixes
-> and should be mandatory.
-
-I'm not sure that it is always possible to determine the specific commit
-that a patch fixes.  Some bugs are too old.  Some bugs may arise from an
-interaction of issues.  I don't have a concrete example, but I feel uneasy
-about mandator and compulsory.  Neither word is in the proposed text,
-though.
-
-Should Fixes also be used when the change will make it hard to port other
-fixes over it?
-
-julia
-
->
-> Perhaps:
-> ---
->  Documentation/process/submitting-patches.rst | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-> index 1699b7f8e63a..285a84ae79de 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -636,12 +636,14 @@ idea was not posted in a public forum. That said, if we diligently credit our
->  idea reporters, they will, hopefully, be inspired to help us again in the
->  future.
->
-> -A Fixes: tag indicates that the patch fixes an issue in a previous commit. It
-> -is used to make it easy to determine where a bug originated, which can help
-> -review a bug fix. This tag also assists the stable kernel team in determining
-> -which stable kernel versions should receive your fix. This is the preferred
-> -method for indicating a bug fixed by the patch. See :ref:`describe_changes`
-> -for more details.
-> +A Fixes: tag indicates that the patch fixes a "bug". i.e.: a logic defect or
-> +regression in a previous commit.  A Fixes: tag should not be used to indicate
-> +that a previous commit had some trivial defect in spelling in the commit log or
-> +some whitespace defect.  The Fixes: tag is used to make it easy to determine
-> +where a bug originated, which can help review a bug fix. The Fixes: tag also
-> +assists the stable kernel team in determining which stable kernel versions
-> +should receive your fix. This is the preferred method for indicating a bug is
-> +fixed by the patch.  See :ref:`describe_changes` for more details.
->
->  .. _the_canonical_patch_format:
->
->
->
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
