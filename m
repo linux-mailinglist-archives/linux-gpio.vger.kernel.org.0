@@ -2,143 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28A3A1EF286
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 09:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8936E1EF2A0
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 10:01:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726084AbgFEHzn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 03:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
+        id S1726024AbgFEIBp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 04:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbgFEHzm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 03:55:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8CDC08C5C3
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Jun 2020 00:55:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id o5so9249290iow.8
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Jun 2020 00:55:42 -0700 (PDT)
+        with ESMTP id S1725280AbgFEIBp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 04:01:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3636C08C5C2;
+        Fri,  5 Jun 2020 01:01:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id x207so4563290pfc.5;
+        Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
-        b=napgGUjtBstHaKnWWAcYRE9+wyJbxk66BBMEEh1vAYPPhh3BsNVWTmF+SaM6DRStHz
-         KhfmvrVL7amdp1nsprW+RWRzE0G49LBt4ZFeCXwhSmmzsjzwRmky5fhUA3GFffzqTrW5
-         0DlLgeH3O6rSTZ+w/JYgqQb0mMFgdGnYDe9IstCdBCqss5qYcgDv32OySW1Mji0SNTUI
-         H3Ah1CzDBPOTiTZH8Xd/d4lnTrK223b1zYtDlvy7bNiMdzs2ago3OOb3TM/q3UICmpfy
-         jmvesJKZOY6QDyxB3Irvhcxnnsti0+4q9fIcyx0I2VamPkEUjRX3qNm9JBGIncXr6hFv
-         ufVw==
+         :cc;
+        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
+        b=SqGNdaF0A6Kq1TcOl0i/w+Mz7gpK3TvBcCVsNXyvakLq/sI1vjH9Gydj55AfUfH9jJ
+         aYs3QqCXt5c3d1k0qq13+K2Uv7JyTxshU0RSzrKBrz5OjsFwkKdnw4sOp603IEyQPiDd
+         89zCC+yqpR029H2Ew2FnHd4D2aGfwn/ByuodHV7MbX0fUOLBcC+L+d0HKpwtalFHrOEB
+         W7zFBO+bNIGPoxHEJ/pt/cjKbfnFtArfKZN1q4p+7CwBZixuqzsXECf0yASthSfR1qP4
+         x6e0fswV/QzEtzr5wGL8Fg0je0o+1sIX9ltX0sGRUyXhtDgaDVshsZ/AE8O/vX1i2sQc
+         l3Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
-        b=sOD5F/vccL1ThObepaFU4RFBch0gcqxtTV+peeY4bOv7jgBGzz+4Y9do9m6s017p/x
-         aiU7FkKHOQFqQ9MFmsSZyh2S1Y6xX1JCVEFPmEnU3t3/hTsfw7cj5bZFtjgR/9F4JPIh
-         y1GfEOoSLVYFLmHnyJAa6mYNPi4O4YF7XmT7Znp82oApyKCZHKlmKiWSpxozaIW1tP1d
-         j+pEuNjG1qhHbSAswBGaZMNKD2etgGbhSgee6vl6dGyzPBDUIocZ4Hv14fpZFk4VwOsf
-         33DyCsnzaxIdfERHlzRwlulS8XWX0SoOURXX5IY7ce1QnkGbJ7O6ZYjlBJoaOqCXm7Zl
-         ILTA==
-X-Gm-Message-State: AOAM533J9T9ilodS9+sKI8BH+3UjfI+uu8jSxwJg+HXGxytugajPte/a
-        q8edwukLVupoTB+ZFUTbA/Len7n2n4TveqPzpWbrBA==
-X-Google-Smtp-Source: ABdhPJzySjsrYJWlwo+qyiiIvYJv/b1UsVHtFdnZqKiqFRi+LK2PxUf4HI42eeakb5whjKDNylTXeyddpLy8O/Gu5M4=
-X-Received: by 2002:a02:a003:: with SMTP id a3mr7313081jah.102.1591343741504;
- Fri, 05 Jun 2020 00:55:41 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=CA32MQ/+vRGTpFh4UZx8UcD1pDZn/aqTDePABuFsMhA=;
+        b=tQhZBL41IM3w8TpWbrNo0thO3xjQCM4/3bS4TtQRkQmPR7DCXghWYcx/tMs1Nw+Hlq
+         ClCkVI3+Xo7cO3ng4pY3g8epbAiKE5K1w/GbllySasXS4xihir76yR49fLC5DWSn2AbR
+         9bIIvg5JX+/WS0pN0xHaOB2fJ+/NUL5/fLOl3o/YvD9VU3D4MFYFIqNfWLAmgJg8b1kA
+         eTUothXbD7HyktMKwUNhMvFyzxeFuohorLl1G3k76owzWOBCtM5KGREJO7UIa8mOKgTu
+         oTqO/qi5ErEPala2uj7tBphNY3Pz0FQxbg8+LkfdfXqGMUL5kY4huJsfiX3/p6aIueox
+         pfBA==
+X-Gm-Message-State: AOAM530UkXph9iB3w0lE27/d0XFD3yd9QOFJw/PhYnexb02TgxXEwJAO
+        H3IKwZkaMAwiEKTWYRzI5p3/iOcxtPrZLyroYBg=
+X-Google-Smtp-Source: ABdhPJxS0gxAXwoiIs/HAxam4Ku1ew3smVf/6LQ9gSPZd/jo5uG/q2I+R8nedzrqQ5RR62x1rVChLyZKWcKjSc0zh2k=
+X-Received: by 2002:a62:1792:: with SMTP id 140mr8576341pfx.36.1591344103178;
+ Fri, 05 Jun 2020 01:01:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMpxmJX8U-uNYJPQxmkox=YTSvXVPrWss2y5MS81_bg43Co8Lg@mail.gmail.com>
- <20200604175515.GA1076951@bjorn-Precision-5520>
-In-Reply-To: <20200604175515.GA1076951@bjorn-Precision-5520>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 5 Jun 2020 09:55:30 +0200
-Message-ID: <CAMRc=McWFpFAC3ziWdOEYkc0YwkN-Jqf7vZpxbCBLPoe=oewdg@mail.gmail.com>
-Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Richard Hsu <saraon640529@gmail.com>,
-        Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
-        Jesse1_Chang@asmedia.com.tw,
+References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-3-michael@walle.cc>
+In-Reply-To: <20200604211039.12689-3-michael@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 5 Jun 2020 11:01:26 +0300
+Message-ID: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-pci@vger.kernel.org
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 4 cze 2020 o 19:55 Bjorn Helgaas <helgaas@kernel.org> napisa=C5=82(a)=
-:
+On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
 >
-> > > +       /* We look for our device - Asmedia 28XX and 18XX Bridge
-> > > +        * I don't know about a system with two such bridges,
-> > > +        * so we can assume that there is max. one device.
-> > > +        *
-> > > +        * We can't use plain pci_driver mechanism,
-> > > +        * as the device is really a multiple function device,
-> > > +        * main driver that binds to the pci_device is an bus
-> > > +        * driver and have to find & bind to the device this way.
-> > > +        */
-> > > +
-> > > +       for_each_pci_dev(pdev) {
-> > > +               ent =3D pci_match_id(pci_tbl, pdev);
-> > > +               if (ent) {
-> > > +                       /* Because GPIO Registers only work on Upstre=
-am port. */
-> > > +                       type =3D pci_pcie_type(pdev);
-> > > +                       if (type =3D=3D PCI_EXP_TYPE_UPSTREAM) {
-> > > +                               dev_info(&pdev->dev, "ASMEDIA-28xx/18=
-xx Init Upstream detected\n");
-> > > +                               goto found;
-> > > +                       }
-> > > +               }
-> > > +       }
-> > > +       goto out;
-> > > +
-> >
-> > Bjorn: is this approach really correct? It looks very strange to me
-> > and even if we were to do this kind of lookup I'd expect there to be a
-> > real pci device registered as child of pdev here so that we can have a
-> > proper driver in place with probe() et al.
+> Add the core support for the board management controller found on the
+> SMARC-sAL28 board. It consists of the following functions:
+>  - watchdog
+>  - GPIO controller
+>  - PWM controller
+>  - fan sensor
+>  - interrupt controller
 >
-> No, this is pretty broken.  The model is that one PCI device goes with
-> one driver.  If there are two bits of functionality associated with a
-> single PCI device, it's up to the single PCI driver to sort that out.
+> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
 >
-> The comment above mentions "multiple function device," which may lead
-> to some confusion about the terminology.  In the PCI specs, the
-> smallest addressable unit of PCI hardware is the "Function."  A
-> "Device" may consist of one or more Functions.  A Device with more
-> than one Function is referred to in the spec as a "Multi-Function
-> Device".
->
-> These PCI Functions are addressed by a (domain, bus, device, function)
-> tuple.  For example, my system has these:
->
->   0000:00:14.0 Intel USB 3.0 xHCI Controller
->   0000:00:14.2 Intel Thermal Subsystem
->
-> These two Functions are parts of the 0000:00:14 Multi-Function Device.
->
-> In Linux, a "struct pci_dev" refers to a single Function, so there's
-> a pci_dev for 0000:00:14.0 and another for 0000:00:14.2.  These are
-> pretty much independent, and can be claimed by two separate drivers.
->
-> But I think the "multiple function device" comment in *this* patch
-> probably doesn't refer to a "Multi-Function Device" as used in the PCI
-> specs.  It probably means a single PCI Function that has two kinds of
-> functionality.
->
-> In the Linux model, that means the Function should be claimed by a
-> single driver, and that driver is responsible for coordinating the two
-> pieces of functionality.
->
+> Please note that the MFD driver is defined as bool in the Kconfig
+> because the next patch will add interrupt support.
 
-Thanks for the detailed explanation!
+...
 
-Richard: in this case I think it's pretty clear now that whatever
-driver supports the "bridge" mentioned in the comment - needs to be
-extended with GPIO functionality.
+> +config MFD_SL28CPLD
+> +       bool "Kontron sl28 core driver"
+> +       depends on I2C=y
 
-Bart
+Why not module?
+
+> +       depends on OF
+
+I didn't find an evidence this is needed.
+
+No Compile Test?
+
+> +       select REGMAP_I2C
+> +       select MFD_CORE
+
+...
+
+> +#include <linux/of_platform.h>
+
+No evidence of user of this.
+I think you meant mod_devicetable.h.
+
+...
+
+> +static struct i2c_driver sl28cpld_driver = {
+> +       .probe_new = sl28cpld_probe,
+> +       .driver = {
+> +               .name = "sl28cpld",
+> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
+
+Drop of_match_ptr(). It has a little sense in this context (depends OF).
+It will have a little sense even if you drop depends OF b/c you will
+introduce a compiler warning.
+
+> +       },
+> +};
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
