@@ -2,198 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 307CC1EFE15
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 18:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 562741EFE89
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 19:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgFEQek (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 12:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgFEQej (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 12:34:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D70C08C5C2;
-        Fri,  5 Jun 2020 09:34:39 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jz3so2817240pjb.0;
-        Fri, 05 Jun 2020 09:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iJmtlF1Fn34skzAHzjUQqZOvSbl81/B3EfHTzE9JIy8=;
-        b=Ct9r7A1nDUiRWsfrgAS4CkunE7SysHfUQnD2fZDBCheg65ij+ycPcCnjbPuk4RMS4C
-         gtIqQ6n4DGRhDRbWbU+CCoAQY7+CgSCExEaKH+QPyo9rMQ54VIFEzchnvMEdTOj3VyGK
-         6C1/1HJLn5ZNm9cs7ghab4axzm3/2VDXnPlBlxoj7jlVlG6A8WLELAhx11hhJKLpT4DP
-         nzLQEzYnf7Djc8tDaaCrfV0WSPHr5RtjvHWIqtUg8tRBjDawn4abgoW2A1r1WntSSwhq
-         nkleIegA4GFEHxdh31NGOTVyzaeofFQqi2unl6TRwzuh6ItF2Woe4L6Si23SCCi87UNs
-         +I7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=iJmtlF1Fn34skzAHzjUQqZOvSbl81/B3EfHTzE9JIy8=;
-        b=sRywa7SfHIm8xnSVndefLM7NUXej3zdbPLZdTd3RWHmFFDIQtrTuNAkUOXpqV9tWQC
-         120WokNzpUF5jnXKTUISv7XmColpQes2pOlj36UaRvxgj22k8+BtZ7OU+x3XWpG/2ri3
-         OiFbmXrsquRdTXKMiBMlBJBx0YFPgXa2YhoGbGnOl4Q1nSxKJfWEt+69KIdLTCwFNXWC
-         E8Wmj0jTHb/dzqjnsiDuj063uNuHRwTByMGv359DG1Uk8aDmsGejWPNIiqRvsLiZSvwb
-         gJ8qsEvQXEXTOx4wSqNZGeyputTkZL2+MCiPZXLOqG++F/5GR4p7qvk2u4L0zWGhLdXp
-         GvqQ==
-X-Gm-Message-State: AOAM530wFUTjPOj1b5vc/nZ2Y9EV6IoXzg5GNe7Qlc77D8G1qMT09gfy
-        HyJyjoN21ElRHtcDcotLEOw=
-X-Google-Smtp-Source: ABdhPJykhVRiplBn+3LpRFZ8/4hP6LcJwdpYIczM/dd0iT6NreCKioxKBSYX584oPxHH+eI6+j0RcA==
-X-Received: by 2002:a17:902:aa0c:: with SMTP id be12mr10842832plb.241.1591374879375;
-        Fri, 05 Jun 2020 09:34:39 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n38sm110717pgm.1.2020.06.05.09.34.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jun 2020 09:34:38 -0700 (PDT)
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        id S1727794AbgFERJb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 13:09:31 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24813 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726324AbgFERJb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Jun 2020 13:09:31 -0400
+IronPort-SDR: JwmNp8b9Yr4qL8P78n+TuNCQR1xYd2PYy6GT8I6BOFAuH2GvYajawejcufcAGr4zW+tz9B3ifn
+ 8r1y9btTvTHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 10:09:30 -0700
+IronPort-SDR: ejD2iB+0Y/PIY6NUm6qMALZslYTaBiAheR1m3mbD0+dYitoSyHA0rPS0jANDAeWq8XRlUCM/yB
+ V5ypg5o/Rbnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="348494979"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 10:09:28 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jhFqV-00B4hT-DR; Fri, 05 Jun 2020 20:09:31 +0300
+Date:   Fri, 5 Jun 2020 20:09:31 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
- <8f042c2442852c29519c381833f3d289@walle.cc>
- <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
- <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
- <20200605140911.GO2428291@smile.fi.intel.com>
- <20200605150542.GA254229@roeck-us.net>
- <CAHp75VduUG=XkvyZwdZDNqBh3KE67MWZWgqBN67fN6StAa469w@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <450ce146-bf9a-130a-78e5-4bcabf1b7063@roeck-us.net>
-Date:   Fri, 5 Jun 2020 09:34:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        linux-gpio@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: baytrail: Fix pin being driven low for a while
+ on gpiod_get(..., GPIOD_OUT_HIGH)
+Message-ID: <20200605170931.GR2428291@smile.fi.intel.com>
+References: <20200602122130.45630-1-hdegoede@redhat.com>
+ <20200602152317.GI2428291@smile.fi.intel.com>
+ <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VduUG=XkvyZwdZDNqBh3KE67MWZWgqBN67fN6StAa469w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 6/5/20 9:04 AM, Andy Shevchenko wrote:
-> On Fri, Jun 5, 2020 at 6:05 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Fri, Jun 05, 2020 at 05:09:11PM +0300, Andy Shevchenko wrote:
->>> On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
->>>> On 6/5/20 3:50 AM, Andy Shevchenko wrote:
->>>>> On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
->>>>>> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
->>>>>>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
->>>
->>> ...
->>>
->>>>>>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
->>>>>>>> +module_param(nowayout, bool, 0);
->>>>>>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
->>>>>>>> (default="
->>>>>>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
->>>>>>>> ")");
->>>>>>>> +
->>>>>>>> +static int timeout;
->>>>>>>> +module_param(timeout, int, 0);
->>>>>>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
->>>>>>>
->>>>>>> Guenter ACKed this, but I'm wondering why we still need module
->>>>>>> parameters...
->>>>>>
->>>>>> How would a user change the nowayout or the timeout? For the latter
->>>>>> there is
->>>>>> a device tree entry, but thats not easy changable by the user.
->>>>>
->>>>> Yes, it's more question to VIm and Guenter than to you.
->>>>>
->>>>
->>>> Has support for providing module parameters with the kernel command line
->>>> been discontinued/deprecated, or did it run out of favor ? Sorry if I
->>>> missed that.
->>>
->>> Latter according to Greg KH. One of the (plenty) examples [1].
->>>
->>> [1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
->>>
->> What is the suggested replacement ?
+On Fri, Jun 05, 2020 at 04:33:47PM +0200, Hans de Goede wrote:
+> On 6/2/20 5:23 PM, Andy Shevchenko wrote:
+> > On Tue, Jun 02, 2020 at 02:21:30PM +0200, Hans de Goede wrote:
+> > > The pins on the Bay Trail SoC have separate input-buffer and output-buffer
+> > > enable bits and a read of the level bit of the value register will always
+> > > return the value from the input-buffer.
+> > > 
+> > > The BIOS of a device may configure a pin in output-only mode, only enabling
+> > > the output buffer, and write 1 to the level bit to drive the pin high.
+> > > This 1 written to the level bit will be stored inside the data-latch of the
+> > > output buffer.
+> > > 
+> > > But a subsequent read of the value register will return 0 for the level bit
+> > > because the input-buffer is disabled. This causes a read-modify-write as
+> > > done by byt_gpio_set_direction() to write 0 to the level bit, driving the
+> > > pin low!
+> > > 
+> > > Before this commit byt_gpio_direction_output() relied on
+> > > pinctrl_gpio_direction_output() to set the direction, followed by a call
+> > > to byt_gpio_set() to apply the selected value. This causes the pin to
+> > > go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
+> > > calls.
+> > > 
+> > > Change byt_gpio_direction_output() to directly make the register
+> > > modifications itself instead. Replacing the 2 subsequent writes to the
+> > > value register with a single write.
+> > > 
+> > > Note that the pinctrl code does not keep track internally of the direction,
+> > > so not going through pinctrl_gpio_direction_output() is not an issue.
+> > > 
+> > > This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
+> > > already on at boot (no external monitor connected), then the i915 driver
+> > > does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
+> > > temporarily going low of that GPIO was causing the panel to reset itself
+> > > after which it would not show an image until it was turned off and back on
+> > > again (until a full modeset was done on it). This commit fixes this.
+> > 
+> > No Fixes tag?
 > 
-> In some mails he suggested to use sysfs.
+> It is sort of hard to pin the introduction of this down to a single
+> commit. If I were to guess, I guess the commit introducing the driver?
+
+Why not? Good guess to me (but I think rather the one which converts GPIO
+driver to pin control).
+
+...
+
+> > > +	/*
+> > > +	 * Before making any direction modifications, do a check if gpio is set
+> > 
+> > > +	 * for direct IRQ.  On baytrail, setting GPIO to output does not make
+> > 
+> > Since we change this, perhaps
+> > 
+> > 'IRQ.  On baytrail' -> 'IRQ. On Baytrail' (one space and capital 'B').
 > 
+> Sure, not sure if that is worth respinning the patch for though,
+> either way let me know.
 
-Using sysfs specifically to defeat "nowayout" would defeat
-its purpose, which is specifically to disable the possibility
-to stop the watchdog. Using a module parameter (or rather boot
-time parameter) is a bit different since that has to be done
-consciously and is only valid for a given boot. The same is
-true for the timeout parameter. If one can wait for sysfs (or
-userspace) to be active, one can as well use the watchdog
-daemon to update the timeout. The use case for the module
-/ command line parameter or sysfs based timeout is to be
-able to set it _before_ userspace is active.
+I think makes sense to respin. We still have time.
 
-So sysfs is not really an alternative.
+> > > +	 * sense, so let's at least inform the caller before they shoot
+> > > +	 * themselves in the foot.
+> > > +	 */
 
-Guenter
+...
+
+> > Wouldn't be simple below fix the issue?
+
+> No that will not help the pin is already high, but any reads
+> of the register will return the BYT_LEVEL bit as being low, so
+> the read-write-modify done when setting the direction reads BYT_LEVEL
+> as 0 and writes it back as such.
+
+So, if I read documentation correctly, there is no means to read back current
+output value if input is disabled. Alas, quite a bad design of hardware.
+And on top of that likely nobody has tested that on non-Windows platform.
+
+> So your proposal would actually make the problem much worse (and more
+> obvious) if we do the byt_gpio_set() first then for pins which have
+> there input-buffer initially disabled, the value passed to
+> byt_gpio_direction_output will be completely ignored and they will
+> always end up as being driven low.
+
+What I proposed is not gonna work AFAIU documentation.
+
+Btw, can we for sake of consistency update direction_input() as well?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
