@@ -2,125 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EEE51EF5BD
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 12:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 745031EF5D6
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 12:56:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgFEKu4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 06:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgFEKu4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 06:50:56 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC1EC08C5C2;
-        Fri,  5 Jun 2020 03:50:55 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id jz3so2444893pjb.0;
-        Fri, 05 Jun 2020 03:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jm0v4NSQR1eScm4hhrK2IVUXqo9gKL1/dYB+J6Im5x0=;
-        b=K7KhDXCAN4clMZH/9uQj6/jxUV9WXBwbtZ3UN/nOr0eCOZx7zi8KmoNF1OOCbLvD/Q
-         yCeXrjx95GEfn9SFJy/kuOFU0e5hZ7TxwAzd2yJ6KatQ9UAiQtKXcqZjeRrOxs6gUvvy
-         /iD0SENH6qBwJH0O61kFDFhPIGIGy8OSbaVutwR5NpdNYCz0wbhqcsy2mVCoCe4WzyHL
-         RiHAo/+E/znba4TKYpbeiFhAWsha+Fx0H0Le9HVZxYeLgyxR+cTOvGVHZhmGGYvDE0co
-         oqFHhCL+74ImcrYmdoqftf3xhzH1oJLn1tecMG8FD2gp2mkeO2/RUFI/W5hSliYsW+VN
-         vUog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jm0v4NSQR1eScm4hhrK2IVUXqo9gKL1/dYB+J6Im5x0=;
-        b=GQ5iqnQHB8idRGvkJqsPfkiaO35K9hJfbjIwFUSCBl84mhwqoz/mPDpwW/KFZGSGTM
-         gJojmLwfMLRI8vtu7NZNDk7l6ELFKlwsVURJevZ0gVrZO/6A/Tc7Ne+vl79mGNfshWxq
-         l4EO4pH2yQyH5gaSeAbfaY8O+8+uroyJx3Sc23yeb4HzCnMic8vGivwiQE0dEdyEXJRd
-         MnZDUoBAzJnpP6mtVDNWrHP7a3/J7xqRP/hUtE2OipFVAkX3dut7TAGdafDSpni6v+Ml
-         Y0Q+nVFhMpcJSjhHIoqWmeLvYaVO9scLqYWIuh6Snx6ykh1c+qZv0+7OpzQvKA8CUkJa
-         rKRQ==
-X-Gm-Message-State: AOAM532fgdzubpb8foLOLkInfngmJHRyDjQ4LKBY7r5dziPlHdFKEDYs
-        nkB7OJxN2+sst1mMIrdU4tc9B0ooBGf+blB8xNfJBBmscnw=
-X-Google-Smtp-Source: ABdhPJy8g7xgtcfoQmROz1emJfu6kg9Wd3RE5AUde8dS472m5XXCXD1Sghv319T4YYpsCAKy9z10aBn1woa6UmZUj/k=
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr2414679pjq.228.1591354255458;
- Fri, 05 Jun 2020 03:50:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200604211039.12689-1-michael@walle.cc> <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com> <8f042c2442852c29519c381833f3d289@walle.cc>
-In-Reply-To: <8f042c2442852c29519c381833f3d289@walle.cc>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Jun 2020 13:50:43 +0300
-Message-ID: <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726690AbgFEK4H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 06:56:07 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:3796 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726529AbgFEK4H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 06:56:07 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055AtYnU000706;
+        Fri, 5 Jun 2020 05:55:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=Z4RbQvrK5Uz13D2MLs4E3UKIzkSv6CypgiRBDLsO4Bw=;
+ b=VP377OqvBLS2SbQ1qo09YgCjYUZw1ju4jaLOkX+JZ2MpBjfcDhyhe/0+WXAhoYGVFEr9
+ rS591SbbvCNEQu/bgZTSlvQpmZ91IiD9FBI+Sp/rniqzZArg2FcZRpYVhTv8Zln6Br8O
+ fzg+ZwOoPGvumsGgcmGflAYjoF6p1vfhnq1gITXP0cdxeZ2sX7qN7igTW1WZUUIdG6Az
+ yZDGYpkdDMX/K6gUK5E9J3+oPmox3FX0uGusus7Se9wT7OtDlqoA2kuF/wTOY5x4rA2j
+ z0uupWcSupRiD8sBa1olwMnloYUMybbc5Cpmg3Qz6JxRWbI7dfMxJnrZMqpneBu7t5U/ SA== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 31f92g137y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 05 Jun 2020 05:55:58 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 5 Jun 2020
+ 11:55:56 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 5 Jun 2020 11:55:56 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E846E2AB;
+        Fri,  5 Jun 2020 10:55:55 +0000 (UTC)
+Date:   Fri, 5 Jun 2020 10:55:55 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        <patches@opensource.cirrus.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <emamd001@umn.edu>,
+        <wu000273@umn.edu>, <kjlu@umn.edu>, <smccaman@umn.edu>
+Subject: Re: [PATCH] gpio: arizona: handle pm_runtime_get_sync failure case
+Message-ID: <20200605105555.GM71940@ediswmail.ad.cirrus.com>
+References: <20200605025207.65719-1-navid.emamdoost@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200605025207.65719-1-navid.emamdoost@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 cotscore=-2147483648 spamscore=0 mlxscore=0
+ mlxlogscore=999 malwarescore=0 clxscore=1011 phishscore=0 bulkscore=0
+ adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006050084
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
-> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+On Thu, Jun 04, 2020 at 09:52:07PM -0500, Navid Emamdoost wrote:
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
+> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
 
-...
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-> >> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> >> +module_param(nowayout, bool, 0);
-> >> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> >> (default="
-> >> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
-> >> ")");
-> >> +
-> >> +static int timeout;
-> >> +module_param(timeout, int, 0);
-> >> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> >
-> > Guenter ACKed this, but I'm wondering why we still need module
-> > parameters...
->
-> How would a user change the nowayout or the timeout? For the latter
-> there is
-> a device tree entry, but thats not easy changable by the user.
-
-Yes, it's more question to VIm and Guenter than to you.
-
-...
-
-> >> +       if (status & WDT_CTRL_EN) {
-> >> +               sl28cpld_wdt_start(wdd);
-> >
-> >> +               set_bit(WDOG_HW_RUNNING, &wdd->status);
-> >
-> > Do you need atomic op here? Why?
->
-> I'd say consistency, all watchdog drivers do it like that. I just
-> had a look at where this is used, but it looks like access from
-> userspace is protected by a lock.
-
-Okay then.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Charles
