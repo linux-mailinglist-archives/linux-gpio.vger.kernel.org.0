@@ -2,120 +2,212 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A049D1EF9F7
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 16:09:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C50EE1EFB79
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 16:33:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgFEOJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 10:09:14 -0400
-Received: from mga11.intel.com ([192.55.52.93]:45252 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgFEOJO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 5 Jun 2020 10:09:14 -0400
-IronPort-SDR: 3GpFEgJh1E1/pkYsMX2LrazmJIRlAesPx29CBXWo3aDZQfDWDvly76YlZBbxYTbQt+cz9zChzU
- AG1/Ks9NdSeA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 07:09:14 -0700
-IronPort-SDR: STm5cJBEx3cZwh5EDl1WI2zIniez547qsBBHLm0a+PZkJql6UaV6R0I9F6DqWusAPQO2MUnztk
- j822dzBvILJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,476,1583222400"; 
-   d="scan'208";a="471924635"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Jun 2020 07:09:09 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jhD1z-00B2nb-Cy; Fri, 05 Jun 2020 17:09:11 +0300
-Date:   Fri, 5 Jun 2020 17:09:11 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Michael Walle <michael@walle.cc>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        id S1728042AbgFEOdy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 10:33:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30224 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727944AbgFEOdy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 10:33:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591367632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UnXpqpJmhsoGN5vwHlR9MCzTruzIUpnFGVXn1tVsFuM=;
+        b=Mxnr9w42gdtZZTOYLApVKTrKQb2nOmPpSPYPD0KDhV+7WqLnghdoRHpgvMlloEj8GnRNqj
+        yVS1JlGtZ/enEJsMmgLRMS20JLqOFO1FwS4CDHDZ3OOmjJPMgwY7TAHkdNGkEs+eOS6aTN
+        KRB9572/hD9ZhikSVB4Nr6Og+u2lHdw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-KBNC4MWXP9-xAo5mua5_Bg-1; Fri, 05 Jun 2020 10:33:50 -0400
+X-MC-Unique: KBNC4MWXP9-xAo5mua5_Bg-1
+Received: by mail-ed1-f71.google.com with SMTP id g10so4030725edt.3
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jun 2020 07:33:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UnXpqpJmhsoGN5vwHlR9MCzTruzIUpnFGVXn1tVsFuM=;
+        b=O7m2d8qfRGbN/kKXJatvcUMHI8TFQieQ+b+MV/BnwZ2hRX3MDqol7F9k4KamQAyF3o
+         oBW3L33hB4YRSjzouiE9N+aCfKUKbeSrCJKmyNCGIj0WClY2J0r2p0uC7sbJpWHUb47k
+         mKWR43JhgbScw3hd3Uy8NLwFKBO+5okUWT70nxBxnhLrmIpaGvlIf7d1NIe+QHrXEGmo
+         rSI4WsvyCJmW5JtbRvzGDjT+Wbw/Qon3wQLC0nm1Ze+GbvEvzYe58OSHtEaShORMlwu7
+         rGhggPHwGutQ48Pv8Q6mvqHn4m006F6jkEQNiGcqR8UcbHwD0AvJ2qUlb2/gfbaxgW6G
+         GfRA==
+X-Gm-Message-State: AOAM531k/fbUbuGJRUR6GqcK4BCh2wPp2DFcLjy2nzD5UusHScfeRSAQ
+        +DyylfRIIOri4rSQmBRtqKC+u88pX1QAN9e0NPo0WBQlSMJScaA9Lb0jU3bw5J10seo96qram1h
+        mpVN2CV2FKpZZBHDARrBT/A==
+X-Received: by 2002:a17:906:4554:: with SMTP id s20mr8783715ejq.241.1591367629234;
+        Fri, 05 Jun 2020 07:33:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxPmTQAV1XuXHtuL/qMSpWO2BScpZajU1f7rMoqZ9XHo3qWMvt1jv1U5k9HlA8ZVtwsZNScZA==
+X-Received: by 2002:a17:906:4554:: with SMTP id s20mr8783698ejq.241.1591367628950;
+        Fri, 05 Jun 2020 07:33:48 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id o7sm230792edj.52.2020.06.05.07.33.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Jun 2020 07:33:48 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: baytrail: Fix pin being driven low for a while
+ on gpiod_get(..., GPIOD_OUT_HIGH)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 04/11] watchdog: add support for sl28cpld watchdog
-Message-ID: <20200605140911.GO2428291@smile.fi.intel.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-5-michael@walle.cc>
- <CAHp75VdeD6zDc--R4NPHsiqQerzfNGwUikLN+WHMiZZVsQ8QSA@mail.gmail.com>
- <8f042c2442852c29519c381833f3d289@walle.cc>
- <CAHp75VfY0BD4CFu6Thx1wE-U0Zt1q8uTOLxkWTMdFk0MBuhYFQ@mail.gmail.com>
- <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        linux-gpio@vger.kernel.org, stable@vger.kernel.org
+References: <20200602122130.45630-1-hdegoede@redhat.com>
+ <20200602152317.GI2428291@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
+Date:   Fri, 5 Jun 2020 16:33:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871a4990-5b94-3a17-01d4-74998375f08b@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200602152317.GI2428291@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 06:52:00AM -0700, Guenter Roeck wrote:
-> On 6/5/20 3:50 AM, Andy Shevchenko wrote:
-> > On Fri, Jun 5, 2020 at 1:24 PM Michael Walle <michael@walle.cc> wrote:
-> >> Am 2020-06-05 10:14, schrieb Andy Shevchenko:
-> >>> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+Hi,
 
-...
-
-> >>>> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> >>>> +module_param(nowayout, bool, 0);
-> >>>> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started
-> >>>> (default="
-> >>>> +                               __MODULE_STRING(WATCHDOG_NOWAYOUT)
-> >>>> ")");
-> >>>> +
-> >>>> +static int timeout;
-> >>>> +module_param(timeout, int, 0);
-> >>>> +MODULE_PARM_DESC(timeout, "Initial watchdog timeout in seconds");
-> >>>
-> >>> Guenter ACKed this, but I'm wondering why we still need module
-> >>> parameters...
-> >>
-> >> How would a user change the nowayout or the timeout? For the latter
-> >> there is
-> >> a device tree entry, but thats not easy changable by the user.
-> > 
-> > Yes, it's more question to VIm and Guenter than to you.
-> > 
+On 6/2/20 5:23 PM, Andy Shevchenko wrote:
+> On Tue, Jun 02, 2020 at 02:21:30PM +0200, Hans de Goede wrote:
+>> The pins on the Bay Trail SoC have separate input-buffer and output-buffer
+>> enable bits and a read of the level bit of the value register will always
+>> return the value from the input-buffer.
+>>
+>> The BIOS of a device may configure a pin in output-only mode, only enabling
+>> the output buffer, and write 1 to the level bit to drive the pin high.
+>> This 1 written to the level bit will be stored inside the data-latch of the
+>> output buffer.
+>>
+>> But a subsequent read of the value register will return 0 for the level bit
+>> because the input-buffer is disabled. This causes a read-modify-write as
+>> done by byt_gpio_set_direction() to write 0 to the level bit, driving the
+>> pin low!
+>>
+>> Before this commit byt_gpio_direction_output() relied on
+>> pinctrl_gpio_direction_output() to set the direction, followed by a call
+>> to byt_gpio_set() to apply the selected value. This causes the pin to
+>> go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
+>> calls.
+>>
+>> Change byt_gpio_direction_output() to directly make the register
+>> modifications itself instead. Replacing the 2 subsequent writes to the
+>> value register with a single write.
+>>
+>> Note that the pinctrl code does not keep track internally of the direction,
+>> so not going through pinctrl_gpio_direction_output() is not an issue.
+>>
+>> This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
+>> already on at boot (no external monitor connected), then the i915 driver
+>> does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
+>> temporarily going low of that GPIO was causing the panel to reset itself
+>> after which it would not show an image until it was turned off and back on
+>> again (until a full modeset was done on it). This commit fixes this.
 > 
-> Has support for providing module parameters with the kernel command line
-> been discontinued/deprecated, or did it run out of favor ? Sorry if I
-> missed that.
+> No Fixes tag?
 
-Latter according to Greg KH. One of the (plenty) examples [1].
+It is sort of hard to pin the introduction of this down to a single
+commit. If I were to guess, I guess the commit introducing the driver?
 
-[1]: https://www.mail-archive.com/driverdev-devel@linuxdriverproject.org/msg96495.html
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> ...
+> 
+>> +static void byt_gpio_direct_irq_check(struct intel_pinctrl *vg,
+>> +				      unsigned int offset)
+>> +{
+>> +	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
+>> +
+>> +	/*
+>> +	 * Before making any direction modifications, do a check if gpio is set
+> 
+>> +	 * for direct IRQ.  On baytrail, setting GPIO to output does not make
+> 
+> Since we change this, perhaps
+> 
+> 'IRQ.  On baytrail' -> 'IRQ. On Baytrail' (one space and capital 'B').
 
-> nowayout has a configuration default. A module parameter is sometimes
-> provided by drivers to be able to override it. The timeout provided
-> via devicetree or on the command line is only the initial/default
-> timeout, and the watchdog daemon can change it after opening the
-> watchdog device as it sees fit.
+Sure, not sure if that is worth respinning the patch for though,
+either way let me know.
 
-Thanks for explanation.
+>> +	 * sense, so let's at least inform the caller before they shoot
+>> +	 * themselves in the foot.
+>> +	 */
+>> +	if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
+>> +		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
+>> +}
+> 
+> ...
+> 
+>>   static int byt_gpio_direction_output(struct gpio_chip *chip,
+>>   				     unsigned int offset, int value)
+>>   {
+>> -	int ret = pinctrl_gpio_direction_output(chip->base + offset);
+>> +	struct intel_pinctrl *vg = gpiochip_get_data(chip);
+>> +	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
+>> +	unsigned long flags;
+>> +	u32 reg;
+>>   
+>> -	if (ret)
+>> -		return ret;
+>> +	raw_spin_lock_irqsave(&byt_lock, flags);
+>>   
+>> -	byt_gpio_set(chip, offset, value);
+>> +	byt_gpio_direct_irq_check(vg, offset);
+>>   
+>> +	reg = readl(val_reg);
+>> +	reg &= ~BYT_DIR_MASK;
+>> +	if (value)
+>> +		reg |= BYT_LEVEL;
+>> +	else
+>> +		reg &= ~BYT_LEVEL;
+>> +
+>> +	writel(reg, val_reg);
+>> +
+>> +	raw_spin_unlock_irqrestore(&byt_lock, flags);
+>>   	return 0;
+>>   }
+> 
+> Wouldn't be simple below fix the issue?
+> 
+> @@ -1171,14 +1171,10 @@ static int byt_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+>   static int byt_gpio_direction_output(struct gpio_chip *chip,
+>                                       unsigned int offset, int value)
+>   {
+> -       int ret = pinctrl_gpio_direction_output(chip->base + offset);
+> -
+> -       if (ret)
+> -               return ret;
+> -
+> +       /* Set value first to avoid a glitch */
+>          byt_gpio_set(chip, offset, value);
+>   
+> -       return 0;
+> +       return pinctrl_gpio_direction_output(chip->base + offset);
+>   }
 
--- 
-With Best Regards,
-Andy Shevchenko
+No that will not help the pin is already high, but any reads
+of the register will return the BYT_LEVEL bit as being low, so
+the read-write-modify done when setting the direction reads BYT_LEVEL
+as 0 and writes it back as such.
 
+So your proposal would actually make the problem much worse (and more
+obvious) if we do the byt_gpio_set() first then for pins which have
+there input-buffer initially disabled, the value passed to
+byt_gpio_direction_output will be completely ignored and they will
+always end up as being driven low.
+
+Regards,
+
+Hans
 
