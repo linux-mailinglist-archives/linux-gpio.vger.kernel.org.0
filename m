@@ -2,149 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 165F81EF505
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 12:09:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C4541EF51D
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 12:13:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgFEKJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 06:09:22 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33177 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgFEKJT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 06:09:19 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C88EF22EE4;
-        Fri,  5 Jun 2020 12:09:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591351756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MsgwKzto2IoOJjvjTzGrigwCXuk4v4Z5kvEN1IzyNVY=;
-        b=YOz7DoaZopOBIiCVRhTaDmoHMSotqFUD1klTT5xzP/DYKwRApaTqVpxiFqUj62wQlkCeso
-        rmShm/jyM0iW0HJQFp/yx0Rrr4/4YkFrd+I1dZGiEUATTJIfds6yt2ig9EK80aeePTx5yV
-        JdQmMvjA6eyQ/Ls2P9eum9CkF6m0QN0=
+        id S1726225AbgFEKNg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 06:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgFEKNg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 06:13:36 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F45C08C5C3
+        for <linux-gpio@vger.kernel.org>; Fri,  5 Jun 2020 03:13:36 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id fc4so4420325qvb.1
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jun 2020 03:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Kr1JN+TH7Urs24hNJJNmKRJutOEkby8+/R/7dSIUOhw=;
+        b=lh0QXYFb7xG25Uk7dHuFKvyGcg5gMlqONXEIaW2e0MxVOjg/8jMAUN+oSWodCl3VN7
+         pqV0fs0ur1TtYQARI7xzaQERgGbUP3obbscqqxqDjie2jgsxqoFCLc2MmrEFKI8C0ZLS
+         g2Dv4om99HSPjZUZIoC1RDS7WZmIpWWfZfZI7pAB4zmmkdih866YGmuNvVCPVDtK6XmW
+         zgIC7UQPpg86NkUu6ihS+tXO/Yjs3eIi6Dba92KM56D8PXNcLcOrs28FFERzMW4q3PRu
+         JtnJe1CliTNnXElhLu/Mo8pyDQ0cwxpxbR3DsKQxXepdefyJ+ajccLtLaG4ZNqU+AW3k
+         xQGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Kr1JN+TH7Urs24hNJJNmKRJutOEkby8+/R/7dSIUOhw=;
+        b=Z0Yrqm/tb1agZkeROXQyYg5M5wt6ITzKqUtd6XzBEGNUOIrMM9qmyxPseW8MO8CXgQ
+         1WiiUqLmt2D96NI81j+amq+GnrfhIC9iJy60RfXbafwdpg4x8G/JMSBjwn+XS40eKFgV
+         KsuAWwYV0UZXbGXdS38IaMG1nN7eE1lWKJuOJLT91wlloKT+PFIU47iDChuwoViJa6Ry
+         kBO6N1/sytFh406aQSM7bljtz3waVwZjkKl83fiRaXz30ZmMeNyfDmnBiSdYMH8rzHRI
+         g4Svh9GB7avtyzf1TJQgg+aQBRqhK0Ihh4LpAMq3R9+7+SO21wYgkGXE6NjgN5jr3Wi/
+         HMzA==
+X-Gm-Message-State: AOAM530WgvQ1OTs4Y6jthgoVtsVD63g2/aWdl/v2AWO2M/LscsfwkYhl
+        LGXmof2eiSF1pYAqpJupv/WpNb+AJj8ANepS0MkVcg==
+X-Google-Smtp-Source: ABdhPJzm8HG3M6WTMQOrJHazy7H0iVOZBUpaPCcEyaWl+9AsyOE8s4RugnfVJeEtkN9BA4F1BaEeEyRXtGVkr9ePDk0=
+X-Received: by 2002:ad4:55b4:: with SMTP id f20mr8785464qvx.148.1591352015116;
+ Fri, 05 Jun 2020 03:13:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 12:09:15 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+References: <CAMpxmJX8U-uNYJPQxmkox=YTSvXVPrWss2y5MS81_bg43Co8Lg@mail.gmail.com>
+ <20200604175515.GA1076951@bjorn-Precision-5520> <CAMRc=McWFpFAC3ziWdOEYkc0YwkN-Jqf7vZpxbCBLPoe=oewdg@mail.gmail.com>
+ <a12daf08b056431394272f52174aaa71@asmedia.com.tw>
+In-Reply-To: <a12daf08b056431394272f52174aaa71@asmedia.com.tw>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 5 Jun 2020 12:13:24 +0200
+Message-ID: <CAMpxmJWG62W3my9iaRN=LTFaJtkEXQVX=4ye-PPPwrH5PB2QDA@mail.gmail.com>
+Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
+To:     =?UTF-8?B?UmljaGFyZCBIc3Uo6Kix6IKy5b2wKQ==?= 
+        <Richard_Hsu@asmedia.com.tw>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Richard Hsu <saraon640529@gmail.com>,
+        =?UTF-8?B?WWQgVHNlbmco5pu+6KOV6YGUKQ==?= <Yd_Tseng@asmedia.com.tw>,
+        =?UTF-8?B?SmVzc2UxIENoYW5nKOW8teWci+WZqCk=?= 
+        <Jesse1_Chang@asmedia.com.tw>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
- controller
-In-Reply-To: <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <CAHp75Vd-R3yqhq88-whY6vdDhESpzvFCsbi-ygSTjfXfUzOrtg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <8ed988b3e0bc48ea9219d0847c1b1b8e@walle.cc>
-X-Sender: michael@walle.cc
+        Bjorn Helgaas <bhelgaas@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+pt., 5 cze 2020 o 12:02 Richard Hsu(=E8=A8=B1=E8=82=B2=E5=BD=B0) <Richard_H=
+su@asmedia.com.tw>
+napisa=C5=82(a):
+>
+> Hi Bjorn Helgass,
+>     Thanks for your detailed explanation.
 
-Am 2020-06-05 10:01, schrieb Andy Shevchenko:
-> On Fri, Jun 5, 2020 at 12:16 AM Michael Walle <michael@walle.cc> wrote:
->> 
->> Add the core support for the board management controller found on the
->> SMARC-sAL28 board. It consists of the following functions:
->>  - watchdog
->>  - GPIO controller
->>  - PWM controller
->>  - fan sensor
->>  - interrupt controller
->> 
->> At the moment, this controller is used on the Kontron SMARC-sAL28 
->> board.
->> 
->> Please note that the MFD driver is defined as bool in the Kconfig
->> because the next patch will add interrupt support.
-> 
-> ...
-> 
->> +config MFD_SL28CPLD
->> +       bool "Kontron sl28 core driver"
->> +       depends on I2C=y
-> 
-> Why not module?
+Richard, please format your e-mails correctly for the mailing list. I
+already directed you to the documentation on patch submission in the
+linux kernel source. Also: don't top-post.
 
-There are users of the interupt lines provided by the interrupt 
-controller.
-For example, the gpio-button driver. If this is compiled into the kernel
-(which it is by default in the arm64 defconfig), probing will fail 
-because
-the interrupt is not found. Is there a better way for that? I guess the 
-same
-is true for the GPIO driver.
+> Hi Bartosz Golaszewski,
+>     I am grateful for your suggestion. The driver of bridge is a pci bus =
+driver. It isn't written by us and is more complex. I have zero knowledge o=
+f
+>  the PCI sub-system, and perhaps it(pci bus driver) don't use gpio subsys=
+tem with /sys/class/gpio/(sysfs interface) that I need. I just follow the o=
+ther driver(gpio-amd8111.c)'s
+> framework and maybe it can be used again. Thank you
+>
 
-> 
->> +       depends on OF
-> 
-> I didn't find an evidence this is needed.
+The gpio-amd8111 driver does in fact do what you try to copy here but
+it doesn't mean it's correct. It's quite possible that 8 years ago we
+didn't know any better and merged it as it is. It doesn't justify
+doing the same now with a new driver, especially since Bjorn explained
+in detail why it's wrong. Rather, we should try to fix gpio-amd8111
+instead.
 
-see below.
-
-> 
-> No Compile Test?
-
-ok
-
->> +       select REGMAP_I2C
->> +       select MFD_CORE
-> 
-> ...
-> 
->> +#include <linux/of_platform.h>
-> 
-> No evidence of user of this.
-> I think you meant mod_devicetable.h.
-
-devm_of_platform_populate(), so I need CONFIG_OF, too right?
-
-
->> +static struct i2c_driver sl28cpld_driver = {
->> +       .probe_new = sl28cpld_probe,
->> +       .driver = {
->> +               .name = "sl28cpld",
->> +               .of_match_table = of_match_ptr(sl28cpld_of_match),
-> 
-> Drop of_match_ptr(). It has a little sense in this context (depends 
-> OF).
-> It will have a little sense even if you drop depends OF b/c you will
-> introduce a compiler warning.
-
-ok
-
-> 
->> +       },
->> +};
-
--- 
--michael
+Bartosz
