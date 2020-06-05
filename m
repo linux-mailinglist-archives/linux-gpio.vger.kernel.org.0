@@ -2,144 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 562741EFE89
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 19:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71FE11EFE94
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 19:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgFERJb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 13:09:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24813 "EHLO mga18.intel.com"
+        id S1726614AbgFERMs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 13:12:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgFERJb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 5 Jun 2020 13:09:31 -0400
-IronPort-SDR: JwmNp8b9Yr4qL8P78n+TuNCQR1xYd2PYy6GT8I6BOFAuH2GvYajawejcufcAGr4zW+tz9B3ifn
- 8r1y9btTvTHA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 10:09:30 -0700
-IronPort-SDR: ejD2iB+0Y/PIY6NUm6qMALZslYTaBiAheR1m3mbD0+dYitoSyHA0rPS0jANDAeWq8XRlUCM/yB
- V5ypg5o/Rbnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
-   d="scan'208";a="348494979"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 10:09:28 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jhFqV-00B4hT-DR; Fri, 05 Jun 2020 20:09:31 +0300
-Date:   Fri, 5 Jun 2020 20:09:31 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: baytrail: Fix pin being driven low for a while
- on gpiod_get(..., GPIOD_OUT_HIGH)
-Message-ID: <20200605170931.GR2428291@smile.fi.intel.com>
-References: <20200602122130.45630-1-hdegoede@redhat.com>
- <20200602152317.GI2428291@smile.fi.intel.com>
- <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
+        id S1726090AbgFERMs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Jun 2020 13:12:48 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8E902077D;
+        Fri,  5 Jun 2020 17:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591377167;
+        bh=QXbftL2gglLukvDMxKCq8Z23Y28iI+DF1e2aAMUl0B0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n0EVdK/BsUW7EHAekrcDyWf/O1A67u7EZXXKoCWlYA8NsLLWg/vhwHiK1pYZac/X3
+         dyZ8dHjsfabGnO6Nxu1/T+ojqzI2vgjFT8oQEhiQhDorg+S12awL/EI18of70GjXT2
+         3OUfDd2l3dBol1/doICKWPqO1+tVTD2tho8VKvWs=
+Date:   Fri, 5 Jun 2020 12:12:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Richard Hsu <saraon640529@gmail.com>
+Cc:     Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Jesse1_Chang@asmedia.com.tw, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, bhelgaas@google.com,
+        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
+Message-ID: <20200605171244.GA1140813@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200601073604.26289-1-saraon640529@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 04:33:47PM +0200, Hans de Goede wrote:
-> On 6/2/20 5:23 PM, Andy Shevchenko wrote:
-> > On Tue, Jun 02, 2020 at 02:21:30PM +0200, Hans de Goede wrote:
-> > > The pins on the Bay Trail SoC have separate input-buffer and output-buffer
-> > > enable bits and a read of the level bit of the value register will always
-> > > return the value from the input-buffer.
-> > > 
-> > > The BIOS of a device may configure a pin in output-only mode, only enabling
-> > > the output buffer, and write 1 to the level bit to drive the pin high.
-> > > This 1 written to the level bit will be stored inside the data-latch of the
-> > > output buffer.
-> > > 
-> > > But a subsequent read of the value register will return 0 for the level bit
-> > > because the input-buffer is disabled. This causes a read-modify-write as
-> > > done by byt_gpio_set_direction() to write 0 to the level bit, driving the
-> > > pin low!
-> > > 
-> > > Before this commit byt_gpio_direction_output() relied on
-> > > pinctrl_gpio_direction_output() to set the direction, followed by a call
-> > > to byt_gpio_set() to apply the selected value. This causes the pin to
-> > > go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
-> > > calls.
-> > > 
-> > > Change byt_gpio_direction_output() to directly make the register
-> > > modifications itself instead. Replacing the 2 subsequent writes to the
-> > > value register with a single write.
-> > > 
-> > > Note that the pinctrl code does not keep track internally of the direction,
-> > > so not going through pinctrl_gpio_direction_output() is not an issue.
-> > > 
-> > > This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
-> > > already on at boot (no external monitor connected), then the i915 driver
-> > > does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
-> > > temporarily going low of that GPIO was causing the panel to reset itself
-> > > after which it would not show an image until it was turned off and back on
-> > > again (until a full modeset was done on it). This commit fixes this.
-> > 
-> > No Fixes tag?
+[+cc Lee in case he can shed light on the MFD question below]
+
+On Mon, Jun 01, 2020 at 03:36:04PM +0800, Richard Hsu wrote:
+> Hi Bjorn Helgaas,
+>  1. What are the other functions and where is the other driver?
+>  >PCI bus and GPIO can be considered as two functions independently.
+>  And the driver is located at drivers/gpio/gpio-amd8111.c
+
+I'm obviously missing the point here; sorry for being slow.
+
+drivers/gpio/gpio-amd8111.c uses for_each_pci_dev() to look for
+PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_8111_SMBUS [1022:746b] devices.
+drivers/i2c/busses/i2c-amd756.c claims that same device using the
+normal PCI probe mechanism.
+
+In this case both i2c-amd756 and gpio-amd8111 want to use the same
+device, so there's at least a reason why gpio-amd8111 uses the
+non-standard mechanism.
+
+Your driver looks for PCI_VENDOR_ID_ASMEDIA devices: [1b21:2824],
+[1b21:2812], [1b21:2806], [1b21:1824], etc).  But I haven't found a
+second driver that needs to claim these devices.
+
+I can't tell what any of these devices are (other than that they seem
+to have some GPIO).  You might want to add them to the Linux PCI
+database at https://pci-ids.ucw.cz/read/PC/1b21 .  If you do, then
+"lspci" will show the correct names for them.
+
+You mention below that these devices are PCIe bridges.  If that's the
+case, they would be claimed by the "pcieport" driver in the PCI core
+(drivers/pci/pcie/portdrv_pci.c).  If you collect the output of "sudo
+lspci -vvxxxx", it would tell us whether the pcieport driver will
+claim it.
+
+If it does, then we have a problem because the PCIe port services
+(AER, PME, DPC, etc) currently require pcieport.  If you want the AER,
+PME, etc functionality in addition to GPIO, then we have to figure out
+how to coordinate things.
+
+>  2.We end up with multiple drivers controlling the device without
+> any coordination between them?
+>  >Yes,because two functions are independently in the device,and
+> the main driver for PCI bus function is more important.We wish
+> they can't be affected and coordinated between two drivers
+> as much as possible.If main driver is affected,it is more
+> serious.
+>  In our case,we have gpio registers on pci configuration space
+> of asm28xx pci-e bridge(with main pci bus driver).If we want
+> to use it by another driver that use gpio subsystem /sys/class/
+> gpio/(sysfs interface).I find the driver(gpio-amd8111.c) that
+> meet our request.Sorry! i am not best friend with git,and
+> reply mail in the same way. 
 > 
-> It is sort of hard to pin the introduction of this down to a single
-> commit. If I were to guess, I guess the commit introducing the driver?
-
-Why not? Good guess to me (but I think rather the one which converts GPIO
-driver to pin control).
-
-...
-
-> > > +	/*
-> > > +	 * Before making any direction modifications, do a check if gpio is set
-> > 
-> > > +	 * for direct IRQ.  On baytrail, setting GPIO to output does not make
-> > 
-> > Since we change this, perhaps
-> > 
-> > 'IRQ.  On baytrail' -> 'IRQ. On Baytrail' (one space and capital 'B').
 > 
-> Sure, not sure if that is worth respinning the patch for though,
-> either way let me know.
+> Hi Bartosz Golaszewski,
+>  Thank you.And i have studied PCI MFD device in drivers/mfd.
 
-I think makes sense to respin. We still have time.
+I'm not familiar with drivers/mfd.  It looks like it might be useful
+for cases where a single PCI function implements multiple sorts of
+functionality.
 
-> > > +	 * sense, so let's at least inform the caller before they shoot
-> > > +	 * themselves in the foot.
-> > > +	 */
+But if the problem is that you have a single function that is a PCIe
+switch port and also implements some GPIOs, I doubt drivers/mfd will
+help.  In that case, both the existing pcieport driver and your new
+gpio-asm28xx-18xx driver would need to operate the same function, and
+we'd have to make some significant changes to both of them to fit into
+the MFD framework.
 
-...
+Long-term, I think it would be good to move the pcieport things
+directly into the PCI core instead of being a separate driver.  We've
+tripped over this problem before with things like performance counters
+in PCIe ports.
 
-> > Wouldn't be simple below fix the issue?
-
-> No that will not help the pin is already high, but any reads
-> of the register will return the BYT_LEVEL bit as being low, so
-> the read-write-modify done when setting the direction reads BYT_LEVEL
-> as 0 and writes it back as such.
-
-So, if I read documentation correctly, there is no means to read back current
-output value if input is disabled. Alas, quite a bad design of hardware.
-And on top of that likely nobody has tested that on non-Windows platform.
-
-> So your proposal would actually make the problem much worse (and more
-> obvious) if we do the byt_gpio_set() first then for pins which have
-> there input-buffer initially disabled, the value passed to
-> byt_gpio_direction_output will be completely ignored and they will
-> always end up as being driven low.
-
-What I proposed is not gonna work AFAIU documentation.
-
-Btw, can we for sake of consistency update direction_input() as well?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Maybe,it is not what i am looking for.This type of device
+> include core and miscellaneous function drivers.And function
+> drivers export resources(io/mem/dma) to sysfs.Fist,we can't
+> implement another pci bus driver as core driver,and secondly,
+> it don't use gpio subsystem with /sys/class/gpio/(sysfs
+> interface).
+>  So,you will review this driver and upstream to mainline
+> kernel?
