@@ -2,161 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C87F1EF71A
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 14:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95DCC1EF82E
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 14:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgFEMOv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 08:14:51 -0400
-Received: from mout.web.de ([212.227.15.3]:33265 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgFEMOu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 5 Jun 2020 08:14:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591359280;
-        bh=/nzgNVDapogStYC4Kd6Z/LOu+25vbppN0v9dHj6Ug+A=;
-        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
-        b=TKC8orgMj4Pp34GgM/S443+obChISHIz0u0Osx8GUBtM6d+JJfhj0bowZwyJOf8H7
-         V4l1/5ixwderxabrN0cY3D0DVqJaN00U0ids6SecXNwZN5b6zvgdXcbkQLxJcMB9cq
-         B0T0qUmUp3z0l6cnpTiCPEv112dGCpak/9xGl+dA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.102.114]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MECGX-1jrJa90cpp-00AHn0; Fri, 05
- Jun 2020 14:14:40 +0200
-Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gpio: arizona: put pm_runtime in case of failure
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        linux-gpio@vger.kernel.org, patches@opensource.cirrus.com
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
-Date:   Fri, 5 Jun 2020 14:14:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726647AbgFEMm6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 08:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbgFEMm6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 08:42:58 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2623C08C5C2;
+        Fri,  5 Jun 2020 05:42:57 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3389822FEC;
+        Fri,  5 Jun 2020 14:42:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591360973;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V/2TzxsPSlfyINNO8TTfnGs1HicX0u51iSKBI+ftYOE=;
+        b=ppjkq+9sTLA7e0BVJjM/uHM60R+cDCBYYMmhqDwQNcUvU9b7+pKRcr03C7m5x0zjrB3ziF
+        YWsz9DFPvrHEqnF8RKJ1y+mHfSEf3iFURJD8DMeRu/20zVMLDC7Y4IGTLAjYc4Il/lkiaE
+        DPx5ggCjNo0+Q9tyOM36Ky+mQkjuEFI=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6vze/OLGnmlvoSaFdiaCTVS/d1roKImYO4mfkKOKPFz4KqQl08q
- 9ydU87XJWcNLTz0vJtSqqRTlH62bmLE5yjnO9kP9ZvZ1T1w1PHztWWvLnXpivoY8FacUCIs
- pFXm0f9kdPg4qaE/GPBNX1EeG/f2p/QmWjrCH7WDaY/uuTwAYLJbPmO758Lwlx/TsXJE+zf
- 2Z2jZiL5c10+U5h4rjmww==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qODrcmCG6+U=:dIjks5CvDYqda0CldpWLJe
- 36LedYb7GvvP4HQfoQRqYGjVXRBtbhLbytfo8qHYtUcZpB+OobQOd06gxPCg+x8KCxaeWJeQS
- 7VFz8qDfqZyVJoZPTMnpaoaJrXh5SH8MAgbyIQRGgkVC7vYXjjFYKGMSdRvAufiFQMV5auj6e
- ai1qld9YP2Z+9DZnkLbX7fXjnKflDJ5sZ3WrOXVVpRyAs1r41Z9aG9MYyTmMLpxtXiy/6hCSz
- E1olEIvx+LxigngU+hZxgGjj28Dh4Q5nF4gQRnhhb3bnqQgsjMfw3gFBGmcGp4tPrtaiGkbiz
- 0nv5WUp2Rm9euu6CquY0r00QSCdSAHLVDGRaWIU0xzFSYiXJW/rCrHzMkPOOS3n2x68N0Uiv8
- t1nq6buAnDebKI/qNCMEcQfoLspawhJaxskuNFUk1+zL1gifLCAqfCqqzxGGHk9y/qtNu+0pd
- W3x96kzA54uyQNFWemLdn1R2kjJQY9jXW9jz8WkFfIJGTSb5LqK+DcjBQFB9rc7XCsbpLaG31
- iwvhMLS5RQwzQk/IgB/0/n8dEaO2jJf2wKbbOmTNTgat5jq748xng7ZrXrya888H/6jh0TlXv
- 9opDwNPYsk6vI4ydib4rKIeyna31raGP5o9jF4uQ5XXzpK4pyOwOVUjwAbvLG2m2/8tydh1R5
- lfgcjW/fE7CJwgZ0csMAExstMaKMuBaStnGRC7r5glaiSOOmCXGG1aFUBjATWLTbGEv957+hq
- g3n/tjCcH+Z/SQpPAPFn8/ps1VkpJ3IHjI7bT7ufAFoyhEQwJDpoWu4U8b2jirMaUbOb1ZUbS
- +L6hW5MUjeO/nvEM1vAJ3Pw5kMFvFFvNHxctTc9rGB1R0BK19gHKOrENBJW5DirelSfDRBrk6
- 2buHdvh47LEuiuoEwnczWmWr2GRmgsSwhrcaFUQQvT3lns3cYfOApgtPVnumqAZD1wnjx9XAn
- pMYxAJPwksjOdPEqV0tiip3hC82uC/1l1Iwvy+2qzj8dqEoqDpI6qu/yro6+WbbJHt12J6fZv
- jWDHLz8519hF/wmXXhBGsQELRImryGx5BHmhr+pKZHqMfwM7iYg/oO+9UQ941R/nCUe6ng9gh
- VoOXMxAHS8HqhaIh6qWkEXAQdPtxQWTbWdV7TudKbKTKGeLxPX9TV77ceARP42gwd1rTndy1n
- xadSYQ36BnSbgn2LbbZHFrvNf6NvgeMOWAdtmQT5OpYiMszIPa+Ar9YpcujEwDdyxdbqPp+s1
- XvEzqO/+qdnm3wJa3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 05 Jun 2020 14:42:53 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
+ controller
+In-Reply-To: <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-7-michael@walle.cc>
+ <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <216db3154b46bd80202873df055bb3f3@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I recommend to replace the word =E2=80=9Cpm_runtime=E2=80=9D by the
-alternative =E2=80=9CPM run time system=E2=80=9D in the patch subject.
+Am 2020-06-05 14:00, schrieb Andy Shevchenko:
+> On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
+> 
+>> Add support for the GPIO controller of the sl28 board management
+>> controller. This driver is part of a multi-function device.
+>> 
+>> A controller has 8 lines. There are three different flavors:
+>> full-featured GPIO with interrupt support, input-only and output-only.
+> 
+> ...
+> 
+>> +#include <linux/of_device.h>
+> 
+> I think also not needed.
+> But wait...
+> 
+>> +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev), 
+>> regmap,
+> 
+> It seems regmap needs to be converted to use fwnode.
+
+Mhh, this _np functions was actually part of this series in the
+beginning.
+
+>> +                                          irq, IRQF_SHARED | 
+>> IRQF_ONESHOT, 0,
+>> +                                          irq_chip, &gpio->irq_data);
+> 
+> ...
+> 
+>> +       if (!pdev->dev.parent)
+>> +               return -ENODEV;
+> 
+> Are we expecting to get shot into foot? I mean why we need this check?
+
+Can we be sure, that we always have a parent node? You are the first
+which complains about this ;) There were some other comments to move
+this to the beginning of the function.
+
+> 
+>> +       dev_id = platform_get_device_id(pdev);
+>> +       if (dev_id)
+>> +               type = dev_id->driver_data;
+> 
+> Oh, no. In new code we don't need this. We have facilities to provide
+> platform data in a form of fwnode.
+
+Ok I'll look into that.
+
+But I already have a question, so there are of_property_read_xx(), which
+seems to be the old functions, then there is device_property_read_xx() 
+and
+fwnode_property_read_xx(). What is the difference between the latter 
+two?
+
+> 
+>> +       else
+>> +               type = 
+>> (uintptr_t)of_device_get_match_data(&pdev->dev);
+> 
+> So does this. device_get_match_data().
+ok
+
+> 
+>> +       if (!type)
+>> +               return -ENODEV;
+> 
+> ...
+> 
+>> +       if (irq_support &&
+> 
+> Why do you need this flag? Can't simple IRQ number be sufficient?
+
+I want to make sure, the is no misconfiguration. Eg. only GPIO
+flavors which has irq_support set, have the additional interrupt
+registers.
+
+> 
+>> +           device_property_read_bool(&pdev->dev, 
+>> "interrupt-controller")) {
+>> +               irq = platform_get_irq(pdev, 0);
+>> +               if (irq < 0)
+>> +                       return irq;
+>> +
+>> +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
+>> +                                            base, irq);
+>> +               if (ret)
+>> +                       return ret;
+>> +
+>> +               config.irq_domain = 
+>> regmap_irq_get_domain(gpio->irq_data);
+>> +       }
+> 
+> ...
+> 
+>> +static const struct of_device_id sl28cpld_gpio_of_match[] = {
+> 
+>> +       { .compatible = "kontron,sl28cpld-gpio",
+>> +         .data = (void *)SL28CPLD_GPIO },
+>> +       { .compatible = "kontron,sl28cpld-gpi",
+>> +         .data = (void *)SL28CPLD_GPI },
+>> +       { .compatible = "kontron,sl28cpld-gpo",
+>> +         .data = (void *)SL28CPLD_GPO },
+> 
+> All above can be twice less LOCs.
+
+They are longer than 80 chars. Or do I miss something?
+
+> 
+>> +       {},
+> 
+> No comma.
+
+ok
+
+>> +};
+> 
+> 
+> ...
+> 
+>> +               .name = KBUILD_MODNAME,
+> 
+> This actually not good idea in long term. File name can change and 
+> break an ABI.
+
+Ahh an explanation, why this is bad. Ok makes sense, although to be 
+fair,
+.id_table should be used for the driver name matching. I'm not sure if
+this is used somewhere else, though.
 
 
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count if pm_runtime_put is not called in
-> error handling paths.
-
-Should the term =E2=80=9Creference count=E2=80=9D be used here?
-
-
-> Call pm_runtime_put if pm_runtime_get_sync fails.
-
-The diff hunks show an other function name.
-
-
-=E2=80=A6
-> +++ b/drivers/gpio/gpio-arizona.c
-> @@ -64,6 +64,7 @@  static int arizona_gpio_get(struct gpio_chip *chip, u=
-nsigned offset)
->  		ret =3D pm_runtime_get_sync(chip->parent);
->  		if (ret < 0) {
->  			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-> +			pm_runtime_put_autosuspend(chip->parent);
->  			return ret;
->  		}
-
-You propose to use identical statements in three if branches.
-Please add a corresponding jump target for better exception handling.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?id=3D435faf5c218a47fd6258187f62d9bb10=
-09717896#n455
-
-
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messag=
-e?
-
-
-I find it amazing how many questionable implementation details
-you pointed out recently.
-Were these contributions triggered by an evolving source code analysis
-tool like CheQ?
-https://github.com/umnsec/cheq/
-
-Regards,
-Markus
+-- 
+-michael
