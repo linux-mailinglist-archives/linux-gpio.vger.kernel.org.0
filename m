@@ -2,103 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 147D11EEFB4
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 05:01:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D57491EF141
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 08:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726021AbgFEDBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Jun 2020 23:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        id S1726134AbgFEGNz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 02:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFEDBB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Jun 2020 23:01:01 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86627C08C5C0;
-        Thu,  4 Jun 2020 20:01:00 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id i1so6952223ils.11;
-        Thu, 04 Jun 2020 20:01:00 -0700 (PDT)
+        with ESMTP id S1726112AbgFEGNy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 02:13:54 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34095C08C5C5
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Jun 2020 23:13:54 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k26so7871089wmi.4
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jun 2020 23:13:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
-        b=VtUTM0qn7CTaNao5hjVsEXiwUgUnBhKH925UHNI+uAyzcwMhfsq36V6iHXDGgcJKoD
-         BmZMuTPjd9qeP5i4yspQEsrfNpGIHzHqBmPEbPaj8JDY1CHTrro1SnYbTKGwd3iwlb5v
-         nIiJs1yhqmW/KwPIgKTPkLP5NitRPEPr9fHQ6nf99Ey2lNGBUQIynVyjBbUpy4S2fHF2
-         JrnHQi+vt6cNU9JKRRsspY4VihzLZisqneNP1zJMXzRz8gdNX2MzF7mnYHOALiu++cE5
-         v8+CPyH6lYqYiPIKJKq7+40FZAK9eSC3z91rlxQzzQv62XJaNlWlZX1FXvxLQq8XdYn0
-         d1rg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yJN2wMTqdmW9Ywj7bcdohdTeZTeJk5SGvJLUrYv99yE=;
+        b=Wl7PqVYB0NgnKYSjXlz5tRPX5NANomxtDkglcbdjvQsRL+/sWEI5cyjRwbLQ+T/mKJ
+         M6Sc4l0Tp0CYqkIM19DWwsyrML2uNkCQzaRdzWEBO4IX78Xj83hqcyrFBi5p0KwQPyyt
+         sKWZhOFZNlEuvbmA8Y7NjXu1NFVModaASoCqeRUiyrCpwF/jDRi5bccIxaSnkUwrc3AE
+         ZUNS+K/7hVqJYlegt7KZSLfRDBX3qMf8IC9CV9c30saGPnT3D1XpB/ptPF5HrUbitr0g
+         QNFtDsD0FRNBDII5Aim6NI2sruSlz3pIyjo6iBcdTBciWCFeOQEA2YSBgxmU2gAXaS5Q
+         HrCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dMlRURD0AMV5m7nsP7Rq9ppWitDs8+6K6/cTTPcy4TM=;
-        b=qkVeMHC9wddjWOwLnsoSgHq0rrASVyX4N3z5+6wMDZ9GcfMdGoENm/6vbcxDafwAq1
-         NhdRWKCwiZe19ajmMd8PQvbnDe/C9DW2eOUaOXSFIwbp/9uEFGMPvEE13GFiMEdF1rzM
-         EY17mc2ap+a1ZtSW6RrUY/81SxEtr3S1e7iyGEqywWXVsZLbOo7x66MW5Xym85EPX6uM
-         5Fs7W4oQcHWbF1BlgL69jigt3m54WN8GuqP3B9H0yHAcyOcC+IYgaxRVlZ1wOVwHHY4j
-         ga/kn7rKy9LALO+1ELcFC9Wx6yTxvRKeWYkWojvtzC0iDRGc8yg0om0Bhdf82ohdqW8w
-         R8Yg==
-X-Gm-Message-State: AOAM532m83aOwvU5QGQvsnylnGHL//wCoPlFxOzPuXWBjfqYGACELfYX
-        SgqN4mwKCJgsE6Oe1bHgmAg=
-X-Google-Smtp-Source: ABdhPJw65TE6nd6bypfAwdXMpluubPfORSaChczPfQHt4+6ldcKas7EH4A/dfERJ++EUdv98ERCbiA==
-X-Received: by 2002:a92:b603:: with SMTP id s3mr6921538ili.175.1591326059820;
-        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
-Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id d11sm727854iod.11.2020.06.04.20.00.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yJN2wMTqdmW9Ywj7bcdohdTeZTeJk5SGvJLUrYv99yE=;
+        b=VM187qwGepLBOw6SGD1n4grYIGAzH+2BMPZRDpSk0qkKpoFJ6dKtfd2lEUuj+vwNSG
+         rdFOqaSqayc+p1SGUodazZaB7XXbcVm+bkP9TASmI26kB1lywRh41YJrCCq/9Az7p8Pd
+         ZmavVCcl448kQ+zMI1BoSRHpSAQS5cO6g0XNHzorKMsmTRZtvmVBxCeLzT/+xkHetaQ5
+         CWlz7aOp3ahcJeZtNFr7yaWDQryMNbzm+xZUxSzv6J6qKfZ+ESNinnes014Qg+UHGdT9
+         ZIh4xgK1Xg53nAg1A5Fc2y4GkaqzqmeMr+CHwdBu0VHXz6zuCzSlsCYKHcZT8rDKJzCi
+         y5kQ==
+X-Gm-Message-State: AOAM530USYSrQjN72lVYer87OtBophx9D0SY9/4SoiNNAyigg7uU8eFN
+        eDagoyihp8HUJQogCCk/A20Rbw==
+X-Google-Smtp-Source: ABdhPJwf5S2OwPHZvteiT4PVJdXt+ehvT08EuJ6eK2OP2Atm5I/Xbi4JETpWh90BOmkczgotX4Fl6Q==
+X-Received: by 2002:a1c:7dd5:: with SMTP id y204mr963235wmc.182.1591337632738;
+        Thu, 04 Jun 2020 23:13:52 -0700 (PDT)
+Received: from dell ([95.147.198.92])
+        by smtp.gmail.com with ESMTPSA id x186sm9871815wmg.8.2020.06.04.23.13.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 20:00:59 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        Thu, 04 Jun 2020 23:13:51 -0700 (PDT)
+Date:   Fri, 5 Jun 2020 07:13:50 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>
-Subject: [PATCH] gpio: arizona: put pm_runtime in case of failure
-Date:   Thu,  4 Jun 2020 22:00:52 -0500
-Message-Id: <20200605030052.78235-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 00/11] Add support for Kontron sl28cpld
+Message-ID: <20200605061350.GC3714@dell>
+References: <20200604211039.12689-1-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200604211039.12689-1-michael@walle.cc>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+On Thu, 04 Jun 2020, Michael Walle wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/gpio/gpio-arizona.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
+> monitoring and an interrupt controller. For now this controller is used on
+> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
+> might also be used on other boards in the future. The individual blocks
+> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
+> then instantiates different (or multiple of the same) blocks. It also
+> provides the register layout so it might be updated in the future without a
+> device tree change; and support other boards with a different layout or
+> functionalities.
+> 
+> See also [1] for more information.
+> 
+> This is my first take of a MFD driver. I don't know whether the subsystem
+> maintainers should only be CCed on the patches which affect the subsystem
+> or on all patches for this series. I've chosen the latter so you can get a
+> more complete picture.
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 7520a13b4c7c..5bda38e0780f 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -64,6 +64,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
-@@ -72,12 +73,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to drop cache: %d\n",
- 				ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
- 		ret = regmap_read(arizona->regmap, reg, &val);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
-+		}
- 
- 		pm_runtime_mark_last_busy(chip->parent);
- 		pm_runtime_put_autosuspend(chip->parent);
+You chose wisely. :)
+
+> [1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+> 
+> Changes since v3:
+>  - use of_platform_populate() to populate internal devices using the
+>    internal register offsets as unit-addresses
+>  - because we don't use mfd_cells anymore, we cannot use IORESOURCE_REG,
+>    but instead parse the reg property in each individual driver
+>  - dropped the following patches because they were already merged:
+>      gpiolib: Introduce gpiochip_irqchip_add_domain()
+>      gpio: add a reusable generic gpio_chip using regmap
+>  - dropped the following patches because they are no longer needed:
+>      include/linux/ioport.h: add helper to define REG resource constructs
+>      mfd: mfd-core: Don't overwrite the dma_mask of the child device
+>      mfd: mfd-core: match device tree node against reg property
+>  - rephrase commit messages, as suggested by Thomas Gleixner
+
+It's great to have this changelog overview.
+
+However it's equally, if not arguably more important to have a more
+fine grained changelog in each of the patches, usually placed between
+the '---' and the diff stat.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
