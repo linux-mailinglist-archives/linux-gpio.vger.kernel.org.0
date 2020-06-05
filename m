@@ -2,190 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D6C1EFFFA
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 20:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 346351F0005
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 20:45:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgFESo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 14:44:56 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:54305 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgFESo4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 14:44:56 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D4F3122FEB;
-        Fri,  5 Jun 2020 20:44:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1591382693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YRXENm/x2WRLoyAXS0BfjnJoOn+fwaDtXQJ9FoOZsLA=;
-        b=j0Eus+/W8QMEAKZ/SsmQb0kD+m3/XjNNl0Ufda7uFq9odKfuAWBB0W5v8SY60Q1bF9vcpo
-        3dLqeh4xxOffGdO2kS4EOmwn50MCn0MU8NYl8Kzc+MvIKFbpci3tRwsSDkQdqSIrU3phYb
-        jaddnH0/bDjBanv1kCnlJbG0xT/VxY0=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 05 Jun 2020 20:44:52 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        id S1726926AbgFESpk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 14:45:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:32603 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbgFESpk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Jun 2020 14:45:40 -0400
+IronPort-SDR: ZY00p+HTqIiocQ9SQZjocLDKNE4akfyZwU0IkouQ9umJ+NclvzN3Jh8vJ8/+fHXDqsySu2ZoBw
+ WLlBUCAu52lg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 11:45:40 -0700
+IronPort-SDR: Em2SwIApaOChD8ivBSlj6BODCCRiddGWah0O4ySqgGsb0gCpqtOSQm38t0f2Hd2aZIN7CrVwp3
+ Hr5AkR6fJpOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="273556712"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 05 Jun 2020 11:45:38 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jhHLZ-00B5tA-GI; Fri, 05 Jun 2020 21:45:41 +0300
+Date:   Fri, 5 Jun 2020 21:45:41 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 06/11] gpio: add support for the sl28cpld GPIO
- controller
-In-Reply-To: <20200605131525.GK2428291@smile.fi.intel.com>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-7-michael@walle.cc>
- <CAHp75VfRhL1f-XD=PMbqd3BLeJQzQMFAupSzqAvx0g7-X_2VhQ@mail.gmail.com>
- <216db3154b46bd80202873df055bb3f3@walle.cc>
- <20200605131525.GK2428291@smile.fi.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <bf587fc3f907d58609a0ea3d65cd5b37@walle.cc>
-X-Sender: michael@walle.cc
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        linux-gpio@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: baytrail: Fix pin being driven low for a while
+ on gpiod_get(..., GPIOD_OUT_HIGH)
+Message-ID: <20200605184541.GU2428291@smile.fi.intel.com>
+References: <20200602122130.45630-1-hdegoede@redhat.com>
+ <20200602152317.GI2428291@smile.fi.intel.com>
+ <ba931618-9259-aca0-142c-c1dfb67e737e@redhat.com>
+ <20200605170931.GR2428291@smile.fi.intel.com>
+ <1cf9b188-1e59-b321-6909-bf6afa93685d@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1cf9b188-1e59-b321-6909-bf6afa93685d@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2020-06-05 15:15, schrieb Andy Shevchenko:
-> On Fri, Jun 05, 2020 at 02:42:53PM +0200, Michael Walle wrote:
->> Am 2020-06-05 14:00, schrieb Andy Shevchenko:
->> > On Fri, Jun 5, 2020 at 12:14 AM Michael Walle <michael@walle.cc> wrote:
-> 
->> > > +       return devm_regmap_add_irq_chip_np(dev, dev_of_node(dev),
->> > > regmap,
->> >
->> > It seems regmap needs to be converted to use fwnode.
->> 
->> Mhh, this _np functions was actually part of this series in the
->> beginning.
-> 
-> Then, please, make them fwnode aware rather than OF centric.
+On Fri, Jun 05, 2020 at 07:31:35PM +0200, Hans de Goede wrote:
+> On 6/5/20 7:09 PM, Andy Shevchenko wrote:
+> > On Fri, Jun 05, 2020 at 04:33:47PM +0200, Hans de Goede wrote:
+> > > On 6/2/20 5:23 PM, Andy Shevchenko wrote:
+> > > > On Tue, Jun 02, 2020 at 02:21:30PM +0200, Hans de Goede wrote:
 
-ok
+...
 
+> > > Sure, not sure if that is worth respinning the patch for though,
+> > > either way let me know.
+> > 
+> > I think makes sense to respin. We still have time.
 > 
->> > > IRQF_ONESHOT, 0,
->> > > +                                          irq_chip, &gpio->irq_data);
-> 
-> ...
-> 
->> > > +       dev_id = platform_get_device_id(pdev);
->> > > +       if (dev_id)
->> > > +               type = dev_id->driver_data;
->> >
->> > Oh, no. In new code we don't need this. We have facilities to provide
->> > platform data in a form of fwnode.
->> 
->> Ok I'll look into that.
->> 
->> But I already have a question, so there are of_property_read_xx(), 
->> which
->> seems to be the old functions, then there is device_property_read_xx() 
->> and
->> fwnode_property_read_xx(). What is the difference between the latter 
->> two?
-> 
-> It's easy. device_*() requires struct device to be established for 
-> this, so,
-> operates only against devices, while the fwnode_*() operates on pure 
-> data which
-> might or might not be related to any devices. If you understand OF 
-> examples
-> better, consider device node vs. child of such node.
+> I wasn't talking about timing, more just that it creates extra
+> work (for me) and if that was just for the capital 'B' thingie it
+> would not be worth the extra work IMHO, but since we need a v2 for
+> the fixes tag anyways I'll fix this as well.
 
-Ahh thanks, got it.
+I got your point, no problem, I would fix myself, if it is only the comment
+to address.
 
-> 
-> ...
-> 
->> > > +       if (irq_support &&
->> >
->> > Why do you need this flag? Can't simple IRQ number be sufficient?
->> 
->> I want to make sure, the is no misconfiguration. Eg. only GPIO
->> flavors which has irq_support set, have the additional interrupt
->> registers.
-> 
-> In gpio-dwapb, for example, we simple check two things: a) hardware 
-> limitation
-> (if IRQ is assigned to a proper port) and b) if there is any IRQ comes 
-> from DT,
-> ACPI, etc.
+...
 
-I can't follow you here. irq_support is like your (a); or the
-"pp->idx == 0" in your example.
-
->> > > +           device_property_read_bool(&pdev->dev,
->> > > "interrupt-controller")) {
->> > > +               irq = platform_get_irq(pdev, 0);
->> > > +               if (irq < 0)
->> > > +                       return irq;
->> > > +
->> > > +               ret = sl28cpld_gpio_irq_init(&pdev->dev, gpio, regmap,
->> > > +                                            base, irq);
->> > > +               if (ret)
->> > > +                       return ret;
->> > > +
->> > > +               config.irq_domain =
->> > > regmap_irq_get_domain(gpio->irq_data);
->> > > +       }
+> > Btw, can we for sake of consistency update direction_input() as well?
 > 
-> ...
-> 
->> > > +       { .compatible = "kontron,sl28cpld-gpio",
->> > > +         .data = (void *)SL28CPLD_GPIO },
->> > > +       { .compatible = "kontron,sl28cpld-gpi",
->> > > +         .data = (void *)SL28CPLD_GPI },
->> > > +       { .compatible = "kontron,sl28cpld-gpo",
->> > > +         .data = (void *)SL28CPLD_GPO },
->> >
->> > All above can be twice less LOCs.
->> 
->> They are longer than 80 chars. Or do I miss something?
-> 
-> We have 100 :-)
+> Sure, the change for that will be quite small, so shall I out it
+> in this patch, or do you want a second patch for that?
 
-oh come on, since 6 days *g*
+I think we can do in one.
 
->> > > +               .name = KBUILD_MODNAME,
->> >
->> > This actually not good idea in long term. File name can change and break
->> > an ABI.
->> 
->> Ahh an explanation, why this is bad. Ok makes sense, although to be 
->> fair,
->> .id_table should be used for the driver name matching. I'm not sure if
->> this is used somewhere else, though.
-> 
-> I saw in my practice chain of renames for a driver. Now, if somebody
-> somewhere would like to instantiate a platform driver by its name...
-> Oops, ABI breakage.
-> 
-> And of course using platform data for such device makes less sense.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-i just removed the id_table from all drivers anyways.
 
--michael
