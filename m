@@ -2,272 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C96801EF1BB
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 08:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28A3A1EF286
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jun 2020 09:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgFEG5O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 02:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
+        id S1726084AbgFEHzn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Jun 2020 03:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgFEG5N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 02:57:13 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A4AC08C5C5
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Jun 2020 23:57:13 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v19so7388039wmj.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jun 2020 23:57:13 -0700 (PDT)
+        with ESMTP id S1725280AbgFEHzm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 03:55:42 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8CDC08C5C3
+        for <linux-gpio@vger.kernel.org>; Fri,  5 Jun 2020 00:55:42 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id o5so9249290iow.8
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jun 2020 00:55:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tz5BlR5JaV+ArYxa0HAqmVilkT6R8zR9JrCnLl9Yodo=;
-        b=qw82uH6liAGFuBEV6hkyJqcUYBtUY4dcgnzButO12xrC67ecuHOe03IPstZhhMxpkg
-         CoAUe7ix0w9VSDzB4R6LaZ9sUbPfjvRaxYMyMYeRp9nAIJfGM7wp5Ei9cVX6EnlUMfKI
-         0jGYMDy/f68iPGczAsb9xq6xZxgStH3X/LXTNGJDpAUm3b7a4TRbEj8wIACimBuRAv40
-         NlX6/ktlt84lJ+EqG2wFjKS81cdMxFeDDWNOG+TapLO6Fy6L8RDWwhDKNMmiDlhVKIUa
-         GqxtR0PuVKCLaJBVEZZ2EffArw0dmDoRecAGRNlRyHlzphGVag+UBe1i+7I/2/XB9dA1
-         qvEw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
+        b=napgGUjtBstHaKnWWAcYRE9+wyJbxk66BBMEEh1vAYPPhh3BsNVWTmF+SaM6DRStHz
+         KhfmvrVL7amdp1nsprW+RWRzE0G49LBt4ZFeCXwhSmmzsjzwRmky5fhUA3GFffzqTrW5
+         0DlLgeH3O6rSTZ+w/JYgqQb0mMFgdGnYDe9IstCdBCqss5qYcgDv32OySW1Mji0SNTUI
+         H3Ah1CzDBPOTiTZH8Xd/d4lnTrK223b1zYtDlvy7bNiMdzs2ago3OOb3TM/q3UICmpfy
+         jmvesJKZOY6QDyxB3Irvhcxnnsti0+4q9fIcyx0I2VamPkEUjRX3qNm9JBGIncXr6hFv
+         ufVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tz5BlR5JaV+ArYxa0HAqmVilkT6R8zR9JrCnLl9Yodo=;
-        b=mc1WEpS2b+mP3pAqI7c9VJROlR0f8A5o1sA8VNGL6ss7OfbMO4uMUHA4FIxARzeNXm
-         br9WtbJioY64R33oPSH2B6bjeK9irO5a35dwu24RjVAgQ7x2y4K7eE5S4Jv+em+E3TJh
-         yehPy71J3sB45xKM8dYf5t83ODWIZV9YY5WFvmLvZSOykFB/y2ZZhOh2FJbvmzijWza/
-         jjBK0iDQyLofRVmJ9QTn6oD4ndV0gK1ddBZMo1P+s6sZyZU7wYZ3RRmOj7KrHBAjGzFC
-         tUkl69yWmQiwcs04NFO4VWZADU/N2IXQCyCaG9BhYT7Ua5mIeQI8rRKnqLyGm9jzrPhJ
-         41KA==
-X-Gm-Message-State: AOAM530Iij01LumwIYuUrx5bdeGIzLCrYKz77Sf0dDZEGFGtZRVUx5JL
-        GgKe+wEz64bkZeaBIbc+NslupA==
-X-Google-Smtp-Source: ABdhPJw+8D1o16iYVZ1h5gWKMqmnNIGt4AnryEE8VROc7MnMuuWA7+NmgtKq7OghGpEPR8xO5Fr4Zg==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr1181014wmd.138.1591340231562;
-        Thu, 04 Jun 2020 23:57:11 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id t188sm5291530wmt.27.2020.06.04.23.57.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 23:57:10 -0700 (PDT)
-Date:   Fri, 5 Jun 2020 07:57:09 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>, broonie@kernel.org
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200605065709.GD3714@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=fn6d0rG1WRm22xj2b5NGQoFjGmqWjK3x4gd/gH4cTe0=;
+        b=sOD5F/vccL1ThObepaFU4RFBch0gcqxtTV+peeY4bOv7jgBGzz+4Y9do9m6s017p/x
+         aiU7FkKHOQFqQ9MFmsSZyh2S1Y6xX1JCVEFPmEnU3t3/hTsfw7cj5bZFtjgR/9F4JPIh
+         y1GfEOoSLVYFLmHnyJAa6mYNPi4O4YF7XmT7Znp82oApyKCZHKlmKiWSpxozaIW1tP1d
+         j+pEuNjG1qhHbSAswBGaZMNKD2etgGbhSgee6vl6dGyzPBDUIocZ4Hv14fpZFk4VwOsf
+         33DyCsnzaxIdfERHlzRwlulS8XWX0SoOURXX5IY7ce1QnkGbJ7O6ZYjlBJoaOqCXm7Zl
+         ILTA==
+X-Gm-Message-State: AOAM533J9T9ilodS9+sKI8BH+3UjfI+uu8jSxwJg+HXGxytugajPte/a
+        q8edwukLVupoTB+ZFUTbA/Len7n2n4TveqPzpWbrBA==
+X-Google-Smtp-Source: ABdhPJzySjsrYJWlwo+qyiiIvYJv/b1UsVHtFdnZqKiqFRi+LK2PxUf4HI42eeakb5whjKDNylTXeyddpLy8O/Gu5M4=
+X-Received: by 2002:a02:a003:: with SMTP id a3mr7313081jah.102.1591343741504;
+ Fri, 05 Jun 2020 00:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200604211039.12689-3-michael@walle.cc>
+References: <CAMpxmJX8U-uNYJPQxmkox=YTSvXVPrWss2y5MS81_bg43Co8Lg@mail.gmail.com>
+ <20200604175515.GA1076951@bjorn-Precision-5520>
+In-Reply-To: <20200604175515.GA1076951@bjorn-Precision-5520>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 5 Jun 2020 09:55:30 +0200
+Message-ID: <CAMRc=McWFpFAC3ziWdOEYkc0YwkN-Jqf7vZpxbCBLPoe=oewdg@mail.gmail.com>
+Subject: Re: [PATCH] gpio:asm28xx-18xx: new driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Richard Hsu <saraon640529@gmail.com>,
+        Richard_Hsu@asmedia.com.tw, Yd_Tseng@asmedia.com.tw,
+        Jesse1_Chang@asmedia.com.tw,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Mark, what do you think?
+czw., 4 cze 2020 o 19:55 Bjorn Helgaas <helgaas@kernel.org> napisa=C5=82(a)=
+:
+>
+> > > +       /* We look for our device - Asmedia 28XX and 18XX Bridge
+> > > +        * I don't know about a system with two such bridges,
+> > > +        * so we can assume that there is max. one device.
+> > > +        *
+> > > +        * We can't use plain pci_driver mechanism,
+> > > +        * as the device is really a multiple function device,
+> > > +        * main driver that binds to the pci_device is an bus
+> > > +        * driver and have to find & bind to the device this way.
+> > > +        */
+> > > +
+> > > +       for_each_pci_dev(pdev) {
+> > > +               ent =3D pci_match_id(pci_tbl, pdev);
+> > > +               if (ent) {
+> > > +                       /* Because GPIO Registers only work on Upstre=
+am port. */
+> > > +                       type =3D pci_pcie_type(pdev);
+> > > +                       if (type =3D=3D PCI_EXP_TYPE_UPSTREAM) {
+> > > +                               dev_info(&pdev->dev, "ASMEDIA-28xx/18=
+xx Init Upstream detected\n");
+> > > +                               goto found;
+> > > +                       }
+> > > +               }
+> > > +       }
+> > > +       goto out;
+> > > +
+> >
+> > Bjorn: is this approach really correct? It looks very strange to me
+> > and even if we were to do this kind of lookup I'd expect there to be a
+> > real pci device registered as child of pdev here so that we can have a
+> > proper driver in place with probe() et al.
+>
+> No, this is pretty broken.  The model is that one PCI device goes with
+> one driver.  If there are two bits of functionality associated with a
+> single PCI device, it's up to the single PCI driver to sort that out.
+>
+> The comment above mentions "multiple function device," which may lead
+> to some confusion about the terminology.  In the PCI specs, the
+> smallest addressable unit of PCI hardware is the "Function."  A
+> "Device" may consist of one or more Functions.  A Device with more
+> than one Function is referred to in the spec as a "Multi-Function
+> Device".
+>
+> These PCI Functions are addressed by a (domain, bus, device, function)
+> tuple.  For example, my system has these:
+>
+>   0000:00:14.0 Intel USB 3.0 xHCI Controller
+>   0000:00:14.2 Intel Thermal Subsystem
+>
+> These two Functions are parts of the 0000:00:14 Multi-Function Device.
+>
+> In Linux, a "struct pci_dev" refers to a single Function, so there's
+> a pci_dev for 0000:00:14.0 and another for 0000:00:14.2.  These are
+> pretty much independent, and can be claimed by two separate drivers.
+>
+> But I think the "multiple function device" comment in *this* patch
+> probably doesn't refer to a "Multi-Function Device" as used in the PCI
+> specs.  It probably means a single PCI Function that has two kinds of
+> functionality.
+>
+> In the Linux model, that means the Function should be claimed by a
+> single driver, and that driver is responsible for coordinating the two
+> pieces of functionality.
+>
 
-On Thu, 04 Jun 2020, Michael Walle wrote:
+Thanks for the detailed explanation!
 
-> Add the core support for the board management controller found on the
-> SMARC-sAL28 board. It consists of the following functions:
->  - watchdog
->  - GPIO controller
->  - PWM controller
->  - fan sensor
->  - interrupt controller
-> 
-> At the moment, this controller is used on the Kontron SMARC-sAL28 board.
-> 
-> Please note that the MFD driver is defined as bool in the Kconfig
-> because the next patch will add interrupt support.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/mfd/Kconfig    | 19 ++++++++++
->  drivers/mfd/Makefile   |  2 ++
->  drivers/mfd/sl28cpld.c | 79 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 100 insertions(+)
->  create mode 100644 drivers/mfd/sl28cpld.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 4f8b73d92df3..5c0cd514d197 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2109,5 +2109,24 @@ config SGI_MFD_IOC3
->  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
->  	  then say Y. Otherwise say N.
->  
-> +config MFD_SL28CPLD
-> +	bool "Kontron sl28 core driver"
+Richard: in this case I think it's pretty clear now that whatever
+driver supports the "bridge" mentioned in the comment - needs to be
+extended with GPIO functionality.
 
-"Kontron SL28 Core Driver"
-
-> +	depends on I2C=y
-> +	depends on OF
-> +	select REGMAP_I2C
-> +	select MFD_CORE
-> +	help
-> +	  This option enables support for the board management controller
-> +	  found on the Kontron sl28 CPLD. You have to select individual
-
-I can't find any reference to the "Kontron sl28 CPLD" online.
-
-Is there a datasheet?
-
-> +	  functions, such as watchdog, GPIO, etc, under the corresponding menus
-> +	  in order to enable them.
-> +
-> +	  Currently supported boards are:
-> +
-> +		Kontron SMARC-sAL28
-> +
-> +	  To compile this driver as a module, choose M here: the module will be
-> +	  called sl28cpld.
-> +
->  endmenu
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 9367a92f795a..be59fb40aa28 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -264,3 +264,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
->  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
->  
->  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
-> +
-> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
-> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
-> new file mode 100644
-> index 000000000000..a23194bb6efa
-> --- /dev/null
-> +++ b/drivers/mfd/sl28cpld.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * MFD core for the sl28cpld.
-
-Ideally this would match the Kconfig subject line.
-
-> + * Copyright 2019 Kontron Europe GmbH
-
-This is out of date.
-
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/regmap.h>
-> +
-> +#define SL28CPLD_VERSION	0x03
-> +#define SL28CPLD_MIN_REQ_VERSION 14
-> +
-> +struct sl28cpld {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +};
-
-Why do you need this structure?
-
-> +static const struct regmap_config sl28cpld_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.reg_stride = 1,
-> +};
-> +
-> +static int sl28cpld_probe(struct i2c_client *i2c)
-> +{
-> +	struct sl28cpld *sl28cpld;
-> +	struct device *dev = &i2c->dev;
-> +	unsigned int cpld_version;
-> +	int ret;
-> +
-> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
-> +	if (!sl28cpld)
-> +		return -ENOMEM;
-> +
-> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, &sl28cpld_regmap_config);
-> +	if (IS_ERR(sl28cpld->regmap))
-> +		return PTR_ERR(sl28cpld->regmap);
-
-This is now a shared memory allocator and not an MFD at all.
-
-I'm clamping down on these type of drivers!
-
-Please find a better way to accomplish this.
-
-Potentially using "simple-mfd" and "simple-regmap".
-
-The former already exists and does what you want.  The latter doesn't
-yet exist, but could solve your and lots of other contributor's
-issues.
-
-Heck maybe I'll implement it myself if this keeps happening.
-
-> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, &cpld_version);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
-> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
-> +		return -ENODEV;
-> +	}
-> +
-> +	sl28cpld->dev = dev;
-> +	i2c_set_clientdata(i2c, sl28cpld);
-
-If the struct definition is in here, how do you use it elsewhere?
-
-> +	dev_info(dev, "successfully probed. CPLD version %d\n", cpld_version);
-> +
-> +	return devm_of_platform_populate(&i2c->dev);
-> +}
-> +
-> +static const struct of_device_id sl28cpld_of_match[] = {
-> +	{ .compatible = "kontron,sl28cpld-r1", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
-> +
-> +static struct i2c_driver sl28cpld_driver = {
-> +	.probe_new = sl28cpld_probe,
-> +	.driver = {
-> +		.name = "sl28cpld",
-> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
-> +	},
-> +};
-> +module_i2c_driver(sl28cpld_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Bart
