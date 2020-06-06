@@ -2,220 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9132B1F05EE
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2020 11:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2621F066A
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2020 14:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgFFJb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Jun 2020 05:31:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43069 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728638AbgFFJb5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jun 2020 05:31:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591435915;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=WPYvKtAQCtTVFMEFm9HcgELx9JdP3kWVQkmiIOpQoqI=;
-        b=BgpQCxLQJ3h4A7eFILHUYybwxvOVk57zumYg8cUtHbUIDWq3aNE6HvjkBUFrCAMVvmaA3+
-        tl02rjDE12oKs5vKTvTjd6Bk8W+PWmwVs6/0YbO3w37c+fPULfIkkd7vNGagydw8Icu7/H
-        S/84QSubn1KE3VKRkVZKsu2ZlI6NFzE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-Ed4nRy47NWmNGbr_pwUmqQ-1; Sat, 06 Jun 2020 05:31:53 -0400
-X-MC-Unique: Ed4nRy47NWmNGbr_pwUmqQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A117C1853562;
-        Sat,  6 Jun 2020 09:31:52 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 586D210013D5;
-        Sat,  6 Jun 2020 09:31:51 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a while on gpiod_get(..., GPIOD_OUT_HIGH)
-Date:   Sat,  6 Jun 2020 11:31:50 +0200
-Message-Id: <20200606093150.32882-1-hdegoede@redhat.com>
+        id S1728726AbgFFMKX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Jun 2020 08:10:23 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43242 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbgFFMKX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jun 2020 08:10:23 -0400
+X-Greylist: delayed 1382 seconds by postgrey-1.27 at vger.kernel.org; Sat, 06 Jun 2020 08:10:20 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q1hE1By2w6tdlelWUzgDL9pNEpalt4sHuIMqHFjQjp8=; b=k3fx9IKijx/wg1gi89wPskkRj
+        qSJnkyjDFkHUduWjPiD4PsWrnb2+RVPaizPta11NotezqIsLn1oxzVSNvnszEdO6FARP/jF+sntaC
+        MnUHGVN+Z24JRtKvk6f3h4BeEZnju966pPcxiFNt+ga2Sbf/VPisLqymd8KuYebH1Wqlw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1jhXHh-0004Y4-Ov; Sat, 06 Jun 2020 11:46:45 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 3343CD06634; Sat,  6 Jun 2020 12:46:45 +0100 (BST)
+Date:   Sat, 6 Jun 2020 12:46:45 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
+ management controller
+Message-ID: <20200606114645.GB2055@sirena.org.uk>
+References: <20200604211039.12689-1-michael@walle.cc>
+ <20200604211039.12689-3-michael@walle.cc>
+ <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
+Content-Disposition: inline
+In-Reply-To: <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+X-Cookie: You do not have mail.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pins on the Bay Trail SoC have separate input-buffer and output-buffer
-enable bits and a read of the level bit of the value register will always
-return the value from the input-buffer.
 
-The BIOS of a device may configure a pin in output-only mode, only enabling
-the output buffer, and write 1 to the level bit to drive the pin high.
-This 1 written to the level bit will be stored inside the data-latch of the
-output buffer.
+--PmA2V3Z32TCmWXqI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But a subsequent read of the value register will return 0 for the level bit
-because the input-buffer is disabled. This causes a read-modify-write as
-done by byt_gpio_set_direction() to write 0 to the level bit, driving the
-pin low!
+On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+> Am 2020-06-05 12:50, schrieb Mark Brown:
 
-Before this commit byt_gpio_direction_output() relied on
-pinctrl_gpio_direction_output() to set the direction, followed by a call
-to byt_gpio_set() to apply the selected value. This causes the pin to
-go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
-calls.
+> > I have no idea what you are thinking of when you say "simple-regmap" so
+> > it is difficult to comment.
 
-Change byt_gpio_direction_output() to directly make the register
-modifications itself instead. Replacing the 2 subsequent writes to the
-value register with a single write.
+> I guess, Lee is suggesting to be able to create a regmap instance via
+> device tree (and populate its child nodes?). Like
+>   compatible = "syscon", "simple-mfd";
+> but for any regmap, not just MMIO.
 
-Note that the pinctrl code does not keep track internally of the direction,
-so not going through pinctrl_gpio_direction_output() is not an issue.
+I don't understand why this would be anything separate to
+simple-mfd.
 
-This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
-already on at boot (no external monitor connected), then the i915 driver
-does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
-temporarily going low of that GPIO was causing the panel to reset itself
-after which it would not show an image until it was turned off and back on
-again (until a full modeset was done on it). This commit fixes this.
+> But, there is more in my driver:
+>  (1) there is a version check
+>  (2) there is another function for which there is no suitable linux
+>      subsystem I'm aware of and thus which I'd like to us sysfs
+>      attributes for: This controller supports 16 non-volatile
+>      configuration bits. (this is still TBD)
 
-This commit also updates the byt_gpio_direction_input() to use direct
-register accesses instead of going through pinctrl_gpio_direction_input(),
-to keep it consistent with byt_gpio_direction_output().
+TBH I'd also say that the enumeration of the subdevices for this
+device should be in the device rather than the DT, they don't
+seem to be things that exist outside of this one device.
 
-Note for backporting, this commit depends on:
-commit e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once
-when setting direct-irq pin to output")
+--PmA2V3Z32TCmWXqI
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cc: stable@vger.kernel.org
-Fixes: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Note the factoring out of the direct IRQ mode warning is deliberately not
-split into a separate patch to make backporting this easier.
+-----BEGIN PGP SIGNATURE-----
 
----
-Changes in v2:
-- Add fixes tag
-- Also change byt_gpio_direction_input() to directly making the change
-  itself for consistency
-- Add a comment above byt_gpio_direction_output() to avoid someone doing
-  a well intended cleanup in the future re-introducing the problem
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 67 +++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 14 deletions(-)
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7bgiQACgkQJNaLcl1U
+h9CJwAf9GDLvYJzqBwwJ8Wam2ddh4vI4HhG+7om7V0rPbtc+8urivLRpsn4PzyP2
+VEDJVR0PhbtQTX11tUL9oNelTz+H+JHuuGMFCWP/DbbHsTKucuhkpelUnW17FukC
+sr8O5n3D6en4l8bj6vsfjqysrIAtZWKk+xStpf8bQ9Zu9rczpbIGa2XK6r10w27Y
+jcr5C4pQfl7DlyEwdfOw22i+q+dbBuPGPd/zk/7iRp8QzvmHjE9MCr20JO3s0cuO
+4wwwbMMyNZAe2HjD1IOyVfJ42Yhd+Yf+IkgSShozuk03IuU1HEWpHTyV36pXBdvs
+N4lga9r/upJOfAP2iW7qqtIdU4NzZA==
+=M9Xv
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 9b821c9cbd16..b033f9d13fb4 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -800,6 +800,21 @@ static void byt_gpio_disable_free(struct pinctrl_dev *pctl_dev,
- 	pm_runtime_put(vg->dev);
- }
- 
-+static void byt_gpio_direct_irq_check(struct intel_pinctrl *vg,
-+				      unsigned int offset)
-+{
-+	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
-+
-+	/*
-+	 * Before making any direction modifications, do a check if gpio is set
-+	 * for direct IRQ. On Bay Trail, setting GPIO to output does not make
-+	 * sense, so let's at least inform the caller before they shoot
-+	 * themselves in the foot.
-+	 */
-+	if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
-+		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
-+}
-+
- static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- 				  struct pinctrl_gpio_range *range,
- 				  unsigned int offset,
-@@ -807,7 +822,6 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- {
- 	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctl_dev);
- 	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
--	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
- 	unsigned long flags;
- 	u32 value;
- 
-@@ -817,14 +831,8 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
- 	value &= ~BYT_DIR_MASK;
- 	if (input)
- 		value |= BYT_OUTPUT_EN;
--	else if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
--		/*
--		 * Before making any direction modifications, do a check if gpio
--		 * is set for direct IRQ.  On baytrail, setting GPIO to output
--		 * does not make sense, so let's at least inform the caller before
--		 * they shoot themselves in the foot.
--		 */
--		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
-+	else
-+		byt_gpio_direct_irq_check(vg, offset);
- 
- 	writel(value, val_reg);
- 
-@@ -1165,19 +1173,50 @@ static int byt_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
- 
- static int byt_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
- {
--	return pinctrl_gpio_direction_input(chip->base + offset);
-+	struct intel_pinctrl *vg = gpiochip_get_data(chip);
-+	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	raw_spin_lock_irqsave(&byt_lock, flags);
-+
-+	reg = readl(val_reg);
-+	reg &= ~BYT_DIR_MASK;
-+	reg |= BYT_OUTPUT_EN;
-+	writel(reg, val_reg);
-+
-+	raw_spin_unlock_irqrestore(&byt_lock, flags);
-+	return 0;
- }
- 
-+/*
-+ * Note despite the temptation this MUST NOT be converted into a call to
-+ * pinctrl_gpio_direction_output() + byt_gpio_set() that does not work this
-+ * MUST be done as a single BYT_VAL_REG register write.
-+ * See the commit message of the commit adding this comment for details.
-+ */
- static int byt_gpio_direction_output(struct gpio_chip *chip,
- 				     unsigned int offset, int value)
- {
--	int ret = pinctrl_gpio_direction_output(chip->base + offset);
-+	struct intel_pinctrl *vg = gpiochip_get_data(chip);
-+	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
-+	unsigned long flags;
-+	u32 reg;
- 
--	if (ret)
--		return ret;
-+	raw_spin_lock_irqsave(&byt_lock, flags);
-+
-+	byt_gpio_direct_irq_check(vg, offset);
- 
--	byt_gpio_set(chip, offset, value);
-+	reg = readl(val_reg);
-+	reg &= ~BYT_DIR_MASK;
-+	if (value)
-+		reg |= BYT_LEVEL;
-+	else
-+		reg &= ~BYT_LEVEL;
- 
-+	writel(reg, val_reg);
-+
-+	raw_spin_unlock_irqrestore(&byt_lock, flags);
- 	return 0;
- }
- 
--- 
-2.26.2
-
+--PmA2V3Z32TCmWXqI--
