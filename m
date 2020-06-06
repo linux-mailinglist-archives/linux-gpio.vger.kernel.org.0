@@ -2,229 +2,220 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C6D1F0431
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2020 03:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9132B1F05EE
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Jun 2020 11:31:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgFFB45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Jun 2020 21:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgFFB45 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Jun 2020 21:56:57 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD0BC08C5C2;
-        Fri,  5 Jun 2020 18:56:56 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y17so4379127plb.8;
-        Fri, 05 Jun 2020 18:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=9XJUfzg4tRpMg9UJ384v0VHvTRvHdUSTkka3ZJEqC9M=;
-        b=IWoJ6w/Qpb3nZiqDq3Ynp13vOQYhEZdr8MaxRXp3UjappWMEWzxEvZuCG3tMUiy50/
-         srEIpFUMqFtznBVeuTQQrEPWO07t64Ca07GaIU5IynWYWAJkHVOA+3+wWDyuphqms7Zh
-         +asvR/xQBzSLVXp8kvdc7Zwl9gQuH3+BA8wSiT3EO+wv0+uKTuKLUAyLD7UtRWqGZTvh
-         YXfWE5jPfXJTOeN18ooL70g9yKYk0MvjqA/p5GYBwLxX+pCR8RQwYVDQWf2iY5hxJ9GW
-         KXSiu7FsA3ilxvZ3zisyxJ5y3Nm5qAcz8ZOxSLXFlIjMKvW3SDMVVw0Hw4skumWpX3Tk
-         HgCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9XJUfzg4tRpMg9UJ384v0VHvTRvHdUSTkka3ZJEqC9M=;
-        b=Jup7eqH9bsIFzK3iUuSHrnlwxLTUZHBFcUOplOQMu4xVwnxFCP+xOdlsQCU3rEk0u4
-         SnqLELkiDuFnHMOdwehGoaD1zRAdJZdRXEvoYIyChaj/5YuF6fw16re/7KI1XHd9JkHw
-         nKsvVeMSuYtxqpuS05ogaNS1AZGVsmOV0K0JQT5vOOsVm9lpvwk8szN33tudpPPVwhKz
-         1yRhRhunF1+keHDyWOG7TW6dMlknyy+jB0gLkiAGc2K1OzIBFtlVqz+cH5MWDGm5ZjAS
-         sl8YfROV6G7V+JjUI89X5nmpT3LL6yk1EaJQv/mrANBvLZMwwhPN1uRMgXrGT2TY/0rP
-         GnLQ==
-X-Gm-Message-State: AOAM533ny6Bl71a3YEOTlDL2kJ7zTgQhakeYHxh0f2EQdAlBXbFWLeXN
-        dAoSVxpQcao2eLvmyN0jG4kdykz4//A=
-X-Google-Smtp-Source: ABdhPJxihHCwMe4Rc94oKUVZ0w87/fMya+7tPhbp69ffS1XGYAkZFAkdumBhEwOX5RkxU2wj+t0o/A==
-X-Received: by 2002:a17:90a:49c5:: with SMTP id l5mr6057712pjm.31.1591408615346;
-        Fri, 05 Jun 2020 18:56:55 -0700 (PDT)
-Received: from sol (220-235-66-207.dyn.iinet.net.au. [220.235.66.207])
-        by smtp.gmail.com with ESMTPSA id l2sm601411pga.44.2020.06.05.18.56.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 05 Jun 2020 18:56:53 -0700 (PDT)
-Date:   Sat, 6 Jun 2020 09:56:47 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+        id S1728643AbgFFJb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Jun 2020 05:31:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43069 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728638AbgFFJb5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Jun 2020 05:31:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591435915;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WPYvKtAQCtTVFMEFm9HcgELx9JdP3kWVQkmiIOpQoqI=;
+        b=BgpQCxLQJ3h4A7eFILHUYybwxvOVk57zumYg8cUtHbUIDWq3aNE6HvjkBUFrCAMVvmaA3+
+        tl02rjDE12oKs5vKTvTjd6Bk8W+PWmwVs6/0YbO3w37c+fPULfIkkd7vNGagydw8Icu7/H
+        S/84QSubn1KE3VKRkVZKsu2ZlI6NFzE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-Ed4nRy47NWmNGbr_pwUmqQ-1; Sat, 06 Jun 2020 05:31:53 -0400
+X-MC-Unique: Ed4nRy47NWmNGbr_pwUmqQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A117C1853562;
+        Sat,  6 Jun 2020 09:31:52 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 586D210013D5;
+        Sat,  6 Jun 2020 09:31:51 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-Message-ID: <20200606015647.GA8099@sol>
-References: <20200516064507.19058-1-warthog618@gmail.com>
- <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
- <20200604160006.GA5730@sol>
- <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a while on gpiod_get(..., GPIOD_OUT_HIGH)
+Date:   Sat,  6 Jun 2020 11:31:50 +0200
+Message-Id: <20200606093150.32882-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 11:53:05AM +0200, Bartosz Golaszewski wrote:
-> czw., 4 cze 2020 o 18:00 Kent Gibson <warthog618@gmail.com> napisał(a):
-> >
-> 
-> [snip!]
-> 
-> > > > +
-> > > > +enum gpioline_edge {
-> > > > +       GPIOLINE_EDGE_NONE              = 0,
-> > > > +       GPIOLINE_EDGE_RISING            = 1,
-> > > > +       GPIOLINE_EDGE_FALLING           = 2,
-> > > > +       GPIOLINE_EDGE_BOTH              = 3,
-> > > > +};
-> > >
-> > > I would skip the names of the enum types if we're not reusing them anywhere.
-> > >
-> >
-> > I thought it was useful to name them even if it was just to be able to
-> > reference them in the documentation for relevant fields, such as that in
-> > struct gpioline_config below, rather than having to either list all
-> > possible values or a GPIOLINE_EDGE_* glob.
-> >
-> > And I'm currently using enum gpioline_edge in my edge detector
-> > implementation - is that sufficient?
-> >
-> 
-> The documentation argument is more convincing. :)
-> 
+The pins on the Bay Trail SoC have separate input-buffer and output-buffer
+enable bits and a read of the level bit of the value register will always
+return the value from the input-buffer.
 
-I know - but your criteria was reuse... ;-).
+The BIOS of a device may configure a pin in output-only mode, only enabling
+the output buffer, and write 1 to the level bit to drive the pin high.
+This 1 written to the level bit will be stored inside the data-latch of the
+output buffer.
 
-> > > > +
-> > > > +/* Line flags - V2 */
-> > > > +#define GPIOLINE_FLAG_V2_KERNEL                (1UL << 0) /* Line used by the kernel */
-> > >
-> > > In v1 this flag is also set if the line is used by user-space. Maybe a
-> > > simple GPIOLINE_FLAG_V2_USED would be better?
-> > >
-> >
-> > Agreed - the _KERNEL name is confusing.
-> > In my latest draft I've already renamed it GPIOLINE_FLAG_V2_BUSY,
-> > as EBUSY is what the ioctl returns when you try to request such a line.
-> > Does that work for you?
-> > I was also considering _IN_USE, and was using _UNAVAILABLE for a while.
-> >
-> 
-> BUSY sounds less precise to me than USED or IN_USE of which both are
-> fine (with a preference for the former).
->
+But a subsequent read of the value register will return 0 for the level bit
+because the input-buffer is disabled. This causes a read-modify-write as
+done by byt_gpio_set_direction() to write 0 to the level bit, driving the
+pin low!
 
-OK, USED it shall be.
+Before this commit byt_gpio_direction_output() relied on
+pinctrl_gpio_direction_output() to set the direction, followed by a call
+to byt_gpio_set() to apply the selected value. This causes the pin to
+go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
+calls.
 
-> [snip!]
-> 
-> > > > +
-> > > > +/**
-> > > > + * struct gpioline_values - Values of GPIO lines
-> > > > + * @values: when getting the state of lines this contains the current
-> > > > + * state of a line, when setting the state of lines these should contain
-> > > > + * the desired target state
-> > > > + */
-> > > > +struct gpioline_values {
-> > > > +       __u8 values[GPIOLINES_MAX];
-> > >
-> > > Same here for bitfield. And maybe reuse this structure in
-> > > gpioline_config for default values?
-> > >
-> >
-> > Can do.  What makes me reticent is the extra level of indirection
-> > and the stuttering that would cause when referencing them.
-> > e.g. config.default_values.values
-> > So not sure the gain is worth the pain.
-> >
-> 
-> I'd say yes - consolidation and reuse of data structures is always
-> good and normally they are going to be wrapped in some kind of
-> low-level user-space library anyway.
-> 
+Change byt_gpio_direction_output() to directly make the register
+modifications itself instead. Replacing the 2 subsequent writes to the
+value register with a single write.
 
-Ok, and I've changed the values field name to bitmap, along with the change
-to a bitmap type, so the stuttering is gone.
+Note that the pinctrl code does not keep track internally of the direction,
+so not going through pinctrl_gpio_direction_output() is not an issue.
 
-And, as the change to bitmap substantially reduced the size of
-gpioline_config, I now embed that in the gpioline_info instead of
-duplicating all the other fields.  The values field will be zeroed
-when returned within info.
+This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
+already on at boot (no external monitor connected), then the i915 driver
+does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
+temporarily going low of that GPIO was causing the panel to reset itself
+after which it would not show an image until it was turned off and back on
+again (until a full modeset was done on it). This commit fixes this.
 
-> > And I've renamed "default_values" to just "values" in my latest draft
-> > which doesn't help with the stuttering.
-> >
-> 
-> Why though? Aren't these always default values for output?
-> 
+This commit also updates the byt_gpio_direction_input() to use direct
+register accesses instead of going through pinctrl_gpio_direction_input(),
+to keep it consistent with byt_gpio_direction_output().
 
-To me "default" implies a fallback value, and that de-emphasises the
-fact that the lines will be immediately set to those values as they
-are switched to outputs.
-These are the values the outputs will take - the "default" doesn't add
-anything.
+Note for backporting, this commit depends on:
+commit e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once
+when setting direct-irq pin to output")
 
-> [snip!]
-> 
-> > > > +
-> > > > +/**
-> > > > + * struct gpioline_event - The actual event being pushed to userspace
-> > > > + * @timestamp: best estimate of time of event occurrence, in nanoseconds
-> > > > + * @id: event identifier with value from enum gpioline_event_id
-> > > > + * @offset: the offset of the line that triggered the event
-> > > > + * @padding: reserved for future use
-> > > > + */
-> > > > +struct gpioline_event {
-> > > > +       __u64 timestamp;
-> > >
-> > > I'd specify in the comment the type of clock used for the timestamp.
-> > >
-> >
-> > Agreed - as this one will be guaranteed to be CLOCK_MONOTONIC.
-> >
-> > I'm also kicking around the idea of adding sequence numbers to events,
-> > one per line and one per handle, so userspace can more easily detect
-> > mis-ordering or buffer overflows.  Does that make any sense?
-> >
-> 
-> Hmm, now that you mention it - and in the light of the recent post by
-> Ryan Lovelett about polling precision - I think it makes sense to have
-> this. Especially since it's very easy to add.
-> 
+Cc: stable@vger.kernel.org
+Fixes: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Note the factoring out of the direct IRQ mode warning is deliberately not
+split into a separate patch to make backporting this easier.
 
-OK.  I was only thinking about the edge events, but you might want it
-for your line info events on the chip fd as well?
+---
+Changes in v2:
+- Add fixes tag
+- Also change byt_gpio_direction_input() to directly making the change
+  itself for consistency
+- Add a comment above byt_gpio_direction_output() to avoid someone doing
+  a well intended cleanup in the future re-introducing the problem
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 67 +++++++++++++++++++-----
+ 1 file changed, 53 insertions(+), 14 deletions(-)
 
-> > And would it be useful for userspace to be able to influence the size of
-> > the event buffer (currently fixed at 16 events per line)?
-> >
-> 
-> Good question. I would prefer to not overdo it though. The event
-> request would need to contain the desired kfifo size and we'd only
-> allow to set it on request, right?
->
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 9b821c9cbd16..b033f9d13fb4 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -800,6 +800,21 @@ static void byt_gpio_disable_free(struct pinctrl_dev *pctl_dev,
+ 	pm_runtime_put(vg->dev);
+ }
+ 
++static void byt_gpio_direct_irq_check(struct intel_pinctrl *vg,
++				      unsigned int offset)
++{
++	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
++
++	/*
++	 * Before making any direction modifications, do a check if gpio is set
++	 * for direct IRQ. On Bay Trail, setting GPIO to output does not make
++	 * sense, so let's at least inform the caller before they shoot
++	 * themselves in the foot.
++	 */
++	if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
++		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
++}
++
+ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
+ 				  struct pinctrl_gpio_range *range,
+ 				  unsigned int offset,
+@@ -807,7 +822,6 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
+ {
+ 	struct intel_pinctrl *vg = pinctrl_dev_get_drvdata(pctl_dev);
+ 	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
+-	void __iomem *conf_reg = byt_gpio_reg(vg, offset, BYT_CONF0_REG);
+ 	unsigned long flags;
+ 	u32 value;
+ 
+@@ -817,14 +831,8 @@ static int byt_gpio_set_direction(struct pinctrl_dev *pctl_dev,
+ 	value &= ~BYT_DIR_MASK;
+ 	if (input)
+ 		value |= BYT_OUTPUT_EN;
+-	else if (readl(conf_reg) & BYT_DIRECT_IRQ_EN)
+-		/*
+-		 * Before making any direction modifications, do a check if gpio
+-		 * is set for direct IRQ.  On baytrail, setting GPIO to output
+-		 * does not make sense, so let's at least inform the caller before
+-		 * they shoot themselves in the foot.
+-		 */
+-		dev_info_once(vg->dev, "Potential Error: Setting GPIO with direct_irq_en to output");
++	else
++		byt_gpio_direct_irq_check(vg, offset);
+ 
+ 	writel(value, val_reg);
+ 
+@@ -1165,19 +1173,50 @@ static int byt_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 
+ static int byt_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+ {
+-	return pinctrl_gpio_direction_input(chip->base + offset);
++	struct intel_pinctrl *vg = gpiochip_get_data(chip);
++	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
++	unsigned long flags;
++	u32 reg;
++
++	raw_spin_lock_irqsave(&byt_lock, flags);
++
++	reg = readl(val_reg);
++	reg &= ~BYT_DIR_MASK;
++	reg |= BYT_OUTPUT_EN;
++	writel(reg, val_reg);
++
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
++	return 0;
+ }
+ 
++/*
++ * Note despite the temptation this MUST NOT be converted into a call to
++ * pinctrl_gpio_direction_output() + byt_gpio_set() that does not work this
++ * MUST be done as a single BYT_VAL_REG register write.
++ * See the commit message of the commit adding this comment for details.
++ */
+ static int byt_gpio_direction_output(struct gpio_chip *chip,
+ 				     unsigned int offset, int value)
+ {
+-	int ret = pinctrl_gpio_direction_output(chip->base + offset);
++	struct intel_pinctrl *vg = gpiochip_get_data(chip);
++	void __iomem *val_reg = byt_gpio_reg(vg, offset, BYT_VAL_REG);
++	unsigned long flags;
++	u32 reg;
+ 
+-	if (ret)
+-		return ret;
++	raw_spin_lock_irqsave(&byt_lock, flags);
++
++	byt_gpio_direct_irq_check(vg, offset);
+ 
+-	byt_gpio_set(chip, offset, value);
++	reg = readl(val_reg);
++	reg &= ~BYT_DIR_MASK;
++	if (value)
++		reg |= BYT_LEVEL;
++	else
++		reg &= ~BYT_LEVEL;
+ 
++	writel(reg, val_reg);
++
++	raw_spin_unlock_irqrestore(&byt_lock, flags);
+ 	return 0;
+ }
+ 
+-- 
+2.26.2
 
-Yeah, it would only be relevant if edge detection was set and, as per
-edge detection itself, would only be settable via the request, not
-via set_config.  It would only be a suggestion, as the kfifo size gets
-rounded up to a power of 2 anyway.  It would be capped - I'm open to
-suggestions for a suitable max value.  And the 0 value would mean use
-the default - currently 16 per line.
-
-If you want the equivalent for the info watch then I'm not sure where to
-hook it in.  It should be at the chip scope, and there isn't any
-suitable ioctl to hook it into so it would need a new one - maybe a
-set_config for the chip?  But the buffer size would only be settable up
-until you add a watch.
-
-Cheers,
-Kent.
