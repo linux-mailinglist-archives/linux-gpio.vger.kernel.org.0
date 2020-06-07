@@ -2,71 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C07FB1F0D67
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2020 19:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48EC71F0D70
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2020 19:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgFGRhi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Jun 2020 13:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgFGRhi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 7 Jun 2020 13:37:38 -0400
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F2020659;
-        Sun,  7 Jun 2020 17:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591551457;
-        bh=oOcO01//CS9tnM/XneW+fePb34efXa3hMnQnSIfmcHg=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=PSYu6HB9e1NkMK+H3x4AMinaVoPBLsmfKi8Iouu2nTCb9Kq2QEr1YbnSqsq7r2lw+
-         zcmn+wPT00thBdUG+yIJc8j8wCtRjTr3czeDCmOFgx18TzH5NeC/x8rPBVzqyduQtE
-         MCQ8L/ESu77s5dMup0j6EYiW89uHNV3X9ocm9nfc=
-Date:   Sun, 07 Jun 2020 17:37:36 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a while on gpiod_get(..., GPIOD_OUT_HIGH)
-In-Reply-To: <20200606093150.32882-1-hdegoede@redhat.com>
-References: <20200606093150.32882-1-hdegoede@redhat.com>
-Message-Id: <20200607173737.B1F2020659@mail.kernel.org>
+        id S1726738AbgFGRnM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Jun 2020 13:43:12 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34640 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgFGRnL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Jun 2020 13:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1591551789; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=FSFQiXi8mo7IP2wgLUtgrK+iWKDgIGEwYt8WEKc9CXM=;
+        b=J8xcGiwAWTIA3WSET0jy8NBC/G7jJAZFejSYvDyK6v6M3MR6fUj4Gxc1UrUXLUkAjmCvy8
+        C7aXNtydM9PqoL7MHyyW4GsY4CHSYjn+cEwPGHIn/xQqd4wzr8BXn+GXa5hdKuvxTVzcYt
+        UhQa9wAXTqTeAE1VTqkiBnqtlo348WM=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] pinctrl: ingenic: Add NAND FRE/FWE pins for JZ4740
+Date:   Sun,  7 Jun 2020 19:42:43 +0200
+Message-Id: <20200607174243.2361664-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi
+Add the FRE/FWE pins for the JZ4740.
 
-[This is an automated email]
+These pins must be in function #0 for the NAND to work. The reason it
+worked before was because the bootloader did set these pins to the
+correct function beforehand.
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations").
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-The bot has tested the following trees: v5.6.16, v5.4.44, v4.19.126, v4.14.183, v4.9.226.
-
-v5.6.16: Build OK!
-v5.4.44: Failed to apply! Possible dependencies:
-    e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once when setting direct-irq pin to output")
-
-v4.19.126: Failed to apply! Possible dependencies:
-    e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once when setting direct-irq pin to output")
-
-v4.14.183: Failed to apply! Possible dependencies:
-    e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once when setting direct-irq pin to output")
-
-v4.9.226: Failed to apply! Possible dependencies:
-    e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once when setting direct-irq pin to output")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 6a8d44504f94..1da72438d680 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -124,6 +124,7 @@ static int jz4740_nand_cs1_pins[] = { 0x39, };
+ static int jz4740_nand_cs2_pins[] = { 0x3a, };
+ static int jz4740_nand_cs3_pins[] = { 0x3b, };
+ static int jz4740_nand_cs4_pins[] = { 0x3c, };
++static int jz4740_nand_fre_fwe_pins[] = { 0x5c, 0x5d, };
+ static int jz4740_pwm_pwm0_pins[] = { 0x77, };
+ static int jz4740_pwm_pwm1_pins[] = { 0x78, };
+ static int jz4740_pwm_pwm2_pins[] = { 0x79, };
+@@ -146,6 +147,7 @@ static int jz4740_nand_cs1_funcs[] = { 0, };
+ static int jz4740_nand_cs2_funcs[] = { 0, };
+ static int jz4740_nand_cs3_funcs[] = { 0, };
+ static int jz4740_nand_cs4_funcs[] = { 0, };
++static int jz4740_nand_fre_fwe_funcs[] = { 0, 0, };
+ static int jz4740_pwm_pwm0_funcs[] = { 0, };
+ static int jz4740_pwm_pwm1_funcs[] = { 0, };
+ static int jz4740_pwm_pwm2_funcs[] = { 0, };
+@@ -178,6 +180,7 @@ static const struct group_desc jz4740_groups[] = {
+ 	INGENIC_PIN_GROUP("nand-cs2", jz4740_nand_cs2),
+ 	INGENIC_PIN_GROUP("nand-cs3", jz4740_nand_cs3),
+ 	INGENIC_PIN_GROUP("nand-cs4", jz4740_nand_cs4),
++	INGENIC_PIN_GROUP("nand-fre-fwe", jz4740_nand_fre_fwe),
+ 	INGENIC_PIN_GROUP("pwm0", jz4740_pwm_pwm0),
+ 	INGENIC_PIN_GROUP("pwm1", jz4740_pwm_pwm1),
+ 	INGENIC_PIN_GROUP("pwm2", jz4740_pwm_pwm2),
+@@ -195,7 +198,7 @@ static const char *jz4740_lcd_groups[] = {
+ 	"lcd-8bit", "lcd-16bit", "lcd-18bit", "lcd-18bit-tft", "lcd-no-pins",
+ };
+ static const char *jz4740_nand_groups[] = {
+-	"nand-cs1", "nand-cs2", "nand-cs3", "nand-cs4",
++	"nand-cs1", "nand-cs2", "nand-cs3", "nand-cs4", "nand-fre-fwe",
+ };
+ static const char *jz4740_pwm0_groups[] = { "pwm0", };
+ static const char *jz4740_pwm1_groups[] = { "pwm1", };
 -- 
-Thanks
-Sasha
+2.26.2
+
