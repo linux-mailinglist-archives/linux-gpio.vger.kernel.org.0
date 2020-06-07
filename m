@@ -2,63 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2A351F0CCA
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2020 18:08:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 170231F0CEE
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Jun 2020 18:24:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgFGQIe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Jun 2020 12:08:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgFGQIc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Jun 2020 12:08:32 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE89C08C5C3
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Jun 2020 09:08:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b5so7403556pfp.9
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Jun 2020 09:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=85AbGi9fTcBRS9rJ1LbFriCr652B+ElOdhlmIsvw78I=;
-        b=mV1tCEjtK2WfwbkjMn+O9/leokFKWa4AZ3IgcLqJqduK/fMmC9hS7wX/Hr+J8ts3H7
-         xSmUBhnn4oAKxx7G3iCx8WYCr6o1Fq3Hv3S9EC+MGpG1xz6gS1BENk5k0K9gZu039+Mk
-         YgyLG5hrPFC6fECDn3rv/9qDgBnW+bdvpRv/j9QlybA/OU9bzAkLUfBmr4Q39pYs0nB+
-         Gl0v8ZajwaKcoidO/Cu2q58A+jJPdH3humlPnhJcDCTiYiu7nIGgFqdocBRTzLAGUQNt
-         ZypWJpVocWAXS9n7xtH3YKdcU/KPAmTpvWTS6PYUtD4Ty16l1XZ4QYqPVO2O9B+aTb+r
-         kG4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=85AbGi9fTcBRS9rJ1LbFriCr652B+ElOdhlmIsvw78I=;
-        b=do6++F5YMzsvjdKQ7/nVD8NYvqKDn7eXMHV0/6JXUofOZEvruAJMetyXZb7HfPtDgp
-         LItJzoHC/acy4QBPB6gDRE8cIoben9ONsvB8QToNEvD3Hi7OZF5sWxK0G8mlsI9nO+4r
-         6K3wws6AWcrLGBdD256sM+S6tBtNbWYIPnehoQpnXaWM4352uNTe8l9vIiMz4Ty4VeMJ
-         rp86B65cBotaLI2PVQ/Vai02P9+3799SZ8Zg++7ZnulbSr0OMkq2M4oevpmEaO7/KcRI
-         Fyk2cZrc12mzTX21z/Xx+VzRMIg/zcDF9M3uwMDmzCfV0AqITEK57FZgWbd7ZNABqj2G
-         NQBA==
-X-Gm-Message-State: AOAM532lKnQTfHzcb39k1vWUaorCHdk/tIGqRpHSrZIABRtSkf2fHZR1
-        uqPckAOs38cwrAMplUebTIki
-X-Google-Smtp-Source: ABdhPJyoJrIzaCh/9XI3Un7SpZfUxgSnOl2+Hf6dHRKZYYKl7kZ2V3dTHDUBCiQFvoYlmJPgSURAaw==
-X-Received: by 2002:a63:5a66:: with SMTP id k38mr16840647pgm.240.1591546110573;
-        Sun, 07 Jun 2020 09:08:30 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:6e9a:8b0a:3d5e:1902:f17d:d125])
-        by smtp.gmail.com with ESMTPSA id r202sm4739449pfr.185.2020.06.07.09.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2020 09:08:30 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Google-Original-From: Manivannan Sadhasivam <mani@kernel.org>
+        id S1726896AbgFGQYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Jun 2020 12:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726571AbgFGQYS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 7 Jun 2020 12:24:18 -0400
+Received: from localhost.localdomain (unknown [157.51.228.97])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DFBC2073B;
+        Sun,  7 Jun 2020 16:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591547057;
+        bh=VwTciOsPdwIznP882bNkgfO9ZutZE/C70sq9o+aR3Os=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w6kcexPMNJ1A58fGblJMwqTr0e+m7nSP6m42prtENfvNNuhAzn2IArGNx80Jq9JM+
+         +yhPqflQeowkOroGMQ9mrzlUMyqDj1beRjql/mnHwU+JGruMIwhhOLt8u2vqr59Vlz
+         TTqrLy7ioAX0VxmJkBeHIpg/AOwdKmj36U7B4k4g=
+From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     johan@kernel.org, gregkh@linuxfoundation.org
 Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         patong.mxl@gmail.com, linus.walleij@linaro.org,
         mchehab+huawei@kernel.org, Manivannan Sadhasivam <mani@kernel.org>,
         linux-gpio@vger.kernel.org
-Subject: [PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip support
-Date:   Sun,  7 Jun 2020 21:38:08 +0530
-Message-Id: <20200607160809.20192-3-mani@kernel.org>
+Subject: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip support
+Date:   Sun,  7 Jun 2020 21:53:49 +0530
+Message-Id: <20200607162350.21297-3-mani@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200607160809.20192-1-mani@kernel.org>
-References: <20200607160809.20192-1-mani@kernel.org>
+In-Reply-To: <20200607162350.21297-1-mani@kernel.org>
+References: <20200607162350.21297-1-mani@kernel.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
