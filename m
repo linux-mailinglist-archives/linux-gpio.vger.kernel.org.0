@@ -2,107 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 166391F2C64
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67BB61F2D4D
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgFIAX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 20:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730513AbgFIAXy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 20:23:54 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E064C03E969;
-        Mon,  8 Jun 2020 17:23:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ga6so577905pjb.1;
-        Mon, 08 Jun 2020 17:23:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ul3C2ynzc7BlycjIPw2bQXJZLzMcXQ8t1H1WnEcp/Pg=;
-        b=pQeXUNELeG0+AqLfVUjksVW1sEmwS1UMA65+DHHb171Qq8I41wV6g7S91Z2e9POuht
-         DsjlmMCPitArkD3j4FBVX5Dbpq3QuJYPfUw7csuTgj/9KxcKrBO6t2tCohPtpW6l4u4E
-         y/8AdNTHnnOJF2tyaa5qj4aytcthjdbFs+f8wu5jVuposaRfji9j0dvLHYoDN8kWwRj8
-         m0U9RWIEBKd3R+sjBOoGUPsY9Sp48ihNUYEiI4XMkoUvnNaU0C3OhN2V4D87WTQCDm9s
-         EvhJ3yCJSk98zYrmyIOQwUGI6CfZk4pOy3C31PylYUtxPD+p3mfJZL4SY50dsyoKyV3R
-         /1xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ul3C2ynzc7BlycjIPw2bQXJZLzMcXQ8t1H1WnEcp/Pg=;
-        b=ZhP5tsS0XfdzAKUhNuMdhH6NnmlzQnmdsw8cypatg/pnDGGpaLLRgZBluFVgiI0V8T
-         Z0iAGtFH2ZlyNlCN7nJwWAxeNT03aSxe2YfbmPjF2AsKrbnr8iePuPHRmRMj+k3bdJRJ
-         7PNylm9a5ttUZZ9l6AL/4k6gDT5RuFdSyum2+PBt1RybFJc2xbrEev6JFa02jOWjEHyV
-         P7n6v4LJjAWiWT6tUD23P2yZ9QfwDzu8xiJU0UwFcZ/22InUObnKy6HfFmhxty+OBZCy
-         Nx1jJS3yGj+z7Btv7+ZGdOjlC0MZOTlJdrWtdwv7z+Ux+r1ee5XMDhYKLPmobiZt5Ww0
-         TJYg==
-X-Gm-Message-State: AOAM531noxESkxAM6eXG4a/Pn5ok1OjIq+QFQarhUd/kr81fXX7F+Dv2
-        uPbcy4CE/tsmF1VfHdkV5qc=
-X-Google-Smtp-Source: ABdhPJyonqW97chkteloFa/9u16s5FjdS9VoYBohMHfpQBVjEYM2aGCu1mVou8Ix0APuCp1PRVWKMQ==
-X-Received: by 2002:a17:902:bd0a:: with SMTP id p10mr1081713pls.102.1591662233656;
-        Mon, 08 Jun 2020 17:23:53 -0700 (PDT)
-Received: from sol (220-235-66-207.dyn.iinet.net.au. [220.235.66.207])
-        by smtp.gmail.com with ESMTPSA id x190sm6948164pgb.79.2020.06.08.17.23.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 08 Jun 2020 17:23:52 -0700 (PDT)
-Date:   Tue, 9 Jun 2020 08:23:46 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1733128AbgFIAcQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 20:32:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728576AbgFHXPP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C84321531;
+        Mon,  8 Jun 2020 23:15:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591658114;
+        bh=U4a716t1zfB5zL2gtGQ6ceowiQ4YOsRO6zDnhNKNyKQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H9T0ycRFoGB813INPHrl1lodbv8tLA1ucqGA4UzV9rwFXyfdG/YOzkEHIhpn4bO8g
+         JNiOnsjX9wD5pc91Hyx55MqflMAg8fclz+f5sN3h1Ic2Tb/7oXVM5CAUMGh4/wxDxH
+         4XfNErw9HDAmU1RlXry/VbRukcw/TffSt+FuqNqc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v4 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
-Message-ID: <20200609002346.GA6042@sol>
-References: <20191224120709.18247-1-brgl@bgdev.pl>
- <20191224120709.18247-13-brgl@bgdev.pl>
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 152/606] pinctrl: qcom: Add affinity callbacks to msmgpio IRQ chip
+Date:   Mon,  8 Jun 2020 19:04:37 -0400
+Message-Id: <20200608231211.3363633-152-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
+References: <20200608231211.3363633-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224120709.18247-13-brgl@bgdev.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 01:07:08PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-[snip!]
+commit dca4f40742e09ec5d908a7fc2862498e6cf9d911 upstream.
 
-> +static int lineinfo_changed_notify(struct notifier_block *nb,
-> +				   unsigned long action, void *data)
-> +{
-> +	struct gpio_chardev_data *priv = to_gpio_chardev_data(nb);
-> +	struct gpioline_info_changed chg;
-> +	struct gpio_desc *desc = data;
-> +	int ret;
-> +
-> +	if (!test_bit(desc_to_gpio(desc), priv->watched_lines))
-> +		return NOTIFY_DONE;
-> +
-> +	memset(&chg, 0, sizeof(chg));
-> +	chg.info.line_offset = gpio_chip_hwgpio(desc);
-> +	chg.event_type = action;
-> +	chg.timestamp = ktime_get_real_ns();
-> +	gpio_desc_to_lineinfo(desc, &chg.info);
-> +
+Wakeup capable GPIO IRQs routed via PDC are not being migrated when a CPU
+is hotplugged. Add affinity callbacks to msmgpio IRQ chip to update the
+affinity of wakeup capable IRQs.
 
-Is this call legal?  It can sleep - in fact you recently changed that
-very function to move a mutex call outside of a spinlock protected section.
-Here it is being called within an RCU lock, as lineinfo_changed_notify
-is at the end of an atomic_notifier_call_chain.
+Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+[mkshah: updated commit text and minor code fixes]
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/1588314617-4556-1-git-send-email-mkshah@codeaurora.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-I was looking at adding a chg.seqno here and considering what level of
-locking would be appropriate for the source counter when I noticed that
-call. Hopefully I'm missing something.
-
-Cheers,
-Kent.
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 9f1c9951949e..14a8f8fa0ea3 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1010,6 +1010,29 @@ static void msm_gpio_irq_relres(struct irq_data *d)
+ 	module_put(gc->owner);
+ }
+ 
++static int msm_gpio_irq_set_affinity(struct irq_data *d,
++				const struct cpumask *dest, bool force)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_affinity_parent(d, dest, force);
++
++	return 0;
++}
++
++static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_vcpu_affinity_parent(d, vcpu_info);
++
++	return 0;
++}
++
+ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+@@ -1108,6 +1131,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
++	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
++	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
+ 
+ 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+ 	if (np) {
+-- 
+2.25.1
 
