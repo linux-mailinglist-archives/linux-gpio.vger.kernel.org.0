@@ -2,54 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEC661F1064
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 01:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80CCD1F10F8
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 03:03:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgFGXU3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Jun 2020 19:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
+        id S1728369AbgFHBDI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Jun 2020 21:03:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16737 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728007AbgFGXU0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 7 Jun 2020 19:20:26 -0400
-Subject: Re: [GIT PULL] Pin control bulk changes for the v5.8 cycle
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591572025;
-        bh=LU0P94n3W1KJvtoZNSnoPaCtRms3WhAriJoh2850sU0=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=fTZXrGsxapBcmW0MyCml3lbi+KGAgT+J2ecEVl76iwBskK0L/RN0MrgqUHYCRDxWH
-         xXxllG7J9IDCEMmV1uEticcdtb09p9YNfIZBp1sz68zJ7e8hWuxvc0kyvrV42YaShW
-         /sjTMS7lXd/j3QNBUqfx6MlPbaQL+FlkomVPiHD4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
-References: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYfwd-4gPbTkQZWybkjLCHOHPi6mVg8fjF--54qj3zcEA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
- tags/pinctrl-v5.8-1
-X-PR-Tracked-Commit-Id: 94873f6b46f8c103759c28adc121a58022972d01
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cf0c97f148e9e50aa5a7ddd1984a604dd2bde4af
-Message-Id: <159157202578.17419.6978691349982915472.pr-tracker-bot@kernel.org>
-Date:   Sun, 07 Jun 2020 23:20:25 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        id S1728201AbgFHBDI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 7 Jun 2020 21:03:08 -0400
+IronPort-SDR: HcNfMVTOebycw0s019Z+58zzLHXiT8KyNhN7UELxsI86X19bSoc6f8ZnYVWldOmVJyM8l2aTTl
+ lPFZ3YScJuqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2020 18:03:07 -0700
+IronPort-SDR: eMTeIwwYNjJ8V4Higex8aVbxDSVYxFYlfD6Rr12pxhhoZHpEPkyr3ZE/QwTPDJIz/BkxGVIxRp
+ 1YYmTNgcZbGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,486,1583222400"; 
+   d="scan'208";a="305664436"
+Received: from lkp-server01.sh.intel.com (HELO 3b764b36c89c) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2020 18:03:06 -0700
+Received: from kbuild by 3b764b36c89c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1ji6Bt-0000Wj-DE; Mon, 08 Jun 2020 01:03:05 +0000
+Date:   Mon, 8 Jun 2020 09:02:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: mcp23s08: Split to three parts: fix ptr_ret.cocci
+ warnings
+Message-ID: <20200608010253.GA79576@44f7ab9e8d59>
+References: <202006080944.vTmpp64f%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202006080944.vTmpp64f%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jun 2020 00:08:50 +0200:
+From: kernel test robot <lkp@intel.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.8-1
+drivers/pinctrl/pinctrl-mcp23s08_spi.c:129:1-3: WARNING: PTR_ERR_OR_ZERO can be used
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cf0c97f148e9e50aa5a7ddd1984a604dd2bde4af
 
-Thank you!
+ Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Generated by: scripts/coccinelle/api/ptr_ret.cocci
+
+Fixes: 0f04a81784fe ("pinctrl: mcp23s08: Split to three parts: core, I²C, SPI")
+CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   cf0c97f148e9e50aa5a7ddd1984a604dd2bde4af
+commit: 0f04a81784fe3ddc00cae74c517265b3ddb8825c pinctrl: mcp23s08: Split to three parts: core, I²C, SPI
+
+ pinctrl-mcp23s08_spi.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+--- a/drivers/pinctrl/pinctrl-mcp23s08_spi.c
++++ b/drivers/pinctrl/pinctrl-mcp23s08_spi.c
+@@ -126,10 +126,7 @@ static int mcp23s08_spi_regmap_init(stru
+ 	copy->name = name;
+ 
+ 	mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp, copy);
+-	if (IS_ERR(mcp->regmap))
+-		return PTR_ERR(mcp->regmap);
+-
+-	return 0;
++	return PTR_ERR_OR_ZERO(mcp->regmap);
+ }
+ 
+ static int mcp23s08_probe(struct spi_device *spi)
