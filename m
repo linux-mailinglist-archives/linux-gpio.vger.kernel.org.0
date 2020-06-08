@@ -2,40 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B42571F1A45
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 15:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B3651F1A47
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 15:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgFHNnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1729825AbgFHNnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 8 Jun 2020 09:43:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:2281 "EHLO mga06.intel.com"
+Received: from mga12.intel.com ([192.55.52.136]:64831 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgFHNnG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1725797AbgFHNnG (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Mon, 8 Jun 2020 09:43:06 -0400
-IronPort-SDR: GdvxRa0FANwHikpLVVpc0DgQcxjPORATnlrtSH/I0rap9OR5zqc2o1iaqSsLNvn5dZgDgsQ2gx
- PwjUwQkJsaNw==
+IronPort-SDR: 3L1th1NbUJbDpUkIBAdQwh1AShhmjeCFWhaVBnnqEpeyfA/zTLwJiJpfCn1R6MsSi5pwS9wNLf
+ h0+zNNAePIAA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:43:05 -0700
-IronPort-SDR: h/PFo407aJk9EmuzuzJ6NoYruAzwMV2F6U/qEK6AomvC3IvWFbwJDLCTkwWryOuqkQaEBBWGuN
- jm6RXcguRyJg==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:43:05 -0700
+IronPort-SDR: gkoKqzml1kBmlnYLlgZ0wp4CiJttFAFB4LjXsNwJlOqkPcWpVY1mDhytMIfPeNYlbOZF6vnSlD
+ Tobc6lqkB+ug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="288473531"
+   d="scan'208";a="379426399"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 08 Jun 2020 06:43:03 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 08 Jun 2020 06:43:03 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C9DE925A; Mon,  8 Jun 2020 16:43:02 +0300 (EEST)
+        id D1B193CA; Mon,  8 Jun 2020 16:43:02 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/6] mfd: core: Propagate software node group to the sub devices
-Date:   Mon,  8 Jun 2020 16:42:57 +0300
-Message-Id: <20200608134300.76091-4-andriy.shevchenko@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 4/6] mfd: intel_quark_i2c_gpio: Convert to use software nodes
+Date:   Mon,  8 Jun 2020 16:42:58 +0300
+Message-Id: <20200608134300.76091-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.27.0.rc2
 In-Reply-To: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
@@ -46,107 +45,131 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+The driver can provide a software node group instead of
+passing legacy platform data. This will allow to drop
+the legacy platform data structures along with unifying
+a child device driver to use same interface for all
+property providers, i.e. Device Tree, ACPI, and board files.
 
-When ever device properties are supplied for a sub device, a software node
-(fwnode) is actually created and then associated with that device. By allowing
-the drivers to supply the complete software node group instead of just the
-properties in it, the drivers can take advantage of the other features the
-software nodes have on top of supplying the device properties.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/mfd/mfd-core.c   | 31 +++++++++++++++++++++++++++----
- include/linux/mfd/core.h |  3 +++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/mfd/intel_quark_i2c_gpio.c | 63 ++++++++++++++----------------
+ 1 file changed, 30 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index f5a73af60dd4..1a256f64dc9d 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -173,7 +173,24 @@ static int mfd_add_device(struct device *parent, int id,
- 			goto fail_alias;
- 	}
+diff --git a/drivers/mfd/intel_quark_i2c_gpio.c b/drivers/mfd/intel_quark_i2c_gpio.c
+index 06b538dd124c..fb8c0b042ecc 100644
+--- a/drivers/mfd/intel_quark_i2c_gpio.c
++++ b/drivers/mfd/intel_quark_i2c_gpio.c
+@@ -16,8 +16,8 @@
+ #include <linux/clkdev.h>
+ #include <linux/clk-provider.h>
+ #include <linux/dmi.h>
+-#include <linux/platform_data/gpio-dwapb.h>
+ #include <linux/platform_data/i2c-designware.h>
++#include <linux/property.h>
  
--	if (cell->properties) {
-+	/* If software node group exists, use it, otherwise try properties */
-+	if (cell->node_group) {
-+		struct fwnode_handle *fwnode;
+ /* PCI BAR for register base address */
+ #define MFD_I2C_BAR		0
+@@ -27,15 +27,6 @@
+ #define MFD_ACPI_MATCH_GPIO	0ULL
+ #define MFD_ACPI_MATCH_I2C	1ULL
+ 
+-/* The base GPIO number under GPIOLIB framework */
+-#define INTEL_QUARK_MFD_GPIO_BASE	8
+-
+-/* The default number of South-Cluster GPIO on Quark. */
+-#define INTEL_QUARK_MFD_NGPIO		8
+-
+-/* The DesignWare GPIO ports on Quark. */
+-#define INTEL_QUARK_GPIO_NPORTS	1
+-
+ #define INTEL_QUARK_IORES_MEM	0
+ #define INTEL_QUARK_IORES_IRQ	1
+ 
+@@ -89,17 +80,44 @@ static struct resource intel_quark_gpio_res[] = {
+ 	[INTEL_QUARK_IORES_MEM] = {
+ 		.flags = IORESOURCE_MEM,
+ 	},
++	[INTEL_QUARK_IORES_IRQ] = {
++		.flags = IORESOURCE_IRQ,
++	},
+ };
+ 
+ static struct mfd_cell_acpi_match intel_quark_acpi_match_gpio = {
+ 	.adr = MFD_ACPI_MATCH_GPIO,
+ };
+ 
++static const struct software_node intel_quark_gpio_controller_node = {
++	.name = "intel-quark-gpio-controller",
++};
 +
-+		ret = software_node_register_node_group(cell->node_group);
-+		if (ret)
-+			goto fail_alias;
++static const struct property_entry intel_quark_gpio_portA_properties[] = {
++	PROPERTY_ENTRY_U32("reg", 0),
++	PROPERTY_ENTRY_U32("snps,nr-gpios", 8),
++	PROPERTY_ENTRY_U32("snps,gpio-base", 8),
++	{ }
++};
 +
-+		/*
-+		 * The very first software node in the group is related to
-+		 * the device itself. The rest can be device-less children to
-+		 * fulfill the case of sub nodes (LEDs, GPIO keys, etc).
-+		 */
-+		fwnode = software_node_fwnode(cell->node_group[0]);
++static const struct software_node intel_quark_gpio_portA_node = {
++	.name = "portA",
++	.parent = &intel_quark_gpio_controller_node,
++	.properties = intel_quark_gpio_portA_properties,
++};
 +
-+		/* Assign this firmware node as a secondary one of the device */
-+		set_secondary_fwnode(&pdev->dev, fwnode);
-+	} else if (cell->properties) {
- 		ret = platform_device_add_properties(pdev, cell->properties);
- 		if (ret)
- 			goto fail_alias;
-@@ -213,18 +230,18 @@ static int mfd_add_device(struct device *parent, int id,
- 			if (has_acpi_companion(&pdev->dev)) {
- 				ret = acpi_check_resource_conflict(&res[r]);
- 				if (ret)
--					goto fail_alias;
-+					goto fail_resources;
- 			}
- 		}
- 	}
++static const struct software_node *intel_quark_gpio_node_group[] = {
++	&intel_quark_gpio_controller_node,
++	&intel_quark_gpio_portA_node,
++	NULL
++};
++
+ static struct mfd_cell intel_quark_mfd_cells[] = {
+ 	{
+ 		.id = MFD_GPIO_BAR,
+ 		.name = "gpio-dwapb",
+ 		.acpi_match = &intel_quark_acpi_match_gpio,
++		.node_group = intel_quark_gpio_node_group,
+ 		.num_resources = ARRAY_SIZE(intel_quark_gpio_res),
+ 		.resources = intel_quark_gpio_res,
+ 		.ignore_resource_conflicts = true,
+@@ -189,36 +207,15 @@ static int intel_quark_i2c_setup(struct pci_dev *pdev, struct mfd_cell *cell)
  
- 	ret = platform_device_add_resources(pdev, res, cell->num_resources);
- 	if (ret)
--		goto fail_alias;
-+		goto fail_resources;
+ static int intel_quark_gpio_setup(struct pci_dev *pdev, struct mfd_cell *cell)
+ {
+-	struct dwapb_platform_data *pdata;
+ 	struct resource *res = (struct resource *)cell->resources;
+-	struct device *dev = &pdev->dev;
  
- 	ret = platform_device_add(pdev);
- 	if (ret)
--		goto fail_alias;
-+		goto fail_resources;
+ 	res[INTEL_QUARK_IORES_MEM].start =
+ 		pci_resource_start(pdev, MFD_GPIO_BAR);
+ 	res[INTEL_QUARK_IORES_MEM].end =
+ 		pci_resource_end(pdev, MFD_GPIO_BAR);
  
- 	if (cell->pm_runtime_no_callbacks)
- 		pm_runtime_no_callbacks(&pdev->dev);
-@@ -233,6 +250,9 @@ static int mfd_add_device(struct device *parent, int id,
+-	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+-	if (!pdata)
+-		return -ENOMEM;
+-
+-	/* For intel quark x1000, it has only one port: portA */
+-	pdata->nports = INTEL_QUARK_GPIO_NPORTS;
+-	pdata->properties = devm_kcalloc(dev, pdata->nports,
+-					 sizeof(*pdata->properties),
+-					 GFP_KERNEL);
+-	if (!pdata->properties)
+-		return -ENOMEM;
+-
+-	/* Set the properties for portA */
+-	pdata->properties->fwnode	= NULL;
+-	pdata->properties->idx		= 0;
+-	pdata->properties->ngpio	= INTEL_QUARK_MFD_NGPIO;
+-	pdata->properties->gpio_base	= INTEL_QUARK_MFD_GPIO_BASE;
+-	pdata->properties->irq[0]	= pdev->irq;
+-
+-	cell->platform_data = pdata;
+-	cell->pdata_size = sizeof(*pdata);
++	res[INTEL_QUARK_IORES_IRQ].start = pdev->irq;
++	res[INTEL_QUARK_IORES_IRQ].end = pdev->irq;
  
  	return 0;
- 
-+fail_resources:
-+	set_secondary_fwnode(&pdev->dev, NULL);
-+	software_node_unregister_node_group(cell->node_group);
- fail_alias:
- 	regulator_bulk_unregister_supply_alias(&pdev->dev,
- 					       cell->parent_supplies,
-@@ -294,6 +314,9 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
- 	pdev = to_platform_device(dev);
- 	cell = mfd_get_cell(pdev);
- 
-+	set_secondary_fwnode(&pdev->dev, NULL);
-+	software_node_unregister_node_group(cell->node_group);
-+
- 	regulator_bulk_unregister_supply_alias(dev, cell->parent_supplies,
- 					       cell->num_parent_supplies);
- 
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index d01d1299e49d..9a998568759f 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -72,6 +72,9 @@ struct mfd_cell {
- 	/* device properties passed to the sub devices drivers */
- 	struct property_entry *properties;
- 
-+	/* Software node group for the sub device */
-+	const struct software_node **node_group;
-+
- 	/*
- 	 * Device Tree compatible string
- 	 * See: Documentation/devicetree/usage-model.txt Chapter 2.2 for details
+ }
 -- 
 2.27.0.rc2
 
