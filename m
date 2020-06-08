@@ -2,36 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4776A1F2BDE
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B2911F2BE3
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:23:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbgFHXSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 19:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
+        id S1730606AbgFHXST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 19:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbgFHXSJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:09 -0400
+        id S1730600AbgFHXSS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B39A20885;
-        Mon,  8 Jun 2020 23:18:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E742086A;
+        Mon,  8 Jun 2020 23:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658289;
-        bh=wtn7EdCa698or5TkAj8+NLx0LcLzplalDi2MP5Q8pLI=;
+        s=default; t=1591658298;
+        bh=fI0DzAU9GLVa8esFFM30UHEYhA2aD0DBiWdQTB/DY1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnI78AOL2TsgopTvdxpGcOn7fWM9IrOk0Bp0JT4uQ/nhWEY8tAFv2iOPub777xUy7
-         S00klizWhOgwXkkIQFAlD28KiC1QavC3j5TTgRr0A9gWPXmr7OSbemZeZH/HEUvB8j
-         J9n3RcLoVw8BpY7on7ye5MGVlqtKgRbAZ1xUgKnM=
+        b=bdUbg6DPwMvqup/0HEuqO35tQm/T1365Tx+5wCGKCIsKdQBLNC9ZNq6Zs/syRrerH
+         qsMWcDa0ooHcN8qLta5gQlTau/eZy8QlZzWM5o81lIHiUiP2oRnU8xlf9FNO8e0byl
+         JvhFwUYHpfIBgCzQLOsFTRmqBzT8qkkAjcgl3na0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 293/606] gpio: mvebu: Fix probing for chips without PWM
-Date:   Mon,  8 Jun 2020 19:06:58 -0400
-Message-Id: <20200608231211.3363633-293-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 301/606] gpio: exar: Fix bad handling for ida_simple_get error path
+Date:   Mon,  8 Jun 2020 19:07:06 -0400
+Message-Id: <20200608231211.3363633-301-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -44,64 +43,53 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 19c26d90ff4ca08ef2a2fef23cc9c13cfbfd891e ]
+[ Upstream commit 333830aa149a87cabeb5d30fbcf12eecc8040d2c ]
 
-The PWM iomem resource is optional and its presence indicates whether
-the GPIO chip has a PWM or not, which is why mvebu_pwm_probe() returned
-successfully when the PWM resource was not present. With f51b18d92b66
-the driver switched to devm_platform_ioremap_resource_byname() and
-its error return is propagated to the caller, so now a missing PWM resource
-leads to a probe error in the driver.
+The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
+of ida_simple_get fails") added a goto jump to the common error
+handler for ida_simple_get() error, but this is wrong in two ways:
+it doesn't set the proper return code and, more badly, it invokes
+ida_simple_remove() with a negative index that shall lead to a kernel
+panic via BUG_ON().
 
-To fix this explicitly test for the presence of the PWM resource and
-return successfully when it's not there. Do this check before the check
-for the clock is done (which GPIO chips without a PWM do not have). Also
-move the existing comment why the PWM resource is optional up to the
-actual check.
+This patch addresses those two issues.
 
-Fixes: f51b18d92b66 ("gpio: mvebu: use devm_platform_ioremap_resource_byname()")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mvebu.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-exar.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index d2b999c7987f..f0c5433a327f 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -782,6 +782,15 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 				     "marvell,armada-370-gpio"))
- 		return 0;
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index da1ef0b1c291..b1accfba017d 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	mutex_init(&exar_gpio->lock);
  
-+	/*
-+	 * There are only two sets of PWM configuration registers for
-+	 * all the GPIO lines on those SoCs which this driver reserves
-+	 * for the first two GPIO chips. So if the resource is missing
-+	 * we can't treat it as an error.
-+	 */
-+	if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
-+		return 0;
-+
- 	if (IS_ERR(mvchip->clk))
- 		return PTR_ERR(mvchip->clk);
+ 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
+-	if (index < 0)
+-		goto err_destroy;
++	if (index < 0) {
++		ret = index;
++		goto err_mutex_destroy;
++	}
  
-@@ -804,12 +813,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	mvchip->mvpwm = mvpwm;
- 	mvpwm->mvchip = mvchip;
+ 	sprintf(exar_gpio->name, "exar_gpio%d", index);
+ 	exar_gpio->gpio_chip.label = exar_gpio->name;
+@@ -176,6 +178,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
  
--	/*
--	 * There are only two sets of PWM configuration registers for
--	 * all the GPIO lines on those SoCs which this driver reserves
--	 * for the first two GPIO chips. So if the resource is missing
--	 * we can't treat it as an error.
--	 */
- 	mvpwm->membase = devm_platform_ioremap_resource_byname(pdev, "pwm");
- 	if (IS_ERR(mvpwm->membase))
- 		return PTR_ERR(mvpwm->membase);
+ err_destroy:
+ 	ida_simple_remove(&ida_index, index);
++err_mutex_destroy:
+ 	mutex_destroy(&exar_gpio->lock);
+ 	return ret;
+ }
 -- 
 2.25.1
 
