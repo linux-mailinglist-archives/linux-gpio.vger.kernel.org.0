@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B2911F2BE3
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE45B1F2BBB
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 02:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgFHXST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 19:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
+        id S1729059AbgFHXSf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 19:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgFHXSS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:18:18 -0400
+        id S1730653AbgFHXSe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:18:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E742086A;
-        Mon,  8 Jun 2020 23:18:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36F6D20870;
+        Mon,  8 Jun 2020 23:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658298;
-        bh=fI0DzAU9GLVa8esFFM30UHEYhA2aD0DBiWdQTB/DY1k=;
+        s=default; t=1591658314;
+        bh=fbp5eN4Hnuv3+bR/hO5F+wm3gfMFLymjiWDBZD1oZEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdUbg6DPwMvqup/0HEuqO35tQm/T1365Tx+5wCGKCIsKdQBLNC9ZNq6Zs/syRrerH
-         qsMWcDa0ooHcN8qLta5gQlTau/eZy8QlZzWM5o81lIHiUiP2oRnU8xlf9FNO8e0byl
-         JvhFwUYHpfIBgCzQLOsFTRmqBzT8qkkAjcgl3na0=
+        b=jbTIZHd7GkhRUrzCvODtziT1b//1+VHPOXMlUBt1dsPWNzdb/1U3Ep2KhHZxDGMDi
+         BZdAYjGlpPKYKkHEUCI/x0xLArcIUvbcJmYs/vo2DLi5jCk3OCR3TIQAbZD/FXvoTd
+         qzT5d5Sa+bG5HRay2VUSO3TN1UK/QuuTH52qwUJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 301/606] gpio: exar: Fix bad handling for ida_simple_get error path
-Date:   Mon,  8 Jun 2020 19:07:06 -0400
-Message-Id: <20200608231211.3363633-301-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 315/606] gpio: pxa: Fix return value of pxa_gpio_probe()
+Date:   Mon,  8 Jun 2020 19:07:20 -0400
+Message-Id: <20200608231211.3363633-315-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -43,53 +43,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 333830aa149a87cabeb5d30fbcf12eecc8040d2c ]
+[ Upstream commit 558ab2e8155e5f42ca0a6407957cd4173dc166cc ]
 
-The commit 7ecced0934e5 ("gpio: exar: add a check for the return value
-of ida_simple_get fails") added a goto jump to the common error
-handler for ida_simple_get() error, but this is wrong in two ways:
-it doesn't set the proper return code and, more badly, it invokes
-ida_simple_remove() with a negative index that shall lead to a kernel
-panic via BUG_ON().
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-This patch addresses those two issues.
-
-Fixes: 7ecced0934e5 ("gpio: exar: add a check for the return value of ida_simple_get fails")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 542c25b7a209 ("drivers: gpio: pxa: use devm_platform_ioremap_resource()")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-exar.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-pxa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index da1ef0b1c291..b1accfba017d 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -148,8 +148,10 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	mutex_init(&exar_gpio->lock);
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index 9888b62f37af..432c487f77b4 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -663,8 +663,8 @@ static int pxa_gpio_probe(struct platform_device *pdev)
+ 	pchip->irq1 = irq1;
  
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
--	if (index < 0)
--		goto err_destroy;
-+	if (index < 0) {
-+		ret = index;
-+		goto err_mutex_destroy;
-+	}
+ 	gpio_reg_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (!gpio_reg_base)
+-		return -EINVAL;
++	if (IS_ERR(gpio_reg_base))
++		return PTR_ERR(gpio_reg_base);
  
- 	sprintf(exar_gpio->name, "exar_gpio%d", index);
- 	exar_gpio->gpio_chip.label = exar_gpio->name;
-@@ -176,6 +178,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 
- err_destroy:
- 	ida_simple_remove(&ida_index, index);
-+err_mutex_destroy:
- 	mutex_destroy(&exar_gpio->lock);
- 	return ret;
- }
+ 	clk = clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
 -- 
 2.25.1
 
