@@ -2,94 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B48B1F1717
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 12:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBFBD1F1878
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 14:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729492AbgFHK75 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 06:59:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:20100 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgFHK75 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jun 2020 06:59:57 -0400
-IronPort-SDR: NeZ88um0eO0/VEhkD3jMT8V28wH01xnlD0/sp6P6VWTNyPXW8SWCUNfS6vwozruIA3pnP3K6DB
- oY+XqMoNsCNQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 03:59:56 -0700
-IronPort-SDR: 7UeMIu9syk/NjzhM3fO6gHiRjwpyM8+oTUkbPYUlMIrVxsENqpwpxuQFRZfaVnvnAnljy4e6EH
- otaX3jF+vFLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="379387369"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 08 Jun 2020 03:59:54 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 08 Jun 2020 13:59:53 +0300
-Date:   Mon, 8 Jun 2020 13:59:53 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a
- while on gpiod_get(..., GPIOD_OUT_HIGH)
-Message-ID: <20200608105953.GC247495@lahna.fi.intel.com>
-References: <20200606093150.32882-1-hdegoede@redhat.com>
+        id S1729700AbgFHMHj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 08:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgFHMHj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 08:07:39 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED437C08C5C2
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2020 05:07:38 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id z9so20107344ljh.13
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2020 05:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D/qQ2HQfxTsoJ7dED6Ll4k5xtZ49R0eYt0PrrCkdekg=;
+        b=dXrNihZHxrlgg0ZVuh5iDRdS0PSRlGxUmjyOhMdSGaLuoVb0KJE0CRuSvL+qX2IrdZ
+         4iH/i8b9Q0hzPOnJg0UGhJzw+DErm+DVr+GuTUY3usetzQakc5u9GHIzF0xDM7UkPYdL
+         noFc+mBbYVtHeUhPCvN+elLUjqoGkRX2W9rMxZLQwdVZHw+9mdsvaXlWmrCi83RpKmKl
+         OAczotPNGkMGD8D1Ho6tevZf0BVykviuzMO2yo5h5r9g4XHmh8//uzx65WS3WSyQcd5R
+         RhF2Q+1jsykqYXUwWJ91kBuirXP98vxB+8FoxesFhPy3/tgI44tH7Q2WyLgUz1W5l9N6
+         AGUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D/qQ2HQfxTsoJ7dED6Ll4k5xtZ49R0eYt0PrrCkdekg=;
+        b=KZIb2uzr8RBRRrrW8g2tGhrrrq5qYuKNhtNydwndVxFP/9HZPjQfMvsk+q+82YkaKh
+         lKr7pQsxbD1xrn1eb8GWtXwKj/hv9kM+ann1lki4AhJSdT09ipQFydFhCltnKtht+Z3u
+         WToYTIs6S1peByRJEY5a5vH/9H3Nf7wOwHMCGebUg5TibiDu0NFcaSpZ7F1hz4VIKq+0
+         7EUBDYb55TCcWfB4xjbMdg1uqnsN/uYb8Ny7ocdXo4mWxEZW35BMLnx6hEdc7Aehky3v
+         WUud+EItroo0FnAkLEM1zuzOxCtJHz3KUT9HRecFYDIbJ7NAtG21TntA5m74/2VO8FUI
+         y3UA==
+X-Gm-Message-State: AOAM53010zsavLb1QMLDRmgPs3dajACbNEZlDdkompPNF+ePCwJGq45u
+        rJMibrWuTz7ysueNEhogYa9GNE5jkIUyR5aWAm5LDg==
+X-Google-Smtp-Source: ABdhPJxcmxiJOb9LbDnUYMHnqR3xGRyWKQQ6MvgFlurSgSedWuMdM4etCtorHwAIdzEHNlnCb2Kgpp9dI8wCD0bjVkI=
+X-Received: by 2002:a2e:7303:: with SMTP id o3mr11746949ljc.100.1591618057076;
+ Mon, 08 Jun 2020 05:07:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200606093150.32882-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <tencent_77C7CDDE75557AA90115A0DF43576105390A@qq.com>
+In-Reply-To: <tencent_77C7CDDE75557AA90115A0DF43576105390A@qq.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 Jun 2020 14:07:24 +0200
+Message-ID: <CACRpkdYMHWWuuH7rNGRhtxA5tkZ=ktsbeo=FTJ7YnpYAFgPsjQ@mail.gmail.com>
+Subject: Re: gpiolib: Add some warn print for easier to debug
+To:     =?UTF-8?B?5LmU5pif?= <mnlife@foxmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     bgolaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 06, 2020 at 11:31:50AM +0200, Hans de Goede wrote:
-> The pins on the Bay Trail SoC have separate input-buffer and output-buffer
-> enable bits and a read of the level bit of the value register will always
-> return the value from the input-buffer.
-> 
-> The BIOS of a device may configure a pin in output-only mode, only enabling
-> the output buffer, and write 1 to the level bit to drive the pin high.
-> This 1 written to the level bit will be stored inside the data-latch of the
-> output buffer.
-> 
-> But a subsequent read of the value register will return 0 for the level bit
-> because the input-buffer is disabled. This causes a read-modify-write as
-> done by byt_gpio_set_direction() to write 0 to the level bit, driving the
-> pin low!
-> 
-> Before this commit byt_gpio_direction_output() relied on
-> pinctrl_gpio_direction_output() to set the direction, followed by a call
-> to byt_gpio_set() to apply the selected value. This causes the pin to
-> go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
-> calls.
-> 
-> Change byt_gpio_direction_output() to directly make the register
-> modifications itself instead. Replacing the 2 subsequent writes to the
-> value register with a single write.
-> 
-> Note that the pinctrl code does not keep track internally of the direction,
-> so not going through pinctrl_gpio_direction_output() is not an issue.
-> 
-> This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
-> already on at boot (no external monitor connected), then the i915 driver
-> does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
-> temporarily going low of that GPIO was causing the panel to reset itself
-> after which it would not show an image until it was turned off and back on
-> again (until a full modeset was done on it). This commit fixes this.
-> 
-> This commit also updates the byt_gpio_direction_input() to use direct
-> register accesses instead of going through pinctrl_gpio_direction_input(),
-> to keep it consistent with byt_gpio_direction_output().
-> 
-> Note for backporting, this commit depends on:
-> commit e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once
-> when setting direct-irq pin to output")
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Hi mnlfie,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+thanks for your patch!
+
+On Fri, May 29, 2020 at 4:57 PM =E4=B9=94=E6=98=9F <mnlife@foxmail.com> wro=
+te:
+>
+> From d25875d0a6808713f891fa5bafc313d50f317a52 Mon Sep 17 00:00:00 2001
+> From: mnlife <mnlife@foxmail.com>
+> Date: Fri, 29 May 2020 22:02:55 +0800
+> Subject: [PATCH] gpiolib: Add some warn print for easier to debug
+> Content-Type: text/plain; charset=3D"utf-8"
+>
+>     when I get gpiod optional failed, I am Confused for a long time.
+> finally i find because of the string con_id is too long,
+> prop_name be truncated.
+>
+> Signed-off-by: mnlife <mnlife@foxmail.com>
+
+This makes sense.
+
+> - char prop_name[32]; /* 32 is max size of property name */
+> + char prop_name[48]; /* 48 is max size of property name */
+
+But your patch also increase the allowed prop name to 48
+from 32.
+
+What is this name really, why is it so long?
+
+I'd like to ask the DT maintainers what a proper length
+measure of the *-gpios property may be.
+
+The warning print is a good suggestion, please send a
+patch for just that. And another patch for extending the
+property length.
+
+Yours,
+Linus Walleij
