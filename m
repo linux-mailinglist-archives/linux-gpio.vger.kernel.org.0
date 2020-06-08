@@ -2,236 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CAC81F1F59
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 20:57:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2A8B1F1F60
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 20:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgFHS47 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 14:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
+        id S1726227AbgFHS7z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 14:59:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgFHS44 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 14:56:56 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9C6C08C5C6
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2020 11:56:55 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r9so552162wmh.2
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2020 11:56:55 -0700 (PDT)
+        with ESMTP id S1726197AbgFHS7x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 14:59:53 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84F3C08C5C2
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2020 11:59:51 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id dr13so360052ejc.3
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2020 11:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=bYuLeFsFLMkDx3qZeqjTwTuymeICsPggctKvZNcicEBsCT6pD6pMA7MDedxcCgxxxv
-         DaXRWn69Tos6NjXf9n4UhHrwGd5gC47tLeiiskVQVlVn7tUdf+gKVD++b2pSx6mjt0Wt
-         /GROQLIkv8ERRIXfaTl+IBNn5ySBixDUBCavUZXD4GOr2RPx8jv98AlcXxuFAvV8TSzH
-         uUzKSnqPFAIyr30pkKt7Dm8kolIvPkY4GfLVcdkgaBEz6LXVbdJwTjtf+/4f8Isg7P1S
-         KORdnXpCjh3OH33CQNPDcXraPiI3zvS0de9sedU66a7jPu3xIf4o9mtqTrhWJsUZrxQa
-         4t6g==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AuXvnhOOiGVzwKkiy+6KOtiN0oEuJJrG0I2oVdfHv9w=;
+        b=qsV+TNUoVJ78rNWHsBUlitIenVl8PTuGD3oU/lKhyS/r+/PGazU2hlddpXvrquxDKg
+         2Xyr5AaKogB4yR99rY3JVIsHyA1rKm+9ysHcTjqxJ6maJQv8Uv6ZO11KZP1mwvf2VrFH
+         WXoIoKbZ8sV2raI+I2eflcA2Szm7T4hvqVKVNH5gEjC6dEmX4fi4fxPdaZ/SLFzsPh0e
+         KCugdGf7VQ/au5DuctfQIEih/XrKDKVx+zLxie+aMXRUon7xX4Cf06777i1Qed27ce4B
+         MfI+zj6BmLV5FbNvC1ebfANzlFfs21hawvfQeIR4fz3LSurN6alL1ExXgT8lDeSqaej1
+         tsTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bbezwn5gwDlTS6iFB4r9mviI0BHif4uVVFtQV600W10=;
-        b=SLNnTXD+otTx+VZH/+AxZx67XIYuUpzz/EAqidnRCTDVW9bttPj9rVUEM4Athgo1xA
-         BgG5bUnIc6ct2V2Ur1j5fDZHAOSngt3ka7tN7HSr4mn+sG3kHHx5kpFuspaiyb89VmK9
-         xOdy3Kzru0d54JrCjNTUWDTrhaR4GFEQaBTq66rOEO9WLNId3x1e0pdx3QyOJdHpPV/B
-         KZjEf2S3bGy4pvq0Q1tS2+mO1SjjTUJ86jzcIBxLDJgwkAqtwb80o1VE+Fj9VxYophxk
-         Bai7lroyOHzogTMW3x+E8BccsaKBbNvwJ1v00uzgrxL70enNxhgnnFUncgXdXO1WAFlx
-         q0jg==
-X-Gm-Message-State: AOAM531mxyltWsE1LK3Wco+MQ2+e7RhFbJQUuFk626u6wRumK9T3Byd0
-        5Bnv0N9xtQ5CVOFnDJ6smEqX3A==
-X-Google-Smtp-Source: ABdhPJyiWUVMEiOfAXAeFrqmYgqJgRJgWv1aBrPn0d5IckEE0fOBQCHvZfLUDwPo686MnqwrE6u1gg==
-X-Received: by 2002:a1c:80d4:: with SMTP id b203mr135522wmd.138.1591642613825;
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id l17sm431519wmi.16.2020.06.08.11.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 11:56:53 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 19:56:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        david.m.ertman@intel.com, shiraz.saleem@intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608185651.GD4106@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
- <20200608082827.GB3567@dell>
- <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
- <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=AuXvnhOOiGVzwKkiy+6KOtiN0oEuJJrG0I2oVdfHv9w=;
+        b=McFJJjJFnxmErjFExfy6+L0tyRflU5HGolh13T9yaW+8iyDT3Isnjt/dnvxFclsfcT
+         1cgCao+g7TZfryfz86rLxfvf1Lk/rjUorAFGk6SslIwI3ICTC0MQzpUw7dPpjlQaApqA
+         G+hF9bOBxOGj3n+xy+OahpqfRn1EYwJWn0WzVXOxk/X06HVbCM7bvHtC9ZeJQstqgxF7
+         1I+QOl/EyIOx2q4OLwK2xD3rXrULckYR32CX7CBwdzJZ8n58PiiABnliv9HgkdK9r8TH
+         bXbFmLr9FNgVmZrj1KK9hqOcygNq1JEplSRCzjP0seSMzsR/RxG1RawpFYoW3Rpn5/Qp
+         qJLQ==
+X-Gm-Message-State: AOAM531j18M0cu1ZzRM8QPnjwUeajPEb3+At97GBJq2G+a6x0p6jZWNf
+        TxKJmuGUNSDT2dhz5Wvd/bpZotVB6HDXIhHO8U8=
+X-Google-Smtp-Source: ABdhPJxh6h4bjCj+h3uMc9KXIR+feMETeIHNWAK7YIznD+4ThmLCNGjJptLQTF6rlwq8utsY1gd5c+HgVQ09JMm/Y7k=
+X-Received: by 2002:a17:906:b1c3:: with SMTP id bv3mr22713445ejb.292.1591642790641;
+ Mon, 08 Jun 2020 11:59:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc>
+Received: by 2002:a54:34cd:0:0:0:0:0 with HTTP; Mon, 8 Jun 2020 11:59:50 -0700 (PDT)
+Reply-To: mrdavidkekeli01@gmail.com
+From:   "Mr.David Keller" <kojofofone7@gmail.com>
+Date:   Mon, 8 Jun 2020 18:59:50 +0000
+Message-ID: <CADbasEYCBF0Dj6pzObEYj9cN3EE8-tu-u_5AB5W3K0g_+79A-g@mail.gmail.com>
+Subject: Greeting
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 08 Jun 2020, Michael Walle wrote:
-
-> Am 2020-06-08 12:02, schrieb Andy Shevchenko:
-> > +Cc: some Intel people WRT our internal discussion about similar
-> > problem and solutions.
-> > 
-> > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Sat, 06 Jun 2020, Michael Walle wrote:
-> > > > Am 2020-06-06 13:46, schrieb Mark Brown:
-> > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > 
-> > ...
-> > 
-> > > Right.  I'm suggesting a means to extrapolate complex shared and
-> > > sometimes intertwined batches of register sets to be consumed by
-> > > multiple (sub-)devices spanning different subsystems.
-> > > 
-> > > Actually scrap that.  The most common case I see is a single Regmap
-> > > covering all child-devices.
-> > 
-> > Yes, because often we need a synchronization across the entire address
-> > space of the (parent) device in question.
-> > 
-> > >  It would be great if there was a way in
-> > > which we could make an assumption that the entire register address
-> > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-> > > each of the devices described by its child-nodes.  Probably by picking
-> > > up on the 'simple-mfd' compatible string in the first instance.
-> > > 
-> > > Rob, is the above something you would contemplate?
-> > > 
-> > > Michael, do your register addresses overlap i.e. are they intermingled
-> > > with one another?  Do multiple child devices need access to the same
-> > > registers i.e. are they shared?
-> 
-> No they don't overlap, expect for maybe the version register, which is
-> just there once and not per function block.
-
-Then what's stopping you having each device Regmap their own space?
-
-The issues I wish to resolve using 'simple-mfd' are when sub-devices
-register maps overlap and intertwine.
-
-> > > > > > But, there is more in my driver:
-> > > > > >  (1) there is a version check
-> > > 
-> > > If we can rid the Regmap dependency, then creating an entire driver to
-> > > conduct a version check is unjustifiable.  This could become an inline
-> > > function which is called by each of the sub-devices instead, for
-> > > example.
-> 
-> sounds good to me. (although there would then be a probe fail per sub-device
-> if the version is not supported)
-
-I don't see an issue with that.  I would put that check inside a
-shared call though, complete with support for locking.
-
-> > > > > >  (2) there is another function for which there is no suitable linux
-> > > > > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > > > > >      attributes for: This controller supports 16 non-volatile
-> > > > > >      configuration bits. (this is still TBD)
-> > > 
-> > > There is a place for everything in Linux.
-> > > 
-> > > What do these bits configure?
-> 
-> - hardware strappings which have to be there before the board powers up,
->   like clocking mode for different SerDes settings
-> - "keep-in-reset" bits for onboard peripherals if you want to save power
-> - disable watchdog bits (there is a watchdog which is active right from
->   the start and supervises the bootloader start and switches to failsafe
->   mode if it wasn't successfully started)
-> - special boot modes, like eMMC, etc.
-> 
-> Think of it as a 16bit configuration word.
-
-And you wish for users to be able to view these at run-time?
-
-Can they adapt any of them on-the-fly or will the be RO?
-
-> > > > > TBH I'd also say that the enumeration of the subdevices for this
-> > > > > device should be in the device rather than the DT, they don't
-> > > > > seem to be things that exist outside of this one device.
-> > > >
-> > > > We're going circles here, formerly they were enumerated in the MFD.
-> > > > Yes, they are devices which aren't likely be used outside a
-> > > > "sl28cpld", but there might there might be other versions of the
-> > > > sl28cpld with other components on different base addresses. I
-> > > > don't care if they are enumerated in DT or MFD, actually, I'd
-> > > > prefer the latter. _But_ I would like to have the device tree
-> > > > properties for its subdevices, e.g. the ones for the watchdog or
-> > > > whatever components there might be in the future.
-> > > 
-> > > [...]
-> > > 
-> > > > MFD core can
-> > > > match a device tree node today; but only one per unique compatible
-> > > > string. So what should I use to differentiate the different
-> > > > subdevices?
-> > > 
-> > > Right.  I have been aware of this issue.  The only suitable solution
-> > > to this would be to match on 'reg'.
-> 
-> see below (1)
-> 
-> > > 
-> > > FYI: I plan to fix this.
-> > > 
-> > > If your register map needs to change, then I suggest that this is
-> > > either a new device or at least a different version of the device and
-> > > would also have to be represented as different (sub-)mfd_cell.
-> > > 
-> > > > Rob suggested the internal offset, which I did here.
-> > > 
-> > > FWIW, I don't like this idea.  DTs should not have to be modified
-> > > (either in the first instance or subsequently) or specifically
-> > > designed to patch inadequacies in any given OS.
-> 
-> How does (1) play together with this? What do you propose the "reg"
-> property should contain?
-
-Whatever is in the 'reg' property contained in the Device Tree node.
-Either the full address or an offset would be suitable.
-
-Caveat: All this thinking has been done on-the-fly.  I would need to
-look at some examples of existing devices and start coding before I
-could really think the solution through.
-
-Happy to discuss and/or take recommendations though.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Greeting, I sent you a letter days ago Did you receive it, I wait for
+your response, Best Regard, Mr.David Keller.
