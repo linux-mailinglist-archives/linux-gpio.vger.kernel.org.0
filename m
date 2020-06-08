@@ -2,185 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9559A1F14EC
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 11:04:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 991A11F14FD
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 11:06:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgFHJEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 05:04:41 -0400
-Received: from ms.asus.com ([103.10.4.13]:49697 "EHLO ms.asus.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgFHJEl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Jun 2020 05:04:41 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 05:04:39 EDT
-Received: from unknown (HELO TP-MD-V11.corpnet.asus) ([172.22.47.31])
-  by ms.asus.com with ESMTP; 08 Jun 2020 16:57:25 +0800
-Received: from TP-MD-V01.corpnet.asus (172.22.47.17) by TP-MD-V11.corpnet.asus
- (172.22.47.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 8 Jun 2020
- 16:57:25 +0800
-Received: from TP-MD-V01.corpnet.asus (172.22.47.17) by TP-MD-V01.corpnet.asus
- (172.22.47.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 8 Jun 2020
- 16:57:24 +0800
-Received: from TP-MD-V01.corpnet.asus ([fe80::ec39:a96a:6470:e2d3]) by
- TP-MD-V01.corpnet.asus ([fe80::ec39:a96a:6470:e2d3%3]) with mapi id
- 15.01.1913.007; Mon, 8 Jun 2020 16:57:24 +0800
-From:   =?big5?B?UmljaGFyZCBIc3Uos1yofLn8KQ==?= 
-        <Richard_Hsu@asmedia.com.tw>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Richard Hsu <saraon640529@gmail.com>,
-        =?big5?B?UmljaGFyZCBIc3Uos1yofLn8KQ==?= 
-        <Richard_Hsu@asmedia.com.tw>
-CC:     =?big5?B?WWQgVHNlbmcotL+4zrlGKQ==?= <Yd_Tseng@asmedia.com.tw>,
-        =?big5?B?SmVzc2UxIENoYW5nKLFpsOq+uSk=?= 
-        <Jesse1_Chang@asmedia.com.tw>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: RE: [PATCH] gpio:asm28xx-18xx: new driver
-Thread-Topic: [PATCH] gpio:asm28xx-18xx: new driver
-Thread-Index: AQHWN+dcHvM9IwpmfEK3xfJDn79iAKjJwyIAgASmygA=
-Date:   Mon, 8 Jun 2020 08:57:24 +0000
-Message-ID: <64b6e37f10a048189b2661f328e3f13c@asmedia.com.tw>
-References: <20200601073604.26289-1-saraon640529@gmail.com>
- <20200605171244.GA1140813@bjorn-Precision-5520>
-In-Reply-To: <20200605171244.GA1140813@bjorn-Precision-5520>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.78.106.30]
-x-tm-snts-smtp: 7682E491F0FBABDA8D160CEA1F29EDFDC8FCD149DC7FFB58BEA15062B9C2310F2000:8
-Content-Type: text/plain; charset="big5"
+        id S1729078AbgFHJG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 05:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgFHJG6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 05:06:58 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72A3C08C5C3
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2020 02:06:56 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id p5so16487703wrw.9
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2020 02:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=boundarydevices-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hEAlVcSB3x50Ky0nMGuCiUX7cIf9lf5IbJZRm4/cSro=;
+        b=l1Puw3aqdyx+QTkD8wNiZJwXtHOZNoswf/vR/lCtGvX05axmNgUIe4eYb/UFnHQ4jm
+         bXvO4Nn1kV2mohg5vkluP8ONb4QO3ZhwT7Q4LVERCn0tgmVdzJbFZYHRuxbgPBVumcMc
+         Ku0Na75co0gNN0c/Ng118GTlwjmq1bk6nc1LIRN1yyLLbeAQ6189aWihjtiMg3Pyr1A6
+         wOBlwjfovzKVlHDsV7TyNpxaVz3xHvRQTEswvs/sSErNxGOqm3xAy9SJLaxbgU7/P6bs
+         YDH4WnikgRpL7XAEkawhJXc75Gs8JhoBgXA4D37aYAoXM6SQWPN4UWz5gxpFNXLrrXD6
+         4klw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hEAlVcSB3x50Ky0nMGuCiUX7cIf9lf5IbJZRm4/cSro=;
+        b=nUquY0tJIZHvd08LJWEqZKZ059NidG0KtRinNODq92jNwJNOfcYLeYGTm0NXIUykhs
+         v0mUFmCWIsByj0/qXnKURXd75LFYDSwZ5b/+4Jygnn+592Qi/RlPvwJhJn09wQcl4uwP
+         Kr7DFgWvUqg1lZNnZGXV9rbAPz5JgsF8viJYkxQ04Bim2l6gfby3epqG+hvzMvht1vf9
+         qhEItYRNJg+dJwf+j3VpP/lV91wVVJj86B6xDCqmhJB8B4UwNzIwoRYuoGtxUQdHbdfx
+         mlP0oNaUacOSNxlOj4Qzz04/t3PsNGMhh1l/BR1j5B/gjrcwk1eGk+ceudkg8ConM5Rz
+         XcLA==
+X-Gm-Message-State: AOAM532+ZSzz9XWSQ8AS7fTujzarD8W3CMr2YDwUWjwyeFUJ0Z5rZjF3
+        l2rdkLDjuEJZOXLJorJexdNFCrSHcyw=
+X-Google-Smtp-Source: ABdhPJySjYHLBD9pzAn9I/9EKhB7lT+qnduuFqL9K/Siq560ZwLteevFtdupvu9rb6MvTFCwBFEMNw==
+X-Received: by 2002:a5d:684a:: with SMTP id o10mr21120315wrw.4.1591607215124;
+        Mon, 08 Jun 2020 02:06:55 -0700 (PDT)
+Received: from localhost.localdomain (2a01cb000f89b400cc883edd44ec4519.ipv6.abo.wanadoo.fr. [2a01:cb00:f89:b400:cc88:3edd:44ec:4519])
+        by smtp.gmail.com with ESMTPSA id f9sm15378727wrf.74.2020.06.08.02.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2020 02:06:54 -0700 (PDT)
+From:   Gary Bisson <gary.bisson@boundarydevices.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: [libgpiod][PATCH 0/3] Add Android build support
+Date:   Mon,  8 Jun 2020 11:06:49 +0200
+Message-Id: <20200608090652.805516-1-gary.bisson@boundarydevices.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-TM-AS-Product-Ver: SMEX-14.0.0.1158-8.5.1020-25468.005
-X-TM-AS-Result: No-10--22.584700-8.000000
-X-TMASE-MatchedRID: ZsvAduuuCjpYme75ecrqQDlBo7HA0Z++62+gvFt874mE6GalAjvSeQCN
-        FKULxGCZa01mhnn7t6SaoyD8Xyl5JIu3renu5Y0wUbXcK0Ir+YjEBeUbkoRsa4jeUpzSwy45/03
-        t7eXCTBsYgyDj5TiRtQDqCQ/jO5zpzj/TFVfw9ZLg0H4is54GZNeIAqngIfHyURZ41/1PK/vNK/
-        kKSXA9Q7bBlymepgryLraGNlLRahh+Nx1ftYxL8BdPWeSXuu3+xYcTrivHaXSEtFE/+7XCupVRz
-        PxemJL0APiR4btCEeZ+SLLtNOiBhqhUHgPecvuKTtDq+0o8imjlNy/SlED6xO5mL/Sp2zN3qJSK
-        +HSPY+/4h+uI7dxXxKrDhwFDy27q8z70XDTUjsbHb7Wi+d/OqaYKysrnfGARGnqsZ8sRr2LiHyv
-        yXeXh5qbsRRaTaNLROF0RIPSotdP8XV/JQ2P2yh+EcUA4BrzsL2zvSJlY3ViKQsBMcfAIqZ1U1l
-        ojafr/K/YFZTiDf+p3PducjiV5hfQ9pTiXQb6IqQfJfM0xjHLSKvDhB8znT0UUEwP3BakDTAr9A
-        /2Q+AzFdEMoTK7bMeZYcdJgScjx3Z1DlPWYls7WNe8ZrCsorEXxZ0IsVsHpJqUds7uxSE0A/YF+
-        Wl3eH1FH/t3Gql8Ch3M+oFeE/9IBAiRlF06/k+wG8iBYnvZ/CVeEFFfb1B2ykZg9uxRW6sVbb3p
-        jW5Mn4lzqEpaPQLUqZxxkqEcpQPqnWOWEsAkCjFuggVkxLcVq/QSHo849cqPFjJEFr+olkZ3jZ7
-        ODxXygksDOcyqFzwtuKBGekqUpdvpxIsTHHHa1PimItaljun7cGd19dSFd
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--22.584700-8.000000
-X-TMASE-Version: SMEX-14.0.0.1158-8.5.1020-25468.005
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgQmpvcm4gSGVsZ2FhcywNCiAgICBUaGFuayBmb3IgeW91ciBkZXRhaWxlZCBleHBsYW5hdGlv
-biBhbmQgYmVuZWZpdGVkIG1lIGEgbG90Lg0KICBJIGFtIHNvcnJ5IGZvciB5b3VyIGNvbmZ1c2lv
-bi4gQXMgeW91IG1lbnRpb25lZCwgaSBoYXZlIGEgc2luZ2xlIFBDSWUgc3dpdGNoIHBvcnQNCmFu
-ZCBhbHNvIGltcGxlbWVudHMgc29tZSBHUElPcy4NCg0KPllvdXIgZHJpdmVyIGxvb2tzIGZvciBQ
-Q0lfVkVORE9SX0lEX0FTTUVESUEgZGV2aWNlczogWzFiMjE6MjgyNF0sIFsxYjIxOjI4MTJdLCBb
-MWIyMToyODA2XSwgWzFiMjE6MTgyNF0sIGV0YykuDQo+QnV0IEkgaGF2ZW4ndCBmb3VuZCBhIHNl
-Y29uZCBkcml2ZXIgdGhhdCBuZWVkcyB0byBjbGFpbSB0aGVzZSBkZXZpY2VzLiANCiAgIHRoZXNl
-IGRldmljZXMgYXJlIFBDSWUgc3dpdGNoIHBvcnQgYW5kIHVzZSAicGNpZXBvcnQiIGFzIG1haW4g
-ZHJpdmVyLg0KDQpIaSBCYXJ0b3N6IEdvbGFzemV3c2tpIGFuZCBsaW51cyBXYWxsZWlqLA0KICAg
-VGhhbmtzIGZvciB5b3VyIGhlbHAuIEkgYWxtb3N0IGtub3cgdGhlIHByb2JsZW0gb2YgdGhpcyBk
-cml2ZXIuIFNvcnJ5ISBUaGlzIGlzIG15IG1pc3Rha2UgdG8gdXNlIGRyaXZlcidzIGZyYW1ld29y
-ayBpbmNvcnJlY3RseS4gDQoNCkJSLA0KICAgUmljaGFyZCANCg0KLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCkZyb206IEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz4gDQpTZW50
-OiBTYXR1cmRheSwgSnVuZSA2LCAyMDIwIDE6MTMgQU0NClRvOiBSaWNoYXJkIEhzdSA8c2FyYW9u
-NjQwNTI5QGdtYWlsLmNvbT4NCkNjOiBSaWNoYXJkIEhzdSizXKh8ufwpIDxSaWNoYXJkX0hzdUBh
-c21lZGlhLmNvbS50dz47IFlkIFRzZW5nKLS/uM65RikgPFlkX1RzZW5nQGFzbWVkaWEuY29tLnR3
-PjsgSmVzc2UxIENoYW5nKLFpsOq+uSkgPEplc3NlMV9DaGFuZ0Bhc21lZGlhLmNvbS50dz47IGxp
-bnVzLndhbGxlaWpAbGluYXJvLm9yZzsgYmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbTsgYmhlbGdh
-YXNAZ29vZ2xlLmNvbTsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2Vy
-Lmtlcm5lbC5vcmc7IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQpTdWJqZWN0OiBS
-ZTogW1BBVENIXSBncGlvOmFzbTI4eHgtMTh4eDogbmV3IGRyaXZlcg0KDQpbK2NjIExlZSBpbiBj
-YXNlIGhlIGNhbiBzaGVkIGxpZ2h0IG9uIHRoZSBNRkQgcXVlc3Rpb24gYmVsb3ddDQoNCk9uIE1v
-biwgSnVuIDAxLCAyMDIwIGF0IDAzOjM2OjA0UE0gKzA4MDAsIFJpY2hhcmQgSHN1IHdyb3RlOg0K
-PiBIaSBCam9ybiBIZWxnYWFzLA0KPiAgMS4gV2hhdCBhcmUgdGhlIG90aGVyIGZ1bmN0aW9ucyBh
-bmQgd2hlcmUgaXMgdGhlIG90aGVyIGRyaXZlcj8NCj4gID5QQ0kgYnVzIGFuZCBHUElPIGNhbiBi
-ZSBjb25zaWRlcmVkIGFzIHR3byBmdW5jdGlvbnMgaW5kZXBlbmRlbnRseS4NCj4gIEFuZCB0aGUg
-ZHJpdmVyIGlzIGxvY2F0ZWQgYXQgZHJpdmVycy9ncGlvL2dwaW8tYW1kODExMS5jDQoNCkknbSBv
-YnZpb3VzbHkgbWlzc2luZyB0aGUgcG9pbnQgaGVyZTsgc29ycnkgZm9yIGJlaW5nIHNsb3cuDQoN
-CmRyaXZlcnMvZ3Bpby9ncGlvLWFtZDgxMTEuYyB1c2VzIGZvcl9lYWNoX3BjaV9kZXYoKSB0byBs
-b29rIGZvciBQQ0lfVkVORE9SX0lEX0FNRCwgUENJX0RFVklDRV9JRF9BTURfODExMV9TTUJVUyBb
-MTAyMjo3NDZiXSBkZXZpY2VzLg0KZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hbWQ3NTYuYyBjbGFp
-bXMgdGhhdCBzYW1lIGRldmljZSB1c2luZyB0aGUgbm9ybWFsIFBDSSBwcm9iZSBtZWNoYW5pc20u
-DQoNCkluIHRoaXMgY2FzZSBib3RoIGkyYy1hbWQ3NTYgYW5kIGdwaW8tYW1kODExMSB3YW50IHRv
-IHVzZSB0aGUgc2FtZSBkZXZpY2UsIHNvIHRoZXJlJ3MgYXQgbGVhc3QgYSByZWFzb24gd2h5IGdw
-aW8tYW1kODExMSB1c2VzIHRoZSBub24tc3RhbmRhcmQgbWVjaGFuaXNtLg0KDQpZb3VyIGRyaXZl
-ciBsb29rcyBmb3IgUENJX1ZFTkRPUl9JRF9BU01FRElBIGRldmljZXM6IFsxYjIxOjI4MjRdLCBb
-MWIyMToyODEyXSwgWzFiMjE6MjgwNl0sIFsxYjIxOjE4MjRdLCBldGMpLiAgQnV0IEkgaGF2ZW4n
-dCBmb3VuZCBhIHNlY29uZCBkcml2ZXIgdGhhdCBuZWVkcyB0byBjbGFpbSB0aGVzZSBkZXZpY2Vz
-Lg0KDQpJIGNhbid0IHRlbGwgd2hhdCBhbnkgb2YgdGhlc2UgZGV2aWNlcyBhcmUgKG90aGVyIHRo
-YW4gdGhhdCB0aGV5IHNlZW0gdG8gaGF2ZSBzb21lIEdQSU8pLiAgWW91IG1pZ2h0IHdhbnQgdG8g
-YWRkIHRoZW0gdG8gdGhlIExpbnV4IFBDSSBkYXRhYmFzZSBhdCBodHRwczovL3BjaS1pZHMudWN3
-LmN6L3JlYWQvUEMvMWIyMSAuICBJZiB5b3UgZG8sIHRoZW4gImxzcGNpIiB3aWxsIHNob3cgdGhl
-IGNvcnJlY3QgbmFtZXMgZm9yIHRoZW0uDQoNCllvdSBtZW50aW9uIGJlbG93IHRoYXQgdGhlc2Ug
-ZGV2aWNlcyBhcmUgUENJZSBicmlkZ2VzLiAgSWYgdGhhdCdzIHRoZSBjYXNlLCB0aGV5IHdvdWxk
-IGJlIGNsYWltZWQgYnkgdGhlICJwY2llcG9ydCIgZHJpdmVyIGluIHRoZSBQQ0kgY29yZSAoZHJp
-dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X3BjaS5jKS4gIElmIHlvdSBjb2xsZWN0IHRoZSBvdXRwdXQg
-b2YgInN1ZG8gbHNwY2kgLXZ2eHh4eCIsIGl0IHdvdWxkIHRlbGwgdXMgd2hldGhlciB0aGUgcGNp
-ZXBvcnQgZHJpdmVyIHdpbGwgY2xhaW0gaXQuDQoNCklmIGl0IGRvZXMsIHRoZW4gd2UgaGF2ZSBh
-IHByb2JsZW0gYmVjYXVzZSB0aGUgUENJZSBwb3J0IHNlcnZpY2VzIChBRVIsIFBNRSwgRFBDLCBl
-dGMpIGN1cnJlbnRseSByZXF1aXJlIHBjaWVwb3J0LiAgSWYgeW91IHdhbnQgdGhlIEFFUiwgUE1F
-LCBldGMgZnVuY3Rpb25hbGl0eSBpbiBhZGRpdGlvbiB0byBHUElPLCB0aGVuIHdlIGhhdmUgdG8g
-ZmlndXJlIG91dCBob3cgdG8gY29vcmRpbmF0ZSB0aGluZ3MuDQoNCj4gIDIuV2UgZW5kIHVwIHdp
-dGggbXVsdGlwbGUgZHJpdmVycyBjb250cm9sbGluZyB0aGUgZGV2aWNlIHdpdGhvdXQgYW55IA0K
-PiBjb29yZGluYXRpb24gYmV0d2VlbiB0aGVtPw0KPiAgPlllcyxiZWNhdXNlIHR3byBmdW5jdGlv
-bnMgYXJlIGluZGVwZW5kZW50bHkgaW4gdGhlIGRldmljZSxhbmQgdGhlIA0KPiBtYWluIGRyaXZl
-ciBmb3IgUENJIGJ1cyBmdW5jdGlvbiBpcyBtb3JlIGltcG9ydGFudC5XZSB3aXNoIHRoZXkgY2Fu
-J3QgDQo+IGJlIGFmZmVjdGVkIGFuZCBjb29yZGluYXRlZCBiZXR3ZWVuIHR3byBkcml2ZXJzIGFz
-IG11Y2ggYXMgcG9zc2libGUuSWYgDQo+IG1haW4gZHJpdmVyIGlzIGFmZmVjdGVkLGl0IGlzIG1v
-cmUgc2VyaW91cy4NCj4gIEluIG91ciBjYXNlLHdlIGhhdmUgZ3BpbyByZWdpc3RlcnMgb24gcGNp
-IGNvbmZpZ3VyYXRpb24gc3BhY2Ugb2YgDQo+IGFzbTI4eHggcGNpLWUgYnJpZGdlKHdpdGggbWFp
-biBwY2kgYnVzIGRyaXZlcikuSWYgd2Ugd2FudCB0byB1c2UgaXQgYnkgDQo+IGFub3RoZXIgZHJp
-dmVyIHRoYXQgdXNlIGdwaW8gc3Vic3lzdGVtIC9zeXMvY2xhc3MvIGdwaW8vKHN5c2ZzIA0KPiBp
-bnRlcmZhY2UpLkkgZmluZCB0aGUgZHJpdmVyKGdwaW8tYW1kODExMS5jKSB0aGF0IG1lZXQgb3Vy
-IA0KPiByZXF1ZXN0LlNvcnJ5ISBpIGFtIG5vdCBiZXN0IGZyaWVuZCB3aXRoIGdpdCxhbmQgcmVw
-bHkgbWFpbCBpbiB0aGUgDQo+IHNhbWUgd2F5Lg0KPiANCj4gDQo+IEhpIEJhcnRvc3ogR29sYXN6
-ZXdza2ksDQo+ICBUaGFuayB5b3UuQW5kIGkgaGF2ZSBzdHVkaWVkIFBDSSBNRkQgZGV2aWNlIGlu
-IGRyaXZlcnMvbWZkLg0KDQpJJ20gbm90IGZhbWlsaWFyIHdpdGggZHJpdmVycy9tZmQuICBJdCBs
-b29rcyBsaWtlIGl0IG1pZ2h0IGJlIHVzZWZ1bCBmb3IgY2FzZXMgd2hlcmUgYSBzaW5nbGUgUENJ
-IGZ1bmN0aW9uIGltcGxlbWVudHMgbXVsdGlwbGUgc29ydHMgb2YgZnVuY3Rpb25hbGl0eS4NCg0K
-QnV0IGlmIHRoZSBwcm9ibGVtIGlzIHRoYXQgeW91IGhhdmUgYSBzaW5nbGUgZnVuY3Rpb24gdGhh
-dCBpcyBhIFBDSWUgc3dpdGNoIHBvcnQgYW5kIGFsc28gaW1wbGVtZW50cyBzb21lIEdQSU9zLCBJ
-IGRvdWJ0IGRyaXZlcnMvbWZkIHdpbGwgaGVscC4gIEluIHRoYXQgY2FzZSwgYm90aCB0aGUgZXhp
-c3RpbmcgcGNpZXBvcnQgZHJpdmVyIGFuZCB5b3VyIG5ldyBncGlvLWFzbTI4eHgtMTh4eCBkcml2
-ZXIgd291bGQgbmVlZCB0byBvcGVyYXRlIHRoZSBzYW1lIGZ1bmN0aW9uLCBhbmQgd2UnZCBoYXZl
-IHRvIG1ha2Ugc29tZSBzaWduaWZpY2FudCBjaGFuZ2VzIHRvIGJvdGggb2YgdGhlbSB0byBmaXQg
-aW50byB0aGUgTUZEIGZyYW1ld29yay4NCg0KTG9uZy10ZXJtLCBJIHRoaW5rIGl0IHdvdWxkIGJl
-IGdvb2QgdG8gbW92ZSB0aGUgcGNpZXBvcnQgdGhpbmdzIGRpcmVjdGx5IGludG8gdGhlIFBDSSBj
-b3JlIGluc3RlYWQgb2YgYmVpbmcgYSBzZXBhcmF0ZSBkcml2ZXIuICBXZSd2ZSB0cmlwcGVkIG92
-ZXIgdGhpcyBwcm9ibGVtIGJlZm9yZSB3aXRoIHRoaW5ncyBsaWtlIHBlcmZvcm1hbmNlIGNvdW50
-ZXJzIGluIFBDSWUgcG9ydHMuDQoNCj4gTWF5YmUsaXQgaXMgbm90IHdoYXQgaSBhbSBsb29raW5n
-IGZvci5UaGlzIHR5cGUgb2YgZGV2aWNlIGluY2x1ZGUgY29yZSANCj4gYW5kIG1pc2NlbGxhbmVv
-dXMgZnVuY3Rpb24gZHJpdmVycy5BbmQgZnVuY3Rpb24gZHJpdmVycyBleHBvcnQgDQo+IHJlc291
-cmNlcyhpby9tZW0vZG1hKSB0byBzeXNmcy5GaXN0LHdlIGNhbid0IGltcGxlbWVudCBhbm90aGVy
-IHBjaSBidXMgDQo+IGRyaXZlciBhcyBjb3JlIGRyaXZlcixhbmQgc2Vjb25kbHksIGl0IGRvbid0
-IHVzZSBncGlvIHN1YnN5c3RlbSB3aXRoIA0KPiAvc3lzL2NsYXNzL2dwaW8vKHN5c2ZzIGludGVy
-ZmFjZSkuDQo+ICBTbyx5b3Ugd2lsbCByZXZpZXcgdGhpcyBkcml2ZXIgYW5kIHVwc3RyZWFtIHRv
-IG1haW5saW5lIGtlcm5lbD8NCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PQ0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIHRvIGl0
-IGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGFuZCBhcmUgaW50ZW5kZWQgc29sZWx5
-IGZvciB0aGUgdXNlIG9mIHRoZSBpbmRpdmlkdWFsIHRvIHdob20gaXQgDQppcyBhZGRyZXNzZWQu
-SWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBvciByZWNlaXZlIGl0IGFjY2lk
-ZW50YWxseSwgcGxlYXNlIGltbWVkaWF0ZWx5IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IGUtbWFpbCBh
-bmQgZGVsZXRlIA0KdGhlIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBmcm9tIHlvdXIgY29t
-cHV0ZXIgc3lzdGVtLCBhbmQgZGVzdHJveSBhbGwgaGFyZCBjb3BpZXMuIElmIGFueSwgcGxlYXNl
-IGJlIGFkdmlzZWQgdGhhdCBhbnkgdW5hdXRob3JpemVkIA0KZGlzY2xvc3VyZSwgY29weWluZywg
-ZGlzdHJpYnV0aW9uIG9yIGFueSBhY3Rpb24gdGFrZW4gb3Igb21pdHRlZCBpbiByZWxpYW5jZSBv
-biB0aGlzLCBpcyBpbGxlZ2FsIGFuZCBwcm9oaWJpdGVkLiBGdXJ0aGVybW9yZSwgYW55IHZpZXdz
-IA0Kb3Igb3BpbmlvbnMgZXhwcmVzc2VkIGFyZSBzb2xlbHkgdGhvc2Ugb2YgdGhlIGF1dGhvciBh
-bmQgZG8gbm90IHJlcHJlc2VudCB0aG9zZSBvZiBBU01lZGlhIFRlY2hub2xvZ3kgSW5jLiBUaGFu
-ayB5b3UgZm9yIHlvdXIgY29vcGVyYXRpb24uDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+Hi,
+
+This series adds support to build libgpiod library and tools as part of
+an Android build.
+
+Some comments are included into the individual patches, to explain the
+choices made.
+
+This was tested inside an Android 10 AOSP tree.
+
+Let me know if you have any questions.
+
+Regards,
+Gary
+
+Gary Bisson (3):
+  core: add missing header inclusion
+  tools-common: fix build for Android
+  Android.bp: initial addition
+
+ Android.bp           | 95 ++++++++++++++++++++++++++++++++++++++++++++
+ lib/core.c           |  1 +
+ tools/tools-common.c | 10 +++--
+ 3 files changed, 103 insertions(+), 3 deletions(-)
+ create mode 100644 Android.bp
+
+-- 
+2.26.2
 
