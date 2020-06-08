@@ -2,203 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E0A91F1476
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 10:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9559A1F14EC
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jun 2020 11:04:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgFHI2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Jun 2020 04:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729078AbgFHI2f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Jun 2020 04:28:35 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C14EC08C5C4
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Jun 2020 01:28:33 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so16393997wrp.2
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Jun 2020 01:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Kba7qPUxHVUKOanqaaBgtcI9IxnJIhKLPI39GydfXUw=;
-        b=o7x0iQeSI/uwP7xJ7s/u2wJNQdANwPbv2ta24+Sx1h0vxNF5HxpC3+25MhA0PQ8Gjl
-         dKjm7vb2Ht1j7Gzu0kjzTdTBOdMnvlhGwosvxfPaDbiMq618LrkYB1ynOAiejE+KDUNt
-         i+5NbQDjhNNpiCSMFE6TklC8DDvCNHDn4SfaILmPmsRiPxYivhSSIYqkRzoa5427VdA6
-         lW+ze0WQ0JYHLZqvZB6IdbmgY6PPkzBJgypm9ki3yPY7YSf5EXjbhfVEjHE6wR+qbo6I
-         dvp+IK2TyP9Nzuiun7EUGStVXIWuMjnL7q5BMOz+/5eHr+0DeFgljiQZMgpG6R9pGRYw
-         12XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Kba7qPUxHVUKOanqaaBgtcI9IxnJIhKLPI39GydfXUw=;
-        b=W17r9ObxqC1ys+z3mjx4D7XN7pxTJVSIh/TD3+wNVb6EyCs6gb0W5k5xzYQ6biE858
-         q2qdKaK4EZrwE6ABYWpGKgUvwnsyGLGnucmg3R6m08i3N9WksFGTD1Jkt++KYZhY5UcC
-         udbh0/EZCnq3DDk/N3Pfl+xtKfIFBPQ61VA1EsPly7DfBPLY6eIkfXdeLmWuUdEjvRn4
-         jxA5DJuozxBuWcM4iW3qf6rHqyAT8IM9B5Fwiu4ElcVcex5ys3Zyp/n+2Z3UWqyuWo3a
-         4QenFipaE6qojieB9hLSBrsiYNyP9e1IaJQeB/IN2V6LBcvsnUozej2F5K0tZ1n0lYiQ
-         p4Qw==
-X-Gm-Message-State: AOAM533v9aqlS+VLJcg7osDF3oi5mgrG7jiE1rBXpxOUmm/3HUgyaC/+
-        hipqm2OgB926BWumEFRezJ7K2w==
-X-Google-Smtp-Source: ABdhPJwynnrOTei83pcLfW4D02VO6Er3aYpLlO//t7+3zbz9KWHvX2TYAeyuYi6k74iArY5EinOp8Q==
-X-Received: by 2002:a5d:6750:: with SMTP id l16mr22217026wrw.295.1591604910095;
-        Mon, 08 Jun 2020 01:28:30 -0700 (PDT)
-Received: from dell ([95.147.198.92])
-        by smtp.gmail.com with ESMTPSA id v27sm23608100wrv.81.2020.06.08.01.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 01:28:29 -0700 (PDT)
-Date:   Mon, 8 Jun 2020 09:28:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>, Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld
- management controller
-Message-ID: <20200608082827.GB3567@dell>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-3-michael@walle.cc>
- <20200605065709.GD3714@dell>
- <20200605105026.GC5413@sirena.org.uk>
- <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
- <20200606114645.GB2055@sirena.org.uk>
- <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+        id S1726536AbgFHJEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Jun 2020 05:04:41 -0400
+Received: from ms.asus.com ([103.10.4.13]:49697 "EHLO ms.asus.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgFHJEl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Jun 2020 05:04:41 -0400
+X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Mon, 08 Jun 2020 05:04:39 EDT
+Received: from unknown (HELO TP-MD-V11.corpnet.asus) ([172.22.47.31])
+  by ms.asus.com with ESMTP; 08 Jun 2020 16:57:25 +0800
+Received: from TP-MD-V01.corpnet.asus (172.22.47.17) by TP-MD-V11.corpnet.asus
+ (172.22.47.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 8 Jun 2020
+ 16:57:25 +0800
+Received: from TP-MD-V01.corpnet.asus (172.22.47.17) by TP-MD-V01.corpnet.asus
+ (172.22.47.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 8 Jun 2020
+ 16:57:24 +0800
+Received: from TP-MD-V01.corpnet.asus ([fe80::ec39:a96a:6470:e2d3]) by
+ TP-MD-V01.corpnet.asus ([fe80::ec39:a96a:6470:e2d3%3]) with mapi id
+ 15.01.1913.007; Mon, 8 Jun 2020 16:57:24 +0800
+From:   =?big5?B?UmljaGFyZCBIc3Uos1yofLn8KQ==?= 
+        <Richard_Hsu@asmedia.com.tw>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Richard Hsu <saraon640529@gmail.com>,
+        =?big5?B?UmljaGFyZCBIc3Uos1yofLn8KQ==?= 
+        <Richard_Hsu@asmedia.com.tw>
+CC:     =?big5?B?WWQgVHNlbmcotL+4zrlGKQ==?= <Yd_Tseng@asmedia.com.tw>,
+        =?big5?B?SmVzc2UxIENoYW5nKLFpsOq+uSk=?= 
+        <Jesse1_Chang@asmedia.com.tw>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: RE: [PATCH] gpio:asm28xx-18xx: new driver
+Thread-Topic: [PATCH] gpio:asm28xx-18xx: new driver
+Thread-Index: AQHWN+dcHvM9IwpmfEK3xfJDn79iAKjJwyIAgASmygA=
+Date:   Mon, 8 Jun 2020 08:57:24 +0000
+Message-ID: <64b6e37f10a048189b2661f328e3f13c@asmedia.com.tw>
+References: <20200601073604.26289-1-saraon640529@gmail.com>
+ <20200605171244.GA1140813@bjorn-Precision-5520>
+In-Reply-To: <20200605171244.GA1140813@bjorn-Precision-5520>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.78.106.30]
+x-tm-snts-smtp: 7682E491F0FBABDA8D160CEA1F29EDFDC8FCD149DC7FFB58BEA15062B9C2310F2000:8
+Content-Type: text/plain; charset="big5"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+X-TM-AS-Product-Ver: SMEX-14.0.0.1158-8.5.1020-25468.005
+X-TM-AS-Result: No-10--22.584700-8.000000
+X-TMASE-MatchedRID: ZsvAduuuCjpYme75ecrqQDlBo7HA0Z++62+gvFt874mE6GalAjvSeQCN
+        FKULxGCZa01mhnn7t6SaoyD8Xyl5JIu3renu5Y0wUbXcK0Ir+YjEBeUbkoRsa4jeUpzSwy45/03
+        t7eXCTBsYgyDj5TiRtQDqCQ/jO5zpzj/TFVfw9ZLg0H4is54GZNeIAqngIfHyURZ41/1PK/vNK/
+        kKSXA9Q7bBlymepgryLraGNlLRahh+Nx1ftYxL8BdPWeSXuu3+xYcTrivHaXSEtFE/+7XCupVRz
+        PxemJL0APiR4btCEeZ+SLLtNOiBhqhUHgPecvuKTtDq+0o8imjlNy/SlED6xO5mL/Sp2zN3qJSK
+        +HSPY+/4h+uI7dxXxKrDhwFDy27q8z70XDTUjsbHb7Wi+d/OqaYKysrnfGARGnqsZ8sRr2LiHyv
+        yXeXh5qbsRRaTaNLROF0RIPSotdP8XV/JQ2P2yh+EcUA4BrzsL2zvSJlY3ViKQsBMcfAIqZ1U1l
+        ojafr/K/YFZTiDf+p3PducjiV5hfQ9pTiXQb6IqQfJfM0xjHLSKvDhB8znT0UUEwP3BakDTAr9A
+        /2Q+AzFdEMoTK7bMeZYcdJgScjx3Z1DlPWYls7WNe8ZrCsorEXxZ0IsVsHpJqUds7uxSE0A/YF+
+        Wl3eH1FH/t3Gql8Ch3M+oFeE/9IBAiRlF06/k+wG8iBYnvZ/CVeEFFfb1B2ykZg9uxRW6sVbb3p
+        jW5Mn4lzqEpaPQLUqZxxkqEcpQPqnWOWEsAkCjFuggVkxLcVq/QSHo849cqPFjJEFr+olkZ3jZ7
+        ODxXygksDOcyqFzwtuKBGekqUpdvpxIsTHHHa1PimItaljun7cGd19dSFd
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--22.584700-8.000000
+X-TMASE-Version: SMEX-14.0.0.1158-8.5.1020-25468.005
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rob, something for you below.
+SGkgQmpvcm4gSGVsZ2FhcywNCiAgICBUaGFuayBmb3IgeW91ciBkZXRhaWxlZCBleHBsYW5hdGlv
+biBhbmQgYmVuZWZpdGVkIG1lIGEgbG90Lg0KICBJIGFtIHNvcnJ5IGZvciB5b3VyIGNvbmZ1c2lv
+bi4gQXMgeW91IG1lbnRpb25lZCwgaSBoYXZlIGEgc2luZ2xlIFBDSWUgc3dpdGNoIHBvcnQNCmFu
+ZCBhbHNvIGltcGxlbWVudHMgc29tZSBHUElPcy4NCg0KPllvdXIgZHJpdmVyIGxvb2tzIGZvciBQ
+Q0lfVkVORE9SX0lEX0FTTUVESUEgZGV2aWNlczogWzFiMjE6MjgyNF0sIFsxYjIxOjI4MTJdLCBb
+MWIyMToyODA2XSwgWzFiMjE6MTgyNF0sIGV0YykuDQo+QnV0IEkgaGF2ZW4ndCBmb3VuZCBhIHNl
+Y29uZCBkcml2ZXIgdGhhdCBuZWVkcyB0byBjbGFpbSB0aGVzZSBkZXZpY2VzLiANCiAgIHRoZXNl
+IGRldmljZXMgYXJlIFBDSWUgc3dpdGNoIHBvcnQgYW5kIHVzZSAicGNpZXBvcnQiIGFzIG1haW4g
+ZHJpdmVyLg0KDQpIaSBCYXJ0b3N6IEdvbGFzemV3c2tpIGFuZCBsaW51cyBXYWxsZWlqLA0KICAg
+VGhhbmtzIGZvciB5b3VyIGhlbHAuIEkgYWxtb3N0IGtub3cgdGhlIHByb2JsZW0gb2YgdGhpcyBk
+cml2ZXIuIFNvcnJ5ISBUaGlzIGlzIG15IG1pc3Rha2UgdG8gdXNlIGRyaXZlcidzIGZyYW1ld29y
+ayBpbmNvcnJlY3RseS4gDQoNCkJSLA0KICAgUmljaGFyZCANCg0KLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCkZyb206IEJqb3JuIEhlbGdhYXMgPGhlbGdhYXNAa2VybmVsLm9yZz4gDQpTZW50
+OiBTYXR1cmRheSwgSnVuZSA2LCAyMDIwIDE6MTMgQU0NClRvOiBSaWNoYXJkIEhzdSA8c2FyYW9u
+NjQwNTI5QGdtYWlsLmNvbT4NCkNjOiBSaWNoYXJkIEhzdSizXKh8ufwpIDxSaWNoYXJkX0hzdUBh
+c21lZGlhLmNvbS50dz47IFlkIFRzZW5nKLS/uM65RikgPFlkX1RzZW5nQGFzbWVkaWEuY29tLnR3
+PjsgSmVzc2UxIENoYW5nKLFpsOq+uSkgPEplc3NlMV9DaGFuZ0Bhc21lZGlhLmNvbS50dz47IGxp
+bnVzLndhbGxlaWpAbGluYXJvLm9yZzsgYmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbTsgYmhlbGdh
+YXNAZ29vZ2xlLmNvbTsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2Vy
+Lmtlcm5lbC5vcmc7IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQpTdWJqZWN0OiBS
+ZTogW1BBVENIXSBncGlvOmFzbTI4eHgtMTh4eDogbmV3IGRyaXZlcg0KDQpbK2NjIExlZSBpbiBj
+YXNlIGhlIGNhbiBzaGVkIGxpZ2h0IG9uIHRoZSBNRkQgcXVlc3Rpb24gYmVsb3ddDQoNCk9uIE1v
+biwgSnVuIDAxLCAyMDIwIGF0IDAzOjM2OjA0UE0gKzA4MDAsIFJpY2hhcmQgSHN1IHdyb3RlOg0K
+PiBIaSBCam9ybiBIZWxnYWFzLA0KPiAgMS4gV2hhdCBhcmUgdGhlIG90aGVyIGZ1bmN0aW9ucyBh
+bmQgd2hlcmUgaXMgdGhlIG90aGVyIGRyaXZlcj8NCj4gID5QQ0kgYnVzIGFuZCBHUElPIGNhbiBi
+ZSBjb25zaWRlcmVkIGFzIHR3byBmdW5jdGlvbnMgaW5kZXBlbmRlbnRseS4NCj4gIEFuZCB0aGUg
+ZHJpdmVyIGlzIGxvY2F0ZWQgYXQgZHJpdmVycy9ncGlvL2dwaW8tYW1kODExMS5jDQoNCkknbSBv
+YnZpb3VzbHkgbWlzc2luZyB0aGUgcG9pbnQgaGVyZTsgc29ycnkgZm9yIGJlaW5nIHNsb3cuDQoN
+CmRyaXZlcnMvZ3Bpby9ncGlvLWFtZDgxMTEuYyB1c2VzIGZvcl9lYWNoX3BjaV9kZXYoKSB0byBs
+b29rIGZvciBQQ0lfVkVORE9SX0lEX0FNRCwgUENJX0RFVklDRV9JRF9BTURfODExMV9TTUJVUyBb
+MTAyMjo3NDZiXSBkZXZpY2VzLg0KZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1hbWQ3NTYuYyBjbGFp
+bXMgdGhhdCBzYW1lIGRldmljZSB1c2luZyB0aGUgbm9ybWFsIFBDSSBwcm9iZSBtZWNoYW5pc20u
+DQoNCkluIHRoaXMgY2FzZSBib3RoIGkyYy1hbWQ3NTYgYW5kIGdwaW8tYW1kODExMSB3YW50IHRv
+IHVzZSB0aGUgc2FtZSBkZXZpY2UsIHNvIHRoZXJlJ3MgYXQgbGVhc3QgYSByZWFzb24gd2h5IGdw
+aW8tYW1kODExMSB1c2VzIHRoZSBub24tc3RhbmRhcmQgbWVjaGFuaXNtLg0KDQpZb3VyIGRyaXZl
+ciBsb29rcyBmb3IgUENJX1ZFTkRPUl9JRF9BU01FRElBIGRldmljZXM6IFsxYjIxOjI4MjRdLCBb
+MWIyMToyODEyXSwgWzFiMjE6MjgwNl0sIFsxYjIxOjE4MjRdLCBldGMpLiAgQnV0IEkgaGF2ZW4n
+dCBmb3VuZCBhIHNlY29uZCBkcml2ZXIgdGhhdCBuZWVkcyB0byBjbGFpbSB0aGVzZSBkZXZpY2Vz
+Lg0KDQpJIGNhbid0IHRlbGwgd2hhdCBhbnkgb2YgdGhlc2UgZGV2aWNlcyBhcmUgKG90aGVyIHRo
+YW4gdGhhdCB0aGV5IHNlZW0gdG8gaGF2ZSBzb21lIEdQSU8pLiAgWW91IG1pZ2h0IHdhbnQgdG8g
+YWRkIHRoZW0gdG8gdGhlIExpbnV4IFBDSSBkYXRhYmFzZSBhdCBodHRwczovL3BjaS1pZHMudWN3
+LmN6L3JlYWQvUEMvMWIyMSAuICBJZiB5b3UgZG8sIHRoZW4gImxzcGNpIiB3aWxsIHNob3cgdGhl
+IGNvcnJlY3QgbmFtZXMgZm9yIHRoZW0uDQoNCllvdSBtZW50aW9uIGJlbG93IHRoYXQgdGhlc2Ug
+ZGV2aWNlcyBhcmUgUENJZSBicmlkZ2VzLiAgSWYgdGhhdCdzIHRoZSBjYXNlLCB0aGV5IHdvdWxk
+IGJlIGNsYWltZWQgYnkgdGhlICJwY2llcG9ydCIgZHJpdmVyIGluIHRoZSBQQ0kgY29yZSAoZHJp
+dmVycy9wY2kvcGNpZS9wb3J0ZHJ2X3BjaS5jKS4gIElmIHlvdSBjb2xsZWN0IHRoZSBvdXRwdXQg
+b2YgInN1ZG8gbHNwY2kgLXZ2eHh4eCIsIGl0IHdvdWxkIHRlbGwgdXMgd2hldGhlciB0aGUgcGNp
+ZXBvcnQgZHJpdmVyIHdpbGwgY2xhaW0gaXQuDQoNCklmIGl0IGRvZXMsIHRoZW4gd2UgaGF2ZSBh
+IHByb2JsZW0gYmVjYXVzZSB0aGUgUENJZSBwb3J0IHNlcnZpY2VzIChBRVIsIFBNRSwgRFBDLCBl
+dGMpIGN1cnJlbnRseSByZXF1aXJlIHBjaWVwb3J0LiAgSWYgeW91IHdhbnQgdGhlIEFFUiwgUE1F
+LCBldGMgZnVuY3Rpb25hbGl0eSBpbiBhZGRpdGlvbiB0byBHUElPLCB0aGVuIHdlIGhhdmUgdG8g
+ZmlndXJlIG91dCBob3cgdG8gY29vcmRpbmF0ZSB0aGluZ3MuDQoNCj4gIDIuV2UgZW5kIHVwIHdp
+dGggbXVsdGlwbGUgZHJpdmVycyBjb250cm9sbGluZyB0aGUgZGV2aWNlIHdpdGhvdXQgYW55IA0K
+PiBjb29yZGluYXRpb24gYmV0d2VlbiB0aGVtPw0KPiAgPlllcyxiZWNhdXNlIHR3byBmdW5jdGlv
+bnMgYXJlIGluZGVwZW5kZW50bHkgaW4gdGhlIGRldmljZSxhbmQgdGhlIA0KPiBtYWluIGRyaXZl
+ciBmb3IgUENJIGJ1cyBmdW5jdGlvbiBpcyBtb3JlIGltcG9ydGFudC5XZSB3aXNoIHRoZXkgY2Fu
+J3QgDQo+IGJlIGFmZmVjdGVkIGFuZCBjb29yZGluYXRlZCBiZXR3ZWVuIHR3byBkcml2ZXJzIGFz
+IG11Y2ggYXMgcG9zc2libGUuSWYgDQo+IG1haW4gZHJpdmVyIGlzIGFmZmVjdGVkLGl0IGlzIG1v
+cmUgc2VyaW91cy4NCj4gIEluIG91ciBjYXNlLHdlIGhhdmUgZ3BpbyByZWdpc3RlcnMgb24gcGNp
+IGNvbmZpZ3VyYXRpb24gc3BhY2Ugb2YgDQo+IGFzbTI4eHggcGNpLWUgYnJpZGdlKHdpdGggbWFp
+biBwY2kgYnVzIGRyaXZlcikuSWYgd2Ugd2FudCB0byB1c2UgaXQgYnkgDQo+IGFub3RoZXIgZHJp
+dmVyIHRoYXQgdXNlIGdwaW8gc3Vic3lzdGVtIC9zeXMvY2xhc3MvIGdwaW8vKHN5c2ZzIA0KPiBp
+bnRlcmZhY2UpLkkgZmluZCB0aGUgZHJpdmVyKGdwaW8tYW1kODExMS5jKSB0aGF0IG1lZXQgb3Vy
+IA0KPiByZXF1ZXN0LlNvcnJ5ISBpIGFtIG5vdCBiZXN0IGZyaWVuZCB3aXRoIGdpdCxhbmQgcmVw
+bHkgbWFpbCBpbiB0aGUgDQo+IHNhbWUgd2F5Lg0KPiANCj4gDQo+IEhpIEJhcnRvc3ogR29sYXN6
+ZXdza2ksDQo+ICBUaGFuayB5b3UuQW5kIGkgaGF2ZSBzdHVkaWVkIFBDSSBNRkQgZGV2aWNlIGlu
+IGRyaXZlcnMvbWZkLg0KDQpJJ20gbm90IGZhbWlsaWFyIHdpdGggZHJpdmVycy9tZmQuICBJdCBs
+b29rcyBsaWtlIGl0IG1pZ2h0IGJlIHVzZWZ1bCBmb3IgY2FzZXMgd2hlcmUgYSBzaW5nbGUgUENJ
+IGZ1bmN0aW9uIGltcGxlbWVudHMgbXVsdGlwbGUgc29ydHMgb2YgZnVuY3Rpb25hbGl0eS4NCg0K
+QnV0IGlmIHRoZSBwcm9ibGVtIGlzIHRoYXQgeW91IGhhdmUgYSBzaW5nbGUgZnVuY3Rpb24gdGhh
+dCBpcyBhIFBDSWUgc3dpdGNoIHBvcnQgYW5kIGFsc28gaW1wbGVtZW50cyBzb21lIEdQSU9zLCBJ
+IGRvdWJ0IGRyaXZlcnMvbWZkIHdpbGwgaGVscC4gIEluIHRoYXQgY2FzZSwgYm90aCB0aGUgZXhp
+c3RpbmcgcGNpZXBvcnQgZHJpdmVyIGFuZCB5b3VyIG5ldyBncGlvLWFzbTI4eHgtMTh4eCBkcml2
+ZXIgd291bGQgbmVlZCB0byBvcGVyYXRlIHRoZSBzYW1lIGZ1bmN0aW9uLCBhbmQgd2UnZCBoYXZl
+IHRvIG1ha2Ugc29tZSBzaWduaWZpY2FudCBjaGFuZ2VzIHRvIGJvdGggb2YgdGhlbSB0byBmaXQg
+aW50byB0aGUgTUZEIGZyYW1ld29yay4NCg0KTG9uZy10ZXJtLCBJIHRoaW5rIGl0IHdvdWxkIGJl
+IGdvb2QgdG8gbW92ZSB0aGUgcGNpZXBvcnQgdGhpbmdzIGRpcmVjdGx5IGludG8gdGhlIFBDSSBj
+b3JlIGluc3RlYWQgb2YgYmVpbmcgYSBzZXBhcmF0ZSBkcml2ZXIuICBXZSd2ZSB0cmlwcGVkIG92
+ZXIgdGhpcyBwcm9ibGVtIGJlZm9yZSB3aXRoIHRoaW5ncyBsaWtlIHBlcmZvcm1hbmNlIGNvdW50
+ZXJzIGluIFBDSWUgcG9ydHMuDQoNCj4gTWF5YmUsaXQgaXMgbm90IHdoYXQgaSBhbSBsb29raW5n
+IGZvci5UaGlzIHR5cGUgb2YgZGV2aWNlIGluY2x1ZGUgY29yZSANCj4gYW5kIG1pc2NlbGxhbmVv
+dXMgZnVuY3Rpb24gZHJpdmVycy5BbmQgZnVuY3Rpb24gZHJpdmVycyBleHBvcnQgDQo+IHJlc291
+cmNlcyhpby9tZW0vZG1hKSB0byBzeXNmcy5GaXN0LHdlIGNhbid0IGltcGxlbWVudCBhbm90aGVy
+IHBjaSBidXMgDQo+IGRyaXZlciBhcyBjb3JlIGRyaXZlcixhbmQgc2Vjb25kbHksIGl0IGRvbid0
+IHVzZSBncGlvIHN1YnN5c3RlbSB3aXRoIA0KPiAvc3lzL2NsYXNzL2dwaW8vKHN5c2ZzIGludGVy
+ZmFjZSkuDQo+ICBTbyx5b3Ugd2lsbCByZXZpZXcgdGhpcyBkcml2ZXIgYW5kIHVwc3RyZWFtIHRv
+IG1haW5saW5lIGtlcm5lbD8NCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQ0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIHRvIGl0
+IGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGFuZCBhcmUgaW50ZW5kZWQgc29sZWx5
+IGZvciB0aGUgdXNlIG9mIHRoZSBpbmRpdmlkdWFsIHRvIHdob20gaXQgDQppcyBhZGRyZXNzZWQu
+SWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBvciByZWNlaXZlIGl0IGFjY2lk
+ZW50YWxseSwgcGxlYXNlIGltbWVkaWF0ZWx5IG5vdGlmeSB0aGUgc2VuZGVyIGJ5IGUtbWFpbCBh
+bmQgZGVsZXRlIA0KdGhlIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBmcm9tIHlvdXIgY29t
+cHV0ZXIgc3lzdGVtLCBhbmQgZGVzdHJveSBhbGwgaGFyZCBjb3BpZXMuIElmIGFueSwgcGxlYXNl
+IGJlIGFkdmlzZWQgdGhhdCBhbnkgdW5hdXRob3JpemVkIA0KZGlzY2xvc3VyZSwgY29weWluZywg
+ZGlzdHJpYnV0aW9uIG9yIGFueSBhY3Rpb24gdGFrZW4gb3Igb21pdHRlZCBpbiByZWxpYW5jZSBv
+biB0aGlzLCBpcyBpbGxlZ2FsIGFuZCBwcm9oaWJpdGVkLiBGdXJ0aGVybW9yZSwgYW55IHZpZXdz
+IA0Kb3Igb3BpbmlvbnMgZXhwcmVzc2VkIGFyZSBzb2xlbHkgdGhvc2Ugb2YgdGhlIGF1dGhvciBh
+bmQgZG8gbm90IHJlcHJlc2VudCB0aG9zZSBvZiBBU01lZGlhIFRlY2hub2xvZ3kgSW5jLiBUaGFu
+ayB5b3UgZm9yIHlvdXIgY29vcGVyYXRpb24uDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
 
-On Sat, 06 Jun 2020, Michael Walle wrote:
-> Am 2020-06-06 13:46, schrieb Mark Brown:
-> > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
-> > > Am 2020-06-05 12:50, schrieb Mark Brown:
-> > 
-> > > > I have no idea what you are thinking of when you say "simple-regmap" so
-> > > > it is difficult to comment.
-> > 
-> > > I guess, Lee is suggesting to be able to create a regmap instance via
-> > > device tree (and populate its child nodes?). Like
-> > >   compatible = "syscon", "simple-mfd";
-> > > but for any regmap, not just MMIO.
-
-Bingo!
-
-> > I don't understand why this would be anything separate to
-> > simple-mfd.
-> 
-> Don't just simple-mfd tells the of core, to probe the children this
-> node? Where does the regmap then come from?
-
-Right.  I'm suggesting a means to extrapolate complex shared and
-sometimes intertwined batches of register sets to be consumed by
-multiple (sub-)devices spanning different subsystems.
-
-Actually scrap that.  The most common case I see is a single Regmap
-covering all child-devices.  It would be great if there was a way in
-which we could make an assumption that the entire register address
-space for a 'tagged' (MFD) device is to be shared (via Regmap) between
-each of the devices described by its child-nodes.  Probably by picking
-up on the 'simple-mfd' compatible string in the first instance.
-
-Rob, is the above something you would contemplate?
-
-Michael, do your register addresses overlap i.e. are they intermingled
-with one another?  Do multiple child devices need access to the same
-registers i.e. are they shared?
-
-> > > But, there is more in my driver:
-> > >  (1) there is a version check
-
-If we can rid the Regmap dependency, then creating an entire driver to
-conduct a version check is unjustifiable.  This could become an inline
-function which is called by each of the sub-devices instead, for
-example.
-
-> > >  (2) there is another function for which there is no suitable linux
-> > >      subsystem I'm aware of and thus which I'd like to us sysfs
-> > >      attributes for: This controller supports 16 non-volatile
-> > >      configuration bits. (this is still TBD)
-
-There is a place for everything in Linux.
-
-What do these bits configure?
-
-> > TBH I'd also say that the enumeration of the subdevices for this
-> > device should be in the device rather than the DT, they don't
-> > seem to be things that exist outside of this one device.
-> 
-> We're going circles here, formerly they were enumerated in the MFD.
-> Yes, they are devices which aren't likely be used outside a
-> "sl28cpld", but there might there might be other versions of the
-> sl28cpld with other components on different base addresses. I
-> don't care if they are enumerated in DT or MFD, actually, I'd
-> prefer the latter. _But_ I would like to have the device tree
-> properties for its subdevices, e.g. the ones for the watchdog or
-> whatever components there might be in the future.
-
-[...]
-
-> MFD core can
-> match a device tree node today; but only one per unique compatible
-> string. So what should I use to differentiate the different
-> subdevices?
-
-Right.  I have been aware of this issue.  The only suitable solution
-to this would be to match on 'reg'.
-
-FYI: I plan to fix this.
-
-If your register map needs to change, then I suggest that this is
-either a new device or at least a different version of the device and
-would also have to be represented as different (sub-)mfd_cell.
-
-> Rob suggested the internal offset, which I did here.
-
-FWIW, I don't like this idea.  DTs should not have to be modified
-(either in the first instance or subsequently) or specifically
-designed to patch inadequacies in any given OS.
-
-> But then, there is less use in duplicating the offsets in the MFD
-> just to have the MFD enumerate the subdevices and then match
-> the device tree nodes against it. I can just use
-> of_platform_populate() to enumerate the children and I won't
-> have to duplicate the base addresses.
-
-Which is fine.  However this causes a different issue for you.  By
-stripping out the MFD code you render the MFD portion seemingly
-superfluous.  Another issue driver authors commonly contend with.
-
-> So here we are, any ideas appreciated.
-
-Working on it!
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
