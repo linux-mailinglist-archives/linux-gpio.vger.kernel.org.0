@@ -2,497 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CDB11F35DD
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 10:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 330501F360E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 10:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgFIIIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 04:08:51 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:19647 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgFIIIo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 04:08:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1591690124; x=1623226124;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TxSTPbGzjS34PdAPLynHpO6Px+8SLfDppNarSx69la4=;
-  b=Z9UFxCZRKKHmluNsd87AlIENqLTPYPAEZT5ywsE8ky47ZUE3E7H0IPri
-   bTv0XaGafz7K7MTyqBS29IlPWlr51RBcpEC/vFKst/bifl8DYjW1RonvW
-   dKSpokeqtrG79rZdZBghzW1w3JDBlVUEwBV+4nyJ/sSzh1zn6Gi3Xr2is
-   vXhsju1LV/yJsKcwHEOnfH4fLSRD1i+NL41gMgZijB14pNVIC0uyUDVmT
-   3pgMRmVLu4ILErenBN9ugaig5d8zyr5PJ57uw2yCw61kfPaDyLz69056N
-   jxqrSQWM55yVgoERV00z1OI/w10jEffrTx5ex3wji8Y8wsOUY0Y0UelyE
-   A==;
-IronPort-SDR: SI2ZNx348pMDcvA/b5fnwGwHacYEaI/R40HYdVPmWeyQeNx41Q1r1bhHeeiEa+P6vAdHRLEdk6
- UsW7aou8LzHtS1pQZs1DFWTZbW6J+6q/K3aYe8kyf2vV01LkDb0Pxrcs86NrFX7x8hTiiVdoPY
- M1/t66G/N/z58PKM13dq/4nnYaOBhPTH9O2MSl6s1F12qf1g/hwUcnFS59yOncD06S2ph7zNOT
- aD1sCdxw5ut6Yyivziip5Z+ieBGAwA+7+le/uMMWDv7lvj9jp0munDxXre9vwO/e3U2o+TcdrO
- KN4=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
-   d="scan'208";a="78702796"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 01:08:43 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 9 Jun 2020 01:08:42 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 01:08:38 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 10/10] arm64: dts: sparx5: Add i2c devices, i2c muxes
-Date:   Tue, 9 Jun 2020 10:07:09 +0200
-Message-ID: <20200609080709.9654-10-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200609080709.9654-1-lars.povlsen@microchip.com>
-References: <20200608123024.5330-1-lars.povlsen@microchip.com>
- <20200609080709.9654-1-lars.povlsen@microchip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        id S1728107AbgFIIXq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 04:23:46 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38602 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728034AbgFIIXo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 04:23:44 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200609082342euoutp02be50a41ba2a97f5688d7fcc819b4f83a~W0o0tnTsm2018120181euoutp02c
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2020 08:23:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200609082342euoutp02be50a41ba2a97f5688d7fcc819b4f83a~W0o0tnTsm2018120181euoutp02c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1591691022;
+        bh=BGalV4SWoQktnTM1smyzt1YMdWYXcGcpHw/UIPU9QfY=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=DDtw0tA9I3zr0EpRkI94+4tgsN+oC4v+GjIsyjhL2qzhHNtQpyOkvQQWUkWwBSqhq
+         B+5GlI4STrhx09lViCvdqTSa4Eqa8xjp3dTWbM3/RBxYKgYVmjNW/TkfVlE5XKDAOo
+         FYO8Gz8B+iunAkkK6UhY1x5Gt+cgkSp37pfO1z/M=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200609082341eucas1p2c3a4166cdabbe42dffa2247274efd3aa~W0o0baGNz0783307833eucas1p2P;
+        Tue,  9 Jun 2020 08:23:41 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 08.72.60698.D074FDE5; Tue,  9
+        Jun 2020 09:23:41 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200609082341eucas1p2e24e71598af14d994520b79494e96b15~W0oz-h0we0586405864eucas1p22;
+        Tue,  9 Jun 2020 08:23:41 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200609082341eusmtrp13f3232debefbe006bf5db6b998b6c47d~W0oz_vRrt1700117001eusmtrp1H;
+        Tue,  9 Jun 2020 08:23:41 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-4d-5edf470d9af8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FB.74.08375.D074FDE5; Tue,  9
+        Jun 2020 09:23:41 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200609082340eusmtip174a5d456d5afdee3c869087bc138ef55~W0ozjWR9q1237712377eusmtip1T;
+        Tue,  9 Jun 2020 08:23:40 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] pinctrl: samsung: Use bank name as irqchip name
+Date:   Tue,  9 Jun 2020 10:23:29 +0200
+Message-Id: <20200609082329.10184-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBIsWRmVeSWpSXmKPExsWy7djPc7q87vfjDFaf1rXYOGM9q8X1L89Z
+        Lc6f38BuMeXPciaLzfP/MFrMOL+PyWLtkbvsFofftLNarNr1h9GB02PnrLvsHptWdbJ53Lm2
+        h82jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Ms78ucxY8Fy84uX9lywNjA+Euhg5OSQETCRa
+        H01l6WLk4hASWMEosenvU2YI5wujxOQ3h5lAqoQEPjNKvHgmD9PxbuE7qI7lQPFTN1nhOia2
+        /mcGqWITMJToetvFBmKLCDhK/NywCqyIWWAbk8T5rkNACQ4OYQEHiasPGUFqWARUJe6v3AG2
+        jVfAVmLbimYWiG3yEqs3HAA7SULgOZvE08UXGSESLhIn2m+zQdjCEq+Ob2GHsGUkTk/uYYFo
+        aGaUeHhuLTuE08MocblpBlS3tcSdc7/ArmAW0JRYv0sfIuwo0f1zFztIWEKAT+LGW0GQMDOQ
+        OWnbdGaIMK9ERxs07NQkZh1fB7f24IVLzBC2h8TSp9fApggJxErMP1s/gVFuFsKqBYyMqxjF
+        U0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQLTw+l/x7/uYNz3J+kQowAHoxIP7w3xe3FCrIll
+        xZW5hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsQozcGiJM5rvOhlrJBAemJJanZqakFq
+        EUyWiYNTqoFx8/Zt5peq1r62bhL31xVUfuE1J9VZZbpz32fF63LKkcy1oYcWct7azRZvI1QQ
+        4OPsr/zo93aO5j7pVpv3RjV9ui2r1VylM+Mf9s3gtEgWWZsVfzKd81XMwcp3LP7dzn/Dfav6
+        1231n+oZktn3QVZwT+Ea0dYVRR/WtMximsbK4tcRVr7pjxJLcUaioRZzUXEiAGX6MMkLAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsVy+t/xu7q87vfjDB4+E7TYOGM9q8X1L89Z
+        Lc6f38BuMeXPciaLzfP/MFrMOL+PyWLtkbvsFofftLNarNr1h9GB02PnrLvsHptWdbJ53Lm2
+        h82jb8sqRo/Pm+QCWKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJS
+        czLLUov07RL0Ms78ucxY8Fy84uX9lywNjA+Euhg5OSQETCTeLXzH0sXIxSEksJRR4vCsGywQ
+        CRmJk9MaWCFsYYk/17rYQGwhgU+MEtP+moDYbAKGEl1vIeIiAs4SN17tBRvELLCLSaJlzWGg
+        BAeHsICDxNWHjCA1LAKqEvdX7mACsXkFbCW2rWiG2iUvsXrDAeYJjDwLGBlWMYqklhbnpucW
+        G+oVJ+YWl+al6yXn525iBIbltmM/N+9gvLQx+BCjAAejEg/vDfF7cUKsiWXFlbmHGCU4mJVE
+        eJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgKtHwis5Rocj4wZvJK4g1NDc0tLA3Njc2NzSyUxHk7
+        BA7GCAmkJ5akZqemFqQWwfQxcXBKNTB6Lyjyk1S5U5blbfd9yZKjp+bL3tc/kubZxFscn8Id
+        zCwSJHZzSc6ZX58vb6i1tptSWLapvera329MijsXTlwece/bvnMODur3G7Izha1amQzn9KWK
+        /LvxqVe8V23NiuyrabePrJ21pCU53/Ri7tZz1+NE7069tYjvSqOkYv0VXwmBMyvinsgosRRn
+        JBpqMRcVJwIAgt8GL2ECAAA=
+X-CMS-MailID: 20200609082341eucas1p2e24e71598af14d994520b79494e96b15
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200609082341eucas1p2e24e71598af14d994520b79494e96b15
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200609082341eucas1p2e24e71598af14d994520b79494e96b15
+References: <CGME20200609082341eucas1p2e24e71598af14d994520b79494e96b15@eucas1p2.samsung.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds i2c devices and muxes to the Sparx5 reference boards.
+Use the bank name as the irqchip name. This name is later visible in
+/proc/interrupts, what makes it possible to easily identify each
+GPIO interrupt.
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+/proc/interrupts before this patch:
+143:    0     exynos4210_wkup_irq_chip   7 Edge      hdmi
+144:    0     exynos4210_wkup_irq_chip   6 Level     wm8994
+145:    1     exynos4210_wkup_irq_chip   7 Edge      max77686-pmic, max77686-rtc
+146:    1     exynos_gpio_irq_chip   3 Edge      3-0048
+
+/proc/interrupts after this patch:
+143:    0     gpx3   7 Edge      hdmi
+144:    0     gpx3   6 Level     wm8994
+145:    1     gpx0   7 Edge      max77686-pmic, max77686-rtc
+146:    1     gpm2   3 Edge      3-0048
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
- arch/arm64/boot/dts/microchip/sparx5.dtsi     |  36 +++
- .../boot/dts/microchip/sparx5_pcb125.dts      |   4 +
- .../dts/microchip/sparx5_pcb134_board.dtsi    | 237 ++++++++++++++++++
- .../dts/microchip/sparx5_pcb135_board.dtsi    |  77 ++++++
- .../boot/dts/microchip/sparx5_pcb_common.dtsi |   4 +
- 5 files changed, 358 insertions(+)
+ drivers/pinctrl/samsung/pinctrl-exynos.c | 27 +++++++++++++++---------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index d4d7f9ce627bc..cf712e80615da 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -171,7 +171,43 @@ uart2_pins: uart2-pins {
- 				function = "uart2";
- 			};
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index 84501c785473..1c87cf41602a 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -207,7 +207,7 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
+ /*
+  * irq_chip for gpio interrupts.
+  */
+-static struct exynos_irq_chip exynos_gpio_irq_chip = {
++static const struct exynos_irq_chip exynos_gpio_irq_chip __initconst = {
+ 	.chip = {
+ 		.name = "exynos_gpio_irq_chip",
+ 		.irq_unmask = exynos_irq_unmask,
+@@ -313,7 +313,13 @@ int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
+ 			goto err_domains;
+ 		}
+ 
+-		bank->irq_chip = &exynos_gpio_irq_chip;
++		bank->irq_chip = kmemdup(&exynos_gpio_irq_chip,
++					 sizeof(*bank->irq_chip), GFP_KERNEL);
++		if (!bank->irq_chip) {
++			ret = -ENOMEM;
++			goto err_domains;
++		}
++		bank->irq_chip->chip.name = bank->name;
+ 	}
+ 
+ 	return 0;
+@@ -521,7 +527,7 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 	struct samsung_pin_bank *bank;
+ 	struct exynos_weint_data *weint_data;
+ 	struct exynos_muxed_weint_data *muxed_data;
+-	struct exynos_irq_chip *irq_chip;
++	const struct exynos_irq_chip *irq_chip;
+ 	unsigned int muxed_banks = 0;
+ 	unsigned int i;
+ 	int idx, irq;
+@@ -531,12 +537,7 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 
+ 		match = of_match_node(exynos_wkup_irq_ids, np);
+ 		if (match) {
+-			irq_chip = kmemdup(match->data,
+-				sizeof(*irq_chip), GFP_KERNEL);
+-			if (!irq_chip) {
+-				of_node_put(np);
+-				return -ENOMEM;
+-			}
++			irq_chip = match->data;
+ 			wkup_np = np;
+ 			break;
+ 		}
+@@ -557,7 +558,13 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+ 			return -ENXIO;
+ 		}
+ 
+-		bank->irq_chip = irq_chip;
++		bank->irq_chip = kmemdup(irq_chip, sizeof(*irq_chip),
++					 GFP_KERNEL);
++		if (!bank->irq_chip) {
++			of_node_put(wkup_np);
++			return -ENOMEM;
++		}
++		bank->irq_chip->chip.name = bank->name;
+ 
+ 		if (!of_find_property(bank->of_node, "interrupts", NULL)) {
+ 			bank->eint_type = EINT_TYPE_WKUP_MUX;
+-- 
+2.17.1
 
-+			i2c_pins: i2c-pins {
-+				pins = "GPIO_14", "GPIO_15";
-+				function = "twi";
-+			};
-+
-+			i2c2_pins: i2c2-pins {
-+				pins = "GPIO_28", "GPIO_29";
-+				function = "twi2";
-+			};
-+		};
-+
-+		i2c0: i2c@600101000 {
-+			compatible = "snps,designware-i2c";
-+			status = "disabled";
-+			pinctrl-0 = <&i2c_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x00101000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			i2c-sda-hold-time-ns = <300>;
-+			clock-frequency = <100000>;
-+			clocks = <&ahb_clk>;
- 		};
-
-+		i2c1: i2c@600103000 {
-+			compatible = "snps,designware-i2c";
-+			status = "disabled";
-+			pinctrl-0 = <&i2c2_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x00103000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			i2c-sda-hold-time-ns = <300>;
-+			clock-frequency = <100000>;
-+			clocks = <&ahb_clk>;
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index d7f985f7ee020..91ee5b6cfc37a 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -15,3 +15,7 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&i2c1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 9b2aec400101b..18a535a043686 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -7,9 +7,246 @@
- #include "sparx5_pcb_common.dtsi"
-
- /{
-+	aliases {
-+	    i2c0   = &i2c0;
-+	    i2c100 = &i2c100;
-+	    i2c101 = &i2c101;
-+	    i2c102 = &i2c102;
-+	    i2c103 = &i2c103;
-+	    i2c104 = &i2c104;
-+	    i2c105 = &i2c105;
-+	    i2c106 = &i2c106;
-+	    i2c107 = &i2c107;
-+	    i2c108 = &i2c108;
-+	    i2c109 = &i2c109;
-+	    i2c110 = &i2c110;
-+	    i2c111 = &i2c111;
-+	    i2c112 = &i2c112;
-+	    i2c113 = &i2c113;
-+	    i2c114 = &i2c114;
-+	    i2c115 = &i2c115;
-+	    i2c116 = &i2c116;
-+	    i2c117 = &i2c117;
-+	    i2c118 = &i2c118;
-+	    i2c119 = &i2c119;
-+	};
-+
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
- };
-+
-+&gpio {
-+	i2cmux_pins_i: i2cmux-pins-i {
-+	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
-+		      "GPIO_20", "GPIO_22", "GPIO_36", "GPIO_35",
-+		      "GPIO_50", "GPIO_51", "GPIO_56", "GPIO_57";
-+		function = "twi_scl_m";
-+		output-low;
-+	};
-+	i2cmux_0: i2cmux-0 {
-+		pins = "GPIO_16";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_1: i2cmux-1 {
-+		pins = "GPIO_17";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_2: i2cmux-2 {
-+		pins = "GPIO_18";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_3: i2cmux-3 {
-+		pins = "GPIO_19";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_4: i2cmux-4 {
-+		pins = "GPIO_20";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_5: i2cmux-5 {
-+		pins = "GPIO_22";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_6: i2cmux-6 {
-+		pins = "GPIO_36";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_7: i2cmux-7 {
-+		pins = "GPIO_35";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_8: i2cmux-8 {
-+		pins = "GPIO_50";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_9: i2cmux-9 {
-+		pins = "GPIO_51";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_10: i2cmux-10 {
-+		pins = "GPIO_56";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_11: i2cmux-11 {
-+		pins = "GPIO_57";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+};
-+
-+&axi {
-+	i2c0_imux: i2c0-imux@0 {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
-+	i2c0_emux: i2c0-emux@0 {
-+		compatible = "i2c-mux-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
-+};
-+
-+&i2c0_imux {
-+	pinctrl-names =
-+		"i2c100", "i2c101", "i2c102", "i2c103",
-+		"i2c104", "i2c105", "i2c106", "i2c107",
-+		"i2c108", "i2c109", "i2c110", "i2c111", "idle";
-+	pinctrl-0 = <&i2cmux_0>;
-+	pinctrl-1 = <&i2cmux_1>;
-+	pinctrl-2 = <&i2cmux_2>;
-+	pinctrl-3 = <&i2cmux_3>;
-+	pinctrl-4 = <&i2cmux_4>;
-+	pinctrl-5 = <&i2cmux_5>;
-+	pinctrl-6 = <&i2cmux_6>;
-+	pinctrl-7 = <&i2cmux_7>;
-+	pinctrl-8 = <&i2cmux_8>;
-+	pinctrl-9 = <&i2cmux_9>;
-+	pinctrl-10 = <&i2cmux_10>;
-+	pinctrl-11 = <&i2cmux_11>;
-+	pinctrl-12 = <&i2cmux_pins_i>;
-+	i2c100: i2c_sfp1 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c101: i2c_sfp2 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c102: i2c_sfp3 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c103: i2c_sfp4 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c104: i2c_sfp5 {
-+		reg = <0x4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c105: i2c_sfp6 {
-+		reg = <0x5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c106: i2c_sfp7 {
-+		reg = <0x6>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c107: i2c_sfp8 {
-+		reg = <0x7>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c108: i2c_sfp9 {
-+		reg = <0x8>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c109: i2c_sfp10 {
-+		reg = <0x9>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c110: i2c_sfp11 {
-+		reg = <0xa>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c111: i2c_sfp12 {
-+		reg = <0xb>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-+
-+&i2c0_emux {
-+	mux-gpios = <&gpio 55 GPIO_ACTIVE_HIGH
-+		     &gpio 60 GPIO_ACTIVE_HIGH
-+		     &gpio 61 GPIO_ACTIVE_HIGH
-+		     &gpio 54 GPIO_ACTIVE_HIGH>;
-+	idle-state = <0x8>;
-+	i2c112: i2c_sfp13 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c113: i2c_sfp14 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c114: i2c_sfp15 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c115: i2c_sfp16 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c116: i2c_sfp17 {
-+		reg = <0x4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c117: i2c_sfp18 {
-+		reg = <0x5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c118: i2c_sfp19 {
-+		reg = <0x6>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c119: i2c_sfp20 {
-+		reg = <0x7>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-index 9b2aec400101b..d71f11a10b3d2 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
-@@ -7,9 +7,86 @@
- #include "sparx5_pcb_common.dtsi"
-
- /{
-+	aliases {
-+	    i2c0   = &i2c0;
-+	    i2c152 = &i2c152;
-+	    i2c153 = &i2c153;
-+	    i2c154 = &i2c154;
-+	    i2c155 = &i2c155;
-+	};
-+
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpio 37 GPIO_ACTIVE_LOW>;
- 		priority = <200>;
- 	};
- };
-+
-+&gpio {
-+	i2cmux_pins_i: i2cmux-pins-i {
-+	       pins = "GPIO_35", "GPIO_36",
-+		      "GPIO_50", "GPIO_51";
-+		function = "twi_scl_m";
-+		output-low;
-+	};
-+	i2cmux_s29: i2cmux-0 {
-+		pins = "GPIO_35";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s30: i2cmux-1 {
-+		pins = "GPIO_36";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s31: i2cmux-2 {
-+		pins = "GPIO_50";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+	i2cmux_s32: i2cmux-3 {
-+		pins = "GPIO_51";
-+		function = "twi_scl_m";
-+		output-high;
-+	};
-+};
-+
-+&axi {
-+	i2c0_imux: i2c0-imux@0 {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-parent = <&i2c0>;
-+	};
-+};
-+
-+&i2c0_imux {
-+	pinctrl-names =
-+		"i2c152", "i2c153", "i2c154", "i2c155",
-+		"idle";
-+	pinctrl-0 = <&i2cmux_s29>;
-+	pinctrl-1 = <&i2cmux_s30>;
-+	pinctrl-2 = <&i2cmux_s31>;
-+	pinctrl-3 = <&i2cmux_s32>;
-+	pinctrl-4 = <&i2cmux_pins_i>;
-+	i2c152: i2c_sfp1 {
-+		reg = <0x0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c153: i2c_sfp2 {
-+		reg = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c154: i2c_sfp3 {
-+		reg = <0x2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+	i2c155: i2c_sfp4 {
-+		reg = <0x3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-index 1f99d0db1284f..9d1a082de3e29 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-@@ -13,3 +13,7 @@ &uart0 {
- &uart1 {
- 	status = "okay";
- };
-+
-+&i2c0 {
-+	status = "okay";
-+};
---
-2.27.0
