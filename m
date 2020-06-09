@@ -2,70 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25CEC1F3B19
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 14:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80CFF1F3DD9
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 16:20:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgFIMr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 08:47:56 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54182 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgFIMqX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 08:46:23 -0400
-Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3F19D1227;
-        Tue,  9 Jun 2020 14:46:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1591706778;
-        bh=7whrIeN77UWRmsTr1S+zsP7M0XhqPGZPPuqIh/7NIH0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyP9JX2MWv5mksB6QTdQ5K3EngDF2sSHwmOzAq+oRaA5vcfl53GHpfar2IbXC9lHx
-         FbYFXeOJO/xriftHoBcRIKlK4HuZ+NBv++xrH2kP71jrPdspofYEwtmhgWPocS/Qkg
-         xA0gRZTcyT3x+6oGZR3prnmqLH9YLCudeFX95FY4=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jiri Kosina <trivial@kernel.org>,
-        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 03/17] drivers: gpio: Fix trivial spelling
-Date:   Tue,  9 Jun 2020 13:45:56 +0100
-Message-Id: <20200609124610.3445662-4-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
-References: <20200609124610.3445662-1-kieran.bingham+renesas@ideasonboard.com>
+        id S1728472AbgFIOUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 10:20:31 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:50607 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgFIOU2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 10:20:28 -0400
+Received: from mail-qv1-f50.google.com ([209.85.219.50]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQMmF-1jMRR53xQn-00MLCd; Tue, 09 Jun 2020 16:20:27 +0200
+Received: by mail-qv1-f50.google.com with SMTP id fc4so10156583qvb.1;
+        Tue, 09 Jun 2020 07:20:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533QwtnNPkXPNWdTYqLAM44N+BL7lkWIj+I4tWZY/pv9hwkPNd7f
+        AdFQUH/XJPFXnU6bvg+licBhwO04hLAbWO6oMfM=
+X-Google-Smtp-Source: ABdhPJyWzFtHnwzSbAkz4GLh128cvHYFtPFkfQHnN7U7/MQRzq8WnypIUxaJviPlXrxIobRz1sKlTQMOyvY2voqN0S4=
+X-Received: by 2002:a05:6214:846:: with SMTP id dg6mr3927330qvb.210.1591712425576;
+ Tue, 09 Jun 2020 07:20:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <AM6PR04MB496691DDA4447CD5624EE6E680850@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <20200609104642.GA43074@mwanda>
+In-Reply-To: <20200609104642.GA43074@mwanda>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 9 Jun 2020 16:20:09 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0TivBERWMZcs8Kndb4=Fc41JH6vkxJzMp1FHsazvLfdQ@mail.gmail.com>
+Message-ID: <CAK8P3a0TivBERWMZcs8Kndb4=Fc41JH6vkxJzMp1FHsazvLfdQ@mail.gmail.com>
+Subject: Re: [PATCH] lib: devres: add a comment about the devm_of_iomap() function
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tuowen Zhao <ztuowen@gmail.com>,
+        Denis Efremov <efremov@linux.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        BOUGH CHEN <haibo.chen@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:CAWD5GLUF7L9M18Z7RQteb7Y4M+JH0zHIMqhfGakm/LaCmdP1IL
+ b/w/8iQ7sOifOs17DaEz/3ArZd1TSNmoSa9m1p8XRPEGHunOYZbWwEGCcJ68NYVI6iAgnTu
+ 6IcRZfcXhvEeyBeujwYW03evGEqB6CA6s/uyuoTdxMxMyJbHtwNtm1Roj3qip0GK07DvTOR
+ nBGYvJThXdcZ5mpXZhhiw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QD82GElkA6U=:FHxeeqIehjZLyzBNNZzXi+
+ OaHh5Zgpu4fcSnq76Vf1PKZcmdfmH15OI71eZ/Eq3RKA1M8yViF0L/WrmB6fLRLp4H4MYZrCZ
+ /BT0H4TilXPMC76EzPnZjG/zEV5GYWKgjlUcxnvNi+N+nuan7GtLifwq/FWPDznW0LqU7Ml68
+ 4ByYIQGrBgfWT0P2Zvo23FJhBlsVFc1jlDcgxeJJ4FGOQfrtQaRRL/+81v/8jWz3hEf/0ASai
+ bcHc77PFvzqurGwoRuK09N2ZSyv9SaGBXJpfoP1+QXxf6ZBa+/An9bxCQs4LdGlEP2rwB7tat
+ tRLjCCHXX+1hqwwCTXg7IOxk4Ex09EjMiKAvMi5uKnWpfvgd4qvWYkTccbb9VT5Ify7ONRb29
+ RwPp1nTpz/yeSqpMLxpuZapWwhS68Oiipdb0CK7eEq+kO1BP9KuuojS5MyA2wY+9gTvl9MCRx
+ hlew5iusOaePR8EQRPcLhtPpf/izzX5GZpbqMzEsQc+woUQDpPc/ynp1dGeEBHO313cObUdhm
+ AjjuJyOQGw6LHHi6RDnXmIyaqzoL0sGsCVm+8EKhrGHE2G3xvLS2cCJoO/GKTPqEiHEEjpbNe
+ B/v+/jGzPSjQO11nlnBjBoYju9TTdNMelj0hrhddWQ1q/xYrn9Dys8ApnLNTLcWbknEU8mveR
+ hfd6MxGOXxhoSvO8IEcCCiSdowZ1mHWBDps2dqsuoOxr6JH39GPnCKfsSgXE0p4apf9F4RaCz
+ h5hrs7bZfvHgZkasHrCkNMbXQcYSczzVoYI3g6m2z7rixYBC/0WuxXGjUkFUeI+zl0Rrl4Lne
+ gBUxuN+FHM4E5O5PEruddxo6ZOsDznSaQA7W7z7g/jOB2d5ySw=
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The word 'descriptor' is misspelled throughout the tree.
+On Tue, Jun 9, 2020 at 12:47 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> We recently introduced a bug when we tried to convert of_iomap() to
+> devm_of_iomap().  The problem was that there were two drivers mapping
+> the same io region.  The first driver was using of_iomap() and the
+> second driver was using devm_of_iomap() and the kernel booted fine.
+> When we converted the first drive to use devm_of_iomap() then the second
+> driver failed with -EBUSY and the kernel couldn't boot.
+>
+> Let's add a comment to prevent this sort of mistake in the future.
+>
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Fix it up accordingly:
-    decriptors -> descriptors
+Good idea,
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- drivers/gpio/TODO | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index b989c9352da2..e560e45e84f8 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -5,7 +5,7 @@ subsystem.
- GPIO descriptors
- 
- Starting with commit 79a9becda894 the GPIO subsystem embarked on a journey
--to move away from the global GPIO numberspace and toward a decriptor-based
-+to move away from the global GPIO numberspace and toward a descriptor-based
- approach. This means that GPIO consumers, drivers and machine descriptions
- ideally have no use or idea of the global GPIO numberspace that has/was
- used in the inception of the GPIO subsystem.
--- 
-2.25.1
-
+Acked-by: Arnd Bergmann <arnd@arndb.de>
