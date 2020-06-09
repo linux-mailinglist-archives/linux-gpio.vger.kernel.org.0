@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E51821F359A
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 09:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89B071F35A8
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 10:03:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgFIH6c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 03:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        id S1727124AbgFIID4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 04:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgFIH63 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 03:58:29 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F02C03E97C
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2020 00:58:27 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id r77so8730462ior.3
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2020 00:58:27 -0700 (PDT)
+        with ESMTP id S1726980AbgFIIDy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 04:03:54 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B16EC05BD43
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2020 01:03:54 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 18so19383791iln.9
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2020 01:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=D0Izobairq3HPGIM7wB1F+v5CJ0c4Z0+kAZbB2rwCBI=;
-        b=F+Y1CC9/NEP+GxLXxOTnfU4bNjYY1wz/x6+SLxjPKqio2rOqvkD87hsXOMdaAq0Xud
-         ZllRkeQk689ZblVTsazfI4A7GlJTegbZKyX2ZTP1pNjAVQupq+fFnyXLZtZuP/1nub8o
-         puChyFupDjWLtQvJSLILRou6XOJjURzf6OHkdVye3xCHgvnb738v3os4lRvrqzheh42n
-         A6Xdv5RCBxlU05vi+c5IIEHzyeBUqpxO4fiNnSRK/u//KAfUoJj9+d7XvE3T1lRRtWSV
-         CKr68NLRM5exe/mCIfwlN9X1HrseA7RBy4GEzdxRWwg7kxpfNLauOorlv0d7QZlGJA43
-         3aJQ==
+        bh=j1zGYv5vIgLOimP3OkCOR1BJL86Aah0WsXhX6Tk0Sdg=;
+        b=j64aX7djANteYpMcDhvc55pN0tloE0TEjFQh/23kTMOaSBk6RmhppYEFXMkoGdg4sw
+         5BIUnaXkHt9/5YDTA7pX98HXD8igreLE9KJ91WJkbu+A326LN0sucvCR1CVcfVpxgUtn
+         ozNn7T1mY2F525QmEg2vBq9VaIvNzOcd0OsB6VuDysK+dVg40MaLbWxMacg9Tw6KFLAW
+         mDXsIHq+pSdeeUUdTk788NoXburAZQWJwhw1U4LBo5aUwtYeSffoQY9SaBGqNfCnUebs
+         mnu0NGGIoDW4S7rHUTj0lX4SzoPjIPBIRCNNbsthL8jLJMGnH3V1UmQs1kIxAPTcVBom
+         qdqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=D0Izobairq3HPGIM7wB1F+v5CJ0c4Z0+kAZbB2rwCBI=;
-        b=moaUTkldU1RdeGWuyeF5LJy3+/2kiw8a5vWNR3EtF2DO2oBSKRxwaIU2TkeFllpE/V
-         umHWwlaoR59pw5Tu+6DqXIxMrT7nQz3wggu0weKcDG/MyNHzyujXsmyAqaNN+XkyzwNB
-         0T6phjeQZX8Qy8UtQxNJobJmF0ccIjHHkygj7XJqjp/l8V5GVTnn+IWMbyhCQ0pX05Ys
-         Kn/3eLuISIYCrZAQtekmYNhL/+I24n4YZThV5p1x+iw1JCq0k++1qkOBPyGBo+3W1KFk
-         Ev/upzl/TrOXGk5SgyDbJpohlmuURK9+OYG0gzKeZnc+OTmGgBjXEV21lAzu80/Etiy2
-         PESg==
-X-Gm-Message-State: AOAM530YXTbLYI8JaqeIzafSMTbdpsm/pqd6XNDOPjjukikZLbgVdyrn
-        gUmlymI/y3uhMeyuHnKYEZy+hp6qpR7uARZW8hecng==
-X-Google-Smtp-Source: ABdhPJx2bQ9MpurOw+kbFkTpuwXAUL7qWR5/nMePphcxKeTXiD5GWJBTCE0v27bLoKC5cHGy8OdCkAkiYPTXgWfz/WY=
-X-Received: by 2002:a6b:39d7:: with SMTP id g206mr25951591ioa.31.1591689507052;
- Tue, 09 Jun 2020 00:58:27 -0700 (PDT)
+        bh=j1zGYv5vIgLOimP3OkCOR1BJL86Aah0WsXhX6Tk0Sdg=;
+        b=naAL4N1qLzIhziUhJZMLS6ffNivqNGBnNkmtSmQmMZB6iM7OsRnKFSBj3V2Sakx6E4
+         lOvBSe36yA+nCTKEPSa/cH55auQHusaI1B7o91CL4Yon8M0CqzoO9hnh56eI+trtOIny
+         vcLnM8XM1qiRzlFem5NrFQ1af2E4h//XNTtD8iMCoCXCncaBQD4Zw2HVsUmGiITbzJWa
+         LGqa3I0b6d7O5hDMJVVHlNXN1NLSSFNDsk+/RWtKaX+0F7OYZUnSX2xeR/IwsnAzDxjP
+         TeUnvB4FWnaPCueRstGuRaVGIsx9xcvB75pPDwFCbsxeldnH1Wg51APgCaDor0MHNCXS
+         OBbw==
+X-Gm-Message-State: AOAM531c0C8TCN7KAylb6NXnjx8PlO5sJFE7wYLIP7yRafi4gGu25o6j
+        r5tFE+AL12owXuhmZs036s6oogkaE4v/vYmmeC5r9Q==
+X-Google-Smtp-Source: ABdhPJxCIRFqxlaeMcEOtPwe/tKI+0LrF+62rvn8x4i3MMq7i7bSsnyaDQVz1wSDBOWugHPjhH3QtP8L9elO1yeZsss=
+X-Received: by 2002:a92:aa07:: with SMTP id j7mr26117162ili.40.1591689833582;
+ Tue, 09 Jun 2020 01:03:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191224120709.18247-1-brgl@bgdev.pl> <20191224120709.18247-13-brgl@bgdev.pl>
- <20200609002346.GA6042@sol>
-In-Reply-To: <20200609002346.GA6042@sol>
+References: <20200516064507.19058-1-warthog618@gmail.com> <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
+ <20200604160006.GA5730@sol> <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
+ <20200606015647.GA8099@sol>
+In-Reply-To: <20200606015647.GA8099@sol>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Jun 2020 09:58:16 +0200
-Message-ID: <CAMRc=Mf+xYFaznq+O=wEjb3UyanuH5b3hvOpNx9Jcx+Vm65g7A@mail.gmail.com>
-Subject: Re: [PATCH v4 12/13] gpiolib: add new ioctl() for monitoring changes
- in line info
+Date:   Tue, 9 Jun 2020 10:03:42 +0200
+Message-ID: <CAMRc=Mdz__0TD8Qa33KRK9PE6jLvxa_O_dDjA54MHBLOeMxWfg@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
 To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -66,42 +64,99 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-wt., 9 cze 2020 o 02:23 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a):
->
-> On Tue, Dec 24, 2019 at 01:07:08PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
->
-> [snip!]
->
-> > +static int lineinfo_changed_notify(struct notifier_block *nb,
-> > +                                unsigned long action, void *data)
-> > +{
-> > +     struct gpio_chardev_data *priv =3D to_gpio_chardev_data(nb);
-> > +     struct gpioline_info_changed chg;
-> > +     struct gpio_desc *desc =3D data;
-> > +     int ret;
-> > +
-> > +     if (!test_bit(desc_to_gpio(desc), priv->watched_lines))
-> > +             return NOTIFY_DONE;
-> > +
-> > +     memset(&chg, 0, sizeof(chg));
-> > +     chg.info.line_offset =3D gpio_chip_hwgpio(desc);
-> > +     chg.event_type =3D action;
-> > +     chg.timestamp =3D ktime_get_real_ns();
-> > +     gpio_desc_to_lineinfo(desc, &chg.info);
-> > +
->
-> Is this call legal?  It can sleep - in fact you recently changed that
-> very function to move a mutex call outside of a spinlock protected sectio=
-n.
-> Here it is being called within an RCU lock, as lineinfo_changed_notify
-> is at the end of an atomic_notifier_call_chain.
+sob., 6 cze 2020 o 03:56 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
+:
 >
 
-Yeah, this is clearly wrong and lockdep would complain about invalid
-wait context. I'm trying to remember why I went for an atomic notifier
-chain here though... At first glance it doesn't look like the chain
-could be called from atomic context anywhere.
+[snip!]
+
+> >
+> > I'd say yes - consolidation and reuse of data structures is always
+> > good and normally they are going to be wrapped in some kind of
+> > low-level user-space library anyway.
+> >
+>
+> Ok, and I've changed the values field name to bitmap, along with the chan=
+ge
+> to a bitmap type, so the stuttering is gone.
+>
+> And, as the change to bitmap substantially reduced the size of
+> gpioline_config, I now embed that in the gpioline_info instead of
+> duplicating all the other fields.  The values field will be zeroed
+> when returned within info.
+>
+
+Could you post an example, I'm not sure I follow.
+
+> > > And I've renamed "default_values" to just "values" in my latest draft
+> > > which doesn't help with the stuttering.
+> > >
+> >
+> > Why though? Aren't these always default values for output?
+> >
+>
+> To me "default" implies a fallback value, and that de-emphasises the
+> fact that the lines will be immediately set to those values as they
+> are switched to outputs.
+> These are the values the outputs will take - the "default" doesn't add
+> anything.
+>
+
+Fair enough, values it is.
+
+[snip!]
+
+> > >
+> > > I'm also kicking around the idea of adding sequence numbers to events=
+,
+> > > one per line and one per handle, so userspace can more easily detect
+> > > mis-ordering or buffer overflows.  Does that make any sense?
+> > >
+> >
+> > Hmm, now that you mention it - and in the light of the recent post by
+> > Ryan Lovelett about polling precision - I think it makes sense to have
+> > this. Especially since it's very easy to add.
+> >
+>
+> OK.  I was only thinking about the edge events, but you might want it
+> for your line info events on the chip fd as well?
+>
+
+I don't see the need for it now, but you never know. Let's leave it
+out for now and if we ever need it - we now have the appropriate
+padding.
+
+> > > And would it be useful for userspace to be able to influence the size=
+ of
+> > > the event buffer (currently fixed at 16 events per line)?
+> > >
+> >
+> > Good question. I would prefer to not overdo it though. The event
+> > request would need to contain the desired kfifo size and we'd only
+> > allow to set it on request, right?
+> >
+>
+> Yeah, it would only be relevant if edge detection was set and, as per
+> edge detection itself, would only be settable via the request, not
+> via set_config.  It would only be a suggestion, as the kfifo size gets
+> rounded up to a power of 2 anyway.  It would be capped - I'm open to
+> suggestions for a suitable max value.  And the 0 value would mean use
+> the default - currently 16 per line.
+>
+
+This sounds good. How about 512 for max value for now and we can
+always increase it if needed. I don't think we should explicitly cap
+it though - let the user specify any value and just silently limit it
+to 512 in the kernel.
+
+> If you want the equivalent for the info watch then I'm not sure where to
+> hook it in.  It should be at the chip scope, and there isn't any
+> suitable ioctl to hook it into so it would need a new one - maybe a
+> set_config for the chip?  But the buffer size would only be settable up
+> until you add a watch.
+>
+
+I don't think we need this. Status changes are naturally much less
+frequent and the potential for buffer overflow is miniscule here.
 
 Bart
