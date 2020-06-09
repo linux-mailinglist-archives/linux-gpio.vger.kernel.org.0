@@ -2,107 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAA731F40CD
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 18:28:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E65441F40E8
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 18:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgFIQ2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 12:28:34 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36856 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbgFIQ2e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 12:28:34 -0400
-Received: by mail-io1-f67.google.com with SMTP id r77so10472969ior.3;
-        Tue, 09 Jun 2020 09:28:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A6vd48ocHYfhIgGf9VmwdBfWMzr2z9+KHgzkdfZG/Pw=;
-        b=gdc5NQvllc6HFYMiHDxPVFrXN1WzeG6f8xWMyfju/+9W1a/dTIaU/TiTGVumkwsnmk
-         N1rfHuKlDQimxSYMvp91xWBOHVyuT1wOSVDxYlTJYqjTb6IM3kYrdj1QB2gnztgHDVVx
-         T9jeeXvkmkPvPj7RyutsbMgkJ8UxJ/QcJQpHgWazEt0SENDEy1G9OBRhv3XvO19yxEa3
-         vywbsfTsCsQgIgQIhlmAxS/ecYzbEUJlbQ6/5MCJVV5eVhrbkMEp7lAB35SxCelzlRNV
-         ezzpl+DW8XdZHIRw8OxyW6D7XxUMyw3ZDt+Q58/KcjndZ0DjF9+TFCX85SKtXBqvqFch
-         SrcA==
-X-Gm-Message-State: AOAM5321vBUx3YzsRbR/08cBtvMMGXjHs0lmIQkXipXsR38MJDA8fFgp
-        V1gko/kAdGR1ZRfkDt1qZA==
-X-Google-Smtp-Source: ABdhPJxppbDKoA41o6uRyry3FgAKOA+jukh4Ub5WxT2GMgvWiM/pMXyEGjvEw/XePOisx3B4ZJrI5Q==
-X-Received: by 2002:a05:6638:1483:: with SMTP id j3mr27698460jak.65.1591720112867;
-        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id y13sm7449594iob.51.2020.06.09.09.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2020 09:28:32 -0700 (PDT)
-Received: (nullmailer pid 1020807 invoked by uid 1000);
-        Tue, 09 Jun 2020 16:28:30 -0000
-Date:   Tue, 9 Jun 2020 10:28:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Mark Brown <broonie@kernel.org>, linux-watchdog@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
+        id S1726449AbgFIQbR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 12:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbgFIQbR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 9 Jun 2020 12:31:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD0FE20774;
+        Tue,  9 Jun 2020 16:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591720277;
+        bh=KGsTckml0xbEI9J0TlXRHHhvg6RDFGQ4i5mIyxkxaRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2Vi1eeq41LwbYuDhmRV6SXYFOUt7Zcb/rvNpdZsjsEudsphM5ldCTWGm3IQU9UqSx
+         C5gajI05pVV1hIBCo8l023M0xJyOo6ztJMiYOzgrT5Fh6nXoWLPzc0KM5s1YPXXQYY
+         K1Eg7uaM9FrGJIOhe6EcDaLq09mbI+5+B5R9RiR4=
+Date:   Tue, 9 Jun 2020 17:31:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Lee Jones <lee.jones@linaro.org>, Li Yang <leoyang.li@nxp.com>,
-        linux-gpio@vger.kernel.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/11] dt-bindings: mfd: Add bindings for sl28cpld
-Message-ID: <20200609162830.GA1019634@bogus>
-References: <20200604211039.12689-1-michael@walle.cc>
- <20200604211039.12689-2-michael@walle.cc>
+        Lee Jones <lee.jones@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: max77620: Convert to json-schema
+Message-ID: <20200609163115.GL4583@sirena.org.uk>
+References: <20200609162621.1769610-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AGBBLMjITsWHeOTZ"
 Content-Disposition: inline
-In-Reply-To: <20200604211039.12689-2-michael@walle.cc>
+In-Reply-To: <20200609162621.1769610-1-thierry.reding@gmail.com>
+X-Cookie: Be careful!  Is it classified?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 04 Jun 2020 23:10:29 +0200, Michael Walle wrote:
-> Add a device tree bindings for the board management controller found on
-> the Kontron SMARC-sAL28 board.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
->  .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
->  .../kontron,sl28cpld-intc.yaml                |  54 +++++++
->  .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
->  .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
->  .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
->  6 files changed, 358 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
->  create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->  create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
->  create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-> 
 
+--AGBBLMjITsWHeOTZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On Tue, Jun 09, 2020 at 06:26:21PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+>=20
+> Convert the Maxim MAX77620 PMIC device tree bindings from free-form text
+> format to json-schema.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.example.dt.yaml: sl28cpld@4a: 'gpio@1a', 'gpio@1b', 'hwmon@b', 'interrupt-controller@1c', 'pwm@c', 'pwm@e' do not match any of the regexes: '^gpio(@[0-9]+)?$', '^hwmon(@[0-9]+)?$', '^interrupt-controller(@[0-9]+)?$', '^pwm(@[0-9]+)?$', '^watchdog(@[0-9]+)?$', 'pinctrl-[0-9]+'
+Acked-by: Mark Brown <broonie@kernel.org>
 
-See https://patchwork.ozlabs.org/patch/1303780
+--AGBBLMjITsWHeOTZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+-----BEGIN PGP SIGNATURE-----
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7fuVIACgkQJNaLcl1U
+h9CftAf/U/sNqwgkbzXWIw+NaofN1U68XUh173YGDAYEDgYZrv+dd7iVw7bOXuPe
++j5x5gtNssHTKVU+W9umxb1yRMJ/AZCoAiCruVFWmgd+XXMatFG73X+DdPQZyR+9
+kicOZlf+I95Gz31Ih5dyZ5waOgQMOf8NARAT/V7pwJsepGWRLercdCVePXDtFx6I
+s4Fv8fXfMklu8VR4+DkcFzV78FCDDpRlcCwOQOlHdYKrzlhMETutMzQGwJg4eMYA
+UXby6+vQPPC3fEkEk3o6EA9/YuI4CrpiWBfTAGnzg3uPZuz1zDcJ70hmscSkw54w
+OL9VSs8BdDlIE2ucAFDsXWNxBI3ewg==
+=yEfK
+-----END PGP SIGNATURE-----
 
-Please check and re-submit.
-
+--AGBBLMjITsWHeOTZ--
