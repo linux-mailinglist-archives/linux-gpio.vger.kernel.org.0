@@ -2,161 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89B071F35A8
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 10:03:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F132B1F35B7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 10:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgFIID4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 04:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbgFIIDy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 04:03:54 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B16EC05BD43
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Jun 2020 01:03:54 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id 18so19383791iln.9
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jun 2020 01:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j1zGYv5vIgLOimP3OkCOR1BJL86Aah0WsXhX6Tk0Sdg=;
-        b=j64aX7djANteYpMcDhvc55pN0tloE0TEjFQh/23kTMOaSBk6RmhppYEFXMkoGdg4sw
-         5BIUnaXkHt9/5YDTA7pX98HXD8igreLE9KJ91WJkbu+A326LN0sucvCR1CVcfVpxgUtn
-         ozNn7T1mY2F525QmEg2vBq9VaIvNzOcd0OsB6VuDysK+dVg40MaLbWxMacg9Tw6KFLAW
-         mDXsIHq+pSdeeUUdTk788NoXburAZQWJwhw1U4LBo5aUwtYeSffoQY9SaBGqNfCnUebs
-         mnu0NGGIoDW4S7rHUTj0lX4SzoPjIPBIRCNNbsthL8jLJMGnH3V1UmQs1kIxAPTcVBom
-         qdqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j1zGYv5vIgLOimP3OkCOR1BJL86Aah0WsXhX6Tk0Sdg=;
-        b=naAL4N1qLzIhziUhJZMLS6ffNivqNGBnNkmtSmQmMZB6iM7OsRnKFSBj3V2Sakx6E4
-         lOvBSe36yA+nCTKEPSa/cH55auQHusaI1B7o91CL4Yon8M0CqzoO9hnh56eI+trtOIny
-         vcLnM8XM1qiRzlFem5NrFQ1af2E4h//XNTtD8iMCoCXCncaBQD4Zw2HVsUmGiITbzJWa
-         LGqa3I0b6d7O5hDMJVVHlNXN1NLSSFNDsk+/RWtKaX+0F7OYZUnSX2xeR/IwsnAzDxjP
-         TeUnvB4FWnaPCueRstGuRaVGIsx9xcvB75pPDwFCbsxeldnH1Wg51APgCaDor0MHNCXS
-         OBbw==
-X-Gm-Message-State: AOAM531c0C8TCN7KAylb6NXnjx8PlO5sJFE7wYLIP7yRafi4gGu25o6j
-        r5tFE+AL12owXuhmZs036s6oogkaE4v/vYmmeC5r9Q==
-X-Google-Smtp-Source: ABdhPJxCIRFqxlaeMcEOtPwe/tKI+0LrF+62rvn8x4i3MMq7i7bSsnyaDQVz1wSDBOWugHPjhH3QtP8L9elO1yeZsss=
-X-Received: by 2002:a92:aa07:: with SMTP id j7mr26117162ili.40.1591689833582;
- Tue, 09 Jun 2020 01:03:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200516064507.19058-1-warthog618@gmail.com> <CAMpxmJUbC4qmUGM0Z-6hXsYPRSpEpNM7iXgc7XbMcf_epi0Lig@mail.gmail.com>
- <20200604160006.GA5730@sol> <CAMRc=MfS1sCTU3vs5Gq_6+Ubt_89HX34mqabtpGbAASo+SfzSw@mail.gmail.com>
- <20200606015647.GA8099@sol>
-In-Reply-To: <20200606015647.GA8099@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 9 Jun 2020 10:03:42 +0200
-Message-ID: <CAMRc=Mdz__0TD8Qa33KRK9PE6jLvxa_O_dDjA54MHBLOeMxWfg@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
+        id S1727113AbgFIIHj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 04:07:39 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:35433 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgFIIHi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 04:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1591690057; x=1623226057;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6ZRgHyR7eaQxBSmCf9+/YJqcKtpYgQquClsNmaPOZws=;
+  b=B9Osgtbr5iqb8F5ux1IeGdsaoickpdQZTOhuH3hOwVdRz9p08DwTj4cP
+   i5bsTFGjX0F7uBeyAMEkocBYtNgaVZKYgNlAo5INwwnGmNIaUu1ypl3Cn
+   Q3Z05DXbEtVAuPyp8Gik5pyKSws3nKHCoYc5AdZMc8VPJCqicesinbkGv
+   a4HlsbnvwFgKTEa9onoESLSCC6cFJlqXOoIV0emrNlTyiMquMH5uRBmcI
+   iXiINWiOblqpvTxAToFdHisk82J4NHjwyyGt3INZNLbVcZPJ7nV1pjHDR
+   nu/PmNpQak1x8OAt9j1/qk9Np1bZaFMkWgNb/mzpQVpWVxahbrAmM9QAc
+   g==;
+IronPort-SDR: RjOhFtpkmZ128gT0j3F+3j2mTuMXCigKJY6U7cS1ZRM5NYDx/g34g5GDf/fKNv/GYE3BQXG7BK
+ 4LOnHR0xIqYY1DYj11oXF+vA7Wpt8b6GHcfUE38oA48jV+WeLQ1Uh+PYE39pLUN9dZgU6ATZmK
+ qq/WVPvbvqisd7kbiCKf1WrpWr+d+wfmAX+164IsnkycteONTuhRWsKcUeP/Xqxmp3XTd9pxoF
+ QyJWp79t4aXwORiyNhWoIioJGtHy45qhvnn8hi3LdcDXL0CLHrkl5i13qLws3HBIb+RrGtCjHn
+ YV0=
+X-IronPort-AV: E=Sophos;i="5.73,491,1583218800"; 
+   d="scan'208";a="79412603"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Jun 2020 01:07:37 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 9 Jun 2020 01:07:36 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1847.3 via Frontend Transport; Tue, 9 Jun 2020 01:07:33 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        "Stephen Boyd" <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 01/10] dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+Date:   Tue, 9 Jun 2020 10:07:00 +0200
+Message-ID: <20200609080709.9654-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200608123024.5330-1-lars.povlsen@microchip.com>
+References: <20200608123024.5330-1-lars.povlsen@microchip.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sob., 6 cze 2020 o 03:56 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
-:
->
+This adds the main Sparx5 SoC DT documentation file, with information
+abut the supported board types.
 
-[snip!]
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ .../bindings/arm/microchip,sparx5.yaml        | 65 +++++++++++++++++++
+ .../devicetree/bindings/mfd/syscon.yaml       |  1 +
+ 2 files changed, 66 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
 
-> >
-> > I'd say yes - consolidation and reuse of data structures is always
-> > good and normally they are going to be wrapped in some kind of
-> > low-level user-space library anyway.
-> >
->
-> Ok, and I've changed the values field name to bitmap, along with the chan=
-ge
-> to a bitmap type, so the stuttering is gone.
->
-> And, as the change to bitmap substantially reduced the size of
-> gpioline_config, I now embed that in the gpioline_info instead of
-> duplicating all the other fields.  The values field will be zeroed
-> when returned within info.
->
+diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+new file mode 100644
+index 0000000000000..ecf6fa12e6ad2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+@@ -0,0 +1,65 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip Sparx5 Boards Device Tree Bindings
++
++maintainers:
++  - Lars Povlsen <lars.povlsen@microchip.com>
++
++description: |+
++   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
++   gigabit TSN-capable gigabit switches.
++
++   The SparX-5 Ethernet switch family provides a rich set of switching
++   features such as advanced TCAM-based VLAN and QoS processing
++   enabling delivery of differentiated services, and security through
++   TCAM-based frame processing using versatile content aware processor
++   (VCAP)
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: The Sparx5 pcb125 board is a modular board,
++          which has both spi-nor and eMMC storage. The modular design
++          allows for connection of different network ports.
++        items:
++          - const: microchip,sparx5-pcb125
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb134 is a pizzabox form factor
++          gigabit switch with 20 SFP ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb134
++          - const: microchip,sparx5
++
++      - description: The Sparx5 pcb135 is a pizzabox form factor
++          gigabit switch with 48+4 Cu ports. It features spi-nor and
++          either spi-nand or eMMC storage (mount option).
++        items:
++          - const: microchip,sparx5-pcb135
++          - const: microchip,sparx5
++
++  axi@600000000:
++    type: object
++    description: the root node in the Sparx5 platforms must contain
++      an axi bus child node. They are always at physical address
++      0x600000000 in all the Sparx5 variants.
++    properties:
++      compatible:
++        items:
++          - const: simple-bus
++
++    required:
++      - compatible
++
++required:
++  - compatible
++  - axi@600000000
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 19bdaf781853b..f3fba860d3cc5 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -38,6 +38,7 @@ properties:
+               - allwinner,sun8i-h3-system-controller
+               - allwinner,sun8i-v3s-system-controller
+               - allwinner,sun50i-a64-system-controller
++              - microchip,sparx5-cpu-syscon
 
-Could you post an example, I'm not sure I follow.
+           - const: syscon
 
-> > > And I've renamed "default_values" to just "values" in my latest draft
-> > > which doesn't help with the stuttering.
-> > >
-> >
-> > Why though? Aren't these always default values for output?
-> >
->
-> To me "default" implies a fallback value, and that de-emphasises the
-> fact that the lines will be immediately set to those values as they
-> are switched to outputs.
-> These are the values the outputs will take - the "default" doesn't add
-> anything.
->
-
-Fair enough, values it is.
-
-[snip!]
-
-> > >
-> > > I'm also kicking around the idea of adding sequence numbers to events=
-,
-> > > one per line and one per handle, so userspace can more easily detect
-> > > mis-ordering or buffer overflows.  Does that make any sense?
-> > >
-> >
-> > Hmm, now that you mention it - and in the light of the recent post by
-> > Ryan Lovelett about polling precision - I think it makes sense to have
-> > this. Especially since it's very easy to add.
-> >
->
-> OK.  I was only thinking about the edge events, but you might want it
-> for your line info events on the chip fd as well?
->
-
-I don't see the need for it now, but you never know. Let's leave it
-out for now and if we ever need it - we now have the appropriate
-padding.
-
-> > > And would it be useful for userspace to be able to influence the size=
- of
-> > > the event buffer (currently fixed at 16 events per line)?
-> > >
-> >
-> > Good question. I would prefer to not overdo it though. The event
-> > request would need to contain the desired kfifo size and we'd only
-> > allow to set it on request, right?
-> >
->
-> Yeah, it would only be relevant if edge detection was set and, as per
-> edge detection itself, would only be settable via the request, not
-> via set_config.  It would only be a suggestion, as the kfifo size gets
-> rounded up to a power of 2 anyway.  It would be capped - I'm open to
-> suggestions for a suitable max value.  And the 0 value would mean use
-> the default - currently 16 per line.
->
-
-This sounds good. How about 512 for max value for now and we can
-always increase it if needed. I don't think we should explicitly cap
-it though - let the user specify any value and just silently limit it
-to 512 in the kernel.
-
-> If you want the equivalent for the info watch then I'm not sure where to
-> hook it in.  It should be at the chip scope, and there isn't any
-> suitable ioctl to hook it into so it would need a new one - maybe a
-> set_config for the chip?  But the buffer size would only be settable up
-> until you add a watch.
->
-
-I don't think we need this. Status changes are naturally much less
-frequent and the potential for buffer overflow is miniscule here.
-
-Bart
+--
+2.27.0
