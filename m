@@ -2,89 +2,211 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 702AE1F3E2D
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 16:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B69841F3E63
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jun 2020 16:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgFIOc0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 10:32:26 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49326 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730544AbgFIOcY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 9 Jun 2020 10:32:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 233021A13E5;
-        Tue,  9 Jun 2020 16:32:22 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 97E891A13CA;
-        Tue,  9 Jun 2020 16:32:17 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1EA90402FF;
-        Tue,  9 Jun 2020 22:32:12 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 9/9] pinctrl: imx8dxl: Support building as module
-Date:   Tue,  9 Jun 2020 22:21:25 +0800
-Message-Id: <1591712485-20609-10-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
-References: <1591712485-20609-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1730487AbgFIOih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Jun 2020 10:38:37 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:36211 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgFIOig (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 10:38:36 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 1B4C422F2D;
+        Tue,  9 Jun 2020 16:38:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591713512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3ZPJRQPjyIuPfU5SHFsD+L8Q03R3+eZsQvqJ5K0dqDQ=;
+        b=cEH2mdWXJgiXk5AYmdHK2ORPPLW0kmX5gHUPbeGjN4COswBGwClKjt2xvIVY37IpTQHWrV
+        5w99q1qD+cl6dn+sw3zbCeKnqavpkSE/lERuAHNegK905kSkxRCahqrr4BxkdtV93EcvCO
+        sDDLQ2q+b/rGGOqSyyduIDIYa9RDBo8=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 09 Jun 2020 16:38:31 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200609064735.GH4106@dell>
+References: <20200605065709.GD3714@dell>
+ <20200605105026.GC5413@sirena.org.uk>
+ <c5632bfab3956265e90fc2fb6c0b3cae@walle.cc>
+ <20200606114645.GB2055@sirena.org.uk>
+ <dc052a5c77171014ecc465b1da8b7ef8@walle.cc> <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <32287ac0488f7cbd5a7d1259c284e554@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Support building i.MX8DXL pinctrl driver as module.
+Am 2020-06-09 08:47, schrieb Lee Jones:
+> On Mon, 08 Jun 2020, Michael Walle wrote:
+> 
+>> Am 2020-06-08 20:56, schrieb Lee Jones:
+>> > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> >
+>> > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+>> > > > +Cc: some Intel people WRT our internal discussion about similar
+>> > > > problem and solutions.
+>> > > >
+>> > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+>> > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+>> > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+>> > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+>> > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+>> > > >
+>> > > > ...
+>> > > >
+>> > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+>> > > > > sometimes intertwined batches of register sets to be consumed by
+>> > > > > multiple (sub-)devices spanning different subsystems.
+>> > > > >
+>> > > > > Actually scrap that.  The most common case I see is a single Regmap
+>> > > > > covering all child-devices.
+>> > > >
+>> > > > Yes, because often we need a synchronization across the entire address
+>> > > > space of the (parent) device in question.
+>> > > >
+>> > > > >  It would be great if there was a way in
+>> > > > > which we could make an assumption that the entire register address
+>> > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+>> > > > > each of the devices described by its child-nodes.  Probably by picking
+>> > > > > up on the 'simple-mfd' compatible string in the first instance.
+>> > > > >
+>> > > > > Rob, is the above something you would contemplate?
+>> > > > >
+>> > > > > Michael, do your register addresses overlap i.e. are they intermingled
+>> > > > > with one another?  Do multiple child devices need access to the same
+>> > > > > registers i.e. are they shared?
+>> > >
+>> > > No they don't overlap, expect for maybe the version register, which is
+>> > > just there once and not per function block.
+>> >
+>> > Then what's stopping you having each device Regmap their own space?
+>> 
+>> Because its just one I2C device, AFAIK thats not possible, right?
+> 
+> Not sure what (if any) the restrictions are.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- drivers/pinctrl/freescale/Kconfig           | 2 +-
- drivers/pinctrl/freescale/pinctrl-imx8dxl.c | 9 +++------
- 2 files changed, 4 insertions(+), 7 deletions(-)
+You can only have one device per I2C address. Therefore, I need one 
+device
+which is enumerated by the I2C bus, which then enumerates its 
+sub-devices.
+I thought this was one of the use cases for MFD. (Regardless of how a
+sub-device access its registers). So even in the "simple-regmap" case 
+this
+would need to be an i2c device.
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 4a9c19b..286bbbd 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -167,7 +167,7 @@ config PINCTRL_IMX8QXP
- 	  Say Y here to enable the imx8qxp pinctrl driver
- 
- config PINCTRL_IMX8DXL
--	bool "IMX8DXL pinctrl driver"
-+	tristate "IMX8DXL pinctrl driver"
- 	depends on IMX_SCU && ARCH_MXC && ARM64
- 	select PINCTRL_IMX
- 	help
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-index 7f32e57..c11fcfb 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
-@@ -165,6 +165,7 @@ static const struct of_device_id imx8dxl_pinctrl_of_match[] = {
- 	{ .compatible = "fsl,imx8dxl-iomuxc", },
- 	{ /* sentinel */ }
- };
-+MODULE_DEVICE_TABLE(of, imx8dxl_pinctrl_of_match);
- 
- static int imx8dxl_pinctrl_probe(struct platform_device *pdev)
- {
-@@ -185,9 +186,5 @@ static struct platform_driver imx8dxl_pinctrl_driver = {
- 	},
- 	.probe = imx8dxl_pinctrl_probe,
- };
--
--static int __init imx8dxl_pinctrl_init(void)
--{
--	return platform_driver_register(&imx8dxl_pinctrl_driver);
--}
--arch_initcall(imx8dxl_pinctrl_init);
-+module_platform_driver(imx8dxl_pinctrl_driver);
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+E.g.
 
+&i2cbus {
+   mfd-device@10 {
+     compatible = "simple-regmap", "simple-mfd";
+     reg = <10>;
+     regmap,reg-bits = <8>;
+     regmap,val-bits = <8>;
+     sub-device@0 {
+       compatible = "vendor,sub-device0";
+       reg = <0>;
+     };
+     ...
+};
+
+Or if you just want the regmap:
+
+&soc {
+   regmap: regmap@fff0000 {
+     compatible = "simple-regmap";
+     reg = <0xfff0000>;
+     regmap,reg-bits = <16>;
+     regmap,val-bits = <32>;
+   };
+
+   enet-which-needs-syscon-too@1000000 {
+     vendor,ctrl-regmap = <&regmap>;
+   };
+};
+
+Similar to the current syscon (which is MMIO only..).
+
+-michael
+
+> 
+> I can't think of any reasons why not, off the top of my head.
+> 
+> Does Regmap only deal with shared accesses from multiple devices
+> accessing a single register map, or can it also handle multiple
+> devices communicating over a single I2C channel?
+> 
+> One for Mark perhaps.
+> 
+>> > The issues I wish to resolve using 'simple-mfd' are when sub-devices
+>> > register maps overlap and intertwine.
+> 
+> [...]
+> 
+>> > > > > What do these bits configure?
+>> > >
+>> > > - hardware strappings which have to be there before the board powers
+>> > > up,
+>> > >   like clocking mode for different SerDes settings
+>> > > - "keep-in-reset" bits for onboard peripherals if you want to save
+>> > > power
+>> > > - disable watchdog bits (there is a watchdog which is active right
+>> > > from
+>> > >   the start and supervises the bootloader start and switches to
+>> > > failsafe
+>> > >   mode if it wasn't successfully started)
+>> > > - special boot modes, like eMMC, etc.
+>> > >
+>> > > Think of it as a 16bit configuration word.
+>> >
+>> > And you wish for users to be able to view these at run-time?
+>> 
+>> And esp. change them.
+>> 
+>> > Can they adapt any of them on-the-fly or will the be RO?
+>> 
+>> They are R/W but only will only affect the board behavior after a 
+>> reset.
+> 
+> I see.  Makes sense.  This is board controller territory.  Perhaps
+> suitable for inclusion into drivers/soc or drivers/platform.
