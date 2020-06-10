@@ -2,114 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA6F21F5671
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 16:02:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85FAA1F571A
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 16:54:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgFJOCD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jun 2020 10:02:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbgFJOCC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 10:02:02 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2179AC03E96B
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 07:02:02 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 9269E2A473F
-Received: by earth.universe (Postfix, from userid 1000)
-        id D01533C08C6; Wed, 10 Jun 2020 16:01:56 +0200 (CEST)
-Date:   Wed, 10 Jun 2020 16:01:56 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] gpio: Add gpio-charger to the documentation
-Message-ID: <20200610140156.bt7b3usuumurrmuf@earth.universe>
-References: <20200610095124.170079-1-linus.walleij@linaro.org>
+        id S1727003AbgFJOyg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jun 2020 10:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbgFJOyf (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 10 Jun 2020 10:54:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C009F2072F;
+        Wed, 10 Jun 2020 14:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1591800875;
+        bh=h4GU7pIHSH5YCQVcvAzjRoaE8142Y+WoPe3aExRwEV4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eLXbmVHursVNIqb8JTBmWPsenKWOSKR6Eff0VmZEi5m5uq7Dh5sUSVrKCQhQ181bB
+         FCURlDVuhQUQeWxgxm4WaPOobuSG30vWKrhOrnDbMLuVaDIHmCyy1G76ucW7i5aFGp
+         2ownfxKK+kMNkyeROKw30C1cs9aRwOTq3G7r3ntM=
+Date:   Wed, 10 Jun 2020 16:54:29 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        linux-gpio@vger.kernel.org, patches@opensource.cirrus.com,
+        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpio: arizona: put pm_runtime in case of failure
+Message-ID: <20200610145429.GB2102023@kroah.com>
+References: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v6jdptnjhg43pl62"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200610095124.170079-1-linus.walleij@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <11488e76-2ea0-6478-0800-deb0438f0136@web.de>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jun 05, 2020 at 02:14:38PM +0200, Markus Elfring wrote:
+> I recommend to replace the word “pm_runtime” by the
+> alternative “PM run time system” in the patch subject.
+> 
+> 
+> > Calling pm_runtime_get_sync increments the counter even in case of
+> > failure, causing incorrect ref count if pm_runtime_put is not called in
+> > error handling paths.
+> 
+> Should the term “reference count” be used here?
+> 
+> 
+> > Call pm_runtime_put if pm_runtime_get_sync fails.
+> 
+> The diff hunks show an other function name.
+> 
+> 
+> …
+> > +++ b/drivers/gpio/gpio-arizona.c
+> > @@ -64,6 +64,7 @@  static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
+> >  		ret = pm_runtime_get_sync(chip->parent);
+> >  		if (ret < 0) {
+> >  			dev_err(chip->parent, "Failed to resume: %d\n", ret);
+> > +			pm_runtime_put_autosuspend(chip->parent);
+> >  			return ret;
+> >  		}
+> 
+> You propose to use identical statements in three if branches.
+> Please add a corresponding jump target for better exception handling.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=435faf5c218a47fd6258187f62d9bb1009717896#n455
+> 
+> 
+> Would you like to add the tag “Fixes” to the commit message?
+> 
+> 
+> I find it amazing how many questionable implementation details
+> you pointed out recently.
+> Were these contributions triggered by an evolving source code analysis
+> tool like CheQ?
+> https://github.com/umnsec/cheq/
+> 
+> Regards,
+> Markus
 
---v6jdptnjhg43pl62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi Linus,
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
-On Wed, Jun 10, 2020 at 11:51:24AM +0200, Linus Walleij wrote:
-> The GPIO-based charger is another of the helpful devices built
-> on top of GPIO.
->=20
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/driver-api/gpio/drivers-on-gpio.rst | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/Documentation/driver-api/gpio/drivers-on-gpio.rst b/Document=
-ation/driver-api/gpio/drivers-on-gpio.rst
-> index 820b403d50f6..d85fb748cc52 100644
-> --- a/Documentation/driver-api/gpio/drivers-on-gpio.rst
-> +++ b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-> @@ -89,6 +89,13 @@ hardware descriptions such as device tree or ACPI:
->    Consumer Electronics Control bus using only GPIO. It is used to commun=
-icate
->    with devices on the HDMI bus.
-> =20
-> +- gpio-charger: drivers/power/supply/gpio-charger.c is used if you need =
-to do
-> +  battery charging and all you have to go by to check the presence of the
-> +  battery
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-The presence being checked and reported to userspace is for the AC
-adapter, not the battery. Battery presence is handled by battery
-driver (e.g. sbs-battery has a detect gpio).
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
-> +          or more complex tasks such as indicating charging status using
-> +  nothing but GPIO lines, this driver provides that and also a clearly d=
-efined
-> +  way to pass the charging parameters from hardware descriptions such as=
- the
-> +  device tree.
-> +
->  Apart from this there are special GPIO drivers in subsystems like MMC/SD=
- to
->  read card detect and write protect GPIO lines, and in the TTY serial sub=
-system
->  to emulate MCTRL (modem control) signals CTS/RTS by using two GPIO lines=
-=2E The
+thanks,
 
-Otherwise LGTM.
-
--- Sebastian
-
---v6jdptnjhg43pl62
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7g580ACgkQ2O7X88g7
-+pr9CBAAlq/VHjxp8wjPMI3Ui1HEKTE+XOubatZZcqmxc4gXioZAcbYGSZJdlPeT
-cwyZFSKs/hausngXblBwt0vSHssSo4sDwt7lXL95SrkJbuDA1gH47/FtwBQYjWci
-HiXtFSmmjBQ7Qe3j+BWCX1H6w+ehjNFt3gH/qP4hnyZhOKnc+57pLVS7pOhfKlj+
-GXIdxaWjzdoRyiFDVLCY46C8zaC6ClekImNomJDFNcWycpyClF51Ah6I5NSF+Yew
-26jnE5cLCbYk2WD3SmSwx+R5t3dArqcxo6Cf8qHUcAaQl+89iCMESLY0K89hPSCr
-RsKWKyUp4skv97Q2qSH8wZsKVWvqICgeZ1s1fvcBCNeqUNyLCkRvhBxmmF5sH/9K
-J1sl0lVotNvDzS7pOx9bjGZXj2WnhF6jgB5ElS6pF1Lk1x3mkeVGYur64WYevxFo
-kZ7eco6dd/c4q81xX69reI2ldlEGjeDXiXzn6G8zPIupo5ybn1BX/idnu6W6PnkV
-HUBeZQyyHqHYwKI2wX6YIsDhx2a9oDydRxKatBgPshJDfgdlIIs2hxyDl98DCWSY
-DyI4iLmcIgQlGFlIHRWpPh/Ek4p+yI+tQRwef/j4J60naDMVh6yY+MiMERy9AD7S
-auYKYc3gJVeqcShbTAQzLzVKy/nQBdAuEZl5mpFcgqE5Cu/hPog=
-=CAS5
------END PGP SIGNATURE-----
-
---v6jdptnjhg43pl62--
+greg k-h's patch email bot
