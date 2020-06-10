@@ -2,168 +2,225 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 333D21F4E6B
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 08:49:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA8131F4E9F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 09:10:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726153AbgFJGtj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jun 2020 02:49:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35904 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJGtj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 02:49:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q11so921223wrp.3;
-        Tue, 09 Jun 2020 23:49:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+2RflAbiZFNXscYVcTRcL3mwiWsg2XTLWoR4ERYm7ms=;
-        b=IyGuuFvahSsr9+mYglsAHESTS6ZzGHxYnoBomn7770HJ3zwytoFTjnrEtJoXFTAsQi
-         xc/scuXPUPhSHljSiZkgoW+/64K06rF/Ua79Zhja+mG4p+kQTwyFkx2cdmtWzWN6jBCp
-         o58fLKzEGD3sfNB786znZKMHPytwnI+XiKO0sX08oY+WzekwcK7xexBqIS5gbtGP1jWX
-         p3fX2UAJg4QtJGHE3/xOhK3Oi6r6+VAWRRbVzXzlcsvEf9s6mXVYKjl1XJTAYsSVwwd7
-         6xHjWvMbap0nCbIjAHW2a+A8azf5+qTs7bJyJMTYGKtNCghHwyTD+YHYJ7nOy0l3rUXm
-         3yLQ==
-X-Gm-Message-State: AOAM532EcKiJpF6sewX5dV/PCSKMITOJ7WJPEAmwoGbjNlpZ6fgZMPVx
-        +OXbuWMpHDBbQZnabBp/WkI=
-X-Google-Smtp-Source: ABdhPJwX/wNCPF2VRVwD59vAKR/9jZo0RtMMrv0N+L3RYQCSPc3Nyzmetn/pXQ5whdFbu/vILOolMQ==
-X-Received: by 2002:adf:a491:: with SMTP id g17mr1999512wrb.132.1591771776849;
-        Tue, 09 Jun 2020 23:49:36 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.184])
-        by smtp.googlemail.com with ESMTPSA id u74sm5785556wmu.31.2020.06.09.23.49.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 09 Jun 2020 23:49:36 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 08:49:33 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] pinctrl: samsung: Use bank name as irqchip name
-Message-ID: <20200610064933.GA3716@kozik-lap>
-References: <CGME20200609082341eucas1p2e24e71598af14d994520b79494e96b15@eucas1p2.samsung.com>
- <20200609082329.10184-1-m.szyprowski@samsung.com>
+        id S1726305AbgFJHK1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jun 2020 03:10:27 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:43855 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgFJHK1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 03:10:27 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6397622EEB;
+        Wed, 10 Jun 2020 09:10:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1591773021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I0rOB08jXbT35/9E6zpfxRpSFxgkN52VvN9kq0S08UI=;
+        b=BP3GRfS1Htxt164ZGINJVvvIsrhug3C3YB9iZv77clU6dqVW9V1WXPUpQ22YfpMM1ntoEr
+        YS/bN71y7HJTkKvRFG92Mzh4IerfmOY4KFbuVntCq6cb1MyP0eUbpb18EcKja3TOpxz2Jo
+        0dgVu9RjTAzPW/+Jp8nf2hTIKhyn/+o=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200609082329.10184-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 10 Jun 2020 09:10:18 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        david.m.ertman@intel.com, shiraz.saleem@intel.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K?= =?UTF-8?Q?=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/11] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <20200609194505.GQ4106@dell>
+References: <dc052a5c77171014ecc465b1da8b7ef8@walle.cc>
+ <20200608082827.GB3567@dell>
+ <CAHp75VdiH=J-ovCdh1RFJDW_bJM8=pbXRaHmB691GLb-5oBmYQ@mail.gmail.com>
+ <7d7feb374cbf5a587dc1ce65fc3ad672@walle.cc> <20200608185651.GD4106@dell>
+ <32231f26f7028d62aeda8fdb3364faf1@walle.cc> <20200609064735.GH4106@dell>
+ <32287ac0488f7cbd5a7d1259c284e554@walle.cc> <20200609151941.GM4106@dell>
+ <95e6ec9bbdf6af7a9ff9c31786f743f2@walle.cc> <20200609194505.GQ4106@dell>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <3a6931248f0efcaf8efbb5425a9bd833@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 09, 2020 at 10:23:29AM +0200, Marek Szyprowski wrote:
-> Use the bank name as the irqchip name. This name is later visible in
-> /proc/interrupts, what makes it possible to easily identify each
-> GPIO interrupt.
+Am 2020-06-09 21:45, schrieb Lee Jones:
+> On Tue, 09 Jun 2020, Michael Walle wrote:
 > 
-> /proc/interrupts before this patch:
-> 143:    0     exynos4210_wkup_irq_chip   7 Edge      hdmi
-> 144:    0     exynos4210_wkup_irq_chip   6 Level     wm8994
-> 145:    1     exynos4210_wkup_irq_chip   7 Edge      max77686-pmic, max77686-rtc
-> 146:    1     exynos_gpio_irq_chip   3 Edge      3-0048
+>> Am 2020-06-09 17:19, schrieb Lee Jones:
+>> > On Tue, 09 Jun 2020, Michael Walle wrote:
+>> >
+>> > > Am 2020-06-09 08:47, schrieb Lee Jones:
+>> > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> > > >
+>> > > > > Am 2020-06-08 20:56, schrieb Lee Jones:
+>> > > > > > On Mon, 08 Jun 2020, Michael Walle wrote:
+>> > > > > >
+>> > > > > > > Am 2020-06-08 12:02, schrieb Andy Shevchenko:
+>> > > > > > > > +Cc: some Intel people WRT our internal discussion about similar
+>> > > > > > > > problem and solutions.
+>> > > > > > > >
+>> > > > > > > > On Mon, Jun 8, 2020 at 11:30 AM Lee Jones <lee.jones@linaro.org> wrote:
+>> > > > > > > > > On Sat, 06 Jun 2020, Michael Walle wrote:
+>> > > > > > > > > > Am 2020-06-06 13:46, schrieb Mark Brown:
+>> > > > > > > > > > > On Fri, Jun 05, 2020 at 10:07:36PM +0200, Michael Walle wrote:
+>> > > > > > > > > > > > Am 2020-06-05 12:50, schrieb Mark Brown:
+>> > > > > > > >
+>> > > > > > > > ...
+>> > > > > > > >
+>> > > > > > > > > Right.  I'm suggesting a means to extrapolate complex shared and
+>> > > > > > > > > sometimes intertwined batches of register sets to be consumed by
+>> > > > > > > > > multiple (sub-)devices spanning different subsystems.
+>> > > > > > > > >
+>> > > > > > > > > Actually scrap that.  The most common case I see is a single Regmap
+>> > > > > > > > > covering all child-devices.
+>> > > > > > > >
+>> > > > > > > > Yes, because often we need a synchronization across the entire address
+>> > > > > > > > space of the (parent) device in question.
+>> > > > > > > >
+>> > > > > > > > >  It would be great if there was a way in
+>> > > > > > > > > which we could make an assumption that the entire register address
+>> > > > > > > > > space for a 'tagged' (MFD) device is to be shared (via Regmap) between
+>> > > > > > > > > each of the devices described by its child-nodes.  Probably by picking
+>> > > > > > > > > up on the 'simple-mfd' compatible string in the first instance.
+>> > > > > > > > >
+>> > > > > > > > > Rob, is the above something you would contemplate?
+>> > > > > > > > >
+>> > > > > > > > > Michael, do your register addresses overlap i.e. are they intermingled
+>> > > > > > > > > with one another?  Do multiple child devices need access to the same
+>> > > > > > > > > registers i.e. are they shared?
+>> > > > > > >
+>> > > > > > > No they don't overlap, expect for maybe the version register, which is
+>> > > > > > > just there once and not per function block.
+>> > > > > >
+>> > > > > > Then what's stopping you having each device Regmap their own space?
+>> > > > >
+>> > > > > Because its just one I2C device, AFAIK thats not possible, right?
+>> > > >
+>> > > > Not sure what (if any) the restrictions are.
+>> > >
+>> > > You can only have one device per I2C address. Therefore, I need one
+>> > > device
+>> > > which is enumerated by the I2C bus, which then enumerates its
+>> > > sub-devices.
+>> > > I thought this was one of the use cases for MFD. (Regardless of how a
+>> > > sub-device access its registers). So even in the "simple-regmap"
+>> > > case this
+>> > > would need to be an i2c device.
+>> 
+>> Here (see below)
 > 
-> /proc/interrupts after this patch:
-> 143:    0     gpx3   7 Edge      hdmi
-> 144:    0     gpx3   6 Level     wm8994
-> 145:    1     gpx0   7 Edge      max77686-pmic, max77686-rtc
-> 146:    1     gpm2   3 Edge      3-0048
+> Yes, it should still be an I2C device.
 > 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-
-
-Hi Marek,
-
-Nice idea!
-
-> ---
->  drivers/pinctrl/samsung/pinctrl-exynos.c | 27 +++++++++++++++---------
->  1 file changed, 17 insertions(+), 10 deletions(-)
+>> > >
+>> > > E.g.
+>> > >
+>> > > &i2cbus {
+>> > >   mfd-device@10 {
+>> > >     compatible = "simple-regmap", "simple-mfd";
+>> > >     reg = <10>;
+>> > >     regmap,reg-bits = <8>;
+>> > >     regmap,val-bits = <8>;
+>> > >     sub-device@0 {
+>> > >       compatible = "vendor,sub-device0";
+>> > >       reg = <0>;
+>> > >     };
+>> > >     ...
+>> > > };
+>> > >
+>> > > Or if you just want the regmap:
+>> > >
+>> > > &soc {
+>> > >   regmap: regmap@fff0000 {
+>> > >     compatible = "simple-regmap";
+>> > >     reg = <0xfff0000>;
+>> > >     regmap,reg-bits = <16>;
+>> > >     regmap,val-bits = <32>;
+>> > >   };
+>> > >
+>> > >   enet-which-needs-syscon-too@1000000 {
+>> > >     vendor,ctrl-regmap = <&regmap>;
+>> > >   };
+>> > > };
+>> > >
+>> > > Similar to the current syscon (which is MMIO only..).
+>> >
+>> > We do not need a 'simple-regmap' solution for your use-case.
+>> >
+>> > Since your device's registers are segregated, just split up the
+>> > register map and allocate each sub-device with it's own slice.
+>> 
+>> I don't get it, could you make a device tree example for my
+>> use-case? (see also above)
 > 
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> index 84501c785473..1c87cf41602a 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -207,7 +207,7 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
->  /*
->   * irq_chip for gpio interrupts.
->   */
-> -static struct exynos_irq_chip exynos_gpio_irq_chip = {
-> +static const struct exynos_irq_chip exynos_gpio_irq_chip __initconst = {
->  	.chip = {
->  		.name = "exynos_gpio_irq_chip",
->  		.irq_unmask = exynos_irq_unmask,
-> @@ -313,7 +313,13 @@ int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
->  			goto err_domains;
->  		}
->  
-> -		bank->irq_chip = &exynos_gpio_irq_chip;
-> +		bank->irq_chip = kmemdup(&exynos_gpio_irq_chip,
-> +					 sizeof(*bank->irq_chip), GFP_KERNEL);
-
-You cannot reference initconst memory from non-init function. Build with
-SECTION_MISMATCH to see the warnings.
-
-> +		if (!bank->irq_chip) {
-
-irq_domain_remove()
-
-> +			ret = -ENOMEM;
-> +			goto err_domains;
-> +		}
-> +		bank->irq_chip->chip.name = bank->name;
->  	}
->  
->  	return 0;
-> @@ -521,7 +527,7 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->  	struct samsung_pin_bank *bank;
->  	struct exynos_weint_data *weint_data;
->  	struct exynos_muxed_weint_data *muxed_data;
-> -	struct exynos_irq_chip *irq_chip;
-> +	const struct exynos_irq_chip *irq_chip;
->  	unsigned int muxed_banks = 0;
->  	unsigned int i;
->  	int idx, irq;
-> @@ -531,12 +537,7 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->  
->  		match = of_match_node(exynos_wkup_irq_ids, np);
->  		if (match) {
-> -			irq_chip = kmemdup(match->data,
-> -				sizeof(*irq_chip), GFP_KERNEL);
-> -			if (!irq_chip) {
-> -				of_node_put(np);
-> -				return -ENOMEM;
-> -			}
-> +			irq_chip = match->data;
->  			wkup_np = np;
->  			break;
->  		}
-> @@ -557,7 +558,13 @@ int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->  			return -ENXIO;
->  		}
->  
-> -		bank->irq_chip = irq_chip;
-> +		bank->irq_chip = kmemdup(irq_chip, sizeof(*irq_chip),
-> +					 GFP_KERNEL);
-> +		if (!bank->irq_chip) {
-> +			of_node_put(wkup_np);
-
-irq_domain_remove()
-
-Best regards,
-Krzysztof
-
-
-> +			return -ENOMEM;
-> +		}
-> +		bank->irq_chip->chip.name = bank->name;
->  
->  		if (!of_find_property(bank->of_node, "interrupts", NULL)) {
->  			bank->eint_type = EINT_TYPE_WKUP_MUX;
-> -- 
-> 2.17.1
+>     &i2cbus {
+>         mfd-device@10 {
+>             compatible = "simple-mfd";
+>             reg = <10>;
 > 
+>             sub-device@10 {
+>                 compatible = "vendor,sub-device";
+>                 reg = <10>;
+>             };
+>    };
+> 
+> The Regmap config would be present in each of the child devices.
+> 
+> Each child device would call devm_regmap_init_i2c() in .probe().
+
+Ah, I see. If I'm not wrong, this still means to create an i2c
+device driver with the name "simple-mfd".
+
+Besides that, I don't like this, because:
+  - Rob already expressed its concerns with "simple-mfd" and so on.
+  - you need to duplicate the config in each sub device
+  - which also means you are restricting the sub devices to be
+    i2c only (unless you implement and duplicate other regmap configs,
+    too). For this driver, SPI and MMIO may be viable options.
+
+Thus, I'd rather implement a simple-mfd.c which implement a common
+I2C driver for now and populate its children using
+devm_of_platform_populate(). This could be extended to support other
+type of regmaps like SPI in the future.
+
+Also some MFD drivers could be moved to this, a likely candidate is
+the smsc-ece1099.c. Although I don't really understand its purpose,
+if don't have CONFIG_OF.
+
+Judging from the existing code, this simple-mfd.c wouldn't just be
+"a list of compatible" strings but also additional quirks and tweaks
+for particular devices in this list.
+
+-michael
