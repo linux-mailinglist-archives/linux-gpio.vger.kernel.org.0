@@ -2,144 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 483AF1F4A71
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 02:49:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29F8F1F4C05
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 06:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgFJAta (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Jun 2020 20:49:30 -0400
-Received: from office2.cesnet.cz ([195.113.144.244]:58948 "EHLO
-        office2.cesnet.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgFJAt3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Jun 2020 20:49:29 -0400
-X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Jun 2020 20:49:28 EDT
-Received: from localhost (ip-78-45-211-110.net.upcbroadband.cz [78.45.211.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by office2.cesnet.cz (Postfix) with ESMTPSA id 5783F40005D;
-        Wed, 10 Jun 2020 02:39:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cesnet.cz;
-        s=office2-2020; t=1591749563;
-        bh=623zmTaBKS6E2t14Sz0TpBJ8bnfIQ7azFyIxqD9eoVA=;
-        h=From:To:Cc:Subject:Date;
-        b=hUnbQ2/eYhn0eAq5yieFvb6K0zjh2SLTEwVMBRWpahyK7vB0v5n6NevKPkbbLRKGK
-         20LKcu0+a404YV9T9XE6m+SqHOxFbNK6/CsFcHrOZ3AzTeX6vksXxbhAnx6HvxHu7N
-         ffY98KFtSln2Der2FDp/aasPlpXzuOhejfQDtp/lDJmlJgYdjXmM3FynLsnnJjh2QQ
-         Hv/OWjiqm7X6UOluZsT5kbXsudRK9E+OM5VcxGzqxSCrjgRPC3BGCKWzebXWxnZl1W
-         K4qNMCj17I50Ax2PPOq5RkvSQG0S5q70bvAMIHhdjbYRyTuKD8FpqO9SFUrCUPfOWz
-         3HRaZIrFQmdkA==
-From:   =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-To:     <linux-gpio@vger.kernel.org>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: GPIO regression on mvebu and/or max310x since 2ab73c6d8323
-Date:   Wed, 10 Jun 2020 02:39:22 +0200
-MIME-Version: 1.0
-Message-ID: <8cffce08-ed84-4242-8dcd-72de693f0f71@cesnet.cz>
-Organization: CESNET
-User-Agent: Trojita/v0.7-412-g2869c385e; Qt/5.13.0; xcb; Linux; Gentoo Base System release 2.4.1
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1725270AbgFJENt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jun 2020 00:13:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgFJENs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 00:13:48 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C4FC05BD1E;
+        Tue,  9 Jun 2020 21:13:39 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y18so450808plr.4;
+        Tue, 09 Jun 2020 21:13:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Aos11RqaPZ+e2YnSb8NYoxbzf85DJlijsegumQu5D/4=;
+        b=FRJmMAcSqqHwvC+rKTP0lt2u8OtvhL7uroLmmCqAc/7ctmav8v1cWVkjWskgNFmz/X
+         JA8lGiG6OGwHNc79nqRPaN2ciqerP3jopIdAbeXAdjm6b1BmYs/S8hLZNUeSDv+69R4t
+         s2fQcVbU8jRh5ItTQMFOp0qVsvoJ8qbYrTYnWsNbIlSTqQCgaATVYDKRxguUOFnWdhLS
+         H44w8FVqyMdKBAK5C2kv0vb7wsmyBbOxy/B8j+5jZiQSEOk4A1agFUM7bZa1u0CczU7M
+         eaqLiXzrydUY6us2zy81s25jumAdN7pC5eb7yDs20zPGJHgRlN8EICX1QghnqL+7/lZ/
+         AWLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Aos11RqaPZ+e2YnSb8NYoxbzf85DJlijsegumQu5D/4=;
+        b=gvfeeDsu16uMLvbsJxXinJvP6Dn1TwSknAIAG7BKvH+DQvsxd9+h/d+rBEhFxO3kvY
+         pGmE3uChuus6EO7VklxTvIaEQ9k1N6iQTVUWxGr6Nh+jeWs81IjhHjuMg/IZve6Uvn/o
+         epWmGEdTn7IUnxv5qp17PeT2l7tjtTcPHcR1n54asqeerQC7cnv0zjV3fPcfY8OSg6ag
+         QReg4kSvd9ItCnNeBhkGwkYExZNXY5JhKTb4EM8fvQLsFLEChEQE/D79hML6ktVyFX94
+         zmNDRK3U3VeMNJlYPhxFfKnSbrS0YcbGH40L5uzQ9Vot1Q0OLMuB2aI45c2mGDUNTkGh
+         vvOA==
+X-Gm-Message-State: AOAM530Se+t12o6FX0ku1HPR7RQFlynMA1Avrl2pl5bS349HpAku8lxY
+        QxiW777BU3hivt7ck5oqS6g=
+X-Google-Smtp-Source: ABdhPJx6zMAjL6TpjNgXSxp7AZ0zuAmfpF4vKmHcy5qsE/ExouW65YcElpKUv6vOARbGNm3FLTgNIQ==
+X-Received: by 2002:a17:902:848d:: with SMTP id c13mr1361408plo.289.1591762418532;
+        Tue, 09 Jun 2020 21:13:38 -0700 (PDT)
+Received: from localhost.localdomain ([114.204.138.55])
+        by smtp.gmail.com with ESMTPSA id o1sm11887461pfu.70.2020.06.09.21.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2020 21:13:37 -0700 (PDT)
+From:   hhk7734@gmail.com
+To:     linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Hyeonki Hong <hhk7734@gmail.com>
+Subject: [PATCH] pinctrl: meson: fix drive strength register and bit calculation
+Date:   Wed, 10 Jun 2020 13:13:29 +0900
+Message-Id: <20200610041329.12948-1-hhk7734@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-after upgrading from v5.6.7 to v5.7.1, my bit-banged I2C bus no longer=20
-works. I've run a bisection and it led me to commit 2ab73c6d8323 (gpio:=20
-Support GPIO controllers without pin-ranges). If I make=20
-gpiochip_generic_request() call pinctrl_gpio_request() unconditionally=20
-again, stuff gets back to working.
+From: Hyeonki Hong <hhk7734@gmail.com>
 
-My HW setup is "unusual" as there's also an analog switch in the path of=20
-the bit-banged bus, and that one is controlled by another GPIO from=20
-MAX14830 (drivers/tty/serial/max310x.c). The I2C bit-banging is driven by a=20=
+If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
+registers. However, when register and bit were calculated, the first
+register defined in the bank was used, and the bit was calculated based
+on the first pin. This causes problems in setting the driving strength.
 
-Solidrun ClearFog Base (mvebu, Armada AM385) pins MPP24 and MPP25 which are=20=
+Solved the problem by changing the bit using a mask and selecting the
+next register when the bit exceeds 15.
 
-configured as GPIOs. In terms of a DTS snippet, here's how it looks like:
+Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
+---
+ drivers/pinctrl/meson/pinctrl-meson.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-        /* Bit-banged I2C instead of the default UART function from the SoC=20=
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index bbc919bef2bf..ef66239b7df5 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -98,6 +98,13 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
 
-*/
-        &uart1_pins {
-                status =3D "disabled";
-        };
-        &uart1 {
-                status =3D "disabled";
-        };
-        gpio_i2c {
-                compatible =3D "i2c-gpio";
-                sda-gpios =3D <&gpio0 25 (GPIO_ACTIVE_HIGH |=20
-GPIO_OPEN_DRAIN)>;
-                scl-gpios =3D <&gpio0 24 (GPIO_ACTIVE_HIGH |=20
-GPIO_OPEN_DRAIN)>;
-                i2c-gpio.delay-us =3D <1>;
-                #address-cells =3D <1>;
-                #size-cells =3D <0>;
-        };
-       =20
-        /* Analog switch control via a GPIO hog. This drives that analog=20
-switch
-           so that the signals from the SoC actually reach the I2C slaves=20
-*/
-        max14830@2 {
-                // ...
-                i2c_bitbang_enable {
-                        gpio-hog;
-                        gpios =3D <7 GPIO_ACTIVE_HIGH>;
-                        output-high;
-                        line-name =3D "I2C bitbang bus";
-                };
-        };
+ 	*reg = desc->reg * 4;
+ 	*bit = desc->bit + pin - bank->first;
++
++	if (reg_type == REG_DS) {
++		if (*bit > 15) {
++			*bit &= 0xf;
++			*reg += 4;
++		}
++	}
+ }
 
-This means that for my bit-banged I2C to work, I need both the mvebu's=20
-gpio+pinctrl and the MAX14830 GPIOs. I hope that the max310x.c path is OK=20
-(max310x_gpio_direction_output() and friends are being called when kernel=20
-sets up GPIO hogs). According to some dev_dbg()s in i2c/busses/i2c-gpio.c=20
-and i2c/algos/i2c-algo-bit.c, the I2C slaves never respond with an ACK. The=20=
-
-machine is remote so I have not had a chance to attach a logical analyzer=20
-yet -- but I *think* that the root cause is somewhere in pinconf. When=20
-stuff doesn't work, I get this:
-
-# grep -e mpp24 -e mpp25=20
-/sys/kernel/debug/pinctrl/f1018000.pinctrl/pinconf-groups
-24 (mpp24): current: ua1(rxd), available =3D [ gpio(io) spi0(miso) ua0(cts)=20=
-
-sd0(d4) dev(ready) ]
-25 (mpp25): current: ua1(txd), available =3D [ gpio(io) spi0(cs0) ua0(rts)=20=
-
-sd0(d5) dev(cs0) ]
-
-...whereas on the old kernel, it looks like this:
-
-# grep -e mpp24 -e mpp25=20
-/sys/kernel/debug/pinctrl/f1018000.pinctrl/pinconf-groups=20
-24 (mpp24): current: gpio(io), available =3D [ spi0(miso) ua0(cts) ua1(rxd)=20=
-
-sd0(d4) dev(ready) ]
-25 (mpp25): current: gpio(io), available =3D [ spi0(cs0) ua0(rts) ua1(txd)=20=
-
-sd0(d5) dev(cs0) ]
-
-There's also some difference in=20
-/sys/kernel/debug/pinctrl/f1018000.pinctrl/pinmux-pins says, for example:
-
- pin 19 (PIN19): f1072004.mdio (GPIO UNCLAIMED) function gpio group mpp19
-
-...whereas in the old kernel it is:
-
- pin 19 (PIN19): f1072004.mdio mvebu-gpio:19 function gpio group mpp19
-
-...and the same for 22, 24, 29, 44, 54, all of these are supposed to be=20
-GPIOs I think. At this time I'm deep in the bowels of pinconf/pinmux that I=20=
-
-do not understand.
-
-TL;DR: 2ab73c6d8323 breaks GPIOs on mvebu on my system. I'll be happy to=20
-test patches which fix this in some better way than just a revert.
-
-With kind regards,
-Jan
+ static int meson_get_groups_count(struct pinctrl_dev *pcdev)
+--
+2.17.1
