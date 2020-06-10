@@ -2,94 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0F51F509B
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 10:52:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B95FB1F50FA
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 11:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgFJIwk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jun 2020 04:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39630 "EHLO
+        id S1727030AbgFJJNU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jun 2020 05:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgFJIwk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 04:52:40 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059C3C03E96B
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 01:52:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i27so1435843ljb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 01:52:39 -0700 (PDT)
+        with ESMTP id S1726219AbgFJJNU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 05:13:20 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD38C03E96B
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 02:13:18 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id e125so1035967lfd.1
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 02:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TZj9FRS2XY4VqFQxuNlqLqbv79Zq0nSJ0wqXA0WHqXg=;
-        b=VBHhJCu/HbBJ2Q24M4THp6StoZHbqwa/jkSOPhIazusNP2uMVP594ATj7eMtCLLgFu
-         wsV57vQYUFuXy1k8ZZHFINfMQJwnjJkiVX6w4rkRXu9PkYkufBcAp8i2vZ9h2jIwNw6l
-         TA9TUmhZ1iLn9yRmX9qz623BCCkIvzo0b7Spt4rz4egY3u/JAv8Wve0MqOemyHbXi7K8
-         fgZR3jXhb2RgDkHrXe3DTknMCjighQr02/nSDmhfS98rYUKMcVx9ruwdLgnOO4k0HQIv
-         BGZjjDsYCuHsYj0Qd7KxK6Nc+e7ZNbrS4WtJkpzruTlt3pL1mSg72sTjPORf6bMHaSAO
-         JhYw==
+        bh=C38mlKFbKcn0KxflluI+40IimgVnduQnhaBOHbkWa8E=;
+        b=TWzngnQIgK9IeP2unLrjbP2Nq3Pxntzaj1eVDSWc25mWOIpm8isZibtRz6skHc1PfG
+         uuoXBeQTDjC6NmfpP0ZwdZ1GHRFKXlJDI8QctYnsr2ubz+wkvDC295kESRHh0HLIfFZB
+         WwG1yaDH+MjUFA5cruCUKV4z9FWeU7hkwMmnn3GIcXK8VO1iUZR1HDyp5bFzCbI51tLl
+         W79qWy35Ib1RhXQzkfwuVBUPIXntIKiGc1NXQso1Nrl9RPZAtAQqAnP7MTArEVHqA2Re
+         Wc4xWwm5lbUyl2Z5Bb6ptXu76oedSrvofnMELcMiPNBFBTPbddKU1MrE+vxuUQaxDkYH
+         eVKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TZj9FRS2XY4VqFQxuNlqLqbv79Zq0nSJ0wqXA0WHqXg=;
-        b=GEwPZTUTqJXXsabp29ooJP2X727dz7w5dzhpG79q1lQDEEKVX1ET7Zv7lyAtP/kM3+
-         JZzaDIm06FfaeJ9YWV0gSDE1eBC0FZFqMJUtQihbu8Bq9VfUJZrSRGNq9fSPpmrj0aPs
-         JBMijOSPP+KiH+8KDxpNLQ8uDjhitJiF64FUlYGH9ZwjlIQfgyd0J4euLJ1ACyEjyWcT
-         id5YRzHJgoNAguVhPZyRaWqjSqbNApq+MHH5aDKf/ITJO7ircIJU1Zv3RU5G7vL/jYHk
-         /+IK+uBwz/lhL6JOXmgb2bqy3kN/rZKr+a6r/uBoZCN51wPYCizD05SX033AeWnHtbYi
-         fpZw==
-X-Gm-Message-State: AOAM532Hb/GCgQy5mZjObHeIDK8fLRrUSjgWcoEimdqK+D748ZOED51k
-        QFVbUQpsV4d2hjgnDDuzTL556izeYWujRC6McoAPIA==
-X-Google-Smtp-Source: ABdhPJztWOIRy+Pmfhld9nG2TEcFdJeoDu3IbxxlhHk4JCQWGXBbF2DQUa89TWM40jKt/+uuCCMYWRPeG+Mn4NBekAk=
-X-Received: by 2002:a2e:7303:: with SMTP id o3mr1282281ljc.100.1591779158505;
- Wed, 10 Jun 2020 01:52:38 -0700 (PDT)
+        bh=C38mlKFbKcn0KxflluI+40IimgVnduQnhaBOHbkWa8E=;
+        b=RPgt5X3OJ3oKnOCqTNx3d54Akh9b6XWCP8DuJcNOfIa+Zzl4fIAvF9/kMl/yIPSqu+
+         PKWXN2KGDLPgi1a2wCAtOl8BYhuuBAzLFgGpCjT83QTYart+UOJAQvNxmkF4zFMZVH5S
+         nGlOw9M5dybFOIj8xlh/+e3emFusPe3rx0JBHwi1Jw1a2+xhKqJzJR2LgeEYuVqZ6h7P
+         Lxu3YKF3FJqPqlZPALoxViOBNpg8kt76T2Pbi/vYCo5l7aNyVx9PBIsIbHNt6zMY82n9
+         0MsU6QVBMuhKebXDeDRFZwPAzEiUB+1vsLZIzqrCsWIPBlw3pNWcPrQsGTV4TR5+Mtxv
+         7ebA==
+X-Gm-Message-State: AOAM5306P/dd+8f3hML0+twBCGYoQm/PD1hzW/7DynjKzbNqYD8Iyi1D
+        dhhZB4wFVajgv8f3YZ10rhw5P8SX499zcrzN+4Amhw==
+X-Google-Smtp-Source: ABdhPJz+O3CiP/rQT2+fskrv9NUMEXKRdot09KjDq1C18L6A+qUjVgcXu1eTGOkzU+Rmxr5tJWULYao3d+wWZfCgSsk=
+X-Received: by 2002:ac2:4823:: with SMTP id 3mr1184193lft.194.1591780397116;
+ Wed, 10 Jun 2020 02:13:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200605024919.56177-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20200605024919.56177-1-navid.emamdoost@gmail.com>
+References: <20200602141048.1995-1-warthog618@gmail.com>
+In-Reply-To: <20200602141048.1995-1-warthog618@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 10 Jun 2020 10:52:27 +0200
-Message-ID: <CACRpkdbS7Vo+uV2LJTQNiqoPHWScDrgQiv=TakL1UFQ=ZGXxiQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: handle pm_runtime_get_sync failure case
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+Date:   Wed, 10 Jun 2020 11:13:06 +0200
+Message-ID: <CACRpkdbVmrjgqXHvav3JWmncrKhNnroJKvTYm57dgKu1VrVfUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: split character device into gpiolib-cdev
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>, wu000273@umn.edu,
-        Kangjie Lu <kjlu@umn.edu>, smccaman@umn.edu
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 5, 2020 at 4:49 AM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
+On Tue, Jun 2, 2020 at 4:11 PM Kent Gibson <warthog618@gmail.com> wrote:
 
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
+> Split the cdev specific functionality out of gpiolib.c and into
+> gpiolib-cdev.c. This improves the readability and maintainability of both
+> the cdev and core gpiolib code.
 >
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  drivers/gpio/gpio-rcar.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-> index 7284473c9fe3..eac1582c70da 100644
-> --- a/drivers/gpio/gpio-rcar.c
-> +++ b/drivers/gpio/gpio-rcar.c
-> @@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
->         int error;
->
->         error = pm_runtime_get_sync(p->dev);
-> -       if (error < 0)
-> +       if (error < 0) {
-> +               pm_runtime_put(p->dev);
->                 return error;
-> +       }
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-I need Geert's review on this, he's usually on top of the Renesas stuff.
+Patch applied as early v5.9 development.
+
+I will include it into linux-next after v5.8-rc1 is out.
 
 Yours,
 Linus Walleij
