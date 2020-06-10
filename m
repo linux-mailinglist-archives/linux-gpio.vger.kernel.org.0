@@ -2,94 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6631F5192
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 11:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 362731F51C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 12:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgFJJx3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jun 2020 05:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49036 "EHLO
+        id S1728064AbgFJKCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Jun 2020 06:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgFJJx3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 05:53:29 -0400
+        with ESMTP id S1728029AbgFJKCk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 06:02:40 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB95C03E96B
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 02:53:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 9so1685371ljv.5
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 02:53:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF783C03E96B
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 03:02:39 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 9so1718407ljv.5
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Jun 2020 03:02:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JnYRXPTv/NgZ4PLEUI3sd9KbyWTO5rrfKL/GZOiTmKA=;
-        b=AlLp5JXGOjnlwC4DRgTBKH0vmwnRw1YA8RbU5WfKBSDMbYyLoguGM4oxud49iAXSMn
-         2iOa2UVUiiuVWE1LQFGoQENuAaDi0wVKsM5tJcK1d2URcxpxKam6Fv10hhWtywCrwTIJ
-         O8oXXasueABCZvO+xFNfNERd3MkKWb7YL5TzRjsPfvNFugdZXJ/kfojdfZuwM9PNa0/8
-         27qCSmUCgVrDmR2cSQM7McU1Rs9qErLin0unC/kUJCoRRsGksKq9OFV6qXF/BdujVFfU
-         4RLRLgK0VsDlUhZikBj/MLkG+tJOfy5NQaMQAmtecsCfNXJ7/lyXbJ3d0KU+LoohvSjY
-         bdwg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G/ZiUIIV8iMk3Rf5VRCT4Eiot6h1rdh+GgTRfXX5OTk=;
+        b=iRkvyWtbKG9FeaqfyEPsStoeGXfM3aS4dkrQhpFqfltnvXhwdkTqtgztvDpaIZzGmH
+         RtTZO76xVc/3qdy0J9rSVKrLaKNYBl/GS83JoQTuvNV6rm7N3OprgfsjHVGpoNUWFi+R
+         RqoFqq3Gw2koDSIrukPF1J78Az79usDNRWUtZWwWDOCtdwr5bpeintbgvc/pxtAgE+Cv
+         C8ihjLEojMlA3EDqHnfq7BJ9bY3Nh5iFfEY817yXS1KYQf8LL4SoR+jqzJqYAM+PO/xD
+         IUvJuO/LW50XQV+DioljyezibAVwSq96QLyM12buU5/s7AIsOrDcXaNS/E7i8CLNyozo
+         NlPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JnYRXPTv/NgZ4PLEUI3sd9KbyWTO5rrfKL/GZOiTmKA=;
-        b=VGBcmNo0uoQgY+jxUt+NZo5Ssq06LZcEGUj4HuiFxePhXBrVe/efZ+s8fBA6j9MCHW
-         9GjyiS9AxjkxImL9PEQd6ReC+TXz82RucpSUXHZwXMh4x3EHpiljKTOowo162gj+lcy+
-         wm2K68ekiJoK8KQGzmKgCvnBMy5fryPBbp9W+6rb12SE57VppA5886vG/DTi7FqUwgvG
-         7RWju1ooDERFgUSw9CFZG1MoXvm3hbD5y2aCC+6mYXuPl2MSvARo3sAOrMBr4FBVf6FK
-         YIeclUhiCFmuywW2jYvd9fkY6uv3p/dNBRXgMXTTkMV+Y648CsSqpQqo8wO28R+J5OJn
-         DdMg==
-X-Gm-Message-State: AOAM533Uzk3yYJUKPk0y2ULN3u8XB8rCzmxh09RmLdrQfORKSiA/qddm
-        o0/illXDJ/fcpisT/7jD9YfRBsYHCV8=
-X-Google-Smtp-Source: ABdhPJyGAxxwNZMeyU3VuIk4RxEXA5QxW7tqtnnZpLJnYuuOE2kFOhKcxh0vA8MUqGf3IG+heHYtsQ==
-X-Received: by 2002:a2e:859a:: with SMTP id b26mr1382413lji.191.1591782807013;
-        Wed, 10 Jun 2020 02:53:27 -0700 (PDT)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id o2sm5685412lfc.85.2020.06.10.02.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 02:53:26 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH] gpio: Add gpio-charger to the documentation
-Date:   Wed, 10 Jun 2020 11:51:24 +0200
-Message-Id: <20200610095124.170079-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G/ZiUIIV8iMk3Rf5VRCT4Eiot6h1rdh+GgTRfXX5OTk=;
+        b=tDcGOIHJlLXZEcsaKk4Am28MOdjdRq5A4jVJLBGvsJiDv5qek7OFOGiS8ZtL19WICh
+         Ksb/8vFYYi3J8J5EofNwuETcCXNyFkyuHLE4yrXrc6P74NWotdATAGo3IIfIM/Dt75tq
+         QQOi6Zs0qYo4E2MUYdinpfLre7JuzacX7dlDkK8iFurkD6UftVGtZ9xqsxyE9HrqEdVP
+         FJjIuTe7NdCy1KNTZCK99718/xgVORVuvK5H947SlCdo/UeqHlncoiyrV0wDeQHxOiPz
+         HaIaRhSPra+Am5sjd1261w510e3cMtxNblqLxisoZQFydmi+PGDYAS5Xe0uo6TnyRPjw
+         bOmQ==
+X-Gm-Message-State: AOAM530HdFpcCMbPvURyDsigwm/uqW3IiKAuBG5XJu190pT6K3PmGC/A
+        9l2+XQVDSPLYlNg4xqO/GjQ5WCL1OorgguskIs0/9g==
+X-Google-Smtp-Source: ABdhPJxy0MwTfdtGLEADWrUxJKMn/lX/2cr8fh3TgJePLWUwPx481uUyfXCrk3EVKsfi51DxnDYboh8qt8cSxvyP4Gs=
+X-Received: by 2002:a05:651c:112e:: with SMTP id e14mr1249133ljo.338.1591783358305;
+ Wed, 10 Jun 2020 03:02:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAFAFadBs5UNsktWR072dXwvJpk-rk1wqPBCb=gkLfxMbE55QUQ@mail.gmail.com>
+In-Reply-To: <CAFAFadBs5UNsktWR072dXwvJpk-rk1wqPBCb=gkLfxMbE55QUQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 10 Jun 2020 12:02:27 +0200
+Message-ID: <CACRpkdbkThMGRd=7zCpuuVqfZQSofLodvQwf9gKhxTxweM5gpw@mail.gmail.com>
+Subject: Re: [PATCH] max732x_probe: remove redundant check
+To:     gaurav singh <gaurav1086@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The GPIO-based charger is another of the helpful devices built
-on top of GPIO.
+On Sat, Jun 6, 2020 at 5:09 PM gaurav singh <gaurav1086@gmail.com> wrote:
 
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/driver-api/gpio/drivers-on-gpio.rst | 7 +++++++
- 1 file changed, 7 insertions(+)
+> The pdata is already checked for its validity above:
+>
+>     if (!pdata) {
+>         dev_dbg(&client->dev, "no platform data\n");
+>         return -EINVAL;
+>     }
+>
+> So no need to check again. Hence remove the if (pdata) part. Please find the patch below.
 
-diff --git a/Documentation/driver-api/gpio/drivers-on-gpio.rst b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-index 820b403d50f6..d85fb748cc52 100644
---- a/Documentation/driver-api/gpio/drivers-on-gpio.rst
-+++ b/Documentation/driver-api/gpio/drivers-on-gpio.rst
-@@ -89,6 +89,13 @@ hardware descriptions such as device tree or ACPI:
-   Consumer Electronics Control bus using only GPIO. It is used to communicate
-   with devices on the HDMI bus.
- 
-+- gpio-charger: drivers/power/supply/gpio-charger.c is used if you need to do
-+  battery charging and all you have to go by to check the presence of the
-+  battery or more complex tasks such as indicating charging status using
-+  nothing but GPIO lines, this driver provides that and also a clearly defined
-+  way to pass the charging parameters from hardware descriptions such as the
-+  device tree.
-+
- Apart from this there are special GPIO drivers in subsystems like MMC/SD to
- read card detect and write protect GPIO lines, and in the TTY serial subsystem
- to emulate MCTRL (modem control) signals CTS/RTS by using two GPIO lines. The
--- 
-2.25.4
+Please send the patch as a single main using git send-email.
 
+For further help see:
+Documentation/process/email-clients.rst
+
+Yours,
+Linus Walleij
