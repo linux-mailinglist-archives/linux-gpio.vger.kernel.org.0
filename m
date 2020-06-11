@@ -2,89 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C0511F5D74
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jun 2020 23:00:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 575C11F614D
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 07:40:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgFJVAd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Jun 2020 17:00:33 -0400
-Received: from office2.cesnet.cz ([195.113.144.244]:53124 "EHLO
-        office2.cesnet.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgFJVAd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 10 Jun 2020 17:00:33 -0400
-Received: from localhost (ip-78-45-211-110.net.upcbroadband.cz [78.45.211.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by office2.cesnet.cz (Postfix) with ESMTPSA id 6D71B40005D;
-        Wed, 10 Jun 2020 23:00:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cesnet.cz;
-        s=office2-2020; t=1591822830;
-        bh=ERMntWN9UjaiQJ8NvnJoh1eqeIpyJiezv108wUzGr/U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=OtYRpIQM/+7muIUCPX4JV/bJ9j3jxyGrJSUA3je7SRpFkRH73ZRi82MPYAMHV8s08
-         3eUWUGCOU4Y7kfpUrv2MDGRKdShjKQDAdKzrEBLHzJOfrevi3OvnGdcGEHo4qvLK5z
-         xPN82KN+Jd8VPkq12DhGFOy2YvuofCrq1HutpWCGw56Tw/zbQQl4CcY49z38Asop2y
-         0b4m8GNI7Sx+n1BW4Uzva6LtB849h8v+QZ/0hKTYErM+J+M+Kul0TyE5y+Rn/z/f9g
-         rPoy3HCIlTrW80/VPRHdwAdKUx0hcg/QQ1ZacX2oDr2ua6T1qoed8wf6PgLG4tjmXd
-         FM6WcN2QSKb/w==
-From:   =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: GPIO regression on mvebu and/or max310x since 2ab73c6d8323
-Date:   Wed, 10 Jun 2020 23:00:30 +0200
+        id S1726331AbgFKFkH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jun 2020 01:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726316AbgFKFkG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jun 2020 01:40:06 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669E4C08C5C1;
+        Wed, 10 Jun 2020 22:40:06 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id d6so1912194pjs.3;
+        Wed, 10 Jun 2020 22:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=N3UrA+L6fKKCkym6ASMJYc2jRNYVOVnvVJE5werYGnw=;
+        b=d+nqjy+4dUFQIg+J7rUYD67mgnGPhyWqgBudPF6w+rSZlq/KfbJbVmdiKBinBCNo4e
+         XqihGj7fGfpJUr9AKyRJuZsSPS4jAIVsR1RaqVH2ri3bGI96f1OqmAExijXBGJQFjeVZ
+         5mDhEDzq4LQr9cpcqVVEZY2AhNa09dLlmdJtwIyyFwDLmBV+8JEU9VCN/CExVS6JJDH3
+         p3rfO81wkPJOcva7I/m0r0SqGwAFOmvPF8pmNAgkn/TWFTgGlKhzeiuHYBhLFEs9fknD
+         mH9D1QR0KZ8xgTFHImkXGpHF/YYlRi8ZUCQtZfZ9atnvpBYBI2w4YgNs+7KES9d0Hf3K
+         gxGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=N3UrA+L6fKKCkym6ASMJYc2jRNYVOVnvVJE5werYGnw=;
+        b=HXMhygv5tr/iRFQV1lTdKZgBWzhglkFT34l4m34Lf4leK8Q/5oTw9JJCgclQ8EZE/7
+         jaJeEK3Vmd2IhxFyexmGmf+jKk0dxJiWVy4g1ocuPegaW+o3rOLELYlafGWTt0gOJ7+V
+         yuvUlULNKLzHfOU72cMVtm2zOKkzJkrEJZr7XweKlqnQOq25CviI6oZnwbCpKnLmDSyi
+         RZQE0aFJmlzKbrfPFY2jG/c+jTxEQOVrr9tMY0STTV2N8Cp3fjWCufD3iXcV5UjN3A8t
+         biuQvvddraGiI2c6BQEJ+mqefl0caPS8/BFBo6QLrn48z/NdMr/i2ogObFIvRujyqBDO
+         nugQ==
+X-Gm-Message-State: AOAM531sfJD6gs54YbSRncjv2aGQl+0gLjWyaryy7PB/cIQhdHRE0d+6
+        h+7oNqNd++L+7SkZfldXUd1Ej09x2CfB/nmH
+X-Google-Smtp-Source: ABdhPJy15V32sZVFTROxJJwV3ePEVFwMYm9dYGuNHyquDslsLMT4bbOHF9vhKYSZ75x5MpfJBaampg==
+X-Received: by 2002:a17:902:9346:: with SMTP id g6mr5772701plp.19.1591854005732;
+        Wed, 10 Jun 2020 22:40:05 -0700 (PDT)
+Received: from home-desktop ([114.204.138.55])
+        by smtp.gmail.com with ESMTPSA id s1sm1392337pjp.14.2020.06.10.22.40.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Jun 2020 22:40:04 -0700 (PDT)
+Date:   Thu, 11 Jun 2020 14:40:00 +0900
+From:   Hyeonki Hong <hhk7734@gmail.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>, khilman@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH] pinctrl: meson: fix drive strength register and bit
+ calculation
+Message-ID: <20200611053958.GA3687@home-desktop>
+References: <20200610041329.12948-1-hhk7734@gmail.com>
+ <1jo8prnk2x.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Message-ID: <04568d62-d6ad-45f6-a00f-0ace83b73132@cesnet.cz>
-In-Reply-To: <20200610080327.GA1805015@ulmo>
-References: <8cffce08-ed84-4242-8dcd-72de693f0f71@cesnet.cz>
- <20200610080327.GA1805015@ulmo>
-Organization: CESNET
-User-Agent: Trojita/v0.7-412-g2869c385e; Qt/5.13.0; xcb; Linux; Gentoo Base System release 2.4.1
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1jo8prnk2x.fsf@starbuckisacylon.baylibre.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> I think a good first step would be to try that reverting the change
-> would actually fix the issue for you. Something like the below should do
-> the trick.
+On Wed, Jun 10, 2020 at 03:09:42PM +0200, Jerome Brunet wrote:
+> 
+> On Wed 10 Jun 2020 at 06:13, hhk7734@gmail.com wrote:
+> 
+> > From: Hyeonki Hong <hhk7734@gmail.com>
+> >
+> > If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
+> > registers. However, when register and bit were calculated, the first
+> > register defined in the bank was used, and the bit was calculated based
+> > on the first pin. This causes problems in setting the driving strength.
+> >
+> > Solved the problem by changing the bit using a mask and selecting the
+> > next register when the bit exceeds 15.
+> 
+> This fixes the case of GPIOX on g12 which goes up to 18 yes but the same
+> problem will happen again a if bank ever goes past 31 pins. In such case
+> the problem would apply to all reg types.
+> 
+> I would prefer if it was solved in a more generic fashion, like defining
+> a "stride" table with the values of each reg type. This table can common
+> to all aml SoCs for now but eventually it probably need to be SoC
+> specific.
+> 
+> This would allow to :
+> A) handle the case you are reporting in a generic (future proof) way
+> B) remove the weird "bit = bit << 1;" calc in place in the get/set of
+> the drive strengh pinconf
 
-That's indeed the case, reverting that commit makes everything work again=20
-on 5.7.1. We have five other unrelated patches as well, our tree is=20
-available at=20
-https://gerrit.cesnet.cz/plugins/gitiles/github/torvalds/linux/+log/aabb023ef=
-197c4b365a4404bca2fd8cd0c227835=20
-.
+If all amlogic SoC has same register style, I think the code below is fine.
 
-> Also, can you point out which exact DTS file it is that you
-> see this problem with?
-
-It's armada-388-clearfog-base.dts, and we have some small additions on top=20=
-
-of that. The only modification which looks relevant that we ship is:
-
-/ {
-        gpio_i2c {
-                compatible =3D "i2c-gpio";
-                sda-gpios =3D <&gpio0 25 (GPIO_ACTIVE_HIGH |=20
-GPIO_OPEN_DRAIN)>;
-                scl-gpios =3D <&gpio0 24 (GPIO_ACTIVE_HIGH |=20
-GPIO_OPEN_DRAIN)>;
-                i2c-gpio.delay-us =3D <1>;
-                #address-cells =3D <1>;
-                #size-cells =3D <0>;
-        };
+static const unsigned int meson_bit_strides[] = {
+	0, 0, 0, 0, 0, 1, 0
 };
 
-&uart1_pins {
-        status =3D "disabled";
-};
+static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
+				   enum meson_reg_type reg_type,
+				   unsigned int *reg, unsigned int *bit)
+{
+	struct meson_reg_desc *desc = &bank->regs[reg_type];
 
-&uart1 {
-        status =3D "disabled";
-};
+	*bit = (desc->bit + pin - bank->first) << meson_bit_strides[reg_type];
+	*reg = (desc->reg + (*bit / 32)) * 4;
+	*bit &= 0x1f;
+}
 
-With kind regards,
-Jan
+How about this?
+
+> >
+> > Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
+> > ---
+> >  drivers/pinctrl/meson/pinctrl-meson.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> > index bbc919bef2bf..ef66239b7df5 100644
+> > --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> > +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> > @@ -98,6 +98,13 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
+> >
+> >  	*reg = desc->reg * 4;
+> >  	*bit = desc->bit + pin - bank->first;
+> > +
+> > +	if (reg_type == REG_DS) {
+> > +		if (*bit > 15) {
+> > +			*bit &= 0xf;
+> > +			*reg += 4;
+> > +		}
+> > +	}
+> >  }
+> >
+> >  static int meson_get_groups_count(struct pinctrl_dev *pcdev)
+> 
