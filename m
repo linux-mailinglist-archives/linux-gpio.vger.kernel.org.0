@@ -2,148 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDAF31F63B1
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 10:34:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6873F1F63B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 10:35:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgFKIeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Jun 2020 04:34:37 -0400
-Received: from mail-vi1eur05on2046.outbound.protection.outlook.com ([40.107.21.46]:55745
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726651AbgFKIeg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:34:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R55udsL6zlDXwduLw6Y9H9bBaqAURlYPyLeKiu45FcD5iT3h/3y1psi9hpheNEvBJQ01bn/q4ql8JGfxRyFHCmGCPrXTwLbt5wxAIC1XsXzoMLd9Ui7lFOOOQsLD5EOGg9UEeYFrQSXyqGE7JzigH04XCmMf64m+70Iv0qAbBaL8SCkph1j6ipkNtzZ56Fu1VkttvePvjNjx12OvOx8XSZBuIBFQ0efriDpwXWoAfP20+bN8fthnpRkz5DOdST5SBwpVSHUNkVY/e7NmiPVEjZt4xPZ6W/8RE1LCYwp0yiobP0wJGBMW+A2/REN3aTBZcBbYxWEghV4yhg9HSQwGDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ETx5Dd8sTz943zVqBZvQ9vUea9KnbB86qk4neVQp18o=;
- b=DTTlphKI+WFjbzqunOFumACQtuXay+XFMMCPgM5+F2ZdWYzOXk8TgnK8pg/K1s5MRSU0skSsjbdRWIRtBl0hFWoYLXN5rFTxG603O6T+YCDgIGLrPDkHHnRsVJocqCG2UAquh5JYkpBqNLgtCfJ1D6GIGxOwQhqN6QxTLJoX82bxuhWalOpO4kexGtn/xjn68Rw2APeE8t29NqNBgxqbEmto1Au/Wl33DktQN5QjVV5G2b6iClwhjuWlN8AzUFdOgWZkRRjWM1/QIANwQmyxJg6bmL+YEWjA0rQ7u2URsvfmfsNvFUDzd4K74ru2D3eaIaJEOtK/ikiGnibCPHGbww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ETx5Dd8sTz943zVqBZvQ9vUea9KnbB86qk4neVQp18o=;
- b=aV8Jxp03Gj3Gd1ySzGTfh5fshfFodjWzeMxnYdZN+i5K8ot2p5jwgYfQ/DmvmREu/EaW8e+xq3SKA7pLCDxCdZcbkCD/X7/PCTubNj33eXaYjHfQgXyTDdil1GaM3u63rhJrKPNwGLc2ANehYYNHnmmfApvo4t+0EcrVtt6UxAo=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2575.eurprd04.prod.outlook.com
- (2603:10a6:800:51::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
- 2020 08:34:31 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 08:34:31 +0000
-Subject: Re: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as module
-To:     Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com,
-        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-Message-ID: <2dfc7a60-1e96-190b-7385-89a843312d80@nxp.com>
-Date:   Thu, 11 Jun 2020 11:34:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR10CA0046.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::26) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+        id S1726651AbgFKIfo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jun 2020 04:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgFKIfn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Jun 2020 04:35:43 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341FFC08C5C1
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Jun 2020 01:35:43 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id n141so4855412qke.2
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Jun 2020 01:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DvyWv8zI1tCNOmOhDH9gqHVmEeBnf7bP2kS6STbSdMc=;
+        b=wLUMvO0Z7LK1/8yVvwhJOFQxva5EDrX/CWEOg9r468mPT6aPs4b4a+qY4M6ia6vgE7
+         C6QK7QHndCAnJLLGrGyaOx4lu02MYqvTnf8ijFGm3essFKN2MbCyKAsBfy5b1hgooJpp
+         ai30JnSwYB+vxrNFbAVlXlf2Bpw7GJ4Uw0GIX4CxPhAm3hi6LwTXoUo4lkaHjaqE1VbQ
+         3ONkof49g57sX8wnE5j1QusdoCrsP3G6wDbnpq8biRaBUkLUnNNPzfUF4P9xfUKgcO+A
+         jZvpCkODIHTmMAGIRnlu02ot85BPJqMfPSyAbqqQEQmbarqFS0TDo4FtRoqYWY56r+zN
+         ELZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DvyWv8zI1tCNOmOhDH9gqHVmEeBnf7bP2kS6STbSdMc=;
+        b=iOLNakHoKJB4OcXGzOOnvbDjqD+Hh/IgA8rTINlK2KJH35IlV6xGNUJyzhCbT9ygwZ
+         +LcGRN5VrHtRFitbM9u76IIXwWL0T7l7JS/IKQPaEERwaFsmyVcMxy1aGEKweLlRHwNL
+         JICaUnS1GHKso09mSJ1DwQVMx33oRU1tKtLOEI6IhoYsTCKfPYTH7iIqVRbcDOUY0b4m
+         90VADND9fLKy3ZnexiJdf4nnPNNNo8XGFMCB7yKKG+koHdViAmPStuDDKj/rgzUw0gIl
+         MHg4wagzlS5hXQ2Kx2v7DzsbOdXttNSeX5LLGPU1cJsoHlyER/S+ZnsSMKAxBBTK1KvY
+         uHwQ==
+X-Gm-Message-State: AOAM533MVHMblDebbH+HZ8zcVTvJ+T73BskME8oWfcj8vuCsEly9CfzW
+        F8b+u/HeZde3mVDdAQ59xxVuWEK3IZvjF43v0w76Nzl9
+X-Google-Smtp-Source: ABdhPJwS1EfUl7nStNbyXZclW0+o6Uf4aV8Yr3UwYH5ddHX5pwVR3Cj6FaI5MLgsQmh6f32nYDryhm4a06FuhOYT17c=
+X-Received: by 2002:a37:a643:: with SMTP id p64mr6671057qke.21.1591864542103;
+ Thu, 11 Jun 2020 01:35:42 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:2f08:560d:e500:fcf6:7c4d:8076:b570] (2a02:2f08:560d:e500:fcf6:7c4d:8076:b570) by AM0PR10CA0046.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.21 via Frontend Transport; Thu, 11 Jun 2020 08:34:29 +0000
-X-Originating-IP: [2a02:2f08:560d:e500:fcf6:7c4d:8076:b570]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 73adfcf3-4b92-4a00-d2cb-08d80de242ab
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2575:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB25752EE570A5BD96BE36FA57F9800@VI1PR0401MB2575.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QAlozSzh38Wo5H9Yf29wpqpcWGLuYIGUNvm375u+1WKN0oBnttb5FYa0i2lF+hTme0rDiFx91nkI2SfJ0ELHI64cTNu5sOvOPiDu1W3X4fXlOLqAlz4c9IlCc4iRzCfaEpB7e28w1zS73IEmJkJ/VWLcj2R/XQk6SKktYOE3dNecoy5MaOTsK232SjgRjTwmqFSUWAJg0aJKqOpzroMaD5ogSxjeBwVnpO0AqNPqhHt2m6FlXwNO4lASJnvQR82MMyD0tVDjhEsmuTY/ainzg0wy3TFZnUKNXKZ2UpaA3VZe7YVfINnxi3/dOTZpjrAAH7McW5apW7zTdWcb1MSUP73fm9Yuy8JbbDR75YDuCNCOGgn34e3gg5EZnfLV2vpwSeaZhcdxBwiEf5zwZUDDcg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(366004)(39860400002)(346002)(376002)(136003)(396003)(4326008)(16526019)(66556008)(6486002)(316002)(478600001)(186003)(66946007)(66476007)(44832011)(8936002)(31686004)(83380400001)(2906002)(31696002)(86362001)(2616005)(5660300002)(36756003)(8676002)(52116002)(53546011)(921003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Z8IIyIi+ZcEElHByDKH6i3Gp6JxWuY7+36yzvOiA+9v56UD2jIcd4RDqi3DeTx1k5gbpqpvoeq4gMjA757xRnERnkPbVdxELooumcS6c+qlbWsT4MBLM7uI+VMSOVxn3dlwSsZw8WMeLtijvQwYClc6902j0Tdznclfed4TrS8UVnAy5pPX2ejyiqwZu2Fte17L/LMppe9uQ2m6LfDdqa6bUl8R61zKDSpMXXQBr8UD2YZnQk49XzAhp7pqsUxIliwHysMK9jmSQKqdD4/x7RY4icouCjazyH/p3b1hqfEJQhB6NVq12KOLQNOcq28knXbcfk6PONVirfBI1btpkWqz/m+lNGkKm+LRhRA+1NzJXaVUkGmA76RaG3EdoZ13GqLKWDgiNJzhHYS21Kan0j14rQ4vvvkxXqOzL0Fr6FdGkPhDARfuhmmO1NuawJUEpWJ4E3+suJFtRJhW3UjDIM9zTuPX25paMm1HxSUMaV8dn+dPne02KPlCDLghfdMPGIQikxkD2mWSP/AEuJgu65921cb25To8Vg8Yj/J7A8wtFQEnFELuzszTi+cLrlxj/
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73adfcf3-4b92-4a00-d2cb-08d80de242ab
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 08:34:30.8050
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N4uPxu6FJufNKrJlE2cB7xPmBcIiChiwx3Jg7gACR6gOi9d90UqOklF4j7XqB7OnmDSAdpnbBcIXRkEF34Xleg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2575
+References: <20200605235652.2680545-1-hancock@sedsystems.ca>
+In-Reply-To: <20200605235652.2680545-1-hancock@sedsystems.ca>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 11 Jun 2020 10:35:31 +0200
+Message-ID: <CAMpxmJWyfVrw_o_YRwyZZoDaNFZ74xm8_Cv28tEu9SbRD2u4Ow@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xilinx: Add interrupt support
+To:     Robert Hancock <hancock@sedsystems.ca>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Anson,
-
-Patch series mostly looks good to me. I have a comment about adding
-
-the MODULE_LICENSE. This is a pretty important change.
-
-
-Can you please add this change in a separate patch with a proper explanation
-
-of why it is needed.
-
-
-Most likely it is because it was forgotten in the previous patches.
-
-
-thanks,
-
-daniel.
-
-On 10.06.2020 10:57, Anson Huang wrote:
-> There are more and mroe requirements that SoC specific modules should be built
-> as module in order to support generic kernel image, such as Android GKI concept.
+sob., 6 cze 2020 o 01:57 Robert Hancock <hancock@sedsystems.ca> napisa=C5=
+=82(a):
 >
-> This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
-> including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, and it also supports building
-> i.MX common pinctrl driver and i.MX SCU common pinctrl driver as module.
+> Adds interrupt support to the Xilinx GPIO driver so that rising and
+> falling edge line events can be supported. Since interrupt support is
+> an optional feature in the Xilinx IP, the driver continues to support
+> devices which have no interrupt provided.
 >
-> Compared to V3, the changes are as below:
-> 	- change the config dependency back to original;
-> 	- use function callbacks for SCU related functions, and all drivers
-> 	  using SCU pinctrl driver need to initialize the function callbacks,
-> 	  pinctrl-imx.c will check the SCU function callback and call it when
-> 	  it is valid, then no build issue when PINCTRL_IMX is built in and
-> 	  PINCTRL_IMX_SCU is built as module.
+> These changes are based on a patch in the Xilinx Linux Git tree,
+> "gpio: xilinx: Add irq support to the driver" from Srinivas Neeli, but
+> include a number of fixes and improvements such as supporting both
+> rising and falling edge events.
 >
-> Anson Huang (9):
->    pinctrl: imx: Support building SCU pinctrl driver as module
->    pinctrl: imx: Support building i.MX pinctrl driver as module
->    pinctrl: imx8mm: Support building as module
->    pinctrl: imx8mn: Support building as module
->    pinctrl: imx8mq: Support building as module
->    pinctrl: imx8mp: Support building as module
->    pinctrl: imx8qxp: Support building as module
->    pinctrl: imx8qm: Support building as module
->    pinctrl: imx8dxl: Support building as module
+> Signed-off-by: Robert Hancock <hancock@sedsystems.ca>
+> ---
+>  drivers/gpio/Kconfig       |   1 +
+>  drivers/gpio/gpio-xilinx.c | 247 ++++++++++++++++++++++++++++++++++---
+>  2 files changed, 233 insertions(+), 15 deletions(-)
 >
->   drivers/pinctrl/freescale/Kconfig           | 19 +++++-----
->   drivers/pinctrl/freescale/pinctrl-imx.c     | 22 ++++++-----
->   drivers/pinctrl/freescale/pinctrl-imx.h     | 57 ++++++++++++-----------------
->   drivers/pinctrl/freescale/pinctrl-imx8dxl.c | 12 +++---
->   drivers/pinctrl/freescale/pinctrl-imx8mm.c  | 10 ++---
->   drivers/pinctrl/freescale/pinctrl-imx8mn.c  | 10 ++---
->   drivers/pinctrl/freescale/pinctrl-imx8mp.c  | 10 ++---
->   drivers/pinctrl/freescale/pinctrl-imx8mq.c  |  9 ++---
->   drivers/pinctrl/freescale/pinctrl-imx8qm.c  | 12 +++---
->   drivers/pinctrl/freescale/pinctrl-imx8qxp.c | 12 +++---
->   drivers/pinctrl/freescale/pinctrl-scu.c     |  6 +++
->   11 files changed, 86 insertions(+), 93 deletions(-)
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index bcacd9c74aa80..5f91e7829fb7d 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -652,6 +652,7 @@ config GPIO_XGENE_SB
 >
+>  config GPIO_XILINX
+>         tristate "Xilinx GPIO support"
+> +       select GPIOLIB_IRQCHIP
+>         help
+>           Say yes here to support the Xilinx FPGA GPIO device
+>
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 67f9f82e0db0e..42ae12801d0bf 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -14,6 +14,9 @@
+>  #include <linux/io.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+>
+>  /* Register Offset Definitions */
+>  #define XGPIO_DATA_OFFSET   (0x0)      /* Data register  */
+> @@ -21,6 +24,11 @@
+>
+>  #define XGPIO_CHANNEL_OFFSET   0x8
+>
+> +#define XGPIO_GIER_OFFSET      0x11c /* Global Interrupt Enable */
+> +#define XGPIO_GIER_IE          BIT(31)
+> +#define XGPIO_IPISR_OFFSET     0x120 /* IP Interrupt Status */
+> +#define XGPIO_IPIER_OFFSET     0x128 /* IP Interrupt Enable */
+> +
+>  /* Read/Write access to the GPIO registers */
+>  #if defined(CONFIG_ARCH_ZYNQ) || defined(CONFIG_X86)
+>  # define xgpio_readreg(offset)         readl(offset)
+> @@ -35,17 +43,27 @@
+>   * @gc: GPIO chip
+>   * @regs: register block
+>   * @gpio_width: GPIO width for every channel
+> - * @gpio_state: GPIO state shadow register
+> + * @gpio_state: GPIO write state shadow register
+> + * @gpio_last_irq_read: GPIO read state register from last interrupt
+>   * @gpio_dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+> + * @irq: IRQ used by GPIO device
+> + * @irq_enable: GPIO irq enable/disable bitfield
+> + * @irq_rising_edge: GPIO irq rising edge enable/disable bitfield
+> + * @irq_falling_edge: GPIO irq rising edge enable/disable bitfield
+>   */
+>  struct xgpio_instance {
+>         struct gpio_chip gc;
+>         void __iomem *regs;
+>         unsigned int gpio_width[2];
+>         u32 gpio_state[2];
+> +       u32 gpio_last_irq_read[2];
+>         u32 gpio_dir[2];
+> -       spinlock_t gpio_lock[2];
+> +       spinlock_t gpio_lock;
+> +       int irq;
+> +       u32 irq_enable[2];
+> +       u32 irq_rising_edge[2];
+> +       u32 irq_falling_edge[2];
+
+I don't know this driver very well. Could you explain why the two
+instances of these fields and why are you removing the second lock?
+
+[snip!]
+
+>         chip->gc.base =3D -1;
+> @@ -336,6 +530,29 @@ static int xgpio_probe(struct platform_device *pdev)
+>
+>         xgpio_save_regs(chip);
+>
+> +       chip->irq =3D platform_get_irq(pdev, 0);
+
+Why not simply: platform_get_irq_optional()?
+
+> +       if (chip->irq <=3D 0) {
+> +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
+> +       } else {
+> +               u32 temp;
+> +
+> +               /* Disable per-channel interrupts */
+> +               xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, 0);
+> +               /* Clear any existing per-channel interrupts */
+> +               temp =3D xgpio_readreg(chip->regs + XGPIO_IPISR_OFFSET);
+> +               xgpio_writereg(chip->regs + XGPIO_IPISR_OFFSET, temp);
+> +               /* Enable global interrupts */
+> +               xgpio_writereg(chip->regs + XGPIO_GIER_OFFSET, XGPIO_GIER=
+_IE);
+> +
+> +               chip->gc.irq.chip =3D &xgpio_irqchip;
+> +               chip->gc.irq.handler =3D handle_bad_irq;
+> +               chip->gc.irq.default_type =3D IRQ_TYPE_NONE;
+> +               chip->gc.irq.parent_handler =3D xgpio_irqhandler;
+> +               chip->gc.irq.parent_handler_data =3D chip;
+> +               chip->gc.irq.parents =3D &chip->irq;
+> +               chip->gc.irq.num_parents =3D 1;
+> +       }
+> +
+>         status =3D devm_gpiochip_add_data(&pdev->dev, &chip->gc, chip);
+>         if (status) {
+>                 dev_err(&pdev->dev, "failed to add GPIO chip\n");
+> --
+> 2.26.2
+>
+
+Bart
