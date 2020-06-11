@@ -2,102 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB0F1F654C
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 12:03:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0FDF1F65E4
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 12:43:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgFKKDe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Jun 2020 06:03:34 -0400
-Received: from smtp.asem.it ([151.1.184.197]:57849 "EHLO smtp.asem.it"
+        id S1727785AbgFKKnn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jun 2020 06:43:43 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48798 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgFKKDd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 11 Jun 2020 06:03:33 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000311368.MSG 
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Jun 2020 11:58:26 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 11
- Jun 2020 11:58:24 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Thu, 11 Jun 2020 11:58:24 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1727770AbgFKKnl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 11 Jun 2020 06:43:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 258262004CB;
+        Thu, 11 Jun 2020 12:43:38 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9B2C02004B4;
+        Thu, 11 Jun 2020 12:43:33 +0200 (CEST)
+Received: from titan.ap.freescale.net (titan.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F40BE402BF;
+        Thu, 11 Jun 2020 18:43:27 +0800 (SGT)
+From:   Hui Song <hui.song_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-csky@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH] doc: devicetree: bindings: fix spelling mistake
-Date:   Thu, 11 Jun 2020 11:58:04 +0200
-Message-ID: <20200611095804.22026-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A090203.5EE20041.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Song Hui <hui.song_1@nxp.com>
+Subject: [PATCH] gpio: mpc8xxx: change the gpio interrupt flags.
+Date:   Thu, 11 Jun 2020 18:28:09 +0800
+Message-Id: <20200611102809.27829-1-hui.song_1@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix typo: "triger" --> "trigger"
+From: Song Hui <hui.song_1@nxp.com>
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+Delete the interrupt IRQF_NO_THREAD flags in order to gpio interrupts
+can be threaded to allow high-priority processes to preempt.
+
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
 ---
- Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
- .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
- Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-mpc8xxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-index ba455589f869..e1c49b660d3a 100644
---- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-@@ -12,7 +12,7 @@ Required properties for the top level node:
-    Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
- - #interrupt-cells : Specifies the number of cells needed to encode an
-    interrupt. Should be 2. The first cell defines the interrupt number,
--   the second encodes the triger flags encoded as described in
-+   the second encodes the trigger flags encoded as described in
-    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- - compatible:
-   - "mediatek,mt7621-gpio" for Mediatek controllers
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-index e13405355166..e6bbcae4d07f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-@@ -10,7 +10,7 @@ Interrupt number definition:
-  16-31  : private  irq, and we use 16 as the co-processor timer.
-  31-1024: common irq for soc ip.
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 604dfec..1e86652 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -417,7 +417,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
  
--Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-+Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-  IRQ_TYPE_LEVEL_HIGH (default)
-  IRQ_TYPE_LEVEL_LOW
-  IRQ_TYPE_EDGE_RISING
-diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-index 15cfec08fbb8..f5c7e99cf52b 100644
---- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-+++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-@@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
-  - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
-  - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
-  - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-- - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
-+ - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
- 
- ==============================
- timer node bindings definition
+ 	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
+ 			       mpc8xxx_gpio_irq_cascade,
+-			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       IRQF_SHARED, "gpio-cascade",
+ 			       mpc8xxx_gc);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
 -- 
-2.17.1
+2.9.5
 
