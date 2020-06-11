@@ -2,152 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A18D11F63D4
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 10:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DE611F63E2
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jun 2020 10:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgFKImV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Jun 2020 04:42:21 -0400
-Received: from mail-eopbgr150051.outbound.protection.outlook.com ([40.107.15.51]:22887
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        id S1726756AbgFKIoT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Jun 2020 04:44:19 -0400
+Received: from mail-db8eur05on2073.outbound.protection.outlook.com ([40.107.20.73]:2881
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726651AbgFKImV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 11 Jun 2020 04:42:21 -0400
+        id S1726748AbgFKIoS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 11 Jun 2020 04:44:18 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=guRGX/iD39p9E6YnWJoiU/5f/nQUdzinVNTq15oS9dIp53vt5HB+w54A84zGwlVON6G5lVsBgw3q0W66OpOBGB3gQ4XNXETUv+bv9p/TFMV+SElgHMMui481J9yg6A2BDtu1CC6HyHyWYW2URX606BsSM7Dulte69yzCccBivUS8s6TCDzx++xgQSJV1kgR2UKp1RWvrZA6Gjw9yBCD44jT6LkrreScSwrtIlpRGeEgDFaOtAtMlZkSPBjtGLqKQaDDYV9/uvoPQJnzDZPu1V/L/TaiAHsjvwlXYa3TszM4I1f1WRclbCr3mnYsT6lT42pmUXjoj2M7MPd4Yn3tc3g==
+ b=gZTpKhK2cqjUOCW7cM97XuaggFPotOXmB+4pu2P5DBy+RWpKBemdSKYtZr2da35IZw2RaRBqrFqwrGxqig4M+dwFHkP6LubyhVKe2ZbgLxpykJWscwTwzlQlg4BJ96e7XJ7cbTTC1F+oIWcgLHkSXJue/fu0NdPG3mhLXzUJHnutUZe4plxw6xogJNoBOgmtCcTw8aRoiJ80e25r20DZAw35H1MVHv18fi2/bQKl99EhRxekQzkgQB45RMeqIxezG52CAprls56e/3zpRo6dYywqZBjgZTyoG/1rCEAicEddIYhwuglSr+igl+R/7AYhEcfow2PyrOkNfwu/nbF68Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aaKLcSMzri/TGVbDLMfiPh3RMLvoqPo4w7dwSjzRa9s=;
- b=XOwloy7R9Cs6LIfHCN7YNMvlP8Uo8s9Ge0K7MSVHngNfFW6jwDrzEDMMYxuMEauDBN04G/YCnTMY62WRo5BzQAEkN54MfqDuXXiU1jn8hUofBQeptwX4uiwb1StxyrHG9zEsly43ogYTr+nsrkYXdvZTcHmUPdpOzmNEajBCMpS/OCQG4df6W8Rw0FssQbcYC/MHpSRsoaZnmcyeenyFJczt6nfU9jsR+nr/LsjFXSCgCRICjMTlyuDmmUjn+efdyM/S3UjEz/7FTjp5XcNAWEJ8SkmllBuBbjVdG+pY3Rzxto9f79HHBQIy/asnRwiK+AgEpzJAP7g0OpN1u2xRHg==
+ bh=hpuXGIoQIUfWNUTvuSh8cn9nwQTlb/eY0iu8ggjLlEk=;
+ b=Xa3dpiStHT5q/7AJj6/nr70Ee8JH9gQKxTthmAq6bWTOZJ5t/hIXBWH8edN6tmvzoUtA822Xkm2LE4VtkAg/wPldZ08FBjQdQrmn+W/MzO8KxMx9+ipV0gHJ+X6GzbZS5W2AQydE/lmuyO/xDnh8K171UIIjrAHsOa7yluLmIBwHBCj38pIq4b19XrNd91hZs6B0GYPdd2q2NRX8rHGNp4LSRAtLrGTCxObrA2CDsbwe1H//UWq1/EmbNy72jKuSTcxS6ff5m1soQYgOKzrX0DKq/oIvUdskK5BujQmglSuMiOmDsvF91d1pPA6N5vwHR1qt+nzi+9o9ro25aGlyFw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aaKLcSMzri/TGVbDLMfiPh3RMLvoqPo4w7dwSjzRa9s=;
- b=aKkH4nPkOQl2CL6O/IWNnCYvdaw39QLfRy2hjsV+Xk0uqyv38iuNXO1g0eTYnNU9EY497ODjTSJZ8TMbCVEO3214lnSXOR/H/dKiDGS5hq3SMER8FjsLNYbw9EIq7zKfsvPT6fKoXdlVWbHGWSA7zxwTwLi7juvRJGwnicUceno=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19) by VI1PR0401MB2464.eurprd04.prod.outlook.com
- (2603:10a6:800:56::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
- 2020 08:42:17 +0000
-Received: from VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60]) by VI1PR0401MB2287.eurprd04.prod.outlook.com
- ([fe80::9d5c:685e:4b51:fa60%3]) with mapi id 15.20.3066.023; Thu, 11 Jun 2020
- 08:42:17 +0000
-Subject: Re: [PATCH V4 4/9] pinctrl: imx8mn: Support building as module
-To:     Anson Huang <Anson.Huang@nxp.com>, aisheng.dong@nxp.com,
-        festevam@gmail.com, shawnguo@kernel.org, stefan@agner.ch,
-        kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
+ bh=hpuXGIoQIUfWNUTvuSh8cn9nwQTlb/eY0iu8ggjLlEk=;
+ b=cm8PkrG1cKdLgCDP48gU02Is26F+MYbU1Eh6lvVr4uNua0uiamuUGzbCFxqcBL13+lrOzNQWHmTgDPMnhrdKtMiPeU/lFe+edbedlLuxUHTnzD9v2xiKVQ436pC6gARbXNJ5r/HaDhFyVIEz1U2lrfF8yImTryEIvEiawx8+u+E=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3643.eurprd04.prod.outlook.com (2603:10a6:8:5::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.18; Thu, 11 Jun
+ 2020 08:44:14 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
+ 08:44:14 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+Thread-Topic: [PATCH V4 0/9] Support i.MX8 SoCs pinctrl drivers built as
+ module
+Thread-Index: AQHWPv5bWyCCa1jyBkSPB8P41zHbxKjTGD+AgAABMwA=
+Date:   Thu, 11 Jun 2020 08:44:14 +0000
+Message-ID: <DB3PR0402MB3916AF541FC5692D00625EECF5800@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1591775865-26872-1-git-send-email-Anson.Huang@nxp.com>
- <1591775865-26872-5-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Baluta <daniel.baluta@nxp.com>
-Message-ID: <33292cab-c49d-0878-dd8c-1166258e089b@nxp.com>
-Date:   Thu, 11 Jun 2020 11:42:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <1591775865-26872-5-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <2dfc7a60-1e96-190b-7385-89a843312d80@nxp.com>
+In-Reply-To: <2dfc7a60-1e96-190b-7385-89a843312d80@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-ClientProxiedBy: AM0PR01CA0110.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::15) To VI1PR0401MB2287.eurprd04.prod.outlook.com
- (2603:10a6:800:2e::19)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2e510dce-1831-477c-7c7d-08d80de39ec3
+x-ms-traffictypediagnostic: DB3PR0402MB3643:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB36436353AF13CD8F03077F4FF5800@DB3PR0402MB3643.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0431F981D8
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RYEQW9MJ+pSkKYO24LV7HorQ4dpIQB0X/SXhew2bduwnfrNz6fl08vE1jXw78LjkUZLdoGiSo746AvhokGVwelRAQuvYf9iVsgHytaq6J/KO5v9QR2Ekfv3eaBAtBSlFxTOI0cPeGZJXbube4r/Tkvxhg5WzI4KzBkS1z+Jx+IhyNjx6aCeM17zysraRoU+w8L7SjaSK1F7ySoKTJGrqdIA4VUfZPEpgQ4rHRuaW1jYwlZhSbsQ0FRhzGcok0FCOO8fOrx6C3J8MmEVY6WPHOAjzyBTACAabAmH3bOP2DrQUxe3i1C13hzZzEj1GYZXgkJMhVpSyh1SAc7cBCOCEx5Bp6/1L+9/ttipUdaGl6lYIeUGSHBwymMixnJy0B38h
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(4636009)(136003)(396003)(346002)(39860400002)(376002)(366004)(52536014)(8936002)(2906002)(8676002)(316002)(66556008)(55016002)(4326008)(9686003)(5660300002)(83380400001)(33656002)(66946007)(26005)(76116006)(110136005)(6506007)(86362001)(478600001)(66476007)(44832011)(7696005)(66446008)(71200400001)(186003)(4744005)(64756008)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 0FAuCj5W5O4n4xP1P+XSAFWDxntDmMy+DICrJposQZCNA2TLrDuIeYyWeRhVU4HPyECPAv8e/ZX/3gQkDZM0ZDnefho9gcXsjOvvnkyZV9lPG3SDJs8HVEkwqfMISFOo96fiYJsXRu4DurRYH49/QnbFUbukOXoa8EL8zRH7Am7hYQFX4hNOurmvgNdEylPlgImPAddxYNdUlbFHKvCk9Aj84M1kqVRGezLm0bYeqTtbEuBcJgSJ8Tylbjx2oXgJKwVzDnYtEurpzWuok4Bnm3Xi3cec5tkkqBDi4vS/t88NGW3an8xDoQAEPHNq8Z8/AFU+76Wvz5cIArhhqFAxZMZh/zwGhJTUcJwGe+pROxrRVi6tAHFDa2DamR2pFC48Yc+Uj+EbN/9LeSlxA1IMyQhoPGAo4GmKodJC4L4sXmagtRMksYQ3TPN0HWKs28HMs+xmtZQqS1i3I/qDBRBaCEQMAGxvbL4PjbWonMEscFiZMyxBjlF6fjZgot4pnBqg
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:2f08:560d:e500:fcf6:7c4d:8076:b570] (2a02:2f08:560d:e500:fcf6:7c4d:8076:b570) by AM0PR01CA0110.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 08:42:16 +0000
-X-Originating-IP: [2a02:2f08:560d:e500:fcf6:7c4d:8076:b570]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0c6849ab-3f55-4489-4cdd-08d80de358cd
-X-MS-TrafficTypeDiagnostic: VI1PR0401MB2464:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0401MB246489B0406B9CCFB69AC275F9800@VI1PR0401MB2464.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0431F981D8
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DImLV8J8FexEW+sHFXrJ06czzddzPXy6fja/UdRWbtx5WYQRbh64LUOUVL2Nok1SDZekkXV71JhbboYozr+hlB7gVf5B7fhGYUuefRF/rg+0BXESOgxZ6azIQq983CydhplhoB4QBo4hZJUArNCW70kPUcKagLmsOhCE7yIOwu0ZJ1qL5bMDI7jXINqQFwqFSlWpjvcHDK+m05hNJc7JQE0BM3DN+hbECZ4IiVh/MPQLfrv7tpQ0KSLl8K9+agLU2XiW+Xhwc59JvCBKJ/PV5ckQtVEoPrepEWiV/y+61npYQKb4X7Kp5B5e7BFg3tTgqVOEj3TYQ7nFE5z2mXe4V0Qr2q9KeRu/G9e+/tSKtOBAy8aDZmbtW6ZjitF0zrPUb2M0udQnJmJ5w7TJGu3SxtiuhC7ewHSrbA8IstPB6Us=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0401MB2287.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(2906002)(31686004)(83380400001)(8676002)(186003)(316002)(86362001)(5660300002)(16526019)(66556008)(8936002)(478600001)(66946007)(66476007)(2616005)(31696002)(6486002)(4326008)(53546011)(36756003)(52116002)(44832011)(921003)(32563001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GpH0JD7MWUdthuNbZSrrx7gA3DnKyjAWMUenfVat42egxvPlaC5sPuW1iDdvqJXDc4HYHrI/vOMQohS53RBNV6zIXje+BOoXPXtjLAfJg0A/6zbGWhiEhPkK419VRe0wIf72sV8O99KStnBf9GtBjfpSaGpSCj7zkQp2GYe9tOuQO3Ct2WgN1b1F0u+gBKy8XeTdnBwvLTQo842iVZ1DInrDhFv864DOQRfX+2zI6sj42+LJA3MV6OU1ueTbxV8wf4+8y3zwYjI0QnhwXnQnys6FMrhjfZKgOXTce7VosY9+OOsd/feojf6F4+D1JICKB6z5xe12Qmoy2ieZAsCiVLyRRKrOQG4kC4xP6P9dr2O4BcVIpmoEO4UFQ1WcrWU0dCNHRAEaYFg/ZhHZGse5oLBlSsP0XNM8SzrX2t5Xv3M2Irh64vN/pSWc3H7p3Ww6nwIlRD8zbEfEksY9SPv57kVzCZDEGovXeqF0yPO8gNmenZAGQIFup/o9vXmKal0MjfQf9/qZUVgSqCQBxZ6yVMC1nUDt2f/SNAJh3brpGTxPcOt/1tg2lmBVVMSRA0p3
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c6849ab-3f55-4489-4cdd-08d80de358cd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 08:42:17.5510
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e510dce-1831-477c-7c7d-08d80de39ec3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jun 2020 08:44:14.4154
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /o8oBHa8emBcnA4L+AGRGfXy1Afn5n4egA2ha1vasKOFS4p4+MhRUDiqAUN4NjeG2vBBcLMBJKkGBvzznEpDNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2464
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Ff4ynEWvXf0xHYtWNfYSQgAimgEynXk+cZibegW5+T1yyjf+wyuEDk1cSVKS+x4KSZQPqHFMv2XYfTU0YOznQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3643
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Maybe this is obvious but I would really like to see an explanation
-
-of why we are switching from arch_initcall to platform_init.
-
-Commit message act as documentation  for the reviewers.
-
-On 10.06.2020 10:57, Anson Huang wrote:
-> Support building i.MX8MN pinctrl driver as module.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No change.
-> ---
->   drivers/pinctrl/freescale/Kconfig          |  2 +-
->   drivers/pinctrl/freescale/pinctrl-imx8mn.c | 10 ++++------
->   2 files changed, 5 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-> index 556adc3..fe3e49c 100644
-> --- a/drivers/pinctrl/freescale/Kconfig
-> +++ b/drivers/pinctrl/freescale/Kconfig
-> @@ -132,7 +132,7 @@ config PINCTRL_IMX8MM
->   	  Say Y here to enable the imx8mm pinctrl driver
->   
->   config PINCTRL_IMX8MN
-> -	bool "IMX8MN pinctrl driver"
-> +	tristate "IMX8MN pinctrl driver"
->   	depends on ARCH_MXC
->   	select PINCTRL_IMX
->   	help
-> diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mn.c b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-> index 100ed8c..b6db780 100644
-> --- a/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-> +++ b/drivers/pinctrl/freescale/pinctrl-imx8mn.c
-> @@ -5,6 +5,7 @@
->   
->   #include <linux/err.h>
->   #include <linux/init.h>
-> +#include <linux/module.h>
->   #include <linux/of.h>
->   #include <linux/pinctrl/pinctrl.h>
->   #include <linux/platform_device.h>
-> @@ -326,6 +327,7 @@ static const struct of_device_id imx8mn_pinctrl_of_match[] = {
->   	{ .compatible = "fsl,imx8mn-iomuxc", .data = &imx8mn_pinctrl_info, },
->   	{ /* sentinel */ }
->   };
-> +MODULE_DEVICE_TABLE(of, imx8mn_pinctrl_of_match);
->   
->   static int imx8mn_pinctrl_probe(struct platform_device *pdev)
->   {
-> @@ -340,9 +342,5 @@ static struct platform_driver imx8mn_pinctrl_driver = {
->   	},
->   	.probe = imx8mn_pinctrl_probe,
->   };
-> -
-> -static int __init imx8mn_pinctrl_init(void)
-> -{
-> -	return platform_driver_register(&imx8mn_pinctrl_driver);
-> -}
-> -arch_initcall(imx8mn_pinctrl_init);
-> +module_platform_driver(imx8mn_pinctrl_driver);
-> +MODULE_LICENSE("GPL v2");
+SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjQgMC85XSBTdXBwb3J0IGkuTVg4
+IFNvQ3MgcGluY3RybCBkcml2ZXJzIGJ1aWx0IGFzIG1vZHVsZQ0KPiANCj4gSGkgQW5zb24sDQo+
+IA0KPiBQYXRjaCBzZXJpZXMgbW9zdGx5IGxvb2tzIGdvb2QgdG8gbWUuIEkgaGF2ZSBhIGNvbW1l
+bnQgYWJvdXQgYWRkaW5nDQo+IA0KPiB0aGUgTU9EVUxFX0xJQ0VOU0UuIFRoaXMgaXMgYSBwcmV0
+dHkgaW1wb3J0YW50IGNoYW5nZS4NCj4gDQo+IA0KPiBDYW4geW91IHBsZWFzZSBhZGQgdGhpcyBj
+aGFuZ2UgaW4gYSBzZXBhcmF0ZSBwYXRjaCB3aXRoIGEgcHJvcGVyIGV4cGxhbmF0aW9uDQo+IA0K
+PiBvZiB3aHkgaXQgaXMgbmVlZGVkLg0KPiANCj4gDQo+IE1vc3QgbGlrZWx5IGl0IGlzIGJlY2F1
+c2UgaXQgd2FzIGZvcmdvdHRlbiBpbiB0aGUgcHJldmlvdXMgcGF0Y2hlcy4NCg0KWWVzLCBpdCBp
+cyBvYnZpb3VzbHkgbWlzc2VkIGluIHRoZSBwcmV2aW91cyBwYXRjaGVzLCBhcyBwcmV2aW91c2x5
+IHRoZXNlIHBpbmN0cmwgZHJpdmVycw0KZG8gTk9UIHN1cHBvcnQgbW9kdWxlIGJ1aWxkIGF0IGFs
+bC4NCg0KQW5kIE1PRFVMRV9MSUNFTlNFIGlzIGEgTVVTVCB3aGVuIGRyaXZlcnMgc3VwcG9ydGlu
+ZyBtb2R1bGUgYnVpbGQsIGJ1aWxkIHdpbGwgcmVwb3J0IGZhaWx1cmUNCmlmIG1vZHVsZSBsaWNl
+bnNlIG1pc3NlZCwgc28gSSB0aGluayBpdCBpcyBhbHNvIHBhcnQgb2YgdGhlIG1vZHVsZSBidWls
+ZCBzdXBwb3J0IHBhdGNoLA0KZG8geW91IG1lYW4gaXQgaXMgYmV0dGVyIHRvIGFkZCBhIHNlcGFy
+YXRlIHBhdGNoIHRvIGFkZCB0aGUgTU9EVUxFX0xJQ0VOU0UgdG8gYWxsIHBpbmN0cmwgZHJpdmVy
+cyBtaXNzaW5nIGl0Pw0KTWF5YmUgd2UgY2FuIGdldCBtb3JlIG9waW5pb24gZnJvbSBtYWludGFp
+bmVyLCBJIGFtIE5PVCB2ZXJ5IHN1cmUgd2hldGhlciBpdCBpcyBiZXR0ZXIgdG8gc2VwYXJhdGUN
+CnRoZSBtb2R1bGUgbGljZW5zZSBhcyBhIHNpbmdsZSBwYXRjaC4uLi4NCg0KdGhhbmtzLA0KQW5z
+b24NCg==
