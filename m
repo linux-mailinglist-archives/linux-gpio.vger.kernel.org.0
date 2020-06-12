@@ -2,63 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE3581F77A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 14:06:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 356A81F79DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 16:33:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgFLMGc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Jun 2020 08:06:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:53832 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgFLMGc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jun 2020 08:06:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1591963590; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=VD1lYp851tEOX4dOM9B2+TveG6z7jeQIId2w1xa70ys=;
-        b=WxrqkciNWOfuttyELtwbtPk+/F1p08zytlofkozjNh8fy99rVkwry5GyUjT1OaqmWU5sQE
-        h+b3nUvdnK1PuB7zF7DqU32ERmz7aKbElGFOgC9ftssBV88AFPx9hqA/Nyn3hFIyAhqTEw
-        vIuWV8cKeBjgEBBtfh+Oud9iIjhRydM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] pinctrl: ingenic: Add ingenic,jz4725b-gpio compatible string
-Date:   Fri, 12 Jun 2020 14:06:09 +0200
-Message-Id: <20200612120609.12730-1-paul@crapouillou.net>
+        id S1726257AbgFLOdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Jun 2020 10:33:33 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21300 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgFLOdd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Jun 2020 10:33:33 -0400
+IronPort-SDR: e/42Ag8meYRYRaNACRRjFbfTPlQN1APOxdNyNEg1Of3yveQjP43SHgwCyVe/pe/Y+HEy5YnKo/
+ ToXQUiB4QD5w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2020 07:33:32 -0700
+IronPort-SDR: n9JifMj9w2rN/H4cViNhicQDb52YQzv2rvj9ixl69gJOxu4E2L7RO+a3SeCmViVpUNixplq2gz
+ zt6vrg9n6o6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,503,1583222400"; 
+   d="scan'208";a="419480422"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 12 Jun 2020 07:33:31 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jjkkQ-00CdC2-A6; Fri, 12 Jun 2020 17:33:34 +0300
+Date:   Fri, 12 Jun 2020 17:33:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 01/10] pinctrl: intel: Disable input and output buffer
+ when switching to GPIO
+Message-ID: <20200612143334.GI2428291@smile.fi.intel.com>
+References: <20200610183543.89414-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610183543.89414-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a compatible string to support the GPIO chips on the JZ4725B SoC.
-There was already a compatible string for the pinctrl node, but not for
-the individual GPIO chip nodes.
+On Wed, Jun 10, 2020 at 09:35:34PM +0300, Andy Shevchenko wrote:
+> It's possible scenario that pin has been in different mode, while
+> the respective GPIO register has a leftover output buffer enabled.
+> In such case when we request GPIO it will switch to GPIO mode, and
+> thus to output with unknown value, followed by switching to input
+> mode. This can produce a glitch on the pin.
+> 
+> Disable input and output buffer when switching to GPIO to avoid
+> potential glitches.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+I'll send v2 soon with additional patches.
 
-Notes:
-    The Ingenic pinctrl devicetree documentation will be properly
-    updated in a separate patchset.
+Also I move patch "Split intel_config_get() to three functions" closer to the
+end where is seems more logical (continuation of which is IO protection).
 
- drivers/pinctrl/pinctrl-ingenic.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 6a8d44504f94..0f624ba7075d 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -2292,6 +2292,7 @@ static const struct regmap_config ingenic_pinctrl_regmap_config = {
- 
- static const struct of_device_id ingenic_gpio_of_match[] __initconst = {
- 	{ .compatible = "ingenic,jz4740-gpio", },
-+	{ .compatible = "ingenic,jz4725b-gpio", },
- 	{ .compatible = "ingenic,jz4760-gpio", },
- 	{ .compatible = "ingenic,jz4770-gpio", },
- 	{ .compatible = "ingenic,jz4780-gpio", },
 -- 
-2.27.0
+With Best Regards,
+Andy Shevchenko
+
 
