@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6BF91F74F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 10:00:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EFE1F74F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 10:00:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgFLIAD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Jun 2020 04:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
+        id S1726398AbgFLIAY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Jun 2020 04:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgFLIAD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jun 2020 04:00:03 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A66C08C5C1
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 01:00:03 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id y9so3980883qvs.4
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 01:00:03 -0700 (PDT)
+        with ESMTP id S1726297AbgFLIAY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jun 2020 04:00:24 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0D5C03E96F
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 01:00:24 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id k22so6494549qtm.6
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 01:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zAch9IlDTp6iEr5w238b0yuLmT7aOF6imYemNYoLEcM=;
-        b=Dupr1m37CTGw4+ohb5QSfamEzZj2PxJPeG5irXL+9QuTzFHpCgE8yPpn5blX9p3G4N
-         KkjCYbpH56ulQEGwMu4HVjdpUpzbibqcRaIC/BcmW5X02t5/gmDSiZAK3IbQetQhKl2J
-         J5fZG/dZ7lk7FdAZ0zXuoRxcXte73Vr7+RSypUkKfYeJOI8H9aMVf0nFEv0iLD94Wil4
-         xRWvs1k++ma1V/PiVoijg0pVmcL3y5AuWrQT3GS/kmsj8dTndoosa90F3FAX5BT6NEk5
-         sXDCvnf3L4vJy+n3Fsek9Yy7vsAxX21X4W9DEE+Zkllq3EGDQD7ItZXleP5iUQGn2vCQ
-         tkbw==
+        bh=xYHnyazKvcx6oiktPL+KRZOzioT3qEIvMI6fjShgXbs=;
+        b=BG27RaLl7FuvmC5qU5wo4ULsee1aMeqmd1sslVReRMtYPxsWHNUm5OoERRNwakoEzm
+         709bwkfolIi6KCsVjA3qsZO+nCd1OUyh5rZQX8Cji3wYlvwi9hDo/WNQhpQpJIP7QhVl
+         x+JF95YyyQuzmDBorBxn5M84Xi/aPS2P3H+/xNBbL2aUhEZQRdMIA+qR28Vo3BoBbOyk
+         94YxGuprV2rGTnhMWpNxb2xHOkhGnpb9OCf0nWyUsdBcNUxqji94F+f/KTBazXuUIIwT
+         EKFj00jyu7zKFEVrD9fgUw5Hv9w83a2BuC++knBLuhnGBUXg4QIk7Gs2fZitZXhS3r68
+         1Zmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zAch9IlDTp6iEr5w238b0yuLmT7aOF6imYemNYoLEcM=;
-        b=hNq9OQB5cVuVAnpWV78MJ3MQfEkgCAvXgZgfBiZHsVrbXsgrfHYfZ6Laj85eemyU5G
-         HU0MZWXQSytPF+IHb9nb/a+UHLHq/KTx7joRCyoLtmXLWgAjnJL4V2WJN8UGZ8SbvbfE
-         UCs70/rFAUW33HuzK3ZsAdOcByGHIRU+J6/EFaOu/070uxY6EmV+Qm/5vnrzazoRGDjA
-         8Hu+G4/sd/bHFx2gPyr4yfw5w7ZfdxgYLsBkuphq9UxkW5zwXs2xmUMDmn6ybry6pyRh
-         kbfoNMX20q73sq4BUv41uICPIpATIy2LrkQrZnuFSaZM8lAZkqBxs2pt5oN0G1g+xY5o
-         IAaA==
-X-Gm-Message-State: AOAM531EzDG2KZZj9cEGLGuCSd21OcbMJ6WKuoCbCjpUG/ROjuTtlf1o
-        3AYLiIu7NVWn+Njgs+CU4+X+2m3jG5c3r5RmcyYk+g==
-X-Google-Smtp-Source: ABdhPJzu+ikYeKslS04C6iqRdh+KuS10EdJ8EzagLxWO+G6bPpS74j9WkEF9YzTpHGGWSiZXeAW9AVmnAHKn5Rn+vKA=
-X-Received: by 2002:a0c:f652:: with SMTP id s18mr10954998qvm.96.1591948802450;
- Fri, 12 Jun 2020 01:00:02 -0700 (PDT)
+        bh=xYHnyazKvcx6oiktPL+KRZOzioT3qEIvMI6fjShgXbs=;
+        b=h3UxcxqW5M5eUfJVap7UW9i5XSFT/3/uN777avN0VfzoEACsLAy6ARoRxhzwKSQ9Z0
+         uRHBf6LidJIATu/oXeG8kpQA5yuEdbHplPYghqsE5JiNv7efF7ziyNqOOqET8knO6YQv
+         tg3no3LgToEZOG0kOvhJVtpQctM3YLSbUbO+c7+Th4N7pK829dRvM2K18uF3rs9W/Z6k
+         JPZh0sTJ3aMWHeEMv2OenUMmfxcjVFE85Pmna4XixtlD3D0F46goFWZSHeLy9OVH/8U/
+         M/k0F957UOwyxt7NnI7bHGK2l4l2lA85XGzlKq2ZDX/JzD6pQZXF4Ex3XEhqzS8VH8lu
+         JNMQ==
+X-Gm-Message-State: AOAM530ZEkv7/EHGj3d3kjmz9iel1Wtd6llboookjmgKp042wcTWRvpm
+        qwX+v1JNAqpgtyC/rGvDsJMGydBQu3OuAXx3MckZCg==
+X-Google-Smtp-Source: ABdhPJwJ3Spmc+G/ols3thU5v7DezP+CeZxDjbS74NAReXP2ceQRu6iqs8rn4ci7iLABCMQCd0ppK3jldKhvR/2HMqo=
+X-Received: by 2002:ac8:23fb:: with SMTP id r56mr1812691qtr.197.1591948823593;
+ Fri, 12 Jun 2020 01:00:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200612045034.27425-1-warthog618@gmail.com> <20200612045034.27425-2-warthog618@gmail.com>
-In-Reply-To: <20200612045034.27425-2-warthog618@gmail.com>
+References: <20200612045034.27425-1-warthog618@gmail.com> <20200612045034.27425-3-warthog618@gmail.com>
+In-Reply-To: <20200612045034.27425-3-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 12 Jun 2020 09:59:51 +0200
-Message-ID: <CAMpxmJWUmiEADN44DeZ8tRwOSZGr_eYnutQy5zGsxhDTM7PSFg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpiolib: cdev: fix -Wmissing-prototypes warnings
+Date:   Fri, 12 Jun 2020 10:00:12 +0200
+Message-ID: <CAMpxmJUUd2+1A-3UJF+UOU5PYs33t7E3otYaO9GUTcXAT+VoNQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: fix file comment
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -65,27 +64,33 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 pt., 12 cze 2020 o 06:51 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
 :
 >
-> Fix -Wmissing-prototypes warnings by including module's header.
+> Replace file comment carried over from gpiolib.c with one more
+> appropriate for gpiolib-cdev.c.
 >
-> Fixes: f6d984418ffd (gpiolib: split character device into gpiolib-cdev)
-> Reported-by: kernel test robot <lkp@intel.com>
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > ---
->  drivers/gpio/gpiolib-cdev.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/gpio/gpiolib-cdev.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >
 > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 971470bdc9c9..58011ba88a1d 100644
+> index 58011ba88a1d..17d5541d76a0 100644
 > --- a/drivers/gpio/gpiolib-cdev.c
 > +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -23,6 +23,7 @@
->
->
+> @@ -25,11 +25,10 @@
 >  #include "gpiolib.h"
-> +#include "gpiolib-cdev.h"
+>  #include "gpiolib-cdev.h"
 >
->  /* Implementation infrastructure for GPIO interfaces.
+> -/* Implementation infrastructure for GPIO interfaces.
+> +/* Character device interface to GPIO.
 >   *
+> - * The GPIO programming interface allows for inlining speed-critical
+> - * get/set operations for common cases, so that access to SOC-integrated
+> - * GPIOs can sometimes cost only an instruction or two per bit.
+> + * The GPIO character device, /dev/gpiochipN, provides userspace an
+> + * interface to gpiolib GPIOs via ioctl()s.
+>   */
+>
+>  /*
 > --
 > 2.27.0
 >
