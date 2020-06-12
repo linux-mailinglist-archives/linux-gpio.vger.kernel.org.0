@@ -2,77 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA3581F767E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 12:10:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A98B41F774A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jun 2020 13:28:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgFLKKU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Jun 2020 06:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
+        id S1726281AbgFLL2D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Jun 2020 07:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgFLKKT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jun 2020 06:10:19 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1801AC03E96F
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 03:10:19 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id j12so5181430lfh.0
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 03:10:18 -0700 (PDT)
+        with ESMTP id S1726277AbgFLL2D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Jun 2020 07:28:03 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2180C08C5C1
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 04:28:02 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id k11so9726973ejr.9
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jun 2020 04:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=vi/c/LMCdUfy+NHnzaxesrqpKupfHgwjijntSTNgu4c=;
-        b=PJ0DZAhnJI5gqxw9X8g3NuKK6E1SwakF2xtqV5rkqI+Q/7TUJ5YmcWD6iZ53jY3w1M
-         vY+eFnWtI3bgLHTmLGBWpKz1XV8JUBRACoMPyzbvmyuX7fUUtCegoXaI12JCHyqmYCb/
-         VZkz5YNw6sfkhnXvtkcrqYQL2WwMp6KJl05WL/0ohNJV3MIxDAgv4EtE1gW3RCMX1kEv
-         VvtB7WqRDi3AYNSrG9G+pK97Q6VNfNfUd4xvZzPU8iljHWDXiNZC/ZQnJSw3SDoa1Q6R
-         w/byd75lUEeIeOa4BZcLFa3yk3/OOkNl/oZLnQEEa/aoEbqtVNnBHkqy8ax0BXYNXUVE
-         IA8Q==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=x+EzCa13oBkDmmedkJhpOdOSq/9OAyMQhRjI6L6Gk/o=;
+        b=S9sT7t5ZIpfYCDAbMcB8jwtLa9MGKk4nqPnImEddN0kepR2Z2qESMoSN67etrUmroP
+         5QE5GwFi7YDu7pm2Eqp1OZ7LmU+DXSlFqm3Js6tHBg6u2TDbxzqtQu940+Cgd+XtqYhl
+         //2bmHmnG6qgnSQSqHZ/epqvSiZ1jb8gbfaJX0fko6dCVNmJs4BFRpdReRJ9d76Ui4vY
+         qgwSALEkjxQjQiiTAhpqu1t/sst2pzjGpuSjiz+7iL5YL6q9Yf4rqQBCxWyw1U2TplfR
+         ou4iHSigiIisVr6BInNL7yCRKp2Uz+nkp1juM7ujUqL0KImK8i0aA00J+oiEpe6FJLet
+         V0Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=vi/c/LMCdUfy+NHnzaxesrqpKupfHgwjijntSTNgu4c=;
-        b=fRfRIqBxG2Dw7B/QX24mfcFIX6eGV4aSEpxPxQNaNHbKdJbfEvwz1K5ct0ifl+MtlG
-         kE67UcyXA5sRlA5nwLA2KQ2yqacpEKJtjTJ1MF+dfIucL3QfXOuc4rizmrno3bNS2NXl
-         756EAiCFJN0QXBO/4Qdwz7me8v4mOh5Qtuo1pmAihYaGlw8106VNIb2T3+cgjN5ByoR6
-         SQWUAOQu3qafKFMuVHK94/NEgse7ldY/Hkc8wkspEEMu7xnZe8xmEvuXYIPCYNRlcGFx
-         6ru5APhH7LQ6r+gwsPVDmt5nuTrhS8INCVfptyoxyEtA+62vmz3vysEYfGrjA3n7ZhMb
-         9DpA==
-X-Gm-Message-State: AOAM532gM+bCYs+lCiSHQgrZFWKVuIGKEx1E7O2ywP5jbUSOpmMeljWt
-        sjCix4K5vNcJp0mKdYvI4vX6GMUWHVQw9ml084g=
-X-Google-Smtp-Source: ABdhPJwks7j4SRMO50tsxzx/LP1Rx2u5fE28erhJM28ccp2MZfQpMvC0q+tNO/qc8Tr+zJz2a1swY0or7lCWMMifrpk=
-X-Received: by 2002:a19:c616:: with SMTP id w22mr6244733lff.123.1591956616022;
- Fri, 12 Jun 2020 03:10:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=x+EzCa13oBkDmmedkJhpOdOSq/9OAyMQhRjI6L6Gk/o=;
+        b=TdsQoQEBK2k87DvVSp1eOFqKNG5IQmqhQAPa8p/qHTQkkGxxlNH/6Pc44YAdASKy1H
+         KGAv2cZAAuH9pY7Da5Fx7QXMrWwm5WZv4gItcmLdO9GYMy/KJXtd0FLDUmoro2ULDWL8
+         RHUqnAkZpmVqGcfM3FGvCbUqr6njedL9o5CzT9OmopwJZGHrvvwwH0c1AABDWCr3cxzz
+         zPTjEBhbACOgfhQyM3VSpd3hOVYTdAl4n3eqw06PxnxPO5BY5P1FfXPWsl7IiNDJIsCp
+         MbxeVGhQwHBdHNvWu6NGJCMyArAnuJ1wL/nMoWosFNMgy19U3sewxwUafqO72Xro8Uuq
+         VIGA==
+X-Gm-Message-State: AOAM531HO8KbcDlRv90+Gdn4Z583Ry04eutIPc+z44foYdbZKC5rQRAE
+        8SdK2wJfU5FipSCQ4lD20yJ1qA==
+X-Google-Smtp-Source: ABdhPJz41qD396e8oQ3tm1hW5XAIn/LJUid1p+0iAEYyEf4Y0r8td0r8b0A9+lQuL6oaAsmx37Tuzg==
+X-Received: by 2002:a17:906:3548:: with SMTP id s8mr12279231eja.202.1591961281224;
+        Fri, 12 Jun 2020 04:28:01 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id y62sm2957534edy.61.2020.06.12.04.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 04:28:00 -0700 (PDT)
+Date:   Fri, 12 Jun 2020 13:27:58 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH] pinctrl: single: fix function name in documentation
+Message-ID: <20200612112758.GA3407886@x1>
 MIME-Version: 1.0
-Received: by 2002:a2e:2ac1:0:0:0:0:0 with HTTP; Fri, 12 Jun 2020 03:10:15
- -0700 (PDT)
-Reply-To: gh727530@gmail.com
-From:   george howard <brichardjohnson02@gmail.com>
-Date:   Fri, 12 Jun 2020 12:10:15 +0200
-Message-ID: <CAOZWaH9t3H02pVdTST-8QLxg8rX5_8k2z_LeyGCcfBheJjm3KQ@mail.gmail.com>
-Subject: hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hallo
+Use the correct the function name in the documentation for
+"pcs_parse_one_pinctrl_entry()".
 
-Mein Name ist George Howard. Ich bin von Beruf Rechtsanwalt. Ich
-m=C3=B6chte Ihnen anbieten
-der n=C3=A4chste Verwandte meines Klienten. Sie erben die Summe von (8,5
-Millionen US-Dollar)
-Dollar, die mein Kunde vor seinem Tod auf der Bank gelassen hat.
+"smux_parse_one_pinctrl_entry()" appears to be an artifact from the
+development of a prior patch series ("simple pinmux driver") which
+transformed into pinctrl-single.
 
-Mein Kunde ist ein Staatsb=C3=BCrger Ihres Landes, der mit seiner Frau bei
-einem Autounfall ums Leben gekommen ist
-und einziger Sohn. Ich habe Anspruch auf 50% des Gesamtfonds, 50% darauf
-sein f=C3=BCr dich.
-Bitte kontaktieren Sie meine private E-Mail hier f=C3=BCr weitere
-Informationen: gh727530@gmail.com
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+---
+ drivers/pinctrl/pinctrl-single.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Vielen Dank im Voraus,
-Mr. George Howard,
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index a9d511982780..02f677eb1d53 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -958,7 +958,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ }
+ 
+ /**
+- * smux_parse_one_pinctrl_entry() - parses a device tree mux entry
++ * pcs_parse_one_pinctrl_entry() - parses a device tree mux entry
+  * @pctldev: pin controller device
+  * @pcs: pinctrl driver instance
+  * @np: device node of the mux entry
+-- 
+2.25.1
+
