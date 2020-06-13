@@ -2,120 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B97D51F8219
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2020 10:43:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 631991F8274
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2020 12:09:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgFMIn0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgFMIn0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 13 Jun 2020 04:43:26 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7507F20836;
-        Sat, 13 Jun 2020 08:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592037805;
-        bh=SyRgaHUOm/RP8zZ90+MyAGaRN4cSsWrzzNGHyfuBnCk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BgrzEr0T3JoHmKZPf5JHHJjvygSMZGF5NKn+13GG7QHtIS/IBZ7akYkLuc0TbufY0
-         IdI3tEBicGVpmTrhCjhPNSbLdEFx6l03HXU1AMn8ObSGPs2e5kB+GmV2Rt/rdkNQLA
-         gC00pV5XYzyrAQW5/CPir6q3bWaJ154iM+O+UJ14=
-Received: by mail-lj1-f173.google.com with SMTP id z9so13654752ljh.13;
-        Sat, 13 Jun 2020 01:43:25 -0700 (PDT)
-X-Gm-Message-State: AOAM530UMrNSLF4v9bMAv1GquAIAsJZVHEBg2VJ+ce9ilPP2+24WGcJW
-        9BJyo7cAOyU92QRBAJcL7HThNO6/3AQ43YFnCPM=
-X-Google-Smtp-Source: ABdhPJwZ1ylOrBsd6XVZmYSQ3sLMGYqoTKujz2SwyQaUfONmAEP2kaw8s4sWs89ZwT6ZjZ3AWnilqqgnG/azc96C0bc=
-X-Received: by 2002:a2e:2a42:: with SMTP id q63mr9000358ljq.265.1592037803689;
- Sat, 13 Jun 2020 01:43:23 -0700 (PDT)
+        id S1725783AbgFMKJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 Jun 2020 06:09:17 -0400
+Received: from sonic316-22.consmr.mail.ne1.yahoo.com ([66.163.187.148]:44816
+        "EHLO sonic316-22.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726304AbgFMKJR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 13 Jun 2020 06:09:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592042956; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=B2sJGAeUdCy3QtpOdZhrd9WylFl5LYuswSF7PA6rOrb74vV4DRHY3dhZt9JYUz0VEdfcNQyFc+6MGS+1jArHzO0vD7r0wJki8yRjoL0U8vKG6MTzdPkruaIS3gsh9dR70L/cxXovHBnx2oVMUQgtC2FNu0IY4qUbHOU+Pmafcr7ExL9cVWJ1XHXsjAuj90Cw/sRKyhg/1LoC0V/3gNmd3vtm6knqDY/kw/yyvS0cJW5X3IbReoGidqcaGPOV+ABDYsy9618qM4GRwPQWkiwhaNmaMPYISM0eTqsZt6y4JEh0uldLKE1UVIUc4KKXd9Y9ueqMPwVA7m7TTE2f+mRPNQ==
+X-YMail-OSG: yLTs8xsVM1lGF2v0Cmq_DiL_UvrV3FCo0CouxjNcV4KCQrn1zmQoXqpEWKK_w6r
+ a1a.3LWgzlLttlINYU00hh4KGgIDPmUtQMq4t_hwHUpN5s9ZEG_gHwCuHsmM1stfFoQ0VSLkSi4z
+ r4nypAmV6wAT_lmpyyS2sqf1P0i0nolWyRz1_HIthAN7ia94R5MO5NqgGj4JKH0OHEFq805CIEzV
+ ba3U.EcP2ZsawD3IJsQjQTi4C67wKH2faZbjdBt50eGJnKWVUCwwFL.l_0BG3OJRtvQDD4BlHo1n
+ 9plH17pyE7cwhilJn7g08c8CCdHSrSQqsx6Qy_YnzAmwDzpYUSkrj9mnkevuIlp_y6gqZ0UniB6H
+ cDUzPxNLInHL5WWZKAUUCC5mFf9kfEFNcznvIZUZO7RYwYmBbxDmfpTu.wayok.jN_KfUykoYmCf
+ XU6PuWhTgOHPfIfzka0Ch2m2nXwLvfiNlPTJWzv7ExAw_8yQKHGNoCV2yk4RBkNhPF6oQtNmNSXA
+ RhjDHdlKKZWCPK.qB2yGXv5xWoBfuptR__h8ErHgpvDv7wFwbiF_puPqGYuz.q8ZuwC_HVH7Yf4c
+ fCtrxbe7YXc.Wn2gQJJzJLOe2c3W5iR4pH2gon2TXpXuNekk1w7tdbtvr8v.BYpjrmfKVbgozJaF
+ .nvzJ9KApba_Dkjlx6Ecg9WWHamWn80B8FLleFuSI3J868VsaUUjtwcMeNcCSegMl2uRaTzdPfPm
+ EgdBc6CWS_M_i40D.8I1aB_8._pt.c6sgeD1TCWxVhWtI7fdHwAZ.r9f_iATohPuXH.4QECKnFLl
+ kr_ZJCi7Oeg4OHQmzDBTZI1mv_ZH_YeE5RFsAu7.lPFx4_plEEnyf0HH2R1HIEZB_6MjwIwqLMfr
+ 8CqqsuMFtR3CJPHXSsx7lv5WokiAZ6n7JAKynk.bZpkm.d.aCNL4PfWfqDSTfHuxi8UgvDGzAWb5
+ 30kmBHyffLZGvrusAyyIcSFm4UX6lDEeyYu7JoLAbuoE3zdscxQXWiAf78Mvst_t_9IMUiKIyphG
+ 4TxVMev.C9k2Y4mkQ5.v6Lz2nRlyeLZf56HoevsbJMc6CiVB1H9u20tBO3e09o0L0V_DUeSinymj
+ bX08HpSPJ3n8nq5dheMogKTVYDl0rp_BcUlBR.UxaFC6u2L4PSNCKrTi142MWGst9.l3oxT.P_eJ
+ lyJMqwCYQUPMXk4M.gXQfIrdKx6KmVKfL5MOAeiZU50nWFcYyM0CweM0OknmHC3k.Pl5IkQwLYkE
+ .OwGfNEu9A74uldV8HDaOhoGU4Ym4ckERva8.zqLeR2GXo9FrJBvp5iV3GY2e3e3vf21EqBOnwg-
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Sat, 13 Jun 2020 10:09:16 +0000
+Date:   Sat, 13 Jun 2020 10:09:15 +0000 (UTC)
+From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <156749975.268601.1592042955052@mail.yahoo.com>
+Subject: BUSINESS FROM(Ms Lisa hugh).
 MIME-Version: 1.0
-References: <20200611095804.22026-1-f.suligoi@asem.it>
-In-Reply-To: <20200611095804.22026-1-f.suligoi@asem.it>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sat, 13 Jun 2020 16:43:11 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Message-ID: <CAJF2gTTojGRnshstFwqu4xM_txeBOY=uFiWPTpXZPWv2uS6QqQ@mail.gmail.com>
-Subject: Re: [PATCH] doc: devicetree: bindings: fix spelling mistake
-To:     Flavio Suligoi <f.suligoi@asem.it>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-csky@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <156749975.268601.1592042955052.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16119 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Acked-by: Guo Ren <guoren@kernel.org>
-
-On Thu, Jun 11, 2020 at 5:58 PM Flavio Suligoi <f.suligoi@asem.it> wrote:
->
-> Fix typo: "triger" --> "trigger"
->
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
->  .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> index ba455589f869..e1c49b660d3a 100644
-> --- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-> @@ -12,7 +12,7 @@ Required properties for the top level node:
->     Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
->  - #interrupt-cells : Specifies the number of cells needed to encode an
->     interrupt. Should be 2. The first cell defines the interrupt number,
-> -   the second encodes the triger flags encoded as described in
-> +   the second encodes the trigger flags encoded as described in
->     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->  - compatible:
->    - "mediatek,mt7621-gpio" for Mediatek controllers
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> index e13405355166..e6bbcae4d07f 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> @@ -10,7 +10,7 @@ Interrupt number definition:
->   16-31  : private  irq, and we use 16 as the co-processor timer.
->   31-1024: common irq for soc ip.
->
-> -Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-> +Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
->   IRQ_TYPE_LEVEL_HIGH (default)
->   IRQ_TYPE_LEVEL_LOW
->   IRQ_TYPE_EDGE_RISING
-> diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> index 15cfec08fbb8..f5c7e99cf52b 100644
-> --- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> +++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-> @@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
->   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
->   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
->   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-> - - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
-> + - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
->
->  ==============================
->  timer node bindings definition
-> --
-> 2.17.1
->
 
 
--- 
-Best Regards
- Guo Ren
+Dear Friend,
 
-ML: https://lore.kernel.org/linux-csky/
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
