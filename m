@@ -2,74 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 631991F8274
-	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2020 12:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01AEC1F8333
+	for <lists+linux-gpio@lfdr.de>; Sat, 13 Jun 2020 14:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgFMKJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 13 Jun 2020 06:09:17 -0400
-Received: from sonic316-22.consmr.mail.ne1.yahoo.com ([66.163.187.148]:44816
-        "EHLO sonic316-22.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726304AbgFMKJR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 13 Jun 2020 06:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592042956; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=B2sJGAeUdCy3QtpOdZhrd9WylFl5LYuswSF7PA6rOrb74vV4DRHY3dhZt9JYUz0VEdfcNQyFc+6MGS+1jArHzO0vD7r0wJki8yRjoL0U8vKG6MTzdPkruaIS3gsh9dR70L/cxXovHBnx2oVMUQgtC2FNu0IY4qUbHOU+Pmafcr7ExL9cVWJ1XHXsjAuj90Cw/sRKyhg/1LoC0V/3gNmd3vtm6knqDY/kw/yyvS0cJW5X3IbReoGidqcaGPOV+ABDYsy9618qM4GRwPQWkiwhaNmaMPYISM0eTqsZt6y4JEh0uldLKE1UVIUc4KKXd9Y9ueqMPwVA7m7TTE2f+mRPNQ==
-X-YMail-OSG: yLTs8xsVM1lGF2v0Cmq_DiL_UvrV3FCo0CouxjNcV4KCQrn1zmQoXqpEWKK_w6r
- a1a.3LWgzlLttlINYU00hh4KGgIDPmUtQMq4t_hwHUpN5s9ZEG_gHwCuHsmM1stfFoQ0VSLkSi4z
- r4nypAmV6wAT_lmpyyS2sqf1P0i0nolWyRz1_HIthAN7ia94R5MO5NqgGj4JKH0OHEFq805CIEzV
- ba3U.EcP2ZsawD3IJsQjQTi4C67wKH2faZbjdBt50eGJnKWVUCwwFL.l_0BG3OJRtvQDD4BlHo1n
- 9plH17pyE7cwhilJn7g08c8CCdHSrSQqsx6Qy_YnzAmwDzpYUSkrj9mnkevuIlp_y6gqZ0UniB6H
- cDUzPxNLInHL5WWZKAUUCC5mFf9kfEFNcznvIZUZO7RYwYmBbxDmfpTu.wayok.jN_KfUykoYmCf
- XU6PuWhTgOHPfIfzka0Ch2m2nXwLvfiNlPTJWzv7ExAw_8yQKHGNoCV2yk4RBkNhPF6oQtNmNSXA
- RhjDHdlKKZWCPK.qB2yGXv5xWoBfuptR__h8ErHgpvDv7wFwbiF_puPqGYuz.q8ZuwC_HVH7Yf4c
- fCtrxbe7YXc.Wn2gQJJzJLOe2c3W5iR4pH2gon2TXpXuNekk1w7tdbtvr8v.BYpjrmfKVbgozJaF
- .nvzJ9KApba_Dkjlx6Ecg9WWHamWn80B8FLleFuSI3J868VsaUUjtwcMeNcCSegMl2uRaTzdPfPm
- EgdBc6CWS_M_i40D.8I1aB_8._pt.c6sgeD1TCWxVhWtI7fdHwAZ.r9f_iATohPuXH.4QECKnFLl
- kr_ZJCi7Oeg4OHQmzDBTZI1mv_ZH_YeE5RFsAu7.lPFx4_plEEnyf0HH2R1HIEZB_6MjwIwqLMfr
- 8CqqsuMFtR3CJPHXSsx7lv5WokiAZ6n7JAKynk.bZpkm.d.aCNL4PfWfqDSTfHuxi8UgvDGzAWb5
- 30kmBHyffLZGvrusAyyIcSFm4UX6lDEeyYu7JoLAbuoE3zdscxQXWiAf78Mvst_t_9IMUiKIyphG
- 4TxVMev.C9k2Y4mkQ5.v6Lz2nRlyeLZf56HoevsbJMc6CiVB1H9u20tBO3e09o0L0V_DUeSinymj
- bX08HpSPJ3n8nq5dheMogKTVYDl0rp_BcUlBR.UxaFC6u2L4PSNCKrTi142MWGst9.l3oxT.P_eJ
- lyJMqwCYQUPMXk4M.gXQfIrdKx6KmVKfL5MOAeiZU50nWFcYyM0CweM0OknmHC3k.Pl5IkQwLYkE
- .OwGfNEu9A74uldV8HDaOhoGU4Ym4ckERva8.zqLeR2GXo9FrJBvp5iV3GY2e3e3vf21EqBOnwg-
- -
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Sat, 13 Jun 2020 10:09:16 +0000
-Date:   Sat, 13 Jun 2020 10:09:15 +0000 (UTC)
-From:   Ms Lisa Hugh <lisa.hugh111@gmail.com>
-Reply-To: ms.lisahugh000@gmail.com
-Message-ID: <156749975.268601.1592042955052@mail.yahoo.com>
-Subject: BUSINESS FROM(Ms Lisa hugh).
+        id S1726277AbgFMM2v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 13 Jun 2020 08:28:51 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:37649 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726021AbgFMM2u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 13 Jun 2020 08:28:50 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0F0CB1BF204;
+        Sat, 13 Jun 2020 12:28:43 +0000 (UTC)
+Date:   Sat, 13 Jun 2020 14:32:07 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hyun Kwon <hyunk@xilinx.com>, linux-media@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        sakari.ailus@iki.fi,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+Message-ID: <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+ <20200612221003.GA3901624@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <156749975.268601.1592042955052.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16119 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200612221003.GA3901624@bogus>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Rob,
 
+On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
+> On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
+> > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> >
+> > The MAX9286 deserializes video data received on up to 4 Gigabit
+> > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using up
+> > to 4 data lanes.
+> >
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > ---
+> >
+> > v7:
+> >  - Collect Rob's RB tag
+> >  - Remove redundant maxItems from remote-endpoints
+> >  - Fix SPDX licence tag
+> >
+> > v10:
+> > [Jacopo]
+> >  - Fix dt-validation
+> >  - Fix dt-binding examples with 2 reg entries
+> >
+> > [Kieran]
+> >  - Correctly match the hex camera node reg
+> >  - Add (required) GPIO controller support
+> >
+> >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++++
+> >  1 file changed, 366 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+> >
+>
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3865935872, 0, 64] is too long
+>
+>
+> See https://patchwork.ozlabs.org/patch/1308280
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+>
 
-Dear Friend,
+I have updated my dt-schema installation to the latest github master
+-------------------------------------------------------------------------------
+Successfully installed dtschema-2020.6.dev8+g4d2d86c
 
-I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0aaa400866bc36727bea
 
-Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+$ /usr/bin/dt-validate -V
+2020.6.dev8+g4d2d86c
+-------------------------------------------------------------------------------
 
-I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+But I still cannot reproduce the error.
 
-Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+However, I see this commit in your next branch
+https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4d7553f696544b40ee6
+"schemas: Add a schema to check 'reg' sizes "
 
-Below information is what i need from you so will can be reaching each other
+Which sounds very likely related to the above reported error.
+Was this intentional ?
 
-1)Full name ...
-2)Private telephone number...
-3)Age...
-4)Nationality...
-5)Occupation ...
+I'm not sure how I should handle this. The error reports the i2c node
+parents should have both address-cells and size-cells properties set
+to 2, but in the example there is not i2c node parent at all :)
+Should I add a parent node for the i2c in the example snippet ?
 
+Thanks
+  j
 
-Thanks.
-
-Ms Lisa hugh.
+> Please check and re-submit.
+>
