@@ -2,83 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78F441F9751
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B381F973A
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:54:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgFOMzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 08:55:05 -0400
-Received: from mga05.intel.com ([192.55.52.43]:56842 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbgFOMxs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:53:48 -0400
-IronPort-SDR: 4MXRCOgUBHBh8Q03bh3MuQMBeyb3Q6plqU0cjZKfsfkvk/l2PlCFXaxI9apBMFlCjoCGtijq6A
- yOVupo8lgBOw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 05:53:48 -0700
-IronPort-SDR: 9AWUi8vBSUDGs3O8vIVOfV+pl5iANM5qD7wipVx6FOBtTdSzNTaKkv9ZbseJjEEu0AW2CoA40h
- sItMMayIXAlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
-   d="scan'208";a="261092670"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 15 Jun 2020 05:53:46 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jkocX-00DZZd-D7; Mon, 15 Jun 2020 15:53:49 +0300
-Date:   Mon, 15 Jun 2020 15:53:49 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
- automatic address incrementing
-Message-ID: <20200615125349.GD2428291@smile.fi.intel.com>
-References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
- <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
- <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
+        id S1730225AbgFOMy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 08:54:27 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22274 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730218AbgFOMyY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:54:24 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FCqnb7011050;
+        Mon, 15 Jun 2020 14:54:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=kkty9Awoo0IVXf8uf5q3BXusDQstQvIXLN4JcfqXozQ=;
+ b=aaQD18t4rb6P5c/PYFhR4q/GpllK+j9kYF9tPGd4latDf9n9WOTwJROgTVO37g+k95b7
+ Oq7+yeiWcG239NEkE1UOsbfz1dqKG2E1enAMmX/6aAa7WnLP8T4TUucOkQWEabHirVC2
+ 2WDy85YUzUJGQtoZKny0bnC3J9qJvMmeHkmmePIAv4HHspZn8xbIcCw/oryi8MqLE7dy
+ sqwM6r3ELVIbGD3lD1cmixl35c7BDWJHl/WhDhOXU4W3AcDXbJ4ex7klr+ioSVrJvMIp
+ BkMUJCzoEAgQPy/ciBqdkC8MRlvTGXsCuLrRbDnZbCPHvGml4ew3IKwW2Ft/P+5lGvuF fg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 31mmjvspcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jun 2020 14:54:21 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8BEC610002A;
+        Mon, 15 Jun 2020 14:54:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8119F2B35E0;
+        Mon, 15 Jun 2020 14:54:21 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:54:21
+ +0200
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <alexandre.torgue@st.com>
+Subject: [PATCH 0/2] pinctrl: stm32: add changes to better manage
+Date:   Mon, 15 Jun 2020 14:54:05 +0200
+Message-ID: <20200615125407.27632-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 02:20:44PM +0200, Uwe Kleine-König wrote:
-> On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
-> > It's a repetition of the commit aa58a21ae378
-> >   ("gpio: pca953x: disable regmap locking")
-> > which states the following:
-> > 
-> >   This driver uses its own locking but regmap silently uses
-> >   a mutex for all operations too. Add the option to disable
-> >   locking to the regmap config struct.
-> > 
-> > Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
-> > Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Ah, good catch. I assume that I didn't have aa58a21ae378 in my tree when
-> I created the patch that then became bcf41dc480b1.
-> 
-> Looks right
-> 
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Hi,
 
-Thanks!
+Clocks and resets for GPIO banks could be defined but not yet ready when
+stm32 pinctrl is probed. This series adds changes to manage probe defer
+when a clock or a reset is not yet registered in the system.
 
-Linus, Bart, just to clarify that this is material for one of the next v5.8-rcX
-(this cycle!).
+regards
+alex
+
+Etienne Carriere (2):
+  pinctrl: stm32: don't print an error on probe deferral during clock
+    get
+  pinctrl: stm32: defer probe if reset resource is not yet ready
+
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 35 +++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
