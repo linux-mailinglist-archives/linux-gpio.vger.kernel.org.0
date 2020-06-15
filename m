@@ -2,102 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 517851F9BA5
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 17:12:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08BF31F9BA7
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 17:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbgFOPMb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 11:12:31 -0400
-Received: from mga05.intel.com ([192.55.52.43]:6502 "EHLO mga05.intel.com"
+        id S1730777AbgFOPOA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 11:14:00 -0400
+Received: from mga02.intel.com ([134.134.136.20]:34150 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbgFOPMb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jun 2020 11:12:31 -0400
-IronPort-SDR: +y4UHbwz2ux2avnzUVwENOQMNmfmbb9hLMw3fzUi+Ojyt22TiFrCrNXvbNkosbGnQPspzppuci
- cr+GKmCcjbeA==
+        id S1730788AbgFOPN7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:13:59 -0400
+IronPort-SDR: kyFdwIjaQULowKVED7rSiU60q1lqXPhCGseqmoLnpHwJOGwA8HzFg1+mSwVSbpHEUd44Xf5HIc
+ m3xPU4pY8OQg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 08:12:30 -0700
-IronPort-SDR: vZhxHtn/kD9Imc85J7Gkwf9qygtjoPruVDG9ESMt7IfcNWGvG31d3HHmmRuI5yyFPmyuRA7MuM
- UpFRJqKZfMWA==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 08:13:58 -0700
+IronPort-SDR: 0esV9ToOCDk3BHf+WogXVvbeDhi1+GLKw41p0So7D1N089Z5y5n4/cUicWtAOqf0MGRlhylSFH
+ Q9oYUcPbzeig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
-   d="scan'208";a="351393842"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 15 Jun 2020 08:12:29 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jkqml-00Db1E-O3; Mon, 15 Jun 2020 18:12:31 +0300
-Date:   Mon, 15 Jun 2020 18:12:31 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
- automatic address incrementing
-Message-ID: <20200615151231.GG2428291@smile.fi.intel.com>
-References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
- <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
- <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
- <20200615125349.GD2428291@smile.fi.intel.com>
- <20200615132027.flexasjahrn6floq@taurus.defre.kleine-koenig.org>
- <CAHp75VcA8ExfpBXyo=nB0KqP5+s9RWq8YtZ03Z8UTp7RSPvTmQ@mail.gmail.com>
- <20200615141804.aocz2tw3czlcyaxy@taurus.defre.kleine-koenig.org>
+   d="scan'208";a="476066796"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Jun 2020 08:13:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EBF57217; Mon, 15 Jun 2020 18:13:55 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 0/3] pinctrl: intel: Reuse for_each_requested_gpio*() macros
+Date:   Mon, 15 Jun 2020 18:13:50 +0300
+Message-Id: <20200615151353.88194-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0.rc2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200615141804.aocz2tw3czlcyaxy@taurus.defre.kleine-koenig.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 04:18:04PM +0200, Uwe Kleine-König wrote:
-> On Mon, Jun 15, 2020 at 04:38:23PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 15, 2020 at 4:23 PM Uwe Kleine-König
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Mon, Jun 15, 2020 at 03:53:49PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Jun 15, 2020 at 02:20:44PM +0200, Uwe Kleine-König wrote:
-> > > > > On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
-> > > > > > It's a repetition of the commit aa58a21ae378
-> > > > > >   ("gpio: pca953x: disable regmap locking")
-> > > > > > which states the following:
-> > > > > >
-> > > > > >   This driver uses its own locking but regmap silently uses
-> > > > > >   a mutex for all operations too. Add the option to disable
-> > > > > >   locking to the regmap config struct.
-> > > > > >
-> > > > > > Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
-> > > > > > Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > >
-> > > > > Ah, good catch. I assume that I didn't have aa58a21ae378 in my tree when
-> > > > > I created the patch that then became bcf41dc480b1.
-> > > > >
-> > > > > Looks right
-> > > > >
-> > > > > Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > >
-> > > > Thanks!
-> > > >
-> > > > Linus, Bart, just to clarify that this is material for one of the next v5.8-rcX
-> > > > (this cycle!).
-> > >
-> > > I didn't test but I wonder if this patch is really urgent.
-> > 
-> > I'm talking about this entire fix-series.
-> 
-> Ah, I didn't notice this is a series as I only got patch 4.
+This is part of previously sent clean up / fixes series against Intel pin
+control drivers. This piece replaces home grown alternatives to generic (*)
+for_each_requested_gpio*() helpers.
 
-In case you are curious / want to try:
-https://lore.kernel.org/linux-gpio/20200605134036.9013-1-andriy.shevchenko@linux.intel.com/T/#m5e01e6462f2f72fbc4bdd3f71c330b7a2f75d5ba
+(*) Mika suggested to document for_each_requested_gpio*() helper, and I decided
+that it may be useful to GPIO and pin control subsystems in general, so, thus it
+has dependency to [1] submitted recently.
+
+[1]: https://lore.kernel.org/linux-gpio/20200615150545.87964-1-andriy.shevchenko@linux.intel.com/T/#t
+
+Andy Shevchenko (3):
+  pinctrl: intel: Make use of for_each_requested_gpio_in_range()
+  pinctrl: lynxpoint: Make use of for_each_requested_gpio()
+  pinctrl: lynxpoint: Introduce helpers to enable or disable input
+
+ drivers/pinctrl/intel/pinctrl-intel.c     | 21 ++++++------------
+ drivers/pinctrl/intel/pinctrl-lynxpoint.c | 26 +++++++++++++++--------
+ 2 files changed, 23 insertions(+), 24 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.27.0.rc2
 
