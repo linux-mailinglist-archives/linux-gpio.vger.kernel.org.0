@@ -2,128 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E1221F99EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 16:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2549E1F9B4F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 17:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgFOOSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 10:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729733AbgFOOSJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jun 2020 10:18:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE00C061A0E
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 07:18:08 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jkpw5-0004iV-Py; Mon, 15 Jun 2020 16:18:05 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jkpw5-0006Jq-1Y; Mon, 15 Jun 2020 16:18:05 +0200
-Date:   Mon, 15 Jun 2020 16:18:04 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
- automatic address incrementing
-Message-ID: <20200615141804.aocz2tw3czlcyaxy@taurus.defre.kleine-koenig.org>
-References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
- <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
- <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
- <20200615125349.GD2428291@smile.fi.intel.com>
- <20200615132027.flexasjahrn6floq@taurus.defre.kleine-koenig.org>
- <CAHp75VcA8ExfpBXyo=nB0KqP5+s9RWq8YtZ03Z8UTp7RSPvTmQ@mail.gmail.com>
+        id S1730881AbgFOPCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 11:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730777AbgFOPCl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 11:02:41 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B542078A;
+        Mon, 15 Jun 2020 15:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592233360;
+        bh=cLE/KDQ7zi8CXnleskZoZ1Ql9hp/DpDm7B2xPgtp8Pc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y/Z6obKYdtRw3N7G0dSci0N/ySSHnfwI0VNvmTCeY5dHarhRxKChHbUr6Buy9daJP
+         D4GTJuhsL/S5ZeAsl+9VS3pxK89gzUu2/ZqmiHMO2Yj5hAnMlh0RuCyELdAW2JFx3u
+         wr/1hQxPWYOL9irTK4WJNpAqnTDfHvZBVpb+ZVVs=
+Received: by mail-ot1-f42.google.com with SMTP id n5so2708691otj.1;
+        Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
+X-Gm-Message-State: AOAM532EM5j/AyvpSbbWi9j5UQinstFVaQwmlaCAq06tbrAIz0M03qz2
+        Bo4HU11cnwS+FjD5wPaNSzFjkcmbzs6dSCGc+Q==
+X-Google-Smtp-Source: ABdhPJzjxGO9DWEIsfipS4yrm2PPJNlfjEILXBJsHkZzS1HbqK8iCTqz315EJs5dkJCwXWaRJRWjBuWpAO9+qSTHPZY=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr22220499ots.192.1592233359274;
+ Mon, 15 Jun 2020 08:02:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="22e3z4uskfyqfe7i"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcA8ExfpBXyo=nB0KqP5+s9RWq8YtZ03Z8UTp7RSPvTmQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-2-kieran.bingham+renesas@ideasonboard.com>
+ <20200612221003.GA3901624@bogus> <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+In-Reply-To: <20200613123207.6ey6y5spfa5ajk4h@uno.localdomain>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 15 Jun 2020 09:02:28 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+Message-ID: <CAL_Jsq+o6Hwz6vN2mgYGnZF4wX5nFoaXRMweQr8euep-9OmBiA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/4] dt-bindings: media: i2c: Add bindings for Maxim
+ Integrated MAX9286
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---22e3z4uskfyqfe7i
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 15, 2020 at 04:38:23PM +0300, Andy Shevchenko wrote:
-> On Mon, Jun 15, 2020 at 4:23 PM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> > Hello,
-> >
-> > [adding Geert to Cc as he was involved with
-> > aa58a21ae37894d456a2f91a37e9fd71ad4aa27e]
-> >
-> > On Mon, Jun 15, 2020 at 03:53:49PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jun 15, 2020 at 02:20:44PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
-> > > > > It's a repetition of the commit aa58a21ae378
-> > > > >   ("gpio: pca953x: disable regmap locking")
-> > > > > which states the following:
-> > > > >
-> > > > >   This driver uses its own locking but regmap silently uses
-> > > > >   a mutex for all operations too. Add the option to disable
-> > > > >   locking to the regmap config struct.
-> > > > >
-> > > > > Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic ad=
-dress incrementing")
-> > > > > Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > >
-> > > > Ah, good catch. I assume that I didn't have aa58a21ae378 in my tree=
- when
-> > > > I created the patch that then became bcf41dc480b1.
-> > > >
-> > > > Looks right
-> > > >
-> > > > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+On Sat, Jun 13, 2020 at 6:28 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+>
+> Hi Rob,
+>
+> On Fri, Jun 12, 2020 at 04:10:03PM -0600, Rob Herring wrote:
+> > On Fri, 12 Jun 2020 15:47:10 +0100, Kieran Bingham wrote:
+> > > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > > >
-> > > Thanks!
+> > > The MAX9286 deserializes video data received on up to 4 Gigabit
+> > > Multimedia Serial Links (GMSL) and outputs them on a CSI-2 port using=
+ up
+> > > to 4 data lanes.
 > > >
-> > > Linus, Bart, just to clarify that this is material for one of the nex=
-t v5.8-rcX
-> > > (this cycle!).
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboar=
+d.com>
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.co=
+m>
+> > > Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
+h.se>
+> > > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
+ech.se>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > >
+> > > ---
+> > >
+> > > v7:
+> > >  - Collect Rob's RB tag
+> > >  - Remove redundant maxItems from remote-endpoints
+> > >  - Fix SPDX licence tag
+> > >
+> > > v10:
+> > > [Jacopo]
+> > >  - Fix dt-validation
+> > >  - Fix dt-binding examples with 2 reg entries
+> > >
+> > > [Kieran]
+> > >  - Correctly match the hex camera node reg
+> > >  - Add (required) GPIO controller support
+> > >
+> > >  .../bindings/media/i2c/maxim,max9286.yaml     | 366 ++++++++++++++++=
+++
+> > >  1 file changed, 366 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim=
+,max9286.yaml
+> > >
 > >
-> > I didn't test but I wonder if this patch is really urgent.
->=20
-> I'm talking about this entire fix-series.
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/me=
+dia/i2c/maxim,max9286.example.dt.yaml: example-0: i2c@e66d8000:reg:0: [0, 3=
+865935872, 0, 64] is too long
+> >
+> >
+> > See https://patchwork.ozlabs.org/patch/1308280
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master=
+ --upgrade
+> >
+>
+> I have updated my dt-schema installation to the latest github master
+> -------------------------------------------------------------------------=
+------
+> Successfully installed dtschema-2020.6.dev8+g4d2d86c
+>
+> https://github.com/devicetree-org/dt-schema/commit/4d2d86c5cd65cd3944ce0a=
+aa400866bc36727bea
+>
+> $ /usr/bin/dt-validate -V
+> 2020.6.dev8+g4d2d86c
+> -------------------------------------------------------------------------=
+------
+>
+> But I still cannot reproduce the error.
+>
+> However, I see this commit in your next branch
+> https://github.com/devicetree-org/dt-schema/commit/b72500282cfd2eba6f9df4=
+d7553f696544b40ee6
+> "schemas: Add a schema to check 'reg' sizes "
+>
+> Which sounds very likely related to the above reported error.
+> Was this intentional ?
 
-Ah, I didn't notice this is a series as I only got patch 4.
+Yes, I can't add the new checks to master until all the in tree schema
+are fixed yet I want to check submissions with pending checks, so I
+created the 'next' branch.
 
-Best regards
-Uwe
+> I'm not sure how I should handle this. The error reports the i2c node
+> parents should have both address-cells and size-cells properties set
+> to 2, but in the example there is not i2c node parent at all :)
+> Should I add a parent node for the i2c in the example snippet ?
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+The examples have default sizes of 1 cell. If you need something
+different, the example has to define a parent node to specify it. In
+your case, I'd just change 'reg' to use 1 cell each.
 
---22e3z4uskfyqfe7i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7ngxkACgkQwfwUeK3K
-7AmWfwf+I3vs24kj8zZmi2xLtp3eBse/rsx/QwGFFCBjl1ddyzuqVk/w36jlqcWR
-eipqFYnPqoBfImmEvBGs0EEOjk7M2mxLQEom0o9RaOrILZb4lYiezDBzZKtX82CH
-eFkHxlAk0RWkDcJerTaXVZQMsIIc3mDCbb7m+fycw0naGc1OrGisSL9aWwKz0XY+
-9/25b++BjZjVx5Ptr/fCE9wJ4uL4V4v8nhHB8U5tGJi5xZHt8m4nQsfFlLFnmq/F
-VRnBXlo6FH9r/htxD0UXNu1tXy4LX0E++cPFx2YZurrZWzey2TavHzkgx2SHqmxO
-K86MQ0cl0dTkTegwS5VBGTueCSo92Q==
-=nBOm
------END PGP SIGNATURE-----
-
---22e3z4uskfyqfe7i--
+Rob
