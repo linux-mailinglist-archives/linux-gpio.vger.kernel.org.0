@@ -2,239 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1499D1F96DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA4B1F96F9
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbgFOMpC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 08:45:02 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41828 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729243AbgFOMpC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jun 2020 08:45:02 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05FChqHm015449;
-        Mon, 15 Jun 2020 14:44:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=OeFeiQXSPoFz1zGDNRLnx/pg+w7M3JAqmjkNz+4d8C0=;
- b=hRp6vYCuTFSCYfa3cTf3Gg9rzRHJX8mWUpwsApmZlwiQ5uM915KS9jKUtZWK7R7MZT7Y
- saynVOqKkDnogwO5JhHsC+CgMpirImKgGFH2aDd2JIMAR0CWhPgFfRZxcZhgLqKZRrWA
- 1YNQNfqEP05rsNgC6WDgBwuklLdm5znfuEY5EVr496WIuhQie3HAKthhH6QiV61FRe2I
- YAK7CY9T+fN3n6LFir3foro/A62oD65IHf6C/gK8uIDCowP0HK9xgk8udeJlJRYyp4vv
- 0P6b+Pdp8T0p0fUwUqRwsc2L+F4Mnz10E+52r68+MeGIgMY/7MSqi4b8uRSiE9Y5PJKh 3g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31mm91hqeg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jun 2020 14:44:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 388EB10002A;
-        Mon, 15 Jun 2020 14:44:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2A8EA2B45D9;
-        Mon, 15 Jun 2020 14:44:57 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Jun 2020 14:44:56
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH] pinctrl: stm32: use the hwspin_lock_timeout_in_atomic() API
-Date:   Mon, 15 Jun 2020 14:44:56 +0200
-Message-ID: <20200615124456.27328-1-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
+        id S1730072AbgFOMqv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 08:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728285AbgFOMqu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jun 2020 08:46:50 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F380DC061A0E;
+        Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p5so15112220ile.6;
+        Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Ex4ahxPfnRJtHhHWkEbgHyzFGza84a5R1pjXHVBwv1k=;
+        b=qKfY5RcZwunYOBi349HPaH9pICMNxGTeYVJuxlg2OASzshTxktOUuR2xF4VOxC+gPh
+         /m6dq5sc5Zq6O9NEbWCvAuasEFmQUvbH+z36wkqubUp+gJ7qQkatmsqJhbE5j0ETipu6
+         oxMEy6xor4+CfJZXMtsT+BIR/6iVSk6EYbBAoq1SVtmUJyj61610y5a1sULkMdxWnKDv
+         +mjIRlj519zIpp2eNy3kqE/t/28gLV8iqkjXml8KnpSgTkgGRT/hEy938A8SdKMvDdBN
+         DKWdA5hwlb4r2IOpBjsYa80zrdpp4UJ8hBAAUjdryK1VjIj++blPq6733ZB6oNLJFLCa
+         yE9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Ex4ahxPfnRJtHhHWkEbgHyzFGza84a5R1pjXHVBwv1k=;
+        b=boSdQhD/R1FMZi91wCOBLb9EJeOzTAHknzWpGP7dMU3Hx7cHdKUZ5Uz2YiF72mu0c7
+         cG1kVmpvf6umFtzffGj6h2srFy+mQqI6ejnH75OvGUCdvX4UA9SPAAXYeiRdeKVUUoTo
+         C9PhND2nB9eEXwaJ3ehA9nZ1gl7yizbF5VQxT6iCdUi1AfXwmNob0i07HTjTgD+I1Ph4
+         9XNYYpYrisNb+xPSLzcg5+V2OF6P4W+6+0PuHX+AOplEj7axS/G1B5ouK3dOyMQZqxrc
+         002brSnfi5ICoPs9NKhVwQYhy1HDT4AtaJKMWN4yTDM2qSU1eeK7r1ubVjbwxxdr6juH
+         sJQA==
+X-Gm-Message-State: AOAM533OeG/Kw/UZbfZwR4+GWLI+bKHO4oVbzSGertI0zpsOqA6sgJ0A
+        BmAqAQfSBQYM/1qkAgxzipvUc3qkvYr9i0ZKsKc=
+X-Google-Smtp-Source: ABdhPJziLUuk2qoHcHqUNeIaqipAR7Yne8rAu4BGDaYRpWHBs0TR8DrvYEjvYzreMLe1BHbse4edbW5ExC9KB2ifCwA=
+X-Received: by 2002:a05:6e02:12b3:: with SMTP id f19mr27719137ilr.13.1592225209461;
+ Mon, 15 Jun 2020 05:46:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-15_02:2020-06-15,2020-06-15 signatures=0
+References: <cover.1590017578.git.syednwaris@gmail.com> <CAMpxmJUrC270rgWcADYruqA_qVeh9-N8mCVPWgJkL-8kU2bO1A@mail.gmail.com>
+In-Reply-To: <CAMpxmJUrC270rgWcADYruqA_qVeh9-N8mCVPWgJkL-8kU2bO1A@mail.gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Mon, 15 Jun 2020 18:16:37 +0530
+Message-ID: <CACG_h5pP1ffeG4E-Vz_C+cX=2PGaHvNBPe+sUpP7sbfMC-0sdQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/4] Introduce the for_each_set_clump macro
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+On Mon, May 25, 2020 at 3:06 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> niedz., 24 maj 2020 o 07:00 Syed Nayyar Waris <syednwaris@gmail.com> napi=
+sa=C5=82(a):
+> >
+> > Hello Linus,
+> >
+> > Since this patchset primarily affects GPIO drivers, would you like
+> > to pick it up through your GPIO tree?
+> >
+> > This patchset introduces a new generic version of for_each_set_clump.
+> > The previous version of for_each_set_clump8 used a fixed size 8-bit
+> > clump, but the new generic version can work with clump of any size but
+> > less than or equal to BITS_PER_LONG. The patchset utilizes the new macr=
+o
+> > in several GPIO drivers.
+> >
+> > The earlier 8-bit for_each_set_clump8 facilitated a
+> > for-loop syntax that iterates over a memory region entire groups of set
+> > bits at a time.
+> >
+>
+> The GPIO part looks good to me. Linus: how do we go about merging it
+> given the bitops dependency?
+>
+> Bart
 
-Use the hwspin_lock_timeout_in_atomic() API which is the most appropriated
-here. Indeed:
-- hwspin_lock_() is called after spin_lock_irqsave()
-- the hwspin_lock_timeout() API relies on jiffies count which won't work
-  if IRQs are disabled which is the case here.
+A minor change has been done in patch [2/4] to fix compilation warning.
+Kindly refer patchset v8 in future.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index a657cd829ce6..1f7fff84aa9d 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -64,7 +64,7 @@
- #define gpio_range_to_bank(chip) \
- 		container_of(chip, struct stm32_gpio_bank, range)
- 
--#define HWSPINLOCK_TIMEOUT	5 /* msec */
-+#define HWSPNLCK_TIMEOUT	1000 /* usec */
- 
- static const char * const stm32_gpio_functions[] = {
- 	"gpio", "af0", "af1",
-@@ -420,12 +420,14 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 	 * to avoid overriding.
- 	 */
- 	spin_lock_irqsave(&pctl->irqmux_lock, flags);
--	if (pctl->hwlock)
--		ret = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
- 
--	if (ret) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		ret = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (ret) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	if (pctl->irqmux_map & BIT(irq_data->hwirq)) {
-@@ -433,7 +435,7 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 			irq_data->hwirq);
- 		ret = -EBUSY;
- 		if (pctl->hwlock)
--			hwspin_unlock(pctl->hwlock);
-+			hwspin_unlock_in_atomic(pctl->hwlock);
- 		goto unlock;
- 	} else {
- 		pctl->irqmux_map |= BIT(irq_data->hwirq);
-@@ -442,7 +444,7 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- 	regmap_field_write(pctl->irqmux[irq_data->hwirq], bank->bank_ioport_nr);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- unlock:
- 	spin_unlock_irqrestore(&pctl->irqmux_lock, flags);
-@@ -750,12 +752,13 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + alt_offset);
-@@ -769,7 +772,7 @@ static int stm32_pmx_set_mode(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_MODER);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_mode(bank, pin, mode, alt);
- 
-@@ -869,12 +872,13 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_TYPER);
-@@ -883,7 +887,7 @@ static int stm32_pconf_set_driving(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_TYPER);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_driving(bank, offset, drive);
- 
-@@ -923,12 +927,13 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_SPEEDR);
-@@ -937,7 +942,7 @@ static int stm32_pconf_set_speed(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_SPEEDR);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_speed(bank, offset, speed);
- 
-@@ -977,12 +982,13 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 	clk_enable(bank->clk);
- 	spin_lock_irqsave(&bank->lock, flags);
- 
--	if (pctl->hwlock)
--		err = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
--
--	if (err) {
--		dev_err(pctl->dev, "Can't get hwspinlock\n");
--		goto unlock;
-+	if (pctl->hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(pctl->hwlock,
-+						    HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			dev_err(pctl->dev, "Can't get hwspinlock\n");
-+			goto unlock;
-+		}
- 	}
- 
- 	val = readl_relaxed(bank->base + STM32_GPIO_PUPDR);
-@@ -991,7 +997,7 @@ static int stm32_pconf_set_bias(struct stm32_gpio_bank *bank,
- 	writel_relaxed(val, bank->base + STM32_GPIO_PUPDR);
- 
- 	if (pctl->hwlock)
--		hwspin_unlock(pctl->hwlock);
-+		hwspin_unlock_in_atomic(pctl->hwlock);
- 
- 	stm32_gpio_backup_bias(bank, offset, bias);
- 
--- 
-2.17.1
-
+Thanks
+Syed Nayyar Waris
