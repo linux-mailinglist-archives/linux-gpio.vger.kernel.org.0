@@ -2,106 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6411F90D8
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 09:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755841F90FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 10:06:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgFOH6t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 03:58:49 -0400
-Received: from smtp.asem.it ([151.1.184.197]:51429 "EHLO smtp.asem.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728948AbgFOH6o (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jun 2020 03:58:44 -0400
-Received: from webmail.asem.it
-        by asem.it (smtp.asem.it)
-        (SecurityGateway 6.5.2)
-        with ESMTP id SG000317057.MSG 
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 09:58:39 +0200S
-Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 15
- Jun 2020 09:58:37 +0200
-Received: from flavio-x.asem.intra (172.16.17.208) by ASAS044.asem.intra
- (172.16.16.44) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Mon, 15 Jun 2020 09:58:37 +0200
-From:   Flavio Suligoi <f.suligoi@asem.it>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <linux-csky@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH v1] doc: devicetree: bindings: fix spelling mistake
-Date:   Mon, 15 Jun 2020 09:58:35 +0200
-Message-ID: <20200615075835.15202-1-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.17.1
+        id S1728496AbgFOIGF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 04:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgFOIGE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jun 2020 04:06:04 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C57C05BD43
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 01:06:04 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id g62so11882893qtd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 01:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y7uJRbGGvdP4YgJCKlTTB04yoKIdbZ44XdVpkWA4eLo=;
+        b=mJP006ALkTf6tZMnk0CVb/lK0d+Kiphgow+YqE9InaHh6PwPBjimUFuooivb+XgO/z
+         YJP2VsyWT6TJbHKlDdKIeAEg8Yui6RwoVxXhpfOmdRuZkqmL/Zxl18t51xd47VPlUOsd
+         QL3d86JyiZYbt5UOla/FE5BccZnXY97vwK3Ek1zSKpxuiMPjau4NLcpKgk1eYngggqXO
+         7lQBbV7aA2+JZf2K7oENSOGFTEt8iGsWY2X3AvnsMf8QE8tn7Ry/SFd3Qozyy/jQ8+tE
+         EAtylBk66FAHxyL6n0lFBxmRFF+oiqOtYrDIxl45Nv5BwHheeu4B6S+06mKi1YVckaI6
+         uQPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y7uJRbGGvdP4YgJCKlTTB04yoKIdbZ44XdVpkWA4eLo=;
+        b=jMYbpVyKeoOsbQWIOdNLXEiPYKgc0sf3eHT8YZlFFSwdNOm7XA5ascwTqWaMC0SG4+
+         Qmlsm5AdQtGycARNl8rGXjc5LhtgzmOVzXFFEx5LFSaCrFq1wowBofG8pvr1Ba2iZIR6
+         4HOuMUzWcxDpl+Ax2EKJoJG/5Ck6/cqo56YlCTuu+Bgcq2v5AlObp02XmOclFxVE1nGr
+         pqrT+l3rBgZEzF+h67x3/wkjfO3YFXv5nzJK2mKsw1nSxErTkI5QHhEPFkPgmDcJKtRO
+         ccEAbOnN22oGmwlWYE5KMe6PiQEGNszEYSVnnIE5UB8ZCjsvQlWIyK7tomd3DObqjg7U
+         UqgQ==
+X-Gm-Message-State: AOAM533B8wMWi3+FaVEE/veQiPVOQRKIrD5KkHRkauljkylc5gizmLR7
+        ZdyO/RlLyvYxnk/ievZO3L6XqTE+sXCVO/7J2OgMUQ==
+X-Google-Smtp-Source: ABdhPJzuVatKjvfNPfptZxy9khtOlStDT/4TZpiCuQrHEGqM5lJmhBgrRKpjXG+7iknxfcdBL4pKYW0yuMxvK9LiYt4=
+X-Received: by 2002:ac8:1bc1:: with SMTP id m1mr14067075qtk.57.1592208362743;
+ Mon, 15 Jun 2020 01:06:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
-X-SGSPF-Result: none (smtp.asem.it)
-X-SGOP-RefID: str=0001.0A09020A.5EE72A2D.0065,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
+References: <cover.1592203542.git.mchehab+huawei@kernel.org> <97beeedde507eaeea189ae955c9f35ecf1563d6d.1592203542.git.mchehab+huawei@kernel.org>
+In-Reply-To: <97beeedde507eaeea189ae955c9f35ecf1563d6d.1592203542.git.mchehab+huawei@kernel.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 15 Jun 2020 10:05:51 +0200
+Message-ID: <CAMpxmJUyOfM3hqqEzeHzQxOYG57+ZZD-wLVYbtOaRsiNDiEfYg@mail.gmail.com>
+Subject: Re: [PATCH 08/29] gpio: driver.h: fix kernel-doc markup
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix typo: "triger" --> "trigger"
+pon., 15 cze 2020 o 08:47 Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> napisa=C5=82(a):
+>
+> There is one parameter with a wrong name at kernel-doc macro:
+>
+> ./include/linux/gpio/driver.h:499: warning: Function parameter or member =
+'gc' not described in 'gpiochip_add_data'
+> ./include/linux/gpio/driver.h:499: warning: Excess function parameter 'ch=
+ip' description in 'gpiochip_add_data'
+>
+> Fix it.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  include/linux/gpio/driver.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index c4f272af7af5..c11261f3c724 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -481,7 +481,7 @@ extern int gpiochip_add_data_with_key(struct gpio_chi=
+p *gc, void *data,
+>
+>  /**
+>   * gpiochip_add_data() - register a gpio_chip
+> - * @chip: the chip to register, with chip->base initialized
+> + * @gc: the chip to register, with chip->base initialized
+>   * @data: driver-private data associated with this chip
+>   *
+>   * Context: potentially before irqs will work
+> --
+> 2.26.2
+>
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-Acked-by: Guo Ren <guoren@kernel.org>
----
+Patch applied, thanks!
 
-v1: add Acked-by: Guo Ren <guoren@kernel.org>
-
- Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt | 2 +-
- .../devicetree/bindings/interrupt-controller/csky,mpintc.txt    | 2 +-
- Documentation/devicetree/bindings/timer/csky,mptimer.txt        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-index ba455589f869..e1c49b660d3a 100644
---- a/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/mediatek,mt7621-gpio.txt
-@@ -12,7 +12,7 @@ Required properties for the top level node:
-    Only the GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
- - #interrupt-cells : Specifies the number of cells needed to encode an
-    interrupt. Should be 2. The first cell defines the interrupt number,
--   the second encodes the triger flags encoded as described in
-+   the second encodes the trigger flags encoded as described in
-    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- - compatible:
-   - "mediatek,mt7621-gpio" for Mediatek controllers
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-index e13405355166..e6bbcae4d07f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-@@ -10,7 +10,7 @@ Interrupt number definition:
-  16-31  : private  irq, and we use 16 as the co-processor timer.
-  31-1024: common irq for soc ip.
- 
--Interrupt triger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-+Interrupt trigger mode: (Defined in dt-bindings/interrupt-controller/irq.h)
-  IRQ_TYPE_LEVEL_HIGH (default)
-  IRQ_TYPE_LEVEL_LOW
-  IRQ_TYPE_EDGE_RISING
-diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-index 15cfec08fbb8..f5c7e99cf52b 100644
---- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-+++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-@@ -8,7 +8,7 @@ regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
-  - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
-  - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
-  - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-- - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
-+ - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
- 
- ==============================
- timer node bindings definition
--- 
-2.17.1
-
+Bartosz
