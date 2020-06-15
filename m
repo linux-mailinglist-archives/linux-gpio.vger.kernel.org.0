@@ -2,129 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 874251F972C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:54:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78F441F9751
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgFOMyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 08:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgFOMyF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jun 2020 08:54:05 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D8BC05BD43;
-        Mon, 15 Jun 2020 05:54:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so6679156pls.2;
-        Mon, 15 Jun 2020 05:54:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/BsN6sT0XoGQQsg1j2eXjDaxyV/WqhpHkxTTB2bsuOI=;
-        b=kwx5ZwXbJmY+gdEhVsyY2TFkBMQv0VDqAWgY51tVViwSQteTvuK9j4EauYI2LJ69Tk
-         tTZnN7A+1vamo3xCKDUGQqVkYRupY3fal1Whh/TaXQzXye1WBTEqnm0E+/uMWxbgn1ek
-         0viBXX3y74hrLGthozCpzgM2Q69IYBGzdHt9tEDa8YGqukAw72U1blcxV1I4vN1haDXJ
-         cO7fhfy/516lcLTA0esHJpwaQeeqTnHSrg+YEw5Tztyh87NzFajE5pH+n1EtEqgiiVHI
-         W+JOEU9QIb6RikjFKkzYrkavjbnj1d7flB+ql+8NICeNa3PktFVBxICcRAfQKh3+JDMN
-         116g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/BsN6sT0XoGQQsg1j2eXjDaxyV/WqhpHkxTTB2bsuOI=;
-        b=ZOAYvYeNQPkotZN/LIJgz3BqEIQURmIYoH2K0k1yY7ovYVenXNpaqIzQ28bum3LXwR
-         YxII1lk7DMJ4R90GjSOqWjt6Muf+tox8lPZCq7lSnW2w/3kx/yL5mvbplotZepZcHGRV
-         RD+uB/wqIMJZ+1sBS/5GKvPb7oRWS7/w8VPepzUsoperXDqlsnIk+cKKBVLckeQKdPGs
-         YZxAjM8GM03TTpoUDIrtg0JPvvxc+SOvKZoW7z7P+qzVV2F0zeEapB/DyE3luQrGtFd5
-         8s3bFuY/+Aylh+8oLchXIrY5HSDct10zoJBok2siTFSgXdKT/+NxOGhHAPdkWlp8DUvP
-         oSVA==
-X-Gm-Message-State: AOAM532V3ZHMOLH8exLh0AiCQM3aEjl3en/tBg1B1teLSJ6XQOv/nIZH
-        XniMBbre4GYpF7r1wLLiRaM=
-X-Google-Smtp-Source: ABdhPJx/GVVjfxNT/ENYaoVHX+Y6zSM3++zUo6/QLeWdmerDI0Ox5ULcQxb19SXZUsh4FzbC9hfkDA==
-X-Received: by 2002:a17:90a:a405:: with SMTP id y5mr11996352pjp.15.1592225643846;
-        Mon, 15 Jun 2020 05:54:03 -0700 (PDT)
-Received: from syed ([106.198.195.84])
-        by smtp.gmail.com with ESMTPSA id g84sm13147530pfb.113.2020.06.15.05.53.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Jun 2020 05:54:03 -0700 (PDT)
-Date:   Mon, 15 Jun 2020 18:23:47 +0530
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-To:     linus.walleij@linaro.org, akpm@linux-foundation.org
-Cc:     andriy.shevchenko@linux.intel.com, vilhelm.gray@gmail.com,
-        rrichter@marvell.com, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 3/4] gpio: thunderx: Utilize for_each_set_clump macro
-Message-ID: <3dfa9a7e2215eee79006ee07b139c3e12dc01160.1592224129.git.syednwaris@gmail.com>
-References: <cover.1592224128.git.syednwaris@gmail.com>
+        id S1730276AbgFOMzF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 08:55:05 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56842 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730123AbgFOMxs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:53:48 -0400
+IronPort-SDR: 4MXRCOgUBHBh8Q03bh3MuQMBeyb3Q6plqU0cjZKfsfkvk/l2PlCFXaxI9apBMFlCjoCGtijq6A
+ yOVupo8lgBOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 05:53:48 -0700
+IronPort-SDR: 9AWUi8vBSUDGs3O8vIVOfV+pl5iANM5qD7wipVx6FOBtTdSzNTaKkv9ZbseJjEEu0AW2CoA40h
+ sItMMayIXAlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,514,1583222400"; 
+   d="scan'208";a="261092670"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 15 Jun 2020 05:53:46 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jkocX-00DZZd-D7; Mon, 15 Jun 2020 15:53:49 +0300
+Date:   Mon, 15 Jun 2020 15:53:49 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
+ automatic address incrementing
+Message-ID: <20200615125349.GD2428291@smile.fi.intel.com>
+References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
+ <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
+ <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cover.1592224128.git.syednwaris@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch reimplements the thunderx_gpio_set_multiple function in
-drivers/gpio/gpio-thunderx.c to use the new for_each_set_clump macro.
-Instead of looping for each bank in thunderx_gpio_set_multiple
-function, now we can skip bank which is not set and save cycles.
+On Mon, Jun 15, 2020 at 02:20:44PM +0200, Uwe Kleine-König wrote:
+> On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
+> > It's a repetition of the commit aa58a21ae378
+> >   ("gpio: pca953x: disable regmap locking")
+> > which states the following:
+> > 
+> >   This driver uses its own locking but regmap silently uses
+> >   a mutex for all operations too. Add the option to disable
+> >   locking to the regmap config struct.
+> > 
+> > Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address incrementing")
+> > Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Ah, good catch. I assume that I didn't have aa58a21ae378 in my tree when
+> I created the patch that then became bcf41dc480b1.
+> 
+> Looks right
+> 
+> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
-Changes in v8:
- - No change.
+Thanks!
 
-Changes in v7:
- - No change.
+Linus, Bart, just to clarify that this is material for one of the next v5.8-rcX
+(this cycle!).
 
-Changes in v6:
- - No change.
-
-Changes in v5:
- - No change.
-
-Changes in v4:
- - Minor change: Inline value '64' in code for better code readability.
-
-Changes in v3:
- - Change datatype of some variables from u64 to unsigned long
-   in function thunderx_gpio_set_multiple.
-
-Changes in v2:
- - No change.
-
- drivers/gpio/gpio-thunderx.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-index 9f66deab46ea..58c9bb25a377 100644
---- a/drivers/gpio/gpio-thunderx.c
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -275,12 +275,15 @@ static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
- 				       unsigned long *bits)
- {
- 	int bank;
--	u64 set_bits, clear_bits;
-+	unsigned long set_bits, clear_bits, gpio_mask;
-+	unsigned long offset;
-+
- 	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
- 
--	for (bank = 0; bank <= chip->ngpio / 64; bank++) {
--		set_bits = bits[bank] & mask[bank];
--		clear_bits = ~bits[bank] & mask[bank];
-+	for_each_set_clump(offset, gpio_mask, mask, chip->ngpio, 64) {
-+		bank = offset / 64;
-+		set_bits = bits[bank] & gpio_mask;
-+		clear_bits = ~bits[bank] & gpio_mask;
- 		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
- 		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
- 	}
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
