@@ -2,99 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E541F966C
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:20:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2940E1F96D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 14:42:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgFOMUu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 08:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728510AbgFOMUu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Jun 2020 08:20:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E843CC061A0E
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 05:20:49 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jko6X-0006XX-EG; Mon, 15 Jun 2020 14:20:45 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jko6W-00011d-PY; Mon, 15 Jun 2020 14:20:44 +0200
-Date:   Mon, 15 Jun 2020 14:20:44 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
- automatic address incrementing
-Message-ID: <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
-References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
- <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="karor7u4vxrgd5fs"
-Content-Disposition: inline
-In-Reply-To: <20200605134036.9013-4-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+        id S1728510AbgFOMmi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 08:42:38 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:34047 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728598AbgFOMmh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 08:42:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1592224957; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=IcH9ie83cqyX2wRpW4LqU8OPLSE6vdIbgqFcdhJpvVk=; b=Vtmh27kxxkMudRBZRg6V18da12WELIPA/FzwQSQLIvVcHq3RJCuHw6J4ZJ53cGKUFpu3yz2s
+ FQt5RchEfxl9QGADD3HPTOzULnwqw2//QgKqJmXFkOWYpbuAJacpWKEroaO9Ff/rQN9AMZ59
+ 2g2XghiZ+wHuF9aAFX1gghjI5sQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ee76cb2567385e8e76d0812 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 15 Jun 2020 12:42:26
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4D7E5C433CA; Mon, 15 Jun 2020 12:42:25 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0B53DC433C8;
+        Mon, 15 Jun 2020 12:42:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0B53DC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mkshah@codeaurora.org,
+        ilina@codeaurora.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
+Date:   Mon, 15 Jun 2020 18:12:07 +0530
+Message-Id: <1592224927-28576-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The PDC irqchip driver currently does not handle dual-edge interrupts,
+and we have atleast one board with sc7180 designed to configure gpio28
+as a dual-edge interrupt. This interrupt is however not expected to be
+wakeup capable, so an easy way to fix this, seems to be to make this
+gpio non wakeup capable and let TLMM handle it.
 
---karor7u4vxrgd5fs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It would have been nice to be able to do this only for the particular
+board with this design, however this change of removing gpio28 from the
+pinctrl SoC file means we end up with one less wakeup capable gpio for
+the entire SoC.
 
-On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
-> It's a repetition of the commit aa58a21ae378
->   ("gpio: pca953x: disable regmap locking")
-> which states the following:
->=20
->   This driver uses its own locking but regmap silently uses
->   a mutex for all operations too. Add the option to disable
->   locking to the regmap config struct.
->=20
-> Fixes: bcf41dc480b1 ("gpio: pca953x: fix handling of automatic address in=
-crementing")
-> Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reported-by: Jimmy Cheng-Yi Chiang <cychiang@google.com>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-sc7180.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ah, good catch. I assume that I didn't have aa58a21ae378 in my tree when
-I created the patch that then became bcf41dc480b1.
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+index 1b6465a..3afcc01 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
+@@ -1122,7 +1122,7 @@ static const struct msm_pingroup sc7180_groups[] = {
+ static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
+ 	{0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
+ 	{10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
+-	{24, 61}, {26, 52}, {28, 36}, {30, 100}, {31, 33}, {32, 81},
++	{24, 61}, {26, 52}, {30, 100}, {31, 33}, {32, 81},
+ 	{33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
+ 	{41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
+ 	{52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Looks right
-
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-Thanks
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---karor7u4vxrgd5fs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl7nZ5cACgkQwfwUeK3K
-7AmUnQf+K33BgTGpJdxfmodrLhunXgVb2I8DNj175rg/lrghLFDXVN4ehwYh+LPe
-U0CeweAZRsU+pSVYVG/RIGE8jcYDao7Gz8OIuaqzRaxK4VUHZBe8npdvKgm5lFss
-nGVRj/n1ujafsaw3lwL1+aliINfIhJGOLOlULxXsIOICbqXjFQC0z5g12cPpwGG4
-bfS6Zhy0dM/XlDinDMS59ldCBMQh6sIw+X6gdtbbsuybEtsxOTi4Ce9sZw0fHIlz
-1auC8lI3GdP5BON3VccATUMx/QGefd7jdfX4mDmn59t1UG8L0Dwmr5/IqAexTFqA
-yF9pM1AAAuS0eP6E9dK0fNmAjLT5sg==
-=gIQm
------END PGP SIGNATURE-----
-
---karor7u4vxrgd5fs--
