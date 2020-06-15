@@ -2,64 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4758C1F9D81
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 18:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E21A1F9E89
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jun 2020 19:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgFOQdG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Jun 2020 12:33:06 -0400
-Received: from mga01.intel.com ([192.55.52.88]:49347 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729792AbgFOQdF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Jun 2020 12:33:05 -0400
-IronPort-SDR: S4a7Z8Z/IGDo6qk2vI3MLJwwo8Tp5qk70BTvtV+5W/PceWEnNnImVlj3hrZv/5cttQ1MIJoIxH
- vupWWTiBD8HA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2020 09:33:05 -0700
-IronPort-SDR: v9DBSSF0nHvoZsOtIRZQcrgG/whEyJlL+sQqsoZMVriEotjp2iOen251GNKqQRfR93s1gbioRd
- DOkvdD7YPfmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,515,1583222400"; 
-   d="scan'208";a="382592461"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 15 Jun 2020 09:33:03 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 15 Jun 2020 19:33:02 +0300
-Date:   Mon, 15 Jun 2020 19:33:02 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] pinctrl: intel: Reuse for_each_requested_gpio*()
- macros
-Message-ID: <20200615163302.GV247495@lahna.fi.intel.com>
-References: <20200615151353.88194-1-andriy.shevchenko@linux.intel.com>
+        id S1731217AbgFORcf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Jun 2020 13:32:35 -0400
+Received: from sonic301-3.consmr.mail.bf2.yahoo.com ([74.6.129.42]:36531 "EHLO
+        sonic301-3.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728585AbgFORcf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Jun 2020 13:32:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592242354; bh=NajTNMrfMLb6UXcjRhYpYerQX8PtVBLz0oFgaMINSWY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=a1qPeJnsgR5d6Xf2FeiK+qLxCdL2WXC40YTXT8A9hy9X+YRUkqNtQBo3aI2GWCpg6EkHz6MG61bCMUh+iwjMPDq7Tlx22WIOwZ9II76tEfUTd2S95p0gScShqw9d/sPw8j0dV+swHMzMPS/PE/WqeuTAKQB75rK7N1Q0LiV1/+UphRVXkG+iIWZkdnCdlFPc6wOW2WGt8AB+E/5DMELOtXqnd4ocNtzRZ2k76VzTtAojFE7/oT7O6EsCtP+G56+8K69t5fwAcTX765BoCYuy1qEVdFfbUh4i9YmS6J6Tbbc6gl62mbmfZn8e7znWax0mLgKepOuAgrFBPKFkyfnS8Q==
+X-YMail-OSG: AjE6pkEVM1kNHBgCKC6tIuRaPfOX9h2SF7fkvjvAmN8bkpnIVLOkLZUc0LfLfr9
+ bRNvuL3DCjpbasAw8jkZ0q1sr_SxgQ5L4_NKII2.ymXI2dWo.kVwcpmn.dyCCn_LceW5GcDgNjoa
+ XIayuBMHhbwoPQJX3XeWEJaHvvU3fcykcu_zG_tL9QYtJa9weHhGd9hUrI0zgL7tF70mpbRabS2W
+ 8EHmstrQOc037EkiYAKhWThI4lZtVT.46AZ_bcrv_MZc8pZopnqwOaZgq2P2boPWdQ14XlBfbQsx
+ bf4YCxBxZJCsuzEJzJLv8ZXMu.ncmDBOnntP_73sr61kvAD.LygezY8LynMAahcH8C1bXON8CipZ
+ wgTDqlUXrFNRcmrc5SFJHnxf.N4OPsCwt.s4w_gBAdynQ8bwydqSv8nxqU1TnJpe4LREs51Djz2R
+ 4ckdJMOiZO5amNqxWz.2_h61grILpfC.CmtJv9Ws.0iU9mfU98q8FCtwxBV2Jq.w9seSofrONecj
+ 5dB1OKbhRalJFNPnihJSOl8X08dKEtE6v8yh.SaLkVyelte7EP24xFn9xmK5MyTqUC4MEmuh5ty1
+ sJAxGLkPTSufPR5v.Y3vD.gtxyrnrzTBV8UD1H2H3ul8l.s2yZrUuBK_79c8I3SpUEIlh8xCo3rQ
+ ifES63ImS1QAkspkrHAK91WXkOEjAsOBQAAda8C7RroAzw6C94RRD4LTSPOG8BGHw6D5XPAXp8mF
+ c8nBzcyzlbFdgGRjgD90PfkMJxUKqNpU8Typb7_SiBWBxAsHiu4AkLI3wfOsGPvex7pNJZvjF8m3
+ rFeEAqeb0vJsRHR6Xn3pUgRRTw2f0lUsZi.UpTsWamlmJhmvG9hnd_a4OOrx4EuwELV7plZOwVRN
+ 61Eh7K8o3JNN7LwQrrPzOTQysXGLewaopus2gcBPIuq6aBLzeU8s5CLzl4W0JDfY_ZXo5XIQdjRz
+ 8VfpK26_gLDvcFrAeKv0WQvoCzebSh6mltu2CCnSHjgc3i9OQ9MtkwVYecPku__axSMYJmBELK8g
+ npGNZBmuc7hJQ2JF_DHAM9weFvqPHEnEyT7ITwVK6qoyDBdgPKEERhFTQS3wJ_CiUpXWHR5aCEJv
+ lFSRc8ihpWjejG1BraRpDp77GybrfXfqJZ2Hu2JKZj2zpeEt0DzhJaj2XaEwlEyVLS7EOZw0HdG8
+ 9TNiVnnoZuBA_1giiIpqwti3dkmNZYH1w5jIrNq9zBuLCWpl76AwO5a2qxGkQ3qpyjnC5oi8Ue2Q
+ wE624C45621PL38mw0JeDw9LRzzKWuPLIEX4GNMtgmQM1RHnRYwJrI9Vxgp6crUA9g1w-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.bf2.yahoo.com with HTTP; Mon, 15 Jun 2020 17:32:34 +0000
+Date:   Mon, 15 Jun 2020 17:32:33 +0000 (UTC)
+From:   Ms lisa Hugh <lisahugh531@gmail.com>
+Reply-To: ms.lisahugh000@gmail.com
+Message-ID: <1271891906.798134.1592242353602@mail.yahoo.com>
+Subject: BUSINESS FROM(Ms Lisa hugh).
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200615151353.88194-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1271891906.798134.1592242353602.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16119 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:13:50PM +0300, Andy Shevchenko wrote:
-> This is part of previously sent clean up / fixes series against Intel pin
-> control drivers. This piece replaces home grown alternatives to generic (*)
-> for_each_requested_gpio*() helpers.
-> 
-> (*) Mika suggested to document for_each_requested_gpio*() helper, and I decided
-> that it may be useful to GPIO and pin control subsystems in general, so, thus it
-> has dependency to [1] submitted recently.
-> 
-> [1]: https://lore.kernel.org/linux-gpio/20200615150545.87964-1-andriy.shevchenko@linux.intel.com/T/#t
-> 
-> Andy Shevchenko (3):
->   pinctrl: intel: Make use of for_each_requested_gpio_in_range()
->   pinctrl: lynxpoint: Make use of for_each_requested_gpio()
->   pinctrl: lynxpoint: Introduce helpers to enable or disable input
 
-Looks good,
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Dear Friend,
+
+I am Ms Lisa hugh, work with the department of Audit and accounting manager here in the Bank(B.O.A).
+
+Please i need your assistance for the transferring of thIs fund to your bank account for both of us benefit for life time investment, amount (US$4.5M DOLLARS).
+
+I have every inquiry details to make the bank believe you and release the fund in within 5 banking working days with your full co-operation with me for success.
+
+Note/ 50% for you why 50% for me after success of the transfer to your bank account.
+
+Below information is what i need from you so will can be reaching each other
+
+1)Full name ...
+2)Private telephone number...
+3)Age...
+4)Nationality...
+5)Occupation ...
+
+
+Thanks.
+
+Ms Lisa hugh.
