@@ -2,86 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1EB1FAB64
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 10:37:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36EF41FAB9E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 10:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgFPIhr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 04:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36230 "EHLO
+        id S1726856AbgFPIuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 04:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgFPIhq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 04:37:46 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C730C05BD43
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:37:45 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id g2so3635625lfb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:37:45 -0700 (PDT)
+        with ESMTP id S1725710AbgFPIuT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 04:50:19 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E64C05BD43
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:50:18 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id d82so1226383qkc.10
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RA/a9xgeNIP0kFcRMvVhhdjRGSwULwerogwSj/F+Grs=;
-        b=HzPE1gUPc/C6yijBergBKS2BL3NPxjYVkqz5YK+Cp3GLxIQbBpnJUmKfOX8Qnxu/Ev
-         xQ4xP7abGcRd0RgEyzqM0HgrgrHjLhWA3J5BcOCKoDg7eZ5YS1BIDe9HRoCTCCGw5h/5
-         ZfQC7imXoCRa4KrmcGUZdWnGlzHAf5hMCkedF/OL3lITn44Riia+SNCrn6XoqSBZsoN6
-         Se40FgCH6bUFxIDJdr7t04juD9FtznG3+9DoSW0y7VzX5Gm/RJ7yebTjwKc8OEG/4tPW
-         DdU0xAlzHcvFO2VIQC/TaqntOAQXeo7faQR5WlLFFdXuYdo328K3ny+FlalgJH++7Hzw
-         JDPQ==
+         :cc:content-transfer-encoding;
+        bh=RVGu6PAcvTn1Y9na/crur5lRNO3jpGTKn65gyjWomTs=;
+        b=NfMvBfPgpryL2bUTBbncoUwqL6NQfkDWPPsZMFnsPS4iwUjsmMjF+0SoT6yhDi2mjj
+         U04I014RrOBw9UJGfNaoriO/Beqf7rBxRpoNL6NCxVQRo3cpJSJe8sDk3n5dNnS25GDm
+         VK3Zpy3MQMxWGVq/RI+L3cL4cCyW9P0n2f0LyW2ENuIp+dSuBLCq7Y4awXpYii7jiT3F
+         op/ZKIRufkJMbGbaavCy2B8w6UHjY+cXdLs84t975/4XQuNMIaJjc6y2F/Tny+eI/EcF
+         ME2Sd7QeAIMkvYfWdC6tcBjt2UKoipAHLNXd4V2Nehv3xwZh0IPQ7AfIIz9xmL/PTe/7
+         StOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RA/a9xgeNIP0kFcRMvVhhdjRGSwULwerogwSj/F+Grs=;
-        b=uUsHBzi5W0ELuuAVAP555a1n6nbViq60l5K19XDPJU1X6Tfjuo3DuACDlJdNZuizlV
-         aUaYzjDsFwufl8/tGg/vS/iPRjDvZqXEHDRaSinAmU5ewzUDK6jenjhcGpwcomWE8ebg
-         ch1W5NCIsmfcfOkeQz3S3YHs1kQ9kzBRn0TiRFH9NcbKJ7U2NXUPj9LQoUACy4k3H1eF
-         hG2nlqt0gEqyXJCO6B2ibrYevIj1vE88knCFVebC1tkzj0PYYcLmEubkZy2Z0SQZ7Rb0
-         m0CexEBc4l49Flbe+w3uBJQHLrYsv+zLwCQUGmJZb8wvjbi+7bTODay/ZGfLAaZZspUD
-         aGHA==
-X-Gm-Message-State: AOAM531Dp7N7ajzDo7Jg1oq8jp3evmzOcNah+cqq7LZUu5oXGK3mFHfN
-        0eTegLH7vHiJQkS7A98PTxpOEBDicskpwANkbOuuKw==
-X-Google-Smtp-Source: ABdhPJzzerD6xw0Kzs6JVDyTlC9tslnjITcT/1ov4XlDMrheqCSkjc7GIsa5Ps5UpaZ9lk0NPOIH5V95vNTTkup8gLg=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr1144061lfn.21.1592296663758;
- Tue, 16 Jun 2020 01:37:43 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RVGu6PAcvTn1Y9na/crur5lRNO3jpGTKn65gyjWomTs=;
+        b=elbcrI2p9+6dOipcuzZBAuS0/8pxwXwr6DUzFOKTqlEtaBV/7EqqsBdiD3qu1xwUly
+         n6TnQZNgbDQbAOezy6fhHtW4dqSkcgpsEkXZcZXBGh/FphVpL6BmF1QLbSZqa9KCaIbA
+         NwUUG6gF+U5M9wDGoxNrI+Ez4/t/NFWzrAwjEX8cygP4V6Lg+IMtt+ljNAvy7J64+NS6
+         6OiR3beEcjocrb8yijiGi57eWx+Zp8F6ES9sBXea5MpOPXmsoKt2HcocsYKydnVkMLik
+         ruyihv0rxL4LczPPa4GriYmfmjEW0fpVHwFSutK4FoMz0kj/F46bRZ7phLWAFUPkxSGu
+         5sGA==
+X-Gm-Message-State: AOAM531B1cCN5P6Lu4hJs+TK4RX2gt4MdhD9WSnrK0hpiwWD1ode7nKX
+        y8T3sihU3lZKeyqt9rYJ8lBN91JzAUhN7b5nktO8V9M+
+X-Google-Smtp-Source: ABdhPJzHsHHV9iDdm3KT3PEY16dBCNueo47F4xXAfBIzQeXxnvTko9WPEtISdUCzsY8ukXzSk1Z3VzoJmSNThF7CXjw=
+X-Received: by 2002:a37:aac4:: with SMTP id t187mr17406503qke.263.1592297418121;
+ Tue, 16 Jun 2020 01:50:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200609235135.10414-1-warthog618@gmail.com>
-In-Reply-To: <20200609235135.10414-1-warthog618@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 16 Jun 2020 10:37:32 +0200
-Message-ID: <CACRpkdZ9to8LRMFiGNW5gd-v901j2AsKDWKojw=f4dRaJSm4kQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpiolib: split character device into gpiolib-cdev
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <cover.1592227348.git.jan.kiszka@siemens.com> <213b571eda0ac65a2605df83e60fc20a9b37070a.1592227348.git.jan.kiszka@siemens.com>
+In-Reply-To: <213b571eda0ac65a2605df83e60fc20a9b37070a.1592227348.git.jan.kiszka@siemens.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 16 Jun 2020 10:50:07 +0200
+Message-ID: <CAMpxmJWMfu31=tG-puG2Ca=vKiUYTEq6ASu+=CextsxC9PcHpA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: pca953x: add nxp,pcal9535
+To:     Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 1:52 AM Kent Gibson <warthog618@gmail.com> wrote:
-
-> Split the cdev specific functionality out of gpiolib.c and into
-> gpiolib-cdev.c. This improves the readability and maintainability of both
-> the cdev and core gpiolib code.
+pon., 15 cze 2020 o 15:22 Jan Kiszka <jan.kiszka@siemens.com> napisa=C5=82(=
+a):
 >
-> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> From: Jan Kiszka <jan.kiszka@siemens.com>
 >
+> The NXP PCAL9535 is an extended variant of the PCA9535.
+>
+> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
 > ---
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> Changes in v3:
->  - updated the gpiolib-cdev.c file comment.
->  - rebased to latest gpio/devel (no changes impacted this patch)
->  - dropped the patch commentary as the points mentioned are mostly
->   resolved - there still remain a couple of commits in gpio/fixes that will
->   conflict...
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Do=
+cumentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> index dab537c20def..3126c3817e2a 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>         nxp,pca9698
+>         nxp,pcal6416
+>         nxp,pcal6524
+> +       nxp,pcal9535
+>         nxp,pcal9555a
+>         maxim,max7310
+>         maxim,max7312
+> --
+> 2.26.2
+>
 
-I rebased my GPIO tree on v5.8-rc1 and the old version of the patch did
-not apply and neither did this, could you rebase this patch so I can
-apply it? Sorry for the moving target, the merge window times are
-a bit bumpy. :/
+Patch applied with Andy's review tag.
 
-Yours,
-Linus Walleij
+Bart
