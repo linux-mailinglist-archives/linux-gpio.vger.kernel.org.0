@@ -2,176 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE0BC1FB002
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 14:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2101FB133
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 14:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgFPMQv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 08:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41820 "EHLO
+        id S1726306AbgFPMxs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 08:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbgFPMQv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 08:16:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA590C08C5C2
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 05:16:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id n2so8299665pld.13
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 05:16:50 -0700 (PDT)
+        with ESMTP id S1726261AbgFPMxr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 08:53:47 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9836AC03D1FB
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 05:53:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b16so9445827pfi.13
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 05:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=6k5s5oGcUxrwDw2wCN81XwAtrt5JkoLHhurxpJarLvI=;
-        b=K9QGP3qJ8k+LAlNaxPva/6E6ZE66rSbBxtk56RMeRY0QUarxw4jnfCOKDSVYqlpWkH
-         XnPw/9x76HmfY/RHaCCf5w203yXF4iUEi5/5lLxC4FExQCLsHqWqyJtKQkr+WQUrHhYb
-         1Ch2o2OV7kp0xrFgvmZjnW7wQLAQqOgBJcWt5KH9PEI/YZSNrIbvD+tZFrguRaBW/Jnl
-         OtGFb7SF5Ev3PDAGVo/IKOK77O2PSZbZHs4M6vd2PtsyDww+mhG09B0gry6WScotGM/b
-         XNvDqgEahqA5zxo/SWOpeMA4YF8wbTFgqZNcPN/Pz94TTyvZHhELaIHIvwrH931U353L
-         a4yQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5Y6wEAlAgsTxpN0pz7DrDEj+FpV7gGtoAH2iYun1tO8=;
+        b=QuS1kP3HH3dJdJWfEud/v440H2HaC36bBjDRr5DDl8WNT4lxGSNBjagwdbgwkKMJ/s
+         7rE0VBbo91MiIhN3GYmXTQEm7sStFgvkEaZ965V6QdRsle6XY8tjmWRkFKHp+kQdcNsu
+         +Jvael/G/Mt6z4wuE+7APwBESobIO7bAfwgIpXpxLNKOL1S/CHuVXWxJgP2sOmtApFA9
+         1+hosPeDIXRk93trOjrsFs2vbVTKDKCVwmwXZLvVtV6gwxrxmBHAEL/l5euzuF3HS1sv
+         2oJTps3xHvvpEAQ/4/IExc3HrsbukEoufk/ao0hM7W99uohxoF7jla0yj5v2C37OAMCC
+         5rOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=6k5s5oGcUxrwDw2wCN81XwAtrt5JkoLHhurxpJarLvI=;
-        b=KMujA5xxpTRjYdTr9CHhXQsDBTmDgUGZKmVX3bFzs0Z5mBD/MVrpg8cvUc1L+HBqD+
-         bgClyj0SCtYe0ars4aqKV/4dQQf47MRpCw4pqaZyWy4VH2zQQyAnS+I7D52lCgdXNYKu
-         o/nI9eyMdAkcN/e0DeH8aRm1eTGnmZATOh6PzH0d21+WvsXcXY0+OLe9+L0HDE7tLGp/
-         p1In1LnJteIhW3LxvcR3Rbyk/OatPm7+n5qa5pu9BRp9eWtDB0lfl604rtVHWODS24dV
-         czvhwE/3KEIV8h191ttUHLzWdPJsFv2Ds7VBEx4eFf+kHEyYXFAejaoFQQqRmjgwDQUG
-         bd0w==
-X-Gm-Message-State: AOAM530LXAw8nd2ydp6fN2NBwzySo651m7E99SMTkpC6POXrSdOGopkO
-        sY6rlwYG9njPsWRfDv9zZsBMKfoTxRY=
-X-Google-Smtp-Source: ABdhPJwDFT/rSrjgPoXj1dE2+wR0gnIob/vB3qjuT/KCapd+agMga6Hb2VPdDAQ4ehcRSNI/2ytybw==
-X-Received: by 2002:a17:90b:2308:: with SMTP id mt8mr2462620pjb.211.1592309810067;
-        Tue, 16 Jun 2020 05:16:50 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id i63sm2590813pje.34.2020.06.16.05.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 05:16:49 -0700 (PDT)
-Message-ID: <5ee8b831.1c69fb81.f50c6.7207@mx.google.com>
-Date:   Tue, 16 Jun 2020 05:16:49 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5Y6wEAlAgsTxpN0pz7DrDEj+FpV7gGtoAH2iYun1tO8=;
+        b=riu647L7hwRyEO1WXIOBT0IdxfT2Ckdl0KQnav2pqidh3wVBxwLz1/GWfR7ASM5P0p
+         Znbi35KzNY37kBLBZ5Rexe0GaD+LlotkDPioAe7VKG2UUPXPUtihbnMdLRp6hAYTPUTu
+         nK0yWZ0EV5Aj5rnm7l9fEMUqa5Da37/MlcBp4JhzqNhcTqpdJs2W+J1DtI0Kz411RSZg
+         Ao9CjAwC7jxySOsPkNR3v6ZCoZW/Hjc3VYYG7VZTdktoutlCiJJBXLkX570Bs9IU1l0m
+         FeAfJEcyGtmya/Dlks703Ktq5pjze/SA+XD5IwNrVQCV6m2/CklCWuKuZ6e6BrVcORLT
+         pPFQ==
+X-Gm-Message-State: AOAM531S4X2g8RTFdFxPgDvo/xY4xSwm8dszYrw9/wCtmw9BlgYPMPRX
+        FXAuUrG+73qKcJfg+w+h30O/QSSkHWJVLMQJy7A=
+X-Google-Smtp-Source: ABdhPJzXzF56mw9sIAJ8dbBpVJ+6jkngSaSqgFmy+pAuHq51xaccpXR0Zx+rY+VhOwTb1f76jVdMNiOTzBKD6l9DoZ4=
+X-Received: by 2002:a62:3103:: with SMTP id x3mr1934271pfx.130.1592312025584;
+ Tue, 16 Jun 2020 05:53:45 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200605134036.9013-1-andriy.shevchenko@linux.intel.com>
+ <20200605134036.9013-4-andriy.shevchenko@linux.intel.com> <20200615122044.j2vdhpmhbpsw6qkb@taurus.defre.kleine-koenig.org>
+ <20200615125349.GD2428291@smile.fi.intel.com> <CAMpxmJWiX2750939wC+btP-Uu1oOA2iU8rsJ1wqe_c+x9HeCzw@mail.gmail.com>
+In-Reply-To: <CAMpxmJWiX2750939wC+btP-Uu1oOA2iU8rsJ1wqe_c+x9HeCzw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 16 Jun 2020 15:53:32 +0300
+Message-ID: <CAHp75VehmxpTocW=pAVeAyGPP_nF8Gvq7kb_3GZgTsmB9JZE=A@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] gpio: pca953x: disable regmap locking for
+ automatic address incrementing
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: build
-X-Kernelci-Branch: for-next
-X-Kernelci-Tree: linusw
-X-Kernelci-Kernel: v5.8-rc1-2-g861254d82649
-Subject: linusw/for-next build: 5 builds: 0 failed, 5 passed,
- 9 warnings (v5.8-rc1-2-g861254d82649)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/for-next build: 5 builds: 0 failed, 5 passed, 9 warnings (v5.8-rc1-2=
--g861254d82649)
+On Tue, Jun 16, 2020 at 12:25 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pon., 15 cze 2020 o 14:53 Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> napisa=C5=82(a):
+> > On Mon, Jun 15, 2020 at 02:20:44PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Fri, Jun 05, 2020 at 04:40:36PM +0300, Andy Shevchenko wrote:
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
-l/v5.8-rc1-2-g861254d82649/
+...
 
-Tree: linusw
-Branch: for-next
-Git Describe: v5.8-rc1-2-g861254d82649
-Git Commit: 861254d826499944cb4d9b5a15f5a794a6b99a69
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 5 unique architectures
+> > > Looks right
+> > >
+> > > Reviewed-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> >
+> > Thanks!
+> >
+> > Linus, Bart, just to clarify that this is material for one of the next =
+v5.8-rcX
+> > (this cycle!).
 
-Warnings Detected:
+> I applied the whole series for fixes. Thanks!
 
-arc:
+Thank you!
 
-arm64:
-    defconfig (gcc-8): 8 warnings
-
-mips:
-
-riscv:
-    defconfig (gcc-8): 1 warning
-
-x86_64:
-
-
-Warnings summary:
-
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #size-cells (1) differs from / (2)
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #address-cells (1) differs from / (2)
-    1    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=
-=98e1000e_check_me=E2=80=99 defined but not used [-Wunused-function]
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
- (1) differs from / (2)
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
-lls (1) differs from / (2)
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
-matches
-
-Warnings:
-    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=98e1=
-000e_check_me=E2=80=99 defined but not used [-Wunused-function]
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
-1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
-differs from / (2)
-
----------------------------------------------------------------------------=
------
-haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
-section mismatches
-
----------------------------------------------------------------------------=
------
-x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
-ction mismatches
-
----
-For more info write to <info@kernelci.org>
+--=20
+With Best Regards,
+Andy Shevchenko
