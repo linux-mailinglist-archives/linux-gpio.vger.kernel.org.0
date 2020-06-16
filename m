@@ -2,103 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 171861FBDC9
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 20:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC5C1FBFA7
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 22:02:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgFPSQC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 14:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        id S1730252AbgFPUCa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 16:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgFPSQB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 14:16:01 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6C2C061573
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 11:16:00 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id 35so3407073ple.0
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 11:16:00 -0700 (PDT)
+        with ESMTP id S1728144AbgFPUCa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 16:02:30 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A84BC061573;
+        Tue, 16 Jun 2020 13:02:29 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id w15so12495544lfe.11;
+        Tue, 16 Jun 2020 13:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z1XaYlehYWut5xn5qNaNhnjCbRokX8uPbXrjUXkK3Pc=;
-        b=TqAJzV9Ol2dWnzzlf/TumUPcxa0ADyk5/T1ZI5Ti2h/X2YqeauR1UhwnWMjxhAhsNC
-         +VZCYHWi6RXHXRN1v43tes0wA6wOa1/JIxuwdcRwgKM/R+Q2Pf/RkRROA0EHhgkC8R7u
-         miWoQb45WeLw//3BG43KjWbWbBr6Q8pzhWvT6Df875xfI7Y9tuQnPigw2rH8u5ciXPGG
-         m/KuCgr/iIXJUz4t/tsOkzXL1FvhFtVlrhdG4qccFREUNVwpdrCE3/tPzlC2M6Zf4qOC
-         te6U5dsN+Tsa4bV1GUP4TmKwN+0j62kq2vrJtKntbXuxbsuClM4vAMc33TIYe7mBxWbe
-         LHLg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mw839rq7RjrHM/hppkDoF5y0yc1HEG6Z382QxOHiZE4=;
+        b=tgt9w+4hhcFOFvmXJG0d9BLOqArfPCHifgXbSYew66UIyXnLr0WUwEx4TsvRz028Lf
+         bivExKj/4cpv1mA9fUYkYngREvq4Ty+BdV9AWLRkuU+b3R/ghhAzF1wjZ9am/BzgnyAX
+         6BgHGeesz3cMwAjD4Rys7gVGBQU67KzsuHhhtgpfNUJZD/kvU+P/MCh1OjqYNn3Ep7Cw
+         L9rH+HQR6ygyoEG8foSwxB1CSQG2UL/cuJCqr/UNNKO6DUcxhcaBIsIE+cl6mW+us2h8
+         od9BQKTKD5jIGZEmQe4fPRcAGCJpk/K9mtLFGnyRNHfnLo5jzYY4BZW0TecQWRJ02foK
+         xOYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z1XaYlehYWut5xn5qNaNhnjCbRokX8uPbXrjUXkK3Pc=;
-        b=eEdLJ8jPAvTaH2LeZ7R/9mvbQcGLBsPl44uyIfC+J6dDRczWwyb/OsUKZlxOyuA9mc
-         Tea6j6YlzWWvO872oMJQhxtHbrHnGrdRBV1d6hd0axfkKV77kHMzdEVSEV4pdEmVU4Fa
-         2M4t0uBmCxnyg9/0HC8BJsFBd7PjK2srlOuqJv9gHerC6jCKmt4UN9mibx+JZad6MVJ2
-         lgt96yexeFVKOG1eoFb+o99Igp8A/b0/EnTMBRMoAMzsAXF0LAQ6SQZ6k4AWQkdlmhVi
-         8AEymLmh0UTo7D7M8Sqb3444yNvQgeyBwMt4L2gFx0ZuSBpchT6ohtIL5mjA1Sj+7cfr
-         lU1A==
-X-Gm-Message-State: AOAM530O7g4rWtfM7zruUSkbR9PQ26Tib/eja0/ukFpQXg1cKcOFwRKO
-        cFl3knX1NPa4HzDW/dCUEUagMWy5yTgYf4Z+o+U=
-X-Google-Smtp-Source: ABdhPJyuvpcpZihgfTE4ALQk6gSSM54KpW+diJ3rfsWrP9y1YBpF/h9TAsdomfouYQmKK8RLzhAKRIzPj7bcG5YVv+A=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr3903755pjr.181.1592331359686;
- Tue, 16 Jun 2020 11:15:59 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mw839rq7RjrHM/hppkDoF5y0yc1HEG6Z382QxOHiZE4=;
+        b=G1jwDtcOlbUPEIQWWQ9ojo2SKl1pyy85B4hUHz57dq+zyDnHpV6dnOxdCPaxYltlYT
+         S5Oob3/jAXV0fJJ/oTkIJyiCZPEFsuA5CIsXu3hoxPIw8HqyndbIHoMLOsTc5jInETTF
+         Sinf7vOn8LrP0a1wIafyqwLdi/4VBRPeAXccyZQOyEMP8u15GUVMbH6ZA17Z/vV5lSCC
+         Dx+TrOzj9pvIfk3gn0xFNTPjovQoKdwpVrUCIjHcbRkaSTIK5xhfgHbQPvzNXgMTjpQO
+         v9hG70xtTAMKuLMr9WlUIAMFTO53t34yIaLX0eD6cfiTTuR3srZ/130Njp5Pl54ZHU4i
+         MSkA==
+X-Gm-Message-State: AOAM532zF5GQUsji/q92dIA/u1VuUVFJNK3t3la+UCAkIZakGSflhSxg
+        jLlycDmav2iQmdzpn9UEzVWSKj0U
+X-Google-Smtp-Source: ABdhPJytqFCePdIKP+8M6eemAWjcBI9X51u1xMeVXsCLKE0WG48gFo9Ny4Zbw4Qelfx4B3lTHCtSNA==
+X-Received: by 2002:ac2:44cd:: with SMTP id d13mr1126260lfm.13.1592337748063;
+        Tue, 16 Jun 2020 13:02:28 -0700 (PDT)
+Received: from mobilestation ([95.79.139.207])
+        by smtp.gmail.com with ESMTPSA id 144sm2858709lfm.87.2020.06.16.13.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 13:02:27 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 23:02:25 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+Message-ID: <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <1591673223-1680-1-git-send-email-haibo.chen@nxp.com> <AM6PR04MB4966D0FCE44CC173F95C139A809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB4966D0FCE44CC173F95C139A809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 16 Jun 2020 21:15:43 +0300
-Message-ID: <CAHp75VdvV-tBtZKU6WKHJy+yuesaq6c=PbxCFaJuvujeWhmm-Q@mail.gmail.com>
-Subject: Re: [PATCH v2] Revert "pinctrl: freescale: imx: Use 'devm_of_iomap()'
- to avoid a resource leak in case of error in 'imx_pinctrl_probe()'"
-To:     Aisheng Dong <aisheng.dong@nxp.com>
-Cc:     BOUGH CHEN <haibo.chen@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "christophe.jaillet@wanadoo.fr" <christophe.jaillet@wanadoo.fr>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 5:54 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> Some devices would need to have a hierarchy of properties and
+> child nodes passed to the child or children of MFD. For such case
+> we may utilize software nodes, which is superior on device properties.
+> 
+> Add support of software nodes to MFD core and convert one driver
+> to show how it looks like. This allows to get rid of legacy platform
+> data.
+> 
+> The change has been tested on Intel Galileo Gen 2.
 
-> Could you help apply this patch as it blocked MX7D booting for a while?
+I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+part into the gpio-dwapb.c driver and use either the ACPI-based or
+platform_device_id-based matching to get the device-specific resources
+info through the driver_data field. By doing so you wouldn't need to
+introduce a new "snps,gpio-base"-like property and propagate
+software_node-based properties, but still you could get rid of the
+dwapb_platform_data structure since all the info would be locally
+available.
 
-> > This reverts commit ba403242615c2c99e27af7984b1650771a2cc2c9.
-> >
-> > After commit 26d8cde5260b ("pinctrl: freescale: imx: add shared input select
-> > reg support"). i.MX7D has two iomux controllers iomuxc and iomuxc-lpsr which
-> > share select_input register for daisy chain settings.
-> > If use 'devm_of_iomap()', when probe the iomuxc-lpsr, will call
-> > devm_request_mem_region() for the region <0x30330000-0x3033ffff> for the
-> > first time. Then, next time when probe the iomuxc, API
-> > devm_platform_ioremap_resource() will also use the API
-> > devm_request_mem_region() for the share region <0x30330000-0x3033ffff>
-> > again, then cause issue, log like below:
-> >
-> > [    0.179561] imx7d-pinctrl 302c0000.iomuxc-lpsr: initialized IMX pinctrl
-> > driver
-> > [    0.191742] imx7d-pinctrl 30330000.pinctrl: can't request region for
-> > resource [mem 0x30330000-0x3033ffff]
-> > [    0.191842] imx7d-pinctrl: probe of 30330000.pinctrl failed with error -16
+If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+then you could just replace the intel_quark_mfd_cells[0].name with
+something like "gpio-dwapb-quark", which then by the MFD core will be
+copied to the corresponding platform_device->name due to calling
+platform_device_alloc() with cell-name passed. That name will be used
+to match a platform_driver with id_table having that new name added.
 
-It means that shared support took a wrong approach. If something has
-shared resources, another schema should be used, something like MFD
-(parent device which keeps only shared resources). Easiest way is to
-switch to the regmap API.
+-Sergey
 
-P.S. The revert is okay as a quick fix but... see above.
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> Andy Shevchenko (5):
+>   gpio: dwapb: Replace irq_shared flag with fwnode type check
+>   gpio: dwapb: Read GPIO base from snps,gpio-base property
+>   mfd: intel_quark_i2c_gpio: Convert to use software nodes
+>   gpio: dwapb: Get rid of legacy platform data
+>   gpio: dwapb: Define magic number for IRQ and GPIO lines
+> 
+> Heikki Krogerus (1):
+>   mfd: core: Propagate software node group to the sub devices
+> 
+>  drivers/gpio/gpio-dwapb.c                | 44 +++++++++-------
+>  drivers/mfd/intel_quark_i2c_gpio.c       | 64 +++++++++++-------------
+>  drivers/mfd/mfd-core.c                   | 31 ++++++++++--
+>  include/linux/mfd/core.h                 |  3 ++
+>  include/linux/platform_data/gpio-dwapb.h | 23 ---------
+>  5 files changed, 85 insertions(+), 80 deletions(-)
+>  delete mode 100644 include/linux/platform_data/gpio-dwapb.h
+> 
+> -- 
+> 2.27.0.rc2
+> 
