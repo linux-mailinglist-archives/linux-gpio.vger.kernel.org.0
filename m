@@ -2,168 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE2D91FA89D
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 08:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE7C1FA9D6
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 09:18:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgFPGNz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 02:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgFPGNt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 02:13:49 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD461C03E96A
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:48 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id d6so1051284pjs.3
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sjkuZIHgOGWNn0NM6WxaSWNlrL5TYHvrP2K4MQU57Qs=;
-        b=z0Ya8NgIc7JGqkE+pEiQxFdlLb1wI+YIdEhjbg63klsr9SrNdiWfoslKkTEk6he3qf
-         dTUbIL6TJWmiUS0mE3JJ680pY6mwbVwm9fG095z+akltQXiIt/Tm5YyuCKRkSwJXGNid
-         ueARo5vX67GhC0jJKeiZ2O+xPlAIi7b5zjFyw/jrwW3EbNRMWWSbx4GCMJKpWzAcY6s3
-         Y8m3moUHonrenxnBYqM8BdukDS/D1MI63FiKaoqHeoenLKaFkHzd09/PJzgJghFTgGx8
-         D2F/uagbw34y3bfQlXcZWfvjzd1pHQlziWnls/d601EqJCI2KUVag4SNPvTdFblJyVbx
-         GVxQ==
+        id S1726091AbgFPHSm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 03:18:42 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:38163 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgFPHSl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 03:18:41 -0400
+Received: by mail-ej1-f66.google.com with SMTP id w16so19813543ejj.5;
+        Tue, 16 Jun 2020 00:18:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sjkuZIHgOGWNn0NM6WxaSWNlrL5TYHvrP2K4MQU57Qs=;
-        b=Fe1csdp/4hQjzoBE+qbFrRYoA9rldXNVqeyHBzi0YilPsuNuOad1bJkCEb2kiRbG46
-         lRkk2L8wNS+sIrsKK+8r4tc0oJgvnDaQRbLQOXIJOC5it6O77QbCHQeWPf8uF25rCNuV
-         t2JSrLt01Cniho5Ls2mRlgyNBaU3hg9zKPiaR1wGN6EBZ6TzIvKT5Mnuwa8o9ZL/qDS7
-         GdvLRih7Vxf4MXD9ZpR8/VRz4OOuzPf6sAxe1bna+1yQOKXlamh1kAGpstUqWxoFI0Ab
-         q0/bCmEfJ4df/0tRjMZ1x1wq1h8usOh8Zk7fVhjTDjgbioLeQYwrE/2/11FsomBtkcR6
-         8bnA==
-X-Gm-Message-State: AOAM5331Kuf8c7h8zALC0QLJQD+TikDEbjMgvQ+O8t+YUgAjQoNXnYdM
-        uLh1o+uIYURnnqDPMpi/FnSAjQ==
-X-Google-Smtp-Source: ABdhPJwYhjtOBdx0zxRParoCjvCJBIOPOU1zn3RHlSdNmeSw/AbOBT8/4UQJOQjCCNZqxbJatymuaQ==
-X-Received: by 2002:a17:90b:3004:: with SMTP id hg4mr1670052pjb.208.1592288028324;
-        Mon, 15 Jun 2020 23:13:48 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id i26sm15642032pfo.0.2020.06.15.23.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:47 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tT4lPCOqC8m2jN6E8L7uFkNVDR9AvY5WZewZRGKHN3k=;
+        b=eNMAtj8JqGE+DAXcm+nxXOPyOQyvAunnTk1brzsxBrcw6NGuj/z6a0yUiPsqJqH3lC
+         xXdA2CmfxIxH0iDGAUSUWk1lM32F23unbpltsKO6aIuhcjnsUvgO6hUbNJlGeUyy+8gE
+         FkPn6UmP1KIqSnlAk/NI26Zfg5GQr4S4xJ6LTqbX0dmLIKfilBoEDYUdlcIDGnWO/irF
+         oFPIz/4Sl9Yx5TDtG+jGsS644lbWNEcti8Sg5Jx9SqYKYZkbyyAj0OV++yZpBqQxnguP
+         Y0vHOZAnna7biuE2ewRTN8JQa8E1eOQfkI3W8oCvuT8rtcBdh0IGVx4ON5nBLSAjUnRQ
+         046Q==
+X-Gm-Message-State: AOAM5339TTOStu08Fatz5a3of2/oWo897okS6EInSS4NSEEtCUw8zG6F
+        PbrHxthZ8jKGhojCqELha/E=
+X-Google-Smtp-Source: ABdhPJxDifyRwf13/EjaihQm5vJnlZB+OKK9ORGdXYCRlY5yhWD2VfzUsTFNIEnVJ1d/pJH4EtKjtQ==
+X-Received: by 2002:a17:906:fcae:: with SMTP id qw14mr1563379ejb.166.1592291919788;
+        Tue, 16 Jun 2020 00:18:39 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.184])
+        by smtp.googlemail.com with ESMTPSA id js3sm10651179ejb.65.2020.06.16.00.18.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Jun 2020 00:18:39 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 09:18:37 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [RFC][PATCH 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be loadable as a permenent module
-Date:   Tue, 16 Jun 2020 06:13:38 +0000
-Message-Id: <20200616061338.109499-6-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200616061338.109499-1-john.stultz@linaro.org>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v3] pinctrl: samsung: Use bank name as irqchip name
+Message-ID: <20200616071837.GB20282@kozik-lap>
+References: <CGME20200610194107eucas1p1b22f0c8e3e13551940efd6093df505a3@eucas1p1.samsung.com>
+ <20200610194052.6434-1-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610194052.6434-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow the qcom_scm driver to be loadable as a
-permenent module.
+On Wed, Jun 10, 2020 at 09:40:52PM +0200, Marek Szyprowski wrote:
+> Use the bank name as the irqchip name. This name is later visible in
+> /proc/interrupts, what makes it possible to easily identify each
+> GPIO interrupt.
+> 
+> /proc/interrupts before this patch:
+> 143:    0     exynos4210_wkup_irq_chip   7 Edge      hdmi
+> 144:    0     exynos4210_wkup_irq_chip   6 Level     wm8994
+> 145:    1     exynos4210_wkup_irq_chip   7 Edge      max77686-pmic, max77686-rtc
+> 146:    1     exynos_gpio_irq_chip   3 Edge      3-0048
+> 
+> /proc/interrupts after this patch:
+> 143:    0     gpx3   7 Edge      hdmi
+> 144:    0     gpx3   6 Level     wm8994
+> 145:    1     gpx0   7 Edge      max77686-pmic, max77686-rtc
+> 146:    1     gpm2   3 Edge      3-0048
+> 
+> Handling of the eint_wake_mask_value has been reworked, because each bank
+> has now its own exynos_irq_chip structure allocated.
+> 
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/firmware/Kconfig    | 2 +-
- drivers/firmware/Makefile   | 3 ++-
- drivers/firmware/qcom_scm.c | 4 ++++
- drivers/iommu/Kconfig       | 2 ++
- 4 files changed, 9 insertions(+), 2 deletions(-)
+Thanks, applied.
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index fbd785dd0513..9e533a462bf4 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -236,7 +236,7 @@ config INTEL_STRATIX10_RSU
- 	  Say Y here if you want Intel RSU support.
- 
- config QCOM_SCM
--	bool
-+	tristate "Qcom SCM driver"
- 	depends on ARM || ARM64
- 	select RESET_CONTROLLER
- 
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 99510be9f5ed..cf24d674216b 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -17,7 +17,8 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
- obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
- obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
--obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
-+obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
-+qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
- obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
- obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
- obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 0e7233a20f34..b5e88bf66975 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -1155,6 +1155,7 @@ static const struct of_device_id qcom_scm_dt_match[] = {
- 	{ .compatible = "qcom,scm" },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
- 
- static struct platform_driver qcom_scm_driver = {
- 	.driver = {
-@@ -1170,3 +1171,6 @@ static int __init qcom_scm_init(void)
- 	return platform_driver_register(&qcom_scm_driver);
- }
- subsys_initcall(qcom_scm_init);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. SCM driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index b510f67dfa49..714893535dd2 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
- config ARM_SMMU
- 	tristate "ARM Ltd. System MMU (SMMU) Support"
- 	depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-+	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_LPAE
- 	select ARM_DMA_USE_IOMMU if ARM
-@@ -500,6 +501,7 @@ config QCOM_IOMMU
- 	# Note: iommu drivers cannot (yet?) be built as modules
- 	bool "Qualcomm IOMMU Support"
- 	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-+	depends on QCOM_SCM=y
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_LPAE
- 	select ARM_DMA_USE_IOMMU
--- 
-2.17.1
+Best regards,
+Krzysztof
 
