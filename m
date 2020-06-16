@@ -2,59 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3DEA1FABA1
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 10:50:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F325E1FABB8
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 10:58:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgFPIub (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 04:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
+        id S1726112AbgFPI62 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 04:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgFPIua (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 04:50:30 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC619C03E96A
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:50:29 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w1so18410629qkw.5
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:50:29 -0700 (PDT)
+        with ESMTP id S1725710AbgFPI61 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 04:58:27 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2ECC05BD43
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:58:26 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id w7so13691168edt.1
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 01:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4t3Xqwr79G87+mJaR9fguFknMk+FUvhA8KmaEt177vQ=;
-        b=R6czlWCQdPPI+IblkY8cTz8xoyh4JQuwrSDZW01KPtdwGZvBh1daPbeSCuZCQbHwQy
-         5HUDEFAi/XOI0WDzAO6NeSk76UnaD/I66hzsEN2XYqOQEUlos/VWC0P8LrxHxAdM8jrh
-         TD7QBO97joe0FRYUAHfqJsKYX1xQ8DwSWLH7W3ri3mwZziqcRMb3l8QFUjWMQ2dYrDEz
-         U6tIihwEg5v/WcekDHgL2Km3TGWYW5Yqru9VRKq3MDXyiaQghtwfylHFBZNYB54G8LzU
-         lbuycYEnvZPzIhniy61GHEjzRB/2txBTTOtutXEEyYqIBlsteCBS0e8dli8icPUe2c/d
-         cRfA==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=lr8s79ZPnHwzGuxTYYQcZkdM3p8jL4frhAFE1iQpmnQ=;
+        b=jEXmWfAk3NES54doQp9xW6JGO6Xr1e0fqrW6uhDpIQky6aUN2tVRyDT2Ynu2TplQtP
+         U1BA5VgJkAFimGCxtP9Xh3MD88bbZGqdQC5EzIRlKS+5QS9B97bBnF6TQrLrFBlIXLdc
+         LkqIPCyPEab+gl9NmUR/KZVFKkOyH4nUuzpr/ibXWGMGvoRcy4pxngedCqvZwlYcGh2z
+         gSmfQJ5H0vWZvYJ/KTPO1uAdJMknkEB1p0Dn94Vx80PypN9be+ZsaMFdKENWgu5Ultrj
+         JB0mTXGSTwwwFVQjFwf1YSp01DyskeyiWVezrY+1x6Rd50M4+ip8DUAw/CZ0SxgZ61Gr
+         MfGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4t3Xqwr79G87+mJaR9fguFknMk+FUvhA8KmaEt177vQ=;
-        b=go4j97S/mS2uhViJMeBqAOseayTG9BjWAmOP9opGMXV3PilQDp6mgBOv05TQz4WR+m
-         ISFihsQZYMflzsXMEAMPytUAr8kFwFGysCKc9T3S/Dmv+tdPkD9p1Q+urDljCQ0L72KU
-         nw5Y9e23pGH3BdUC6vcQ//FlnHv/1vFCGgkMvA9jhcfRqqXcsN7G1uv/hZyi0aG0Iha3
-         VD9luf3EkSW/bxi7xWFU+H/7pQUXduTZbgb5TcV3ijOr+V0XNLX+WnOcW5EW1lje8nbf
-         IODjlwxWh3fiFShBeuK/JGz7fNAn/cYUSz3uHjRfUYOqUsGdh38rPZuixogbmV7gqK82
-         lcNw==
-X-Gm-Message-State: AOAM533tTDeSVX+4YniMh5QP91iGjvSjCZBAWNNcdCBVBUJPtLFHE52i
-        O8EZ82LLUsO/r/j3gnhmWx5ot/3s/BZ3WM8bniacuA==
-X-Google-Smtp-Source: ABdhPJxD3cjCWk74RZhMR9JWS6d7o4JKHCTWkM8var9lSxpVjr/Tp1RtPwC/0y1lZPsKdRRQ2zdXAzp+CXaW4VF3SUA=
-X-Received: by 2002:a37:4ac6:: with SMTP id x189mr18595455qka.323.1592297429112;
- Tue, 16 Jun 2020 01:50:29 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=lr8s79ZPnHwzGuxTYYQcZkdM3p8jL4frhAFE1iQpmnQ=;
+        b=M7ChFdq8QabosYXG3ARTeKX+X5JX5rzWSq3UJFQ0hT/WAJ/FfzP4JGc4cqdVm3Z0qL
+         tZ9dtCNJYhHcLYF4Ek8Ev/Mi2iQWrW82X7+6TcxzpVveyW6Oq/teLcKz5De5nZxzTcp4
+         37uBZUPsAgMEH9KeYtxIHwG75p6AFgbtkvZqRiXT/IO987C8C1+uiaX6XL/nsE3iCNL9
+         /NmIHBH3IHwxGXpYiPj1lQuAlXfO5l9+lVaJ7ovD1xKDXypzVjSDhEwjXHQ2gughe68I
+         hi8Ab5/XjcEhmfsDHSSG8vDZIe+/+2PN54hm2dHIh+Tgr2SiY2k08IUb/4n5Htr71qJw
+         I5ow==
+X-Gm-Message-State: AOAM533Pj5mR5Sc59dDgTBHogXNbNWI0HPH3UaeLIxT++HAMTAsiDX2W
+        NMmJjk+6CMY5AkpRUS5uP7Tl0Se4m1GRXCdxXQ4=
+X-Google-Smtp-Source: ABdhPJxka+hSGbM+qACEYNaqDePpdvYdXAG/S+i/mKYokbTlb8TS72WMwkfx1GA0u77gWNnefyTE4UAWBu4Lw9nXT5o=
+X-Received: by 2002:aa7:c403:: with SMTP id j3mr1604255edq.294.1592297904787;
+ Tue, 16 Jun 2020 01:58:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1592227348.git.jan.kiszka@siemens.com> <eecfadcb92f9f9c1446b4824471e9d7f45a9d8aa.1592227348.git.jan.kiszka@siemens.com>
-In-Reply-To: <eecfadcb92f9f9c1446b4824471e9d7f45a9d8aa.1592227348.git.jan.kiszka@siemens.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 16 Jun 2020 10:50:18 +0200
-Message-ID: <CAMpxmJWF8uKf2iGP3cF2mOC7nozFD-hZh0wE9VFAqP+P-zAC9g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpio: pca953x: Add support for the PCAL9535
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+Received: by 2002:a50:8045:0:0:0:0:0 with HTTP; Tue, 16 Jun 2020 01:58:24
+ -0700 (PDT)
+Reply-To: gh727530@gmail.com
+From:   george howard <edemhoegbesso@gmail.com>
+Date:   Tue, 16 Jun 2020 10:58:24 +0200
+Message-ID: <CAPM9i6-Ng1KYf7=F0_UpHAvzTx=Y2MHbZ0SCKvfJfdU9UbL1nw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -62,51 +59,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-pon., 15 cze 2020 o 15:22 Jan Kiszka <jan.kiszka@siemens.com> napisa=C5=82(=
-a):
->
-> From: Jan Kiszka <jan.kiszka@siemens.com>
->
-> The PCAL9535 is compatible to the PCA9535. Additionally, it comes with
-> interrupt support and input latching. Other features are not supported
-> by the GPIO subsystem.
->
-> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCAL9535A.pdf
->
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
-> ---
->  drivers/gpio/gpio-pca953x.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-> index 1fca8dd7824f..cd5fb522563e 100644
-> --- a/drivers/gpio/gpio-pca953x.c
-> +++ b/drivers/gpio/gpio-pca953x.c
-> @@ -89,6 +89,7 @@ static const struct i2c_device_id pca953x_id[] =3D {
->
->         { "pcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
->         { "pcal6524", 24 | PCA953X_TYPE | PCA_LATCH_INT, },
-> +       { "pcal9535", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
->         { "pcal9555a", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
->
->         { "max7310", 8  | PCA953X_TYPE, },
-> @@ -1145,6 +1146,7 @@ static const struct of_device_id pca953x_dt_ids[] =
-=3D {
->
->         { .compatible =3D "nxp,pcal6416", .data =3D OF_953X(16, PCA_LATCH=
-_INT), },
->         { .compatible =3D "nxp,pcal6524", .data =3D OF_953X(24, PCA_LATCH=
-_INT), },
-> +       { .compatible =3D "nxp,pcal9535", .data =3D OF_953X(16, PCA_LATCH=
-_INT), },
->         { .compatible =3D "nxp,pcal9555a", .data =3D OF_953X(16, PCA_LATC=
-H_INT), },
->
->         { .compatible =3D "maxim,max7310", .data =3D OF_953X( 8, 0), },
-> --
-> 2.26.2
->
+Hoi
 
-Patch applied with Andy's review tag.
+Mijn naam is George Howard. Ik ben advocaat van beroep. ik
+zou u willen aanbieden
+het dichtste familielid van mijn cli=C3=ABnt. Ze erven de som van (8.5
+Miljoen US dollars)
+Dollars die mijn klant op de bank achterliet voordat hij stierf.
 
-Bart
+Mijn klant is een burger van uw land die bij zijn vrouw is
+is omgekomen bij een auto-ongeluk
+en enige zoon. Ik heb recht op 50% van het totale fonds, 50% daarvan
+voor jou zijn.
+Neem hier contact op met mijn priv=C3=A9-e-mailadres voor meer
+Informatie: gh727530@gmail.com
+
+Bij voorbaat dank,
+Meneer George Howard,
