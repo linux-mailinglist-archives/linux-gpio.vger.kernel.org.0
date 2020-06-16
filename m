@@ -2,180 +2,218 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BD2D1FAFA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 13:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D25851FAFB2
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 14:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgFPL5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 07:57:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38874 "EHLO
+        id S1728489AbgFPL76 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 07:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgFPL5r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 07:57:47 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08676C08C5C2
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:57:47 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d66so9399379pfd.6
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:57:46 -0700 (PDT)
+        with ESMTP id S1726692AbgFPL74 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 07:59:56 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7DCC08C5C4
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id o26so14037868edq.0
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
-        b=LwwQxAQpjHwso9BJ1tR1rhuBrRAfl+cOBMdQ2kjpXaYvvdFG6XW/iCfX/trryaZWsz
-         f2jWqJN5LZq6EXsnQnxlMEl0OSEIJZIAHLrxW3nqWzv7EQUpBAyOo6aLbYkZrtxX+Nhk
-         thevzGm2hI1ltbq2nvWdoEhJl/nxmYDWpDJ3o=
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
+        b=qU3gGhZyPmAH6X7JfnyHrsDU+7oTdpbz1YAthn1buJ0jnK49tJAfpCusTt5I70ATYx
+         0gOBtgEnf4sVLHiZlKm5pnuNYAZtL3Rzzi/83WU03/jW4uF8lW9YNQSmsWMMziU6Y5Oa
+         Vuklbd5Nus9ElENtzXUkbsmUVT2wjmPP0OAH/Y/CSj1EikMdGljd0ewAMOv1mYeWNWlH
+         wWbdevHWLvxK7U1mqSRRgn8dttBSzPxRw43NT4YSLoheKQwtucMJZQi8WrsliV+pL26W
+         o/2l97fOVDL2+ac20rcG45UJaUaMel5v7Q/2zi5OE6fbzCPP+ehhpmoPCeirYewIILwz
+         KvBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
-        b=I+cjrj+7oiwOqViOZ684JmGQfjbxdxRKPfKYsqby9ZbuxDgIE1uNPv3WUOseRgnyRm
-         cGkpFVpDS0tie8TLdr1c9XrFiRZPfT3Tk7NZMzdCRohQhxWfCxtTAni/zNnqEZGA74u2
-         VjctJxbN30VNmIrqWLeAzughEP88RoVmvWLbRxB70aBTyPHOcuFL2f2eEUPddsdOJ03M
-         tgBNKyfQZv6kGSqcQYSxtB75lkxzC+i2x85JwSJCmTz1EJINNi5l4DZ80gabif1gI6i7
-         TPNoGM26elNbw1YyISYVNaRwpS9DRzCdwjZRus/8mfkmkhRyoYWqOUrci7k+XxitCbJy
-         IKog==
-X-Gm-Message-State: AOAM530C4SzR90ExN/l314MXbyzK3mJnGENHIX+HvqHeR6DS3v9Lws1I
-        DyfUngaUXnOVkFRDflJVQ1wCPw==
-X-Google-Smtp-Source: ABdhPJyPGiUlFFbnEi1GrizQqWMSc+1IJ5buXyebb6Lrv5QYdyrN3i4Ge/Dui3N6HEpy8NH3b+TFzA==
-X-Received: by 2002:a63:f906:: with SMTP id h6mr1859146pgi.134.1592308666320;
-        Tue, 16 Jun 2020 04:57:46 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j8sm2370847pji.3.2020.06.16.04.57.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vFt52X6ZxnjFhdInzqPTsBTf0H25///Yw0La+Ewwi+o=;
+        b=DE2ap7F0PkvbeW/iYATe2YovR88dzfJVxX6zCPDpLangqXwmvilG10AV9zkpZOhUIV
+         O1XebRA75/qGmeownXuqUnslcq657cmhvrynKFUa83xtAEsuUDua3PYkF7/zlhqjevXR
+         ut6gO01KGbhMpOesZH8KDv0/Kr90GUhITWXFO8+tobUTcU8LX2YVtXhdoWYOtWt8H3mo
+         0i34WfJOjx4tXRdOEDTShSuncWcJh2tRBkzBuG6V3n9FT+zeKs7aA4rRP3vRqW2YUc67
+         YYpRGBiQwLQLTf0FBCVw7T58ge5BXs1JDfV0u8VKi2SLAF8m/9qx3OnOZ6ijU2MXzRIK
+         sM2g==
+X-Gm-Message-State: AOAM530qbh5USoGSMaDWLfUMoSUQ0sCL/rhRZVCo2wxKCZe2z8kvZNgl
+        uglL+CgTtgYCsVU1m/EM91keFQ==
+X-Google-Smtp-Source: ABdhPJyF1u1ezjdAA2rWPEYtw/dAw4UYwl9b/mgLDaDmMHfOk/h17IkWVgv5p5leHslveVvEwX3McQ==
+X-Received: by 2002:aa7:d698:: with SMTP id d24mr2252260edr.56.1592308793605;
+        Tue, 16 Jun 2020 04:59:53 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id lw11sm10833271ejb.58.2020.06.16.04.59.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 04:57:45 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 16 Jun 2020 04:59:52 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 13:59:51 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
+Message-ID: <20200616115951.GA3976568@x1>
+References: <20200608125143.GA2789203@x1>
+ <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org> <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com> <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org> <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com> <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Tue, 16 Jun 2020 04:57:44 -0700
-Message-ID: <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Maulik Shah (2020-06-01 04:38:25)
-> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-05-29 02:20:32)
-> >> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
-> >>> Quoting Maulik Shah (2020-05-23 10:11:13)
-> >>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data =
-*d)
-> >>>>           if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> >>>>                   return;
-> >>>>   =20
-> >>>> +       pdc_enable_intr(d, true);
-> >>>>           irq_chip_unmask_parent(d);
-> >>>>    }
-> >>>>   =20
-> >>> I find these two hunks deeply confusing. I'm not sure what the
-> >>> maintainers think though. I hope it would be simpler to always enable
-> >>> the hwirqs in the pdc when an irq is requested and only disable it in
-> >>> the pdc when the system goes to suspend and the pdc pin isn't for an =
-irq
-> >>> that's marked for wakeup. Does that break somehow?
-> >> PDC monitors interrupts during CPUidle as well, in cases where deepest
-> >> low power mode happened from cpuidle where GIC is not active.
-> >> If we keep PDC IRQ always enabled/unmasked during idle and then
-> >> disable/mask when entering to suspend, it will break cpuidle.
-> > How does it break cpuidle? The irqs that would be enabled/unmasked in
-> > pdc would only be the irqs that the kernel has setup irq handlers for
-> > (from request_irq() and friends).  We want those irqs to keep working
-> > during cpuidle and wake the CPU from the deepest idle states.
->=20
-> >>I hope it would be simpler to always enable
-> >>the hwirqs in the pdc when an irq is requested and only disable it in
-> >>the pdc when the system goes to suspend and the pdc pin isn't for an irq
-> >>that's marked for wakeup
->=20
-> >>How does it break cpuidle?
->=20
-> Consider a scenario..
-> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/alloc =
-happens
-> 2. Client driver disable's irq. (lazy disable is there, so in HW its stil=
-l unmasked) but disabled in SW.
-> 3. Device enters deep CPUidle low power modes where only PDC monitors IRQ.
-> 4. This IRQ can still wakeup from CPUidle since it was monitored by PDC.
-> 5. From handler, it comes to know that IRQ is disabled in SW, so it reall=
-y invokes irq_mask callback now to disable in HW.
-> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets mas=
-ked only during suspend, all other times its enabled)
-> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from de=
-ep cpuidle states.
-
-Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
-it keeps waking up the CPU because it isn't masked at the PDC after the
-first time it interrupts? Is this a power problem? Because from a
-correctness standpoint we don't really care. It woke up the CPU because
-it happened, and the GIC can decide to ignore it or not by masking it at
-the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
-the irq at the GIC level. Is that not true?
-
->=20
+On Tue, Jun 16, 2020 at 10:31:54AM +0200, Linus Walleij wrote:
+> On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
+> 
+> > This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+> > pinctrl_map is added.  The current behavior is to return 0 when
+> > !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+> > incorrectly assumes that a map was added and sets num_maps = 2.
 > >
-> >>> My understanding of the hardware is that the GPIO controller has lines
-> >>> directly connected to various SPI lines on the GIC and PDC has a way =
-to
-> >>> monitor those direct connections and wakeup the CPUs when they trigger
-> >>> the detection logic in the PDC. The enable/disable bit in PDC gates t=
-hat
-> >>> logic for each wire between the GPIO controller and the GIC.
-> >>>
-> >>> So isn't it simpler to leave the PDC monitoring pins that we care abo=
-ut
-> >>> all the time and only stop monitoring when we enter and leave suspend?
-> >> it can affect idle path as explained above.
-> >>
-> >>> And shouldn't the driver set something sane in qcom_pdc_init() to
-> >>> disable all the pdc pins so that we don't rely on boot state to
-> >>> configure pins for wakeup?
-> >> We don't rely on boot state, by default all interrupt will be disabled.
-> > Does 'default' mean the hardware register reset state?
-> correct.
-> > I'm worried that
-> > we will kexec and then various pdc pins will be enabled because the
-> > previous kernel had them enabled but then the new kernel doesn't care
-> > about those pins and we'll never be able to suspend or go idle. I don't
-> > know what happens in the GIC case but I think gic_dist_config() and
-> > things set a sane state at kernel boot.
->=20
-> Right however when switching kernel, i suppose client drivers will do a=20
-> free_irq(), then this will
->=20
-> clear the PDC interrupt in HW by invoking mask_irq() from within free_irq=
-().
-
-We can't rely on drivers to do that.
-
->=20
+> > Analysis:
+> > =========
+> > The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+> > if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+> > returns 0 to indicate there was no error and num_maps is then set to 2:
 > >
-> >> This is same to GIC driver having GICD_ISENABLER register, where all
-> >> bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
-> >>
-> >> Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
-> >>
-> > What code sets the IRQ_ENABLE_BANK to all zero when this driver probes?
->=20
-> Enable bank will be zero as part of HW reset status when booting up=20
-> first time.
->=20
+> >  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+> >  981                                                 struct device_node *np,
+> >  982                                                 struct pinctrl_map **map,
+> >  983                                                 unsigned *num_maps,
+> >  984                                                 const char **pgnames)
+> >  985 {
+> > <snip>
+> > 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> > 1054         (*map)->data.mux.group = np->name;
+> > 1055         (*map)->data.mux.function = np->name;
+> > 1056
+> > 1057         if (PCS_HAS_PINCONF && function) {
+> > 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+> > 1059                 if (res)
+> > 1060                         goto free_pingroups;
+> > 1061                 *num_maps = 2;
+> > 1062         } else {
+> > 1063                 *num_maps = 1;
+> > 1064         }
+> >
+> > However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+> > !nconfs.  I believe these conditions should indicate that no map was
+> > added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+> > will set num_maps = 2 even though no maps were successfully added, as
+> > it does not reach "m++" on line 940:
+> >
+> >  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+> >  896                              struct pcs_function *func,
+> >  897                              struct pinctrl_map **map)
+> >  898
+> >  899 {
+> >  900         struct pinctrl_map *m = *map;
+> > <snip>
+> >  917         /* If pinconf isn't supported, don't parse properties in below. */
+> >  918         if (!PCS_HAS_PINCONF)
+> >  919                 return 0;
+> >  920
+> >  921         /* cacluate how much properties are supported in current node */
+> >  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+> >  923                 if (of_find_property(np, prop2[i].name, NULL))
+> >  924                         nconfs++;
+> >  925         }
+> >  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+> >  927                 if (of_find_property(np, prop4[i].name, NULL))
+> >  928                         nconfs++;
+> >  929         }
+> >  930         if (!nconfs)
+> >  919                 return 0;
+> >  932
+> >  933         func->conf = devm_kcalloc(pcs->dev,
+> >  934                                   nconfs, sizeof(struct pcs_conf_vals),
+> >  935                                   GFP_KERNEL);
+> >  936         if (!func->conf)
+> >  937                 return -ENOMEM;
+> >  938         func->nconfs = nconfs;
+> >  939         conf = &(func->conf[0]);
+> >  940         m++;
+> >
+> > This situtation will cause a boot failure [0] on the BeagleBone Black
+> > (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+> > has compatible = "pinconf-single" instead of "pinctrl-single".
+> >
+> > The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+> > or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+> > map was added.
+> >
+> > Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+> > between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+> > is set to 1 as it is valid for pinconf to be enabled and a given pin
+> > group to not any pinconf properties.
+> >
+> > [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+> >
+> > Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> 
+> Patch applied as non-critical (for-next) fix.
+> 
+> If there is no hurry let's merge it this way with lots of testing
+> along the way.
+> 
+> Yours,
+> Linus Walleij
 
-It's not a concern about the hardware reset state of these registers at
-boot. I'm worried that the bootloaders or previous OS will configure pdc
-pins to wake us up. It's better to just force it to something sane, i.e.
-everything disabled in the PDC, at driver probe time so that nothing can
-be wrong.
+Thanks, I agree more testing is a good idea.
+
+In particular, do you have a way to followup with Haojian Zhuang within
+Linaro?
+
+Haojian added the generic pinconf support back in 2013, so it would be
+good to get his review.
+
+Also, neither Tony or I have the Hikey hardware to test.
+
+The most important to test would be those which include a .dtsi with
+"pinconf-single" compatible.  I do plan to add pinconf-single to the
+AM3358 BeagleBone (which is what I am testing on), but the current
+mainline users are:
+
+arch/arm/boot/dts/hi3620.dtsi
+|- arch/arm/boot/dts/hi3620-hi4511.dts
+
+arch/arm/boot/dts/pxa3xx.dtsi
+|- arch/arm/boot/dts/pxa300-raumfeld-common.dtsi
+   |- arch/arm/boot/dts/pxa300-raumfeld-connector.dts
+      arch/arm/boot/dts/pxa300-raumfeld-controller.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-l.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-m.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-one.dts
+      arch/arm/boot/dts/pxa300-raumfeld-speaker-s.dts
+
+I am cc'ing Daniel Mack and Robert Jarzmi as they are listed as
+maintainers for the pxa300 related dts files.
+
+Those platforms using compatible = "pinctrl-single" should not be
+effected by this patch:
+
+arch/arm/boot/dts/am33xx-l4.dtsi (I have changed to pinconf for test)
+arch/arm/boot/dts/da850.dtsi
+arch/arm/boot/dts/dm814x.dtsi
+arch/arm/boot/dts/dm816x.dtsi
+arch/arm/boot/dts/hi3620.dtsi
+arch/arm/boot/dts/keystone-k2g.dtsi
+arch/arm/boot/dts/keystone-k2l.dtsi
+arch/arm/boot/dts/omap3-gta04.dtsi
+
+
+Thanks,
+Drew
