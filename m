@@ -2,183 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1E41FAF2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 13:30:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BD2D1FAFA5
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 13:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgFPLa0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 07:30:26 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:30480 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbgFPLaX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 16 Jun 2020 07:30:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592307022; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RTLcSYYKGCznp62vlVdfOr6g6s60R3IwkNGZ7WpqjjY=; b=ZF/5DYdqupv7zpk0jFvyF/pc1dF7YEJL42s2XEk9A4eqfSVHiMMKxZUgAStkueUK8q4zev8w
- BVXWURZi5hy+3iUdRIjKCKNoI2SWhG6XTLYRgPFTKERWh0O4M05yx+DCuG6qFPR8MCn87B/t
- Qdk/w26jdtzDPaJCgRL/nd6+gik=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n14.prod.us-east-1.postgun.com with SMTP id
- 5ee8ad43567385e8e7c150fe (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 11:30:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 65EC4C433A1; Tue, 16 Jun 2020 11:30:10 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.43.129] (unknown [106.222.0.113])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A225C433C9;
-        Tue, 16 Jun 2020 11:30:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A225C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFC][PATCH 3/5] irqchip: Allow QCOM_PDC to be loadable as a
- perment module
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-4-john.stultz@linaro.org>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
-Date:   Tue, 16 Jun 2020 16:59:58 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728657AbgFPL5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 07:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgFPL5r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 07:57:47 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08676C08C5C2
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:57:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d66so9399379pfd.6
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 04:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
+        b=LwwQxAQpjHwso9BJ1tR1rhuBrRAfl+cOBMdQ2kjpXaYvvdFG6XW/iCfX/trryaZWsz
+         f2jWqJN5LZq6EXsnQnxlMEl0OSEIJZIAHLrxW3nqWzv7EQUpBAyOo6aLbYkZrtxX+Nhk
+         thevzGm2hI1ltbq2nvWdoEhJl/nxmYDWpDJ3o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=CrhBgRCkF1offe/wGYgudc00yXLl3OPNVUMs9mpEVnM=;
+        b=I+cjrj+7oiwOqViOZ684JmGQfjbxdxRKPfKYsqby9ZbuxDgIE1uNPv3WUOseRgnyRm
+         cGkpFVpDS0tie8TLdr1c9XrFiRZPfT3Tk7NZMzdCRohQhxWfCxtTAni/zNnqEZGA74u2
+         VjctJxbN30VNmIrqWLeAzughEP88RoVmvWLbRxB70aBTyPHOcuFL2f2eEUPddsdOJ03M
+         tgBNKyfQZv6kGSqcQYSxtB75lkxzC+i2x85JwSJCmTz1EJINNi5l4DZ80gabif1gI6i7
+         TPNoGM26elNbw1YyISYVNaRwpS9DRzCdwjZRus/8mfkmkhRyoYWqOUrci7k+XxitCbJy
+         IKog==
+X-Gm-Message-State: AOAM530C4SzR90ExN/l314MXbyzK3mJnGENHIX+HvqHeR6DS3v9Lws1I
+        DyfUngaUXnOVkFRDflJVQ1wCPw==
+X-Google-Smtp-Source: ABdhPJyPGiUlFFbnEi1GrizQqWMSc+1IJ5buXyebb6Lrv5QYdyrN3i4Ge/Dui3N6HEpy8NH3b+TFzA==
+X-Received: by 2002:a63:f906:: with SMTP id h6mr1859146pgi.134.1592308666320;
+        Tue, 16 Jun 2020 04:57:46 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id j8sm2370847pji.3.2020.06.16.04.57.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 04:57:45 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200616061338.109499-4-john.stultz@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org> <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com> <e565f798-e62b-7b03-6cd5-6daf9b516262@codeaurora.org> <159086679215.69627.4444511187342075544@swboyd.mtv.corp.google.com> <c93695d4-a03e-7f62-747a-90d892c48694@codeaurora.org>
+Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Tue, 16 Jun 2020 04:57:44 -0700
+Message-ID: <159230866475.62212.10807813558467898966@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Quoting Maulik Shah (2020-06-01 04:38:25)
+> On 5/31/2020 12:56 AM, Stephen Boyd wrote:
+> > Quoting Maulik Shah (2020-05-29 02:20:32)
+> >> On 5/27/2020 3:45 PM, Stephen Boyd wrote:
+> >>> Quoting Maulik Shah (2020-05-23 10:11:13)
+> >>>> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data =
+*d)
+> >>>>           if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> >>>>                   return;
+> >>>>   =20
+> >>>> +       pdc_enable_intr(d, true);
+> >>>>           irq_chip_unmask_parent(d);
+> >>>>    }
+> >>>>   =20
+> >>> I find these two hunks deeply confusing. I'm not sure what the
+> >>> maintainers think though. I hope it would be simpler to always enable
+> >>> the hwirqs in the pdc when an irq is requested and only disable it in
+> >>> the pdc when the system goes to suspend and the pdc pin isn't for an =
+irq
+> >>> that's marked for wakeup. Does that break somehow?
+> >> PDC monitors interrupts during CPUidle as well, in cases where deepest
+> >> low power mode happened from cpuidle where GIC is not active.
+> >> If we keep PDC IRQ always enabled/unmasked during idle and then
+> >> disable/mask when entering to suspend, it will break cpuidle.
+> > How does it break cpuidle? The irqs that would be enabled/unmasked in
+> > pdc would only be the irqs that the kernel has setup irq handlers for
+> > (from request_irq() and friends).  We want those irqs to keep working
+> > during cpuidle and wake the CPU from the deepest idle states.
+>=20
+> >>I hope it would be simpler to always enable
+> >>the hwirqs in the pdc when an irq is requested and only disable it in
+> >>the pdc when the system goes to suspend and the pdc pin isn't for an irq
+> >>that's marked for wakeup
+>=20
+> >>How does it break cpuidle?
+>=20
+> Consider a scenario..
+> 1. All PDC irqs enabled/unmasked in HW when request_irq() happened/alloc =
+happens
+> 2. Client driver disable's irq. (lazy disable is there, so in HW its stil=
+l unmasked) but disabled in SW.
+> 3. Device enters deep CPUidle low power modes where only PDC monitors IRQ.
+> 4. This IRQ can still wakeup from CPUidle since it was monitored by PDC.
+> 5. From handler, it comes to know that IRQ is disabled in SW, so it reall=
+y invokes irq_mask callback now to disable in HW.
+> 6. This mask callback doesn't operate on PDC (since in PDC, IRQs gets mas=
+ked only during suspend, all other times its enabled)
+> 7. step 3 to 6 repeats, if this IRQ keeps on coming and waking up from de=
+ep cpuidle states.
 
-On 6/16/2020 11:43 AM, John Stultz wrote:
-> Allows qcom-pdc driver to be loaded as a permenent module
+Ok so in summary, irq is left unmasked in pdc during deep cpu idle and
+it keeps waking up the CPU because it isn't masked at the PDC after the
+first time it interrupts? Is this a power problem? Because from a
+correctness standpoint we don't really care. It woke up the CPU because
+it happened, and the GIC can decide to ignore it or not by masking it at
+the GIC. I thought that the PDC wouldn't wake up the CPU if we masked
+the irq at the GIC level. Is that not true?
 
-typo: permanent
+>=20
+> >
+> >>> My understanding of the hardware is that the GPIO controller has lines
+> >>> directly connected to various SPI lines on the GIC and PDC has a way =
+to
+> >>> monitor those direct connections and wakeup the CPUs when they trigger
+> >>> the detection logic in the PDC. The enable/disable bit in PDC gates t=
+hat
+> >>> logic for each wire between the GPIO controller and the GIC.
+> >>>
+> >>> So isn't it simpler to leave the PDC monitoring pins that we care abo=
+ut
+> >>> all the time and only stop monitoring when we enter and leave suspend?
+> >> it can affect idle path as explained above.
+> >>
+> >>> And shouldn't the driver set something sane in qcom_pdc_init() to
+> >>> disable all the pdc pins so that we don't rely on boot state to
+> >>> configure pins for wakeup?
+> >> We don't rely on boot state, by default all interrupt will be disabled.
+> > Does 'default' mean the hardware register reset state?
+> correct.
+> > I'm worried that
+> > we will kexec and then various pdc pins will be enabled because the
+> > previous kernel had them enabled but then the new kernel doesn't care
+> > about those pins and we'll never be able to suspend or go idle. I don't
+> > know what happens in the GIC case but I think gic_dist_config() and
+> > things set a sane state at kernel boot.
+>=20
+> Right however when switching kernel, i suppose client drivers will do a=20
+> free_irq(), then this will
+>=20
+> clear the PDC interrupt in HW by invoking mask_irq() from within free_irq=
+().
 
-> Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
-> building as a module, we have to add the platform driver hooks
-> explicitly.
->
-> Thanks to Saravana for his help on pointing out the
-> IRQCHIP_DECLARE issue and guidance on a solution.
->
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Saravana Kannan <saravanak@google.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->   drivers/irqchip/Kconfig    |  2 +-
->   drivers/irqchip/qcom-pdc.c | 30 ++++++++++++++++++++++++++++++
->   2 files changed, 31 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 29fead208cad..12765bed08f9 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -425,7 +425,7 @@ config GOLDFISH_PIC
->            for Goldfish based virtual platforms.
->   
->   config QCOM_PDC
-> -	bool "QCOM PDC"
-> +	tristate "QCOM PDC"
->   	depends on ARCH_QCOM
->   	select IRQ_DOMAIN_HIERARCHY
->   	help
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 6ae9e1f0819d..98d74160afcd 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -11,7 +11,9 @@
->   #include <linux/irqdomain.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> +#include <linux/module.h>
->   #include <linux/of.h>
-> +#include <linux/of_irq.h>
-please move this include in order after of_device.h
->   #include <linux/of_address.h>
->   #include <linux/of_device.h>
->   #include <linux/soc/qcom/irq.h>
-> @@ -430,4 +432,32 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->   	return ret;
->   }
->   
-> +#ifdef MODULE
-> +static int qcom_pdc_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *parent = of_irq_find_parent(np);
-> +
-> +	return qcom_pdc_init(np, parent);
-> +}
-> +
-> +static const struct of_device_id qcom_pdc_match_table[] = {
-> +	{ .compatible = "qcom,pdc" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
-> +
-> +static struct platform_driver qcom_pdc_driver = {
-> +	.probe = qcom_pdc_probe,
-> +	.driver = {
-> +		.name = "qcom-pdc",
-> +		.of_match_table = qcom_pdc_match_table,
+We can't rely on drivers to do that.
 
-can you please set .suppress_bind_attrs = true,
+>=20
+> >
+> >> This is same to GIC driver having GICD_ISENABLER register, where all
+> >> bits (one bit per interrupt) set to 0 (masked irqs) during boot up.
+> >>
+> >> Similarly PDC also have all bits set to 0 in PDC's IRQ_ENABLE_BANK.
+> >>
+> > What code sets the IRQ_ENABLE_BANK to all zero when this driver probes?
+>=20
+> Enable bank will be zero as part of HW reset status when booting up=20
+> first time.
+>=20
 
-This is to prevent bind/unbind using sysfs. Once irqchip driver module 
-is loaded, it shouldn't get unbind at runtime.
-
-Thanks,
-Maulik
-> +	},
-> +};
-> +module_platform_driver(qcom_pdc_driver);
-> +#else
->   IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
-> +#endif
-> +
-> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
-> +MODULE_LICENSE("GPL v2");
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+It's not a concern about the hardware reset state of these registers at
+boot. I'm worried that the bootloaders or previous OS will configure pdc
+pins to wake us up. It's better to just force it to something sane, i.e.
+everything disabled in the PDC, at driver probe time so that nothing can
+be wrong.
