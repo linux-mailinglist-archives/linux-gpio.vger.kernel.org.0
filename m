@@ -2,173 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 754EB1FC0F5
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 23:22:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA2781FC118
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 23:40:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgFPVWN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 17:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42084 "EHLO
+        id S1726271AbgFPVkw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 17:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgFPVWK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 17:22:10 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726AEC061573
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 14:22:09 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id v26so4385984oof.7
-        for <linux-gpio@vger.kernel.org>; Tue, 16 Jun 2020 14:22:09 -0700 (PDT)
+        with ESMTP id S1725773AbgFPVkw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 17:40:52 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAF4C061573;
+        Tue, 16 Jun 2020 14:40:52 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so3608890plo.7;
+        Tue, 16 Jun 2020 14:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1WTjVtVQHawTUGhoVtzUqLBrhOe6FD5mLMeqvgfDzVg=;
-        b=M4fPpFWneE9bnyXRYRY3Mn84h60xJrEkkF9vFW3Q9pcy/KKGQ5UrPvuZ4lWrZQ8/4G
-         9miARSs02wr9PKZWhq0Vw6Rq72C5RFpxZHumND2rpKJZiRdxXHDsjl2FqMZid6dfz/UR
-         ZTqF6NiyURgd0q+jR3JyBuFd2e7ixojyPqdz7rfY80U0YB0fiS/dBO9rk5IowumDz5NU
-         b8B7GPvsbqH982dU9YW502JFqOwRVTIfs6DlxbTEr/k/c2fKUDh8W+7OHH6ZGAb5JG93
-         DvToRR1Ge0+fj/RBUEOI35BkFGq8T2tn8aW5tN5iacF3Fi0xZPbHN0D5ACToeRxVulJ9
-         vusQ==
+        bh=+dajMWjezIJ0QoGB+YVGjkIeaVfvA1ZzMYeFQHxUYCY=;
+        b=G+eaAvVoxKV4s+UrluTAMDCCoQ3u5InSeKWKwrY/m8A9W8k7DbebILXdxDP2iEvG1w
+         Dx3ueS+WBJFUS4KqcBlzHZK3g0OyHhdNB90HprruUOF44s4YF56endRnFxcQsLBCcHIT
+         25htvqS0mTSn9m6xpqwBwWgRbYSVJ7wIySdiWdaujhZ0T1+LNg0b/xJK+YT/Qd3ROMpK
+         ZTpIBogDLhUbbSe9q+6du5LZXYw5mnxPvt4lJphHKaLVTars0IwQE8mAaHXJaopaqezc
+         7nwKWyF9iiyY38FAnSyh0P0C4T34AUOb6NU7rTa2cGsAw/dkW+qCjaKSt0wz+bK9Jy/r
+         CBAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1WTjVtVQHawTUGhoVtzUqLBrhOe6FD5mLMeqvgfDzVg=;
-        b=sK46pmkE71ZpsLuXVtdP391fgVg0L9FWjDurUgDg4x0UueRv2qj05Tw9G8P82FkIpg
-         GlPXrYbqgv0DstW62f89G8eyQsW2/E3dfcvBOSZ/OE8b8xiZ6wjkDiFfD1GX244TDIy4
-         4ncWrgEOWC7DbRjYLqpXPLIChBCq2/ANpuyWqILkSK89k1sUBPoFAP25yhyvz9BPv35y
-         ijEVKAXjcA2SoH56J6rEIg9oJnj7TVJ+PwRhcIy2RTJDbPpgjjacC4hVe0j3DE3UCrgC
-         ft+gAxlAQYw6MkBKiJqUjfnPcsP5NBGYWjka/f7uZBMb3O0L3BpykpLqBuwBv27YKPsA
-         Lm/Q==
-X-Gm-Message-State: AOAM533OeNlv0a3iNFGPVL17xiu1Xj/kPP4KbmS+Syfs2C/tDVMgVrHo
-        AMbdaQyLOdYs5Xu15POrnOJtsA//wB4zNBURyQldRg==
-X-Google-Smtp-Source: ABdhPJzIgCP4J42f64sJb6GXSPJX1olg9X9JFjeVFC4T8jGcQXs1ijKnE/J6hxJaHOZoWyhr9TFaRSdMWjuhuHGnjIg=
-X-Received: by 2002:a4a:94d1:: with SMTP id l17mr4120054ooi.88.1592342528795;
- Tue, 16 Jun 2020 14:22:08 -0700 (PDT)
+        bh=+dajMWjezIJ0QoGB+YVGjkIeaVfvA1ZzMYeFQHxUYCY=;
+        b=VJp9w/Hz2Bp0tTtWgyzsNuzvtSHt2ZEHg2ZLAlhLwNW2JwLAoiXq9qblKm6OvOrB/n
+         7h6gKbn3M1/KO/VJtedzm48EU2srsTZSPP87oRQWyG6yWapojDZiMEBSpSJnE3if882n
+         HNQJCd6nLD23cQFpooPIMJt7XxglLsdWUFcVG4oKIrQtRAmyOPo7839vyr/YP0fKtTMk
+         EKCwX8NBIeq9LlByVDuHMpSNe+HXVdKJFe4mnvuKZapjZzwT75C6UdRcwFemn5gxFfuB
+         ZhS15H6kivLPJpUjtGg+49hIJ3yE8D+mHpWLSXUf/ueuxxi4qQDcFj9/7OYtjk3uLbLX
+         4s4w==
+X-Gm-Message-State: AOAM531c3G0pFGgzQyCpkmLpKTUEIh7vHybQViFh7/SR90FGkZq1/Rzo
+        pw1px3TSbvGzpRJplbyMRePshsI/XvN4obBkfkSQAfoW
+X-Google-Smtp-Source: ABdhPJw+5RcNqV+etOo/4A14LjCKQKf1PiP/HW80zQ3wk0qQ/kI//YDPYeANKr3EqL380La+nt7/YUkbRD/WEM4OPWM=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr4582038pjr.181.1592343651550;
+ Tue, 16 Jun 2020 14:40:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-4-john.stultz@linaro.org> <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
-In-Reply-To: <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 16 Jun 2020 14:21:55 -0700
-Message-ID: <CALAqxLUvnhgL98T3LPaaCPq3w9b1notu=1a8ZhcRJNCkF3dXrQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 3/5] irqchip: Allow QCOM_PDC to be loadable as a
- perment module
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com> <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+In-Reply-To: <20200616200225.32mwzew3zw3nuiwh@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 17 Jun 2020 00:40:35 +0300
+Message-ID: <CAHp75VfZMx8ip=Bo=gZQiGufJvh=7dtr61C3ZcZjETFrErTk6Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] mfd: Make use of software nodes
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 4:30 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Hi,
->
-> On 6/16/2020 11:43 AM, John Stultz wrote:
-> > Allows qcom-pdc driver to be loaded as a permenent module
->
-> typo: permanent
->
-> > Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
-> > building as a module, we have to add the platform driver hooks
-> > explicitly.
+On Tue, Jun 16, 2020 at 11:03 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> On Mon, Jun 08, 2020 at 04:42:54PM +0300, Andy Shevchenko wrote:
+> > Some devices would need to have a hierarchy of properties and
+> > child nodes passed to the child or children of MFD. For such case
+> > we may utilize software nodes, which is superior on device properties.
 > >
-> > Thanks to Saravana for his help on pointing out the
-> > IRQCHIP_DECLARE issue and guidance on a solution.
+> > Add support of software nodes to MFD core and convert one driver
+> > to show how it looks like. This allows to get rid of legacy platform
+> > data.
 > >
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Jason Cooper <jason@lakedaemon.net>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Lina Iyer <ilina@codeaurora.org>
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: linux-arm-msm@vger.kernel.org
-> > Cc: iommu@lists.linux-foundation.org
-> > Cc: linux-gpio@vger.kernel.org
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >   drivers/irqchip/Kconfig    |  2 +-
-> >   drivers/irqchip/qcom-pdc.c | 30 ++++++++++++++++++++++++++++++
-> >   2 files changed, 31 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > index 29fead208cad..12765bed08f9 100644
-> > --- a/drivers/irqchip/Kconfig
-> > +++ b/drivers/irqchip/Kconfig
-> > @@ -425,7 +425,7 @@ config GOLDFISH_PIC
-> >            for Goldfish based virtual platforms.
-> >
-> >   config QCOM_PDC
-> > -     bool "QCOM PDC"
-> > +     tristate "QCOM PDC"
-> >       depends on ARCH_QCOM
-> >       select IRQ_DOMAIN_HIERARCHY
-> >       help
-> > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> > index 6ae9e1f0819d..98d74160afcd 100644
-> > --- a/drivers/irqchip/qcom-pdc.c
-> > +++ b/drivers/irqchip/qcom-pdc.c
-> > @@ -11,7 +11,9 @@
-> >   #include <linux/irqdomain.h>
-> >   #include <linux/io.h>
-> >   #include <linux/kernel.h>
-> > +#include <linux/module.h>
-> >   #include <linux/of.h>
-> > +#include <linux/of_irq.h>
-> please move this include in order after of_device.h
-> >   #include <linux/of_address.h>
-> >   #include <linux/of_device.h>
-> >   #include <linux/soc/qcom/irq.h>
-> > @@ -430,4 +432,32 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
-> >       return ret;
-> >   }
-> >
-> > +#ifdef MODULE
-> > +static int qcom_pdc_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device_node *np = pdev->dev.of_node;
-> > +     struct device_node *parent = of_irq_find_parent(np);
-> > +
-> > +     return qcom_pdc_init(np, parent);
-> > +}
-> > +
-> > +static const struct of_device_id qcom_pdc_match_table[] = {
-> > +     { .compatible = "qcom,pdc" },
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
-> > +
-> > +static struct platform_driver qcom_pdc_driver = {
-> > +     .probe = qcom_pdc_probe,
-> > +     .driver = {
-> > +             .name = "qcom-pdc",
-> > +             .of_match_table = qcom_pdc_match_table,
+> > The change has been tested on Intel Galileo Gen 2.
 >
-> can you please set .suppress_bind_attrs = true,
->
-> This is to prevent bind/unbind using sysfs. Once irqchip driver module
-> is loaded, it shouldn't get unbind at runtime.
+> I am wondering whether we could move the {gpio_base, ngpio, irq_shared}
+> part into the gpio-dwapb.c driver and use either the ACPI-based or
+> platform_device_id-based matching to get the device-specific resources
+> info through the driver_data field. By doing so you wouldn't need to
+> introduce a new "snps,gpio-base"-like property and propagate
+> software_node-based properties, but still you could get rid of the
+> dwapb_platform_data structure since all the info would be locally
+> available.
 
-Thanks, I really appreciate the review! I've made these changes on my
-side and they'll be included in v2.
+The idea is to get rid of the driver being dependent on some quirks
+when we may do it clearly and nicely.
+We, by applying this series, make (keep) layers independent: board
+code vs. driver code. Mixing them more is the opposite to what I
+propose.
 
-thanks
--john
+WRT property.
+snps,gpio-base can be easily changed to *already in use* gpio-base or
+being both converted to linux,gpio-base to explicitly show people that
+this is internal stuff that must not be present in firmware nodes.
+
+> If ACPI-based matching doesn't uniquely address the Quark GPIO node,
+> then you could just replace the intel_quark_mfd_cells[0].name with
+> something like "gpio-dwapb-quark", which then by the MFD core will be
+> copied to the corresponding platform_device->name due to calling
+> platform_device_alloc() with cell-name passed. That name will be used
+> to match a platform_driver with id_table having that new name added.
+
+Oh, that doesn't sound right. It makes things ugly.
+
+-- 
+With Best Regards,
+Andy Shevchenko
