@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8514E1FA89E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 08:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71B7B1FA8A0
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 08:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgFPGNr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 02:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42178 "EHLO
+        id S1727815AbgFPGOD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 02:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgFPGNq (ORCPT
+        with ESMTP id S1727107AbgFPGNq (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Jun 2020 02:13:46 -0400
 Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064C8C03E97C
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:45 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g12so7910852pll.10
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A87C03E96A
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:46 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y18so7922098plr.4
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Jun 2020 23:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=d8HNtFjVL/HPLva77WTnFKUW0Kvfs2vTc0BrF81DdWI=;
-        b=v8pnncAeJ6EXVXBVIROBwY85MaUJaS+3cYpbNNYYzPLk/7pselZhTcoIxYzjCeyVv8
-         z7rLz6dynrZeFhSyjXXuzxJss8D71TgLPxY1wSvVrGHHBe36mvLVuJbyV7oeqmPxZPF4
-         3bBf2ru+qoskK42o6IV1MKU7khzwkAlxUiF86aroPb9CUN8SmEpvlRuPhbKl/aZW/n7x
-         AWmFqLqQFiPnl3Li0QE+BVRXmEQzG3QuSiiUUYtPhE0RXGhRnX5RUcHPWqrprYghVulQ
-         elANL0qhyySKvw/JSPWezE64h1v8gJgRUsY4bf8AXuO5qPZruWEfPRgNNcA9UaNhTmde
-         rX1A==
+        bh=M2uJULnvxDpfHs89lgaTRTB9rey6NHbhAifKB1x72gQ=;
+        b=HS2MKGAsNdjUxJ+yy27jcpiH1bk7koug2OAXwLJHoTgucSozWnIJSObeAki8dM05am
+         DLCS+qX0P1LSqKwIln1ckxouXz0KbXo3o0tpFiRBYmK+NPiqKE6pDzuqc9M+Woh0UQ59
+         0qIqzR0HzmFta9njqekXv2RYydZQgrYMTxUNtcLireoA0iUhs07M+xTESQi6DDO/vBQo
+         bSM6fZK5iqdLi0jpB6PQWvFyk1ti/AJVyzKrfiIVqCShGFceJ3mF8PFRVhuFFpNV+gJ8
+         6/V4j3vwecDwCtqKeIWENohJF3zGujG5GiKGDkkY7rGGOJZOxBk/IL493YOcEiEuhVBI
+         PAjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=d8HNtFjVL/HPLva77WTnFKUW0Kvfs2vTc0BrF81DdWI=;
-        b=pW1Xg2AM4jfCmXiLQ2hNbKNsG1BkUuQgzQ1+NTD/fO5R6Y9dGnFSg/NsVwWnCm1EF4
-         4cdByAoZ83EsSaPXH4nGY6mpnVUMw2pWIQa8qVJKYPU8I1apETvMeq+L+97u6lDI3Yml
-         Suj4kDqflF5nNDoFmzPfaRsL9MnnVFm0AXmPDUfAJAba0rxr5vc4DLlHEavDnIhxL9eM
-         MKwGHGKmhPsdKOUfEKOiWW/8WYPiElLNM6Pm2/fkvHFalh04QLghWwYkfBYpgtgxXdL4
-         YnDp5bH7Duv/niexXG0CMs4fI6zbJAmWbTI2jWbtesgx7EoQcfh8tQpUzXmbpzZglInU
-         LQ8w==
-X-Gm-Message-State: AOAM5314KEfcg9hlKzBbftklz8Xy2MmpYt+0KjWRCrcdK+Z59RTDBDnx
-        +DVqEv5HPHhuPv7ERr78N5H0Lw==
-X-Google-Smtp-Source: ABdhPJxCaVz3G+/geS1NzlugB57rAw/I7PZ2XURXxDE8DMjhkDv5DK9XyvrD63NMIlJN57XPvBQpCw==
-X-Received: by 2002:a17:90a:220f:: with SMTP id c15mr1308713pje.129.1592288024596;
-        Mon, 15 Jun 2020 23:13:44 -0700 (PDT)
+        bh=M2uJULnvxDpfHs89lgaTRTB9rey6NHbhAifKB1x72gQ=;
+        b=dTd7CqJqG113+B4dfr3ZY9XktT1UBGB2mw++YU6iPpIjzL8IpwSEpKJpyLpFXxhuF9
+         L9Iv+MbXLywcwhacT1N1M24WyXCgFNCBQGnmkd5K7Qvc9Yr6Zl1+GYYi9Izu9RljSRbr
+         gYeghFV8BNYLJBz5u7oTLjLQtYaZ8+V3Q5OK5A6HDO843l7uN4drUWNglKsBpovTrXJW
+         lgBLpqsU1gHm+gV0Nzj0yDsHzBksd8qyk0bxa5q35EV/Ml+1FtonZgf9hKJlXoWJ4mcI
+         XY9ebOI9aoaRpcSW0F4VwQFZZJ+tSiROvQ62x7iwK+p3fWH9ieKs8lcW5EqQOkE3ztH8
+         Sdzw==
+X-Gm-Message-State: AOAM531q1Fc+OsRPMnpxSs0Cug7CgJoIi8Y9yAhKZ6piw5Bru2mmM8Kj
+        20kBkVfYJMnR6tSP0ltjCCZEAg==
+X-Google-Smtp-Source: ABdhPJw2m1e+LDbBPxO7NdX9TwT/7AlJxXRrPGMYRWdq75cFQWSCTf4uPSRnj0rAwyp+oCkFUZF2jQ==
+X-Received: by 2002:a17:90b:238d:: with SMTP id mr13mr1308289pjb.19.1592288025969;
+        Mon, 15 Jun 2020 23:13:45 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id i26sm15642032pfo.0.2020.06.15.23.13.43
+        by smtp.gmail.com with ESMTPSA id i26sm15642032pfo.0.2020.06.15.23.13.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2020 23:13:44 -0700 (PDT)
+        Mon, 15 Jun 2020 23:13:45 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -62,9 +62,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
         linux-gpio@vger.kernel.org
-Subject: [RFC][PATCH 2/5] irq: irqchip: Export irq_chip_retrigger_hierarchy and irq_chip_set_vcpu_affinity_parent
-Date:   Tue, 16 Jun 2020 06:13:35 +0000
-Message-Id: <20200616061338.109499-3-john.stultz@linaro.org>
+Subject: [RFC][PATCH 3/5] irqchip: Allow QCOM_PDC to be loadable as a perment module
+Date:   Tue, 16 Jun 2020 06:13:36 +0000
+Message-Id: <20200616061338.109499-4-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200616061338.109499-1-john.stultz@linaro.org>
 References: <20200616061338.109499-1-john.stultz@linaro.org>
@@ -73,9 +73,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add EXPORT_SYMBOL_GPL entries for irq_chip_retrigger_hierarchy()
-and irq_chip_set_vcpu_affinity_parent() so that we can allow
-drivers like the qcom-pdc driver to be loadable as a module.
+Allows qcom-pdc driver to be loaded as a permenent module
+
+Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
+building as a module, we have to add the platform driver hooks
+explicitly.
+
+Thanks to Saravana for his help on pointing out the
+IRQCHIP_DECLARE issue and guidance on a solution.
 
 Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -93,30 +98,70 @@ Cc: iommu@lists.linux-foundation.org
 Cc: linux-gpio@vger.kernel.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- kernel/irq/chip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/Kconfig    |  2 +-
+ drivers/irqchip/qcom-pdc.c | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 41e7e37a0928..ba6ce66d7ed6 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1478,6 +1478,7 @@ int irq_chip_retrigger_hierarchy(struct irq_data *data)
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 29fead208cad..12765bed08f9 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -425,7 +425,7 @@ config GOLDFISH_PIC
+          for Goldfish based virtual platforms.
  
- 	return 0;
+ config QCOM_PDC
+-	bool "QCOM PDC"
++	tristate "QCOM PDC"
+ 	depends on ARCH_QCOM
+ 	select IRQ_DOMAIN_HIERARCHY
+ 	help
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 6ae9e1f0819d..98d74160afcd 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -11,7 +11,9 @@
+ #include <linux/irqdomain.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/soc/qcom/irq.h>
+@@ -430,4 +432,32 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+ 	return ret;
  }
-+EXPORT_SYMBOL_GPL(irq_chip_retrigger_hierarchy);
  
- /**
-  * irq_chip_set_vcpu_affinity_parent - Set vcpu affinity on the parent interrupt
-@@ -1492,7 +1493,7 @@ int irq_chip_set_vcpu_affinity_parent(struct irq_data *data, void *vcpu_info)
- 
- 	return -ENOSYS;
- }
--
-+EXPORT_SYMBOL_GPL(irq_chip_set_vcpu_affinity_parent);
- /**
-  * irq_chip_set_wake_parent - Set/reset wake-up on the parent interrupt
-  * @data:	Pointer to interrupt specific data
++#ifdef MODULE
++static int qcom_pdc_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *parent = of_irq_find_parent(np);
++
++	return qcom_pdc_init(np, parent);
++}
++
++static const struct of_device_id qcom_pdc_match_table[] = {
++	{ .compatible = "qcom,pdc" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
++
++static struct platform_driver qcom_pdc_driver = {
++	.probe = qcom_pdc_probe,
++	.driver = {
++		.name = "qcom-pdc",
++		.of_match_table = qcom_pdc_match_table,
++	},
++};
++module_platform_driver(qcom_pdc_driver);
++#else
+ IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
++#endif
++
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
