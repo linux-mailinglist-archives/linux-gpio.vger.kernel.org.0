@@ -2,184 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 456141FBABC
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 18:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0E781FBBB4
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jun 2020 18:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbgFPQNu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Jun 2020 12:13:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:29197 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731920AbgFPQNt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 16 Jun 2020 12:13:49 -0400
-X-Greylist: delayed 313 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Jun 2020 12:13:47 EDT
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1592324028; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=MD92WfPRgR/jkFLJAG2o5YhCjEHFWsLDGTiEaMXk+O4=; b=bk6w68bOp8tUx8zWBNm29Xa8VCXbz1vhUjnF2N+cO2L1bPtWEraQIfnipDUBhLqVcCNMmh8m
- 57s0BrwL4M0omKe3UfOlW4kod4Gf9Ns8HayBVccgL0jGZQhLOlbjFWHjth2qlCBiNYoHSYmv
- +tnn4BgHDJLZzub01bTDBxSKmRk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5ee8ee75bfb34e631cae2c63 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 16 Jun 2020 16:08:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D9B68C433AD; Tue, 16 Jun 2020 16:08:20 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2594BC433CA;
-        Tue, 16 Jun 2020 16:08:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2594BC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 16 Jun 2020 10:08:18 -0600
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [RFC][PATCH 3/5] irqchip: Allow QCOM_PDC to be loadable as a
- perment module
-Message-ID: <20200616160818.GD12942@codeaurora.org>
-References: <20200616061338.109499-1-john.stultz@linaro.org>
- <20200616061338.109499-4-john.stultz@linaro.org>
- <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
+        id S1730125AbgFPQ22 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Jun 2020 12:28:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31174 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730400AbgFPQ21 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Jun 2020 12:28:27 -0400
+IronPort-SDR: ALxC30VVXOBnaN4CCstjqJtylgpH91PUGK6DVr6z0p30HT3EO2VNJmiX89/mW8l+OAf9OHVv7n
+ VSNKGvKJcm5Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2020 09:28:26 -0700
+IronPort-SDR: RzVEtIiyMNegj2etWgu6o8ymt/EKz6SpHWX6HiXbPpx4+rNSBCfpwnNmIlgQJs9sAo8zA474zi
+ wDqi9+6sFMgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,518,1583222400"; 
+   d="scan'208";a="476497925"
+Received: from lkp-server01.sh.intel.com (HELO b4e26a9a4e5e) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jun 2020 09:28:24 -0700
+Received: from kbuild by b4e26a9a4e5e with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jlERk-0000Al-6U; Tue, 16 Jun 2020 16:28:24 +0000
+Date:   Wed, 17 Jun 2020 00:27:53 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [pinctrl:devel] BUILD SUCCESS
+ bcad94d7b7c13b123ed4ded86544667cfbfb1aa7
+Message-ID: <5ee8f309.3l64fXfBLjevOBwF%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <55e5982a-1e73-7013-e02d-5d1d30815fba@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 16 2020 at 05:30 -0600, Maulik Shah wrote:
->Hi,
->
->On 6/16/2020 11:43 AM, John Stultz wrote:
->>Allows qcom-pdc driver to be loaded as a permenent module
->
->typo: permanent
->
->>Also, due to the fact that IRQCHIP_DECLARE becomes a no-op when
->>building as a module, we have to add the platform driver hooks
->>explicitly.
->>
->>Thanks to Saravana for his help on pointing out the
->>IRQCHIP_DECLARE issue and guidance on a solution.
->>
->>Cc: Andy Gross <agross@kernel.org>
->>Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->>Cc: Joerg Roedel <joro@8bytes.org>
->>Cc: Thomas Gleixner <tglx@linutronix.de>
->>Cc: Jason Cooper <jason@lakedaemon.net>
->>Cc: Marc Zyngier <maz@kernel.org>
->>Cc: Linus Walleij <linus.walleij@linaro.org>
->>Cc: Lina Iyer <ilina@codeaurora.org>
->>Cc: Saravana Kannan <saravanak@google.com>
->>Cc: Todd Kjos <tkjos@google.com>
->>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>Cc: linux-arm-msm@vger.kernel.org
->>Cc: iommu@lists.linux-foundation.org
->>Cc: linux-gpio@vger.kernel.org
->>Signed-off-by: John Stultz <john.stultz@linaro.org>
->>---
->>  drivers/irqchip/Kconfig    |  2 +-
->>  drivers/irqchip/qcom-pdc.c | 30 ++++++++++++++++++++++++++++++
->>  2 files changed, 31 insertions(+), 1 deletion(-)
->>
->>diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>index 29fead208cad..12765bed08f9 100644
->>--- a/drivers/irqchip/Kconfig
->>+++ b/drivers/irqchip/Kconfig
->>@@ -425,7 +425,7 @@ config GOLDFISH_PIC
->>           for Goldfish based virtual platforms.
->>  config QCOM_PDC
->>-	bool "QCOM PDC"
->>+	tristate "QCOM PDC"
->>  	depends on ARCH_QCOM
->>  	select IRQ_DOMAIN_HIERARCHY
->>  	help
->>diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
->>index 6ae9e1f0819d..98d74160afcd 100644
->>--- a/drivers/irqchip/qcom-pdc.c
->>+++ b/drivers/irqchip/qcom-pdc.c
->>@@ -11,7 +11,9 @@
->>  #include <linux/irqdomain.h>
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->>+#include <linux/module.h>
->>  #include <linux/of.h>
->>+#include <linux/of_irq.h>
->please move this include in order after of_device.h
->>  #include <linux/of_address.h>
->>  #include <linux/of_device.h>
->>  #include <linux/soc/qcom/irq.h>
->>@@ -430,4 +432,32 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->>  	return ret;
->>  }
->>+#ifdef MODULE
->>+static int qcom_pdc_probe(struct platform_device *pdev)
->>+{
->>+	struct device_node *np = pdev->dev.of_node;
->>+	struct device_node *parent = of_irq_find_parent(np);
->>+
->>+	return qcom_pdc_init(np, parent);
->>+}
->>+
->>+static const struct of_device_id qcom_pdc_match_table[] = {
->>+	{ .compatible = "qcom,pdc" },
->>+	{}
->>+};
->>+MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
->>+
->>+static struct platform_driver qcom_pdc_driver = {
->>+	.probe = qcom_pdc_probe,
->>+	.driver = {
->>+		.name = "qcom-pdc",
->>+		.of_match_table = qcom_pdc_match_table,
->
->can you please set .suppress_bind_attrs = true,
->
->This is to prevent bind/unbind using sysfs. Once irqchip driver module 
->is loaded, it shouldn't get unbind at runtime.
->
-That is a good point. We probably should do that to RPMH RSC driver as well.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  devel
+branch HEAD: bcad94d7b7c13b123ed4ded86544667cfbfb1aa7  pinctrl: ingenic: Add NAND FRE/FWE pins for JZ4740
 
->Thanks,
->Maulik
->>+	},
->>+};
->>+module_platform_driver(qcom_pdc_driver);
->>+#else
->>  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
->>+#endif
->>+
->>+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
->>+MODULE_LICENSE("GPL v2");
->
->-- 
->QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+elapsed time: 484m
+
+configs tested: 100
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                         axm55xx_defconfig
+mips                         bigsur_defconfig
+mips                      bmips_stb_defconfig
+c6x                              allyesconfig
+sh                            migor_defconfig
+arm                             pxa_defconfig
+um                           x86_64_defconfig
+mips                      pic32mzda_defconfig
+arm                       versatile_defconfig
+ia64                      gensparse_defconfig
+mips                           ip28_defconfig
+mips                           ip27_defconfig
+c6x                        evmc6678_defconfig
+arm                       netwinder_defconfig
+sh                           se7721_defconfig
+i386                              allnoconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                             allyesconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a015-20200615
+i386                 randconfig-a011-20200615
+i386                 randconfig-a014-20200615
+i386                 randconfig-a013-20200615
+i386                 randconfig-a016-20200615
+i386                 randconfig-a012-20200615
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
