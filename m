@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 594A31FCC85
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 13:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0E641FCC84
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 13:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgFQLh5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 07:37:57 -0400
-Received: from mail-eopbgr760083.outbound.protection.outlook.com ([40.107.76.83]:42570
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        id S1726781AbgFQLh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 07:37:56 -0400
+Received: from mail-mw2nam10on2063.outbound.protection.outlook.com ([40.107.94.63]:26095
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726769AbgFQLhx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S1726761AbgFQLhx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Wed, 17 Jun 2020 07:37:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iIRoYX4PPtSI3SvzPZD/Jfosq0UlNu0DsrrOIZrRzl/f4/ZKkoeCvcko/NfxVO22CvK0tbB1cOuQeO/WDCUtHmiw5cEja006ycVBniFdZTD5f8dBGjS77GSGRKYXtKtFrdKOm+AGrlsUhc3j5UtmtKD28SCaGP3Jbw2E2GDSONIXXh9ThwGWHPSQNacQA4nu1rmp5JAhduwVR5IeAVefrLa5FO6u4ggKnziS0S942Sfvt+g5Jxn95bVQ4MBUPTc5yCkjbkbQfJ6sl+mfpPwE5cP6zjichy/fCEdWV9kpfDQfTJNl4s4QLb9euLdEOV/jBthaAVsm8t8OXj9sDHXOEg==
+ b=f2xFflN4xfYkb2ttq7hoeavOKKUouBzKgvZz0lADDdmuYVUbpz+AcsF94ljwyppsLwiupewX53REYb4pMlezDqu+1a9L81XnYBD9iU/bvefG8YlNKPM9DnOvby6T72yr5xtsgt2Srgc6qcj8DcfOaoHClY/vef8KeSQbnB90XOQhUIrcHcoyAi13MJhcHDSLNmCVJQzv3YDhT8eiYb9Ij3nTvdMV4g/89DVwBK2T4+btLZfGWKUA9Tu4eEP0rt22v33cxsMNlKbKXQPmQ+mvMgX0m9z+A1IJmIhm6xi6JzBCz65rcAmFc2tiBse0UYUXaxx87jyOmNRdnNrl0G2ovg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfCAluQT+BkcOujX1CojNyUo+PO4qbrtmhtOI76lcn8=;
- b=TYKeSNQZML9kGanp97g9bbpqXP+m2BoIkkv6umBu0qUtMob3Gbj6zm8aUnhtKO5QA74IUnQwvv0JPxZKvRfzXwVJaTwJHFNVLwgRhDzCo11LhKlkXF0u+ceU/oT7UXd1LyL5p9vgZOCO+nUCOit3f2fchWGENuyUmQBGV8xaotswY4CIGURAfciKsL/uUKez+23ZfyRX4B2+AwJIAc9TOEKFSxdPBM84ZpAxYiZiU1amNYZxSJztFr50sI9pS0eT2E0HtNz1anLv18LljNt7ryKgIjroPjcCvO5I/S1hldi5RIv4MxuTajwyjnXF0hZA5JUKonaSQX/Q6Zavqycopg==
+ bh=aSLIql5MoG4i9i/mKSl1vgGEGnbfGf/ctqtXPBP8pkQ=;
+ b=ld6GjTymnNJ5Y3STw/0Ffla82kGQ0pBxSel2HTj6VchOcGG94zlYVtT0570yoZJ7R0xzfxyiKKu9FyHF5Frm86uJH9M0OHiSZAd66nNtdTouJ4jSNwbbOZ1Cnn2kxMwb6Rp/siWiiqY//AXMgMEeOGDGAdHvv6iBIFjEOoxwyDNlPiKg5E2+n2OqPK5P3LFu1WkazPPwA35++eeoBmOMm7sON3MlB+TiBtX+cT1v/tU7ij96fqpp2jIoCkur5KhCHwT4MtAGZ496lnYg3wn5IEu/QCAUZqWJqj7M8tjkjyVluYzpTMWTAeuTXME8ER5osJlZWEFc9xWn0dNR+7XhfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -26,17 +26,17 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfCAluQT+BkcOujX1CojNyUo+PO4qbrtmhtOI76lcn8=;
- b=RmD0g3RrvK8lwczytfZQSnsuZaDOSkL5J3M19A7jGDzHiI3H7bwXvhEEwPyuiQclKTiffqXit93M21jqbg6oeiJWVc9TLfiXw3FjJg4q/KAOYQ6CBGERg+emASF9T54tGctf9caTPLM3bYyQOXi3vJM3tfTPM3FcwT7HNBntCP4=
-Received: from SN4PR0501CA0093.namprd05.prod.outlook.com
- (2603:10b6:803:22::31) by BYAPR02MB5032.namprd02.prod.outlook.com
- (2603:10b6:a03:71::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.26; Wed, 17 Jun
+ bh=aSLIql5MoG4i9i/mKSl1vgGEGnbfGf/ctqtXPBP8pkQ=;
+ b=Yt8Wz+tksvSmFkg2/3H1AhgQ4PD8sXJHFQx1bBmSlOjvAkVH2lkvulwh2/bhTqTqq98VU35xLffUM+JN5Ive/bKPcHRzNNmomO7jxGDf2OAbc/cFEc3Lpok7Dl58emCuR5L0Q+yrpDJzw29EXWk5UNIpMrVtp7VV0whtKcn6qQU=
+Received: from MN2PR15CA0041.namprd15.prod.outlook.com (2603:10b6:208:237::10)
+ by DM6PR02MB4604.namprd02.prod.outlook.com (2603:10b6:5:28::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Wed, 17 Jun
  2020 11:37:50 +0000
-Received: from SN1NAM02FT042.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:22:cafe::a0) by SN4PR0501CA0093.outlook.office365.com
- (2603:10b6:803:22::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.11 via Frontend
+Received: from BL2NAM02FT014.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:237:cafe::75) by MN2PR15CA0041.outlook.office365.com
+ (2603:10b6:208:237::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
  Transport; Wed, 17 Jun 2020 11:37:50 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
@@ -46,33 +46,33 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT042.mail.protection.outlook.com (10.152.73.149) with Microsoft SMTP
+ BL2NAM02FT014.mail.protection.outlook.com (10.152.76.154) with Microsoft SMTP
  Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:37:50
  +0000
-Received: from [149.199.38.66] (port=36166 helo=xsj-pvapsmtp01)
+Received: from [149.199.38.66] (port=36154 helo=xsj-pvapsmtp01)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWN3-0001I5-Gl; Wed, 17 Jun 2020 04:36:45 -0700
+        id 1jlWN3-0001Hx-Au; Wed, 17 Jun 2020 04:36:45 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by xsj-pvapsmtp01 with smtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWO5-0007aG-R6; Wed, 17 Jun 2020 04:37:49 -0700
+        id 1jlWO5-0007aG-Kv; Wed, 17 Jun 2020 04:37:49 -0700
 Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBbdGj032541;
-        Wed, 17 Jun 2020 04:37:39 -0700
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBbggK032553;
+        Wed, 17 Jun 2020 04:37:42 -0700
 Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1jlWNu-0007TR-PP; Wed, 17 Jun 2020 04:37:39 -0700
+        id 1jlWNx-0007TR-H0; Wed, 17 Jun 2020 04:37:41 -0700
 From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
         sgoud@xilinx.com
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, git@xilinx.com
-Subject: [PATCH V4 3/7] devicetree-binding: Add pmc gpio node
-Date:   Wed, 17 Jun 2020 17:07:23 +0530
-Message-Id: <1592393847-1415-4-git-send-email-srinivas.neeli@xilinx.com>
+Subject: [PATCH V4 4/7] gpio: zynq: Add Versal support
+Date:   Wed, 17 Jun 2020 17:07:24 +0530
+Message-Id: <1592393847-1415-5-git-send-email-srinivas.neeli@xilinx.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
 References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
@@ -81,27 +81,27 @@ X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(39860400002)(136003)(46966005)(9786002)(26005)(316002)(336012)(44832011)(966005)(82310400002)(8676002)(70586007)(356005)(2906002)(8936002)(6666004)(70206006)(7696005)(107886003)(2616005)(5660300002)(186003)(4326008)(47076004)(82740400003)(81166007)(6636002)(478600001)(36756003)(83380400001)(426003);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(396003)(376002)(346002)(46966005)(26005)(316002)(107886003)(2906002)(186003)(8936002)(7696005)(966005)(9786002)(5660300002)(478600001)(336012)(82740400003)(4326008)(47076004)(70586007)(70206006)(2616005)(426003)(83380400001)(36756003)(44832011)(356005)(6636002)(8676002)(82310400002)(6666004)(81166007);DIR:OUT;SFP:1101;
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 1aa2a848-40f9-4464-3f35-08d812b2dd6e
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5032:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5032D9A4F8F3604504A9379AAF9A0@BYAPR02MB5032.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: a45fc6e4-536e-4360-0661-08d812b2dd5c
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4604:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB4604D9281A6105A44D229FF8AF9A0@DM6PR02MB4604.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
 X-Forefront-PRVS: 04371797A5
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jvxNgKTw5isnXs+neDWsJWiiUFOV+Vp0Inx2V4mHbLrBOdf3fSNMzHit8tiqS6MBZvBnrrOoIsQZ+wxXt1681y6MeAuol02Bz9LYJQP5v0t/SbDvoqg0Pmd55fv3ys3bIIrfFOy50ClbB3CPJUEAVtFmJ6d3Ty/8FvKPAitsTzeO2N0yc5/QxkCz82oAAmiVVsrJxG4nTe1mZqM1h/vM0cGAwpCwhptVw5KjefspTLxslSoD1A9BPQ+sGmQ/XTZAy6GDS65fyY98HxDKikjUNSAllAjwf+dVJTrVrd1+jIQ2P7RJHMHaHnZG9kTQbwwf70D1cxmlHtVlBxOyb8ENvDCtaF2IaqALbuOv8AvJ9ZNN9ZtDmAtFDBYqZqKh+RInd2ovTyZldoMgBQV+INi4J6A/JhZ0gkxX8l9/tI0w2ybzo5veF+Kb4RMarMdi/LvRKCr94lA1FoqBw0fLulYMKBk29iz3iExC13lbt5p1FQo=
+X-Microsoft-Antispam-Message-Info: oYp0rXqZrvBcTPyJaRJc9hxUTc9UCNJigroDCgDZJnU8iM/YcHEpTv+lFJ7Qh4pgd8j/t3qUbmDNpBwCI3VwF0zzjsHAeMeSIxAXDZIGHrgwhu4LNcD7LWEa+7vV1TkLlGqnrdAWOxxyDbzDcwTv3CzHi5R+NSfRx/xsYjgDjwlb73lNqqzSLqgRRrrgW09fytamJWCZH8zyN2WFpkk9/h6xDp00X6oR/Owb2fJZNo6XL7JgXmrcYkeLpnl6J/ZI1sgoUydvDlAiUUC5VnmiG9tWK7vZ2KuluPZrG26tdJLUGnZjKt8PRSxjfmKqSwRsVXpJgTIqMD62b+VsqecRzlvdyFwwtlMFMeq3bPP6ljBgr5XRn4qHc+03S5yTy3RE/YK4wBCUKnsm4fpVq7UB4cBPQtYYz9tv5iKO4GdIbFVfVY2KyyVyUBU+kjpU6IGwCk2zrsj/tFZkoLbhOgktF2RzjyBi8UxW0/UIv+iaHbM=
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:50.1293
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:50.0129
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa2a848-40f9-4464-3f35-08d812b2dd6e
+X-MS-Exchange-CrossTenant-Network-Message-Id: a45fc6e4-536e-4360-0661-08d812b2dd5c
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5032
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4604
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -109,7 +109,9 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 
-Add the pmc gpio node to the device tree.
+Add Versal support in gpio.
+Only bank 0 and 3 are connected to the Multiplexed Input output pins.
+Bank 0 to mio and bank3 to fabric Multiplexed input output pins.
 
 Versal devices are the industry's first adaptive compute
 acceleration platforms.
@@ -130,21 +132,106 @@ https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-zynq.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-zynq.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-index 4806d846c0fc..f693e82b4c0f 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.txt
-@@ -8,6 +8,7 @@ Required properties:
- 			    parameters (unused)
- - compatible		: Should be "xlnx,zynq-gpio-1.0" or
- 			  "xlnx,zynqmp-gpio-1.0" or "xlnx,versal-gpio-1.0
-+			  or "xlnx,pmc-gpio-1.0
- - clocks		: Clock specifier (see clock bindings for details)
- - gpio-controller	: Marks the device node as a GPIO controller.
- - interrupts		: Interrupt specifier (see interrupt bindings for
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index fb93b35ab19e..9ac69144a0eb 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -22,6 +22,8 @@
+ /* Maximum banks */
+ #define ZYNQ_GPIO_MAX_BANK	4
+ #define ZYNQMP_GPIO_MAX_BANK	6
++#define VERSAL_GPIO_MAX_BANK	4
++#define VERSAL_UNUSED_BANKS	2
+ 
+ #define ZYNQ_GPIO_BANK0_NGPIO	32
+ #define ZYNQ_GPIO_BANK1_NGPIO	22
+@@ -96,6 +98,7 @@
+ /* set to differentiate zynq from zynqmp, 0=zynqmp, 1=zynq */
+ #define ZYNQ_GPIO_QUIRK_IS_ZYNQ	BIT(0)
+ #define GPIO_QUIRK_DATA_RO_BUG	BIT(1)
++#define GPIO_QUIRK_VERSAL	BIT(2)
+ 
+ struct gpio_regs {
+ 	u32 datamsw[ZYNQMP_GPIO_MAX_BANK];
+@@ -199,6 +202,8 @@ static inline void zynq_gpio_get_bank_pin(unsigned int pin_num,
+ 					gpio->p_data->bank_min[bank];
+ 			return;
+ 		}
++		if (gpio->p_data->quirks & GPIO_QUIRK_VERSAL)
++			bank = bank + VERSAL_UNUSED_BANKS;
+ 	}
+ 
+ 	/* default */
+@@ -656,6 +661,8 @@ static void zynq_gpio_irqhandler(struct irq_desc *desc)
+ 		int_enb = readl_relaxed(gpio->base_addr +
+ 					ZYNQ_GPIO_INTMASK_OFFSET(bank_num));
+ 		zynq_gpio_handle_bank_irq(gpio, bank_num, int_sts & ~int_enb);
++		if (gpio->p_data->quirks & GPIO_QUIRK_VERSAL)
++			bank_num = bank_num + VERSAL_UNUSED_BANKS;
+ 	}
+ 
+ 	chained_irq_exit(irqchip, desc);
+@@ -685,6 +692,8 @@ static void zynq_gpio_save_context(struct zynq_gpio *gpio)
+ 		gpio->context.int_any[bank_num] =
+ 				readl_relaxed(gpio->base_addr +
+ 				ZYNQ_GPIO_INTANY_OFFSET(bank_num));
++		if (gpio->p_data->quirks & GPIO_QUIRK_VERSAL)
++			bank_num = bank_num + VERSAL_UNUSED_BANKS;
+ 	}
+ }
+ 
+@@ -716,6 +725,8 @@ static void zynq_gpio_restore_context(struct zynq_gpio *gpio)
+ 		writel_relaxed(~(gpio->context.int_en[bank_num]),
+ 			       gpio->base_addr +
+ 			       ZYNQ_GPIO_INTEN_OFFSET(bank_num));
++		if (gpio->p_data->quirks & GPIO_QUIRK_VERSAL)
++			bank_num = bank_num + VERSAL_UNUSED_BANKS;
+ 	}
+ }
+ 
+@@ -787,6 +798,17 @@ static const struct dev_pm_ops zynq_gpio_dev_pm_ops = {
+ 			   zynq_gpio_runtime_resume, NULL)
+ };
+ 
++static const struct zynq_platform_data versal_gpio_def = {
++	.label = "versal_gpio",
++	.quirks = GPIO_QUIRK_VERSAL,
++	.ngpio = 58,
++	.max_bank = VERSAL_GPIO_MAX_BANK,
++	.bank_min[0] = 0,
++	.bank_max[0] = 25, /* 0 to 25 are connected to MIOs (26 pins) */
++	.bank_min[3] = 26,
++	.bank_max[3] = 57, /* Bank 3 is connected to FMIOs (32 pins) */
++};
++
+ static const struct zynq_platform_data zynqmp_gpio_def = {
+ 	.label = "zynqmp_gpio",
+ 	.quirks = GPIO_QUIRK_DATA_RO_BUG,
+@@ -824,6 +846,7 @@ static const struct zynq_platform_data zynq_gpio_def = {
+ static const struct of_device_id zynq_gpio_of_match[] = {
+ 	{ .compatible = "xlnx,zynq-gpio-1.0", .data = &zynq_gpio_def },
+ 	{ .compatible = "xlnx,zynqmp-gpio-1.0", .data = &zynqmp_gpio_def },
++	{ .compatible = "xlnx,versal-gpio-1.0", .data = &versal_gpio_def },
+ 	{ /* end of table */ }
+ };
+ MODULE_DEVICE_TABLE(of, zynq_gpio_of_match);
+@@ -903,9 +926,12 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 		goto err_pm_dis;
+ 
+ 	/* disable interrupts for all banks */
+-	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++)
++	for (bank_num = 0; bank_num < gpio->p_data->max_bank; bank_num++) {
+ 		writel_relaxed(ZYNQ_GPIO_IXR_DISABLE_ALL, gpio->base_addr +
+ 			       ZYNQ_GPIO_INTDIS_OFFSET(bank_num));
++		if (gpio->p_data->quirks & GPIO_QUIRK_VERSAL)
++			bank_num = bank_num + VERSAL_UNUSED_BANKS;
++	}
+ 
+ 	/* Set up the GPIO irqchip */
+ 	girq = &chip->irq;
 -- 
 2.7.4
 
