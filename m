@@ -2,96 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0E71FD417
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 20:06:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2191FD9FA
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 01:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgFQSFt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 14:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36410 "EHLO
+        id S1726867AbgFQX6x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 19:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgFQSFs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 14:05:48 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30C3C061755
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 11:05:48 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id k11so3444000ejr.9
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 11:05:48 -0700 (PDT)
+        with ESMTP id S1726763AbgFQX6w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 19:58:52 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D3BC06174E;
+        Wed, 17 Jun 2020 16:58:51 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id q14so3055521qtr.9;
+        Wed, 17 Jun 2020 16:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=yDJt73mw7weaay3nFZ2M3lWsQoLaL8FRFjLnlYqrKi0=;
-        b=1pp7YrVnknNM8LvbhqviZfKRvt81ldvDhhGsjRDo3NxyU+iQtzVy5HnFYycmwRt3HZ
-         8kXQwp6KqzKKCgAEuL7X4AaMYTUL5AzZimCdK2+ZkoarZQ2nb7sWmI8waAMh73e544Of
-         8W4pFCivlUMvYydSxAexRpQ/u0omhoVZrom6sC8wqe/dPPd0dxgPnX/xRtAsMvzTWrSd
-         cg0tCOjc0RVArkFtzbAnZE9mxuTdIsZcoYhWwmRkxPXqIfrpKd+DqtY5XeQ1KWxNct41
-         NDB4ME9I5woyo8wnVcumDy9syS2m2y/JCFIKZLKUGf99feP4bI3cWv5/D8Aig4l5eZTi
-         xgCQ==
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=jGy72MS6gZKYHJ1vR4n9374W/R354yQ24JMckZsZxVk=;
+        b=PGiayrYQUm5naVpGdTdNvZd567DY9WtY7O7CabtImTleiqrdAcr8pVh6Sv4AFXyoHH
+         Z1FyPJh1BTRW4ErAB6BpIkOIFHOvQ+7wJzReTlFwhfqaepfK7RYkA76EojBOBLflqMJV
+         nW423Ijic5ljepsDOD6qlqVlHZ4oTUdbfsQAl4RE9bT6n8Eoc8EclMe431HznPklvRcY
+         6aI+CJs5L/elIztypPD8r54DTkxiXEgV2alGtlq676KmoGirw5V1UAeooiEjm2vCnKc5
+         Evg7MPT00OBwWPr9+y4rQsZVS9g9PYkVNfzHOh7kq/N5wni6QHEiHJ0jOTBJYmz2Gw7i
+         V2Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=yDJt73mw7weaay3nFZ2M3lWsQoLaL8FRFjLnlYqrKi0=;
-        b=KvsMWbwzmfpos7n3R6z7K98z/pi37UhUtTLd53ZXEuQkh4yIcF4YhPfaftBhT/c8hq
-         IHVqlsoEPBz7buLcQQQeoRLcJJZtAHvwNRU7AqOhVfYb4NpzJg7n9+k4jvVez3wwiWK0
-         k1EKfYZq5k4g01aRnunetE31hSr2XbM38p/Pz/nWEXl1vhGnMBkkkbRq0VTYlAUILAPp
-         7Bi3ej05IF+wYp6gfuvd1AwiDJArrEyutVLBPMraGoEKv0srUgo5xy5jSsmU6xc0QfwQ
-         L3fWAmow1Qyo7sJ+62gmYfmEXDSGXtMwRrmfH1N883JXOTqYlRpyke4A/AMJG3C36N+p
-         Ueqw==
-X-Gm-Message-State: AOAM5313JJY+6NsXkaoTPrP5E421dyzoLJukJNDQylBPpN33T8/gRkO0
-        l/h+J2/LcTKLBQVyx6fGU561JQ==
-X-Google-Smtp-Source: ABdhPJzMWK4g+FCDDXKT/NqpY8aSLOan2cBspKMr8Txzql3WBYoiuuE6IFAEwnRnzTYR8iJpw6uTrw==
-X-Received: by 2002:a17:906:7ad7:: with SMTP id k23mr336797ejo.439.1592417147096;
-        Wed, 17 Jun 2020 11:05:47 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id r6sm253016edq.44.2020.06.17.11.05.45
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=jGy72MS6gZKYHJ1vR4n9374W/R354yQ24JMckZsZxVk=;
+        b=WkYcWY96BwGSmUyDsT0V2kdGtfbs3eIRJSdmuCQdt5K/Eh2X2IWoyHXwYCBI+660YH
+         tZ9qbJq53cSWuFSL5ZD2OIAaV5eqKJYv7AhIZitVTrpjVUJSz8hN0gp8Skg1X/kmWzAF
+         drh15rhNv7WpE8ZYPFW+TifjMs9PGhSAzXGKQ0mX3oS6VOzVt7tA+VCWkbmcm47xISbW
+         iZWkuaC9HSXLCXQudMdf1QD9+foLDVlQPp0k1jBNI8qAnIyDeeS91leEerPJzzfITOI2
+         nXhM65PnIUca1H4HnTdLV0zQVrjlD+Qv/u+nuzQTWgqKPAN33Dtn05dK+Ty42WWL0XyC
+         k4eg==
+X-Gm-Message-State: AOAM533j3Efu1sbQJk7slvTwNlNUHK/sF5SP8iPdXicZT9/8jPmCG2Z5
+        NH9ux0Q0R4S8+8Kbalvtb/0=
+X-Google-Smtp-Source: ABdhPJyY8d28wSSZaDFBJ71V7MlCpga0K4kCntcxasPuh4S0OAA0LRGw8uC2Imyr866Fi8ug6MeYhQ==
+X-Received: by 2002:ac8:3682:: with SMTP id a2mr1771825qtc.137.1592438330707;
+        Wed, 17 Jun 2020 16:58:50 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:9c3:b47c:c995:4853])
+        by smtp.googlemail.com with ESMTPSA id f30sm1356774qtb.9.2020.06.17.16.58.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 11:05:46 -0700 (PDT)
-Date:   Wed, 17 Jun 2020 20:05:43 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     trivial@kernel.org, Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: single: fix function name in documentation
-Message-ID: <20200617180543.GA4186054@x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Wed, 17 Jun 2020 16:58:50 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] max732x_probe: remove redundant check
+Date:   Wed, 17 Jun 2020 19:58:19 -0400
+Message-Id: <20200617235831.25671-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Use the correct the function name in the documentation for
-"pcs_parse_one_pinctrl_entry()".
+The check : if (pdata) is redundant since its already
+dereferenced before: pdata->have_64bit_regs;
+pdata is not initialized after that hence remove 
+this null check.
 
-"smux_parse_one_pinctrl_entry()" appears to be an artifact from the
-development of a prior patch series ("simple pinmux driver") which
-transformed into pinctrl-single.
-
-Fixes: 8b8b091bf07f ("pinctrl: Add one-register-per-pin type device tree based pinctrl driver")
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
 ---
-v2:
-- add trivial@kernel.org
-- add Fixes: tag
-
- drivers/pinctrl/pinctrl-single.c | 2 +-
+ drivers/gpio/gpio-max732x.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index a9d511982780..02f677eb1d53 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -958,7 +958,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- }
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index 5fb0bcf31142..63472f308857 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -703,7 +703,7 @@ static int max732x_probe(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
  
- /**
-- * smux_parse_one_pinctrl_entry() - parses a device tree mux entry
-+ * pcs_parse_one_pinctrl_entry() - parses a device tree mux entry
-  * @pctldev: pin controller device
-  * @pcs: pinctrl driver instance
-  * @np: device node of the mux entry
+-	if (pdata && pdata->setup) {
++	if (pdata->setup) {
+ 		ret = pdata->setup(client, chip->gpio_chip.base,
+ 				chip->gpio_chip.ngpio, pdata->context);
+ 		if (ret < 0)
 -- 
-2.25.1
+2.17.1
+
