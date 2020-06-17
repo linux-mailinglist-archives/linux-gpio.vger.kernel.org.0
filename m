@@ -2,150 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0171FCEF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 15:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CCE71FD12D
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 17:40:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgFQN7k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 09:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgFQN7j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 09:59:39 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E6BC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 06:59:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c3so2427904wru.12
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 06:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=8bUOsv4bybXC/mQ3Hxos70tmB9QZ6NyHuFcpp79A5zQ=;
-        b=Go/+9ZBYINQ9VUzlG0iy74ta2eMH67TuPQd2a+TF/sBt1oDLA9sLMJqB62Ar8RWkxk
-         0sMcyp1Z7ffxSVOFPq5o3HwWy/I9Gh59I7ek3lR7TQUAdmVRbMN5vhgLZdSjm7TZVpRc
-         TdGlYfUFt0+J7VmicXsaaErvjTwwzLmZuLC32D1hsM6QcsOcTG+TMIZR7FggXwksyxZy
-         MHt6K4cZJCrH1l4XidjoTTls8O3VpQMIvnVQniuNSzyuG0wShjvJ5BWHOK6ct3vPBpHs
-         s+8qg0dX1W7EV24+vVAci6qja8ItjS68bPV8pFuU4Ro/QYk2MddfUPU6veYTM1dyC3tC
-         WiPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=8bUOsv4bybXC/mQ3Hxos70tmB9QZ6NyHuFcpp79A5zQ=;
-        b=WeDktQj7sHfWMTwOzZzoixMVlkeQP9kzvG4QZY9f3U3Y4wPLwuuaJie+dMqYCSGZ61
-         fvhIjABdl37TksoBv2XHAPV19Y7qrB8wStVJyOC8lb5f7rLzWuf/yQH7+1mvA1gw0ha0
-         TA0QFuIh21WA3zliX2P7lmASpIaOT6Nj24/4UCazHl9NUv975uSt+DmukcU8DWVVS1Dv
-         H1oHfa8f7tOvvbVOQogtn8KMCKXpL8KEsWQV+YOtQt5xtWcfOUEvPhmzoIiifnbTmtoO
-         W72spkmb/nmaSmi2onKRVOriqW8UnXFNRcjndFI4yNcI5OmeEgBMZpL3K9BRO/HRh4Tk
-         aXrw==
-X-Gm-Message-State: AOAM5315OTpse5PkrDpVGQ9/Btz0OfNoIilZx+pagUtorQCP+rqCstak
-        zDzUrFwENtypO6hseN9hH5Vi/Q==
-X-Google-Smtp-Source: ABdhPJyZoDgBWJusMEybO4nVCF1jKe4N/ywOBHUQE8w7mWB2J38E0OeLsvstMXvxyC+4R8rFG2dxyA==
-X-Received: by 2002:a5d:5112:: with SMTP id s18mr8474999wrt.160.1592402377338;
-        Wed, 17 Jun 2020 06:59:37 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id y132sm610312wmb.11.2020.06.17.06.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 06:59:36 -0700 (PDT)
-References: <20200610041329.12948-1-hhk7734@gmail.com> <1jo8prnk2x.fsf@starbuckisacylon.baylibre.com> <20200611053958.GA3687@home-desktop>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Hyeonki Hong <hhk7734@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>, khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] pinctrl: meson: fix drive strength register and bit calculation
-In-reply-to: <20200611053958.GA3687@home-desktop>
-Date:   Wed, 17 Jun 2020 15:59:35 +0200
-Message-ID: <1jeeqd3i9k.fsf@starbuckisacylon.baylibre.com>
+        id S1726893AbgFQPkt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 11:40:49 -0400
+Received: from mail.ionscale.com ([88.99.12.52]:41024 "EHLO mail.ionscale.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgFQPks (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 11:40:48 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.ionscale.com (Postfix) with ESMTP id 1EE90344598;
+        Wed, 17 Jun 2020 17:40:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ionscale.com;
+        s=201902; t=1592408446;
+        bh=t/9tjY9CD1mTAfaBXj00jlv8dFLtoGZUKbU2aXTAlgc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kLZ/lCdXt/h28zBco3YUXo3bAvylZsFfAtgeVcnbAZf76pmq19XRSnqmJ9du1KZTN
+         6DrnRETYnUrSeuRgcB41WjBrnKHiOCPJDvY17g/qGJyfOiAFVNAdt4cX1/F2TP9f1k
+         PP4+VcB2/gRGleGJfjefp3iAbdMWxyITKnxKAHupc/vjD5XAGLIwlZpCgUkN0GyD62
+         5JUQcMuGqIqfxzxPNwz1gk+JzUaicBAjFaa0IxygswZf0wnFfOCqXgb0SfIRfugA2G
+         5CExaFij60pgZohw+oTkt4xWG88bBy/oUbquZUzcvvtFw8d03ZWCdzylyNUZ5J/hAg
+         55Aj2eyviKwJQ==
+X-Virus-Scanned: Debian amavisd-new at mail.esenta.de
+Received: from mail.ionscale.com ([127.0.0.1])
+        by localhost (mail.ionscale.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eukPsNkeW-F1; Wed, 17 Jun 2020 17:40:44 +0200 (CEST)
+Received: from [192.168.179.22] (xdsl-212-8-140-212.nc.de [212.8.140.212])
+        by mail.ionscale.com (Postfix) with ESMTPSA id 2C4BC343413;
+        Wed, 17 Jun 2020 17:40:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ionscale.com;
+        s=201902; t=1592408444;
+        bh=t/9tjY9CD1mTAfaBXj00jlv8dFLtoGZUKbU2aXTAlgc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mLhzqfi8mt3xZa84/KvI35ZIT9giGUf5kqpJvpJ0IqSkcT6diZO615RawHlKdv413
+         uWW+nng3dMSTC/TmdLmckwh6nIsYk20z+fJjh0JR2Qu5LutBjLtiUQhQjoORC5hPmz
+         QbdlvkIyclF6LEsm2gTGwWKOC4ZNPwRaaOQkVVbBNsKAJF+ogiw5IICB2HTAfCS8wd
+         S9PsO96CFEPNUKBeNMzbc5Jtdy9li/O7D6AcaMcKy9n5l+3Wv5DzLzCULa5M7j+e2E
+         3WS9HQmdc91UlVvwzW/nL4IPVXRKS/GPorSdXRZatn35jmmabPw4DDNwapGhx1Df0v
+         nBYC7NkaAq9Vw==
+Subject: Re: [libgpiod] reading multiple lines after edge event
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+References: <a21e051a-805b-4c26-6f47-99f1654f222b@ionscale.com>
+ <20200617015717.GA16394@sol>
+From:   Gerrit Wyen <ml@ionscale.com>
+Message-ID: <2a50a3b7-c970-24b6-c77e-64e1362646f3@ionscale.com>
+Date:   Wed, 17 Jun 2020 17:40:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200617015717.GA16394@sol>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On Thu 11 Jun 2020 at 07:40, Hyeonki Hong <hhk7734@gmail.com> wrote:
-
-> On Wed, Jun 10, 2020 at 03:09:42PM +0200, Jerome Brunet wrote:
->> 
->> On Wed 10 Jun 2020 at 06:13, hhk7734@gmail.com wrote:
->> 
->> > From: Hyeonki Hong <hhk7734@gmail.com>
->> >
->> > If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
->> > registers. However, when register and bit were calculated, the first
->> > register defined in the bank was used, and the bit was calculated based
->> > on the first pin. This causes problems in setting the driving strength.
->> >
->> > Solved the problem by changing the bit using a mask and selecting the
->> > next register when the bit exceeds 15.
->> 
->> This fixes the case of GPIOX on g12 which goes up to 18 yes but the same
->> problem will happen again a if bank ever goes past 31 pins. In such case
->> the problem would apply to all reg types.
->> 
->> I would prefer if it was solved in a more generic fashion, like defining
->> a "stride" table with the values of each reg type. This table can common
->> to all aml SoCs for now but eventually it probably need to be SoC
->> specific.
->> 
->> This would allow to :
->> A) handle the case you are reporting in a generic (future proof) way
->> B) remove the weird "bit = bit << 1;" calc in place in the get/set of
->> the drive strengh pinconf
+Am 17.06.20 um 03:57 schrieb Kent Gibson:
+> On Mon, Jun 15, 2020 at 09:39:45PM +0200, Gerrit Wyen wrote:
+>> Hi,
+>>
+>> can someone explain the following behavior and whether it is a bug?
+>>
+>> When reading two lines at once via get_values() in response to an edge event
+>> I only receive the correct value for the first line (second line is high
+>> during the test but always reported as low).
+>> See example code below:
+>>
+>> lines.request({
+>>   “gpiotest”, ::gpiod::line_request::EVENT_BOTH_EDGES,
+>>   0,
+>> });
+>>
+>> auto events = lines.event_wait(::std::chrono::seconds(10));
+>> if (events) {
+>>   auto values = lines.get_values();
+>>   for (auto& it: values) {
+>>     ::std::cout << it;
+>>     }
+>>   }
+>>
+>> However reading the same lines via get_value() one by one after the event
+>> works correctly. Like so:
+>>
+>> for (auto& it: lines) { ::std::cout << it.get_value(); }
+>>
+>>
+>> Also, when reading them without waiting for the event with
+>> line_request::DIRECTION_INPUT  the correct values are returned by
+>> get_values() as well as by get_value().
+>>
+>> This behavior was tested on multiple different devices.
+>>
+>>
+> 
+> I have written some test cases and can confirm that behaviour
+> with libgpiod v1.5.
+> 
+> When you request the lines with DIRECTION_INPUT, libgpiod is using a
+> linehandle (which works), but with EVENT_BOTH_EDGES it is using
+> a collection of linevents (which doesn't).
+> 
+> I would consider that a bug - linehandles (lines without edge detection)
+> and lineevents (lines with edge detection) are treated differently
+> in the GPIO uAPI and libgpiod should be hiding that from you - and is
+> failing to do that.
+> 
+> The issue here is that the underlying function that retrieves the values,
+> gpiod_line_get_value_bulk, assumes it is dealing with a linehandle
+> that can be read in bulk by the kernel, not a collection of lineevents
+> that must be read individually, so it is only getting the value of the
+> first line in the set.  It should be getting the event lines
+> individually, as you are, and collecting those values into the response.
+> 
+> Until there is a fix, the workaround is to read the event lines
+> individually - as you have already discovered.
+> 
+> Cheers,
+> Kent.
 >
-> If all amlogic SoC has same register style, I think the code below is fine.
->
-> static const unsigned int meson_bit_strides[] = {
-> 	0, 0, 0, 0, 0, 1, 0
-> };
 
- the table above is the shift, not the stride.
- Maybe 'width' is a better description
- I would prefer if it was { 1, 1, 1, 1, 1, 2, 1 } and adjust the caculation
+Thanks a lot for the quick response.
+I applied your patch and it fixed the issue.
 
-A part from this, your proposition is exactly what I meant :) Thx
-
->
-> static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
-> 				   enum meson_reg_type reg_type,
-> 				   unsigned int *reg, unsigned int *bit)
-> {
-> 	struct meson_reg_desc *desc = &bank->regs[reg_type];
->
-> 	*bit = (desc->bit + pin - bank->first) << meson_bit_strides[reg_type];
-> 	*reg = (desc->reg + (*bit / 32)) * 4;
-> 	*bit &= 0x1f;
-> }
->
-> How about this?
->
->> >
->> > Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
->> > ---
->> >  drivers/pinctrl/meson/pinctrl-meson.c | 7 +++++++
->> >  1 file changed, 7 insertions(+)
->> >
->> > diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->> > index bbc919bef2bf..ef66239b7df5 100644
->> > --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> > +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> > @@ -98,6 +98,13 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
->> >
->> >  	*reg = desc->reg * 4;
->> >  	*bit = desc->bit + pin - bank->first;
->> > +
->> > +	if (reg_type == REG_DS) {
->> > +		if (*bit > 15) {
->> > +			*bit &= 0xf;
->> > +			*reg += 4;
->> > +		}
->> > +	}
->> >  }
->> >
->> >  static int meson_get_groups_count(struct pinctrl_dev *pcdev)
->> 
-
+best regards,
+Gerrit
