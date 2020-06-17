@@ -2,93 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 422151FC746
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 09:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5002E1FC7AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 09:40:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbgFQH1B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 03:27:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34907 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgFQH1A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 03:27:00 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k4so949246oik.2;
-        Wed, 17 Jun 2020 00:26:59 -0700 (PDT)
+        id S1726025AbgFQHkp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 03:40:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbgFQHkp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 03:40:45 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F01C061573;
+        Wed, 17 Jun 2020 00:40:45 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id p5so1211550ile.6;
+        Wed, 17 Jun 2020 00:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=JHfmeKqqt+QslrWvaGtda80Cg4S3Y6HmuFyLaNggFFw=;
+        b=gh3xc2V4aXL5yUN+zGT7RWRNEBR0HBX3deIFpZ8dYsREpXojS1s1CVFVMDKl/1S2yE
+         1T8WX1+kWzVin16rCRD1TYIQDHw5wc7U/FH2i/8Nk+bLwk6/fZiuOSs4BDQPyZtpFT26
+         x1Ctst9IWRIjThg90bJ+PvGlieo6Q3+cIkwj7W2+0Ctddbk7aq7OmS20MRxYfkra02pj
+         dXLjn0pP8ROFVkIe1OBN/hTxf3KaxTyL4OmHCoYybA6TPlNbwnzlqoxC3JLXV/T+LXrd
+         M3OH+txrubobi9YmmLPTb4JJk6zvwTAhztWiVAWou3ZKiTNfOGkrjoPI6D+aiQGxzdDW
+         X82g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kxyFmibDG5zSWuXtIhnkYe3H38OpnFHk954/p0T/5F0=;
-        b=L1RiL0nnX2c/NYlKiW5iz3AiMph1l9VRBoKIePm5qqptDOLYXDqPn5MMdix1GOKLW8
-         B1QVGhVm3Zie27Mty60B5BVESniQJfLX7NZ5GOzgRmM5t7BlZjOjUYJYXBHkj9LzsdoB
-         sVvF2OQBuDv8Kj/+tBor8qS/CafZUk1rLlKaGAocXbAiP/JVYP9JOX51MDbcB3Bo0NE1
-         0DjTgRWL4A2XOwYUWWL0blm3RYLUKlHV7tP4SX4tP/Zw1hI5WVMKm7GCS7syr3Hqfe9+
-         qlMIBvAXyd0GPQTreWucvnKHaeHvE+N0Kq5xKmqpm+yJ7Ruvom/zKACau4+DiJcBZQt9
-         F+bA==
-X-Gm-Message-State: AOAM533gPJoqyFc8YWCkqLjDdPcm6RawCZOmXEpZzQvhMkmfjdOF/ax2
-        +Npa5u1Hx3RY3XwEsF7ktQK6rT4gNw/2Z/uAbzM=
-X-Google-Smtp-Source: ABdhPJzo05G9Ws9f3MCK6JC8SiQnblUqmieP1YcvRAPGi0k/Moz8N8pFDuR5v0ZYCWq67OhTW6jbDP1dW5+bo2BUdhI=
-X-Received: by 2002:a54:4006:: with SMTP id x6mr6155596oie.148.1592378818667;
- Wed, 17 Jun 2020 00:26:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200605024919.56177-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20200605024919.56177-1-navid.emamdoost@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 17 Jun 2020 09:26:47 +0200
-Message-ID: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: handle pm_runtime_get_sync failure case
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=JHfmeKqqt+QslrWvaGtda80Cg4S3Y6HmuFyLaNggFFw=;
+        b=GhzxskxK8MVPzy935vXtQ7A73lGbM+5ozRU/BkXcc0BcmI8xSWV7a9gzRKXFEqGyam
+         C+NeUODpYYAoDbbfoRNWmNDlajV8Y+MsgFGo9V1C9w0+pGfFL4UGUTpu0dLzLfcBpu9f
+         zT6uKccURZw7h8haoMaVfv9xTee9AzAoYG+YgOS33/ZqhhaUN28fN5pKVhg0jWmnLaP/
+         y0PUhpiipECQoZJWZHqF0qkfzNHuMzV+/lnvMiHB0yrSAFisXfu3hPLj8NiXHVLVTOKI
+         YxgfHC0KI70qmGns7XK1OhmREep3YOLfxRKRz/94E5GLDCfnrgXhNc07CCZgqk27zv9Z
+         ab8g==
+X-Gm-Message-State: AOAM530dGFyE2xrc9Qt7X0ftYntV66syC3kADeCR/lrVl4YElc5EMbw8
+        4Jr5nLoiH0+g3wog5HwhoAk=
+X-Google-Smtp-Source: ABdhPJyAsrfP4SUFzookJbLZbg7GMAgBfzpWyMZOru1nuPolwYhvLVYFVyn1D+xNMPlQx9BTxDtwPg==
+X-Received: by 2002:a92:1bd2:: with SMTP id f79mr7248438ill.115.1592379644698;
+        Wed, 17 Jun 2020 00:40:44 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id w15sm10984885ilq.4.2020.06.17.00.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 00:40:44 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu,
+        mccamant@cs.umn.edu, geert@linux-m68k.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH v2] gpio: rcar: handle pm_runtime_get_sync failure case
+Date:   Wed, 17 Jun 2020 02:40:23 -0500
+Message-Id: <20200617074023.30356-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
+References: <CAMuHMdXHT9y09L19j2K=oQ1W+7x=SE7MEyjj6r1i=DPcokvWzg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Navid,
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-On Fri, Jun 5, 2020 at 4:50 AM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
-> Calling pm_runtime_get_sync increments the counter even in case of
-> failure, causing incorrect ref count. Call pm_runtime_put if
-> pm_runtime_get_sync fails.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+Changes in v2:
+	- use pm_runtime_put_noidle
+---
+ drivers/gpio/gpio-rcar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks for your patch!
-
-> --- a/drivers/gpio/gpio-rcar.c
-> +++ b/drivers/gpio/gpio-rcar.c
-> @@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
->         int error;
->
->         error = pm_runtime_get_sync(p->dev);
-> -       if (error < 0)
-> +       if (error < 0) {
-> +               pm_runtime_put(p->dev);
-
-As per [1], I would like to see a call to pm_runtime_put_noidle() instead.
-
-[1] http://lore.kernel.org/r/CAJZ5v0i87NGcy9+kxubScdPDyByr8ypQWcGgBFn+V-wDd69BHQ@mail.gmail.com
-
->                 return error;
-> +       }
->
->         error = pinctrl_gpio_request(chip->base + offset);
->         if (error)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 7284473c9fe3..8fb9079a1d60 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -250,8 +250,10 @@ static int gpio_rcar_request(struct gpio_chip *chip, unsigned offset)
+ 	int error;
+ 
+ 	error = pm_runtime_get_sync(p->dev);
+-	if (error < 0)
++	if (error < 0) {
++		pm_runtime_put_noidle(p->dev);
+ 		return error;
++	}
+ 
+ 	error = pinctrl_gpio_request(chip->base + offset);
+ 	if (error)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
