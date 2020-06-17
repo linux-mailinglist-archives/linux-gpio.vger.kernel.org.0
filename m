@@ -2,94 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFDA71FCDA1
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 14:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E561FCDBB
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 14:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgFQMp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 08:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43034 "EHLO
+        id S1726454AbgFQMvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 08:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgFQMpz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 08:45:55 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7D7C06174E
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 05:45:54 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id i16so1338801qtr.7
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 05:45:54 -0700 (PDT)
+        with ESMTP id S1726211AbgFQMvb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 08:51:31 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E78C061755
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 05:51:31 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d128so1872166wmc.1
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jun 2020 05:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9m9WMv//OFprhV8dDd+RL+Fb+UKpc5RDoOswf9hLbyM=;
-        b=lHyHoc6D2D1qXoXyh3PWrOlhWDJcQtLlVds+1XKRT/uvoYbsmQ7fP+o4+BP4LQra1U
-         wfMcp99foUsufAY0Z6CrVDdzOoYI9VI+oEcH9L/30heyhXYYdrNGpHg1TNVCc9DIO4lz
-         1zhNIo4ybx1MBLtqGz/khmJuJ7+tDqMmN5CsYbiVnzs517UulXV0Qs3zR6Lm7g6bNRY7
-         UJyLpifegWbWGN2hnbKZ7vLAKRYFdh5amlL9XNUYvaEu1GcMJF9uSVYtfevHtGUDvydM
-         DeQDeuzpTjOyuJraRUybZ4Dp5NbfqmYLVk2UoJ3bUKj53ltrlornvKP+KLyB3fEwyp6W
-         2VVA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ZNdhT1O8ghdO/yxNE2LQXegJpujAjKndMu2bshp61pY=;
+        b=Ew4T1koEzWTfh6kAw3zMYNcj6AwfMdr4ZlA5IXWcaxvmkC1+nxXCuOJ0SrQjghwWGi
+         KTM2LqRlw3K7/ltixO5Dpdxp7XZMPc2TyyoOkuAE3NoVexXoprBwHTnR9CCznoIHyVwo
+         mTpLL3mKkCDs4EW5NVmhEY4z26UXGdGTE0JLiA0l++ZhXgowL7T3E9qAd6tA9Mr/82oC
+         S57SgZc+YHyQlYIN6WmBhA9ezPz7xMF/Fs9LbM6XlQvmek9tOyQwqVDPz1ohCFWVpuZw
+         4fyYZr1Tw/6fe8qVyjkwjzFziEvmC5kQNI7qSet6vYSuNuz+vtD1TkhignbGVONOuNj6
+         1zbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9m9WMv//OFprhV8dDd+RL+Fb+UKpc5RDoOswf9hLbyM=;
-        b=a2aV+RHB1Yd5VsRgx37UO5eCCJ3Og84Izw37Jy0mH8yh+6x2WzWhaj3w9MVrQJvQ0k
-         YMkY8EDXM5277iCM5+WAAKTkpw1b5JgRdKB8TLqQ2mjVfzOvpvbuqqohPnxAYJlIBwvU
-         ZSs8zrS+Spb49Xnge4uRZzYbYV5UwSD29bD8dqA6moJbrXP5Nk3t62JIJ9I21BYWVBnk
-         gAVE86RlAuFvT+AuOR0BoGYu5intdmlcFzxjNwGpawfMxMs+aicals1UrXr19dANSq/V
-         DkWWbC4qj7WBYXZoAY0aQXRy0LgbOKqdE0GjFWz8HiDLYmrXsVCEo4qeOUbc6icoUvns
-         L1Sg==
-X-Gm-Message-State: AOAM531hv0gjS3Ozvp6UNwdLCICdSFSouoNCZ8OlivQ0bS14TlG8lnUs
-        N7T+nu815pP6dWo4ftreMfaHdr1lz9s8161PYtYDBA==
-X-Google-Smtp-Source: ABdhPJwKcsCwJ+KpoW3d57io3EVSLoB9X7iRN2xdmkBbUlgFk8VUCtDFY4aSeG8RAbsgQuItF5S70UarV6ogqFMyoeU=
-X-Received: by 2002:ac8:23fb:: with SMTP id r56mr26765156qtr.197.1592397953774;
- Wed, 17 Jun 2020 05:45:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ZNdhT1O8ghdO/yxNE2LQXegJpujAjKndMu2bshp61pY=;
+        b=tJe+/HTT89El4jqjF76O/VBaVaaNMcJVioj5okhKRuKP+cgo8AKptyaXGg4mK+sexo
+         aJtVDbMszHJcK3/0nanjRhyQJXofCHJKZijYf7xaN/Gjdn1Gez2FU4NvnnxdtrTVYXmR
+         fl0WUr5EzhBGhgPe3t1lm0amIm79ANhxE4o1qdYZEsa9jSZ5/Q2H2CvOb0EJfcT0Grq+
+         R8L7lmZV9sLJRT/u1jG9FrQt7EvjY0E+Ms8EuCamQQ8G69naEh78iOMjfM982a3k1ua/
+         nqylr8Pk1AQ6dVUWhoy/+2c9FY+aKE8uTlme30SqpPXnhmnBEsX4y0syXgyNUk6mASLe
+         Zwxw==
+X-Gm-Message-State: AOAM531JDDkBkBMOkaIsZYizZ1oHL20CuxeWXlKopa31JsHZIBHTuPK+
+        ZTWtl/CaghaARFsuziqg+ptFBw==
+X-Google-Smtp-Source: ABdhPJwRxogohu9xenneWybyNGA7/KqI/GOgkdioUUMJWgbS1vIGiEVOGKiQyCD4pI7AhzvSycLzlg==
+X-Received: by 2002:a7b:cd06:: with SMTP id f6mr8357661wmj.8.1592398290140;
+        Wed, 17 Jun 2020 05:51:30 -0700 (PDT)
+Received: from dell ([2.27.167.65])
+        by smtp.gmail.com with ESMTPSA id b8sm33382379wrm.35.2020.06.17.05.51.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 05:51:29 -0700 (PDT)
+Date:   Wed, 17 Jun 2020 13:51:28 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v1 3/6] mfd: core: Propagate software node group to the
+ sub devices
+Message-ID: <20200617125128.GW2608702@dell>
+References: <20200608134300.76091-1-andriy.shevchenko@linux.intel.com>
+ <20200608134300.76091-4-andriy.shevchenko@linux.intel.com>
+ <20200608192524.GF4106@dell>
+ <20200609124000.GO2428291@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200617030639.27690-1-warthog618@gmail.com>
-In-Reply-To: <20200617030639.27690-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 17 Jun 2020 14:45:43 +0200
-Message-ID: <CAMpxmJUryMf5z9GzeH98emERFJ8ABn+v7A_KV=juCv65YhHeEQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 0/3] fix get_values for events
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>, ml@ionscale.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200609124000.GO2428291@smile.fi.intel.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=C5=9Br., 17 cze 2020 o 05:07 Kent Gibson <warthog618@gmail.com> napisa=C5=
-=82(a):
->
-> This patch series fixes getting the values of a bulk of lineevents.
->
-> The problem was reported by Gerrit Wyen <ml@ionscale.com>, using the
-> cxx bindings.  The first patch adds test cases to confirm the reported
-> behaviour with cxx.  The second adds corresponding tests for the
-> underlying gpiod_line_get_value_bulk with events.  The third fixes
-> gpiod_line_get_value_bulk so that it returns the correct values
-> for a bulk of events.
->
-> Kent Gibson (3):
->   bindings: cxx: tests: add tests for bulk events get_values
->   tests: event: add tests for gpiod_line_get_value_bulk events
->   core: fix gpiod_line_get_value_bulk for events
->
->  bindings/cxx/tests/tests-event.cpp |  36 +++++++++-
->  lib/core.c                         |  33 ++++++---
->  tests/tests-event.c                | 110 +++++++++++++++++++++++++++++
->  3 files changed, 169 insertions(+), 10 deletions(-)
->
->
-> base-commit: 2efb0075a7779fa61bfe01c40aa97f7d23a8e528
-> --
-> 2.27.0
->
+On Tue, 09 Jun 2020, Andy Shevchenko wrote:
 
-I applied the whole series to master and backported patch 3/3 to
-stable branches (v1.4.x and v1.5.x).
+> On Mon, Jun 08, 2020 at 08:25:24PM +0100, Lee Jones wrote:
+> > On Mon, 08 Jun 2020, Andy Shevchenko wrote:
+> > 
+> > > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > 
+> > > When ever device properties are supplied for a sub device, a software node
+> > > (fwnode) is actually created and then associated with that device. By allowing
+> > > the drivers to supply the complete software node group instead of just the
+> > > properties in it, the drivers can take advantage of the other features the
+> > > software nodes have on top of supplying the device properties.
+> > > 
+> > > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  drivers/mfd/mfd-core.c   | 31 +++++++++++++++++++++++++++----
+> > >  include/linux/mfd/core.h |  3 +++
+> > >  2 files changed, 30 insertions(+), 4 deletions(-)
+> > 
+> > I'm not sure a change to the API is justified presently (same does go
+> > for 'properties' really, but as it was only a couple of lines, it
+> > didn't seem too intrusive).
+> 
+> This is better and comprehensive API, but I heard you.
+> 
+> > My recommendation is to handle this in-house (i.e. locally in-driver)
+> > for now.
+> 
+> I think you understand that this is not gonna work (we need to attach fwnode
+> to the child device before it's registration.
+> 
+> > When (if) more users adopt the practice, then we should
+> > consider to draw down on line numbers and repetition and make it part
+> > of the API.
+> 
+> I briefly looked at the current state of affairs and found that properties are
+> used only for MFD LPSS driver. Would the conversion of that driver to swnodes
+> work for you?
+> 
+> Note, the long prospective is to get rid of platform_add_properties() API
+> completely.
 
-Thanks for a quick fix!
+That's a shame.  Do you plan on replacing it with something else?
 
-Bartosz
+MFD tends to only interact with the platform_device API, and even
+platform_device_add_properties() doesn't get involved in the nitty
+gritty of fwnodes.  Instead it acts as a pass-through straight to
+device_add_properties() which is where the magic happens.
+
+For this to be acceptable you would need to add support into
+platform_device i.e. platform_device_add_property_group() or some
+such.  I really do not want the MFD API to have knowledge about
+regarding the particulars i.e. software node registration, secondary
+fwnodes and the like.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
