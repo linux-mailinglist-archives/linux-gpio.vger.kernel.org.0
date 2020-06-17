@@ -2,149 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80A7B1FCAE3
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 12:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C8531FCC75
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jun 2020 13:37:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgFQK3v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 06:29:51 -0400
-Received: from mail-vi1eur05on2070.outbound.protection.outlook.com ([40.107.21.70]:6042
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        id S1726211AbgFQLho (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 07:37:44 -0400
+Received: from mail-bn7nam10on2058.outbound.protection.outlook.com ([40.107.92.58]:28293
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725901AbgFQK3v (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 06:29:51 -0400
+        id S1725901AbgFQLhn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 07:37:43 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XGJci70p00+tn6+VAvjnecTArPiaFtozMfEEybJPD9CmI7gBT6xuSFZQwcTaqqdMMPkYZukVUG/g2y135Udo51rYrB7dxKuuOl/jzl3R1x+FtyXHkcVmUguydkVwj+hax0HYs0tBcijjYYjVMSC4OwmoWXbk4Z9PUaT0zWIvmFnDJRTik7frD0sK8XPoDU8hcJPWZPT2oJ7xJja61CiH5syCLj5dY5Vxta73AHLgoB9jKultcULJ26WEk8LONoTFF026RtygQREYdteqmAO3rnlVRLkpkc3vrhcxc2sU/0hV/f1sX+ORSZcnzuvuR00ceCBITkJ+ba3AjNIeeE7NlA==
+ b=UT3LVo6mh+1OnWbVEo3OU3ef1lq3YhrziyRzM6V95PBiS8kv/xckuasQsRgw1qDmuozt+EhBuugjKsGpAaTja7aA9u4tEAmZ/T3nljvajtsEqaIJBckidJSQGmrXryjl9irxDP4cGtcrN8rEZC9XGYAzKrwMFRUFsZkEAfOuSAjEUAX/6l99Mo2CAuOwurf1QGxdyKw/Tvxm82JvocgMzjWtKb67pEIW4o9mvdQiCAs8ly+6UHeIVd6trotBEw/u1Dcdc9j5QljcrC0CB7E5lVcaXEUvqvF1vO+0sv64k6c/JvENl6nV3zcZ2v0C9oiK7KJ24IM3o0kMD94o+AlG5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VzNpslDNw3i8luGdWPE8oqB01iM3dIvnonWn8KpVxkc=;
- b=TQ8dlVA0CkXVd/pTfn6yrrHGtxFHsMQg/YWGYbZi9HQVUxzyIQAWixfZdmm3BJww06S32K3gTjRXKvGErcjukpZxUN+ux3fPTPyLxhtm9uD3E03jDOVCHdtZM4rXwq3oTJc0A6qsT1nv+C4Ay2Gf7WeSOufqNSoWANJGlJIMdMJxIb3hrA4l1S12rilCFQq6oVBTgJWaTZqIHOanCc3uJIcGje2TSzVd1ni0KFPS3rkyDgeGASrMhx4wvqx+bfU0D9DKOFIZkYd0xJ9FkquQ4FigJj+HguxCBy3nyptylQhsNDm9ZVBjC18lPlpLVmypTA7wJz4IC0FI1qQSoErtDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=kCLDLDK8GNAsRPQHb48AEdaj6H8+DPmwV6z5eKEpG6I=;
+ b=MwqPHBw5hAvITH8EMiUfdhWND8bbgAbM/6R+A+A8nyADOesnLPZsCn+MzyinatoHo0r5r0Yq9bDJEKsePEjFcbMUNT6iGpizJtiqR7G4xO9Pe4kJNqkCb5ts+tlAYdjb4LHwb49MR9/pOmd0m0U9DDLwrhWMRG0BUFwTBo4W4dtp5KrqszovH/PJzsHqBz8MYywE0+b+HuHGA4rMrL7uuCRdqSaqaeyIS2AgVFbkiz8CTwZviRozSK3Ldr35eVKaWwSPumMYHvPw45YpVMauyHC61QenMDOvTGFMKCdckefh8ymAUrA+6qxNS87NyIMdcqnioLaciCgdAWEpQ7FvcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VzNpslDNw3i8luGdWPE8oqB01iM3dIvnonWn8KpVxkc=;
- b=G52mDbmea64UD0LM5HEi9PitnTPjuesTIiUHPF1MnsX34FLu/ZVWTzQ//hHdUWFZVp+vnBWynRvpBcl4aKmnjSVRH0z/5tKPNMaSHjW54WhfvpkfjY/5O6DdIxlxvU1hhHXoZdveEERff3+b9oY5W1EX3DDvrmyoiGefcCfPR9k=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4022.eurprd04.prod.outlook.com (2603:10a6:209:42::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20; Wed, 17 Jun
- 2020 10:29:46 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
- 10:29:46 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
- as module
-Thread-Topic: [PATCH V5 1/9] pinctrl: imx: Support building SCU pinctrl driver
- as module
-Thread-Index: AQHWP+Xe3FoK7wvcIE2WhqslqxeLCKja/NXggAAZlYCAAQ64MIAABz+AgABRaxA=
-Date:   Wed, 17 Jun 2020 10:29:46 +0000
-Message-ID: <AM6PR04MB4966243E1116C43C595CDD47809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1591875295-19427-1-git-send-email-Anson.Huang@nxp.com>
- <1591875295-19427-2-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966C661D52B43E6938FCBF4809D0@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916610502199D90B4BFC5E3F59D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <AM6PR04MB49661AA8A25B73D04FFF6769809A0@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB3PR0402MB391687D9A9CFAAAEB3E4F236F59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB391687D9A9CFAAAEB3E4F236F59A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d263d2e5-0540-4c76-e1ac-08d812a95b8b
-x-ms-traffictypediagnostic: AM6PR04MB4022:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4022DBAC168E4FAE4ABF6021809A0@AM6PR04MB4022.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 04371797A5
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /uPBJuh2gESHczZV3FS+f6PkUeqgxCfLhP+iFxOLPqilNHkxqskaYACtpuqM6cq7qLGkVb7+IYMGF3cZxhXurqPL/iUrCwwi9bAdyEvBEb/vanOP2TkjYCJS41TX8Hi28XIfLycr74G+pWlXolQCWI63tQ1tkPlAEJvIloqLTRB7oQMme4UhR7/6ZyyBon/WABLwEH1eHfBAvEqnG2tLNh9rFBlzA7kFAvCT3G3visK6pasQlPwgYJpxjLodUJF3C3A7LNVDTsblMDrKjq9H66tsTYYspibX29to1BCzStQ2dQ0DQFCEf7D1wEoe4txoulpPIxL219XmbzFQZH18NJsFE/COpsME+D1hARBadA42KcgIxySa9GboxJCzbU1D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(4326008)(5660300002)(52536014)(86362001)(55016002)(9686003)(478600001)(44832011)(186003)(2906002)(26005)(71200400001)(316002)(66446008)(66946007)(64756008)(66476007)(66556008)(110136005)(76116006)(33656002)(7696005)(8676002)(8936002)(6506007)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hG1dJnAphRifZlJgS9sGqTO57H7mZhhO3AQUnmdvfDem5gtmJf19sjFUJRLsd+BmhG8vd0ojzLf1dPaqsw8Hpeqk7Yx+AWyK7qQ3MXQaaHyf+H48KQKmjT6nTZN2fGLis4cWzPqkq64ocOYIaOS1s4Y8wx9UQjs7ST8sjrTMgoaRGgZ1rK4g6G8+ubycUdd7JeKmRhTrogzVqD0gZLnB5umIGVLDaxNOjkJzuWDVFKb58wKSPXCK7hFMFhvX713SPv5eJncxfpahIlFWqESUvTa4WFB5rWyLxePGHURl6RGYOA006miWLDX7Yzqv4hVDiGsi1UpXXe+CR11qJdlzreil4qeszZ4lVUMJmHevpcft7Xcp0ghKviKR6Op6YMi/9K8wpm/xIFMp2H6nRApVXiWbeTpKqDFWWTlFi6lkIbeWUOEQq3+uKhmkGz9SBceYIBH0Ohf9Jek64Q41ZzOlr7qWzVay1n4RvIPKLuZHVDghawMvjdFDdhTQIM07pNfX
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ bh=kCLDLDK8GNAsRPQHb48AEdaj6H8+DPmwV6z5eKEpG6I=;
+ b=NapejguyG9tMc6I6yjXuUOuTDs3cNIb8vR0LNjCvV8OOH0Stc1ACaTjusY3x/08scuIENXUgrRGd+bkkn8eZCs2Xm1tCdrESnN/h6T6ZT/2CL3d+EWO4woGtWur7vG3YBf6rsURbCxX5khwrYFjNCp9xLo23S13q/FRHSzdZIks=
+Received: from SN4PR0701CA0014.namprd07.prod.outlook.com
+ (2603:10b6:803:28::24) by BYAPR02MB4264.namprd02.prod.outlook.com
+ (2603:10b6:a03:16::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
+ 2020 11:37:40 +0000
+Received: from SN1NAM02FT059.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:28:cafe::c1) by SN4PR0701CA0014.outlook.office365.com
+ (2603:10b6:803:28::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend
+ Transport; Wed, 17 Jun 2020 11:37:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT059.mail.protection.outlook.com (10.152.72.177) with Microsoft SMTP
+ Server id 15.20.3088.18 via Frontend Transport; Wed, 17 Jun 2020 11:37:39
+ +0000
+Received: from [149.199.38.66] (port=36024 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWMt-0001HX-5l; Wed, 17 Jun 2020 04:36:35 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWNv-0007Wp-Fz; Wed, 17 Jun 2020 04:37:39 -0700
+Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 05HBbUYo032503;
+        Wed, 17 Jun 2020 04:37:31 -0700
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1jlWNm-0007TR-FN; Wed, 17 Jun 2020 04:37:30 -0700
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        michal.simek@xilinx.com, shubhrajyoti.datta@xilinx.com,
+        sgoud@xilinx.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com
+Subject: [PATCH V4 0/7] gpio: zynq: Update on gpio-zynq driver
+Date:   Wed, 17 Jun 2020 17:07:20 +0530
+Message-Id: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(376002)(396003)(136003)(346002)(39860400002)(46966005)(83380400001)(316002)(81166007)(47076004)(8936002)(107886003)(26005)(8676002)(82740400003)(9786002)(478600001)(186003)(336012)(426003)(82310400002)(7696005)(4326008)(5660300002)(356005)(70206006)(70586007)(44832011)(15650500001)(36756003)(2616005)(2906002)(6636002)(6666004);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d263d2e5-0540-4c76-e1ac-08d812a95b8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2020 10:29:46.6822
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: c8bb0dac-2164-4458-89c0-08d812b2d745
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4264:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB4264DA3FE3428B6CE535CBD9AF9A0@BYAPR02MB4264.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:644;
+X-Forefront-PRVS: 04371797A5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +NxA606+esr0jqu+cZUech+mIMOIXjlheTV/P4iCUv2hABu87LIUEya+l4j2bu+/m9yyXIpGKC5qnhN4ODVd1BRrWmmwyoZMAwJyYl9p59K8/gU5ChkF3d881gdxXqEDCrxl1Ik40MXv/rbjzX9HxOtXcyVwj8gNMTuKeghSQ0XZIBf+vuXrrijSHkEpGqSyaPivmtFGzu8IN2/ye+pLhM/L8pFrL9UB7QzBYyXz4HvnqT9fADh7cry5Z9OaT2HRsz8W9ojwhJKQbm9yd/W3V6wvdoFpnNrqs0f5l5/3Of+VgzeWPoqpevU9wzi82B3Gc+0SSvw19jtKfCSidf+6xLzdLzD8vXkCZnii0pFIUXsgawj1bNwzwXOXMH8H0nKpGDzI03x3X2sesYwdw8rCrg==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 11:37:39.7982
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /N1LM/s97LOp87amvDmqy6kCCc4AGXzfbLku5EIicKgck8w8lqr/KgYyHI1EG4HNsqt7hIhDFYpFzAoXY3opjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4022
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8bb0dac-2164-4458-89c0-08d812b2d745
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4264
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Wy4uLl0NCg0KPiA+ID4gPiA+IC0gKiBAZGV2OiBhIHBvaW50ZXIgYmFjayB0byBjb250YWluaW5n
-IGRldmljZQ0KPiA+ID4gPiA+IC0gKiBAYmFzZTogdGhlIG9mZnNldCB0byB0aGUgY29udHJvbGxl
-ciBpbiB2aXJ0dWFsIG1lbW9yeQ0KPiA+ID4gPiA+IC0gKi8NCj4gPiA+ID4gPiAtc3RydWN0IGlt
-eF9waW5jdHJsIHsNCj4gPiA+ID4gPiAtCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiA+ID4gPiAt
-CXN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bDsNCj4gPiA+ID4gPiAtCXZvaWQgX19pb21lbSAqYmFz
-ZTsNCj4gPiA+ID4gPiAtCXZvaWQgX19pb21lbSAqaW5wdXRfc2VsX2Jhc2U7DQo+ID4gPiA+ID4g
-LQljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmluZm87DQo+ID4gPiA+ID4gLQlz
-dHJ1Y3QgaW14X3Bpbl9yZWcgKnBpbl9yZWdzOw0KPiA+ID4gPiA+IC0JdW5zaWduZWQgaW50IGdy
-b3VwX2luZGV4Ow0KPiA+ID4gPiA+IC0Jc3RydWN0IG11dGV4IG11dGV4Ow0KPiA+ID4gPiA+ICsJ
-aW50ICgqaW14X3BpbmNvbmZfZ2V0KShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHVuc2ln
-bmVkDQo+ID4gPiA+ID4gK2ludA0KPiA+IHBpbl9pZCwNCj4gPiA+ID4gPiArCQkJICAgICAgIHVu
-c2lnbmVkIGxvbmcgKmNvbmZpZyk7DQo+ID4gPiA+ID4gKwlpbnQgKCppbXhfcGluY29uZl9zZXQp
-KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwgdW5zaWduZWQNCj4gPiA+ID4gPiAraW50DQo+
-ID4gcGluX2lkLA0KPiA+ID4gPiA+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyAqY29uZmlncywg
-dW5zaWduZWQgaW50IG51bV9jb25maWdzKTsNCj4gPiA+ID4gPiArCXZvaWQgKCppbXhfcGluY3Ry
-bF9wYXJzZV9waW4pKHN0cnVjdCBpbXhfcGluY3RybCAqaXBjdGwsDQo+ID4gPiA+ID4gKwkJCQkg
-ICAgICB1bnNpZ25lZCBpbnQgKnBpbl9pZCwgc3RydWN0IGlteF9waW4gKnBpbiwNCj4gPiA+ID4g
-PiArCQkJCSAgICAgIGNvbnN0IF9fYmUzMiAqKmxpc3RfcCk7DQo+ID4gPiA+DQo+ID4gPiA+IENv
-bXBhcmVkIHdpdGggVjQsIHRoaXMgbmV3IGltcGxlbWVudGF0aW9uIHNlZW1zIGEgYml0IGNvbXBs
-aWNhdGVkLg0KPiA+ID4gPiBJIGd1ZXNzIHdlIGRvbid0IGhhdmUgdG8gc3VwcG9ydCBQSU5DVFJM
-X0lNWD15ICYmDQo+ID4gPiA+IFBJTkNUUkxfSU1YX1NDVT1tIGNhc2UuDQo+ID4gPiA+IFdpbGwg
-dGhhdCBtYWtlIHRoZSBzdXBwb3J0IGEgYml0IGVhc2llcj8NCj4gPiA+DQo+ID4gPiBJIGFtIE5P
-VCBzdXJlIGlmIHN1Y2ggc2NlbmFyaW8gbWVldHMgcmVxdWlyZW1lbnQsIHRoZSBmYWN0IGlzIG90
-aGVyDQo+ID4gPiBub24taS5NWCBTb0MgYWxzbyBzZWxlY3RzIHRoZSBQSU5DVFJMX0lNWCB3aGlj
-aCB3aWxsIG1ha2UNCj4gPiA+IFBJTkNUUkxfSU1YPXksIHNvIGluIHRoYXQgY2FzZSwgZXZlbiBh
-bGwgaS5NWCBQSU5DVFJMIGRyaXZlcnMgYXJlDQo+ID4gPiBzZXQgdG8gbW9kdWxlLCBpdCB3aWxs
-IHN0aWxsIGhhdmUgUElOQ1RSTF9JTVg9eSBhbmQNCj4gPiA+IFBJTkNUUkxfSU1YX1NDVT1tLCB0
-aGVuIGJ1aWxkIHdpbGwgZmFpbC4gQW5kIEkgYmVsaWV2ZSB0aGUgYXV0bw0KPiA+ID4gYnVpbGQg
-dGVzdCBtYXkgYWxzbyBjb3ZlciBzdWNoIGNhc2UgYW5kIGJ1aWxkIGVycm9yIHdpbGwgYmUNCj4g
-PiA+IHJlcG9ydGVkLCB0aGF0IGlzIHdoeSB0aGlzIGNoYW5nZSBpcyBuZWVkZWQgYW5kIHdpdGgg
-dGhpcyBjaGFuZ2UsDQo+ID4gPiBmdW5jdGlvbiBpcyBOT1QgaW1wYWN0ZWQsDQo+ID4gPg0KPiA+
-DQo+ID4gSXMgaXQgcG9zc2libGUgdG8gYWRkIHNvbWUgY29uc3RyYWluc3QgdG8gbWFrZSBzdXJl
-IFBJTkNUUkxfSU1YX1NDVQ0KPiA+IHZhbHVlIGlzIHRoZSBzYW1lIGFzIFBJTkNUUkxfSU1YPyBP
-ciBjb21iaW5lIHRoZW0gaW50byBvbmU/DQo+ID4gSWYgd2UgY2FuIGRvIHRoYXQsIGl0IG1heSBl
-YXNlIHRoZSBpbXBsZW1lbnRhdGlvbiBhIGxvdCBhbmQgbWFrZSB0aGUNCj4gPiBjb2RlIHN0aWxs
-IGNsZWFuLg0KPiANCj4gQ29tYmluZSBQSU5DVFJMX0lNWF9TQ1UgYW5kIFBJTkNUUkxfSU1YIGlz
-IE5PVCBtYWtpbmcgc2Vuc2UsIHNpbmNlIGZvcg0KPiBub24tU0NVIHBsYXRmb3JtcywgUElOQ1RS
-TF9JTVhfU0NVIGlzIE5PVCBuZWNlc3NhcnksIHRvIG1ha2UNCj4gUElOQ1RSTF9JTVhfU0NVIHNh
-bWUgdmFsdWUgYXMgUElOQ1RSTF9JTVgsIHVubGVzcyBtYWtlICJzZWxlY3QNCj4gUElOQ1RSTF9J
-TVhfU0NVIiBpbiBQSU5DVFJMX0lNWCwgYnV0IHRoYXQgaXMgYWxzbyBOT1QgbWFraW5nIHNlbnNl
-LA0KPiBiZWNhdXNlLCBQSU5DVFJMX0lNWCBkb2VzIE5PVCBkZXBlbmRzIG9uIFBJTkNUUkxfSU1Y
-X1NDVSBhdCBhbGwuDQo+IA0KDQpQSU5DVFJMX0lNWF9TQ1UgY291bGQgYmUgY29uZGl0aW9uYWxs
-eSBjb21waWxlZC4gDQpTb21ldGhpbmcgbGlrZSBmb2xsb3dzOg0Kb2JqLSQoQ09ORklHX1BJTkNU
-UkxfSU1YKSArPSBwaW5jdHJsLWlteC1jb3JlLm8NCnBpbmN0cmwtaW14LWNvcmUteSA6PSBwaW5j
-dHJsLWlteC5vDQpwaW5jdHJsLWlteC1jb3JlLSQoQ09ORklHX1BJTkNUUkxfSU1YX1NDVSkgKz0g
-cGluY3RybC1zY3Uubw0KDQpDYW4geW91IHRyeSBpZiB0aGlzIHdheSBjb3VsZCB3b3JrPw0KDQpS
-ZWdhcmRzDQpBaXNoZW5nDQoNCj4gVGhlIGNoYW5nZSBpcyBOT1QgdGhhdCBiaWcgSU1PLCBhbmQg
-bm8gYmV0dGVyIGlkZWEgaW4gbXkgbWluZCwgaGF2ZSB0cmllZCB0aGF0DQo+IGluIHByZXZpb3Vz
-IHZlcnNpb25zIG9mIHBhdGNoIHNlcmllcy4NCj4gDQo+IEFuc29uDQo=
+This patch series does the following:
+-protect direction in/out with a spinlock
+-Add binding for Versal gpio
+-Add binding for pmc gpio node
+-Add Versal support
+-Disable the irq if it is not a wakeup source
+-Add pmc gpio support
+-Remove error prints in EPROBE_DEFER
+
+---
+Changes in V2:
+- In previous series [PATCH 1/8] already applied on "linux-next".
+- Fixed checkpatch warning for spinlock description. 
+- Added description for Versal PS_GPIO and PMC_GPIO.
+Changes in V3:
+- Updated commit description for PATCH 4 and 6.
+Changes in V4:
+- Updated commit description for PATCH 2 and 3.
+---
+
+Glenn Langedock (1):
+  gpio: zynq: protect direction in/out with a spinlock
+
+Shubhrajyoti Datta (6):
+  dt-bindings: gpio: Add binding for Versal gpio
+  devicetree-binding: Add pmc gpio node
+  gpio: zynq: Add Versal support
+  gpio: zynq: Disable the irq if it is not a wakeup source
+  gpio: zynq: Add pmc gpio support
+  gpio: zynq: Remove error prints in EPROBE_DEFER
+
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+ drivers/gpio/gpio-zynq.c                           | 66 +++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
