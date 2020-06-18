@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7560C1FDBD7
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 03:15:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29AF1FDCFC
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 03:24:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgFRBPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 21:15:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        id S1730902AbgFRBXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 21:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgFRBPD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:15:03 -0400
+        id S1730898AbgFRBXA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:23:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA9E2193E;
-        Thu, 18 Jun 2020 01:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CF220776;
+        Thu, 18 Jun 2020 01:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442903;
-        bh=VhUP5N88YIUjI9qfkLVrMa+Aua/Ag0rIGQN16DXGFuk=;
+        s=default; t=1592443379;
+        bh=Zn29QQOI0ycuXRLcrGs67DF+14r1u6Z7gLuIOVr4LUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJ3JO3qMY2Bo13/tdeaXNsHqoyGamxk4Ar8DzTf0P564z4jYmD9VQl2pNBdBUyLgV
-         4nH4TH2QmDRONqRdhU65Xtcojvv0zEXrT+Rm0oE6Ahi3piwGlFccFwMLeKxeQUy+7W
-         xpLP7cydzIr2C6HXNAyNqtw9IhF9yiTdUlL4ZQaY=
+        b=BuOPFnHTG4n7cHjkiplawLdPC8nODZBefayj1mb6d5l9BFNbyaQi/QXV2YO6ncv6Q
+         OCtJIa94FK0OxKNePAefzGa/syCeD1o2zMZ1grzuziS1AYJObo5TRi5oGsZvtiyp6Z
+         /hBd3D1nlgaYTH3CMzCJ1lEuUy9lsXjxTG0p1llc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 323/388] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
-Date:   Wed, 17 Jun 2020 21:07:00 -0400
-Message-Id: <20200618010805.600873-323-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 031/172] gpio: dwapb: Call acpi_gpiochip_free_interrupts() on GPIO chip de-registration
+Date:   Wed, 17 Jun 2020 21:19:57 -0400
+Message-Id: <20200618012218.607130-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
-References: <20200618010805.600873-1-sashal@kernel.org>
+In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
+References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,36 +44,75 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit 494a94e38dcf62543a32a4424d646ff80b4b28bd ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+Add missed acpi_gpiochip_free_interrupts() call when unregistering ports.
 
-Axe a now unneeded 'pinctrl_unregister()'.
+While at it, drop extra check to call acpi_gpiochip_request_interrupts().
+There is no need to have an additional check to call
+acpi_gpiochip_request_interrupts(). Even without any interrupts available
+the registered ACPI Event handlers can be useful for debugging purposes.
 
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
+Fixes: e6cb3486f5a1 ("gpio: dwapb: add gpio-signaled acpi event support")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Link: https://lore.kernel.org/r/20200519131233.59032-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpio/gpio-dwapb.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index c00d0022d311..421f7d1886e5 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+index 044888fd96a1..68db0033d158 100644
+--- a/drivers/gpio/gpio-dwapb.c
++++ b/drivers/gpio/gpio-dwapb.c
+@@ -535,26 +535,33 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+ 		dwapb_configure_irqs(gpio, port, pp);
  
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
--		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
- 	}
+ 	err = gpiochip_add_data(&port->gc, port);
+-	if (err)
++	if (err) {
+ 		dev_err(gpio->dev, "failed to register gpiochip for port%d\n",
+ 			port->idx);
+-	else
+-		port->is_registered = true;
++		return err;
++	}
+ 
+ 	/* Add GPIO-signaled ACPI event support */
+-	if (pp->has_irq)
+-		acpi_gpiochip_request_interrupts(&port->gc);
++	acpi_gpiochip_request_interrupts(&port->gc);
+ 
+-	return err;
++	port->is_registered = true;
++
++	return 0;
+ }
+ 
+ static void dwapb_gpio_unregister(struct dwapb_gpio *gpio)
+ {
+ 	unsigned int m;
+ 
+-	for (m = 0; m < gpio->nr_ports; ++m)
+-		if (gpio->ports[m].is_registered)
+-			gpiochip_remove(&gpio->ports[m].gc);
++	for (m = 0; m < gpio->nr_ports; ++m) {
++		struct dwapb_gpio_port *port = &gpio->ports[m];
++
++		if (!port->is_registered)
++			continue;
++
++		acpi_gpiochip_free_interrupts(&port->gc);
++		gpiochip_remove(&port->gc);
++	}
+ }
+ 
+ static struct dwapb_platform_data *
 -- 
 2.25.1
 
