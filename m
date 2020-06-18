@@ -2,41 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6DD1FE2A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:03:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DD551FE26A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbgFRCDJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 22:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
+        id S1731138AbgFRCB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 22:01:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731027AbgFRBXj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:23:39 -0400
+        id S1731134AbgFRBYJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:24:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F104F214DB;
-        Thu, 18 Jun 2020 01:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0B921974;
+        Thu, 18 Jun 2020 01:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443418;
-        bh=OUWjkozM3sAKULP9nNpNr0tWDlusZ8MW5m5GDzWq7TU=;
+        s=default; t=1592443448;
+        bh=T8yuiFplhkHxiUAjaifpVYPPuG9x26CJk7BTd3i7XHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H8v4tBTmjpijQbMWUMxmBd3LG/DdNlmdT6IOoUnlEds+vF41JYMnZjEop933Ghhzf
-         aLXduPFGQILOdg8m9bwIBrez8aUj34SJ4dOmv/LaVsheCgNKBnadkLz0fRQN/2G4Qp
-         MJSGLij8wN1nh3KHOewlJGMNF/rYY9yy9pxkv9Yg=
+        b=EvfamgsdMcDi45MjCdx80Lf9b7CLDIZdS562dVqnNqVrcEilDdHcPOuU4EtqzLkJG
+         9dNHPfLYOFpWdyA4JN74Iet10054aZJ8fSfk/IxmoMjp5uVEfzHxOzxp6rx/2p7zeD
+         516EyGBWILz9/0BxcXNDZeocOvtQEGjCzN9bu99w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 060/172] pinctrl: rza1: Fix wrong array assignment of rza1l_swio_entries
-Date:   Wed, 17 Jun 2020 21:20:26 -0400
-Message-Id: <20200618012218.607130-60-sashal@kernel.org>
+Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 084/172] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
+Date:   Wed, 17 Jun 2020 21:20:50 -0400
+Message-Id: <20200618012218.607130-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
 References: <20200618012218.607130-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -45,43 +46,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit 4b4e8e93eccc2abc4209fe226ec89e7fbe9f3c61 ]
+[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
 
-The rza1l_swio_entries referred to the wrong array rza1h_swio_pins,
-which was intended to be rza1l_swio_pins. So let's fix it.
+In function rockchip_dt_node_to_map, a new_map variable is
+allocated by:
 
-This is detected by the following gcc warning:
+new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+		       GFP_KERNEL);
 
-drivers/pinctrl/pinctrl-rza1.c:401:35: warning: ‘rza1l_swio_pins’
-defined but not used [-Wunused-const-variable=]
- static const struct rza1_swio_pin rza1l_swio_pins[] = {
-                                   ^~~~~~~~~~~~~~~
+This uses devres and attaches new_map to the pinctrl driver.
+This cause a leak since new_map is not released when the probed
+driver is removed. Fix it by using kcalloc to allocate new_map
+and free it in `rockchip_dt_free_map`
 
-Fixes: 039bc58e73b77723 ("pinctrl: rza1: Add support for RZ/A1L")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Link: https://lore.kernel.org/r/20200417111604.19143-1-yanaijie@huawei.com
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rza1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index f76edf664539..021c19eaf12d 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -421,7 +421,7 @@ static const struct rza1_bidir_entry rza1l_bidir_entries[RZA1_NPORTS] = {
- };
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 8d83817935da..005df24f5b3f 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -507,8 +507,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	}
  
- static const struct rza1_swio_entry rza1l_swio_entries[] = {
--	[0] = { ARRAY_SIZE(rza1h_swio_pins), rza1h_swio_pins },
-+	[0] = { ARRAY_SIZE(rza1l_swio_pins), rza1l_swio_pins },
- };
+ 	map_num += grp->npins;
+-	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
+-								GFP_KERNEL);
++
++	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
+ 	if (!new_map)
+ 		return -ENOMEM;
  
- /* RZ/A1L (r7s72102x) pinmux flags table */
+@@ -518,7 +518,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	/* create mux map */
+ 	parent = of_get_parent(np);
+ 	if (!parent) {
+-		devm_kfree(pctldev->dev, new_map);
++		kfree(new_map);
+ 		return -EINVAL;
+ 	}
+ 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
+@@ -545,6 +545,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
+ static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
+ 				    struct pinctrl_map *map, unsigned num_maps)
+ {
++	kfree(map);
+ }
+ 
+ static const struct pinctrl_ops rockchip_pctrl_ops = {
 -- 
 2.25.1
 
