@@ -2,129 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B98A1FE929
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E2F91FEC89
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 09:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgFRC73 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 22:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726906AbgFRC72 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Jun 2020 22:59:28 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75975C06174E;
-        Wed, 17 Jun 2020 19:59:28 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id r18so2231659pgk.11;
-        Wed, 17 Jun 2020 19:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=c+XBBSUJkbuSD8EzkachzbNQFLmI3baAWx8Tvz5SX9A=;
-        b=ce2KN786GgRadse5m9yAoPlwSIL8pcph73/I//OEEO+UR3c+knDGQIQwQEMWusaoxR
-         c7pEFVCQBTemK2twFjbMAprzclbJfSXlvxSwZEDK4NJZbg4jFJzsidCoszJm1akXutOb
-         rBeEVOVOQRD8f6GCeckk6oBAjBoZwbCRaB99odubFDPTUCGyqe/N/9ls/xI2juTMYmth
-         R+yaoAX6CqZQuUpynGvQ0vfBb4G7TFvCQGydsdX/oML2LpmHd6zFr82rEBqNOzbBhiZa
-         AmwIQHb0fcd6R+jRtfplgvhLANX2HEniV8Nl6XyjIqgSE4/CqjpI5+DO9ALOVronKyJh
-         SOjg==
+        id S1727987AbgFRHdp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Jun 2020 03:33:45 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:47028 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbgFRHdo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jun 2020 03:33:44 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m26so2848295lfo.13;
+        Thu, 18 Jun 2020 00:33:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=c+XBBSUJkbuSD8EzkachzbNQFLmI3baAWx8Tvz5SX9A=;
-        b=nlawB26dnHh8vgP3ywCP5tCNYY83JN5bqmeTudA1nEwUPS1MIyvu69BQPhANhFGxV7
-         6iikmWkHeMA6OoPJgnznR90YU1KBSIOrXbWB14YDXX0OeP7JwiuqfTNzJwWjPPHF0/3z
-         0nPqZCp+CLYjVDSOoImT9nnGzyh6lNWv+urywyLIGcIQ8tE5xl8zbV3vuG8B0TwBo6Wg
-         tH1rHgNUQzfW+G5kxPfJ07J0mb9dktfNIElRwB90tzFkl1gOWUNoZ3J2Q02hbgMxHR1A
-         PKHIylFdf6VmwgIjpxVbm243tKVoMgepkp4j1bTaMSZpSvkAD8s/9Y97noINQBHPzWNF
-         7mVg==
-X-Gm-Message-State: AOAM531fx4Dtwca95lJMwcwQSZ38/wvCeAh9L20vgEyPh5wsQx7QIJR6
-        NHWGxCzHO2NFEZ44VTaFH9rUyv+UMBeKP86e
-X-Google-Smtp-Source: ABdhPJxvua+/GIpND09OviVKdksZLCWgeWga/Ef+nBwx2A0d5tunbidPFHBYJKkdl+DxEaSXQcryAA==
-X-Received: by 2002:a62:3582:: with SMTP id c124mr1694339pfa.298.1592449167930;
-        Wed, 17 Jun 2020 19:59:27 -0700 (PDT)
-Received: from home-desktop ([114.204.138.55])
-        by smtp.gmail.com with ESMTPSA id j184sm1094045pfg.131.2020.06.17.19.59.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Jun 2020 19:59:27 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 11:59:22 +0900
-From:   Hyeonki Hong <hhk7734@gmail.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>, khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH] [v2] pinctrl: meson: fix drive strength register and bit
- calculation
-Message-ID: <20200618025916.GA19368@home-desktop>
+        bh=V2LuQUDFIIF5jl6wVGVy4hB7QYtw6Q/zQUKKaqApImE=;
+        b=l7AhaIAlb31RPWcK/9tcQ8cCMaCr/3LP5PBkT5uoCdpwUGNXsYGHLxL4V6kjtlFius
+         BegrRLPAGfK0LQqFWGIc6j3/lk4xbJ/hSiTlKHQzbCQ3uX+Og3+YdiQpVMj7yUoHm6ob
+         05L6JFD9YMCv7k2G7WUBZ3T6aDDSwL1nbPitw3U8Qu9ff3fQZv69b/XFBzNZPUGtBkfD
+         c7ERRjAioiCDwkX0xiWAUZ81dCkVkJchWHTbPAgjiigx5Qjqh8AXme+0i1BVQzP8Coep
+         pYS6ij0tOC9yYH9EK+QLm9gcO5LjaypngiAid4BG4+Cq5i47t7x2YVVrDDywJI/Vf/gF
+         CL4Q==
+X-Gm-Message-State: AOAM530oghh3svvxFpJTtD1uVs01DzPJpq1+o2zNOcy79Hi+nTQnB3tB
+        mDzGqnLj8gVIfBjdKVzzc1M=
+X-Google-Smtp-Source: ABdhPJzhQPwQhZT7ChJeJQe7xVV2nqchjeSaUQ5xsLwlnbL7h83g4iEGu5DcJ3yDKPIb2+wZBqaZmw==
+X-Received: by 2002:a19:8252:: with SMTP id e79mr1610797lfd.103.1592465621241;
+        Thu, 18 Jun 2020 00:33:41 -0700 (PDT)
+Received: from localhost.localdomain (62-78-225-252.bb.dnainternet.fi. [62.78.225.252])
+        by smtp.gmail.com with ESMTPSA id u13sm453118ljo.75.2020.06.18.00.33.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 00:33:40 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 10:33:31 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Message-ID: <20200618073331.GA9403@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
-or more registers. However, when register and bit were calculated, the
-first register defined in the bank was used, and the bit was calculated
-based on the first pin. This causes problems in setting the driving
-strength.
+Add entry for maintaining power management IC drivers for ROHM
+BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
 
-The following method was used to solve this problem:
-A bit is calculated first using predefined strides. Then, If the bit is
-32 or more, the register is changed by the quotient of the bit divided
-by 32. And the bit is set to the remainder.
-
-Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Sebastian Reichel <sre@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Morning Lee - could you take this in MFD? This is scattered all around
+different subsystems anyways... I guess crafting bunch of patches to
+each individual subsystems would just end up with lots of merge
+conflicts.
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-index bbc919bef2bf..bf116c2e45c0 100644
---- a/drivers/pinctrl/meson/pinctrl-meson.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson.c
-@@ -56,6 +56,10 @@
- #include "../pinctrl-utils.h"
- #include "pinctrl-meson.h"
+Changes from v1:
+- Dropped patch 2/2 (linear-ranges maintainer) which was already applied by Mark
+- Added shiny new ROHM linux-power list so that I am no longer the lonely
+  poor sod watching these at ROHM side :)
+- sort few files to alphabethical order as checkpatch now nagged about
+  that.
+
+v1 was here:
+https://lore.kernel.org/lkml/e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com/
+
+
+ MAINTAINERS | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..ce08617f63f5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14704,6 +14704,13 @@ L:	linux-serial@vger.kernel.org
+ S:	Odd Fixes
+ F:	drivers/tty/serial/rp2.*
  
-+static const unsigned int meson_bit_strides[] = {
-+	1, 1, 1, 1, 1, 2, 1
-+};
++ROHM BD99954 CHARGER IC
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++L:	linux-power@fi.rohmeurope.com
++S:	Supported
++F:	drivers/power/supply/bd99954-charger.c
++F:	drivers/power/supply/bd99954-charger.h
 +
- /**
-  * meson_get_bank() - find the bank containing a given pin
-  *
-@@ -96,8 +100,9 @@ static void meson_calc_reg_and_bit(struct meson_bank *bank, unsigned int pin,
- {
- 	struct meson_reg_desc *desc = &bank->regs[reg_type];
+ ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
+ M:	Tomasz Duszynski <tduszyns@gmail.com>
+ S:	Maintained
+@@ -14721,6 +14728,31 @@ F:	drivers/mfd/bd9571mwv.c
+ F:	drivers/regulator/bd9571mwv-regulator.c
+ F:	include/linux/mfd/bd9571mwv.h
  
--	*reg = desc->reg * 4;
--	*bit = desc->bit + pin - bank->first;
-+	*bit = (desc->bit + pin - bank->first) * meson_bit_strides[reg_type];
-+	*reg = (desc->reg + (*bit / 32)) * 4;
-+	*bit &= 0x1f;
- }
- 
- static int meson_get_groups_count(struct pinctrl_dev *pcdev)
-@@ -314,7 +319,6 @@ static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
- 		return ret;
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
--	bit = bit << 1;
- 
- 	if (drive_strength_ua <= 500) {
- 		ds_val = MESON_PINCONF_DRV_500UA;
-@@ -441,7 +445,6 @@ static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
- 		return ret;
- 
- 	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
--	bit = bit << 1;
- 
- 	ret = regmap_read(pc->reg_ds, reg, &val);
- 	if (ret)
--- 
-2.17.1
++ROHM POWER MANAGEMENT IC DEVICE DRIVERS
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++L:	linux-power@fi.rohmeurope.com
++S:	Supported
++F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
++F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
++F:	drivers/clk/clk-bd718x7.c
++F:	drivers/gpio/gpio-bd70528.c
++F:	drivers/gpio/gpio-bd71828.c
++F:	drivers/mfd/rohm-bd70528.c
++F:	drivers/mfd/rohm-bd71828.c
++F:	drivers/mfd/rohm-bd718x7.c
++F:	drivers/power/supply/bd70528-charger.c
++F:	drivers/regulator/bd70528-regulator.c
++F:	drivers/regulator/bd71828-regulator.c
++F:	drivers/regulator/bd718x7-regulator.c
++F:	drivers/regulator/rohm-regulator.c
++F:	drivers/rtc/rtc-bd70528.c
++F:	drivers/watchdog/bd70528_wdt.c
++F:	include/linux/mfd/rohm-bd70528.h
++F:	include/linux/mfd/rohm-bd71828.h
++F:	include/linux/mfd/rohm-bd718x7.h
++F:	include/linux/mfd/rohm-generic.h
++F:	include/linux/mfd/rohm-shared.h
++
+ ROSE NETWORK LAYER
+ M:	Ralf Baechle <ralf@linux-mips.org>
+ L:	linux-hams@vger.kernel.org
 
+base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
