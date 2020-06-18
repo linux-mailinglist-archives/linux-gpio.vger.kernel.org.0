@@ -2,41 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DD551FE26A
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:02:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A5A1FE8B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:51:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbgFRCB2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 22:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58402 "EHLO mail.kernel.org"
+        id S1728109AbgFRBJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 21:09:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbgFRBYJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:24:09 -0400
+        id S1728102AbgFRBJR (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:09:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F0B921974;
-        Thu, 18 Jun 2020 01:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE122193E;
+        Thu, 18 Jun 2020 01:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443448;
-        bh=T8yuiFplhkHxiUAjaifpVYPPuG9x26CJk7BTd3i7XHc=;
+        s=default; t=1592442556;
+        bh=6gruKfqidV8dlcCkOj9tUa6RXFVX8x50lVwibQBN1mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvfamgsdMcDi45MjCdx80Lf9b7CLDIZdS562dVqnNqVrcEilDdHcPOuU4EtqzLkJG
-         9dNHPfLYOFpWdyA4JN74Iet10054aZJ8fSfk/IxmoMjp5uVEfzHxOzxp6rx/2p7zeD
-         516EyGBWILz9/0BxcXNDZeocOvtQEGjCzN9bu99w=
+        b=ksQ0AyCPqlmHiHObWLQsZZXtpdSuGhFQxYf8f/R0naOk4Mbm4mviGUv4K425KoFYE
+         njGtxg8A+bWByqHhU5VlVd76iWpXRBxF2TKABek2wBoVxBF96cwHWdtMymzxsyto9q
+         5WY2MsGxqWP0N1X45rrKxxz0H24ZR2XkNL+8tN7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 084/172] pinctrl: rockchip: fix memleak in rockchip_dt_node_to_map
-Date:   Wed, 17 Jun 2020 21:20:50 -0400
-Message-Id: <20200618012218.607130-84-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 053/388] pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
+Date:   Wed, 17 Jun 2020 21:02:30 -0400
+Message-Id: <20200618010805.600873-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
+References: <20200618010805.600873-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,62 +44,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Lars Povlsen <lars.povlsen@microchip.com>
 
-[ Upstream commit d7faa8ffb6be57bf8233a4b5a636d76b83c51ce7 ]
+[ Upstream commit 0b47afc65453a70bc521e251138418056f65793f ]
 
-In function rockchip_dt_node_to_map, a new_map variable is
-allocated by:
+This fixes a problem with using the GPIO as an interrupt on Jaguar2
+(and similar), as the register layout of the platforms with 64 GPIO's
+are pairwise, such that the original offset must be multiplied with
+the platform stride.
 
-new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
-		       GFP_KERNEL);
-
-This uses devres and attaches new_map to the pinctrl driver.
-This cause a leak since new_map is not released when the probed
-driver is removed. Fix it by using kcalloc to allocate new_map
-and free it in `rockchip_dt_free_map`
-
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200506100903.15420-1-dafna.hirschfeld@collabora.com
+Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support.
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Link: https://lore.kernel.org/r/20200513125532.24585-4-lars.povlsen@microchip.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-ocelot.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 8d83817935da..005df24f5b3f 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -507,8 +507,8 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	}
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index ed8eac6c1494..4b99922d6c7e 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -714,11 +714,12 @@ static void ocelot_irq_handler(struct irq_desc *desc)
+ 	struct irq_chip *parent_chip = irq_desc_get_chip(desc);
+ 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
+ 	struct ocelot_pinctrl *info = gpiochip_get_data(chip);
++	unsigned int id_reg = OCELOT_GPIO_INTR_IDENT * info->stride;
+ 	unsigned int reg = 0, irq, i;
+ 	unsigned long irqs;
  
- 	map_num += grp->npins;
--	new_map = devm_kcalloc(pctldev->dev, map_num, sizeof(*new_map),
--								GFP_KERNEL);
-+
-+	new_map = kcalloc(map_num, sizeof(*new_map), GFP_KERNEL);
- 	if (!new_map)
- 		return -ENOMEM;
+ 	for (i = 0; i < info->stride; i++) {
+-		regmap_read(info->map, OCELOT_GPIO_INTR_IDENT + 4 * i, &reg);
++		regmap_read(info->map, id_reg + 4 * i, &reg);
+ 		if (!reg)
+ 			continue;
  
-@@ -518,7 +518,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	/* create mux map */
- 	parent = of_get_parent(np);
- 	if (!parent) {
--		devm_kfree(pctldev->dev, new_map);
-+		kfree(new_map);
- 		return -EINVAL;
- 	}
- 	new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
-@@ -545,6 +545,7 @@ static int rockchip_dt_node_to_map(struct pinctrl_dev *pctldev,
- static void rockchip_dt_free_map(struct pinctrl_dev *pctldev,
- 				    struct pinctrl_map *map, unsigned num_maps)
- {
-+	kfree(map);
- }
- 
- static const struct pinctrl_ops rockchip_pctrl_ops = {
 -- 
 2.25.1
 
