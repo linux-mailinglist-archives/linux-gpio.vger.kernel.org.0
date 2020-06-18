@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2A121FE74E
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A17D1FE6D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbgFRCkI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 22:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41594 "EHLO mail.kernel.org"
+        id S1733112AbgFRCg1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 22:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728989AbgFRBMr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:12:47 -0400
+        id S1729239AbgFRBN4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:13:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A41320EDD;
-        Thu, 18 Jun 2020 01:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9FCD21924;
+        Thu, 18 Jun 2020 01:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592442766;
-        bh=K9zxSlIgRYqNErbEqIuvrgg8NyT9/rYN3WcDSo2mlqU=;
+        s=default; t=1592442835;
+        bh=L+2u2x+M17UPWRFkAT8mRWoi6IoHPRAravkJ2WX2OFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5t7+/4GwY7+Dl9Ne5Im7aoHoZO8s75bgQ+ttXnDoZhLDbpbJZzWTpRZOmujIdXAE
-         jiMnoBDeI/2LSTxiCjxL3zPGMJnIDO62yy9fasRklN1jisp5PKm+QERYNF2SPSz6Ul
-         mC7AniL9wP2WRSPoSMlB8+3IndkkVyTu+LQ9YAlQ=
+        b=eQ3nCr3SHpbkua+1tYSTYfI+OkILvLU1HiP0imX4P6ckqBtyXu/xrsebVoRpHELqV
+         PQ1N4MmsBTyuCOxFAlmvpDq/zqlymqUBTZpVg7diDTaxUZO1NfYDt/B7z7ZMA+ZiIj
+         R4Ikc2Zulgo+gsvWW60av4m01qMHDAhouKUFx8Ok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 215/388] pinctrl: ocelot: Always register GPIO driver
-Date:   Wed, 17 Jun 2020 21:05:12 -0400
-Message-Id: <20200618010805.600873-215-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 269/388] pinctrl: Fix return value about devm_platform_ioremap_resource()
+Date:   Wed, 17 Jun 2020 21:06:06 -0400
+Message-Id: <20200618010805.600873-269-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200618010805.600873-1-sashal@kernel.org>
 References: <20200618010805.600873-1-sashal@kernel.org>
@@ -44,67 +44,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Lars Povlsen <lars.povlsen@microchip.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 550713e33f4338c8596776828a936fd1e3bf35de ]
+[ Upstream commit b5d9ff10dca49f4d4b7846c3751c6bec50d07375 ]
 
-This fixes the situation where the GPIO controller is not
-used as an interrupt controller as well.
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Previously, the driver would silently fail to register even the
-GPIO's. With this change, the driver will only register as an
-interrupt controller if a parent interrupt is provided.
-
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-Link: https://lore.kernel.org/r/20200513125532.24585-2-lars.povlsen@microchip.com
+Fixes: 4b024225c4a8 ("pinctrl: use devm_platform_ioremap_resource() to simplify code")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Link: https://lore.kernel.org/r/1590234326-2194-1-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ocelot.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 2 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 4b99922d6c7e..b1bf46ec207f 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -752,21 +752,21 @@ static int ocelot_gpiochip_register(struct platform_device *pdev,
- 	gc->of_node = info->dev->of_node;
- 	gc->label = "ocelot-gpio";
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+index f690fc5cd688..71e666178300 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -1406,7 +1406,7 @@ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
+ 	pdata->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdata->reg_base)) {
+ 		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
+-		return -ENODEV;
++		return PTR_ERR(pdata->reg_base);
+ 	}
  
--	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
--	if (irq <= 0)
--		return irq;
--
--	girq = &gc->irq;
--	girq->chip = &ocelot_irqchip;
--	girq->parent_handler = ocelot_irq_handler;
--	girq->num_parents = 1;
--	girq->parents = devm_kcalloc(&pdev->dev, 1, sizeof(*girq->parents),
--				     GFP_KERNEL);
--	if (!girq->parents)
--		return -ENOMEM;
--	girq->parents[0] = irq;
--	girq->default_type = IRQ_TYPE_NONE;
--	girq->handler = handle_edge_irq;
-+	irq = irq_of_parse_and_map(gc->of_node, 0);
-+	if (irq) {
-+		girq = &gc->irq;
-+		girq->chip = &ocelot_irqchip;
-+		girq->parent_handler = ocelot_irq_handler;
-+		girq->num_parents = 1;
-+		girq->parents = devm_kcalloc(&pdev->dev, 1,
-+					     sizeof(*girq->parents),
-+					     GFP_KERNEL);
-+		if (!girq->parents)
-+			return -ENOMEM;
-+		girq->parents[0] = irq;
-+		girq->default_type = IRQ_TYPE_NONE;
-+		girq->handler = handle_edge_irq;
-+	}
+ 	/* Initialize the dynamic part of pinctrl_desc */
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index 694912409fd9..54222ccddfb1 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1019,7 +1019,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
  
- 	ret = devm_gpiochip_add_data(&pdev->dev, gc, info);
- 	if (ret)
+ 	atmel_pioctrl->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(atmel_pioctrl->reg_base))
+-		return -EINVAL;
++		return PTR_ERR(atmel_pioctrl->reg_base);
+ 
+ 	atmel_pioctrl->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(atmel_pioctrl->clk)) {
 -- 
 2.25.1
 
