@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 016181FE1BA
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 03:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6DAB1FE091
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 03:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgFRB4x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 21:56:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
+        id S1732759AbgFRBsL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 21:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728705AbgFRBZS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:25:18 -0400
+        id S1731369AbgFRB16 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:27:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 748D12083B;
-        Thu, 18 Jun 2020 01:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43034221F3;
+        Thu, 18 Jun 2020 01:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443518;
-        bh=pWp5whErmJ4Ic7w6wL0o19Xjfyw0DXak7LVcI12+LI8=;
+        s=default; t=1592443678;
+        bh=d8qrNxiJ5pT/MSaN6ds/NnYwzajL2zhxp4yLqKg+Jnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRSo04dZkrWUWYCJ8v6fttMdaECQUl1+OvNnsbX3L8Rfh5pWEEE3BMCt1YSx8VJAb
-         riKWXLpUQSFufPEv+4SIpR0Tbw48f/CnwxaAbocurjv1wCrhvhUnuYNIy6NZtOkRPJ
-         8qDROkUx/TRxrhcmlUh9TUV0GpIwKGzBYFNOr5cQ=
+        b=OPHB7abl3IXue8TyK84EEEBefDYjuawhE4QkraSHx2k7uMXVJxFm6Jfgr2MfHHElA
+         9gqNIUHGtRUc0zmUz5h3seiKy6Kdqk+5OhapUFohZNMlOrHqEa4bX0MWlImu+uULdB
+         waAGOzDvk8sQ3j47F3Vs4NvmaJgJeHMLLpy00wbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 141/172] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
-Date:   Wed, 17 Jun 2020 21:21:47 -0400
-Message-Id: <20200618012218.607130-141-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 093/108] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
+Date:   Wed, 17 Jun 2020 21:25:45 -0400
+Message-Id: <20200618012600.608744-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012218.607130-1-sashal@kernel.org>
-References: <20200618012218.607130-1-sashal@kernel.org>
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,10 +63,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 deletion(-)
 
 diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index deb7870b3d1a..961c24e0cc8f 100644
+index e2cca91fd266..68108c4c3969 100644
 --- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
 +++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -638,7 +638,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+@@ -642,7 +642,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
  
  	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
  	if (ret) {
