@@ -2,111 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1131FED3E
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 10:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3B11FED98
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 10:28:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgFRIKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Jun 2020 04:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
+        id S1728137AbgFRI2l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Jun 2020 04:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgFRIJh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jun 2020 04:09:37 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2875C0613EE
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:09:36 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id b82so4258781wmb.1
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:09:36 -0700 (PDT)
+        with ESMTP id S1728636AbgFRI2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jun 2020 04:28:37 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7303C0613EE
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:28:36 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d128so4709256wmc.1
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=aa9FGpSBU0p0SkiM2oqKVw0h4OsYKmsdaf41oPs0vM4=;
-        b=JZ2DoDiqpWFUvgxnCeqJipmSehBOhlGEN4DI/Br9dFqFoR+0t1Rm+LipBYanLVATwe
-         1pzOBFKiaoVwnejyhr+54+DqWSGHUj893x390snhCIvjEsg7GfZpDv6Fq71r10mDiJbf
-         AI6h8IiZpknBrzYxEwf05V+5PcFgp7uZ1LbFkRjCL1kcxXykNxLw/YXAMQwSPzC6JBGy
-         29BqXIzw0HKKnNdY05qZph0tgmFBdrP6Rm2sG/oCnfgMF/mGqac8zelpReFYPvEcqdQA
-         jFP1eK5T5a7NOfqJzhLWRMKwCWJTQpiULTkTsY9df8CH1KrfVU9QMiDxEG1OAqzdnXJv
-         N1VQ==
+        bh=pNtXBIvU5TL09qsEeDfkPWacil/hALuNwYF0M4VqVIA=;
+        b=s8BNjNGF1UTKkjVDS8nWIdgDRjlFSXgMAcIi75k+nM41dr3jATR3IzMMp0joVXktiF
+         WfFxvjaUbCtc4l4lwbnZBCYJNYXEdV0b08HTjKy8RwmC/H54jxGYXY44sO4moMFcFVzH
+         +avE69VbK06HsLaoeqHXueOof2z43MmEh4BME2CRgKsP0plFGt3WhU7DDq1vC7bu6jrU
+         N469wRpA5We3mztUXKE93mihM9/6Q68YyqfzYe2Qn6KqETb8SJbHHBOoqbq3kXDaXQgG
+         PuW6LF5HO9W4P2gufa6mQgD2fP4muGjfl/rJgP/2Ll7fhBinj6vWOZFHSHU8nMKzrg1+
+         ll1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=aa9FGpSBU0p0SkiM2oqKVw0h4OsYKmsdaf41oPs0vM4=;
-        b=oPlgANHtet+qCjNIVu8149Te6AzYLo0rPLNdfpRWoyGAOA1oAEkV2FLOfcG6tyFaai
-         gWh1o+dNbfbj3zETecODzH5W9oYzpvhlm97arz6vLp2I/G3QaNtzgqeSXfxesx/JCcNN
-         JvjNTm9bOZ2C6fGuiq9JXGfH76iDPXCQ2Mp1xO/wGltDjTaYSnggj7p+QMeIAgY8pWrA
-         VnGdLrz2DHckxaew/aB9QqxUlIoHTktIIZqMnsKCy7UqzWhDhmGLg3qga5UDm0zWQ7eL
-         98RSJZOaY77SPilJplc+gAlos6V40u/v/7QJiqjx2K1U/wcfltzXry8aVpPCEKK+5oJJ
-         hYog==
-X-Gm-Message-State: AOAM530H2nIJf8Fo8v/c3hLAvPtEOPAmb5pmf86XmCsHam/RGa5EiUT1
-        vwZHd9a5nhz647Omlcx4j9fTCg==
-X-Google-Smtp-Source: ABdhPJxykprCYfE9CDJKy6l36stICHQh0Hzp3gCi+QfRIwYROeNp3OkNtRUy+NNKi8dtsQz9fbKqMQ==
-X-Received: by 2002:a7b:c1c5:: with SMTP id a5mr2657143wmj.35.1592467775057;
-        Thu, 18 Jun 2020 01:09:35 -0700 (PDT)
+        bh=pNtXBIvU5TL09qsEeDfkPWacil/hALuNwYF0M4VqVIA=;
+        b=N0Kap/UkSfIPBNCj9JVPLlz+lu3laqrCuEzAxzPIEZ6nzedjAhuD2YPJyfRId1njdu
+         9nnbF+7Tss8npz2PWTLGqUhXdwtQZB+JmFyfWs1SoEtLXfQVfu94VPfU0fa6I//pNZ1+
+         5Qm9evu4ibmWtw0vY2D4qP7VzLbCpQ+WoNI/Kse2NA/Ft6+Ms/ywaWhtzU4o4LTUZIxr
+         U1B/xtUgSiOV0t9rWDYf5jQzWyJ+aQGjaVPfKzsyC9fKFfs9hvDiLo9iWsPXSTooyZrT
+         XHp5meVDfKBWCU3PsiHi0R4sGSPbmqmtmptwyT8S2jxJvtYEieBKA5L1PhaolFsWzmuE
+         ASWQ==
+X-Gm-Message-State: AOAM533unTC2lJS4PKe9jyKNQE37ZAcrahAAti5/+dreOhELxi1c1s2/
+        nDDktkxloCKFyTLEjiIVG6KJww==
+X-Google-Smtp-Source: ABdhPJx0bssLzs0IUMEdhcrZYDyS44UMQ45eyj2LaifO2XUGoS2al0i8+FuiMCxAwozRQz4kCay5Gw==
+X-Received: by 2002:a1c:ddc1:: with SMTP id u184mr2658284wmg.115.1592468915449;
+        Thu, 18 Jun 2020 01:28:35 -0700 (PDT)
 Received: from dell ([95.149.164.118])
-        by smtp.gmail.com with ESMTPSA id c70sm2436069wme.32.2020.06.18.01.09.33
+        by smtp.gmail.com with ESMTPSA id j5sm2501138wrq.39.2020.06.18.01.28.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 01:09:34 -0700 (PDT)
-Date:   Thu, 18 Jun 2020 09:09:32 +0100
+        Thu, 18 Jun 2020 01:28:34 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 09:28:32 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
-Message-ID: <20200618080932.GZ2608702@dell>
-References: <20200618073331.GA9403@localhost.localdomain>
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: max77620: Convert to json-schema
+Message-ID: <20200618082832.GA954398@dell>
+References: <20200609162621.1769610-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200618073331.GA9403@localhost.localdomain>
+In-Reply-To: <20200609162621.1769610-1-thierry.reding@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 18 Jun 2020, Matti Vaittinen wrote:
+On Tue, 09 Jun 2020, Thierry Reding wrote:
 
-> Add entry for maintaining power management IC drivers for ROHM
-> BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Convert the Maxim MAX77620 PMIC device tree bindings from free-form text
+> format to json-schema.
+> 
+> This also pulls in the GPIO, regulator, pinmux and thermal bindings for
+> the corresponding subdevices into the top-level binding so that it can
+> be described more consistently.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
-> Morning Lee - could you take this in MFD? This is scattered all around
-> different subsystems anyways... I guess crafting bunch of patches to
-> each individual subsystems would just end up with lots of merge
-> conflicts.
+>  .../bindings/gpio/gpio-max77620.txt           |  25 -
+>  .../devicetree/bindings/mfd/max77620.txt      | 162 -----
+>  .../devicetree/bindings/mfd/max77620.yaml     | 662 ++++++++++++++++++
+>  .../bindings/pinctrl/pinctrl-max77620.txt     | 127 ----
+>  .../bindings/regulator/regulator-max77620.txt | 222 ------
+>  .../bindings/thermal/max77620_thermal.txt     |  70 --
+>  6 files changed, 662 insertions(+), 606 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/max77620_thermal.txt
 
-Yes, no problem.  Let's let it sit around for a week or so.  If it
-doesn't gain any negative attention, I'll apply it.
+Wow, what a beast.  I can see why Rob is putting this one off!
 
-> Changes from v1:
-> - Dropped patch 2/2 (linear-ranges maintainer) which was already applied by Mark
-> - Added shiny new ROHM linux-power list so that I am no longer the lonely
->   poor sod watching these at ROHM side :)
-> - sort few files to alphabethical order as checkpatch now nagged about
->   that.
-> 
-> v1 was here:
-> https://lore.kernel.org/lkml/e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com/
-> 
-> 
->  MAINTAINERS | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+Changes look okay to me, but Rob and Linus should review.
 
 -- 
 Lee Jones [李琼斯]
