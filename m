@@ -2,78 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 069301FEC95
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 09:36:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1131FED3E
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 10:11:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgFRHgz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Jun 2020 03:36:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
+        id S1728439AbgFRIKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Jun 2020 04:10:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgFRHgy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jun 2020 03:36:54 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A60C06174E
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 00:36:54 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id h3so4791214ilh.13
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 00:36:54 -0700 (PDT)
+        with ESMTP id S1728472AbgFRIJh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Jun 2020 04:09:37 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2875C0613EE
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:09:36 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id b82so4258781wmb.1
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jun 2020 01:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=BZ6QwRR02dvt2Dfkx/8pLd8y5N0V2XUEr6jl1bsxecw=;
-        b=T2Ti2m4IR8Zrs29PvjVvmQtlzyy0+wjwevxrDVIiMfziXezTE3jzZR7vd/w5B4NwDP
-         J4EMu00cBMAwSy34XzOJcjMUlI27fFMaMEwqQtmFqDp7FJciJZz4t0rXUa3ZX8IU/qvx
-         8Q2vRVVELh7nHxEhzrejFK0rnC4wRcH44mDFL3ppi9HixqzCxxt/qOQKw0EDTXrdBeie
-         UB5pELZPspKyHdnly1Ty3/ACU+9JV7BAvyoHB+VijIr6aZm1iMaOSgiDVmhRM+qtBM+o
-         VSUiJo8u+cP53ACcZ7kzpmINy/3Z8jMId5N+BuFp183Db3SHXvfqfEs1llxHAQ8wUOgt
-         dDjQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=aa9FGpSBU0p0SkiM2oqKVw0h4OsYKmsdaf41oPs0vM4=;
+        b=JZ2DoDiqpWFUvgxnCeqJipmSehBOhlGEN4DI/Br9dFqFoR+0t1Rm+LipBYanLVATwe
+         1pzOBFKiaoVwnejyhr+54+DqWSGHUj893x390snhCIvjEsg7GfZpDv6Fq71r10mDiJbf
+         AI6h8IiZpknBrzYxEwf05V+5PcFgp7uZ1LbFkRjCL1kcxXykNxLw/YXAMQwSPzC6JBGy
+         29BqXIzw0HKKnNdY05qZph0tgmFBdrP6Rm2sG/oCnfgMF/mGqac8zelpReFYPvEcqdQA
+         jFP1eK5T5a7NOfqJzhLWRMKwCWJTQpiULTkTsY9df8CH1KrfVU9QMiDxEG1OAqzdnXJv
+         N1VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=BZ6QwRR02dvt2Dfkx/8pLd8y5N0V2XUEr6jl1bsxecw=;
-        b=bxoRW65PGEgwtuBwZyWPT6oLCI4kymPWDLnLD1TZJ9OOmhIZbLW7Rq/82MJiqnnb8E
-         hK/dOcdkJJe8MOLTvMWirXVVNmcA2EyJ0fTVSea/XFOp5hRBAfrgaQ/XcI1B2KjEblZV
-         53/rJYimPhT2M0ThTZ9Ze+3kuzeUtv0YtXbB+OqTnH6rH8+2zFwaxDgWGTMx6OIeO5AZ
-         lwMz6QQGJjq5hK64dhtnM5hkriSeq1RFx+qbX1VTIrLUxCwxAuczqU3W89j91HezNuc7
-         Ewlkx/Rhwrha3x2KQcGX+GD9r2Ms8jbzNGqfUJx0Ft5IDM50Qq03q31TRZ2wTR7zi5JD
-         SFiA==
-X-Gm-Message-State: AOAM533SSwEc0qHzCPL3ZeU88BPNqjw16Jo22Wip/krfkEHXFzv1DK/u
-        1DroTSt0u7J6vX5Kkot9lE1F4WVfKW6Cf09OyTs=
-X-Google-Smtp-Source: ABdhPJwSu+gsa2xPZsJPpBKGy5TEDAetq5txsm8yzVZnERca9AfEkyszNA8zt2uHJ+t78ws0JGr8BvAyV/dXtLMI9Cc=
-X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr2632333ilj.190.1592465813733;
- Thu, 18 Jun 2020 00:36:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=aa9FGpSBU0p0SkiM2oqKVw0h4OsYKmsdaf41oPs0vM4=;
+        b=oPlgANHtet+qCjNIVu8149Te6AzYLo0rPLNdfpRWoyGAOA1oAEkV2FLOfcG6tyFaai
+         gWh1o+dNbfbj3zETecODzH5W9oYzpvhlm97arz6vLp2I/G3QaNtzgqeSXfxesx/JCcNN
+         JvjNTm9bOZ2C6fGuiq9JXGfH76iDPXCQ2Mp1xO/wGltDjTaYSnggj7p+QMeIAgY8pWrA
+         VnGdLrz2DHckxaew/aB9QqxUlIoHTktIIZqMnsKCy7UqzWhDhmGLg3qga5UDm0zWQ7eL
+         98RSJZOaY77SPilJplc+gAlos6V40u/v/7QJiqjx2K1U/wcfltzXry8aVpPCEKK+5oJJ
+         hYog==
+X-Gm-Message-State: AOAM530H2nIJf8Fo8v/c3hLAvPtEOPAmb5pmf86XmCsHam/RGa5EiUT1
+        vwZHd9a5nhz647Omlcx4j9fTCg==
+X-Google-Smtp-Source: ABdhPJxykprCYfE9CDJKy6l36stICHQh0Hzp3gCi+QfRIwYROeNp3OkNtRUy+NNKi8dtsQz9fbKqMQ==
+X-Received: by 2002:a7b:c1c5:: with SMTP id a5mr2657143wmj.35.1592467775057;
+        Thu, 18 Jun 2020 01:09:35 -0700 (PDT)
+Received: from dell ([95.149.164.118])
+        by smtp.gmail.com with ESMTPSA id c70sm2436069wme.32.2020.06.18.01.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2020 01:09:34 -0700 (PDT)
+Date:   Thu, 18 Jun 2020 09:09:32 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Message-ID: <20200618080932.GZ2608702@dell>
+References: <20200618073331.GA9403@localhost.localdomain>
 MIME-Version: 1.0
-Received: by 2002:a92:ce8f:0:0:0:0:0 with HTTP; Thu, 18 Jun 2020 00:36:53
- -0700 (PDT)
-From:   "Mr.Steve Elinam" <aaldocecilio@gmail.com>
-Date:   Thu, 18 Jun 2020 00:36:53 -0700
-Message-ID: <CAEEBr0mRsB-z-iuY7kwYX3Z15tkTbhJH70spfzisWcRGWcFFpw@mail.gmail.com>
-Subject: Hello My Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618073331.GA9403@localhost.localdomain>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, 18 Jun 2020, Matti Vaittinen wrote:
+
+> Add entry for maintaining power management IC drivers for ROHM
+> BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> ---
+> Morning Lee - could you take this in MFD? This is scattered all around
+> different subsystems anyways... I guess crafting bunch of patches to
+> each individual subsystems would just end up with lots of merge
+> conflicts.
+
+Yes, no problem.  Let's let it sit around for a week or so.  If it
+doesn't gain any negative attention, I'll apply it.
+
+> Changes from v1:
+> - Dropped patch 2/2 (linear-ranges maintainer) which was already applied by Mark
+> - Added shiny new ROHM linux-power list so that I am no longer the lonely
+>   poor sod watching these at ROHM side :)
+> - sort few files to alphabethical order as checkpatch now nagged about
+>   that.
+> 
+> v1 was here:
+> https://lore.kernel.org/lkml/e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com/
+> 
+> 
+>  MAINTAINERS | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+
 -- 
-My Dear,
-
-An important and confidential business proposal. My name is Mr.Steve
-Elinam. I`m looking for an urgent need for a foreign partner that led
-to my contacting you about this mutual transaction. I am a banker by
-profession and currently holding the post of Chief Auditor in our
-Bank. I have the opportunity of transferring an unclaimed funds (9.5M)
-Nine Million Five Hundred Thousand Dollars belonging to one of my late
-clients.
-
-Having no one coming up to claim his funds and if left unclaimed will
-be transferred to the government treasury by the bank.Hence, I am
-inviting you for a business deal where we can facilitate the transfer
-of this fund and have promised 50% as your percentage once we are
-through, If you agree to my business proposal send your full data
-names, telephone number and address. Further details of the transfer
-will be forwarded to you.
-
-Regards,
-
-Mr.Steve Elinam.
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
