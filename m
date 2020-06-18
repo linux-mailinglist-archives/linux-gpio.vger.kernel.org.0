@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 237D81FDF87
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 03:43:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B481FE55B
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jun 2020 04:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbgFRBkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Jun 2020 21:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39550 "EHLO mail.kernel.org"
+        id S1730741AbgFRCZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 17 Jun 2020 22:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732401AbgFRB3x (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:29:53 -0400
+        id S1729793AbgFRBRY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:17:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68B772224B;
-        Thu, 18 Jun 2020 01:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC1321D80;
+        Thu, 18 Jun 2020 01:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443793;
-        bh=d8qrNxiJ5pT/MSaN6ds/NnYwzajL2zhxp4yLqKg+Jnw=;
+        s=default; t=1592443044;
+        bh=EytVya3RUKs/M3nMiP4+ZwjX7H34TqkxdAqrVyMkEP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igLJjaQMl8tOz2tArpv1xwVOCXoc6FGdK5V6hiutgihZz5ECEzyh17Uh/FmIaJO1i
-         D9+xdW0K5Hp4dxoF4m685lIZshGkD74jGqPj1tIMStBULnTUAbhWIRfyQrnVhZFtOL
-         /dON055HIN4EzXru7l27012+dXFVRdqZoR+PA8tw=
+        b=AnGDWT1VV5HwCvrDKcgva5QIC7RY8Wq86Pk+FDleMZWEz2RKA4d2LOXny9Aa7vxhQ
+         A3J2UITA9DAshjZQcn/CcseSQV6+kkKVfTtUSJqqn1O76omwUk2mZ0oNyme19Ur+aS
+         QcC6C1IjYoJYhIxWy4eBHLtxJwWU37HqwxfeUVpw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 73/80] pinctrl: imxl: Fix an error handling path in 'imx1_pinctrl_core_probe()'
-Date:   Wed, 17 Jun 2020 21:28:12 -0400
-Message-Id: <20200618012819.609778-73-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 039/266] pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
+Date:   Wed, 17 Jun 2020 21:12:44 -0400
+Message-Id: <20200618011631.604574-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
-References: <20200618012819.609778-1-sashal@kernel.org>
+In-Reply-To: <20200618011631.604574-1-sashal@kernel.org>
+References: <20200618011631.604574-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,36 +44,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Lars Povlsen <lars.povlsen@microchip.com>
 
-[ Upstream commit 9eb728321286c4b31e964d2377fca2368526d408 ]
+[ Upstream commit 0b47afc65453a70bc521e251138418056f65793f ]
 
-When 'pinctrl_register()' has been turned into 'devm_pinctrl_register()',
-an error handling path has not been updated.
+This fixes a problem with using the GPIO as an interrupt on Jaguar2
+(and similar), as the register layout of the platforms with 64 GPIO's
+are pairwise, such that the original offset must be multiplied with
+the platform stride.
 
-Axe a now unneeded 'pinctrl_unregister()'.
-
-Fixes: e55e025d1687 ("pinctrl: imxl: Use devm_pinctrl_register() for pinctrl registration")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20200530201952.585798-1-christophe.jaillet@wanadoo.fr
+Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support.
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+Link: https://lore.kernel.org/r/20200513125532.24585-4-lars.povlsen@microchip.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-imx1-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/pinctrl-ocelot.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx1-core.c b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-index e2cca91fd266..68108c4c3969 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx1-core.c
-@@ -642,7 +642,6 @@ int imx1_pinctrl_core_probe(struct platform_device *pdev,
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index fb76fb2e9ea5..0a951a75c82b 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -711,11 +711,12 @@ static void ocelot_irq_handler(struct irq_desc *desc)
+ 	struct irq_chip *parent_chip = irq_desc_get_chip(desc);
+ 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
+ 	struct ocelot_pinctrl *info = gpiochip_get_data(chip);
++	unsigned int id_reg = OCELOT_GPIO_INTR_IDENT * info->stride;
+ 	unsigned int reg = 0, irq, i;
+ 	unsigned long irqs;
  
- 	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
- 	if (ret) {
--		pinctrl_unregister(ipctl->pctl);
- 		dev_err(&pdev->dev, "Failed to populate subdevices\n");
- 		return ret;
- 	}
+ 	for (i = 0; i < info->stride; i++) {
+-		regmap_read(info->map, OCELOT_GPIO_INTR_IDENT + 4 * i, &reg);
++		regmap_read(info->map, id_reg + 4 * i, &reg);
+ 		if (!reg)
+ 			continue;
+ 
 -- 
 2.25.1
 
