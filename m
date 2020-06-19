@@ -2,116 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFAE420092B
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2020 14:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3D5E200B62
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2020 16:26:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732775AbgFSM6x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Jun 2020 08:58:53 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33416 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732765AbgFSM6v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Jun 2020 08:58:51 -0400
-Received: by mail-oi1-f193.google.com with SMTP id i74so8367827oib.0;
-        Fri, 19 Jun 2020 05:58:50 -0700 (PDT)
+        id S1726594AbgFSO0c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Jun 2020 10:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgFSO0b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Jun 2020 10:26:31 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC92C06174E;
+        Fri, 19 Jun 2020 07:26:31 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w7so7794626edt.1;
+        Fri, 19 Jun 2020 07:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8bSED8zl4CrcAER1VVpY4315eH4pyEInk1CBmUlC8tM=;
+        b=iJvxOSObVw2uCB3dpRtcU1+kdibcBS4VTzuVUkFDbJVkDGJR2vlGw1hTcAs3wM2Tam
+         XGi4UOs8uNemmHbnWqlm0CCGzeFJ81SiGAP0SwH7Pq2QUFjq0FJY5CzfOnE0Tcvvxa2m
+         zuXPu5ApOTcKe/fumgtPG45HXts8sUHlDVrWYW02ekrxE9PYZ1ywUt16YRcoS/I3jUvL
+         91dteczkbB3+8EXmotE3WGfHl++X8J55oGhOmEYbvRuO5ckaTbuRvRyHKFPfe8f02czo
+         lyY6L3nu3z9lFdHy1m0520iP8gG50EdpjIO7ycRH5byCsniK2u7Gtpwq+FFQI5OhqFqN
+         xmhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GLGWXGdvLEqy2ag59xbzqTnELkRbK3aCBxLiaPQPTbY=;
-        b=XVUKKnLRbvTL1z5+Vgdt64lcfcYv6hx3bZxBxoYfWs4MMpD6AVGYQgfro6PUxFRnt8
-         QJjS9UI9pz/aVaHsUV/t3HvEQv5XrVvVU8mbh7Lpfdj/eWa2OobU0xXkENMIx0C1TKjB
-         XGcQm7sanx9dUdVqmp75r7bX/MZPIDBLnCXuggXGyq3qvFxuPIuXW7HID04eafjuv/K5
-         OCOt8EmF9E4ZHKUu090uynlg8ea/1/it30vAS0ax/sCBK0QiIL9MeqzlvMlQtSJ0bEcC
-         uhb0FfMvdfFUHgI45xOxUDI7QgDuImIFZOMumvx5iREOcqBZqAFNOXWNMep1pfyUJ3wd
-         YutA==
-X-Gm-Message-State: AOAM532dMRYAys0FnH/BRZa/0L4XTZl5b2tQ73UUJJJDcoN/bKeF4V+X
-        mLIU0RfRQ/Nl7Z0oLVfUa1pGN7crIBoPr3sG68s=
-X-Google-Smtp-Source: ABdhPJzIBrBQh6qipWEvurguOD7EHarsROaYJOE8TXHghjCkr/O6DoWIUs6xxOqZoSWzQT7sI37TXrnxeXOe5/U7Qsw=
-X-Received: by 2002:aca:1a19:: with SMTP id a25mr2941174oia.54.1592571530217;
- Fri, 19 Jun 2020 05:58:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8bSED8zl4CrcAER1VVpY4315eH4pyEInk1CBmUlC8tM=;
+        b=OrdK/FQAzovE2j5cn4l10Qjlj66w63Jq/elSrXE4RpeK8BZtWl7f87/2EpL6acdSsp
+         dTVW3Q40LxrjITZUdcdKHC+gmlmO04hkw/DZs1+CyQUkFrS5H+H3aHoiqHlb8eAZvb2U
+         JH+dhkBgTMYTTjRSvZSDTTS1v/y+a17gBimZSOyrv/KAuCuQEh1ZRgySxCA5KhmCqIKP
+         HkqGtUzGjFZ0YdvDBGMOC5shrg7hjkEPeylqiNmOGygrTIPABdw8dAzAOLLGuS9ISNp2
+         JOu68VrOlBvjB1O5QQmRv3Bos5VuXvytgU9Fbp7wO4a6Xsh2ajJjh4oz24ThH/n1J6eg
+         QruA==
+X-Gm-Message-State: AOAM531sbVsm4xm3cb4qKdXtzrDg2DJIOgMCzzQlwImEh4fg0mtNwe+y
+        f1yRdQopgZW96GTz+1DvA2M=
+X-Google-Smtp-Source: ABdhPJyRnKu5OL+gzHHN41FCxTU48KdilWSjIzi6WQc3xDaIKuUdLn5JhaB8ICPJhCHJj3DTR4VdSA==
+X-Received: by 2002:a05:6402:a42:: with SMTP id bt2mr3539290edb.42.1592576789902;
+        Fri, 19 Jun 2020 07:26:29 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:904f:be8d:1d92:9974])
+        by smtp.gmail.com with ESMTPSA id j16sm4736461edp.35.2020.06.19.07.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 07:26:29 -0700 (PDT)
+Date:   Fri, 19 Jun 2020 16:26:28 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+Message-ID: <20200619142628.burfxyjoe5uouzuz@ltop.local>
+References: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+ <202006160420.iatdr9ab%lkp@intel.com>
+ <CACG_h5oiA8mDpTjtyGFYR4eptbxppN9tq+2wUj8T1hsbZ5h47A@mail.gmail.com>
 MIME-Version: 1.0
-References: <21306a59-8f20-ad08-fdc1-bcc6333c01d4@cogentembedded.com> <d3907b56-e346-f246-694e-6088d060bd27@cogentembedded.com>
-In-Reply-To: <d3907b56-e346-f246-694e-6088d060bd27@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 19 Jun 2020 14:58:39 +0200
-Message-ID: <CAMuHMdV=f7iUA+SV72C++xjWQjxh=fwt+JWCU=R6TQQht-qOKQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sh-pfc: r8a77970: add RPC pins, groups, and functions
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACG_h5oiA8mDpTjtyGFYR4eptbxppN9tq+2wUj8T1hsbZ5h47A@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sergei,
+On Tue, Jun 16, 2020 at 11:27:18AM +0530, Syed Nayyar Waris wrote:
 
-On Thu, Jun 18, 2020 at 9:46 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Subject: pinctrl: sh-pfc: r8a77970: Add RPC pins, groups, and functions
->
-> Add the RPC pins/groups/functions to the R8A77970 PFC driver.
-> They can be used if an Octal-SPI flash or HyperFlash is connected.
->
-> Based on the patch by Dmitry Shifrin <dmitry.shifrin@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Hi, 
 
-Thanks for your patch!
+> Regarding the compilation warning reported above:
+> 
+> "sparse: shift too big (64) for type unsigned long" at line 639
+> "sparse: invalid access past the end of 'old' (8 8)" at line 638
+> 
+> Kindly refer to the code above, at these line numbers.
+> 
+> I am in the process of fixing this warning. But what would be the fix?
+> ? At the moment can't think of a code-fix to make the compilation
+> warning disappear (specially at line 639). Can anyone please explain
+> to me the meaning of the compilation warning more deeply?
 
-> --- renesas-drivers.orig/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-> +++ renesas-drivers/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-> @@ -1416,6 +1416,64 @@ static const unsigned int qspi1_data4_mu
->         QSPI1_IO2_MARK, QSPI1_IO3_MARK
->  };
->
-> +/* - RPC -------------------------------------------------------------------- */
-> +static const unsigned int rpc_clk1_pins[] = {
-> +       /* Octal-SPI flash: C/SCLK */
-> +       RCAR_GP_PIN(5, 0),
-> +};
-> +static const unsigned int rpc_clk1_mux[] = {
-> +       QSPI0_SPCLK_MARK,
-> +};
-> +static const unsigned int rpc_clk2_pins[] = {
-> +       /* HyperFlash: CK, CK# */
-> +       RCAR_GP_PIN(5, 0), RCAR_GP_PIN(5, 6),
-> +};
-> +static const unsigned int rpc_clk2_mux[] = {
-> +       QSPI0_SPCLK_MARK, QSPI1_SPCLK_MARK,
-> +};
-> +static const unsigned int rpc_ctrl_pins[] = {
-> +       /* Octal-SPI flash: S#/CS, DQS */
-> +       /* HyperFlash: CS#, RDS */
-> +       RCAR_GP_PIN(5, 5), RCAR_GP_PIN(5, 11),
-> +};
-> +static const unsigned int rpc_ctrl_mux[] = {
-> +       QSPI0_SPCLK_MARK, QSPI0_SSL_MARK,
+This error message is caused by sparse doing the check too early.
+There is thus nothing to be fixed for it in this code.
 
-Shouldn't the above read
-
-    QSPI0_SSL_MARK, QSPI1_SSL_MARK,
-
-?
-
-I seem to have overlooked the same issue in commit aa2165cf2ece9176
-("pinctrl: sh-pfc: r8a77980: Add RPC pins, groups, and functions") in
-sh-pfc-for-v5.9, which I can fix myself.
-
-With the above sorted out:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-and will queue in sh-pfc-for-v5.9 after fixing.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+-- Luc
