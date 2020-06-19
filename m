@@ -2,198 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 839E02019D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2020 19:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE3BF201B1A
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jun 2020 21:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbgFSRyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Jun 2020 13:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731445AbgFSRyg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Jun 2020 13:54:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B0EC06174E
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Jun 2020 10:54:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s1so12524633ljo.0
-        for <linux-gpio@vger.kernel.org>; Fri, 19 Jun 2020 10:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:references:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LtdXAlu47wyWf4vxXj+jp7xPrK3QijfjtnczPQlueO0=;
-        b=GNpLO4HZKTC4YqSMmEzbk/RJt9ckyq3PgYrKdPRAv+CByjKGlE29K+luI2g3BvtS6V
-         LQtXZupFHrxqnaQx/kkADdiNtzHGWZk2fADdzzNDw29qDkE3EdY2gOZ+2dyGBti5GJNE
-         Y7PbxewVZUUPmUq7f/ghs/FEeyDMPG2N7CHWPmS0p+lEn6USlNB8476oNJ2k7twi3VIE
-         00yVYJ6DGdLAxMwgQ1/ZhJA4dSjYniapSW5A5KUSdU/6wOjfW4qQESdUepJha/9DQpQE
-         pZzs37w4XakexgDTexKOh2VvEyzKY9gmXBljdnX9/Q6OXKDJLm+4+z1D/tVhpe2adQWg
-         uT1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LtdXAlu47wyWf4vxXj+jp7xPrK3QijfjtnczPQlueO0=;
-        b=h+/BiX+zzi2TWfwwAl09jfSWLlyD+g3uuSblb9Jv3n7rNDR3PjhcQSG0GTeg7MOKo8
-         etoacgEadMEpD90RDvtG91kY6u8jqNdQYfcoUqvuOMvA+r+AoCJy2qjCcFR8vxNoh+rz
-         gHWMsRgXDv8/SM9NvJgRoehtt3FgxU3DAaFA7+DV99020xGWvDCbRvhogvMLKCx+Nhfw
-         oVXZcHsNcYeT7U0VxEwVx0Vk4sS7PgzmuKjFObi+RG+Fbpi0OEhV6vx2p1NU80UXIvFa
-         q0XWUoXb1NSY0plPT27nVRNh3sGQM4FYTtJSi1jkuIbA1CmTBVi2p8tv2QWNnvgT4o3Q
-         thEw==
-X-Gm-Message-State: AOAM531BRH447V6bcHrUiJ2o/hlWVPQDBvpGp/jOTY/XhmGqlmmrtGBq
-        AwSx52xYtWwA21CsZRYPJ4nXxQFFMiY=
-X-Google-Smtp-Source: ABdhPJzX8vTlKzbr4Uo1H644IY61Ap3uE5v5Cba+I3vvKu/jdR5vq0jWtC6acJJ6A2+8r5y5BmvE6g==
-X-Received: by 2002:a2e:6a05:: with SMTP id f5mr2487019ljc.272.1592589274122;
-        Fri, 19 Jun 2020 10:54:34 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:441c:ac8f:7564:6e7d:9e36:7ded])
-        by smtp.gmail.com with ESMTPSA id n10sm1512799lfb.82.2020.06.19.10.54.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 19 Jun 2020 10:54:33 -0700 (PDT)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] pinctrl: sh-pfc: r8a77970: add RPC pins, groups, and
- functions
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        linux-renesas-soc@vger.kernel.org
-References: <21306a59-8f20-ad08-fdc1-bcc6333c01d4@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <3982785f-4fca-96f9-2b6a-a0d1828cb0ad@cogentembedded.com>
-Date:   Fri, 19 Jun 2020 20:54:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        id S1733275AbgFSTRJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Jun 2020 15:17:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:58360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733272AbgFSTRJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 19 Jun 2020 15:17:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7CEB2B;
+        Fri, 19 Jun 2020 12:17:07 -0700 (PDT)
+Received: from [10.57.9.128] (unknown [10.57.9.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49DD33F73C;
+        Fri, 19 Jun 2020 12:17:06 -0700 (PDT)
+Subject: Re: [PATCH v8 4/4] gpio: xilinx: Utilize for_each_set_clump macro
+To:     Syed Nayyar Waris <syednwaris@gmail.com>, linus.walleij@linaro.org,
+        akpm@linux-foundation.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vilhelm.gray@gmail.com, michal.simek@xilinx.com,
+        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1592224128.git.syednwaris@gmail.com>
+ <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7c0bcc9e-ab76-b356-7da6-6eb8b3868610@arm.com>
+Date:   Fri, 19 Jun 2020 20:17:05 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <21306a59-8f20-ad08-fdc1-bcc6333c01d4@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <46c05c5deeada60a13ee0de83c68583d578f42fd.1592224129.git.syednwaris@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the RPC pins/groups/functions to the R8A77970 PFC driver.
-They can be used if an Octal-SPI flash or HyperFlash is connected.
+On 2020-06-15 13:54, Syed Nayyar Waris wrote:
+> This patch reimplements the xgpio_set_multiple function in
+> drivers/gpio/gpio-xilinx.c to use the new for_each_set_clump macro.
+> Instead of looping for each bit in xgpio_set_multiple
+> function, now we can check each channel at a time and save cycles.
+> 
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+> Changes in v8:
+>   - No change.
+> 
+> Changes in v7:
+>   - No change.
+> 
+> Changes in v6:
+>   - No change.
+> 
+> Changes in v5:
+>   - Minor change: Inline values '32' and '64' in code for better
+>     code readability.
+> 
+> Changes in v4:
+>   - Minor change: Inline values '32' and '64' in code for better
+>     code readability.
+> 
+> Changes in v3:
+>   - No change.
+> 
+> Changes in v2:
+>   - No change.
+> 
+>   drivers/gpio/gpio-xilinx.c | 62 ++++++++++++++++++++------------------
+>   1 file changed, 32 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 67f9f82e0db0..e81092dea27e 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -136,39 +136,41 @@ static void xgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>   			       unsigned long *bits)
+>   {
+> -	unsigned long flags;
+> +	unsigned long flags[2];
+>   	struct xgpio_instance *chip = gpiochip_get_data(gc);
+> -	int index = xgpio_index(chip, 0);
+> -	int offset, i;
+> -
+> -	spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -
+> -	/* Write to GPIO signals */
+> -	for (i = 0; i < gc->ngpio; i++) {
+> -		if (*mask == 0)
+> -			break;
+> -		/* Once finished with an index write it out to the register */
+> -		if (index !=  xgpio_index(chip, i)) {
+> -			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -				       index * XGPIO_CHANNEL_OFFSET,
+> -				       chip->gpio_state[index]);
+> -			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> -			index =  xgpio_index(chip, i);
+> -			spin_lock_irqsave(&chip->gpio_lock[index], flags);
+> -		}
+> -		if (__test_and_clear_bit(i, mask)) {
+> -			offset =  xgpio_offset(chip, i);
+> -			if (test_bit(i, bits))
+> -				chip->gpio_state[index] |= BIT(offset);
+> -			else
+> -				chip->gpio_state[index] &= ~BIT(offset);
+> -		}
+> +	u32 *const state = chip->gpio_state;
+> +	unsigned int *const width = chip->gpio_width;
 
-Based on the patch by Dmitry Shifrin <dmitry.shifrin@cogentembedded.com>.
+Immutable pointers to mutable data are pretty unusual, especially for 
+temporary local variables. Let me share my thought process upon seeing this:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+- hmm, is "* const" simply a mistake that's meant to be "const *"?
+- <scan the rest of the function> no, updating chip->gpio_state seems 
+appropriate, so it can't be that.
+- does anything take the address of either of these variables that might 
+justify it?
+- <scan the rest of the function again> nope, they're only ever used by 
+value
+- hmm, maybe it's just paranoia, but in that case why isn't width "const 
+* const" since chip->gpio_width shouldn't need to be modified?
+- hmm...
 
----
-The patch is against the 'sh-pfc' branch of Geert's 'renesas-drivers.git' repo.
+And at that point I've spent nearly a minute parsing what should have 
+been be some trivial definitions of local shorthand variables. Defensive 
+programming is all very well, but the distraction to readers (I can't be 
+the only one) can easily outweigh any perceived value in trying to 
+harden against theoretical future developer error in a straightforward 
+~30-line function.
 
-Changes in version 2:
-- fixed up the initializer for rpc_ctrl_mux[];
-- added Geert's tag.
+> +	unsigned long offset, clump;
+> +	size_t index;
+> +
+> +	DECLARE_BITMAP(old, 64);
+> +	DECLARE_BITMAP(new, 64);
+> +	DECLARE_BITMAP(changed, 64);
+> +
+> +	spin_lock_irqsave(&chip->gpio_lock[0], flags[0]);
+> +	spin_lock_irqsave(&chip->gpio_lock[1], flags[1]);
 
- drivers/pinctrl/sh-pfc/pfc-r8a77970.c |   76 ++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+Why _irqsave on the inner lock? (think about it...)
 
-Index: renesas-drivers/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-===================================================================
---- renesas-drivers.orig/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-+++ renesas-drivers/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
-@@ -1416,6 +1416,64 @@ static const unsigned int qspi1_data4_mu
- 	QSPI1_IO2_MARK, QSPI1_IO3_MARK
- };
- 
-+/* - RPC -------------------------------------------------------------------- */
-+static const unsigned int rpc_clk1_pins[] = {
-+	/* Octal-SPI flash: C/SCLK */
-+	RCAR_GP_PIN(5, 0),
-+};
-+static const unsigned int rpc_clk1_mux[] = {
-+	QSPI0_SPCLK_MARK,
-+};
-+static const unsigned int rpc_clk2_pins[] = {
-+	/* HyperFlash: CK, CK# */
-+	RCAR_GP_PIN(5, 0), RCAR_GP_PIN(5, 6),
-+};
-+static const unsigned int rpc_clk2_mux[] = {
-+	QSPI0_SPCLK_MARK, QSPI1_SPCLK_MARK,
-+};
-+static const unsigned int rpc_ctrl_pins[] = {
-+	/* Octal-SPI flash: S#/CS, DQS */
-+	/* HyperFlash: CS#, RDS */
-+	RCAR_GP_PIN(5, 5), RCAR_GP_PIN(5, 11),
-+};
-+static const unsigned int rpc_ctrl_mux[] = {
-+	QSPI0_SSL_MARK, QSPI1_SSL_MARK,
-+};
-+static const unsigned int rpc_data_pins[] = {
-+	/* DQ[0:7] */
-+	RCAR_GP_PIN(5, 1), RCAR_GP_PIN(5, 2),
-+	RCAR_GP_PIN(5, 3), RCAR_GP_PIN(5, 4),
-+	RCAR_GP_PIN(5, 7), RCAR_GP_PIN(5, 8),
-+	RCAR_GP_PIN(5, 9), RCAR_GP_PIN(5, 10),
-+};
-+static const unsigned int rpc_data_mux[] = {
-+	QSPI0_MOSI_IO0_MARK, QSPI0_MISO_IO1_MARK,
-+	QSPI0_IO2_MARK, QSPI0_IO3_MARK,
-+	QSPI1_MOSI_IO0_MARK, QSPI1_MISO_IO1_MARK,
-+	QSPI1_IO2_MARK, QSPI1_IO3_MARK,
-+};
-+static const unsigned int rpc_reset_pins[] = {
-+	/* RPC_RESET# */
-+	RCAR_GP_PIN(5, 12),
-+};
-+static const unsigned int rpc_reset_mux[] = {
-+	RPC_RESET_N_MARK,
-+};
-+static const unsigned int rpc_int_pins[] = {
-+	/* RPC_INT# */
-+	RCAR_GP_PIN(5, 14),
-+};
-+static const unsigned int rpc_int_mux[] = {
-+	RPC_INT_N_MARK,
-+};
-+static const unsigned int rpc_wp_pins[] = {
-+	/* RPC_WP# */
-+	RCAR_GP_PIN(5, 13),
-+};
-+static const unsigned int rpc_wp_mux[] = {
-+	RPC_WP_N_MARK,
-+};
-+
- /* - SCIF Clock ------------------------------------------------------------- */
- static const unsigned int scif_clk_a_pins[] = {
- 	/* SCIF_CLK */
-@@ -1750,6 +1808,13 @@ static const struct sh_pfc_pin_group pin
- 	SH_PFC_PIN_GROUP(qspi1_ctrl),
- 	SH_PFC_PIN_GROUP(qspi1_data2),
- 	SH_PFC_PIN_GROUP(qspi1_data4),
-+	SH_PFC_PIN_GROUP(rpc_clk1),
-+	SH_PFC_PIN_GROUP(rpc_clk2),
-+	SH_PFC_PIN_GROUP(rpc_ctrl),
-+	SH_PFC_PIN_GROUP(rpc_data),
-+	SH_PFC_PIN_GROUP(rpc_reset),
-+	SH_PFC_PIN_GROUP(rpc_int),
-+	SH_PFC_PIN_GROUP(rpc_wp),
- 	SH_PFC_PIN_GROUP(scif_clk_a),
- 	SH_PFC_PIN_GROUP(scif_clk_b),
- 	SH_PFC_PIN_GROUP(scif0_data),
-@@ -1954,6 +2019,16 @@ static const char * const qspi1_groups[]
- 	"qspi1_data4",
- };
- 
-+static const char * const rpc_groups[] = {
-+	"rpc_clk1",
-+	"rpc_clk2",
-+	"rpc_ctrl",
-+	"rpc_data",
-+	"rpc_reset",
-+	"rpc_int",
-+	"rpc_wp",
-+};
-+
- static const char * const scif_clk_groups[] = {
- 	"scif_clk_a",
- 	"scif_clk_b",
-@@ -2039,6 +2114,7 @@ static const struct sh_pfc_function pinm
- 	SH_PFC_FUNCTION(pwm4),
- 	SH_PFC_FUNCTION(qspi0),
- 	SH_PFC_FUNCTION(qspi1),
-+	SH_PFC_FUNCTION(rpc),
- 	SH_PFC_FUNCTION(scif_clk),
- 	SH_PFC_FUNCTION(scif0),
- 	SH_PFC_FUNCTION(scif1),
+> +
+> +	bitmap_set_value(old, state[0], 0, width[0]);
+> +	bitmap_set_value(old, state[1], width[0], width[1]);
+> +	bitmap_replace(new, old, bits, mask, gc->ngpio);
+> +
+> +	bitmap_set_value(old, state[0], 0, 32);
+> +	bitmap_set_value(old, state[1], 32, 32);
+> +	state[0] = bitmap_get_value(new, 0, width[0]);
+> +	state[1] = bitmap_get_value(new, width[0], width[1]);
+> +	bitmap_set_value(new, state[0], 0, 32);
+> +	bitmap_set_value(new, state[1], 32, 32);
+> +	bitmap_xor(changed, old, new, 64);
+> +
+> +	for_each_set_clump(offset, clump, changed, 64, 32) {
+> +		index = offset / 32;
+> +		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> +				index * XGPIO_CHANNEL_OFFSET,
+> +				state[index]);
+>   	}
+
+TBH this looks like a rather overcomplicated and horribly inefficient 
+way of doing:
+
+	if (((u32 *)changed)[0])
+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET,
+				state[0]);
+	if (((u32 *)changed)[1])
+		xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+				XGPIO_CHANNEL_OFFSET, state[1]);
+
+(and doing the changed/state update itself one word at a time for each 
+condition would probably be a fair bit more efficient in terms of 
+minimising spilling to the stack on 32-bit machines)
+
+I can see this API having merit if the clumps are a weird size or 
+expected to be significantly sparse in the bitmap, but making 
+out-of-line calls to an iterator which itself involves another 
+out-of-line call and an integer division, all just to process two halves 
+of a 64-bit value, seems... unnecessarily silly :/
+
+[drive-by review since I had a "packing small values into bitmaps" 
+use-case and wondered if there might be anything interesting here]
+
+Robin.
+
+>   
+> -	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
+> -		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+> -
+> -	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
+> +	spin_unlock_irqrestore(&chip->gpio_lock[1], flags[1]);
+> +	spin_unlock_irqrestore(&chip->gpio_lock[0], flags[0]);
+>   }
+>   
+>   /**
+> 
