@@ -2,142 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FF1D2023E6
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 15:09:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D89320264F
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 22:07:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgFTNJ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 09:09:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23212 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728113AbgFTNJ2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 20 Jun 2020 09:09:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592658567;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+ypfIEqXxI1rZS8xHo7HMDMiiKRVrKIkJdE8+KOsLcw=;
-        b=KToFqv9hyXxzaK8w0IGnKLZXB5hOXAi3SnAOPE5C2TTmXRjMfarxz8upsLOhcqQyXwiem8
-        a5hJgAzbyaeu3IAtzGbsUFYnBYQTCXfMh1E05Ob1646ZvXoyPhHs1hA/U0Tfjgwzdcf18b
-        Mszu3nS2IwgtqtcvYDiRLuLGsRE1DZE=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-vtsYcBlUMM6qq7FS_Nvdnw-1; Sat, 20 Jun 2020 09:09:23 -0400
-X-MC-Unique: vtsYcBlUMM6qq7FS_Nvdnw-1
-Received: by mail-wr1-f70.google.com with SMTP id c14so6390455wrw.11
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 06:09:23 -0700 (PDT)
+        id S1728741AbgFTUHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 16:07:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44450 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728738AbgFTUHI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 16:07:08 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c17so15146071lji.11
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 13:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1R7JEXYt1HHp0CouB56E5bM/YXS+//KerD1pgri198Q=;
+        b=exK01JTMxni0en+KItqNJ0S/BfGAPNjBrBkcfB7Qnu+PLg0J4jMv6aWnfCkdhgrBu0
+         ne58bXR8G3LHaUT8e0XF9nair46sDthB0i2X9HWcJ502Lx/juYSHn7DPkab0IgCZhpGX
+         c9VDCgCcm5jC+bDdvyDlI5LG2uJJsoCVVJJXPIOEWshrmFjWwy8XiAJWxQmjPqK7yo2j
+         7NHl9WbhHTrjwc7qU+3paM9Q/csXlKDrOprcW0/MDEst4+MXTTuMmCL6FBxUlSv4k47w
+         sEQhNC4JII/GFIIf6dcwdkEQtc9uvmFuhlFlx6NcDp8uGBcIgSDMYWar4ZT2pLirYXWS
+         Gg8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+ypfIEqXxI1rZS8xHo7HMDMiiKRVrKIkJdE8+KOsLcw=;
-        b=OBTAqG3kC35AMG9ibxse1mcJvIzxe2Fjuks1R6+CFbCb4XaDaP6VaPkeNl08FgEBAn
-         hwfYDSXK5C6RudUrYGLt7W5kWvta6NMXGWdo8MMAcJfrMS6uPjYhEgHWLH9y0wrBDq0e
-         yBxePYgDWlkZxsyCH4mOAyGOxrVQB5x/E33QrTTrki+Lp+B9+tHpD+IWKS+HK5bHBSv7
-         JHm1+Iz6DuJ0i6+IlQkQbnIQL/myZIMfgY0tmfIwTubQbhtJEb/LIPsOQe7sPncKzR2G
-         vmuqCO2wNlk2DVM8c/NukLaOb4XGPgUKKlLu5MJLRaEr0KUzVPej/VM7mXGs3eqmPbDb
-         1M1w==
-X-Gm-Message-State: AOAM531JmWWPEVseiLolveqUkrAzlg9ucd9bDVAsLyZO3jw1BY+4iXTF
-        dR5WbkZwjVWPPioMI91z8TVJ/uZvCQQGQt/B/LHY4O3H7LHv2sKn8nAiD1ceDuk+6oejODAhuc/
-        1e47rVujDtnC6qGX9l1gfUA==
-X-Received: by 2002:a5d:4710:: with SMTP id y16mr9415202wrq.189.1592658562260;
-        Sat, 20 Jun 2020 06:09:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwq+btKWtdDTjyPLMo90lzn0ZVOTGxbfEq8AiITy2GCUELOFoHZ7fVrfLR8ewF4Pkf98z0RBg==
-X-Received: by 2002:a5d:4710:: with SMTP id y16mr9415187wrq.189.1592658562002;
-        Sat, 20 Jun 2020 06:09:22 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id y17sm10918444wrd.58.2020.06.20.06.09.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jun 2020 06:09:21 -0700 (PDT)
-Subject: Re: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a
- while on gpiod_get(..., GPIOD_OUT_HIGH)
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-References: <20200606093150.32882-1-hdegoede@redhat.com>
- <20200608105953.GC247495@lahna.fi.intel.com>
- <20200615100345.GV2428291@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3c7d2097-6ade-0568-4170-94805589cf46@redhat.com>
-Date:   Sat, 20 Jun 2020 15:09:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1R7JEXYt1HHp0CouB56E5bM/YXS+//KerD1pgri198Q=;
+        b=SH5tWuwK2FeQZ9/zZfYwTB6oImDMg0CbdwJZBDvQtQwMXFJkd30z6NkEdfjUugpSnj
+         bWbb5rAYhevyXW6Hp2kJwdnEd6kaoYzdc3LbGCwSFF+ATCxWljONEg/N0Ad9YNrSE3zr
+         qUH8zvyQDApu9wp58GkrGwYkyGgUNBrOcRnSVPLyB+osw2zJ89/Ee7mXeBYeoNI376Ln
+         PwsPf+Cxa8GjP/cT8tcnNEsBqfJNSxfEJwYaFnB1K1vwLozSIZxcuc0xF5q1cshjZdpl
+         bVWRd0FLMewzXldLDNKwqchTZaC4Gq0G66uBXAOaRZKizrGo0iMRnvxVdoh32idJnqe+
+         oCzw==
+X-Gm-Message-State: AOAM531Xo3ZgyxVAU0tmqB5aJuHmep8qKUtxr0iGXmK0eCangExL0VB6
+        xX4HpMgqhQ08/3r/E3ww8OY58LigcZgKeeWz/2zpcQ==
+X-Google-Smtp-Source: ABdhPJzqDDpCQUw4ihD2vuoiRAREP7goOEw2oLtKfp/TxCBlQSwp8k6nqeRhq2YRi0eIN0urkrX5o+i5kyqwG2hGVM8=
+X-Received: by 2002:a2e:7303:: with SMTP id o3mr5119361ljc.100.1592683566426;
+ Sat, 20 Jun 2020 13:06:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200615100345.GV2428291@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1592541089-17700-1-git-send-email-sivaprak@codeaurora.org>
+In-Reply-To: <1592541089-17700-1-git-send-email-sivaprak@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 20 Jun 2020 22:05:55 +0200
+Message-ID: <CACRpkdbnQZX7RJ3+rgu2Yfg4Q3O2X2dFzgmA7f6ej7N-yh1d9Q@mail.gmail.com>
+Subject: Re: [PATCH V2] pinctrl: qcom: ipq6018 Add missing pins in qpic pin group
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        Sricharan R <sricharan@codeaurora.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, Jun 19, 2020 at 6:31 AM Sivaprakash Murugesan
+<sivaprak@codeaurora.org> wrote:
 
-On 6/15/20 12:03 PM, Andy Shevchenko wrote:
-> On Mon, Jun 08, 2020 at 01:59:53PM +0300, Mika Westerberg wrote:
->> On Sat, Jun 06, 2020 at 11:31:50AM +0200, Hans de Goede wrote:
->>> The pins on the Bay Trail SoC have separate input-buffer and output-buffer
->>> enable bits and a read of the level bit of the value register will always
->>> return the value from the input-buffer.
->>>
->>> The BIOS of a device may configure a pin in output-only mode, only enabling
->>> the output buffer, and write 1 to the level bit to drive the pin high.
->>> This 1 written to the level bit will be stored inside the data-latch of the
->>> output buffer.
->>>
->>> But a subsequent read of the value register will return 0 for the level bit
->>> because the input-buffer is disabled. This causes a read-modify-write as
->>> done by byt_gpio_set_direction() to write 0 to the level bit, driving the
->>> pin low!
->>>
->>> Before this commit byt_gpio_direction_output() relied on
->>> pinctrl_gpio_direction_output() to set the direction, followed by a call
->>> to byt_gpio_set() to apply the selected value. This causes the pin to
->>> go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
->>> calls.
->>>
->>> Change byt_gpio_direction_output() to directly make the register
->>> modifications itself instead. Replacing the 2 subsequent writes to the
->>> value register with a single write.
->>>
->>> Note that the pinctrl code does not keep track internally of the direction,
->>> so not going through pinctrl_gpio_direction_output() is not an issue.
->>>
->>> This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
->>> already on at boot (no external monitor connected), then the i915 driver
->>> does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
->>> temporarily going low of that GPIO was causing the panel to reset itself
->>> after which it would not show an image until it was turned off and back on
->>> again (until a full modeset was done on it). This commit fixes this.
->>>
->>> This commit also updates the byt_gpio_direction_input() to use direct
->>> register accesses instead of going through pinctrl_gpio_direction_input(),
->>> to keep it consistent with byt_gpio_direction_output().
->>>
->>> Note for backporting, this commit depends on:
->>> commit e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once
->>> when setting direct-irq pin to output")
->>>
->>> Cc: stable@vger.kernel.org
->>> Fixes: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations")
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> Pushed to my review and testing queue, thanks!
+> The patch adds missing qpic data pins to qpic pingroup. These pins are
+> necessary for the qpic nand to work.
+>
+> Fixes: ef1ea54eab0e ("pinctrl: qcom: Add ipq6018 pinctrl driver")
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
+> [V2]
+>  * Corrected Fixes tag
 
-I'm not seeing it here:
+Applied this instead of the previous patch.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/log/?h=review-andy
-
-Did you perhaps forgot to push it ?
-
-Regards,
-
-Hans
-
+Thanks,
+Linus Walleij
