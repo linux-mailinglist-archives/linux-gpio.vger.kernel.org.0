@@ -2,78 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0011A202670
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 22:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C345202674
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 22:44:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgFTUnP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 16:43:15 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33755 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgFTUnO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 16:43:14 -0400
-Received: by mail-lf1-f66.google.com with SMTP id g2so7510053lfb.0
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 13:43:13 -0700 (PDT)
+        id S1728819AbgFTUo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 16:44:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46511 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728807AbgFTUo3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 16:44:29 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z9so15205343ljh.13
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 13:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lcFxZDJV0JE7EILOFQLnvdmPuPHbFA43GAORC1SuIgc=;
-        b=UJDRoyXfza9eu6l9hI9fr7ez3X/6F/4uo85Ob3sf281CMgHH3m+Mtx913shdmjDCe0
-         wzT1brbPxl7u1YLem58YAbAa4VpZFhvnGvMihW/TlnF6bZ1DoH/Wu+ayNVzRC6yB28kw
-         7TlBjKeoqPAGw7KP7ahp3CrVxtxGP+gXNgau75MLjl6u/z5yMPZf5QKKEy7le2fxjfjk
-         q92+piYiIAsi8zTdAD0tFoH7sTEIpefFXSn3742nZAZBLtDSIGpF65YMY/aPDU7SHUs+
-         M/HOxh1ELVqvlSqscMPa0KBYOA8R8J5zdAbxcXIxdltWl0DL8oMAxbyMonfdoQHqtsRR
-         oLGg==
+        bh=ctY1Wy9wIIIcbQLpOXjoHpHxkeNAAsK0lL/c72YppyU=;
+        b=O2v3CokRst/vy3A+uiSf4+WOQv/7+8oGHSGKF44cG69xXPba/65IxO9vm/MuwdhUp5
+         OmxmT5M1sIiAkW4E/K7YlcHIRMfawaAfHxCts8wS3g3EHM4wwyxK8/CAmOI+3Byv+bdf
+         tWDCSaModGS2huVaIsqGxE2n4+E08fwbMEVKOdHw/Z/WcL0qaeIpJQJ5v2DpyLvALSCr
+         F/Q4lu70nVdxlNYuA6CXpnFFRvTMvcXflkz/I0lA2bCZlwDxSxmVDrwtKhktGm02Rjn3
+         Y2bcS67UG958vhQiVpGaldqjpisCJNCYm+jEIBMjUO6+kosucgpAY9iz1ffpf9cqgmHC
+         mDDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lcFxZDJV0JE7EILOFQLnvdmPuPHbFA43GAORC1SuIgc=;
-        b=skcuV0Z7JBvELciqaNCfyq9oZMp5mEvYyjGNJbbmkbir4aQJgjsh4Z2V+u9+GXF2ND
-         nsSeBxTQKytdvuW8b36cY9it95ydx259OZsIpIfhkeqxxByPvov4QmE2hWhRP8NM0OBt
-         F8ts+sDjMAL3nwTKnrLmGZ+7BWheAUFv05dM0m25qmabbQVVDyi9686rTTAtghAaSXbu
-         iSZ4xUJu7352pdHngZI+Abz6hMIMU0B9QV+AVdlw8h+UkcE7y6PIlLRt9lgYbcvujsPI
-         G8jSZD2P6w6nyyPgfmKPOilScMOfofAtqL4PcaTB43/dqwua0t9HVFM2zhRETDXgnm0k
-         E5zA==
-X-Gm-Message-State: AOAM531NJW50vmj6FUFzZ90T7Re4bRLtvVfBcSoaxzSUGwngHXq05dOL
-        OzIS2y7RW1bpk5fezI9pZhnjtvZ9GawZhXuf9ypeGw==
-X-Google-Smtp-Source: ABdhPJxYtAEDvRBSpp8tdmOckarOes/SsxhEPpZ0qNeeF/xp2t4qLjK5NUS7m1mNGy9cL9z49GKsu9JGaSMlrHxtXso=
-X-Received: by 2002:a05:6512:31ce:: with SMTP id j14mr1633403lfe.47.1592685732304;
- Sat, 20 Jun 2020 13:42:12 -0700 (PDT)
+        bh=ctY1Wy9wIIIcbQLpOXjoHpHxkeNAAsK0lL/c72YppyU=;
+        b=py7Udkdg7oPvjkD1+ksTDHIB53U8wyyvT8nnbAEmjPK+TEH6jsR2FMuj2ItIqyf80q
+         CrS2baegu3UOfdGafyzDSUByjJfgrz9RCUX0cQ7ndZqeK4bHBkgJSJRM4pd4muYDs1LD
+         WdoNngWThHx0qHB+Zxae/KJRE3qlVpypsNd5DHiXbwtqoo339/ovSggX20m8uH/nQLtH
+         0v0urucXs7zVT+pREN7Ls7IeS1mpRhOzeOLGYTHY+3P6fnnNC0P6hDYSoscC3lFAB82c
+         au0qw65Hsc8UaA/1P3SyAykrcaTcusN+Kf1z8YSApQwvGCWQKJM9rwFJ7biIHHjEB4FB
+         e0yw==
+X-Gm-Message-State: AOAM533wIsq3sM2qQAewkoa5dtrSNxPGshzg1nU3GSLfBsN/6QMsOPeQ
+        2arcQlpzinkgUDg5oXVGfg+lYHQhJEVh2QrPPRQBPZQ0njg=
+X-Google-Smtp-Source: ABdhPJxBM1udCjVBlr0yRSi7Ob7TlqTZf8Wuo6lMRWikVhe0vp5cJc9bcgk6tgDNV0FWDPtXeY2aQNoyhRip/C3VkZw=
+X-Received: by 2002:a2e:a40f:: with SMTP id p15mr5232818ljn.286.1592685807390;
+ Sat, 20 Jun 2020 13:43:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200612112758.GA3407886@x1>
-In-Reply-To: <20200612112758.GA3407886@x1>
+References: <20200612120609.12730-1-paul@crapouillou.net>
+In-Reply-To: <20200612120609.12730-1-paul@crapouillou.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 22:42:01 +0200
-Message-ID: <CACRpkdY8u8DxtO9nv5_Y17H3cs+ExvUOGEhmwWqz34q-QTRNtg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: single: fix function name in documentation
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
+Date:   Sat, 20 Jun 2020 22:43:16 +0200
+Message-ID: <CACRpkdZwFuiCfJNMrO3aH0eZnnmX__-5EjRnrR8tHh4gqSB=1w@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ingenic: Add ingenic,jz4725b-gpio compatible string
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     od@zcrc.me,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 1:28 PM Drew Fustini <drew@beagleboard.org> wrote:
+On Fri, Jun 12, 2020 at 2:06 PM Paul Cercueil <paul@crapouillou.net> wrote:
 
-> Use the correct the function name in the documentation for
-> "pcs_parse_one_pinctrl_entry()".
+> Add a compatible string to support the GPIO chips on the JZ4725B SoC.
+> There was already a compatible string for the pinctrl node, but not for
+> the individual GPIO chip nodes.
 >
-> "smux_parse_one_pinctrl_entry()" appears to be an artifact from the
-> development of a prior patch series ("simple pinmux driver") which
-> transformed into pinctrl-single.
->
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-Patch applied for fixes.
+Patch applied.
 
 Yours,
 Linus Walleij
