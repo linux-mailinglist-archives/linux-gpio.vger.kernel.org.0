@@ -2,84 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9FC92026E5
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BDF92026E8
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgFTVeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 17:34:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39563 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgFTVeH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:34:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a9so15288541ljn.6
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:34:05 -0700 (PDT)
+        id S1729017AbgFTVfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 17:35:38 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34125 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729042AbgFTVfh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:35:37 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u25so7551282lfm.1
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
-        b=fM4jBfoJ8l2d8ZgUkqeYaPu66l91KZ+pIQwrkEHS4iDVaScL1olYwKtzFsLv7tD6nc
-         U5k2wV+U0eGTAME55rsSEefFLQbDFZoLdJWUSbEFQ6t2b9dMa5pThSZpU6CpmQhaAA6x
-         wZQhubqxLH+t28SzlysCuddi8WW516Qro+ktfIHpZpNZO6upfyub7jvC1rh4j1dzn3kN
-         r5s0jtTEv2e77Tzt4Z8dZ4ZvsjOeJF8+gJsFz2nwuIyW2DkeeOkQKMcGAsbiACdNNct8
-         xXLJO8p/SzLJuWgd1BIvAcPLaFclUaxFY/oF3V6ZsY1n6ODXPpOTgsHK/601jY9P/XqC
-         NDxQ==
+        bh=3+9QHb9ghdIy3+7pfNpTLxO6P2BWg5e6MpFuHAr7gQA=;
+        b=yWmHf50gZlST9gXFNybUAWe6FVywTFE5PUaafxbJ/1epTV0n+Lv+CpSwKOg1RuQf4K
+         BwifKjuxExz1QXAUp6i3sPeIKKMCw416sYVuOUHMGy/29//ZZq15vrTSJxbnc6bKNJ0G
+         QTyaGW0UrCqFXq8mLHTGFcRsQVmZW6+Dc0JjPBzPXys4RgobptufQsi0EgpjQvWRi12Q
+         ICJ84NCYkJ4XYldpNVIEac1hE4h/aaHAj9d7fQEPIbyjB7FEApSRhFREVIbIEThtDTEh
+         Pv3+NilD68wnMWf8PaAVKjjJDpgjze5uj2cfQmrVmqkVbxAbNSDe+OAOnxGyWU5MAsv4
+         OZ5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
-        b=Vwx63yX5+ii+qqY5wNUfQPLyqyvXDJ0HK+VCuTbCHEuz65QiUNPYIXd1nWQLh8bWHy
-         fi5PxwYdxkneLIcYfOtSnQGh+uZREYjOlTN1RhsJeYYr2/Y7hihwvjxdVfdbHgGTuZZC
-         Yd1/Jxwk2wCHvbw4Cd4USlcze/mjYQ0kA/jKWan1N6Q4PPqWseN+5Jp0Hdk+pAQNQbAa
-         IdUPkQctLE0tk01mR+pmDuqskYdf0DBwZC2pFWV6+Y+v1D8DpCaZH8fROgdqPe2mH9gp
-         0ekn+4LQhcMsi//Fe7p1QZHhGTSkECkD3MeUEPX6AXW+CTrJg8C5RjM2Oa1oomLB4LFH
-         VdUA==
-X-Gm-Message-State: AOAM530mTv7L2ROIZ+tbpp+9prYeP47RKqvcBl+Bk2pT/syIwFJ7HGN8
-        QVYpidaPUoQ78Vm8DxMw9Rji7wITHJiTjZqEvvtSDQ==
-X-Google-Smtp-Source: ABdhPJyc/rKcuZI7IzUgOFsdvhotZrQBegRWHGiFD7Jo5zA51VgOf9AQa+SOJTDLDml/A2XI/RqRiyXvUzFabtKoFAk=
-X-Received: by 2002:a2e:351a:: with SMTP id z26mr4816556ljz.144.1592688785302;
- Sat, 20 Jun 2020 14:33:05 -0700 (PDT)
+        bh=3+9QHb9ghdIy3+7pfNpTLxO6P2BWg5e6MpFuHAr7gQA=;
+        b=XTxwkD+HkTZ3g4bqk2sBx2ijwZEJzJzVwBjP+244lj5Qqsx/aNf25VmGQNbPH2Pyr7
+         ro5KGqQx+H8SSfxA2kVIV2ft/BfDWWT5bQuwiMpfdszaTF7hg2lNBG86AO099+NrHFuh
+         Uug3R1NC+F2YSE0xq666ncyQ3qKOyq4xVCRW8h5EMY9LikhMCQfvvBrmmRFcIZskHBnL
+         HDOkReNDbC3ZvTS2xYXUCAQpoKPoSsyq8r3u8Nn0YwIuRBl2XEeh4liFWWF+FxHNk08o
+         KLgkjV3iEQa9p9zNDKud1QoSGN654kOFqYG2+EAXlXNw+XaSAg2XvTnLleuLKybvcpEr
+         tnQg==
+X-Gm-Message-State: AOAM533qO5Ig7lej3leU1b2xezCJZakMFaIfrCRcxutm5jovR22S6K3E
+        BwwMkB/V3IGNGyC3ex5B/CoWvjsxUX7vjiIZTaufCA==
+X-Google-Smtp-Source: ABdhPJymDZLDq9jqFxfQFsgfJoOmYGGWijE0qWUIwgm6/kOFKN6HrfPAS9IzTxrDiH+cm72wLGp2koofZY5WkcS99zg=
+X-Received: by 2002:a19:7407:: with SMTP id v7mr5202141lfe.4.1592688874285;
+ Sat, 20 Jun 2020 14:34:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200220162246.8334-1-benjamin.gaignard@st.com> <20200520085142.GD271301@dell>
-In-Reply-To: <20200520085142.GD271301@dell>
+References: <20200618073331.GA9403@localhost.localdomain>
+In-Reply-To: <20200618073331.GA9403@localhost.localdomain>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 23:32:54 +0200
-Message-ID: <CACRpkdYry6=iJ8hpy+pS9hFuBJD5Cf1ZKJwCkCBZPGW4rGa86Q@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to json-schema
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Sat, 20 Jun 2020 23:34:23 +0200
+Message-ID: <CACRpkdZm2978CG0z=9eZMWk3RpOYzjtgFZ8REj1hZDBE7gwHZA@mail.gmail.com>
+Subject: Re: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-power@fi.rohmeurope.com,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, May 20, 2020 at 10:51 AM Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
->
-> > Convert stmfx bindings to json-schema
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> >  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
-> >  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
->
-> >  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
->
-> Linus, anything from you?
+On Thu, Jun 18, 2020 at 9:33 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 
-Looks good:
+> Add entry for maintaining power management IC drivers for ROHM
+> BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
