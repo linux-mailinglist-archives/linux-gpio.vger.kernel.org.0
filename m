@@ -2,89 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BCF0202683
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 22:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15053202695
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgFTU5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 16:57:15 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38322 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgFTU5O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 16:57:14 -0400
-Received: by mail-lf1-f68.google.com with SMTP id d27so7488186lfq.5
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 13:57:11 -0700 (PDT)
+        id S1728191AbgFTVET (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 17:04:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44490 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbgFTVES (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:04:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id c17so15222512lji.11
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ROHy8PT89Cn+9siMYllBMwwAqBhLcNofbVcwsnhhn8I=;
-        b=Zh6LoBBZ3yC1GwNm+3u8GkIWTdtNwbBggK1igC6j3PNYJAhU2jdNvOTKbkOjJpz9+o
-         Z5v5f1KOnuZHgpYGVph63hxrK6rvaeLv4STJJJVGx24RW4Gl4zeTJ3XkDxoaC57ng4Pl
-         41gCJfrPR4/dDpRWI2PJpv9AiMiw3tTI7ftbbkjjrXe4Rlmp+ELXDuNfXt155ACJFclG
-         jY2Cf1oMSTa/2oveAob+BlQWY1Phn3xu3htdqzN0kAqXEkvHdNnbWiCPQ6YIEuXTZlbU
-         UzRDL9hdslnMOCClR3EQTpDDkkiqLAthali2GYYOkE5TxJAyq4XLJh72LBoCniMBSL+Y
-         pmRA==
+        bh=uMfSif8lYt33+r64QbIMr/6xvgq88zcecC3Y2xRHieQ=;
+        b=jffKj9+P2dPJBSyOULJuAU6eBWKCl+2gQgwHtfsz6jmfHRR3WF40mhzxBPXFR+c3j1
+         WE/4fe7XbkzFwaLQNUN0FbFefWCE6THJpVVFMNdhcYMiwViokPGEMmID+bZikNxuHXfy
+         +FrnK1/DCpoDSqn+e0cr4SlLZE5JfYqb2yt4GxQoWoUbpMxbJ9EYEPouYmIhFEdxWLGr
+         QtTEoyudLU2HEq0axhatbGdFhwPmk8e8NND7hb2DldelRIjj0fcsJGsrRPMH85DaNjnq
+         66NAjB0c7ggwbnzd++elcTCWFgqTcsmzKaytPVhCfhST2MlsbPqCIngKn0hlvWeW60fG
+         /Y+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ROHy8PT89Cn+9siMYllBMwwAqBhLcNofbVcwsnhhn8I=;
-        b=CxBm+goIPMoBw7xGzsiwQjp9A6SIswo6NsJnMMLBffVm9+Eel8FEOVRJG04cBWQzDg
-         qD26RFrUbs1qUv7q7JtFalr8e1++XhEb9Ns9ifL+hvEBXXo52KITlqDuFy79hHgUrOV5
-         H+TeQ1LHev5NnmKpX85bivhz1qzOVK0qXDUNZortqukdEd72wijq/WrrdLxLHjeKJPkW
-         NYD9zrbqGgSxLETNGXppo1qUiC5p4cgv6bnnRjEYphecSa9l/vM9raw5g+owcTeEpGcd
-         J/L6g2NkVkkb4cEsdVdU84f9+VnzAmu4sTkN2CR46+/JcLCdW/VBW10nz27GDs/dJNjG
-         XsGQ==
-X-Gm-Message-State: AOAM533OLdk6xI48ZaimqgJEEVdr/KmYYM8DBViLGgnx9DJYqhszvqFY
-        jaKZZSqrLvEQplmEPpvdOR6/nkRDdb/TTdaOYHA5E3a7Ggg=
-X-Google-Smtp-Source: ABdhPJwT3d3Xzo+6D6WYQXEAqJJQ61tAXTpGEg1HRUSa4jDSvFFDUTOMRNlEjsw78HLYdmyvdQ2UbnbafURxxQjCQEA=
-X-Received: by 2002:a19:ccd0:: with SMTP id c199mr2917354lfg.194.1592686571099;
- Sat, 20 Jun 2020 13:56:11 -0700 (PDT)
+        bh=uMfSif8lYt33+r64QbIMr/6xvgq88zcecC3Y2xRHieQ=;
+        b=mAGXeDqU/00iCUPP7qVVwRq/dinYoGtJhN91+QkaHc14wYRTA/cW3NSF2vNWy6YOmg
+         OmzYzHnsYg6ZU36xlLm2OS5/JMEtoy7OhPfn49N30MofHYb0lk+W5DSrI7bwPwGuRLzg
+         ngKHuem1nPMQFpRB17x1c7dcGAzZasAtQK8AjRRWYtj1BPiVDDImjuLf7/7b77iyMn9V
+         ZS2DipNpd0LW+hh48SB+jCpqtaw0DzDbp2DuFncIHmGOtYzTt6g4L/7258yH2xPewYOa
+         SfFGgmXaTndRUopbNvJrrQU170rUYdUXKt37kQdx2HZNphSW0VU8X+biVNupn7RUMzGN
+         owrg==
+X-Gm-Message-State: AOAM5315iZXkYlWz9a1l4P4G52hBLDNXIXbY7z1PIYRhZCDrBU+yT1TZ
+        KBkLuO1rCOZrXrVwhlxrvtOC+0bEJbGkFigIR9meeQ==
+X-Google-Smtp-Source: ABdhPJw5SuKxJji2VfElAtYt42a0GP5lNrUCmrE3LEQtLbJKkZXvQKMkGNPhUVtMQZEJummq20kBonA8zp4n1tWKaUE=
+X-Received: by 2002:a2e:a40f:: with SMTP id p15mr5259398ljn.286.1592686995948;
+ Sat, 20 Jun 2020 14:03:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200612145006.9145-1-andriy.shevchenko@linux.intel.com>
- <20200612145006.9145-8-andriy.shevchenko@linux.intel.com> <20200615115927.GG247495@lahna.fi.intel.com>
- <20200615120148.GA2428291@smile.fi.intel.com>
-In-Reply-To: <20200615120148.GA2428291@smile.fi.intel.com>
+References: <1592224927-28576-1-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <1592224927-28576-1-git-send-email-rnayak@codeaurora.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 22:56:00 +0200
-Message-ID: <CACRpkdb0FYcNCJxNqj4sCFykcboe5SdAyVFu__jyLW5YHaqxbA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/13] pinctrl: intel: Introduce for_each_requested_gpio()
- macro
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sat, 20 Jun 2020 23:03:05 +0200
+Message-ID: <CACRpkdaNSw3jfYFY21LcrnV+40=VBSiaCsZeHDmscb0pkRuybg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 2:01 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, Jun 15, 2020 at 02:59:27PM +0300, Mika Westerberg wrote:
-> > On Fri, Jun 12, 2020 at 05:50:01PM +0300, Andy Shevchenko wrote:
-> > > Introduce for_each_requested_gpio() macro which helps to iterate
-> > > over requested GPIO in a range.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > >  drivers/pinctrl/intel/pinctrl-intel.h | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/drivers/pinctrl/intel/pinctrl-intel.h b/drivers/pinctrl/intel/pinctrl-intel.h
-> > > index 4e17308d33e9..c1f312bc28eb 100644
-> > > --- a/drivers/pinctrl/intel/pinctrl-intel.h
-> > > +++ b/drivers/pinctrl/intel/pinctrl-intel.h
-> > > @@ -249,4 +249,8 @@ const struct dev_pm_ops _name = {                                       \
-> > >                                   intel_pinctrl_resume_noirq)       \
-> > >  }
-> > >
-> >
-> > kernel-doc would be good to have here.
->
-> Okay, actually I considered to have this in the gpio/driver.h or so.
+On Mon, Jun 15, 2020 at 2:42 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
 
-Please put it there! It looks generally useful.
+> It would have been nice to be able to do this only for the particular
+> board with this design, however this change of removing gpio28 from the
+> pinctrl SoC file means we end up with one less wakeup capable gpio for
+> the entire SoC.
+
+Yeah but what about only removing it for this board in the driver then?
+
+> @@ -1122,7 +1122,7 @@ static const struct msm_pingroup sc7180_groups[] = {
+>  static const struct msm_gpio_wakeirq_map sc7180_pdc_map[] = {
+>         {0, 40}, {3, 50}, {4, 42}, {5, 70}, {6, 41}, {9, 35},
+>         {10, 80}, {11, 51}, {16, 20}, {21, 55}, {22, 90}, {23, 21},
+> -       {24, 61}, {26, 52}, {28, 36}, {30, 100}, {31, 33}, {32, 81},
+> +       {24, 61}, {26, 52}, {30, 100}, {31, 33}, {32, 81},
+>         {33, 62}, {34, 43}, {36, 91}, {37, 53}, {38, 63}, {39, 72},
+>         {41, 101}, {42, 7}, {43, 34}, {45, 73}, {47, 82}, {49, 17},
+>         {52, 109}, {53, 102}, {55, 92}, {56, 56}, {57, 57}, {58, 83},
+
+Make a copy of this tuple-array and in sc7180_pinctrl_probe()
+set sc7180_pinctrl.wakeirq_map and .nwakeirq_map to something
+board specific like that:
+
+if (of_machine_is_compatible("my,board")) {
+    sc7180_pinctrl..wakeirq_map = ... ;
+}
 
 Yours,
 Linus Walleij
