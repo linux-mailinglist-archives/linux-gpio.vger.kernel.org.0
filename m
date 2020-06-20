@@ -2,71 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB3CA2026A7
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:10:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33B8E2026B7
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgFTVKD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 17:10:03 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36561 "EHLO
+        id S1728874AbgFTVML (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 17:12:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41687 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgFTVKB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:10:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id i3so15284595ljg.3
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:09:59 -0700 (PDT)
+        with ESMTP id S1728979AbgFTVMK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:12:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 9so15274191ljc.8
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Gc9tdvMm5I7FJ9/c9wizyx0mIG41qGeqGwmlr+DZXMs=;
-        b=IvAC7ZQ3rsnPQbRpe/zhqJX5h5DHKg2O/MrnfYfjr9Zce7psVaMRbv9AhkaSnbgzO9
-         +WaPbgTnjvGnVJKwiLI8WAKGc6kWyYMwchzqviYciYEfZcPQ9D5xtRFr5tgz2Oq+16k0
-         DFIafeLVdCK3BP4iid2OzKBZViODJZYG5DNZaqPnzFzSsuGxIeKBSHBk6Dcwi72cNcen
-         u2bC9fuNz6HlM9G/ZJrKeg0F8THM+Gl1vS4O4q/YqnNsiKCStMLriluy51nB6rNwOtOI
-         tcnMd2RvUpAmKCH1xk0vtXcZ33/12atFQif1nAM/XxmRQMDxkQYKXqTTEvtI7pXawhfc
-         y9hQ==
+        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
+        b=ejwQKsS9R74OVx4oleO34kJ/97nhPXE5oUxGSV3txe70SwiGWv62+473pSxKiEXCDL
+         U5tedGRDKcJ42HmweVyL/YeRulQyKi1SjAM3wF5aYfzAVtLFlSXfhdyjkmS73imjEvlu
+         mUf0ycwAmGlre8Y5z0bue63mfiIvmQf9NqndNnegmKmECrygz6SfWdTy7X3xxiGd+gRR
+         +yQfN3RYHAGEDVUXCzjyj1IrM2oscTM+NA2sd3pyB8aGw9ES6CX3evJhV43ja5C7okJ1
+         pGlD4rxPQ9+Lg427gcKNTxNbkPUt1/zLlPM8E2ZhiDJtCxpWA0tEg/WZnrnmtzOhiXsc
+         0PrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Gc9tdvMm5I7FJ9/c9wizyx0mIG41qGeqGwmlr+DZXMs=;
-        b=d5iu6R7NsMWtQpTlfvm1qgtdUvr+8RBIDR6V9A9lKVqvOz2jSXsyDpPHcCYkZ97Y1G
-         iEmNitOFSJA1b/4nu2lJpizEIbCj3Rv1Pxq/Tppk2umWaQu50K2E3XFMfvxRKXHCJjTe
-         TnDT0Bsn//ic5Oro/RRHwJLonDb6v01bJ2m0KBanmSJAEjvlSeDzXwUX0vLL0wVtBqmK
-         0ri5Y0df1Er/8SNE/6+YrkX3LaOg8GvpkoFLvBrKO/hUHRspMgVuuAlosznqMiX47OFd
-         IjP0k/x4PvhERwVAdQ+OB7R3LfW9MoQ5O0eCGS/pZ2vu/kgcORC9SvQss4tjh2KVnPS1
-         JSKA==
-X-Gm-Message-State: AOAM533oKHI30Hcsw73fYzjUHHHpXw+VKBQUw1Nb/rWkt/y6WgL98UYm
-        c1NjuorX9A+p2UBWi6xe/2oVtpnkYyCjWHsOQeKschqlCVY=
-X-Google-Smtp-Source: ABdhPJwdgpgs+ay+WZjD/XkBsiAdpaLbdadabai2iJjIEJzxZyOWnj/D/DOGj5KOcwe67T4FZfBDGzbpDtr8cOH+enA=
-X-Received: by 2002:a2e:7303:: with SMTP id o3mr5207917ljc.100.1592687338273;
- Sat, 20 Jun 2020 14:08:58 -0700 (PDT)
+        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
+        b=ckXsPCFw0aAYaRrH6qDxaWMgTkGEvWZczaL/OJGFQBfa+R3ISbx8v32olNufgIe2pz
+         qikf2uOHTICAsfckGyCGW7CV4Zs9A4aafRryeUa8hjgk1AcVi9/ceYw3J/qiRjkA3kd4
+         m+KRZ2eE3PloBwPFG7SZVmy9ePqeWZhg4WzBp58FqWLlnGlSUvHng+yyXlV2xlD8EiSD
+         D0GMsk1Bo0lyUiKZCD5EwmLBV/xjlkqYWtQ45bFjNDW1uj1++2LCt8XtGKVXy17rDMZY
+         oR4xv3I+w+FGxj9jszFQMr3YPzv/sHoCLipM+lnys9L5F3f3EjKKUcEqm11XSdNMk1PN
+         dpvQ==
+X-Gm-Message-State: AOAM532Mwy1BMNBg/E3s78C47YjoaJZS1HklHHvYTO5B+hQPPcxtg/C6
+        0Cv+hta5S3x2o8jL04FUR08EX4UXQy/8aeoxRYQ3pg==
+X-Google-Smtp-Source: ABdhPJyNzj8lntNB+gPdQZorIuGyuglVZ2GRN4JTEikAZoHXf3zt4iKWY8HyVoOjoJhJdUnny/FjxeRZZMdO0eg8d0w=
+X-Received: by 2002:a2e:351a:: with SMTP id z26mr4790421ljz.144.1592687468252;
+ Sat, 20 Jun 2020 14:11:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200615125951.28008-1-alexandre.torgue@st.com>
-In-Reply-To: <20200615125951.28008-1-alexandre.torgue@st.com>
+References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
+In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 23:08:47 +0200
-Message-ID: <CACRpkdbgMRW6Jqde6AOcjJ9=T-d5fTO02N19YsrVL+iaZiKXwA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: stm32: Add possibility to configure only one pin
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+Date:   Sat, 20 Jun 2020 23:10:57 +0200
+Message-ID: <CACRpkdaWZeMCNuwUNzyYd+g9Q75F_8o7K1Npxr46V+-Y4z-6wA@mail.gmail.com>
+Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 2:59 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
 
-> Currently stm32 pinctrl driver offers only the possibility to configure pins
-> groups thanks "pin_config_group_set" callback. To configure pins thanks to the
-> GPIOlib (i.e. GPIO_PULL_UP ...) this driver needs also to support
-> "pin_config_set" callback.
+> This add support for Sparx5 pinctrl, using the ocelot drives as
+> basis. It adds pinconfig support as well, as supported by the
+> platform.
+>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 
-Nice feature growth!
-Patches applied.
+Is it fine if I just apply this driver to the pinctrl tree?
+Otherwise Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
