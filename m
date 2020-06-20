@@ -2,76 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD482026DF
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:32:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FC92026E5
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:34:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgFTVcr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 17:32:47 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37403 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728942AbgFTVcq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:32:46 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e4so15302437ljn.4
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:32:44 -0700 (PDT)
+        id S1728999AbgFTVeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 17:34:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39563 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729032AbgFTVeH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:34:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a9so15288541ljn.6
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jPqxfVUy1Gzl1fLE6PCdAwbdXrjoXBidHDbOe2gfB/Y=;
-        b=ybSMxPbji04GXBgQMUj5fbCOpXQxnIB+/uxJxJGkNZzsUGb1pf7fMjBkoUoCYE1fZx
-         Un5rLRNRQWJetGwQ7bHr3XWi92A7i1cYTAVM0s9HcGt2WLAOVTRDgFZtI2E7+UYz5tVB
-         lN97L+omd7SQNGhzCgcrckDFtsOmKhuxcFilXbYrbUaWuwxWhWLGXWMsxk28x81Kza6H
-         1naWcYaBoOgsQdxYZ9wouu5nlMGls2EdKSQIWN6Jt/Xp9dV7VXvfyAubx1Av0NraH3yW
-         spSGsrEEbO6Il25BAVb2L72ZRxta9QUtP3J9pz4CzzYVLbokoxIEtRVXVftlW8ZUQHhp
-         DG1g==
+        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
+        b=fM4jBfoJ8l2d8ZgUkqeYaPu66l91KZ+pIQwrkEHS4iDVaScL1olYwKtzFsLv7tD6nc
+         U5k2wV+U0eGTAME55rsSEefFLQbDFZoLdJWUSbEFQ6t2b9dMa5pThSZpU6CpmQhaAA6x
+         wZQhubqxLH+t28SzlysCuddi8WW516Qro+ktfIHpZpNZO6upfyub7jvC1rh4j1dzn3kN
+         r5s0jtTEv2e77Tzt4Z8dZ4ZvsjOeJF8+gJsFz2nwuIyW2DkeeOkQKMcGAsbiACdNNct8
+         xXLJO8p/SzLJuWgd1BIvAcPLaFclUaxFY/oF3V6ZsY1n6ODXPpOTgsHK/601jY9P/XqC
+         NDxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jPqxfVUy1Gzl1fLE6PCdAwbdXrjoXBidHDbOe2gfB/Y=;
-        b=tThMqyBN1qtWKAGhFmv9rImhPwfCXCf1/XmMX2uvuX3FqEt+anCA1CEtymEV7k3swV
-         FJ1MBPOShWWwuXSt0P+oAPFQa9jpyKgLgSQNZy5tTBDhLevBYmA92NEdpfchwpMFtwBX
-         M/Eml9N9rY0KNnF8gCYuKL+dH/FqPR+R7QwZ/1Ez+VuK8BfnJw918i974O5i97o4bltu
-         zKfk+fk3jzuFFEe9Qd+wn1sQKgs6N+Qr45NeZHUYe36EuKQhjp2/u2cEO1hyK24jeDbR
-         FeVbGfPOK8T5QZ7IBgTFpimIS794ux+C4oE6elgBFj/25zq41Q05WyF94HS7FWq/rhCr
-         2yhw==
-X-Gm-Message-State: AOAM532KlCxYYQ+XpseVDcC1n3qw/2nyeHD9ne/KHjUCXl1eeQiXPlUJ
-        F3rFbCd8ritHYG5AWlcWv3mdPJuNFZ8kzx8v91HPEarCyn8=
-X-Google-Smtp-Source: ABdhPJyX0/YcVM3NDYVudiZWpJg0yQTwjqwbFIl1YUal/YA0hvXTcQ+p+9pzF3dbVB57FdkR85fcY03rZyyxXP0NdrU=
-X-Received: by 2002:a2e:7303:: with SMTP id o3mr5238694ljc.100.1592688703993;
- Sat, 20 Jun 2020 14:31:43 -0700 (PDT)
+        bh=XMLLcSh0FlLbcDXmFaO9BURwcvJCFIp9+2dM/IBT/Z8=;
+        b=Vwx63yX5+ii+qqY5wNUfQPLyqyvXDJ0HK+VCuTbCHEuz65QiUNPYIXd1nWQLh8bWHy
+         fi5PxwYdxkneLIcYfOtSnQGh+uZREYjOlTN1RhsJeYYr2/Y7hihwvjxdVfdbHgGTuZZC
+         Yd1/Jxwk2wCHvbw4Cd4USlcze/mjYQ0kA/jKWan1N6Q4PPqWseN+5Jp0Hdk+pAQNQbAa
+         IdUPkQctLE0tk01mR+pmDuqskYdf0DBwZC2pFWV6+Y+v1D8DpCaZH8fROgdqPe2mH9gp
+         0ekn+4LQhcMsi//Fe7p1QZHhGTSkECkD3MeUEPX6AXW+CTrJg8C5RjM2Oa1oomLB4LFH
+         VdUA==
+X-Gm-Message-State: AOAM530mTv7L2ROIZ+tbpp+9prYeP47RKqvcBl+Bk2pT/syIwFJ7HGN8
+        QVYpidaPUoQ78Vm8DxMw9Rji7wITHJiTjZqEvvtSDQ==
+X-Google-Smtp-Source: ABdhPJyc/rKcuZI7IzUgOFsdvhotZrQBegRWHGiFD7Jo5zA51VgOf9AQa+SOJTDLDml/A2XI/RqRiyXvUzFabtKoFAk=
+X-Received: by 2002:a2e:351a:: with SMTP id z26mr4816556ljz.144.1592688785302;
+ Sat, 20 Jun 2020 14:33:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200618114906.79346-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200618114906.79346-1-andriy.shevchenko@linux.intel.com>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com> <20200520085142.GD271301@dell>
+In-Reply-To: <20200520085142.GD271301@dell>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 23:31:33 +0200
-Message-ID: <CACRpkdbWMS+qNQFsJ+9QrphTcqw+2EVRw177X0wTvTLoaXNuyQ@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: pca953x: Fix GPIO resource leak on Intel Galileo
- Gen 2
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Sat, 20 Jun 2020 23:32:54 +0200
+Message-ID: <CACRpkdYry6=iJ8hpy+pS9hFuBJD5Cf1ZKJwCkCBZPGW4rGa86Q@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to json-schema
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.co>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 1:49 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-
-> When adding a quirk for IRQ on Intel Galileo Gen 2 the commit ba8c90c61847
-> ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
-> missed GPIO resource release. We can safely do this in the same quirk, since
-> IRQ will be locked by GPIO framework when requested and unlocked on freeing.
+On Wed, May 20, 2020 at 10:51 AM Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
 >
-> Fixes: ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Convert stmfx bindings to json-schema
+> >
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > ---
+> >  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+> >  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>
+> >  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+>
+> Linus, anything from you?
 
-This seems to go on top of what Bartosz applied so I expect him to pick
-it up!
+Looks good:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
