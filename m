@@ -2,82 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33B8E2026B7
-	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69DD92026C2
+	for <lists+linux-gpio@lfdr.de>; Sat, 20 Jun 2020 23:17:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgFTVML (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 20 Jun 2020 17:12:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41687 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728979AbgFTVMK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:12:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 9so15274191ljc.8
-        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:12:08 -0700 (PDT)
+        id S1728931AbgFTVRn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 20 Jun 2020 17:17:43 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44530 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728891AbgFTVRm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 20 Jun 2020 17:17:42 -0400
+Received: by mail-lj1-f193.google.com with SMTP id c17so15239535lji.11
+        for <linux-gpio@vger.kernel.org>; Sat, 20 Jun 2020 14:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
-        b=ejwQKsS9R74OVx4oleO34kJ/97nhPXE5oUxGSV3txe70SwiGWv62+473pSxKiEXCDL
-         U5tedGRDKcJ42HmweVyL/YeRulQyKi1SjAM3wF5aYfzAVtLFlSXfhdyjkmS73imjEvlu
-         mUf0ycwAmGlre8Y5z0bue63mfiIvmQf9NqndNnegmKmECrygz6SfWdTy7X3xxiGd+gRR
-         +yQfN3RYHAGEDVUXCzjyj1IrM2oscTM+NA2sd3pyB8aGw9ES6CX3evJhV43ja5C7okJ1
-         pGlD4rxPQ9+Lg427gcKNTxNbkPUt1/zLlPM8E2ZhiDJtCxpWA0tEg/WZnrnmtzOhiXsc
-         0PrA==
+        bh=mHgH43K83+iQ6RNkHMCCXAsjIbVyGh9lGIEdQYieGCo=;
+        b=tRI9TCQFMHUFSxEdH4oiQp5+HofGbEEvn9/OHlFZinQAhVx1IGJMTXcvbe7WH4Hcb5
+         9/rjsg11IGZK6n6azZGrtCNoYqQ1prUOrH1muMwWNsKa8Wjp0abgo75ogPcBbjONtyaw
+         2P4HymlgnhG5sWSR8FQqqVJ0txLVHYwN42sipma/x1piwbotMqWbDBzmrZVUGCFcD9oj
+         9JL6Stg4vHh0L9Ak1xIxvb0y1u7j5NkZKK/vIzr9JWcFljC3NDSXT26fQSOqhtmzatnV
+         vZz12RtFzotGuDuPZIB3zSnlTaPJ4kQWGYdjQlJWdLzja9IehBsMBdKQZ9uj0tbn1Lkv
+         42oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XJEVsWfbn8aRBSjCUjQoaB/zi3FIbrrLmSUqtBf4ufc=;
-        b=ckXsPCFw0aAYaRrH6qDxaWMgTkGEvWZczaL/OJGFQBfa+R3ISbx8v32olNufgIe2pz
-         qikf2uOHTICAsfckGyCGW7CV4Zs9A4aafRryeUa8hjgk1AcVi9/ceYw3J/qiRjkA3kd4
-         m+KRZ2eE3PloBwPFG7SZVmy9ePqeWZhg4WzBp58FqWLlnGlSUvHng+yyXlV2xlD8EiSD
-         D0GMsk1Bo0lyUiKZCD5EwmLBV/xjlkqYWtQ45bFjNDW1uj1++2LCt8XtGKVXy17rDMZY
-         oR4xv3I+w+FGxj9jszFQMr3YPzv/sHoCLipM+lnys9L5F3f3EjKKUcEqm11XSdNMk1PN
-         dpvQ==
-X-Gm-Message-State: AOAM532Mwy1BMNBg/E3s78C47YjoaJZS1HklHHvYTO5B+hQPPcxtg/C6
-        0Cv+hta5S3x2o8jL04FUR08EX4UXQy/8aeoxRYQ3pg==
-X-Google-Smtp-Source: ABdhPJyNzj8lntNB+gPdQZorIuGyuglVZ2GRN4JTEikAZoHXf3zt4iKWY8HyVoOjoJhJdUnny/FjxeRZZMdO0eg8d0w=
-X-Received: by 2002:a2e:351a:: with SMTP id z26mr4790421ljz.144.1592687468252;
- Sat, 20 Jun 2020 14:11:08 -0700 (PDT)
+        bh=mHgH43K83+iQ6RNkHMCCXAsjIbVyGh9lGIEdQYieGCo=;
+        b=gcl7ELKrUqTVZPWnth+yBlCnrqvnNU7sB/JwAOK6nnkIKF41qtRN2gfj1tn4jSfFs7
+         t8ks/tpoZkJILjCqJ22C18vQTQpoy9uO3r1KERS/mfFlIJ44Iy8cqz4S0xGs2ktCkoNM
+         QhP1AKDrGrOsMFAHlQ+1uRFxQlqarlM/gIWzvclZp2Tr56vYAG/37yOKlbR+rDR7F6ZL
+         wQgc16M6tOflcNyEoiKLADm4EpmHqYiUGApin65+ZtvqtWWf1U241qISo61uDorkMeG/
+         z3zUa4ypcjNZ/Hz37FjxRQ5x/paXJw5oV64XLaljfFjislUnz6CF8Czx6ctUbQqBneu/
+         +xdQ==
+X-Gm-Message-State: AOAM533IWGt4rMLtQnzd+T5lcLdIbWy9wBfE7v0ChMkaDJOnsJC+k/OS
+        e1kSU9r6P2kSDuVyseydQ+0njTkNAvREp7JRcZYNT18ObWY=
+X-Google-Smtp-Source: ABdhPJxxwEtCfzQ1FEAh8yrGmSi/M69HcOGzWZfVt/ZikxadOFf/c/H2T7BBkDTM2qTUDHeo7/Sta/Q2mq+LW17OJI4=
+X-Received: by 2002:a2e:351a:: with SMTP id z26mr4796925ljz.144.1592687800595;
+ Sat, 20 Jun 2020 14:16:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200615133242.24911-1-lars.povlsen@microchip.com> <20200615133242.24911-6-lars.povlsen@microchip.com>
-In-Reply-To: <20200615133242.24911-6-lars.povlsen@microchip.com>
+References: <20200615150545.87964-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200615150545.87964-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 20 Jun 2020 23:10:57 +0200
-Message-ID: <CACRpkdaWZeMCNuwUNzyYd+g9Q75F_8o7K1Npxr46V+-Y4z-6wA@mail.gmail.com>
-Subject: Re: [PATCH v3 05/10] pinctrl: ocelot: Add Sparx5 SoC support
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Date:   Sat, 20 Jun 2020 23:16:29 +0200
+Message-ID: <CACRpkdb31hRr=uhyQVDz+pJ0ArScBz=yKXqmTviCaFg2C4jp=Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/5] gpio, pinctrl, introduce for_each_requested_gpio() helper
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 3:33 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On Mon, Jun 15, 2020 at 5:05 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> This add support for Sparx5 pinctrl, using the ocelot drives as
-> basis. It adds pinconfig support as well, as supported by the
-> platform.
+> While cleaning up Intel pin control drivers I have noticed that one helper
+> macro can be used widely in GPIO and pin control subsystems. Here we are.
 >
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> Intel stuff is deliberately excluded, so, this can be applied to the GPIO
+> subsystem into immutable branch that will be propagated to pin control
+> subsystem and TWIMC parties, such as Intel pin control drivers.
 
-Is it fine if I just apply this driver to the pinctrl tree?
-Otherwise Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Oh, nice! There it is :)
+
+I applied this to the branch ib-for-each-requested in the GPIO tree and
+merged into the GPIO devel branch, then I also pulled that into the
+pinctrl "devel" branch.
 
 Yours,
 Linus Walleij
