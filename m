@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3328F2029DB
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2020 11:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD3A2029DD
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2020 11:51:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgFUJvg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jun 2020 05:51:36 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10034 "EHLO mga04.intel.com"
+        id S1726112AbgFUJvj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Jun 2020 05:51:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:56802 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgFUJvg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 21 Jun 2020 05:51:36 -0400
-IronPort-SDR: HZINJtLhIdGeun7MUedXXMELmajX+bdSTEoMU9nUJXVaCY8PhWSe1tygssVJ8JZsT1wQ3V/Rzu
- tKURu2KWbF3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="141030910"
+        id S1729628AbgFUJvj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 21 Jun 2020 05:51:39 -0400
+IronPort-SDR: lC8d5QYrji2hKt77E26FGfwrPUp6hx8+K0L67IeeVZIgpCNLvhWvFW7sJ4aqnCgT8zUCxcod52
+ jmAaxm0ArSXw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="141791826"
 X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
-   d="scan'208";a="141030910"
+   d="scan'208";a="141791826"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 02:51:35 -0700
-IronPort-SDR: 4NO57MFJtS2apDBWmy13NBL0aYqIruSOPi/uv6+e6br3OD6RBnjIx35fFm5t4LTQtqVAZf+NJ6
- Bqx6hTv2P+UQ==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 02:51:38 -0700
+IronPort-SDR: n6WTnj/kththyes9NBSgYCvcMXDmzCmO4WYneGE00TYybwhxr1jKUi8TI2n5Yx1PCfRciswGd1
+ tkWOk2on92Wg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
-   d="scan'208";a="478093652"
+   d="scan'208";a="264257216"
 Received: from lkp-server02.sh.intel.com (HELO 3aa54c81372e) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 21 Jun 2020 02:51:34 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jun 2020 02:51:37 -0700
 Received: from kbuild by 3aa54c81372e with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jmwdR-0002bv-Tn; Sun, 21 Jun 2020 09:51:33 +0000
-Date:   Sun, 21 Jun 2020 17:51:24 +0800
+        id 1jmwdU-0002c1-Mm; Sun, 21 Jun 2020 09:51:36 +0000
+Date:   Sun, 21 Jun 2020 17:51:27 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- 44fc2d79b5470090169fb53b119eeba768fe5c6e
-Message-ID: <5eef2d9c.113Z0+R4HdNy18mX%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 25fae752156db7253471347df08a2700501eafde
+Message-ID: <5eef2d9f.NysX3lhGR7XZXdsw%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,12 +46,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
-branch HEAD: 44fc2d79b5470090169fb53b119eeba768fe5c6e  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
+branch HEAD: 25fae752156db7253471347df08a2700501eafde  pinctrl: single: fix function name in documentation
 
 elapsed time: 721m
 
-configs tested: 117
+configs tested: 123
 configs skipped: 10
 
 The following configs have been built successfully.
@@ -90,7 +90,6 @@ mips                        bcm47xx_defconfig
 mips                        nlm_xlr_defconfig
 sh                             shx3_defconfig
 m68k                          sun3x_defconfig
-mips                             allmodconfig
 sh                ecovec24-romimage_defconfig
 arm                            dove_defconfig
 openrisc                         allyesconfig
@@ -107,10 +106,10 @@ arm                         orion5x_defconfig
 sh                          rsk7201_defconfig
 powerpc                  mpc866_ads_defconfig
 arc                    vdk_hs38_smp_defconfig
+i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
 i386                              debian-10.3
-i386                              allnoconfig
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                              allnoconfig
@@ -139,6 +138,7 @@ sh                               allmodconfig
 sh                                allnoconfig
 microblaze                        allnoconfig
 mips                              allnoconfig
+mips                             allmodconfig
 parisc                            allnoconfig
 parisc                              defconfig
 parisc                           allyesconfig
@@ -148,6 +148,12 @@ powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
+x86_64               randconfig-a012-20200621
+x86_64               randconfig-a011-20200621
+x86_64               randconfig-a013-20200621
+x86_64               randconfig-a014-20200621
+x86_64               randconfig-a015-20200621
+x86_64               randconfig-a016-20200621
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
