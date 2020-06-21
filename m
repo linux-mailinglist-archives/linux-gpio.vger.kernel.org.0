@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8086C202A57
+	by mail.lfdr.de (Postfix) with ESMTP id 4E914202A56
 	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jun 2020 13:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbgFULiy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1729949AbgFULiy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sun, 21 Jun 2020 07:38:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57279 "EHLO mga12.intel.com"
+Received: from mga11.intel.com ([192.55.52.93]:43705 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbgFULiy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 21 Jun 2020 07:38:54 -0400
-IronPort-SDR: DoISy5v9OWzwPySEHwA215Gx03M5udVOrXApynbAw/OuoE+VsvD+TjEseuUaq49QTW17r2JrM7
- RTuGPZFene+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="123204210"
+        id S1729944AbgFULix (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 21 Jun 2020 07:38:53 -0400
+IronPort-SDR: 5T5FCwWyJbinmlEi8LGAwu+8SSdDLHA6x9zu4Gd/hQKBo35jWNMNDC2oAhasnoPZkIxEC2kl7f
+ QvOEfQcFK/QQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9658"; a="141800985"
 X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
-   d="scan'208";a="123204210"
+   d="scan'208";a="141800985"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 04:38:53 -0700
-IronPort-SDR: 14bu9g2pUqJrvZt+cuzeXmwDyKgChwe0UCd2FPGJN/v5VsyFvoXYkkybd+OyBHn8uo2KLFXSP4
- nYAlDrYrAyJQ==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2020 04:38:53 -0700
+IronPort-SDR: /yZhe+Ff05sdwf+6SqjoaeWTS6c6xSbkH5KTIevZBdWdiOW9xaGk0ffxY33IXPBPi+5jSq8zqu
+ 8RuL6T99HghQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,262,1589266800"; 
-   d="scan'208";a="384253010"
+   d="scan'208";a="274747366"
 Received: from lkp-server02.sh.intel.com (HELO 3aa54c81372e) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Jun 2020 04:38:51 -0700
+  by orsmga003.jf.intel.com with ESMTP; 21 Jun 2020 04:38:52 -0700
 Received: from kbuild by 3aa54c81372e with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jmyJH-0002eK-Ah; Sun, 21 Jun 2020 11:38:51 +0000
-Date:   Sun, 21 Jun 2020 19:37:59 +0800
+        id 1jmyJH-0002eQ-C1; Sun, 21 Jun 2020 11:38:51 +0000
+Date:   Sun, 21 Jun 2020 19:38:00 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-charger-mentioned] BUILD SUCCESS
- e4ae3c21f7cceec4f3b42546f3c90b73f98a9a46
-Message-ID: <5eef4697.md+cBYg+/6gXjWov%lkp@intel.com>
+Subject: [gpio:for-next] BUILD SUCCESS
+ 42ba326cdeff6954bfd381d858e3c58f1126889b
+Message-ID: <5eef4698.m+dtPRrGIxBYrV3p%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,13 +46,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-charger-mentioned
-branch HEAD: e4ae3c21f7cceec4f3b42546f3c90b73f98a9a46  gpio: Add gpio-charger to the documentation
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
+branch HEAD: 42ba326cdeff6954bfd381d858e3c58f1126889b  Merge branch 'devel' into for-next
 
 elapsed time: 723m
 
-configs tested: 123
-configs skipped: 9
+configs tested: 124
+configs skipped: 10
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -91,6 +91,7 @@ riscv                    nommu_k210_defconfig
 sh                          polaris_defconfig
 arm                         lpc32xx_defconfig
 arm                         nhk8815_defconfig
+arm                         socfpga_defconfig
 mips                 pnx8335_stb225_defconfig
 mips                           mtx1_defconfig
 xtensa                    smp_lx200_defconfig
