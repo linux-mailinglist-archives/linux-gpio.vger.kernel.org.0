@@ -2,122 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2765820337D
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 11:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 011952034D0
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 12:30:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgFVJeY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jun 2020 05:34:24 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21997 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbgFVJeX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:34:23 -0400
-IronPort-SDR: 6jzTowNRqLdr67x8J28TgiZUOkqH5JQY1dMiZpvwCXSpTrgt1N1odeC9PT9H3PDPf0GbP5PsNi
- wwtcu4aLaS8Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9659"; a="142764088"
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="142764088"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 02:34:22 -0700
-IronPort-SDR: JolN8ki/rEfWUv2Zai4taIMRvaai1ENQll9g/CXnmeGOpxgjcg8DiRp7KqPUnlkNGVcrW3r8dQ
- pbbmEtq5Ixjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,266,1589266800"; 
-   d="scan'208";a="318733961"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Jun 2020 02:34:20 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jnIqM-00F1V1-Pf; Mon, 22 Jun 2020 12:34:22 +0300
-Date:   Mon, 22 Jun 2020 12:34:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] pinctrl: baytrail: Fix pin being driven low for a
- while on gpiod_get(..., GPIOD_OUT_HIGH)
-Message-ID: <20200622093422.GF2428291@smile.fi.intel.com>
-References: <20200606093150.32882-1-hdegoede@redhat.com>
- <20200608105953.GC247495@lahna.fi.intel.com>
- <20200615100345.GV2428291@smile.fi.intel.com>
- <3c7d2097-6ade-0568-4170-94805589cf46@redhat.com>
+        id S1726987AbgFVKaW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jun 2020 06:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726919AbgFVKaV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 06:30:21 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E47C061795
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so3713057wru.6
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 03:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
+        b=hyTPcZ3p/Vj6NBYTZuHMAibM2O4uw5XyIDy98N/mJFvWAkzmlmsgkmIdoUWbpc0r7k
+         98uhYZM80THFf+l8shd3BDY8336XLBaz70LV/2bAqqu305gf8YTAYYdWus/Y+V0+47iu
+         Rr0HhXfrQyZGE13X5i5Vz+p3VGGkd4eDwsfkgKGa1dnHotEE8Fqp/ZVTKsKQeY2V4iG0
+         xi9713viZTF66cHzHcR8S6hrTHw99znvETu7lqsDPBE37UYcZJ0JmPSdcKPUUSHZlV4x
+         ZE2v+946/9xzxcKSOfXLVBxbi/C+rNRFDVDrcILhe0MTGy+7VPon/dfW+RTZ9tkVS8G+
+         TsWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OJZ8ufIPKsqB5rJhxxmA58THKC8gBVaQJxB1BylSHW8=;
+        b=c7WzdELigYyvswSjuZyDM/gMzA691fqyX7G/YXA0oN1EuoKmbMeupIONOGs2mo8mDO
+         Kfqs2ge7AmRNsG+1RRk62Uh9W+mlm/AsqI2wXw84ycxwGxFZmKhO2vkck2aZYINnPAgu
+         0/ZArnyWfDrG/vxzIL9Fp+PhzAzaHQgiZw16HDb431AOIsylZw2r2At/nkB2e44mv3s9
+         qTi5cki9IUwcYs7hSLMblsUz6i11wwwv0f/npIE2vD/hW7DZjW/lZFNq42t4Y89s03ui
+         GdoxPY+0r/gDRlXIi5YWVGv+nevfOuM6YxVUTZcCsS0cmSt6p+4ncu5yZjmnGxNZ8S97
+         M4CA==
+X-Gm-Message-State: AOAM532owkvQxgmuWYStDRaDfOkTkPKGAiVuVgUW5DjQzBKlK6PnxZq8
+        B2CZ0xdSVHf/paP+7LEb3tLKWRJ0pgA=
+X-Google-Smtp-Source: ABdhPJzbZyR4CNtd9Ju/EbDUWI2mZigkJb8SK98Z/hYKtkT3onVWzAgyoX8RGlVwB7JFNUi69uXTIQ==
+X-Received: by 2002:a5d:4286:: with SMTP id k6mr17702175wrq.140.1592821819859;
+        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id d9sm17210004wre.28.2020.06.22.03.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jun 2020 03:30:19 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 11:30:17 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.co, alexandre.torgue@st.com,
+        linus.walleij@linaro.org, amelie.delaunay@st.com,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200622103017.GS954398@dell>
+References: <20200220162246.8334-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3c7d2097-6ade-0568-4170-94805589cf46@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220162246.8334-1-benjamin.gaignard@st.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jun 20, 2020 at 03:09:20PM +0200, Hans de Goede wrote:
-> On 6/15/20 12:03 PM, Andy Shevchenko wrote:
-> > On Mon, Jun 08, 2020 at 01:59:53PM +0300, Mika Westerberg wrote:
-> > > On Sat, Jun 06, 2020 at 11:31:50AM +0200, Hans de Goede wrote:
-> > > > The pins on the Bay Trail SoC have separate input-buffer and output-buffer
-> > > > enable bits and a read of the level bit of the value register will always
-> > > > return the value from the input-buffer.
-> > > > 
-> > > > The BIOS of a device may configure a pin in output-only mode, only enabling
-> > > > the output buffer, and write 1 to the level bit to drive the pin high.
-> > > > This 1 written to the level bit will be stored inside the data-latch of the
-> > > > output buffer.
-> > > > 
-> > > > But a subsequent read of the value register will return 0 for the level bit
-> > > > because the input-buffer is disabled. This causes a read-modify-write as
-> > > > done by byt_gpio_set_direction() to write 0 to the level bit, driving the
-> > > > pin low!
-> > > > 
-> > > > Before this commit byt_gpio_direction_output() relied on
-> > > > pinctrl_gpio_direction_output() to set the direction, followed by a call
-> > > > to byt_gpio_set() to apply the selected value. This causes the pin to
-> > > > go low between the pinctrl_gpio_direction_output() and byt_gpio_set()
-> > > > calls.
-> > > > 
-> > > > Change byt_gpio_direction_output() to directly make the register
-> > > > modifications itself instead. Replacing the 2 subsequent writes to the
-> > > > value register with a single write.
-> > > > 
-> > > > Note that the pinctrl code does not keep track internally of the direction,
-> > > > so not going through pinctrl_gpio_direction_output() is not an issue.
-> > > > 
-> > > > This issue was noticed on a Trekstor SurfTab Twin 10.1. When the panel is
-> > > > already on at boot (no external monitor connected), then the i915 driver
-> > > > does a gpiod_get(..., GPIOD_OUT_HIGH) for the panel-enable GPIO. The
-> > > > temporarily going low of that GPIO was causing the panel to reset itself
-> > > > after which it would not show an image until it was turned off and back on
-> > > > again (until a full modeset was done on it). This commit fixes this.
-> > > > 
-> > > > This commit also updates the byt_gpio_direction_input() to use direct
-> > > > register accesses instead of going through pinctrl_gpio_direction_input(),
-> > > > to keep it consistent with byt_gpio_direction_output().
-> > > > 
-> > > > Note for backporting, this commit depends on:
-> > > > commit e2b74419e5cc ("pinctrl: baytrail: Replace WARN with dev_info_once
-> > > > when setting direct-irq pin to output")
-> > > > 
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: 86e3ef812fe3 ("pinctrl: baytrail: Update gpio chip operations")
-> > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > 
-> > > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > 
-> > Pushed to my review and testing queue, thanks!
-> 
-> I'm not seeing it here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel.git/log/?h=review-andy
-> 
-> Did you perhaps forgot to push it ?
+On Thu, 20 Feb 2020, Benjamin Gaignard wrote:
 
-Oh, thanks! Now pushed!
-I'll send it as a part of PR for v5.8-rc3 to Linus W.
+> Convert stmfx bindings to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
+>  3 files changed, 124 insertions(+), 144 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+
+Applied, thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
