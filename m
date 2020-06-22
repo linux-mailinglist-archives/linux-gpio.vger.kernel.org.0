@@ -2,98 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4974C203E04
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 19:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B99203E42
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 19:46:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgFVRc1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jun 2020 13:32:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
+        id S1730138AbgFVRq2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jun 2020 13:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbgFVRcY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 13:32:24 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8013C061573
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 10:32:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id n24so18868587ejd.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 10:32:24 -0700 (PDT)
+        with ESMTP id S1730122AbgFVRq2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 13:46:28 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C844AC061797
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 10:46:27 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 64so2830450oti.5
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 10:46:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=esraNk9vYcbt+aYhCal6Rv+dFZCSdTm7//1cm/DqNAg=;
-        b=LhbGWaTFVPf141FJ+VrlM1gm9G0Yx9T8OzJsVp75vXKaqYFoXf5GmC8kpq2EpwwBbc
-         WqOxWY+Tg9AsLYgOz1eO/LBiR+MVYTEfOkKxkgHAnxxI/56s2ggpsK/r/j/7SL1++AMP
-         SDLZKqsstrA3w9vruCcX1oPVY8uC0Q6yXReSYG9DVhLmm+/Uqq6mmd+e1SYBBXOExrgd
-         s9Qnj0Q1Hszp8W0gNV884tUzFLS+cHFswvbroJwNUn1qRoJIz/FwglnYHd4rTywkKgLw
-         Q7b6HII+eeMzKJpkWXli3tFONXpY94d5smgvEkrme+nK5Rm88QCngPMJej+Qa3qer9do
-         8iyQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+PoE8yiRYasvpVTcmOB/KM09iEzE1JRP/lNZ3k5npcg=;
+        b=X6lFlikLjM57gw/5/KFf4WYh17y5pOO2Nd1bjA1AMFtYVBiSjVsW17Tj/7u5AZivQM
+         umURivbWdUVI4Dv1pVwIrReNSuJDyC8dR0afrvIcTuuK1sji1ftuMW+u/N+iz55GH/ri
+         oUC58t4kl6Hgnf0uh3I6Ry4/7A2nmwlB+5U65UdHO5s4I2QtwUvUbu+Snhk64GJLrMM7
+         k6So4J7ewwHay12xDDthdTKN8td7+Uvpz5QY94/U+VXmGzHCebhIrkUOGPNzWKWsuFRJ
+         GT+XDOTxZY1FtkUsWFckwSq6dsLlq/urXW0nbXEjwWcs79Dj3apXWpEdcaCt5fRPQE1I
+         izdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=esraNk9vYcbt+aYhCal6Rv+dFZCSdTm7//1cm/DqNAg=;
-        b=jwkcmlRsk2sK/b0eKArP3uRy/IjqhwsJ4VHYVkERnxLHbJrw8mswfAeX3di9qEgBp4
-         MU3w2qTylDT8jlV/mskrSquLAZXSPtLNJtvW4s2G+mGlADC+VjEe3GtWtWQSJfcyxWzo
-         cPLtpkF8w2arf0TOD/3GCvbZnYmo1OukuNNb5BibbW7dJgBW6QNmHnhXqK4frbHZ2ky7
-         29ahs58521Vt44MknFq9+0E9gLzBr+uPRI+/x/JLn7nilObg1Adl4j80jnRTGu1JKaXw
-         ICjCe2ooVdDYJAz1xGrDRVE1mvj3obxids6GdOfW2v0Twsc/eVmTn4f/6ZZe4UOhR11P
-         9Lbg==
-X-Gm-Message-State: AOAM5312fwi+oEmvEEZZb+aZMS8XuK25ETR0TquRRFKcnp/tJPow9zOq
-        nvkTbe5CfTU9Dv7G9tgNlSzBMQ==
-X-Google-Smtp-Source: ABdhPJy+SFPlroEIO3VTMMRuyksrmrJdFlyJ5PCayo2U6g0j3Kq28XVgQDvES259MOoHErSiuzhQNA==
-X-Received: by 2002:a17:906:e05:: with SMTP id l5mr17849171eji.318.1592847143378;
-        Mon, 22 Jun 2020 10:32:23 -0700 (PDT)
-Received: from localhost.localdomain (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id z1sm4747386ejb.41.2020.06.22.10.32.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+PoE8yiRYasvpVTcmOB/KM09iEzE1JRP/lNZ3k5npcg=;
+        b=a2gBJhj+bSGjWr23C2Z+AC0E+ezIQKyzylbRQmSHvj0sOfq8QsvNtUNyCYFeXuLA/Q
+         yYVywcuSbfclH0uPEpv3d8GUf1VOcYdqjN5Gb8gNrzVXUWM9fDGuW0VESpWW/jsI8Jy8
+         aevBb3/3P3prezjrp3MHxfPyGIBFFi/owPSvzGi1GEoSiI9zr/JmH8eAr+wPNO1MjCp0
+         C6UahVUDee0dr7L9vJ9ROZrXoyltjZv6on+sNzT8jg3WVZ8S5ng5MZIjSoTGl/Z+wJra
+         PiojAPSysIhvSt4y4fssfp9I81Oen5AdNuiwIPwY12YzKFM48h2pWErxCGmutBEt43Kc
+         4x/w==
+X-Gm-Message-State: AOAM5327d7tFna9viiei1JFfs7dL4RdO9ZLbv6WSjE9yp77tau4BHQjt
+        fzccTVrULqp/bKTY2GjCfA/e3A==
+X-Google-Smtp-Source: ABdhPJyUdRtRq9tztqPkA0Ij9COzUJcM37XZ1xYZCEeJmqizxWTn8SkN0elI/ub/TlCx51fdAkVsvQ==
+X-Received: by 2002:a05:6830:4a1:: with SMTP id l1mr4509025otd.215.1592847986993;
+        Mon, 22 Jun 2020 10:46:26 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e25sm3434158otj.73.2020.06.22.10.46.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 10:32:22 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mon, 22 Jun 2020 10:46:26 -0700 (PDT)
+Date:   Mon, 22 Jun 2020 10:43:41 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v3 3/3] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-Date:   Mon, 22 Jun 2020 19:29:51 +0200
-Message-Id: <20200622172951.524306-4-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200622172951.524306-1-drew@beagleboard.org>
-References: <20200622172951.524306-1-drew@beagleboard.org>
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/8] soc: qcom: socinfo: Add socinfo entry for SDM630
+Message-ID: <20200622174341.GR128451@builder.lan>
+References: <20200622075749.21925-1-konradybcio@gmail.com>
+ <20200622075749.21925-4-konradybcio@gmail.com>
+ <20200622080503.GQ128451@builder.lan>
+ <CAMS8qEWrnHc3CWrW-vzwxu+PR8FL9hcvCtBpS4oK9ZYXgGfLJg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEWrnHc3CWrW-vzwxu+PR8FL9hcvCtBpS4oK9ZYXgGfLJg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This requires AM33XX_PADCONF macro in omap.h to be modified to keep pin
-conf and pin mux values separate.
+On Mon 22 Jun 01:37 PDT 2020, Konrad Dybcio wrote:
 
-pinctrl-single.c must also be changed to support "pinctrl-single,pins"
-with 3 arguments (offset, conf, mux).
+> Hi Bjorn,
+> 
+> you said "Applied" - so should I omit this patch when sending a v3 of
+> the series or keep it in there?
+> 
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
----
- arch/arm/boot/dts/am33xx-l4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Seems I missed pushing out the drivers-for-5.9 branch, but the change is
+staged for 5.9 here:
+https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/log/?h=for-next
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 7ff11d6bf0f2..dafd6e8b42a1 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -278,7 +278,7 @@ scm: scm@0 {
- 				am33xx_pinmux: pinmux@800 {
- 					compatible = "pinctrl-single";
- 					reg = <0x800 0x238>;
--					#pinctrl-cells = <1>;
-+					#pinctrl-cells = <2>;
- 					pinctrl-single,register-width = <32>;
- 					pinctrl-single,function-mask = <0x7f>;
- 				};
--- 
-2.25.1
+So you can omit it from now on.
 
+Regards,
+Bjorn
