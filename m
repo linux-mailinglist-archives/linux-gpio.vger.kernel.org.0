@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D49B9203D10
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 18:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC78203D24
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 18:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgFVQuw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jun 2020 12:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50710 "EHLO
+        id S1729797AbgFVQwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jun 2020 12:52:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729471AbgFVQuw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 12:50:52 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636FEC061573
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 09:50:52 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j10so4555954qtq.11
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 09:50:52 -0700 (PDT)
+        with ESMTP id S1729669AbgFVQwj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 12:52:39 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C60C061573
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 09:52:38 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id l188so3101262qkf.10
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jun 2020 09:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=zNIXazRbZTl0hNjJl4OuKyr32sJX5wD3ftLoVFvgmfw=;
-        b=qLk5xYU+6MCO8B1j+gRdWtyZBWQWjzYhV/+LazyTuBN5g1R95S/Y4JXHO5PFT8ZCn7
-         JBVC18sGz5YktASw5JOAsiib9AkM+m6iT5A7rir1JpUq5Gffrr0H4OZ6Vu5FPPKd4iir
-         QiADywIlhy5T+looP4rJGXP8anyX5lM9DwHd67sGHUw2A66URTsv6jGsKSkz+fXV161x
-         zWxvKMOevq9Hqg3YPchIIq4nN5xdMsulBk9RZeasoZzsVUE9uZuOGKgg+gw8XW35GQSS
-         DRfAMHdz3uCCKolLbdY8nd3XpWdGH1OQ+D/KacLXyB7Fy6JGmIeviFZB7G24Cd4Bo4l9
-         LKEw==
+        bh=xKlTLIr9tKVPVyEmN3O+/UkYg0WlA5ho7PxkSHR5NzY=;
+        b=s7hHLK8CF7P1rEZlyq5Ba1zzjNuyXZHfdd6V5zCHpjwzqJpO+k7ijIKsQ3rMKHnVpQ
+         haebi/K3MfTdgqAS8bI+RO4GRQP7+Cwzuv52xT4DJIy1oS4dmr3XZnzmKEYG4p5KpXZn
+         x2mUjuAz0Kvobg3oGfzRfFHtXM2nU6Fyaho7pb3Jo6Pj4D8as/Ju2l4O3QPzrKo2S6UM
+         zcck1QhxlvllhVx2VKlTfmL2USvekMl0uptErzE0aNrBwX53a21o2u6rjN8QvnqJl1c0
+         1BiIWORmrDAzIPuBcamt+kKpk2myp0BDuqLPiSQPdR62yx0xUUxruvhblG1OdYNei2uw
+         3G/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zNIXazRbZTl0hNjJl4OuKyr32sJX5wD3ftLoVFvgmfw=;
-        b=tAaJMLmeAS0hbTt4lARb1GzFMt2SwbWjGFDF2OWlQc47CmYZ/b0xCgVw4VxoRf3HIw
-         QqzJOiuzYROG7p4sc8EL3Xs0qiTZ64UialfZq1OpPT8ZzZBPA+S8bBRH98hylNekRUbe
-         uFNFj0u0egeyJBA5QOss4PV7iigi/tH4UPeF2PAoc8Q2f02Yb2n9alXulIUwYSCXPyf2
-         ZitT1IkeeAbwG5GRiq/4FKYaT7Jpfy7c+D+6OMTG3wwZReCE3pygEZwy46yehHs4oDNQ
-         IgnCKCdmHFRnAyILtifU+0S3x6fvNaS/5aMNB0LvO3mxAIeFeqJLcU3u3YaKN/pMjpwL
-         EEEg==
-X-Gm-Message-State: AOAM532l+odyPTriuqxt6EUNZthtTR5irP18ZnTwmogHox5cEl45KxYp
-        QyV9agqYPVNrl1Aj44g8SfqQ8C/uZ1YTe4T+DtxBIA==
-X-Google-Smtp-Source: ABdhPJyL3/bqH4D0qJphsqucAUiUEnZ/g/CZ7SeS110SRX14jdu6QKSOu+pQG/UBfDyE0ONgN4VR83Prp7EvmVjxsW8=
-X-Received: by 2002:ac8:23fb:: with SMTP id r56mr17425833qtr.197.1592844651549;
- Mon, 22 Jun 2020 09:50:51 -0700 (PDT)
+        bh=xKlTLIr9tKVPVyEmN3O+/UkYg0WlA5ho7PxkSHR5NzY=;
+        b=VwD/TDABZY/L3xXOTbKP+J29mGchLkuOl0bezR/+OIFzHJJiNsXEcu9hpBQllQKvbL
+         vtEAGOMIyXazbguyMmMC7oHHKjPZq+n0YMK9DpDIJEQEOce7CmGmLso8T+ziEEVPt0YB
+         ZnfrQ1m26ER1ZFvUUNj5vrgqHUheF0h+qx7NR0x+3dxob4mom6Sq7iAtW2eKExGDyHlQ
+         qAuGrVEJglLlSn5UDPGr3EXq9dbhJ7a+nI+jea5NInam+8osKbOk+z2V9ccjFpX0gO+w
+         OdNiDitMz2elWu9lnwlTv9kLY93DmRQ8z9Nv6U+fko+3q5/UfM7Vr551T6YZG65YtxCm
+         p+sg==
+X-Gm-Message-State: AOAM530Qqvm/1pngEY7OB9JDeHzBfE57pjdqOuHDAXf/jkKBqb+/SkXZ
+        us3AmOmDODT6SkRfMMKNHjkQetZIeSQufmh5BjI2jOU0
+X-Google-Smtp-Source: ABdhPJwdzGM650XCKSYu6fonmtxJdOrCDiID1B96i6bFOCK45RM2LyuBvGd0CJQFlhk1Xzp7+LpRN6eSWIyzZQVCa8I=
+X-Received: by 2002:a05:620a:1114:: with SMTP id o20mr16913291qkk.120.1592844758047;
+ Mon, 22 Jun 2020 09:52:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200617235831.25671-1-gaurav1086@gmail.com>
-In-Reply-To: <20200617235831.25671-1-gaurav1086@gmail.com>
+References: <20200618114906.79346-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbWMS+qNQFsJ+9QrphTcqw+2EVRw177X0wTvTLoaXNuyQ@mail.gmail.com> <CAHp75VdMLQth4pM7zgzcWt8vaBBPo-75=a3SSRv0SOGR8Eqk9A@mail.gmail.com>
+In-Reply-To: <CAHp75VdMLQth4pM7zgzcWt8vaBBPo-75=a3SSRv0SOGR8Eqk9A@mail.gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 22 Jun 2020 18:50:40 +0200
-Message-ID: <CAMpxmJW40AO9bEf2LPHk7Pbu_r4tgczaR6uJ6iyHPa8gUmR0=w@mail.gmail.com>
-Subject: Re: [PATCH] max732x_probe: remove redundant check
-To:     Gaurav Singh <gaurav1086@gmail.com>
+Date:   Mon, 22 Jun 2020 18:52:26 +0200
+Message-ID: <CAMpxmJWN-yc+MEkX3VVDRF1XwtUmvcuYVPUV-qhmP8SeDP2pFw@mail.gmail.com>
+Subject: Re: [PATCH v1] gpio: pca953x: Fix GPIO resource leak on Intel Galileo
+ Gen 2
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -61,37 +64,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-czw., 18 cze 2020 o 01:58 Gaurav Singh <gaurav1086@gmail.com> napisa=C5=82(=
-a):
+niedz., 21 cze 2020 o 10:23 Andy Shevchenko
+<andy.shevchenko@gmail.com> napisa=C5=82(a):
 >
-> The check : if (pdata) is redundant since its already
-> dereferenced before: pdata->have_64bit_regs;
-> pdata is not initialized after that hence remove
-> this null check.
+> On Sun, Jun 21, 2020 at 12:33 AM Linus Walleij <linus.walleij@linaro.org>=
+ wrote:
+> >
+> > On Thu, Jun 18, 2020 at 1:49 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > When adding a quirk for IRQ on Intel Galileo Gen 2 the commit ba8c90c=
+61847
+> > > ("gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen=
+ 2")
+> > > missed GPIO resource release. We can safely do this in the same quirk=
+, since
+> > > IRQ will be locked by GPIO framework when requested and unlocked on f=
+reeing.
+> > >
+> > > Fixes: ba8c90c61847 ("gpio: pca953x: Override IRQ for one of the expa=
+nders on Galileo Gen 2")
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >
+> > This seems to go on top of what Bartosz applied so I expect him to pick
+> > it up!
 >
-> Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-> ---
->  drivers/gpio/gpio-max732x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Yes, that's what is expected.
 >
-> diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> index 5fb0bcf31142..63472f308857 100644
-> --- a/drivers/gpio/gpio-max732x.c
-> +++ b/drivers/gpio/gpio-max732x.c
-> @@ -703,7 +703,7 @@ static int max732x_probe(struct i2c_client *client,
->         if (ret)
->                 return ret;
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> -       if (pdata && pdata->setup) {
-> +       if (pdata->setup) {
->                 ret =3D pdata->setup(client, chip->gpio_chip.base,
->                                 chip->gpio_chip.ngpio, pdata->context);
->                 if (ret < 0)
+> Thanks!
+>
 > --
-> 2.17.1
->
+> With Best Regards,
+> Andy Shevchenko
 
-The subject should be 'gpio: max732x: ...". I fixed it up and applied
-the path to for-next.
+Applied for fixes. I'll send a PR to Linus later this week.
 
-Bartosz
+Bart
