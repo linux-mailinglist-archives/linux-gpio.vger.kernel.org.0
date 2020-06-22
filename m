@@ -2,285 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B462035D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 13:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46B5D203BFA
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 18:03:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbgFVLiD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Jun 2020 07:38:03 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:33706 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727060AbgFVLiC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 07:38:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1592825879; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=S4TMOQR23TFpFNf/Gdrrq65wyImfAOA6VASHODQN8A8=;
-        b=QphqDsoeYX3l+fski8+fWU5lzLz02BoDZG+qXic1QwpxMARJ2+gY/1YNnE6ZCzkOctkEeL
-        /TfSdmXg9NW/Fn7W3Z0PwluQ6IJyKd+6LJiXg3KGV6n/4J16FRdpD+wG/x+jRC/RHVPKkM
-        64HGuPWcEFrNbxE/rYGdi+o5mVArPCM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH RESEND v2] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt to YAML
-Date:   Mon, 22 Jun 2020 13:37:40 +0200
-Message-Id: <20200622113740.46450-1-paul@crapouillou.net>
+        id S1729578AbgFVQC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jun 2020 12:02:56 -0400
+Received: from sonic302-21.consmr.mail.ne1.yahoo.com ([66.163.186.147]:43541
+        "EHLO sonic302-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729669AbgFVQCW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Jun 2020 12:02:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841741; bh=cK2qy9Lv5SAgMg9nAvfVmkJPj46H3ss3vOVyjpHm6Nk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=imnMzKvnrwdEkzevY9v55JCHWrS7mFcRp2xLflBpdsWBX5v32iTt1Jwj292Sqyxc6zTWfVf6UW3RltjDxv8H8ZAxxFg96tpPBoXA2f/GRkfTuiNcUr3yDzOGiHeT9IqR//B+9C8c9YoGDJPnAeuuKcQvLl1HS8J+STK4/r0WZ3jbtWFF0MKDjydg+AbeXShoRDHqwsqAaAi7D9jDq8wNDWBIR81puaAh7APGDPK32RqjpFS85hxXrbmotW59Gm/gC9SoLB52q4udtwMI++FS4HYmIHt+kUh9tNcMAsNUvFYo0HWMN59EiLf7lYGm/4AR40adfmghUfkmt4dYpTZmZQ==
+X-YMail-OSG: AhKkJLAVM1lDQ3XPPTTJWpEw.A_YPk4v7tBrtMEv9XTYrBN0vKxPyUyPokZyCLH
+ 0NPJEnbM.Ixt5u0eXkMwZesEBqS.rCtCLJgnod2Yg.I9TXOm0suNzcmJ92mBaA3mHgRFUusjI.6E
+ 3Gu4LEq019.le8uhDgpgUZ.YgtmiKAQJK6Bd4WPLqozbdEc8urSPipLpvwJTvKec65xmptWyRiVv
+ 5wejfhjut7ltVV2EWvbGnxpPsKrHXW63gZY0z7W.qC8yTTTM6xXIAPM6OYdYDYNn.6t5yJFWlC1P
+ OIdbZEYbWLsjaYGAZ3nhw68imywZs7JgVqTzxfR4ZQQxpuo3K8t9CM9O0hpOCt10FP__XXwyrmrD
+ TCoCE7B_Edu3G.zjOUn_rksR4jYB.m1Rp.1vZ_bLxnQwCiAul5Wqfj8PNdUGzT.zvxnBCUVqWq9J
+ 8hXM6oMyn8gklCF.R8KCTVo6NRJRq4thjGWIexrpJEGu0QolvkJTIALFEd6_slAReLmAOEup3xKy
+ .77XY9y0L2WZlQcf1QY4ryEv90HkLK9R59Zd1MxuC8qefRgY6y6xUFmVBWO8SDJCCjnQpB48PRDP
+ pRTSfD8hEjxrcMoyLQRR8ik6SRBEuL1N.zoJ2juJT7TtdJItukcqyaFlw7VOC6cm49vWb13NtnZ0
+ gQ2bWEWTG5v0uAlc54_ulltpKs.Fgm6hkagBtyzunEJ52PGAuturV.LPWyLoBYPiB1KC1HlV8gI8
+ yJqtTplsyPL2eALndgi_xv5WXRslUdVun50zfx9iDK5v_kT1lyZrnl7BpPa5N7roHYs5FCR3fGlt
+ 00HJ7sf.lnan3Im8PEbT96k38NwI6o6wqQk3XTx1x0TOib38VwKLgaWNY916uiRI1upzFCMVqmW6
+ hKW.i_z2qDWeeQaZVyBhDmfLTpSCKpEZXqJt.HWEa0uB7F6lyRoT1rQEzhMY_zbISz6YbRmtNDlq
+ VLlEzjYA6uILpMVD7EkmwXGP0XOJgDIix93HShigByDXDbmOlbnVPelpKvxPRFg3gnhpf.0Rc47i
+ 08Ic.liUMCD9zHGFCga9cXgoGaM8kFbRyDB3CB8uLHuuV8rIwOstkm24RLt0t3H1wtfuP85AC7r8
+ v042NbRsPX1Mj80LTxFt.KStV8ND4Dc1.IiPBslhVUpEA9f2YrGnkjCHG4.U4j0M0U489djAouYX
+ y9F8lECiGIH30pwUi5p9NUzViYBtaTM7ID67rbGjIKdkEdFs14rCm3KSzct0U2izLUB1NerwsRiF
+ IQWasnNhp61WOxqpf4zyo6bEJMCV1B8QkTG.8HvHCcJtAwYQhWHkE5SwAzxSGopkwGBC4.Xf9
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 16:02:21 +0000
+Date:   Mon, 22 Jun 2020 16:02:19 +0000 (UTC)
+From:   Karim Zakari <kariim1960z@gmail.com>
+Reply-To: kzakari04@gmail.com
+Message-ID: <1507214802.1850985.1592841739314@mail.yahoo.com>
+Subject: URGENT REPLY.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1507214802.1850985.1592841739314.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
 
-In the process, some compatible strings now require a fallback, as the
-corresponding SoCs are pin-compatible with their fallback variant.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Good-Day Friend,
 
-Notes:
-    v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
-        - remove 'additionalProperties: false' since we will have pin conf nodes
+ Hope you are doing great Today. I have a proposed business deal worthy (US$16.5 Million Dollars) that will benefit both parties. This is legitimate' legal and your personality will not be compromised.
 
- .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
- .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
- 2 files changed, 136 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+Waiting for your response for more details, As you are willing to execute this business opportunity with me.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-deleted file mode 100644
-index d9b2100c98e8..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
-+++ /dev/null
-@@ -1,81 +0,0 @@
--Ingenic XBurst pin controller
--
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
--
--For the XBurst SoCs, pin control is tightly bound with GPIO ports. All pins may
--be used as GPIOs, multiplexed device functions are configured within the
--GPIO port configuration registers and it is typical to refer to pins using the
--naming scheme "PxN" where x is a character identifying the GPIO port with
--which the pin is associated and N is an integer from 0 to 31 identifying the
--pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
--PB31 is the last pin in GPIO port B. The jz4740, the x1000 and the x1830
--contains 4 GPIO ports, PA to PD, for a total of 128 pins. The jz4760, the
--jz4770 and the jz4780 contains 6 GPIO ports, PA to PF, for a total of 192 pins.
--
--
--Required properties:
----------------------
--
-- - compatible: One of:
--    - "ingenic,jz4740-pinctrl"
--    - "ingenic,jz4725b-pinctrl"
--    - "ingenic,jz4760-pinctrl"
--    - "ingenic,jz4760b-pinctrl"
--    - "ingenic,jz4770-pinctrl"
--    - "ingenic,jz4780-pinctrl"
--    - "ingenic,x1000-pinctrl"
--    - "ingenic,x1000e-pinctrl"
--    - "ingenic,x1500-pinctrl"
--    - "ingenic,x1830-pinctrl"
-- - reg: Address range of the pinctrl registers.
--
--
--Required properties for sub-nodes (GPIO chips):
-------------------------------------------------
--
-- - compatible: Must contain one of:
--    - "ingenic,jz4740-gpio"
--    - "ingenic,jz4760-gpio"
--    - "ingenic,jz4770-gpio"
--    - "ingenic,jz4780-gpio"
--    - "ingenic,x1000-gpio"
--    - "ingenic,x1830-gpio"
-- - reg: The GPIO bank number.
-- - interrupt-controller: Marks the device node as an interrupt controller.
-- - interrupts: Interrupt specifier for the controllers interrupt.
-- - #interrupt-cells: Should be 2. Refer to
--   ../interrupt-controller/interrupts.txt for more details.
-- - gpio-controller: Marks the device node as a GPIO controller.
-- - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
--    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
--    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-- - gpio-ranges: Range of pins managed by the GPIO controller. Refer to
--   ../gpio/gpio.txt for more details.
--
--
--Example:
----------
--
--pinctrl: pin-controller@10010000 {
--	compatible = "ingenic,jz4740-pinctrl";
--	reg = <0x10010000 0x400>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	gpa: gpio@0 {
--		compatible = "ingenic,jz4740-gpio";
--		reg = <0>;
--
--		gpio-controller;
--		gpio-ranges = <&pinctrl 0 0 32>;
--		#gpio-cells = <2>;
--
--		interrupt-controller;
--		#interrupt-cells = <2>;
--
--		interrupt-parent = <&intc>;
--		interrupts = <28>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-new file mode 100644
-index 000000000000..5be2b1e95b36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-@@ -0,0 +1,136 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic SoCs pin controller devicetree bindings
-+
-+description: >
-+  Please refer to pinctrl-bindings.txt in this directory for details of the
-+  common pinctrl bindings used by client devices, including the meaning of the
-+  phrase "pin configuration node".
-+
-+  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
-+  may be used as GPIOs, multiplexed device functions are configured within the
-+  GPIO port configuration registers and it is typical to refer to pins using the
-+  naming scheme "PxN" where x is a character identifying the GPIO port with
-+  which the pin is associated and N is an integer from 0 to 31 identifying the
-+  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
-+  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
-+  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
-+  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
-+  pins.
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+properties:
-+  nodename:
-+    pattern: "^pinctrl@[0-9a-f]+$"
-+
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-pinctrl
-+        - ingenic,jz4725b-pinctrl
-+        - ingenic,jz4760-pinctrl
-+        - ingenic,jz4770-pinctrl
-+        - ingenic,jz4780-pinctrl
-+        - ingenic,x1000-pinctrl
-+        - ingenic,x1500-pinctrl
-+        - ingenic,x1830-pinctrl
-+      - items:
-+        - const: ingenic,jz4760b-pinctrl
-+        - const: ingenic,jz4760-pinctrl
-+      - items:
-+        - const: ingenic,x1000e-pinctrl
-+        - const: ingenic,x1000-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^gpio@[0-9]$":
-+    type: object
-+    properties:
-+      compatible:
-+        enum:
-+          - ingenic,jz4740-gpio
-+          - ingenic,jz4725b-gpio
-+          - ingenic,jz4760-gpio
-+          - ingenic,jz4770-gpio
-+          - ingenic,jz4780-gpio
-+          - ingenic,x1000-gpio
-+          - ingenic,x1500-gpio
-+          - ingenic,x1830-gpio
-+
-+      reg:
-+        items:
-+          - description: The GPIO bank number
-+
-+      gpio-controller: true
-+
-+      "#gpio-cells":
-+        const: 2
-+
-+      gpio-ranges:
-+        maxItems: 1
-+
-+      interrupt-controller: true
-+
-+      "#interrupt-cells":
-+        const: 2
-+        description:
-+          Refer to ../interrupt-controller/interrupts.txt for more details.
-+
-+      interrupts:
-+        maxItems: 1
-+
-+    required:
-+      - compatible
-+      - reg
-+      - gpio-controller
-+      - "#gpio-cells"
-+      - interrupts
-+      - interrupt-controller
-+      - "#interrupt-cells"
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+examples:
-+  - |
-+    pin-controller@10010000 {
-+      compatible = "ingenic,jz4770-pinctrl";
-+      reg = <0x10010000 0x600>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      gpio@0 {
-+        compatible = "ingenic,jz4770-gpio";
-+        reg = <0>;
-+
-+        gpio-controller;
-+        gpio-ranges = <&pinctrl 0 0 32>;
-+        #gpio-cells = <2>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+
-+        interrupt-parent = <&intc>;
-+        interrupts = <17>;
-+      };
-+    };
--- 
-2.26.2
-
+Sincerely Yours,
+Mr. Karim Zakari.
