@@ -2,110 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC021202EC3
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 05:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D8B202FD4
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jun 2020 08:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbgFVDA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Jun 2020 23:00:29 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53166 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731220AbgFVDA1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 21 Jun 2020 23:00:27 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2037645|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0497008-0.00175125-0.948548;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=27;RT=27;SR=0;TI=SMTPD_---.HqMydez_1592794774;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.HqMydez_1592794774)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Mon, 22 Jun 2020 11:00:21 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Frank Lee <frank@allwinnertech.com>
-Subject: [PATCH v2 11/11] arm64: allwinner: A100: add support for Allwinner Perf1 board
-Date:   Mon, 22 Jun 2020 10:59:07 +0800
-Message-Id: <20200622025907.32574-12-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200622025907.32574-1-frank@allwinnertech.com>
-References: <20200622025907.32574-1-frank@allwinnertech.com>
+        id S1726691AbgFVGjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Jun 2020 02:39:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgFVGjT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Jun 2020 02:39:19 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C511CC061794;
+        Sun, 21 Jun 2020 23:39:18 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id mb16so16843514ejb.4;
+        Sun, 21 Jun 2020 23:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UTfi4b8erlafdjROIQMGSunv2DNbIWrzkDCZLv011tE=;
+        b=DFK98p1wLeynT/wsoxfmOQMAl5w+7qY8JSvESy9eH1v/rvYDHPqu6IAplDSWkC04md
+         rqCDl2dBYvoSQigQJdoB/KsF7/Tn87GvcgffgEpRtUHo7o2ztPJVrFxM2EbAnFDIShUP
+         Zxn/hkfTTH4BtxZWHV1qsmVaGAUZAdiYxkHTwFKFCZyMzLyxUQ4g3XTe1j7V6ST91Pfc
+         41qr2/WzM5MT5POyYA2Ia6YKiEoE+XjGGWODVXztEKFBp/tsGAJflQd+VUXVGUnn2WwN
+         hhMmUC05v4mzLSlbmXkOprdGl+B4knk7knd3YfWQpdPvwyAZwv/sotrPOueGnngf/3ft
+         x4qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UTfi4b8erlafdjROIQMGSunv2DNbIWrzkDCZLv011tE=;
+        b=eBTRG2m5Kea9JYj5APKa8qyRdHsb4ubo8aoPS/dayISVrfYkj9oazlDb4k+uaWgH0l
+         4trAiyWHodNnvQCszzoQLVfJtcBSjvXuv8iWB5pQ679+YEXrdGKnTI16T2EsuF2I3yDX
+         L8ihIlSeYpsP2f/Sp10q+Jeqy+4MOWqcB73R+tXg/6hhDKszt2Y1PEGiJoURLvfiOnf2
+         yZRtWzwWiJteWbZDoUDQT/DYgvtcAUFo+S1e75XWV6SsgbHMDS1k32lipr/+3coHAnFW
+         ZDPrQlSIBjafUnm68FJ0EVgG25upCCmdyt5lqi1ZoBYnRaR6bEuxKgJKghjkH2Uj9KRH
+         1VkQ==
+X-Gm-Message-State: AOAM5315cOvhHTqtOdvbx3/SPLRyyGlDZplTsBrWcJHkuqVZnizCGh8G
+        r2//Ql6of2surwzb8kgIjn83w0EVe634shSOtKw=
+X-Google-Smtp-Source: ABdhPJwmb95kBquCZL4hUerl8N+Bx61Cmy8RB0rTg0YvcGRWZm5k/9ODdc6AKUOl7Bp+hr+WaQeoZhRXeU7wRyWqVCs=
+X-Received: by 2002:a17:906:945:: with SMTP id j5mr14496147ejd.52.1592807957515;
+ Sun, 21 Jun 2020 23:39:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-7-konradybcio@gmail.com> <CANi4RBQ-o=K+X_AoZf_NvB19Hum0d9tpr6qjqPThsSNQZaj74A@mail.gmail.com>
+In-Reply-To: <CANi4RBQ-o=K+X_AoZf_NvB19Hum0d9tpr6qjqPThsSNQZaj74A@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 22 Jun 2020 08:38:41 +0200
+Message-ID: <CAMS8qEW+7sjtdUcdUOcdDFCXSv2R4U4O-puyCP2utG_2rjBQ+A@mail.gmail.com>
+Subject: Re: [PATCH 6/8] arm64: dts: qcom: sdm630: Add sdm630 dts file
+To:     Alexey Minnekhanov <alexey.min@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A100 perf1 is an Allwinner A100-based SBC, with the following features:
+Qualcomm keeps them separate, so there's probably a good reason to,
+and I would prefer to do so as well. But if you guys really want it
+merged, then it's doable I guess..
 
-- 1GiB DDR3 DRAM
-- AXP803 PMIC
-- 2 USB 2.0 ports
-- MicroSD slot and on-board eMMC module
-- on-board Nand flash
-- ···
-
-Adds initial support for it, including the UART.
-
-Signed-off-by: Frank Lee <frank@allwinnertech.com>
----
- arch/arm64/boot/dts/allwinner/Makefile             |  1 +
- .../dts/allwinner/sun50i-a100-allwinner-perf1.dts  | 27 ++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e4d3cd0..ab780db 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-new file mode 100644
-index 0000000..d03fa26
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-@@ -0,0 +1,27 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Frank Lee <frank@allwinnertech.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a100.dtsi"
-+
-+/{
-+	model = "Allwinner A100 Perf1";
-+	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
--- 
-1.9.1
-
+Regards
+Konrad
