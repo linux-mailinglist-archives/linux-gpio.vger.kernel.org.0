@@ -2,82 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A45A320584F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 19:13:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7010B2059B8
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 19:43:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbgFWRNS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 13:13:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732913AbgFWRNR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 13:13:17 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F04DC061573
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 10:13:17 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id x202so19491336oix.11
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 10:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=J0VpeRSOJK/TFNJp5yzWMw9fGCcpvggw0aTUG92BVzQ=;
-        b=i0uoYXqFKhL3vc8tp9C6K5GgpytnAnuC0fZClT3jh84RWiGoFjDxz39WaUpuVkv5Kt
-         SmAD30H1WPcvgrd6SExLkc0wvDrspPtVH+1PQMYezhVKK7bR7gTWCpGypXQPIWL4m5P/
-         UFpcHIAwKZqa5DVah79cTZgEa934aGrR1pZyyekUT2C2Q3FXfvUm+RudX5svn6pptMTT
-         YUdPBGfzBWetaC2UbBaKbhgDQiwJdAeAt9IEos/JG/Wjt1Ikco+AIihtHk/64mwRaTkM
-         tERL1Y9s4p6ROcotdBqAWRPz8pvuk7rPYGNRk0ct0p7vzFJC0SJE00MV5zGFRmcqW5F+
-         R6tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=J0VpeRSOJK/TFNJp5yzWMw9fGCcpvggw0aTUG92BVzQ=;
-        b=ElCNFbIYWhjA2EmE8oOt/unayaAVdNdW8bKK22dlk+AD/9n9tC0E+/gR4E1C3Hb13w
-         THj/fgTx3Cgy/Oz+yj1MATkwL3WjKWI3oTY2kOzxy8zBlrTihdbgBhJ9tx5kicJ4CGcL
-         bkjb28zbQz6fyulHGvhUa9ydivFJdIyaO7/gbGBKfuuWZyI7OZJQ+OJppa6TqDAcwjzz
-         tiTZfLM9dGnMIy1UMuScqpnCt0T7jWZVkheYOYbar1/+Vvcmuw6GreCgP07BI8sdcPFf
-         HWs5DBzP8+HexiRRCqswtQ3z1eWts0TZhN0rV9xEfo+26GHvlOEAp1wFXNxgl+XBwqOa
-         LEIQ==
-X-Gm-Message-State: AOAM531kHi9wvlM4z1pbUxuXx+qcg+1v/0uU/pm/nzgAbbJuM0FKk+1K
-        HMnv4eF0onlQfVRG9HkG84eeMKXPufVOyX7C/Mk=
-X-Google-Smtp-Source: ABdhPJwFGNvc68tznvvGeV1jsg/GTZ4Rd/39o97OHBEKjwSpMzIvEuOyGqbhcOFMrzUuf9xgPL++CJubuneMvIUBBhk=
-X-Received: by 2002:a05:6808:3d3:: with SMTP id o19mr17543391oie.63.1592932396880;
- Tue, 23 Jun 2020 10:13:16 -0700 (PDT)
+        id S1733209AbgFWRnZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jun 2020 13:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733248AbgFWRfk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Jun 2020 13:35:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C317C20706;
+        Tue, 23 Jun 2020 17:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592933739;
+        bh=hlJzryK0YI2B6UOeX5mG0dMrQH8hcdUBIULXt+JZ1TY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oZF9tmz/OEPdPLe+/j5oGqT5Pk4L6SwaSEq05JoD6M2nZd9JMGLM7Yef1PQLsFDiy
+         jU6BK+RrZ9UivcWrk34ZL7aEJ9h1MitybNaF2dEknxivEW0OJeVHWJE/u4hAIw8Ntk
+         V5mQg1YHlLno5Vwjmzr1ztiy+CVyoV8n2nSfDvjM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 13/28] pinctrl: qcom: spmi-gpio: fix warning about irq chip reusage
+Date:   Tue, 23 Jun 2020 13:35:08 -0400
+Message-Id: <20200623173523.1355411-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200623173523.1355411-1-sashal@kernel.org>
+References: <20200623173523.1355411-1-sashal@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a9d:1d03:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 10:13:15
- -0700 (PDT)
-Reply-To: sctnld11170@tlen.pl
-From:   "Mr. Scott Donald" <jesseomar11@gmail.com>
-Date:   Tue, 23 Jun 2020 10:13:15 -0700
-Message-ID: <CAJs48TCdF4yNPxK7idLt-8=zPqaO9MudVK-snWMwrGxb6HXbZw@mail.gmail.com>
-Subject: Hello, Please
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
-I'm Mr. Scott Donald a Successful business Man. dealing with
-Exportation, I got your mail contact through search to let you know my
-Ugly Situation Am a dying Man here in Los Angeles California Hospital
-Bed in (USA), I Lost my Wife and my only Daughter for Covid-19 I'm
-dying with same symptoms. my Doctor open-up to me that I don't have
-enough time to live anymore, I have a project that I am about to hand
-over to you. I have already instructed the Barclays Bank of London to
-transfer my fund sum of =C2=A33,7M GBP to you as to enable you to give 50%
-to Charitable Home and take 50% I have given all I have here in
-America to Charitable home I ask my Doctor to help me keep you notice
-when I'm no more please, allow me to see you on my Doctor whats-app
-video call very urgent please, here is my Doctor Whats-app Number for
-urgent notice +13019692737
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Hope To Hear From You. I'm sending this email to you for the second
-time yet no response from you.
+[ Upstream commit 5e50311556c9f409a85740e3cb4c4511e7e27da0 ]
 
-My Regards.
+Fix the following warnings caused by reusage of the same irq_chip
+instance for all spmi-gpio gpio_irq_chip instances. Instead embed
+irq_chip into pmic_gpio_state struct.
 
-Mr. Scott Donald
-CEO
+gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/r/20200604002817.667160-1-dmitry.baryshkov@linaro.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index fe0be8a6ebb7b..092a48e4dff57 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -170,6 +170,7 @@ struct pmic_gpio_state {
+ 	struct regmap	*map;
+ 	struct pinctrl_dev *ctrl;
+ 	struct gpio_chip chip;
++	struct irq_chip irq;
+ };
+ 
+ static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+@@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+ 	return 0;
+ }
+ 
+-static struct irq_chip pmic_gpio_irq_chip = {
+-	.name = "spmi-gpio",
+-	.irq_ack = irq_chip_ack_parent,
+-	.irq_mask = irq_chip_mask_parent,
+-	.irq_unmask = irq_chip_unmask_parent,
+-	.irq_set_type = irq_chip_set_type_parent,
+-	.irq_set_wake = irq_chip_set_wake_parent,
+-	.flags = IRQCHIP_MASK_ON_SUSPEND,
+-};
+-
+ static int pmic_gpio_domain_translate(struct irq_domain *domain,
+ 				      struct irq_fwspec *fwspec,
+ 				      unsigned long *hwirq,
+@@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	if (!parent_domain)
+ 		return -ENXIO;
+ 
++	state->irq.name = "spmi-gpio",
++	state->irq.irq_ack = irq_chip_ack_parent,
++	state->irq.irq_mask = irq_chip_mask_parent,
++	state->irq.irq_unmask = irq_chip_unmask_parent,
++	state->irq.irq_set_type = irq_chip_set_type_parent,
++	state->irq.irq_set_wake = irq_chip_set_wake_parent,
++	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
++
+ 	girq = &state->chip.irq;
+-	girq->chip = &pmic_gpio_irq_chip;
++	girq->chip = &state->irq;
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
+-- 
+2.25.1
+
