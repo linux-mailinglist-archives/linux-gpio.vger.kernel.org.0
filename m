@@ -2,269 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E46DA204984
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 08:05:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BD24204B02
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 09:28:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbgFWGFr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 02:05:47 -0400
-Received: from mout-p-202.mailbox.org ([80.241.56.172]:42516 "EHLO
-        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730149AbgFWGFr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 02:05:47 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 49rbP45ZXszQlHP;
-        Tue, 23 Jun 2020 08:05:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1592892342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lTNZHuO/TmpST/Jzny6UT1j5tHlNcdY+OWOLAISK3qo=;
-        b=TUkc/3kU+rs4oNJiGKDE1BPQa1vidgRhNhTX8EZHtkGEICYulbQ37vThOOv6CE/2hVYxxL
-        HIcxPyJ2fjMsp+CML9DQW01ltj/oib9g4XtnAtXkHzIrwXaGPbRxJEiLfF5r6vd/6ZvKlf
-        h3wB40GX5+6unjlDporEtCzLi8NZmwaaqX6srY/ddIW39odftXWNO2x4egUtWWH3tvCVKS
-        n+eGlt+HQ8nY1ut75SFLQqUlpn7qiKYAZQ5AqLhVmEHMhwRDK526TtFjFud0CoLrQ8jawm
-        LKBL68d63MU+HINQpU2ZRmCuypqTcM4lFQdwVdwS7D7/inEVyGk2GyZLfc1K/w==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id LFybZml-4YEm; Tue, 23 Jun 2020 08:05:40 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1730939AbgFWH2V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jun 2020 03:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730992AbgFWH2U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 03:28:20 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A40BC061795
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 00:28:20 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id n6so15638427otl.0
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 00:28:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZleFPD0cvqJ3sKu6UtqPD0rWOKA/Zt+zhrXRP4AOnvg=;
+        b=PDsCvaLKh9mBy736pxT8qsMAQLVP6PLNFR6KI0UWK8e2RkH5jKLIbuAGiOyAu+ML+Z
+         9lOTrwjFNWHvaDYEpBhv2iJT9MIxhUDOH/eVnfRqqHcXtdofBXK8SwdQdic3gNBW/0Tj
+         GU6krAzxByGuLpPL26+OjKOcQsYwz9rGsxEWubx33sS1U6nSJ+hcmlsycuj/JCJ7qj0J
+         1neoBaEOrtod1giKMaAx4BzXEAcHvIJr1P63v0wNw1SeV70Fjqi5O6t/2rexBFGHIkz1
+         TL4D6EPFZQUbkKG7eON2nDTfaO9aJ5yxQNWp8mJVrWtfKgJE9J2GlwI+U74K/KO5tU8b
+         Js4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZleFPD0cvqJ3sKu6UtqPD0rWOKA/Zt+zhrXRP4AOnvg=;
+        b=KTFpnq63wiXH0RR7kCsVGUZBnormTxAuIKkevBiBuiw3sUQfII5Je+b2fwhsDeAKJp
+         zprl0UTaIcFUXgwKUAj7Z5cZIk/xYuvQriGnGYV2l/pKBKzUpCfXGb/b/+37Gn51PK84
+         BVW+9tJva2XMmWyiiXPJeXfxvMh7YrIDMQWp/Eg1akiL80/v3LCeMnKTesYa+4ycEYeP
+         Z9jryoDUWC7GV7dO78SXL9OvZZCpDukIpmlJqkxaf3rPg2QUAW35TFxv2oucwozNHYiE
+         c459XBRTJJoB8JYckzewZlh+U/P4kkrgRLsHozVfXZs6CBX1m25rj5WYx9+g7yKm0ryL
+         bxXQ==
+X-Gm-Message-State: AOAM532T+MRQTc4lSQtEoSHvLWtPb2h5rs8ugeba9Pb0+hZIGFiGkuvx
+        /DiKl82cyVigAiND9W9ORcfZiA==
+X-Google-Smtp-Source: ABdhPJzzGYHFm3tkDGQDm2FvcqbLAhEc5k7M1RWwN7OHmjbHWoaV4NOnDMqGZlJo3b44MKMZvSLwSA==
+X-Received: by 2002:a05:6830:20d7:: with SMTP id z23mr18042947otq.157.1592897299885;
+        Tue, 23 Jun 2020 00:28:19 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d145sm2530080oib.17.2020.06.23.00.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2020 00:28:19 -0700 (PDT)
+Date:   Tue, 23 Jun 2020 00:25:35 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH] gpio: add GPO driver for PCA9570
-Date:   Tue, 23 Jun 2020 15:05:26 +0900
-Message-Id: <20200623060526.29922-1-mans0n@gorani.run>
+Subject: Re: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
+Message-ID: <20200623072535.GX128451@builder.lan>
+References: <20200622192558.152828-1-konradybcio@gmail.com>
+ <20200622192558.152828-8-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 11
-X-Rspamd-Score: 1.79 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 484B11758
-X-Rspamd-UID: 595c8a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622192558.152828-8-konradybcio@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds support for the PCA9570 I2C GPO expander.
+On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-Tested in kernel 5.4 on an ipq40xx platform.
+> The Qualcomm SDM660 platform has a APCS HMSS GLOBAL block, add the
+> compatible for this.
+> 
+> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
 
-This is my first time submitting a whole driver patch, and I'm not really familiar with this PCA expander series.
-Please let me know how I can improve this patch further. (Do I also need to document the DT compatible string?)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-FYI there's an unmerged patch for this chip.
-http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-I don't have PCA9571 either so I didn't add support for it.
----
- drivers/gpio/Kconfig        |   8 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-pca9570.c | 159 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 168 insertions(+)
- create mode 100644 drivers/gpio/gpio-pca9570.c
+Regards,
+Bjorn
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c6b5c65c8405..d10dcb81b841 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
- 	  Say yes here to enable the pca953x to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
- 
-+config GPIO_PCA9570
-+	tristate "PCA9570 4-Bit I2C GPO expander"
-+	help
-+	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-pca9570.
-+
- config GPIO_PCF857X
- 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
- 	select GPIOLIB_IRQCHIP
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1e4894e0bf0f..33cb40c28a61 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
- obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
- obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
- obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
-+obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
- obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
- obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
- obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
-diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
-new file mode 100644
-index 000000000000..9ed01554f5df
---- /dev/null
-+++ b/drivers/gpio/gpio-pca9570.c
-@@ -0,0 +1,159 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for PCA9570 I2C GPO expander
-+ *
-+ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
-+ *
-+ * Based on gpio-tpic2810.c
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+
-+/**
-+ * struct pca9570 - GPIO driver data
-+ * @chip: GPIO controller chip
-+ * @client: I2C device pointer
-+ * @buffer: Buffer for device register
-+ * @lock: Protects write sequences
-+ */
-+struct pca9570 {
-+	struct gpio_chip chip;
-+	struct i2c_client *client;
-+	u8 buffer;
-+	struct mutex lock;
-+};
-+
-+static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value);
-+
-+static int pca9570_get_direction(struct gpio_chip *chip,
-+				 unsigned offset)
-+{
-+	/* This device always output */
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int pca9570_direction_input(struct gpio_chip *chip,
-+				   unsigned offset)
-+{
-+	/* This device is output only */
-+	return -EINVAL;
-+}
-+
-+static int pca9570_direction_output(struct gpio_chip *chip,
-+				    unsigned offset, int value)
-+{
-+	/* This device always output */
-+	pca9570_set(chip, offset, value);
-+	return 0;
-+}
-+
-+static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer;
-+	int err;
-+
-+	mutex_lock(&gpio->lock);
-+
-+	buffer = gpio->buffer & ~mask;
-+	buffer |= (mask & bits);
-+
-+	err = i2c_smbus_write_byte(gpio->client, buffer);
-+	if (!err)
-+		gpio->buffer = buffer;
-+
-+	mutex_unlock(&gpio->lock);
-+}
-+
-+static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
-+}
-+
-+static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits)
-+{
-+	pca9570_set_mask_bits(chip, *mask, *bits);
-+}
-+
-+static const struct gpio_chip template_chip = {
-+	.label			= "pca9570",
-+	.owner			= THIS_MODULE,
-+	.get_direction		= pca9570_get_direction,
-+	.direction_input	= pca9570_direction_input,
-+	.direction_output	= pca9570_direction_output,
-+	.set			= pca9570_set,
-+	.set_multiple		= pca9570_set_multiple,
-+	.base			= -1,
-+	.ngpio			= 4,
-+	.can_sleep		= true,
-+};
-+
-+static const struct of_device_id pca9570_of_match_table[] = {
-+	{ .compatible = "nxp,pca9570" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
-+
-+static int pca9570_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
-+{
-+	struct pca9570 *gpio;
-+	int ret;
-+
-+	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, gpio);
-+
-+	gpio->chip = template_chip;
-+	gpio->chip.parent = &client->dev;
-+
-+	gpio->client = client;
-+
-+	mutex_init(&gpio->lock);
-+
-+	ret = gpiochip_add_data(&gpio->chip, gpio);
-+	if (ret < 0) {
-+		dev_err(&client->dev, "Unable to register gpiochip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pca9570_remove(struct i2c_client *client)
-+{
-+	struct pca9570 *gpio = i2c_get_clientdata(client);
-+
-+	gpiochip_remove(&gpio->chip);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id pca9570_id_table[] = {
-+	{ "pca9570", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
-+
-+static struct i2c_driver pca9570_driver = {
-+	.driver = {
-+		.name = "pca9570",
-+		.of_match_table = pca9570_of_match_table,
-+	},
-+	.probe = pca9570_probe,
-+	.remove = pca9570_remove,
-+	.id_table = pca9570_id_table,
-+};
-+module_i2c_driver(pca9570_driver);
-+
-+MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
-+MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
-+MODULE_LICENSE("GPL v2");
--- 
-2.27.0
-
+> ---
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml   | 1 +
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                      | 5 +++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> index 12eff942708d..b4501c6b5c6f 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.yaml
+> @@ -22,6 +22,7 @@ properties:
+>        - qcom,msm8998-apcs-hmss-global
+>        - qcom,qcs404-apcs-apps-global
+>        - qcom,sc7180-apss-shared
+> +      - qcom,sdm660-apcs-hmss-global
+>        - qcom,sdm845-apss-shared
+>        - qcom,sm8150-apss-shared
+>  
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index cec34f0af6ce..ab0275869434 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -49,6 +49,10 @@ static const struct qcom_apcs_ipc_data msm8998_apcs_data = {
+>  	.offset = 8, .clk_name = NULL
+>  };
+>  
+> +static const struct qcom_apcs_ipc_data sdm660_apcs_data = {
+> +	.offset = 8, .clk_name = NULL
+> +};
+> +
+>  static const struct qcom_apcs_ipc_data apps_shared_apcs_data = {
+>  	.offset = 12, .clk_name = NULL
+>  };
+> @@ -150,6 +154,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+>  	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = &msm8998_apcs_data },
+>  	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = &msm8916_apcs_data },
+>  	{ .compatible = "qcom,sc7180-apss-shared", .data = &apps_shared_apcs_data },
+> +	{ .compatible = "qcom,sdm660-apcs-hmss-global", .data = &sdm660_apcs_data },
+>  	{ .compatible = "qcom,sdm845-apss-shared", .data = &apps_shared_apcs_data },
+>  	{ .compatible = "qcom,sm8150-apss-shared", .data = &apps_shared_apcs_data },
+>  	{}
+> -- 
+> 2.27.0
+> 
