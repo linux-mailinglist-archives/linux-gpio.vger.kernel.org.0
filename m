@@ -2,65 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 035A8205269
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 14:25:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB8862052CC
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 14:47:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732518AbgFWMZw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 08:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        id S1732569AbgFWMrd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jun 2020 08:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732393AbgFWMZv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 08:25:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFD1C061573
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 05:25:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id g21so3021964wmg.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 05:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=ELzt2LNkpFvkfIJxrUlMsB838noJYLcuPyykulIjS5MMxWCvfFV9WeHdr0h5SV2YPL
-         kb1sQPIcg1u3M9/ed5QupxX+Q+iNoP2GZGkG1IJL9DbPHDBQg82rmqtNdhxoPCqfVRzV
-         wA+2gOm7PKfsE/viu3B0O8b4aLW4BOvt0TNYfI+sxh3ISl04LCIZ2I/zRdUFP9wM1sSm
-         lZled9+ltbDqPHUG4AReikTb4ndmZ3cYxubW+zqBsbffLcwOdcTW7JwC+5XXu8c7t1cn
-         uAB6yaQtnzUMEmZk/DxSlxqdzxMvdXXPOcrs9AkU0Dl22PL7ohfOdfgzWIALueve+crW
-         OiLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=IGgqkMURDgMk4CQB3BQW7uyEJ1YwshyJd/qHM1DEl7Dwwr8T0y3mR9sGLILRZjdyBG
-         y3c8MHQtUTJ0CIlQrTY+id3NQ7yuUvcAY06SKFLV7cW3ERfQRMFmD8Da7FXwg/oLIwMq
-         cUrq1/Bx6Rw8zwFpHVyyHHyOtvGp9IVIBTh/HslB3OxRLfi0Equqcn35AzJ3toEdeWj+
-         vqlOPPk2gHKj8zcaPACZHR2ZNfZp6eK2GvSAiCg49ehQj7iOcp73XFoUM/MQ9+HQjAM1
-         0KwyC+F54xImqcdym2ck00yBIl356xkS7hor27qfdYfJRFn3wR1vXyp5phl/Gj3Cw0RJ
-         j3gA==
-X-Gm-Message-State: AOAM531zx6UAG/0kIBo568vA43NIvGtkmCbkMFu0HqLzNTqKrXf1jM4V
-        YwI9Yld1qk7y6aXX/W/CtR2rPDcl67b6qeFdncg=
-X-Google-Smtp-Source: ABdhPJyOZ5f/Li1Z2YARRqJs3KD4nSxWMXqUESwGLO8ludk9zl2M4Hk7w3SoVVyVSCHOilgroVKBB3xQk7Bf17E5+eQ=
-X-Received: by 2002:a1c:1d04:: with SMTP id d4mr25102622wmd.156.1592915149600;
- Tue, 23 Jun 2020 05:25:49 -0700 (PDT)
+        with ESMTP id S1729562AbgFWMrc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 08:47:32 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51BFC061573;
+        Tue, 23 Jun 2020 05:47:32 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id B23A222175;
+        Tue, 23 Jun 2020 14:47:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1592916448;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uIWcxL06bYKGyY5zeMVQC8JJNVmi1MGHB3ymuX8QDx8=;
+        b=vaAvorLb/tf1DLoSyGwy93HCy507E7meWCbgT1aWmcsuteBE6T7phkOdkulKf9JLCxyCUZ
+        kKfr9NZL4CnZZeJ+gsbXYDTDWa+vGCbR659K2P8/1+xUvMAEHj7uEP75IIwVPDvWHsvak+
+        0aPcJqUYw4tlLYbUbPIf+3lW2Hv5b94=
 MIME-Version: 1.0
-Received: by 2002:a5d:42c4:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 05:25:49
- -0700 (PDT)
-Reply-To: bektery@outlook.com
-From:   YAVUZ BEKTER <bariskamx@gmail.com>
-Date:   Tue, 23 Jun 2020 05:25:49 -0700
-Message-ID: <CABZeqGdQC_S30fHubAOr__bffrLgEttBqvUSae4okxjmqcc_6g@mail.gmail.com>
-Subject: Hello.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 23 Jun 2020 14:47:28 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+In-Reply-To: <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
+References: <20200623060526.29922-1-mans0n@gorani.run>
+ <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+ <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I am the foreign operations director of Bank of Turkey.
-My name is Mr, Yavuz. I have a sensitive investment project to discuss
-with you, please reply now.
-________________________
-Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
-Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
-met u, antwoord dan nu.
+Hi Sungbo,
+
+Am 2020-06-23 14:22, schrieb Sungbo Eo:
+> On 2020-06-23 17:31, Michael Walle wrote:
+>> Am 2020-06-23 08:05, schrieb Sungbo Eo:
+>>> This patch adds support for the PCA9570 I2C GPO expander.
+>>> 
+>>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+>>> ---
+>>> Tested in kernel 5.4 on an ipq40xx platform.
+>>> 
+>>> This is my first time submitting a whole driver patch, and I'm not
+>>> really familiar with this PCA expander series.
+>>> Please let me know how I can improve this patch further. (Do I also
+>>> need to document the DT compatible string?)
+>> 
+>> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+>> to be simple enough to be easily integrated with that. If you need a
+>> blueprint; because at the moment there is no driver in the kernel
+>> using that, you could have a look at:
+>> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
+> 
+> Thanks for your advice. I didn't really know what regmap is for...
+> It seems gpio-regmap is for gpio controllers having val/dir registers.
+> But pca9570 does not use port registers. The master only sends a data
+> byte without reg address.
+
+Ahh I missed that :(
+
+> I'm not sure how to apply gpio-regmap or
+> regmap-i2c here.
+> I'll try to investigate if setting reg_size or reg_bits to zero is 
+> possible.
+> 
+> Please correct me if I'm in the wrong direction.
+
+That won't work because the underlying regmap expects the address bits 
+to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make 
+sense, because there is actually no real gain.
+
+-michael
