@@ -2,94 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB8862052CC
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 14:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA48205411
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 16:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbgFWMrd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 08:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
+        id S1729504AbgFWOC6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jun 2020 10:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbgFWMrc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 08:47:32 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51BFC061573;
-        Tue, 23 Jun 2020 05:47:32 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id B23A222175;
-        Tue, 23 Jun 2020 14:47:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1592916448;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uIWcxL06bYKGyY5zeMVQC8JJNVmi1MGHB3ymuX8QDx8=;
-        b=vaAvorLb/tf1DLoSyGwy93HCy507E7meWCbgT1aWmcsuteBE6T7phkOdkulKf9JLCxyCUZ
-        kKfr9NZL4CnZZeJ+gsbXYDTDWa+vGCbR659K2P8/1+xUvMAEHj7uEP75IIwVPDvWHsvak+
-        0aPcJqUYw4tlLYbUbPIf+3lW2Hv5b94=
+        with ESMTP id S1732754AbgFWOC5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 10:02:57 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB20C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 07:02:57 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id k4so18921168oik.2
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jun 2020 07:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=awl46nmRF9qXx8R63oRLnthW+3OlyhIXwWGWxJcaw1w=;
+        b=Zz1Y8J6V0J5ZVAKESgKPWuGSVYGuk5cm4bxBb2xyGC99b/TaBmtZyB7j4u4Nzm/Lb+
+         yvWhv/XSQzhL6igRyDM1T6pSf9TgokGLk/SchOaU7C4/T0kqahImPGoiEj84+8PTKnjx
+         XAxYWd/UGZR3t+FsIv7/BjS1WO0aE2GdHDOe1uPtCT8du/qusiIOZ8oOaWut8E/VvgHR
+         pbEjYcS8libcJ//k0LTzwOKXyuLzkV3S8u0u8VB4SDXO8zo+8bM1zH05nzHMGBcTdMzm
+         E3t0SQD1DCFP0+WFSDm5sR6hJCavA42JW+aWKMtpq9cKkFGjqVtw3XlPlEgxXLYJfPl+
+         lxCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=awl46nmRF9qXx8R63oRLnthW+3OlyhIXwWGWxJcaw1w=;
+        b=iJLiGiJXqbgd+bEVRdDST8+RqUWCgzLbdVk7TdOEqiP0mFjs/jt7Ol0xFnfvNhaAnn
+         /Mz4dYfxBbiYVsmfEbkXhaRxs3mtApMPcP0n23p4X4+1aLVwAnrsWEWfAjWvnU7chYhF
+         4IKTV4+pzvPY3VSgp+1M9P2A1h9YJIsvUGwDyT18m4vP4zZBesoNVsR4buXZri3c+CT2
+         WL+pwk8k+r+TD8FADzYXW9i0/HwbtdXWVM2tZZ2vXRSaFVcsfsAkPUTp+GgJLFNAGDLX
+         n425ogsa77Y4ZE/7B3OpodSEMNQxpYH32sLSuORpdyorsvtY7Sghsu0KHKQbqYq3z2Jp
+         Nhug==
+X-Gm-Message-State: AOAM5332FaSRODa7VxzKjR+s1cmB3rvulIR5EdBIc4DLk3zmbX8AxDmv
+        VyIGnfbvjfK1v45SgSCxZODc9xUzmuWle52cqng=
+X-Google-Smtp-Source: ABdhPJx2XywwvW7PM/nABsXLFyDeTOBbTg10z95jkc+/XqF251TveWjVo3FYHP432t5MbF77e0r8TSwb9Sn62eQLW74=
+X-Received: by 2002:a54:4787:: with SMTP id o7mr16826961oic.137.1592920976885;
+ Tue, 23 Jun 2020 07:02:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 23 Jun 2020 14:47:28 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
-In-Reply-To: <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
-References: <20200623060526.29922-1-mans0n@gorani.run>
- <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
- <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
-X-Sender: michael@walle.cc
+Received: by 2002:a4a:da55:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 07:02:56
+ -0700 (PDT)
+Reply-To: scdn-1@tlen.pl
+From:   "Mrs. Patricia Edgar" <mdpp608@gmail.com>
+Date:   Tue, 23 Jun 2020 07:02:56 -0700
+Message-ID: <CAD90mdZOq=BFNZuYq8Mm6pD5sNwY026LUhq_MeXoqxFX53q=5w@mail.gmail.com>
+Subject: Your Response,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sungbo,
+Hello,
+I am Mrs. Patricia Edgar
+My Sorrow Is Deep Bitter dying Woman here in Hospital Bed in United
+State. I Lost my Husband and my only Daughter Angela for heartless
+Covid-19 i am the only remaining in the Family dying here in the
+Hospital slowly with Coronavirus disease High Blood. i and my late
+husband have Gold Mining Companies in Five Country's in the World.
 
-Am 2020-06-23 14:22, schrieb Sungbo Eo:
-> On 2020-06-23 17:31, Michael Walle wrote:
->> Am 2020-06-23 08:05, schrieb Sungbo Eo:
->>> This patch adds support for the PCA9570 I2C GPO expander.
->>> 
->>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
->>> ---
->>> Tested in kernel 5.4 on an ipq40xx platform.
->>> 
->>> This is my first time submitting a whole driver patch, and I'm not
->>> really familiar with this PCA expander series.
->>> Please let me know how I can improve this patch further. (Do I also
->>> need to document the DT compatible string?)
->> 
->> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
->> to be simple enough to be easily integrated with that. If you need a
->> blueprint; because at the moment there is no driver in the kernel
->> using that, you could have a look at:
->> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
-> 
-> Thanks for your advice. I didn't really know what regmap is for...
-> It seems gpio-regmap is for gpio controllers having val/dir registers.
-> But pca9570 does not use port registers. The master only sends a data
-> byte without reg address.
+i have a project that I am about to hand over to you. I have already
+instructed the Bank to make the transfer to you as soon as the Account
+Manager hear from you. the fund i want you to give 50% to Charitable
+Home and take 50% Please, don't think otherwise and why would anybody
+sent someone you barely know a huge amount of money is this real or
+what? please do as i said there was someone from that State i Love and
+i miss him so very very much i have no means to reach any Charitable
+Home there. that is why i go for personal search of the Country and
+State and i got your mail contact through search to let you know my
+Bitterness and please, help me now is getting very Dark I ask my
+Doctor to help me keep you notice failure for me to reach you in
+person Your Response,
 
-Ahh I missed that :(
+Thanks.
 
-> I'm not sure how to apply gpio-regmap or
-> regmap-i2c here.
-> I'll try to investigate if setting reg_size or reg_bits to zero is 
-> possible.
-> 
-> Please correct me if I'm in the wrong direction.
-
-That won't work because the underlying regmap expects the address bits 
-to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make 
-sense, because there is actually no real gain.
-
--michael
+Mrs. Patricia Edgar
