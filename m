@@ -2,177 +2,269 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 760C9204860
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 06:04:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E46DA204984
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jun 2020 08:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732407AbgFWEDk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 00:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732442AbgFWEDj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 00:03:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA77C061573;
-        Mon, 22 Jun 2020 21:03:39 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id r18so9240289pgk.11;
-        Mon, 22 Jun 2020 21:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N2WsCEt9jJAwnHoKd4TNitmUSkbY341ZWHQD48mSWyg=;
-        b=R2xAZ/QYxThBsAuu3SofmnSF1N0eTB0XqcdiXEcbgftnqNKRU0dd6FvI08T5kjU1Lz
-         s//KWI92XCajbjW9EAvAOhzu7FpAbh+8frmoGTY0P54FjGFyg4FzwNx7542KJBteB7iG
-         mQO3LoRz2tPpBofCkN3a9065d9wYNvsT9jk7NkaAIP6NUYoBrVw81TZRQtRNguXNJPVJ
-         7kiUViPYVTJEaPkR5cFMmszshEi/UcPPgu9SATdikCZ7HMaG9Jg6ISdQs7l+QTfnGOnj
-         AolQTy3kKZRVaoR1hBsSOFmav9pzzGp0zbO6SaNL0Xy9YHAjoj5XFBJwTKktihsiBsbg
-         TNtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N2WsCEt9jJAwnHoKd4TNitmUSkbY341ZWHQD48mSWyg=;
-        b=C5VQuWgyl9UqZjipkEzw7I8Biu/CeagLHaFWLpgtFr/LcIUKEbPtB8pmQwq+Uycay8
-         6fhsDy2WpGFVKpT4CTl8Ken2lPB4HRSPmfj+xTfyv944HPXzTB+UJO6sz2jx260vzmZJ
-         MCYu7hYz2mo6e8arnTd5Dx3VJUAwGpDl4BQ6EcFHhA1UJ6VQqyO9g6U3uH/R/1zlvXUH
-         fWtyq5Hj7h0Y6Qyj8aZ/wnMfcak0oDQbgXuCpU1CAedbyZC7PlHraz6KQ1xamZ7aMmRL
-         RBHgQSwD3Zi097fqZHuuNYqv4SfFJwcQDLFPLDe49U6i0jlu631aq/dSIIkL/th3J+9w
-         a4xQ==
-X-Gm-Message-State: AOAM5326BUSRsaGpCDTGbW9OCwyWh7QkMYTUkK0OcQaa+cQvvxAkoGbq
-        bSwZVP5GNB4/GzPZkH1JgwagVjlYmzI=
-X-Google-Smtp-Source: ABdhPJw/r9O+wa/6w+7Y3gQrjrBPnzQQ7sg5E25CY8+QIIuETDerxxup+QGXkia3D+703ZXcjqHGNg==
-X-Received: by 2002:aa7:8bc6:: with SMTP id s6mr22854545pfd.260.1592885018659;
-        Mon, 22 Jun 2020 21:03:38 -0700 (PDT)
-Received: from sol.lan (220-235-126-59.dyn.iinet.net.au. [220.235.126.59])
-        by smtp.gmail.com with ESMTPSA id n64sm12442315pga.38.2020.06.22.21.03.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2020 21:03:38 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 22/22] tools: gpio: support monitoring multiple lines
-Date:   Tue, 23 Jun 2020 12:01:07 +0800
-Message-Id: <20200623040107.22270-23-warthog618@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200623040107.22270-1-warthog618@gmail.com>
-References: <20200623040107.22270-1-warthog618@gmail.com>
+        id S1730263AbgFWGFr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Jun 2020 02:05:47 -0400
+Received: from mout-p-202.mailbox.org ([80.241.56.172]:42516 "EHLO
+        mout-p-202.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730149AbgFWGFr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 02:05:47 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 49rbP45ZXszQlHP;
+        Tue, 23 Jun 2020 08:05:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1592892342;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lTNZHuO/TmpST/Jzny6UT1j5tHlNcdY+OWOLAISK3qo=;
+        b=TUkc/3kU+rs4oNJiGKDE1BPQa1vidgRhNhTX8EZHtkGEICYulbQ37vThOOv6CE/2hVYxxL
+        HIcxPyJ2fjMsp+CML9DQW01ltj/oib9g4XtnAtXkHzIrwXaGPbRxJEiLfF5r6vd/6ZvKlf
+        h3wB40GX5+6unjlDporEtCzLi8NZmwaaqX6srY/ddIW39odftXWNO2x4egUtWWH3tvCVKS
+        n+eGlt+HQ8nY1ut75SFLQqUlpn7qiKYAZQ5AqLhVmEHMhwRDK526TtFjFud0CoLrQ8jawm
+        LKBL68d63MU+HINQpU2ZRmCuypqTcM4lFQdwVdwS7D7/inEVyGk2GyZLfc1K/w==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id LFybZml-4YEm; Tue, 23 Jun 2020 08:05:40 +0200 (CEST)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH] gpio: add GPO driver for PCA9570
+Date:   Tue, 23 Jun 2020 15:05:26 +0900
+Message-Id: <20200623060526.29922-1-mans0n@gorani.run>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 11
+X-Rspamd-Score: 1.79 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 484B11758
+X-Rspamd-UID: 595c8a
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Extend gpio-event-mon to support monitoring multiple lines.
-This would require multiple lineevent requests to implement using uAPI V1,
-but can be performed with a single line request using uAPI V2.
+This patch adds support for the PCA9570 I2C GPO expander.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
 ---
- tools/gpio/gpio-event-mon.c | 41 ++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 10 deletions(-)
+Tested in kernel 5.4 on an ipq40xx platform.
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index ec90e44389dc..ed1adb8247c6 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -26,7 +26,8 @@
- #include "gpio-utils.h"
+This is my first time submitting a whole driver patch, and I'm not really familiar with this PCA expander series.
+Please let me know how I can improve this patch further. (Do I also need to document the DT compatible string?)
+
+FYI there's an unmerged patch for this chip.
+http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+I don't have PCA9571 either so I didn't add support for it.
+---
+ drivers/gpio/Kconfig        |   8 ++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-pca9570.c | 159 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 168 insertions(+)
+ create mode 100644 drivers/gpio/gpio-pca9570.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c6b5c65c8405..d10dcb81b841 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+ 	  Say yes here to enable the pca953x to be used as an interrupt
+ 	  controller. It requires the driver to be built in the kernel.
  
- int monitor_device(const char *device_name,
--		   unsigned int line,
-+		   unsigned int *lines,
-+		   unsigned int num_lines,
- 		   struct gpioline_config *config,
- 		   unsigned int loops)
- {
-@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
- 		goto exit_free_name;
- 	}
- 
--	ret = gpiotools_request_line(device_name, &line, 1, config,
-+	ret = gpiotools_request_line(device_name, lines, num_lines, config,
- 				     "gpio-event-mon");
- 	if (ret < 0)
- 		goto exit_device_close;
-@@ -63,9 +64,23 @@ int monitor_device(const char *device_name,
- 		goto exit_line_close;
- 	}
- 
--	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
--	fprintf(stdout, "Initial line value: %d\n",
--		gpiotools_test_bit(values.bitmap, 0));
-+	if (num_lines == 1) {
-+		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
-+		fprintf(stdout, "Initial line value: %d\n",
-+			gpiotools_test_bit(values.bitmap, 0));
-+	} else {
-+		fprintf(stdout, "Monitoring lines %d", lines[0]);
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d", lines[i]);
-+		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
-+		fprintf(stdout, "Initial line values: %d",
-+			gpiotools_test_bit(values.bitmap, 0));
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d",
-+				gpiotools_test_bit(values.bitmap, i));
-+		fprintf(stdout, " and %d\n",
-+			gpiotools_test_bit(values.bitmap, i));
++config GPIO_PCA9570
++	tristate "PCA9570 4-Bit I2C GPO expander"
++	help
++	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gpio-pca9570.
++
+ config GPIO_PCF857X
+ 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+ 	select GPIOLIB_IRQCHIP
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e4894e0bf0f..33cb40c28a61 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
+ obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
+ obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
+ obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
++obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
+ obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
+ obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
+ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
+diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+new file mode 100644
+index 000000000000..9ed01554f5df
+--- /dev/null
++++ b/drivers/gpio/gpio-pca9570.c
+@@ -0,0 +1,159 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Driver for PCA9570 I2C GPO expander
++ *
++ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
++ *
++ * Based on gpio-tpic2810.c
++ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#include <linux/gpio/driver.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++
++/**
++ * struct pca9570 - GPIO driver data
++ * @chip: GPIO controller chip
++ * @client: I2C device pointer
++ * @buffer: Buffer for device register
++ * @lock: Protects write sequences
++ */
++struct pca9570 {
++	struct gpio_chip chip;
++	struct i2c_client *client;
++	u8 buffer;
++	struct mutex lock;
++};
++
++static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value);
++
++static int pca9570_get_direction(struct gpio_chip *chip,
++				 unsigned offset)
++{
++	/* This device always output */
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int pca9570_direction_input(struct gpio_chip *chip,
++				   unsigned offset)
++{
++	/* This device is output only */
++	return -EINVAL;
++}
++
++static int pca9570_direction_output(struct gpio_chip *chip,
++				    unsigned offset, int value)
++{
++	/* This device always output */
++	pca9570_set(chip, offset, value);
++	return 0;
++}
++
++static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
++{
++	struct pca9570 *gpio = gpiochip_get_data(chip);
++	u8 buffer;
++	int err;
++
++	mutex_lock(&gpio->lock);
++
++	buffer = gpio->buffer & ~mask;
++	buffer |= (mask & bits);
++
++	err = i2c_smbus_write_byte(gpio->client, buffer);
++	if (!err)
++		gpio->buffer = buffer;
++
++	mutex_unlock(&gpio->lock);
++}
++
++static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
++}
++
++static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
++				 unsigned long *bits)
++{
++	pca9570_set_mask_bits(chip, *mask, *bits);
++}
++
++static const struct gpio_chip template_chip = {
++	.label			= "pca9570",
++	.owner			= THIS_MODULE,
++	.get_direction		= pca9570_get_direction,
++	.direction_input	= pca9570_direction_input,
++	.direction_output	= pca9570_direction_output,
++	.set			= pca9570_set,
++	.set_multiple		= pca9570_set_multiple,
++	.base			= -1,
++	.ngpio			= 4,
++	.can_sleep		= true,
++};
++
++static const struct of_device_id pca9570_of_match_table[] = {
++	{ .compatible = "nxp,pca9570" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
++
++static int pca9570_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct pca9570 *gpio;
++	int ret;
++
++	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, gpio);
++
++	gpio->chip = template_chip;
++	gpio->chip.parent = &client->dev;
++
++	gpio->client = client;
++
++	mutex_init(&gpio->lock);
++
++	ret = gpiochip_add_data(&gpio->chip, gpio);
++	if (ret < 0) {
++		dev_err(&client->dev, "Unable to register gpiochip\n");
++		return ret;
 +	}
- 
- 	while (1) {
- 		struct gpioline_event event;
-@@ -124,7 +139,7 @@ void print_usage(void)
- 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
- 		"Listen to events on GPIO lines, 0->1 1->0\n"
- 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
--		"  -o <n>     Offset to monitor\n"
-+		"  -o <n>     Offset of line to monitor (may be repeated)\n"
- 		"  -d         Set line as open drain\n"
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
-@@ -141,7 +156,8 @@ void print_usage(void)
- int main(int argc, char **argv)
- {
- 	const char *device_name = NULL;
--	unsigned int line = -1;
-+	unsigned int lines[GPIOLINES_MAX];
-+	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpioline_config config;
- 	int c;
-@@ -158,7 +174,12 @@ int main(int argc, char **argv)
- 			device_name = optarg;
- 			break;
- 		case 'o':
--			line = strtoul(optarg, NULL, 10);
-+			if (num_lines >= GPIOLINES_MAX) {
-+				print_usage();
-+				return -1;
-+			}
-+			lines[num_lines] = strtoul(optarg, NULL, 10);
-+			num_lines++;
- 			break;
- 		case 'b':
- 			config.flags |= GPIOLINE_FLAG_V2_DEBOUNCE;
-@@ -184,7 +205,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	if (!device_name || line == -1) {
-+	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
- 	}
-@@ -193,5 +214,5 @@ int main(int argc, char **argv)
- 		       "falling edges\n");
- 		config.edge_detection = GPIOLINE_EDGE_BOTH;
- 	}
--	return monitor_device(device_name, line, &config, loops);
-+	return monitor_device(device_name, lines, num_lines, &config, loops);
- }
++
++	return 0;
++}
++
++static int pca9570_remove(struct i2c_client *client)
++{
++	struct pca9570 *gpio = i2c_get_clientdata(client);
++
++	gpiochip_remove(&gpio->chip);
++
++	return 0;
++}
++
++static const struct i2c_device_id pca9570_id_table[] = {
++	{ "pca9570", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
++
++static struct i2c_driver pca9570_driver = {
++	.driver = {
++		.name = "pca9570",
++		.of_match_table = pca9570_of_match_table,
++	},
++	.probe = pca9570_probe,
++	.remove = pca9570_remove,
++	.id_table = pca9570_id_table,
++};
++module_i2c_driver(pca9570_driver);
++
++MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
++MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
++MODULE_LICENSE("GPL v2");
 -- 
 2.27.0
 
