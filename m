@@ -2,98 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F642074BF
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 15:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F11F2074D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 15:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390113AbgFXNlY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jun 2020 09:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42974 "EHLO
+        id S2391029AbgFXNqv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 09:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388453AbgFXNlT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 09:41:19 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8493FC061573;
-        Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k1so1084581pls.2;
-        Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YjaRnLW/TeYDKRVMhHoc45hQDjzb3Lxd9P36OWV9xUg=;
-        b=RQJP9IMnZpBzbnT/jh+2pJW2cGqgsGVYUg+jHmUFrFaiyByppGTLqtmTHID5c5IeM8
-         2n9vlkn+Lp0Ig1u5TF0mXhg82+LHraV3/WjEnJABoyKbCCbvwgQBWqb/dBUglS5aJhGk
-         RmnqImfrEqOZp2e46uO50u9GLGltFwksP9MqT8BoNY6HcuucvCFr99VhSrFxHFXfgxFq
-         xCB85l5FVyZy9bl3eqgGsh0j3SHmWiI7WrflyVMbOQz6fcPcBgDu63sUxsBAAiWrwRkT
-         BB7KGloNr+drMlgjuAKVpP31HqM/PwSEMQtyIvD3CYeZsC5M2LrFR+asVVpZLsP3F/l2
-         BIeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YjaRnLW/TeYDKRVMhHoc45hQDjzb3Lxd9P36OWV9xUg=;
-        b=GqVXt/aAAStKo2pRaEnnaI/US9MV/wChnBYLITLsRFaJl3A6APmf90pEpBgrcUNoH9
-         FkFmFzoWa3Q+LsUFhWhZq7JJ379GTc5Nn0XtdIf6MNl9vlitQtDNcMRwtmAy/JZrGlJB
-         uYSSUEI7Nf4ysbUx8dVzGITm7a8yrqgz7/aA+AVPSzbRqAZaUMkDrWZjbaoFzcBWmjC6
-         h4KSMMAqZuh1BONkYv8ijvbr9iNpUMMxdzICMRDuLCa7vCbGo9r/LOGLnb0alq1vuicF
-         P4sA329IpzL+77N8MyNG33CMEgjfvFiS/B637rKK01+H+AAb4K2pMvfqkKvWluULbGRQ
-         cTfg==
-X-Gm-Message-State: AOAM530qn1AnQeYHeNnKkPVAWowqXaP6fJkD6Oa93+SQ1zs/04i45avo
-        sf84xzsKp7WKyZ81edLZ3CYE1rABlBFOwTuI/J0=
-X-Google-Smtp-Source: ABdhPJxnOauBhHEdzF48+9LTCaK/Sq2VJQShwYVd5y7GHlmvjT3U3dmQ5AMnvw3J4EVR2S4nOo0HAMSLMzT2olab7p8=
-X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr28213586pjr.181.1593006078101;
- Wed, 24 Jun 2020 06:41:18 -0700 (PDT)
+        with ESMTP id S2390933AbgFXNqv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 09:46:51 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE99FC061573;
+        Wed, 24 Jun 2020 06:46:50 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 662FE23076;
+        Wed, 24 Jun 2020 15:46:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593006407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nsHzBggZvOZK2UQRWliQHDUQLUPL8ZE+00z/UsJFn1I=;
+        b=fql7ZIJvpyPIcpNqwoG5pY6sFGJK658EgHbzWK0YIAlaK9TEkqpuYPCdoauKRPR56giMlt
+        qVabBRtud/4ohSpTJAkrqnqn5GZGZ0TUz1e6louNC/lwdU9KLHbXAbj6gMYACIVScWi5NE
+        JYObZe1D+k5YUqy+6N3jAj48TJNTgog=
 MIME-Version: 1.0
-References: <20200623145748.28877-1-geert+renesas@glider.be>
- <20200623145748.28877-3-geert+renesas@glider.be> <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
-In-Reply-To: <CAMpxmJWGckzicz6FddXybcJh-hb+-hoGbV29Z3BA61RVQ1nQDQ@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 24 Jun 2020 16:41:05 +0300
-Message-ID: <CAHp75VenuB=up5wHm+BtkQPy_N6GuE7xvHJWq-e4Fricg1M7Vw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: aggregator: Use bitmap_parselist() for parsing
- GPIO offsets
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 24 Jun 2020 15:46:47 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sungbo Eo <mans0n@gorani.run>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] gpio: add GPO driver for PCA9570
+In-Reply-To: <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
+References: <20200623060526.29922-1-mans0n@gorani.run>
+ <80bbca9a625b2a0feb9b816906549b7c@walle.cc>
+ <2291c01d-30df-518e-a952-644bd955f1f3@gorani.run>
+ <69f5d1a1970838b8c4bd8d6e8dba6cac@walle.cc>
+ <CAHp75Vfc2udv2mLLJCFO6P+n8_kcO7OZKhH_XkOy7Cf4fnxgtA@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <9956439a3c887dde7b2b8fa48de20db2@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 3:16 PM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
->
-> wt., 23 cze 2020 o 16:57 Geert Uytterhoeven <geert+renesas@glider.be>
-> napisa=C5=82(a):
-> >
-> > Replace the custom code to parse GPIO offsets and/or GPIO offset ranges
-> > by a call to bitmap_parselist(), and an iteration over the returned bit
-> > mask.
-> >
-> > This should have no impact on the format of the configuration parameter=
-s
-> > written to the "new_device" virtual file in sysfs.
-> >
-> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > I'm not super happy with the mask[] array, which is on the stack.
-> > But there is no real limit on the number of GPIO lines provided by a
-> > single gpiochip, except for the global ARCH_NR_GPIOS.
->
-> Why not allocate it with bitmap_zalloc() then?
+Hi Andy,
 
-I haven't got the original messages yet, so my thought is to actually
-extract a helper from
-gpiod_get_array_value_complex() or gpiod_set_array_value_complex() for
-bitmap allocation.
-But I didn't check if it's suitable here. So, bitmap_zalloc() would be help=
-ful.
+Am 2020-06-24 15:33, schrieb Andy Shevchenko:
+> On Tue, Jun 23, 2020 at 3:48 PM Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-06-23 14:22, schrieb Sungbo Eo:
+>> > On 2020-06-23 17:31, Michael Walle wrote:
+>> >> Am 2020-06-23 08:05, schrieb Sungbo Eo:
+> 
+> ...
+> 
+>> >> Did you have a look at drivers/gpio/gpio-regmap.c ? Your driver seems
+>> >> to be simple enough to be easily integrated with that. If you need a
+>> >> blueprint; because at the moment there is no driver in the kernel
+>> >> using that, you could have a look at:
+>> >> https://lore.kernel.org/linux-gpio/20200604211039.12689-7-michael@walle.cc/
+>> >
+>> > Thanks for your advice. I didn't really know what regmap is for...
+>> > It seems gpio-regmap is for gpio controllers having val/dir registers.
+>> > But pca9570 does not use port registers. The master only sends a data
+>> > byte without reg address.
+>> 
+>> Ahh I missed that :(
+>> 
+>> > I'm not sure how to apply gpio-regmap or
+>> > regmap-i2c here.
+>> > I'll try to investigate if setting reg_size or reg_bits to zero is
+>> > possible.
+>> >
+>> > Please correct me if I'm in the wrong direction.
+>> 
+>> That won't work because the underlying regmap expects the address bits
+>> to be either 8 or 16. In this case I'd guess gpio-regmap, doesn't make
+>> sense, because there is actually no real gain.
+> 
+> From the DS:
+> "The device acknowledges and the master sends the data byte for P7 to
+> P0 and is acknowledged by the device. Writes to P7 to P4 are ignored
+> in the PCA9570 as only P3 through P0 are available. The 4-bit data is
+> presented on the port lines after it has been acknowledged by the
+> device. The number of data bytes that can be sent successively is not
+> limited. The previous data is overwritten every time a data byte has
+> been sent."
+> 
+> So, basically writing to the register the value of register can
+> simulate register map, but the question is do we gain anything from
+> that abstraction because it means that all 256 (or 16 for 4-bit
+> variant) registers are possible?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Mh? I can't follow you. Port means a physical I/O port, if I
+read the datasheet correctly. And because that is a 4 port IO
+expander only the lower four bits are used. I'd guess if it is
+a 8 port IO expander all bits would be used. (Actually, its
+output only.)
+
+So you just write one byte of data (or you might repeat it, but
+that is just as if you start a new i2c transaction, just that
+you save the i2c addressing).
+
+-michael
