@@ -2,77 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E6B2069EE
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 04:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2429D206C85
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 08:35:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgFXCHl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Jun 2020 22:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730898AbgFXCHk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Jun 2020 22:07:40 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B91C061573;
-        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id h10so580378pgq.10;
-        Tue, 23 Jun 2020 19:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
-        b=aQHlyuSVkmINthgnO8IlvQfQNiHl3Fh3Wk+SBaxME0DNd5EZwcEvTT3e7xaX1Qccaz
-         QwATpAkbCIB6NVJ//9xb/S+KdJP5krKRAN7Ewrsa1hBg7s/TMJQNQcyN157dvw165D0T
-         RCDTFl322csA0Fn9+G1N6LFFuE0TJKTspv6STQwEvCCeVxM4sgbB2S0JzcRk+6l5m19N
-         8HrnkC1ZmwwDhraCw9a0wQRm31m4gIJqesN1HwOsvrmJyaxyvCSBxK+tkr6TjrlEmXUa
-         KN7JbWfOpE/+MFUdSJ/di6832FlQpX+dbTT3ivs+ecENirdYk7cH/7XRhrq67DaucM5Q
-         lIbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NweuR852F/MkwNU1J1icoSJt72FTFNVF3baoyChYHNE=;
-        b=mBjK2vjkbEPwF5xDt2FxgcqYmb3EyKAGMC/j3TLC6eb+YSepfSI7hB/hQdK8DcLsVK
-         IT7Dx/x0iW33MRem2n0EsZNjbfHPeaWBIcAGpOW0rdFkFHjVwdZEtzBPSJsEGRTu2XZF
-         1RVO5039akZ/FG3V/Z48WwID3166azvh1t6eW7u7kzaE5HCWeWoMj9CeCjrHqT7TWg54
-         8q2n/tWF99G8GhD0anaUZm5Fo4WCt6q6oXYLNpJijAmW0JzaI5H4xq5I18KYYqzOPj4p
-         NUOoyyVVcRSvDGspLlQlgDc+l3WzDILgB+kdr4eZWt5vBW2tIdImMmzaX7p+z4mLJl0U
-         IfHA==
-X-Gm-Message-State: AOAM531+5nQJHZyHctAzkBJ/hk3O/j4I2RnDWMXvWrCzY1YP+ll+y5kp
-        qEJJwMPV7mMXZPKzOxUF7SA=
-X-Google-Smtp-Source: ABdhPJwN0Sr3ZDJbmPOu+dSoX3SV259OdHPy6OWnXG5tg87Z5TKKn7UfG3SAOcVrg/q3BJyLEtERXQ==
-X-Received: by 2002:a63:df01:: with SMTP id u1mr17901576pgg.401.1592964458724;
-        Tue, 23 Jun 2020 19:07:38 -0700 (PDT)
-Received: from sol (220-235-97-240.dyn.iinet.net.au. [220.235.97.240])
-        by smtp.gmail.com with ESMTPSA id n19sm17615649pfu.194.2020.06.23.19.07.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 23 Jun 2020 19:07:37 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 10:07:31 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Subject: Re: [PATCH 16/22] gpiolib: cdev: add V2 uAPI implementation to
- parity with V1 (fwd)
-Message-ID: <20200624020731.GA9728@sol>
-References: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2006231910320.2367@hadrien>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S2389055AbgFXGff (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 02:35:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47324 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388262AbgFXGfe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:35:34 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E3FF1200F3D;
+        Wed, 24 Jun 2020 08:35:32 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 59F4B200172;
+        Wed, 24 Jun 2020 08:35:28 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 38419402A6;
+        Wed, 24 Jun 2020 14:35:22 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V6 0/9] Support i.MX8 SoCs pinctrl drivers built as module
+Date:   Wed, 24 Jun 2020 14:23:55 +0800
+Message-Id: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 07:11:49PM +0200, Julia Lawall wrote:
-> It looks like the put_device (line 891) should be one line earlier.
-> 
+There are more and mroe requirements that SoC specific modules should be built
+as module in order to support generic kernel image, such as Android GKI concept.
 
-Yikes - thanks for that.
-I'll be sure to coccinelle my code before submitting from now on.
+This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
+including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, i.MX common pinctrl driver and i.MX
+SCU common pinctrl driver as still built-in.
 
-Cheers,
-Kent.
+Compared to V5, the changes are as below:
+        - Keep i.MX common pinctrl libary built in, ONLY i.MX SoC pinctrl driver
+          support built as module.
+
+Anson Huang (9):
+  pinctrl: imx: Support i.MX8 SoCs pinctrl driver built as module
+  pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as
+    module
+  pinctrl: imx8mm: Support building as module
+  pinctrl: imx8mn: Support building as module
+  pinctrl: imx8mq: Support building as module
+  pinctrl: imx8mp: Support building as module
+  pinctrl: imx8qxp: Support building as module
+  pinctrl: imx8qm: Support building as module
+  pinctrl: imx8dxl: Support building as module
+
+ drivers/pinctrl/freescale/Kconfig           | 14 +++++++-------
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  2 ++
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  5 +++++
+ drivers/pinctrl/freescale/pinctrl-imx8mm.c  |  6 ++++++
+ drivers/pinctrl/freescale/pinctrl-imx8mn.c  |  6 ++++++
+ drivers/pinctrl/freescale/pinctrl-imx8mp.c  |  6 ++++++
+ drivers/pinctrl/freescale/pinctrl-imx8mq.c  |  6 ++++++
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  5 +++++
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  5 +++++
+ drivers/pinctrl/freescale/pinctrl-scu.c     |  4 ++++
+ 10 files changed, 52 insertions(+), 7 deletions(-)
+
+-- 
+2.7.4
 
