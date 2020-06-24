@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AABBA2074EE
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 15:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8ED020751E
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 16:01:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391067AbgFXNyK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jun 2020 09:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44976 "EHLO
+        id S2390898AbgFXOA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 10:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391062AbgFXNyK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 09:54:10 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0E0C061573
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 06:54:10 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id z1so1720773qtn.2
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 06:54:10 -0700 (PDT)
+        with ESMTP id S2389484AbgFXOAz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 10:00:55 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD098C061573
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 07:00:54 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id a14so1064379qvq.6
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 07:00:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=NQkrsxjDdsmZEVxqxY+8ufwWus4F7B1Od4+L9++jURM=;
-        b=YTQ2sWvOoPM2vQR7+lyfwWEExK+4ZvBkqBaulOwGNu3XDUTwalaF56D+5SYCBDNAXn
-         1svBlVQdpFrYUfyIUqhWeqKSNNTtcq+JXd27nIK/FTFMezR7qMx3MrK8OOis/qbVZWpk
-         c1ImTfp7UE62pdQVk1QO6d5GWAIXqfqZFcQkvcWfDA7YsdzA1GcbpSeGi9rHObuwwpbP
-         L1GokQ0XQBDxDqSCBCHyDFfNJ9KPBo9kzNFvyCmXvPe9HLnUe6CwkbIKcVGCDk2MvhJZ
-         A+2Lt0REfh1DDU8PO09p+U2fqsBs6bslJdrHXk/nq6qeu/QghSct2AGya7RU0llG5QHr
-         8G3Q==
+        bh=IHUFmFa+PERILwSWl+mXNut/vkPHclyZKqXAUx/99u4=;
+        b=vUXMPXXq8Zw5TkXeHV4MZ7HPDHkvugAyM9PvNdF5sQ0X9X/y5xDdWI0eOuPqS9MLRn
+         CLyTd3RTJJNfD4ec/t+xppt3SM7P8qheiP/tZ+l+UuSAT84i4lRyFqJfXzMHRxi9yLZx
+         TL+WEvKnvzFFvzHsiJ3ttZaNdkHPMx6wwlC9ZmOT+DExbI4IKVdGCBvgNw0CE7Df9Urb
+         fsKb4LetTAWs0d6WH6QufVofUMmr61BnGKBY3PbwlSdEEMY8OuMN7bEWxCd0INJH3zs3
+         8kXkqXAjOZEoggqsXGkYBXFf/TFyobF1d76m++X/tO2QWZogFrKqMq1S8uI1P3/XZOpc
+         ymcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NQkrsxjDdsmZEVxqxY+8ufwWus4F7B1Od4+L9++jURM=;
-        b=Eq9WvF76RR0ysJSIFQSrbA61Np4lOFINEyNSiLSN+fSXk1itfIez03fZG0wQB5os4m
-         dwV5T/yfEn+dpuC1cmku2ozMMuq36q70y1Scfon2QrocJD8MNFYcqseqJvhID4CxJYaD
-         E815E7eLL/BzfnYidV0CuWPf3VoMQRjhfSaIrXY/8TOlG5zraB1VUEq438DooHIlbPXL
-         CzvvNXTBhtquN6zX2P2gUvKSMcYMUWGMxw/5Vc/jPbrLz/so89PumsXiwG8XSLnkPfFE
-         bVpQ5SW7tmAlreiI9XH5LgbHNwkghczxU1ssVVnOf+Udd89yc1ACl/TcxRLSO4uMHo2G
-         BJGg==
-X-Gm-Message-State: AOAM531SE62YZNaeBNDyKJRSXj6IuLGmkTX94xKcWec3GlA+eFQQuTHB
-        mKk6yNPS9Mfm4Pbs0fkPz4UgTq9IWUsCMrSV9n4ONA==
-X-Google-Smtp-Source: ABdhPJwcHIikenXP1O+2YczuwWCzJOygplvP6C/CH5w1IHNKGD5NlVsw8prqjeL4PK2NNrrxL+PW48GOXE6r6+Mow60=
-X-Received: by 2002:aed:2a75:: with SMTP id k50mr11067272qtf.27.1593006849420;
- Wed, 24 Jun 2020 06:54:09 -0700 (PDT)
+        bh=IHUFmFa+PERILwSWl+mXNut/vkPHclyZKqXAUx/99u4=;
+        b=HUoQuOAl1RyGHUwqsv71fwI1KvIWw7a9oUJSi3P5gGudNa7GeOFZsAd+a9k53a8Uvj
+         Qx8KIPmbBZiIgSC/BQKoAeBUVm0EwPvPGexat5SXRBgc0t+ya1DdkxdbdyYOp/GGtkdl
+         p/tkR96O8IK/ieBYgqgPGjHH4kg/guZKyyhiuQJc7rghUtnU/wWGLgVHtfHyRqida/jc
+         Z3PoY8QXa6R8gg9kxDjbvfDNRWgrv1Wl6/GOAmgU994qV10jb79lq+6yXUYtbwPvH+Kq
+         c6E2ly/062hggjMFRSK5GBCYq5tyIauXVSAxT96pFgpoWu2Xl87YwyUiYjrs9VDASut3
+         1egQ==
+X-Gm-Message-State: AOAM531AB7UQN7oGMkSYdOZJftRIqa6h3WckDwNTAKqz9ZX5EEi08jmt
+        RSNytwu1hOE+1YEGYd/X/TRsCHbeg1nyO9NZ7uedjw==
+X-Google-Smtp-Source: ABdhPJwc+N7OLcgF2n6s7AYzvFq1sI6X0oMw7s/cuElNqvpPqyRyd7bBZnFfZ22kg8kVyDwekNyPWQtA2v0Bw1QGcu8=
+X-Received: by 2002:ad4:55b4:: with SMTP id f20mr30749529qvx.148.1593007253628;
+ Wed, 24 Jun 2020 07:00:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-8-warthog618@gmail.com>
-In-Reply-To: <20200623040107.22270-8-warthog618@gmail.com>
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-9-warthog618@gmail.com>
+In-Reply-To: <20200623040107.22270-9-warthog618@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 24 Jun 2020 15:53:58 +0200
-Message-ID: <CAMpxmJXNakO6Lu0XFUnKS4tc2pg9D39iLs_Y3+jx+tUkovsmjg@mail.gmail.com>
-Subject: Re: [PATCH 07/22] gpiolib: cdev: remove pointless decrement of i
+Date:   Wed, 24 Jun 2020 16:00:42 +0200
+Message-ID: <CAMpxmJVbiH9mh2c8aAS+GG9a76w9c0Nrrv-VDVhpo+wSyQ2NeQ@mail.gmail.com>
+Subject: Re: [PATCH 08/22] gpiolib: cdev: complete the irq/thread timestamp handshake
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
@@ -64,12 +64,22 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=C5=82(a)=
 :
 >
-> Remove pointless decrement of variable, and associated comment.
+> Reset the timestamp field to 0 after using it in lineevent_irq_thread.
 >
-> While i is used subsequently, it is re-initialized so this decrement
-> serves no purpose.
+> The timestamp is set by lineevent_irq_handler and is tested by
+> lineevent_irq_thread to determine if it is called from a nested theaded
+> interrupt.
+> lineevent_irq_thread is assuming that the nested, or otherwise, status
+> of the IRQ is static, i.e. it is either always nested or never nested.
+> This change removes that assumption, resetting the timestamp so it can
+> be re-used to determine the nested state of subsequent interrupts.
 >
 > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 >
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This change makes sense to me but I'm having a hard time processing
+the explanation. If we're requesting the interrupt and allocating the
+lineevent state in the same function - how can we run into a situation
+here the status of the irq would change like what you describe?
+
+Bart
