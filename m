@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2648B2070F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 12:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7747F2070FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jun 2020 12:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388570AbgFXKSV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jun 2020 06:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40028 "EHLO
+        id S2388551AbgFXKS7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 06:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388551AbgFXKSU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 06:18:20 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81F3AC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 03:18:20 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id e13so1293499qkg.5
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 03:18:20 -0700 (PDT)
+        with ESMTP id S2388197AbgFXKS7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 06:18:59 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78C1C061755
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 03:18:58 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id cv17so758945qvb.13
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 03:18:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=8jgfU2E0apwMh6wsaejptHHCTw5UgOkwm0wLww38xJk=;
-        b=Zs0iesBVSboLL0pPa3SmzoU3GGAhIWocMZKNz/qHAInfUbsED3WVXRTwdFNtSOLfoA
-         s3NnIhn6Oy8edwR99FVaom1dOVGIg6yLJ0AXEU/8fe2BoOdUH2ZUJ8W5FMIGNbj0PaJZ
-         xS4h/W3uokUCTPMzUX4LCrPvcTeGV/W/7ODHCVYPXG17R7e3e88iU6uDKjdZEfYLz1DO
-         SoX8Lk8wfKkLDOI9SyR675ieJCNw9l8sgtRMM7d0eXQJWapYbBR6pTCz0YOycsvICdEz
-         IwHHiKIaeCjowv8l5AzigbdoDUqnCb02xVESinUoiM5inJrLXcxnuxOQh6nw5+DIeg63
-         u9wg==
+        bh=C6/v5FDFWQu+K+FXq08cjlRQyyzbafWyPUDoa4Irltc=;
+        b=jj3cnZCOyOB9NW5CdQjqAVegrA2UgCoaX9vN5SE+cDx5Ij/EqZgnx69yDAe7CAmhe8
+         aOZBqYkZpuwrgMZ2Lcl2qZ2Pg7lQTEKxyurHvft6gu/JIA/Na7misgT3ELJ2Yo/YvK+j
+         K2TIdcqZmopU46RyJqGNmzoAbLsKnb1WPD/E2plF8iD9ugy//nIgZh1ATKMXGOvSYJrx
+         /rPcLMTsznbRDq7QgAqYlZqtAkjwZ4bJBpLWyf+ObIh9D9pk+zIDVQALitwwbE5tL1cX
+         HKlyGkK81UEOArvbLGDPDI7Dj1xncuMTl18GUPZ54HUi/yC85eEwucjb7I/k9Nn3hpdV
+         KVlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8jgfU2E0apwMh6wsaejptHHCTw5UgOkwm0wLww38xJk=;
-        b=FjIAsyhaKcK5v2H9IOo/MF0RKnOzkGLqu62QCvwVN0eDgnr/ZV3gEOeI8ircxfiTZ2
-         y7zZVB4wuOzQWkvfGlu6GSPGVP+Id6j24naw2O2YOXxqksO5H70PIt0m2oJrzG1KQhe7
-         vRntlC6ZmNOO8JDDkSZ6sEClD3ivKbOWYZfXqwOo7lEiBJ87B51vKQeecfrK/gTU9z5P
-         SXoNPAUOwlWbGll2VPhD6aI5gChYt/WOVIBgoOFqtPrEOcMjAdH11IZ9MoXIpG7jcg5j
-         u5QEaEXnvspuf8jPHOCpZ9N+OF7BQkpEQlLMBwgJNEwl3AMdtai/j5mkVeghc6POfx6u
-         OAyQ==
-X-Gm-Message-State: AOAM532sTw/A3IQqOE4djcJ3xod6BPUByx+IyNukM6Kz94cwZtEUoF9M
-        zmzFK1sdWmQlO7ckXTwMhku0cKvnGov163zlAkmLUQ==
-X-Google-Smtp-Source: ABdhPJxNRfFJkbDxdLxofIwKZguLERV2rujyL4vJHjYoiDq6+3W5IMkv5upBRlgurYdNM8aGw0dOWaZAKREOcHxHBpQ=
-X-Received: by 2002:a37:aac4:: with SMTP id t187mr22208491qke.263.1592993899699;
- Wed, 24 Jun 2020 03:18:19 -0700 (PDT)
+        bh=C6/v5FDFWQu+K+FXq08cjlRQyyzbafWyPUDoa4Irltc=;
+        b=F/bnge8rmmZvR5dvtH4jDxewcCroCk4A5BTQKdQhi7lQD0jrglxdTj32kQRhCiY9Dq
+         kwzxspjHogfOzMtd7icAIZ4C8Pr8ZAdn2T/qWhZ9iHncvSwc9x/b//aXweVg8z8G66p8
+         gvwhelA0QmXbAFrwiipn+PzlEU5Kp0Ehym5nmHuVYckrQKIwyZzuZU1/dKiuIpcGy9uN
+         48jmGOMXZVz4W+qfo1toCujEPd7jzxpF+lnkI34nFbqFhSS1f8iR/SlTfQKV3tQGE2rL
+         khL5os8BZuKcPfjDvAP6IaTa4s53zuoEKKc+grLkthT7l8krhedJ4vm0XwlkW2TqWrzf
+         Ac0g==
+X-Gm-Message-State: AOAM531XxOWnfwOx01sIZlMTiLA19uiJLcVkAJr12SIbGNyW3ziqEHGI
+        Y6M7HedYoneaFlNniUCyyojqB8W9F3vi+zLyDNJwsA==
+X-Google-Smtp-Source: ABdhPJxyOty9d2vWpwJQ8sY1tPaTNpUtvrolxOFLx9ay2+sbUQy6PmOXqt/+hA79Z2fnVWQc7yZOCL6cO4O2DyjGW28=
+X-Received: by 2002:ad4:580e:: with SMTP id dd14mr14074237qvb.96.1592993938042;
+ Wed, 24 Jun 2020 03:18:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1592393847-1415-1-git-send-email-srinivas.neeli@xilinx.com> <1592393847-1415-4-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1592393847-1415-4-git-send-email-srinivas.neeli@xilinx.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 24 Jun 2020 12:18:08 +0200
-Message-ID: <CAMpxmJX1YQWEiY-Oa-UvniHJcX=sM2uCVG8q+p=3Or3ZCt_kbg@mail.gmail.com>
-Subject: Re: [PATCH V4 0/7] gpio: zynq: Update on gpio-zynq driver
+Date:   Wed, 24 Jun 2020 12:18:47 +0200
+Message-ID: <CAMpxmJVJQ0Kz0xdRr4pmHddWonn8JQ-4pSEZyfr39ApQV73G=A@mail.gmail.com>
+Subject: Re: [PATCH V4 3/7] devicetree-binding: Add pmc gpio node
 To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Michal Simek <michal.simek@xilinx.com>,
@@ -67,46 +67,31 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 =C5=9Br., 17 cze 2020 o 13:37 Srinivas Neeli <srinivas.neeli@xilinx.com> na=
 pisa=C5=82(a):
 >
-> This patch series does the following:
-> -protect direction in/out with a spinlock
-> -Add binding for Versal gpio
-> -Add binding for pmc gpio node
-> -Add Versal support
-> -Disable the irq if it is not a wakeup source
-> -Add pmc gpio support
-> -Remove error prints in EPROBE_DEFER
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 >
-> ---
-> Changes in V2:
-> - In previous series [PATCH 1/8] already applied on "linux-next".
-> - Fixed checkpatch warning for spinlock description.
-> - Added description for Versal PS_GPIO and PMC_GPIO.
-> Changes in V3:
-> - Updated commit description for PATCH 4 and 6.
-> Changes in V4:
-> - Updated commit description for PATCH 2 and 3.
-> ---
+> Add the pmc gpio node to the device tree.
 >
-> Glenn Langedock (1):
->   gpio: zynq: protect direction in/out with a spinlock
+> Versal devices are the industry's first adaptive compute
+> acceleration platforms.
+> https://www.xilinx.com/support/documentation/data_sheets/ds950-versal-ove=
+rview.pdf
 >
-> Shubhrajyoti Datta (6):
->   dt-bindings: gpio: Add binding for Versal gpio
->   devicetree-binding: Add pmc gpio node
->   gpio: zynq: Add Versal support
->   gpio: zynq: Disable the irq if it is not a wakeup source
->   gpio: zynq: Add pmc gpio support
->   gpio: zynq: Remove error prints in EPROBE_DEFER
+> On the Versal platform, we are using two customized GPIO controllers(IP)
+> which were used in Zynq/ZynqMp platform.
+> One of them present in the Platform Management Controller(PMC) block and
+> other in Processing System(PS) block.
 >
->  .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
->  drivers/gpio/gpio-zynq.c                           | 66 ++++++++++++++++=
-+++++-
->  2 files changed, 67 insertions(+), 3 deletions(-)
+> In PMC_GPIO only Bank0,1,3 & 4 are enabled and in PS_GPIO only
+> Bank 0 & 3 are enabled.
 >
-> --
-> 2.7.4
+> You can find more details of GPIO IP in ZynqMP TRM General Purpose
+> I/O(Chapter-27).
+> https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultr=
+ascale-trm.pdf
 >
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-Series applied to for-next.
+I fixed up the subject - should have been "dt-bindings: gpio: ..."
 
-Bart
+Bartosz
