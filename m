@@ -2,121 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A367D209703
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 01:16:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4D320971C
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 01:22:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgFXXQT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jun 2020 19:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47650 "EHLO
+        id S2388741AbgFXXWZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 19:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728035AbgFXXQS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 19:16:18 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351CCC061573;
-        Wed, 24 Jun 2020 16:16:18 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x8so923588plm.10;
-        Wed, 24 Jun 2020 16:16:18 -0700 (PDT)
+        with ESMTP id S2388737AbgFXXWY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 19:22:24 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578DEC0613ED
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 16:22:24 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id v13so3597879otp.4
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 16:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=J7Jgfpk0v913z31scet/MSjYO35DmH+ex3A+IPMV7fo=;
-        b=R+zT8czCoPco4eqdKUg7r//uSAx4PF4r+xr7DiUoQj3vaoQDl96ppaP14nUDjZAvLI
-         j7zqnLg5UaxrCkwWmMjEdMEHXen40Oc1YISAHUExtdOYCg70NjKdVeyLy3xoUhXDNxDl
-         gCBVxJYx7qxKt7/v4tqsVovAoIn0LM+cj/eVh9xzRmWzjVOSFwtoHHtFCO2pQ9gkslhV
-         Fxh+1ujRIbF2Ly3ZV2c+jvuKfTZwRnFeSZjdmSh3cPQmapLkRHgz8n6o/uXP+UoMBiDx
-         XYLhfGHhy5fN8PjFv34tvL6u4mkbKsvkIBQKNG4nUAmKjkYBSoF/mZ7wIKMS3YTyL3L0
-         +yYA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ixR4kIucjZXiRtwMzxKSRPAHfL+FLubXnd+GvW1h77s=;
+        b=Z7YPQvc6norraPne8OACkSUlKBVmLzg0FP9LZ7gduh3U4fiXJckSxRV8Rw/M6ozRWJ
+         CjO2/AkaXd9R+o9hVzdrRw1hQuKb2mCZ1GENwhRmQMvXPb4YogDL9Anl/z4vNHibhS7O
+         NK3IrFNQK8cYxuy21niT7Scw64KVhXT99fgZQNoQLHaS4zd3qSpDwRBNF69Va9CI3Su1
+         XOZeXBH0cz4qgxb4LruxmpvoG9P53uUpxNMeGz+7XTSEjo/48iNu+ULMKQcpWyfIRnzG
+         WGAjrfnyEm3aD+QzMcQW7ICI5L5cy+GzJeuU+I+SuwLYvFoAuMEzV69tL1xuT3vPCjHY
+         qcNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=J7Jgfpk0v913z31scet/MSjYO35DmH+ex3A+IPMV7fo=;
-        b=OazD1vYisS1dC9fXLAWJIRqEsIaJY1lHqOKNvDWrwNVW+dk3isvoxJeIiVwieFck1a
-         2NwVX0jite0+JjobAqZrO+ydiwRM3E3NqHGZhxE9W84g14I/em6ej4lkQufZF4a1SWPf
-         XtCrOWU3U3cOqmf0mQZhkYM2C7RP+yNiFP4dvK2J0tn4jowtbSH8fQ3+PIALOZ36LdsH
-         4XlR18Bk/wzNHwnu9j8iC3ap1oN+TTqE5PmX2e6OxsC3J3fBitT5OTXmMj0ewMUQBnlc
-         5SZ7zToon+FzcdPY6prpsKqIREwM/g+i/GW+DwVbVxG545bpPuRFo1CV/uD9JCXmxqVP
-         phKQ==
-X-Gm-Message-State: AOAM5321zj7cpFppBRNVkbafJAFMhZG62huGrBNaJbbG5ZX8vnqnb7D3
-        qq0GxxwnPwtojyj++YKfhNY=
-X-Google-Smtp-Source: ABdhPJzExJ/D4yjyy69/+V/pqc43DyAgQxfe4Wi7aYkhwVa4l25RXDKHSX5vFbYxOIqwq4xVf9LSVA==
-X-Received: by 2002:a17:90b:1b06:: with SMTP id nu6mr169446pjb.106.1593040577621;
-        Wed, 24 Jun 2020 16:16:17 -0700 (PDT)
-Received: from sol (220-235-99-174.dyn.iinet.net.au. [220.235.99.174])
-        by smtp.gmail.com with ESMTPSA id v13sm6451332pjd.9.2020.06.24.16.16.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 24 Jun 2020 16:16:16 -0700 (PDT)
-Date:   Thu, 25 Jun 2020 07:16:11 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 09/22] gpiolib: cdev: rename priv to gcdev
-Message-ID: <20200624231611.GA6751@sol>
-References: <20200623040107.22270-1-warthog618@gmail.com>
- <20200623040107.22270-10-warthog618@gmail.com>
- <CAMpxmJUWZGhB3eeSquOJZQegTAwyb7yyKzBSeOjG7FSzq=BAkg@mail.gmail.com>
- <20200624141912.GB7569@sol>
- <CAMpxmJVsPjOhHymkd=8OsNJZDZUXpU83=m1M4+winaUE0RO2sg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ixR4kIucjZXiRtwMzxKSRPAHfL+FLubXnd+GvW1h77s=;
+        b=iWcL6slnp2hMF4Bu4/VyUfATyCA3cSVBMj/wfVyCkDpGKPq8PmsK2DvcDqPhUAHa8X
+         vEkMikG7/yONAFt5/BFtsVqEl/gfvLbwTq70NPMZjg98C4JqH30oSTgQICUoPKwuimsn
+         eijn3hB0bjitob0GcM7uFII4MNpjtB/EGQv2szvXNbWsqDh3S+0HxLyqSHYRh5nKlyL7
+         9HXKBzVR+jMM8mUTwy9RzMENSAVM75drcqAQfnTDQediNeeLxaWoPJpcq8JNE2iFRkI5
+         WHn7USwTPK4+7Rks2SDehW015uZnNkN8ctJ9qUsWMbJfdl8IaiNHDWLGKH99BGOM42tx
+         N/cg==
+X-Gm-Message-State: AOAM530/xROgi+BsytiYlW/8ky5Wtwby+ZeE+7rt0wwLuJL1p13kec6n
+        Jofiw9lWHHUIJGhC3aUVKhqya0qay418TviAnz1oLw==
+X-Google-Smtp-Source: ABdhPJyDeT0KDPGBY+XrtAn4IpWyHShWZgknfbRvrpyv5ICBQ0JbfIvQE3n6cpvnMFZ4tsBYi4nHf3OPeZeTeb/2RbY=
+X-Received: by 2002:a05:6830:1e13:: with SMTP id s19mr9494408otr.102.1593040943632;
+ Wed, 24 Jun 2020 16:22:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJVsPjOhHymkd=8OsNJZDZUXpU83=m1M4+winaUE0RO2sg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200616061338.109499-1-john.stultz@linaro.org>
+ <20200616061338.109499-5-john.stultz@linaro.org> <20200621060055.GA2421@builder.lan>
+In-Reply-To: <20200621060055.GA2421@builder.lan>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 24 Jun 2020 16:22:12 -0700
+Message-ID: <CALAqxLUhi4qQpz5b+6hc8T5mA2E6ugg6UD44WA+Dc2+=Hjm=DQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 4/5] pinctrl: qcom: Allow pinctrl-msm code to be
+ loadable as a module
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 04:20:49PM +0200, Bartosz Golaszewski wrote:
-> śr., 24 cze 2020 o 16:19 Kent Gibson <warthog618@gmail.com> napisał(a):
+On Sat, Jun 20, 2020 at 11:03 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 15 Jun 23:13 PDT 2020, John Stultz wrote:
+>
+> > Tweaks to allow pinctrl-msm code to be loadable as a module.
+> > This is needed in order to support having the qcom-scm driver,
+> > which pinctrl-msm calls into, configured as a module.
 > >
-> > On Wed, Jun 24, 2020 at 04:04:09PM +0200, Bartosz Golaszewski wrote:
-> > > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisał(a):
-> > > >
-> > > > Rename priv to gcdev to improve readability.
-> > > >
-> > > > The name "priv" indicates that the object is pointed to by
-> > > > file->private_data, not what the object is actually is.
-> > > > It is always used to point to a struct gpio_chardev_data so renaming
-> > > > it to gcdev seemed as good as anything, and certainly clearer than "priv".
-> > > >
-> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > > >
-> > >
-> > > Ugh now it's gcdev and gdev everywhere and it doesn't really make it
-> > > more readable. Maybe chardev_data or cdev_data?
-> > >
-> >
-> > Agreed, it isn't ideal visually, but is at least more unique than priv.
-> > Linus was going for short names recently (e.g. gc for gpiochip), so I was
-> > going for something short.
-> >
-> > And I try avoid names ending in _data or _state or similar where they
-> > don't really add anything.
-> >
-> > Would chardev or gchardev work for you?
-> >
-> 
-> Yes, chardev is fine. Even cdev is fine for me: gdev vs gcdev is
-> confusing but gdev vs cdev looks better IMO.
-> 
+>
+> This means that we need a "depends on QCOM_SCM || QCOM_SCM=n" on all
+> entries in the Kconfig that selects PINCTRL_MSM, or switch PINCTRL_MSM
+> to be user selectable and make all the others depend on it.
 
-OK, I was avoiding cdev to try to make the name more likely to be
-globally unique, hence the leading "g".
+Oh, good point! I already had to fix that in a different tree, but
+forgot to move the fix over to my upstreaming tree.
 
-To try to keep it short, how about attacking it from the other end and
-reducing it to gcd?
-That would also be in keeping with the naming convention I use in later
-patches, e.g. glv for gpioline_values.
-So gcd for gpio_chardev_data. Hmmm, or maybe gcdd?
 
-Why is it that naming things is always the hardest part ;-)?
+> >
+> > +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. pinctrl-msm driver");
+>
+> It's the "Qualcomm Technologies, Inc. TLMM driver"
+>
+> > +MODULE_LICENSE("GPL v2");
+> > +
+>
+> Please don't retain my empty line at the end of this file :)
 
-Cheers,
-Kent.
+Done and done. Thanks so much for the review!
+-john
