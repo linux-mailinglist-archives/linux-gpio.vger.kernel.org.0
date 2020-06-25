@@ -2,170 +2,335 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA1320976B
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 02:11:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4117620979E
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 02:27:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388800AbgFYAKz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Jun 2020 20:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
+        id S2387843AbgFYA1n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Jun 2020 20:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388754AbgFYAKu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 20:10:50 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8490AC0617B9
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 17:10:50 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id r18so2346885pgk.11
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 17:10:50 -0700 (PDT)
+        with ESMTP id S2388297AbgFYA1m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Jun 2020 20:27:42 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0608AC061573
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 17:27:40 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j94so4067509wrj.0
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jun 2020 17:27:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kiF3eDPsXk3VmmQHETFrF9xdJnTYDdY6wfkANtzZV7Q=;
-        b=ghZjuyMCSqi6r/mP067i7gCCgDQ8CIvlmDUdYveGV/ywVVimKDCeQ48DCqYYxQSjv9
-         iDNFglxfH3peOAoYUQPNAkiMHqAIm/FyhMAoxcQnurpZTvXzwm+YvCEBYam5e8nuO4DO
-         WrPB7kyWF1cQoKHIr3ognTMQSkn3Z6j9z3vAbbFotbvg4H2H5EFrU7+uBHNjHD3B/F50
-         XentXKhlzSBPKX50y8DNOnd653kbzN5Fe5fdAVvx565On7xBqCG60bcAqXA6Ix+dmzGM
-         m6sFFEExLUBhOWg/Y1v2SVbfCRQrV4/eRYbsYNY9yMkarE050yR98fHFteqEu+o1tLl+
-         br3w==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=twOEEo4sVMzJuj8SG+LhZx4U/3YAbsNh96QjyOpXoFc=;
+        b=N8Ct3mHyZaOv2SbFUW5O4+RtAYUpm5f33PESPdvsYwkpUFXnBv6P9+ilmtc9+PD1RH
+         iAOScnBHob24pLwN2kUXrwCcw2XezODi5Uev6Bm/037YsGVU0lGuI06vEz9JiG3nPIRb
+         V4GeQgu8PpDUh8Ke4eVryiRfUyneVDm6GlG5YwwB9uFNigm1OCoHPcGahGwYiDuwjki8
+         XHyUW3UN5VsOJ23VRPvRcmUFdwZDlxgdl8ifP5g7Os0X7ScqtSlb4IrNTNe8raTB0lS4
+         W5NbZN1iOPXMgibJfjFp7UxOwiv7rJINDbnkm2BXYNulaS4829NaGS9acHiWFfFyX6ah
+         y2zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kiF3eDPsXk3VmmQHETFrF9xdJnTYDdY6wfkANtzZV7Q=;
-        b=LDRfTEJ+JmK2czo9M1he6dE4emdrN7YC90cMIErq/+JV2gt3cd3fsOcexYNJJEHi4P
-         k29AvX8QqK9y8rnnZoYJ/yPI5asP1s9saNGyZUeiioQpWb7EL9WvyTnxE0skrIiJbB+P
-         h54bxMG53fGtQaqqaLjW8TauGRgDXuwXRqtW7tRQN9knAFKJd4xBWLdKsZmMhKIEGmvf
-         ebB43BxnrtpuOUhhs5V/y2H6M9U2aJVP0QhqsmwkdNDNeFkFG6FcMxCJGXjA1Fx0xTyw
-         JJSSFKzG+PxpVspb1UhTFCv9Q0ROqX029gva5nv3h0H6OuJruxqp9PK8Ko8FyfFFjR7W
-         /eqQ==
-X-Gm-Message-State: AOAM533pUeVoxHZYw/jOKa/U6wo/2c2zar3siXAEvPKTvhrKFCypHnD8
-        qElN3ldRz5v9gGl9Rfu7S0aKsA==
-X-Google-Smtp-Source: ABdhPJxM85T0FzOYq+u8F9o4EsXhOA/DjOfUfncdRKLbnKazJufGF2ZhCsN8URE01mtnSZ5QoFjk5g==
-X-Received: by 2002:a63:4d5a:: with SMTP id n26mr25014355pgl.85.1593043850074;
-        Wed, 24 Jun 2020 17:10:50 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id n19sm17458671pgb.0.2020.06.24.17.10.48
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=twOEEo4sVMzJuj8SG+LhZx4U/3YAbsNh96QjyOpXoFc=;
+        b=sDQQ2ZPIPlLeAhQiVhgx7SDs5lcAxnZpkBXfI3x23tnenwAMlO8KYSVtjQNyFwbEJ5
+         snSqPbGqfuxmc+r0Byjc7PLg5zoEz8TXpZKjorArSgPITCAA7gocRxBBqbN5uIYalLum
+         9IiPdVmsgYsWU4n0oizML/QPtK7oueC+m50E1CL7QIRmcsvDhHNtJ6IcSdqa/WgBgYX9
+         ZlE0Ia6yKjcuHWSDi/OAXQ03IQQGSqUmm8kCRK0xbXO9IMC69TBxOEtwS3IRUAGIUI5C
+         Tm2Hi+gBGqkIrjaJL0JxphDCAKmmEx1VZaC0xWpXrXhwda7VCSZAMdkI5oNRMm7av3bG
+         Ie+w==
+X-Gm-Message-State: AOAM530Ei8Lbht9ET2uR4IKMUoyvmyq3MfDSnX9SdP9/HBhYSIo2KvRJ
+        grJgGglvtHIHTrsL9KFlMDCVzg==
+X-Google-Smtp-Source: ABdhPJzpFnn5JabAo7dVEOKs5pBdDMgmmfoc9e02L3NoomJjv8KOqOTBXZW82AswCXHWg65DTgHcIg==
+X-Received: by 2002:a5d:40d2:: with SMTP id b18mr33016186wrq.131.1593044859578;
+        Wed, 24 Jun 2020 17:27:39 -0700 (PDT)
+Received: from x1 ([2001:16b8:5cfa:bd01:8fc:c978:d44b:800])
+        by smtp.gmail.com with ESMTPSA id f16sm2801079wmf.17.2020.06.24.17.27.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 17:10:49 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be loadable as a permenent module
-Date:   Thu, 25 Jun 2020 00:10:39 +0000
-Message-Id: <20200625001039.56174-6-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200625001039.56174-1-john.stultz@linaro.org>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
+        Wed, 24 Jun 2020 17:27:38 -0700 (PDT)
+Date:   Thu, 25 Jun 2020 02:27:36 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: gpio-omap: handle bias flag for gpio line
+Message-ID: <20200625002736.GA24954@x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow the qcom_scm driver to be loadable as a
-permenent module.
+Tony and Linus -
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: iommu@lists.linux-foundation.org
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+I'm hoping you could give me some feedback on this approach. My goal is
+to allow a userspace library (like libgpiod) to be able to set pull-up
+and pull-downs on the AM3358.
+
+I've changed gpio-omap.c so omap_gpio_set_config() will call
+omap_gpio_bias() when the parameter is one of the PIN_CONFIG_BIAS_xxx
+flags. That function will call gpiochip_generic_config() and the rest
+proceeds normally without further changes.
+
+However, this does require the following:
+1) patch to fix return code in pcs_parse_pinconf() [0]
+2) patch to add the gpio-ranges mappings [1]
+2) change the compatible for the am33xx_pinmux node to "pinconf-single"
+4) add "pinctrl-single,bias-pulldown" or "pinctrl-single,bias-pullup"
+   property to a pin node.
+
+I found the binding documentation [2] for the bias properties to be very
+confusing as to how those 4 values work:
+
+> - pinctrl-single,bias-pullup : array of value that are used to configure the
+>   input bias pullup in the pinmux register.
+>
+> 		/* input, enabled pullup bits, disabled pullup bits, mask */
+> 		pinctrl-single,bias-pullup = <0 1 0 1>;
+> 
+> - pinctrl-single,bias-pulldown : array of value that are used to configure the
+>   input bias pulldown in the pinmux register.
+
+>		/* input, enabled pulldown bits, disabled pulldown bits, mask */
+>		pinctrl-single,bias-pulldown = <2 2 0 2>;
+
+For AM3358, the pin conf register has the format [3]:
+
+bit	attribute      value
+  6	slew           { 0: fast, 1: slow }
+  5     rx_active      { 0: rx disable, 1: rx enabled }
+  4     pu_typesel     { 0: pulldown select, 1: pullup select }
+  3     puden          { 0: pud enable, 1: disabled }
+  2     mode           3 bits to selec mode 0 to 7
+  1     mode
+  0     mode
+
+I figured out the values for bias-pull{up,down} properties based on:
+
+        16      8       4       2       1
+        2^4     2^3     2^2     2^1     2^0
+mask    1       1       0       0       0       24
+pull-up 1       1       0       0       0       24
+pull-dn 0       1       0       0       0       8
+none    0       0       0       0       0       0
+
+Thus the properties are:
+
+	pinctrl-single,bias-pulldown = < 8  8 0 24>;
+	pinctrl-single,bias-pullup   = <24 24 0 24>;
+
+For an example, I added "pinctrl-single,bias-pulldown" to the node
+pinmux-ehrpwm1-pins in am335x-pocketbeagle.dts:
+
+ehrpwm1_pins: pinmux-ehrpwm1-pins {
+	pinctrl-single,pins = <
+		AM33XX_PADCONF(AM335X_PIN_GPMC_A2, PIN_OUTPUT_PULLDOWN, MUX_MODE6)
+		/* (U14) gpmc_a2.ehrpwm1A */
+	>;
+	pinctrl-single,bias-pulldown = <8 8 0 24>;
+}
+
+AM335X_PIN_GPMC_A2 is PIN18 based on the memory offset and corresponds
+to gpiochip 1 line 18 (MUX_MODE1).
+
+Here is function graph trace (note: I used -fno-inline) when gpiomon
+runs with pull-down bias flag on gpiochip 1 line 18:
+
+debian@beaglebone:~$ ./libgpiod/tools/gpiomon -B pull-down 1 18
+
+ 0)               |  gpio_ioctl() { 
+ 0)   2.708 us    |    gpiochip_get_desc();
+ 0)               |    gpiod_request() {
+ 0)               |      gpiod_request_commit() {
+ 0)   2.834 us    |        gpiochip_line_is_valid();
+ 0)               |        omap_gpio_request() {
+ 0)   2.708 us    |          omap_enable_gpio_module();
+ 0) + 15.375 us   |        }
+ 0)               |        gpiod_get_direction() {
+ 0)   2.500 us    |          gpiod_to_chip();
+ 0)   3.459 us    |          omap_gpio_get_direction();
+ 0) + 16.125 us   |        }
+ 0) + 52.875 us   |      }
+ 0) + 60.750 us   |    }
+ 0)               |    gpiod_direction_input() {
+ 0)               |      omap_gpio_input() {
+ 0)   2.500 us    |        omap_set_gpio_direction();
+ 0)   8.125 us    |      }
+ 0)               |      gpio_set_bias() {
+ 0)               |        gpio_set_config() {
+ 0)               |          gpio_do_set_config() {
+ 0)               |            omap_gpio_set_config() {
+ 0)               |              omap_gpio_bias() {
+ 0)               |                gpiochip_generic_config() {
+ 0)               |                  pinctrl_gpio_set_config() {
+ 0)               |                    pinctrl_get_device_gpio_range() {
+ 0)   3.292 us    |                      pinctrl_match_gpio_range();
+ 0)   8.667 us    |                    }
+ 0)               |                    pinconf_set_config() {
+ 0)               |                      pcs_pinconf_set() {
+ 0)   5.250 us    |                        pcs_get_function();
+ 0)   3.417 us    |                        pcs_readl();
+ 0)               |                        pcs_pinconf_clear_bias() {
+ 0)               |                          pcs_pinconf_set() {
+ 0)   3.125 us    |                            pcs_get_function();
+ 0)   2.833 us    |                            pcs_readl();
+ 0)   3.792 us    |                            pcs_writel();
+ 0) + 20.958 us   |                          }
+ 0)               |                          pcs_pinconf_set() {
+ 0)   2.750 us    |                            pcs_get_function();
+ 0)   8.083 us    |                          }
+ 0) + 37.333 us   |                        }
+ 0)   2.708 us    |                        pcs_writel();
+ 0) + 65.916 us   |                      }
+ 0) + 71.375 us   |                    }
+ 0) + 89.083 us   |                  }
+ 0) + 95.292 us   |                }
+ 0) ! 100.750 us  |              }
+ 0) ! 106.667 us  |            }
+ 0) ! 111.791 us  |          }
+ 0) ! 117.167 us  |        }
+ 0) ! 122.917 us  |      }
+ 0)   2.750 us    |      desc_to_gpio();
+ 0) ! 146.459 us  |    }
+
+Thus, all it seems I can do is set a bias flag on a gpio line if the
+corresponding bias property is already set for that pin in dts.  This
+does not accomplish anything.
+
+The ideal capability in my mind would be for pinctrl-single to
+understand that a pin defined by a "pinctrl-single,pins" property has
+both a configuration value and a mux mode value.  The current pinconf
+support is based on "pinctrl-single,bias-pull{up,down}" which does not
+seem useful.
+
+I would appreciate any feedback.
+
+Thanks,
+Drew
+
+[0] https://lore.kernel.org/linux-omap/20200608125143.GA2789203@x1/
+[1] https://lore.kernel.org/linux-omap/20200602131428.GA496390@x1/
+[2] Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+[3] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf (see Figure 9-51)
 ---
- drivers/firmware/Kconfig    | 2 +-
- drivers/firmware/Makefile   | 3 ++-
- drivers/firmware/qcom_scm.c | 4 ++++
- drivers/iommu/Kconfig       | 2 ++
- 4 files changed, 9 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am335x-pocketbeagle.dts |  2 ++
+ arch/arm/boot/dts/am33xx-l4.dtsi          |  2 +-
+ drivers/gpio/Makefile                     |  2 +-
+ drivers/gpio/gpio-omap.c                  | 37 ++++++++++++++++++++---
+ drivers/pinctrl/Makefile                  |  2 +-
+ 5 files changed, 38 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index fbd785dd0513..9e533a462bf4 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -236,7 +236,7 @@ config INTEL_STRATIX10_RSU
- 	  Say Y here if you want Intel RSU support.
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index 22d52516b7fc..f6de2028ba53 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -221,6 +221,8 @@ ehrpwm1_pins: pinmux-ehrpwm1-pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_PADCONF(AM335X_PIN_GPMC_A2, PIN_OUTPUT_PULLDOWN, MUX_MODE6)	/* (U14) gpmc_a2.ehrpwm1A */
+ 		>;
++		pinctrl-single,bias-pulldown = <8 8 0 24>;
++		/*pinctrl-single,bias-pullup = <24 24 0 24>;*/
+ 	};
  
- config QCOM_SCM
--	bool
-+	tristate "Qcom SCM driver"
- 	depends on ARM || ARM64
- 	select RESET_CONTROLLER
+ 	mmc0_pins: pinmux-mmc0-pins {
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 903338015a68..cb8a57ed13c1 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -288,7 +288,7 @@ scm: scm@0 {
+ 				ranges = <0 0 0x2000>;
  
-diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 99510be9f5ed..cf24d674216b 100644
---- a/drivers/firmware/Makefile
-+++ b/drivers/firmware/Makefile
-@@ -17,7 +17,8 @@ obj-$(CONFIG_ISCSI_IBFT)	+= iscsi_ibft.o
- obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
- obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
- obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
--obj-$(CONFIG_QCOM_SCM)		+= qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
-+obj-$(CONFIG_QCOM_SCM)		+= qcom-scm.o
-+qcom-scm-objs += qcom_scm.o qcom_scm-smc.o qcom_scm-legacy.o
- obj-$(CONFIG_TI_SCI_PROTOCOL)	+= ti_sci.o
- obj-$(CONFIG_TRUSTED_FOUNDATIONS) += trusted_foundations.o
- obj-$(CONFIG_TURRIS_MOX_RWTM)	+= turris-mox-rwtm.o
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 0e7233a20f34..b5e88bf66975 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -1155,6 +1155,7 @@ static const struct of_device_id qcom_scm_dt_match[] = {
- 	{ .compatible = "qcom,scm" },
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, qcom_scm_dt_match);
+ 				am33xx_pinmux: pinmux@800 {
+-					compatible = "pinctrl-single";
++					compatible = "pinconf-single";
+ 					reg = <0x800 0x238>;
+ 					#pinctrl-cells = <2>;
+ 					pinctrl-single,register-width = <32>;
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e4894e0bf0f..c55a5c167c43 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # generic gpio support: platform drivers, dedicated expander chips, etc
  
- static struct platform_driver qcom_scm_driver = {
- 	.driver = {
-@@ -1170,3 +1171,6 @@ static int __init qcom_scm_init(void)
- 	return platform_driver_register(&qcom_scm_driver);
+-ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG
++ccflags-$(CONFIG_DEBUG_GPIO)	+= -DDEBUG -fno-inline
+ 
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devres.o
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index b8e2ecc3eade..972629d69917 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -871,6 +871,21 @@ static int omap_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
+ 	return 0;
  }
- subsys_initcall(qcom_scm_init);
+ 
++/**
++ * omap_gpio_bias() - apply configuration for a pin
++ * @gc: the gpiochip owning the GPIO
++ * @offset: the offset of the GPIO to apply the configuration
++ * @config: the configuration to be applied
++ */
++static int omap_gpio_bias(struct gpio_chip *gc, unsigned offset, unsigned long config)
++{
++	int ret = 0;
 +
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. SCM driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index b510f67dfa49..714893535dd2 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
- config ARM_SMMU
- 	tristate "ARM Ltd. System MMU (SMMU) Support"
- 	depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-+	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_LPAE
- 	select ARM_DMA_USE_IOMMU if ARM
-@@ -500,6 +501,7 @@ config QCOM_IOMMU
- 	# Note: iommu drivers cannot (yet?) be built as modules
- 	bool "Qualcomm IOMMU Support"
- 	depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-+	depends on QCOM_SCM=y
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_LPAE
- 	select ARM_DMA_USE_IOMMU
++	ret = gpiochip_generic_config(gc, offset, config);
++	return ret;
++}
++
++
+ static int omap_gpio_debounce(struct gpio_chip *chip, unsigned offset,
+ 			      unsigned debounce)
+ {
+@@ -896,12 +911,26 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+ 				unsigned long config)
+ {
+ 	u32 debounce;
++	u32 config_arg;
++	int ret;
+ 
+-	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
+-		return -ENOTSUPP;
++	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
++	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
++	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
++	{
++		ret = omap_gpio_bias(chip, offset, config);
++	}
++	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
++	{
++		debounce = pinconf_to_config_argument(config);
++		ret = omap_gpio_debounce(chip, offset, debounce);
++	}
++	else
++	{
++		ret = -ENOTSUPP;
++	}
+ 
+-	debounce = pinconf_to_config_argument(config);
+-	return omap_gpio_debounce(chip, offset, debounce);
++	return ret;
+ }
+ 
+ static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 1731b2154df9..fc62c20702c6 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # generic pinmux support
+ 
+-subdir-ccflags-$(CONFIG_DEBUG_PINCTRL)	+= -DDEBUG
++subdir-ccflags-$(CONFIG_DEBUG_PINCTRL)	+= -DDEBUG -fno-inline
+ 
+ obj-y				+= core.o pinctrl-utils.o
+ obj-$(CONFIG_PINMUX)		+= pinmux.o
 -- 
-2.17.1
+2.25.1
 
