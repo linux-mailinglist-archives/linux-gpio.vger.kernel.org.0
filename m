@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 631F52097F9
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 02:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB36D2097F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jun 2020 02:48:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgFYAsn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S2388738AbgFYAsn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 24 Jun 2020 20:48:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39263 "EHLO mga02.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:15430 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388679AbgFYAsn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 24 Jun 2020 20:48:43 -0400
-IronPort-SDR: f1udPVv62iyusak6D7zajkuDPCfGilI+qD0ROKQYfxrDoHbsGU8H55Ylk3VxMTLSsYjhdp+rAd
- wdYU1q6KXg2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="133118125"
+        id S1729175AbgFYAsm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 24 Jun 2020 20:48:42 -0400
+IronPort-SDR: aIipQhzY7g8OJ/7BJfOxnchDV2jysGntAsbUdM3EIw3sjzvpznqoNkKHvmV4irQWq/JmVdNqvD
+ EjjWRvbG4UjA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="206230766"
 X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="133118125"
+   d="scan'208";a="206230766"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 17:48:42 -0700
-IronPort-SDR: HTdcFX62CAjM65+sZyq6M3NzDulShD3pcCj+AZNWW94vEd2Ar7BJmHabOdpWhEN7/zjSsgunPN
- fwIzWqeHPo9w==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 17:48:42 -0700
+IronPort-SDR: bgSICOJ+GXMFls/9Tbe84E1e0xmkc9cq9HWikk0swghDngNa+Plv3r7hU9C2hNwR3dT3OJDDeT
+ MEWHPPvAZhOQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="310956529"
+   d="scan'208";a="294315316"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 24 Jun 2020 17:48:41 -0700
+  by orsmga007.jf.intel.com with ESMTP; 24 Jun 2020 17:48:41 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1joG4G-0001EQ-Ox; Thu, 25 Jun 2020 00:48:40 +0000
-Date:   Thu, 25 Jun 2020 08:47:46 +0800
+        id 1joG4G-0001EN-ED; Thu, 25 Jun 2020 00:48:40 +0000
+Date:   Thu, 25 Jun 2020 08:47:49 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [pinctrl:for-next] BUILD SUCCESS
- e337924b7654127dc41364aee61e1af478025248
-Message-ID: <5ef3f432.7pZh2umd8n49qQrW%lkp@intel.com>
+Subject: [pinctrl:fixes] BUILD SUCCESS
+ 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb
+Message-ID: <5ef3f435.1IjG7YaWbJqinTPo%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,13 +46,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  for-next
-branch HEAD: e337924b7654127dc41364aee61e1af478025248  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git  fixes
+branch HEAD: 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb  pinctrl: amd: fix npins for uart0 in kerncz_groups
 
-elapsed time: 720m
+elapsed time: 721m
 
-configs tested: 115
-configs skipped: 4
+configs tested: 112
+configs skipped: 3
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -70,10 +70,6 @@ sh                         microdev_defconfig
 arm                       cns3420vb_defconfig
 arc                            hsdk_defconfig
 m68k                        m5272c3_defconfig
-arc                     haps_hs_smp_defconfig
-powerpc                          g5_defconfig
-mips                        jmr3927_defconfig
-s390                             allyesconfig
 mips                         tb0219_defconfig
 sh                          r7780mp_defconfig
 sh                ecovec24-romimage_defconfig
@@ -102,11 +98,11 @@ openrisc                            defconfig
 c6x                              allyesconfig
 c6x                               allnoconfig
 openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
 csky                             allyesconfig
 csky                                defconfig
 alpha                               defconfig
-nds32                               defconfig
-nds32                             allnoconfig
 alpha                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
@@ -151,6 +147,7 @@ riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
 riscv                            allmodconfig
+s390                             allyesconfig
 s390                              allnoconfig
 s390                             allmodconfig
 s390                                defconfig
