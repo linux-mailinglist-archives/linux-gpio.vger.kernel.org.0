@@ -2,419 +2,254 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33CF120B38D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 16:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3137720B3AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 16:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgFZO3v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Jun 2020 10:29:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43318 "EHLO
+        id S1726422AbgFZOgp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Jun 2020 10:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgFZO3u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 10:29:50 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2D0C03E97B
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 207so4531802pfu.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/RLhEgFZqwOiUJR7hIKF84H/JoM0jqaYVnZVyqUR9og=;
-        b=y8Mh+0U22P0/TnRv7ckznedVo83HnXfMs+IKYnrzL8cgYTJ8eHlMikPlhGQ8UG3ZxJ
-         ziByUJ8b4OkJgRvaH5uDNr3Bq62L7F/BBJLK663OWgRD9rUhmxgp7Pa4TiB5irxWIVNE
-         HcsFYSm/m61euntdWZlGusaL7WNBEiHPijyb8h9m+s82KPAS4bvpzYJZ3VL9ygI4X3dl
-         fsWqC7mscuM4DN2QtrBZaa62sec3421spt4AdK4WmtutrhVhTmtzoeHCfigtN/nRUFSK
-         e/WxR/Atg9tkgBD8YTwwV93BNm4cXlnnleUOUlpb7iy7FZGQNbC1YckAoH0byztL7TAY
-         oKyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/RLhEgFZqwOiUJR7hIKF84H/JoM0jqaYVnZVyqUR9og=;
-        b=HFWSjsUkUa2FgE6F0xApZHU4BtTqMzljFsjROfc7C57nSzLq5HAm+NldpcrNiGKS6Y
-         wQGNb0sJH0rwWc+3pdz8t5gvpmSxWiB8hS5+VPBHXJ2N1zeBIjCCn9C5Jl9MJcJAYCzi
-         dDTzS3QGtZe1L8r/bN0RNL0DshFvxk2bvXdauG2SC8nPCgC7C7xCStdeuXvSg02Hl1lm
-         CknszrUV1IBITYyAgbK0lGmIxyOljwwI9EkL14yBVFawRAaTIHGPQsKN0M+KYApE1CGm
-         eLz4rO3BNcLKir3IJFABIWwwQ3zOtoIzmvKJX27Kg9Ph8ZGJHnanrdDLWlbMdn0MuPnG
-         g+7g==
-X-Gm-Message-State: AOAM531MRyRkPfkJWy/YcQcWiosXg4P7t5aqhg1g1H6ZXIgP1yOo1w/i
-        oanecKH11h7Jj55f85hcXLEY
-X-Google-Smtp-Source: ABdhPJw7tkcO9iWA+Yjqs6I7rbP2ZmpL3n4krfSpPGn1iEuD1RvzOke8erQx4umLSENe9v/9Nt/mJQ==
-X-Received: by 2002:a63:e00c:: with SMTP id e12mr2970735pgh.413.1593181790067;
-        Fri, 26 Jun 2020 07:29:50 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e11:8623:980f:4d73:2b9:f602])
-        by smtp.gmail.com with ESMTPSA id n189sm26615055pfn.108.2020.06.26.07.29.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 26 Jun 2020 07:29:49 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 19:59:41 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S1725970AbgFZOgo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 10:36:44 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45791C03E979
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 07:36:44 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:a816:a2b4:ac1d:77b4])
+        by albert.telenet-ops.be with bizsmtp
+        id vqcf2200k0dCmYp06qcfFh; Fri, 26 Jun 2020 16:36:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jopT6-0007rh-42; Fri, 26 Jun 2020 16:36:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jopT6-0004J3-1o; Fri, 26 Jun 2020 16:36:40 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH 2/3] pinctrl: actions: Add Actions S500 pinctrl driver
-Message-ID: <20200626142941.GE8333@Mani-XPS-13-9360>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
- <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ebf34a13fe4e98342e654e834751d3f2c4285e8.1593112402.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Chris Brandt <chris.brandt@renesas.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to json-schema
+Date:   Fri, 26 Jun 2020 16:36:38 +0200
+Message-Id: <20200626143638.16512-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:16:19PM +0300, Cristian Ciocaltea wrote:
-> Add pinctrl and gpio driver for Actions Semi S500 SoC.
-> 
-> The driver supports pinctrl, pinmux, pinconf, gpio and interrupt
-> functions using a set of registers shared between gpio and pinctrl.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> ---
->  drivers/pinctrl/actions/Kconfig        |    6 +
->  drivers/pinctrl/actions/Makefile       |    1 +
->  drivers/pinctrl/actions/pinctrl-s500.c | 1727 ++++++++++++++++++++++++
->  3 files changed, 1734 insertions(+)
->  create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
-> 
-> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
-> index 966f1c2c89d6..a1d16e8280e5 100644
-> --- a/drivers/pinctrl/actions/Kconfig
-> +++ b/drivers/pinctrl/actions/Kconfig
-> @@ -10,6 +10,12 @@ config PINCTRL_OWL
->  	help
->  	  Say Y here to enable Actions Semi OWL pinctrl driver
->  
-> +config PINCTRL_S500
-> +	bool "Actions Semi S500 pinctrl driver"
-> +	depends on PINCTRL_OWL
-> +	help
-> +	  Say Y here to enable Actions Semi S500 pinctrl driver
-> +
->  config PINCTRL_S700
->  	bool "Actions Semi S700 pinctrl driver"
->  	depends on PINCTRL_OWL
-> diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
-> index 61aa9107a43a..b9e2c527c9d3 100644
-> --- a/drivers/pinctrl/actions/Makefile
-> +++ b/drivers/pinctrl/actions/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
-> +obj-$(CONFIG_PINCTRL_S500) 	+= pinctrl-s500.o
->  obj-$(CONFIG_PINCTRL_S700) 	+= pinctrl-s700.o
->  obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
-> diff --git a/drivers/pinctrl/actions/pinctrl-s500.c b/drivers/pinctrl/actions/pinctrl-s500.c
-> new file mode 100644
-> index 000000000000..38e30914af6e
-> --- /dev/null
-> +++ b/drivers/pinctrl/actions/pinctrl-s500.c
-> @@ -0,0 +1,1727 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Actions Semi S500 SoC Pinctrl driver
-> + *
-> + * Copyright (c) 2014 Actions Semi Inc.
-> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include "pinctrl-owl.h"
-> +
-> +/* Pinctrl registers offset */
-> +#define MFCTL0			(0x0040)
-> +#define MFCTL1			(0x0044)
-> +#define MFCTL2			(0x0048)
-> +#define MFCTL3			(0x004C)
-> +#define PAD_PULLCTL0		(0x0060)
-> +#define PAD_PULLCTL1		(0x0064)
-> +#define PAD_PULLCTL2		(0x0068)
-> +#define PAD_ST0			(0x006C)
-> +#define PAD_ST1			(0x0070)
-> +#define PAD_CTL			(0x0074)
-> +#define PAD_DRV0		(0x0080)
-> +#define PAD_DRV1		(0x0084)
-> +#define PAD_DRV2		(0x0088)
-> +
-> +#define _GPIOA(offset)		(offset)
-> +#define _GPIOB(offset)		(32 + (offset))
-> +#define _GPIOC(offset)		(64 + (offset))
-> +#define _GPIOD(offset)		(96 + (offset))
-> +#define _GPIOE(offset)		(128 + (offset))
-> +
-> +#define NUM_GPIOS		(_GPIOE(3) + 1)
-> +#define _PIN(offset)		(NUM_GPIOS + (offset))
-> +
-> +#define DNAND_DQS		_GPIOA(12)
-> +#define DNAND_DQSN		_GPIOA(13)
-> +#define ETH_TXD0		_GPIOA(14)
-> +#define ETH_TXD1		_GPIOA(15)
-> +#define ETH_TXEN		_GPIOA(16)
-> +#define ETH_RXER		_GPIOA(17)
-> +#define ETH_CRS_DV		_GPIOA(18)
-> +#define ETH_RXD1		_GPIOA(19)
-> +#define ETH_RXD0		_GPIOA(20)
-> +#define ETH_REF_CLK		_GPIOA(21)
-> +#define ETH_MDC			_GPIOA(22)
-> +#define ETH_MDIO		_GPIOA(23)
-> +#define SIRQ0			_GPIOA(24)
-> +#define SIRQ1			_GPIOA(25)
-> +#define SIRQ2			_GPIOA(26)
-> +#define I2S_D0			_GPIOA(27)
-> +#define I2S_BCLK0		_GPIOA(28)
-> +#define I2S_LRCLK0		_GPIOA(29)
-> +#define I2S_MCLK0		_GPIOA(30)
-> +#define I2S_D1			_GPIOA(31)
-> +
-> +#define I2S_BCLK1		_GPIOB(0)
-> +#define I2S_LRCLK1		_GPIOB(1)
-> +#define I2S_MCLK1		_GPIOB(2)
-> +#define KS_IN0			_GPIOB(3)
-> +#define KS_IN1			_GPIOB(4)
-> +#define KS_IN2			_GPIOB(5)
-> +#define KS_IN3			_GPIOB(6)
-> +#define KS_OUT0			_GPIOB(7)
-> +#define KS_OUT1			_GPIOB(8)
-> +#define KS_OUT2			_GPIOB(9)
-> +#define LVDS_OEP		_GPIOB(10)
-> +#define LVDS_OEN		_GPIOB(11)
-> +#define LVDS_ODP		_GPIOB(12)
-> +#define LVDS_ODN		_GPIOB(13)
-> +#define LVDS_OCP		_GPIOB(14)
-> +#define LVDS_OCN		_GPIOB(15)
-> +#define LVDS_OBP		_GPIOB(16)
-> +#define LVDS_OBN		_GPIOB(17)
-> +#define LVDS_OAP		_GPIOB(18)
-> +#define LVDS_OAN		_GPIOB(19)
-> +#define LVDS_EEP		_GPIOB(20)
-> +#define LVDS_EEN		_GPIOB(21)
-> +#define LVDS_EDP		_GPIOB(22)
-> +#define LVDS_EDN		_GPIOB(23)
-> +#define LVDS_ECP		_GPIOB(24)
-> +#define LVDS_ECN		_GPIOB(25)
-> +#define LVDS_EBP		_GPIOB(26)
-> +#define LVDS_EBN		_GPIOB(27)
-> +#define LVDS_EAP		_GPIOB(28)
-> +#define LVDS_EAN		_GPIOB(29)
-> +#define LCD0_D18		_GPIOB(30)
-> +#define LCD0_D17		_GPIOB(31)
-> +
-> +#define DSI_DP3			_GPIOC(0)
-> +#define DSI_DN3			_GPIOC(1)
-> +#define DSI_DP1			_GPIOC(2)
-> +#define DSI_DN1			_GPIOC(3)
-> +#define DSI_CP			_GPIOC(4)
-> +#define DSI_CN			_GPIOC(5)
-> +#define DSI_DP0			_GPIOC(6)
-> +#define DSI_DN0			_GPIOC(7)
-> +#define DSI_DP2			_GPIOC(8)
-> +#define DSI_DN2			_GPIOC(9)
-> +#define SD0_D0			_GPIOC(10)
-> +#define SD0_D1			_GPIOC(11)
-> +#define SD0_D2			_GPIOC(12)
-> +#define SD0_D3			_GPIOC(13)
-> +#define SD1_D0			_GPIOC(14) /* SD0_D4 */
-> +#define SD1_D1			_GPIOC(15) /* SD0_D5 */
-> +#define SD1_D2			_GPIOC(16) /* SD0_D6 */
-> +#define SD1_D3			_GPIOC(17) /* SD0_D7 */
-> +#define SD0_CMD			_GPIOC(18)
-> +#define SD0_CLK			_GPIOC(19)
-> +#define SD1_CMD			_GPIOC(20)
-> +#define SD1_CLK			_GPIOC(21)
-> +#define SPI0_SCLK		_GPIOC(22)
-> +#define SPI0_SS			_GPIOC(23)
-> +#define SPI0_MISO		_GPIOC(24)
-> +#define SPI0_MOSI		_GPIOC(25)
-> +#define UART0_RX		_GPIOC(26)
-> +#define UART0_TX		_GPIOC(27)
-> +#define I2C0_SCLK		_GPIOC(28)
-> +#define I2C0_SDATA		_GPIOC(29)
-> +#define SENSOR0_PCLK		_GPIOC(31)
-> +
-> +#define SENSOR0_CKOUT		_GPIOD(10)
-> +#define DNAND_ALE		_GPIOD(12)
-> +#define DNAND_CLE		_GPIOD(13)
-> +#define DNAND_CEB0		_GPIOD(14)
-> +#define DNAND_CEB1		_GPIOD(15)
-> +#define DNAND_CEB2		_GPIOD(16)
-> +#define DNAND_CEB3		_GPIOD(17)
-> +#define UART2_RX		_GPIOD(18)
-> +#define UART2_TX		_GPIOD(19)
-> +#define UART2_RTSB		_GPIOD(20)
-> +#define UART2_CTSB		_GPIOD(21)
-> +#define UART3_RX		_GPIOD(22)
-> +#define UART3_TX		_GPIOD(23)
-> +#define UART3_RTSB		_GPIOD(24)
-> +#define UART3_CTSB		_GPIOD(25)
-> +#define PCM1_IN			_GPIOD(28)
-> +#define PCM1_CLK		_GPIOD(29)
-> +#define PCM1_SYNC		_GPIOD(30)
-> +#define PCM1_OUT		_GPIOD(31)
-> +
-> +#define I2C1_SCLK		_GPIOE(0)
-> +#define I2C1_SDATA		_GPIOE(1)
-> +#define I2C2_SCLK		_GPIOE(2)
-> +#define I2C2_SDATA		_GPIOE(3)
-> +
-> +#define CSI_DN0			_PIN(0)
-> +#define CSI_DP0			_PIN(1)
-> +#define CSI_DN1			_PIN(2)
-> +#define CSI_DP1			_PIN(3)
-> +#define CSI_CN			_PIN(4)
-> +#define CSI_CP			_PIN(5)
-> +#define CSI_DN2			_PIN(6)
-> +#define CSI_DP2			_PIN(7)
-> +#define CSI_DN3			_PIN(8)
-> +#define CSI_DP3			_PIN(9)
-> +
-> +#define DNAND_D0		_PIN(10)
-> +#define DNAND_D1		_PIN(11)
-> +#define DNAND_D2		_PIN(12)
-> +#define DNAND_D3		_PIN(13)
-> +#define DNAND_D4		_PIN(14)
-> +#define DNAND_D5		_PIN(15)
-> +#define DNAND_D6		_PIN(16)
-> +#define DNAND_D7		_PIN(17)
-> +#define DNAND_WRB		_PIN(18)
-> +#define DNAND_RDB		_PIN(19)
-> +#define DNAND_RDBN		_PIN(20)
-> +#define DNAND_RB		_PIN(21)
-> +
-> +#define PORB			_PIN(22)
-> +#define CLKO_25M		_PIN(23)
-> +#define BSEL			_PIN(24)
-> +#define PKG0			_PIN(25)
-> +#define PKG1			_PIN(26)
-> +#define PKG2			_PIN(27)
-> +#define PKG3			_PIN(28)
-> +
-> +#define _FIRSTPAD		_GPIOA(0)
-> +#define _LASTPAD		PKG3
-> +#define NUM_PADS		(_PIN(28) + 1)
-> +
+Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
+binding documentation to json-schema.
 
-[...]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
+ .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
+ 2 files changed, 100 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
 
-> +static const struct owl_gpio_port s500_gpio_ports[] = {
-> +	OWL_GPIO_PORT(A, 0x0000, 32, 0x0, 0x4, 0x8, 0x204, 0x208, 0x20C, 0x230, 0),
-> +	OWL_GPIO_PORT(B, 0x000C, 32, 0x0, 0x4, 0x8, 0x1F8, 0x204, 0x208, 0x22C, 1),
-> +	OWL_GPIO_PORT(C, 0x0018, 32, 0x0, 0x4, 0x8, 0x1EC, 0x200, 0x204, 0x228, 2),
-> +	OWL_GPIO_PORT(D, 0x0024, 32, 0x0, 0x4, 0x8, 0x1E0, 0x1FC, 0x200, 0x224, 3),
-> +	OWL_GPIO_PORT(E, 0x0030,  4, 0x0, 0x4, 0x8, 0x1D4, 0x1F8, 0x1FC, 0x220, 4),
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+deleted file mode 100644
+index a63ccd476cdaf919..0000000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
++++ /dev/null
+@@ -1,87 +0,0 @@
+-Renesas RZ/A2 combined Pin and GPIO controller
+-
+-The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
+-Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+-Each port features up to 8 pins, each of them configurable for GPIO
+-function (port mode) or in alternate function mode.
+-Up to 8 different alternate function modes exist for each single pin.
+-
+-Pin controller node
+--------------------
+-
+-Required properties:
+-  - compatible: shall be:
+-    - "renesas,r7s9210-pinctrl": for RZ/A2M
+-  - reg
+-    Address base and length of the memory area where the pin controller
+-    hardware is mapped to.
+-  - gpio-controller
+-    This pin controller also controls pins as GPIO
+-  - #gpio-cells
+-    Must be 2
+-  - gpio-ranges
+-    Expresses the total number of GPIO ports/pins in this SoC
+-
+-Example: Pin controller node for RZ/A2M SoC (r7s9210)
+-
+-	pinctrl: pin-controller@fcffe000 {
+-		compatible = "renesas,r7s9210-pinctrl";
+-		reg = <0xfcffe000 0x1000>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&pinctrl 0 0 176>;
+-	};
+-
+-Sub-nodes
+----------
+-
+-The child nodes of the pin controller designate pins to be used for
+-specific peripheral functions or as GPIO.
+-
+-- Pin multiplexing sub-nodes:
+-  A pin multiplexing sub-node describes how to configure a set of
+-  (or a single) pin in some desired alternate function mode.
+-  The values for the pinmux properties are a combination of port name, pin
+-  number and the desired function index. Use the RZA2_PINMUX macro located
+-  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
+-  For assigning GPIO pins, use the macro RZA2_PIN also in r7s9210-pinctrl.h
+-  to express the desired port pin.
+-
+-  Required properties:
+-    - pinmux:
+-      integer array representing pin number and pin multiplexing configuration.
+-      When a pin has to be configured in alternate function mode, use this
+-      property to identify the pin by its global index, and provide its
+-      alternate function configuration number along with it.
+-      When multiple pins are required to be configured as part of the same
+-      alternate function they shall be specified as members of the same
+-      argument list of a single "pinmux" property.
+-      Helper macros to ease assembling the pin index from its position
+-      (port where it sits on and pin number) and alternate function identifier
+-      are provided by the pin controller header file at:
+-      <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+-      Integers values in "pinmux" argument list are assembled as:
+-      ((PORT * 8 + PIN) | MUX_FUNC << 16)
+-
+-  Example: Board specific pins configuration
+-
+-	&pinctrl {
+-		/* Serial Console */
+-		scif4_pins: serial4 {
+-			pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
+-				 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
+-		};
+-	};
+-
+-  Example: Assigning a GPIO:
+-
+-	leds {
+-		status = "okay";
+-		compatible = "gpio-leds";
+-
+-		led0 {
+-			/* P6_0 */
+-			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+new file mode 100644
+index 0000000000000000..b7911a994f3a9f12
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/renesas,rza2-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/A2 combined Pin and GPIO controller
++
++maintainers:
++  - Chris Brandt <chris.brandt@renesas.com>
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description:
++  The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO
++  controller.
++  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
++  Each port features up to 8 pins, each of them configurable for GPIO function
++  (port mode) or in alternate function mode.
++  Up to 8 different alternate function modes exist for each single pin.
++
++properties:
++  compatible:
++    const: "renesas,r7s9210-pinctrl" # RZ/A2M
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++    description:
++      The first cell contains the global GPIO port index, constructed using the
++      RZA2_PIN() helper macro in r7s9210-pinctrl.h.
++      E.g. "RZA2_PIN(PORT6, 0)" for P6_0.
++
++  gpio-ranges:
++    maxItems: 1
++
++patternProperties:
++  "^.*$":
++    if:
++      type: object
++    then:
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++      description:
++        The child nodes of the pin controller designate pins to be used for
++        specific peripheral functions or as GPIO.
++
++        A pin multiplexing sub-node describes how to configure a set of
++        (or a single) pin in some desired alternate function mode.
++        The values for the pinmux properties are a combination of port name,
++        pin number and the desired function index. Use the RZA2_PINMUX macro
++        located in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily
++        define these.
++        For assigning GPIO pins, use the macro RZA2_PIN also in
++        to express the desired port pin.
++
++      properties:
++        phandle: true
++
++        pinmux:
++          description:
++            Values are constructed from GPIO port number, pin number, and
++            alternate function configuration number using the RZA2_PINMUX()
++            helper macro in r7s9210-pinctrl.h.
++
++      required:
++        - pinmux
++
++      additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
++    pinctrl: pin-controller@fcffe000 {
++            compatible = "renesas,r7s9210-pinctrl";
++            reg = <0xfcffe000 0x1000>;
++
++            gpio-controller;
++            #gpio-cells = <2>;
++            gpio-ranges = <&pinctrl 0 0 176>;
++
++            /* Serial Console */
++            scif4_pins: serial4 {
++                    pinmux = <RZA2_PINMUX(PORT9, 0, 4)>, /* TxD4 */
++                             <RZA2_PINMUX(PORT9, 1, 4)>; /* RxD4 */
++            };
++    };
+-- 
+2.17.1
 
-Except PORT-A, rest of the offsets for ports seems to be wrong. From where did
-you get these?
-
-Thanks,
-Mani
-
-> +};
-> +
-> +enum s500_pinconf_pull {
-> +	OWL_PINCONF_PULL_DOWN,
-> +	OWL_PINCONF_PULL_UP,
-> +};
-> +
-> +static int s500_pad_pinconf_arg2val(const struct owl_padinfo *info,
-> +				    unsigned int param, u32 *arg)
-> +{
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		*arg = OWL_PINCONF_PULL_DOWN;
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*arg = OWL_PINCONF_PULL_UP;
-> +		break;
-> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> +		*arg = (*arg >= 1 ? 1 : 0);
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int s500_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
-> +				    unsigned int param, u32 *arg)
-> +{
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		*arg = *arg == OWL_PINCONF_PULL_UP;
-> +		break;
-> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
-> +		*arg = *arg == 1;
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct owl_pinctrl_soc_data s500_pinctrl_data = {
-> +	.padinfo = s500_padinfo,
-> +	.pins = (const struct pinctrl_pin_desc *)s500_pads,
-> +	.npins = ARRAY_SIZE(s500_pads),
-> +	.functions = s500_functions,
-> +	.nfunctions = ARRAY_SIZE(s500_functions),
-> +	.groups = s500_groups,
-> +	.ngroups = ARRAY_SIZE(s500_groups),
-> +	.ngpios = NUM_GPIOS,
-> +	.ports = s500_gpio_ports,
-> +	.nports = ARRAY_SIZE(s500_gpio_ports),
-> +	.padctl_arg2val = s500_pad_pinconf_arg2val,
-> +	.padctl_val2arg = s500_pad_pinconf_val2arg,
-> +};
-> +
-> +static int s500_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return owl_pinctrl_probe(pdev, &s500_pinctrl_data);
-> +}
-> +
-> +static const struct of_device_id s500_pinctrl_of_match[] = {
-> +	{ .compatible = "actions,s500-pinctrl", },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver s500_pinctrl_driver = {
-> +	.driver = {
-> +		.name = "pinctrl-s500",
-> +		.of_match_table = of_match_ptr(s500_pinctrl_of_match),
-> +	},
-> +	.probe = s500_pinctrl_probe,
-> +};
-> +
-> +static int __init s500_pinctrl_init(void)
-> +{
-> +	return platform_driver_register(&s500_pinctrl_driver);
-> +}
-> +arch_initcall(s500_pinctrl_init);
-> +
-> +static void __exit s500_pinctrl_exit(void)
-> +{
-> +	platform_driver_unregister(&s500_pinctrl_driver);
-> +}
-> +module_exit(s500_pinctrl_exit);
-> +
-> +MODULE_AUTHOR("Actions Semi Inc.");
-> +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-> +MODULE_DESCRIPTION("Actions Semi S500 SoC Pinctrl Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.27.0
-> 
