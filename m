@@ -2,107 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6786820AD16
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 09:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7C4D20AD70
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 09:43:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbgFZH1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Jun 2020 03:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34728 "EHLO
+        id S1728829AbgFZHm5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Jun 2020 03:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728765AbgFZH1V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 03:27:21 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94B4C08C5DC
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 00:27:21 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 67so212687pfg.5
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 00:27:21 -0700 (PDT)
+        with ESMTP id S1728803AbgFZHm5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 03:42:57 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1564AC08C5C1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 00:42:57 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id cv18so1383460pjb.1
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 00:42:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=EZ4ukNPP7iVf8vF6muxB/o/Srf2rzuTl0wpGGpjxFsM=;
-        b=yNUST13hy1+EHsS2sfxk+Rj7MFVtb9pHUJ3ZuX0/lRKXQPpvZvrig6EuZfTDWJ+qke
-         mS2zGNJmWT2QfsMus14SCDaf4xdse3am1VGM0br3ydyj4Ov9vgtL86CR7fCudpTiE8ys
-         Ci+M6jhRh06570+Mo2IKvLSr9pW+x6gDTDfXoKE1n2S1L6xBMvF7jXSP2xQYl1atO0vT
-         lm3XmwkvyR4386nRWGZQg6hZGKAWdELGxM1QX8N8eHsLoA0Q13fbRTeA0iMtJg4kSBm7
-         oJBOrAqwZqKn+ptRxOV/EKR/7IOufy9I6tei+eA1AIzseW66Ha2Dp0/RPMdWOlFMypHR
-         pEow==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=OJIUC4k1mJAJPg8NhZJ50NxPEO+zBVx140Q/CxvWNvw=;
+        b=JuHGdSRcBQGE3Lde78F313PsAZcPMsnhx/4TiHSLZEfd0kKmZO8VUORbl2ywLlLNYP
+         SybuYbIXipyAqOoCEFVzfX+cyu1u//qdxZmUFkk1BZIbhZiDVvkT+r3ys2yo80bHbGon
+         SsdxDCae+9fy02JYCpW6exl43BLdPHw76Jn1k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=EZ4ukNPP7iVf8vF6muxB/o/Srf2rzuTl0wpGGpjxFsM=;
-        b=ue2RqJMx9N5segvR6olCPBC+ExOwuqcIxZSLlF3L622cL2oOTGo8eCgjjEq+gmqDjj
-         Oban1nd2JQf9YEndc/fScHEpk/HBKfGOM9e0phQ7zQE+ZUh0c9pOq/Z8A3/d9i2VIOwt
-         uYZ8J9hobImxuijvAaVPmERKCYudjrdO6DWq43d4FchnNGyc3JGw+9afBkL46iopiBJH
-         RoS725W8AYkgWlLgdQNzLqeD9nxC91aRwDqTT6RqpygFz+SyVYszBQMn90pQK0DnLnl3
-         zkPiKuMD0DH3VBTNId21thjBmGas7EHryVwE0k4K/oDW3PtEUiMeiHbFEvFZR2ZGJcwK
-         zykg==
-X-Gm-Message-State: AOAM532tQBAaD1rwtP/KoM+1f4Rv4bNKmqg065khRlP2YNlnA4BglDx8
-        PhGO4b/Xd5M5Enf++mDupErh
-X-Google-Smtp-Source: ABdhPJxghrZqKHyTE+bK+1pDhBG1aZE7of6Mvctp26xHfyHYrc39RS2yDT2fHkCmrHl79016pP2nsA==
-X-Received: by 2002:a63:2248:: with SMTP id t8mr1576526pgm.113.1593156441147;
-        Fri, 26 Jun 2020 00:27:21 -0700 (PDT)
-Received: from ?IPv6:2409:4072:8f:e5bc:398d:eac0:43d5:2c47? ([2409:4072:8f:e5bc:398d:eac0:43d5:2c47])
-        by smtp.gmail.com with ESMTPSA id k14sm24364377pfk.97.2020.06.26.00.27.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jun 2020 00:27:20 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 12:57:15 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <d54d1fe9d8378e7c44d19e7b366b909bf5dbb7dc.1593112402.git.cristian.ciocaltea@gmail.com>
-References: <cover.1593112402.git.cristian.ciocaltea@gmail.com> <d54d1fe9d8378e7c44d19e7b366b909bf5dbb7dc.1593112402.git.cristian.ciocaltea@gmail.com>
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=OJIUC4k1mJAJPg8NhZJ50NxPEO+zBVx140Q/CxvWNvw=;
+        b=lRbzOB9vuYx0aZ/135wPQWMuVomzdfYKzQ51wK6CG+PXbQjpap+uVAKnOHmWPvWHaV
+         tnvdt5mbpvGwGGtbXsRrSO3+/ymyQxcUc71QXX3z1ppi5ljN2FW/vuJyHXCT1Z6SOtzn
+         JPAHBfUYVdIgzVjqOzQo0lLHPbM+CtRGqTguvNABRlhWikNOg4zy10gedK6O+CFj8/jv
+         BAJqgNcsy3FgzNYDq8C4PXCEEYL8XALeNpXgyTj6hhW+Zpve0cfA+M671GIRu2AOtNrg
+         WLGTvg0gIuw00dk4yYlnHJAq+YwuAEXlNWu5bPbwIp1/bC4p4n3fTA9GfKKMDZHL/hjR
+         0AXQ==
+X-Gm-Message-State: AOAM532awbUy3Owhl8fFFP+8xTThdQoJOu1QNkZQ53EzZlPPUrI0eKC1
+        hsuiCAC+uwxiioFcKKDOkEz8Gg==
+X-Google-Smtp-Source: ABdhPJxJiBdKBJCg9hkKXPvaAZ1SMFSV7dxt8ZkrJwCH6KsPe6VyOeT252b+sGAmU5335uuNU45W2w==
+X-Received: by 2002:a17:90a:1546:: with SMTP id y6mr2153667pja.92.1593157376534;
+        Fri, 26 Jun 2020 00:42:56 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id jz23sm10479542pjb.2.2020.06.26.00.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jun 2020 00:42:56 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add pinctrl binding entry for Actions Semi S500
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
+In-Reply-To: <20200625001039.56174-4-john.stultz@linaro.org>
+References: <20200625001039.56174-1-john.stultz@linaro.org> <20200625001039.56174-4-john.stultz@linaro.org>
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-actions@lists.infradead.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <EDE29F4D-CB0B-4A24-B7B4-01E2C11179A3@linaro.org>
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Fri, 26 Jun 2020 00:42:55 -0700
+Message-ID: <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Quoting John Stultz (2020-06-24 17:10:37)
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index 6ae9e1f0819d..3fee8b655da1 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -430,4 +432,33 @@ static int qcom_pdc_init(struct device_node *node, s=
+truct device_node *parent)
+>         return ret;
+>  }
+> =20
+> +#ifdef MODULE
+> +static int qcom_pdc_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np =3D pdev->dev.of_node;
+> +       struct device_node *parent =3D of_irq_find_parent(np);
+> +
+> +       return qcom_pdc_init(np, parent);
+> +}
+> +
+> +static const struct of_device_id qcom_pdc_match_table[] =3D {
+> +       { .compatible =3D "qcom,pdc" },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+> +
+> +static struct platform_driver qcom_pdc_driver =3D {
+> +       .probe =3D qcom_pdc_probe,
+> +       .driver =3D {
+> +               .name =3D "qcom-pdc",
+> +               .of_match_table =3D qcom_pdc_match_table,
+> +               .suppress_bind_attrs =3D true,
+> +       },
+> +};
+> +module_platform_driver(qcom_pdc_driver);
+> +#else
+>  IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
 
+Is there any reason to use IRQCHIP_DECLARE if this can work as a
+platform device driver?
 
-On 26 June 2020 1:46:20 AM IST, Cristian Ciocaltea <cristian=2Eciocaltea@g=
-mail=2Ecom> wrote:
->Add a pinctrl binding entry for Actions Semi S500=2E
->
->Signed-off-by: Cristian Ciocaltea <cristian=2Eciocaltea@gmail=2Ecom>
->---
-> MAINTAINERS | 1 +
-> 1 file changed, 1 insertion(+)
->
->diff --git a/MAINTAINERS b/MAINTAINERS
->index e6285c13bab0=2E=2E4b9eec04c937 100644
->--- a/MAINTAINERS
->+++ b/MAINTAINERS
->@@ -1519,6 +1519,7 @@
->F:	Documentation/devicetree/bindings/clock/actions,owl-cmu=2Etxt
-> F:	Documentation/devicetree/bindings/dma/owl-dma=2Etxt
-> F:	Documentation/devicetree/bindings/i2c/i2c-owl=2Etxt
-> F:	Documentation/devicetree/bindings/mmc/owl-mmc=2Eyaml
->+F:	Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl=2Eyaml
-
-I think we can use wildcard now=2E
-
-pinctrl/actions,*
-
-Thanks,=20
-Mani
-
-> F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl=2Etxt
-> F:	Documentation/devicetree/bindings/power/actions,owl-sps=2Etxt
-> F:	Documentation/devicetree/bindings/timer/actions,owl-timer=2Etxt
-
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> +#endif
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller"=
+);
+> +MODULE_LICENSE("GPL v2");
