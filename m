@@ -2,191 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 332AD20B941
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 21:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C4320BB2D
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jun 2020 23:10:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbgFZTTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Jun 2020 15:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59910 "EHLO
+        id S1725983AbgFZVKl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Jun 2020 17:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbgFZTTv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 15:19:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93618C03E979
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 12:19:50 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id g18so10553909wrm.2
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 12:19:50 -0700 (PDT)
+        with ESMTP id S1725838AbgFZVKk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Jun 2020 17:10:40 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF5EC03E979
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 14:10:40 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id s30so7364728qts.18
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jun 2020 14:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v3oOHqdeiilgAo1krqYM7ZW2FYPIuBxdWkBI8kNf8w4=;
-        b=NQTltRUUQEyW33Cu2UEltV6GamFzrhZ94/moDjBBeDIWK+eLNpNbN3QnKUQZ633i2K
-         SAsyOsZB2dkM/QqQzckArvwRNsGVVPcFsTY3EBvlYaR1TH2zFC+ToIUhC3weBqAwMNqY
-         46WgvtmTea15ADPMKPKljDfRBsW1N6yeG9DPkIqCntAcs+IIAJ7Q3uhTiN9qATp6+4Gb
-         uVNjVPK5U6YHPGAtTdvXUTqdLbqBuznHnSm7leob0E5rMqNAoLutVOjPOmoP1dyYLzT6
-         CAjpfEhlqeTrl0rjehSk66/5E9syf5SYN3q29L41ioUbUusekaKJf+TwW8farRSItzlT
-         /Jqg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=SqHQ9DZWlxsE7qIqsV85VvjMJJNMgqXueRXxvJ29fgI=;
+        b=nM6YJHrx8LdaSjUWSkIKwhAbVqGDbNri4NlhGXkImmnI6EUEOZO82ZVoGm8q/XELDm
+         bnNAzmNAhVPBIi0bVifIvUYvTS9zfYQfH2U/PU8U69Guzkxl10Tnjk06C3s4cW1NXqB4
+         Hh1g0qte6QgyiiXCKmxejoA2zfSAr76RNnDRQ58CCe7rmhv8oiwtfOuU0rb/0gg8Iitj
+         SNRupPbGmkO6jtdA/qNCs9wlmnQICBkZhbK2/+RZbA7EC3bAFwn3WrpjgKQ3Vc4K5W6c
+         1WWDqAc8BGw8QPd8UxZixp75Fvc3/xaI1GHAvRz+FlqtCZ0+uXv/dMuv2ctKZmdYc858
+         XnDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v3oOHqdeiilgAo1krqYM7ZW2FYPIuBxdWkBI8kNf8w4=;
-        b=Q7Yoe3INumLr5lkW3t9dlYmMzGsEDmn/3VNQAhlWV8mBn9xbsqvDCusA+oY5hWh8yX
-         0fkXr5tojvbN30PanvdGJm6LjHopGMUJyY6bipvXNEnc/ciKYflN9+u7lTJoFGHBjOIO
-         fXeyCWix/7EnF7h1ilxmYtSSXJH6s7ZVzG73fFvJbaXb7ItScMOvVqR+DAyGPTf2Z9oo
-         +M2887GhiOFcBjOFm6Vr8U5w/9tqLg7v4UlfYX7zCH0opT7jisc+VtWxoG3Kp1LhcMvY
-         IK2LVgOBan3NpufYUzpoXfoeIjwErraGBrjzmntBbyOdtRlZd1qLQMmgicWUR8MFAaX6
-         rf2w==
-X-Gm-Message-State: AOAM530NesPfxCBwaWIu2EuKbnDJMFw7dbFOmP7LArs66jx3yaV6YWYS
-        QBqohTBVIJfTHLXO+zhOqOWbXQ==
-X-Google-Smtp-Source: ABdhPJyxppcg9yXdgcCtGmzUVM0Qhgol51JAPy/Ev0oDVmvT+dzG+dcduwYmDgiNPxITN/BSFtuOaA==
-X-Received: by 2002:a5d:664a:: with SMTP id f10mr5249137wrw.300.1593199189262;
-        Fri, 26 Jun 2020 12:19:49 -0700 (PDT)
-Received: from x1 ([2001:16b8:5c03:b001:3446:ed90:fece:8da5])
-        by smtp.gmail.com with ESMTPSA id w12sm29179536wrm.79.2020.06.26.12.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2020 12:19:48 -0700 (PDT)
-Date:   Fri, 26 Jun 2020 21:19:46 +0200
-From:   Drew Fustini <drew@beagleboard.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=SqHQ9DZWlxsE7qIqsV85VvjMJJNMgqXueRXxvJ29fgI=;
+        b=HlEN7ybp+AdzfLmq+XIOGjcAjBj7LkYQydWkzc/ywz7lgVy0uEvlcXQIQDqQv/Od+1
+         zQLJ5b8r18eP4ruruIH6TIuP3FpKp1Aw48Xncsq9wC3wTch744rM9nSNAd7rM+S10EOI
+         44BmAlN6MnHuy+czEzGUeTCuFK5AhohEhZbLLX1G5vy9GqG/B+wxgskifP3XLXqO/8Q8
+         2rB3NBklMC87OyYC7de/qu3+gnRzLKSVT6m3uzGKwXJXpFHYZ/Tt1dzPp9w3IfinmBxL
+         a0Uyu3uWKN3urFP3s/o8clXHhrlmitQKunhT7ULU1AbbVh02hd7r1NGllv+trd+d/KCn
+         DFuQ==
+X-Gm-Message-State: AOAM531LUVYUN84YhokafUz4gr1MkDY/s80ujFoKjL2vBJx9kANQF5e7
+        TTr0b/FmIS9wBiZAAyOKpHzro8eVU4U1
+X-Google-Smtp-Source: ABdhPJyeof3yYlB1yKI2mHu0xqNJs5O2CtfyPkQJNcaGC0exq/y2fajFvLM4uo+3CPWRUrsqOFT5/mmqDJbS
+X-Received: by 2002:a0c:bf47:: with SMTP id b7mr4962051qvj.167.1593205839758;
+ Fri, 26 Jun 2020 14:10:39 -0700 (PDT)
+Date:   Fri, 26 Jun 2020 14:10:26 -0700
+Message-Id: <20200626211026.513520-1-furquan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH] pinctrl: amd: Honor IRQ trigger type requested by the caller
+From:   Furquan Shaikh <furquan@google.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
-Message-ID: <20200626191946.GA97666@x1>
-References: <20200608125143.GA2789203@x1>
- <CACRpkdZupnetd29aehw4HF3isGgRHbqxWZuTkPBusm_EmvjZ4g@mail.gmail.com>
- <20200616115951.GA3976568@x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616115951.GA3976568@x1>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shyam-sundar.S-k@amd.com, akshu.agrawal@amd.com,
+        adurbin@google.com, dtor@google.com,
+        Furquan Shaikh <furquan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 01:59:51PM +0200, Drew Fustini wrote:
-> On Tue, Jun 16, 2020 at 10:31:54AM +0200, Linus Walleij wrote:
-> > On Mon, Jun 8, 2020 at 2:51 PM Drew Fustini <drew@beagleboard.org> wrote:
-> > 
-> > > This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-> > > pinctrl_map is added.  The current behavior is to return 0 when
-> > > !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-> > > incorrectly assumes that a map was added and sets num_maps = 2.
-> > >
-> > > Analysis:
-> > > =========
-> > > The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
-> > > if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
-> > > returns 0 to indicate there was no error and num_maps is then set to 2:
-> > >
-> > >  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
-> > >  981                                                 struct device_node *np,
-> > >  982                                                 struct pinctrl_map **map,
-> > >  983                                                 unsigned *num_maps,
-> > >  984                                                 const char **pgnames)
-> > >  985 {
-> > > <snip>
-> > > 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-> > > 1054         (*map)->data.mux.group = np->name;
-> > > 1055         (*map)->data.mux.function = np->name;
-> > > 1056
-> > > 1057         if (PCS_HAS_PINCONF && function) {
-> > > 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
-> > > 1059                 if (res)
-> > > 1060                         goto free_pingroups;
-> > > 1061                 *num_maps = 2;
-> > > 1062         } else {
-> > > 1063                 *num_maps = 1;
-> > > 1064         }
-> > >
-> > > However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
-> > > !nconfs.  I believe these conditions should indicate that no map was
-> > > added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
-> > > will set num_maps = 2 even though no maps were successfully added, as
-> > > it does not reach "m++" on line 940:
-> > >
-> > >  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
-> > >  896                              struct pcs_function *func,
-> > >  897                              struct pinctrl_map **map)
-> > >  898
-> > >  899 {
-> > >  900         struct pinctrl_map *m = *map;
-> > > <snip>
-> > >  917         /* If pinconf isn't supported, don't parse properties in below. */
-> > >  918         if (!PCS_HAS_PINCONF)
-> > >  919                 return 0;
-> > >  920
-> > >  921         /* cacluate how much properties are supported in current node */
-> > >  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
-> > >  923                 if (of_find_property(np, prop2[i].name, NULL))
-> > >  924                         nconfs++;
-> > >  925         }
-> > >  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
-> > >  927                 if (of_find_property(np, prop4[i].name, NULL))
-> > >  928                         nconfs++;
-> > >  929         }
-> > >  930         if (!nconfs)
-> > >  919                 return 0;
-> > >  932
-> > >  933         func->conf = devm_kcalloc(pcs->dev,
-> > >  934                                   nconfs, sizeof(struct pcs_conf_vals),
-> > >  935                                   GFP_KERNEL);
-> > >  936         if (!func->conf)
-> > >  937                 return -ENOMEM;
-> > >  938         func->nconfs = nconfs;
-> > >  939         conf = &(func->conf[0]);
-> > >  940         m++;
-> > >
-> > > This situtation will cause a boot failure [0] on the BeagleBone Black
-> > > (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
-> > > has compatible = "pinconf-single" instead of "pinctrl-single".
-> > >
-> > > The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
-> > > or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
-> > > map was added.
-> > >
-> > > Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
-> > > between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
-> > > is set to 1 as it is valid for pinconf to be enabled and a given pin
-> > > group to not any pinconf properties.
-> > >
-> > > [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
-> > >
-> > > Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
-> > > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> > 
-> > Patch applied as non-critical (for-next) fix.
-> > 
-> > If there is no hurry let's merge it this way with lots of testing
-> > along the way.
-> > 
-> > Yours,
-> > Linus Walleij
-> 
-> Thanks, I agree more testing is a good idea.
-> 
-> In particular, do you have a way to followup with Haojian Zhuang within
-> Linaro?
-> 
+This change drops the override in `amd_gpio_irq_set_type()` that
+ignores the IRQ trigger type settings from the caller. The device
+driver (caller) is in a better position to identify the right trigger
+type for the device based on the usage as well as the information
+exposed by the BIOS. There are instances where the device driver might
+want to configure the trigger type differently in different modes. An
+example of this is gpio-keys driver which configures IRQ type as
+trigger on both edges (to identify assert and deassert events) when in
+S0 and reconfigures the trigger type using the information provided by
+the BIOS when going into suspend to ensure that the wake happens on
+the required edge.
 
-Linus - do you have a way to contact Haojian Zhuan?
+This override in `amd_gpio_irq_set_type()` prevents the caller from
+being able to reconfigure trigger type once it is set either based on
+ACPI information or the type used by the first caller for IRQ on a
+given GPIO line.
 
-I found them on Freenode but they have been idle since beginning of
-June.  Last email I can find on the mailing list is from March.
+Without this change, pen-insert gpio key (used by garaged stylus on a
+Chromebook) works fine in S0 (i.e. insert and eject events are
+correctly identified), however, BIOS configuration for wake on only
+pen eject i.e. only-rising edge or only-falling edge is not honored.
 
-Tony and I would both like someone familiar with Hisilicon to comment on
-this patch as it is using pinctrl-single.
+With this change, it was verified that pen-insert gpio key behavior is
+correct in both S0 and for wakeup from S3.
 
-Thanks,
-Drew
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 1fe62a35bb12..c34e6a950b3f 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -417,22 +417,13 @@ static int amd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	int ret = 0;
+ 	u32 pin_reg, pin_reg_irq_en, mask;
+-	unsigned long flags, irq_flags;
++	unsigned long flags;
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct amd_gpio *gpio_dev = gpiochip_get_data(gc);
+ 
+ 	raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 	pin_reg = readl(gpio_dev->base + (d->hwirq)*4);
+ 
+-	/* Ignore the settings coming from the client and
+-	 * read the values from the ACPI tables
+-	 * while setting the trigger type
+-	 */
+-
+-	irq_flags = irq_get_trigger_type(d->irq);
+-	if (irq_flags != IRQ_TYPE_NONE)
+-		type = irq_flags;
+-
+ 	switch (type & IRQ_TYPE_SENSE_MASK) {
+ 	case IRQ_TYPE_EDGE_RISING:
+ 		pin_reg &= ~BIT(LEVEL_TRIG_OFF);
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
