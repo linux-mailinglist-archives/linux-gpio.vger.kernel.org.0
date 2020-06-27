@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5478D20C2EE
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2020 18:03:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAF1F20C2EC
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2020 18:03:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgF0QDP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Jun 2020 12:03:15 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60205 "EHLO mga17.intel.com"
+        id S1726126AbgF0QDL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 Jun 2020 12:03:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21127 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgF0QDO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 27 Jun 2020 12:03:14 -0400
-IronPort-SDR: QfPn/WE6nRh0wORp8p0Lxry1jBZlXsmsd/IFYuRYmrgIFN5dryN00f9/lXxOauILYj/QCvDrYa
- rqyzh2Z6alAA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="125844573"
+        id S1725882AbgF0QDL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 27 Jun 2020 12:03:11 -0400
+IronPort-SDR: w19FmOqZmoJJ9/3zHCZH3TlxXoZIWC2D1ZqMY56fgO/Z1iBkySPIKMPvrVvicDlwn7aesOFdcA
+ xqIcHvCCO9NA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="210766537"
 X-IronPort-AV: E=Sophos;i="5.75,287,1589266800"; 
-   d="scan'208";a="125844573"
+   d="scan'208";a="210766537"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 09:03:13 -0700
-IronPort-SDR: 43tMMLtJ2YGd0bCdUcgyOUSnhyY6kWEHMArYtU2o34pOPd8AeiwzwZtcNQgSHWVRxJXNIrKCBJ
- akXUWwhnQJEQ==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 09:03:10 -0700
+IronPort-SDR: +txJFWre3j+LdxuxpBNDbiXySBQHsQfXYw4mMWLcZe8CxThY90jU1lcy8GIpBvNN1qVlMeqMyU
+ xwiYsQq98pPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,287,1589266800"; 
-   d="scan'208";a="302627901"
+   d="scan'208";a="264463136"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jun 2020 09:03:10 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 27 Jun 2020 09:03:09 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jpDIL-0002qO-LH; Sat, 27 Jun 2020 16:03:09 +0000
-Date:   Sun, 28 Jun 2020 00:02:04 +0800
+        id 1jpDIK-0002qF-N9; Sat, 27 Jun 2020 16:03:08 +0000
+Date:   Sun, 28 Jun 2020 00:02:06 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-drm] BUILD SUCCESS
- cf9a06e657b5bc58cac41eee89a9ac61f7c70e0e
-Message-ID: <5ef76d7c.v3FTF/x7v6yA+YQJ%lkp@intel.com>
+Subject: [gpio:gpio-descriptors-backlight] BUILD SUCCESS
+ 2bdb915873de8d7ebf12cbfcf218efcb4a7e0d7f
+Message-ID: <5ef76d7e.Co0BNRp9JZ70wY0b%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,12 +46,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-drm
-branch HEAD: cf9a06e657b5bc58cac41eee89a9ac61f7c70e0e  drm: omapdrm: Delete surplus GPIO includes
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-backlight
+branch HEAD: 2bdb915873de8d7ebf12cbfcf218efcb4a7e0d7f  backlight: sky81452: Privatize platform data
 
 elapsed time: 724m
 
-configs tested: 108
+configs tested: 109
 configs skipped: 7
 
 The following configs have been built successfully.
@@ -96,6 +96,7 @@ arm                       spear13xx_defconfig
 parisc                            allnoconfig
 arm                            lart_defconfig
 arm                         bcm2835_defconfig
+powerpc                       ppc64_defconfig
 sh                  sh7785lcr_32bit_defconfig
 i386                              allnoconfig
 i386                             allyesconfig
@@ -155,8 +156,8 @@ sparc64                          allyesconfig
 sparc64                          allmodconfig
 um                               allmodconfig
 um                                allnoconfig
-um                               allyesconfig
 um                                  defconfig
+um                               allyesconfig
 x86_64                               rhel-7.6
 x86_64                    rhel-7.6-kselftests
 x86_64                               rhel-8.3
