@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 347D420C2E6
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2020 18:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44EA320C2E9
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jun 2020 18:02:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgF0QCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Jun 2020 12:02:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55710 "EHLO mga01.intel.com"
+        id S1726579AbgF0QCO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 Jun 2020 12:02:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46428 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgF0QB7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 27 Jun 2020 12:01:59 -0400
-IronPort-SDR: qBC40MDsQq94i+vka6B2uliz7qZcxHlQ9hCaiV0SpX8Q3VnN79E+e+z7YAvfBL91Ff+N3DfxDN
- WvtlA8LoYCPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="163713505"
+        id S1726126AbgF0QCO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 27 Jun 2020 12:02:14 -0400
+IronPort-SDR: FGVH/+1TpA04KGrexXY8U4Ldh8DVtwKsZg+Z7THSpmIaMfCRj0RY2fOrYHaP/XEFIfiJUV3hk1
+ 5nJRv9Rm7UGg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="133110532"
 X-IronPort-AV: E=Sophos;i="5.75,287,1589266800"; 
-   d="scan'208";a="163713505"
+   d="scan'208";a="133110532"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 09:01:58 -0700
-IronPort-SDR: Mts3Uxggm1MQyqCFvnABsuTFiKNY1wfQs2vKn1DPmB2LgzVNFpHKlL8brKJirlKwUKIMAzfMGG
- CGAxCVmmes+A==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2020 09:02:10 -0700
+IronPort-SDR: 6P/MNW3X+t0/9cpELT32EbNp4nYGGnUFvJmh/TEUPGa3zpOQoAo61k1escL1Wu5C2RtBMLl4aA
+ V4YOyg6Zafew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,287,1589266800"; 
-   d="scan'208";a="480131187"
+   d="scan'208";a="265855705"
 Received: from lkp-server01.sh.intel.com (HELO 538b5e3c8319) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 27 Jun 2020 09:01:57 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 27 Jun 2020 09:02:09 -0700
 Received: from kbuild by 538b5e3c8319 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jpDHB-0002pu-36; Sat, 27 Jun 2020 16:01:57 +0000
-Date:   Sun, 28 Jun 2020 00:01:42 +0800
+        id 1jpDHM-0002q0-FY; Sat, 27 Jun 2020 16:02:08 +0000
+Date:   Sun, 28 Jun 2020 00:01:47 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-leds] BUILD SUCCESS
- 12127e12635624882cca1fbadb36d0772d96224f
-Message-ID: <5ef76d66.oAleyq/D5F5k2gdP%lkp@intel.com>
+Subject: [gpio:gpio-descriptors-spi] BUILD SUCCESS
+ 4faa1551dc16564a750a22007cad309aace4295f
+Message-ID: <5ef76d6b.fE+pMVTAY39jV1ZP%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,8 +46,8 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-leds
-branch HEAD: 12127e12635624882cca1fbadb36d0772d96224f  leds: s3c24xx: Convert to use GPIO descriptors
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-spi
+branch HEAD: 4faa1551dc16564a750a22007cad309aace4295f  spi: omap2-mcspi: Convert to use GPIO descriptors
 
 elapsed time: 724m
 
@@ -141,9 +141,9 @@ i386                 randconfig-a004-20200624
 i386                 randconfig-a013-20200624
 i386                 randconfig-a016-20200624
 i386                 randconfig-a012-20200624
+i386                 randconfig-a014-20200624
 i386                 randconfig-a011-20200624
 i386                 randconfig-a015-20200624
-i386                 randconfig-a014-20200624
 x86_64               randconfig-a004-20200624
 x86_64               randconfig-a002-20200624
 x86_64               randconfig-a003-20200624
