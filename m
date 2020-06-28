@@ -2,123 +2,300 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F37820C8E2
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2020 18:00:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B60120C908
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jun 2020 18:39:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgF1QAB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Jun 2020 12:00:01 -0400
-Received: from mail-co1nam11on2044.outbound.protection.outlook.com ([40.107.220.44]:6184
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726011AbgF1QAB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 28 Jun 2020 12:00:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FFg9ctA0GRZANawBufLY3mceeGEQb+muOge7DhOyJzYQam89LWm3sHj21T2PVEZuY1zFIWO8tPI5/nNjlAWUgFKl+zWhwxb6YVW4K2AHWfQF0z+1DlX9x+40OOFd1HLuJnvpvDoHOvGnZGLqV3mNAgFSqUhPfz/b6Web/hx85Rab8F7xTGN/aYfXcRWMrDKm+R5mCWwefL8XfT2300F2oB+42HyguufSm02Riwl8NtyTrkPDLT3O1//cCcavcmHspRIOrmTtjbzZuO0KhYsckW8552UhnWuZmVsw1Iy75L2XYCsru3qCZ4VhX1wqdETKwpMamj5Q2Q8l8p3nDLIf1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9uLbqaT1JQ+X9EKxEkd2jbrzEupg4a7xdGTQlyKO95M=;
- b=VYgqI7cTs9gvaTHGfBDj6O7h7s0Jhe1FubVgJNmth6Ib2/iyfFdBMM6uUnInyaQ6sor8jKrOBcAkFa6nCdecF7kI24nipamFerwdPpwyVhaYi77hFfCIAlOvAvmN1jXEZGz7KdXj4jY4WCrgQ38rcsEvxaCjOR51FprE0BfkNastSTCu9YJ37etnK0p1+scmXRsS+Hn8uYsz4XR5ZwBhuDTk8EtoXcxIq0j9qqhlo91QVvx75+KE3RBTt2mueD1dcL58sGWPkbEzg7Gdbd7urhYuAKwdBa8yAo8hfyYTxfkyU6KZgGpSSNg8Th4RRme/VpP8c/boYi7gsEwoDdt+Sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        id S1726395AbgF1QjG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Jun 2020 12:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgF1QjF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Jun 2020 12:39:05 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509E9C03E97A
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2020 09:39:05 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id s16so2330281lfp.12
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2020 09:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9uLbqaT1JQ+X9EKxEkd2jbrzEupg4a7xdGTQlyKO95M=;
- b=rKqR4tAxE0vBzRY5/apHdwuBWPsv+lEgZJvQi6WwGQUtnn0WSzj0b/vDwjq2XMQI0ILxEkHza2ebVJ9xbrlyilJ5SNK+GnR2Gd7BpgEohyyOrJIi6pqFaFg/KFrBQ1VJje8gfe6+pbKW+VgUVuPkae4QuGmqFWhe5ZW+mEWNvDI=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0268.namprd12.prod.outlook.com (2603:10b6:4:54::16)
- by DM6PR12MB4187.namprd12.prod.outlook.com (2603:10b6:5:212::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Sun, 28 Jun
- 2020 15:59:57 +0000
-Received: from DM5PR1201MB0268.namprd12.prod.outlook.com
- ([fe80::d826:5909:ca60:ec2e]) by DM5PR1201MB0268.namprd12.prod.outlook.com
- ([fe80::d826:5909:ca60:ec2e%12]) with mapi id 15.20.3131.025; Sun, 28 Jun
- 2020 15:59:57 +0000
-Subject: Re: [PATCH] pinctrl: amd: Honor IRQ trigger type requested by the
- caller
-To:     Furquan Shaikh <furquan@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shyam-sundar.S-k@amd.com, akshu.agrawal@amd.com,
-        adurbin@google.com, dtor@google.com
-References: <20200626211026.513520-1-furquan@google.com>
-From:   Shyam Sundar S K <ssundark@amd.com>
-Message-ID: <b7875c51-f99d-1bc0-0ca0-ad44c9cf8652@amd.com>
-Date:   Sun, 28 Jun 2020 21:29:45 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200626211026.513520-1-furquan@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-ClientProxiedBy: BM1PR0101CA0052.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:19::14) To DM5PR1201MB0268.namprd12.prod.outlook.com
- (2603:10b6:4:54::16)
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=44jYHq4vsT34apIFOBTKIM6GNTAQfLucICyAOjYoaHI=;
+        b=xv5roH2MW70tL4MGfmDBsFBeMTFdN8HNMhSdntgUB8K6FBEY94yiMfdU5C8R+2Itif
+         Q2uET52Mhl6EtTC9yvqAKxK2SC6ri8KaAnJqUlrtUib8JviVdboxI0VYNAIlJDOHB89X
+         CpDjkZKhLrykUkPIfKwtkeqN0Z2Z0Fz4eVehJuHLOQtm/HsRzmZyOuRIwFPxxQLoI0Zo
+         cQgYzTe8RkQtMmyaDhUPjJ1mUpPKEMnx6wcYU+5LSWcMAqJup6/xgxA6rvYPqtndi+E5
+         I6eLaCHaCz4+iI9Iyu0u7vt2kfzr4AMb14WKl18mxiOwJ81sxOa8WoqH8EM2EK6GmVwY
+         EYGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=44jYHq4vsT34apIFOBTKIM6GNTAQfLucICyAOjYoaHI=;
+        b=PsutY7yHeOFR35LGAUzSmOHU1q4X+QnMG2+vP1saY5mRThhQ+KAGWgMq7HO8wiSgo6
+         n5e7M2jqNhOkljYxFi0WE/Wh7J0QL4B9xDuxo9Br/2yR7aCqd3BT6ggO4ei6/q0+KYMC
+         LtuvcqaWm0NPkO6WZlFBxrz9lDkNPbuCyvKDK8qvLa5dFrqBduQGX8BnhhrmYsd3rCAb
+         4ANTF+dfly62CnUCtm/7B7BboPut1by8Tmguuu4/rHELKo95fH1Ib5Fc7ANxTIcGxMoq
+         TVKu9Jku3WRTwSghDaddqha+M4+68Qz7zPT3f4VjgdJhMP+Panqj7x/4uS1BlUlLA9Wx
+         1I/g==
+X-Gm-Message-State: AOAM530aHNtRjk+mpY8l4Xn6cPg7+krL0v+zddrk9aGw5pMANBGWcn+0
+        P0wJRfVqsfeHGJjfpK2+H4ZSmA==
+X-Google-Smtp-Source: ABdhPJwYFpUzHoFTLqaCGCMebyfNZi6L+IyBYJ6JYAp5+Z0/nV2LtvHVREUDHQBCfrnQ0V+l7CWZ1g==
+X-Received: by 2002:a19:4805:: with SMTP id v5mr7212954lfa.75.1593362343618;
+        Sun, 28 Jun 2020 09:39:03 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id j22sm10354676lfe.63.2020.06.28.09.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 09:39:03 -0700 (PDT)
+Date:   Sun, 28 Jun 2020 18:39:02 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Convert to
+ json-schema
+Message-ID: <20200628163902.GI1105424@oden.dyn.berto.se>
+References: <20200626143638.16512-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.252.89.180] (165.204.159.242) by BM1PR0101CA0052.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Sun, 28 Jun 2020 15:59:54 +0000
-X-Originating-IP: [165.204.159.242]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 09238be8-4964-4f02-4ead-08d81b7c4e0a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4187:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4187F23BEBD954BB2532C55B9A910@DM6PR12MB4187.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0448A97BF2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UMUHphNi9ibp3lba7gn9Tim4zfdr//XLgL8FJ3J+yVW9JIfcHm6/tbFBWtuB72GIGbnGMORTTR4F6TtPoT5nwG7wsShJRSr/PaGA04XrH/tb/ly7unkLa8if6o4YSa8Uq4A9Q/2EizSUi/bppsW0b2LFPuUWpWcn1uoX2CazGcm6OKUnQkByNQL+b2Q2cyaQm2LyKtsVXrdHsbGYOsAZTMuR+JSOjDN2tkhtcFbMcI3W5qBPKTAwyIz4DRRs+mHP78iyEWharKvHBQeMupn4h9w+vl/H0lGF7Xi7WRJqHL3s1tqEk2XHkhoWedxeX+JsPkzqJHvMgkjTBvQ5c7xJVr5FKUjU//Fd2365V4wciinEMWlUh8CYKgXetrO+XgAY
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0268.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(366004)(396003)(376002)(136003)(16576012)(110136005)(956004)(4326008)(83380400001)(36756003)(2616005)(66476007)(52116002)(31686004)(6486002)(478600001)(316002)(6666004)(5660300002)(26005)(2906002)(53546011)(16526019)(66556008)(186003)(8936002)(8676002)(66946007)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: +eiD1sE7INZcbsUzXfRqwMFKKcMwkK3x0iOqwY9A199cvNFPrE/d6dd0XBsCAeDFxYU47RWXkxLVjSZN5VDVS6V6RBrHYBOUZcdSMvQRon9YsP0JlU1c9GLeolNOF+HTS/4N3Q4vOtubQE4HbMbbqWLYRMjb0cGDEDYVUgXU2OKwnUHUuyoqEngNKf7KW7Oxjq536DHqqy6GLPogTCMV+8epxpf/X9+vlMEgwsiVVNd8A7FumZuMnBRByp6t7vXCUalJidLgNZEeKBTBMZa3Z6O/NDRJ+fRX3CF4Bw/AW6iGPR5Q1SZ2/qjuo//XxzMM5QA74T2CMaw2izYkq2JKgvvcyw2GEPaegVsO9gOY87jdoeEHTAR8hG6Fii9DlGYP+or+l1EqXycUAKarnZFYPSSO7cNMbjC6CBTMbNR8yA831uj0Y1hbRofK22lNQiGVDempwNZBuQ235dOdO+a6S+8z2ElzTeBMyu226efNj2k=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09238be8-4964-4f02-4ead-08d81b7c4e0a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2020 15:59:57.5046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q3Ugtr6WT7kET/AEHWkGXQUHTLlgfzaD1NEyMGf4pGvJxz1mjmgtM3Zex+5jRC/uw6iVWZKypSQ++RLziQWhcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4187
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626143638.16512-1-geert+renesas@glider.be>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Geert,
 
-On 6/27/2020 2:40 AM, Furquan Shaikh wrote:
-> [CAUTION: External Email]
->
-> This change drops the override in `amd_gpio_irq_set_type()` that
-> ignores the IRQ trigger type settings from the caller. The device
-> driver (caller) is in a better position to identify the right trigger
-> type for the device based on the usage as well as the information
-> exposed by the BIOS. There are instances where the device driver might
-> want to configure the trigger type differently in different modes. An
-> example of this is gpio-keys driver which configures IRQ type as
-> trigger on both edges (to identify assert and deassert events) when in
-> S0 and reconfigures the trigger type using the information provided by
-> the BIOS when going into suspend to ensure that the wake happens on
-> the required edge.
->
-> This override in `amd_gpio_irq_set_type()` prevents the caller from
-> being able to reconfigure trigger type once it is set either based on
-> ACPI information or the type used by the first caller for IRQ on a
-> given GPIO line.
->
-> Without this change, pen-insert gpio key (used by garaged stylus on a
-> Chromebook) works fine in S0 (i.e. insert and eject events are
-> correctly identified), however, BIOS configuration for wake on only
-> pen eject i.e. only-rising edge or only-falling edge is not honored.
->
-> With this change, it was verified that pen-insert gpio key behavior is
-> correct in both S0 and for wakeup from S3.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
+Thanks for your work.
 
-Signed-off-by: Shyam Sundar S K<Shyam-sundar.S-k@amd.com>
+On 2020-06-26 16:36:38 +0200, Geert Uytterhoeven wrote:
+> Convert the Renesas RZ/A2 combined Pin and GPIO controller Device Tree
+> binding documentation to json-schema.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../bindings/pinctrl/renesas,rza2-pinctrl.txt |  87 ---------------
+>  .../pinctrl/renesas,rza2-pinctrl.yaml         | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 87 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> deleted file mode 100644
+> index a63ccd476cdaf919..0000000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.txt
+> +++ /dev/null
+> @@ -1,87 +0,0 @@
+> -Renesas RZ/A2 combined Pin and GPIO controller
+> -
+> -The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO controller.
+> -Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> -Each port features up to 8 pins, each of them configurable for GPIO
+> -function (port mode) or in alternate function mode.
+> -Up to 8 different alternate function modes exist for each single pin.
+> -
+> -Pin controller node
+> --------------------
+> -
+> -Required properties:
+> -  - compatible: shall be:
+> -    - "renesas,r7s9210-pinctrl": for RZ/A2M
+> -  - reg
+> -    Address base and length of the memory area where the pin controller
+> -    hardware is mapped to.
+> -  - gpio-controller
+> -    This pin controller also controls pins as GPIO
+> -  - #gpio-cells
+> -    Must be 2
+> -  - gpio-ranges
+> -    Expresses the total number of GPIO ports/pins in this SoC
+> -
+> -Example: Pin controller node for RZ/A2M SoC (r7s9210)
+> -
+> -	pinctrl: pin-controller@fcffe000 {
+> -		compatible = "renesas,r7s9210-pinctrl";
+> -		reg = <0xfcffe000 0x1000>;
+> -
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&pinctrl 0 0 176>;
+> -	};
+> -
+> -Sub-nodes
+> ----------
+> -
+> -The child nodes of the pin controller designate pins to be used for
+> -specific peripheral functions or as GPIO.
+> -
+> -- Pin multiplexing sub-nodes:
+> -  A pin multiplexing sub-node describes how to configure a set of
+> -  (or a single) pin in some desired alternate function mode.
+> -  The values for the pinmux properties are a combination of port name, pin
+> -  number and the desired function index. Use the RZA2_PINMUX macro located
+> -  in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily define these.
+> -  For assigning GPIO pins, use the macro RZA2_PIN also in r7s9210-pinctrl.h
+> -  to express the desired port pin.
+> -
+> -  Required properties:
+> -    - pinmux:
+> -      integer array representing pin number and pin multiplexing configuration.
+> -      When a pin has to be configured in alternate function mode, use this
+> -      property to identify the pin by its global index, and provide its
+> -      alternate function configuration number along with it.
+> -      When multiple pins are required to be configured as part of the same
+> -      alternate function they shall be specified as members of the same
+> -      argument list of a single "pinmux" property.
+> -      Helper macros to ease assembling the pin index from its position
+> -      (port where it sits on and pin number) and alternate function identifier
+> -      are provided by the pin controller header file at:
+> -      <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> -      Integers values in "pinmux" argument list are assembled as:
+> -      ((PORT * 8 + PIN) | MUX_FUNC << 16)
+> -
+> -  Example: Board specific pins configuration
+> -
+> -	&pinctrl {
+> -		/* Serial Console */
+> -		scif4_pins: serial4 {
+> -			pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
+> -				 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
+> -		};
+> -	};
+> -
+> -  Example: Assigning a GPIO:
+> -
+> -	leds {
+> -		status = "okay";
+> -		compatible = "gpio-leds";
+> -
+> -		led0 {
+> -			/* P6_0 */
+> -			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> new file mode 100644
+> index 0000000000000000..b7911a994f3a9f12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/renesas,rza2-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/A2 combined Pin and GPIO controller
+> +
+> +maintainers:
+> +  - Chris Brandt <chris.brandt@renesas.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +description:
+> +  The Renesas SoCs of the RZ/A2 series feature a combined Pin and GPIO
+> +  controller.
+> +  Pin multiplexing and GPIO configuration is performed on a per-pin basis.
+> +  Each port features up to 8 pins, each of them configurable for GPIO function
+> +  (port mode) or in alternate function mode.
+> +  Up to 8 different alternate function modes exist for each single pin.
 
+This paragraph formatting looks odd, but I'm not sure it's intentional 
+or not :-) In either case with or without this changed,
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> +
+> +properties:
+> +  compatible:
+> +    const: "renesas,r7s9210-pinctrl" # RZ/A2M
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +    description:
+> +      The first cell contains the global GPIO port index, constructed using the
+> +      RZA2_PIN() helper macro in r7s9210-pinctrl.h.
+> +      E.g. "RZA2_PIN(PORT6, 0)" for P6_0.
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  "^.*$":
+> +    if:
+> +      type: object
+> +    then:
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
+> +      description:
+> +        The child nodes of the pin controller designate pins to be used for
+> +        specific peripheral functions or as GPIO.
+> +
+> +        A pin multiplexing sub-node describes how to configure a set of
+> +        (or a single) pin in some desired alternate function mode.
+> +        The values for the pinmux properties are a combination of port name,
+> +        pin number and the desired function index. Use the RZA2_PINMUX macro
+> +        located in include/dt-bindings/pinctrl/r7s9210-pinctrl.h to easily
+> +        define these.
+> +        For assigning GPIO pins, use the macro RZA2_PIN also in
+> +        to express the desired port pin.
+> +
+> +      properties:
+> +        phandle: true
+> +
+> +        pinmux:
+> +          description:
+> +            Values are constructed from GPIO port number, pin number, and
+> +            alternate function configuration number using the RZA2_PINMUX()
+> +            helper macro in r7s9210-pinctrl.h.
+> +
+> +      required:
+> +        - pinmux
+> +
+> +      additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+> +    pinctrl: pin-controller@fcffe000 {
+> +            compatible = "renesas,r7s9210-pinctrl";
+> +            reg = <0xfcffe000 0x1000>;
+> +
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&pinctrl 0 0 176>;
+> +
+> +            /* Serial Console */
+> +            scif4_pins: serial4 {
+> +                    pinmux = <RZA2_PINMUX(PORT9, 0, 4)>, /* TxD4 */
+> +                             <RZA2_PINMUX(PORT9, 1, 4)>; /* RxD4 */
+> +            };
+> +    };
+> -- 
+> 2.17.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
