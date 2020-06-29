@@ -2,99 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40F6E20D49F
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 21:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53F4120D564
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 21:16:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgF2TKO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jun 2020 15:10:14 -0400
-Received: from muru.com ([72.249.23.125]:59964 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgF2TKL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:11 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id F1E3A81A3;
-        Mon, 29 Jun 2020 16:42:20 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] gpio: omap: Add missing PM ops for suspend
-Date:   Mon, 29 Jun 2020 09:41:14 -0700
-Message-Id: <20200629164114.1186-1-tony@atomide.com>
-X-Mailer: git-send-email 2.27.0
+        id S1731760AbgF2TQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jun 2020 15:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731923AbgF2TQH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:16:07 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5889C08EA4D
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 12:16:02 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id s21so350093ilk.5
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 12:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=E57soH+fAZU9oM/uuDn4bCNx2wALmvA7rwFsDeo/VdmyR4hSt+vRDMPW0qpAcJ9V/h
+         UbYJ9fIR9BUAZrS+1TfrEzBoFSxbLFUBB/IIzj7rfy4Y1SyxPmM/cs9fEremwVWV5m5u
+         b9v38myIgTBJNjasjLIOUO/K2CJS7vPJsURIlWBEC7RA0ax+vZbkexDjvFbqaAUgNm/w
+         yj4NkgHNxXLdKOO4AZsIv5vnXx8YMl4s3e1fTXh2Hp6rhwVI9k4nzVvvlc/OSvXrfpbl
+         +6DOlsrKa8IKCRxKxdcbetpm2uz+ZUKJBnziwlMhGJ11qW6bGQPIDGjYXF06+gry04Zz
+         3NGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=XdfoRVGuOCD2JOxmLnJxyvoO2f5zjf1xh4i//8cGLHs=;
+        b=OtDbhdQAMpHru1wBm+ZJ3nrmR7/aThMIHElY5oe0cCMaP9DgDZ6BPj11j+oCt30JzT
+         qZeX9cnaW3RQtB790fROME9tLMQ+XQuYwTHEtjlm1Y42bvwnJU//wGtbC2EVBwrlmpBp
+         sYCD/QXF2F29MNavGdFygF69Zj5mpiiLn81jwZ67i1tWZ/2yBcMmcePt1lnwMUp2dXqY
+         LshbJV4lb43E+LN64NRywKly3X/16V16gxg4s01OskVoiPODhVxhJYck+S18wVssLGU9
+         s6z8kAZIpIF7sNy3LwKLGUZfPnabedo1CJHtNzFl+qXvlfRFGP72JBBFwqYM2jk/I1pE
+         bHAg==
+X-Gm-Message-State: AOAM533e6L9efEoCE8g9/g0PjRULPQz99ohJIy6jGn7CDdfFE9GEKNr/
+        T3Qk/h9OLybqIDU4OZRTRs0OpsRzqTYmTrJidmikhT5S0/c=
+X-Google-Smtp-Source: ABdhPJyNR5zXZ8o09DSJzsSA3OSccnAxM/c9AxKQjYYOZlXvOMCiHs1YW/1gQi1Sa70TQ2VOPtabshfviWRkV7+ICnM=
+X-Received: by 2002:a6b:db17:: with SMTP id t23mr18236117ioc.4.1593458159284;
+ Mon, 29 Jun 2020 12:15:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6602:1588:0:0:0:0 with HTTP; Mon, 29 Jun 2020 12:15:58
+ -0700 (PDT)
+Reply-To: mrs.victoria.alexander2@gmail.com
+From:   "mrs.victoria alexander" <markalexandermilley321@gmail.com>
+Date:   Mon, 29 Jun 2020 12:15:58 -0700
+Message-ID: <CAP7XNCwEGQ+-Q==u4yk4yvJdk1X+gsfSU6pUV_hROjmF=p-DHw@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We've had the legacy platform code take care of suspend for us but
-this no longer is the case when probed without legacy mode with
-ti-sysc. We need to configure PM ops like standard Linux device
-drivers do.
+Dear friend,
 
-As we still have some SoCs booting also the legacy mode, we need to
-add omap_gpio_suspend() and omap_gpio_resume(), and check for the
-is_suspended flag to avoid legacy _od_suspend_noirq() calling them
-on an already suspended GPIO instance.
 
-Once we have no SoCs booting in legacy mode, we can just switch to
-using the standard PM ops with pm_runtime_force_suspend() and
-pm_runtime_force_resume().
+I have a business container transaction what that some of( $13million dollars)
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/gpio/gpio-omap.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ I would like to discuss with you. If you are interested, please
+contact my email
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -60,6 +60,7 @@ struct gpio_bank {
- 	struct clk *dbck;
- 	struct notifier_block nb;
- 	unsigned int is_suspended:1;
-+	unsigned int needs_resume:1;
- 	u32 mod_usage;
- 	u32 irq_usage;
- 	u32 dbck_enable_mask;
-@@ -1504,9 +1505,34 @@ static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
-+static int omap_gpio_suspend(struct device *dev)
-+{
-+	struct gpio_bank *bank = dev_get_drvdata(dev);
-+
-+	if (bank->is_suspended)
-+		return 0;
-+
-+	bank->needs_resume = 1;
-+
-+	return omap_gpio_runtime_suspend(dev);
-+}
-+
-+static int omap_gpio_resume(struct device *dev)
-+{
-+	struct gpio_bank *bank = dev_get_drvdata(dev);
-+
-+	if (!bank->needs_resume)
-+		return 0;
-+
-+	bank->needs_resume = 0;
-+
-+	return omap_gpio_runtime_resume(dev);
-+}
-+
- static const struct dev_pm_ops gpio_pm_ops = {
- 	SET_RUNTIME_PM_OPS(omap_gpio_runtime_suspend, omap_gpio_runtime_resume,
- 									NULL)
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(omap_gpio_suspend, omap_gpio_resume)
- };
- 
- static struct platform_driver omap_gpio_driver = {
--- 
-2.27.0
+address (mrs.victoria.alexander2@gmail.com)
+
+My WhatsApp number but only message (+19293737780)
+
+Please do not reply if you are not ready
+Thanks
