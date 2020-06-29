@@ -2,105 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0037A20D9CC
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 22:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5263820DFAF
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 23:55:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgF2Tut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jun 2020 15:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
+        id S1731709AbgF2Uiz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jun 2020 16:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387812AbgF2Tus (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:50:48 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65560C061755
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 12:50:48 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpznh-0000h3-F5; Mon, 29 Jun 2020 21:50:45 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpzng-0005aB-Te; Mon, 29 Jun 2020 21:50:44 +0200
-Date:   Mon, 29 Jun 2020 21:50:44 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <20200629160844.6ecf79c1@xps13>
+        with ESMTP id S1731738AbgF2TOQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:14:16 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCECEC08E9A8
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2020 22:42:36 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id d12so7142428qvn.0
+        for <linux-gpio@vger.kernel.org>; Sun, 28 Jun 2020 22:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=GhYE10QAs2eBgL/jTh3H4abtZ2nGJeeaFPnZ4jyf5aw=;
+        b=fpJRnfdGhxzBagghlIUer/JvttmVHyBs1Yo67AUURPBPp35UDM5CqB3RjpGm5XLcMI
+         V9RVd+YVzskYxLeKte+oqWJ7K95iejpG76KxOOscPoctrI8OPurZL6hTYGvIWJ3bmnoq
+         wR0GTS8bkViO/GEM59U2LI9zD+65zdrjlQhNlzQANqOY46Ga1QrFHAGdrvHagO5GSrOX
+         l0sIXM4xKGPgJiCcAZXxgND10QC80wC5RihFEuoj/d/pPTew7Ob4H3nIEKZ5bd6J7M24
+         V6vF5l79I4899Lk/5p2Evz5qKqVYGY++xFk6nfoPq4Iq6CncdxlMYk3IG/h1K4a7wPDj
+         fpzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=GhYE10QAs2eBgL/jTh3H4abtZ2nGJeeaFPnZ4jyf5aw=;
+        b=GRR5os68kfCpBcttbWNfRsoHe4sm1hcOi7b6kl+S9Wh3FkyZm9ITGub+fX9+BfCD1L
+         T4/OrmnSd2+7ttnZbVIv9Rhb+b7ac/mYyCNuHpE19PKPNnXcWu77qtluebT6t0ys6gXR
+         7GfiAzFJucBi/I/y1eEW5vWobanBK+PXNCG1fAFAv4o9bGOXy1z82QS5CRJ8oiEfO7bA
+         PT27CfF6StNgq+b7Unin9HX0TlTqT8VrgMnX3QPzmNRu4II6Qy7pFJ1VOV5UiULi4Ru/
+         zfzLHvjvKPkXwssF32j1vWkGp/ZIiJg6mIxowMR+5nJwyfBKkSzwwopmL40VRn9sFxIA
+         5dUg==
+X-Gm-Message-State: AOAM533YpXiAEFt1NQZka7mUU7usa486Ly0G99Mz4OKkU4dZFPpPrZLw
+        Yj9tW+hnKY7bcUXMFKr74BkCNJv6crX0PiN8fGk=
+X-Google-Smtp-Source: ABdhPJwoy8cGBnftyF8ytw3LzMU8PiX1WcsOzjl5XLqBDELK1XTRepv7TEbffxuWqjB/ksy2RWqqy1P71QTpEX61/go=
+X-Received: by 2002:ad4:4a6d:: with SMTP id cn13mr11842511qvb.165.1593409355638;
+ Sun, 28 Jun 2020 22:42:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mft2vsrhiooh6kvs"
-Content-Disposition: inline
-In-Reply-To: <20200629160844.6ecf79c1@xps13>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Received: by 2002:ad4:57cf:0:0:0:0:0 with HTTP; Sun, 28 Jun 2020 22:42:34
+ -0700 (PDT)
+Reply-To: scdn-1@tlen.pl
+From:   "Mrs. Patricia Edgar" <davidaminu1@gmail.com>
+Date:   Sun, 28 Jun 2020 22:42:34 -0700
+Message-ID: <CALe=1L1OaHUTtoa7ZUFnYv=abSi6b+GTojzMB75CFo_G_61P0g@mail.gmail.com>
+Subject: Your Response,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hello,
+I am Mrs. Patricia Edgar My Sorrow Is Deep Bitter dying Woman here in
+Hospital Bed in United State. I Lost my Husband and my only Daughter
+Angela for heartless Covid-19 i am the only remaining in the Family am
+dying here in the Hospital slowly Heart Disease Corona-virus High
+Blood.
 
---mft2vsrhiooh6kvs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+i have a project that I am about to hand over to you. I have already
+instructed the Bank to make the transfer to you as soon as the Account
+Manager hear from you. the fund i want you to give 50% to Charitable
+Home and take 50% Please, don't think otherwise and why would anybody
+sent someone you barely know a huge amount of money is this real or
+what? please do as i said there was someone from that State i Love and
+i miss him so very very much i have no means to reach any Charitable
+Home there. that is why i go for personal search of the Country and
+State and i got your mail contact through search to let you know my
+Bitterness and please, help me now is getting very Dark I ask my
+Doctor to help me keep you notice failure for me to reach you in
+person Your Response,
 
-On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
-> Hello Uwe, Thierry,
->=20
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
-> 12:54:53 +0200:
->=20
-> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > functions but can also manage the intensity on each of its ports with
-> > PWM. Each output is independent and may be tuned with 16 values (4
-> > bits per output). The period is always 32kHz, only the duty-cycle may
-> > be changed. One can use any output as GPIO or PWM.
-> >=20
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
->=20
-> Can I have a status on this patch please?
->=20
-> If it was forgotten, I would be good to have it queued now, otherwise,
-> may I know the reason?
-
-You could reply to my feedback ... If you could say there: "What you
-want isn't possible" I'd count this as a strong indication to not ask to
-implement Andy's suggestion. (Even if this would be possible, I'm not
-sure this is a good idea, but still ...)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mft2vsrhiooh6kvs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76RhEACgkQwfwUeK3K
-7AnNygf/ajou6A2cnBZDepvApB9y0hCf2RUYvXMGZEw5WqGZbmWr5Edmtsym/bZL
-9x4/ugEvXcDFZrYfnYxCaEX6Y4HpKvwKX+gu2Ovbfx4LE3nEqZHh0qXrQgK2vTUD
-By5NJRRup31nL9iIjmLPrG4I1ddDdN2/oQU9sHtycbwhEunnV0GuzlwBdKA6LISX
-N+MBcqPfpoUlS0xCYRVacwtVNnS8/5yjA30pnUHLrHyfcErNjSKL647CmSv1B+Zx
-BENNroAw8tgHnrOASQ4RAmRMQ7zIPhv+/cfv2ICG4q4E8C+MPgDc7JnW1GOhBeDV
-d+D8SLIBaU7HDi4BTUcZSg8br9TmtA==
-=YjLE
------END PGP SIGNATURE-----
-
---mft2vsrhiooh6kvs--
+Thanks.
+Mrs. Patricia Edgar
