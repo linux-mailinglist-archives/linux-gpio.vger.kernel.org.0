@@ -2,83 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E20EF20E262
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 00:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77ABA20E326
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 00:02:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390266AbgF2VEj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jun 2020 17:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
+        id S1729360AbgF2VMS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jun 2020 17:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731103AbgF2TMo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:12:44 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4DBC00E3F4;
-        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id d16so5980115edz.12;
-        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
+        with ESMTP id S1730154AbgF2S5o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 14:57:44 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F6C8C00F803
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 05:29:03 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id i14so16369510ejr.9
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 05:29:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
-        b=Mt6YICf2k3JascEFwPr+DhVRtQVII9mitVMQBW+uLVMO8/WmyQT80jOuzZcBOBRepN
-         3tzXW2b8Mjlq8B8TpjQH2Tm4bNtSxoR7BC3Ghx5abmvL9u/vB1JdEbT44qNQyVO7ATqh
-         vhiHpEgAX3qNWmGPTqSgTxz1V9WXJ70C8RxRSdOpBFQEs+omcOyaBtsZEvBYihgp9WGg
-         2buf1O+ocG/M3upbbAGl/w2ACJOYmw68GTIfmYtflzMC3yjUY+Bi+IDmAIHhyHnMsxY9
-         hb78RlB/eUGpN8EF8ikWLyk9OuAjyuLVWBi8wDqq3TbqdoCE/aFcJv10R/pPmR2yCAyw
-         qAOQ==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nLPL88OfKWPjoDgMrUq7HX0bJ21PFQyFVAStT19x/30=;
+        b=PSx0WywEstp6kzCgrb2T780nS7vnNFzJS+U+DK53C0PhGN6LZvYDc2EFvOEAdEmhEj
+         RUqqwUYHPI+moJOm1Lu+qDnTY8k7w4i1ZmDLAcEGCt5/VfkthQIciG4scNhgkF7qBZsF
+         vapojTxZMy6hzLbJ19FtwmOG4LeFbtDfvu2hGXI5r15prpIVDn5Q6Ex36/ORxBC8HOMu
+         p8sNi03zdwEm4JKaNFhsJFwkK43/7a69OrK8KLs3I2Jj3FUWqdHQLOJ+ViEJxwPsy3tk
+         RJ+tPHTitdFJ/MPwm7Oci+jsb+VVt/S6RIkCjMGIh8K6vN3UA3j4206+/RBfGp3XCb1e
+         Wcrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
-        b=oFW2Lxj1CtqT32ZG8i8M/PS0hhpXotD7aL7aG3tzjZJ1/DauOurLYbcU2x/STLA36q
-         x7AB39z0oq3IvzG0w6mVNCBpky10GdL6G5Q+Cy5PhfGlQvHFfcPTl6oSHBGuGS0MSP50
-         0PgySA/IyLJ2BfnIylcfHpYS0kNrQc0VFvVUJLvEet/YYIsh93GKOvGxrSKQcaYkUsYJ
-         x/+FNNNof/USi6M907qtWIFJ0ArGZFNs72IPPBC5w/i1SKgX0i1NcKIsRTXV++u4okJS
-         X3l8qHVH65QyjJJy6Ps8qMm+mNLr08Qp6visdbEkt6MqbI8pXHQtD3iTeT+WCTqFzSfn
-         Z/QQ==
-X-Gm-Message-State: AOAM530rMQoSdMfCpNCtipfPBYu6ygGkR0qN6aY1tFVTMmE1oNHJ/O5c
-        mSH4BnOk836TtYfVSuhUW9ZPBiQ8bEkFQ74wIls=
-X-Google-Smtp-Source: ABdhPJx8GL2/LtvhYYnPZOnTG4JvnILLNC3i/hbToZbdsMBix31WyuKYxSB8w2InTRozYPvAU2y9b9ASSm/xVcLNwMA=
-X-Received: by 2002:a50:ec8f:: with SMTP id e15mr16899806edr.70.1593432838641;
- Mon, 29 Jun 2020 05:13:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200621213806.551879-1-konradybcio@gmail.com>
- <20200621213806.551879-9-konradybcio@gmail.com> <20200629120918.GB1319@bug>
-In-Reply-To: <20200629120918.GB1319@bug>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Mon, 29 Jun 2020 14:13:22 +0200
-Message-ID: <CAMS8qEVaJ0ZpZ1HE8U9DbPfV0-cc=_qyLYdA1g7NYfz-WcE+aA@mail.gmail.com>
-Subject: Re: [PATCH 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10
- Plus (Ganges platform)
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nLPL88OfKWPjoDgMrUq7HX0bJ21PFQyFVAStT19x/30=;
+        b=OsLpmLSVMOSpw/cAbdhPvwPlod+zlC+zeealt0WPRLBAniCGECRRS33u1Qm5MnqWLC
+         CaUfTw8ZVwJl0UOuQe2S8ZtIYEKvpMbghuqAJX9Jk7zRH7chCyd3vWFXkIN3amQl4SFw
+         OwtlL0l4teDJ5wkZWGnnl0k2Cf1f+xXXxavsUVnMrNZV4Eo2fnhJvXx5zWrJ+fOTfm86
+         Q03goARxqQv4omW1840hNr7KzMbZoAuF3Nw287+n07KHIYWg/xxPUYOf2szaQt+8gt4J
+         /gLAHt+wJDp7vVdBvNnzn7ASQ2DAgaTIlrh3znI4/606cfBKVotwwvNdGKHTfiNIbxha
+         X1mQ==
+X-Gm-Message-State: AOAM531OhMFwiu8XZD8hRAqFh9+uv09nFzjF1Ieiime36dPhM9WnF8PF
+        7T1kaqSZMA7WiXGW0HsBBHh2eA==
+X-Google-Smtp-Source: ABdhPJysnXFWJwpJ6uF9IEbsegahi3Y1+BUPbpahxlycTv66BVhVh2m/VMBwbtCgMcpWhDDWY9vklw==
+X-Received: by 2002:a17:906:fa15:: with SMTP id lo21mr14416147ejb.156.1593433742019;
+        Mon, 29 Jun 2020 05:29:02 -0700 (PDT)
+Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
+        by smtp.gmail.com with ESMTPSA id a1sm18278094ejk.125.2020.06.29.05.29.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:29:01 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:28:58 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, Martin Botka <martin.botka1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v3 0/3] pinctrl: single: support #pinctrl-cells = 2
+Message-ID: <20200629122858.GA506802@x1>
+References: <20200622172951.524306-1-drew@beagleboard.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200622172951.524306-1-drew@beagleboard.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> This is not usual comment style.
+On Mon, Jun 22, 2020 at 07:29:48PM +0200, Drew Fustini wrote:
+> Currently, pinctrl-single only allows #pinctrl-cells = 1.
+> 
+> This series will allow pinctrl-single to also support #pinctrl-cells = 2
+> 
+> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
+> pcs_parse_one_pinctrl_entry() does an OR operation on to get the
+> value to store in the register.
+>     
+> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
+> omap.h is modified to keep pin conf and pin mux values separate.
+> 
+> change log:
+> - v3: change order of patches to make sure the pinctrl-single.c patch
+>   does not break anything without the dts patches
+> 
+> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
+>   compile error in dtc.  I had added it per suggestion from checkpatch
+>   about having parentheses around complex values.
+> 
+> Drew Fustini (3):
+>   pinctrl: single: parse #pinctrl-cells = 2
+>   ARM: dts: change AM33XX_PADCONF macro separate conf and mux
+>   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
+> 
+>  arch/arm/boot/dts/am33xx-l4.dtsi   |  2 +-
+>  drivers/pinctrl/pinctrl-single.c   | 11 +++++++++--
+>  include/dt-bindings/pinctrl/omap.h |  2 +-
+>  3 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
 
-This was fixed in a later revision and is currently applied to
-qcom/linux in the correct form. [1]
+Hi Tony - do you think this series is useful as-is?
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=234d7d6b4cbfab0e900f12658053689bb3376141
+Or do you want to see some usage of the seperate conf and mux values
+first?
 
-Regards
-Konrad
+thanks,
+drew
