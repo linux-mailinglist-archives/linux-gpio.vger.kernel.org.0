@@ -2,98 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AB8720D621
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 22:04:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0037A20D9CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jun 2020 22:12:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgF2TRy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jun 2020 15:17:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44314 "EHLO
+        id S1726128AbgF2Tut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jun 2020 15:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731954AbgF2TRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:17:43 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA3FC030F31;
-        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so746758plk.1;
-        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
-        b=qfyP5RxgxAmyq6gPs73byd3YoUOiLlNFQvfce7YA6ZsR4onyELxfCTqCWi9/zFOy9v
-         7ispQlUC7C62ftj66FOnsAaCx06Splb36D3NXxPefaLlEexM+/GJp5SzYtsGakl+mL8B
-         eiPo23Xf8b/PqiyIqGS164oGgDUWUvPrIGy1sBMgspA0aqQBkcHfxRXfE3/2dFsV6dAW
-         k11LT22CZUqLUqGH2Em2PSrz5m+H6cJgWvUB96mb2oPQvs7VGaO1I4H9d6J/iOgaigXr
-         4af3bgasPy59TzF+5e2A/5fHzziw2TWZci3cAFqTzHOYBESugR9IwZ0F6+uS9vE1IZyq
-         e9DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
-        b=Ds++611FQtbDfwjmK0Ja4x9B58g+eThFp+aRwufbE2vjFMIxtgfGgWbB+qHZSOJdKh
-         5VsnBo8MQ/e2H3mNtffXUFLD2Ps4AcN9kHr36iYHIPL5ntx1ioOcUOHmT6F6ORvvbgW+
-         poPI0MMFucKV5HvwCURQH1raQjhOBVlulKj3W3r64sSU5qp/4vN+IRns1HuxGBDd5vk0
-         VWXkVyIEkbIQ9GQBHDI+CRTJo2gxuzAHOwZAjSdctc8LX2KFUTwCUmAD5MY6EKwcENhb
-         5HYFoGRr8/QMhmeS9C0i0JeRg+HEKWW381w6z2lIqX7+WFSzLSFvzpCqCxMNdjinfH9T
-         dvig==
-X-Gm-Message-State: AOAM531qr4mxBjjAKaoH7SAMxSn+Ci3wz8LYyEKVulMaeNx020qu7ULY
-        UQQkgwlPJjfciCCmyTDkTgvQAjzZORLlKmh1mmg=
-X-Google-Smtp-Source: ABdhPJwK8VIW73nkc0kipwx1fUf9LlTusE2dlg042QQH/vsyXg7aXQu6OoBfFkAIfefdmaXBT/ZOhM4ezkR0DNBgt9w=
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr6807522plo.262.1593449454975;
- Mon, 29 Jun 2020 09:50:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com> <20200629160844.6ecf79c1@xps13>
-In-Reply-To: <20200629160844.6ecf79c1@xps13>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 29 Jun 2020 19:50:41 +0300
-Message-ID: <CAHp75Vehv_Cp1AhMPhk8ktyp-uHSkgweqnhhSq_7w2Kf9y=7XQ@mail.gmail.com>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+        with ESMTP id S2387812AbgF2Tus (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 15:50:48 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65560C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Jun 2020 12:50:48 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpznh-0000h3-F5; Mon, 29 Jun 2020 21:50:45 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpzng-0005aB-Te; Mon, 29 Jun 2020 21:50:44 +0200
+Date:   Mon, 29 Jun 2020 21:50:44 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mft2vsrhiooh6kvs"
+Content-Disposition: inline
+In-Reply-To: <20200629160844.6ecf79c1@xps13>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:08 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+--mft2vsrhiooh6kvs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> Hello Uwe, Thierry,
+>=20
 > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
 > 12:54:53 +0200:
->
+>=20
 > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
 > > functions but can also manage the intensity on each of its ports with
 > > PWM. Each output is independent and may be tuned with 16 values (4
 > > bits per output). The period is always 32kHz, only the duty-cycle may
 > > be changed. One can use any output as GPIO or PWM.
-
+> >=20
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+>=20
 > Can I have a status on this patch please?
->
+>=20
 > If it was forgotten, I would be good to have it queued now, otherwise,
 > may I know the reason?
 
-TWIMC, just my 2 cents about this patch.
-I don't like it in this form. On the constructive side I can propose
-at least two ways to solve:
-a) introduce a PWM as a pin mode; move pca953x to pin control; use
-this mode with PWM driver being separated from the pin control;
-b) introduce an MFD that provides two parts for this GPIO & PWM.
+You could reply to my feedback ... If you could say there: "What you
+want isn't possible" I'd count this as a strong indication to not ask to
+implement Andy's suggestion. (Even if this would be possible, I'm not
+sure this is a good idea, but still ...)
 
-Personally I would go with a) as I know at least one more pin
-controller which will get an advantage of this (and it's definitely
-not an MFD).
+Best regards
+Uwe
 
-If GPIO / pin control maintainers consider this okay, I will rest my
-case, but see above...
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
--- 
-With Best Regards,
-Andy Shevchenko
+--mft2vsrhiooh6kvs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76RhEACgkQwfwUeK3K
+7AnNygf/ajou6A2cnBZDepvApB9y0hCf2RUYvXMGZEw5WqGZbmWr5Edmtsym/bZL
+9x4/ugEvXcDFZrYfnYxCaEX6Y4HpKvwKX+gu2Ovbfx4LE3nEqZHh0qXrQgK2vTUD
+By5NJRRup31nL9iIjmLPrG4I1ddDdN2/oQU9sHtycbwhEunnV0GuzlwBdKA6LISX
+N+MBcqPfpoUlS0xCYRVacwtVNnS8/5yjA30pnUHLrHyfcErNjSKL647CmSv1B+Zx
+BENNroAw8tgHnrOASQ4RAmRMQ7zIPhv+/cfv2ICG4q4E8C+MPgDc7JnW1GOhBeDV
+d+D8SLIBaU7HDi4BTUcZSg8br9TmtA==
+=YjLE
+-----END PGP SIGNATURE-----
+
+--mft2vsrhiooh6kvs--
