@@ -2,117 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFA8C20E43C
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 00:04:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 917C220E718
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 00:10:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390970AbgF2VWq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Jun 2020 17:22:46 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:56115 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729599AbgF2Sv1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4180D5805B9;
-        Mon, 29 Jun 2020 11:10:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 29 Jun 2020 11:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=Hxhkhq+OJaiV71iJYRzqwDQRWMP
-        lO3tU/YNo9PNyFWw=; b=L59tg5R5bevKZc84RIvc0helt7vmNIAEH38i2QB1XMT
-        b+bvaQ9CmUPwo3kdql/EBZ4VCtVV1QnqMvxyUjCYjpaz78RcMv8miXu7ORnmnUtv
-        L8zfbg7fUydU40GNBkWUxnjPn8+kH4yHQAR8cVTkT1vJludnJdbQ+joYW6Z/HQE7
-        GRXur2g4BN77wqZ7NtPGeTrDfR0UsZu2iklA51UfqC7ExQyQQO3W7pklcmbM41AI
-        C6O1ics0CTGT6isbqj8aRbp4FP89ys+HTBTLbflQ/8vsMfFqC8l8aa6HY8I0yG04
-        Bpxg0GWa1dhlrJpDwgz50rPVMaK46pxn+uV0AY55u2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Hxhkhq
-        +OJaiV71iJYRzqwDQRWMPlO3tU/YNo9PNyFWw=; b=nAkF6yhg3rQUDL/mCU5jnu
-        8UPqsE7wUfX7V3uGL3rr4mPX6whwDnfrRqwbh24M11e5HdpLUVb8T2dH094VSvp2
-        PiiDhZUtiwg1OJD1h5nLNgo9w7AIJzT3e3f2apisRR3qMMFf1SB//vcluirG0ihq
-        NwdD5/waaeKkQ3jSzNgXI9y4rCl7YjbyW4uE5oY6cFJ8iZ/w7FtHvPuR7hYU2NyV
-        PNz3+f9Basv2n0Hz59i3hc1U5SUH1zmRSiqOlu30OMILDXwQa9XLniGmywJ6vIUD
-        4HL6TOGVX3TVMVnZylKUIobz1RiIMNe8AyzAgOoT+4pRuFban4XMPP/PeHh/Viyg
-        ==
-X-ME-Sender: <xms:XwT6XtGAgBPd66aW1ODh3bC86gKgq77_QlvHMJXeULQbYFpfTpJQBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudelledgudefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:XwT6XiW7FAivTiFvb3h20qdKxf2QJtljVBlnkl1xOne5QCs7GPWNNQ>
-    <xmx:XwT6XvJEc6Tom1XR59v0Yx4tYDbAjWTn_qMDNvGm9abYFecs3V3diw>
-    <xmx:XwT6XjEzAUUf3suWBkgCWhg5zVSj3jT6oCAiLOU8dS6hMBt8lAGlHg>
-    <xmx:YgT6XpFXQ5Vpr9ZxMb2KKD5heeJbV2_CcxnA0X1o3-1TUcPoUWmNFw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5B04F3067CA9;
-        Mon, 29 Jun 2020 11:10:23 -0400 (EDT)
-Date:   Mon, 29 Jun 2020 17:10:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, mturquette@baylibre.com,
-        sboyd@kernel.org, srinivas.kandagatla@linaro.org,
-        linus.walleij@linaro.org, anarsoul@gmail.com,
-        tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
-        megous@megous.com, karlp@tweak.net.au, bage@linutronix.de,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
-Subject: Re: [PATCH v2 08/11] thermal: sun8i: Add A100's THS controller
- support
-Message-ID: <20200629151022.e23hqixsx3b5vsxd@gilmour.lan>
-References: <20200622025907.32574-1-frank@allwinnertech.com>
- <20200622025907.32574-9-frank@allwinnertech.com>
+        id S2404273AbgF2Vxg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Jun 2020 17:53:36 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37466 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404461AbgF2Vxf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Jun 2020 17:53:35 -0400
+Received: by mail-io1-f65.google.com with SMTP id v6so5163812iob.4;
+        Mon, 29 Jun 2020 14:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TqO9zSccC03uQUBHdnGu8Ma3JV07Cz0JDvsVx9Gx0ZY=;
+        b=BI5j2klROPkAw5y71Nus7JZg2kw4DRN35t07NRJ8k7ia18GH/E0t3shkmjJ18jl0SP
+         /rTnVa2UbnSnJNgWxI8OFen9vWgatI3pPXPj/4WMXjJxvxFdSfI8ywNrCw+WR8YrlARO
+         mTaMURwB9Z0RPIn2mWLBE3qw5vk2hYKNR44yqIGVs0T5bLDvpLknUc7eTNupVfliVRya
+         yVSNAzcpr7e6v2Yuir7Nod8b0MTrOaH4d/ss5+Sjr+y+jmc320xfXlce2YPHTYuC5Z+2
+         BMCB9J5u9DHwASyI2AxdIoxbMR+zKhJu9ae7SVdM6q14yX88MEBetp6EFiJLHf2B1XDL
+         0GPA==
+X-Gm-Message-State: AOAM530wCbae5J3sg6I2a4rDTIcR9/v6t5Jp3l6xGyiG5A8bpLNxhtph
+        jaQqtkoVLIj2QHFMncrWsw==
+X-Google-Smtp-Source: ABdhPJyIbG7PIhmtfb8YhLKR5Xh3nGklRFT+QTShHlA/Rx0Efb1UteRJRihqMm1UaKN8nH02gpJ1Xw==
+X-Received: by 2002:a05:6638:2601:: with SMTP id m1mr9213481jat.43.1593467614612;
+        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id t12sm604000ilo.80.2020.06.29.14.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
+Received: (nullmailer pid 2994774 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:53:31 -0000
+Date:   Mon, 29 Jun 2020 15:53:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     wsd_upstream@mediatek.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>, linux-clk@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+Message-ID: <20200629215331.GA2991039@bogus>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
+ <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ylwydmatvahcimwd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200622025907.32574-9-frank@allwinnertech.com>
+In-Reply-To: <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, 18 Jun 2020 19:33:32 +0800, Hanks Chen wrote:
+> From: Andy Teng <andy.teng@mediatek.com>
+> 
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+> 
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> ---
+>  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  210 ++++++++++++++++++++
+>  1 file changed, 210 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> 
 
---ylwydmatvahcimwd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2020 at 10:59:04AM +0800, Frank Lee wrote:
-> This patch add thermal sensor controller support for A100,
-> which is similar to the previous ones.
->=20
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+My bot found errors running 'make dt_binding_check' on your patch:
 
-This SoB is weird. If Yangtao Li is the author, then they should be
-credited, and if they're not then their SoB shouldn't be here
-(especially in the latest position which is usually the person that
-committed / sent the patch).
+Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt6779-pinfunc.h: No such file or directory
+         #include <dt-bindings/pinctrl/mt6779-pinfunc.h>
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Either way, something is off here.
 
-Maxime
+See https://patchwork.ozlabs.org/patch/1312018
 
---ylwydmatvahcimwd
-Content-Type: application/pgp-signature; name="signature.asc"
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
------BEGIN PGP SIGNATURE-----
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvoEXgAKCRDj7w1vZxhR
-xTEIAP4vwQRHMN634gqK3ztUkKWqQlYv9RetPxwmfazpSwD72AD+MYVlV4xv3h5Z
-Imn9dR7VTpA1168kL+XF4l5MfCZMEg0=
-=IJGI
------END PGP SIGNATURE-----
+Please check and re-submit.
 
---ylwydmatvahcimwd--
+
+
+Here, you need patch 2 to come first or merge it into this patch as it 
+is part of the binding.
+
+Rob
+
