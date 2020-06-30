@@ -2,61 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 938B320F12F
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 11:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF31B20F146
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 11:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731888AbgF3JIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 05:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60600 "EHLO
+        id S1730669AbgF3JNo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 05:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731666AbgF3JIt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 05:08:49 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12339C03E979
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id p7so8938413qvl.4
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
+        with ESMTP id S1726404AbgF3JNn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 05:13:43 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3659C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:13:42 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id z2so15020714qts.5
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:13:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
-        b=g6H5Mkbt5DNNC4mpM8Ol5Sb2XFAAVgz7dk+QHwtFzZVZNmtS7nCKUPcrX84jfbcdBE
-         bUo/rHlBN4uFQuSRpShN17WBsTptjwVuG2PZBnqmo8xAyRdilDLUY/3lfIpU4iAhaqot
-         Xy9y/J6p7X0nQNFcJ+aahou+oeMcbuaSI7EfivxPYsakS5wa329R/bHCeCgoOR0ra7vr
-         xkJStDT3T984WOH8KXYf+jsirAHOCixX5rRq6veMsAQ5K5xjNLkXMVQOkpS/uSirKP0u
-         5schmfSp19lHLwXGCMWiW9MlF6yGg0zUDoZtN64aUyRoZpPspbkRrVL5TLjCA0YZLvyA
-         JRmA==
+        bh=NiaAQZb6e16RNNwC58Ig+5aKFcoVz1kh1EE7z1LSbO0=;
+        b=rftMDQzUsnWJRbvKE710N3N7H9ymntoND40Bj8Ft2pc4kSO8W04Lgrv1xzvY4J1Bl3
+         +UWCCL6JciQsaoJ9MYKzReREtjBH/5Vl3Ud5qy7a4wEeAYLdv6wj91fUKIrLN8n7/ezw
+         +Ltt3x9iRmvM3jA9EIlBfNtZgnKX81F5Z7I5V+V3WCZjT2UJICp+to6FrKLrVor2qhwr
+         GNl7MdqXujhtJRgAOotb0YWeIIB1l4mYzYdh1+htIRnPUUSrWMDhrr+c/VxhbE6LQtlj
+         34481H7fX2umXtLGDhf4IQzN82CzNThDoMuanmdbBt6GDpPV7h5przEpZXJ5xZgfIKCH
+         BsoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
-        b=Ds9hSMphnlaO62nzzGCAcw4sq97y/bGFJk3j8Cu6IvaUyC4jMpzNlXXTr48zcDBoPD
-         FjalYCwSw1AZgoLx0Kbx9FEQi0LOyx+9IE64ZchNDL+60mlhjgnnEc48jslGs0f57JiY
-         KF4muqgaCHNoW+rtrOttRM35v3NIMhQyf7x2OcNojDvnUyOCiZxNAKfNuYfogsXeI3Aj
-         jk+s2jQe48IjrJ2Gce8X2Ca16TyLnzCO/MmZUEYJLCgilUOjInEuMzBdTrcgww5s2c5T
-         ROdxdvRfxGn8ezQZPmQobBg+cQArmmsjjhs168HdAbAgiqMWVL7ybKQQ/uHEwC/cmuY3
-         0dqg==
-X-Gm-Message-State: AOAM532nZMNuDdr4nnxHkPfUU8rD3FaNMcNmcZvSJOoBo6W08+WKUb2/
-        wTVW3u081o8op8A87DUUweANFaz4/HCeK/TG7UrBUw==
-X-Google-Smtp-Source: ABdhPJwkBKiwHoQTkPDwgHkZOpEnSHjYxqckozTuh5xOgGjTCbFXW4/OwVL4K9CtiMFwbAzSCK7mZVJT+JVxeCNGWvE=
-X-Received: by 2002:a0c:bd15:: with SMTP id m21mr19505914qvg.61.1593508128336;
- Tue, 30 Jun 2020 02:08:48 -0700 (PDT)
+        bh=NiaAQZb6e16RNNwC58Ig+5aKFcoVz1kh1EE7z1LSbO0=;
+        b=rqBSnaTO+r+o5AcZKFGL79Pxl19SBfxQW8waeq53Og42U/iUJS7fADg/tDURvsYXQt
+         2Mf8EHZlsA+Y2seHbpnB/ZlaLGN2BDstlneJONuW/NPvAe2Mq97DJYgj/FggFVka7ITl
+         9f+oS5m2CPnlfheoF2qKoQE8ZRrbmUaHffGUoOWhmph+SJyVpV+XahpPdtMs0aq3WBKr
+         Wx/LOrrCqt/Iq+81UFs8Wjx8jKhbJvYPIGtaL4GcMtLmE+/lfcZSrvPgTMaS6VwIXej7
+         8jkn5th1QGhtHUtqYlmoMHQJLfsuvwIrvcazviUGtDgTznJnNKSW4U1/e8FFF6Q/drzV
+         BzBg==
+X-Gm-Message-State: AOAM533QBWs8NobVpxKofWugJum9FgtTmUqFY0tJl2gbtN51Ak3LXKWM
+        xXPT36mBKfw8tPa4jbJEvOaGpCHZYY880gef6+ykqA==
+X-Google-Smtp-Source: ABdhPJzDAAzCHsuXTek0a114336cynJGittTkzm51tTWGOlNq0w2PjNG7rgt5mcKicjSeSki0XFVAa7qvDKPbbdt2IY=
+X-Received: by 2002:aed:2a75:: with SMTP id k50mr19148818qtf.27.1593508422149;
+ Tue, 30 Jun 2020 02:13:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-9-warthog618@gmail.com>
- <CAMpxmJVbiH9mh2c8aAS+GG9a76w9c0Nrrv-VDVhpo+wSyQ2NeQ@mail.gmail.com>
- <20200624140806.GA7569@sol> <CAMpxmJXbzFvR9h4fXvCwDMz4t6N16o2Y88K94aPwu6MFuCzqrg@mail.gmail.com>
- <20200625100126.GA18788@sol>
-In-Reply-To: <20200625100126.GA18788@sol>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13> <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+ <20200630085828.1aebdf99@xps13>
+In-Reply-To: <20200630085828.1aebdf99@xps13>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 30 Jun 2020 11:08:37 +0200
-Message-ID: <CAMpxmJXbp_JYg8pX6StMy3578O4MZuatDTd-Ki6ydVY8u32+fw@mail.gmail.com>
-Subject: Re: [PATCH 08/22] gpiolib: cdev: complete the irq/thread timestamp handshake
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+Date:   Tue, 30 Jun 2020 11:13:31 +0200
+Message-ID: <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -64,51 +69,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 12:01 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Jun 30, 2020 at 8:58 AM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
 >
-> On Thu, Jun 25, 2020 at 11:44:30AM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Jun 24, 2020 at 4:08 PM Kent Gibson <warthog618@gmail.com> wrot=
-e:
+> Hi Uwe,
+>
+> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 J=
+un
+> 2020 21:50:44 +0200:
+>
+> > On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> > > Hello Uwe, Thierry,
 > > >
-> > > On Wed, Jun 24, 2020 at 04:00:42PM +0200, Bartosz Golaszewski wrote:
-> > > > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=
-=C5=82(a):
-> [ snip ]
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> > > 12:54:53 +0200:
 > > >
-> > > I'm not totally sure myself, as my understanding of how interrupts ar=
-e
-> > > shared in the kernel is pretty sketchy, but my concern is that if we
-> > > are sharing the irq then whoever we are sharing with may release the =
-irq
-> > > and we go from nested to unnested.  Or vice versa.  Not sure if that =
-is
-> > > valid, but that was my concern, and it seemed like a minor change to
-> > > cover it just in case.
+> > > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > > functions but can also manage the intensity on each of its ports wi=
+th
+> > > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > > bits per output). The period is always 32kHz, only the duty-cycle m=
+ay
+> > > > be changed. One can use any output as GPIO or PWM.
+> > > >
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > ---
 > > >
+> > > Can I have a status on this patch please?
+> > >
+> > > If it was forgotten, I would be good to have it queued now, otherwise=
+,
+> > > may I know the reason?
 > >
-> > It's my understanding that a shared interrupt must be explicitly
-> > requested as shared by all previous users or request_irq() will fail.
-> > In this case: we call request_threaded_irq() without the IRQF_SHARED
-> > flag so it's never a shared interrupt. Even if someone previously
-> > requested it as shared - our call will simply fail.
-> >
+> > You could reply to my feedback ... If you could say there: "What you
+> > want isn't possible" I'd count this as a strong indication to not ask t=
+o
+> > implement Andy's suggestion. (Even if this would be possible, I'm not
+> > sure this is a good idea, but still ...)
 >
-> OK.  Is there a reason not to share the interrupt?
+> Sorry for the misunderstanding, but I already replied twice to Andy
+> about this. Once in October, again in November, then I gave a shot to
+> the idea of splitting the drivers (GPIO vs. PWM) in January. So I
+> thought you were sharing your thoughts out loud but was not expecting
+> any specific feedback on it.
 >
-
-If nobody requested this yet, I'd say: let's not touch it. :)
-
-In theory, we check if the line state changed so we should be fine but
-in practice this sounds like a can of worms. That being said: I don't
-have a reason not to do it. Just a feeling.
-
-> > I still think that resetting the timestamp is fine because it's not
-> > being set to 0 in hardirq context. We just need a different
-> > explanation.
-> >
+> So, no, even if the idea might make sense, it is not doable in a
+> reasonable amount of time. I am not saying it is impossible, but someone
+> has to think about it deeper and propose a core structure to handle it
+> in a generic and clean way so that other drivers sharing the same
+> properties can rely on it. I am not qualified enough to do it the proper
+> way in a reasonable time frame.
 >
-> Or just drop it?
+> Thanks,
+> Miqu=C3=A8l
 
-Yes, I think dropping this patch for now is fine.
+Hi Miqu=C3=A8l,
 
-Bart
+I can't find anything in any of the previous threads. What was the
+reason to not go the MFD way here?
+
+Bartosz
