@@ -2,89 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 996E720FEBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 23:28:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D446820FF55
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 23:37:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgF3V1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 17:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33528 "EHLO
+        id S1729658AbgF3Vg6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 17:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgF3V1s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 17:27:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60F0C061755;
-        Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id q17so9971751pfu.8;
-        Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MQBErciIyI85FpBDV0t+8Lcbb9FvJ1w5mLOf7Rx5bGk=;
-        b=Ijzh/MFvNwAuuPmLgLmPFfO+rTkLg8UETdEfqUYAGZWlH72Tzsw+4ViGmOO6kb3KHF
-         5CL9IjG0tPcq6RHvGQDfZZI7+YDR5ABYH74Iv4D9PwMxyFT5IJeUjs4LLHs4eSR3YR3I
-         wHxXWIIHF5fB51h1FENg3+FvVKOGEj2GWfNOHdJ4etVG1+NuNPhE6PZFUMaW7wH18fw0
-         tImDJkVHgQFRt5MEGYGj3Jo8MkJGjHLoz0xwc/vncyOwwJdgPIfv5pWWz+yEgYS5rbhs
-         FsbWn2bkGeY7hoLwqm+0Gen/EVePDSbOU88/MRO8fR81jkI6sj49Zsz9hHtGELoq4k7R
-         A8VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MQBErciIyI85FpBDV0t+8Lcbb9FvJ1w5mLOf7Rx5bGk=;
-        b=kkf8vZicsa9y2CUDhQ79LiBi9/+Xge9zM67pRjqMO7lw42dab83GC3PNVJUjzFagLo
-         elC4qqKd34toGGnywcjxwBtVY3yR13fhIbYaGVS9sw13h0JnydWCmTkv+Th69OE+Ixg0
-         Eay7WRNL95JN3dNPWHJvwRvXX06mY2ISnopBPsb8bf8vv0WHE/l7BGE7vwdocwd1igSh
-         yteeIBixafx6lf5bhY3b4rWMfhtJjH42dvLhKjE+VBCKKy5Une7L68jV3NkrlAX7UzmF
-         aYkvRJKq0KzcJu0ZxgpOR0nyQCU7xeJ7SvDPvQ/0xFWnXhPa1MFQ/rC8Mcm7dRvOqUsx
-         AdZw==
-X-Gm-Message-State: AOAM530JE5F2BJsZGy5XRD1aFZcu+4CCvHfPBz27145ooKi50/y26S8Y
-        j4b8/XmRFD88QYHQbFlH0cQpx+8TTj80ZBJTffw=
-X-Google-Smtp-Source: ABdhPJy35NPGb0KZOUK69krtGXjYyP3OWGIt43uOZrw9wYyrqRr7g2NM1taAwkEdxDXzWr1zn/289gUuXkahPQAtk0E=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr11026892pgn.4.1593552468187;
- Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
+        with ESMTP id S1726907AbgF3Vg5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 17:36:57 -0400
+X-Greylist: delayed 404 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 30 Jun 2020 14:36:55 PDT
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F10C03E97A
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 14:36:55 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E17508011F;
+        Wed,  1 Jul 2020 09:30:06 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593552606;
+        bh=a9s+V2nzli8tsrcb0f2+rV3tw5YwE41Dqit8SLbbkqE=;
+        h=From:To:Cc:Subject:Date;
+        b=Ca7KOSLa8qcaM7G6uXP/Uf6OcU2/o107X/xBAUZuN7VCfORCIXCCKOGRmyBKkH06B
+         PSijTfk35h8DoUScsrf6RBRQzV5VoAouAXyF5jSsk2TOspkWF6fFN5dXzbRzlsVPyk
+         MAVlfRLd3tzRddhPTWHJqV8aARHBcYfsO+ER0jxTxSVPScgq+YojlCpPOviLc1/PhP
+         N/gKzJHmzcQQ6P0StzYI4KKaW1mGxiS2sZ3Rv5LNXKH7jJCNZhio3Llx6EsvObUyC1
+         ZDT+zSHhzo00z/mOPJEhoYo364AxoW6GAguzY3EpedrcPcO/t6fMQbnOSfOcdHFuVe
+         XP4P93b7DPyFg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efbaeda0000>; Wed, 01 Jul 2020 09:30:06 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id CC9E013EF9B;
+        Wed,  1 Jul 2020 09:30:00 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id D06D333E9BD; Wed,  1 Jul 2020 09:30:01 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] pinctrl: initialise nsp-mux earlier.
+Date:   Wed,  1 Jul 2020 09:29:58 +1200
+Message-Id: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <20200629160844.6ecf79c1@xps13> <20200629195044.uvgma53cajiko3gf@pengutronix.de>
- <20200630085828.1aebdf99@xps13> <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
- <20200630124500.m765t276atb3wqgy@pengutronix.de>
-In-Reply-To: <20200630124500.m765t276atb3wqgy@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Jul 2020 00:27:31 +0300
-Message-ID: <CAHp75VcxQ-qK+RYmfULDx3cHQW9W8__-Gf8EFw7Hgqsz0oPkjA@mail.gmail.com>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:45 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Jun 30, 2020 at 11:13:31AM +0200, Bartosz Golaszewski wrote:
-> > I can't find anything in any of the previous threads. What was the
-> > reason to not go the MFD way here?
->
-> MFD doesn't work because the different "modes" are not orthogonal. So
-> this is not a single device that provides several functions at the same
-> time that can be used in parallel.
+The GPIO specified in the DTS file references the pinctrl, which is
+specified after the GPIO. If the GPIO is initialised before pinctrl,
+an error message for the -EPROBE_DEFER ends up in the kernel log. Even
+though the probe will succeed when the driver is re-initialised, the
+error can be scary to end users. To fix this, change the time the
+pinctrl is probed, so that it is always before the GPIO driver.
 
-Did I get this correctly that it's either *all* pins are GPIO or *all* are =
-PWM?
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+---
+ drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Otherwise, it fits from my point of view.
-
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/=
+pinctrl-nsp-mux.c
+index f1d60a708815..7586949f83ec 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+@@ -639,4 +639,4 @@ static int __init nsp_pinmux_init(void)
+ {
+ 	return platform_driver_register(&nsp_pinmux_driver);
+ }
+-arch_initcall(nsp_pinmux_init);
++postcore_initcall(nsp_pinmux_init);
 --=20
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
