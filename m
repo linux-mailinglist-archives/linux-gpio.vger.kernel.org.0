@@ -2,130 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D1E620F91E
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 18:10:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5908C20F925
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 18:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgF3QKE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 12:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        id S1726831AbgF3QL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 12:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgF3QKE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 12:10:04 -0400
+        with ESMTP id S1726117AbgF3QL1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 12:11:27 -0400
 Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C4CC061755;
-        Tue, 30 Jun 2020 09:10:03 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C374C061755;
+        Tue, 30 Jun 2020 09:11:27 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8T56KSVzQlL5;
-        Tue, 30 Jun 2020 18:10:01 +0200 (CEST)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8Vj546PzQlLc;
+        Tue, 30 Jun 2020 18:11:25 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593533399;
+        t=1593533483;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/GvbcSzf93t3Xo8PgTLO0RFe1bXEAMDeF7vWz9G0lXY=;
-        b=Ysv+xs4V8Jruw1SxiPoUfjc6pgAqz91VNB8/TGmbrM6bCDpgr6byLNxH1oBz6+X2FsYugj
-        6f6t+GJh9046R2sqSJhTQIF2xTrIHb7qWcjFOeHlMoUMHlVTWQ4T0zDXG/gsmV8Og0bN4B
-        3S36A6pgFxS+hbBuFkX1/fjP05xLfnjy106gR+ZLXSi1d8t5CIY624T6CoGqn47rH1UmUH
-        auD5wx+t8YI2amB2gt9qAngvycTsQPaTWMkvAeRoFAABUXHsFSCctSbcbQetHBC63cnRkI
-        7lkQEk9J0hmKRCt+PyKgHUCdZYVnlu4DMNZBgk900GOE4wcRHY224Lf2Mzj+Vg==
+        bh=WvyEvwVOE6KFGw0IR8ROR1P235uwh5VDXyfvL1XeXgA=;
+        b=j73ErYfMWm6xpXPOypH1e0O4BeBvU/7X9mMqNt5Fubpqo0+PCONMb9KncbqekxtX/KxsAI
+        rRdgPTYv98ApEr+JHhC1zMsZyMwkHJELP2L97BCJ6ypolHE93O8ajAus4ZdOhN3owbFieu
+        qYUhmXIo2VU/JGBbIzQrGAWYQ0g3X2fKpxtkOCX11Da0Y7fZwDbCJKtTYz79vGuG4MpFEX
+        jdPeIkm3+rU/KFoATWeODmhE3Y1FBjxpfSaWHJ0tRabrrp/7U+poAC944c+vcOGbfsVWAw
+        S0WNDqoTa+osV9iYeyNlS8cYXGfp+8bYpU2Jy/8WB5caAO3661zgVB7bB4DbZw==
 Received: from smtp1.mailbox.org ([80.241.60.240])
         by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id 5PLJZsftWcGX; Tue, 30 Jun 2020 18:09:57 +0200 (CEST)
+        with ESMTP id GE1n9uaG34HV; Tue, 30 Jun 2020 18:11:22 +0200 (CEST)
+Subject: Re: [PATCH v2 1/2] gpio: add GPO driver for PCA9570
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20200625075805.363918-1-mans0n@gorani.run>
+ <CAMpxmJXDHX-U-HWR8093orBU1ZxEeWp_r2Xar+k5FMoZ1pS78Q@mail.gmail.com>
+ <CAHp75VdNh8nFNqZxSD0g7ADD8GvY+Dmbfg8xc6LW94hw_Brwew@mail.gmail.com>
 From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-Date:   Wed,  1 Jul 2020 01:09:34 +0900
-Message-Id: <20200630160934.1197066-1-mans0n@gorani.run>
-In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
-References: <20200630160736.1196697-1-mans0n@gorani.run>
+Message-ID: <c7fd2365-0f47-b2c8-4085-020928c79254@gorani.run>
+Date:   Wed, 1 Jul 2020 01:11:16 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 8
-X-Rspamd-Score: 1.27 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 706AB17FE
-X-Rspamd-UID: c515cf
+In-Reply-To: <CAHp75VdNh8nFNqZxSD0g7ADD8GvY+Dmbfg8xc6LW94hw_Brwew@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -4.04 / 15.00 / 15.00
+X-Rspamd-Queue-Id: A955F1800
+X-Rspamd-UID: ed3a9e
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch adds device tree bindings for the NXP PCA9570,
-a 4-bit I2C GPO expander.
+Thanks for all the reviews! I've updated the patch, please have a look.
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-v3:
-* fixed dt_binding_check error
+And I have something to ask.
 
-v2:
-I don't feel I can really maintain this driver, but it seems all yaml docs
-have a maintainers field so I just added it...
----
- .../bindings/gpio/gpio-pca9570.yaml           | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+# echo 1 > gpio408/value
+# cat gpio408/value
+cat: read error: I/O error
+# cat gpio408/direction
+out
+# echo out > gpio408/direction
+# echo in > gpio408/direction
+[   91.006691] gpio-408 (sysfs): gpiod_direction_input: missing get() 
+but have direction_input()
+ash: write error: I/O error
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-new file mode 100644
-index 000000000000..338c5312a106
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCA9570 I2C GPO expander
-+
-+maintainers:
-+  - Sungbo Eo <mans0n@gorani.run>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,pca9570
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        gpio@24 {
-+            compatible = "nxp,pca9570";
-+            reg = <0x24>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+        };
-+    };
-+
-+...
--- 
-2.27.0
+I've never dealt with GPO expander before, so this seems a bit odd to me.
+Is it perfectly okay to leave get() and direction_input() unimplemented?
 
+Thanks.
+
+On 2020-06-30 18:53, Andy Shevchenko wrote:
+> On Tue, Jun 30, 2020 at 12:28 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+>> On Thu, Jun 25, 2020 at 9:58 AM Sungbo Eo <mans0n@gorani.run> wrote:
+> 
+>>> +static const struct of_device_id pca9570_of_match_table[] = {
+>>> +       { .compatible = "nxp,pca9570" },
+>>> +       { /* sentinel */ }
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
+>>
+>> If you're not using it in probe than maybe move it next to the I2C device table?
+> 
+> (Side note)
+> ...and even if so it can be assessed via a struct device pointer:
+> dev->driver->id_table (don't remember by heart, but you have an idea).
+> 
