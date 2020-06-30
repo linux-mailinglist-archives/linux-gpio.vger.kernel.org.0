@@ -2,89 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5A1120FEA3
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 23:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 996E720FEBC
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 23:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgF3VYL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 17:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
+        id S1728716AbgF3V1t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 17:27:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgF3VYF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 17:24:05 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B0BC061755;
-        Tue, 30 Jun 2020 14:24:05 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so7582930pgf.0;
-        Tue, 30 Jun 2020 14:24:05 -0700 (PDT)
+        with ESMTP id S1726847AbgF3V1s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 17:27:48 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A60F0C061755;
+        Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q17so9971751pfu.8;
+        Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hIPfO7ux9DNr6HYEXTRvYHtolE2zfLDOhNyZZg0neiU=;
-        b=l6IbFr4lB10a6avSIpBkHukmvsF7G+Pa3+nFsF43/+EvA/lHbqde5uyHkmEQmbhWQi
-         gzEvYjUi198wq2shdVl+NYnidqLtlARhuL3JFWlTkPqCK+kXjoFuhUfI3wdXYpKjeR/y
-         AvrGhJKF2TtuMX4MjuTTH54IOyj16SSWwwSDU8XiR7P8JpTzObyVBBzNMm5pVn9i7vy4
-         myEXPf0E6MOBUGwCQH0NfvOIhbDCukLi+hHl3oWks9goEeF962Vwf38BdMzNt0Xz7Uh2
-         1IUCAZs4Atrj4mnoffhwMiXP8s0HNRrpXO5lgcaD2p4ARfkHZ8JdtHqrEAuvd81cx99n
-         RARg==
+         :cc:content-transfer-encoding;
+        bh=MQBErciIyI85FpBDV0t+8Lcbb9FvJ1w5mLOf7Rx5bGk=;
+        b=Ijzh/MFvNwAuuPmLgLmPFfO+rTkLg8UETdEfqUYAGZWlH72Tzsw+4ViGmOO6kb3KHF
+         5CL9IjG0tPcq6RHvGQDfZZI7+YDR5ABYH74Iv4D9PwMxyFT5IJeUjs4LLHs4eSR3YR3I
+         wHxXWIIHF5fB51h1FENg3+FvVKOGEj2GWfNOHdJ4etVG1+NuNPhE6PZFUMaW7wH18fw0
+         tImDJkVHgQFRt5MEGYGj3Jo8MkJGjHLoz0xwc/vncyOwwJdgPIfv5pWWz+yEgYS5rbhs
+         FsbWn2bkGeY7hoLwqm+0Gen/EVePDSbOU88/MRO8fR81jkI6sj49Zsz9hHtGELoq4k7R
+         A8VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hIPfO7ux9DNr6HYEXTRvYHtolE2zfLDOhNyZZg0neiU=;
-        b=ndBpO/1C5e71sPMla+AFf3vptmHXtkV7seGstxF1wxHxCtAn6dKArZTr2rv+hWprzv
-         YEhC1BekBuck9TscORe1r58iFpvDKqvu1H7jYhoCZdORnPMOaxHK1BpEAzeyp0lYkZuM
-         4Rg8hn6g2ZtW05CYNIbLyJcA0SHPmfWJfFEGAF/s8FojGytwPVSX3oAeyLPrSmtPZHyQ
-         bgBFVM0gnugufMHglBAilmn9z2GT++tRt+L3repC6I4d+pUuDGycKVCIxx+0bn9gqUuc
-         pFYmzlS5S90mVfoAPvBhyXIFLQkAp0GOp4JkZXDZ9XpuG20/Z9CCLwplYFsMIGalBo/Z
-         IoSg==
-X-Gm-Message-State: AOAM533yTr0MOYs5+abmgRnDm4jY/uRUhTY4TWDFucvcSGhSkOvNjMFD
-        wMedhQbH9y5JeKE2pxzosUQ6Tr/9p5sAknIeXEB9kHch
-X-Google-Smtp-Source: ABdhPJxS+NqNFjrvVBjxUI6LilnL2HGF9aURL8vCDDdZpShiQWILIkcjBH2JoHLsAvpyGq9STgQ1iO0jJxtZ4UvOZVI=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr11014041pgn.4.1593552244686;
- Tue, 30 Jun 2020 14:24:04 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MQBErciIyI85FpBDV0t+8Lcbb9FvJ1w5mLOf7Rx5bGk=;
+        b=kkf8vZicsa9y2CUDhQ79LiBi9/+Xge9zM67pRjqMO7lw42dab83GC3PNVJUjzFagLo
+         elC4qqKd34toGGnywcjxwBtVY3yR13fhIbYaGVS9sw13h0JnydWCmTkv+Th69OE+Ixg0
+         Eay7WRNL95JN3dNPWHJvwRvXX06mY2ISnopBPsb8bf8vv0WHE/l7BGE7vwdocwd1igSh
+         yteeIBixafx6lf5bhY3b4rWMfhtJjH42dvLhKjE+VBCKKy5Une7L68jV3NkrlAX7UzmF
+         aYkvRJKq0KzcJu0ZxgpOR0nyQCU7xeJ7SvDPvQ/0xFWnXhPa1MFQ/rC8Mcm7dRvOqUsx
+         AdZw==
+X-Gm-Message-State: AOAM530JE5F2BJsZGy5XRD1aFZcu+4CCvHfPBz27145ooKi50/y26S8Y
+        j4b8/XmRFD88QYHQbFlH0cQpx+8TTj80ZBJTffw=
+X-Google-Smtp-Source: ABdhPJy35NPGb0KZOUK69krtGXjYyP3OWGIt43uOZrw9wYyrqRr7g2NM1taAwkEdxDXzWr1zn/289gUuXkahPQAtk0E=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr11026892pgn.4.1593552468187;
+ Tue, 30 Jun 2020 14:27:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625075805.363918-1-mans0n@gorani.run> <CAMpxmJXDHX-U-HWR8093orBU1ZxEeWp_r2Xar+k5FMoZ1pS78Q@mail.gmail.com>
- <CAHp75VdNh8nFNqZxSD0g7ADD8GvY+Dmbfg8xc6LW94hw_Brwew@mail.gmail.com> <c7fd2365-0f47-b2c8-4085-020928c79254@gorani.run>
-In-Reply-To: <c7fd2365-0f47-b2c8-4085-020928c79254@gorani.run>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13> <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+ <20200630085828.1aebdf99@xps13> <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
+ <20200630124500.m765t276atb3wqgy@pengutronix.de>
+In-Reply-To: <20200630124500.m765t276atb3wqgy@pengutronix.de>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Jul 2020 00:23:48 +0300
-Message-ID: <CAHp75VcA-kmJHyuZOMs-BDqhQ7FszZti=uHmSs-NCH2F6e_c4A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
+Date:   Wed, 1 Jul 2020 00:27:31 +0300
+Message-ID: <CAHp75VcxQ-qK+RYmfULDx3cHQW9W8__-Gf8EFw7Hgqsz0oPkjA@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:11 PM Sungbo Eo <mans0n@gorani.run> wrote:
+On Tue, Jun 30, 2020 at 3:45 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Jun 30, 2020 at 11:13:31AM +0200, Bartosz Golaszewski wrote:
+> > I can't find anything in any of the previous threads. What was the
+> > reason to not go the MFD way here?
 >
-> Thanks for all the reviews! I've updated the patch, please have a look.
->
-> And I have something to ask.
->
-> # echo 1 > gpio408/value
-> # cat gpio408/value
-> cat: read error: I/O error
-> # cat gpio408/direction
-> out
-> # echo out > gpio408/direction
-> # echo in > gpio408/direction
-> [   91.006691] gpio-408 (sysfs): gpiod_direction_input: missing get()
-> but have direction_input()
-> ash: write error: I/O error
->
-> I've never dealt with GPO expander before, so this seems a bit odd to me.
-> Is it perfectly okay to leave get() and direction_input() unimplemented?
+> MFD doesn't work because the different "modes" are not orthogonal. So
+> this is not a single device that provides several functions at the same
+> time that can be used in parallel.
 
-Actually it would be better to return the value you set for output in ->get().
+Did I get this correctly that it's either *all* pins are GPIO or *all* are =
+PWM?
 
+Otherwise, it fits from my point of view.
 
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
