@@ -2,74 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E372E20FFB4
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 23:56:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58DB020FFE2
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 00:08:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgF3V4O convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 30 Jun 2020 17:56:14 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55991 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgF3V4O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 17:56:14 -0400
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D85FB240008;
-        Tue, 30 Jun 2020 21:56:10 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 23:56:09 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200630235609.52611e41@xps13>
-In-Reply-To: <CAHp75VcxQ-qK+RYmfULDx3cHQW9W8__-Gf8EFw7Hgqsz0oPkjA@mail.gmail.com>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
-        <20200629160844.6ecf79c1@xps13>
-        <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-        <20200630085828.1aebdf99@xps13>
-        <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
-        <20200630124500.m765t276atb3wqgy@pengutronix.de>
-        <CAHp75VcxQ-qK+RYmfULDx3cHQW9W8__-Gf8EFw7Hgqsz0oPkjA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726078AbgF3WIO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 18:08:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgF3WIO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 18:08:14 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE75EC061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 15:08:13 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so20245091wmj.2
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 15:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
+        b=ZJWhYNW80aP0UjLF2kYUMHvCiLGwyo9hylEay2xarposLoORgE2Ch0QRE90zfu7d4C
+         HcWcdBfALIPOnUa82U8dsC9oj0/Qs7AQ4dWDhzRlqFbMQLj9OshNPw3e431Bqr9DV47R
+         1dE/paxnDLFlc100OSaSsF8nYGx8mKkaMx3kM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
+        b=eugXFRBw/vLv2fJGd8pAxjh/OX6SyChvTog1kJPHryh18IAyhSqhrbJgzJGoTrtapQ
+         6f4QvJFIZHYelQBBqbWLEghSU9MdJjLjiZGAaW6c3WVFSMx+wpjEbW741NrsuvpJL0Zi
+         fzup3YEawHXWAvWjwERd1U1kxQvukA3X4hmnrNWnyBgKvKYKFYexNjt58NohI0Z30XVW
+         bD27E3Kq9n4ZRfzqAeJeKBWKRgZyWgQNbEnrLW5/rk+3zUnF7Ae4xOGp87pDZugK3j3o
+         A2Wbobx42wndBExz7mg/qzyBBY+JsO0GqE3xp/N2FvvmmW6VVJTaCFS9EjSZcnvx8jvP
+         k7ZA==
+X-Gm-Message-State: AOAM532Y4tDtnMTPLQBkI6Ey9kKU9GiVngbfMB9neabMhe0CgsHvpkWo
+        /KMl0bHy4UXczDW1HkC2rhiy4w==
+X-Google-Smtp-Source: ABdhPJzjZhl1qhrkUOIUo/m25AEPI8WGU/fDVfZi71HnMPSFwWnuM9w7rn5qy3jXU3ZrOXB6iwh9xg==
+X-Received: by 2002:a1c:24c6:: with SMTP id k189mr24732162wmk.9.1593554892402;
+        Tue, 30 Jun 2020 15:08:12 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id e8sm5092967wrp.26.2020.06.30.15.08.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 15:08:11 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+Date:   Tue, 30 Jun 2020 15:08:05 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+Hi Mark,
 
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Wed, 1 Jul 2020
-00:27:31 +0300:
+On 6/30/2020 2:29 PM, Mark Tomlinson wrote:
+> The GPIO specified in the DTS file references the pinctrl, which is
+> specified after the GPIO. If the GPIO is initialised before pinctrl,
 
-> On Tue, Jun 30, 2020 at 3:45 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Jun 30, 2020 at 11:13:31AM +0200, Bartosz Golaszewski wrote:
-> > > I can't find anything in any of the previous threads. What was the
-> > > reason to not go the MFD way here?
-> >
-> > MFD doesn't work because the different "modes" are not orthogonal. So
-> > this is not a single device that provides several functions at the same
-> > time that can be used in parallel.
+May I know which GPIO driver you are referring to on NSP? Both the iProc
+GPIO driver and the NSP GPIO driver are initialized at the level of
+'arch_initcall_sync', which is supposed to be after 'arch_initcall' used
+here in the pinmux driver
+
+> an error message for the -EPROBE_DEFER ends up in the kernel log. Even
+> though the probe will succeed when the driver is re-initialised, the
+> error can be scary to end users. To fix this, change the time the
+
+Scary to end users? I don't know about that. -EPROBE_DEFER was
+introduced exactly for this purpose. Perhaps users need to learn what
+-EPROBE_DEFER errno means?
+
+> pinctrl is probed, so that it is always before the GPIO driver.
 > 
-> Did I get this correctly that it's either *all* pins are GPIO or *all* are PWM?
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+>  drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Otherwise, it fits from my point of view.
+> diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> index f1d60a708815..7586949f83ec 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> @@ -639,4 +639,4 @@ static int __init nsp_pinmux_init(void)
+>  {
+>  	return platform_driver_register(&nsp_pinmux_driver);
+>  }
+> -arch_initcall(nsp_pinmux_init);
+> +postcore_initcall(nsp_pinmux_init);
 > 
-
-Sorry for not being clear in the first place : the choice between
-pure GPIO and PWM is on a per output basis. As Uwe said, the two
-"modes" are not orthogonal hence the MFD does not fit here IMHO.
-
-Thanks,
-Miquèl
