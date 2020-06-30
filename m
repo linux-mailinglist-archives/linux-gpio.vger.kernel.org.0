@@ -2,85 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E297D20F11A
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 11:03:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F27EB20F128
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 11:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731591AbgF3JDR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 05:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59746 "EHLO
+        id S1731746AbgF3JIL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 05:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731781AbgF3JDQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 05:03:16 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F97C03E979
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:03:16 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b185so7275055qkg.1
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=csyHqi1dgCFTiTLH92m1pa/01f6/WL6cXgwUlzD9rQs=;
-        b=HD4AHzV/G4h+Qg4Jf13PqCiiixOihB5TxcT0bF1y6ewEADJ9V2spVuaQRlP9dBzy69
-         5bkx4da1YWTJ8uwLkfjy8PvpO1sydpdbB06U9g6vQz5OXIsN4TdfnWkYqvfrBDxYwkmn
-         GUI8+bmuFxhwVbfF1a7rLPuh6GIbbyUsQ71u6QMWTzEtPC0+K2qOR+LiuX4CruoT8wh9
-         0isjNHlHsRje9C/Lz2ZcHKbPnlsXC6wSB8e4j1gJaiYKuho9dEg/tk8PBwrSXQsBUzmU
-         euQ7o0Ri3f35NR3vaPCUQMZvv6bTa99Iu1x9WxROMITca1tDD8qVKuHyD9812y0+B0De
-         J+Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=csyHqi1dgCFTiTLH92m1pa/01f6/WL6cXgwUlzD9rQs=;
-        b=AT/TO1vci5HLc5lVynyYvTEE3v3kQn1APCQvaMYIrkpTh/0FMJpOow5aR2N1W/4/by
-         itO/0E+XAD2g/s4B10n97vY+nC2DovrLW48apSQU+nxuvBXl0grZ1028EL+IbPbGqbmM
-         VFtrF8Mrdt9BUJPAEaTDb9U3H7GWqW3uyaIJKEYlzxMjKmkJOunpZgNiTMF9c+Mh68zU
-         ybjRGEEI7tKf6jrIFz1fRsZpDrHwfGGXr1K3FewX395JVWi3/4qOT45pfe6o4wLR6QzR
-         qD0zCIYpAhWCgIbidfB+F1uLFNOY3b2MXURKOTrudGA0kJ0ZWrFxQpsMIQA/uSNbpSc6
-         nQSg==
-X-Gm-Message-State: AOAM532lwdrvcb/3/JMb6+jma0gCei+h50xakAKq1HHccXsJvlJ5aZ6k
-        NwbdxEPVAfCmtG28Ih9tzmVVjn4ShLoBQjxI7bDHzw==
-X-Google-Smtp-Source: ABdhPJyjaXiWK6XZ9b/I9+BjA4tksSscWU+OFzjp2Ia0HC38A3dnw6Cm+HFUohMblrOwECY7vvWo8ub3+608Ayf5mZY=
-X-Received: by 2002:a37:9c81:: with SMTP id f123mr17606293qke.21.1593507795079;
- Tue, 30 Jun 2020 02:03:15 -0700 (PDT)
+        with ESMTP id S1731744AbgF3JIK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 05:08:10 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72597C03E979
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 02:08:10 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jqCFL-000619-6a; Tue, 30 Jun 2020 11:08:07 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jqCFK-0001al-AU; Tue, 30 Jun 2020 11:08:06 +0200
+Date:   Tue, 30 Jun 2020 11:08:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200630090806.6bgjgi34gtcrzfze@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13>
+ <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+ <20200630085828.1aebdf99@xps13>
 MIME-Version: 1.0
-References: <20200629164114.1186-1-tony@atomide.com>
-In-Reply-To: <20200629164114.1186-1-tony@atomide.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 30 Jun 2020 11:03:04 +0200
-Message-ID: <CAMpxmJWE7NWPp6Evek+HJp97Vb6XUXDsw6XD3mYNfSwctHDoEg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: omap: Add missing PM ops for suspend
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q6efgvsv3vhhwcas"
+Content-Disposition: inline
+In-Reply-To: <20200630085828.1aebdf99@xps13>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 6:41 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> We've had the legacy platform code take care of suspend for us but
-> this no longer is the case when probed without legacy mode with
-> ti-sysc. We need to configure PM ops like standard Linux device
-> drivers do.
->
-> As we still have some SoCs booting also the legacy mode, we need to
-> add omap_gpio_suspend() and omap_gpio_resume(), and check for the
-> is_suspended flag to avoid legacy _od_suspend_noirq() calling them
-> on an already suspended GPIO instance.
->
-> Once we have no SoCs booting in legacy mode, we can just switch to
-> using the standard PM ops with pm_runtime_force_suspend() and
-> pm_runtime_force_resume().
->
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
 
-Applied, thanks!
+--q6efgvsv3vhhwcas
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bartosz
+Hello Miquel,
+
+On Tue, Jun 30, 2020 at 08:58:28AM +0200, Miquel Raynal wrote:
+> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 Jun
+> 2020 21:50:44 +0200:
+>=20
+> > On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> > > Hello Uwe, Thierry,
+> > >=20
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> > > 12:54:53 +0200:
+> > >  =20
+> > > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > > functions but can also manage the intensity on each of its ports wi=
+th
+> > > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > > bits per output). The period is always 32kHz, only the duty-cycle m=
+ay
+> > > > be changed. One can use any output as GPIO or PWM.
+> > > >=20
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > --- =20
+> > >=20
+> > > Can I have a status on this patch please?
+> > >=20
+> > > If it was forgotten, I would be good to have it queued now, otherwise,
+> > > may I know the reason? =20
+> >=20
+> > You could reply to my feedback ... If you could say there: "What you
+> > want isn't possible" I'd count this as a strong indication to not ask to
+> > implement Andy's suggestion. (Even if this would be possible, I'm not
+> > sure this is a good idea, but still ...)
+>=20
+> Sorry for the misunderstanding, but I already replied twice to Andy
+> about this. Once in October, again in November, then I gave a shot to
+> the idea of splitting the drivers (GPIO vs. PWM) in January. So I
+> thought you were sharing your thoughts out loud but was not expecting
+> any specific feedback on it.
+
+Ah ok. Probably the discussion took too long already and was swapped out
+on my end.
+
+I will take a look once more later this week. One thing I noticed while
+skimming the patch was, that the added defines could make use of a nice
+prefix. MAX_PWM for example sounds quite generic.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--q6efgvsv3vhhwcas
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl77APMACgkQwfwUeK3K
+7AmdWwf+NJnKEOUjeeHA3Ud3w8l7E+nDL0RwEKeFDSjcFcoPKx+gC9VOj+8qFbA5
+rMEQZUXEY3sN5K36oVWQ4F6RU7e8LZwU1Q458H0t1+YK4wnVaT/lq4qisRejIot9
+1nuyfRuz4LfbAzERL5CIpCQu+LsfDbg6ZyUOiyR12N42wVYWGcdi/wS77eXPtS6C
++R+vYVrZtwIW+xK5OeY8PXycziJeLkYTZ382yObdsN0y6+05oYpBe8HUgEp9IxHG
+6qEebvwI6Ta2p+SBo1WBbKqntOqDZDR0fRvGABLI9fRTDRC++fBXlNYVdepIP52C
+5pJbowCjeSdTZXZPI5VgbdQvMzoejw==
+=0bW1
+-----END PGP SIGNATURE-----
+
+--q6efgvsv3vhhwcas--
