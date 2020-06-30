@@ -2,94 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 523E120F4F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 14:45:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FDE120F5B5
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 15:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387856AbgF3MpO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 08:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37422 "EHLO
+        id S2388161AbgF3Ndw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 09:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387855AbgF3MpE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 08:45:04 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1BFC061755
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 05:45:04 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jqFdF-0004Gz-9G; Tue, 30 Jun 2020 14:45:01 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jqFdE-00026X-AU; Tue, 30 Jun 2020 14:45:00 +0200
-Date:   Tue, 30 Jun 2020 14:45:00 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200630124500.m765t276atb3wqgy@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <20200629160844.6ecf79c1@xps13>
- <20200629195044.uvgma53cajiko3gf@pengutronix.de>
- <20200630085828.1aebdf99@xps13>
- <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
+        with ESMTP id S2388129AbgF3Ndu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 09:33:50 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A66C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g75so18824459wme.5
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g/OBCOZny1ndsw3tmtK3a2umBUo6+P4OiGX2ORUOTVo=;
+        b=SOwYxgcVaWP69efaAXz9BhJcmlTyK1GZqGNK1MqJgMhuxbrP1cUHlsGK2XYPEVuoot
+         KTtEe9qq6HGV8fCOc+8e5ors98U36q7Ke+yVpoP8mVeODUQU4Dqiojr2Lr68JuvxfcIT
+         9u7cxUHcLRvtnCsd4woz3jbfJZ7xySd6MHAlwOphAAEb0h58APo9daYXwxoXL9yRDl9M
+         HkKFTYCyGu/mFr9dVcsDrxBPS3yaAATySXjSSLERl93KVRUu2daqu4B988sR46gWzz1z
+         T9HbXAn8MX+UcCVy8IcimypeXTMbCfyv1yFHF5YHpvWxE5T+N02+l6NAA5EsSo1+jBC4
+         iUmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=g/OBCOZny1ndsw3tmtK3a2umBUo6+P4OiGX2ORUOTVo=;
+        b=qJQ8BL5MfLWXK/gQxwY57bfauraHaXvZo1Wc7iWc20UX4P/bpDdfYn4Y7B3FAVVctK
+         SPXetrkskeRJaRv6I6c27A0l4HZ4KevutmszrjRQgif5JhcpPryduw8iTDcxe8zQWKRT
+         5L6vyoldEqFhGQQo3KPFUN78dve6fcJpWIGy9fhw6N2fC4j+b52sO9cZTfkRGHurRQy+
+         nks3m3QJ9YCm/giRuLL9KRYXqw8XS0piiyUAHQ8GzovKlDQUAjh7O6K/PU6O9vRq8Pas
+         inse5CLgAcqs2u1egtxTGKcuGG5xtjCEU+1VSKzXMAOURDCqN2DN0U1K/u/tUKUooBsj
+         Ou/A==
+X-Gm-Message-State: AOAM531yb/iS2g95W6vObcpYNBfUGyazLHvR2jIUaaeWPBfPSPhpaxDm
+        Y9QnywZwUuWOocaZuGt2lB5Bew==
+X-Google-Smtp-Source: ABdhPJwIF8ribrbnToYRwN/u2AGBLiHFeuBSCLm3XU+lxTFxPc4lFfZzghG4zloc1akGtH8+Nhr4Pw==
+X-Received: by 2002:a7b:c0da:: with SMTP id s26mr20301556wmh.96.1593524028491;
+        Tue, 30 Jun 2020 06:33:48 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 06:33:47 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 00/10] Clean GPIO of W=1 warnings
+Date:   Tue, 30 Jun 2020 14:33:35 +0100
+Message-Id: <20200630133345.2232932-1-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="krdjdadfcr2hiurd"
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJUHy+5ynmsU6FhX=MJR6XbwoNr65NGqzuAd0Bm-JS1kWw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This set is part of a larger effort attempting to clean-up W=1
+kernel builds, which are currently overwhelmingly riddled with
+niggly little warnings.
 
---krdjdadfcr2hiurd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Lee Jones (10):
+  gpio: gpiolib-of: Provide documentation for of_gpio_spi_cs_get_count()
+  gpio: gpio-altera: Add missing kerneldoc entry and demote comment
+  gpio: gpio-ml-ioh: Fix missing ':' in 'struct ioh_gpio_reg_data
+  gpio: gpio-pmic-eic-sprd: Fix incorrectly named property 'map'
+  gpio: gpio-sama5d2-piobu: Demote all kerneldoc headers to basic
+    comment blocks
+  gpio: gpio-syscon: Fix formatting issues which confuse kerneldoc
+  gpio: gpio-it87: Fix formatting issues which confuse kerneldoc
+  gpio: gpio-mlxbf: Tell the compiler that ACPI functions may not be
+    used
+  gpio: gpio-mlxbf2: Tell the compiler that ACPI functions may not be
+    use
+  gpio: gpio-mlxbf2.c: Provide __releases() annotation to stop confusing
+    Sparse
 
-Hallo Bartosz,
+ drivers/gpio/gpio-altera.c        |  3 ++-
+ drivers/gpio/gpio-it87.c          | 14 +++++++-------
+ drivers/gpio/gpio-ml-ioh.c        |  2 +-
+ drivers/gpio/gpio-mlxbf.c         |  2 +-
+ drivers/gpio/gpio-mlxbf2.c        |  4 +++-
+ drivers/gpio/gpio-pmic-eic-sprd.c |  2 +-
+ drivers/gpio/gpio-sama5d2-piobu.c | 16 ++++++++--------
+ drivers/gpio/gpio-syscon.c        | 12 ++++++------
+ drivers/gpio/gpiolib-of.c         |  3 +++
+ 9 files changed, 32 insertions(+), 26 deletions(-)
 
-On Tue, Jun 30, 2020 at 11:13:31AM +0200, Bartosz Golaszewski wrote:
-> I can't find anything in any of the previous threads. What was the
-> reason to not go the MFD way here?
+-- 
+2.25.1
 
-MFD doesn't work because the different "modes" are not orthogonal. So
-this is not a single device that provides several functions at the same
-time that can be used in parallel.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---krdjdadfcr2hiurd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl77M8kACgkQwfwUeK3K
-7All0Qf9GdnPCjEM0OlXRr7bI7rOuAhdap/1C3qSS/4I43TT+CcuEs+lztsEi5Tm
-DtpykD0ZiI0bhUI3SIJmS9gN4IAgQhAjYpNcgBt8/2OthVxkz8OgLDzxsan6kPIH
-2U8Dxa9hPsdW7VRnXmBqKC2eeR+PPKItUy7RzkV07Qs/SUTBO4xCLifwHT7WlOnA
-vBvicgmTboB6XlEfIWOq95QrZT3cchHlekcM9Qe3TGDLz2F+rj2PSWYe807G++W5
-JfIpwwh1rn1TTxUxpfnaq8tx8UuHoy2XTkUnKVN8FsMRHIKfDxH13FpOWJ7r/5CO
-WjYLxGth+0dO+cUZ5yDYqbbt4OZOyQ==
-=bp8M
------END PGP SIGNATURE-----
-
---krdjdadfcr2hiurd--
