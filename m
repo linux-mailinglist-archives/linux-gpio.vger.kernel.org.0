@@ -2,89 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32F9C20EEE2
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 08:58:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E521820EF09
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 09:11:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbgF3G6d convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 30 Jun 2020 02:58:33 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46569 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgF3G6d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 02:58:33 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id D812D6000A;
-        Tue, 30 Jun 2020 06:58:29 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 08:58:28 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        id S1730723AbgF3HLV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 03:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730600AbgF3HLT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 03:11:19 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D3CC061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 00:11:19 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so18937438wrw.12
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 00:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=K64/PWzIdJHy6AMq0CI1QxWBigdrJv6e4jIUjK6qkD0=;
+        b=QwrOy5cCVRKI+Mspy8/CQFQQfjsIENqMArQcy6wu3W/FJtySPw8sfwnWO6wClLrdPR
+         0t7Oiq1odHqpiKZG0L2OYdCDBz/1WEJDhsvFhR//xeQ+2hO6Kr80/All8equ1NCLTOYN
+         2/Ydpyf3BWL3S6vyhCzZjGJZ4Qyn+y9NQfGiCgPf7TIoaIiHJQP4IiMFN8r/07C7ELzy
+         dLV8FWsyiBN80NWS+vmM6O+PaF6qF/lrtht7CavF0JYAIsmWriZykdA2mxyKPqUTEJDw
+         5WbXMJysulDXVFL02NFQ7frxgHN6CQpEVRjgjy+zybl6G0giruv4u8Qi6HcD/A3fcC2+
+         en8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=K64/PWzIdJHy6AMq0CI1QxWBigdrJv6e4jIUjK6qkD0=;
+        b=ejOszwSzApM9XPj0AywArMc25XdbjCexb8VUT0KnvH7R0mkvvvouFdVFfxTOhDLarv
+         bDmtdObxHpqazRRO+8b+nNzGzGqslfaPAIuCxE8VXntueF0kFyjPla6V72lqhkUQ6IaK
+         uh2Zm+qtJSz3CHQgX+VDF0y41eO1/vkOLoyiqSpFGaFdm/n3Z06udWFIHQx+8n/6Z5zx
+         Wl+v6OF2YVcfCCyXQeVmu3NBeOTD26Az1jbXGHumx1NYS0N5XGXpsHas+K1ky4yxTNJz
+         XgR4iYJ3YxlLZt3/1tuWwyctJcruSm8C7zssF0AIyKMwyhUY/AWsBDEv7V/kcrFQHYTo
+         yh9Q==
+X-Gm-Message-State: AOAM5333TCfRHze0npE+a+exq5CY7mpmD8QEm3Qr/oxmkW/mPq9c7LJs
+        U8u9jCHRCGJ4nfdDQua50YvAUQ==
+X-Google-Smtp-Source: ABdhPJwZssKxM2tBc6NCDnk4r2tWfyhz2turH5uFie+KVPTCYv0GHzeKD3NWkCZuHCFBkEVXD3Bc/Q==
+X-Received: by 2002:adf:f350:: with SMTP id e16mr19880821wrp.43.1593501077875;
+        Tue, 30 Jun 2020 00:11:17 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id k20sm2459432wmi.27.2020.06.30.00.11.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 00:11:17 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 08:11:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200630085828.1aebdf99@xps13>
-In-Reply-To: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
-        <20200629160844.6ecf79c1@xps13>
-        <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-power@fi.rohmeurope.com, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: Add entry for ROHM power management ICs
+Message-ID: <20200630071115.GG1179328@dell>
+References: <20200618073331.GA9403@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200618073331.GA9403@localhost.localdomain>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
+On Thu, 18 Jun 2020, Matti Vaittinen wrote:
 
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 Jun
-2020 21:50:44 +0200:
-
-> On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
-> > Hello Uwe, Thierry,
-> > 
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
-> > 12:54:53 +0200:
-> >   
-> > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > > functions but can also manage the intensity on each of its ports with
-> > > PWM. Each output is independent and may be tuned with 16 values (4
-> > > bits per output). The period is always 32kHz, only the duty-cycle may
-> > > be changed. One can use any output as GPIO or PWM.
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---  
-> > 
-> > Can I have a status on this patch please?
-> > 
-> > If it was forgotten, I would be good to have it queued now, otherwise,
-> > may I know the reason?  
+> Add entry for maintaining power management IC drivers for ROHM
+> BD71837, BD71847, BD71850, BD71828, BD71878, BD70528 and BD99954.
 > 
-> You could reply to my feedback ... If you could say there: "What you
-> want isn't possible" I'd count this as a strong indication to not ask to
-> implement Andy's suggestion. (Even if this would be possible, I'm not
-> sure this is a good idea, but still ...)
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> ---
+> Morning Lee - could you take this in MFD? This is scattered all around
+> different subsystems anyways... I guess crafting bunch of patches to
+> each individual subsystems would just end up with lots of merge
+> conflicts.
+> 
+> Changes from v1:
+> - Dropped patch 2/2 (linear-ranges maintainer) which was already applied by Mark
+> - Added shiny new ROHM linux-power list so that I am no longer the lonely
+>   poor sod watching these at ROHM side :)
+> - sort few files to alphabethical order as checkpatch now nagged about
+>   that.
+> 
+> v1 was here:
+> https://lore.kernel.org/lkml/e11366fd280736844ae63791b6193bb84d6205bf.1589866138.git.matti.vaittinen@fi.rohmeurope.com/
+> 
+> 
+>  MAINTAINERS | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 
-Sorry for the misunderstanding, but I already replied twice to Andy
-about this. Once in October, again in November, then I gave a shot to
-the idea of splitting the drivers (GPIO vs. PWM) in January. So I
-thought you were sharing your thoughts out loud but was not expecting
-any specific feedback on it.
+Applied, thanks.
 
-So, no, even if the idea might make sense, it is not doable in a
-reasonable amount of time. I am not saying it is impossible, but someone
-has to think about it deeper and propose a core structure to handle it
-in a generic and clean way so that other drivers sharing the same
-properties can rely on it. I am not qualified enough to do it the proper
-way in a reasonable time frame.
-
-Thanks,
-Miquèl
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
