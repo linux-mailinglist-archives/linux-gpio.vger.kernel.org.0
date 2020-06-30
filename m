@@ -2,70 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B929820F2E4
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 12:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6DF20F32A
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 12:54:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732549AbgF3KoC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 06:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        id S1729377AbgF3Kys (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 06:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732238AbgF3KoC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 06:44:02 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3832C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 03:44:01 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id g13so15148131qtv.8
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 03:44:01 -0700 (PDT)
+        with ESMTP id S1732591AbgF3Kyr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 06:54:47 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE62C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 03:54:47 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so11587612wrs.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 03:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4bCn6yAxhhKfFCMfxCVtciONp8WZ4qR8ToxEEMbZF44=;
-        b=yBqVphZLN2l+GICEPyL10FeKN9ReRzetzIG7z/Dw1a13xJeahZY2dwtnbAhgVfE2EI
-         M4urXR3MvtejtzNKSjigzTH1DgbCjMwrU9xh+v3JX+n5Di6cw0Pd6JFWNggY+1YqGdZr
-         bsJ2t9s9KU5sTYq+gN5JY2lFjfseubEdMPUBNbQqX9cIwnv7/8kJ1xmXmGP0ZTp2oqeZ
-         XVSTj0z3XFyhtrxvzb3sUOcJ1Xarw0F0oe0OpoUgNJKv5k2VWqwHSQu6K8CZUV4jjr8T
-         rEwyjRixkrYP8Jz28ynJzG+jy1hPUdvO4HQ8pfaRZYB72hYb0LnS9l2NIenJi2bQSRZ+
-         n9hQ==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fLFGuFYNX9qKG48KdRYSPfvQX3QtmokVEXBY7Xhm3tg=;
+        b=Ulgim/j1Zkc4r+XF69T/niVkpvP+9eA8e5BTMsmp9RmR7EUyJ4X4QN3sjDoz+7hKFS
+         q8/9599Jhk2VlFjwMx3doOVrDvSA3sSj5rRr+qCMQzjbAXD3Hf5Cp4ChyKBHkLt30SKC
+         lwBG3vAHWyrTcnrtP3i1rpCwVhE2BEo53eWlnjg7OxZfesQ8bqkd6HviA3yzm7W6/l4R
+         UvE14CZj/B8w7SqhPv8smCwTgZkv0Kjcfi+jk51x55B2cO05JCVBq8doknbiw3UgOXRW
+         Dr0l+CLoIHvEU0hQvyNHGc4+qPlQiiH7gvu90Fl1cvEx5tUDUFsndb07G9y2gS8uaXdR
+         d4XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4bCn6yAxhhKfFCMfxCVtciONp8WZ4qR8ToxEEMbZF44=;
-        b=MmTStmaafscEcuWjM9jT8hMUjm8jRfQFZ/8i2ieEofwx7KvJlEYLtlQLi2CG+xEF7Z
-         INvyyjNy6V9bCYXppMqm6IQu08CcDkBnP69rg5OJRbyrYHtvhMNj6RHp8pQNXCrhkx8d
-         JnEK6o/B/vfXvNAcZPiAONKQu4F94UzM3/zwhhAwFh8jCg314S3+MN2EUAHUWTci504z
-         /sbf2f5wFUAo6lXkPDMUYY6gWn0ZujZTkzQJElUT01dSEBK30K4Tw+BFZxPY78MuoX00
-         wpSP3a4dMzSwDj17xynaBUVnfMYBF35vORWUF56WN6C3FZ04oGk/Nj0CfA0531Hbc1OX
-         LXiw==
-X-Gm-Message-State: AOAM533Es8Q2j03csdf6G5gT0ovEoi4goFvJQpfnVdEXKvAqhfwDwEWp
-        AbC7gvXaiNq5yuXGlrnUffkbezFgnVqtA1A7DzIIQw==
-X-Google-Smtp-Source: ABdhPJxgyHTPl/MdV/H9MRuo4y6SteuggF7clPqfYLQbfABBIYlSRtJ9cr2JB8tHJDCz+48DSc/0k9bEa0nCm5jNi3w=
-X-Received: by 2002:aed:21da:: with SMTP id m26mr723714qtc.197.1593513841134;
- Tue, 30 Jun 2020 03:44:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fLFGuFYNX9qKG48KdRYSPfvQX3QtmokVEXBY7Xhm3tg=;
+        b=maWTYH634WrTMuD/HwRD/vC2YeZDd+dPs1MyyNWxFMap5oSASaaHOqOdSL5TehT1DK
+         1sZ8iCyxKPNRLN15C+CmAmbwwg9ghxyxH+T3YEKqcw/roCbtulN/+TZvDgBnkbSwiDkS
+         kwI3WcZNbwUv/VqrvXSHxpPPol42lhkadSVRkb5ieeY3qVjoRxQnWho34/9UVCy+jALP
+         G/fnSgIS/1NkzgOOk4Ty1oXiy5GPw6n+I2eLtJTJWMW6Xp7XAGMs0lxicSC9fDjJzUfD
+         9L3oR89MM7tNg2PEJRaXE5YNcF3WMQRNf8rCycLMx/aJZv3ZGWQLy8CRAR+NYjvank86
+         RM3w==
+X-Gm-Message-State: AOAM533XPs+3iP1gcHKDrbgUPADgZcLLlv6c6Zub+Rt0zhJ053ftuuM0
+        l6q9yNPoGWRs9JQ//7J6ZBmMpr08OHY=
+X-Google-Smtp-Source: ABdhPJzAG3/3+Z7C9A/hcaqoOq+jSsjQIRiy4owuUK+a+xfqAIfjO7NR7sfOpSWyhlUXo9rIMdtl/w==
+X-Received: by 2002:adf:ed02:: with SMTP id a2mr20986348wro.110.1593514485745;
+        Tue, 30 Jun 2020 03:54:45 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id c2sm3356397wrv.47.2020.06.30.03.54.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 03:54:45 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] gpio: updates for v5.9
+Date:   Tue, 30 Jun 2020 12:54:43 +0200
+Message-Id: <20200630105443.29954-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-23-warthog618@gmail.com>
-In-Reply-To: <20200623040107.22270-23-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 30 Jun 2020 12:43:50 +0200
-Message-ID: <CAMpxmJUNHnPxgv3hvvx2GuVZHjCE3DJ4CiEqA5o5+KBg3Udw7w@mail.gmail.com>
-Subject: Re: [PATCH 22/22] tools: gpio: support monitoring multiple lines
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 6:03 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Extend gpio-event-mon to support monitoring multiple lines.
-> This would require multiple lineevent requests to implement using uAPI V1,
-> but can be performed with a single line request using uAPI V2.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Linus,
+
+please pull the following changes for v5.9. I'll be on paternity leave
+in July, so I may be less active during that time.
+
+Best regards,
+Bartosz
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.9-part1
+
+for you to fetch changes up to ae66eca000cfef3ef0e31842102e17b1b660b1ce:
+
+  gpiolib: Deduplicate find_first_zero_bit() call (2020-06-30 12:39:14 +0200)
+
+----------------------------------------------------------------
+gpio updates for v5.9
+
+- use kobj_to_dev() in sysfs interface
+- kerneldoc and documentation fixes
+- relax the interrupt flags in gpio-mpc8xxx
+- support new model in gpio-pca953x
+- remove a redundant check from gpio-max732x
+- support a new platform in gpio-zynq (+ some minor fixes)
+- don't depend on GPIOLIB when already inside the "if GPIOLIB" in Kconfig
+- support PM ops for suspend in gpio-omap
+- minor tweaks in gpiolib
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      gpiolib: Deduplicate find_first_zero_bit() call
+
+Gaurav Singh (1):
+      gpio: max732x: remove redundant check from probe()
+
+Geert Uytterhoeven (1):
+      gpio: Drop superfluous dependencies on GPIOLIB
+
+Glenn Langedock (1):
+      gpio: zynq: protect direction in/out with a spinlock
+
+Jan Kiszka (2):
+      dt-bindings: gpio: pca953x: add nxp,pcal9535
+      gpio: pca953x: Add support for the PCAL9535
+
+Kieran Bingham (1):
+      drivers: gpio: Fix trivial spelling
+
+Mauro Carvalho Chehab (1):
+      gpio: driver.h: fix kernel-doc markup
+
+Shubhrajyoti Datta (6):
+      dt-bindings: gpio: Add binding for Versal gpio
+      dt-bindings: gpio: Add pmc gpio node to gpio-zynq
+      gpio: zynq: Add Versal support
+      gpio: zynq: Disable the irq if it is not a wakeup source
+      gpio: zynq: Add pmc gpio support
+      gpio: zynq: Remove error prints in EPROBE_DEFER
+
+Song Hui (1):
+      gpio: mpc8xxx: change the gpio interrupt flags.
+
+Tony Lindgren (1):
+      gpio: omap: Add missing PM ops for suspend
+
+Wang Qing (1):
+      gpiolib: sysfs: use kobj_to_dev
+
+ .../devicetree/bindings/gpio/gpio-pca953x.txt      |  1 +
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+ drivers/gpio/Kconfig                               |  4 +-
+ drivers/gpio/TODO                                  |  2 +-
+ drivers/gpio/gpio-max732x.c                        |  2 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |  2 +-
+ drivers/gpio/gpio-omap.c                           | 26 +++++++++
+ drivers/gpio/gpio-pca953x.c                        |  2 +
+ drivers/gpio/gpio-zynq.c                           | 66 +++++++++++++++++++++-
+ drivers/gpio/gpiolib-sysfs.c                       |  2 +-
+ drivers/gpio/gpiolib.c                             | 10 ++--
+ include/linux/gpio/driver.h                        |  2 +-
+ 12 files changed, 107 insertions(+), 16 deletions(-)
