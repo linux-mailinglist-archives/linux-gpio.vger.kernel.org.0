@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9221A20F6F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 16:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFFE20F6F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jun 2020 16:19:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgF3OR0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 10:17:26 -0400
-Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:10007
+        id S1726051AbgF3OTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 10:19:04 -0400
+Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:44352
         "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgF3OR0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:17:26 -0400
+        id S1725887AbgF3OTD (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:19:03 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vd4rs3Vy4dHpdoA4IEK7zoRQH1MfjYXy6D91a9w+wq5xCmdaFqCuPBYQxgHPvJ/KYxnaMSsUKYPPFOVWVrKXxGXR1x0foiRsENCNp6Txo5Aa6IOJXCM1qos89HejhHHlxqpOnEhL+RXAAEZBVoEfUiqtCMdS1N6Lx97SnZdz8400G5RtbZXTEcDHxCtEjsvSiY527taJkrbj2aW+w0EFCu5eo8pVunpCUpQDKdZ7kA2VN75K9XYaZxUueb3oWEhhlWIE2A6AJfx+J49OYQMShWWnwmJhsntHoBEME4bftnFwyU4M/3HNtljpBlMaySQeS0BooGbZ08RhaJbyKEN2Gg==
+ b=RuvkUoAaNsfVXDb9VvQG/pKcKUJJtK7Ye9mG15Fcl8NvXnp6bli8GPwwOX2ngC8TDaAnlaSRK7p+EZKN92xlBdw3sqfPwgcbCny6pH6NAkVvlEmdJ9NRp7XdhLdVo50AEuvyKKPvLtEQk3dZm3uX7QyEiD3Et4lTEonUoMPtUjRotO4pWOmRLOjpmvPjqNfLbewmNJlwYH2CEtkBPX4sH7w08Fdn/2WFPeQB3Uzklw5S3KKfUS9cKEp/+pvM6ZXhDu/e3Y009V7J/pzQn3rJz5a5+4WXzjxCWbH/cm4jOZIDrklfx+ox5JgzGSNLAPqF4HftWfovJFZVkzYh/ysujw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RDiz0oplFHJjdAfSaHRvDnIp2gTUbulXsWSUYEV1U7Y=;
- b=kZabyMwT3SDNQLGA709Sqmu/xBpK6KM4cJiA+QLVeAqQJiY9ccmJ5npbTdDlK2OjNYRnxy8Lk6koY5pYi5uPCLmemPsTevj/cIm+URrgdrSeGqsHGLR9HMzstBMlj8nstiHD1ol4tvWSUz/IIsxnJ6usqYQN+pzIPI80hqIvGlJcZoTOhZ2hvVu0LUwOllwT2FWZ1oP7pSl1kNDkm/jPU2trkPpqv6lD3MuQtVwyl/eSn4WYTUQu4BFeF/sfxNxuhNWHDN9NYlvdLHZEcKKUhQybCNK8eESY1O7AD3ag+nh51Bym+hOwlbuPk6tPc4lxsNEIX0FDIFQ9pZz3TPVKFg==
+ bh=776MXqOXwwDPwPSvO0UMFOjwGTWrR0vBvYy2r5z5isM=;
+ b=Q5Deky8uJIvEgN19GclCL+P6Mnc+L6YNcK+NVGFMwaHJTPypkge3qsKwgP/1geLwamH9aAZJ39SYuHYGI2VemLUKkudivJswshwoIohkS4m1wTd31SaoCrAPc5RDcukk4sCEmwvDEE9iZrO6Z/TSLlFykvd5igM3PRrTJYyb/2DF2sl9WrVoCuqTlZmp3jhJwwhT/LJCumAz8YVgjKgN/2nYY15fOZeTpSU+M8oRvH0AT56QE/SA0sW9ginyGMRiMT+Jo8m/a5JN5jwQsG5aEaOpDcHuZKQad0O6nBEsydu0Jn+WgVvdawcvZssFF20i/zlnCBycL+5qE7KoocpwiA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
  dkim=pass header.d=mellanox.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RDiz0oplFHJjdAfSaHRvDnIp2gTUbulXsWSUYEV1U7Y=;
- b=KHBz+TUwzfa6ObVnqzSx81cXNHXJ6jErWZDIXpiubTnLDCEG0ZtRGUe+K0eY4yHPF530m269aawbpPggdfUffgHxjgwwMpl6gZg/zggtFraTapI4Apo1YGguX2BeoA9hcCtdrOD82ctd2SkigXT/jXViNdBr6GY/yO53nKrZDC4=
+ bh=776MXqOXwwDPwPSvO0UMFOjwGTWrR0vBvYy2r5z5isM=;
+ b=ko7cUxbG3KZ0fHesp8ergq00mP86mOhbX0viMUG/snjfuXsdNKlma7hvb+hqoM9x1NQv8R7GXGWsfe+J6JP3R/yjRWCP+gwsN8TrsTJq82pptzbmAat7+eX/GIAMtY7A13MUNpCPjSf140T78nwbCqeanFKy5bMeMeHKqIyWtk8=
 Received: from VI1PR05MB4110.eurprd05.prod.outlook.com (2603:10a6:803:3f::23)
- by VI1PR05MB6896.eurprd05.prod.outlook.com (2603:10a6:800:178::10) with
+ by VI1PR0502MB3054.eurprd05.prod.outlook.com (2603:10a6:800:b2::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
- 2020 14:17:21 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Tue, 30 Jun
+ 2020 14:18:59 +0000
 Received: from VI1PR05MB4110.eurprd05.prod.outlook.com
  ([fe80::c19b:54d7:a861:2a88]) by VI1PR05MB4110.eurprd05.prod.outlook.com
  ([fe80::c19b:54d7:a861:2a88%4]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 14:17:21 +0000
+ 14:18:59 +0000
 From:   Asmaa Mnebhi <Asmaa@mellanox.com>
 To:     Lee Jones <lee.jones@linaro.org>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
@@ -44,16 +44,16 @@ CC:     "linux-arm-kernel@lists.infradead.org"
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH 09/10] gpio: gpio-mlxbf2: Tell the compiler that ACPI
- functions may not be use
-Thread-Topic: [PATCH 09/10] gpio: gpio-mlxbf2: Tell the compiler that ACPI
- functions may not be use
-Thread-Index: AQHWTuMcDTcl+auvqk++8TiYH38LVqjxNFpA
-Date:   Tue, 30 Jun 2020 14:17:20 +0000
-Message-ID: <VI1PR05MB4110250294454B9764958D4DDA6F0@VI1PR05MB4110.eurprd05.prod.outlook.com>
+Subject: RE: [PATCH 10/10] gpio: gpio-mlxbf2.c: Provide __releases()
+ annotation to stop confusing Sparse
+Thread-Topic: [PATCH 10/10] gpio: gpio-mlxbf2.c: Provide __releases()
+ annotation to stop confusing Sparse
+Thread-Index: AQHWTuMdWP1Ga5jw8EGUM60UUYoLU6jxNPkQ
+Date:   Tue, 30 Jun 2020 14:18:59 +0000
+Message-ID: <VI1PR05MB41101B1316E8332D86EE7988DA6F0@VI1PR05MB4110.eurprd05.prod.outlook.com>
 References: <20200630133345.2232932-1-lee.jones@linaro.org>
- <20200630133345.2232932-10-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-10-lee.jones@linaro.org>
+ <20200630133345.2232932-11-lee.jones@linaro.org>
+In-Reply-To: <20200630133345.2232932-11-lee.jones@linaro.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -63,59 +63,80 @@ authentication-results: linaro.org; dkim=none (message not signed)
 x-originating-ip: [65.96.160.128]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dbcb1704-43a6-4f7d-2a89-08d81d004d8f
-x-ms-traffictypediagnostic: VI1PR05MB6896:
-x-microsoft-antispam-prvs: <VI1PR05MB689615646C0B31F39AE6548BDA6F0@VI1PR05MB6896.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
+x-ms-office365-filtering-correlation-id: cfefb787-15bb-40df-45dd-08d81d00882a
+x-ms-traffictypediagnostic: VI1PR0502MB3054:
+x-microsoft-antispam-prvs: <VI1PR0502MB3054547AD54B34798B0FA652DA6F0@VI1PR0502MB3054.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
 x-forefront-prvs: 0450A714CB
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W59yxhzdCLaqyKudhoafFdAyhRiu5T7goEszhyOQtCbwrS8TW2ok4lEI1e5dZJjz+CKpaM07nGORc/TD6yhJrl37cr3vCMFaeQ0QNqntsp2MqO/Seeb1K9LzV7XB6FXH2vzPmLE2rkUHK/ZWOc3NdNpZQhPMhFESzts8LvBP5EDLHPhp7cMsxEJWMcPDv+SF0QAxoHYCOzrg+hQPyls2tcsi6RYhr0fejUHpbz4t2k//hsX3G5xJtVq0VnNVb0gMewUBLjLMAV6KmU8XO6/s2QYW1R/O5YgIcA85yWg2wwlCo0ujgTC2eIRBaDF0v+xbD6HBSrzjODsXVdPTGdeOog==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4110.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(376002)(136003)(396003)(7696005)(64756008)(66446008)(66556008)(66476007)(66946007)(110136005)(71200400001)(8676002)(4326008)(478600001)(53546011)(6506007)(54906003)(8936002)(33656002)(76116006)(2906002)(86362001)(9686003)(83380400001)(52536014)(26005)(5660300002)(186003)(316002)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 4r5q48aWKcvsvhE+AmBYyQY+IC4SyIAFclcvCitoVu+Ur0aaxmrSqM+TmdNZQLhpeu1yhLLxvqgpaAnFC/IzOslArmGSGfnG0xPXEluhcjYF0XQDjFoKZotjUUBYnjrkmOftUrcISgcHoi7/9K3et2an8B4mFxXhAx6GE11Ojnjixa2Fbt9qKb98fFydIHhjqoQ9khHc5X5aJaSpo9z2OKtx+97LpMrIDZyo/6uYu9pDaa730jqVlhIONr5VRyRIJbuQAuYjS1I1BmfgsIrlY6iQY7m4kCnrnNU4CPheAy3Wvx5cDtss//EuclUOQCAaueFp5jU4/GbTg80D5SzS0YTNPn+AveiFJVjpwaLbfInJfI9mT0yCEpsROOdaHs/6He49QP3ozCHUly6IdeGnJGYaFkOQgEF9QdSpSsQ18BO9jYNPcm7yaSVVqxD4qbPAbZi9pxsTbKjI0WSPYjQ2FHZp9Ta8RMqWnMPhGS1Dm1I=
+x-microsoft-antispam-message-info: n0KN87QZHX9+Q/mP4UKwRdFLWaVq+geppCvoUQAx5Dd9YTFskz1wyJVruZ2TmYaNlVnvmoI9zBiiE44C9yzxwnV1o6jOOhFMD7x0X6IEggKRfgejMPM95KasJYgdjFRwbMDTHIxYArnPIyZtYjNLnPtu7VLu5/MERPg61pscPEnpm6VJ3bYrwmmbdilGjXXyhz1p9NDWROyyAxVzy187IXhOooAKMkO5r2nKK3uA93ud0d9y5/O6WDbMNApWOVNUm/m9D8yE3woAaTv0ZVu4sN5rwLQXFpvez7FVnpnv/OP8y+ISBokRAkr4/qcMXg8FscR9TlYIvTq9KF/DcvwPmQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4110.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(26005)(9686003)(54906003)(86362001)(110136005)(316002)(83380400001)(8936002)(7696005)(4326008)(478600001)(33656002)(8676002)(55016002)(71200400001)(76116006)(66946007)(66446008)(66476007)(66556008)(64756008)(5660300002)(186003)(2906002)(52536014)(53546011)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Y7Oua9ZEHixXLgvzKo8ZvZtq/+zpf/s8LlGbz9zoIoqarwWG9Z4jONd8iZIj8tFYClw7oHmgZGPpgidXED6F8ImnwFBKRN+jzOLioNosF4cK26FcHLGYSgvfKMV84a7RTv2y5tPGqn73ANrf7CD7qlFV/9pjpNhAm0mpP6QJ0UuwXrbyYkOQ5JP7vsJWrpiChELkq8qHBq3e4Vp5CC1nlybWau/AJ1idwrnOH88Ep9uB8xEJ2j+3jZnVc+iz0K/7gkLoYCU1NPpYTz0tojOr3KChHd/uVb0erLk24mE+73KGOAogVlPaHyLuTEAA1Ha1DZiJEI7ufoYbJ9qeOdhSdAgfS66n88JjrtpskPyf+Sfsbu6jUQhvI1/HnYJ26djzXsmwbq4cqSGawFE0SqjhNwGInv/fHEmLfJRuXlhvBr6/fmstByfodMvEKWR1LpPWa/8Pyqb3bDnArb0JCEArsASuzpnyi7HWBwndnG6Pgxs=
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: Mellanox.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4110.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbcb1704-43a6-4f7d-2a89-08d81d004d8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 14:17:20.9809
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfefb787-15bb-40df-45dd-08d81d00882a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 14:18:59.3303
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r9QqbIJJ9BO+3mi+kRgQv3WMEaOch6F0K17YUNOQWWCSA3LpDmR93r6TpXrY5X+FJ/HlWSahSVof1BXedGPtVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6896
+X-MS-Exchange-CrossTenant-userprincipalname: uA1rZk9xohyMn+6I526prt93r87E9xMDde9c1uiSDhLAQ1BG85vQFFo7mqi+f/3FRx/Q9pnqM+i1MVT4vEI2nA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3054
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IEFzbWFhIE1uZWJoaSA8YXNtYWFAbWVsbGFub3guY29tPg0KDQpUaGFuayB5
-b3UuDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBMZWUgSm9uZXMgPGxlZS5q
-b25lc0BsaW5hcm8ub3JnPiANClNlbnQ6IFR1ZXNkYXksIEp1bmUgMzAsIDIwMjAgOTozNCBBTQ0K
-VG86IGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZzsgYmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbQ0K
-Q2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IExlZSBKb25lcyA8bGVl
-LmpvbmVzQGxpbmFyby5vcmc+OyBBc21hYSBNbmViaGkgPEFzbWFhQG1lbGxhbm94LmNvbT4NClN1
-YmplY3Q6IFtQQVRDSCAwOS8xMF0gZ3BpbzogZ3Bpby1tbHhiZjI6IFRlbGwgdGhlIGNvbXBpbGVy
-IHRoYXQgQUNQSSBmdW5jdGlvbnMgbWF5IG5vdCBiZSB1c2UNCg0KLi4uIGFzIGlzIHRoZSBjYXNl
-IHdoZW4gIUNPTkZJR19BQ1BJLg0KDQpGaXhlcyB0aGUgZm9sbG93aW5nIFc9MSBrZXJuZWwgYnVp
-bGQgd2FybmluZzoNCg0KIGRyaXZlcnMvZ3Bpby9ncGlvLW1seGJmMi5jOjMxMjozNjogd2Fybmlu
-Zzog4oCYbWx4YmYyX2dwaW9fYWNwaV9tYXRjaOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVd1
-bnVzZWQtY29uc3QtdmFyaWFibGU9XQ0KIDMxMiB8IHN0YXRpYyBjb25zdCBzdHJ1Y3QgYWNwaV9k
-ZXZpY2VfaWQgbWx4YmYyX2dwaW9fYWNwaV9tYXRjaFtdID0geyAgfCBefn5+fn5+fn5+fn5+fn5+
-fn5+fn5+DQoNCkNjOiBBc21hYSBNbmViaGkgPEFzbWFhQG1lbGxhbm94LmNvbT4NClNpZ25lZC1v
-ZmYtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQotLS0NCiBkcml2ZXJzL2dw
-aW8vZ3Bpby1tbHhiZjIuYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
-IDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLW1seGJmMi5j
-IGIvZHJpdmVycy9ncGlvL2dwaW8tbWx4YmYyLmMgaW5kZXggOTRkNWVmY2UxNzIxYy4uODYxYThk
-MGE4NGJlMCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvLW1seGJmMi5jDQorKysgYi9k
-cml2ZXJzL2dwaW8vZ3Bpby1tbHhiZjIuYw0KQEAgLTMwOSw3ICszMDksNyBAQCBzdGF0aWMgaW50
-IG1seGJmMl9ncGlvX3Jlc3VtZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSAgfSAgI2Vu
-ZGlmDQogDQotc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBtbHhiZjJfZ3Bpb19h
-Y3BpX21hdGNoW10gPSB7DQorc3RhdGljIGNvbnN0IHN0cnVjdCBhY3BpX2RldmljZV9pZCBfX21h
-eWJlX3VudXNlZCANCittbHhiZjJfZ3Bpb19hY3BpX21hdGNoW10gPSB7DQogCXsgIk1MTlhCRjIy
-IiwgMCB9LA0KIAl7fSwNCiB9Ow0KLS0NCjIuMjUuMQ0KDQo=
+Reviewed-by: Asmaa Mnebhi <asmaa@mellanox.com>
+
+Thank you.
+
+-----Original Message-----
+From: Lee Jones <lee.jones@linaro.org>=20
+Sent: Tuesday, June 30, 2020 9:34 AM
+To: linus.walleij@linaro.org; bgolaszewski@baylibre.com
+Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; lin=
+ux-gpio@vger.kernel.org; Lee Jones <lee.jones@linaro.org>; Asmaa Mnebhi <As=
+maa@mellanox.com>
+Subject: [PATCH 10/10] gpio: gpio-mlxbf2.c: Provide __releases() annotation=
+ to stop confusing Sparse
+
+Sparse cannot peer into other functions to see when and if locks are acquir=
+ed and released, thus it simply warns that a 'context imbalance'
+is detected instead.  Let's be kind to Sparse and let it know that this beh=
+aviour is intentional.
+
+ drivers/gpio/gpio-mlxbf2.c:125:12: warning: context imbalance in 'mlxbf2_g=
+pio_lock_acquire' - different lock contexts for basic block
+ drivers/gpio/gpio-mlxbf2.c:151:13: warning: context imbalance in 'mlxbf2_g=
+pio_lock_release' - unexpected unlock
+
+Cc: Asmaa Mnebhi <Asmaa@mellanox.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/gpio/gpio-mlxbf2.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c index =
+861a8d0a84be0..befa5e1099439 100644
+--- a/drivers/gpio/gpio-mlxbf2.c
++++ b/drivers/gpio/gpio-mlxbf2.c
+@@ -149,6 +149,8 @@ static int mlxbf2_gpio_lock_acquire(struct mlxbf2_gpio_=
+context *gs)
+  * Release the YU arm_gpio_lock after changing the direction mode.
+  */
+ static void mlxbf2_gpio_lock_release(struct mlxbf2_gpio_context *gs)
++	__releases(&gs->gc.bgpio_lock)
++	__releases(yu_arm_gpio_lock_param.lock)
+ {
+ 	writel(YU_ARM_GPIO_LOCK_RELEASE, yu_arm_gpio_lock_param.io);
+ 	spin_unlock(&gs->gc.bgpio_lock);
+--
+2.25.1
+
