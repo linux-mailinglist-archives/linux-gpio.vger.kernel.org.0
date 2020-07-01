@@ -2,122 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF336210252
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 05:08:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD88210263
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 05:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbgGADIQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 23:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
+        id S1725868AbgGADOm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 23:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgGADIQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 23:08:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7AE5C061755;
-        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so21620721wml.3;
-        Tue, 30 Jun 2020 20:08:15 -0700 (PDT)
+        with ESMTP id S1725862AbgGADOm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 23:14:42 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC71EC061755;
+        Tue, 30 Jun 2020 20:14:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w2so10171880pgg.10;
+        Tue, 30 Jun 2020 20:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
-        b=CG0eRdM4nSGcNNL81fuuo8W+TEO3HxqCIUhHH01sJ2+wYiauylNYzArgI5NTEfbhfz
-         mKeYTXR0ghYspwz0JBT9vrHKY70ZaxUi6d6c5WX+UZu5B+FkVAd99OR6MAZST5dT1Eh/
-         jdvi55lWYMtQ5uLpZHWcXMwKcK87MNxHQ0X2rSxkh3+hU2iVl1kLXJ067qDH2vLPtYXn
-         sYtZnLzyG33k+NEx45qYpr3PeX8CVeFoEnqmPJUM107iX8mbVgqrsAYlmDmNtFB34BIq
-         wV28hUqcjRBGmIW3VUOkw83YjowV1MKdYeVLsSkZBpwCoTVewspNH/xwYdzBE7iXHTOD
-         mrdg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/nMbIk+ePFh7vyfgizEqp6K7uZpZA2mzkQk6EAEuZaI=;
+        b=vTYPFSTTvPrb4deuaHX6cik4b1R4mAlIngmiYe11zonBtZGGeqEQ09h7vGkGBRhgWa
+         gO+xG5I8+BNNAau4bRi/SVXHr0f8BC4ydDsYI8guL2zod+yYy5lFTVbMa7ugVE33d55l
+         PqikZV7nilgqYH+ZSVlRZRdMgAaErfTbJTnrF+fiycakW8niQ5M/udEuqnaRNyyVCccp
+         01KAulgQeBz8dyBZ02VTmwfjrUmsPYu7X58z8AHZaRULfgrUfedbjLW02iVc+3gecZXi
+         P4lBX7ab186tlBMQ+2uYPRPbPeSwAwlOWU9ca2hu9H3MCfRIlIeR/m4eJPy70wZQzBP9
+         fXQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Kp+AZ2OQpkgYzsEUEsvF13veFsMd10pQS3JPgn4R6Ng=;
-        b=izJQrB4G8UIrKMkHOY/byhXG0CBXCJFeH9CJnYPZ6o+/p77YYd70J1dEpQ/p/J+3tS
-         lVEkCtInsrPLk6g9OCepFPNUkt40dlZcBgKroIEm+5lIfLRFSpLirHlRl8z8PCaPfxJx
-         oMEiE6O474Kq7shQ4bZAwCZglVevlWvXHDimHii4/ha3wMgs6BvlH61OvKOwZdWq/BwM
-         87AdGf0PGiG+2zGc5zkf9nRe8eTX02eC3DvAmP3U5uOXNb6bGtMJnPjf0BISRz6uCvoJ
-         C9hpF73/qCnKQbJuBudCAqSLaq5cWy8MJemmQ19iSsLfBfuRtQKrz6OKBeNmFdSnGcaO
-         onAA==
-X-Gm-Message-State: AOAM531EGy6XKQUCASNFC4/V/SSU0j3/6oKP1IdKfzOhcd2tpHiI6zfd
-        a1jzGWESAdcImfUrJ1UPEzo=
-X-Google-Smtp-Source: ABdhPJyp2dS0CMUbwyVCAerk4TlBJ87yWOY9msqe2AJenQdsul7dqdlDD+8tUTPPvHvvLJ5/S69IXw==
-X-Received: by 2002:a1c:bc54:: with SMTP id m81mr17607509wmf.22.1593572894543;
-        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.15])
-        by smtp.gmail.com with ESMTPSA id q1sm5515702wro.82.2020.06.30.20.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 20:08:14 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: aspeed: Describe the heartbeat function on ball Y23
-Date:   Wed,  1 Jul 2020 12:37:56 +0930
-Message-Id: <20200701030756.2834657-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.27.0
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/nMbIk+ePFh7vyfgizEqp6K7uZpZA2mzkQk6EAEuZaI=;
+        b=WPMq1F6iFh6x3GMpXM08Vagj4lXt5JCt9/mLcb34qy/uWnQqdzFK0ZEwMbqjP/wxnP
+         JvUJJ5PYmMl87Vd+oLGS+lp+3Qa2tu3y6ddQlzlppXVDLG6msBun88H45U0ovLiCQ9zq
+         kVUKDuqog//8myrIGWx+q/OhWc3wZm+3s0LatmzXpn+FDUY7GjElqJPO8v548tn3H3Sr
+         q6JisnogwqofXfjdmYFR8yc7UXV43PH5MyS8W4CcKcX0C7APnca+XKyNeyUpO/sduboF
+         s31X/0n+ZVdNJbw1h9UTaCfNovBEkYtjpy5jPorgtvpJiMMPdmgAAdVOu9oHn29yVVDh
+         ZFgg==
+X-Gm-Message-State: AOAM5310+2djAuIFkZiHetTfqAUL8KZ8X6cJzss9JgsO/pNBhi1BwpIL
+        vTJCmjCJVkn8j8lozpemQFxFGyNZ
+X-Google-Smtp-Source: ABdhPJz7n8nCI5lXN7YZkyGgGGVqvA252adpCGY8lCGBZYufnoBamJMTaDJHF4BAGzKQwB11Mrtk2A==
+X-Received: by 2002:a63:f814:: with SMTP id n20mr17242552pgh.92.1593573280661;
+        Tue, 30 Jun 2020 20:14:40 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x8sm3768410pfn.61.2020.06.30.20.14.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 20:14:39 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+To:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+ <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+ <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
+Date:   Tue, 30 Jun 2020 20:14:37 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
 
-The default pinmux configuration for Y23 is to route a heartbeat to
-drive a LED. Previous revisions of the AST2600 datasheet did not include
-a description of this function.
 
-Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On 6/30/2020 7:23 PM, Mark Tomlinson wrote:
+> On Tue, 2020-06-30 at 15:08 -0700, Ray Jui wrote:
+>> May I know which GPIO driver you are referring to on NSP? Both the iProc
+>> GPIO driver and the NSP GPIO driver are initialized at the level of
+>> 'arch_initcall_sync', which is supposed to be after 'arch_initcall' used
+>> here in the pinmux driver
+> 
+> Sorry, it looks like I made a mistake in my testing (or I was lucky),
+> and this patch doesn't fix the issue. What is happening is:
+> 1) nsp-pinmux driver is registered (arch_initcall).
+> 2) nsp-gpio-a driver is registered (arch_initcall_sync).
+> 3) of_platform_default_populate_init() is called (also at level
+> arch_initcall_sync), which scans the device tree, adds the nsp-gpio-a
+> device, runs its probe, and this returns -EPROBE_DEFER with the error
+> message.
+> 4) Only now nsp-pinmux device is probed.
+> 
+> Changing the 'arch_initcall_sync' to 'device_initcall' in nsp-gpio-a
+> ensures that the pinmux is probed first since
+> of_platform_default_populate_init() will be called between the two
+> register calls, and the error goes away. Is this change acceptable as a
+> solution?
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index fa32c3e9c9d1..7efe6dbe4398 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -46,6 +46,7 @@
- #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
- #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
- #define SCU694		0x694 /* Multi-function Pin Control #25 */
-+#define SCU69C		0x69C /* Multi-function Pin Control #27 */
- #define SCUC20		0xC20 /* PCIE configuration Setting Control */
- 
- #define ASPEED_G6_NR_PINS 256
-@@ -819,11 +820,13 @@ FUNC_DECL_2(PWM14, PWM14G0, PWM14G1);
- #define Y23 127
- SIG_EXPR_LIST_DECL_SEMG(Y23, PWM15, PWM15G1, PWM15, SIG_DESC_SET(SCU41C, 31));
- SIG_EXPR_LIST_DECL_SESG(Y23, THRUOUT3, THRU3, SIG_DESC_SET(SCU4BC, 31));
--PIN_DECL_2(Y23, GPIOP7, PWM15, THRUOUT3);
-+SIG_EXPR_LIST_DECL_SESG(Y23, HEARTBEAT, HEARTBEAT, SIG_DESC_SET(SCU69C, 31));
-+PIN_DECL_3(Y23, GPIOP7, PWM15, THRUOUT3, HEARTBEAT);
- GROUP_DECL(PWM15G1, Y23);
- FUNC_DECL_2(PWM15, PWM15G0, PWM15G1);
- 
- FUNC_GROUP_DECL(THRU3, AB24, Y23);
-+FUNC_GROUP_DECL(HEARTBEAT, Y23);
- 
- #define AA25 128
- SSSF_PIN_DECL(AA25, GPIOQ0, TACH0, SIG_DESC_SET(SCU430, 0));
-@@ -1920,6 +1923,7 @@ static const struct aspeed_pin_group aspeed_g6_groups[] = {
- 	ASPEED_PINCTRL_GROUP(GPIU5),
- 	ASPEED_PINCTRL_GROUP(GPIU6),
- 	ASPEED_PINCTRL_GROUP(GPIU7),
-+	ASPEED_PINCTRL_GROUP(HEARTBEAT),
- 	ASPEED_PINCTRL_GROUP(HVI3C3),
- 	ASPEED_PINCTRL_GROUP(HVI3C4),
- 	ASPEED_PINCTRL_GROUP(I2C1),
-@@ -2158,6 +2162,7 @@ static const struct aspeed_pin_function aspeed_g6_functions[] = {
- 	ASPEED_PINCTRL_FUNC(GPIU5),
- 	ASPEED_PINCTRL_FUNC(GPIU6),
- 	ASPEED_PINCTRL_FUNC(GPIU7),
-+	ASPEED_PINCTRL_FUNC(HEARTBEAT),
- 	ASPEED_PINCTRL_FUNC(I2C1),
- 	ASPEED_PINCTRL_FUNC(I2C10),
- 	ASPEED_PINCTRL_FUNC(I2C11),
+If probe deferral did not work, certainly but it sounds like this is
+being done just for the sake of eliminating a round of probe deferral,
+is there a functional problem this is fixing?
+
+> 
+>>> though the probe will succeed when the driver is re-initialised, the
+>>> error can be scary to end users. To fix this, change the time the
+>>
+>> Scary to end users? I don't know about that. -EPROBE_DEFER was
+>> introduced exactly for this purpose. Perhaps users need to learn what
+>> -EPROBE_DEFER errno means?
+> 
+> The actual error message in syslog is:
+> 
+> kern.err kernel: gpiochip_add_data_with_key: GPIOs 480..511
+> (18000020.gpio) failed to register, -517
+> 
+> So an end user sees "err" and "failed", and doesn't know what "-517"
+> means.
+
+How about this instead:
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 4fa075d49fbc..10d9d0c17c9e 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1818,9 +1818,10 @@ int gpiochip_add_data_with_key(struct gpio_chip
+*gc, void *data,
+        ida_simple_remove(&gpio_ida, gdev->id);
+ err_free_gdev:
+        /* failures here can mean systems won't boot... */
+-       pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+-              gdev->base, gdev->base + gdev->ngpio - 1,
+-              gc->label ? : "generic", ret);
++       if (ret != -EPROBE_DEFER)
++               pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n",
++                       __func__, gdev->base, gdev->base + gdev->ngpio - 1,
++                       gc->label ? : "generic", ret);
+        kfree(gdev);
+        return ret;
+ }
+
 -- 
-2.27.0
-
+Florian
