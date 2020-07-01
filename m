@@ -2,121 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F1A1210308
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 06:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2229C210311
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 06:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgGAEiD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jul 2020 00:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
+        id S1725774AbgGAEok (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jul 2020 00:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725272AbgGAEiD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jul 2020 00:38:03 -0400
-X-Greylist: delayed 8053 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 30 Jun 2020 21:38:02 PDT
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DE0C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 21:38:02 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A22C8066C;
-        Wed,  1 Jul 2020 16:37:58 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1593578278;
-        bh=Wi84TLx1F2NEUOgl/mdFakSQYpQaxC9CQ4JIFp7pX/0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=vn6shSyEMotsJ1TblFLlIJudTTkfwIh8+C8kvDAyIe3ou+PhC6tlPJrdxg/o1b1lp
-         eXMDtKk6P+2hDUXKWftMqTkpEKOjwqEXtffLcxQqaH9xB9Ve7XUVgyuX4ODKilW0Dy
-         1ELZpGT8NutJmPEBGPubBMbXWpil2heV8yvtKxtiiaNPz1H7qEhdfDmcFDTfcYtGM9
-         aPjJIbMn06DkJixWrhFlhxgr77kzVlIhaGo2KERmvNWCkvkIVyPWYeCwqfiSCUgOOR
-         ynMkkyzq2cghwldmM8sQkUZR5CXME8K4QQr6rzHILrfEG4qCIDUC7CAtisGhuauXZ4
-         JaQCB3UxDAXQw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5efc13260000>; Wed, 01 Jul 2020 16:37:58 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 1 Jul 2020 16:37:54 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 1 Jul 2020 16:37:54 +1200
-From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
-To:     "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        with ESMTP id S1725272AbgGAEoj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jul 2020 00:44:39 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E11FC061755;
+        Tue, 30 Jun 2020 21:44:39 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m9so180575pfh.0;
+        Tue, 30 Jun 2020 21:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PsSXK0LueMTros0guq6lr1zFXnW4biIZ10cMu87ynbA=;
+        b=psgzIRkWHmWgUZzY2nLaIePhjDX/FDGj5ex4nRtGGpJlIYHTXnLfv86Wypu10UOA36
+         cWeE/tFVTwr/GzmZihTFUOXNs2QaKE2CkSkDWl2vkNNrc7aqE+n46Io0E2dclvCcyvyx
+         9/AKsr5dX2TlHCdARmvscsX6bNCx5MroCZQN4Y8RZ0SflrpMlntwGNWf7szVoUF4P8zh
+         ofWqCUsB2K71NlNuS32I2p4qpNPbkhCgs+5bqmN+YYJLhfj9QavncmopJ+nw6EuAtxpF
+         zQX5LrZDHgpA76Zck12UD+/m0Tt69h2Zxn4TH7jj4maw5j3a5LJ9D86pMQoryqCPdIy2
+         s7Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PsSXK0LueMTros0guq6lr1zFXnW4biIZ10cMu87ynbA=;
+        b=nhgv2o8hBMgx8c6kpXo0b0WrXjCUc6HNVJ0bGNbuPoHkmXzMHIHgCUA5KbNcIuHpRx
+         4kTZP3GxXkM08P39sZFVequq2Lj6ZXi8AwCd0gQa+dy/3PssQ207uuFjEjgWFiR3FgGr
+         q+1kr1usTqKc7xVhk/Q0AlmYTIjSRQbknDRQgQGODjGmiBbWmDW1IuhDxG9hU21VeVY8
+         Ifjv4aN7rgZJJ84GqgP9Qn+ccjCO1ZuPDYRgdVLHz77j3SAlvyLXrqhJvPAt4MG9OR7E
+         Pxd1iftYDh3X+4CH3k0DYYGZlaxOk4HJKhDoEZlGEzIYe/Rmts+R9u0FXBpqMUCdYHZS
+         Aghg==
+X-Gm-Message-State: AOAM531FrGwpJ+ikrSHx4nu8pi28BCx3+zXyZyDmb19PiHtmkurhbqMy
+        h3tHq0Pc1FEMVA1eSJW1i9YPRPLW
+X-Google-Smtp-Source: ABdhPJxgd25zxITtTsJDfQ68vGFu+qwm3jcGOLY1V7iUsJsM1SwU4xIiF/JswppLB4mPwy/euDv0TQ==
+X-Received: by 2002:a63:b90a:: with SMTP id z10mr17348129pge.277.1593578678376;
+        Tue, 30 Jun 2020 21:44:38 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id u23sm4388224pgn.26.2020.06.30.21.44.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 21:44:37 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+To:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
         "bcm-kernel-feedback-list@broadcom.com" 
         <bcm-kernel-feedback-list@broadcom.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "sbranden@broadcom.com" <sbranden@broadcom.com>,
         "rjui@broadcom.com" <rjui@broadcom.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Topic: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Index: AQHWTyWf+OJCQzu0tUG0OUfiNa14/6jw7mWAgABHbYCAAA44gIAAF0UA
-Date:   Wed, 1 Jul 2020 04:37:54 +0000
-Message-ID: <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
-         <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
-         <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
-         <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
-In-Reply-To: <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:23:899d:a7e9:b35a:a1ab]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F7788E01D7A1BF43A0671BC8590FC233@atlnz.lc>
-Content-Transfer-Encoding: base64
+ <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+ <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
+ <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com>
+ <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <cd40f919-f8d9-cde4-6cc5-f523e4973c3b@gmail.com>
+Date:   Tue, 30 Jun 2020 21:44:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTMwIGF0IDIwOjE0IC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiBTb3JyeSwgaXQgbG9va3MgbGlrZSBJIG1hZGUgYSBtaXN0YWtlIGluIG15IHRlc3Rpbmcg
-KG9yIEkgd2FzIGx1Y2t5KSwNCj4gPiBhbmQgdGhpcyBwYXRjaCBkb2Vzbid0IGZpeCB0aGUgaXNz
-dWUuIFdoYXQgaXMgaGFwcGVuaW5nIGlzOg0KPiA+IDEpIG5zcC1waW5tdXggZHJpdmVyIGlzIHJl
-Z2lzdGVyZWQgKGFyY2hfaW5pdGNhbGwpLg0KPiA+IDIpIG5zcC1ncGlvLWEgZHJpdmVyIGlzIHJl
-Z2lzdGVyZWQgKGFyY2hfaW5pdGNhbGxfc3luYykuDQo+ID4gMykgb2ZfcGxhdGZvcm1fZGVmYXVs
-dF9wb3B1bGF0ZV9pbml0KCkgaXMgY2FsbGVkIChhbHNvIGF0IGxldmVsDQo+ID4gYXJjaF9pbml0
-Y2FsbF9zeW5jKSwgd2hpY2ggc2NhbnMgdGhlIGRldmljZSB0cmVlLCBhZGRzIHRoZSBuc3AtZ3Bp
-by1hDQo+ID4gZGV2aWNlLCBydW5zIGl0cyBwcm9iZSwgYW5kIHRoaXMgcmV0dXJucyAtRVBST0JF
-X0RFRkVSIHdpdGggdGhlIGVycm9yDQo+ID4gbWVzc2FnZS4NCj4gPiA0KSBPbmx5IG5vdyBuc3At
-cGlubXV4IGRldmljZSBpcyBwcm9iZWQuDQo+ID4gDQo+ID4gQ2hhbmdpbmcgdGhlICdhcmNoX2lu
-aXRjYWxsX3N5bmMnIHRvICdkZXZpY2VfaW5pdGNhbGwnIGluIG5zcC1ncGlvLWENCj4gPiBlbnN1
-cmVzIHRoYXQgdGhlIHBpbm11eCBpcyBwcm9iZWQgZmlyc3Qgc2luY2UNCj4gPiBvZl9wbGF0Zm9y
-bV9kZWZhdWx0X3BvcHVsYXRlX2luaXQoKSB3aWxsIGJlIGNhbGxlZCBiZXR3ZWVuIHRoZSB0d28N
-Cj4gPiByZWdpc3RlciBjYWxscywgYW5kIHRoZSBlcnJvciBnb2VzIGF3YXkuIElzIHRoaXMgY2hh
-bmdlIGFjY2VwdGFibGUgYXMgYQ0KPiA+IHNvbHV0aW9uPw0KPiANCj4gSWYgcHJvYmUgZGVmZXJy
-YWwgZGlkIG5vdCB3b3JrLCBjZXJ0YWlubHkgYnV0IGl0IHNvdW5kcyBsaWtlIHRoaXMgaXMNCj4g
-YmVpbmcgZG9uZSBqdXN0IGZvciB0aGUgc2FrZSBvZiBlbGltaW5hdGluZyBhIHJvdW5kIG9mIHBy
-b2JlIGRlZmVycmFsLA0KPiBpcyB0aGVyZSBhIGZ1bmN0aW9uYWwgcHJvYmxlbSB0aGlzIGlzIGZp
-eGluZz8NCg0KTm8sIEknbSBqdXN0IHRyeWluZyB0byBwcmV2ZW50IGFuICJlcnJvciIgbWVzc2Fn
-ZSBhcHBlYXJpbmcgaW4gc3lzbG9nLg0KDQo+ID4gVGhlIGFjdHVhbCBlcnJvciBtZXNzYWdlIGlu
-IHN5c2xvZyBpczoNCj4gPiANCj4gPiBrZXJuLmVyciBrZXJuZWw6IGdwaW9jaGlwX2FkZF9kYXRh
-X3dpdGhfa2V5OiBHUElPcyA0ODAuLjUxMQ0KPiA+ICgxODAwMDAyMC5ncGlvKSBmYWlsZWQgdG8g
-cmVnaXN0ZXIsIC01MTcNCj4gPiANCj4gPiBTbyBhbiBlbmQgdXNlciBzZWVzICJlcnIiIGFuZCAi
-ZmFpbGVkIiwgYW5kIGRvZXNuJ3Qga25vdyB3aGF0ICItNTE3Ig0KPiA+IG1lYW5zLg0KPiANCj4g
-SG93IGFib3V0IHRoaXMgaW5zdGVhZDoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8v
-Z3Bpb2xpYi5jIGIvZHJpdmVycy9ncGlvL2dwaW9saWIuYw0KPiBpbmRleCA0ZmEwNzVkNDlmYmMu
-LjEwZDlkMGMxN2M5ZSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncGlvL2dwaW9saWIuYw0KPiAr
-KysgYi9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi5jDQo+IEBAIC0xODE4LDkgKzE4MTgsMTAgQEAgaW50
-IGdwaW9jaGlwX2FkZF9kYXRhX3dpdGhfa2V5KHN0cnVjdCBncGlvX2NoaXANCj4gKmdjLCB2b2lk
-ICpkYXRhLA0KPiAgICAgICAgIGlkYV9zaW1wbGVfcmVtb3ZlKCZncGlvX2lkYSwgZ2Rldi0+aWQp
-Ow0KPiAgZXJyX2ZyZWVfZ2RldjoNCj4gICAgICAgICAvKiBmYWlsdXJlcyBoZXJlIGNhbiBtZWFu
-IHN5c3RlbXMgd29uJ3QgYm9vdC4uLiAqLw0KPiAtICAgICAgIHByX2VycigiJXM6IEdQSU9zICVk
-Li4lZCAoJXMpIGZhaWxlZCB0byByZWdpc3RlciwgJWRcbiIsIF9fZnVuY19fLA0KPiAtICAgICAg
-ICAgICAgICBnZGV2LT5iYXNlLCBnZGV2LT5iYXNlICsgZ2Rldi0+bmdwaW8gLSAxLA0KPiAtICAg
-ICAgICAgICAgICBnYy0+bGFiZWwgPyA6ICJnZW5lcmljIiwgcmV0KTsNCj4gKyAgICAgICBpZiAo
-cmV0ICE9IC1FUFJPQkVfREVGRVIpDQo+ICsgICAgICAgICAgICAgICBwcl9lcnIoIiVzOiBHUElP
-cyAlZC4uJWQgKCVzKSBmYWlsZWQgdG8gcmVnaXN0ZXIsICVkXG4iLA0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICBfX2Z1bmNfXywgZ2Rldi0+YmFzZSwgZ2Rldi0+YmFzZSArIGdkZXYtPm5ncGlv
-IC0gMSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZ2MtPmxhYmVsID8gOiAiZ2VuZXJpYyIs
-IHJldCk7DQo+ICAgICAgICAga2ZyZWUoZ2Rldik7DQo+ICAgICAgICAgcmV0dXJuIHJldDsNCj4g
-IH0NCj4gDQpUaGF0IHdhcyBvbmUgb2YgbXkgdGhvdWdodHMgdG9vLiBJIGZvdW5kIHNvbWVvbmUg
-aGFkIHRyaWVkIHRoYXQNCmVhcmxpZXIsIGJ1dCBpdCB3YXMgcmVqZWN0ZWQ6DQoNCg0KaHR0cHM6
-Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L2xpbnV4LWdwaW8vcGF0Y2gvMTUxNjU2Njc3
-NC0xNzg2LTEtZ2l0LXNlbmQtZW1haWwtZGF2aWRAbGVjaG5vbG9neS5jb20vDQoNCg==
+
+
+On 6/30/2020 9:37 PM, Mark Tomlinson wrote:
+> On Tue, 2020-06-30 at 20:14 -0700, Florian Fainelli wrote:
+>> Sorry, it looks like I made a mistake in my testing (or I was lucky),
+>>> and this patch doesn't fix the issue. What is happening is:
+>>> 1) nsp-pinmux driver is registered (arch_initcall).
+>>> 2) nsp-gpio-a driver is registered (arch_initcall_sync).
+>>> 3) of_platform_default_populate_init() is called (also at level
+>>> arch_initcall_sync), which scans the device tree, adds the nsp-gpio-a
+>>> device, runs its probe, and this returns -EPROBE_DEFER with the error
+>>> message.
+>>> 4) Only now nsp-pinmux device is probed.
+>>>
+>>> Changing the 'arch_initcall_sync' to 'device_initcall' in nsp-gpio-a
+>>> ensures that the pinmux is probed first since
+>>> of_platform_default_populate_init() will be called between the two
+>>> register calls, and the error goes away. Is this change acceptable as a
+>>> solution?
+>>
+>> If probe deferral did not work, certainly but it sounds like this is
+>> being done just for the sake of eliminating a round of probe deferral,
+>> is there a functional problem this is fixing?
+> 
+> No, I'm just trying to prevent an "error" message appearing in syslog.
+> 
+>>> The actual error message in syslog is:
+>>>
+>>> kern.err kernel: gpiochip_add_data_with_key: GPIOs 480..511
+>>> (18000020.gpio) failed to register, -517
+>>>
+>>> So an end user sees "err" and "failed", and doesn't know what "-517"
+>>> means.
+>>
+>> How about this instead:
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index 4fa075d49fbc..10d9d0c17c9e 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -1818,9 +1818,10 @@ int gpiochip_add_data_with_key(struct gpio_chip
+>> *gc, void *data,
+>>         ida_simple_remove(&gpio_ida, gdev->id);
+>>  err_free_gdev:
+>>         /* failures here can mean systems won't boot... */
+>> -       pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+>> -              gdev->base, gdev->base + gdev->ngpio - 1,
+>> -              gc->label ? : "generic", ret);
+>> +       if (ret != -EPROBE_DEFER)
+>> +               pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n",
+>> +                       __func__, gdev->base, gdev->base + gdev->ngpio - 1,
+>> +                       gc->label ? : "generic", ret);
+>>         kfree(gdev);
+>>         return ret;
+>>  }
+>>
+> That was one of my thoughts too. I found someone had tried that
+> earlier, but it was rejected:
+> 
+> 
+> https://patchwork.ozlabs.org/project/linux-gpio/patch/1516566774-1786-1-git-send-email-david@lechnology.com/
+
+clk or reset APIs do not complain loudly on EPROBE_DEFER, it seems to me
+that GPIO should follow here. Also, it does look like Linus was in
+agreement in the end, not sure why it was not applied though.
+-- 
+Florian
