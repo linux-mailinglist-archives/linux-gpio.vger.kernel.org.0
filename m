@@ -2,98 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70EF32101F2
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 04:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FDFF210239
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 04:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgGACXx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 22:23:53 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45863 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgGACXx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 22:23:53 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 944F68066C;
-        Wed,  1 Jul 2020 14:23:44 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1593570224;
-        bh=mI32KsENUjMHrBaa4ywoRDgEOcKsi98TwBM9Vd/zqmA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=0ZlA74PotZDiJUGfC2GeoNw5Zm8QJIogcWXxcz8vFzgKeCd2kxM7GOy8dvRtVYSlm
-         jrJSfNOpnZM8W7dEymC2ON8/lA0K0KVZVMq95jxGUpCjhYlDBLAqHFpEJUTSUQEUK3
-         33FmhY58plKFeiN8ihahel2mT4DxT1r8JKqm2vvyCIqtMVs4YvRSQy7dx52TdUHuXp
-         PWQvNFe8fLJlzvysRxQ5aAV2I0hWcKRUtjy0l89wI0nrae1sDuPRVch82g9xbzPrTJ
-         Q2sijJdCQmJuBWCC3ZakLK1B6AY9ht/zCZrvbkv1jYZ+D1gTrWsJZRu8sD3gamWles
-         OHnAWgCEQMF6Q==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5efbf3b10001>; Wed, 01 Jul 2020 14:23:45 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 1 Jul 2020 14:23:44 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 1 Jul 2020 14:23:44 +1200
-From:   Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>
-To:     "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Topic: [PATCH] pinctrl: initialise nsp-mux earlier.
-Thread-Index: AQHWTyWf+OJCQzu0tUG0OUfiNa14/6jw7mWAgABHbYA=
-Date:   Wed, 1 Jul 2020 02:23:43 +0000
-Message-ID: <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
-References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
-         <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
-In-Reply-To: <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:23:899d:a7e9:b35a:a1ab]
+        id S1725988AbgGACxj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 22:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgGACxi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 22:53:38 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 910F0C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 19:53:37 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id m9so67742pfh.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 19:53:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=tbVnNxF/guXtko01byA5Q8jVjWRvMtu0BhcsqW06NGo=;
+        b=mapZB9XRV89+vdZG/WfrwWISK7YiEpJCm5t3RUxI31sllOEZltrykQTXkGxflbqDzD
+         RIlGJwfi6ZCGiEus0cjntr+dVQhtnVL6Nw6UW5GU/JDAVoZxQUoGFtc2OSjtgRrWZ0qy
+         b7Wquo4tkWyxtoFfEKevQ/2H+3PF+crYXMBPT8Zx2KShUI4BJpSATzcusMikQ41R3G/d
+         WGF2JK8xGC60vDJlE29rCeYvlh4NT9b3zaqk4+ey3AXU9hVFrVFdxoItcO2YO3R8dA6F
+         V9h0HB+bMguCK+NC45ioLdv+2T3S1nuWK4czvupoQBJmEIoFcfcHTQ7J0LoM2Hie9ho1
+         +G4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=tbVnNxF/guXtko01byA5Q8jVjWRvMtu0BhcsqW06NGo=;
+        b=cjrAn/ZsHo5npQ/ZvVWSGo0PKfGI4magT3Hj80+BnOapaBHu+hzXOEBJB6Gbw6vP9/
+         cNAIFjkkxa07FU6HwwIJe9DiIwDf1BTbhXzTaBMiBfXUUKGuWxFi8oi/Q3r3qT/+cx5t
+         gfkYjBg9T3mxxtHvGzvt1/nzJOUL8DlBWgWZiVCjJBpUgRAYrvdUbaZrrXjgmTeIjEJ+
+         L0aIHoC8p4ARAcqB4YwTpXCr9c6gMyRnRwTTqp/FE85zR1a/Sh7c1RRHWree9Qz8xjYo
+         OO78u9TYLah0kfbXXXWz44sVWPLisCDAuV/c9VjQnGPgUPGvtyn/BrYWZrXNWHLjH2WG
+         K+zQ==
+X-Gm-Message-State: AOAM530EskwdeSbNXmRXtk59Mrt3u0RSleZeAw04bXeHZ9mXt9oX04v2
+        YyNmDiq/m1WkVsZh6hMtPyUwI/FbWm0=
+X-Google-Smtp-Source: ABdhPJzHJ4jSTPKoHLvJ8U54pFNn6UW+oyzM8c8BB/X4F07jC27IB6xRteymAmFUV6IClQaYm3zIhg==
+X-Received: by 2002:a65:67d0:: with SMTP id b16mr3272276pgs.60.1593572016695;
+        Tue, 30 Jun 2020 19:53:36 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id c139sm3976583pfb.189.2020.06.30.19.53.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 19:53:36 -0700 (PDT)
+Message-ID: <5efbfab0.1c69fb81.619e1.bd4e@mx.google.com>
+Date:   Tue, 30 Jun 2020 19:53:36 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <632CE4073ECE9D4199209DF8E6A9E704@atlnz.lc>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc1-26-gb239e4454e59
+X-Kernelci-Report-Type: test
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: devel
+Subject: linusw/devel baseline: 44 runs,
+ 3 regressions (v5.8-rc1-26-gb239e4454e59)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA2LTMwIGF0IDE1OjA4IC0wNzAwLCBSYXkgSnVpIHdyb3RlOg0KPiBNYXkg
-SSBrbm93IHdoaWNoIEdQSU8gZHJpdmVyIHlvdSBhcmUgcmVmZXJyaW5nIHRvIG9uIE5TUD8gQm90
-aCB0aGUgaVByb2MNCj4gR1BJTyBkcml2ZXIgYW5kIHRoZSBOU1AgR1BJTyBkcml2ZXIgYXJlIGlu
-aXRpYWxpemVkIGF0IHRoZSBsZXZlbCBvZg0KPiAnYXJjaF9pbml0Y2FsbF9zeW5jJywgd2hpY2gg
-aXMgc3VwcG9zZWQgdG8gYmUgYWZ0ZXIgJ2FyY2hfaW5pdGNhbGwnIHVzZWQNCj4gaGVyZSBpbiB0
-aGUgcGlubXV4IGRyaXZlcg0KDQpTb3JyeSwgaXQgbG9va3MgbGlrZSBJIG1hZGUgYSBtaXN0YWtl
-IGluIG15IHRlc3RpbmcgKG9yIEkgd2FzIGx1Y2t5KSwNCmFuZCB0aGlzIHBhdGNoIGRvZXNuJ3Qg
-Zml4IHRoZSBpc3N1ZS4gV2hhdCBpcyBoYXBwZW5pbmcgaXM6DQoxKSBuc3AtcGlubXV4IGRyaXZl
-ciBpcyByZWdpc3RlcmVkIChhcmNoX2luaXRjYWxsKS4NCjIpIG5zcC1ncGlvLWEgZHJpdmVyIGlz
-IHJlZ2lzdGVyZWQgKGFyY2hfaW5pdGNhbGxfc3luYykuDQozKSBvZl9wbGF0Zm9ybV9kZWZhdWx0
-X3BvcHVsYXRlX2luaXQoKSBpcyBjYWxsZWQgKGFsc28gYXQgbGV2ZWwNCmFyY2hfaW5pdGNhbGxf
-c3luYyksIHdoaWNoIHNjYW5zIHRoZSBkZXZpY2UgdHJlZSwgYWRkcyB0aGUgbnNwLWdwaW8tYQ0K
-ZGV2aWNlLCBydW5zIGl0cyBwcm9iZSwgYW5kIHRoaXMgcmV0dXJucyAtRVBST0JFX0RFRkVSIHdp
-dGggdGhlIGVycm9yDQptZXNzYWdlLg0KNCkgT25seSBub3cgbnNwLXBpbm11eCBkZXZpY2UgaXMg
-cHJvYmVkLg0KDQpDaGFuZ2luZyB0aGUgJ2FyY2hfaW5pdGNhbGxfc3luYycgdG8gJ2RldmljZV9p
-bml0Y2FsbCcgaW4gbnNwLWdwaW8tYQ0KZW5zdXJlcyB0aGF0IHRoZSBwaW5tdXggaXMgcHJvYmVk
-IGZpcnN0IHNpbmNlDQpvZl9wbGF0Zm9ybV9kZWZhdWx0X3BvcHVsYXRlX2luaXQoKSB3aWxsIGJl
-IGNhbGxlZCBiZXR3ZWVuIHRoZSB0d28NCnJlZ2lzdGVyIGNhbGxzLCBhbmQgdGhlIGVycm9yIGdv
-ZXMgYXdheS4gSXMgdGhpcyBjaGFuZ2UgYWNjZXB0YWJsZSBhcyBhDQpzb2x1dGlvbj8NCg0KPiA+
-IHRob3VnaCB0aGUgcHJvYmUgd2lsbCBzdWNjZWVkIHdoZW4gdGhlIGRyaXZlciBpcyByZS1pbml0
-aWFsaXNlZCwgdGhlDQo+ID4gZXJyb3IgY2FuIGJlIHNjYXJ5IHRvIGVuZCB1c2Vycy4gVG8gZml4
-IHRoaXMsIGNoYW5nZSB0aGUgdGltZSB0aGUNCj4gDQo+IFNjYXJ5IHRvIGVuZCB1c2Vycz8gSSBk
-b24ndCBrbm93IGFib3V0IHRoYXQuIC1FUFJPQkVfREVGRVIgd2FzDQo+IGludHJvZHVjZWQgZXhh
-Y3RseSBmb3IgdGhpcyBwdXJwb3NlLiBQZXJoYXBzIHVzZXJzIG5lZWQgdG8gbGVhcm4gd2hhdA0K
-PiAtRVBST0JFX0RFRkVSIGVycm5vIG1lYW5zPw0KDQpUaGUgYWN0dWFsIGVycm9yIG1lc3NhZ2Ug
-aW4gc3lzbG9nIGlzOg0KDQprZXJuLmVyciBrZXJuZWw6IGdwaW9jaGlwX2FkZF9kYXRhX3dpdGhf
-a2V5OiBHUElPcyA0ODAuLjUxMQ0KKDE4MDAwMDIwLmdwaW8pIGZhaWxlZCB0byByZWdpc3Rlciwg
-LTUxNw0KDQpTbyBhbiBlbmQgdXNlciBzZWVzICJlcnIiIGFuZCAiZmFpbGVkIiwgYW5kIGRvZXNu
-J3Qga25vdyB3aGF0ICItNTE3Ig0KbWVhbnMuDQoNCg==
+linusw/devel baseline: 44 runs, 3 regressions (v5.8-rc1-26-gb239e4454e59)
+
+Regressions Summary
+-------------------
+
+platform                     | arch  | lab          | compiler | defconfig =
+| results
+-----------------------------+-------+--------------+----------+-----------=
++--------
+bcm2837-rpi-3-b              | arm64 | lab-baylibre | gcc-8    | defconfig =
+| 4/5    =
+
+hifive-unleashed-a00         | riscv | lab-baylibre | gcc-8    | defconfig =
+| 0/1    =
+
+meson-gxl-s805x-libretech-ac | arm64 | lab-baylibre | gcc-8    | defconfig =
+| 4/5    =
+
+
+  Details:  https://kernelci.org/test/job/linusw/branch/devel/kernel/v5.8-r=
+c1-26-gb239e4454e59/plan/baseline/
+
+  Test:     baseline
+  Tree:     linusw
+  Branch:   devel
+  Describe: v5.8-rc1-26-gb239e4454e59
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      b239e4454e59bc85d466eb5630da46f6a876df77 =
+
+
+
+Test Regressions
+---------------- =
+
+
+
+platform                     | arch  | lab          | compiler | defconfig =
+| results
+-----------------------------+-------+--------------+----------+-----------=
++--------
+bcm2837-rpi-3-b              | arm64 | lab-baylibre | gcc-8    | defconfig =
+| 4/5    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5efbf090467c86be9d85bb33
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/arm64/defconfig/gcc-8/lab-baylibre/baseline-bcm2837-rpi-3-b.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2019=
+.02-11-g17e793fa4728/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.dmesg.crit: https://kernelci.org/test/case/id/5efbf090467c86be=
+9d85bb36
+      failing since 10 days (last pass: v5.8-rc1, first fail: v5.8-rc1-8-g8=
+4651e81ee33)
+      1 lines =
+
+
+
+platform                     | arch  | lab          | compiler | defconfig =
+| results
+-----------------------------+-------+--------------+----------+-----------=
++--------
+hifive-unleashed-a00         | riscv | lab-baylibre | gcc-8    | defconfig =
+| 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5efbed47bf035d72dd85bb30
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (riscv64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed-a00.t=
+xt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed-a00.h=
+tml
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2019=
+.02-11-g17e793fa4728/riscv/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5efbed47bf035d72dd85b=
+b31
+      failing since 14 days (last pass: gpio-v5.8-1-1-gf6d984418ffd, first =
+fail: v5.8-rc1) =
+
+
+
+platform                     | arch  | lab          | compiler | defconfig =
+| results
+-----------------------------+-------+--------------+----------+-----------=
++--------
+meson-gxl-s805x-libretech-ac | arm64 | lab-baylibre | gcc-8    | defconfig =
+| 4/5    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5efbf1b37e0ec9442185bb29
+
+  Results:     4 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (aarch64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s805x-libret=
+ech-ac.txt
+  HTML log:    https://storage.kernelci.org//linusw/devel/v5.8-rc1-26-gb239=
+e4454e59/arm64/defconfig/gcc-8/lab-baylibre/baseline-meson-gxl-s805x-libret=
+ech-ac.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2019=
+.02-11-g17e793fa4728/arm64/baseline/rootfs.cpio.gz =
+
+
+  * baseline.dmesg.emerg: https://kernelci.org/test/case/id/5efbf1b37e0ec94=
+42185bb2e
+      new failure (last pass: v5.8-rc1-8-g84651e81ee33)
+      2 lines =20
