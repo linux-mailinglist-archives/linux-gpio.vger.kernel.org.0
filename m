@@ -2,67 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97158210183
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 03:33:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5270210198
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 03:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbgGABdz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 21:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43252 "EHLO
+        id S1725763AbgGABje (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 21:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgGABdy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 21:33:54 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB6DC061755
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dp18so22727611ejc.8
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:33:53 -0700 (PDT)
+        with ESMTP id S1725872AbgGABjd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 21:39:33 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4760EC061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:39:32 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id 207so10063504pfu.3
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=Ze5edmszHxmHc+eoA3XPuNrJory3gisovndE6X2LIUGAgs7R+rm/wiwrUx+/NZ4nDv
-         MlW9lobaAbeZfQDHOVVeHB6gGZr3XIpDhsJDzU8ZKuSNl4P520bybbN+UVOBJq5cKfrT
-         2W4YyqS7MChAYDWrygjxus6SVOnqHtgSUKO8qHbQtIy9RFh2IvcUAw1HT+uS3xE8AuEX
-         TGtbH1+dlihzi4qyO2pJQgZU3FztFCbk10RLDxiwT7oUPaJYOLabSbf+l3JLPupZyvFj
-         od+0TgOoXJR3YH9kaH8tek0LF9MMhMEbSDVyvbZd/F5/WG1yz9e1YNHiWXwkZafTdX7R
-         hOJw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AQ5jIovH0f3E5gni4PyQrUkPRk6UAn+p1+D9cwFBEf4=;
+        b=tsOz7TpDPFA9fBYeqnjmoMGmYmTri4S/VgDfBN5mDkDDhmGEzE/zqmiQw4fpadVmau
+         JDD0QjhGT1qDVGBMls2DqBTHCUNs3iBk1KFMdo8FjU6JyKEiNjqTjdlVFpTp0w1HjUT9
+         ActBCUj+7XQm7I1AeIGNCvoSQj3Ahag/YGyZJOC40w5W9983OZUJOvyHy382qN/nN4U3
+         Tzn9MSxA5fFghwHRxghNxuhiwRhalXLChyMhD/4GLHSEGQUnLMtx8aplPQbK+/IXpB/p
+         62ZeJ7OGQ7I1J+5B9fbaXDasR7f9z6lUWPJ4SCHoa5ZbgG0tfKOM2jAaG1gz0iYc8SJR
+         A9Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zJ22qdC4RvZHdtMxJ8YYWILYunoa4ADbCDBJhh+M35c=;
-        b=VSH1LkvdaEG5fAejWG5NCLhjjujNYdesQFSm6Nx+K3DsoZVKvp6zLQUOHT7nIfzP1l
-         IuWugkS/IbZr4jCoaBPoUrpQ6SPgOrPPRdegljlHQ4ugyGGri4SZy1R36hbFP+fineHq
-         9wa9VLf//6/miX8Ch2ZM17D3+dBekySnFNc6oNb00SXfngzcCVOYTFD3YRHFEMBhHPga
-         OgEZuhU6QGZ61CVlke2juHQROWJ2gW8Pw+aBDA/3zlDiYaB/F+qRIZu7dK8V3+clYusA
-         Kj0k/UFCpC1wK60X2whAsEoCLX62om7gx0h+NhYBVvY6dEwjdIabINGhHL4j5pvYRbwT
-         3fUA==
-X-Gm-Message-State: AOAM53322VscvTEM8z2L6xf7HkYsXZNAGYcb6abAjktHm+8kRp6OrEAm
-        LoNeBYmx8RX8J7H6HrzZQdILoQ==
-X-Google-Smtp-Source: ABdhPJxI0WQk14+Ivo5cdeI8jHa73I3z+K18yjH+Q4Lpumd9g0c4kuF6XkdkxR7cidzvTjndU+H8pg==
-X-Received: by 2002:a17:906:b354:: with SMTP id cd20mr18663123ejb.296.1593567232608;
-        Tue, 30 Jun 2020 18:33:52 -0700 (PDT)
-Received: from localhost.localdomain ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
-        by smtp.gmail.com with ESMTPSA id d23sm3348571eja.27.2020.06.30.18.33.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AQ5jIovH0f3E5gni4PyQrUkPRk6UAn+p1+D9cwFBEf4=;
+        b=Db3DVujU14KFBGuuVCEK6e2YFvKbH7x63IlvFYYASDF5n96E3qrJpabeEvl8WphQDz
+         ENzuRUqL45Ud1cxtVznKQLIYXGQpN/Hk6jvPUBeba9t0QmhbbDxSCH/YZ2Xf03ewGk26
+         j0WSaY5KgT9AegL6E/03oIzMe5kutSVwYbmKswihNY2D1nmoDo0qk7QbvB+10jeJOjV/
+         lv9tRbidBpPNfyXW4Mm49ED+MvFEXC0Oj8G2Xi10A7IugUqmxGm2fo8ynU3Ur/QZQU5p
+         rXKgMuSRhlaoeT5yx3Trg+STSYYca6e63P6/BO+BbU26IQQfD5BAU5w7CE/vyLBx0I4b
+         UIgg==
+X-Gm-Message-State: AOAM5336tvr+kQ6pCEqADXSTFmMvXSUdO4DGhlVH4SnZn/v4ZAuTfkSJ
+        4qJp5OMWZ7BB6zkkagehrxrZmv00
+X-Google-Smtp-Source: ABdhPJz47AWnn7C8jem0o/hYU2bQ6ywC97DH6DlVETyzRjnGoNT53B/IBKk04eFDlNuWe1P34bL25Q==
+X-Received: by 2002:a62:8096:: with SMTP id j144mr22211926pfd.78.1593567571142;
+        Tue, 30 Jun 2020 18:39:31 -0700 (PDT)
+Received: from sol.lan (106-69-191-222.dyn.iinet.net.au. [106.69.191.222])
+        by smtp.gmail.com with ESMTPSA id 25sm3784787pfi.7.2020.06.30.18.39.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 18:33:51 -0700 (PDT)
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>
-Subject: [PATCH v4 2/2] ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-Date:   Wed,  1 Jul 2020 03:33:20 +0200
-Message-Id: <20200701013320.130441-3-drew@beagleboard.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
-References: <20200701013320.130441-1-drew@beagleboard.org>
+        Tue, 30 Jun 2020 18:39:30 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, bgolaszewski@baylibre.com
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod][PATCH] bindings: cxx: fix sign-compare compile warnings in tests
+Date:   Wed,  1 Jul 2020 09:39:08 +0800
+Message-Id: <20200701013908.42359-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
@@ -70,42 +61,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Increase #pinctrl-cells to 2 so that mux and conf be kept separate. This
-requires the AM33XX_PADCONF macro in omap.h to also be modified to keep pin
-conf and pin mux values separate.
+Fix sign-compare compile warnings in cxx tests.
 
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- arch/arm/boot/dts/am33xx-l4.dtsi   | 2 +-
- include/dt-bindings/pinctrl/omap.h | 2 +-
+
+Just noticed these warnings while rebuilding in a fresh build environment.
+Not sure if they were triggered by an enviromental change, or if I just
+wasn't paying enough attention before, but either way this patch makes
+the compiler happier.
+
+ bindings/cxx/tests/tests-iter.cpp | 2 +-
+ bindings/cxx/tests/tests-line.cpp | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index a9cbefc80c0c..3141590e5889 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -278,7 +278,7 @@ scm: scm@0 {
- 				am33xx_pinmux: pinmux@800 {
- 					compatible = "pinctrl-single";
- 					reg = <0x800 0x238>;
--					#pinctrl-cells = <1>;
-+					#pinctrl-cells = <2>;
- 					pinctrl-single,register-width = <32>;
- 					pinctrl-single,function-mask = <0x7f>;
- 				};
-diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-index 625718042413..2d2a8c737822 100644
---- a/include/dt-bindings/pinctrl/omap.h
-+++ b/include/dt-bindings/pinctrl/omap.h
-@@ -65,7 +65,7 @@
- #define DM814X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define DM816X_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
- #define AM33XX_IOPAD(pa, val)		OMAP_IOPAD_OFFSET((pa), 0x0800) (val)
--#define AM33XX_PADCONF(pa, dir, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) ((dir) | (mux))
-+#define AM33XX_PADCONF(pa, conf, mux)	OMAP_IOPAD_OFFSET((pa), 0x0800) (conf) (mux)
+diff --git a/bindings/cxx/tests/tests-iter.cpp b/bindings/cxx/tests/tests-iter.cpp
+index fdc2cb5..4c07613 100644
+--- a/bindings/cxx/tests/tests-iter.cpp
++++ b/bindings/cxx/tests/tests-iter.cpp
+@@ -53,7 +53,7 @@ TEST_CASE("Line iterator works", "[iter][line]")
+ {
+ 	mockup::probe_guard mockup_chips({ 4 });
+ 	::gpiod::chip chip(mockup::instance().chip_name(0));
+-	int count = 0;
++	unsigned int count = 0;
  
- /*
-  * Macros to allow using the offset from the padconf physical address
+ 	for (auto& it: ::gpiod::line_iter(chip))
+ 		REQUIRE(it.offset() == count++);
+diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
+index 5353093..e2e4cbc 100644
+--- a/bindings/cxx/tests/tests-line.cpp
++++ b/bindings/cxx/tests/tests-line.cpp
+@@ -210,7 +210,7 @@ TEST_CASE("Line bulk object works correctly", "[line][bulk]")
+ 	SECTION("bulk iterator works")
+ 	{
+ 		auto lines = chip.get_all_lines();
+-		int count = 0;
++		unsigned int count = 0;
+ 
+ 		for (auto& it: lines)
+ 			REQUIRE(it.offset() == count++);
+
+base-commit: b56d6b6a452e47fee8c70514afb99ccd77ada677
 -- 
-2.25.1
+2.27.0
 
