@@ -2,203 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C18210B91
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 15:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1306210DD6
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 16:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgGANCR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Jul 2020 09:02:17 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41183 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730763AbgGANCQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Jul 2020 09:02:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z24so1925963ljn.8;
-        Wed, 01 Jul 2020 06:02:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pONDTE3q4C4ergFWZALFTmpNQdd6P301hOAS15uLVek=;
-        b=ZusZp9pHj6NjfYZIKrt+eOFDMgAVC610SHqJ2eqv+YMkISjLN6fuEt6v4f5bL7W0mR
-         unXbyFW1vC9t0f8r74qpf6NM68Ejns0qZvE1lJrloO5ekCRs16i5JcCMVFiF9cCOlF9c
-         N8z15drYxzJiazRPew7/7WtK6YTdCGCWnxf7sejujjlnMS9EpZK3eTavL22u9XrRWlWD
-         G19T6XJoMkDRBEBItzu5Ix+9ZpnjnA/wJUUG41Vkv7ctBfFZBBLKkkOAsZi3dEGUMsS9
-         CfughaMvnBmu/lW2kKGaU+3KYxypjdM75X2x54Ngq6Tss5pp2dz+MK2VIkS6AeHX5G0e
-         JBuQ==
-X-Gm-Message-State: AOAM530iQjim05AsFzxg+UuWfUEk59/AfotQN1w/5zn5rbQ2s171p0Yd
-        yCVLblzQFhTtvPKL5q5M8FQf3EkoWpI=
-X-Google-Smtp-Source: ABdhPJxRp62vEJvwwakzJZLy1MQMlRAKWi4FPOGPRdB7In7mhIB6SqZXzsLfpgpnM4RfLz5oLWjSEg==
-X-Received: by 2002:a2e:a419:: with SMTP id p25mr6965067ljn.164.1593608532682;
-        Wed, 01 Jul 2020 06:02:12 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id y69sm2028366lfa.86.2020.07.01.06.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2020 06:02:11 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jqcNK-0007Wz-Nh; Wed, 01 Jul 2020 15:02:07 +0200
-Date:   Wed, 1 Jul 2020 15:02:06 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patong.mxl@gmail.com, linus.walleij@linaro.org,
-        mchehab+huawei@kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
- support
-Message-ID: <20200701130206.GD3334@localhost>
-References: <20200607162350.21297-1-mani@kernel.org>
- <20200607162350.21297-3-mani@kernel.org>
+        id S1731344AbgGAOfU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Jul 2020 10:35:20 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21872 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731442AbgGAOfT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 1 Jul 2020 10:35:19 -0400
+IronPort-SDR: zfjXm4kTnQ6OeAUuRRWcxH4ROg9yVuQ5l0pFu+qVAldnoKXZCBITRGylGqaHNhJbmlrMKoZRI9
+ fx5/mxXKVMuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="211645005"
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="211645005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 07:35:18 -0700
+IronPort-SDR: ishwKsZ+pmTK7wM1pb2MnX7FwdquD4a+sXnklnPnEowfumQPsufEAacRgI91TGvgagPu4e00lJ
+ 5N+K8nYDx0ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,300,1589266800"; 
+   d="scan'208";a="356133734"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 01 Jul 2020 07:35:16 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jqdpT-00037N-RA; Wed, 01 Jul 2020 14:35:15 +0000
+Date:   Wed, 01 Jul 2020 22:34:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-staging] BUILD SUCCESS
+ baa2aaadbd9621cfb4a1c52f13ecfc980d157bd6
+Message-ID: <5efc9ee4.r3WOE6xmgNHJmoEA%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200607162350.21297-3-mani@kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
-> Add gpiochip support for Maxlinear/Exar USB to serial converter
-> for controlling the available gpios.
-> 
-> Inspired from cp210x usb to serial converter driver.
-> 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
->  drivers/usb/serial/xr_serial.c | 209 ++++++++++++++++++++++++++++++++-
->  1 file changed, 208 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
-> index bb7df79cc129..2240fbc9ea7f 100644
-> --- a/drivers/usb/serial/xr_serial.c
-> +++ b/drivers/usb/serial/xr_serial.c
-> @@ -10,6 +10,7 @@
->   * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
->   */
->  
-> +#include <linux/gpio/driver.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -17,6 +18,18 @@
->  #include <linux/usb.h>
->  #include <linux/usb/serial.h>
->  
-> +#ifdef CONFIG_GPIOLIB
-> +enum gpio_pins {
-> +	GPIO_RI = 0,
-> +	GPIO_CD,
-> +	GPIO_DSR,
-> +	GPIO_DTR,
-> +	GPIO_CTS,
-> +	GPIO_RTS,
-> +	GPIO_MAX,
-> +};
-> +#endif
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-staging
+branch HEAD: baa2aaadbd9621cfb4a1c52f13ecfc980d157bd6  staging: wfx: Get descriptors for GPIOs
 
-Try to avoid littering the driver with GPIOLIB ifdefs. One or two is
-fine, but no more even if it means declaring an unused type. Add
-stubbed out helpers where appropriate.
+elapsed time: 724m
 
-> +
->  static void xr_set_termios(struct tty_struct *tty,
->  			   struct usb_serial_port *port,
->  			   struct ktermios *old_termios);
-> @@ -39,6 +52,11 @@ struct xr_uart_regs {
->  };
->  
->  struct xr_port_private {
-> +#ifdef CONFIG_GPIOLIB
-> +	struct gpio_chip gc;
-> +	bool gpio_registered;
-> +	enum gpio_pins pin_status[GPIO_MAX];
-> +#endif
->  	const struct xr_uart_regs *regs;
->  	bool port_open;
->  };
-> @@ -390,6 +408,13 @@ static void xr_set_flow_mode(struct tty_struct *tty,
->  	 */
->  	gpio_mode &= ~UART_MODE_GPIO_MASK;
->  	if (cflag & CRTSCTS) {
-> +#ifdef CONFIG_GPIOLIB
-> +		/* Check if the CTS/RTS pins are occupied */
-> +		if (port_priv->pin_status[GPIO_RTS] ||
-> +		    port_priv->pin_status[GPIO_CTS])
-> +			return;
-> +#endif
+configs tested: 117
+configs skipped: 4
 
-You cannot just bail out as this could leave software flow enabled etc.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-You also need to claim these pins once at open or leave them be. We
-don't want CRTSCTS to suddenly start toggling because a pin is released
-by gpiolib.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+xtensa                generic_kc705_defconfig
+sh                ecovec24-romimage_defconfig
+powerpc                      ppc6xx_defconfig
+arm                  colibri_pxa270_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                   rts7751r2dplus_defconfig
+powerpc                         ps3_defconfig
+arm                         ebsa110_defconfig
+sparc64                          allmodconfig
+sh                          sdk7780_defconfig
+m68k                          amiga_defconfig
+arm                         lpc32xx_defconfig
+m68k                            mac_defconfig
+arm                            dove_defconfig
+mips                          ath79_defconfig
+alpha                            alldefconfig
+arc                         haps_hs_defconfig
+powerpc                    gamecube_defconfig
+arm                           tegra_defconfig
+arm                         orion5x_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200701
+i386                 randconfig-a001-20200701
+i386                 randconfig-a006-20200701
+i386                 randconfig-a005-20200701
+i386                 randconfig-a004-20200701
+i386                 randconfig-a003-20200701
+x86_64               randconfig-a012-20200701
+x86_64               randconfig-a016-20200701
+x86_64               randconfig-a014-20200701
+x86_64               randconfig-a011-20200701
+x86_64               randconfig-a015-20200701
+x86_64               randconfig-a013-20200701
+i386                 randconfig-a011-20200701
+i386                 randconfig-a015-20200701
+i386                 randconfig-a014-20200701
+i386                 randconfig-a016-20200701
+i386                 randconfig-a012-20200701
+i386                 randconfig-a013-20200701
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-That is, determine who owns each pin at open() and keep it that way till
-close() (by setting some flags at open).
-
-> +
->  		dev_dbg(&port->dev, "Enabling hardware flow ctrl\n");
->  		flow = UART_FLOW_MODE_HW;
->  		gpio_mode |= UART_MODE_RTS_CTS;
-> @@ -497,6 +522,17 @@ static int xr_tiocmset_port(struct usb_serial_port *port,
->  	u8 gpio_set = 0;
->  	u8 gpio_clr = 0;
->  
-> +#ifdef CONFIG_GPIOLIB
-> +	/* Check if the RTS/DTR pins are occupied */
-> +	if (set & TIOCM_RTS || clear & TIOCM_RTS)
-> +		if (port_priv->pin_status[GPIO_RTS])
-> +			return -EBUSY;
-> +
-> +	if (set & TIOCM_DTR || clear & TIOCM_DTR)
-> +		if (port_priv->pin_status[GPIO_DTR])
-> +			return -EBUSY;
-> +#endif
-
-Same here. And perhaps just ignoring the pins managed by gpiolib is
-better (cf. gpiolib and pinctrl being orthogonal).
-
-> +
->  	/* Modem control pins are active low, so set & clr are swapped */
->  	if (set & TIOCM_RTS)
->  		gpio_clr |= UART_MODE_RTS;
-> @@ -589,9 +625,175 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
->  		   state);
->  }
->  
-> +#ifdef CONFIG_GPIOLIB
-> +
-> +static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct usb_serial_port *port = gpiochip_get_data(gc);
-> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> +
-> +	/*
-> +	 * Do not proceed if the port is open. This is done to avoid changing
-> +	 * the GPIO configuration used by the serial driver.
-> +	 */
-> +	if (port_priv->port_open)
-> +		return -EBUSY;
-> +
-> +	/* Mark the GPIO pin as busy */
-> +	port_priv->pin_status[offset] = true;
-
-You need a lock to serialise against open/close properly.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void xr_gpio_free(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct usb_serial_port *port = gpiochip_get_data(gc);
-> +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> +
-> +	/* Mark the GPIO pin as free */
-> +	port_priv->pin_status[offset] = false;
-> +}
-
-Johan
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
