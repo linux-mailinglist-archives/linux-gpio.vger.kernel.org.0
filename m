@@ -2,112 +2,265 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 279CD210007
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 00:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6197E210169
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Jul 2020 03:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgF3W1G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Jun 2020 18:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42866 "EHLO
+        id S1725805AbgGABVm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Jun 2020 21:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgF3W1F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 18:27:05 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C67EC061755
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 15:27:05 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so16887850wmm.0
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 15:27:05 -0700 (PDT)
+        with ESMTP id S1725763AbgGABVm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Jun 2020 21:21:42 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4F3C061755
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:21:42 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id i4so10307481pjd.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jun 2020 18:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RJMDWi4rVdnlXtHH3FEEBs4ZVPxpgSB+nPYBkDaztWY=;
-        b=g0+5ViLx5xhv7QmSHuJ0gdETRPLWxYOqYl3T1moYSb8ZkhOwPrvz8EQ7WPUHcwZMBR
-         +baNnqiEkYHKhOUCBB4yhTPYhk7KtNJHItMhcXWUoyAVhaHdqXqQHoQFtyPYmhf1IQGv
-         6vvHb8RJLXC4SrSNne5U0UjpnIOv8Wp6x07Fk=
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=9UIK1ShhLaU8bAoPJTWRjqjpVKz3rYEKFNm0z591NRI=;
+        b=dQ8faYgcCx9gLid0aGq+fk0eDIiTbCWQJf9s+HPHE2Rvbm7DhV4F5YZsl1xM9ZFnKw
+         gUVghJD98GPhZYfz/nQKHhQHGZcE48IhRPGZ1/q4KKLXjIVetYWsi1JBPJFxhtJM38KV
+         KTCgPcTULl2XpaP5GujEPGBe59V00egzaSo8gj8bkOMrKSqd2xsZFtkIgCwxh+E/hLYv
+         EAqvaKL+p9+CPm9b8iRDDkj+w93euWEDlWbTMx6obd4PT8eF8mZNHiTywyNZLmtD0Cvg
+         sPkDO6iS+Ud6voQfCMZ4CzIpQ+SsSyJNPWzyWiRE5ABDkr3+dl23xKuEiVd6IlxgEIiy
+         6LBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RJMDWi4rVdnlXtHH3FEEBs4ZVPxpgSB+nPYBkDaztWY=;
-        b=AAqospZqsaVWt11Uyw5fRkonzLiZneXlUAd1P/vCRj9JUm/1k97Uy6YkuF16Zw0Vfc
-         nKeIzuu1xTC/NHw4ALKRS3wxsFgFGc/wwtb+Qdo7A0TIfx4mnLEY36TnrIXqKxO/0ieN
-         xqvbsj7/kOJUkiL+lm4qNXTpQrcsMi8221hb4qtpgzlEdSEYJrW7Qy05iJOMqIlBxToq
-         cgnLxUdwX4f6jlDuT0ddaLJ2jm4/PvGhyKWjIlsXKz5D5ticUR9T0WSC4C78jOxm0VTK
-         jlBLDOc20IZ7pU/vxxoR+YGNPnNsLxTWZGgpub7CPDqnW/T+dxFfkDMfUlmYBvLfHFlU
-         Mt2w==
-X-Gm-Message-State: AOAM532C0agkEZsnfbZ1rS1AMNo/OJPGnuuoMSFsBotMzw9X9GbCg4/k
-        0kTEjMJzISUQ/AQWoDsbYyO0YM3r9fu0CA==
-X-Google-Smtp-Source: ABdhPJwLDuL7dsch52OEz43Vnb+/wc9UWTMLbW6RREjm/xJ670fR0aYqcK6lMpp4NWS+oCn7O3qqnQ==
-X-Received: by 2002:a1c:2cd7:: with SMTP id s206mr22638463wms.109.1593556022584;
-        Tue, 30 Jun 2020 15:27:02 -0700 (PDT)
-Received: from [10.230.182.181] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id f12sm5145719wrj.48.2020.06.30.15.26.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 15:27:01 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: nsp: Set irq handler based on trig type
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200630204704.17736-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <bc6c62f7-1ae5-4f7d-43ba-efae057e8cb7@broadcom.com>
-Date:   Tue, 30 Jun 2020 15:26:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=9UIK1ShhLaU8bAoPJTWRjqjpVKz3rYEKFNm0z591NRI=;
+        b=aLoUSS/N7ZtvH3B1aa4yh+BWSuQG6FgBLU7xe9zTO4ztO3b2gFRonMUsAjKcNf1nCG
+         J/8GSGxnzhZXRQbhamS6TOr0xK3g8kSg0hSMxQ5b3T31wBKDRtBjFiZ9fU6MM1jggItd
+         ni1OdKAeS7cQ+sVqhhADfUpdBXqMdlp7ks3Sb3okyaJ57/D5aOTqYKJSku7tJ3ASJSQf
+         j2HEZkPs2sCVdgLwhmduLfxSbgspAtrRcV7FJNme4DF1HZEEKgjBvdkUnqnYYW5KaokX
+         wF0DuadEEyv7iIYPq1pkdDMkWcVQuwoeDyZIcQdiJuw1BQWekQwEM1W8dqUNuFTRpo9b
+         oc/A==
+X-Gm-Message-State: AOAM5315uzxG5ugM/qpWIJmmF8TSXzyrCz1nomaRmhwWcnkBBUu65zPn
+        0kNouXejFQNacRPR2oqeSPp1HcX0UuI=
+X-Google-Smtp-Source: ABdhPJy9aIgWz6dNAHMJC1A5P7XwYJ0lg9t3tUKxYyNOjhkyUnauIuBehcCJqPZX78H/lR662BU0/w==
+X-Received: by 2002:a17:90a:1117:: with SMTP id d23mr25543440pja.136.1593566501101;
+        Tue, 30 Jun 2020 18:21:41 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id i67sm2183983pfg.13.2020.06.30.18.21.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 18:21:40 -0700 (PDT)
+Message-ID: <5efbe524.1c69fb81.da8a.5b14@mx.google.com>
+Date:   Tue, 30 Jun 2020 18:21:40 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200630204704.17736-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v5.8-rc1-35-g65884065616f
+X-Kernelci-Report-Type: build
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next build: 7 builds: 0 failed, 7 passed,
+ 21 warnings (v5.8-rc1-35-g65884065616f)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mark,
+linusw/for-next build: 7 builds: 0 failed, 7 passed, 21 warnings (v5.8-rc1-=
+35-g65884065616f)
 
-On 6/30/2020 1:47 PM, Mark Tomlinson wrote:
-> Rather than always using handle_simple_irq() as the gpio_irq_chip
-> handler, set a more appropriate handler based on the IRQ trigger type
-> requested. This is important for level triggered interrupts which need
-> to be masked during handling. Also, always acknowledge the interrupt
-> regardless of whether it is edge or level triggered.
-> 
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
->  drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> index bed0124388c0..349fb384113e 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-> @@ -174,11 +174,8 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
->  	struct nsp_gpio *chip = gpiochip_get_data(gc);
->  	unsigned gpio = d->hwirq;
->  	u32 val = BIT(gpio);
-> -	u32 trigger_type;
->  
-> -	trigger_type = irq_get_trigger_type(d->irq);
-> -	if (trigger_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
-> -		nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
-> +	nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
+Full Build Summary: https://kernelci.org/build/linusw/branch/for-next/kerne=
+l/v5.8-rc1-35-g65884065616f/
+
+Tree: linusw
+Branch: for-next
+Git Describe: v5.8-rc1-35-g65884065616f
+Git Commit: 65884065616fc34c9613fd743c022716083a9ccc
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
+git/
+Built: 7 unique architectures
+
+Warnings Detected:
+
+arc:
+
+arm64:
+    defconfig (gcc-8): 8 warnings
+
+arm:
+    multi_v7_defconfig (gcc-8): 12 warnings
+
+i386:
+
+mips:
+
+riscv:
+    defconfig (gcc-8): 1 warning
+
+x86_64:
 
 
-I have a question here. I assume writing a bit to this register will
-result in clearing that bit, is that true?
+Warnings summary:
 
-Based on the driver, the 'nsp_gpio_irq_handler' seems to rely on
-'NSP_GPIO_EVENT' register to figure out which GPIO the interrupt is for.
-And if so, and if this is cleared here that is invoked before the actual
-IRQ handler, how does this work?
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #size-cells (1) differs from / (2)
+    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
+rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
+ its #address-cells (1) differs from / (2)
+    1    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=
+=98e1000e_check_me=E2=80=99 defined but not used [-Wunused-function]
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
+ (1) differs from / (2)
+    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
+s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
+lls (1) differs from / (2)
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: War=
+ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C add=
+ress must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4:=
+ Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus=
+ unit address format error, expected "40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: War=
+ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C add=
+ress must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4:=
+ Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus=
+ unit address format error, expected "40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: War=
+ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C add=
+ress must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4:=
+ Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus=
+ unit address format error, expected "40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: War=
+ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C addr=
+ess must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4:=
+ Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus =
+unit address format error, expected "40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C addr=
+ess must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: =
+Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus =
+unit address format error, expected "40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C addr=
+ess must be less than 10-bits, got "0x40000010"
+    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: =
+Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus =
+unit address format error, expected "40000010"
 
-I could be missing something here, so please help to explain it in more
-details here.
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
 
-Thanks,
+Detailed per-defconfig build reports:
 
-Ray
+---------------------------------------------------------------------------=
+-----
+32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
+ion mismatches
+
+---------------------------------------------------------------------------=
+-----
+defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
+matches
+
+Warnings:
+    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=98e1=
+000e_check_me=E2=80=99 defined but not used [-Wunused-function]
+
+---------------------------------------------------------------------------=
+-----
+defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
+smatches
+
+Warnings:
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#address-cells (1) differs from / (2)
+    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
+ (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
+#size-cells (1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
+1) differs from / (2)
+    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
+mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
+differs from / (2)
+
+---------------------------------------------------------------------------=
+-----
+haps_hs_smp_defconfig (arc, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 =
+section mismatches
+
+---------------------------------------------------------------------------=
+-----
+i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
+n mismatches
+
+---------------------------------------------------------------------------=
+-----
+multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 12 warnings, 0 se=
+ction mismatches
+
+Warnings:
+    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: Warni=
+ng (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus unit =
+address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warning (=
+i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C address m=
+ust be less than 10-bits, got "0x40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: Warni=
+ng (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus unit =
+address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warning (=
+i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C address m=
+ust be less than 10-bits, got "0x40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit =
+address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning =
+(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address m=
+ust be less than 10-bits, got "0x40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit=
+ address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning =
+(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address =
+must be less than 10-bits, got "0x40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit=
+ address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning =
+(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address =
+must be less than 10-bits, got "0x40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warn=
+ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit=
+ address format error, expected "40000010"
+    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning =
+(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address =
+must be less than 10-bits, got "0x40000010"
+
+---------------------------------------------------------------------------=
+-----
+x86_64_defconfig (x86_64, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 se=
+ction mismatches
+
+---
+For more info write to <info@kernelci.org>
