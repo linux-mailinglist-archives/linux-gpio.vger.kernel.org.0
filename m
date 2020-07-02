@@ -2,77 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD67B212312
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jul 2020 14:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBD57212377
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Jul 2020 14:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgGBMSh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Jul 2020 08:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55030 "EHLO
+        id S1729055AbgGBMgt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Jul 2020 08:36:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbgGBMSg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jul 2020 08:18:36 -0400
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD1C6C08C5C1;
-        Thu,  2 Jul 2020 05:18:36 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 49yHF72b7SzKmV1;
-        Thu,  2 Jul 2020 14:18:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593692313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8PdW4mY0M10JbXsnQKZPQGWOov3L8734sg9udOp2odM=;
-        b=myuci/fRw15/QzDb3nTia6hCdEO/4qQDCzXXK8x0k4uR/xxZcky8rf249YE93rqV+l4UNS
-        mp/jqH72t546XWpFyJRasU2fVyJHP6kYW/4tkXdpTtt9gWPXXin25lv+IFPTsgIuKklrO/
-        /2Gl2+doiqmOEgkuZxHWIYRPuY7rEAC2e4rxQ3DUkGIZCCZaNyon3lvkodXNXQqIvTeAz4
-        NahrXayIWFOyVLQtaFjoUYPes/tLihjK1xNSlorsR7gvMPE+/jRXdtZySe+q6QsRhwx5zS
-        g8bkvbSx0cz8O+1IBpA3UMWLfrsYU+r4g3Ndgp+czbfR+fjMFJitU7BlBtzy4A==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id K4S0sSUXSksq; Thu,  2 Jul 2020 14:18:32 +0200 (CEST)
-Subject: Re: [PATCH v3 1/2] gpio: add GPO driver for PCA9570
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        with ESMTP id S1729049AbgGBMgt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jul 2020 08:36:49 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771E5C08C5C1;
+        Thu,  2 Jul 2020 05:36:49 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u8so12093590pje.4;
+        Thu, 02 Jul 2020 05:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=70KIJZ33aGI+UMaCpiknKdXzvORTFf4NfJOKWe9rZQo=;
+        b=aYUBx2NDjD3DbNNBJbMZAT3GU8EdHoGW4ulTq3hZWT3U5O8crdVSE9d5s9CaAik1I/
+         HPakXsDnaeV85PwAwbmzb03qsHuQA4zoFE8gagv8dSwze6/HnUuqG2KEcpS6GXGIEjsx
+         vnQ/vMoTRyL1rl9/WuSGz/SwnRgpoeBh1rkNuXT6t2YQZgJySXyufXpO1Bt6XL3eztgu
+         IahgUaShxMUuJrZq8ReNN/kftpOVQdHqtSmUpmWQlClFaatr15hgpkJu7MlrN53xpCO6
+         bVW7V1pKqkG5PsF1t5W2VyAVEHieX70QLI9tb0S6v0Z8udodKmRVjtXb2PShE/i1VUFS
+         yBDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=70KIJZ33aGI+UMaCpiknKdXzvORTFf4NfJOKWe9rZQo=;
+        b=jwEslo0qWCtwnzWIHNIlT2MkAbyflSeE0fikg1HWtOUFtuD0VArtPhPnavBUR6qUrU
+         7MxuCDgyV9KHOVsIlQ1lC020u2eE58aT+yN/dj9fYqb1ub7DZO1MwAOnb+CIUzStNPZp
+         Xbz9agb16X6ZABwdWgBFJT4YreiYHBMBu8FbEQQ/X4QsZBuyJKZOtK0ftw/cL2UZj0zt
+         Y+XkL9eCydqzfKw/gbtP9cRq9QrfdyTSXt5KcUwTBlIBgaASPFO9fMurWCovlqNfzWEt
+         358taC4hKJzjSbfJFF29alWUzBj/sTtplRvk8hBikeqbQa03nWc/CB0eJ3ZzLElo/r89
+         VrXA==
+X-Gm-Message-State: AOAM532fzHLXpbcMShswbhN/cDJHBjGgjNQZVjximci4OMEY1ShS24Oc
+        y/stDbf7LicFFEp2LRY13/VFN5xjDmYfueC/DIrUVvZk
+X-Google-Smtp-Source: ABdhPJy8HHhtSGM6T/cs0JiJcz2Vn42c32KKtBwllFR5lqyGp0yAfYakRj74vN96iGB5hiN90hGYV/BSbRX/imPhxQg=
+X-Received: by 2002:a17:90b:1b52:: with SMTP id nv18mr28038158pjb.129.1593693408863;
+ Thu, 02 Jul 2020 05:36:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200702121722.1121468-1-mans0n@gorani.run>
+In-Reply-To: <20200702121722.1121468-1-mans0n@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 2 Jul 2020 15:36:32 +0300
+Message-ID: <CAHp75VdSWxcAQzWryKoMfzh8xM_2ZRF6Uk+8pveGhmt=prOAVg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Michael Walle <michael@walle.cc>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20200630160736.1196697-1-mans0n@gorani.run>
- <CAHp75VfuvuMQ3r_SHSUzE78TViQMqDCqPLEZ4eUjLVUpNHj7kA@mail.gmail.com>
-From:   Sungbo Eo <mans0n@gorani.run>
-Message-ID: <70c39afa-ee69-f867-61ae-a7e3a5c149d6@gorani.run>
-Date:   Thu, 2 Jul 2020 21:18:24 +0900
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VfuvuMQ3r_SHSUzE78TViQMqDCqPLEZ4eUjLVUpNHj7kA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -2.70 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 32C4F1807
-X-Rspamd-UID: 0a1fcb
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-07-01 06:30, Andy Shevchenko wrote:
-> On Tue, Jun 30, 2020 at 7:08 PM Sungbo Eo <mans0n@gorani.run> wrote:
->>
->> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
->> Its ports are controlled only by a data byte without register address.
->>
->> As there is no other driver similar enough to be adapted for it, a new
->> driver is introduced here.
->>
-> 
-> It looks good, but I would add ->get() to return buffered value.
-> 
+On Thu, Jul 2, 2020 at 3:18 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
 
-Thanks, your suggestion was indeed valuable. I reworked the driver, 
-please have a look.
+is a 4-bit
+
+> Its ports are controlled only by a data byte without register address.
+>
+> As there is no other driver similar enough to be adapted for it, a new
+> driver is introduced here.
+
+Can we have a Datasheet: tag with URL attached to it?
+
+...
+
+> +static int pca9570_read(struct pca9570 *gpio, u8 *value)
+> +{
+> +       s32 ret;
+> +
+> +       ret = i2c_smbus_read_byte(gpio->client);
+> +       if (ret < 0)
+> +               return ret;
+> +
+
+> +       *value = (u8)ret;
+
+I doubt casting is needed.
+
+> +       return 0;
+> +}
+
+...
+
+> +static const struct i2c_device_id pca9570_id_table[] = {
+> +       { "pca9570", 4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
+> +
+> +static const struct of_device_id pca9570_of_match_table[] = {
+
+> +       { .compatible = "nxp,pca9570" },
+
+This driver data should also have 4.
+
+> +       { /* sentinel */ }
+> +};
+
+...
+
+> +       gpio->chip.ngpio = i2c_match_id(pca9570_id_table, client)->driver_data;
+
+Oh, avoid direct access to the table like this. And you may simply use
+device_get_match_data().
+...
+
+> +       /* Read the current output level */
+> +       (void) pca9570_read(gpio, &gpio->out);
+
+(void) casting is not needed. And I'm not sure hiding an error is a
+good idea. But the latter is up to you.
+
+-- 
+With Best Regards,
+Andy Shevchenko
