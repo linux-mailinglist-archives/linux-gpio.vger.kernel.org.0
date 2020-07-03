@@ -2,142 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1153521306F
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2020 02:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EDD82130E3
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Jul 2020 03:18:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgGCAUv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Jul 2020 20:20:51 -0400
-Received: from mga03.intel.com ([134.134.136.65]:56677 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGCAUv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Jul 2020 20:20:51 -0400
-IronPort-SDR: 7t1GlYMDspsuXKlfJDcbQEHc7dGXpHgr67CQYU52hfZlY/vshgMtyGEoTivTs1xnTObyxriYrM
- 5+Crlt7IigNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="147066676"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="147066676"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 17:20:50 -0700
-IronPort-SDR: 067JuJ99Np9Wf9ufHaY4Czz7FfhgNM3zaLogD8IxrxGnX1Mi6Wh6j4p5c2MRlVN9pcrX4dfBEC
- hFE/gn9Vb6dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="387482677"
-Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Jul 2020 17:20:48 -0700
-Received: from kbuild by 28879958b202 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jr9Rg-0003to-8e; Fri, 03 Jul 2020 00:20:48 +0000
-Date:   Fri, 03 Jul 2020 08:19:34 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:for-next] BUILD SUCCESS
- 65884065616fc34c9613fd743c022716083a9ccc
-Message-ID: <5efe7996.Ilrg7z/UTixZv27N%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726028AbgGCBS4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Jul 2020 21:18:56 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49717 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgGCBSz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Jul 2020 21:18:55 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9A580806A8;
+        Fri,  3 Jul 2020 13:18:50 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593739130;
+        bh=z6uXglLM1apjA8ADkgnQIQcIwy9dTO+rNH4jQNq4seQ=;
+        h=From:To:Cc:Subject:Date;
+        b=iuLVEDZPCQ+m0eZ6892aQXJJfumNC41P6BLE9LVs8m3GNbMDlOOcXu7cJx65PSq7p
+         hOU6jtNN1baGhuUhKgbx609wTN+d2L13mXuQDHi0arllmGmpgl2e3xcCT4PhEZ1oy1
+         8Ro2GtbuJtVh8hm3aEZn6HJDhsANUgbjvGxQxJ+NzkGpkiQwUL8S3DlCH1odTNWl2V
+         1wRAEvQqSc1o+gKZ4JjDhnUs0DU7gEzLU0IGGUWCNwEIKDf5VOR5FUGjqI2G7A6BYz
+         1BDkuRQW9rQKGJFZdcAyborGCkKgXJBwBmjcSMxmN7ZIWGHzOXE9n7v7kJuH+31K+V
+         LJ0HYTcLybrAg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efe877b0000>; Fri, 03 Jul 2020 13:18:51 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id 1C07413EEBA;
+        Fri,  3 Jul 2020 13:18:50 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id 4C7D53404A4; Fri,  3 Jul 2020 13:18:50 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     ray.jui@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        sbranden@broadcom.com
+Cc:     linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH v2] pinctrl: nsp: Set irq handler based on trig type
+Date:   Fri,  3 Jul 2020 13:18:30 +1200
+Message-Id: <20200703011830.15655-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  for-next
-branch HEAD: 65884065616fc34c9613fd743c022716083a9ccc  Merge branch 'devel' into for-next
+Rather than always using handle_simple_irq() as the gpio_irq_chip
+handler, set a more appropriate handler based on the IRQ trigger type
+requested. This is important for level triggered interrupts which need
+to be masked during handling. Also, fix the interrupt acknowledge so
+that it clears only one interrupt instead of all interrupts which are
+currently active. Finally there is no need to clear the interrupt during
+the interrupt handler, since the edge-triggered handler will do that for
+us.
 
-elapsed time: 2750m
-
-configs tested: 80
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Changes in v2:
+- Don't perform unnecessary acks.
+
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm=
+/pinctrl-nsp-gpio.c
+index bed0124388c0..a00a42a61a90 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
+@@ -154,15 +154,9 @@ static irqreturn_t nsp_gpio_irq_handler(int irq, voi=
+d *data)
+ 		level &=3D readl(chip->base + NSP_GPIO_INT_MASK);
+ 		int_bits =3D level | event;
+=20
+-		for_each_set_bit(bit, &int_bits, gc->ngpio) {
+-			/*
+-			 * Clear the interrupt before invoking the
+-			 * handler, so we do not leave any window
+-			 */
+-			writel(BIT(bit), chip->base + NSP_GPIO_EVENT);
++		for_each_set_bit(bit, &int_bits, gc->ngpio)
+ 			generic_handle_irq(
+ 				irq_linear_revmap(gc->irq.domain, bit));
+-		}
+ 	}
+=20
+ 	return  int_bits ? IRQ_HANDLED : IRQ_NONE;
+@@ -178,7 +172,7 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
+=20
+ 	trigger_type =3D irq_get_trigger_type(d->irq);
+ 	if (trigger_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+-		nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
++		writel(val, chip->base + NSP_GPIO_EVENT);
+ }
+=20
+ /*
+@@ -262,6 +256,12 @@ static int nsp_gpio_irq_set_type(struct irq_data *d,=
+ unsigned int type)
+=20
+ 	nsp_set_bit(chip, REG, NSP_GPIO_EVENT_INT_POLARITY, gpio, falling);
+ 	nsp_set_bit(chip, REG, NSP_GPIO_INT_POLARITY, gpio, level_low);
++
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		irq_set_handler_locked(d, handle_edge_irq);
++	else
++		irq_set_handler_locked(d, handle_level_irq);
++
+ 	raw_spin_unlock_irqrestore(&chip->lock, flags);
+=20
+ 	dev_dbg(chip->dev, "gpio:%u level_low:%s falling:%s\n", gpio,
+@@ -691,7 +691,7 @@ static int nsp_gpio_probe(struct platform_device *pde=
+v)
+ 		girq->num_parents =3D 0;
+ 		girq->parents =3D NULL;
+ 		girq->default_type =3D IRQ_TYPE_NONE;
+-		girq->handler =3D handle_simple_irq;
++		girq->handler =3D handle_bad_irq;
+ 	}
+=20
+ 	ret =3D devm_gpiochip_add_data(dev, gc, chip);
+--=20
+2.27.0
+
