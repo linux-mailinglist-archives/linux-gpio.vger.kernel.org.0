@@ -2,104 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 828672146F8
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2020 17:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 088A62147F4
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2020 20:32:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbgGDPnU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Jul 2020 11:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgGDPnU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Jul 2020 11:43:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6B0C061794
-        for <linux-gpio@vger.kernel.org>; Sat,  4 Jul 2020 08:43:20 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jrkJx-0007Ek-3w; Sat, 04 Jul 2020 17:43:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jrkJw-0007cZ-2M; Sat, 04 Jul 2020 17:43:16 +0200
-Date:   Sat, 4 Jul 2020 17:43:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200704154313.qjaxtlz62y6kjytj@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
- <20200703145313.vwjsh5crdqx2u76a@pengutronix.de>
- <CAHp75Vdii+w4nNErG_z_YHwsTYWR9PeJsKk53szk4p-rop-Htw@mail.gmail.com>
+        id S1726682AbgGDScn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Jul 2020 14:32:43 -0400
+Received: from mga07.intel.com ([134.134.136.100]:16923 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726669AbgGDScn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 4 Jul 2020 14:32:43 -0400
+IronPort-SDR: hQ7WGnCrPm5gm0EaYSinU7X5cajfyyiDJMOdWTcugYVlMGtAmla/KAku+KAm6i5DNUa8QP3TgE
+ F6wodY8qI2fw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9672"; a="212270312"
+X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
+   d="scan'208";a="212270312"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 11:32:39 -0700
+IronPort-SDR: jRDtif+gimq3aQbbAxcw/qpIz6Vjf7SFl8judtIXioO60diYwJnNTGyALPGjouBMY6uHP+OdzI
+ rDmA7HanbVfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
+   d="scan'208";a="322025951"
+Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Jul 2020 11:32:37 -0700
+Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jrmxp-0000kc-As; Sat, 04 Jul 2020 18:32:37 +0000
+Date:   Sun, 05 Jul 2020 02:32:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpio-descriptors-drm] BUILD SUCCESS
+ bbb0b68589c88df2ea0f8b57a10edec53772a496
+Message-ID: <5f00cb3d.KBSgV8C2LtH3yf30%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nbvhjrv6doy6cgjl"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdii+w4nNErG_z_YHwsTYWR9PeJsKk53szk4p-rop-Htw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-drm
+branch HEAD: bbb0b68589c88df2ea0f8b57a10edec53772a496  drm: gma500: Convert to GPIO descriptors
 
---nbvhjrv6doy6cgjl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 1765m
 
-On Sat, Jul 04, 2020 at 02:23:09PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 3, 2020 at 5:53 PM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Sun, May 03, 2020 at 12:54:53PM +0200, Miquel Raynal wrote:
->=20
-> ...
->=20
-> > > +     ret =3D regmap_read(pca_chip->regmap, reg, &val);
-> > > +     mutex_unlock(&pca_chip->i2c_lock);
-> > > +     if (ret < 0) {
-> > > +             dev_err(dev, "Cannot retrieve PWM intensity (%d)\n", re=
-t);
-> >
-> > Please use %pe for error codes.
->=20
-> %pe is mainly for error pointers, with plain integers it will look
-> awkward a bit.
+configs tested: 138
+configs skipped: 11
 
-Yeah, the right usage is:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-	dev_err(dev, "Cannot retrieve PWM intensity (%pe)\n", ERR_PTR(ret));
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                       aspeed_g4_defconfig
+m68k                       m5249evb_defconfig
+arm                            mmp2_defconfig
+sh                            shmin_defconfig
+powerpc                      pmac32_defconfig
+arm                          pxa3xx_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                      ppc6xx_defconfig
+mips                          ath25_defconfig
+arm                           efm32_defconfig
+sh                               alldefconfig
+powerpc                    mvme5100_defconfig
+mips                          rb532_defconfig
+xtensa                          iss_defconfig
+h8300                               defconfig
+powerpc                  mpc885_ads_defconfig
+arm                   milbeaut_m10v_defconfig
+sh                        dreamcast_defconfig
+openrisc                    or1ksim_defconfig
+powerpc                     mpc5200_defconfig
+s390                          debug_defconfig
+ia64                                defconfig
+s390                             alldefconfig
+powerpc                      tqm8xx_defconfig
+mips                     loongson1b_defconfig
+powerpc                    gamecube_defconfig
+arm                        trizeps4_defconfig
+nios2                         10m50_defconfig
+powerpc                          alldefconfig
+arm                           stm32_defconfig
+arc                            hsdk_defconfig
+mips                        jmr3927_defconfig
+mips                        vocore2_defconfig
+parisc                generic-64bit_defconfig
+mips                 decstation_r4k_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nios2                            allyesconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                              defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200701
+i386                 randconfig-a001-20200701
+i386                 randconfig-a006-20200701
+i386                 randconfig-a005-20200701
+i386                 randconfig-a004-20200701
+i386                 randconfig-a003-20200701
+x86_64               randconfig-a012-20200701
+x86_64               randconfig-a016-20200701
+x86_64               randconfig-a014-20200701
+x86_64               randconfig-a011-20200701
+x86_64               randconfig-a015-20200701
+x86_64               randconfig-a013-20200701
+i386                 randconfig-a011-20200701
+i386                 randconfig-a015-20200701
+i386                 randconfig-a014-20200701
+i386                 randconfig-a016-20200701
+i386                 randconfig-a012-20200701
+i386                 randconfig-a013-20200701
+i386                 randconfig-a011-20200703
+i386                 randconfig-a014-20200703
+i386                 randconfig-a015-20200703
+i386                 randconfig-a016-20200703
+i386                 randconfig-a012-20200703
+i386                 randconfig-a013-20200703
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allyesconfig
+um                               allmodconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---nbvhjrv6doy6cgjl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8Ao44ACgkQwfwUeK3K
-7AndkAf/VoVfxQww+BvyjBD+Vd05dYxw5ADB0MHirOdCfxKKnri7eYlXBGfEdlCB
-/MFlEhNXyr3sKDizZYtutASSaoncUhCRpxPMMWdRLo2B+ABWwbM0g/gWkLOyqDci
-RDaMvOYHkYSJrKsj05aDUUFLl3LsJP0Pd6Ie2F7ME1FtmElZ6RUL2+16OMEo1Mtu
-pEKjKy3ekggM4K94GtzboiFOPqf3OtExBCXnsNs8dZ0khSZVQXlrAQnd1WkKQRP8
-/i3VZ1Ak0RNWPJkC4zX3OcQC9j4BsvXFmlHpN8raGXhFqkhJlXL10+fYuZLdyN24
-z5XiVw9YzHcxhofr+108N7KU3Emt4A==
-=neRI
------END PGP SIGNATURE-----
-
---nbvhjrv6doy6cgjl--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
