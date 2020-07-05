@@ -2,200 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 088A62147F4
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Jul 2020 20:32:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD1E214B39
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2020 10:58:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgGDScn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Jul 2020 14:32:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16923 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgGDScn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 4 Jul 2020 14:32:43 -0400
-IronPort-SDR: hQ7WGnCrPm5gm0EaYSinU7X5cajfyyiDJMOdWTcugYVlMGtAmla/KAku+KAm6i5DNUa8QP3TgE
- F6wodY8qI2fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9672"; a="212270312"
-X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
-   d="scan'208";a="212270312"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2020 11:32:39 -0700
-IronPort-SDR: jRDtif+gimq3aQbbAxcw/qpIz6Vjf7SFl8judtIXioO60diYwJnNTGyALPGjouBMY6uHP+OdzI
- rDmA7HanbVfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,312,1589266800"; 
-   d="scan'208";a="322025951"
-Received: from lkp-server01.sh.intel.com (HELO 6dc8ab148a5d) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Jul 2020 11:32:37 -0700
-Received: from kbuild by 6dc8ab148a5d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jrmxp-0000kc-As; Sat, 04 Jul 2020 18:32:37 +0000
-Date:   Sun, 05 Jul 2020 02:32:29 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpio-descriptors-drm] BUILD SUCCESS
- bbb0b68589c88df2ea0f8b57a10edec53772a496
-Message-ID: <5f00cb3d.KBSgV8C2LtH3yf30%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726565AbgGEI63 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Jul 2020 04:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgGEI63 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Jul 2020 04:58:29 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC922C08C5DF
+        for <linux-gpio@vger.kernel.org>; Sun,  5 Jul 2020 01:58:28 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id q15so36021582wmj.2
+        for <linux-gpio@vger.kernel.org>; Sun, 05 Jul 2020 01:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fO8Sm7jhXe4mHOe8pjHRrbIqykTXXZPDSkAJJtQ0flQ=;
+        b=UHqRHBrk/E0Nro7ziXuOaa2fcSqwoDgSjmxgLh47J+/bouQPDuI25LLgGRkyN8CPlE
+         4HOBi7C6Iw5v8emKfPYbZGNGcECP0l6o68V5ju4IonzXU4QEzWHoi80mgtc3+R4gqhSN
+         Y8mawndVwaQhVVTaiEBHwZiyZx7D+nhQuJHcJpe9084zirgn13roo0hlOdEzO85QZJdG
+         WnbQahnJ/c0d2yVGP0tUV0+9QYXnB1Kul8CAZPxFqAxY8IvJ/zKot/73RedRcTcwwgXL
+         GY/gWb1okutR4wDE3YeocsKJh//JH7pfgjRDtFgz4nj6DHgIMml7B8+VSAO3/JJ7Fvbr
+         IC/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fO8Sm7jhXe4mHOe8pjHRrbIqykTXXZPDSkAJJtQ0flQ=;
+        b=gjZ5qG1z/V1nK5WBVzF99RYY4OtLzDAbTZqWaU3wfw+D41YLUDIYsQAM6jhf67Nvbl
+         Ls1mN+huXna5DrSzl6HntlIxhZfjEMRLyuU2eUk0n4AHZCNhEhtR/si8yiDUNi3NzpMd
+         0f3Ww+mFpoyKlB+7csiOAgU6qscK4z37tfLbuVfOzYa/T3O4/UPh4jyqiseNaGwOVX7U
+         jcx5SMgj4xg+AtWyWt8wV+NXkUF/DCG4fvO1of+NDORXHBAvgjk9O27LfseLswLUnR3X
+         Y6LpJULbmWxIYjFYbzmk/q/VnHfX9STzpCpFOF+7gMOG7EvP8yIPXGTg95VQq76CY1gM
+         GbcA==
+X-Gm-Message-State: AOAM532dpWS5nKOwf/ueQ5uWBq3yKCC5FgQbr+Qdf4feEvFV8ZB6xUGy
+        9Frp6ISDQNPX+eR9n7DgppCdIZogVvF6A3yclQKMnA==
+X-Google-Smtp-Source: ABdhPJxoXIiB/oovpbebj6RLBt4a0fIvvJskTiQi8g73R7Bb8eF1bsgPg6qJgADyzLpCZDir/JK2rDmBmjxOaavedyc=
+X-Received: by 2002:a1c:f30a:: with SMTP id q10mr43204822wmq.3.1593939507310;
+ Sun, 05 Jul 2020 01:58:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200608125143.GA2789203@x1>
+In-Reply-To: <20200608125143.GA2789203@x1>
+From:   Haojian Zhuang <haojian.zhuang@linaro.org>
+Date:   Sun, 5 Jul 2020 16:58:16 +0800
+Message-ID: <CAD6h2NR3C0UPMR93jx3Hoo270ebfwXe8bx9WG9Edkf7nr2CQ9Q@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl-single: fix pcs_parse_pinconf() return value
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpio-descriptors-drm
-branch HEAD: bbb0b68589c88df2ea0f8b57a10edec53772a496  drm: gma500: Convert to GPIO descriptors
+On Mon, 8 Jun 2020 at 20:51, Drew Fustini <drew@beagleboard.org> wrote:
+>
+> This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+> pinctrl_map is added.  The current behavior is to return 0 when
+> !PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+> incorrectly assumes that a map was added and sets num_maps = 2.
+>
+> Analysis:
+> =========
+> The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+> if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+> returns 0 to indicate there was no error and num_maps is then set to 2:
+>
+>  980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+>  981                                                 struct device_node *np,
+>  982                                                 struct pinctrl_map **map,
+>  983                                                 unsigned *num_maps,
+>  984                                                 const char **pgnames)
+>  985 {
+> <snip>
+> 1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+> 1054         (*map)->data.mux.group = np->name;
+> 1055         (*map)->data.mux.function = np->name;
+> 1056
+> 1057         if (PCS_HAS_PINCONF && function) {
+> 1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+> 1059                 if (res)
+> 1060                         goto free_pingroups;
+> 1061                 *num_maps = 2;
+> 1062         } else {
+> 1063                 *num_maps = 1;
+> 1064         }
+>
+> However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+> !nconfs.  I believe these conditions should indicate that no map was
+> added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+> will set num_maps = 2 even though no maps were successfully added, as
+> it does not reach "m++" on line 940:
+>
+>  895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>  896                              struct pcs_function *func,
+>  897                              struct pinctrl_map **map)
+>  898
+>  899 {
+>  900         struct pinctrl_map *m = *map;
+> <snip>
+>  917         /* If pinconf isn't supported, don't parse properties in below. */
+>  918         if (!PCS_HAS_PINCONF)
+>  919                 return 0;
+>  920
+>  921         /* cacluate how much properties are supported in current node */
+>  922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+>  923                 if (of_find_property(np, prop2[i].name, NULL))
+>  924                         nconfs++;
+>  925         }
+>  926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+>  927                 if (of_find_property(np, prop4[i].name, NULL))
+>  928                         nconfs++;
+>  929         }
+>  930         if (!nconfs)
+>  919                 return 0;
+>  932
+>  933         func->conf = devm_kcalloc(pcs->dev,
+>  934                                   nconfs, sizeof(struct pcs_conf_vals),
+>  935                                   GFP_KERNEL);
+>  936         if (!func->conf)
+>  937                 return -ENOMEM;
+>  938         func->nconfs = nconfs;
+>  939         conf = &(func->conf[0]);
+>  940         m++;
+>
+> This situtation will cause a boot failure [0] on the BeagleBone Black
+> (AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+> has compatible = "pinconf-single" instead of "pinctrl-single".
+>
+> The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+> or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+> map was added.
+>
+> Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+> between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+> is set to 1 as it is valid for pinconf to be enabled and a given pin
+> group to not any pinconf properties.
+>
+> [0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+>
+> Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+> changes from V1 [0]:
+> - if pcs_parse_pinconf() returns -ENOSUPP, then set num_maps to 1 and
+>   proceed normally as it is valid for group to have no pinconf props
+> - added Fixes: tag thanks to Gustavo A. R. Silva
+>
+> [0] https://lore.kernel.org/linux-omap/20200531204147.GA664833@x1/
+>
+>  drivers/pinctrl/pinctrl-single.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index 1e0614daee9b..a9d511982780 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -916,7 +916,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>
+>         /* If pinconf isn't supported, don't parse properties in below. */
+>         if (!PCS_HAS_PINCONF)
+> -               return 0;
+> +               return -ENOTSUPP;
+>
+>         /* cacluate how much properties are supported in current node */
+>         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+> @@ -928,7 +928,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>                         nconfs++;
+>         }
+>         if (!nconfs)
+> -               return 0;
+> +               return -ENOTSUPP;
+>
+>         func->conf = devm_kcalloc(pcs->dev,
+>                                   nconfs, sizeof(struct pcs_conf_vals),
+> @@ -1056,9 +1056,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+>
+>         if (PCS_HAS_PINCONF && function) {
+>                 res = pcs_parse_pinconf(pcs, np, function, map);
+> -               if (res)
+> +               if (res == 0)
+> +                       *num_maps = 2;
+> +               else if (res == -ENOTSUPP)
+> +                       *num_maps = 1;
+> +               else
+>                         goto free_pingroups;
+> -               *num_maps = 2;
+>         } else {
+>                 *num_maps = 1;
+>         }
+> --
+> 2.25.1
 
-elapsed time: 1765m
 
-configs tested: 138
-configs skipped: 11
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                       aspeed_g4_defconfig
-m68k                       m5249evb_defconfig
-arm                            mmp2_defconfig
-sh                            shmin_defconfig
-powerpc                      pmac32_defconfig
-arm                          pxa3xx_defconfig
-arm                       imx_v6_v7_defconfig
-powerpc                      ppc6xx_defconfig
-mips                          ath25_defconfig
-arm                           efm32_defconfig
-sh                               alldefconfig
-powerpc                    mvme5100_defconfig
-mips                          rb532_defconfig
-xtensa                          iss_defconfig
-h8300                               defconfig
-powerpc                  mpc885_ads_defconfig
-arm                   milbeaut_m10v_defconfig
-sh                        dreamcast_defconfig
-openrisc                    or1ksim_defconfig
-powerpc                     mpc5200_defconfig
-s390                          debug_defconfig
-ia64                                defconfig
-s390                             alldefconfig
-powerpc                      tqm8xx_defconfig
-mips                     loongson1b_defconfig
-powerpc                    gamecube_defconfig
-arm                        trizeps4_defconfig
-nios2                         10m50_defconfig
-powerpc                          alldefconfig
-arm                           stm32_defconfig
-arc                            hsdk_defconfig
-mips                        jmr3927_defconfig
-mips                        vocore2_defconfig
-parisc                generic-64bit_defconfig
-mips                 decstation_r4k_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-nios2                            allyesconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                              defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200701
-i386                 randconfig-a001-20200701
-i386                 randconfig-a006-20200701
-i386                 randconfig-a005-20200701
-i386                 randconfig-a004-20200701
-i386                 randconfig-a003-20200701
-x86_64               randconfig-a012-20200701
-x86_64               randconfig-a016-20200701
-x86_64               randconfig-a014-20200701
-x86_64               randconfig-a011-20200701
-x86_64               randconfig-a015-20200701
-x86_64               randconfig-a013-20200701
-i386                 randconfig-a011-20200701
-i386                 randconfig-a015-20200701
-i386                 randconfig-a014-20200701
-i386                 randconfig-a016-20200701
-i386                 randconfig-a012-20200701
-i386                 randconfig-a013-20200701
-i386                 randconfig-a011-20200703
-i386                 randconfig-a014-20200703
-i386                 randconfig-a015-20200703
-i386                 randconfig-a016-20200703
-i386                 randconfig-a012-20200703
-i386                 randconfig-a013-20200703
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-s390                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                allnoconfig
-um                                  defconfig
-um                               allyesconfig
-um                               allmodconfig
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Tested-by: Haojian Zhuang <haojian.zhuang@linaro.org>
