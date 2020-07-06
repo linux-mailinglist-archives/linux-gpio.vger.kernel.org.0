@@ -2,190 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37CCD2153C0
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2020 10:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD953215640
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2020 13:21:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgGFILf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jul 2020 04:11:35 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:4742 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728536AbgGFILc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jul 2020 04:11:32 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0667rscg012104;
-        Mon, 6 Jul 2020 10:11:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+WZHIdwRTPieJW/Mf4tbydfBXpegEoEpTyEHH1Sf3Wo=;
- b=Oe8sn2UCo50GcvGSLFIdEG3KQA7ihvsNogI5oMPxqsfGb5QSIjaB1xEVhD65ivZ6wnp4
- 7y+ChCvCjCpISIit8Ti7BaGzzus8gHZfocRP1UQFEu7IC7asltH1O4TdWN9oD8iREmJO
- 0P6z1FHmw+XXr2xAVWPv7uCHS7GUsaR+G3d7Wqglh9o4gGdrJE1GRg+l8VKPNtiEGBjU
- WdJkxfIJad2pc+7Fih4dL+m86m43w8myVh5kkImu2/82AxdkCNz1OV/Ctjd1JA/yNo61
- lhP4M/iVpCXh79PcgvPs9JtO8WNXNmYczAohDPKnWmnne0Xt64rS9yTs+UBOZPJdm0X3 HQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 322ew925ww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jul 2020 10:11:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9812410002A;
-        Mon,  6 Jul 2020 10:11:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8BB372ADA14;
-        Mon,  6 Jul 2020 10:11:16 +0200 (CEST)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 6 Jul 2020 10:11:16
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>,
-        <alexandre.torgue@st.com>
-Subject: [RESEND PATCH] irqchip/stm32-exti: Use the hwspin_lock_timeout_in_atomic() API
-Date:   Mon, 6 Jul 2020 10:11:15 +0200
-Message-ID: <20200706081115.25180-1-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
+        id S1728881AbgGFLVa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jul 2020 07:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728683AbgGFLVa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jul 2020 07:21:30 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C608DC061794
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2020 04:21:29 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id dm12so16968803qvb.9
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2020 04:21:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eaKkoa6OtK9ushlhbRsOllZl1SkbmcFyigdDIq8+K+E=;
+        b=KFKjgcxGJuWiNXupkKc/WX+BRn9eaPo70uMCjtxoRwexDUqyKLPR74ag+pyo2iHje0
+         fWce7QcRP/v0WSiBq2IGXHYY069VP7xOrsRtEFB/lqWESZ2JruZ5NfI8nkTw+9rxJBhT
+         O4WbVRTd40L4Gk8K67XZ6YpvWv+7OE/aSdrMoDYvvjPf12jW690Wx3eJscAg4bBqmG45
+         8b7vuh3Zql+rrZ7jgLMzJqZUghlcg1Ij2VJNrxch1PGF+q9099PPddonHkIhYWbM4MXB
+         Gle3lOnMaPrTAMZ1r5+RlaX8/GRDOVigZj0gn+PU6z1ykVa5L9TPh+1vrnAT5Xl3bOKs
+         qBSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eaKkoa6OtK9ushlhbRsOllZl1SkbmcFyigdDIq8+K+E=;
+        b=aOfrifVzwBDdNnxNIhPlIYG2STJYfRsCjwnrP6ob5aU/CPlmGe4Oh6LhzaWg6kTUv1
+         C3QHBv2I6V3VXpXxdHcCxFcla8cnPeqqQn40HxS9syDEzUSnF0FbCdE4JxxcXHI5tIew
+         MvfaH0orMnwb38oKMfDACDksisn1qC7dkf/MDexhrTJpOFGILtcloi9LYoDjYd8BldOo
+         4D/DaMMV+Vf9DvV/J1aeCQ5eDDAaHeVbjt0mP7U3OMvRNVi2JxZMpbBNxy+fisAYsLol
+         AaMkIiFw2FS1iS1QWuVurfS0yaV8AydtMcdR1MVtqjM2p+AR48a9GdnzOZQLgVmR4eeN
+         RtuA==
+X-Gm-Message-State: AOAM530BOnjfpfEDNu6Dpq7yqFC58G7LeNzazcey/1AuYLD61aneJYOu
+        fpvLLUIamKnkCPlvrOLiEmcPv9MNtIf7da21tURN1w==
+X-Google-Smtp-Source: ABdhPJxqWzMYBXqxw8sg+ZtpjtUqR1PP8k45Y3HIpLFVvj/kkrM2AKCZmXiSz8xgHwLvqXWQCktiertkhyBS6Fl3sEY=
+X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr43869344qvz.76.1594034488967;
+ Mon, 06 Jul 2020 04:21:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-06_04:2020-07-06,2020-07-06 signatures=0
+References: <20200705133038.161547-1-mans0n@gorani.run>
+In-Reply-To: <20200705133038.161547-1-mans0n@gorani.run>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 6 Jul 2020 13:21:18 +0200
+Message-ID: <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabien Dessenne <fabien.dessenne@st.com>
+On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+>
+> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+>
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> ---
+> v5:
+> * amended the commit message
+> * removed unnecessary castings
+> * added data to of_match_table
+>
+> v4:
+> * removed ->direction_input() and ->direction_output()
+>   (Seems unnecessary to me)
+> * removed ->set_multiple()
+>   (I'm not sure this implementation is really correct)
+> * added ->get()
+>   (DS says we can read the status from the device)
+> * read current status during probe
+>
+> v3:
+> * remove mutex
+> * rename buffer to out
+> * simplify return statements
+> * replace ->probe() to ->probe_new()
+> * move ngpio to driver_data
+>   (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
 
-Now that the hwspin_lock_timeout_in_atomic() API is available use it.
+This driver looks nice now but why did you remove the mutex in v3? I
+think when Andy commented on that, he meant not understanding why the
+error check is protected, not the i2c operations.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Are you sure you don't need this lock?
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index faa8482c8246..c7ab69694931 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -25,7 +25,6 @@
- #define IRQS_PER_BANK 32
- 
- #define HWSPNLCK_TIMEOUT	1000 /* usec */
--#define HWSPNLCK_RETRY_DELAY	100  /* usec */
- 
- struct stm32_exti_bank {
- 	u32 imr_ofst;
-@@ -277,55 +276,24 @@ static int stm32_exti_set_type(struct irq_data *d,
- 	return 0;
- }
- 
--static int stm32_exti_hwspin_lock(struct stm32_exti_chip_data *chip_data)
--{
--	int ret, timeout = 0;
--
--	if (!chip_data->host_data->hwlock)
--		return 0;
--
--	/*
--	 * Use the x_raw API since we are under spin_lock protection.
--	 * Do not use the x_timeout API because we are under irq_disable
--	 * mode (see __setup_irq())
--	 */
--	do {
--		ret = hwspin_trylock_raw(chip_data->host_data->hwlock);
--		if (!ret)
--			return 0;
--
--		udelay(HWSPNLCK_RETRY_DELAY);
--		timeout += HWSPNLCK_RETRY_DELAY;
--	} while (timeout < HWSPNLCK_TIMEOUT);
--
--	if (ret == -EBUSY)
--		ret = -ETIMEDOUT;
--
--	if (ret)
--		pr_err("%s can't get hwspinlock (%d)\n", __func__, ret);
--
--	return ret;
--}
--
--static void stm32_exti_hwspin_unlock(struct stm32_exti_chip_data *chip_data)
--{
--	if (chip_data->host_data->hwlock)
--		hwspin_unlock_raw(chip_data->host_data->hwlock);
--}
--
- static int stm32_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct stm32_exti_chip_data *chip_data = gc->private;
- 	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
-+	struct hwspinlock *hwlock = chip_data->host_data->hwlock;
- 	u32 rtsr, ftsr;
- 	int err;
- 
- 	irq_gc_lock(gc);
- 
--	err = stm32_exti_hwspin_lock(chip_data);
--	if (err)
--		goto unlock;
-+	if (hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(hwlock, HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			pr_err("%s can't get hwspinlock (%d)\n", __func__, err);
-+			goto unlock;
-+		}
-+	}
- 
- 	rtsr = irq_reg_readl(gc, stm32_bank->rtsr_ofst);
- 	ftsr = irq_reg_readl(gc, stm32_bank->ftsr_ofst);
-@@ -338,7 +306,8 @@ static int stm32_irq_set_type(struct irq_data *d, unsigned int type)
- 	irq_reg_writel(gc, ftsr, stm32_bank->ftsr_ofst);
- 
- unspinlock:
--	stm32_exti_hwspin_unlock(chip_data);
-+	if (hwlock)
-+		hwspin_unlock_in_atomic(hwlock);
- unlock:
- 	irq_gc_unlock(gc);
- 
-@@ -504,15 +473,20 @@ static int stm32_exti_h_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
- 	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
-+	struct hwspinlock *hwlock = chip_data->host_data->hwlock;
- 	void __iomem *base = chip_data->host_data->base;
- 	u32 rtsr, ftsr;
- 	int err;
- 
- 	raw_spin_lock(&chip_data->rlock);
- 
--	err = stm32_exti_hwspin_lock(chip_data);
--	if (err)
--		goto unlock;
-+	if (hwlock) {
-+		err = hwspin_lock_timeout_in_atomic(hwlock, HWSPNLCK_TIMEOUT);
-+		if (err) {
-+			pr_err("%s can't get hwspinlock (%d)\n", __func__, err);
-+			goto unlock;
-+		}
-+	}
- 
- 	rtsr = readl_relaxed(base + stm32_bank->rtsr_ofst);
- 	ftsr = readl_relaxed(base + stm32_bank->ftsr_ofst);
-@@ -525,7 +499,8 @@ static int stm32_exti_h_set_type(struct irq_data *d, unsigned int type)
- 	writel_relaxed(ftsr, base + stm32_bank->ftsr_ofst);
- 
- unspinlock:
--	stm32_exti_hwspin_unlock(chip_data);
-+	if (hwlock)
-+		hwspin_unlock_in_atomic(hwlock);
- unlock:
- 	raw_spin_unlock(&chip_data->rlock);
- 
--- 
-2.17.1
-
+Bartosz
