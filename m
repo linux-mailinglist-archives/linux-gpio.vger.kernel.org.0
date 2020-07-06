@@ -2,77 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78EBB2158CE
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2020 15:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 662E8215ACB
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2020 17:33:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgGFNq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Jul 2020 09:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729158AbgGFNq4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jul 2020 09:46:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DB6C061755
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2020 06:46:56 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so45461056ljn.4
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2020 06:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RkuIfciSPyPXrSkEl1s1JRHJQ/3MzHgmqoXKdPaAFrM=;
-        b=GMp5J3Hbn3MO/yaK/jgxoMMXtIPRVdExvGwpiv0Fy0lQaqsfZgNekNwfEFLCZY/476
-         WEg15tR9FhQ4mKwLrZBzxO0kA/NgUBcVSFM9Y22nIZpOFnbMH60Hg/Xqw5ViGa2krl6i
-         2iqPV/KwZHQe97l4m316kRpmN42yZTqOpb6h6KXunquossMZhFPKPCccGs0rlcggNznl
-         dG5LfpXo8OBlJ/sErZtGukXrYbdmRyFleM619ahxQzw/ivUOTWY8Vz6GbZTS/3RmmnLf
-         3OTZMD8Bxx81vO7AbGMKiW7p/reqLH93Qc0ZRWQJEHKdT9h7SAPAAdy8o2A1I3e3bt31
-         gENw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RkuIfciSPyPXrSkEl1s1JRHJQ/3MzHgmqoXKdPaAFrM=;
-        b=q2Xqosc1vR2jMXgaWvYTyEs6xz287QyDySH8ll9Z8dpxoZ6qGtq8MTFNrdGZ7PXSKw
-         iebHW6w3sLlGhsvak/PaNmM3lwNpIKzgV4oeH7WsF300XWdlWuoEe/n1wVpiFgw4bO85
-         7JS7JRcL4BzWpbpgvxsZEn/UON/7xCgAYLIB5FitcqGx4r9DUu3sxc2gR01sFA7q4K+x
-         CH3QYaImqEngDzyxlEQ6qOyKNrWWTNPdyvNWqNcJ5aiIrphXDeDIY2CxTJKSc+nBPrhL
-         ea7qXLn3HjQbAnZCNlSY5mFzq2poarbvYEySOAw7+caUXL4FjBs5V9llgbkl0ZCTQyAn
-         0L+g==
-X-Gm-Message-State: AOAM533NudFaKVepgaw/EX1b+uEJG44us9itXmfNIgvkufSlhA/CAsbh
-        Kvc6BXEwPNFPb/7FGPg832CbJwxcnSj8fLYOVKHQJE9u1rg=
-X-Google-Smtp-Source: ABdhPJxFEPAnMDDmbdiCFckbauejl60S7Q5jeZ5PGk7Lxr+hZr2S+9Oej1mS878fQMud/4VvtDo/3Rdcxx7UUcdySew=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr28361421ljj.293.1594043214904;
- Mon, 06 Jul 2020 06:46:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200703121735.6738-1-geert+renesas@glider.be>
-In-Reply-To: <20200703121735.6738-1-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Jul 2020 15:46:44 +0200
-Message-ID: <CACRpkdaZA5UGuy=7GSkwubRO33N4yPxQc-_fJBkiRxzxEcOuTQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: sh-pfc: Updates for v5.9
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
+        id S1729412AbgGFPd3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jul 2020 11:33:29 -0400
+Received: from smtpcmd10101.aruba.it ([62.149.156.101]:56656 "EHLO
+        smtpcmd10101.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729297AbgGFPd3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Jul 2020 11:33:29 -0400
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd10.ad.aruba.it with bizsmtp
+        id zrZS2200T3Zw7e501rZSBy; Mon, 06 Jul 2020 17:33:26 +0200
+Subject: Re: [RFC] GPIO User I/O
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+Date:   Mon, 6 Jul 2020 17:33:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594049606; bh=sjhRclmbNQRngrKqfhNGWCPGl7uVo1ztyrmApJp5b2o=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=Y9JrYiAY9mqN4rpCtup82nASdqGFnpsgbcwunaugM2ZTSbo131CjkiwkmGB87Q0tA
+         6kkprkAre8PT249nD/qfSAmiCWbBoCDaAa19ZcSHmUbOJ5gJd95MVjoN8HrZ7VUjPC
+         tgi/zIIPJoK6Lv88IaYGMTa7yTbSB6CVk2LgMerliHfsw3Td1vdr2d958A4Z8UGfbA
+         RXRPYxJyDf7he6FCFVcdhvvViiwMx68CS49bnan7vhJfOOMH4NRkCrYrMThP7YLZGX
+         EfW3xVTTaNJC218SmpU403vnRi7CbQ/bK44mUCIIHUGRDK0uFvxjmmcbCJEkuw5g1I
+         dgBoTbPfhhAlA==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 2:17 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On 06/07/2020 15:43, Linus Walleij wrote:
+> Hi Rodolfo!
 
-> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
->
->   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/sh-pfc-for-v5.9-tag1
+Hi. :)
 
-Thanks a lot!
+> thanks for your mail.
+> 
+> On Mon, Jul 6, 2020 at 2:19 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+> 
+>> 4) Then users will find a new class with entries, one for each new line:
+>>
+>> # ls /sys/class/gpio-uio/
+>> bypass-1  bypass0
+>>
+>> 5) By using the attribute "line" the users can get or set the line status
+>>
+>> # cat /sys/class/gpio-uio/bypass-1/line
+>> 0
+>> # echo 1 > /sys/class/gpio-uio/bypass-1/line
+>> # cat /sys/class/gpio-uio/bypass-1/line
+>> 1
+> 
+> This interface is problematic because it extends the sysfs ABI which is
+> obsolete. This is why the documentation of this ABI has been moved to
+> Documentation/ABI/obsolete/sysfs-gpio  for many years.
 
-Pulled into my devel branch for v5.9 and pushed.
+This support is not part of CONFIG_GPIO_SYSFS; it just uses the sysfs to work.
 
-Yours,
-Linus Walleij
+> The sysfs approach has several problems which are summarized like
+> this in the commit where it was introduced:
+
+I see, but my solution is just for having an easy-to-use way to get access to
+meaningful GPIOs the board manufacturer defined for some specific usage during
+the board design. It's not generic as gpio-sysfs.
+
+> Another thing that is not mentioned here is that when a character
+> device is opened it is automatically closed if a process crashes,
+> which means that kernelspace can do clean-ups and reference counting
+> and making the lines available to other consumers (like if you
+> restart the program).
+
+In this case there is nothing to release nor clean up since each line has a
+fixed name, usage and it can be used as input or output without modifications.
+
+> With Geert's GPIO aggregator userspace and device tree can conjure
+> special per-usecase gpio chips as pointed out by Drew: this is
+> very useful when you want some kernel-managed yet
+> usecase-specific GPIO lines in a special "container" chip.
+> To me this is the best of two worlds. (Kernelspace and userspace.)
+
+Maybe this is the "best of two worlds" as you say but the problem is that board
+manufactures need a way to well-define how a GPIO line must be used for within
+the device-tree and without the need of patches! In this point of view neither
+the "driver_override" way nor adding a compatible value to
+gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
+board!). That's why at the moment they prefer not specify these GPIO lines at
+all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
+simple...
+
+By using my solution each board manufacturer can specify meaningful GPIO lines
+directly within the device-tree, then users can use it via the "line" property
+or just use the new chrdev interface for better performances.
+
+Also my solution allows developers to manage these lines without any external
+programs but just using cat&echo. This is _very_ useful when your embedded
+system has a very tiny rootfs!
+
+My two cents. :)
+
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
