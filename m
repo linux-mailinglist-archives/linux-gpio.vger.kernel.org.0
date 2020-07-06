@@ -2,284 +2,664 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F388214CC8
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Jul 2020 15:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1A62152C4
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Jul 2020 08:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgGENbJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Jul 2020 09:31:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgGENbJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Jul 2020 09:31:09 -0400
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC1DC061794;
-        Sun,  5 Jul 2020 06:31:08 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B08jP0JgpzQlHt;
-        Sun,  5 Jul 2020 15:31:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593955862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ce0tV1PIU1POYpnsSZxB0iFhytkwDCzMi3ju2tYJTxw=;
-        b=ToZHG4YoVjWrV+0oG9vLuUqS2270j96I8VDbIJp0XhVCqPkjCJlVdqzSFgm/wGGngjv3CG
-        0SjKqfS9QyUYXWsTA4YfSjv7HoVPpiG06/8npYLga92YjhBxOEF0y7IptPXuj4AcJRr0Yt
-        UibCXAlJN8AnTCn9spdVMGzb40Eq18oS5APrsXusTxVFDBjahkAF+PP8SAkOLIistyUk+p
-        7l/y79fpGf1NTfbsFJMfMmb0oLaan9mZO/rLu9qmBZMW/+3tGczc21XOllq06hi6s03bDm
-        Zmr990/jBZGtH5Mbx5FWekmev+EzUqlr7XP+AuM7ypk6N/zxN0Na+ry6uLba/g==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id DPmn9X-5-ZHh; Sun,  5 Jul 2020 15:31:00 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
-Date:   Sun,  5 Jul 2020 22:30:38 +0900
-Message-Id: <20200705133038.161547-1-mans0n@gorani.run>
+        id S1725889AbgGFGnF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Jul 2020 02:43:05 -0400
+Received: from mga04.intel.com ([192.55.52.120]:40545 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727923AbgGFGnE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Jul 2020 02:43:04 -0400
+IronPort-SDR: ek/wL2hReIDBDDXOXxxK4qN9qQfEZYoq93A1zBtfvJ80zZwcoT+OzmT5lcdo8jH1/p3IiPZB02
+ BpycaV9jGa0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="144868624"
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="144868624"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 23:42:56 -0700
+IronPort-SDR: nMHhDJiQzeWkRDGDANrXvp+tBsLY0P9HeTn9mWiQ9+98t+VeCtq2ofzrj1WGXdJhOKtaENP7yr
+ LeMnWmxRA1vA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,318,1589266800"; 
+   d="scan'208";a="456591848"
+Received: from lkp-server01.sh.intel.com (HELO 82346ce9ac16) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 05 Jul 2020 23:42:54 -0700
+Received: from kbuild by 82346ce9ac16 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jsKq2-00006s-85; Mon, 06 Jul 2020 06:42:50 +0000
+Date:   Mon, 06 Jul 2020 14:42:06 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [gpio:gpiochip-no-driver-h] BUILD REGRESSION
+ 2ade795a7e0399423f07a9b077b820792be52f5c
+Message-ID: <5f02c7be.QzvJyAFU2S6U0KKw%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 1
-X-Rspamd-Score: 0.21 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 7A06B1802
-X-Rspamd-UID: 935507
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
-Its ports are controlled only by a data byte without register address.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpiochip-no-driver-h
+branch HEAD: 2ade795a7e0399423f07a9b077b820792be52f5c  See what explodes if we apply this patch
 
-Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+Error/Warning in current branch:
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+arch/mips/alchemy/common/gpiolib.c:145:15: error: variable 'au1300_gpiochip' has initializer but incomplete type
+arch/mips/alchemy/common/gpiolib.c:145:25: error: storage size of 'au1300_gpiochip' isn't known
+arch/mips/alchemy/common/gpiolib.c:146:13: warning: excess elements in struct initializer
+arch/mips/alchemy/common/gpiolib.c:146:3: error: 'struct gpio_chip' has no member named 'label'
+arch/mips/alchemy/common/gpiolib.c:147:3: error: 'struct gpio_chip' has no member named 'direction_input'
+arch/mips/alchemy/common/gpiolib.c:148:3: error: 'struct gpio_chip' has no member named 'direction_output'
+arch/mips/alchemy/common/gpiolib.c:149:3: error: 'struct gpio_chip' has no member named 'get'
+arch/mips/alchemy/common/gpiolib.c:150:3: error: 'struct gpio_chip' has no member named 'set'
+arch/mips/alchemy/common/gpiolib.c:151:3: error: 'struct gpio_chip' has no member named 'to_irq'
+arch/mips/alchemy/common/gpiolib.c:152:12: note: in expansion of macro 'AU1300_GPIO_BASE'
+arch/mips/alchemy/common/gpiolib.c:152:3: error: 'struct gpio_chip' has no member named 'base'
+arch/mips/alchemy/common/gpiolib.c:153:13: note: in expansion of macro 'AU1300_GPIO_NUM'
+arch/mips/alchemy/common/gpiolib.c:153:3: error: 'struct gpio_chip' has no member named 'ngpio'
+arch/mips/alchemy/common/gpiolib.c:162:9: error: implicit declaration of function 'gpiochip_add_data' [-Werror=implicit-function-declaration]
+arch/mips/alchemy/common/gpiolib.c:96:18: error: array type has incomplete element type 'struct gpio_chip'
+arch/mips/alchemy/common/gpiolib.c:97:3: error: array index in non-array initializer
+arch/mips/alchemy/common/gpiolib.c:98:3: error: field name not in record or union initializer
+arch/mips/include/asm/mach-au1x00/gpio-au1300.h:22:26: warning: excess elements in struct initializer
+drivers/input/keyboard/adp5588-keys.c:76:30: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
+drivers/net/wireless/broadcom/brcm80211/brcmsmac/led.c:71:44: error: dereferencing pointer to incomplete type 'struct gpio_chip'
+drivers/pcmcia/pxa2xx_viper.c:164:34: error: array type has incomplete element type 'struct platform_device_id'
+drivers/pcmcia/pxa2xx_viper.c:165:4: error: field name not in record or union initializer
+drivers/power/supply/sbs-manager.c:195:27: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:541:2: error: implicit declaration of function 'of_node_put' [-Werror=implicit-function-declaration]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:541:2: error: implicit declaration of function 'of_node_put'; did you mean 'bpf_module_put'? [-Werror=implicit-function-declaration]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:543:2: error: implicit declaration of function 'of_node_put' [-Werror=implicit-function-declaration]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:789:34: error: array type has incomplete element type 'struct of_device_id'
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:790:4: error: field name not in record or union initializer
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:791:34: error: array type has incomplete element type 'struct of_device_id'
+drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c:792:4: error: field name not in record or union initializer
+drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c:573:2: error: implicit declaration of function 'of_node_put' [-Werror=implicit-function-declaration]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c:573:2: error: implicit declaration of function 'of_node_put'; did you mean 'bpf_module_put'? [-Werror=implicit-function-declaration]
+drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c:830:34: error: array type has incomplete element type 'struct of_device_id'
+drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c:831:4: error: field name not in record or union initializer
+include/asm-generic/gpio.h:58:9: error: returning 'int' from a function with return type 'struct gpio_chip *' makes pointer from integer without a cast [-Werror=int-conversion]
+include/asm-generic/gpio.h:58:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
+include/linux/ssb/ssb.h:496:19: error: field 'gpio' has incomplete type
+
+Error/Warning ids grouped by kconfigs:
+
+recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arc-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arc-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arc-randconfig-c003-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arc-randconfig-c024-20200706
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arm-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arm-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arm-pxa_defconfig
+|   |-- drivers-pcmcia-pxa2xx_viper.c:error:array-type-has-incomplete-element-type-struct-platform_device_id
+|   `-- drivers-pcmcia-pxa2xx_viper.c:error:field-name-not-in-record-or-union-initializer
+|-- arm-viper_defconfig
+|   |-- drivers-pcmcia-pxa2xx_viper.c:error:array-type-has-incomplete-element-type-struct-platform_device_id
+|   `-- drivers-pcmcia-pxa2xx_viper.c:error:field-name-not-in-record-or-union-initializer
+|-- arm64-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arm64-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- arm64-randconfig-c023-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- c6x-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- c6x-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- c6x-randconfig-c024-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- h8300-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- h8300-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- h8300-randconfig-r013-20200701
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- i386-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- i386-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- i386-randconfig-c001-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- i386-randconfig-r023-20200705
+|   |-- drivers-input-keyboard-adp5588-keys.c:warning:initialization-makes-pointer-from-integer-without-a-cast
+|   |-- drivers-power-supply-sbs-manager.c:warning:initialization-makes-pointer-from-integer-without-a-cast
+|   `-- include-asm-generic-gpio.h:warning:return-makes-pointer-from-integer-without-a-cast
+|-- i386-randconfig-s001-20200702
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- i386-randconfig-s002-20200704
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- ia64-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- ia64-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- ia64-randconfig-r034-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- m68k-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- m68k-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- m68k-randconfig-r026-20200702
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- microblaze-randconfig-c022-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- mips-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- mips-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- mips-db1xxx_defconfig
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:array-index-in-non-array-initializer
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:array-type-has-incomplete-element-type-struct-gpio_chip
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:field-name-not-in-record-or-union-initializer
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:implicit-declaration-of-function-gpiochip_add_data
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:storage-size-of-au1300_gpiochip-isn-t-known
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-base
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-direction_input
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-direction_output
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-get
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-label
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-ngpio
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-set
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:struct-gpio_chip-has-no-member-named-to_irq
+|   |-- arch-mips-alchemy-common-gpiolib.c:error:variable-au1300_gpiochip-has-initializer-but-incomplete-type
+|   |-- arch-mips-alchemy-common-gpiolib.c:note:in-expansion-of-macro-AU1300_GPIO_BASE
+|   |-- arch-mips-alchemy-common-gpiolib.c:note:in-expansion-of-macro-AU1300_GPIO_NUM
+|   |-- arch-mips-alchemy-common-gpiolib.c:warning:excess-elements-in-struct-initializer
+|   `-- arch-mips-include-asm-mach-au1x00-gpio-au1300.h:warning:excess-elements-in-struct-initializer
+|-- mips-randconfig-c021-20200705
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- nds32-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- nios2-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- openrisc-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- parisc-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- parisc-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- parisc-randconfig-c003-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- parisc-randconfig-r016-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- powerpc-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- powerpc-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- powerpc-ppc6xx_defconfig
+|   `-- include-asm-generic-gpio.h:error:returning-int-from-a-function-with-return-type-struct-gpio_chip-makes-pointer-from-integer-without-a-cast
+|-- riscv-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- riscv-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- riscv-randconfig-r021-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- s390-allmodconfig
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- s390-allyesconfig
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sh-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sh-randconfig-c003-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc-randconfig-c004-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc-randconfig-r024-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc-randconfig-r025-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc64-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc64-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- sparc64-randconfig-c003-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-allmodconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-fedora-25
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-randconfig-c002-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-randconfig-c002-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-randconfig-c022-20200701
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   `-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|-- x86_64-randconfig-c023-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-randconfig-s021-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-randconfig-s021-20200706
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-rhel-7.6
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- x86_64-rhel-7.6-kselftests
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- xtensa-allyesconfig
+|   |-- drivers-net-wireless-broadcom-brcm80211-brcmsmac-led.c:error:dereferencing-pointer-to-incomplete-type-struct-gpio_chip
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi4.c:error:implicit-declaration-of-function-of_node_put
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:array-type-has-incomplete-element-type-struct-of_device_id
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:field-name-not-in-record-or-union-initializer
+|   |-- drivers-video-fbdev-omap2-omapfb-dss-hdmi5.c:error:implicit-declaration-of-function-of_node_put
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+|-- xtensa-randconfig-c024-20200705
+|   `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+`-- xtensa-randconfig-r022-20200705
+    `-- include-linux-ssb-ssb.h:error:field-gpio-has-incomplete-type
+
+elapsed time: 3934m
+
+configs tested: 220
+configs skipped: 29
+
+arm                                 defconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm                       aspeed_g4_defconfig
+m68k                       m5249evb_defconfig
+arm                            mmp2_defconfig
+sh                            shmin_defconfig
+powerpc                      pmac32_defconfig
+sh                                  defconfig
+arm                          moxart_defconfig
+arm                            qcom_defconfig
+arm                          iop32x_defconfig
+mips                           ip28_defconfig
+powerpc                     pq2fads_defconfig
+arm                         at91_dt_defconfig
+sh                           cayman_defconfig
+h8300                       h8s-sim_defconfig
+arc                        nsim_700_defconfig
+c6x                        evmc6472_defconfig
+m68k                        m5272c3_defconfig
+arc                        nsimosci_defconfig
+mips                      malta_kvm_defconfig
+arm                          ep93xx_defconfig
+openrisc                 simple_smp_defconfig
+arm                         cm_x300_defconfig
+sh                 kfr2r09-romimage_defconfig
+mips                         tb0219_defconfig
+sh                               j2_defconfig
+arm                          lpd270_defconfig
+h8300                     edosk2674_defconfig
+nios2                         10m50_defconfig
+arm                          pxa3xx_defconfig
+arm                       imx_v6_v7_defconfig
+powerpc                      ppc6xx_defconfig
+mips                          ath25_defconfig
+arm                         assabet_defconfig
+arm                      jornada720_defconfig
+xtensa                              defconfig
+powerpc                       maple_defconfig
+mips                      pistachio_defconfig
+h8300                               defconfig
+arm                          simpad_defconfig
+xtensa                         virt_defconfig
+sh                          landisk_defconfig
+m68k                        stmark2_defconfig
+sh                           se7780_defconfig
+arm                           efm32_defconfig
+sh                               alldefconfig
+powerpc                    mvme5100_defconfig
+mips                          rb532_defconfig
+xtensa                          iss_defconfig
+powerpc                  mpc885_ads_defconfig
+arm                   milbeaut_m10v_defconfig
+sh                        dreamcast_defconfig
+openrisc                    or1ksim_defconfig
+arm                             pxa_defconfig
+powerpc                      mgcoge_defconfig
+arm                         bcm2835_defconfig
+mips                        maltaup_defconfig
+m68k                            mac_defconfig
+sh                     magicpanelr2_defconfig
+sh                         apsh4a3a_defconfig
+arc                           tb10x_defconfig
+ia64                         bigsur_defconfig
+powerpc                     mpc5200_defconfig
+s390                          debug_defconfig
+ia64                                defconfig
+s390                             alldefconfig
+sh                           se7705_defconfig
+arc                        vdk_hs38_defconfig
+parisc                           alldefconfig
+arm                          imote2_defconfig
+nios2                               defconfig
+arm                        clps711x_defconfig
+xtensa                    xip_kc705_defconfig
+mips                         rt305x_defconfig
+sparc64                          alldefconfig
+powerpc                         wii_defconfig
+sparc                            alldefconfig
+arm                           viper_defconfig
+arm                         orion5x_defconfig
+m68k                          multi_defconfig
+arm                         socfpga_defconfig
+mips                            e55_defconfig
+powerpc                     powernv_defconfig
+arm                         s3c6400_defconfig
+m68k                          atari_defconfig
+arm                           u8500_defconfig
+mips                    maltaup_xpa_defconfig
+arm                              zx_defconfig
+powerpc                          g5_defconfig
+arc                          axs103_defconfig
+powerpc                      tqm8xx_defconfig
+mips                     loongson1b_defconfig
+powerpc                    gamecube_defconfig
+arm                        trizeps4_defconfig
+arc                                 defconfig
+arm                          prima2_defconfig
+powerpc                      ppc64e_defconfig
+h8300                            alldefconfig
+sh                      rts7751r2d1_defconfig
+arm                         ebsa110_defconfig
+powerpc                       ppc64_defconfig
+m68k                       bvme6000_defconfig
+sh                     sh7710voipgw_defconfig
+mips                           xway_defconfig
+ia64                              allnoconfig
+arm                         vf610m4_defconfig
+arm                          tango4_defconfig
+mips                     cu1000-neo_defconfig
+alpha                            allyesconfig
+powerpc                      ppc44x_defconfig
+powerpc                        cell_defconfig
+um                            kunit_defconfig
+powerpc                          alldefconfig
+arm                           stm32_defconfig
+arc                            hsdk_defconfig
+mips                        jmr3927_defconfig
+i386                             alldefconfig
+mips                      fuloong2e_defconfig
+mips                           jazz_defconfig
+parisc                generic-64bit_defconfig
+arm                           spitz_defconfig
+powerpc                          allyesconfig
+mips                         db1xxx_defconfig
+arm                         lubbock_defconfig
+mips                        vocore2_defconfig
+mips                      pic32mzda_defconfig
+sh                           se7619_defconfig
+mips                        nlm_xlp_defconfig
+powerpc                  storcenter_defconfig
+sh                          r7785rp_defconfig
+arm                      footbridge_defconfig
+arm                          badge4_defconfig
+m68k                            q40_defconfig
+arc                    vdk_hs38_smp_defconfig
+arc                     nsimosci_hs_defconfig
+sh                              ul2_defconfig
+arm                          pxa168_defconfig
+powerpc                          allmodconfig
+mips                           gcw0_defconfig
+nios2                         3c120_defconfig
+c6x                        evmc6678_defconfig
+sh                   sh7770_generic_defconfig
+ia64                        generic_defconfig
+um                             i386_defconfig
+arm                           sunxi_defconfig
+powerpc                      chrp32_defconfig
+mips                 pnx8335_stb225_defconfig
+riscv                             allnoconfig
+sh                         ecovec24_defconfig
+mips                 decstation_r4k_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+nios2                            allyesconfig
+openrisc                         allyesconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+arc                              allyesconfig
+sh                               allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                             allmodconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+powerpc                             defconfig
+powerpc                          rhel-kconfig
+powerpc                           allnoconfig
+riscv                               defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                             allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc                            allyesconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                                allnoconfig
+um                                  defconfig
+um                               allmodconfig
+um                               allyesconfig
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+
 ---
-v5:
-* amended the commit message
-* removed unnecessary castings
-* added data to of_match_table
-
-v4:
-* removed ->direction_input() and ->direction_output()
-  (Seems unnecessary to me)
-* removed ->set_multiple()
-  (I'm not sure this implementation is really correct)
-* added ->get()
-  (DS says we can read the status from the device)
-* read current status during probe
-
-v3:
-* remove mutex
-* rename buffer to out
-* simplify return statements
-* replace ->probe() to ->probe_new()
-* move ngpio to driver_data
-  (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
-
-v2:
-* move the direction functions below the set functions
-* use devm_gpiochip_add_data() and remove the remove callback
-
-v1:
-Tested in kernel 5.4 on an ipq40xx platform.
-
-This is my first time submitting a whole driver patch, and I'm not really
-familiar with this PCA expander series.
-Please let me know how I can improve this patch further.
-
-FYI there's an unmerged patch for this chip.
-http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-I don't have PCA9571 either so I didn't add support for it.
----
- drivers/gpio/Kconfig        |   8 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-pca9570.c | 138 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 147 insertions(+)
- create mode 100644 drivers/gpio/gpio-pca9570.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c6b5c65c8405..d10dcb81b841 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
- 	  Say yes here to enable the pca953x to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
- 
-+config GPIO_PCA9570
-+	tristate "PCA9570 4-Bit I2C GPO expander"
-+	help
-+	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-pca9570.
-+
- config GPIO_PCF857X
- 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
- 	select GPIOLIB_IRQCHIP
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1e4894e0bf0f..33cb40c28a61 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
- obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
- obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
- obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
-+obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
- obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
- obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
- obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
-diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
-new file mode 100644
-index 000000000000..d420c4f55766
---- /dev/null
-+++ b/drivers/gpio/gpio-pca9570.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for PCA9570 I2C GPO expander
-+ *
-+ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
-+ *
-+ * Based on gpio-tpic2810.c
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+
-+/**
-+ * struct pca9570 - GPIO driver data
-+ * @chip: GPIO controller chip
-+ * @client: I2C device pointer
-+ * @out: Buffer for device register
-+ */
-+struct pca9570 {
-+	struct gpio_chip chip;
-+	struct i2c_client *client;
-+	u8 out;
-+};
-+
-+static int pca9570_read(struct pca9570 *gpio, u8 *value)
-+{
-+	int ret;
-+
-+	ret = i2c_smbus_read_byte(gpio->client);
-+	if (ret < 0)
-+		return ret;
-+
-+	*value = ret;
-+	return 0;
-+}
-+
-+static int pca9570_write(struct pca9570 *gpio, u8 value)
-+{
-+	return i2c_smbus_write_byte(gpio->client, value);
-+}
-+
-+static int pca9570_get_direction(struct gpio_chip *chip,
-+				 unsigned offset)
-+{
-+	/* This device always output */
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int pca9570_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer;
-+	int ret;
-+
-+	ret = pca9570_read(gpio, &buffer);
-+	if (ret)
-+		return ret;
-+
-+	return !!(buffer & BIT(offset));
-+}
-+
-+static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer = gpio->out;
-+	int ret;
-+
-+	if (value)
-+		buffer |= BIT(offset);
-+	else
-+		buffer &= ~BIT(offset);
-+
-+	ret = pca9570_write(gpio, buffer);
-+	if (ret)
-+		return;
-+
-+	gpio->out = buffer;
-+}
-+
-+static const struct gpio_chip template_chip = {
-+	.label			= "pca9570",
-+	.owner			= THIS_MODULE,
-+	.get_direction		= pca9570_get_direction,
-+	.get			= pca9570_get,
-+	.set			= pca9570_set,
-+	.base			= -1,
-+	.can_sleep		= true,
-+};
-+
-+static const struct i2c_device_id pca9570_id_table[] = {
-+	{ "pca9570", 4 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
-+
-+static const struct of_device_id pca9570_of_match_table[] = {
-+	{ .compatible = "nxp,pca9570", .data = (void *)4 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
-+
-+static int pca9570_probe(struct i2c_client *client)
-+{
-+	struct pca9570 *gpio;
-+
-+	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	gpio->chip = template_chip;
-+	gpio->chip.parent = &client->dev;
-+	gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
-+	gpio->client = client;
-+
-+	/* Read the current output level */
-+	pca9570_read(gpio, &gpio->out);
-+
-+	i2c_set_clientdata(client, gpio);
-+
-+	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
-+}
-+
-+static struct i2c_driver pca9570_driver = {
-+	.driver = {
-+		.name = "pca9570",
-+		.of_match_table = pca9570_of_match_table,
-+	},
-+	.probe_new = pca9570_probe,
-+	.id_table = pca9570_id_table,
-+};
-+module_i2c_driver(pca9570_driver);
-+
-+MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
-+MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
-+MODULE_LICENSE("GPL v2");
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
