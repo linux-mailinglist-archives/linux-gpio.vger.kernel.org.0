@@ -2,106 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F95B21672B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 09:17:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1FE6216793
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 09:40:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725766AbgGGHRu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 03:17:50 -0400
-Received: from smtpcmd14161.aruba.it ([62.149.156.161]:47051 "EHLO
-        smtpcmd14161.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgGGHRu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 03:17:50 -0400
-Received: from [192.168.1.129] ([93.146.66.165])
-        by smtpcmd14.ad.aruba.it with bizsmtp
-        id 07Hn2301S3Zw7e5017HncG; Tue, 07 Jul 2020 09:17:48 +0200
-Subject: Re: [RFC] GPIO User I/O
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
- <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
-From:   Rodolfo Giometti <giometti@enneenne.com>
-Message-ID: <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
-Date:   Tue, 7 Jul 2020 09:17:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1594106268; bh=gjXhXmgD+B/RGJdapYr3LZScV27ekBpijS2USkQB/rI=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=WWBhZROOaAEZmGjg9RccMPw79CYNK7hUbfmh29JpOssPCjwOG3QL5eSnp18nvE2Ay
-         zZWzjJZS9RYcIZbzP0wltwy5XNquSfhfsJ6gtqPZQbSe76B4rGjOcNRbNtETttFUts
-         KBLKRcv90+BbHfgiQBOwzD4OF1XOy0BGz3nmRmLM1IoFP95m5JJM42MfPvauXp4QlR
-         gOwzDo1u8JuCOiGUfz1Wx55fZBde5mD8Myqu6edUSD23kbu1UnosDz2PONA8n2Smh3
-         1ET5AQqdV6cSpGH/cXpTEQ1oiN1bnF09DUrb7XdxgQbwxQ1g+SYK1OwvjAyk4EASc7
-         iIV3h2c2e7Dcw==
+        id S1726478AbgGGHkF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 03:40:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:61555 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725766AbgGGHkD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 03:40:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594107602; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=ynmxLQggstB9XGLc/Af3iGhS0qhtnRihyG/QMgVXDzg=; b=ZH/mXKVid+2aln2UCx++v694JxfeOsNh3FknaSAAaz43bM5NwqKsgIcjQW8u/DNhQcADEZYr
+ FeWHmuCxvqQoqc8a2BaBeIF7l+UrN7eQ0bZPfEcbSzNlTCPgljiGXy1xIaKxVtWWv+Ir66z+
+ xifWIt8UMuMswnZy5lwfi9ELQDU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f0426d2c9789fa9061ff8fa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 07:40:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B300EC43387; Tue,  7 Jul 2020 07:40:01 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E56FC433C8;
+        Tue,  7 Jul 2020 07:39:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E56FC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sivaprak@codeaurora.org, srichara@codeaurora.org,
+        Kathiravan T <kathirav@codeaurora.org>,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Subject: [PATCH V2] pinctrl: qcom: ipq8074: route gpio interrupts to APPS
+Date:   Tue,  7 Jul 2020 13:09:48 +0530
+Message-Id: <1594107588-17055-1-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/07/2020 23:00, Geert Uytterhoeven wrote:
-> On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
->>>> With Geert's GPIO aggregator userspace and device tree can conjure
->>>> special per-usecase gpio chips as pointed out by Drew: this is
->>>> very useful when you want some kernel-managed yet
->>>> usecase-specific GPIO lines in a special "container" chip.
->>>> To me this is the best of two worlds. (Kernelspace and userspace.)
->>>
->>> Maybe this is the "best of two worlds" as you say but the problem is that board
->>> manufactures need a way to well-define how a GPIO line must be used for within
->>> the device-tree and without the need of patches! In this point of view neither
->>> the "driver_override" way nor adding a compatible value to
->>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
->>> board!). That's why at the moment they prefer not specify these GPIO lines at
->>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
->>> simple...
->>
->> I think the idea is to add a very generic DT compatible to the
->> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
->> to create a new chip with named lines etc.
->>
->> But Geert can speak of that.
-> 
-> The idea is to describe the real device in DT, and add it's compatible value
-> to gpio_aggregator_dt_ids[], or enable support for it dynamically using
-> driver_override.
-> The former indeed requires modifying the driver.
+set target proc as APPS to route the gpio interrupts to APPS
 
-I see.
+Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+---
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Note that if you ever want to write a pure kernelspace driver, you do need
-> a proper compatible value anyway.
-
-OK, but for our purposes we need just one compatible value.
-
-> I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
-> or "gpio-relays".  However, you can always propose bindings for the
-> latter, and, when they have been accepted, add those compatible
-> values to upstream gpio_aggregator_dt_ids[].
-
-Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
-in my solution would be suffice. However, after these discussions, are there any
-chances my patch (with needed modifications and documentation) may be accepted? :)
-
-Thanks for your time and answers.
-
-Ciao,
-
-Rodolfo
-
+diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+index 0edd41c..aec68b1 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
++++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+@@ -50,6 +50,7 @@
+ 		.intr_enable_bit = 0,		\
+ 		.intr_status_bit = 0,		\
+ 		.intr_target_bit = 5,		\
++		.intr_target_kpss_val = 3,	\
+ 		.intr_raw_status_bit = 4,	\
+ 		.intr_polarity_bit = 1,		\
+ 		.intr_detection_bit = 2,	\
 -- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
