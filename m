@@ -2,101 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9CE216B71
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:25:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7846216B7C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgGGLZf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 07:25:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:3217 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727044AbgGGLZf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:25:35 -0400
-X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=vfvjtfH3Qs6aHOw/QXhcQ51ZF1iRs+TYc8vvEskKgac=;
-        b=a4lwH1jhsqzlod4taTS95VZTNCoYXO3ItijaP8jF5e/2Mimn5KW7Kt4ejWZ5YJVTYxSrKcTDqyHwHVkQR1IjhC36+k6nwULgHw0Y+2+TKSA8Z/plz7na4EqiL20klEDy8HzRe8J+6NO3e/W7TMCUkPabj6i9QQGHrIdSHDTRUPk=;
-X-UUID: 1a1278ba04a84476844e6203b60a745f-20200707
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 522712986; Tue, 07 Jul 2020 19:25:30 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Jul 2020 19:25:25 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Jul 2020 19:25:26 +0800
-Message-ID: <1594121128.20610.9.camel@mtkswgap22>
-Subject: Re: [PATCH v7 0/7] Add basic SoC Support for Mediatek MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-Date:   Tue, 7 Jul 2020 19:25:28 +0800
-In-Reply-To: <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
-         <1593694630-26604-2-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1727962AbgGGL25 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 07:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbgGGL25 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:28:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B89C061755
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:28:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z24so24567143ljn.8
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l2GgGCQ4x2LNmv5qReFPVJw3khTbvSjXsD6wjYhQb7Y=;
+        b=zWnIc6qofdCS9+DTAqiP2mYvfUMkKgNtY66044wIi1kMyF/YMWbTeAbp88neTmKAjg
+         l4NVDAG1dEwiaZezcxnW8k9KINZmV3DJhoBAYyDImmbwzinIrmh6319oyq9VSJrczDFj
+         mPkPKQ+JVKQJ33Pteub5ITH+KNCisvIOs2eDRq6lSy77ixWfNBm3/AbIu8/LYHSFisNL
+         G4SQZdmMtzLpXK3Qo0STr2ZXBrJwTBjBoXIRtxft8IFNK/uVuvwcO82ILEZdRuaaiem9
+         jwKqcIxMoUt6Nehc4S6/Wx9bgRY/ZxA1UbCtjfTs8v5QmYf6Ip9JPYGynYjONYsadalI
+         Dzug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l2GgGCQ4x2LNmv5qReFPVJw3khTbvSjXsD6wjYhQb7Y=;
+        b=o9eEda/XeA9MvKCq3E8NzlsadxOHt3Lo/95ps8zkoeecHby9jlvFDMxVjDTEQWdMAm
+         akBXFS62+z9enDSIsReDNQCKalJGQXatGrqNVrOAPmzd9WQJFjKF4yZ4tA3wfqVVPSh3
+         l8DaOis5942eeXGJb2mUXlkCqql5KwZqwDqEjf8RgEDCFOAinn/ybhGl6G4W6QwmBi6l
+         CjX2cdzPDFabpdWZzlYPn1cs4+hcf3Vq5GMTJvhC++VVuMLVU/dRDCZEluPKC84hU4UX
+         hoVnpwXoM/nVwNpXYvcf6+4j39qWkTzP9iOD++bLoRk2dpZBDU8qFBDMyXNqLfXAPMIE
+         SXVQ==
+X-Gm-Message-State: AOAM530s1b0PHZqCVDDSCntdS3gn78+kcvYUaiAUmmto2DrKNcok5jza
+        eb5WPusMIY2H2RqqXzziDSz1UdLTodJMiMh+zAil8Q==
+X-Google-Smtp-Source: ABdhPJzwnbeGJl04zq1MZBixqaru16oyOK4a5p7qERMrlxVnC8ulTiRIAiMfY3IMS44ahKysxRy+Eg/cXIDkrrO8/XM=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr13972698ljc.104.1594121335310;
+ Tue, 07 Jul 2020 04:28:55 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 054C2A82F4257DC0A2C98A1257360749210D114C218370F82C156C88CC470A042000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200609162621.1769610-1-thierry.reding@gmail.com>
+In-Reply-To: <20200609162621.1769610-1-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 13:28:44 +0200
+Message-ID: <CACRpkdY=rVH03i+JsLuiDKa_BSU57ZNdBNHGv6avuC-AkPZkMQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mfd: max77620: Convert to json-schema
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgTWljaGFlbCwgU3RlcGhlbiwgTWF0dGhpYXMgYW5kIGFsbCwNCg0KZ2VudGxlIHBpbmcgZm9y
-IHRoaXMgcGF0Y2ggc2V0DQoNCklmIG5vIG5ldyBjb21tZW50cywgSSB3b3VsZCBsaWtlIHRvIHNl
-bmQgYSBuZXdlciB2ZXJzaW9uIGZvciB0aGUgc2VyaWVzLg0KDQpwYXRjaCBzZXQ6DQpodHRwczov
-L2xrbWwub3JnL2xrbWwvMjAyMC83LzIvNDk3DQoNCg0KVGhhbmtzDQpIYW5rcyBDaGVuDQoNCg0K
-T24gVGh1LCAyMDIwLTA3LTAyIGF0IDIwOjU3ICswODAwLCBIYW5rcyBDaGVuIHdyb3RlOg0KPiAq
-KiogQkxVUkIgSEVSRSAqKioNCj4gDQo+IEFuZHkgVGVuZyAoMSk6DQo+ICAgZHQtYmluZGluZ3M6
-IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgTVQ2Nzc5IFNvQw0KPiANCj4gSGFu
-a3MgQ2hlbiAoNik6DQo+ICAgcGluY3RybDogbWVkaWF0ZWs6IHVwZGF0ZSBwaW5tdXggZGVmaW5p
-dGlvbnMgZm9yIG10Njc3OQ0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhdm9pZCB2aXJ0dWFsIGdw
-aW8gdHJ5aW5nIHRvIHNldCByZWcNCj4gICBwaW5jdHJsOiBtZWRpYXRlazogYWRkIHBpbmN0cmwg
-c3VwcG9ydCBmb3IgTVQ2Nzc5IFNvQw0KPiAgIHBpbmN0cmw6IG1lZGlhdGVrOiBhZGQgbXQ2Nzc5
-IGVpbnQgc3VwcG9ydA0KPiAgIGNsazogbWVkaWF0ZWs6IGFkZCBVQVJUMCBjbG9jayBzdXBwb3J0
-DQo+ICAgYXJtNjQ6IGR0czogYWRkIGR0cyBub2RlcyBmb3IgTVQ2Nzc5DQo+IA0KPiAgLi4uL2Jp
-bmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbCAgfCAgMjEwICsrDQo+
-ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICB8ICAg
-IDEgKw0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cyAgICAg
-ICAgfCAgIDMxICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kg
-ICAgICAgICAgIHwgIDI3MSArKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdDY3Nzku
-YyAgICAgICAgICAgICAgICAgIHwgICAgMiArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICB8ICAgMTIgKw0KPiAgZHJpdmVycy9waW5jdHJsL21l
-ZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGRyaXZlcnMvcGlu
-Y3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc3OS5jICAgICAgICAgIHwgIDc4MyArKysrKysrKw0K
-PiAgZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jICAgfCAg
-IDI1ICsNCj4gIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIu
-aCAgIHwgICAgMSArDQo+ICBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2
-Nzc5LmggICAgICB8IDIwODUgKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvcGluY3Ry
-bC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAgICAgIHwgICAgNyArDQo+ICBpbmNsdWRl
-L2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ2Nzc5LXBpbmZ1bmMuaCAgICAgICB8IDEyNDIgKysrKysr
-KysrKysrDQo+ICAxMyBmaWxlcyBjaGFuZ2VkLCA0NjcxIGluc2VydGlvbnMoKykNCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9t
-ZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
-cm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZiLmR0cw0KPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LmR0c2kNCj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KPiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1t
-dDY3NzkuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3Ry
-bC9tdDY3NzktcGluZnVuYy5oDQo+IA0KDQo=
+Hi Thierry,
 
+thanks for doing this!
+
+On Tue, Jun 9, 2020 at 6:26 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77620.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/regulator-max77620.txt
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/max77620_thermal.txt
+
+So everything goes in under the MFD node now I suppose (why not).
+
+> diff --git a/Documentation/devicetree/bindings/mfd/max77620.yaml b/Documentation/devicetree/bindings/mfd/max77620.yaml
+(...)
+> +patternProperties:
+> +  "^gpio(@[0-9]+)?$":
+> +    type: object
+> +    properties:
+> +      gpio-hog:
+> +        $ref: "/schemas/types.yaml#/definitions/flag"
+> +
+> +      output-high:
+> +        $ref: "/schemas/types.yaml#/definitions/flag"
+> +
+> +      gpios:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32-matrix"
+
+This looks strange. ^gpio(@[0-9]+)?$ seems like the node for
+the gpio-controller per se, and that should have a subnode for
+the hog, but this makes it look like that hog is directly in the
+gpio controller node.
+
+The current gpio.txt lists this example:
+
+        qe_pio_a: gpio-controller@1400 {
+                compatible = "fsl,qe-pario-bank-a", "fsl,qe-pario-bank";
+                reg = <0x1400 0x18>;
+                gpio-controller;
+                #gpio-cells = <2>;
+
+                line_b {
+                        gpio-hog;
+                        gpios = <6 0>;
+                        output-low;
+                        line-name = "foo-bar-gpio";
+                };
+        };
+
+I know I should make a generic gpio.yaml include you can just
+use for all of this but you know ... time. (Volunteers welcome!)
+
+> +  "^pinmux(@[0-9]+)?$":
+> +    type: object
+> +    patternProperties:
+> +      "^gpio[0-7_]+$":
+> +        type: object
+> +        properties:
+> +          pins:
+> +            items:
+> +              pattern: "^gpio[0-7]$"
+> +            minItems: 1
+> +            maxItems: 8
+> +
+> +          function:
+> +            $ref: "/schemas/types.yaml#/definitions/string"
+> +            enum:
+> +              - gpio
+> +              - lpm-control-in
+> +              - fps-out
+> +              - 32k-out1
+> +              - sd0-dvs-in
+> +              - sd1-dvs-in
+> +              - reference-out
+> +
+> +          drive-push-pull:
+> +            $ref: "/schemas/types.yaml#/definitions/uint32"
+> +            enum: [ 0, 1 ]
+> +
+> +          drive-open-drain:
+> +            $ref: "/schemas/types.yaml#/definitions/uint32"
+> +            enum: [ 0, 1 ]
+> +
+> +          bias-pull-up:
+> +            $ref: "/schemas/types.yaml#/definitions/uint32"
+> +            enum: [ 0, 1 ]
+> +
+> +          bias-pull-down:
+> +            $ref: "/schemas/types.yaml#/definitions/uint32"
+> +            enum: [ 0, 1 ]
+
+This seems to reinvent large parts of Rob's already provided:
+Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+
+So just $ref-include these instead. See other bindings for examples.
+Since this is placed in mfd you might need some ../pinctrl... path.
+
+Yours,
+Linus Walleij
