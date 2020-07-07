@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EAB6216CB3
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 14:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A5FD216CD2
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 14:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgGGMWe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 08:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        id S1727989AbgGGM2b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 08:28:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGMWd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 08:22:33 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AD10C061755
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 05:22:33 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id s16so19113125lfp.12
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 05:22:33 -0700 (PDT)
+        with ESMTP id S1726540AbgGGM2b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 08:28:31 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A82C061755
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 05:28:30 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id j11so916897ljo.7
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 05:28:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=8FZ6b+u5hIehEVHEyIzeSnPbhkCZR5qqkr1GS1FN368=;
-        b=e2w+qLHC9gUCkhrQmqzM7pcqL4MQF71oL5qMBHAX5ratJP+59bnK/pgD0OdRSrPwW4
-         7AOOLfsDr8mOOOi93MQ+vsZFEu5FSmXA3X7gbTIqw09NU8BtkIbifam82tZoVsNCsZ3g
-         v/+EhHRjDh0T2V9z4AqrYYUyWORI6uz3ODSOOjD++nnw3LCH1w63npSnX/+atmBAqEbJ
-         1reFAxRm1wH47R+DfUTQnWjdP0UirIikXXNbpKsOmdE5V87NQp4Y0BawMh5zHD6upwnN
-         slGc2HIP4lZgUWLI5a95vK+Ea5VN3Z8jMI91hxy2apPtqQxu2G3OC5XpaeQa7vkNbVKn
-         gr2w==
+        bh=8ylDfquIzHzjf8zeGZfpuGrTUxJ8mwOYuZzWoFiX+Dg=;
+        b=qun6ri7QIewOLqcwE2kFPRiAYkcHYnx4t87TyU29aDXMclTcx2EZYhD87gk91EdeDR
+         ncCEzpcckDxXIshsSx9T8ulJbI4VSPM8c5xYkt64FNBfDdesVr86WgcPmLq7bspmMEe2
+         RLaqJg6Gjmn7yT+VnagdYWPUUa3VPs/tVDFEUQN91/QnCFHprpZSgGyQoy53ZBtasgUp
+         OVG+xsjNTATXB2KGf4XApEuI7tFH0u6wnHNbblKQ0ayAqKPxIEv+xqAcbGHXcS0gybSw
+         V7NamKF+91VtrZ7oA3ZkPD2AwP/Tl28qSAEUh1jQLqgSgl7wuYwy1Oh+DUDGKiFB+F8/
+         bHAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8FZ6b+u5hIehEVHEyIzeSnPbhkCZR5qqkr1GS1FN368=;
-        b=f8MG1kjT947L/c2TmdR147NlKoP7vjzbcDeyakm3YHW10xZNaAh46fx0TjVhzmCrHl
-         3nScjDuF1KBvFoYtIhITz/eC+zi7znxZ1quHUzndn6ykleNEGhvormg5oLlALSPh8aqc
-         H5B1sDzPXb0TWg4O072gDiAQBztRwVO4IGWp5pfJ24gh6xNMlnQjQs4li56CsqMTIk6W
-         tUBsDacs9i9cAnm3ZfTntt+ziUBVTPXguxwUvYGyT0tAMFoFmaoJLI9ceWqEneyjaiEi
-         xMnKjhHnHrGTdBMP+J3tivEGNS/KSVk4C926+LOb1rpB2F41FEa3SstA/2BCLJLEA3pZ
-         t5vw==
-X-Gm-Message-State: AOAM531HxNspdCPKrCt+OpuwOF1WhWWXYK2mbCTegyTnbh4ompSO5GDE
-        kHWy+503sacANa6xY5HwwycZQEKFN28qRR6GY6WKVA==
-X-Google-Smtp-Source: ABdhPJy10kov8+Mkmk61f0WKp6Ld4d65E/TrwXZO1pVb4/ph9AvFTgkedwG7sd7BumQWUfn2llEmg5uClQm94RJryQ0=
-X-Received: by 2002:a19:f20a:: with SMTP id q10mr33221646lfh.89.1594124551643;
- Tue, 07 Jul 2020 05:22:31 -0700 (PDT)
+        bh=8ylDfquIzHzjf8zeGZfpuGrTUxJ8mwOYuZzWoFiX+Dg=;
+        b=lRU72pl9TtshsfvjkBANmAJJ/6hzZiwmQLgMS19o5X2o2vf3oxmCfl0veGY6YoeAUP
+         hAJ2yHtfVYZ4pnZdjILQyUmQp+jRSa7T8qr8xuz5oYvqaPck/1Pt4KbpIjh/CMWG6833
+         5bRK0FHwQdbE7nmkeAt2/1yMAsSyZxL1wsGckTYjo77YNJh4McoCorLn4gKf2qqelpi+
+         PSBVKV/QXTH2U3C0E2aQTBH9PLQiQnI/Wq6+kkj2xDl0bBlCKNQuAw6L5NLI3K63dcYh
+         ENZ6amKFdfCDXAOgHTdvtRwCMTzwtFC41qjId73hLXYKuBzLCrneX1sUqmmixvA3P1Yp
+         D1gA==
+X-Gm-Message-State: AOAM531md38GccIAJv/R7NhAMYr4DaE4J5N2xayu/U14mB1s9QnXWBxE
+        Pdjv65Bbk3an8HEdT4v5QsiPELrBZuscG9Ll72I0/ZT88X8=
+X-Google-Smtp-Source: ABdhPJxfamrMV0hz0YsD3aFwN6FXjD1DthNRrfGGFIEYrrPQQxEFLz2uspNuRFBRx+hjR7R6GWrkgB8L77Qfvx4rIKU=
+X-Received: by 2002:a2e:810a:: with SMTP id d10mr24404404ljg.144.1594124909277;
+ Tue, 07 Jul 2020 05:28:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200622214548.265417-1-paul@crapouillou.net>
-In-Reply-To: <20200622214548.265417-1-paul@crapouillou.net>
+References: <8cffce08-ed84-4242-8dcd-72de693f0f71@cesnet.cz>
+ <20200610080327.GA1805015@ulmo> <7e4a427c-a6bb-4036-ba8d-0f290a17852c@cesnet.cz>
+ <30fdc2f7-47f9-486d-8987-3c3d8b157fe6@cesnet.cz>
+In-Reply-To: <30fdc2f7-47f9-486d-8987-3c3d8b157fe6@cesnet.cz>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:22:21 +0200
-Message-ID: <CACRpkdbb3RCuu52kyzWZr+mDaWrcP5_CTfEp4aN+GddOKxDcOA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me,
+Date:   Tue, 7 Jul 2020 14:28:18 +0200
+Message-ID: <CACRpkdZope0J3QVWAdgy6oRRBehZSLFcTcynjJSi5kHiiMYOww@mail.gmail.com>
+Subject: Re: GPIO regression on mvebu and/or max310x since 2ab73c6d8323
+To:     =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+Cc:     Thierry Reding <treding@nvidia.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        =?UTF-8?Q?Jo=C3=A3o_Henrique?= <johnnyonflame@hotmail.com>
+        Vidya Sagar <vidyas@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
@@ -63,40 +63,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:46 PM Paul Cercueil <paul@crapouillou.net> wrote=
-:
+On Tue, Jun 23, 2020 at 11:11 PM Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz> w=
+rote:
 
-> Ingenic SoCs don't natively support registering an interrupt for both
-> rising and falling edges. This has to be emulated in software.
+> > Unfortunately I'm largely ignorant of the relation between
+> > gpio, pinctrl and pinmux, so I'm afraid I cannot dig much
+> > further. Should I try to blindly add the "gpio-ranges" into the
+> > DTS, for example?
 >
-> Until now, this was emulated by switching back and forth between
-> IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING according to the level of
-> the GPIO. While this worked most of the time, when used with GPIOs that
-> need debouncing, some events would be lost. For instance, between the
-> time a falling-edge interrupt happens and the interrupt handler
-> configures the hardware for rising-edge, the level of the pin may have
-> already risen, and the rising-edge event is lost.
->
-> To address that issue, instead of switching back and forth between
-> IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING, we now switch back and
-> forth between IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH. Since we
-> always switch in the interrupt handler, they actually permit to detect
-> level changes. In the example above, if the pin level rises before
-> switching the IRQ type from IRQ_TYPE_LEVEL_LOW to IRQ_TYPE_LEVEL_HIGH,
-> a new interrupt will raise as soon as the handler exits, and the
-> rising-edge event will be properly detected.
->
-> Cc: stable@vger.kernel.org
-> Fixes: e72394e2ea19 ("pinctrl: ingenic: Merge GPIO functionality")
-> Reported-by: Jo=C3=A3o Henrique <johnnyonflame@hotmail.com>
-> Tested-by: Jo=C3=A3o Henrique <johnnyonflame@hotmail.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Hi Thierry, Linus,
+> can you help me with this, please? As it is now, my GPIO-based I2C no
+> longer works since 2ab73c6d8323 on this Solidrun Clearfog Base. I suspect
+> that this is because of no gpio-ranges property in the DTS files, but I
+> don't know how the mvebu gpio/pinctrl/pinmux drivers work internally to
+> debug this.
 
-I have applied these two as non-urgent fixes for v5.9.
+I have as little clue as you, who maintains this driver? Who wrote it?
 
-Are they urgent?
-Are they causing regressions?
-Tell me if they need to be merged to v5.8-rcs.
+Can you just send a patch to the Armada DTS file adding these ranges?
 
 Yours,
 Linus Walleij
