@@ -2,121 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9603D21699B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 11:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7514D216AEA
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:00:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgGGJ5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 05:57:01 -0400
-Received: from smtpcmd14161.aruba.it ([62.149.156.161]:55315 "EHLO
-        smtpcmd14161.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGGJ5B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 05:57:01 -0400
-Received: from [192.168.1.129] ([93.146.66.165])
-        by smtpcmd14.ad.aruba.it with bizsmtp
-        id 09wx2300z3Zw7e5019wyCE; Tue, 07 Jul 2020 11:56:59 +0200
-Subject: Re: [RFC] GPIO User I/O
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
- <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
- <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
- <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
- <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
- <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
- <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
-From:   Rodolfo Giometti <giometti@enneenne.com>
-Message-ID: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
-Date:   Tue, 7 Jul 2020 11:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1725944AbgGGLAH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 07:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgGGLAG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:00:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14029C08C5E0
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:00:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s9so49325504ljm.11
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KYp96ZZSsCMgncArOFXly9s4OIli23NE92mNWgNw4B4=;
+        b=fTRhwpj/hU9LfJzJkArIDCDB06upW6a/C93yjE1K2cuse98pkQSzoA+sYMYtLUzpDf
+         3bp4aEg2xQVvoYioUSQP0uJQAC21hPPGHss9REoOMCDiJiZ5xEBBCNpeUbFG4cvUniMv
+         2TC9aOH9W8eK2nENG0Z49Gl/eIoFu9EfVU7YOlIOqdz27oL0+BEVXQstm2SudjiXJY3+
+         27TOPF9Jb895pl5OdzMSly4xGJ0XrKuF6+ntvUXmtZOdDg2vGf6j8qqtWXaNTbOKnfRC
+         k9bfaV65PgvLITOCEwGD9SdAmApIqfAx76iAQGVkmib6gjtNWscBDAyMLSGqGzdyvUTP
+         y7jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KYp96ZZSsCMgncArOFXly9s4OIli23NE92mNWgNw4B4=;
+        b=e8cS74O5UqfP/nlNciQoqXXf+zmF+EqXQvahA17HdvXdN4rWMJg8xsnuQVcwj7tJ9B
+         4rzqieuqWhMyk3Z4TJJTy91uB6SZ6d/tVZi3lJHdZyYoz5Kqqcgk1TyUXRcE55aHqoZs
+         zq6bb+1G2AGXf1dAQps0aA88lg+sQH7YX73nuZz8/MkXbMukeye4LoCGRDnn3jjsHUh6
+         1DU1UhswJ/UMZSNrQRoqAlvdln80R0DODh5UmZrVP2AHHMCCuj60eugdDuFWxZgKKuUp
+         NKbOQFhP7bPTxHDvjneaCfv4bz7PObv/VuGo3ZmeRvgPYTbqPNeBr/LTTTWIEHBzfGGR
+         h9Ww==
+X-Gm-Message-State: AOAM530j/C52CsBF+kB3V6tqjO95U1IKp2n5aWbWcJ7XjnrD7srnQmJ7
+        DGRqImef97oIe9xCsKTV1bpbCl6CcVq7CBCKq76Z8w==
+X-Google-Smtp-Source: ABdhPJz/EbBwJ1T3GgvyKHSaJPDBjC/885l2Y1IY+hCrikFT6rUcrPXU9Ohp3fztPR4QHzpES5qUG955fZ1BVL9iXNs=
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr13896696ljc.104.1594119604328;
+ Tue, 07 Jul 2020 04:00:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
-        t=1594115819; bh=iMxzmbAXPORie8pkdG5YzxTMnrq/UBvG98R/J9x/Zgo=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=PXysaG3XMcA3HoMihAJhEede4iaDg8Oa1xrq/8tpYb9MhHbvO47WVbkI5coxEiX+8
-         KyYKeMkVLIARfKCn9bAP/PfKJe1UjiIHT88BmUdN3Zrkh4lxIVLZrCm0LL+0qH99+f
-         PuKfdBMt1700JYiBPabJZvJGyVtQzIT6+dOQ8ueWxxRwxaCB2NnmnRmCxJCDSx/d8F
-         bgAWCrXoyOZJkX5Twi6UD+IRRZXsmpl+rRl77Tyl6J9aqyFJEoIgGvL2LzgxDVN/Qh
-         2+ZWMDGTHOncdUWuzMsQUFLGzr//oMlfKO8vazmQCn0MQyM5/DwYGldcLOdTN3MptR
-         fArYo77cL1HPg==
+References: <20200701013320.130441-1-drew@beagleboard.org>
+In-Reply-To: <20200701013320.130441-1-drew@beagleboard.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jul 2020 12:59:53 +0200
+Message-ID: <CACRpkdY3mUjczkJhV9BdZhUJGOgrbOMJnciBjOaPg6c9XUt8Ww@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/07/2020 09:41, Geert Uytterhoeven wrote:
-> Hi Rodolfo,
-> 
-> CC devicetree
-> 
-> On Tue, Jul 7, 2020 at 9:17 AM Rodolfo Giometti <giometti@enneenne.com> wrote:
->> On 06/07/2020 23:00, Geert Uytterhoeven wrote:
->>> On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
->>>>>> With Geert's GPIO aggregator userspace and device tree can conjure
->>>>>> special per-usecase gpio chips as pointed out by Drew: this is
->>>>>> very useful when you want some kernel-managed yet
->>>>>> usecase-specific GPIO lines in a special "container" chip.
->>>>>> To me this is the best of two worlds. (Kernelspace and userspace.)
->>>>>
->>>>> Maybe this is the "best of two worlds" as you say but the problem is that board
->>>>> manufactures need a way to well-define how a GPIO line must be used for within
->>>>> the device-tree and without the need of patches! In this point of view neither
->>>>> the "driver_override" way nor adding a compatible value to
->>>>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
->>>>> board!). That's why at the moment they prefer not specify these GPIO lines at
->>>>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
->>>>> simple...
->>>>
->>>> I think the idea is to add a very generic DT compatible to the
->>>> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
->>>> to create a new chip with named lines etc.
->>>>
->>>> But Geert can speak of that.
->>>
->>> The idea is to describe the real device in DT, and add it's compatible value
->>> to gpio_aggregator_dt_ids[], or enable support for it dynamically using
->>> driver_override.
->>> The former indeed requires modifying the driver.
->>
->> I see.
->>
->>> Note that if you ever want to write a pure kernelspace driver, you do need
->>> a proper compatible value anyway.
->>
->> OK, but for our purposes we need just one compatible value.
->>
->>> I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
->>> or "gpio-relays".  However, you can always propose bindings for the
->>> latter, and, when they have been accepted, add those compatible
->>> values to upstream gpio_aggregator_dt_ids[].
->>
->> Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
->> in my solution would be suffice. However, after these discussions, are there any
->> chances my patch (with needed modifications and documentation) may be accepted? :)
->>
->> Thanks for your time and answers.
-> 
-> Let's ask the DT people...
+On Wed, Jul 1, 2020 at 3:33 AM Drew Fustini <drew@beagleboard.org> wrote:
 
-I think I need an OK from GPIO SUBSYSTEM's maintainers first...
+> Currently, pinctrl-single only allows #pinctrl-cells = 1.
+>
+> This series will allow pinctrl-single to also support #pinctrl-cells = 2
+>
+> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux) then
+> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
+> get the value to store in the register.
+>
+> To take advantage of #pinctrl-cells = 2, the AM33XX_PADCONF macro in
+> omap.h is modified to keep pin conf and pin mux values separate.
+>
+> change log:
+> - v4: squash patches 2 and 3 together so that git biesct will not result
+>   in a boot failure
+>
+> - v3: change order of patches to make sure the pinctrl-single.c patch
+>   does not break anything without the dts patches
+>
+> - v2: remove outer parentheses from AM33XX_PADCONF macro as it causes a
+>   compile error in dtc.  I had added it per suggestion from checkpatch
+>   about having parentheses around complex values.
+>
+> Drew Fustini (2):
+>   pinctrl: single: parse #pinctrl-cells = 2
+>   ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
 
-Ciao,
+Both patches applied to the pinctrl devel branch for v5.9!
 
-Rodolfo
+Please make sure not to create colliding patches in the DTS files merged
+through ARM SoC this merge window.
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming                     skype:  rodolfo.giometti
+Yours,
+Linus Walleij
