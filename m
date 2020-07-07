@@ -2,85 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2F7D216FAF
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 17:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C5D5217369
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 18:13:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgGGPHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 11:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgGGPHn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 11:07:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0DBC061755;
-        Tue,  7 Jul 2020 08:07:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b92so18647231pjc.4;
-        Tue, 07 Jul 2020 08:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Cj5YHVMEb1Skcs4Bgm6WovZ+60YcaX0yJ/fN2fOst+g=;
-        b=ViObSl1ZKpdciiuiNFoSHCk5YRn01KNsWY0LK+HmrnV1MqDayYTmP09uakkSE9Oave
-         5Z6J2fusmaBC1BtqDsnhUO6FvJMblkUrvXV7QeoJgmJHeWLtWo9a/N6vpL6jIcL7L1Hu
-         9xt+yO49i5RQUVxCO88mM5b49xuIlDH5BDxbkzS+pBqsEAuyRkGQNlX5loUyRfVOCvA8
-         n8DrIp1sgKmV0ae9UvWWKWWnPw/U0/ZgU8V7NmUC67FUjASPBc1aEmswsx3zz1xd9Wwo
-         QVQxvZ4GQ7TmA00rFZCj8E1/Y5VdeTCikQGa5kVwZOZrpaatXeQdt7SuP7D50rHxjyGV
-         rI0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Cj5YHVMEb1Skcs4Bgm6WovZ+60YcaX0yJ/fN2fOst+g=;
-        b=ItInun/AoQmJgSxOxuWABryBOQg/voyHx0g60UdMKjY/tz7wmIzNoWu2SfoTCt3kOr
-         9xArLsJKRcK5EqWdX5v1Jvr7V6Ex8/Ezy8qqmkult0GwIOT2srLBta8sLzAgkP+B6oT3
-         zr0AZI/9AVb8Hx2EJ1pYARwQtRKludGE2sVcQi949PgahfeYzv8k0Pw0sJVat5Ts5qZm
-         HnqBTgapQUKZXjlQQiPYOB5Wov/wv0FfdCOXLT40q+e5jxz6UtOU2FMX4yKkrZlHLt7w
-         stSIhsqeZLdvCO8QIE5z1zFlRUghicYxLljGdVuoyhLpIx3i0AqiNxS1LZlwF4esX9wj
-         xrSw==
-X-Gm-Message-State: AOAM533dlyJu3TlTfalzrgaS/BikkCtGu5AjEmzDwPxXy2CmD0+WQN/Y
-        ZwgwW6IjsZ5MxXEsnC5rCT9+I6mjwJBM8bG89C0=
-X-Google-Smtp-Source: ABdhPJyAi6KKJgB+rJC8tyyRzMI6cuzPylPEhysjXroqhcz7RiGTClFrH2Ex/BeJyxHSXInhDczuPgIZoxvnXvep11E=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr46952213pll.18.1594134462903;
- Tue, 07 Jul 2020 08:07:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200705133038.161547-1-mans0n@gorani.run> <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
- <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com> <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
-In-Reply-To: <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 7 Jul 2020 18:07:26 +0300
-Message-ID: <CAHp75VeKUvy9tkoBq=axx9g-2_p3QUqffA1z2WmGO-Uu8oyHHA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1728162AbgGGQNQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 12:13:16 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:30692 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727789AbgGGQNQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 12:13:16 -0400
+X-IronPort-AV: E=Sophos;i="5.75,324,1589209200"; 
+   d="scan'208";a="51539948"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 08 Jul 2020 01:13:14 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 00C6640062C8;
+        Wed,  8 Jul 2020 01:13:11 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 00/14] Add core support for Renesas RZ/G2H SoC
+Date:   Tue,  7 Jul 2020 17:12:34 +0100
+Message-Id: <1594138368-16449-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 5:03 PM Sungbo Eo <mans0n@gorani.run> wrote:
-> On 20. 7. 6. =EC=98=A4=ED=9B=84 9:00, Andy Shevchenko wrote:
+Hi All,
 
-...
+This patch series adds initial core support for Renesas RZ/G2H
+(R8A774E1) SoC, enabling the CPG, RST and PFC support.
 
-> But I don't really understand what mutex does here. The driver does not
-> need consecutive commands, it only sends/receives only one byte at a
-> time. And AFAIK each i2c_smbus function is already protected by a mutex.
-> So what should be exactly inside the lock? Should we protect the output
-> buffer as well? I'm not an expert on this so please enlighten me.
+Cheers,
+Prabhakar
 
-There are questions, answering them will give you a solution:
-- Since we have two functions doing i2c communications, can they
-clash? If so, does the i2c framework guarantee the serialisation?
-- Since we have a shared resource (buf), can accessors clash? How do
-we guarantee serialization?
+Lad Prabhakar (1):
+  pinctrl: sh-pfc: pfc-r8a77951: Add R8A774E1 PFC support
 
---=20
-With Best Regards,
-Andy Shevchenko
+Marian-Cristian Rotariu (13):
+  dt-bindings: arm: renesas: Document RZ/G2H SoC DT bindings
+  dt-bindings: arm: renesas: Add HopeRun RZ/G2H boards
+  soc: renesas: Identify RZ/G2H
+  soc: renesas: Add Renesas R8A774E1 config option
+  dt-bindings: power: renesas,rcar-sysc: Document r8a774e1 SYSC binding
+  dt-bindings: power: Add r8a774e1 SYSC power domain definitions
+  soc: renesas: rcar-sysc: Add r8a774e1 support
+  dt-bindings: reset: renesas,rst: Document r8a774e1 reset module
+  soc: renesas: rcar-rst: Add support for RZ/G2H
+  dt-bindings: clock: renesas,cpg-mssr: Document r8a774e1
+  clk: renesas: Add r8a774e1 CPG Core Clock Definitions
+  clk: renesas: cpg-mssr: Add r8a774e1 support
+  dt-bindings: pinctrl: renesas,pfc-pinctrl: Document r8a774e1 PFC
+    support
+
+ .../devicetree/bindings/arm/renesas.yaml      |  12 +
+ .../bindings/clock/renesas,cpg-mssr.yaml      |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
+ .../bindings/power/renesas,rcar-sysc.yaml     |   1 +
+ .../bindings/reset/renesas,rst.yaml           |   1 +
+ drivers/clk/renesas/Kconfig                   |   5 +
+ drivers/clk/renesas/Makefile                  |   1 +
+ drivers/clk/renesas/r8a774e1-cpg-mssr.c       | 348 +++++++
+ drivers/clk/renesas/renesas-cpg-mssr.c        |   6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h        |   1 +
+ drivers/pinctrl/sh-pfc/Kconfig                |   4 +
+ drivers/pinctrl/sh-pfc/Makefile               |   1 +
+ drivers/pinctrl/sh-pfc/core.c                 |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77951.c         | 877 +++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
+ drivers/soc/renesas/Kconfig                   |  11 +
+ drivers/soc/renesas/Makefile                  |   1 +
+ drivers/soc/renesas/r8a774e1-sysc.c           |  43 +
+ drivers/soc/renesas/rcar-rst.c                |   1 +
+ drivers/soc/renesas/rcar-sysc.c               |   3 +
+ drivers/soc/renesas/rcar-sysc.h               |   1 +
+ drivers/soc/renesas/renesas-soc.c             |   8 +
+ include/dt-bindings/clock/r8a774e1-cpg-mssr.h |  59 ++
+ include/dt-bindings/power/r8a774e1-sysc.h     |  36 +
+ 24 files changed, 1014 insertions(+), 415 deletions(-)
+ create mode 100644 drivers/clk/renesas/r8a774e1-cpg-mssr.c
+ create mode 100644 drivers/soc/renesas/r8a774e1-sysc.c
+ create mode 100644 include/dt-bindings/clock/r8a774e1-cpg-mssr.h
+ create mode 100644 include/dt-bindings/power/r8a774e1-sysc.h
+
+-- 
+2.17.1
+
