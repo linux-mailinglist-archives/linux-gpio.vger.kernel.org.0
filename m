@@ -2,96 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04859216D21
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 14:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3970D216E51
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 16:03:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgGGMuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 08:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36940 "EHLO
+        id S1726951AbgGGODP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 10:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGGMuN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 08:50:13 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E2CC08C5E0
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 05:50:12 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z24so24839903ljn.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 05:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4SwgAW+EG6tvCZIqxu3/JdX2TBmPRZ3QJRu9pLXvW98=;
-        b=IxAa+leSkBpoUh5Bq/NRPDMzIbc1ztNHK7Nt3NEW/4c5o/7sJR21qImZuPRUcTthg+
-         MelICmihE9tq7OeoCBCxGvGU87PkJ+3NDd2CeIrZ2eQvKrts3wfxg7P+Zy+2SKtZAF1c
-         pVjNDUTVxWkqk/LFvlBBHCLYetSAgkf7RQ3ZOBQQP64oJd4mXHwoN2jRLF4dzCm51/za
-         w9hmt0b2U3ZkovysI0KP+7NFKtJzOEj2OZ+s5FK1XDpGj3/CjOwesQJGHTYVxVUa8C7j
-         Zhgv1BsDH6wUwdwSAXGGypMbhKjoHNCAC67GrMOnYAc8d5jBQQBP4vE/5l2gLbu5QIRi
-         ZVOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4SwgAW+EG6tvCZIqxu3/JdX2TBmPRZ3QJRu9pLXvW98=;
-        b=YDDU9ODrdZU/2LLiPL4hSeo1LSr951+zRewhW/6+6IowtY/VAl2O4m2S/urK2rtrgX
-         dv3iWGNEnI3JA5wzaU3EdQboLxVhRLyKtPwFW2meXYtSXn4dS5YSRSCND/2nqWqkBIWP
-         LNTOClfFdZcwRk2nWxW6AL5PphFo/1Jg0ddksgSOBU6mxiwBcQqLC6I51QbyUI8mfd3v
-         hUoUtbhc5Kzle1Ufqbq6j9gtuY6rfoFKMTxYBfsfPWtyrSMZdaFubDuUlc71Yd3TWZlf
-         cONzxIS8sd2Q8kTFU5Dl4+GDpm6bsOado/6EdTg6QQtyJYuWokFNuZau+H7yt6U2g06N
-         SQOw==
-X-Gm-Message-State: AOAM530Lj57WZZ4do+csgDlsPKKHrPzW1DidvZHGCjbkJDcSm/HVh4nE
-        E5Ns/RH0BTuAAdugpdLcU5YgcXevzEV0jCv9ad/p24PA5NQ=
-X-Google-Smtp-Source: ABdhPJwb40quVLTqVbxWUanPuFGtQykjLJsdQp6TTKdlw6gNizun/jdSZa0XI0eJCmX/F+MxnSVBrBxnftFaqvy1VKI=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr16143076ljg.100.1594126211220;
- Tue, 07 Jul 2020 05:50:11 -0700 (PDT)
+        with ESMTP id S1726900AbgGGODP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 10:03:15 -0400
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC712C061755;
+        Tue,  7 Jul 2020 07:03:14 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B1PKW5V4WzQlH2;
+        Tue,  7 Jul 2020 16:03:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1594130589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ll7gVSOL9XzROZUsvjqsjM/q+j59gZ3tVsoc4JCDtNA=;
+        b=ZS2vQUAeQJHJPZt1jny2VGDtSVHRhegIw8xtPLsbJocmWRMiL5uVguvw1FWnkqtYb6g7q6
+        AdMEjo0BFuMFRATOn5oElrxBJWvbqmyma+Mc+NAo0aKypOcTQmk5Myd5v++BNafQDp32b2
+        +bigyB6DFx+jbTfxFDcREMbZJhTRGdkr/LgF0gY4i/qy1c2qO7+cLekhLc+SBNR4pGZity
+        xJYXCmnpPyORS35HePL4T4Bg+FRA5TYmlN9T8/ORs8DIvYQFOEMj2RJNLbb80Qm20dwPV1
+        /NvEVW8MXCzf4LOv06HV8mpDURY6xZS3+uimkweMl2B9rkp3sn/fxaRHl1RYtg==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id aMe3dxk8w6IU; Tue,  7 Jul 2020 16:03:08 +0200 (CEST)
+Subject: Re: [PATCH v5 1/2] gpio: add GPO driver for PCA9570
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michael Walle <michael@walle.cc>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+References: <20200705133038.161547-1-mans0n@gorani.run>
+ <CAMpxmJUxGq3_R7BRGv68ApeNC+g9PDm_kBd0r=8TjFSyTNxFWg@mail.gmail.com>
+ <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <15d8ae43-6905-b861-3b50-d1ba780edf2d@gorani.run>
+Date:   Tue, 7 Jul 2020 23:03:00 +0900
 MIME-Version: 1.0
-References: <20200626211026.513520-1-furquan@google.com>
-In-Reply-To: <20200626211026.513520-1-furquan@google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 14:50:00 +0200
-Message-ID: <CACRpkdZoTs1WHhmJtu37DW=7WhGtThD5Am46K9LwR10EAxqNwA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: amd: Honor IRQ trigger type requested by the caller
-To:     Furquan Shaikh <furquan@google.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        akshu.agrawal@amd.com, adurbin@google.com,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75Vf4440V5Oh1SA5tjVgss134qGkx591ANDY3aQ+oecEzmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -4.05 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 78083178A
+X-Rspamd-UID: 2ba226
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:10 PM Furquan Shaikh <furquan@google.com> wrote:
+On 20. 7. 6. 오후 9:00, Andy Shevchenko wrote:
+> On Mon, Jul 6, 2020 at 2:21 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:>
+>> On Sun, Jul 5, 2020 at 3:31 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>>>
+>>> NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
+>>> Its ports are controlled only by a data byte without register address.
+>>>
+> 
+>>> Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
+>>>
+> 
+> No blank line here.
+> 
+>>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> 
+>> This driver looks nice now but why did you remove the mutex in v3? I
+>> think when Andy commented on that, he meant not understanding why the
+>> error check is protected, not the i2c operations.
+> 
+> Right.
 
-> This change drops the override in `amd_gpio_irq_set_type()` that
-> ignores the IRQ trigger type settings from the caller. The device
-> driver (caller) is in a better position to identify the right trigger
-> type for the device based on the usage as well as the information
-> exposed by the BIOS. There are instances where the device driver might
-> want to configure the trigger type differently in different modes. An
-> example of this is gpio-keys driver which configures IRQ type as
-> trigger on both edges (to identify assert and deassert events) when in
-> S0 and reconfigures the trigger type using the information provided by
-> the BIOS when going into suspend to ensure that the wake happens on
-> the required edge.
->
-> This override in `amd_gpio_irq_set_type()` prevents the caller from
-> being able to reconfigure trigger type once it is set either based on
-> ACPI information or the type used by the first caller for IRQ on a
-> given GPIO line.
->
-> Without this change, pen-insert gpio key (used by garaged stylus on a
-> Chromebook) works fine in S0 (i.e. insert and eject events are
-> correctly identified), however, BIOS configuration for wake on only
-> pen eject i.e. only-rising edge or only-falling edge is not honored.
->
-> With this change, it was verified that pen-insert gpio key behavior is
-> correct in both S0 and for wakeup from S3.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
+Oh, probably I misunderstood the comment... :(
 
-Patch applied.
+But I don't really understand what mutex does here. The driver does not 
+need consecutive commands, it only sends/receives only one byte at a 
+time. And AFAIK each i2c_smbus function is already protected by a mutex. 
+So what should be exactly inside the lock? Should we protect the output 
+buffer as well? I'm not an expert on this so please enlighten me.
 
-Yours,
-Linus Walleij
+Thanks for your kind reviews, as always. :)
+
+> 
+>> Are you sure you don't need this lock?
+> 
+> It's a good point!
+> 
