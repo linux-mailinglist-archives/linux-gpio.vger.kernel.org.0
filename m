@@ -2,84 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C033216B2B
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:13:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69E04216B3C
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgGGLN1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 07:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        id S1727003AbgGGLPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 07:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728210AbgGGLN0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:13:26 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2739FC08C5DB
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:13:26 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y18so24465660lfh.11
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:13:26 -0700 (PDT)
+        with ESMTP id S1725944AbgGGLPw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:15:52 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E70C061755
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:15:52 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 9so49380097ljv.5
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:15:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DonQkpNAjPvHVAy79oehvm61+vwAXrm714g+O9PzNZA=;
-        b=TO49RncxH1IHsqYy4SyeMCPtM239Wd3esWklEchNM7cIvvWU8d22p9X+tt275U1fRS
-         QqEEj2tGMso79rUK8yQboBeqO7EOEDIn+AJP6k4nNnwlXsiYqtzfhbrl3kHQPTy/Yg2g
-         BdKs03I3DUY1Wu9v63xIkJx6xZK9ao09gx1KMJokoYvlekJIDtjeHgr9dG6UIXla7Gsl
-         1qM/+lnWDQRPxNzzSitTNYUDJyokjMxbg5R7oC9Hj0K2aB3oCYilUnuLygGZfB7853lR
-         i75e5Pi0QsdbsXzNMqijd5nrzs3k0iaH4atcp+LQy3p3kkBZ8X+jUEYy/7jb9cAt16Ew
-         BiQg==
+        bh=IME/GKmb03RMGZjHJLw9fB5q2hWSVThgD6kxOkSv7K4=;
+        b=MbMMReVhvU1Ziovve/YFlmTeUU52Pj/orKnR7kX0NlykcVik8u67E66OxRylvX4Oaz
+         EklcD2sTe2vWnBBM/OrMJN9XhiXGr9KnB3NO0SaKVMbMRzzmQv0mpSIU3l8usw++6Di/
+         YATzyor3V8fa3yajhQQ0JvV+5UyJ2t4+EWpgJquP7iad6/KuBlQkef3UOB+wgdDGi+zi
+         M7tRYg96icGx5VqDZulWFiw/mEN+gdLBERSj5VsUwT3xllZrYNq5/vXaDf2h70MBnUa3
+         G61L17PrwXwrz72aXhT8lIDpbDP8M5nEucOcfgujb4xoACysDuy4vpC1krs7qL1xDlzN
+         BhOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DonQkpNAjPvHVAy79oehvm61+vwAXrm714g+O9PzNZA=;
-        b=DXc6bqSOuE+01hYFsexS9qkqDkusfkZUxEwr6QRFgEIyFimi+IoikapaqH6+t/M3g0
-         nJk0urAYm38UKEpqFqYJ6nAamhhxPe2nVpQt5LXpTkYTaBV/N3H/6/PNO1PtsFHDz4De
-         37aqA3Cp5V12M410/492NBIwceXVaUeeXoNhrALiNORJrtCvLtMjPBntQIwUdFcGnPTM
-         Va6MZyj16lD4B/cZOouzz/7e3ANKVXe8KERWg4CKvNAoalECdr3qzIQwJZ4AcrlurBOc
-         7PybTmD0j4gVmrLmUFd1BtHKMaCNqYMpXd8xoCiogIpyTsIphI7f205ZedYGN4/sYz6E
-         YAqg==
-X-Gm-Message-State: AOAM531e2Mk9ZQxerhyysyw5D0FBJvfFA8HoRfk7YHmYL7vP/G3gGsnM
-        a9tWjeaCT0hSwaRKSypKDw+eHnXBeQpneOhWQccYrA==
-X-Google-Smtp-Source: ABdhPJzwS5f0cvxfzHQbNMbpX81A+XQqU02t1sjlsXR6wKo7CCNC6u99RIC3QWt6g9P+mZRBN/2h2q03IPJWnOOnYNU=
-X-Received: by 2002:a19:f20a:: with SMTP id q10mr33042436lfh.89.1594120404530;
- Tue, 07 Jul 2020 04:13:24 -0700 (PDT)
+        bh=IME/GKmb03RMGZjHJLw9fB5q2hWSVThgD6kxOkSv7K4=;
+        b=o4RlzQXiSlX776DOCBzrYmTKZ7KfRB2dj5UCk2qt5FC9MuPg7II7h04tGgDMiOAJxs
+         ikcnBU/4lDEHnDO8fqXk6Pk3mQ//87/1b1pkc/a5ClCe/Mkno+1I4KZpeEEl3WQmcOZq
+         9NyCYVa+zojMZ39l7aS6y/0YDjEu3+7bHjNuiWd88ah8KqHE3tLnCOd0+CeOLpYBXXSX
+         oCKgFM7Pwf4IOuyIsiUQ6YnBb6lYWT4PWJA6uNM3QYFGHj6IXaAg9XWmNbf7hIflgqIn
+         kohMtuC3HNZ2xMzepD/LmYNu0MQUS2N5jR4SWcmK7JoedK2jRBimMVGEwa57sOwnS+3F
+         oHVw==
+X-Gm-Message-State: AOAM533Vtgcvpmoac+ne2AGPbnyeqfxKwqZLs322oTPZpSA3IA9Ak3xJ
+        pOEGY4GOgzGYvbieYXh+dy4EIwBqUuTdYtPOdsz7oA==
+X-Google-Smtp-Source: ABdhPJwbsoWVmqeN0/WQZpQJHIRzq9HpNh3Mx3xudoIWyjVcuG5GzzrQ0ViAG5GTTFplqmcdl8EFB/wvQqzTDo1sta8=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr8480046ljj.283.1594120550675;
+ Tue, 07 Jul 2020 04:15:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200617180543.GA4186054@x1>
-In-Reply-To: <20200617180543.GA4186054@x1>
+References: <20200618025916.GA19368@home-desktop>
+In-Reply-To: <20200618025916.GA19368@home-desktop>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:13:13 +0200
-Message-ID: <CACRpkdYN+N8cuFtgqeqk_L4QR0ZMUObYehEBTfnGGe1aR9srBA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: single: fix function name in documentation
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Jiri Kosina <trivial@kernel.org>, Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
+Date:   Tue, 7 Jul 2020 13:15:39 +0200
+Message-ID: <CACRpkdZqkAXpH83H88=phtVcJRhqh-1865X8gJun_oOqBwzxrw@mail.gmail.com>
+Subject: Re: [PATCH] [v2] pinctrl: meson: fix drive strength register and bit calculation
+To:     Hyeonki Hong <hhk7734@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 8:05 PM Drew Fustini <drew@beagleboard.org> wrote:
+On Thu, Jun 18, 2020 at 4:59 AM Hyeonki Hong <hhk7734@gmail.com> wrote:
 
-> Use the correct the function name in the documentation for
-> "pcs_parse_one_pinctrl_entry()".
+> If a GPIO bank has greater than 16 pins, PAD_DS_REG is split into two
+> or more registers. However, when register and bit were calculated, the
+> first register defined in the bank was used, and the bit was calculated
+> based on the first pin. This causes problems in setting the driving
+> strength.
 >
-> "smux_parse_one_pinctrl_entry()" appears to be an artifact from the
-> development of a prior patch series ("simple pinmux driver") which
-> transformed into pinctrl-single.
+> The following method was used to solve this problem:
+> A bit is calculated first using predefined strides. Then, If the bit is
+> 32 or more, the register is changed by the quotient of the bit divided
+> by 32. And the bit is set to the remainder.
 >
-> Fixes: 8b8b091bf07f ("pinctrl: Add one-register-per-pin type device tree based pinctrl driver")
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
-> v2:
-> - add trivial@kernel.org
-> - add Fixes: tag
+> Signed-off-by: Hyeonki Hong <hhk7734@gmail.com>
 
-Patch applied as non-critical fix (v5.9).
+Patch applied.
 
 Yours,
 Linus Walleij
