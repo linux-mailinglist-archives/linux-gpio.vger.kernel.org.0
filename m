@@ -2,111 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C94D02168A0
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 10:51:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9603D21699B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 11:57:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgGGIvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 04:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgGGIvr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 04:51:47 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FF43C061755
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 01:51:47 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so31119755qtg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 01:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yP72YWeLU5sMOPz/Z/RhgCtVC8i2Il0r0xFHo/2p+x4=;
-        b=xr75r3K/EJacomCXakfRs113HimS6T0hlDgRyMMwKINy1HcHQ0PvFiF/EEIEDSvhcW
-         /W02tE9hMOtwZKVrbL+6s4MnWPIu80uoxy7FWLEubQcHyH3vwXAvmVrU/pFQaAel0a0d
-         TIHtwszIwylMHwlGod0n2YSxLW+ElEiMORsQH5/AEWZtTd2p58x9hwXtlyO3MLKSyvGt
-         0n17cX4PZowIs1gxqps4mHLwIKz08FWUm4t+y4KbdWASLCvAeLVUHYyHU+NMz/9cpOU/
-         sZaG41ZBUx8AShQcZf3fzGJP6t+AQ9hkfDvySYk/rUUFb+3sAP3r8YL48OXf7QUe5+as
-         FuiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yP72YWeLU5sMOPz/Z/RhgCtVC8i2Il0r0xFHo/2p+x4=;
-        b=cuA1/ViCx5bHnZTJWmfs66pFV0tPAdHjONO/Xu9Y7r9yaiUWOf3wW3e6BcRKJ27aDa
-         Alzwt7xfQ3bujB7vfiGp54fhM6sEo3YQ8FDntlTkefUmImUjWQfIJBMfhs4ruKTA3vPC
-         XovIKw7K9AIyQrw5eQn6ZTOe2M0b0ouNpL/3NUU78K4Dk9R+G+YHPifq3QAZcVAWMzLD
-         fQ/EyfiNqnS3da1un1a9E4zjpNvsQZctnuGwGdf9xfHBNq3EsAJaDQLueETp/pAmMOMG
-         Kt13Gd0MPgI5UOFfaxIosO/c3FY4V7Oa34GKCuW62LJUGaXjy872c5xQ4uI4+It5SvkM
-         S8bA==
-X-Gm-Message-State: AOAM530cSD0LmR3KnN3j+GJLSg+fWFXywB7QEOJvZ9t4Duicit6Ch4SI
-        W/BLbm4V1fdXGtGinTP+PYglBI8hJ87TsXXonqRZ4Nz3
-X-Google-Smtp-Source: ABdhPJxPomvpM80WlooYqlNYhNyQd9PwQQsKMagUjwdNt/77QiXjX96SjCWCP9iYrMS7ZSBAdPhuv5jh3cD7RMWvM0M=
-X-Received: by 2002:aed:21da:: with SMTP id m26mr34625825qtc.197.1594111906542;
- Tue, 07 Jul 2020 01:51:46 -0700 (PDT)
+        id S1726951AbgGGJ5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 05:57:01 -0400
+Received: from smtpcmd14161.aruba.it ([62.149.156.161]:55315 "EHLO
+        smtpcmd14161.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgGGJ5B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 05:57:01 -0400
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd14.ad.aruba.it with bizsmtp
+        id 09wx2300z3Zw7e5019wyCE; Tue, 07 Jul 2020 11:56:59 +0200
+Subject: Re: [RFC] GPIO User I/O
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+Date:   Tue, 7 Jul 2020 11:56:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200701013908.42359-1-warthog618@gmail.com>
-In-Reply-To: <20200701013908.42359-1-warthog618@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 7 Jul 2020 10:51:35 +0200
-Message-ID: <CAMpxmJXe9VL3GT+QJvqOCu7mqLyEaTFL1LO=FQP1UA4UPhMRLA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: cxx: fix sign-compare compile
- warnings in tests
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594115819; bh=iMxzmbAXPORie8pkdG5YzxTMnrq/UBvG98R/J9x/Zgo=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=PXysaG3XMcA3HoMihAJhEede4iaDg8Oa1xrq/8tpYb9MhHbvO47WVbkI5coxEiX+8
+         KyYKeMkVLIARfKCn9bAP/PfKJe1UjiIHT88BmUdN3Zrkh4lxIVLZrCm0LL+0qH99+f
+         PuKfdBMt1700JYiBPabJZvJGyVtQzIT6+dOQ8ueWxxRwxaCB2NnmnRmCxJCDSx/d8F
+         bgAWCrXoyOZJkX5Twi6UD+IRRZXsmpl+rRl77Tyl6J9aqyFJEoIgGvL2LzgxDVN/Qh
+         2+ZWMDGTHOncdUWuzMsQUFLGzr//oMlfKO8vazmQCn0MQyM5/DwYGldcLOdTN3MptR
+         fArYo77cL1HPg==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 3:39 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Fix sign-compare compile warnings in cxx tests.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> Just noticed these warnings while rebuilding in a fresh build environment.
-> Not sure if they were triggered by an enviromental change, or if I just
-> wasn't paying enough attention before, but either way this patch makes
-> the compiler happier.
->
->  bindings/cxx/tests/tests-iter.cpp | 2 +-
->  bindings/cxx/tests/tests-line.cpp | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/bindings/cxx/tests/tests-iter.cpp b/bindings/cxx/tests/tests-iter.cpp
-> index fdc2cb5..4c07613 100644
-> --- a/bindings/cxx/tests/tests-iter.cpp
-> +++ b/bindings/cxx/tests/tests-iter.cpp
-> @@ -53,7 +53,7 @@ TEST_CASE("Line iterator works", "[iter][line]")
->  {
->         mockup::probe_guard mockup_chips({ 4 });
->         ::gpiod::chip chip(mockup::instance().chip_name(0));
-> -       int count = 0;
-> +       unsigned int count = 0;
->
->         for (auto& it: ::gpiod::line_iter(chip))
->                 REQUIRE(it.offset() == count++);
-> diff --git a/bindings/cxx/tests/tests-line.cpp b/bindings/cxx/tests/tests-line.cpp
-> index 5353093..e2e4cbc 100644
-> --- a/bindings/cxx/tests/tests-line.cpp
-> +++ b/bindings/cxx/tests/tests-line.cpp
-> @@ -210,7 +210,7 @@ TEST_CASE("Line bulk object works correctly", "[line][bulk]")
->         SECTION("bulk iterator works")
->         {
->                 auto lines = chip.get_all_lines();
-> -               int count = 0;
-> +               unsigned int count = 0;
->
->                 for (auto& it: lines)
->                         REQUIRE(it.offset() == count++);
->
-> base-commit: b56d6b6a452e47fee8c70514afb99ccd77ada677
-> --
-> 2.27.0
->
+On 07/07/2020 09:41, Geert Uytterhoeven wrote:
+> Hi Rodolfo,
+> 
+> CC devicetree
+> 
+> On Tue, Jul 7, 2020 at 9:17 AM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> On 06/07/2020 23:00, Geert Uytterhoeven wrote:
+>>> On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>>>>>> With Geert's GPIO aggregator userspace and device tree can conjure
+>>>>>> special per-usecase gpio chips as pointed out by Drew: this is
+>>>>>> very useful when you want some kernel-managed yet
+>>>>>> usecase-specific GPIO lines in a special "container" chip.
+>>>>>> To me this is the best of two worlds. (Kernelspace and userspace.)
+>>>>>
+>>>>> Maybe this is the "best of two worlds" as you say but the problem is that board
+>>>>> manufactures need a way to well-define how a GPIO line must be used for within
+>>>>> the device-tree and without the need of patches! In this point of view neither
+>>>>> the "driver_override" way nor adding a compatible value to
+>>>>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
+>>>>> board!). That's why at the moment they prefer not specify these GPIO lines at
+>>>>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
+>>>>> simple...
+>>>>
+>>>> I think the idea is to add a very generic DT compatible to the
+>>>> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
+>>>> to create a new chip with named lines etc.
+>>>>
+>>>> But Geert can speak of that.
+>>>
+>>> The idea is to describe the real device in DT, and add it's compatible value
+>>> to gpio_aggregator_dt_ids[], or enable support for it dynamically using
+>>> driver_override.
+>>> The former indeed requires modifying the driver.
+>>
+>> I see.
+>>
+>>> Note that if you ever want to write a pure kernelspace driver, you do need
+>>> a proper compatible value anyway.
+>>
+>> OK, but for our purposes we need just one compatible value.
+>>
+>>> I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
+>>> or "gpio-relays".  However, you can always propose bindings for the
+>>> latter, and, when they have been accepted, add those compatible
+>>> values to upstream gpio_aggregator_dt_ids[].
+>>
+>> Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
+>> in my solution would be suffice. However, after these discussions, are there any
+>> chances my patch (with needed modifications and documentation) may be accepted? :)
+>>
+>> Thanks for your time and answers.
+> 
+> Let's ask the DT people...
 
-Applied, thanks!
+I think I need an OK from GPIO SUBSYSTEM's maintainers first...
 
-Bartosz
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
