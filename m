@@ -2,97 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 470D22167EE
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 10:02:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D57A6216897
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 10:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgGGICW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 04:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgGGICV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 04:02:21 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F48C061755
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 01:02:21 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z24so23921466ljn.8
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 01:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
-        b=kmiwBLiGpZZvtNTeKIU15ceN7oNeR238ooJAt0CvbsVCRioMTMtD1x4K9zbkRWKQfj
-         W7RgeINwBObWyC5/fs3l+iztnAPnFlO+7+rT6TlvFxObY1g1gx3t3JQjKxE6FyUa9juo
-         5N8AYr3CY5BYyDuMbcSRhA0X+wn/rOYZ8rkv5KuIj68/y3Xy1IWztOLZ/SwuJntz+jrv
-         Vt9rGJw2piKJn4szUdPZwshV+vMr/O1n7q77GXP+6ZIdII0HAE3ejY83wE1+z2nQ/E+d
-         7uBzrhj0+a6r2uqpZpQ5jycmEYlAqNFMZ6fT6hAcoUqpziWRbqwswmZSjiDqbSu9jA0q
-         nVNQ==
+        id S1728053AbgGGIsA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 04:48:00 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46499 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbgGGIsA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 04:48:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l63so32855098oih.13
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 01:47:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jtUOyKVPfoqn53IJY34j6NjtojqZ+ul+fKHV5uiQxGk=;
-        b=cmcS1U/hm0vR8+EoMomEWUk7wU6Ajo2W0Us8evSERrCT62qsYYVztjAMaTYn9VIDRM
-         GYLUlktvRYQkv6Pf/IgaX5U+1XJwy+0HNSgMnL9oCzv3Z6Zx9NcKG87Bdo+bL69dScbt
-         40AOFgJowYtrQ0HF0h4nNnNLUYFgPsoqQ05S3mdiqRxccedl122oGz9tTg+5kCBqy+97
-         KB0w90hxVgqyfNitiDl3NGJBVYXwW1JiFYD/7m0WjSIdlVVrp0qFmwa0z+O4wl8vGLZ7
-         4ApGI1RjZ2hpRNKBlEp38Xxn/Ho4HQwaj5JcnefOmaX26dZbuZFLiruhe07yjs+Od1ny
-         aONw==
-X-Gm-Message-State: AOAM532pJqcLF8PlDzSJgJJitHCNv4G1WDzR8rJAxi9bgrkonUphIhRk
-        x7+yIlW2TZpRcnF2L4cWgUEyakq+kEsJSliRK3rrlg==
-X-Google-Smtp-Source: ABdhPJyCTsje409P42BtkQ0ytfSdmbTULZn92mJJL2yEDwiZIrlVL3eLoJyeVqyBJtF11vUkJyptRe6bOJBOKNMOG8s=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr15386545ljg.100.1594108939830;
- Tue, 07 Jul 2020 01:02:19 -0700 (PDT)
+        bh=aFb5BpJE7gewnGOab0XbBWRqDooxJF7MwmC2W1p5udk=;
+        b=Net1ZMUQr8lV/EICe5fxssMn5Q6dunX5G9eo7lk0YI7Nk1VZtnrpM6MU8Pe1C4V5jv
+         riAekJzZ/W5Mf5F+D8Tkt7BkWD8WY6Iu9n29jtAXJXAOLq5UswzVU3cEAEv7Zh1q2Nuw
+         VQb0xHQphXiGUwn4HTx7r/tPcDeCm02SAfgcon1oWXBX9ZAooyjmSSiCazJI/6SaLmy2
+         u0J2VjeZbdvNU3kKFPG4K65Jg3OqxNct3fTFSF8JhUx4Qc74xkzW+BEjAIEAcytyFvto
+         em4uB3QTEheCo4Ns1VG1vuxByMoQ5vXEXVSvVDlGHPlvF9TdWwZaCSvg3fwS9zgsrD2H
+         gVag==
+X-Gm-Message-State: AOAM532FJiZHAqGgWrLJWllSFZAlR7F0OjMDVPuhWJ8sb9PDSjXuPLCp
+        A1t2VGwMD1oTe7Z9EeTXQuIu5K/vftgJrKjVCLc=
+X-Google-Smtp-Source: ABdhPJwRPZkELuJhT23rXMHr2fcMHlfCIU8aZkVGq5J7TF1TLRYeA4gngkMrbQ9fL7xAvRkBRq41+X+HF6T5QAlY2ik=
+X-Received: by 2002:aca:ac10:: with SMTP id v16mr2336784oie.153.1594111679156;
+ Tue, 07 Jul 2020 01:47:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1592979844-18833-1-git-send-email-Anson.Huang@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 10:02:08 +0200
-Message-ID: <CACRpkdYYJfA9uur0R+9ONkEk1pEABJnzrPe7U0VX4-QVQHgLcQ@mail.gmail.com>
-Subject: Re: [PATCH V6 0/9] Support i.MX8 SoCs pinctrl drivers built as module
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com> <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com> <CAEf4M_C5ztHoiu4uGiiqxLF7uW6wbyxdg43cs=YgArszMfbXcw@mail.gmail.com>
+In-Reply-To: <CAEf4M_C5ztHoiu4uGiiqxLF7uW6wbyxdg43cs=YgArszMfbXcw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jul 2020 10:47:48 +0200
+Message-ID: <CAMuHMdWj5cpu0eR50v=KwojWLJW74kDW7FHCBaBdS569NL6mVA@mail.gmail.com>
+Subject: Re: [RFC] GPIO User I/O
+To:     Drew Fustini <pdp7pdp7@gmail.com>
+Cc:     Rodolfo Giometti <giometti@enneenne.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 8:35 AM Anson Huang <Anson.Huang@nxp.com> wrote:
+Hi Drew,
 
-> There are more and mroe requirements that SoC specific modules should be built
-> as module in order to support generic kernel image, such as Android GKI concept.
+On Tue, Jul 7, 2020 at 10:39 AM Drew Fustini <pdp7pdp7@gmail.com> wrote:
+> On Tue, Jul 7, 2020, 09:18 Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> On 06/07/2020 23:00, Geert Uytterhoeven wrote:
+>> > On Mon, Jul 6, 2020 at 10:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>> >> On Mon, Jul 6, 2020 at 5:33 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> >>>> With Geert's GPIO aggregator userspace and device tree can conjure
+>> >>>> special per-usecase gpio chips as pointed out by Drew: this is
+>> >>>> very useful when you want some kernel-managed yet
+>> >>>> usecase-specific GPIO lines in a special "container" chip.
+>> >>>> To me this is the best of two worlds. (Kernelspace and userspace.)
+>> >>>
+>> >>> Maybe this is the "best of two worlds" as you say but the problem is that board
+>> >>> manufactures need a way to well-define how a GPIO line must be used for within
+>> >>> the device-tree and without the need of patches! In this point of view neither
+>> >>> the "driver_override" way nor adding a compatible value to
+>> >>> gpio_aggregator_dt_ids[] can help (this last solution requires a patch for each
+>> >>> board!). That's why at the moment they prefer not specify these GPIO lines at
+>> >>> all or (improperly) use the gpio-leds and gpio-uinput interfaces to keep it
+>> >>> simple...
+>> >>
+>> >> I think the idea is to add a very generic DT compatible to the
+>> >> gpio_aggregator_dt_ids[]. That way, any DT can use the aggregator
+>> >> to create a new chip with named lines etc.
+>> >>
+>> >> But Geert can speak of that.
+>> >
+>> > The idea is to describe the real device in DT, and add it's compatible value
+>> > to gpio_aggregator_dt_ids[], or enable support for it dynamically using
+>> > driver_override.
+>> > The former indeed requires modifying the driver.
+>>
+>> I see.
+>>
+>> > Note that if you ever want to write a pure kernelspace driver, you do need
+>> > a proper compatible value anyway.
+>>
+>> OK, but for our purposes we need just one compatible value.
+>>
+>> > I do agree that it's annoying to have "gpio-leds", but not "gpio-motors"
+>> > or "gpio-relays".  However, you can always propose bindings for the
+>> > latter, and, when they have been accepted, add those compatible
+>> > values to upstream gpio_aggregator_dt_ids[].
+>>
+>> Having gpio-uio with proper names within it as motor0, motor1, relay0, etc. as
+>> in my solution would be suffice. However, after these discussions, are there any
+>> chances my patch (with needed modifications and documentation) may be accepted? :)
 >
-> This patch series supports i.MX8 SoCs pinctrl drivers to be built as module,
-> including i.MX8MQ/MM/MN/MP/QXP/QM/DXL SoCs, i.MX common pinctrl driver and i.MX
-> SCU common pinctrl driver as still built-in.
 >
-> Compared to V5, the changes are as below:
->         - Keep i.MX common pinctrl libary built in, ONLY i.MX SoC pinctrl driver
->           support built as module.
+> Hi, I would like to clarify my understanding of what gpio-uio.
 >
-> Anson Huang (9):
->   pinctrl: imx: Support i.MX8 SoCs pinctrl driver built as module
->   pinctrl: imx: scu: Support i.MX8 SCU SoCs pinctrl driver built as
->     module
->   pinctrl: imx8mm: Support building as module
->   pinctrl: imx8mn: Support building as module
->   pinctrl: imx8mq: Support building as module
->   pinctrl: imx8mp: Support building as module
->   pinctrl: imx8qxp: Support building as module
->   pinctrl: imx8qm: Support building as module
->   pinctrl: imx8dxl: Support building as module
+> Is there something in mainline that already uses that binding?
 
-Patches applied to the pinctrl devel branch for v5.9.
+No there isn't.
 
-Yours,
-Linus Walleij
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
