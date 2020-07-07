@@ -2,80 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 81EFC2165AF
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 06:58:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D9B52165D5
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 07:15:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgGGE66 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 00:58:58 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:57587 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgGGE66 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Jul 2020 00:58:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594097937; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=kUhlvX5z1O4iL5BZbmyHLAQK/NkvrRKZF2CvSmXuoOU=; b=J1Jud0KOakjMm0m2W8PeRY4nEObFsF5chXWn2r6fTx+TUH78W05jJMZiOaBnk+INy4V+fmIY
- zqtJE9AJ5KdNPqd+vgV3sexqQYNMOsxnhjE7tw3KZFhqE2vgoeM+Ng+rDdOLXVgoVGl/0q9r
- XJgWl+6/aVFGkRei+0JHNagYtC0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-east-1.postgun.com with SMTP id
- 5f04010e1daed08ee0ac8aba (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Jul 2020 04:58:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6049C43391; Tue,  7 Jul 2020 04:58:53 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E7F76C433C6;
-        Tue,  7 Jul 2020 04:58:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E7F76C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     sivaprak@codeaurora.org, sricharan@codeaurora.org,
-        Kathiravan T <kathirav@codeaurora.org>,
+        id S1727088AbgGGFO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 01:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgGGFO5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 01:14:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71CD6C08C5DF
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Jul 2020 22:14:57 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id q17so17915112pfu.8
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Jul 2020 22:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VC1qC/chpLuPrnCtnXydy4WQQAWd7iJ2FZlZimJ5b6I=;
+        b=Gv+dojyI7QQfxRcDCRu4q8/4u57qSHg/i5SDWki0XXKBc1Py5nVmTLUtVcuZJ7KlyX
+         AZLx563OpopGbbMqB23Kln56ys2+XVKQUzE/ENalHLS05+08nhfGEbCcMrCjKDtw0V7l
+         qkg+0GKFNaVVnrpLHBidGE9EN3VE/fm8oBOpykwn/e1fU59Zr7oRNxWoLlYMuot/JKyI
+         3hiTggjRTXkbCAdF4kQ/P5DI90BFjq0CqHgafB0Nb7EDqR86xxQg+Jf7GX+cqA+USTk3
+         WImdsqv+VPPCBI+HTAAEfZsr/nAugjsUYl56q1b2uzcjIbDRlq74eireq2bXGezHT/np
+         Mh/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VC1qC/chpLuPrnCtnXydy4WQQAWd7iJ2FZlZimJ5b6I=;
+        b=cYtfNT2bFG8+u22jt1TWt7v5z8z9ozul99IVOXnPtpZBmU6ZgbozG1cBxP6PbIiIfL
+         95uz/UxrRAfd811/TMqe7/Q9uGVqXDeq/BCX5qR4Z4U9hciamHcerYHMLu10/c8NzC/W
+         8AdWhqCbkZrsQHNizan7dnXK+8koFAubMgGqetmxzkHxba8HBpCeFdmPd/Ydi3NgbdrX
+         tF4R7Hu2pXNrGoQLQMRbsPAwX5YzO3taocgdMufp10ZYJp+KCX14PFGZXzKY18AYR5l7
+         B4Ow1OX6s314vhf73G7u9yLH9l2f+q5P1Mv6CY6ITlxZnAYFOr9kKqzF3+/ewX+CBNYC
+         Wxhw==
+X-Gm-Message-State: AOAM5337dtI/L6WIiUPQLsmhtspj3h4m31U+nLM5NjhsbuKb46RJReUg
+        c76AceIJZIxckIM1m3FNrZvZZA==
+X-Google-Smtp-Source: ABdhPJwBny1F67hBfUTcgvlntD95n8W52l3BO+5OX0uP6ElEwFRCGpsB+Nbv9jE3lXqwkCkrImEHNA==
+X-Received: by 2002:a63:515a:: with SMTP id r26mr46032087pgl.204.1594098895865;
+        Mon, 06 Jul 2020 22:14:55 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m1sm1097166pjy.0.2020.07.06.22.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2020 22:14:55 -0700 (PDT)
+Date:   Mon, 6 Jul 2020 22:14:52 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kathiravan T <kathirav@codeaurora.org>
+Cc:     agross@kernel.org, linus.walleij@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sivaprak@codeaurora.org,
+        sricharan@codeaurora.org,
         Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Subject: [PATCH] pinctrl: qcom: ipq8074: route gpio interrupts to APPS
-Date:   Tue,  7 Jul 2020 10:28:35 +0530
-Message-Id: <1594097915-26725-1-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+Subject: Re: [PATCH] pinctrl: qcom: ipq8074: route gpio interrupts to APPS
+Message-ID: <20200707051452.GO11847@yoga>
+References: <1594097915-26725-1-git-send-email-kathirav@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594097915-26725-1-git-send-email-kathirav@codeaurora.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-set target proc as APPS to route the gpio interrupts to APPS
+On Mon 06 Jul 21:58 PDT 2020, Kathiravan T wrote:
 
-Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-ipq8074.c | 1 +
- 1 file changed, 1 insertion(+)
+> set target proc as APPS to route the gpio interrupts to APPS
+> 
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-index 0edd41c..aec68b1 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
-@@ -50,6 +50,7 @@
- 		.intr_enable_bit = 0,		\
- 		.intr_status_bit = 0,		\
- 		.intr_target_bit = 5,		\
-+		.intr_target_kpss_val = 3,	\
- 		.intr_raw_status_bit = 4,	\
- 		.intr_polarity_bit = 1,		\
- 		.intr_detection_bit = 2,	\
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+This says "first Rajkumar certified the patch's origin, then you picked
+it up and certified its origin". As such I would expect that Rajkumar is
+the author of the patch.
 
+If you both came up with the patch add a Co-developed-by: tag.
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ipq8074.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8074.c b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> index 0edd41c..aec68b1 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ipq8074.c
+> @@ -50,6 +50,7 @@
+>  		.intr_enable_bit = 0,		\
+>  		.intr_status_bit = 0,		\
+>  		.intr_target_bit = 5,		\
+> +		.intr_target_kpss_val = 3,	\
+>  		.intr_raw_status_bit = 4,	\
+>  		.intr_polarity_bit = 1,		\
+>  		.intr_detection_bit = 2,	\
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
