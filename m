@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DD69216BC9
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27B2B216BDA
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Jul 2020 13:41:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGGLj0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 07:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54152 "EHLO
+        id S1728319AbgGGLlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 07:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgGGLj0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:39:26 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A04C08C5E1
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:39:25 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h22so42333947lji.9
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:39:25 -0700 (PDT)
+        with ESMTP id S1727003AbgGGLlh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 07:41:37 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A6DC08C5DF
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 04:41:36 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d21so24509377lfb.6
+        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 04:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AB79oSGoei4/jVAVNUIel30W4YNtDlT0qF8qJNgQrv8=;
-        b=NYzj/o6y2s9Z+eCQgmRYfSgsgU7i2HsuCMcPIod16JgB0/R/Bp8K5TCpEG+jy+bcgs
-         ZeWixYF2ok3de8HvQOPk2q8rgIBZzWFC0mNPOVLWT6rbSD+GQswrYk/COzA1BzWJTS0y
-         drlNb9cBsjk6f3wweib0e8CQxPQBi+sIlqBDP8H9T9s4aZi38GCvzy1ivpwPO1RFCqDw
-         TjSHlhqypVPuC7Pb0P50dC7mEjFGIXvCXjSG/GQxWvFPcZ++jU5mQN6Ide3Q+e/v2VlF
-         reom+VCXprUs4I5+pCDFnZNjMgq7tRgBCHRMqtD75VEibK88tGJtAMoDnCZipsfMypao
-         zqzA==
+        bh=7L/0My4Hmw0nxk/zAz7LX4pkKR6TGLRcA6CE4xPJOLM=;
+        b=IL9/OsUNTSOVSExzddt4AK4CWUR/v5bZ9OfUUimh18UkjLZ40MllYFJGIB/aCN//Gi
+         IO7U8JbSaPzAxcDPh7KvBZnYAiNqrhrEryPI0oYInOPF/UXH7cP1G5VbNvhqOQVFT1z1
+         hadPDW9jXnUvIJJI+Pe2zao9mf6oozWnZFM/7sAYurmlmIUTC4in8iTwSGWI35ATdGpK
+         dYN74HhHxd8jlOvRdiEhJ2tEiH+q8w2yXuCSDell5I+ugHXJBADKnxsluAdw4VLoju1/
+         scwZVogOdt1X0Eg+J00XhrCeJl18hSU4Gyv2EUSYfrov2Aeap01RjCJ5HK0FWqDzGZld
+         EYzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AB79oSGoei4/jVAVNUIel30W4YNtDlT0qF8qJNgQrv8=;
-        b=K/4w2T8Wfvo/7ffHCAb+1uQ5ye1iyBa6wK1QivxE0jDroiAaENmwu+FilSsfqq1x8v
-         4Qhm6d3EmmIfg1NxTV7WWNWRhtiYzi7WQ957RJ4kh0kht5iaKVp5DsW4HJoI8K1rLyW+
-         oEe1gdM+GNll9utgLJykfwAMwnoDOL1X0LyjZxnk/0PrnMJ9XXmTcsP2AtSL1qXe3QSq
-         l47YParnzcxnSPlAuLXuNgSeSD+pXo8ekZGWUc1JWAeRQmQJlg4ARq3BpBBMukRTAOVj
-         K+KBS5ScmoUartX32Oq1pmeTQ5agd907WrNAxWByPtoU5Ez0n+BRCh09Ft2pQCm/cZ6c
-         h8qg==
-X-Gm-Message-State: AOAM531dTwYMzjhWRHEz48BjEMeDH0zmYl/4uf3UX3Ob/3YKhu9Qtclb
-        xtx4RFEajEDdWYrTqBlYngddbZQxSZs32QsWnPWMig==
-X-Google-Smtp-Source: ABdhPJzaNV7qDX5ofVny2CYGichkvvyZwwCuYiY/DXFU9tcXKWyULk7QdWCDcj7Zwb2TtLbaWFduqFOHtHKtVZ06ol4=
-X-Received: by 2002:a2e:8046:: with SMTP id p6mr15946172ljg.100.1594121963989;
- Tue, 07 Jul 2020 04:39:23 -0700 (PDT)
+        bh=7L/0My4Hmw0nxk/zAz7LX4pkKR6TGLRcA6CE4xPJOLM=;
+        b=aFfP9umh9m1IiQZZcVKmKt/MtccBA6nbkGwVwnW/sFkfrerw01ShpiE7wrrQaz5m3s
+         EoUI9w4B5wRepUyJjETr6gx/t5xa6WLHl8Lr2mw1+SpL6/HEeUKSkkmgZHMeNWagsjGI
+         hBozL7oKhv0KP7/0AdNuRlFCbY0YRcJjChTWw8eKoBibeGJI2VH/5UV9ftde5B8Z+hmv
+         EdNP+ZdBiSes39roYlvTTFSVujYfBJ40Ek5T7CHp0ps5S54sUijz277yJE0MvmL6bRd9
+         kEeGBakQyXCnQS+L7/dNZpV6B69f5LcAchkgmgN6LlSf95dHiZ0tn1HGxTOWT1o3eIvY
+         deCw==
+X-Gm-Message-State: AOAM5330y6W4/Y3zEznC3BOLme9qAc2wGbC+C7Vv/At1QYHiEvK1Q1AN
+        vk/5K8uOBbHdP34OMndW+y6XSg1jcdFkzu18n4Tq8Q==
+X-Google-Smtp-Source: ABdhPJz9qB6nG0uUcXiIt2zX4d51YOVLcslM/A8TsXvw47TLHd5sVFUK1DB4TwmcZWAd//+7rEtuzWJ593Cnx/sNKOs=
+X-Received: by 2002:a19:ccd0:: with SMTP id c199mr32729218lfg.194.1594122095031;
+ Tue, 07 Jul 2020 04:41:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com> <1592480018-3340-3-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1592480018-3340-3-git-send-email-hanks.chen@mediatek.com>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jul 2020 13:39:13 +0200
-Message-ID: <CACRpkdZAjwcHURd6wCQPrjHjEgiEiUApqVUff+70nwjRPyAwBw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/7] pinctrl: mediatek: update pinmux definitions for mt6779
+Date:   Tue, 7 Jul 2020 13:41:24 +0200
+Message-ID: <CACRpkdY+N17VNdzidBdo-Z8rgvRGMh=576-WPULgCmmuSJyN7g@mail.gmail.com>
+Subject: Re: [PATCH v7] Add basic SoC Support for Mediatek MT6779 SoC
 To:     Hanks Chen <hanks.chen@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -65,26 +65,28 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, wsd_upstream@mediatek.com,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 1:34 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
+On Thu, Jul 2, 2020 at 2:57 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
->
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Change since v7:
+> Commit "dt-bindings: pinctrl: add bindings for MediaTek"
+> -- fix typo and change order of patch
+> Commit "clk: mediatek: add UART0 clock support"
+> -- add fixes tag and real name
+> Commit "arm64: dts: add dts nodes for MT6779"
+> -- expose all three UARTs in the dtsi
 
-Patch applied.
+Oh I see there are still development on this patch set so I took out
+the patches I applied again.
+
+Waiting for the final reviewed version.
 
 Yours,
 Linus Walleij
