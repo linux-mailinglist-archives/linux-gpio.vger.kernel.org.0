@@ -2,186 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19278217B7F
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 01:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35D11217BAB
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 01:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgGGXDr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 19:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbgGGXDn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 19:03:43 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A7AC08C5DC
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 16:03:42 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id x205so3227915vsc.11
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 16:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0brjpEwt3LWgIWnZnDwkYUdaWWiwXptJrmC/ZFcX/HQ=;
-        b=BqgHANLQsFif0HG55ITqpadVS6fjfIF2CV8dhok0vezrpOEEAmex2bupgTL+ftP6CW
-         4n+9IuBOME0XbSyOmYoUwvFRGwLkvbU9IC8rIbNlIdOoKxLek3hL61Dj7ZAot96xzdUF
-         K9SHLz6w7+TQ9spWWnMYYb28XBBQO4yFAQwV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0brjpEwt3LWgIWnZnDwkYUdaWWiwXptJrmC/ZFcX/HQ=;
-        b=rmR9UbA7hP3xYz7rthuC4czvr+fLfQ9ruBUaa52yGy+E+Fd3bYoNmbeC+q/eKIyJG4
-         N36t5H4W+xJALcytSPA+qovtckGK7uQJ9vef02TtFQkfi+kUzB17FsUktdYdmWsGvP0e
-         uTxo6hFKO2Vccai4ksLEYQ18td1PZ61n6dhHS6R2Vai0sn1DOl8apwWT2swhQs0e/pOO
-         NBM3rRKvZcVzqPrgrO2A8N5Np/fAMtaJRIDxPCYoXa5etxjeQIFo8TJyBluDDxenyQF5
-         vb2+NifbVJjiNWXGqo8oHlJf7sRS5DTP3mYedi1VjlX65JasL+xmF8/VMs7KyP/u9AP8
-         kkPw==
-X-Gm-Message-State: AOAM530M7dJLTfH07SrjUvhPPtawqwZb/AEK/SDzu99M4l2BCKUJqIUr
-        qbWUNyzheglKHZtS/EHRY+p2p/6nfNo=
-X-Google-Smtp-Source: ABdhPJxwsaxD2+0at/dxFfjSA73rn1MBLu3+wpDoV/kH5DfIdRqJgucu/SgohtclLDnvXcTClj01LA==
-X-Received: by 2002:a67:31cc:: with SMTP id x195mr43002163vsx.101.1594163021612;
-        Tue, 07 Jul 2020 16:03:41 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id b187sm238071vsd.30.2020.07.07.16.03.40
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 16:03:40 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id j186so1467844vsd.10
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 16:03:40 -0700 (PDT)
-X-Received: by 2002:a67:6546:: with SMTP id z67mr34808529vsb.169.1594163019992;
- Tue, 07 Jul 2020 16:03:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
- <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
- <20200706203805.GS388985@builder.lan> <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
-In-Reply-To: <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 7 Jul 2020 16:03:28 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-Message-ID: <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
- for google,lazor
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728612AbgGGX2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Jul 2020 19:28:48 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42926 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728201AbgGGX2s (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Jul 2020 19:28:48 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3EEC200988;
+        Wed,  8 Jul 2020 01:28:45 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 10CE220000C;
+        Wed,  8 Jul 2020 01:28:37 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 30F76402C8;
+        Wed,  8 Jul 2020 07:28:26 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, oleksandr.suvorov@toradex.com,
+        aford173@gmail.com, andreas@kemnade.info, hverkuil-cisco@xs4all.nl,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] gpio: mxc: Support module build
+Date:   Wed,  8 Jul 2020 07:25:21 +0800
+Message-Id: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Change config to tristate, add module device table, module author,
+description and license to support module build for i.MX GPIO driver.
 
-On Mon, Jul 6, 2020 at 9:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
-> []..
->
-> >>> @@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-> >>>
-> >>>   static int sc7180_pinctrl_probe(struct platform_device *pdev)
-> >>>   {
-> >>> +       if (of_machine_is_compatible("google,lazor")) {
-> >>> +               sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
-> >>> +               sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
-> >>> +       }
-> >>
-> >> As much as I want patches landed and things working, the above just
-> >> doesn't feel like a viable solution.  I guess it could work as a short
-> >> term hack but it's going to become untenable pretty quickly.
-> >
-> > I second that.
-> >
-> >> As we
-> >> have more variants of this we're going to have to just keep piling
-> >> more machines in here, right?  ...this is also already broken for us
-> >> because not all boards will have the "google,lazor" compatible.  From
-> >> the current Chrome OS here are the compatibles for various revs/SKUs
-> >>
-> >> compatible = "google,lazor-rev0", "qcom,sc7180";
-> >> compatible = "google,lazor-rev0-sku0", "qcom,sc7180";
-> >> compatible = "google,lazor", "qcom,sc7180";
-> >> compatible = "google,lazor-sku0", "qcom,sc7180";
-> >> compatible = "google,lazor-rev2", "qcom,sc7180";
-> >>
-> >> ...so of the 5 boards you'll only match one of them.
-> >>
-> >>
-> >> Maybe I'm jumping into a situation again where I'm ignorant since I
-> >> haven't followed all the prior conversation, but is it really that
-> >> hard to just add dual edge support to the PDC irqchip driver?  ...or
->
-> FWIK, this is really a PDC hardware issue (with the specific IP rev that exists
-> on sc7180) so working it around in SW could get ugly.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/gpio/Kconfig    | 2 +-
+ drivers/gpio/gpio-mxc.c | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Ugh.  I guess it's ugly because the workaround would need to be in the
-PDC driver but to properly do the workaround you need to be able to
-read the state of the pin from the PDC driver?  ...and I guess you
-can't do that with the PDC register space so you'd either need to
-violate a layer or 3 of abstraction and snarf into the GPIO register
-space from the PDC driver or you'd have to provide some sort of API
-access from the PDC back down to the GPIO driver?
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 05e0801..4d09ec5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -397,7 +397,7 @@ config GPIO_MVEBU
+ 	select REGMAP_MMIO
+ 
+ config GPIO_MXC
+-	def_bool y
++	tristate "i.MX GPIO support"
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	select GPIO_GENERIC
+ 	select GENERIC_IRQ_CHIP
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 64278a4..643f4c55 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -15,6 +15,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/syscore_ops.h>
+@@ -158,6 +159,7 @@ static const struct of_device_id mxc_gpio_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7d-gpio", .data = &mxc_gpio_devtype[IMX35_GPIO], },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, mxc_gpio_dt_ids);
+ 
+ /*
+  * MX2 has one interrupt *for all* gpio ports. The list is used
+@@ -604,3 +606,7 @@ static int __init gpio_mxc_init(void)
+ 	return platform_driver_register(&mxc_gpio_driver);
+ }
+ subsys_initcall(gpio_mxc_init);
++
++MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
++MODULE_DESCRIPTION("i.MX GPIO Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.7.4
 
---
-
-Actually, though, I'm still not sure why this would need to be in the
-PDC driver.  Sure, you can't just magically re-use the existing
-dual-edge emulation in pinctrl-msm.c, but you can add some new
-dual-edge emulation for when your parent handles your interrupts,
-can't you?  As per usually, I'm talking out of my rear end, but I
-sorta imagine:
-
-1. At the head of msm_gpio_irq_set_type() if you detect that
-"skip_wake_irqs" is set and you're on an SoC with this hardware errata
-then you do a loop much like the one in
-msm_gpio_update_dual_edge_pos() except that instead of changing the
-polarity with msm_writel_intr_cfg() you change the polarity with
-"irq_chip_set_type_parent()".
-
-2. At the head of msm_gpio_irq_ack() you make the same function call
-if "skip_wake_irqs" is set and you're on an SoC with this hardware
-errata.
-
-It doesn't feel all that ugly to me, assuming I'm understanding it
-correctly.  ...or maybe you can tell me why it'd be harder than that?
-
-
-> >> maybe it's just easier to change the pinctrl driver to emulate dual
-> >> edge itself and that can work around the problem in the PDC?  There
-> >> seem to be a few samples you could copy from:
-> >>
-> >> $ git log --oneline --no-merges --grep=emulate drivers/pinctrl/
-> >> 3221f40b7631 pinctrl: mediatek: emulate GPIO interrupt on both-edges
-> >> 5a92750133ff pinctrl: rockchip: emulate both edge triggered interrupts
-> >>
-> >
-> > pinctrl-msm already supports emulating dual edge, but my understanding
-> > was that the problem lies in that somehow this emulation would have to
-> > be tied to or affect the PDC driver?
->
-> yes, thats correct, pinctrl-msm already supports it, the problem lies
-> in the fact that PDC does not. This patch, infact was trying to fix the
-> issue by removing all PDC involvement for gpio28 and making pinctrl-msm
-> in charge of it.
-
-If we're going to try to do this, I think we're stuck with one of these:
-
-1. A really really long list that we keep jamming more boards into.
-
-2. Add an entry at the top-level device tree compatible to all
-affected boards _just_ for this purpose.  Seems ugly since we don't
-need it for any other reasons.
-
-3. Add some sort of property to the pinctrl node on these boards.
-Seems ugly since conceivably this _could_ be worked around in
-software.
-
-I don't really like any of those options, so I'm really hoping we can
-find out how to get a workaround in...
-
--Doug
