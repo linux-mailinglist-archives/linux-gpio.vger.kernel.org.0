@@ -2,113 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A6C92184D8
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 12:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31A3621854C
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 12:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgGHKWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 06:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgGHKWw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 Jul 2020 06:22:52 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02ABA206F6;
-        Wed,  8 Jul 2020 10:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594203771;
-        bh=wqmaKC3soWVBrlD0Udy60m7oemLeH3Uc93lnAOZzD64=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aYUJimONTlH3wLq1pKSc1jyXGvkW2lRwGivQTRbMogNQuQnSdwDRn+kL2E4zSJ1lr
-         dt+DglW619hP+mHz7wZvNNOFaZS4z1CNFMdod/h3vMwzXOeBIuQdGyn5r1VucItt9+
-         93Kk/xam0fZbQoT25njkkG2V8PcvfpNiw3dhKgow=
-Date:   Wed, 8 Jul 2020 11:22:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1728349AbgGHKyv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 06:54:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgGHKyv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 06:54:51 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9BDC08C5DC;
+        Wed,  8 Jul 2020 03:54:50 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d21so26594993lfb.6;
+        Wed, 08 Jul 2020 03:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
+        b=XChWUnKZ+z/Z5z1PK/1divkaicO/LV6npjMADhKRxPYqJytgHgUFLk/KIxgsQFO7Pd
+         oDZ51RnSlis9BPZ5B2AVl6nR3gjYI+WDpp1em5WzYQLxnKHm2b2ZDEaky2Oz+Ft5Nmlw
+         kKSZIb9kUQADUXgvjXOjFfZUjSlgGU4WZ6C2dG2qoFJZe+CTyi0268LStKihiJL0RnPn
+         k8jsFmAw0ypOVa8rHnjMgAiMURDtfZbI8b/gE9yKXUxdiiAZyfU67/0ml/xC3E+ZX7VB
+         PNlCqqSVMJn1BN6/T7BkDpA9o4nEd8eHorO8aB5gjAt0lIVlgpIiDMXouZjwpE3clTrM
+         1BBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=twagDEp7uXq8z35DJ39Z3HkBCRXMKE29CuddS5Pgx5o=;
+        b=uMG9ko2B4i07aBnjm+xl8c/ye71nIDOxt+goDNgxWg+2NL02bFfUYlGKILzOiABMQY
+         t8Tg+sVWlZZBz4xYTyFEHPoFKs7WonIw7ZQNYX95wvZiZ1jj6/QAJets9g+J7d/dK2JI
+         Dy5CLtcsmD5bfnRTZ8/pgYUdSgcpmwJ3OrND8TvyP3RWvmnd0HY0BScbw4w/apfci9x/
+         vNolZAa5SzLuBaX/MxKweMvWqZYhzqX0QozllY6uO6wVR36MWJ1HgZAC8+psFgnEWZ30
+         b0/sc03+sX9Lu1ZwzSdZ6g94xf3tPdV2Yfk5E71/jNedAxtQz9Zeu71jBFVGqXJjrH1q
+         heAg==
+X-Gm-Message-State: AOAM532GdOIVRF98+hZdL1Lgk5/ZtbaLyZfIqvUUVv+HbEU9FCmms67a
+        1iSo11VtOQqjBd+uMRjhZyfNQc6y
+X-Google-Smtp-Source: ABdhPJyn246HkXwL6wJP8gCUOR9MyRwPQIe4JsLfHYYmrLKs5pX1SN7KzP2DXlB+WqQI0GrcHrPZUw==
+X-Received: by 2002:a05:6512:3153:: with SMTP id s19mr23969454lfi.25.1594205689103;
+        Wed, 08 Jul 2020 03:54:49 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id c14sm9868812lfb.69.2020.07.08.03.54.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 03:54:48 -0700 (PDT)
+Subject: Re: [PATCH v1 4/5] gpio: max77620: Don't handle disabled interrupts
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 01/13] regmap-irq: use fwnode instead of device node
- in add_irq_chip()
-Message-ID: <20200708102246.GC4655@sirena.org.uk>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-2-michael@walle.cc>
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200708082634.30191-1-digetx@gmail.com>
+ <20200708082634.30191-5-digetx@gmail.com>
+ <CAHp75VcqkmywShtOVQhEw3qwbDCHjPKeQDYWxZiq+Cvx2_QCwA@mail.gmail.com>
+ <68df4805-daf9-91c5-d755-53abc8823654@gmail.com>
+ <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d39caa8f-816c-5d4d-6f54-99baea3e0d5a@gmail.com>
+Date:   Wed, 8 Jul 2020 13:54:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
-Content-Disposition: inline
-In-Reply-To: <20200706175353.16404-2-michael@walle.cc>
-X-Cookie: Oh Dad!  We're ALL Devo!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHp75VcEqTJxPj1pETC9eUsZCLwpv8tyZ7EjKvzzJTQ4wfKJyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+08.07.2020 13:11, Andy Shevchenko пишет:
+> On Wed, Jul 8, 2020 at 12:19 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>> 08.07.2020 11:46, Andy Shevchenko пишет:
+>>> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> Check whether GPIO IRQ is enabled before proceeding with handling the
+>>>> interrupt request. The interrupt handler now returns IRQ_NONE if none
+>>>> of interrupts were handled, which is usually a sign of a problem.
+>>>
+>>> ...
+>>>
+>>>> -       pending = value;
+>>>> +       pending = value & gpio->irq_enb_mask;
+>>>
+>>>> +       if (!pending)
+>>>> +               return IRQ_NONE;
+>>>
+>>> for_each_set_bit() should take care of it, no?
+>>
+>> Do you mean that the handle_nested_irq() takes care of handling
+>> unrequested interrupts? Actually, looks like it cares. Alright, I'll
+>> drop this patch since it should be unnecessary. Thank you for the comment!
+> 
+> I think it's still good to have reduced IRQs to handle by dropping not
+> enabled ones, my comment was about the case when pending == 0. Sorry
+> if it was unclear.
 
---iFRdW5/EC4oqxDHL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It should be unnecessary since we now see that the handle_nested_irq()
+checks whether interrupt was requested and if it wasn't, then particular
+GPIO interrupt will be treated as spurious [1]. The pending == 0
+condition is an extreme case, I don't think that there is a need to
+optimize it without any good reason.
 
-On Mon, Jul 06, 2020 at 07:53:41PM +0200, Michael Walle wrote:
-> Convert the argument to the newer fwnode_handle instead a device tree
-> node. Fortunately, there are no users for now. So this is an easy
-> change.
+[1] https://elixir.bootlin.com/linux/v5.8-rc3/source/kernel/irq/chip.c#L485
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-np-fwnode
-
-for you to fetch changes up to 5cc2013bfeee756a1ee6da9bfbe42e52b4695035:
-
-  regmap-irq: use fwnode instead of device node in add_irq_chip() (2020-07-08 11:15:12 +0100)
-
-----------------------------------------------------------------
-regmap: Change node pointer to fwnode in new IRQ API
-
-----------------------------------------------------------------
-Michael Walle (1):
-      regmap-irq: use fwnode instead of device node in add_irq_chip()
-
- drivers/base/regmap/regmap-irq.c | 53 ++++++++++++++++++++++------------------
- include/linux/regmap.h           | 21 +++++++++-------
- 2 files changed, 41 insertions(+), 33 deletions(-)
-
---iFRdW5/EC4oqxDHL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FnnUACgkQJNaLcl1U
-h9B0awf+K6uyKfcY+Cw0Q9cXWpxT1fJLMyrXuyyDLg9o9Qo5YPVU8XkiwRGhJJto
-Asdm6vmCDIr0StMW2SEZxg4vVW6Xxw2UKMU2+ZBJxsGZEgpLxec+7NdiXOtqUQsL
-JmKcTbR+nObPx+w74a1G7QHftWWVDX4peRYST0rLvo8tzaS1NoACmku5AYVhc9Z6
-aUUQKrAghHkoinADk2p6YHBuo4C5EZg/qmB/iN2t5g3aNF9YhdDXNB4ZeE+UwQG+
-F+RC9shXxL6/pSqCpua22fNq6tEHEpaWnGwnsxX3eaJ00iDuD0KAHAmtNuo6X75M
-41RS28TqmDnMbDlLrCvgPxlHJ8Lpjw==
-=nOcx
------END PGP SIGNATURE-----
-
---iFRdW5/EC4oqxDHL--
+Hence it should be better to drop this patch.
