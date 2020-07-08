@@ -2,167 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0B21217C78
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 03:13:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A87D217E02
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 06:18:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgGHBNv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Jul 2020 21:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39560 "EHLO
+        id S1725298AbgGHESP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 00:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729159AbgGHBNs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Jul 2020 21:13:48 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8FDC061755
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Jul 2020 18:13:48 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id m21so8561861vkp.1
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 18:13:48 -0700 (PDT)
+        with ESMTP id S1725446AbgGHESO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 00:18:14 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20B0C061755;
+        Tue,  7 Jul 2020 21:18:14 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id d10so17634562pls.5;
+        Tue, 07 Jul 2020 21:18:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9jiS4KqONWOC5mf3zrCvAZ5bUNYEcdecmpFqJ7RDpoE=;
-        b=diGz9A072uzSke+K19POfossW4WSRglikhF9LycKc8CR4PNoz8WaQE5v0QwBE1aucz
-         w0WCY4cw/7yXlMhPNh/i0S6Nv6pOlmRsclaHePlUS1T0/13xRIPZlbgdO41pHrw/ao5s
-         2WMqeccT14DiuCHrvJ9vql3jEt9lia2Y6lITE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B33cksrAv/5XiOP1rjwC97If9HhuGSq0KwZOoyPCrvI=;
+        b=fzwAaKzwf3aKVUtl51Q0/MoFw1bXj+hmW5lTf5nk2KBmtmwFizsPkK/e0D7NZZPFRd
+         0z/n/wWScrqIVRlIafx1NxpC35Chz0IL7fneCwgPVNzXAnvxGnUysobtgOh2c/O1O0Sv
+         2nbOuWQ6hTx8amDGUKT/dNCz+Uq1rbFFFEPMyJHWd19w2wmz8pfYyhclAHDt0jKHCAM+
+         Hy1BwRAPLn70lLisSanIVrYCIUhETMmteG74J38+1PWE3cGUyaBTOY2hDPAyvGd8vE8y
+         n7Xqe3lwo0QyoD0vaQGMZSt6GXPKuVV2/w+M2Wu7u5nOyGf+IZgKKa+iYpAb5o5I0DK1
+         2BhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9jiS4KqONWOC5mf3zrCvAZ5bUNYEcdecmpFqJ7RDpoE=;
-        b=fH7rSIEpeDbuP7pEoJ2zr3mY9zdlxCnlDDU7MLncTIBwGro9t3xS1krxYXmTKyFEWU
-         +p2mvHuhZy6XJPtLsdFOU/tQcgu/GD+6INP8W3VGr84PZH9LVFPIx1fpDDHmVbV6QDOS
-         RU8UGcAT94eENZ3SNOJcLUFy2PpkyR+RgJYQylkd7d4fc+iohld5WJgBHdf7GiC9o6iE
-         BLRmdtYoy2Dk+5IoWgdbDFzoju7FT39enH2K+g32Z5E1OOjSHwWka2kCumXGPoa3FMqw
-         sWUuMRyQrdmMe0okk8qeiZ48fhSXqUjYvVYdvkYdMj/Zkj9oveZDOBFXF9kbYgvaC1vt
-         /mBA==
-X-Gm-Message-State: AOAM531dvyrbBVWHcO+Bm3sYzRZrOKzsfu1op3zVim3aKuYjzhaSyLJp
-        v4ehiFDrWlFCBTRvS3ehAq/liMDWIvc=
-X-Google-Smtp-Source: ABdhPJzupTulLS1nb5r/26U+wvk1EiFHESQCracftSZPQt2cme1DAz23PwO/yjW7IomhkdUzQArTxg==
-X-Received: by 2002:a1f:3f05:: with SMTP id m5mr15701850vka.92.1594170826616;
-        Tue, 07 Jul 2020 18:13:46 -0700 (PDT)
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
-        by smtp.gmail.com with ESMTPSA id d200sm333334vkd.16.2020.07.07.18.13.45
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 18:13:46 -0700 (PDT)
-Received: by mail-ua1-f42.google.com with SMTP id c7so12381540uap.0
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Jul 2020 18:13:45 -0700 (PDT)
-X-Received: by 2002:ab0:2408:: with SMTP id f8mr32068943uan.91.1594170824905;
- Tue, 07 Jul 2020 18:13:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=B33cksrAv/5XiOP1rjwC97If9HhuGSq0KwZOoyPCrvI=;
+        b=oxqOIOvN68SZpEqGMIKPSP0HoZ+61xD8qGExTZtH25YGCWG3OWogFVZSFkW3o0HhYl
+         ktQdagzjyCMripEGMsLSmProd4QjgqeDOWBiW8MvOOM+9Q+YxtoW6/KLvgjVyd6sEFtr
+         zhP2s9VvqzKfFFGQesIG1dfFT9drHbEVv3DEOIsDDlGSlKSuEvF3psAsa+2lsNDSOoGx
+         90lYkr2s1espTUPl/PhVb/HsmbcxRYwPwWF9jqHrKgfAIxwaNzqZ8tbPfH8Dz9WrNnF8
+         F8e0o0vabkRQyB+UWzhuJ83izMAs5ILWjB4TJPX7wS5rD3nzveUwLvy3kpxeiQKyeSQa
+         jxhw==
+X-Gm-Message-State: AOAM531OGo7fF+hrJAM7O/8bnFJPTHeyDtMTrr5dM6rqryOK4y7/3d+Y
+        9ipBnn2W417J1/gSozxUPcN2qUeF
+X-Google-Smtp-Source: ABdhPJwyJYUGo/Fm1+dPlY6WLMFrB+xIhx7KuREcPHNOeUe78d8KnwnW6IHYstUQairqp6tx9qI+Dg==
+X-Received: by 2002:a17:902:6544:: with SMTP id d4mr5464452pln.138.1594181893858;
+        Tue, 07 Jul 2020 21:18:13 -0700 (PDT)
+Received: from sol.lan (106-69-191-222.dyn.iinet.net.au. [106.69.191.222])
+        by smtp.gmail.com with ESMTPSA id gx23sm3821951pjb.39.2020.07.07.21.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 21:18:13 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 00/17] gpiolib: cdev: pre-uAPI v2 cleanups
+Date:   Wed,  8 Jul 2020 12:15:43 +0800
+Message-Id: <20200708041600.768775-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
- <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
- <20200706203805.GS388985@builder.lan> <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
- <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-In-Reply-To: <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 7 Jul 2020 18:13:33 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WH_SkmbYeF9Bif-sw9=nKGbDg869AVC_wg8S_TH5V_HA@mail.gmail.com>
-Message-ID: <CAD=FV=WH_SkmbYeF9Bif-sw9=nKGbDg869AVC_wg8S_TH5V_HA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
- for google,lazor
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+This collection of patches provides improvements to or
+address minor problems in gpiolib-cdev.
 
-On Tue, Jul 7, 2020 at 4:03 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Mon, Jul 6, 2020 at 9:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> >
-> >
-> > []..
-> >
-> > >>> @@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-> > >>>
-> > >>>   static int sc7180_pinctrl_probe(struct platform_device *pdev)
-> > >>>   {
-> > >>> +       if (of_machine_is_compatible("google,lazor")) {
-> > >>> +               sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
-> > >>> +               sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
-> > >>> +       }
-> > >>
-> > >> As much as I want patches landed and things working, the above just
-> > >> doesn't feel like a viable solution.  I guess it could work as a short
-> > >> term hack but it's going to become untenable pretty quickly.
-> > >
-> > > I second that.
-> > >
-> > >> As we
-> > >> have more variants of this we're going to have to just keep piling
-> > >> more machines in here, right?  ...this is also already broken for us
-> > >> because not all boards will have the "google,lazor" compatible.  From
-> > >> the current Chrome OS here are the compatibles for various revs/SKUs
-> > >>
-> > >> compatible = "google,lazor-rev0", "qcom,sc7180";
-> > >> compatible = "google,lazor-rev0-sku0", "qcom,sc7180";
-> > >> compatible = "google,lazor", "qcom,sc7180";
-> > >> compatible = "google,lazor-sku0", "qcom,sc7180";
-> > >> compatible = "google,lazor-rev2", "qcom,sc7180";
-> > >>
-> > >> ...so of the 5 boards you'll only match one of them.
-> > >>
-> > >>
-> > >> Maybe I'm jumping into a situation again where I'm ignorant since I
-> > >> haven't followed all the prior conversation, but is it really that
-> > >> hard to just add dual edge support to the PDC irqchip driver?  ...or
-> >
-> > FWIK, this is really a PDC hardware issue (with the specific IP rev that exists
-> > on sc7180) so working it around in SW could get ugly.
->
-> Ugh.  I guess it's ugly because the workaround would need to be in the
-> PDC driver but to properly do the workaround you need to be able to
-> read the state of the pin from the PDC driver?  ...and I guess you
-> can't do that with the PDC register space so you'd either need to
-> violate a layer or 3 of abstraction and snarf into the GPIO register
-> space from the PDC driver or you'd have to provide some sort of API
-> access from the PDC back down to the GPIO driver?
->
-> --
->
-> Actually, though, I'm still not sure why this would need to be in the
-> PDC driver.  Sure, you can't just magically re-use the existing
-> dual-edge emulation in pinctrl-msm.c, but you can add some new
-> dual-edge emulation for when your parent handles your interrupts,
-> can't you?  As per usually, I'm talking out of my rear end, but I
-> sorta imagine:
->
-> 1. At the head of msm_gpio_irq_set_type() if you detect that
-> "skip_wake_irqs" is set and you're on an SoC with this hardware errata
-> then you do a loop much like the one in
-> msm_gpio_update_dual_edge_pos() except that instead of changing the
-> polarity with msm_writel_intr_cfg() you change the polarity with
-> "irq_chip_set_type_parent()".
->
-> 2. At the head of msm_gpio_irq_ack() you make the same function call
-> if "skip_wake_irqs" is set and you're on an SoC with this hardware
-> errata.
->
-> It doesn't feel all that ugly to me, assuming I'm understanding it
-> correctly.  ...or maybe you can tell me why it'd be harder than that?
+The majority of the patches (1-7, 9-11) have been pulled directly from
+my "gpio: cdev: add uAPI V2" patch set, as they are not related to any
+uAPI changes.
+The remaining patches were either split out of the remaining patches
+from that set, as they are not directly part of the uAPI changes, or
+were inspired by fixes for issues in that set, or were only noticed
+subsequent to that set.
 
-So I REALLY don't know what I'm doing and this is very rough and
-probably all sorts of illegal (maybe?), but in the limited testing I
-was able to do it seemed to work:
+Changes since "gpio: cdev: add uAPI V2":
+ - rebase onto latest gpio/devel
+ - fix typo in patch 1 commit description
+ - replace patch 8 with the blocking notifier call chain patch
+ - rename priv to cdev instead of gcdev in patch 9
+ - fix error handling in patch 10
+ - add patches 12 to 17
 
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2285815
-WIP: proof of concept workaround for PDC wakeup problem
+Kent Gibson (17):
+  gpiolib: move gpiolib-sysfs function declarations into their own
+    header
+  gpiolib: cdev: sort includes
+  gpiolib: cdev: minor indentation fixes
+  gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
+  gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be consistent
+    with other use
+  gpiolib: cdev: rename numdescs to num_descs
+  gpiolib: cdev: remove pointless decrement of i
+  gpiolib: cdev: use blocking notifier call chain instead of atomic
+  gpiolib: cdev: rename priv to cdev
+  gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+  gpiolib: cdev: remove recalculation of offset
+  gpiolib: cdev: refactor linehandle cleanup into linehandle_free
+  gpiolib: cdev: refactor lineevent cleanup into lineevent_free
+  gpio: uapi: fix misplaced comment line
+  tools: gpio: fix spurious close warning in lsgpio
+  tools: gpio: fix spurious close warning in gpio-utils
+  tools: gpio: fix spurious close warning in gpio-event-mon
 
-If there's anything worthwhile to steal from that, please feel free
-and post your own patch based on it.  :-)
+ drivers/gpio/gpiolib-cdev.c  | 385 ++++++++++++++++-------------------
+ drivers/gpio/gpiolib-sysfs.c |   1 +
+ drivers/gpio/gpiolib-sysfs.h |  24 +++
+ drivers/gpio/gpiolib.c       |  15 +-
+ drivers/gpio/gpiolib.h       |  20 +-
+ include/uapi/linux/gpio.h    |   2 +-
+ tools/gpio/gpio-event-mon.c  |   3 +-
+ tools/gpio/gpio-utils.c      |   4 +-
+ tools/gpio/lsgpio.c          |   3 +-
+ 9 files changed, 217 insertions(+), 240 deletions(-)
+ create mode 100644 drivers/gpio/gpiolib-sysfs.h
 
--Doug
+
+base-commit: b239e4454e59bc85d466eb5630da46f6a876df77
+-- 
+2.27.0
+
