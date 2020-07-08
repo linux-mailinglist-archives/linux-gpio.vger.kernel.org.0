@@ -2,67 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E055A218DA2
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 18:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6EFE218DA9
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 18:58:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730402AbgGHQ4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 12:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
+        id S1729795AbgGHQ6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 12:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgGHQ4f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 12:56:35 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB43FC08C5C1;
-        Wed,  8 Jul 2020 09:56:35 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id 12so31870906oir.4;
-        Wed, 08 Jul 2020 09:56:35 -0700 (PDT)
+        with ESMTP id S1725989AbgGHQ6U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 12:58:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CFBC08C5C1;
+        Wed,  8 Jul 2020 09:58:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t15so1442112pjq.5;
+        Wed, 08 Jul 2020 09:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qZmo9U5aXUZDGkqB26q7sUeeEzOZwLyZGd7ARaA8d54=;
-        b=csGaN8X3gJ3gBxU3gPZD9ntGLA/y+1SAjQ7SiWOKwGzlFsI1NiGdNrzmqU1Po9Rt0T
-         S818ZXcfQYwH13Jmr082uT1HcUeVaCcANOGF2uByM7GCAeaXov6rorHpilfVoVE8WVIr
-         cNaw8aV6fFlVjXhUx20qKVUI3/xOcO1hbWetbeUmN3Auqxp0mSPdzKKsm1yfATtOUvfZ
-         M8bEWNp5NcTP4S5I7xreICMs3aTRRRtYiCH6LRc61UzuOL3Y/iJU8hxv1Uxf/epXsNA9
-         5w6Il6sM2glxaLyl6LxqX9FNrwpgf6JBCR4nMSEq4iNJSiKKA3lEMFknGafDHegmo1uV
-         uIsQ==
+        bh=jEA8+y65zqWSlOUkDJdGcvJw3JxBgOHy/g+Qh3xarWc=;
+        b=rcz9+K+yBUj3Qj1ovUUBH93GqxNvKkAVUwi5vt8kltz46zaCZuY1LRwp5NBTBa9yN5
+         7YVM5XSsbBLJ02SpGGRskxplDqzKgKgS2c09CoRuZYPoksQTlZCimUJ6Buw9Uv6Bd5ns
+         8o819XiDLxSsv2ZzKchNaJtV6eqn4dkUWLqcqefnyhBet9PeiupJoW5zMlMxc2ZdNU7v
+         3rbRGEQPpthLvlwnPkWdT6+ddc9a2SvuagX+RhXQ+DDdyp9u81ORkAvhI1m6lWULbAV+
+         wWZA4Ye68xUPbwVztBXecCtyONerbd+7BEhPP3Ovi6F37Cz02dRURN9fCTJNUD9P1CfW
+         A+1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qZmo9U5aXUZDGkqB26q7sUeeEzOZwLyZGd7ARaA8d54=;
-        b=QAUJAuAx63ooi57/VzAUagDtR+2lBgABNOMi/MGf95nSjZmkfiKX9K00sV+E1ekcdK
-         bOZi4hwvcwWXPlLcfuyVtw0rASzsMtZ1a9U+16DrO29h/N3jOlgkf205weEhVU5Gw5dv
-         vhG0QQvJeBlpSuFupyav37nuSmtQRDCI/WR+8Kt2cCLwnXMioUi6Vs23s6ia5XNVNKFN
-         EMhBwtEvuwZDPgyXcyOU22fOuyNPgkfC08VlJW6aHU4aWdNIZfjGm7ggt9rjNi+FSETr
-         hp3ynbyQcUA0JwR3yhP+uwD1AXT8rk6TGSfr0GoaqBe/tbDY2IwN1ZPk7+f+KRvqFei7
-         Pq0A==
-X-Gm-Message-State: AOAM533A1DwhqxT2CW2qlfl8T3SkyF3jnTHUo6AaN+llzMSeeNfLhsbJ
-        2TPKKwOwFLTVq85fZKrUo+UKw94ou61awSO8K/g=
-X-Google-Smtp-Source: ABdhPJxkeMfA/rVy+3SHKGbcPciz/z+GsVPQFvXGJB1w64YRbQ8QzM8XeW6dvu8cJmDU6/eE92nBVFE+t2LzbkOKaXU=
-X-Received: by 2002:aca:4fd3:: with SMTP id d202mr8216944oib.142.1594227395102;
- Wed, 08 Jul 2020 09:56:35 -0700 (PDT)
+        bh=jEA8+y65zqWSlOUkDJdGcvJw3JxBgOHy/g+Qh3xarWc=;
+        b=L673FHLWzMnh2cIOqyu9mImsM7CtSFg+axQ7LciUY6i/g2s9aR3ERWp2ZH21E+YHCg
+         DptaQyoOQp4c5jyhx5wad8lLnUcBGjmi3vhJA55frMS9c3xZ6Vg8GWA4koVh9imGhAON
+         U58+iVmr7LiCKHEq+LCPMR39i4J4a7r+InZXcacL9wgx267vmVLk5tPKa4XMHq4zAqwM
+         0NrS9e78ZxFZ8/lNQzYoS2DMoo6AXc7uKdcclLLySS0v+RzaMj+Vf6oBGvvji5DtOGnd
+         LM37eT16OHHJQ1x6XGMfR2wEvVyzVzZV000TkqBbfxzFsYJxjIyBw+y3g2hb0tzitcYu
+         LaSw==
+X-Gm-Message-State: AOAM530YVJFLtRVYzGkZvpPyssrcLPCXLKMa03ae9Af5cvESfvjISImB
+        Skk9bZr9kQVRXof1GepdCexuTHtPEv5UrVlEXdo=
+X-Google-Smtp-Source: ABdhPJzTajkWp8OGpeSbbitfdGNtESG5/A+hpNVyEgrVPLmB+JgUi4AzMO00b18GAi3ogNXsTbOi2XvSK30szw6gofU=
+X-Received: by 2002:a17:902:7288:: with SMTP id d8mr51838913pll.18.1594227500095;
+ Wed, 08 Jul 2020 09:58:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWQHnGJCu6zYQwG16xqQmAaQdBTfyw6T1q2OHF3uR-JQQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWQHnGJCu6zYQwG16xqQmAaQdBTfyw6T1q2OHF3uR-JQQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 8 Jul 2020 17:56:08 +0100
-Message-ID: <CA+V-a8u266t41-SzURjEvsLLgA1j2YCg9egoszZ9XQcqhJuU3A@mail.gmail.com>
-Subject: Re: [PATCH 12/14] clk: renesas: cpg-mssr: Add r8a774e1 support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+References: <20200708155834.19762-1-digetx@gmail.com> <20200708155834.19762-2-digetx@gmail.com>
+In-Reply-To: <20200708155834.19762-2-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Jul 2020 19:58:03 +0300
+Message-ID: <CAHp75VcFG3oK7C8Y7RZKoEvwPo9+hKMMucnDhtpqLDmLGoPmJw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: max77620: Initialize interrupts state
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -71,52 +65,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> I noticed on Nexus 7 that after rebooting from downstream kernel to
+> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
 
-On Wed, Jul 8, 2020 at 12:29 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Add support for the RZ/G2H (R8A774E1) SoC to the Renesas Clock
-> > Pulse Generator / Module Standby and Software Reset driver.
-> >
-> > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in clk-renesas-for-v5.9.
->
-> > --- /dev/null
-> > +++ b/drivers/clk/renesas/r8a774e1-cpg-mssr.c
->
-> > +static const unsigned int r8a774e1_crit_mod_clks[] __initconst = {
->
-> As per commit f23f1101ad0ef1ac ("clk: renesas: rcar-gen3: Mark RWDT
-> clocks as critical"), I'll add a line
->
->     MOD_CLK_ID(402),        /* RWDT */
->
-> while applying.
->
-Thank you for taking care of it.
+despite interrupts
 
-Cheers,
---Prabhakar Lad
+> being disabled for all of GPIOs. This happens because Nexus 7 uses a
+> soft-reboot, meaning that bootloader should take care of resetting
+> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
 
-> > +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
-> > +};
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+but the bootloader
+
+As a result
+
+> may be left ON at a boot time. Let's mask all GPIO interrupts at the
+> driver's initialization time in order to resolve the issue.
+
+...
+
+>         mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
+>         mgpio->gpio_chip.can_sleep = 1;
+>         mgpio->gpio_chip.base = -1;
+> +       mgpio->gpio_chip.irq.init_hw = max77620_gpio_irq_init_hw,
+
+Now this seems a bit awkward. Perhaps you need first to switch to use
+GPIO IRQ chip structure?
+It's also in the TODO of the GPIO subsystem ;-)
+
+...
+
+>  #ifdef CONFIG_OF_GPIO
+>         mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
+>  #endif
+
+This seems to be done by GPIO library.
+
+Also point to improve: don't shadow error from platform_get_irq().
+
+-- 
+With Best Regards,
+Andy Shevchenko
