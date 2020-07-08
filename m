@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6459C217E1C
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 06:20:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3952E217E1E
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 06:21:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgGHEUQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 00:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        id S1729485AbgGHEUY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 00:20:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgGHEUP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 00:20:15 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0F6C061755;
-        Tue,  7 Jul 2020 21:20:15 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 207so19201054pfu.3;
-        Tue, 07 Jul 2020 21:20:15 -0700 (PDT)
+        with ESMTP id S1725446AbgGHEUX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 00:20:23 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC75C061755;
+        Tue,  7 Jul 2020 21:20:22 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x72so9958995pfc.6;
+        Tue, 07 Jul 2020 21:20:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DIvxW6NTvtcgRygXCnNgm6ihM/xzXyllojs+21+/QHA=;
-        b=FxZvmyUhiQS+eZk0doFEfyYWBptooh0Dl2lC4e8LBL5vFDGl7WA3Ij5BJc2xjXNnQY
-         9f7u+u8aue29ilRcJmETn5eB09yrtX+EbOEnl/jG7VOB4kr7nPAXtvA0egIBLozqlGur
-         QJ59gKSyD6DylelPjXRq3m7qUxgcRxuM9qdqL9Yakda40P2d/vxGfhR8Nr1et4dWz9Ls
-         g9sqwCb/q6d1GbgBRgj51sU0jPgdS8EEaiCGvo1TAuRFOlbu1KMAlt1N0jbUVZvhr601
-         DUFB/195mBA4JeTJqx/aM5eLZ0cJW/u7ma9TBnD/+c54n6rd5b5UtSV5Kw4+InO6Lfrn
-         bj+w==
+        bh=UGbIGJBshzPLISykEztMgHEa0rXjOkE3qrOM3IAMwy4=;
+        b=Dlxtv1kI/oaGzpjHEawhILekrWwQ4djkpA3JeUhxbUha9n2Y75u3bpjTqffdVYpA/U
+         Y96XFZjF+1W9yj6KB8NGtvG4+u5USezNzWmYPiY21OMnoVnH6KrOsZCrixZCora3X1tI
+         OTzmYfI05Y6GbTnvBs+To6UZ9Bb2H2EAISsEQdZKnLrSX9t2cwDtXDqU1WYSf4eSUwou
+         lAxmbdDAhPASG0v7vKAQg6ZeGJXpaqpcC1zdmb85wzFeHKa+f+iA82BbMh/Dpcg453UT
+         kqGQDsZYsFZHo5i/mP/tBWn+FSClA6tRoRhXho15ZfAIBwMjF9cgnEW53V3/p0B6Pm8G
+         mPZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DIvxW6NTvtcgRygXCnNgm6ihM/xzXyllojs+21+/QHA=;
-        b=nObWP5SuviCzcSRCvq20UnX7NrdXjjH/37Hwl7bw6NvvrxGh6kpFx0QQjhTl2tnXxu
-         H/VGmBoAIwgU8agX5HmQPtzdJO5pjgEGqph6Hs9bULXZx2b/NEoSIzUu2D44pG5cUHDu
-         EuqPZAhVdqFsm5gAsJv602J861Otqzkoi8yRqBOn57H1wF7q8JjCedpR25g3Ls7mhVwv
-         bCZboosf8USTbnHZhoApNY7dehYOOXry2LhKwWb8yR1qFn1mQh4p1rgADao9j2gH0Hs5
-         8zOGJUVwxCpEECIVO6Hox9zPGOgiD9ZUyJHppfFUO9wx9layuOPtBsTRQa8mlLdUJx+t
-         jfAw==
-X-Gm-Message-State: AOAM531UjGob/KciugW2dJsuSIB4g2YwzqKtLh4yW9Kptr+IUh9NcaEB
-        1Mk0dd/NB6bx5e0JNag/2ZncJbc/
-X-Google-Smtp-Source: ABdhPJxBBAQA8aepjonxxxHNRWzPcmRxuQJFw/achaMRFzAeAyUN6qUBF7W8JO0jJ2sb+OSx9l7p0w==
-X-Received: by 2002:a62:7a07:: with SMTP id v7mr46136013pfc.76.1594182014766;
-        Tue, 07 Jul 2020 21:20:14 -0700 (PDT)
+        bh=UGbIGJBshzPLISykEztMgHEa0rXjOkE3qrOM3IAMwy4=;
+        b=cap2VR+LHXdsZx5mtTMWl3CnemBXgDmGC40hI7tclSmFeFuQHUtEO4hfgAZ/B0FvJr
+         u66m2V7XArBya8J+wfaLcEfWoaqiB7mC7gxAhPEZLTp0iNTOMpZkSzi4K6bW953p8aXE
+         QQlm/ZCSOZmAbBjWMTKNk/2Cz2b3+FOIioAtPNjZ9h738hyGLE/WDydtNr2Xl7HZMWxP
+         8n8EbFP52ARMj8JlA7Uu/yvwm0eqSr4hZKtXmp6QDK6+dkpVTUA9N6vReccJ38zB++sX
+         FnXOfX/Q+JQI7+hZHLYAkmwI0t14tlM4neb9VDgIdpx6y/8bVtY51QitxcRPLvFUA+AA
+         pJ8w==
+X-Gm-Message-State: AOAM531BtoS93Tzgm0q+K1yK5ECDZLouXDxcJFnhL2uRnc4ydbndzQ0R
+        gQ++rKB9b8xmwuyS+cto6fXSuOvj
+X-Google-Smtp-Source: ABdhPJwBRdl6uFMDofXXmt/eyg6u6Y6C81uFfYjdGhWbanU7jaUcJ4pqiQQaIL2kEQAzVRizLIOpDQ==
+X-Received: by 2002:a62:cd0c:: with SMTP id o12mr29870413pfg.70.1594182021646;
+        Tue, 07 Jul 2020 21:20:21 -0700 (PDT)
 Received: from sol.lan (106-69-191-222.dyn.iinet.net.au. [106.69.191.222])
-        by smtp.gmail.com with ESMTPSA id gx23sm3821951pjb.39.2020.07.07.21.20.11
+        by smtp.gmail.com with ESMTPSA id gx23sm3821951pjb.39.2020.07.07.21.20.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 21:20:13 -0700 (PDT)
+        Tue, 07 Jul 2020 21:20:20 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 12/17] gpiolib: cdev: refactor linehandle cleanup into linehandle_free
-Date:   Wed,  8 Jul 2020 12:15:55 +0800
-Message-Id: <20200708041600.768775-13-warthog618@gmail.com>
+Subject: [PATCH 13/17] gpiolib: cdev: refactor lineevent cleanup into lineevent_free
+Date:   Wed,  8 Jul 2020 12:15:56 +0800
+Message-Id: <20200708041600.768775-14-warthog618@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200708041600.768775-1-warthog618@gmail.com>
 References: <20200708041600.768775-1-warthog618@gmail.com>
@@ -64,127 +64,116 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Consolidate the cleanup of linehandles, currently duplicated in
-linehandle_create and linehandle_release, into a helper function
-linehandle_free.
+Consolidate the cleanup of lineevents, currently duplicated in
+lineevent_create and lineevent_release, into a helper function
+lineevent_free.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- drivers/gpio/gpiolib-cdev.c | 39 ++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ drivers/gpio/gpiolib-cdev.c | 44 ++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index c86fb9305681..d56b367239cc 100644
+index d56b367239cc..e6c9b78adfc2 100644
 --- a/drivers/gpio/gpiolib-cdev.c
 +++ b/drivers/gpio/gpiolib-cdev.c
-@@ -228,17 +228,21 @@ static long linehandle_ioctl_compat(struct file *file, unsigned int cmd,
+@@ -478,16 +478,20 @@ static ssize_t lineevent_read(struct file *file,
+ 	return bytes_read;
  }
- #endif
  
--static int linehandle_release(struct inode *inode, struct file *file)
-+static void linehandle_free(struct linehandle_state *lh)
+-static int lineevent_release(struct inode *inode, struct file *file)
++static void lineevent_free(struct lineevent_state *le)
  {
--	struct linehandle_state *lh = file->private_data;
--	struct gpio_device *gdev = lh->gdev;
- 	int i;
- 
- 	for (i = 0; i < lh->num_descs; i++)
--		gpiod_free(lh->descs[i]);
-+		if (lh->descs[i])
-+			gpiod_free(lh->descs[i]);
- 	kfree(lh->label);
-+	put_device(&lh->gdev->dev);
- 	kfree(lh);
+-	struct lineevent_state *le = file->private_data;
+-	struct gpio_device *gdev = le->gdev;
+-
+-	free_irq(le->irq, le);
+-	gpiod_free(le->desc);
++	if (le->irq)
++		free_irq(le->irq, le);
++	if (le->desc)
++		gpiod_free(le->desc);
+ 	kfree(le->label);
++	put_device(&le->gdev->dev);
+ 	kfree(le);
 -	put_device(&gdev->dev);
 +}
 +
-+static int linehandle_release(struct inode *inode, struct file *file)
++static int lineevent_release(struct inode *inode, struct file *file)
 +{
-+	linehandle_free(file->private_data);
++	lineevent_free(file->private_data);
  	return 0;
  }
  
-@@ -257,7 +261,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 	struct gpiohandle_request handlereq;
- 	struct linehandle_state *lh;
- 	struct file *file;
--	int fd, i, count = 0, ret;
-+	int fd, i, ret;
- 	u32 lflags;
+@@ -612,7 +616,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	u32 eflags;
+ 	int fd;
+ 	int ret;
+-	int irqflags = 0;
++	int irq, irqflags = 0;
  
- 	if (copy_from_user(&handlereq, ip, sizeof(handlereq)))
-@@ -288,6 +292,8 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 		}
+ 	if (copy_from_user(&eventreq, ip, sizeof(eventreq)))
+ 		return -EFAULT;
+@@ -663,7 +667,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	ret = gpiod_request(desc, le->label);
+ 	if (ret)
+-		goto out_free_label;
++		goto out_free_le;
+ 	le->desc = desc;
+ 	le->eflags = eflags;
+ 
+@@ -671,16 +675,17 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	ret = gpiod_direction_input(desc);
+ 	if (ret)
+-		goto out_free_desc;
++		goto out_free_le;
+ 
+ 	blocking_notifier_call_chain(&desc->gdev->notifier,
+ 				     GPIOLINE_CHANGED_REQUESTED, desc);
+ 
+-	le->irq = gpiod_to_irq(desc);
+-	if (le->irq <= 0) {
++	irq = gpiod_to_irq(desc);
++	if (irq <= 0) {
+ 		ret = -ENODEV;
+-		goto out_free_desc;
++		goto out_free_le;
  	}
++	le->irq = irq;
  
-+	lh->num_descs = handlereq.lines;
-+
- 	/* Request each GPIO */
- 	for (i = 0; i < handlereq.lines; i++) {
- 		u32 offset = handlereq.lineoffsets[i];
-@@ -295,19 +301,18 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 
- 		if (IS_ERR(desc)) {
- 			ret = PTR_ERR(desc);
--			goto out_free_descs;
-+			goto out_free_lh;
- 		}
- 
- 		ret = gpiod_request(desc, lh->label);
- 		if (ret)
--			goto out_free_descs;
-+			goto out_free_lh;
- 		lh->descs[i] = desc;
--		count = i + 1;
- 		linehandle_flags_to_desc_flags(handlereq.flags, &desc->flags);
- 
- 		ret = gpiod_set_transitory(desc, false);
- 		if (ret < 0)
--			goto out_free_descs;
-+			goto out_free_lh;
- 
- 		/*
- 		 * Lines have to be requested explicitly for input
-@@ -318,11 +323,11 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 
- 			ret = gpiod_direction_output(desc, val);
- 			if (ret)
--				goto out_free_descs;
-+				goto out_free_lh;
- 		} else if (lflags & GPIOHANDLE_REQUEST_INPUT) {
- 			ret = gpiod_direction_input(desc);
- 			if (ret)
--				goto out_free_descs;
-+				goto out_free_lh;
- 		}
- 
- 		blocking_notifier_call_chain(&desc->gdev->notifier,
-@@ -331,12 +336,11 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
- 	}
--	lh->num_descs = handlereq.lines;
+ 	if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
+ 		irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
+@@ -701,12 +706,12 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 				   le->label,
+ 				   le);
+ 	if (ret)
+-		goto out_free_desc;
++		goto out_free_le;
  
  	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
  	if (fd < 0) {
  		ret = fd;
--		goto out_free_descs;
-+		goto out_free_lh;
+-		goto out_free_irq;
++		goto out_free_le;
  	}
  
- 	file = anon_inode_getfile("gpio-linehandle",
-@@ -368,13 +372,8 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	file = anon_inode_getfile("gpio-event",
+@@ -735,15 +740,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
  
  out_put_unused_fd:
  	put_unused_fd(fd);
--out_free_descs:
--	for (i = 0; i < count; i++)
--		gpiod_free(lh->descs[i]);
--	kfree(lh->label);
- out_free_lh:
--	kfree(lh);
+-out_free_irq:
+-	free_irq(le->irq, le);
+-out_free_desc:
+-	gpiod_free(le->desc);
+-out_free_label:
+-	kfree(le->label);
+ out_free_le:
+-	kfree(le);
 -	put_device(&gdev->dev);
-+	linehandle_free(lh);
++	lineevent_free(le);
  	return ret;
  }
  
