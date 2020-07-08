@@ -2,94 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 925C721924C
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 23:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC012192B3
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 23:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbgGHVTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 17:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
+        id S1725964AbgGHVoi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 17:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgGHVTg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 17:19:36 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD5D5C08C5C1
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 14:19:35 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id x13so20555002vsx.13
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 14:19:35 -0700 (PDT)
+        with ESMTP id S1725848AbgGHVoi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 17:44:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45FEC061A0B;
+        Wed,  8 Jul 2020 14:44:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so16938lji.2;
+        Wed, 08 Jul 2020 14:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/y9ZwmNn+oHS/YG99lAA1vbL+yYfWBpKvPtygJNnx1Y=;
-        b=RbdOVmNLjU1dmqCFDkewrU07toCP6wp5eolc5J+eZG1aV0cymd0po74ugeBqP50Ln5
-         mAerEGGHvwIPfsv/GD4tVXPwsYeKgvvwwJdzSeEtH5wxNt2BIMmDwhaxXREjc6ohOSRe
-         oPjk2ZFYEIOsgoY5s+WuADTF1hRrBpUNm5+WI=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DKE3Qx4NqqHAmkA79Cwyh3cscqveKce5cBLWkBL9ZD8=;
+        b=IXdyyE+PeuUsV96D/O0KARgoOKGVoT74bfHSsdCFeW+/91RGn9Gzixxdetrl9r2EJJ
+         JDetKl632XdqCPqRI8GE8gXpS4KzWW/DCBmTNJB9juYM1BCGKzs+I3aIss2D4j+WX2/L
+         iFwuOQulk4DCEueDpNTce2nBYBLKjxJf7ydrMMj6JTwDtckUPPZbORbYPNjq/bsrYz8V
+         Bwb9ckLWcaKgZhbmRS6RGSmV5pRXHIwzYEsOsxqXvWnjbyy7ew0ZPJZoW4T8jTmEJiK/
+         TzbUdVOJa7C8DbjIBZZ9XbWfm4/aVVIRTqXsCIfG8AnTV/3O3MGqui5V+3s4/tBA4NMv
+         zvMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/y9ZwmNn+oHS/YG99lAA1vbL+yYfWBpKvPtygJNnx1Y=;
-        b=VlGKE2eF3gc7spi4qdvy50xL4I3mxf/0hxPP+O9TU1fDYZ2RotMSTg1ghY5N/fmb1d
-         ksnw1iNmoeKB77Ep+CLLKK6J5BujeGkYvH0nwRS534w0Rrfsh8j6BKyx71pyyz5kgoGM
-         zBP8B6OSxhq5a+A2nG1+u08RDMCBid+oq6KLbw1UOxKL7oYLbaMuswzlLbiXWdcZEt1J
-         DCl3ZHMUG8vQv3JOVPcrkuutjkaenqpBTOJ63J/KfhG8sStWe7x81e6fTvpfUWYkF0RL
-         B0gYeJSgzMFpFdAdfij13MnJyVkgWmAwBAp0H0aE6twJNVG3AB9vZp7T86DOz6oPAinW
-         muAQ==
-X-Gm-Message-State: AOAM530u6pCuEhYwW7ct6u5FswCmPOOBrtXki7OE6CFFLV9STpjjhQbp
-        9ZMi2CxQ0MJpVvJ1LFGKZaXnT2rRDI4=
-X-Google-Smtp-Source: ABdhPJwBuAFvYCComq3MxEY5KW+KY0fhubz5BH6gVhEpP0Q1t6DzGmygM/qS5QveBfE2ye6Yaml0fw==
-X-Received: by 2002:a67:2f43:: with SMTP id v64mr23503919vsv.128.1594243174896;
-        Wed, 08 Jul 2020 14:19:34 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id h77sm149835vke.21.2020.07.08.14.19.32
-        for <linux-gpio@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DKE3Qx4NqqHAmkA79Cwyh3cscqveKce5cBLWkBL9ZD8=;
+        b=mlrewnWNEXQPdURTDNzp5dUytxx4EbZFp0oQJMrsm3JGHt5KtZON1yVg6IiQEhxud+
+         TGzdesR45uJs8iVplQ2b3euBD0F5ncUbaHX/0/DmECKWj5AvFBFSndi7vtdKnRXP1fFS
+         r5uqOjlA4J/RVtxnK73xOTq6VK3II98qSqsBYqu4ikeK0rfTo00VSaHgElNL2fz3/Q+j
+         2W5pMrkeDq+nONRgo3cTGPqjYNRODDR7oR4fVoJ5XGRpe+DMrKuLcInqoWXbs05KEC51
+         nzQTrnuR1cbnM8lanGim5Y9RR744vEnhMBw1B23vaGj6ioCFK8CgU2e67CMYaZ4tz1qr
+         cB3A==
+X-Gm-Message-State: AOAM532dbiNBXQmIzaRwqu3cDFGBucY1QWYT8Ul5qKBua7IxxIj4MqMh
+        lV5nkuiBJekGtR8nrSwq+r46XoEN
+X-Google-Smtp-Source: ABdhPJwZrbJ+l8PiY3hx9jTjb3F2/yOhxw6lamN9/8C6+B0kV2IEsPE/rw6SArJPQZAoUNtsoXq7rg==
+X-Received: by 2002:a2e:9316:: with SMTP id e22mr32722271ljh.393.1594244675696;
+        Wed, 08 Jul 2020 14:44:35 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id k11sm241618ljg.37.2020.07.08.14.44.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 14:19:33 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id k7so23955025vso.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 14:19:32 -0700 (PDT)
-X-Received: by 2002:a67:69c1:: with SMTP id e184mr13796424vsc.119.1594243172403;
- Wed, 08 Jul 2020 14:19:32 -0700 (PDT)
+        Wed, 08 Jul 2020 14:44:35 -0700 (PDT)
+Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200708202355.28507-1-digetx@gmail.com>
+ <20200708202355.28507-4-digetx@gmail.com>
+ <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
+Date:   Thu, 9 Jul 2020 00:44:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
- <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
- <20200706203805.GS388985@builder.lan> <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
- <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com>
- <56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org> <CAD=FV=VcBK02CS+ms0HtV0f_t7G7-0rzJ11xDKWdLanGVrx0QA@mail.gmail.com>
-In-Reply-To: <CAD=FV=VcBK02CS+ms0HtV0f_t7G7-0rzJ11xDKWdLanGVrx0QA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 8 Jul 2020 14:19:07 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WeXKAfWTK9q9u4m7=OU51rqQ975B+NBQDJT_sedPFOfQ@mail.gmail.com>
-Message-ID: <CAD=FV=WeXKAfWTK9q9u4m7=OU51rqQ975B+NBQDJT_sedPFOfQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
- for google,lazor
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+08.07.2020 23:57, Andy Shevchenko пишет:
+> 
+> 
+> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
+> <mailto:digetx@gmail.com>> wrote:
+> 
+>     The gpiochip_add_data() takes care of setting the of_node to the
+>     parent's
+>     device of_node, hence there is no need to do it manually in the driver's
+>     code. This patch corrects the parent's device pointer and removes the
+>     unnecessary setting of the of_node.
+> 
+> 
+> I gave a second look and I think my suggestion is wrong. Here is an
+> interesting propagation of the parent device node to its grand son,
+> leaving son’s one untouched. Original code has intentions to do that way.
 
-On Wed, Jul 8, 2020 at 6:42 AM Doug Anderson <dianders@chromium.org> wrote:
->
-> Was there something wrong with my proof of concept patch?  Unless I
-> get swamped with other things, my plan was to try to make that more
-> real and post it unless someone told me why it was wrong...
+The [1] says that gpio_chip.parent should point at the "device providing
+the GPIOs". That's the pdev->dev.parent in the case of this driver.
+MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
+controller, PINCTRL and RTC. The MFD is the parent device that provides
+the GPIOs [2].
 
-OK, I spent a bit of time poking at it and cleaning it.  I _think_
-this is right now:
+[1]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L276
 
-https://lore.kernel.org/r/20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid
+[2]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi#L48
 
-Please test and/or review.
+I think the old code was wrong and this patch is correct, please correct
+me if I'm missing something.
 
--Doug
+>     Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com
+>     <mailto:andy.shevchenko@gmail.com>>
+>     Signed-off-by: Dmitry Osipenko <digetx@gmail.com
+>     <mailto:digetx@gmail.com>>
+>     ---
+>      drivers/gpio/gpio-max77620.c | 5 +----
+>      1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+>     diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+>     index 7f7e8d4bf0d3..39d431da2dbc 100644
+>     --- a/drivers/gpio/gpio-max77620.c
+>     +++ b/drivers/gpio/gpio-max77620.c
+>     @@ -279,7 +279,7 @@ static int max77620_gpio_probe(struct
+>     platform_device *pdev)
+>             mgpio->dev = &pdev->dev;
+> 
+>             mgpio->gpio_chip.label = pdev->name;
+>     -       mgpio->gpio_chip.parent = &pdev->dev;
+>     +       mgpio->gpio_chip.parent = pdev->dev.parent;
+>             mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
+>             mgpio->gpio_chip.get = max77620_gpio_get;
+>             mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
+>     @@ -288,9 +288,6 @@ static int max77620_gpio_probe(struct
+>     platform_device *pdev)
+>             mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
+>             mgpio->gpio_chip.can_sleep = 1;
+>             mgpio->gpio_chip.base = -1;
+>     -#ifdef CONFIG_OF_GPIO
+>     -       mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
+>     -#endif
+> 
+>             platform_set_drvdata(pdev, mgpio);
+>      
+>     -- 
+>     2.26.0
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
