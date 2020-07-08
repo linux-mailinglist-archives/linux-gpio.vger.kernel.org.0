@@ -2,184 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9358B218813
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 14:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C5121895A
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 15:42:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgGHMyn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 08:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35476 "EHLO
+        id S1729540AbgGHNmQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 09:42:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgGHMym (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 08:54:42 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD6AC08C5DC;
-        Wed,  8 Jul 2020 05:54:42 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c30so37450896qka.10;
-        Wed, 08 Jul 2020 05:54:42 -0700 (PDT)
+        with ESMTP id S1729136AbgGHNmQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 09:42:16 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA64C061A0B
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 06:42:16 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 64so18238640vsl.3
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 06:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FigRipMzj+8SYJPiAiqqyolx+NOkjpAqI8ePBffI6HY=;
-        b=IIKIEat+iMxiT0kEcRgY5YSOHkj0N3SuRUV1+LclSBDx3uZVBP3BDNGOThWWj2Y29f
-         McLpZKmSl/hzEwKXssf+r9f416f0ZqUDgnF5vvdND9ZOAAgbHl7FV4SlOoU+f700G1sA
-         perj+d7hQgWl43AX2PNZGx4paANP8Ur1x+Fn4gHqPHB00AvHUPJcllqmd+RB14PKgmhH
-         xBaSB+HJQ8mnz3uU2hRoYNfNqGQpOgJ7ljtN6W4/kCKnsUYATmqTXaXJVy+VDy/V6O2B
-         DXVBUSCt/n38jILCWslY1+kOnHMpDK/Fv5XlvsSis3J5HWeo4nes7BGWcQzCZIlWqplS
-         L+GQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EBkLug3cPyoXl+ulMF1qw8Y1K3XzRcw29bM5tOQuRrQ=;
+        b=bpcNa/zMls02QjpRksmgtZ/xkWZh7awnjLCkRUKaalbhfNMVFGrJyG4PRFgZCOYMbE
+         gH3G/QWTynwQTMzUhTVNq1tCIBOY6Q9rlAicsboW1ELB7bjgPN+M3Huu2XrkQBWTvwWu
+         vPRWoyOtm2asBJcULk9PcaX2rWGWZsF4vmgAo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FigRipMzj+8SYJPiAiqqyolx+NOkjpAqI8ePBffI6HY=;
-        b=HnQegnQ3XL7jo5dbGwBylemwq6bQXLVOnPStkabdCQj1VB9fBc3ViQF/ODWme1ynGg
-         5ZDOSPXLavDj3SIqST0JuTBWUk4/LJgUIln1KT4Qp81vKOYkQhVw/eSwmDFME1J/DP9t
-         vqP9klwCndo3o+gV/rnxcRJCdBW0tkWV5mWyWnaVeQhQ8NPMbTmOdVhpY4wyKO4S21Et
-         0pbwFyYZuymgDKZ9M2sU/2UrDp4CNRSspa8dzHM3WVCHjszduYGcx8McoWqQGmMJ3O3r
-         9UayuLcTyCmuHlg4q5rhlkoZvXiKCsGbaNav9mKE2HC9UEuX+IaP0mryO3RQcV89UElg
-         8s1A==
-X-Gm-Message-State: AOAM5317tFGGNQCJ3DYU2QHVvBlJEpcji0XMTmIZ2mdFd9SFfpR9IQC4
-        VSP/W1vkB9+TyM4DBoAt9Sg=
-X-Google-Smtp-Source: ABdhPJxpfU40MOta06TYylM+gnexyvbyJllDVPOy6Usi9QNIUqgJ8fkew4TsiwuNfG0eH9LrbGTRnQ==
-X-Received: by 2002:a37:8b07:: with SMTP id n7mr52779086qkd.98.1594212881808;
-        Wed, 08 Jul 2020 05:54:41 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id x26sm27454404qtr.4.2020.07.08.05.54.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2020 05:54:40 -0700 (PDT)
-Date:   Wed, 8 Jul 2020 08:54:38 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
-        bgolaszewski@baylibre.com, michal.simek@xilinx.com,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] gpio: xilinx: Utilize generic bitmap_get_value
- and _set_value.
-Message-ID: <20200708125438.GB5221@shinobu>
-References: <cover.1593243079.git.syednwaris@gmail.com>
- <0a35c10d1613aff43038bc7d4d6f95061d9d80d3.1593243081.git.syednwaris@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EBkLug3cPyoXl+ulMF1qw8Y1K3XzRcw29bM5tOQuRrQ=;
+        b=oiwhYpvckq2UMv4M+tmGsUp+gQcfnIKvhv57iJKufw2RFAP5OMj8gW0Y3vluLjZsrv
+         vPxCTS11ijLCaiTsDNLwfUB6P0tK+SPKnu9vKvnXKkzHLLFaFqQiE5hYMA0n8QeL7+qa
+         upZzox/RTCGhvkxr1RrhSfEs5/u1KlNJJP9jNKZ+dGTpeYeyO82BxMoz6KhLbBwMzLjv
+         bPMoeprGwPL6Lq92PWRu/JYg55HhWlUsPIJi/LFPv6G7E8yu65n/jC698BeMhcLTlQAm
+         q79wZA6Lj1lz2TWwUoCD63kiRirEmprUwoAaKMuaKt/YOLtYXyWrf96VmmaNJqIeG4iB
+         qlrw==
+X-Gm-Message-State: AOAM533VU617PTZ6wxfd5bUo1sdSYieyGxJaHGdsjtstQrL4w4herKwU
+        MgvHwRXQ7/2HGMXIBj9r0xxBFrEciSg=
+X-Google-Smtp-Source: ABdhPJwpP/GabA5mGK+EyhzWsXbjJgkrPMG0PYAM9MphRFsMKNNTNpb8tuXG+9LP83YN+NtBKYhidw==
+X-Received: by 2002:a67:1105:: with SMTP id 5mr28973374vsr.174.1594215734745;
+        Wed, 08 Jul 2020 06:42:14 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id z201sm397029vsz.22.2020.07.08.06.42.13
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 06:42:13 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id d198so3169642vsc.1
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 06:42:13 -0700 (PDT)
+X-Received: by 2002:a05:6102:407:: with SMTP id d7mr42888100vsq.73.1594215733267;
+ Wed, 08 Jul 2020 06:42:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
-Content-Disposition: inline
-In-Reply-To: <0a35c10d1613aff43038bc7d4d6f95061d9d80d3.1593243081.git.syednwaris@gmail.com>
+References: <1593762506-32680-1-git-send-email-rnayak@codeaurora.org>
+ <CAD=FV=WyhJ6g0DZS=ysT-AyXJoiRX=UFE9fXY2NEHfuUHYUXCQ@mail.gmail.com>
+ <20200706203805.GS388985@builder.lan> <c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org>
+ <CAD=FV=Xs9Z37hv=CPgLEALoSoX=Uyir0s=ker=YKecA+Lhy1Qg@mail.gmail.com> <56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org>
+In-Reply-To: <56fb02df-372d-935a-cc39-c13289d65c0d@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Jul 2020 06:42:01 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VcBK02CS+ms0HtV0f_t7G7-0rzJ11xDKWdLanGVrx0QA@mail.gmail.com>
+Message-ID: <CAD=FV=VcBK02CS+ms0HtV0f_t7G7-0rzJ11xDKWdLanGVrx0QA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: sc7180: Make gpio28 non wakeup capable
+ for google,lazor
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
---E/DnYTRukya0zdZ1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jul 7, 2020 at 10:29 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+>
+> Hi,
+>
+> On 7/8/2020 4:33 AM, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Mon, Jul 6, 2020 at 9:52 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+> >>
+> >> []..
+> >>
+> >>>>> @@ -1151,6 +1168,10 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
+> >>>>>
+> >>>>>    static int sc7180_pinctrl_probe(struct platform_device *pdev)
+> >>>>>    {
+> >>>>> +       if (of_machine_is_compatible("google,lazor")) {
+> >>>>> +               sc7180_pinctrl.wakeirq_map = sc7180_lazor_pdc_map;
+> >>>>> +               sc7180_pinctrl.nwakeirq_map = ARRAY_SIZE(sc7180_lazor_pdc_map);
+> >>>>> +       }
+> >>>> As much as I want patches landed and things working, the above just
+> >>>> doesn't feel like a viable solution.  I guess it could work as a short
+> >>>> term hack but it's going to become untenable pretty quickly.
+> >>> I second that.
+> >>>
+> >>>> As we
+> >>>> have more variants of this we're going to have to just keep piling
+> >>>> more machines in here, right?  ...this is also already broken for us
+> >>>> because not all boards will have the "google,lazor" compatible.  From
+> >>>> the current Chrome OS here are the compatibles for various revs/SKUs
+> >>>>
+> >>>> compatible = "google,lazor-rev0", "qcom,sc7180";
+> >>>> compatible = "google,lazor-rev0-sku0", "qcom,sc7180";
+> >>>> compatible = "google,lazor", "qcom,sc7180";
+> >>>> compatible = "google,lazor-sku0", "qcom,sc7180";
+> >>>> compatible = "google,lazor-rev2", "qcom,sc7180";
+> >>>>
+> >>>> ...so of the 5 boards you'll only match one of them.
+> >>>>
+> >>>>
+> >>>> Maybe I'm jumping into a situation again where I'm ignorant since I
+> >>>> haven't followed all the prior conversation, but is it really that
+> >>>> hard to just add dual edge support to the PDC irqchip driver?  ...or
+> >> FWIK, this is really a PDC hardware issue (with the specific IP rev that exists
+> >> on sc7180) so working it around in SW could get ugly.
+> > Ugh.  I guess it's ugly because the workaround would need to be in the
+> > PDC driver but to properly do the workaround you need to be able to
+> > read the state of the pin from the PDC driver?  ...and I guess you
+> > can't do that with the PDC register space so you'd either need to
+> > violate a layer or 3 of abstraction and snarf into the GPIO register
+> > space from the PDC driver or you'd have to provide some sort of API
+> > access from the PDC back down to the GPIO driver?
+> >
+> > --
+> >
+> > Actually, though, I'm still not sure why this would need to be in the
+> > PDC driver.  Sure, you can't just magically re-use the existing
+> > dual-edge emulation in pinctrl-msm.c, but you can add some new
+> > dual-edge emulation for when your parent handles your interrupts,
+> > can't you?  As per usually, I'm talking out of my rear end, but I
+> > sorta imagine:
+> >
+> > 1. At the head of msm_gpio_irq_set_type() if you detect that
+> > "skip_wake_irqs" is set and you're on an SoC with this hardware errata
+> > then you do a loop much like the one in
+> > msm_gpio_update_dual_edge_pos() except that instead of changing the
+> > polarity with msm_writel_intr_cfg() you change the polarity with
+> > "irq_chip_set_type_parent()".
+> >
+> > 2. At the head of msm_gpio_irq_ack() you make the same function call
+> > if "skip_wake_irqs" is set and you're on an SoC with this hardware
+> > errata.
+> >
+> > It doesn't feel all that ugly to me, assuming I'm understanding it
+> > correctly.  ...or maybe you can tell me why it'd be harder than that?
+> >
+> >
+> >>>> maybe it's just easier to change the pinctrl driver to emulate dual
+> >>>> edge itself and that can work around the problem in the PDC?  There
+> >>>> seem to be a few samples you could copy from:
+> >>>>
+> >>>> $ git log --oneline --no-merges --grep=emulate drivers/pinctrl/
+> >>>> 3221f40b7631 pinctrl: mediatek: emulate GPIO interrupt on both-edges
+> >>>> 5a92750133ff pinctrl: rockchip: emulate both edge triggered interrupts
+> >>>>
+> >>> pinctrl-msm already supports emulating dual edge, but my understanding
+> >>> was that the problem lies in that somehow this emulation would have to
+> >>> be tied to or affect the PDC driver?
+> >> yes, thats correct, pinctrl-msm already supports it, the problem lies
+> >> in the fact that PDC does not. This patch, infact was trying to fix the
+> >> issue by removing all PDC involvement for gpio28 and making pinctrl-msm
+> >> in charge of it.
+> > If we're going to try to do this, I think we're stuck with one of these:
+> >
+> > 1. A really really long list that we keep jamming more boards into.
+> >
+> > 2. Add an entry at the top-level device tree compatible to all
+> > affected boards _just_ for this purpose.  Seems ugly since we don't
+> > need it for any other reasons.
+> >
+> > 3. Add some sort of property to the pinctrl node on these boards.
+> > Seems ugly since conceivably this _could_ be worked around in
+> > software.
+> >
+> > I don't really like any of those options, so I'm really hoping we can
+> > find out how to get a workaround in...
+> Hi Doug,
+>
+> The client driver here never uses/needs both the edges at a given time.
+> Another option (clean & correct IMO) is to update the driver to request
+> proper irq type its expecting.
+>
+> Lets take SD card detect GPIO for example, which uses dual edge interrupt.
+> one edge (rising type) can be used as a card insert detect interrupt and
+> another edge (falling type) may be used for card removal detect.
+>
+> The sequence of operations, IMO should be..
+> 1. Driver request a rising type irq to start with (the one that detects
+> card insertion)
+> 2. once card insertion irq comes in, the driver should change the type
+> to falling which is expected (to detect the card removal)
+> 3. once card removal irq comes in, it can change type to rising edge (to
+> detect another insertion)
+> 4. above steps (2,3) continues
+>
+> if above sequence is followed from drivers using dual edge IRQ, we don't
+> need any workaround.
 
-On Sat, Jun 27, 2020 at 01:44:23PM +0530, Syed Nayyar Waris wrote:
-> This patch reimplements the xgpio_set_multiple function in
-> drivers/gpio/gpio-xilinx.c to use the new generic functions:
-> bitmap_get_value and bitmap_set_value. The code is now simpler
-> to read and understand. Moreover, instead of looping for each bit
-> in xgpio_set_multiple function, now we can check each channel at
-> a time and save cycles.
-> ---
-> Changes in v9:
->  - Remove looping of 'for_each_set_clump' and instead process two
->    halves of a 64-bit bitmap separately or individually. Use normal spin_=
-lock=20
->    call for second inner lock. And take the spin_lock_init call outside t=
-he 'if'
->    condition in the 'probe' function of driver.
->=20
-> Changes in v8:
->  - No change.
->=20
-> Changes in v7:
->  - No change.
->=20
-> Changes in v6:
->  - No change.
->=20
-> Changes in v5:
->  - Minor change: Inline values '32' and '64' in code for better
->    code readability.
->=20
-> Changes in v4:
->  - Minor change: Inline values '32' and '64' in code for better
->    code readability.
->=20
-> Changes in v3:
->  - No change.
->=20
-> Changes in v2:
->  - No change
->=20
->  drivers/gpio/gpio-xilinx.c | 66 +++++++++++++++++++-------------------
->  1 file changed, 33 insertions(+), 33 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 67f9f82e0db0..48393d06fb55 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -136,39 +136,39 @@ static void xgpio_set(struct gpio_chip *gc, unsigne=
-d int gpio, int val)
->  static void xgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
->  			       unsigned long *bits)
->  {
-> -	unsigned long flags;
-> +	unsigned long flag;
+You're saying that we should make the rest of Linux change to work
+around the bug in your pinctrl driver?  I don't think that'll fly too
+well with the maintainers of the other subsystems.  The
+IRQ_TYPE_EDGE_BOTH define exists and we should support it.
 
-Hi Syed,
+Was there something wrong with my proof of concept patch?  Unless I
+get swamped with other things, my plan was to try to make that more
+real and post it unless someone told me why it was wrong...
 
-I have a couple minor suggestions in case you submit a version 10. Leave
-this variable named "flags" because it refers to CPU flags which will
-likely be more than one flag anyway.
-
-> @@ -292,6 +292,7 @@ static int xgpio_probe(struct platform_device *pdev)
->  		chip->gpio_width[0] =3D 32;
-> =20
->  	spin_lock_init(&chip->gpio_lock[0]);
-> +	spin_lock_init(&chip->gpio_lock[1]);
-> =20
->  	if (of_property_read_u32(np, "xlnx,is-dual", &is_dual))
->  		is_dual =3D 0;
-> @@ -314,7 +315,6 @@ static int xgpio_probe(struct platform_device *pdev)
->  					 &chip->gpio_width[1]))
->  			chip->gpio_width[1] =3D 32;
-> =20
-
-Remove this whitespace as well.
-
-Thanks,
-
-William Breathitt Gray
-
-> -		spin_lock_init(&chip->gpio_lock[1]);
->  	}
-> =20
->  	chip->gc.base =3D -1;
-> --=20
-> 2.26.2
->=20
-
---E/DnYTRukya0zdZ1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl8Fwg4ACgkQhvpINdm7
-VJJ8kQ/+L3sMhxucxZch0OlspO/vaRblsi64ksYyIrx0pKKuHqq4OQ5cLqgdLdn1
-cGkSm7WwfA+Zj+o2E3KrPMkJH8ZFSG4c2IKkzQ9A8lW7rjdfuvdYbQSDIJ6ztjnp
-siys93AM00j4+D5+ugvNTVYMeJKPRUjXPHpGmOKKemuq8N8h3tSw1lgYoNi3deI0
-FgXJmi/PuF8LGETmRyBpdn2X/ROU5M8iilm5j+y0BmsN+DF9M1MINL0aLvQXeSXk
-H3KZ7LlDKCOPR7fi0BQFjzeaTpYBOvjpTvudTLtnHVsL6IxkczCu4o4nvHd8agms
-hS0vX5+QUZ4p26f3uqiTV0S7xK0Bf1Ig4WiY8YMw52QOedY275blmah7feD3CmkW
-FHDeiPZ77DXfaHGcUeqeMpIotsJNQTkoRgjgI+l2PampcCUIrRhWZf6sGFBTOEao
-Y4qA2woZYaQ7SFqdL98OhzLyhgzjcO1zrPFaUwdE84HT89aCPpZfMPmR2NhfoDiW
-agOYRI8bYlN1j5vX4GVAqAzrzKjYFO5judhkb5UuDZ3ft6r/geNeSZzTTQoPQnx3
-FtAjnCPTA9arJqAsA43xZIhGV6nT/n7zrxM+zdel3EB6LbTI0mRY1lbOL6WJ9rl2
-ToIeFx1shURZcjnGBA+vYK8sSp/Kj6EFX53+wG1MBmZ0qHJcwao=
-=xP7Y
------END PGP SIGNATURE-----
-
---E/DnYTRukya0zdZ1--
+-Doug
