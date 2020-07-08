@@ -2,125 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58973218E5F
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 19:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15DC3219166
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 22:26:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGHRgA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 13:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
+        id S1725972AbgGHU05 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 16:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgGHRgA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 13:36:00 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E49BC061A0B;
-        Wed,  8 Jul 2020 10:35:59 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id t9so27337677lfl.5;
-        Wed, 08 Jul 2020 10:35:59 -0700 (PDT)
+        with ESMTP id S1725848AbgGHU05 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 16:26:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03846C061A0B;
+        Wed,  8 Jul 2020 13:26:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id b25so52151029ljp.6;
+        Wed, 08 Jul 2020 13:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0go/Ywd9NLu2fQFwy7ITgscW8Fvhwb0kSSx94KkN6qQ=;
-        b=AQSJPXvAehcaC6E4s4aEzDy10L+p17B130aW8NNx4YZdGEkzM1Hm7TRl1HCmco1kVW
-         oeLIBgPLnbk2C21kAmouftX+4+gaDSSwAo0BnwkRe3yzRFZsTOsSRxzLGbMTUYxpgXts
-         JMV8H4HQ4soaV9okb3GTZP9Nt2gQvuGzWuNxhwuGpOoLwJ2PH+5Yl1eu+w+M/lZBeSmr
-         HPzcdV/8B8/8QAeW27HL+bSXhLQ3haKjhWYMSupwIYZpABjs4O1Wh6T2lABRxl+JObao
-         i8lta6o8p6v1RKWxE6yO2pmtietemN+jGZp58K2kloMS1D8WQFNuGfT+Rqa63ai9t+M6
-         osnQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D0w0hRPTED8ZJ28VWYfFispbGvxFYo9ZlStpShX4740=;
+        b=bEBRjtzqrFkDSfrNrtKl4ZmznJGVbvcqiRGANQW/t6hFtByFI80ITB8pZ+nW2W+mHg
+         Ruaz90jRK7HQuNyzHJNYXyhO6qq5JmdjIAdwiunkuSCVsan9LAT5/LmmcF61w+cKUXcP
+         ks0+4snR8xFJuwRlnhhYdS/W5rINHu90KXR4c5GgKcA2gkHaboP3sxmmPxr69gHCKXQZ
+         9pz2d0flTBJy+dXB7Shu8puA3iVTUaIBrxEf5G72+pMc+zcczUmDl6oYrjBOnZxzmm1z
+         0LuM5IpJBpXqw/iub49FHxICjPPQwFGje7xyjPpQGBPbPb1eDpKMLuoPLUUlrH66SA21
+         4eGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=0go/Ywd9NLu2fQFwy7ITgscW8Fvhwb0kSSx94KkN6qQ=;
-        b=Ns/omrmLfaGblZYZXd9Mp0h9E+h4U9QBuc5MJNALzzc+hi+iISKSBjjwTouA015jln
-         NEWL/Iz3tG118Ii1+4PZiELVGIjSyuXyt7gatuDzXS14FRRSdIrmte03Q4iY5zQOQMCP
-         dq3x9QgSZ4twZWy5Gs4WnBvPsQ2nkExHPG6GI0rJzL4WvMO+NO/CAQqxtvis+60JU1wQ
-         ojcf7vRZr75u41JxBY2POzBONv1bCDAksYo13lfAVoIMEMog8/1B4XPJCsaXXRkDIt73
-         g5r82QSJuRYtwpUtvM9uzL3mWYErybKGMQrQ2KT8mCDI683ROpwDKpMuiOoRP/K5yKY6
-         z5KA==
-X-Gm-Message-State: AOAM532/1DoxYAShwv5hvcyBq/r1L1UtUcDukwtPG4Ts8UKF5wrysBfp
-        72ciP9Jd9U64tEaVSL6U/Rr7V5w6
-X-Google-Smtp-Source: ABdhPJx2dKgAODQ81t/pTzKZAGIlcurXRdTe/cXHYFlicjssRadZkxC98kXpYUjJhWiF8cPtkOd82w==
-X-Received: by 2002:a19:8a07:: with SMTP id m7mr37060035lfd.31.1594229757359;
-        Wed, 08 Jul 2020 10:35:57 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id n10sm141266lfb.82.2020.07.08.10.35.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 10:35:55 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] gpio: max77620: Initialize interrupts state
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        bh=D0w0hRPTED8ZJ28VWYfFispbGvxFYo9ZlStpShX4740=;
+        b=hDYOYIypJqR/SYdi5k1OUsNdEGVsj12i6RbnFEZYHcJMT8Owgc8go4NSyL8U5ZHTAl
+         x7erezcHh8qOaavXn0g0eDTnRnfZ6QFRithjni31OcZ3WukQwINZXNZ042aRwjk04lMs
+         NNIWFs/aJA63q+tClBKPsOTVDHsfJ2AeKg3KYMplTM9aWnQkJFwaQr6hHkcTnyP4sukE
+         cfwnYFnQ/sEPfQsAg4toSCPHesDGoIyOjYJKSiIKZvEp5PxGnXZD1BafVUqiTbI6hiSI
+         mH6nOFs20xqeBq+oDGxmLVakiu9Pq4Rkgo9KZwiKQnWb0UKxGhv7lPspOGGuXBIYeS5c
+         6Cbg==
+X-Gm-Message-State: AOAM533gSoECrPQun2PONEGkOLQtr09JlDc24F2ve0LTqZPGOD6F5mAb
+        Ufx+7F9keQy7KXRSoKn64bg=
+X-Google-Smtp-Source: ABdhPJwsh1d/oAeKRwn7jMN68bTbcHeGJkrYESS6hrpyraz73/oT2dMQ5kmFfzlRcdEghQ5W+/yVoQ==
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr10752007ljp.16.1594240015517;
+        Wed, 08 Jul 2020 13:26:55 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.gmail.com with ESMTPSA id e29sm252568lfc.51.2020.07.08.13.26.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 13:26:54 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200708155834.19762-1-digetx@gmail.com>
- <20200708155834.19762-2-digetx@gmail.com>
- <CAHp75VcFG3oK7C8Y7RZKoEvwPo9+hKMMucnDhtpqLDmLGoPmJw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2f61f759-81fc-c429-8181-508368c4f091@gmail.com>
-Date:   Wed, 8 Jul 2020 20:35:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] Improvements for MAX77620 GPIO driver
+Date:   Wed,  8 Jul 2020 23:23:49 +0300
+Message-Id: <20200708202355.28507-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcFG3oK7C8Y7RZKoEvwPo9+hKMMucnDhtpqLDmLGoPmJw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-08.07.2020 19:58, Andy Shevchenko пишет:
-> On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> I noticed on Nexus 7 that after rebooting from downstream kernel to
->> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
-> 
-> despite interrupts
-> 
->> being disabled for all of GPIOs. This happens because Nexus 7 uses a
->> soft-reboot, meaning that bootloader should take care of resetting
->> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
-> 
-> but the bootloader
-> 
-> As a result
+Hello!
 
-Thanks!
+This series addresses a problem that I discovered on Nexus 7 device where
+GPIO interrupts may be left enabled after bootloader and the driver isn't
+prepared to this. It also makes a small improvements to the code, fixes the
+non-released interrupt bug and converts driver to use irqchip template.
 
->> may be left ON at a boot time. Let's mask all GPIO interrupts at the
->> driver's initialization time in order to resolve the issue.
-> 
-> ...
-> 
->>         mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
->>         mgpio->gpio_chip.can_sleep = 1;
->>         mgpio->gpio_chip.base = -1;
->> +       mgpio->gpio_chip.irq.init_hw = max77620_gpio_irq_init_hw,
-> 
-> Now this seems a bit awkward. Perhaps you need first to switch to use
-> GPIO IRQ chip structure?
-> It's also in the TODO of the GPIO subsystem ;-)
+Changelog:
 
-Alright, I'll try to switch it to use the GPIO IRQ chip struct in v3!
+v3: - Addressed review comment that were made by Andy Shevchenko to v2:
 
-> ...
-> 
->>  #ifdef CONFIG_OF_GPIO
->>         mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
->>  #endif
-> 
-> This seems to be done by GPIO library.
+        - Improved the commit message of the "Initialize hardware state of
+          interrupts" patch.
 
-Indeed!
+        - Added these new patches:
 
-> Also point to improve: don't shadow error from platform_get_irq().
-> 
+           gpio: max77620: Don't set of_node
+           gpio: max77620: Don't shadow error code of platform_get_irq()
+           gpio: max77620: Use irqchip template
 
-Good catch!
+    - Added "Fix missing release of interrupt" patch.
+
+v2: - Addressed review comment that were made by Andy Shevchenko to v1:
+
+        - Generic init_hw() callback is used now for resetting interrupts.
+
+        - These v1 patches are dropped:
+
+           gpio: max77620: Replace interrupt-enable array with bitmap
+           gpio: max77620: Don't handle disabled interrupts
+           gpio: max77620: Move variable declaration
+
+Dmitry Osipenko (6):
+  gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+  gpio: max77620: Fix missing release of interrupt
+  gpio: max77620: Don't set of_node
+  gpio: max77620: Don't shadow error code of platform_get_irq()
+  gpio: max77620: Use irqchip template
+  gpio: max77620: Initialize hardware state of interrupts
+
+ drivers/gpio/gpio-max77620.c | 65 ++++++++++++++++++++++++------------
+ 1 file changed, 44 insertions(+), 21 deletions(-)
+
+-- 
+2.26.0
+
