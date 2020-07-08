@@ -2,41 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86EE7218475
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 11:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE93218478
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 11:57:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbgGHJ4K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 05:56:10 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:39994 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgGHJ4K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 05:56:10 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t198so24772139oie.7;
-        Wed, 08 Jul 2020 02:56:09 -0700 (PDT)
+        id S1726302AbgGHJ5E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 05:57:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33722 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbgGHJ5D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 05:57:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id h13so15933008otr.0;
+        Wed, 08 Jul 2020 02:57:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wuZ52/2R2QhpWJLHCV/wGrDxu4may668Ov4P0DPN7go=;
-        b=jWqbpALxf7txcC6DUNhOfsAct/3VMzJvM1yM78IRSwTRbH/DF2S8bzVW1v+w4HdLr6
-         jN8pMLCjZGo6E/UHmA6llO/LOn7RZcF4WxcMm21y+yZE/B7NdrFmDqKHZ1zbCvjKPAhM
-         BPvKzBzcQkMjn2kDh1NHZDJvHqOzC1PYA49RcT4k8vEZ8USyxtjKMYs/FAaKdifBoCzW
-         YFuw+iDKsJ9pmZuWRBySmeoHRI6XSt9yPfiC63jwokXdC+S+9mgNLA++A57ErY67cIrP
-         upKTOA6jXXVVPErc5W86s8M5POy3mfFtqAnWKEugUN1rA4WQzFvR0XQ4SQ5IrF88xEQO
-         jDHA==
-X-Gm-Message-State: AOAM532JSyRVHa6sd6ZwzDsRoMOiIbn+TUgIOn/SCrJ1jv9rVLTGHC/b
-        cCUJa8yj042/yz0c6R+4ZjTUDl/o5z5A9iWwywo=
-X-Google-Smtp-Source: ABdhPJziRItiVHnSBeIux3430KjIvDj8lyVf1dBBml+v4gyc2l5NRtIxrY4n2e1Chzu0gV5BFqwWF3ybNdNI/IJ/wW4=
-X-Received: by 2002:aca:5c41:: with SMTP id q62mr6236480oib.148.1594202168991;
- Wed, 08 Jul 2020 02:56:08 -0700 (PDT)
+        bh=/XMiWJeC9gW4zNEiGNGQ7Jia3B7H7LS3LhnFPaKtC4g=;
+        b=cAebVONZZ7bMYY5J+ExVAu3ogmzNZabjQIZd7uwlAtjsyZWnnyPI6ZrtmKTetGIWUe
+         QJXQyRHBbn/FddhdH9HGzrUUGoptU8+7jz2klxn94SfwT31nTV5KF/lfLcZOoPzFiAP+
+         EL259q2jUCrCSlyXc7kph8d/nVXV0EnaCKKTtDPpL9/dOM6oFEzGYOHiLDV4gjQEHkPP
+         wkSGDIqWD73BE1msxIrv3CPfMppG9AZ0OPeb+oOrsA2qwmNGocl7UPX/7hxpZOzA1k4X
+         I/6hG8i4BigJiJCZ/duxNlIZDIOannLf6uP/p6qsd8SvDjynBOcWohdGnVlLLKDAgilM
+         HSWA==
+X-Gm-Message-State: AOAM533bUrZTOnjNVQzV8el95sQPM9LYmnx8/JBWlVzaxjeW8g5KKkoV
+        1wd56+JJc7QBaKKm5zjROVOZtywvQuvIyBxq/IxZwscUe6M=
+X-Google-Smtp-Source: ABdhPJyuevYFnTlFM0LnJZUoW7t2WZAhJReoOxca7ubZPR+uLGRaihk2OIZA0t2pcDxVCl8uiENhn5qrU2TBWt7WZac=
+X-Received: by 2002:a9d:2646:: with SMTP id a64mr46196987otb.107.1594202222825;
+ Wed, 08 Jul 2020 02:57:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594138692-16816-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594138692-16816-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 Jul 2020 11:55:57 +0200
-Message-ID: <CAMuHMdUMnt1VJ6b7=S+5DoDTxbUQ6mRsfEPu2Fu7ZeDUobi8cw@mail.gmail.com>
-Subject: Re: [PATCH 07/14] soc: renesas: rcar-sysc: Add r8a774e1 support
+Date:   Wed, 8 Jul 2020 11:56:51 +0200
+Message-ID: <CAMuHMdVo7gsK-SpHUqWnV1zzcjbXp6FDRFD46J88iksoJrPakg@mail.gmail.com>
+Subject: Re: [PATCH 08/14] dt-bindings: reset: renesas,rst: Document r8a774e1
+ reset module
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -57,27 +58,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
-
 On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> Add support for RZ/G2H (R8A774E1) SoC power areas to the R-Car SYSC
-> driver.
+> Document bindings for the RZ/G2H (R8A774E1) reset module.
 >
 > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-with the Kconfig part moved in, and reordered before 4/14:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
-
---
+-- 
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
