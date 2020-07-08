@@ -2,76 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D206C2181A3
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:47:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BA062181E9
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGHHr1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 03:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgGHHr0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:47:26 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66023C08C5DC
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 00:47:26 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id q4so17297724lji.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 00:47:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jwgQk4hxB0u815VyD14iTdkDJc1dGDwOWq82/HI8OL4=;
-        b=THButbdDWn+ub3xsg77v8ii5FhwFxDJlOeGBUfD3mM+xi+74SQZlyDr14GGhivyeC8
-         s3t6wYmLKyiFEOuHRbCQkotAoaa9YYfImJHg2LdJ9bykYfFImaruITuPNc/Dsl0DwlAP
-         MatRv+S0gXIrYhlci1pBRh53JBp4lVxHtXc6w2WIvy9GSKPdNV/NKefjGYIoWLXEqe0V
-         ZHKM3FZPx0Jn3UcUA3MopFJW+CQpmklCm/626a4O9MRCd1gbnPYwVioZqc2NTVoaeWZT
-         A5kJX8I1KC4zbDxeYweSH+7hxFeUVF99PaI6f+3I/5E83xrxxit+HKGR86OZuE3V1I4z
-         cA9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jwgQk4hxB0u815VyD14iTdkDJc1dGDwOWq82/HI8OL4=;
-        b=DLYRgujs3llO8Ju/4IjjzPjnXfI6eZ1/EbTTxpvOzQwXOCdUnS9qLFM1mh6gzVP50e
-         7nDYlSTVhJ/+G8+deLnZ8Z1KudQm01e0IplnWxNzi+RHJjVCWgW1J34sXZM0G7PSBlXs
-         DLJMraHOUfU7gXCDIURcs70ZnSDtg+lIESlPtUobEO1jLC9a5WtKISucQ4dmjp4NROMJ
-         kzzwmeArhwtMkiI2yLqc03xJQCa+SU0n2aVhcnP0dE2BiCvfdQ0xmmnRdQL4TmhZkKEN
-         SgxxkbG4+DsvV8KeUCqpNqJMR2gR/TMAOUAGlh2O5CMNtpPdNdb2gGH9RPvL/EwP3q5a
-         bFcQ==
-X-Gm-Message-State: AOAM531OdbmzpAysnGzbpIEp/uKOb6fbVPhRR+ggzdTUEmaOv+kKufyM
-        xoS+Mc06kdkDad/msBxBEBXfv3h6udnbTMvjovYKlC8cnvg=
-X-Google-Smtp-Source: ABdhPJy7eKLcoaOty1RWVaBPYD1ofrMGU5FBs2Nu2Y118NsdmOZZ9nNtEh2lRkwUxs2g+QICAOhadamLtzzcLHx5iNU=
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr31606603ljc.286.1594194444952;
- Wed, 08 Jul 2020 00:47:24 -0700 (PDT)
+        id S1728089AbgGHH4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 03:56:19 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:53373 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgGHH4T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:56:19 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3F86923078;
+        Wed,  8 Jul 2020 09:56:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1594194976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vkAaApfhcYQrTtXHZ3DFw7xulIHI0rpYQDvfWCBnZm0=;
+        b=biSWOVAjbZvthb+/2JqDpUf5TrG64sWC75SF1s1Z9kEyywzchrxU3Iqy6tXIkUZtVhIPg2
+        abaMsAwWt4rVPYHYCytnRxorHIp1FA2W3FP3QKMrp3C5gwwGssdcUV38GWIS2O6vsBwp7x
+        l58Gj90dSpH5zagXo6jLY7W8llV9JPY=
 MIME-Version: 1.0
-References: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
-In-Reply-To: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:47:14 +0200
-Message-ID: <CACRpkdbWYhbtR+Tv5fFdxuyPAXU68uAswFYNZQfNFaR_89k=nw@mail.gmail.com>
-Subject: Re: chv-gpio interrupt storm on UMAX VisionBook 10Wi Pro
-To:     Jiri Slaby <jirislaby@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jul 2020 09:56:13 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
+In-Reply-To: <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-14-michael@walle.cc>
+ <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <d9a53ed9254a136a7bc161c2a93045b0@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 9:18 AM Jiri Slaby <jirislaby@kernel.org> wrote:
+Hi Linus,
 
-> I installed Linux on UMAX VisionBook 10Wi Pro. It sometimes boots, but
-> even then it encounters lags, soft lockups:
-> > watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
-> > watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [kworker/0:0H:6]
-> > watchdog: BUG: soft lockup - CPU#0 stuck for 21s! [kworker/0:2:133]
-> > watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
+Am 2020-07-08 09:39, schrieb Linus Walleij:
+> just a drive-by-comment:
+> 
+> On Mon, Jul 6, 2020 at 7:57 PM Michael Walle <michael@walle.cc> wrote:
+> 
+>> Add a pwm-fan mapped to the PWM channel 0 which is connected to the
+>> fan connector of the carrier.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+> 
+> If you have a cooling device like this, do you also have a temperature
+> sensor? In that case it makes sense to add a thermal zone and a
+> policy, such as I did for a device in
+> 6e97f0aaca4ca778905dd1dc667cbf379f4cae15
 
-Adding Hans de Goede to Cc, he often deals with this kind of weirdness
-so he might have some ideas here.
+Yep, the CPU and DDR controller have temperatur sensors and there are
+already thermal zones for them. We have the fan linked to the policies
+in our vendor DTS overlay. For now I didn't want to include that here,
+mainly because there are no labels in the fsl-ls1028a.dtsi for the
+thermal zone/cooling maps/trips. But this is still on my TODO, when
+this series finally make it into the kernel ;)
 
-Yours,
-Linus Walleij
+-michael
