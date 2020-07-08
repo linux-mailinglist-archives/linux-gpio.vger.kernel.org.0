@@ -2,115 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1BAA2183F1
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 11:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10574218400
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 11:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGHJhm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 05:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgGHJhm (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 Jul 2020 05:37:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43645206C3;
-        Wed,  8 Jul 2020 09:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594201061;
-        bh=FMfBPrKkg56I41HR/oz9HArqZ/nbHhmy/CTSfaxeBGo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sbfNACTpkqCbWD5aa302J26Zs8H/6wJy04I81wZIXqHfv+8h6aPihY0skXI9Ws3xT
-         uAQODNbO+TB96nVJfyWxe4AJMxm3KcaEVeT2NPqd0QsMsw08Ymc9EpHUlZBqYUpSVe
-         odhxBTqdT7vgRn7mxOsVMthPOc9wK/pckWYf0oao=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jt6WJ-00A2JK-Qa; Wed, 08 Jul 2020 10:37:39 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jul 2020 10:37:39 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S1726445AbgGHJlu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 05:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgGHJlu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 05:41:50 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218AFC08C5DC;
+        Wed,  8 Jul 2020 02:41:50 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s9so53339055ljm.11;
+        Wed, 08 Jul 2020 02:41:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GPMeuDsCXTADuLJLoIy2N9qwDLdeQmuia/lSB8E0qrU=;
+        b=CNbB0R68YWw0Z3iV5ixYR0bUFVXyh6U+fQXyLBCgdqqki7Eq9h09AWBWow9sICgySr
+         317kdeZx6+zS+mmxbjLC3wDx3MuuMUzw3+c4mdUjLVgUoalEdSGZ4Wd+2+uMpL5MsVrd
+         f/jhX7uueYD7h5Owzi+3hqqXl/+Pr70cCKAHWyLaSrPGsNb6ggIDVWCDP+LLpoGunrau
+         a0+xjrqa1QKt63nYDWXvyTYNN7KTrs42EsfFRPg0phHuh5qW4i2315Ptn/gyNQv5LM7T
+         7GfeHkBbJXWLJDwO7bT6k1keNOr8Jiu/0qBAWmlBpLYV+Fk5kMF42POmf9XBu4dRmZtl
+         Vu2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GPMeuDsCXTADuLJLoIy2N9qwDLdeQmuia/lSB8E0qrU=;
+        b=IJW+WQL3dq6YanCZ8G29QxHtBtQ/+IutALXtXCobxihQEllsz13F8lGOE4CN07vUX9
+         UjC9MmvTxU+T3lD6AhzwfKT/DPlQJUjlv2fSh3WPVesuyRzVq8o4zakGrXQHlNgUBX6g
+         0ivUVeD9ceHx1KW5AFAduxj8kPi3JqTwhrE38BssfLRrAC286DS6mf3rPkLxg002gUT4
+         7raybqqulbOEVAckQJF4wItqALQrxoUo783TChJDreWFRWTxXRQ+lzQkTXtXqtg9MdDW
+         zMX/8/pSiY9cpj3esM+t81HlAZs1tPYt8dQFjJRpbHmYO1txwHqDpNlSvhcOL93slMXG
+         wClg==
+X-Gm-Message-State: AOAM530sGXwl1G8YJLN2S9LZ7fy8pSMng66EV1USTtAZJjxAZtdl/dem
+        luF7rLLsU+xqrltyzXRY0bbPOpmg
+X-Google-Smtp-Source: ABdhPJy9FcYqgP1wkWLMBvlayoKZTTo2ZClSUXVd8QkMvWexf7BV4FS5B4cDcY+5HaqBAlAQSa2csQ==
+X-Received: by 2002:a2e:91ca:: with SMTP id u10mr28037948ljg.101.1594201308192;
+        Wed, 08 Jul 2020 02:41:48 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.googlemail.com with ESMTPSA id d25sm780669ljc.103.2020.07.08.02.41.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jul 2020 02:41:47 -0700 (PDT)
+Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 05/13] irqchip: add sl28cpld interrupt controller
- support
-In-Reply-To: <20200706175353.16404-6-michael@walle.cc>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-6-michael@walle.cc>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <30c8a3b40003f8805ba8ebacd328583c@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michael@walle.cc, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, jdelvare@suse.com, linux@roeck-us.net, lee.jones@linaro.org, thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de, wim@linux-watchdog.org, shawnguo@kernel.org, leoyang.li@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, broonie@kernel.org, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200708082634.30191-1-digetx@gmail.com>
+ <20200708082634.30191-2-digetx@gmail.com>
+ <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fc3926ec-f8a3-b408-aff6-939f3ce91ce9@gmail.com>
+Date:   Wed, 8 Jul 2020 12:41:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-07-06 18:53, Michael Walle wrote:
-> Add support for the interrupt controller inside the sl28 CPLD 
-> management
-> controller.
+08.07.2020 11:51, Andy Shevchenko пишет:
+> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> I noticed on Nexus 7 that after rebooting from downstream kernel to
+>> upstream, the GPIO interrupt is triggering non-stop despite of interrupts
+>> being disabled for all of GPIOs. This happens because Nexus 7 uses a
+>> soft-reboot, meaning that bootloader should take care of resetting
+>> hardware, but bootloader doesn't do it well. In a result, GPIO interrupt
+>> may be left ON at a boot time. Let's mask all GPIO interrupts at the
+>> driver's probe time in order to resolve the issue.
 > 
-> The interrupt controller can handle at most 8 interrupts and is really
-> simplistic and consists only of an interrupt mask and an interrupt
-> pending register.
+> ...
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> Changes since v4:
->  - update copyright year
->  - don't use "int irq" instead of "unsigne int irq", because
->    platform_get_irq() might return a negative error code. Found by 
-> "kernel
->    test robot <lkp@intel.com>
->  - remove comma in terminator line of the compatible strings list,
->    suggested by Andy
->  - use newer devm_regmap_add_irq_chip_fwnode()
->  - don't use KBUID_MODNAME, suggested by Andy
->  - remove the platform device table
+>> +               err = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(i),
+>> +                                        MAX77620_CNFG_GPIO_INT_MASK, 0);
+>> +               if (err < 0)
 > 
-> Changes since v3:
->  - see cover letter
+> Does ' < 0' meaningful here?
+
+Not really, although [1] explicitly says that regmap_update_bits()
+returns either 0 or a negative error code. The positive value will be an
+unexpected return code here.
+
+[1]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/drivers/base/regmap/regmap.c#L2910
+
+This variant of ' < 0' is consistent with all other similar occurrences
+in the driver's code, so should be better to keep it as-is, IMO.
+
+>> +                       dev_err(mgpio->dev, "failed to disable interrupt: %d\n",
+>> +                               err);
 > 
->  drivers/irqchip/Kconfig        |  8 +++
->  drivers/irqchip/Makefile       |  1 +
->  drivers/irqchip/irq-sl28cpld.c | 96 ++++++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/irqchip/irq-sl28cpld.c
+> One line.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+This will make this line inconsistent with the rest of the driver's code.
 
-Given the dependency on the MFD patches, I assume this will
-be routed to that subsystem. Please let me know if you want
-it to be handled differently.
+Secondly, this line won't fit to display using my multi-file view-edit
+setup.
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+I know that 80 chars isn't warned by checkpatch anymore, but still it's
+a preferred width for all cases where it doesn't hurt readability, which
+is the case here, IMO.
