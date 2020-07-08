@@ -2,61 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D46E218D5F
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 18:45:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E055A218DA2
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 18:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgGHQpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 12:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43078 "EHLO
+        id S1730402AbgGHQ4g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 12:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730278AbgGHQpf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 12:45:35 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A6BC061A0B;
-        Wed,  8 Jul 2020 09:45:35 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md7so1436832pjb.1;
-        Wed, 08 Jul 2020 09:45:35 -0700 (PDT)
+        with ESMTP id S1726124AbgGHQ4f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 12:56:35 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB43FC08C5C1;
+        Wed,  8 Jul 2020 09:56:35 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id 12so31870906oir.4;
+        Wed, 08 Jul 2020 09:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
-        b=ZPaJPdozMAQiL2Gq+tWHaGQ/IRAzrfgb72YMuC5chBqeUEHy/NNFCnayfq122lo6K4
-         lTNNaNgPZykcZ4Thl5hIfwvvuGI6hwji6HqDBIg86i9xQWhTqJ5PoOBCszgwClJ3a9gK
-         n6jVRhwMzu1fHl5uA1+jkWu5vV7cLzFxh0PM00rJwfjNu+6lqmGtEN1iViLcawmwYMWx
-         ttPt9TMxbyzUV2vBMJi+jRv6qeyHGXzbFp1LfXVmdNTcxXgRIkAUINAeUWrDI4t2th/y
-         BhqKtQoZOfMIGvUsYFeJX744JCIXSgX4ElOZ1SAlrYpqgw+9q9BPpp0PikQh3/3if5As
-         5avA==
+        bh=qZmo9U5aXUZDGkqB26q7sUeeEzOZwLyZGd7ARaA8d54=;
+        b=csGaN8X3gJ3gBxU3gPZD9ntGLA/y+1SAjQ7SiWOKwGzlFsI1NiGdNrzmqU1Po9Rt0T
+         S818ZXcfQYwH13Jmr082uT1HcUeVaCcANOGF2uByM7GCAeaXov6rorHpilfVoVE8WVIr
+         cNaw8aV6fFlVjXhUx20qKVUI3/xOcO1hbWetbeUmN3Auqxp0mSPdzKKsm1yfATtOUvfZ
+         M8bEWNp5NcTP4S5I7xreICMs3aTRRRtYiCH6LRc61UzuOL3Y/iJU8hxv1Uxf/epXsNA9
+         5w6Il6sM2glxaLyl6LxqX9FNrwpgf6JBCR4nMSEq4iNJSiKKA3lEMFknGafDHegmo1uV
+         uIsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/0QaE6E8CXzLAPNfsNVNICr8uQjOJBz75blux9yeZRY=;
-        b=uoNm1umtbcLQ4EXP91QqmVuWda4TSYyuo4jrIwjIN0L2pE8I8VqShsT6s1C106M19/
-         bKduJoCinQh3SADSFZRUmPtQNbb3/UeVbUdkyQMqriBUF3Ftvh62WX5zYL84XI+9YvsW
-         ogz+ZwzI8fyCMgNRBz3XpAE3E2xlP1AdT9m0i9c2R2a9o+kSYExdda1s9HaxfVz0nhuc
-         qCYf4EglUQG//r+8j3Yba78x9oZrsNF7aJINLUL2NBVfCUawn96slthy4quVN5ZqZhul
-         +mant38PmXRFjw2Kig8POOUQNfvcpW0V5fqKo5OJBfByKIEp5tlz12r2gw72zf3GNsES
-         Lqcw==
-X-Gm-Message-State: AOAM533cYThngN9WelUz4bGDJJKwSd9uMzVW0KpKthKzvb5UoIbn/L9+
-        K6e3inh1Iu0vAT3vwED7k2GyygrdEo0VFH1yT2g=
-X-Google-Smtp-Source: ABdhPJw/9tCiF8Lg8K1frvEARIekU3Ycw+ZcCSwFx5Jcd6FFxgQUP1wz5lTVdVNaeVg63WLJLPKx9iXKjUcpc1CCYqs=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr51792321pll.18.1594226734775;
- Wed, 08 Jul 2020 09:45:34 -0700 (PDT)
+        bh=qZmo9U5aXUZDGkqB26q7sUeeEzOZwLyZGd7ARaA8d54=;
+        b=QAUJAuAx63ooi57/VzAUagDtR+2lBgABNOMi/MGf95nSjZmkfiKX9K00sV+E1ekcdK
+         bOZi4hwvcwWXPlLcfuyVtw0rASzsMtZ1a9U+16DrO29h/N3jOlgkf205weEhVU5Gw5dv
+         vhG0QQvJeBlpSuFupyav37nuSmtQRDCI/WR+8Kt2cCLwnXMioUi6Vs23s6ia5XNVNKFN
+         EMhBwtEvuwZDPgyXcyOU22fOuyNPgkfC08VlJW6aHU4aWdNIZfjGm7ggt9rjNi+FSETr
+         hp3ynbyQcUA0JwR3yhP+uwD1AXT8rk6TGSfr0GoaqBe/tbDY2IwN1ZPk7+f+KRvqFei7
+         Pq0A==
+X-Gm-Message-State: AOAM533A1DwhqxT2CW2qlfl8T3SkyF3jnTHUo6AaN+llzMSeeNfLhsbJ
+        2TPKKwOwFLTVq85fZKrUo+UKw94ou61awSO8K/g=
+X-Google-Smtp-Source: ABdhPJxkeMfA/rVy+3SHKGbcPciz/z+GsVPQFvXGJB1w64YRbQ8QzM8XeW6dvu8cJmDU6/eE92nBVFE+t2LzbkOKaXU=
+X-Received: by 2002:aca:4fd3:: with SMTP id d202mr8216944oib.142.1594227395102;
+ Wed, 08 Jul 2020 09:56:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200708155834.19762-1-digetx@gmail.com> <20200708155834.19762-3-digetx@gmail.com>
-In-Reply-To: <20200708155834.19762-3-digetx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 8 Jul 2020 19:45:18 +0300
-Message-ID: <CAHp75VeKKDevnYgu-te9DzND5nm1EfZQFCjEsGhaDg3yJn9-Kw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: max77620: Replace 8 with MAX77620_GPIO_NR
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594138692-16816-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWQHnGJCu6zYQwG16xqQmAaQdBTfyw6T1q2OHF3uR-JQQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWQHnGJCu6zYQwG16xqQmAaQdBTfyw6T1q2OHF3uR-JQQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 8 Jul 2020 17:56:08 +0100
+Message-ID: <CA+V-a8u266t41-SzURjEvsLLgA1j2YCg9egoszZ9XQcqhJuU3A@mail.gmail.com>
+Subject: Re: [PATCH 12/14] clk: renesas: cpg-mssr: Add r8a774e1 support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-tegra@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -65,48 +71,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 8, 2020 at 6:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> The MAX77620_GPIO_NR enum value represents the total number of GPIOs,
-> let's use it instead of a raw value in order to improve the code's
-> readability a tad.
+Hi Geert,
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Wed, Jul 8, 2020 at 12:29 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> >
+> > Add support for the RZ/G2H (R8A774E1) SoC to the Renesas Clock
+> > Pulse Generator / Module Standby and Software Reset driver.
+> >
+> > Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in clk-renesas-for-v5.9.
+>
+> > --- /dev/null
+> > +++ b/drivers/clk/renesas/r8a774e1-cpg-mssr.c
+>
+> > +static const unsigned int r8a774e1_crit_mod_clks[] __initconst = {
+>
+> As per commit f23f1101ad0ef1ac ("clk: renesas: rcar-gen3: Mark RWDT
+> clocks as critical"), I'll add a line
+>
+>     MOD_CLK_ID(402),        /* RWDT */
+>
+> while applying.
+>
+Thank you for taking care of it.
 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/gpio/gpio-max77620.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+Cheers,
+--Prabhakar Lad
+
+> > +       MOD_CLK_ID(408),        /* INTC-AP (GIC) */
+> > +};
 >
-> diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-> index 970ad6397a56..08bd5b141437 100644
-> --- a/drivers/gpio/gpio-max77620.c
-> +++ b/drivers/gpio/gpio-max77620.c
-> @@ -19,8 +19,8 @@ struct max77620_gpio {
->         struct regmap           *rmap;
->         struct device           *dev;
->         struct mutex            buslock; /* irq_bus_lock */
-> -       unsigned int            irq_type[8];
-> -       bool                    irq_enabled[8];
-> +       unsigned int            irq_type[MAX77620_GPIO_NR];
-> +       bool                    irq_enabled[MAX77620_GPIO_NR];
->  };
+> Gr{oetje,eeting}s,
 >
->  static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
-> @@ -38,7 +38,7 @@ static irqreturn_t max77620_gpio_irqhandler(int irq, void *data)
+>                         Geert
 >
->         pending = value;
->
-> -       for_each_set_bit(offset, &pending, 8) {
-> +       for_each_set_bit(offset, &pending, MAX77620_GPIO_NR) {
->                 unsigned int virq;
->
->                 virq = irq_find_mapping(gpio->gpio_chip.irq.domain, offset);
 > --
-> 2.26.0
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 >
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
