@@ -2,63 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AD8F21809E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:17:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB4D2180A6
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:18:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgGHHQy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 03:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        id S1730177AbgGHHSA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 03:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbgGHHQy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:16:54 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7333C061755
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 00:16:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id 9so52884886ljv.5
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 00:16:53 -0700 (PDT)
+        with ESMTP id S1729825AbgGHHSA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:18:00 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F60C08C5DC
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 00:17:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id 9so52887784ljv.5
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 00:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QkfJYzPGnOMpKG+ZFcmubOHnwB8gAssiAAxbH64D1Os=;
-        b=v23iSweXgVsXKUdOxxg/lno3rnKJT5so4Q1FckB4o54uePZGBH6Bv5dwLjdKxdoHyF
-         Ire9DkQ0wSOBZ/6+Jg0AAYC8wtkDKf9/siUYTIZlgUbzqixFTP6895Ra1GAk6YCFuohl
-         x+y6i/RbUv3YdzwivmLgScI07z0O8dweZdrBp3weUksD0J3EzNTxc7Hz0lXYE8K+TP3X
-         w6vLfF4fvpDjs4j7dxgXrgeMh5hlwNXsGxQgWwtEM83O7OTsu5RiGQhltl1N1vEznQW0
-         lGAHJO34oeAR5ItX7GtTa8pCAwAUodck/cFiyzl8m1xuauaxTJ+jdoQUA5tXtLqxzwjR
-         Za/w==
+        bh=cAFIrZ8F/mBJqkJAYIueoajWvUWkQCtRnV1fgyx+lWQ=;
+        b=aq4/cPjLKxizsfEDEFrsZ9DGzsV8/Xzod02YigHVJC6RddJnaepE6YlWiJY9FFJpoC
+         54aDpJB5eued3sHz2mnYw22r4dsoPVbdRXnUuhdPiqFAYguZh3C6B2Ideqix5JIthSS0
+         PlpC1PCg6Wpltv0HD/zgILAzRytUTjKO/gr+Kyic5mSyz0EIpvQAd+p/xK5CE3bMh26O
+         b7cdMK77tPPi9Imv+wDRBZTIALJUzVSkNKQSx+9QaJASHLFc8IW3LVLarMFs3dUJWc68
+         dwtTUUpKJcA2BwQ1sgaZDbmvzkG6jQkIv0iMDa7BmKGEBohIAFop4idQonc4huMd/wzd
+         /PNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QkfJYzPGnOMpKG+ZFcmubOHnwB8gAssiAAxbH64D1Os=;
-        b=M7+5bruVJuRjypYoiXHAeOH9xHHah2rrQlpJ+0q86p0LKMcFcniXrXiBSu4jZJW/BP
-         GFTxR/DP9MtJhY7Qd+wTtcFR7bMx31lI6zqBq73JlzGyD8IDl2CVJnG/FLMlsUT8CKZm
-         5KAUU8c4UXf4JX+n0JipY2cDE/b9WXCcJIu4zD+dtFjFVYz2DFG3QXXKSxfkILEPQym9
-         gKohvkVbQZF7d7If9Ruq0LTUX57vHRj3c7vdXlUuAV4U5t+aX9lLHFb5yZgmsuOAY5OV
-         we0NiA4JHi5tqPVniZfWh8VnpxTA5An1crdGWCwffsJzTgCR4JD1U1QifI53DtRjYnHz
-         VgqA==
-X-Gm-Message-State: AOAM530AhCz0a9H9Eo5xOWKeCsUC2fPjV2t/dP3SxqgtTcwmWphPnxK8
-        a5+ta/xjeq7a7uj82BDExVnAMWHL0HHrNSSfKh/k8Q==
-X-Google-Smtp-Source: ABdhPJz/BY0ubh5lFlvcwaCxE8m83cbsKbPYMczIH7G8X19q2JkKCkjg6IDxFGQ4sceQqyL82aY2xnRQoeGrU76PwIQ=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr26808667ljg.144.1594192612283;
- Wed, 08 Jul 2020 00:16:52 -0700 (PDT)
+        bh=cAFIrZ8F/mBJqkJAYIueoajWvUWkQCtRnV1fgyx+lWQ=;
+        b=MZ6CorEbx55SNb2mUF6QM3YB8QsJXGe4W2hitF9KmiaOIAYFfj37nA7H/IorQxzpvr
+         3mGV4LPJSrxHRh5DSkQ36aAOLo8tfQy4sXQ+4fzbkaZoMQjwJnIQjVO47L6Yje1eejII
+         q7dZZCmWW0ApZY4fd4vqrWUiWnnO6SiLgYuVTzWlcI8Def/AjSRGpRbTDM89g+N9ApYk
+         35RYD+vBCpRQjVRh9AwDn7zsWVQuafKTA3XHOB/Uui6fjq09cVlRhBGyiCEtn8YAnBNL
+         5XNnX5nuDUHlaBJ9ee+z2jzXOLuyB9N/Y39CHmqqdt7skJEWEC5K7tzl41uwUYYM3yAi
+         TycQ==
+X-Gm-Message-State: AOAM531ETaUJ/BJJxogdLLmcViRh6O08YBW4YulhUXyH1Y4ZsnwV00u7
+        rEDoHkiaosXKI6mKAjrFtKbVuTjdy54rmrlL/5sd5g==
+X-Google-Smtp-Source: ABdhPJylJBqgZ7fRWLwWIlGt4A5bo/2LK2Oljqk21UeArICbItF5N+VoFDh+vaO83CgV2n/EdrLLeJelnkHFnIetLCI=
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr18618352ljg.100.1594192678178;
+ Wed, 08 Jul 2020 00:17:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-5-lee.jones@linaro.org>
-In-Reply-To: <20200630133345.2232932-5-lee.jones@linaro.org>
+References: <20200630133345.2232932-1-lee.jones@linaro.org> <20200630133345.2232932-6-lee.jones@linaro.org>
+In-Reply-To: <20200630133345.2232932-6-lee.jones@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:16:41 +0200
-Message-ID: <CACRpkdbUpWSNur2thrZ4Cea-eNazMopcQRt5uc9cyKOuHX4dBQ@mail.gmail.com>
-Subject: Re: [PATCH 04/10] gpio: gpio-pmic-eic-sprd: Fix incorrectly named
- property 'map'
+Date:   Wed, 8 Jul 2020 09:17:47 +0200
+Message-ID: <CACRpkdaUQkS5vfkQ1GsssWY7gGgz8N1-Ng6_HugGWMxuQxSysg@mail.gmail.com>
+Subject: Re: [PATCH 05/10] gpio: gpio-sama5d2-piobu: Demote all kerneldoc
+ headers to basic comment blocks
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Andrei Stefanescu <andrei.stefanescu@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
@@ -67,17 +66,13 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Jun 30, 2020 at 3:33 PM Lee Jones <lee.jones@linaro.org> wrote:
 
-> A good attempt has been made to properly document 'struct
-> sprd_pmic_eic', but 'map' has been incorrectly described as
-> 'regmap' since the driver's inception in 2018.
+> No attempt has been made to provide proper descriptions for each of
+> the function arguments throughout the file.  Simply demote all
+> kerneldoc headers to basic function headers.
+(...)
 >
-> Fixes the following W=1 kernel build warning:
->
->  drivers/gpio/gpio-pmic-eic-sprd.c:65: warning: Function parameter or member 'map' not described in 'sprd_pmic_eic'
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Cc: Andrei Stefanescu <andrei.stefanescu@microchip.com>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
 Patch applied!
