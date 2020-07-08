@@ -2,94 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CEB92184C9
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 12:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A6C92184D8
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 12:22:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgGHKSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 06:18:09 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:46653 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGHKSH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 06:18:07 -0400
-Received: by mail-oo1-f67.google.com with SMTP id s190so5185012ooa.13;
-        Wed, 08 Jul 2020 03:18:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DW+k++6QmShOYTPp1GCiBSfmYcnWVZRPXo5Q7LF3tA0=;
-        b=jzEDVVqf+vpnTzAO8O7YEur1YefzHERctZFB8JV202/ZNQN21GincXfj+74EJH/UJx
-         IikpsTgOreG0FP8qWm/Rr2vls5g+xya3IHCtdzkyKJTXPV/O+0YdEZcAqUNW7flgjpzE
-         DKmJzJuFX2830mZStMkXyo9vcVXCuUZmMRhCQnBy40mKQ4lzIpdBnV4tBO3M/yYpVqGO
-         Qlj3vMYCngCg3rPh3uuRc4joR/KtsjPn0sWcs8potwHSiDYsVtTI5xJsvW2iX/+p36fc
-         pQt1f0C56AWlC+T+XE55FkTAKAT1+qNqGpCRHGZ+DG6CsFRNZ9+MMvxFHfjzwIHKdP7z
-         pRpQ==
-X-Gm-Message-State: AOAM530vR0kxczD2utPrjGcCQIGOVMOckWyF3vk17hOQLA6RNzOnG5nd
-        yUfENjuhT6duuE3QMAsL0+6hbigUaiTMUGVb2I7cF/vQSxo=
-X-Google-Smtp-Source: ABdhPJx+L6lRbWyeMJB6JvYEpS+n2WhASo6vd9a544uDAG1Ay2/5APPOJa/auzmeTbGCqjBXDSgeavriOmv1d4Ly1Ic=
-X-Received: by 2002:a4a:5209:: with SMTP id d9mr33382180oob.40.1594203486265;
- Wed, 08 Jul 2020 03:18:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594138692-16816-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594138692-16816-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594138692-16816-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 8 Jul 2020 12:17:55 +0200
-Message-ID: <CAMuHMdWPLi4OVyfSgcc50BZHsTuWQ=dbKyJsEfzN5bEeDe9tAQ@mail.gmail.com>
-Subject: Re: [PATCH 11/14] clk: renesas: Add r8a774e1 CPG Core Clock Definitions
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        id S1728176AbgGHKWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 06:22:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgGHKWw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 8 Jul 2020 06:22:52 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02ABA206F6;
+        Wed,  8 Jul 2020 10:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594203771;
+        bh=wqmaKC3soWVBrlD0Udy60m7oemLeH3Uc93lnAOZzD64=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aYUJimONTlH3wLq1pKSc1jyXGvkW2lRwGivQTRbMogNQuQnSdwDRn+kL2E4zSJ1lr
+         dt+DglW619hP+mHz7wZvNNOFaZS4z1CNFMdod/h3vMwzXOeBIuQdGyn5r1VucItt9+
+         93Kk/xam0fZbQoT25njkkG2V8PcvfpNiw3dhKgow=
+Date:   Wed, 8 Jul 2020 11:22:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v5 01/13] regmap-irq: use fwnode instead of device node
+ in add_irq_chip()
+Message-ID: <20200708102246.GC4655@sirena.org.uk>
+References: <20200706175353.16404-1-michael@walle.cc>
+ <20200706175353.16404-2-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
+Content-Disposition: inline
+In-Reply-To: <20200706175353.16404-2-michael@walle.cc>
+X-Cookie: Oh Dad!  We're ALL Devo!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 6:18 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> Add all RZ/G2H Clock Pulse Generator Core Clock Outputs, as listed in
-> Table 11.2 ("List of Clocks [RZ/G2H]") of the RZ/G2H Hardware User's
-> Manual.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in clk-renesas for v5.9, in a branch shared by driver
-and DT (renesas-r8a774e1-dt-binding-defs).
+--iFRdW5/EC4oqxDHL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/r8a774e1-cpg-mssr.h
+On Mon, Jul 06, 2020 at 07:53:41PM +0200, Michael Walle wrote:
+> Convert the argument to the newer fwnode_handle instead a device tree
+> node. Fortunately, there are no users for now. So this is an easy
+> change.
 
-> +#define R8A774E1_CLK_CANFD             46
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-I guess it's fine we keep CANFD last, for consistency with other RZ/G2
-SoCs (CANFD was not present in early revisions of the Hardware User's
-Manual).
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-Gr{oetje,eeting}s,
+are available in the Git repository at:
 
-                        Geert
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-np-fwnode
 
+for you to fetch changes up to 5cc2013bfeee756a1ee6da9bfbe42e52b4695035:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  regmap-irq: use fwnode instead of device node in add_irq_chip() (2020-07-08 11:15:12 +0100)
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+----------------------------------------------------------------
+regmap: Change node pointer to fwnode in new IRQ API
+
+----------------------------------------------------------------
+Michael Walle (1):
+      regmap-irq: use fwnode instead of device node in add_irq_chip()
+
+ drivers/base/regmap/regmap-irq.c | 53 ++++++++++++++++++++++------------------
+ include/linux/regmap.h           | 21 +++++++++-------
+ 2 files changed, 41 insertions(+), 33 deletions(-)
+
+--iFRdW5/EC4oqxDHL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8FnnUACgkQJNaLcl1U
+h9B0awf+K6uyKfcY+Cw0Q9cXWpxT1fJLMyrXuyyDLg9o9Qo5YPVU8XkiwRGhJJto
+Asdm6vmCDIr0StMW2SEZxg4vVW6Xxw2UKMU2+ZBJxsGZEgpLxec+7NdiXOtqUQsL
+JmKcTbR+nObPx+w74a1G7QHftWWVDX4peRYST0rLvo8tzaS1NoACmku5AYVhc9Z6
+aUUQKrAghHkoinADk2p6YHBuo4C5EZg/qmB/iN2t5g3aNF9YhdDXNB4ZeE+UwQG+
+F+RC9shXxL6/pSqCpua22fNq6tEHEpaWnGwnsxX3eaJ00iDuD0KAHAmtNuo6X75M
+41RS28TqmDnMbDlLrCvgPxlHJ8Lpjw==
+=nOcx
+-----END PGP SIGNATURE-----
+
+--iFRdW5/EC4oqxDHL--
