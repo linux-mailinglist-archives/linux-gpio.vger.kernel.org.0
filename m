@@ -2,98 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F180D21815C
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D40821818A
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 09:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgGHHkC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 03:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42706 "EHLO
+        id S1726352AbgGHHpZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 03:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgGHHj6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:39:58 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF15C08E85B
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 00:39:57 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id b25so49398913ljp.6
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 00:39:57 -0700 (PDT)
+        with ESMTP id S1726222AbgGHHpY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 03:45:24 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61ABCC08E763
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Jul 2020 00:45:24 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id o2so1883745wmh.2
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 00:45:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+HxgH6sad3gU6leW7SDh/gf8Hzfs0/fhZcOEjnvGhWs=;
-        b=kf6x43aymox0RXHGLm8aA9SdFQARFjcUUTid1nkeg9ibekZJqFjhwH23OVWjfAOjVS
-         PIyKh85DWMiQQ7vV4MPU9N/PHWMBXsW8ALCT0jUDOBYiRrEm93dNmyBY2QKLC8e59uXU
-         rF/LbFEzhwf7Hh9D0M9LGkfmU1uXbWrbwnSzZ8YxxZR5BL7KxyZLYny+CUf+LF90Q6OB
-         gITnA0TUKecjikeYVz6qOheu9mHlpVGZsqJgXhFyS2gl3mAaueYbWpptMe/oEQAYYllA
-         zsUp2xKjkGd9Lw4e7zUScEK+4AP896Zl4fGx27sAKWpJkoT11s4X/JaSJFPzE8k8XuwU
-         CRkQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dvqxIY5/h+Hi08QqzkQR4GxWo2uSuz4DSd8Ijo5xAAw=;
+        b=sM01lxxYQ4EfApgBtPAY1tlREhF6Q5nbZBYrqNsF5UEIT5lxaBcV65i8uLFHPMXHw2
+         qBBbTvwQm/uLh+pR1RyhDDIbT9acEqGVIPgjWmTHAHYY27RNK0klDk5+1hd49k60iwoo
+         OQTKcgBMQMTYP6o/jNt5edF10/yPCEb83Wc+S0178PPiSq5CQCuRHwxt63Da4T4v0vZ0
+         OiIqGvRWkt8S1hXD/Lm3uOj+7rNdaiQereDtYK+NxGCm2H8CRtd8tDETWtu76IR67xUq
+         X3FanwL88C0lIQOC9u2uU4XvpNtT0H2S23GeuQe+VQVqFkv/IqYFLsGmuGcBI8/GxgUY
+         UhFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+HxgH6sad3gU6leW7SDh/gf8Hzfs0/fhZcOEjnvGhWs=;
-        b=Lt9zWVZXNE9c1+fWRqj2mqWg6BQo+EtsRUcuFpDM6sFZV2B+irtoGPRrX7f7mWOEJA
-         JCMktPeTErsICCq5UV/oO645/NzE4akkzMmkIOlvawpqGhlZBWtEfZRw4pA48BJv1ff1
-         lmukFo3Rc1REPMn/dQFLQma98/SdJuoOZfgPydUBcD5JDaM2jvRRtdvqRPkM40cOBeyv
-         ZJWKNMQU+6SYsmpmBjpJj0e45stIq+Pf/HUepg4gIwj7pDphDJCCdLU0+AIs3FdUkc//
-         1SdsLTv2VDr4NXTzVrhyJsjLSmzdi4RQzvitRJbf6pAVPzxsJZ3hm8XSdLHXodmpuI2O
-         PBkg==
-X-Gm-Message-State: AOAM530If7rAcMHtfEB+yDVge52OJN6jkNy+gn1lXoM97H2LS6pmVych
-        rKL9/GHGejCbyah1e7Qq6H36gx/yzrfCtFhoSRoAiQ==
-X-Google-Smtp-Source: ABdhPJxTYp6lBnboAKIMoKnmPkXV27lA7iN1d1K5nRqP4hkVKmZacGWC0DDRGgpoKAE/wWfaRt/VjtFi95icB142swA=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr33775780ljj.293.1594193995825;
- Wed, 08 Jul 2020 00:39:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dvqxIY5/h+Hi08QqzkQR4GxWo2uSuz4DSd8Ijo5xAAw=;
+        b=BW/rhqBgkyJM+Lj3db0fml98+9OuSuR4zTobQK9WKVs8WhaSbGzGBapixqPpw24EQz
+         mhD+SEOb2BNua8J38VzW8YSBNZy08RY5u9xxBJEUgc818xgsKi07QdM75ZZhuIAy2R4I
+         NzIRWryM2Ed10wK7g2XK+VUWvAjwHZWgCfGkJXU1KypD8rim4ELspyBemAt7wu0J83Tp
+         6xcti+q+ilKMmlOcTfGbvlJXCAax4MbASz+nyq2eWepFhrtUxlXP5qwfhIKcGMTZC71Z
+         so+3NSCYuHhFhMwnLsMhl2oVBXLgMgwZinUd4ywTfUWZSSPQgcOXuNk9CxRs1wudRnIp
+         gPMQ==
+X-Gm-Message-State: AOAM531eQxOEV55mo+IfIzPHpxR9kwQxtCxP8tVFtEE5V1NiHT5Mn0a9
+        1CtMMeRPxhvAcx6MIj83jXPWuw==
+X-Google-Smtp-Source: ABdhPJyrs9JjcAa1EVpT3YYg0xeBhj7Vs2aNSuxcfo+IdXW371pwsk+hDd+L5UUI6ck9FLQzlHDvzA==
+X-Received: by 2002:a1c:e18a:: with SMTP id y132mr7831817wmg.27.1594194323097;
+        Wed, 08 Jul 2020 00:45:23 -0700 (PDT)
+Received: from dell ([2.27.35.206])
+        by smtp.gmail.com with ESMTPSA id k18sm4434969wrx.34.2020.07.08.00.45.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2020 00:45:22 -0700 (PDT)
+Date:   Wed, 8 Jul 2020 08:45:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v3 12/16] dt-bindings: irq: sun7i-nmi: Add binding for
+ A100's NMI controller
+Message-ID: <20200708074520.GQ3500@dell>
+References: <20200708072331.19700-1-frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <20200706175353.16404-1-michael@walle.cc> <20200706175353.16404-14-michael@walle.cc>
-In-Reply-To: <20200706175353.16404-14-michael@walle.cc>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 8 Jul 2020 09:39:45 +0200
-Message-ID: <CACRpkdaPO7CGNrxmjL5QH1cxP5wqku1oMtQaQgJfeKiKqiGAOg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/13] arm64: dts: freescale: sl28: enable fan support
-To:     Michael Walle <michael@walle.cc>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708072331.19700-1-frank@allwinnertech.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Michael,
+On Wed, 08 Jul 2020, Frank Lee wrote:
 
-just a drive-by-comment:
+> Add a binding for A100's nmi controller.
+> 
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  .../bindings/interrupt-controller/allwinner,sun7i-a20-sc-nmi.yaml      | 3 +++
+>  1 file changed, 3 insertions(+)
 
-On Mon, Jul 6, 2020 at 7:57 PM Michael Walle <michael@walle.cc> wrote:
+I'm sure 3/4 of the people in your recipients list have little
+interest in this change.  May of us already have overflowing inboxes.
 
-> Add a pwm-fan mapped to the PWM channel 0 which is connected to the
-> fan connector of the carrier.
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
+Please be more restrictive/considerate when posting patches in the
+future.
 
-If you have a cooling device like this, do you also have a temperature
-sensor? In that case it makes sense to add a thermal zone and a
-policy, such as I did for a device in
-6e97f0aaca4ca778905dd1dc667cbf379f4cae15
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
