@@ -2,159 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF5AC2182DE
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 10:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3666A2182E0
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Jul 2020 10:53:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgGHIw5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Jul 2020 04:52:57 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:42107 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgGHIw4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 04:52:56 -0400
-Received: by mail-ej1-f67.google.com with SMTP id f12so23294757eja.9
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Jul 2020 01:52:55 -0700 (PDT)
+        id S1728250AbgGHIxk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Jul 2020 04:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgGHIxj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Jul 2020 04:53:39 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ECEAC08C5DC;
+        Wed,  8 Jul 2020 01:53:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o1so11333311plk.1;
+        Wed, 08 Jul 2020 01:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VOj8KMo33FR22/jWCVdCcCGb06O1I/LxQuTqwI48/VM=;
+        b=XVaw/fGyrcXlucPs4sMyJWqR/2tGNDhmci6LOfI7G2KzbfyBiuLIKeM3gt/i/FHfTl
+         UcGL2VCudJBfvOAz0gWIcSHSf8k4L/na8w87HHwtvzKtaiul8V0eRHIFkzQTmRwQXJ1t
+         qagZ8IY5GU2EmHW3bCPmMlKSzPzLtMMxWRdGVHsR8hhYAlRuduo83IaB6cl1CRv3vrpV
+         WmzaO1zzTkd26THfyWZygotRdemT0E1Xk0Kpv4kpvIGCrUoiyVv8ap132a5iT/e7XPQI
+         PoN0RSoRRLf4uboTyl4zzhAX3Gi9sNsGm7NlcJjlMbzOSKgP7xdR7pnfuDvcI2xQvu3T
+         fGkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KhNsqKOaKY4/9qXZOdlDFAmC8N1o8ni4gxG96lzYjd8=;
-        b=EpemMS9CFHA6Ibrxq++JQwQvZ8FjsGtrkTgkpUrIhHA1qObVOXrABESFuMRc80wrBY
-         MmpR3qYxpZUUcsbTqFtc3g89DuyHRkAzZTNZ+ChVVpCvlffX/S3oOZNLwzUPMarwDgK3
-         +7fg/O5Nfu1Uha82KN7fJwVz+YdYwYkd/IgeCUOZgjgDBDSMZO6ncZo2RyLrKCzArUDW
-         BGoRPVT/WBY7xDAj7yLZauuunV0Iw+7akCc3yXajVWdWWU9+H231raXy8V8tMcRRn4zB
-         XJpNDLhgZoHQ9joicJz5EK2mByhjta2C0Afhc4vN5aA5cQv7mxCE9EkYElcmypPxvX7h
-         /qaQ==
-X-Gm-Message-State: AOAM532/YrbGLAZDTQ4UNd5yYjlBWk1bT2ALrxDWY7Xn+rDpZqAi2m2v
-        rDqi6qgHqvW/eUSzdzHgfVQ=
-X-Google-Smtp-Source: ABdhPJx2vOCnf1KkpQ8PpeVQ1pptWJXP1FQwtaGt2ThXnFeWJepTGzQnoZgLV7EtimRpYHvWUhGxRA==
-X-Received: by 2002:a17:906:3b83:: with SMTP id u3mr49720833ejf.207.1594198374510;
-        Wed, 08 Jul 2020 01:52:54 -0700 (PDT)
-Received: from [192.168.1.49] (185-219-167-24-static.vivo.cz. [185.219.167.24])
-        by smtp.gmail.com with ESMTPSA id se16sm1634130ejb.93.2020.07.08.01.52.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jul 2020 01:52:53 -0700 (PDT)
-Subject: Re: chv-gpio interrupt storm on UMAX VisionBook 10Wi Pro
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-References: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
- <CACRpkdbWYhbtR+Tv5fFdxuyPAXU68uAswFYNZQfNFaR_89k=nw@mail.gmail.com>
- <9781e07e-a609-a2e1-112f-e5ebc78bfc23@redhat.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Message-ID: <77bc7754-9a51-ed8f-5f88-3ed9f8ecca81@kernel.org>
-Date:   Wed, 8 Jul 2020 10:52:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VOj8KMo33FR22/jWCVdCcCGb06O1I/LxQuTqwI48/VM=;
+        b=k3erQ4J8Hb9fMnC4DAui8e8VoTJUsR7oFJ1zJ691MDxE5mx5w0HF5MFtlRnEDmyFhu
+         gIfNuWZA2QsC8hHmiKMmBHH3zRz1S5T0kMbWuzBox5uyFI/OVInsYmJxqpqBTOH4tQDJ
+         U0iUEM/h0GGDOUwn2v/nwz790gwCjlIch0MXMEou1F+920fmHiL5lNj/DHDdYrzsRk9e
+         uqeluPyrBvrIKn90PgHaExXZ1o0f8eDAQbivSB9SWXm5PH2PmkHBqZLq/Us7pQtMZF90
+         KfzUQGQjqcoe7KsS9OAsFCdvSYh37Iq1/cy8s4WQghKQs/pIyFZLIdl9tjoR6aS0vfmX
+         Gkog==
+X-Gm-Message-State: AOAM532KJkndkBn6LUFIC2gFMDcYhDMT/SL27r+vDRfH6flvBD0+EUJk
+        TYj9h2a7zQ+ClO7d6Lq5rpHGqI7x9UM2iOvfiAE=
+X-Google-Smtp-Source: ABdhPJzAFjNmz79HHfOIHYsJ4VMDby2KumuiiAmBdz+zEaO/KA1y9Ri6f8yoIalH6rKTEGj14uU3CTNqOQmxPn7hMiw=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr8741109pjp.228.1594198419141;
+ Wed, 08 Jul 2020 01:53:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9781e07e-a609-a2e1-112f-e5ebc78bfc23@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200708082634.30191-1-digetx@gmail.com> <20200708082634.30191-2-digetx@gmail.com>
+ <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
+In-Reply-To: <CAHp75VdFVGgKxR+n5TUMuFnWDy_uEmEeG=TvR9s7Xbe=jOdObg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Jul 2020 11:53:22 +0300
+Message-ID: <CAHp75VdTw87aOGqnjS-jukiHcMACG7-gDDhDWP6hikSLWpDebQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] gpio: max77620: Initialize interrupts state
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-tegra@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08. 07. 20, 10:23, Hans de Goede wrote:
-> Hi all,
-> 
-> On 7/8/20 9:47 AM, Linus Walleij wrote:
->> On Wed, Jul 8, 2020 at 9:18 AM Jiri Slaby <jirislaby@kernel.org> wrote:
->>
->>> I installed Linux on UMAX VisionBook 10Wi Pro. It sometimes boots, but
->>> even then it encounters lags, soft lockups:
->>>> watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
->>>> watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [kworker/0:0H:6]
->>>> watchdog: BUG: soft lockup - CPU#0 stuck for 21s! [kworker/0:2:133]
->>>> watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:0]
->>
->> Adding Hans de Goede to Cc, he often deals with this kind of weirdness
->> so he might have some ideas here.
-> 
-> Thank you for looping me in Linus. I've read up on the rest of the
-> thread in the archives.
-> 
-> So looking at this:
-> https://www.umax.cz/umax-visionbook-10wi/
-> 
-> This device appears to be a pretty standard Cherry Trail based 2-in-1
-> with detachable keyboard. Which usually means (with all the hw-enablement
-> I've been doing the last 2 years for these) that it will just work.
-> But no such luck this time it seems.
+On Wed, Jul 8, 2020 at 11:51 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Jul 8, 2020 at 11:29 AM Dmitry Osipenko <digetx@gmail.com> wrote:
 
-Hi,
+...
 
-It seems to be Baytrail.
+> > +       max77620_gpio_initialize(mgpio);
+>
+> I guess we have special callback for that, i.e.
+> https://elixir.bootlin.com/linux/v5.8-rc3/C/ident/init_hw.
 
-> What I find interesting / weird is that you (Jiri) get an active
-> (/sys/bus/acpi/devices/INT3496\:00/status != 0) INT3496 device at
-> all. That typically only happens when the BIOS thinks you are booting
-> Android.
+Sorry, here is correct link
 
-15 that is.
+https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L212
 
-> Now you may think that Android == Linux so that should be good,
-> but Intel did a real frankenstein solution for Android X86, see:
-> https://github.com/intel/ProductionKernelQuilts
-> for all the 5000 downstream patches in al their glory (hint your
-> life will be better if you don't take a look).
-> 
-> The much saner support for these devices which eventually got added
-> to the mainline kernel actually works much better with the "Windows"
-> profile of the BIOS, since the mainline code expects sane ACPI tables
-> and the Android targetting ACPI tables are a bit of a mess.
-> 
-> So the first thing to do is to go into the BIOS setup and see if
-> there is a setting for this (this depends on if the BIOS is
-> unlocked and has like a gazillion settings, or if it is locked
-> to only show a few settings).
-> 
-> I just checked on one of own CHT devices and there the option is
-> under Advanced -> System Component -> OS IMAGE ID
-
-I had/have:
-Advanced
-  -> Droid boot = disabled
-  -> Android boot = disabled
-  -> OS selection = Windows 8.x (there is also GMIN and Android to select)
-
-So there seems nothing I should change?
-
-> I would expect the INT3496 device to disappear when you do
-> this (it will be replaced by an ACPI event handler for the
-> USB id pin GPIO, so I guess we might change one interrupt
-> storm for the other).
-> 
-> Also can you put an acpidump of this device up somewhere,
-> or send me a private email with it ?
-
-Sure:
-https://paste.opensuse.org/view/raw/79423338
-
-> Regards,
-> 
-> Hans
-> 
-> 
-> p.s.
-> 
-> As for adding your device's DMI id to the chv_no_valid_mask
-> dmi table not helping. That is somewhat expected, that table
-> activates a bug to work around an *IRQ* numbering problem
-> for some older Chromebooks which use direct IRQ resources
-> in combination with broken IRQ numbering. The chromebooks
-> adjusted the ACPI tables to deal with a bug in the Linux kernel,
-> then when we fixed the bug so that things would work with
-> the gazillion Windows devices out there, we had to add the
-> quirk to restore the buggy behavior for the chromebooks.
-
-The bugs also suggest that this avoids storms thanks to different
-handling in chv_gpio_irq_init_hw (if (!pctrl->chip.irq.init_valid_mask)
-there).
-
-thanks,
 -- 
-js
+With Best Regards,
+Andy Shevchenko
