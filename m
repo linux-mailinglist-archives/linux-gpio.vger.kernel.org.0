@@ -2,121 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 802F6219E0B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 12:38:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E2C7219EE1
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 13:10:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgGIKia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 06:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgGIKia (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 06:38:30 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB83C061A0B;
-        Thu,  9 Jul 2020 03:38:29 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y13so854228lfe.9;
-        Thu, 09 Jul 2020 03:38:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
-        b=AyxM2Hq4isSQgbRSa96E0ZX8J8YHfxYDufGkRFsRULapTaNBLKd7Y4LAd+Bp1rwap5
-         KAYWi72BHe47/GdliDuMBlZNXQu4cHrACIbjX1xBefZ4PQp52W5TR+m+yKbKXZ6XpFlc
-         PGO4yx7gkZITrIudBkMnTGalsgr34guYn2h/z8rMeUBbOFJHHj6y0YF9D7NLHyjhJeVO
-         t1a8cH09ectOXb9XMy24snbB98PRwqnOSCQMbqlVJY8/1R51ULQG/dL4Nub0Sh/Hbonm
-         noYG+JZvCVv5U7lHhd5H5KQGefXecrJX0YkGWWeHqloJK8LqFlEEA2wFO+tbpu9McP1h
-         +ekA==
+        id S1726446AbgGILKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 07:10:38 -0400
+Received: from mail-ej1-f42.google.com ([209.85.218.42]:37230 "EHLO
+        mail-ej1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgGILKi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 07:10:38 -0400
+Received: by mail-ej1-f42.google.com with SMTP id lx13so1845751ejb.4
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 04:10:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=b3nvtrFoAaXSkUPmIflmEsQDIojlyJCetyOU5B6Jdkg=;
-        b=EBiWuuDJ8GtZpk4BD0BYpXY9nCpwWNJtDClUhGvpQ/eRi+7GOVsQwRpQCEdCMwQtn0
-         Lu1a8e/dYd41/RcLx2AJm2fk8C91TDBUPwBnAR172ZlXXepeAm130Innwn6Ek58092AK
-         tsELTtwZpsKDNDOgmd8C1zmi7Vsw71zuB2dXGdezg/1IThk/nLvei2ubF7l63qnEOSWq
-         23TrjMxVs0asYUWMm9nTnrOD2+h+rozfK30R2N3ODv8f7qxb/rMGEpxowfOr+/zBvJfb
-         m7lZ8U4slhcIWOQi/pOgxcrJyrEztwko0keLiHct6MDoRNVLLGac5VmUDjJeRivdFeR+
-         ybOg==
-X-Gm-Message-State: AOAM5337o0iMf0AH7rmIBWf03OId+rJyP3EFRmiEuL8nKA4h13YFkE4z
-        9r2iVoc+8thuaarUQL2CseaZGYif
-X-Google-Smtp-Source: ABdhPJxST9mVM+8Ql63IDWlaUT39N2nUOtf0lOm6EvnbbfgEPInr6qwSWYX1MW0vNetzORgAXD0ycw==
-X-Received: by 2002:a05:6512:52a:: with SMTP id o10mr39253739lfc.137.1594291108065;
-        Thu, 09 Jul 2020 03:38:28 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
-        by smtp.googlemail.com with ESMTPSA id s12sm659627ljd.116.2020.07.09.03.38.27
+        bh=mcVXD+/awrEQMpSPgKyfuQLB09s2GbjJsLOsrpqUBAU=;
+        b=ijqpV8F6PKl6YDPLJCqeOMk3jnxtGR5dXqKvYr1xdwvdNmtLW5YVOSibSdubWjV8Mc
+         BGqgvX8RWFu1Yp3f8P8YZR5l9sMninvd4OP6Kqr2Rx2wiBHl6Gt6PPjV52hCoxG/LgC0
+         o9UBTWkIKXnnp8OKl9rALAMi9EbYDoMmumYqk7OizT4l9gXud1FBi2Prt+lMkHuTIX2h
+         512/RVqokEuFjX8sV44pcQKjjd7s9ojcofqXHDG0sr2D/Y8sdR7+Osohg36S4y9HNqpb
+         PebjSv5FtbdbIXy79bG0knNR/yVZXe4xyGarAj2fG22ji8LC1vEzao/cxzhQLqXpN4LV
+         WZIA==
+X-Gm-Message-State: AOAM531jij6PjrSRFFIlncUdEF2yZBup7s9bf47Btu5bkD2z4QixMOiu
+        OnUtqgXO9QNtjKvH8EB47tc=
+X-Google-Smtp-Source: ABdhPJy/okWDcG3hU/IWGWmAiTzZWtz8coCwzqoUH8Tuaq5uxdxfb1ZC7UAi9FT9E3Gp4836E5QVLg==
+X-Received: by 2002:a17:906:27c9:: with SMTP id k9mr54815495ejc.74.1594293036127;
+        Thu, 09 Jul 2020 04:10:36 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id ay27sm1768846edb.81.2020.07.09.04.10.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 03:38:27 -0700 (PDT)
-Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200708202355.28507-1-digetx@gmail.com>
- <20200708202355.28507-4-digetx@gmail.com>
- <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com>
- <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
- <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ff7985a4-58be-b466-62c2-abce9ae1c0f0@gmail.com>
-Date:   Thu, 9 Jul 2020 13:38:26 +0300
+        Thu, 09 Jul 2020 04:10:35 -0700 (PDT)
+Subject: Re: chv-gpio interrupt storm on UMAX VisionBook 10Wi Pro
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+References: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
+ <CACRpkdbWYhbtR+Tv5fFdxuyPAXU68uAswFYNZQfNFaR_89k=nw@mail.gmail.com>
+ <9781e07e-a609-a2e1-112f-e5ebc78bfc23@redhat.com>
+ <77bc7754-9a51-ed8f-5f88-3ed9f8ecca81@kernel.org>
+ <2d5c5968-ad66-cbbc-a754-8f6114ff0ded@redhat.com>
+ <ce01fc0d-e71a-26c9-1168-16926198fdef@kernel.org>
+ <09661b70-0a19-e70a-1985-4da6024ec291@redhat.com>
+ <29d9d787-bec2-7c41-30d4-d03c4cf75cdc@kernel.org>
+ <12101845-4a03-802b-fcab-7fc78fed0be5@redhat.com>
+ <071f2816-0cb6-b725-532b-08fc56c1ad1e@kernel.org>
+ <ca4dfb41-843c-d859-2128-c985aec97a99@redhat.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <032ecb14-e8be-19cd-9150-91c633f28a2c@kernel.org>
+Date:   Thu, 9 Jul 2020 13:10:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
+In-Reply-To: <ca4dfb41-843c-d859-2128-c985aec97a99@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-09.07.2020 12:07, Andy Shevchenko пишет:
-> On Thu, Jul 9, 2020 at 12:44 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 08.07.2020 23:57, Andy Shevchenko пишет:
->>> On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
->>> <mailto:digetx@gmail.com>> wrote:
-> 
-> ...
-> 
->>> I gave a second look and I think my suggestion is wrong. Here is an
->>> interesting propagation of the parent device node to its grand son,
->>> leaving son’s one untouched. Original code has intentions to do that way.
->>
->> The [1] says that gpio_chip.parent should point at the "device providing
->> the GPIOs".
-> 
-> Yes, physical device I believe.
-> 
->> That's the pdev->dev.parent in the case of this driver.
->> MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
->> controller, PINCTRL and RTC. The MFD is the parent device that provides
->> the GPIOs [2].
->>
->> [1]
->> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/driver.h#L276
->>
->> [2]
->> https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi#L48
->>
->> I think the old code was wrong and this patch is correct, please correct
->> me if I'm missing something.
-> 
-> Hmm... I have checked through GPIO drivers I have knowledge of / care
-> about and PMIC ones do like you suggested in this patch, the rest
-> (which are instantiated from MFD) take a virtual platform device.
-> 
-> Looking at DT excerpt I think you're rather right than wrong, so I
-> leave it to you and maintainers.
-> Thanks!
+Hi,
 
-Okay, waiting for the maintainers then :)
+On 09. 07. 20, 12:01, Hans de Goede wrote:
+>> Any other idea what file/volume I should create in EFI fs?
+> 
+> No I'm afraid not. The ACPI subsystem will execute the DSDT's
+> _INI method (line 21712 in the disassembled DSDT) pretty early on.
+> 
+> I think the best way to workaround this is to use a DSDT override
+> where you set OSID=1 in that _INI method.
 
-Thank you very much for the review!
+Yep, that indeed works.
+
+> This is far from ideal, but so are the other options. Unfortunately
+> this will not help any other users with the same device, but it at
+> least should get it working for you.
+
+If we only had sources of that BIOS (or at least binary)...
+
+Now, I need to find a way how to persuade dracut to automatically pick
+up the updated DSDT.
+
+thanks,
+-- 
+js
