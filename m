@@ -2,138 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC2D219F60
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 13:54:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B44DF21A0AC
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 15:20:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGILyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 07:54:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46643 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726433AbgGILyA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 07:54:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594295639;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B7jjQV/7atE0zNLCH6im6Xtx5fniwbdJG3WDIYIPd4g=;
-        b=WluetiD068osSjtIZ85h/4nfdoGyfXksqv8uwZw38WNPBbSk0hDInPRcTgVFBigjWzgKzn
-        D/AzaVk8DQY1yz3TDJ22o4tOYfFsdXxdLtse8B+kQpV1bgLKVS5qiOs44NKx74UHHbNU8j
-        Dk0n6/SFxVCyp1O7UG9BTkrUTSM3NL0=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-DnlyVMS9NnqJYAw_RpBvxQ-1; Thu, 09 Jul 2020 07:53:57 -0400
-X-MC-Unique: DnlyVMS9NnqJYAw_RpBvxQ-1
-Received: by mail-ed1-f71.google.com with SMTP id h5so2214489edl.7
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 04:53:57 -0700 (PDT)
+        id S1726941AbgGINTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 09:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35758 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726935AbgGINT3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 09:19:29 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC9EC08C5CE
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2020 06:19:29 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id di5so881458qvb.11
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 06:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
+        b=rCiEZYZ9CED5ElkKfWtMCX8ixiQqplvTeIu+Ibn+QBVy3wXBuDBikSfnSKeNCRj/VB
+         EqrVchTsBbGc2W4JWOIzzNVs1qy4idQxgXy97+072cnPMGKGFuMvjU3yMnu4EE5TT6mj
+         ooFWv3xAjwHTB7RfTTbBACSQ7WhJUIzjDqmPKM91EatqfR1ThIFZ0bhRDCUVl230P+P2
+         pW3pfIm3zvrjncMfAhRrznCBtGEMNIqV8f4UKRPrlh0GmAqAnTpZ3MidAZEOM8F0zIvp
+         rH2B5Xpi3y5E/XAeSdtuqt5ODAyaLxUXME5yc/FwYj2cReLsn6uLB+MOM284lCaJi6/8
+         BmXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B7jjQV/7atE0zNLCH6im6Xtx5fniwbdJG3WDIYIPd4g=;
-        b=PkRi2CYf0N3FetNYnxv/QXAPlfZG1lJOQr1Phm4CspK/RxQeAxG/BAQU4d+U9CBxtL
-         vGAkNt4PWesJ2co9vYYuVeN32HzKxFgntjs3M7o5MG2ncjwszKIon9Wu825Pm+luxf9S
-         nsK0J12kxDDWimzoywuFgKSTJ6fkEYECDCnFqijGW+6Lv3ghUS1AvttumnzjyCqkowbn
-         I44rwUZypyMw0CJES3mzxwsd0G4Ryc56ip8WMc1FpB7fUighelE6+/Lnf3asAco/LxLZ
-         4sr3LtHti8ByRIXNzxt2nxOuTqe+MmCyHi2vfHm+Ek7mBwAtCUdmeYg9eSsUUX8HKX9x
-         DVwA==
-X-Gm-Message-State: AOAM532kicP/l7VtK5+PTJpK+DQKSOuinH5zle3CziWeOzNqF+zZCBuv
-        Begiacv5/eb57QvuAC1mBj2S44izv4SZlCfLbERW4fZe5aF08TayRl6AZoV8H+7xutRxZPIqRRm
-        7Qv/73qlujz6NcjSvAIZ9qA==
-X-Received: by 2002:a50:ee84:: with SMTP id f4mr69653058edr.183.1594295636000;
-        Thu, 09 Jul 2020 04:53:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzO/M3DbjmMCm/A+FwHLd6P/wM4LiPb32tv/EiKbkGK4zzpzLZ2Sr+nS+uNxlHT+p0zIVM60w==
-X-Received: by 2002:a50:ee84:: with SMTP id f4mr69653043edr.183.1594295635781;
-        Thu, 09 Jul 2020 04:53:55 -0700 (PDT)
-Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
-        by smtp.gmail.com with ESMTPSA id t21sm1668106ejr.68.2020.07.09.04.53.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2020 04:53:55 -0700 (PDT)
-Subject: Re: chv-gpio interrupt storm on UMAX VisionBook 10Wi Pro
-To:     Jiri Slaby <jirislaby@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>
-References: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
- <CACRpkdbWYhbtR+Tv5fFdxuyPAXU68uAswFYNZQfNFaR_89k=nw@mail.gmail.com>
- <9781e07e-a609-a2e1-112f-e5ebc78bfc23@redhat.com>
- <77bc7754-9a51-ed8f-5f88-3ed9f8ecca81@kernel.org>
- <2d5c5968-ad66-cbbc-a754-8f6114ff0ded@redhat.com>
- <ce01fc0d-e71a-26c9-1168-16926198fdef@kernel.org>
- <09661b70-0a19-e70a-1985-4da6024ec291@redhat.com>
- <29d9d787-bec2-7c41-30d4-d03c4cf75cdc@kernel.org>
- <12101845-4a03-802b-fcab-7fc78fed0be5@redhat.com>
- <071f2816-0cb6-b725-532b-08fc56c1ad1e@kernel.org>
- <ca4dfb41-843c-d859-2128-c985aec97a99@redhat.com>
- <032ecb14-e8be-19cd-9150-91c633f28a2c@kernel.org>
- <bf44576d-8371-d30c-9704-ecebf913e7b5@kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <744b1c5c-e43a-db92-5fb9-bd25880c2101@redhat.com>
-Date:   Thu, 9 Jul 2020 13:53:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wDgz11ShYk/Rb+cjhB3hGNA4H8iFe+o/AJhL/6TvR/c=;
+        b=BzAnUDWqMIVufT4Z+50xcAjC2sHbFVisTeH0uBzPqKxE3omiZLhDYRUG7X0ZVbsPf9
+         ANSYDFjWgKAkeC5ClKNAEpvX5IKgGaaLY1HeGTCY/e9RLc8pOf7GsIrvbpe+/Anvit/v
+         Kr3ZPmCBN9G5DuHlT/j5CZCYQ3NORAfAJIWayITCsd9Za1xHyl/GgoED2v1vj4vDhzXZ
+         9L5N+9pQr2lfBRbJKy6WS1kyh3Ik84Mzuie3RsCv0+cA2aAngUMUD2wSWK9NTD15SitE
+         4IOc1HqyITy4IwbwRMt8iIXZe0NRBbhJb6zEDmZiSHFuhGwiDhLYgMw84Gk2il0Vbv8Y
+         jKtw==
+X-Gm-Message-State: AOAM531mU0AsMt3ZsXE4yhukP88A2xnjYl8nPlmhDh1/fmulf1R1Pg0u
+        6nuSuw7mC8NQfafjg43t9lcOZka++FSMhervwX79NA==
+X-Google-Smtp-Source: ABdhPJyBlDePeobZPrB/H+vNSKy8PsVTe99vnGiqo586PyF/ZAgTRfMF07tYml4pg+RfsX6MJuGd7z9oI42LX8hANPA=
+X-Received: by 2002:a05:6214:72c:: with SMTP id c12mr59335115qvz.76.1594300768959;
+ Thu, 09 Jul 2020 06:19:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <bf44576d-8371-d30c-9704-ecebf913e7b5@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200708041600.768775-1-warthog618@gmail.com>
+In-Reply-To: <20200708041600.768775-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jul 2020 15:19:18 +0200
+Message-ID: <CAMpxmJUtD_GrQObd=1-6pVv4xDb4GO52J6sDyvVvtxzySjBzJw@mail.gmail.com>
+Subject: Re: [PATCH 00/17] gpiolib: cdev: pre-uAPI v2 cleanups
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Wed, Jul 8, 2020 at 6:18 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> This collection of patches provides improvements to or
+> address minor problems in gpiolib-cdev.
+>
+> The majority of the patches (1-7, 9-11) have been pulled directly from
+> my "gpio: cdev: add uAPI V2" patch set, as they are not related to any
+> uAPI changes.
+> The remaining patches were either split out of the remaining patches
+> from that set, as they are not directly part of the uAPI changes, or
+> were inspired by fixes for issues in that set, or were only noticed
+> subsequent to that set.
+>
+> Changes since "gpio: cdev: add uAPI V2":
+>  - rebase onto latest gpio/devel
+>  - fix typo in patch 1 commit description
+>  - replace patch 8 with the blocking notifier call chain patch
+>  - rename priv to cdev instead of gcdev in patch 9
+>  - fix error handling in patch 10
+>  - add patches 12 to 17
+>
+> Kent Gibson (17):
+>   gpiolib: move gpiolib-sysfs function declarations into their own
+>     header
+>   gpiolib: cdev: sort includes
+>   gpiolib: cdev: minor indentation fixes
+>   gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
+>   gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be consistent
+>     with other use
+>   gpiolib: cdev: rename numdescs to num_descs
+>   gpiolib: cdev: remove pointless decrement of i
+>   gpiolib: cdev: use blocking notifier call chain instead of atomic
+>   gpiolib: cdev: rename priv to cdev
+>   gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+>   gpiolib: cdev: remove recalculation of offset
+>   gpiolib: cdev: refactor linehandle cleanup into linehandle_free
+>   gpiolib: cdev: refactor lineevent cleanup into lineevent_free
+>   gpio: uapi: fix misplaced comment line
+>   tools: gpio: fix spurious close warning in lsgpio
+>   tools: gpio: fix spurious close warning in gpio-utils
+>   tools: gpio: fix spurious close warning in gpio-event-mon
+>
+>  drivers/gpio/gpiolib-cdev.c  | 385 ++++++++++++++++-------------------
+>  drivers/gpio/gpiolib-sysfs.c |   1 +
+>  drivers/gpio/gpiolib-sysfs.h |  24 +++
+>  drivers/gpio/gpiolib.c       |  15 +-
+>  drivers/gpio/gpiolib.h       |  20 +-
+>  include/uapi/linux/gpio.h    |   2 +-
+>  tools/gpio/gpio-event-mon.c  |   3 +-
+>  tools/gpio/gpio-utils.c      |   4 +-
+>  tools/gpio/lsgpio.c          |   3 +-
+>  9 files changed, 217 insertions(+), 240 deletions(-)
+>  create mode 100644 drivers/gpio/gpiolib-sysfs.h
+>
+>
+> base-commit: b239e4454e59bc85d466eb5630da46f6a876df77
+> --
+> 2.27.0
+>
 
-On 7/9/20 1:19 PM, Jiri Slaby wrote:
-> On 09. 07. 20, 13:10, Jiri Slaby wrote:
->> Now, I need to find a way how to persuade dracut to automatically pick
->> up the updated DSDT.
-> 
-> # cat > /etc/dracut.conf.d/dsdt.conf  <<EOF
-> acpi_table_dir=/boot/acpi/
-> acpi_override=yes
-> EOF
-> # cp dsdt.aml /boot/acpi/
-> # dracut --force
-> 
-> That is.
-> 
-> FWIW, now:
-> # cat /sys/bus/acpi/devices/ACPI0011:00/status
-> 15
-> # cat /sys/bus/acpi/devices/INTCFD9:00/status
-> 0
+Hi Kent,
 
-And I assume the interrupt storms are gone now too :)   ?
+The entire series looks good to me, thanks for doing this. I'll pick
+it up into my tree and send a PR to Linus.
 
-I'm glad that this helps, even if it is not entirely ideal.
-
-Let me know if you need help to e.g. get the touchscreen to
-work (if it is a silead / MSSL1680 touchscreen you need to do
-some manual config).
-
-Likewise you will probably need some quirks for the audio
-to get e.g. the internal mic and/or jack-detect to work, see e.g. :
-
-sound/soc/intel/boards/bytcr_rt5640.c
-sound/soc/intel/boards/bytcr_rt5651.c
-sound/soc/codecs/rt5645.c
-
-The bringup of different codecs was done by different people,
-spo the quirks for the rt5640 and rt5651 live in the machine
-driver, where as for the rt5645 they are in the codec driver
-itself.
-
-For rt5640 / rt5641 the userspace UCM profile bits should pick
-up the changes automatically. For rt5645 the UCM profile will
-give you all available options. Once you know the right ones
-for your tablet we can add a userspace DMI match to make it
-show only the ones which are actually valid for your tablet.
-
-Regards,
-
-Hans
-
+Bartosz
