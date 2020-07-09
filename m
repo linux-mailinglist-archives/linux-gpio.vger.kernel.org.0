@@ -2,112 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80AFB219BAB
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 11:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FC6F219CE4
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 12:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGIJIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 05:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgGIJIB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 05:08:01 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FF1C061A0B;
-        Thu,  9 Jul 2020 02:08:01 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b92so825040pjc.4;
-        Thu, 09 Jul 2020 02:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=j3K2X3/RiGy249KpzJwq9E4MvMleCWKUqV6iVngTkS8=;
-        b=SQJbLNgzhdKt01fp9fZPyoHqwU8+UpC+a7O8V/WpWkH1DDIXjYR5B0pHn2nHngRHlN
-         JDA0G4ruUCz6wrkNDFJ/UXDGC/MGMbEKQvNqNMUQtbppd7zxbZ1j3sKY1LDkCVa/sYH4
-         tCL6+mtsYBneYv1EC4wtcBr8Zk81brcr1HUJBuTct2diJ4kI9ZcwfBHsUMGPPGxecnvj
-         xGOUC9XtQglTlZSo7k0PAMc7GVn9PmWxb4wq2TYYuxHwYkBn2Fb620VVwnxuLa5QF6BS
-         o9Z2OfqVrOBg8F9xuQN08N6fs4GOAgCgCRo35vGx4myODcTCjcRXUZunFCdzt+GdGgI1
-         0+sw==
+        id S1726376AbgGIKCv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 06:02:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41806 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726140AbgGIKBr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 06:01:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594288904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nkIOQ2vm7ob9ahgK3cBcyxSEnbupkn5P7GmmdydYdvQ=;
+        b=aI4xlaDfaSixv2eXVQTsbtgW78XhVurGDijJXOsUkVBIELsqZT72eRAj7ivvu0gLhLLAKa
+        Ilyx8ZBkiWNMA70ffDMJ3bogvh6jVit+Mw8Bk62nMYI+k1qK2H+H71DynL3YysUxXBfUDP
+        Ij+CK2V6j6K/JZuu7pyOx7zFLXzHL7w=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-jcQK93k9PPeSOgS-k4qgpg-1; Thu, 09 Jul 2020 06:01:43 -0400
+X-MC-Unique: jcQK93k9PPeSOgS-k4qgpg-1
+Received: by mail-ej1-f69.google.com with SMTP id do21so2115148ejc.2
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 03:01:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=j3K2X3/RiGy249KpzJwq9E4MvMleCWKUqV6iVngTkS8=;
-        b=otz9GeoB71fI9MyukEnbuVYfY0miIZp03Cp2dgjv5qdLD/U8zrM7S9s6E4+/20ZsB/
-         8CsJJpZBr3tNzeU9rinS+0lfVWg6AoITPmO+g9N+u/CQGjbhgiAsCT9dgLDQqmB7iUJp
-         4fXjISMGxaYFtOX54xF7v2EakRjyGuqx3we6904gP6EnyyOnM+QRtpXGSExxlcL+jMAN
-         Vw05TFQex18KJtodjQgojhf9bbv6DMhB0wYBzWBxledVHfe9Vm24m2u2HdqWl8n/xl5i
-         eJ0GN0EoSTlM7ayvaVWgdaPXxb65/jxJ6AB1wwLfSMpU12Nej5/snTM8gwTkVPEgyHUj
-         1O+g==
-X-Gm-Message-State: AOAM533YWTHKEvlfZfuguMqnuckZPlZNGoDPVVCSKbeodnTfXmsKBmjB
-        RzLOO5OLdDA3NVzrUpCkdXAwF1wT3mCZhOT+VII=
-X-Google-Smtp-Source: ABdhPJwRtV0Jd7qJCGSCXF3A+Ex2/kk91xx8MhsUVXW+KUq9GprPICkkSO6Biphls5J1Y9iAFKqSpeUZLPlRTZx2L+g=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr13725161pjb.181.1594285680452;
- Thu, 09 Jul 2020 02:08:00 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nkIOQ2vm7ob9ahgK3cBcyxSEnbupkn5P7GmmdydYdvQ=;
+        b=LmK/vJrLZZfmq7sYkaCMobNE09r3zEnaLrdQjfdy4Xh3wMAPR/GXaSf/e3W67uqrr/
+         AN2/6fA7qSrlBto33Q+7KlD/O0+4quhAtrYo3sfqbAvG+v2gjbyKNppUCNiSj33TCdQH
+         s04lm6VXjTb0xGcVxPF/jGVv+wkfVUhzSXGSpzGEGVNkRq47F4ihDYMnKFhbpESI6M8M
+         PdV8gUrqPYYGfBpMN3Y9T7dHOBxA46hYZjNZbA0T9Nx/jlvyuCnoFBQc6vDC8CCZBakV
+         HAUMuxrmyRtzMXWmTvk0x1MPKzAMLZGP6BetoOMPgFH5JXZvBkMhp2fPsGyoEGmozCV4
+         tvmg==
+X-Gm-Message-State: AOAM5329Hu8tzws+GBrMKX+2N3d2RTZHwT/E8BzIKr0Z3ReiPW78T87N
+        1M47aCMZftUbbgA11a5/Jd3XVXZgB+N6C1QOdcv0wQqiwkmP5G0h/gSRFKjnelfg0Psj9GFGmXd
+        GhdcZhqO7EjQfg7goArK1xw==
+X-Received: by 2002:a17:906:8588:: with SMTP id v8mr57994118ejx.211.1594288901869;
+        Thu, 09 Jul 2020 03:01:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxKVkRINyueZ3aFur3FuE/Z3W54Eto/+BE+VvFQ9m3g54qt//WhoLogyYgJHLmBn8Qi8qE/KA==
+X-Received: by 2002:a17:906:8588:: with SMTP id v8mr57994097ejx.211.1594288901604;
+        Thu, 09 Jul 2020 03:01:41 -0700 (PDT)
+Received: from x1.localdomain ([2a0e:5700:4:11:334c:7e36:8d57:40cb])
+        by smtp.gmail.com with ESMTPSA id dt22sm1532969ejc.104.2020.07.09.03.01.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2020 03:01:41 -0700 (PDT)
+Subject: Re: chv-gpio interrupt storm on UMAX VisionBook 10Wi Pro
+To:     Jiri Slaby <jirislaby@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+References: <5ed9d3ad-743f-e139-cf20-18eb418b24cd@kernel.org>
+ <CACRpkdbWYhbtR+Tv5fFdxuyPAXU68uAswFYNZQfNFaR_89k=nw@mail.gmail.com>
+ <9781e07e-a609-a2e1-112f-e5ebc78bfc23@redhat.com>
+ <77bc7754-9a51-ed8f-5f88-3ed9f8ecca81@kernel.org>
+ <2d5c5968-ad66-cbbc-a754-8f6114ff0ded@redhat.com>
+ <ce01fc0d-e71a-26c9-1168-16926198fdef@kernel.org>
+ <09661b70-0a19-e70a-1985-4da6024ec291@redhat.com>
+ <29d9d787-bec2-7c41-30d4-d03c4cf75cdc@kernel.org>
+ <12101845-4a03-802b-fcab-7fc78fed0be5@redhat.com>
+ <071f2816-0cb6-b725-532b-08fc56c1ad1e@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ca4dfb41-843c-d859-2128-c985aec97a99@redhat.com>
+Date:   Thu, 9 Jul 2020 12:01:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200708202355.28507-1-digetx@gmail.com> <20200708202355.28507-4-digetx@gmail.com>
- <CAHp75VejftNuSqdYvd1YE1SdRON6=mQ_iD2dEr4K9D8YGgeRBQ@mail.gmail.com> <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
-In-Reply-To: <675c4691-d372-4fe1-d515-c86fdba2f588@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 9 Jul 2020 12:07:44 +0300
-Message-ID: <CAHp75Vd89QpwaGvkpzG+pxnLd8S2guPCARLW5xPwhxXL8ZRfFw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] gpio: max77620: Don't set of_node
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <071f2816-0cb6-b725-532b-08fc56c1ad1e@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 12:44 AM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 08.07.2020 23:57, Andy Shevchenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Wednesday, July 8, 2020, Dmitry Osipenko <digetx@gmail.com
-> > <mailto:digetx@gmail.com>> wrote:
+Hi,
 
-...
+On 7/9/20 10:30 AM, Jiri Slaby wrote:
+> Hi,
+> 
+> On 08. 07. 20, 13:47, Hans de Goede wrote:
+>>> Unfortunately, there is nothing like that. It's discussed on the net,
+>>> that these UMAXes have only 32bit EFI.
+>>
+>> Which is not a problem by itself, mixed-mode support works well,
+>> in Fedora we even support it out of the box.
+>>
+>> What is a problem is the OSID thing. So one last silly idea,
+>> can you try on your EFI system partition, creating a dir called:
+>>
+>> EFI/Microsoft/Boot
+>>
+>> So the Linux path of that likely is:
+>>
+>> /boot/efi/EFI/Microsoft/Boot
+>>
+>> And then copy your grub.efi to:
+>>
+>> /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
+>>
+>> And then with efibootmgr create an entry
+>> titled Windows pointing to that and try booting
+>> that boot entry?
+> 
+> Ugh, there is indeed some magic, but it doesn't help.
+> 
+> I created that entry and dubbed it "opensuse_MS2". BIOS renamed it to
+> "Windows Boot Manager". But still
+> /sys/bus/acpi/devices/INTCFD9:00/status shows 15 and storms.
+> 
+> I created also EFI/Boot/bootia32.efi. Now BIOS thinks I am android! I.e.
+> wifi disappeared, the boot option in BIOS says "Android legacy". And it
+> always switches "Windows 8.x" to "Android legacy". If I delete
+> EFI/Boot/bootia32.efi (deleting or adding an entry to efibootmgr makes
+> no difference, the presence of the file matters), I can set "Windows
+> 8.x" and it persists booting, but still storms and things (but wifi is
+> back).
+> 
+> Any other idea what file/volume I should create in EFI fs?
 
-> > I gave a second look and I think my suggestion is wrong. Here is an
-> > interesting propagation of the parent device node to its grand son,
-> > leaving son=E2=80=99s one untouched. Original code has intentions to do=
- that way.
->
-> The [1] says that gpio_chip.parent should point at the "device providing
-> the GPIOs".
+No I'm afraid not. The ACPI subsystem will execute the DSDT's
+_INI method (line 21712 in the disassembled DSDT) pretty early on.
 
-Yes, physical device I believe.
+I think the best way to workaround this is to use a DSDT override
+where you set OSID=1 in that _INI method.
 
-> That's the pdev->dev.parent in the case of this driver.
-> MAX77620 is an MFD PMIC device that has virtual sub-devices like GPIO
-> controller, PINCTRL and RTC. The MFD is the parent device that provides
-> the GPIOs [2].
->
-> [1]
-> https://elixir.bootlin.com/linux/v5.8-rc3/source/include/linux/gpio/drive=
-r.h#L276
->
-> [2]
-> https://elixir.bootlin.com/linux/v5.8-rc3/source/arch/arm64/boot/dts/nvid=
-ia/tegra210-p2180.dtsi#L48
->
-> I think the old code was wrong and this patch is correct, please correct
-> me if I'm missing something.
+This is far from ideal, but so are the other options. Unfortunately
+this will not help any other users with the same device, but it at
+least should get it working for you.
 
-Hmm... I have checked through GPIO drivers I have knowledge of / care
-about and PMIC ones do like you suggested in this patch, the rest
-(which are instantiated from MFD) take a virtual platform device.
+Regards,
 
-Looking at DT excerpt I think you're rather right than wrong, so I
-leave it to you and maintainers.
-Thanks!
+Hans
 
---=20
-With Best Regards,
-Andy Shevchenko
