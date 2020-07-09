@@ -2,238 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C26F21A5DA
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 19:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F06D221AA9C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 00:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGIRaM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 13:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46434 "EHLO
+        id S1726482AbgGIWes (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 18:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgGIRaM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 13:30:12 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FD1C08C5CE
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2020 10:30:11 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id rk21so3160953ejb.2
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 10:30:11 -0700 (PDT)
+        with ESMTP id S1726272AbgGIWer (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 18:34:47 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98961C08C5DD
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2020 15:34:47 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id e13so3489278qkg.5
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 15:34:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=F/dfHtnsJB9MOcXbZhwcjlMKxkwZqMB6l2sufAGo788=;
-        b=K1hK+bqghnz2MI0oGaGgc1pxDDAgvXqEFggc78Ax1qDP5G5SopCbkoW8lrKdiTBxjx
-         +EqtwM1Q65rqSqQwCeDQLhv8R+kcOmFIuWnkkxHEcChOoJE0NXFZFptL4lngsqp6aUe7
-         CbxX7XxRdJDF1tfcyivKNwWV39sxvkyl4St9nFSWZT0B7lv054oMpgelbXWG2Rva/yVB
-         6zfGPDhEU6++LSBsv2lmFZ7giMFAUcyTMDHVoAQhdg8ss83vMnCP9Gie4CdO+AWkVg7V
-         Qy2cYwco4VmAcNTAFz9yNbpKzhi9RQQDoOkRNvUAAg4gE7zZ9LANqShJH2UDCrIUnBFS
-         KaZQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nGzR1WtRF8Y8tGKLwHQjy7lggywuCqvt56g9Ssnty14=;
+        b=XN33SzHhxER6ZyVjHyeXjMhX536wgzMnw6B/6NCjLZgko9k/DgUnON6auLfZbFRNHH
+         zADdDT8A3f3eiKj+EM8oF9OEfH6P3gTKjqNl33W5Aq4BT32OI1hOdTiqeo0lC77A9O7X
+         cgSSNWnoK4cKsVFryv7xhGj5pW7W0eDx7m0vkSNbIA4H4ByzBzgOep9KnJhDcatSk7ti
+         2nIFgycv6LN49S6zBfaV3cErfAfTqf0mTpLyRZXncXzmZAnU/kk9fMtp+LFltmHfPnVU
+         F8eWqAUP6oAZGhHDogHLVB9YQIdiM1fRE/y8zSSY/tPhaZuN7R6kB4C2eVDKrg48/uhN
+         Kw1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=F/dfHtnsJB9MOcXbZhwcjlMKxkwZqMB6l2sufAGo788=;
-        b=NJyNtS+6i7OkZU/Xy10iX7JVkZiguPfDKhXu4a5r5FP1bowPLHvGLQDrm2fufmHdJp
-         fOkOA0OPfUtyKPW+B93G5Bp9giymJZ+UJLEbvJceyrTUZ1A4FLKbbgkS0fUmMd6RPCzo
-         vbs+LmU6X0+kmyZZ1hD8eHzKwznG1qsmJ3uMr93o6O2styD5stRWWKlGqxIijvDHIljG
-         DVD6ST2v60Y9uviSx28PvyBAQnm+M6bqjmLpAVVam6I6llH5+cNe5gbj9f9ExTcTpaKk
-         CVSwbdyrw4AGOtD8KwX7vWRkGsgilLdh1PRpcNG+bMFiJAXyfpeoJQH7OrMywB+XOUAU
-         2apA==
-X-Gm-Message-State: AOAM533bmhQ+XGCYNTaTJrF+m8CYf3OgfuYGP4TG7YG4OZO+n4ZalurL
-        Qcvk5UJrEMvdvuEOLFYrSiBV5g==
-X-Google-Smtp-Source: ABdhPJy4azb0lAJom66K1CZw3JBvjqNnZK8mqimmkNmMod3QpRruZvs6oLa3Al9hlHMxrDJiq+heVQ==
-X-Received: by 2002:a17:906:d286:: with SMTP id ay6mr48901383ejb.400.1594315810469;
-        Thu, 09 Jul 2020 10:30:10 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id m16sm2151745eji.23.2020.07.09.10.30.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nGzR1WtRF8Y8tGKLwHQjy7lggywuCqvt56g9Ssnty14=;
+        b=JbRv2pD43s7r+MAdTokP+z4nTEuKO497bZu7Op+O9rSQ2cOaTJ18QEvoOr0Ux5jwlK
+         V6OGfFE46nSE3hLsBhGNfAj18+xkcgfmjTj2Tzu+XY2G9fU8rDsl0MzTqqrbWtmIrnij
+         d5BHsZQIP3PyIGFge0fCsw/LfZLaNQrMeUBVytDgvdwSvxgSlquf+YRsvT1uJe2IwJRK
+         zMO4DpSTTjZyuViDij1miaSSLIIAdWRDFtS1FASEhcuMKgckN+xPIWV90tQDtwavnxmz
+         3nCZaa4EShDGW5c2x4ZCav6bRIo7YRXtoxqvTc+OcbbpwoLwl+55KYyRNzatk3UkeWXl
+         B5Cw==
+X-Gm-Message-State: AOAM532VXrbYXc7uyJelox/cIH+Ot4jywBaf3xVq5eYVnAl7zll2yFQ9
+        bVl0Kt03G0faCZUj5EE8zS4nGg==
+X-Google-Smtp-Source: ABdhPJz3R95qBwSgxEru/Shu4hNfF1GuP4jw2nXmuF6ITk4JjFBp3/peBCYE1DJSJYvsLz702FTn+g==
+X-Received: by 2002:a37:88c2:: with SMTP id k185mr53706537qkd.53.1594334086637;
+        Thu, 09 Jul 2020 15:34:46 -0700 (PDT)
+Received: from localhost.localdomain ([196.52.2.97])
+        by smtp.gmail.com with ESMTPSA id o12sm5029160qtl.48.2020.07.09.15.34.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 10:30:09 -0700 (PDT)
-Date:   Thu, 9 Jul 2020 19:30:07 +0200
+        Thu, 09 Jul 2020 15:34:45 -0700 (PDT)
 From:   Drew Fustini <drew@beagleboard.org>
 To:     Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: [RFC] gpio-omap: handle bias flags
-Message-ID: <20200709173007.GA739269@x1>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Drew Fustini <drew@beagleboard.org>
+Subject: [PATCH] gpio: omap: handle pin config bias flags
+Date:   Fri, 10 Jul 2020 00:34:01 +0200
+Message-Id: <20200709223401.780051-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Tony - what do you think of this approach?
+Modify omap_gpio_set_config() to handle pin config bias flags by calling
+gpiochip_generic_config().
 
-I have added this in arch/arm/boot/dts/am335x-pocketbeagle.dts to
-describe the pins which will be gpio lines accessed by userspace
-through gpiod ioctl() calls:
+The pin group for the gpio line must have the corresponding pinconf
+properties:
 
-&am33xx_pinmux {
+PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
+PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
 
-	pinctrl-names = "default";
-	pinctrl-0 =   < &gpio_pins >;
+This is necessary for pcs_pinconf_set() to find the requested bias
+parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
 
-	gpio_pins: pinmux-gpio-pins {
-		/* MUX_MODE7 is gpio mode */
-		pinctrl-single,pins = <
-			/* PIN 95 and PIN 94 */
-			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, PIN_INPUT, MUX_MODE7)
-			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, PIN_INPUT, MUX_MODE7)
-			/* PIN 100 */
-			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, PIN_INPUT, MUX_MODE7)
-			/* PIN 18 */
-			AM33XX_PADCONF(AM335X_PIN_GPMC_A2, PIN_INPUT, MUX_MODE7)
-		>;
-		pinctrl-single,bias-pullup   = < 8 16  8 24>;
-		pinctrl-single,bias-pulldown = < 8  0  8 24>;
-	};
-
-The "pinctrl-single,bias-pullup" and "pinctrl-single,bias-pulldown"
-pinconf properties are set for the gpio_pins pin group.  The input
-value 0x8 causes both to be inactive but still added to the
-PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.  This is necessary for
-pcs_pinconf_set() to be able to be able to set the bias config.
-
-For AM335x, the pin conf register has the format [0]:
-
-bit	attribute      value
-  6	slew           { 0: fast, 1: slow }
-  5     rx_active      { 0: rx disable, 1: rx enabled }
-  4     pu_typesel     { 0: pulldown select, 1: pullup select }
-  3     puden          { 0: pud enable, 1: disabled }
-  2     mode           3 bits to selec mode 0 to 7
-  1     mode
-  0     mode
-
-Here is how I derived the values:
-
-pinctrl-single,bias-pullup   = <[input] [enabled] [disable] [mask]>;
-pinctrl-single,bias-pullup   = <     8        16        8      24 >;
-
-          2^5    2^4    2^3    2^2    2^1    2^0  | 
-         0x20   0x10   0x08   0x04   0x02   0x01  |
-           32     16      8      4      2      1  | 
--------------------------------------------------------  
-input       x      0      1     x      x      x   |   8 
-enabled     x      1      0     x      x      x   |  16
-disabled    x      0      1     x      x      x   |   8
-mask        x      1      1     x      x      x   |  24
-
-
-pinctrl-single,bias-pulldown = <[input] [enabled] [disable] [mask]>;
-pinctrl-single,bias-pulldown = <     8         0        8      24 >;
-
-          2^5    2^4    2^3    2^2    2^1    2^0  | 
-         0x20   0x10   0x08   0x04   0x02   0x01  |
-           32     16      8      4      2      1  | 
--------------------------------------------------------  
-input       x      0      1     x      x      x   |   8 
-enabled     x      0      0     x      x      x   |   0 
-disabled    x      0      1     x      x      x   |   8
-mask        x      1      1     x      x      x   |  24
-
-The pinconf bias properties get applied to the pin group during boot
-when pcs_pinconf_group_set() calls pcs_pinconf_set() for each pin. Here
-is the output from function_graph tracer:
-
-              pinconf_apply_setting() {
-                pcs_pinconf_group_set() {
-                  pinctrl_generic_get_group_pins();
-                  pcs_pinconf_set() {
-                    pcs_get_function() {
-                      pinmux_generic_get_function();
-                    }
-                    pcs_readl();
-                    pcs_writel();
-                    pcs_readl();
-                    pcs_writel();
-                  }
-                  pcs_pinconf_set() {
-                    pcs_get_function() {
-                      pinmux_generic_get_function();
-                    }
-                    pcs_readl();
-                    pcs_writel();
-                    pcs_readl();
-                    pcs_writel();
-                  }
-                  pcs_pinconf_set() {
-                    pcs_get_function() {
-                      pinmux_generic_get_function();
-                    }
-                    pcs_readl();
-                    pcs_writel();
-                    pcs_readl();
-                    pcs_writel();
-                  }
-                  pcs_pinconf_set() {
-                    pcs_get_function() {
-                      pinmux_generic_get_function();
-                    }
-                    pcs_readl();
-                    pcs_writel();
-                    pcs_readl();
-                    pcs_writel();
-                  }
-                }
-              }
-
-After boot, I then use gpiomon utility with bias flags:
-
-	gpiomon -B pull-up 3 14
-
-gpiochip 3 line 14 maps to pin 100 which is AM335X_PIN_MCASP0_ACLKX at
-offset 0x990.  For this to succeed, I modified omap_gpio_set_config() in
-gpio_omap.c to handle PIN_CONFIG_BIAS_PULL_{UP,DOWN} by calling
-gpiochip_generic_config().  Here is output of function_grapher tracer:
-
-             gpio_ioctl() {
-               gpiochip_get_desc();
-               gpiod_request() {
-                 gpiod_request_commit() {
-                   gpiochip_line_is_valid();
-                   omap_gpio_request() {
-                     omap_gpio_runtime_resume() {
-                       omap_gpio_unidle() {
-                         omap_gpio_restore_context();
-                       }
-                     }
-                     omap_enable_gpio_module();
-                   }
-                   gpiod_get_direction() {
-                     gpiod_to_chip();
-                     omap_gpio_get_direction();
-                   }
-                 }
-               }
-               gpiod_direction_input() {
-                 omap_gpio_input() {
-                   omap_set_gpio_direction();
-                 }
-                 gpio_set_bias() {
-                   gpio_set_config() {
-                     gpio_do_set_config() {
-                       omap_gpio_set_config() {
-                         gpiochip_generic_config() {
-                           pinctrl_gpio_set_config() {
-                             pinctrl_get_device_gpio_range() {
-                               pinctrl_match_gpio_range();
-                             }
-                             pinconf_set_config() {
-                               pcs_pinconf_set() {
-                                 pcs_get_function() {
-                                   pinmux_generic_get_function();
-                                 }
-                                 pcs_readl();
-                                 pcs_pinconf_clear_bias.constprop.0();
-                                 pcs_writel();
-
-Thanks,
-Drew
-
-[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
 ---
  drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
  1 file changed, 17 insertions(+), 4 deletions(-)
@@ -274,3 +120,4 @@ index b8e2ecc3eade..a471a152f318 100644
  static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
 -- 
 2.25.1
+
