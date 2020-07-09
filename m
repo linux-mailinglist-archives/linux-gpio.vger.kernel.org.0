@@ -2,99 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D6821A544
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 18:55:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6335621A57D
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 19:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbgGIQyv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 12:54:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37725 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgGIQyu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 12:54:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so3065896iob.4;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
+        id S1727061AbgGIRMi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 13:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbgGIRMi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 13:12:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E518CC08C5CE;
+        Thu,  9 Jul 2020 10:12:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id q4so3286117lji.2;
+        Thu, 09 Jul 2020 10:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9zGILK2KVJ/L1Sl0wAXTZsxfr/HBlMquYn5Az6ZTy3A=;
+        b=R0DGbFgxU7NCq1PudetXaJ2cWmxXO/quOiRoRCNxqbeGRpVv+j1EkNBfKj3Etr9XG5
+         AodRE01QcFiiBNPoFxJWMZcGIO9C/AL9LOwk0GWhJR5kOKmoFSQcXMVowLHfMLyA8WxC
+         A+jFWlvua5hsiOUSEkrYS/CuPQ2wUeORHHYY9y4SaOYIfJwZfXwDlHW9KHR1Vtz1z5cC
+         iMS8981hYAN+qau4jdzWSrI81X3F9QpL3PmT9minyZXCEy06KGawPZ0L8e56W7NG5nj7
+         NmPzOguO8MTH+2NjK2IKcJQOPqiuQjucdnMR2sFRWMltuBC1+0hTXtkC0x3xGTxnPIkU
+         ecJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LGz/Zlxj80AaON4ZExXC6wPffqBZf12wYIQFvRvtTFU=;
-        b=mjhxfGcDLXIH8n2jNgt6RvjU2fPWiJOC3gZMPuiDMa22/KsJ7O5RxItOEfwjW5ojnz
-         a/loPK+quPsnxKPynDknLb9Cn9EUxlIryCr3NF+Sj+lcuQHQlyXFI6pEpFpp1/lsqT2p
-         D6WiAXaXBxC5I8hjrxjJKrtQxAjYV7JfNIo4jeaQEqCRXS49Vp8uuZ9idpJPNUHGb9dR
-         Jx3u1Fk/727u4zbNiuF+Jz1/1oqMsCLOkCC9BG74u68scjEESQtC2WMHcVdz6AqaT+K5
-         1/DR9sQvCKXkLq+8CAqhzz83UA2Jy2jWavEQ8F3+c6be4RHJzeLY6mwsq5/1UJwQu0jH
-         SX2A==
-X-Gm-Message-State: AOAM530yrTBGMg5b9VbXL+uQ4tAL4H3oCwFJZuOTHpp6UpyX0kBdQVLY
-        aZnxFCis3glcTa0M9LcEuw==
-X-Google-Smtp-Source: ABdhPJwVHnWKGBfcmnHMtMLi5T9+D6bkCcY8zGSjmNL+jbQ/Q/bEuXfltsJTV1Viqjq6/RURN8zfZg==
-X-Received: by 2002:a05:6638:252:: with SMTP id w18mr60811098jaq.42.1594313689499;
-        Thu, 09 Jul 2020 09:54:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id l17sm1999262ilm.70.2020.07.09.09.54.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9zGILK2KVJ/L1Sl0wAXTZsxfr/HBlMquYn5Az6ZTy3A=;
+        b=JXw8aKg3uCY+1BbBDoeOHWPSGTZzyMDHsYPdCdllvd603ADR3D6dZEMBa+g7p7escv
+         YZXs1ZYjVdg8bpx8SCn9gJIo4JwHWb0tUBcIco0XkATCq+HTI9RzRRi33v9CLiEXaFdS
+         YsYMHEmuWADHU1bzTVRspvdEI0XR2ZwIQsLkueg/FZfmZd/UQgmNaPowN58X7d8ElNU7
+         wCC/6VdUXaXVG/Knn8qAzBsHQZwJO6KnB23Xnkikih0y8RNmVCW+yZ3ug74bqGo3vh8L
+         7wOJ63XB2/pOYVrIx+dBjUYHRwlvR9gKFtleRc77Mkf28zdmGcZHo28mO1FddXynm7Y6
+         lknQ==
+X-Gm-Message-State: AOAM530q6ZPiSLd1A0Byg+EQ8Rmq0IHpKwc3O/EPXk8c8FeSuq93eiz+
+        ax2HkLHPjBkaMc2DkvSrsdY=
+X-Google-Smtp-Source: ABdhPJygBkGa2d6MjYhmc8K6TnZbpAHTZV8oEeCuLNEJelpL2CsQnSI1RN63f3P0LJYKQSG2gsoFAQ==
+X-Received: by 2002:a2e:99c7:: with SMTP id l7mr17465156ljj.221.1594314756307;
+        Thu, 09 Jul 2020 10:12:36 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-105.pppoe.mtu-net.ru. [91.79.162.105])
+        by smtp.gmail.com with ESMTPSA id y22sm998314ljn.2.2020.07.09.10.12.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 09:54:48 -0700 (PDT)
-Received: (nullmailer pid 510212 invoked by uid 1000);
-        Thu, 09 Jul 2020 16:54:37 -0000
-Date:   Thu, 9 Jul 2020 10:54:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     linux-gpio@vger.kernel.org, amit.kucheria@verdurent.com,
-        linux-arm-kernel@lists.infradead.org, gregory.clement@bootlin.com,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        huangshuosheng@allwinnertech.com, devicetree@vger.kernel.org,
-        daniel.lezcano@linaro.org, wens@csie.org, lee.jones@linaro.org,
-        clabbe@baylibre.com, p.zabel@pengutronix.de, icenowy@aosc.io,
-        tiny.windzz@gmail.com, linux-kernel@vger.kernel.org,
-        jason@lakedaemon.net, liyong@allwinnertech.com,
-        linux-i2c@vger.kernel.org, bage@linutronix.de, stefan@olimex.com,
-        linus.walleij@linaro.org, rui.zhang@intel.com, tglx@linutronix.de,
-        megous@megous.com, linux-pm@vger.kernel.org, mripard@kernel.org,
-        anarsoul@gmail.com, mturquette@baylibre.com,
-        srinivas.kandagatla@linaro.org, maz@kernel.org, sboyd@kernel.org
-Subject: Re: [PATCH v3 06/16] dt-bindings: nvmem: SID: add binding for A100's
- SID controller
-Message-ID: <20200709165437.GA509792@bogus>
-References: <20200708071942.22595-1-frank@allwinnertech.com>
- <20200708071942.22595-7-frank@allwinnertech.com>
+        Thu, 09 Jul 2020 10:12:35 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/6] Improvements for MAX77620 GPIO driver
+Date:   Thu,  9 Jul 2020 20:11:57 +0300
+Message-Id: <20200709171203.12950-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200708071942.22595-7-frank@allwinnertech.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 08 Jul 2020 15:19:32 +0800, Frank Lee wrote:
-> Add a binding for A100's SID controller.
-> 
-> Signed-off-by: Frank Lee <frank@allwinnertech.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Hello!
 
+This series addresses a problem that I discovered on Nexus 7 device where
+GPIO interrupts may be left enabled after bootloader and the driver isn't
+prepared to this. It also makes a small improvements to the code, fixes the
+non-released interrupt bug and converts driver to use irqchip template.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Changelog:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: properties:compatible:enum:5: {'items': [{'const': 'allwinner,sun50i-a100-sid'}, {'const': 'allwinner,sun50i-a64-sid'}]} is not of type 'string'
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml: ignoring, error in schema: properties: compatible: enum: 5
-warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+v4: - Added stable-tag to the patch "Fix missing release of interrupt".
 
+    - Added acks and r-bs from Laxman Dewangan and Andy Shevchenko.
 
-See https://patchwork.ozlabs.org/patch/1325053
+v3: - Addressed review comment that were made by Andy Shevchenko to v2:
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+        - Improved the commit message of the "Initialize hardware state of
+          interrupts" patch.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+        - Added these new patches:
 
-Please check and re-submit.
+           gpio: max77620: Don't set of_node
+           gpio: max77620: Don't shadow error code of platform_get_irq()
+           gpio: max77620: Use irqchip template
+
+    - Added "Fix missing release of interrupt" patch.
+
+v2: - Addressed review comment that were made by Andy Shevchenko to v1:
+
+        - Generic init_hw() callback is used now for resetting interrupts.
+
+        - These v1 patches are dropped:
+
+           gpio: max77620: Replace interrupt-enable array with bitmap
+           gpio: max77620: Don't handle disabled interrupts
+           gpio: max77620: Move variable declaration
+
+Dmitry Osipenko (6):
+  gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+  gpio: max77620: Fix missing release of interrupt
+  gpio: max77620: Don't set of_node
+  gpio: max77620: Don't shadow error code of platform_get_irq()
+  gpio: max77620: Use irqchip template
+  gpio: max77620: Initialize hardware state of interrupts
+
+ drivers/gpio/gpio-max77620.c | 65 ++++++++++++++++++++++++------------
+ 1 file changed, 44 insertions(+), 21 deletions(-)
+
+-- 
+2.26.0
 
