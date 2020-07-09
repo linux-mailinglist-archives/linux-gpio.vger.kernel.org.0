@@ -2,296 +2,436 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFB9D21A127
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 15:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F25821A1D3
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Jul 2020 16:11:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGINsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Jul 2020 09:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgGINsv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 09:48:51 -0400
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED92C08C5CE;
-        Thu,  9 Jul 2020 06:48:51 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4B2cw04Hv7zQlHh;
-        Thu,  9 Jul 2020 15:48:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1594302526;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NmKH1mr1/+5vjWCBZ5zoNbhOnBFi2+hEUX0Wng8Or8c=;
-        b=REBeJhadmN1n3gZC2Y4moPcMPjsaoJBOMdaOypzFHSa+g24aM6/fYAsVUSfJP6IP0SweNO
-        pIaE2GnUCiVGr+y7CFqBBv5M/pkOaUq/D277whviPI6A67z4EMuomzOtlroMJdXTc6VQwv
-        S4kcyUMNGq54dLw02VSbM7t5SgKDQkZaLWezD3BdNzQDQawjqECiDfA3E7XGRpKVHRBZ5l
-        vWADJGU01d38qXfG0ydOOaUEfts2ankaL8RJ5G6WhEHo28n9pgxW9JXgFoq2HHBOJQn6IN
-        vSnPBp0/58HVCyZG2BHvvLdZ16POJNjr0M+oBCw1AwogYLA9Aken7Hatn4JxDg==
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id 73Z1CDn_Hmeu; Thu,  9 Jul 2020 15:48:42 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S1726410AbgGIOL0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Jul 2020 10:11:26 -0400
+Received: from smtpcmd0871.aruba.it ([62.149.156.71]:44321 "EHLO
+        smtpcmd0871.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgGIOL0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Jul 2020 10:11:26 -0400
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd08.ad.aruba.it with bizsmtp
+        id 12BL2300W3Zw7e5012BL0F; Thu, 09 Jul 2020 16:11:22 +0200
+Subject: [RFC] GPIO lines [was: GPIO User I/O]
+From:   Rodolfo Giometti <giometti@enneenne.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v6 1/2] gpio: add GPO driver for PCA9570
-Date:   Thu,  9 Jul 2020 22:48:29 +0900
-Message-Id: <20200709134829.216393-1-mans0n@gorani.run>
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+Message-ID: <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+Date:   Thu, 9 Jul 2020 16:11:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 21
-X-Rspamd-Score: 3.29 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 6DF681830
-X-Rspamd-UID: defdcb
+In-Reply-To: <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+Content-Type: multipart/mixed;
+ boundary="------------349B4E7446A5F5834C3D4114"
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594303882; bh=LOxFIL0PHXNvH1kGqXseY7KgCXD1XJDLmod1oNyXSNg=;
+        h=Subject:From:To:Date:MIME-Version:Content-Type;
+        b=R/GU4pKzwwYt2C2bpISsg9knuRBDqcSFK9BiLnZaNO/SmfKeex8FcqK2tg/eyWmPB
+         wPz8mn6l8DWJbMapjZG6Sj400EejmryTw7kxN6ikqNDsATDvwcRGxPHL+96vvKQ7wL
+         TwIU5OdGK9NX7gyO9iytMim+PW9FtrGGsDJknjcOEgGnATqhVo7M3SAKVU9anBLgOg
+         xMC1SX6qMnWysI05LV87atW5NQtGzk/oitUR8mNKvLlrC3RdgheNxQ7cIsdhZq1cdC
+         3UurcZ8NJnyMQpgOPW4SK+9nNfbHkqsHNTYThrR7M6W/KH9N2Y7U++1Mk+na5NwpR0
+         4D6Lnygdhn7sQ==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-NXP PCA9570 is a 4-bit I2C GPO expander without interrupt functionality.
-Its ports are controlled only by a data byte without register address.
+This is a multi-part message in MIME format.
+--------------349B4E7446A5F5834C3D4114
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Datasheet: https://www.nxp.com/docs/en/data-sheet/PCA9570.pdf
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-v6:
-* removed client
-* re-added mutex
-* removed template_chip
+Hello,
 
-v5:
-* amended the commit message
-* removed unnecessary castings
-* added data to of_match_table
+I reworked a bit my proposal due to the fact that the name "GPIO User I/O" is
+not so clear as I supposed to be... so I renamed it as "GPIO lines". :)
 
-v4:
-* removed ->direction_input() and ->direction_output()
-  (Seems unnecessary to me)
-* removed ->set_multiple()
-  (I'm not sure this implementation is really correct)
-* added ->get()
-  (DS says we can read the status from the device)
-* read current status during probe
+Since this support is intended to allow boards developers to easily define their
+GPIO lines for a well defined purpose from the userspace I thing this last name
+is more appropriate.
 
-v3:
-* remove mutex
-* rename buffer to out
-* simplify return statements
-* replace ->probe() to ->probe_new()
-* move ngpio to driver_data
-  (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+Within the device tree we have to specify each line:
 
-v2:
-* move the direction functions below the set functions
-* use devm_gpiochip_add_data() and remove the remove callback
+        gpio_lines {
+                compatible = "gpio-line";
 
-v1:
-Tested in kernel 5.4 on an ipq40xx platform.
+                bypass0 {
+                        gpios = <&gpionb 10 GPIO_ACTIVE_HIGH>;
+                        mode = "out-low";
+                };
 
-This is my first time submitting a whole driver patch, and I'm not really
-familiar with this PCA expander series.
-Please let me know how I can improve this patch further.
+                bypass1 {
+                        gpios = <&gpiosb 11 GPIO_ACTIVE_HIGH>;
+                        mode = "out-low";
+                };
 
-FYI there's an unmerged patch for this chip.
-http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-I don't have PCA9571 either so I didn't add support for it.
----
- drivers/gpio/Kconfig        |   8 ++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-pca9570.c | 146 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 drivers/gpio/gpio-pca9570.c
+                key {
+                        gpios = <&gpionb 4 GPIO_ACTIVE_HIGH>;
+                        mode = "input";
+                };
+
+                motor {
+                        gpios = <&gpionb 8 GPIO_ACTIVE_HIGH>;
+                        mode = "out-high-open-drain";
+                };
+        };
+
+Then we enable the configuration settings CONFIG_GPIO_LINE so at boot we have:
+
+[    2.377401] line bypass0: added
+[    2.411496] line bypass1: added
+[    2.416141] line key: added
+[    2.419758] line motor: added
+
+Then, when the boot is finished, we have the following entries in the new "line"
+class:
+
+# ls /sys/class/line/
+bypass0  bypass1  key  motor
+
+Now each line can be read and written by using the "state" attribute:
+
+# cat /sys/class/line/bypass0/state
+0
+# echo 1 > /sys/class/line/bypass0/state
+# cat /sys/class/line/bypass0/state
+1
+
+Hope it could be more acceptable now.
+
+Please, let me know if should I propose a proper patch for inclusion or
+something must be changed/added/fixed.
+
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
+
+--------------349B4E7446A5F5834C3D4114
+Content-Type: text/x-patch; charset=UTF-8;
+ name="gpio-lines.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="gpio-lines.patch"
 
 diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c6b5c65c8405..d10dcb81b841 100644
+index 4f52c3a8ec99..f117b0b9d33e 100644
 --- a/drivers/gpio/Kconfig
 +++ b/drivers/gpio/Kconfig
-@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
- 	  Say yes here to enable the pca953x to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
+@@ -73,6 +73,16 @@ config GPIO_SYSFS
+ 	  Kernel drivers may also request that a particular GPIO be
+ 	  exported to userspace; this can be useful when debugging.
  
-+config GPIO_PCA9570
-+	tristate "PCA9570 4-Bit I2C GPO expander"
++config GPIO_LINE
++	bool "/sys/class/line/... (GPIO lines interface)"
++	depends on SYSFS
 +	help
-+	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
++	  Say Y here to add a sysfs interface to manage system's GPIO lines.
 +
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-pca9570.
++	  Instead of the GPIO_SYSFS support, by using this support, you'll be
++	  able to use GPIOs from userspace as stated in the device-tree
++	  for well defined pourposes and by using proper names.
 +
- config GPIO_PCF857X
- 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
- 	select GPIOLIB_IRQCHIP
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
 diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1e4894e0bf0f..33cb40c28a61 100644
+index c256aff66a65..033a6b836dec 100644
 --- a/drivers/gpio/Makefile
 +++ b/drivers/gpio/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
- obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
- obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
- obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
-+obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
- obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
- obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
- obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
-diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+@@ -9,6 +9,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
+ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
+ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
++obj-$(CONFIG_GPIO_LINE)		+= gpiolib-line.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+ 
+ # Device drivers. Generally keep list sorted alphabetically
+diff --git a/drivers/gpio/gpiolib-line.c b/drivers/gpio/gpiolib-line.c
 new file mode 100644
-index 000000000000..cb2b2f735c15
+index 000000000000..8abd08c1a5e3
 --- /dev/null
-+++ b/drivers/gpio/gpio-pca9570.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/gpio/gpiolib-line.c
+@@ -0,0 +1,256 @@
 +/*
-+ * Driver for PCA9570 I2C GPO expander
++ * GPIOlib - userspace I/O line interface
 + *
-+ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
 + *
-+ * Based on gpio-tpic2810.c
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
++ * Copyright (C) 2020   Rodolfo Giometti <giometti@enneenne.com>
++ *
++ *   This program is free software; you can redistribute it and/or modify
++ *   it under the terms of the GNU General Public License as published by
++ *   the Free Software Foundation; either version 2 of the License, or
++ *   (at your option) any later version.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ *
++ *   You should have received a copy of the GNU General Public License
++ *   along with this program; if not, write to the Free Software
++ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 + */
 +
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/idr.h>
++#include <linux/kdev_t.h>
 +#include <linux/mutex.h>
++#include <linux/platform_device.h>
 +#include <linux/property.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
 +
-+/**
-+ * struct pca9570 - GPIO driver data
-+ * @chip: GPIO controller chip
-+ * @lock: Protects write sequences
-+ * @out: Buffer for device register
++#define GPIO_LINE_MAX_SOURCES       128      /* should be enough... */
++
++/*
++ * Local variables
 + */
-+struct pca9570 {
-+	struct gpio_chip chip;
-+	struct mutex lock;
-+	u8 out;
++
++static dev_t gpio_line_devt;
++static struct class *gpio_line_class;
++
++static DEFINE_MUTEX(gpio_line_idr_lock);
++static DEFINE_IDR(gpio_line_idr);
++
++struct gpio_line_device {
++	struct gpio_desc *gpiod;
++        const char *name;
++        unsigned int id;
++        struct device *dev;
 +};
 +
-+static int pca9570_read(struct pca9570 *gpio, u8 *value)
++/*
++ * sysfs methods
++ */
++
++static ssize_t state_store(struct device *dev,
++                                struct device_attribute *attr,
++                                const char *buf, size_t count)
 +{
-+	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
++        struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++        int status, ret;
++
++        ret = sscanf(buf, "%d", &status);
++        if (ret != 1 && status != 0 && status != 1)
++                return -EINVAL;
++
++	gpiod_set_value_cansleep(gpio_line->gpiod, status);
++
++        return count;
++}
++
++static ssize_t state_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++	int status = gpiod_get_value_cansleep(gpio_line->gpiod);
++
++	return sprintf(buf, "%d\n", status);
++}
++static DEVICE_ATTR_RW(state);
++
++/*
++ * Class attributes
++ */
++
++static struct attribute *gpio_line_attrs[] = {
++        &dev_attr_state.attr,
++        NULL,
++};
++
++static const struct attribute_group gpio_line_group = {
++        .attrs = gpio_line_attrs,
++};
++
++static const struct attribute_group *gpio_line_groups[] = {
++        &gpio_line_group,
++        NULL,
++};
++
++/*
++ * Driver stuff
++ */
++
++static int gpio_line_create_entry(const char *name,
++				struct gpio_desc *gpiod,
++				struct device *parent)
++{
++	struct gpio_line_device *gpio_line;
++	dev_t devt;
 +	int ret;
 +
-+	ret = i2c_smbus_read_byte(client);
-+	if (ret < 0)
-+		return ret;
++	/* First allocate a new gpio_line device */
++	gpio_line = kmalloc(sizeof(struct gpio_line_device), GFP_KERNEL);
++	if (!gpio_line)
++		return -ENOMEM;
 +
-+	*value = ret;
++        mutex_lock(&gpio_line_idr_lock);
++        /*
++         * Get new ID for the new gpio_line source.  After idr_alloc() calling
++         * the new source will be freely available into the kernel.
++         */
++        ret = idr_alloc(&gpio_line_idr, gpio_line, 0,
++			GPIO_LINE_MAX_SOURCES, GFP_KERNEL);
++        if (ret < 0) {
++                if (ret == -ENOSPC) {
++                        pr_err("%s: too many GPIO lines in the system\n",
++                               name);
++                        ret = -EBUSY;
++                }
++                goto error_device_create;
++        }
++        gpio_line->id = ret;
++        mutex_unlock(&gpio_line_idr_lock);
++
++	/* Create the device and init the device's data */
++        devt = MKDEV(MAJOR(gpio_line_devt), gpio_line->id);
++	gpio_line->dev = device_create(gpio_line_class, parent, devt, gpio_line,
++				   "%s", name);
++	if (IS_ERR(gpio_line->dev)) {
++		dev_err(gpio_line->dev, "unable to create device %s\n", name);
++		ret = PTR_ERR(gpio_line->dev);
++		goto error_idr_remove;
++	}
++	dev_set_drvdata(gpio_line->dev, gpio_line);
++
++	/* Init the gpio_line data */
++	gpio_line->gpiod = gpiod;
++	gpio_line->name = name;
++
++	dev_info(gpio_line->dev, "added\n");
++
++	return 0;
++
++error_idr_remove:
++	mutex_lock(&gpio_line_idr_lock);
++        idr_remove(&gpio_line_idr, gpio_line->id);
++
++error_device_create:
++	mutex_unlock(&gpio_line_idr_lock);
++	kfree(gpio_line);
++
++	return ret;
++}
++
++static int gpio_line_gpio_probe(struct platform_device *pdev)
++{
++        struct device *dev = &pdev->dev;
++        struct fwnode_handle *child;
++        int ret;
++
++        device_for_each_child_node(dev, child) {
++		struct device_node *np = to_of_node(child);
++                const char *label;
++		enum gpiod_flags flags = GPIOD_ASIS;
++                const char *mode = "as-is";
++		struct gpio_desc *gpiod;
++
++                ret = fwnode_property_read_string(child, "label", &label);
++                if (ret && IS_ENABLED(CONFIG_OF) && np)
++                        label = np->name;
++                if (!label) {
++                        dev_err(dev,
++				"label property not defined or invalid!\n");
++                        goto skip;
++                }
++
++		ret = fwnode_property_read_string(child, "mode", &mode);
++		if ((ret == 0) && mode) {
++			if (strcmp("as-is", mode) == 0)
++				flags = GPIOD_ASIS;
++			else if (strcmp("input", mode) == 0)
++				flags = GPIOD_IN;
++			else if (strcmp("out-low", mode) == 0)
++				flags = GPIOD_OUT_LOW;
++			else if (strcmp("out-high", mode) == 0)
++				flags = GPIOD_OUT_HIGH;
++			else if (strcmp("out-low-open-drain", mode) == 0)
++				flags = GPIOD_OUT_LOW_OPEN_DRAIN;
++			else if (strcmp("out-high-open-drain", mode) == 0)
++				flags = GPIOD_OUT_HIGH_OPEN_DRAIN;
++		}
++
++                gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
++                                                         flags, label);
++                if (IS_ERR(gpiod)) {
++                        dev_err(dev, "gpios property not defined!\n");
++                        goto skip;
++                }
++
++                ret = gpio_line_create_entry(label, gpiod, dev);
++                if (ret)
++                        goto skip;
++
++		/* Success, now go to the next child */
++		continue;
++
++skip:		/* Error, skip the child */
++		fwnode_handle_put(child);
++		dev_err(dev, "failed to register GPIO lines interface\n");
++        }
++
++        return 0;
++}
++
++static const struct of_device_id of_gpio_gpio_line_match[] = {
++        { .compatible = "gpio-line", },
++        { /* sentinel */ }
++};
++
++static struct platform_driver gpio_line_gpio_driver = {
++        .driver         = {
++                .name   = "gpio-line",
++                .of_match_table = of_gpio_gpio_line_match,
++        },
++};
++
++builtin_platform_driver_probe(gpio_line_gpio_driver, gpio_line_gpio_probe);
++
++/*
++ * Module stuff
++ */
++
++static int __init gpiolib_line_init(void)
++{
++	/* Create the new class */
++	gpio_line_class = class_create(THIS_MODULE, "line");
++	if (!gpio_line_class) {
++		printk(KERN_ERR "gpio_line: failed to create class\n");
++		return -ENOMEM;
++	}
++	gpio_line_class->dev_groups = gpio_line_groups;
++
 +	return 0;
 +}
 +
-+static int pca9570_write(struct pca9570 *gpio, u8 value)
-+{
-+	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
-+
-+	return i2c_smbus_write_byte(client, value);
-+}
-+
-+static int pca9570_get_direction(struct gpio_chip *chip,
-+				 unsigned offset)
-+{
-+	/* This device always output */
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int pca9570_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer;
-+	int ret;
-+
-+	ret = pca9570_read(gpio, &buffer);
-+	if (ret)
-+		return ret;
-+
-+	return !!(buffer & BIT(offset));
-+}
-+
-+static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer;
-+	int ret;
-+
-+	mutex_lock(&gpio->lock);
-+
-+	buffer = gpio->out;
-+	if (value)
-+		buffer |= BIT(offset);
-+	else
-+		buffer &= ~BIT(offset);
-+
-+	ret = pca9570_write(gpio, buffer);
-+	if (ret)
-+		goto out;
-+
-+	gpio->out = buffer;
-+
-+out:
-+	mutex_unlock(&gpio->lock);
-+}
-+
-+static int pca9570_probe(struct i2c_client *client)
-+{
-+	struct pca9570 *gpio;
-+
-+	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	gpio->chip.label = client->name;
-+	gpio->chip.parent = &client->dev;
-+	gpio->chip.owner = THIS_MODULE;
-+	gpio->chip.get_direction = pca9570_get_direction;
-+	gpio->chip.get = pca9570_get;
-+	gpio->chip.set = pca9570_set;
-+	gpio->chip.base = -1;
-+	gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
-+	gpio->chip.can_sleep = true;
-+
-+	mutex_init(&gpio->lock);
-+
-+	/* Read the current output level */
-+	pca9570_read(gpio, &gpio->out);
-+
-+	i2c_set_clientdata(client, gpio);
-+
-+	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
-+}
-+
-+static const struct i2c_device_id pca9570_id_table[] = {
-+	{ "pca9570", 4 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
-+
-+static const struct of_device_id pca9570_of_match_table[] = {
-+	{ .compatible = "nxp,pca9570", .data = (void *)4 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
-+
-+static struct i2c_driver pca9570_driver = {
-+	.driver = {
-+		.name = "pca9570",
-+		.of_match_table = pca9570_of_match_table,
-+	},
-+	.probe_new = pca9570_probe,
-+	.id_table = pca9570_id_table,
-+};
-+module_i2c_driver(pca9570_driver);
-+
-+MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
-+MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
-+MODULE_LICENSE("GPL v2");
--- 
-2.27.0
++postcore_initcall(gpiolib_line_init);
 
+--------------349B4E7446A5F5834C3D4114--
