@@ -2,104 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D266021AF1B
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 08:02:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BFED21B019
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 09:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgGJGC4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 02:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726288AbgGJGCx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 02:02:53 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EB9C08C5DC
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Jul 2020 23:02:53 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b9so1812715plx.6
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Jul 2020 23:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=Oyd2oGqBVPyTAZ6JKFzEpbSr77ywHRgUekUG2FwE1cs=;
-        b=J07Y2gm5zuILWzAzBMOo7yDMDUtUMb/Y8Nizn3WaDwf8021z99+kciMF7G3G6daKCL
-         QhNbumaJhrt2UGJ3VPwE3FtUWphcnRsOd3oZNeAYOehVVdmkHlDJSCj3OFbCqLsmlxlh
-         ruRX6eK6e1o0KvdHMX7zpNYqp0/xMh0BAPcbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=Oyd2oGqBVPyTAZ6JKFzEpbSr77ywHRgUekUG2FwE1cs=;
-        b=kY/hWdD3pfDQXuBUIKQQSJGSKur1VF1m4UVI4AmFsyjZZelVlLBSpIqwh5Fzs0JTG/
-         +e4wYLq8Tq7r6dw1PLuR9pKVxXREgx2kc/q/7Xb4/24sra4q+UfSOQHDfHt5fXiIJoJA
-         FCw0qe+0UwkW8hfczlcJTjWeZq9nrDiBbQBpymbzCp6a5uUxLPPGDNFS6ReWFAtuvsOc
-         jAfByGcrPeQiEwsJOKASB/Dxclmz3t8YHrI1ESpip+BU+/kswgZlRfQjtoBlzHxgmOKN
-         /1CuXqr1Ymrcd/iepAKz3cqYDq9DoAUohUGxKLuzXnAgd6y41V13gQmF5ojUisgKAK/k
-         almg==
-X-Gm-Message-State: AOAM533aKQA/dh/Z5bbxGlTbUA28Z+kt3c+Y8aNYrzr0iimij7KTE42O
-        FLhLQ/7C1/cDVkoJyIe7CAZRsw==
-X-Google-Smtp-Source: ABdhPJxQuO02QwzrJ7yQ4iqF18cqHc9AyeYIrNPWmubHIZDKuPvIBSEE6MzrekewNPVhTy6i4w1egg==
-X-Received: by 2002:a17:90a:2749:: with SMTP id o67mr3989699pje.183.1594360972481;
-        Thu, 09 Jul 2020 23:02:52 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id h194sm4438382pfe.201.2020.07.09.23.02.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 23:02:51 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        id S1726288AbgGJH2K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 03:28:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2210 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725851AbgGJH2K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 03:28:10 -0400
+X-UUID: 0e6bc4382b20431e90a4d40b6f04524c-20200710
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Kck5qu3yKPdlKefd7jPiCK9z60HEzMZy05drle8P5fI=;
+        b=aJ95BNTeouiRE1P/SMVcsBcsMJC6B6+AFmJUTp30RqfkK7JZ0xoLiQZG8eqKAhH7WIjiq9Be23cEuGfImUtIFDQsEYkKgNqHN98FlnCZ8kQINK672JNH1Tw9OsHnIDG37DPkH/rAVSFrp8JNfUDbZ2YaVjqWejitRc+Uf+93xFI=;
+X-UUID: 0e6bc4382b20431e90a4d40b6f04524c-20200710
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1017993438; Fri, 10 Jul 2020 15:28:05 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 10 Jul 2020 15:28:03 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 10 Jul 2020 15:28:02 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <eddie.huang@mediatek.com>,
+        <chuanjia.liu@mediatek.com>, <biao.huang@mediatek.com>,
+        <hongzhou.yang@mediatek.com>, <erin.lo@mediatek.com>,
+        <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH 0/3] Mediatek pinctrl patch on mt8192 
+Date:   Fri, 10 Jul 2020 15:27:14 +0800
+Message-ID: <20200710072717.3056-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <87wo3setn8.wl-maz@kernel.org>
-References: <20200625001039.56174-1-john.stultz@linaro.org> <20200625001039.56174-4-john.stultz@linaro.org> <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com> <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com> <87wo3setn8.wl-maz@kernel.org>
-Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-To:     John Stultz <john.stultz@linaro.org>, Marc Zyngier <maz@kernel.org>
-Date:   Thu, 09 Jul 2020 23:02:50 -0700
-Message-ID: <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 3CB678FE8CE4C5D6230117BC5AACDE25C13BDDFBBE0F779C8812E6E4463C13942000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Marc Zyngier (2020-06-27 02:37:47)
-> On Sat, 27 Jun 2020 02:34:25 +0100,
-> John Stultz <john.stultz@linaro.org> wrote:
-> >=20
-> > On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wro=
-te:
-> > >
-> > >
-> > > Is there any reason to use IRQCHIP_DECLARE if this can work as a
-> > > platform device driver?
-> > >
-> >=20
-> > Hey! Thanks so much for the review!
-> >=20
-> > Mostly it was done this way to minimize the change in the non-module
-> > case. But if you'd rather avoid the #ifdefery I'll respin it without.
->=20
-> That would certainly be my own preference. In general, IRQCHIP_DECLARE
-> and platform drivers should be mutually exclusive in the same driver:
-> if you can delay the probing and have it as a proper platform device,
-> then this should be the one true way.
->=20
+VGhpcyBzZXJpZXMgaW5jbHVkZXMgMyBwYXRjaGVzOg0KMS5hZGQgcGluY3RybCBmaWxlIG9uIG10
+ODE5Mi4NCjIuYWRkIHBpbmN0cmwgYmluZGluZyBkb2N1bWVudCBvbiBtdDgxOTIuDQozLmFkZCBw
+aW5jdHJsIGRyaXZlciBvbiBNVDgxOTIuDQoNClpoaXlvbmcgVGFvICgzKToNCiAgZHQtYmluZGlu
+Z3M6IHBpbmN0cmw6IG10ODE5MjogYWRkIHBpbmN0cmwgZmlsZQ0KICBkdC1iaW5kaW5nczogcGlu
+Y3RybDogbXQ4MTkyOiBhZGQgYmluZGluZyBkb2N1bWVudA0KICBwaW5jdHJsOiBhZGQgcGluY3Ry
+bCBkcml2ZXIgb24gbXQ4MTkyDQoNCiAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5
+Mi55YW1sICAgICAgfCAgMTcwICsrDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcg
+ICAgICAgICAgICAgIHwgICAgNyArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL01ha2VmaWxl
+ICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXQ4MTkyLmMgICAgIHwgMTQ1MyArKysrKysrKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10ay1tdDgxOTIuaCB8IDIyMjggKysrKysrKysrKysrKysrKysNCiBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3BpbmN0cmwvbXQ4MTkyLXBpbmZ1bmMuaCAgfCAxMzQ0ICsrKysrKysrKysN
+CiA2IGZpbGVzIGNoYW5nZWQsIDUyMDMgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLW10ODE5
+Mi55YW1sDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5j
+dHJsLW10ODE5Mi5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10ay1tdDgxOTIuaA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJp
+bmRpbmdzL3BpbmN0cmwvbXQ4MTkyLXBpbmZ1bmMuaA0KDQotLQ0KMi4yNS4xDQoNCg==
 
-Does it work? I haven't looked in detail but I worry that the child
-irqdomain (i.e. pinctrl-msm) would need to delay probing until this
-parent irqdomain is registered. Or has the hierarchical irqdomain code
-been updated to handle the parent child relationship and wait for things
-to probe or be loaded?
