@@ -2,129 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0215D21B268
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 11:38:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFBE721B40E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 13:34:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgGJJiX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 05:38:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54072 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726288AbgGJJiW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Jul 2020 05:38:22 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06A9V1sg031341;
-        Fri, 10 Jul 2020 11:37:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=TdO/QId43zO1OJNo5MpmTUM7DAp5Luky5pxs0JsWi0I=;
- b=YiZrqZhwdFv/DANckpIXL+ISrrXCT7DT441u8ltqPXaOVWED/6+Orqb59R8IZoyvBXDV
- cf916W17upvyT+ueoRJ9x4IGYEVljTTthXoqkytH3AQ+tz7ymYh8WoFjj7IXN6FYojxB
- zzk78b+aHTWPDbIqMypycCSQM1cxWwL8pL1HqadtCmg+EVOh9d6f6S85y19A4NcbDleK
- qYAps7bquR1g4KtBSXI/oBVjxPwd94pOQ1EVRCHyu+NczBClmIUb/INVy0hFFzJXKrUM
- M6hU2wznb5qwpeCPiTJXleWJc85BfTdGQmB7JHwu9c5n5xfrPZFuoD/JQxZipcxVbpHB cw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 325k4d2fcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 11:37:50 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 55A8D10002A;
-        Fri, 10 Jul 2020 11:37:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 234172AE6DF;
-        Fri, 10 Jul 2020 11:37:49 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 Jul
- 2020 11:37:48 +0200
-Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
-To:     Marc Zyngier <maz@kernel.org>, kernel test robot <lkp@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
-References: <20200706081106.25125-1-alexandre.torgue@st.com>
- <202007081232.bA2RH80f%lkp@intel.com> <87imevemwg.wl-maz@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com>
-Date:   Fri, 10 Jul 2020 11:37:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727955AbgGJLeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 07:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgGJLeg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 07:34:36 -0400
+X-Greylist: delayed 1072 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Jul 2020 04:34:36 PDT
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C94AC08C5CE
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 04:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QnCaOuIcCvhdYBaLUabKy4df1O0QApUXplyyBGGXirA=; b=POGAhwidXZA/FO2MzD+VgQyWM
+        GSo4tLG+skCosrnZ1xIBzj1L/J0XxDOdGJVtG5cPDsJXvxb6WsUVS/86X8mzv4IH/KO06x58lrwvZ
+        FF59kyB2cTMBhIv0IMY50JrRgGWFDOC0uv2fnqmfv3fgX1yGY08Q83tFTbt4geIcqoE5I=;
+Received: from p200300ccff110000e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff11:0:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jtr0m-0004gH-G1; Fri, 10 Jul 2020 13:16:12 +0200
+Received: from [::1] (helo=localhost)
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jtr0l-00020e-Se; Fri, 10 Jul 2020 13:16:11 +0200
+Date:   Fri, 10 Jul 2020 13:16:02 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, oleksandr.suvorov@toradex.com,
+        aford173@gmail.com, hverkuil-cisco@xs4all.nl,
+        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
+        geert+renesas@glider.be, olof@lixom.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Build in CONFIG_GPIO_MXC
+ by default
+Message-ID: <20200710131435.38f1f8a0@kemnade.info>
+In-Reply-To: <1594164323-14920-3-git-send-email-Anson.Huang@nxp.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+        <1594164323-14920-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <87imevemwg.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_03:2020-07-10,2020-07-10 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/d6/Rv7Yx5KojLO0Piux=DEc"; protocol="application/pgp-signature"
+X-Spam-Score: -1.0 (-)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
+--Sig_/d6/Rv7Yx5KojLO0Piux=DEc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/10/20 11:31 AM, Marc Zyngier wrote:
-> Alexandre,
-> 
-> On Wed, 08 Jul 2020 05:57:24 +0100,
-> kernel test robot <lkp@intel.com> wrote:
->>
->> [1  <text/plain; us-ascii (7bit)>]
->> Hi Alexandre,
->>
->> I love your patch! Perhaps something to improve:
->>
->> [auto build test WARNING on stm32/stm32-next]
->> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
->> [If your patch is applied to the wrong git tree, kindly drop us a note.
->> And when submitting patch, we suggest to use  as documented in
->> https://git-scm.com/docs/git-format-patch]
->>
->> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
->> config: arm-randconfig-s031-20200707 (attached as .config)
->> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
->> reproduce:
->>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>          chmod +x ~/bin/make.cross
->>          # apt-get install sparse
->>          # sparse version: v0.6.2-31-gabbfd661-dirty
->>          # save the attached .config to linux build tree
->>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
->>
->> If you fix the issue, kindly add following tag as appropriate
->> Reported-by: kernel test robot <lkp@intel.com>
->>
->> All warnings (new ones prefixed by >>):
->>
->>     In file included from include/linux/build_bug.h:5,
->>                      from include/linux/bits.h:23,
->>                      from include/linux/bitops.h:5,
->>                      from drivers/irqchip/irq-stm32-exti.c:8:
->>     drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
->>     drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
->>       683 |  if (desc->irq_parent >= 0) {
->>           |                       ^~
->>     include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
->>        58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->>           |                                                    ^~~~
->>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
->>       683 |  if (desc->irq_parent >= 0) {
-> 
-> Do you plan to address this? Looks like an actual bug to me.
+Hi,
 
-I'll fix it in v2, I was just waiting for other comments before sending 
-a v2. Do you prefer I send a v2 with this fix, and you'll do your review 
-on this v2 ?
+On Wed,  8 Jul 2020 07:25:23 +0800
+Anson Huang <Anson.Huang@nxp.com> wrote:
 
-regards
-alex
+> i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC
+> as built-in manually.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  arch/arm/configs/imx_v6_v7_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+shouldn't this be done also in the multi_v7_defconfig?
 
-> 
-> 	M.
-> 
+Regards,
+Andreas
+
+--Sig_/d6/Rv7Yx5KojLO0Piux=DEc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl8ITfIACgkQl4jFM1s/
+ye92NBAAirKEXgFataafDg7cpIdPHiPdBtEQxJN0JqXbsleYOFa4XZX8UEaS5T+E
+bNQ8n7MLSorL1sxQL8JTTyaXcpZ0uWTLW1JYIxFTJmOZLvEg9CuiKWASFg2L78w6
+ie/jiFwZhUX5LitiikICMcXbdqMatE+UjeFbTIEWZfiSbX5UNSUMF5bPNTOatgvD
+K33z+2z9jc2rTToigZRJg2Qe3+x96rxTAZ8oJuX1fVR8Ini6cbUjI9LvBlPQmpmW
+asOU92aqMGIeBjZRJCO+GBfrP/Df1P/LoFcmZ98Q1G4OR+Gr/1dudhXjScEIzydF
+fmHW1vOsJQoLAdaX7Q8iiSNLR6S6yIkJSLbfP6aVSbjE3lq0OUti2aSQ56KxlUBt
+3JkVP19uql1hmhLYqFOObbwBjpE4xhvqJSHz0F//sun+KE1G//BqVZ5d049wyuV8
+VX9rWje+/cRD711W7/HKcrzY/juP74eFOt9zUDgx7DCVgVYaZ41HHSGtDdfD6dXf
+fsqoWvzf5o64jCC3taMnKA2nYH8yC0796+fXQVuaBWoZal6F0fIeUOVF7mGoqK2z
+rvCmfrWeRtDXfs9w1t8csiWMxgywYvkoPJ/dm3AAwtpSHKFdxB+XHmKw7traX6Bl
+IVTV+BN5qhs0XqDM95AlhSZ0RLINTgzFoUVjcpgWp40XMLq+szk=
+=nwOK
+-----END PGP SIGNATURE-----
+
+--Sig_/d6/Rv7Yx5KojLO0Piux=DEc--
