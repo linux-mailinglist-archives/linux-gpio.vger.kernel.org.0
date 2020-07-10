@@ -2,166 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F3B421B6FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 15:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2087021B7D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 16:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgGJNrc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 09:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
+        id S1728044AbgGJOJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 10:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgGJNrb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 09:47:31 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B0C3C08C5CE;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z15so6002789wrl.8;
-        Fri, 10 Jul 2020 06:47:31 -0700 (PDT)
+        with ESMTP id S1726820AbgGJOJf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 10:09:35 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52367C08C5CE
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ch3so2666716pjb.5
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 07:09:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=HiUD1SeS9oNEOQGLlGjspqlx1ucgIHwcztodspOdsWF5ZLU+APPJD7sBYoCs4essF+
-         iXgSyAj2XPcG3o0aOB4IvQ7R+0mCaei3Vineeb3Jnx6Iix8KSmow+PxMGaa/BzxztTPy
-         4rbyx0c8P12c5p1sgmpGPzsj1/CRo+hL11l1RTydDnt82Fjj7hflsJezjbzZocMlYe7t
-         3fcb3ZuCkDRaexCjlYWVuJ0pa1YLBTdk5C8/mzS3IdNLnwwyWDjp7vW8Tgv7st0tSHaa
-         fSTZN5E5d3BiwyZy+8IV6CghewKF9APDlPS7mjHJCClCC3aUJIFsXvWSBEkfC3My+R1w
-         FJ/A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y6Z/nwDKLdFCkAXEBqyuG3izXJ//6va9st2WwWNZZuw=;
+        b=klRSeNZYiKSPrl6LY4tNV4mZjS/R7Vj5vSZOhshB/6YTEWthQlcL2dpNXU3vWZdu+G
+         1gWO+VVnTa11JVh/ujOjIbsrOaYwgYtmpcHv6NJ21tkBcwe93NPXnvmcbnP8OBpxnFl3
+         QL7kILDfi6tCxGLgta5Fh5uhiGP3+3+3xIxmjjtyZDkbiDm4ew+LMy5Dag6gmW1mUwTY
+         Fd9wggcYnrtkpKF4BD0FjAuM/hYEk0kXgyPESBD32LgU1YOTUSGH4CmLrgj3Qs8T1vQr
+         OfXg8kJMytgwd2tX5OQ2pz2QTuqCDfOOb7gFvb6HB0KCgsqfYyk9GfEQrguJRhyl4YhX
+         stKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FbKNbXw5+ofG9RyKnBh68SnbvorNSKKjBU7WOLXWQE4=;
-        b=rkqRjJ0tjtbLHRxrtjZ0IXxrYgnTkWRmE3iTDTGI2zC0meRgfO5HB9IoIZnBiz0LGF
-         h5TSw2qBXiVWX9DCAgPYLKNJDSV0FPJeuY3Qj/UKNNV8bikIb6NrnkLWdO6mk81LpyNs
-         fs2gFNZzL12BXBuby3/fF4w0RftKIyTIXFCrS/v+NcgV+gKYlaxIdPXFgdFICIrz1RhJ
-         0qtORv63kuiylQ4Aa7BjKcE8uXZxWCPA9Zai3W7S7UL26W9CkTQoY9EteChWZf4VTiOB
-         jLoffK7AVZOtdUaL/YgF2pD8+PnC7I/jseHa0psyc8+5SYFPvZlZgwtgJdKD39RyjyV4
-         D4Uw==
-X-Gm-Message-State: AOAM530aUXBcx32WVQaqeXnvEbAAditxUbNHurw5C3pdMIN3p7nIysA8
-        9XKCONSLeAq2bU/1X0AFvCo=
-X-Google-Smtp-Source: ABdhPJz30P3Ja6nlaCcxoVO3T84UFVmzRkAQoQzS2oPJFdsgjFqTddAfgdfaqHdktNmYIqTpnDGbFQ==
-X-Received: by 2002:adf:e6c1:: with SMTP id y1mr42243181wrm.116.1594388850081;
-        Fri, 10 Jul 2020 06:47:30 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.114.245])
-        by smtp.gmail.com with ESMTPSA id y6sm4572954wrr.74.2020.07.10.06.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 06:47:29 -0700 (PDT)
-Subject: Re: [PATCH v7 7/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
- <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <2eee3a1f-464a-359e-e7d3-0d331c8898ed@gmail.com>
-Date:   Fri, 10 Jul 2020 15:47:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y6Z/nwDKLdFCkAXEBqyuG3izXJ//6va9st2WwWNZZuw=;
+        b=IXJZI1qU3YIRWSs8IXoakVsJ5LymoMoE0JagiaVV8PP0bM1PtOTnSxqG85rvSAsvr3
+         lrJNRLM3IpQ7/i31axQwBqyrevPb+/GdP4csg7i8EXKlgppTT7+lWv+Q8S8jguyxMYlv
+         SExmD4tnEK/6J7h9rAA1F/bvlTp4q9f7JycIQDqL0jtyWmA5/rJ0WKJpRdf1dEIorKOc
+         JeDtWJYuS9aWYVZ1+ATpFQw88Lfxk3fyyzBWnr8ANQBqV/7z/MzK34Rjxrl0kBcU9LfG
+         SMo31iC1w2cpzTy+9BBLM8qYklqXU/SBewmW4cUsjEDYrfrJv6BcBOs5BqbGEYH4HF2I
+         DMtg==
+X-Gm-Message-State: AOAM530WiroYhhpD/HggpJQoKtH2iGB9C9vplF30Y55kKW78FLlG6Gr3
+        8jW7KVtzJ3Ywenfd3a4sdAf0SZQKAfKgaRMPlGA=
+X-Google-Smtp-Source: ABdhPJx0uE1+kL8vekI/evWQn7PikXkeYfmNiQxNrplrXdWK9jx+3fnOB3Y05WjPHod/IYzM5D1oiyS0L8OmIwNkpR4=
+X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr5850738pjb.181.1594390174816;
+ Fri, 10 Jul 2020 07:09:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1593694630-26604-9-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <5f049035.1c69fb81.15cb1.53fdSMTPIN_ADDED_MISSING@mx.google.com>
+ <CAMpxmJWDiF+x5YzYcgcQgH9C6U3rpZLex19UGFAAj7Dh-+BA=Q@mail.gmail.com>
+ <CAHp75VevzXfUH2E6DPRt4QP82xcDqPAZeKfqFAmiwcNG4XaK2g@mail.gmail.com>
+ <BY5PR12MB41141291F53618E098239A73F9650@BY5PR12MB4114.namprd12.prod.outlook.com>
+ <CAHp75Vc8WTO5pO3wyuuRZczavE+QKJM3=ji1J3OEmzjFdjj+ww@mail.gmail.com> <DM6PR12MB41226F148D9D3F64A2C1EE19F9650@DM6PR12MB4122.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB41226F148D9D3F64A2C1EE19F9650@DM6PR12MB4122.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 Jul 2020 17:09:16 +0300
+Message-ID: <CAHp75VfjjXMH8KmBCrEeqwJUw54qgiXiaFGPajatdJ=PQMX4uA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Add some warn print for easier to debug
+To:     qiao mnlife <mnlife.qiao@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        mnlife <mnlife@foxmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Jul 10, 2020 at 4:54 PM qiao mnlife <mnlife.qiao@gmail.com> wrote:
+>
+> It will print the truncated name in gpiolib-of.c line 246, but I think this is not straightforward, and I feel its printing level is wrong
+
+So, it does its job:
+- it's for development
+- it gives developer and information when debugging feature is enabled
+- it does show the issue
+
+> From: Andy Shevchenko <andy.shevchenko@gmail.com>> On Fri, Jul 10, 2020 at 6:11 AM qiao mnlife <mnlife.qiao@gmail.com> wrote:
+> >
+> > However, in development, it is not easy to know that this problem is caused, just looking at the documentation is not enough, I need to read the gpiolib source code more attentive
+>
+> Have you tried to enable CONFIG_GPIO_DEBUG?
+>
+> > From: linux-gpio-owner@vger.kernel.org <linux-gpio-owner@vger.kernel.org> on behalf of Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Thursday, July 9, 2020 11:40:52 PM
+> > To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Cc: mnlife <mnlife@foxmail.com>; Linus Walleij <linus.walleij@linaro.org>; linux-gpio <linux-gpio@vger.kernel.org>
+> > Subject: Re: [PATCH] gpiolib: Add some warn print for easier to debug
+> >
+> > On Thu, Jul 9, 2020 at 4:27 PM Bartosz Golaszewski
+> > <bgolaszewski@baylibre.com> wrote:
+> > > On Tue, Jul 7, 2020 at 5:09 PM mnlife <mnlife@foxmail.com> wrote:
+> >
+> > ...
+> >
+> > > > +               if (size >= sizeof(prop_name))
+> > > > +                       dev_warn(dev, "prop_name %s is truncated with size %d\n",
+> > > > +                                prop_name, size);
+> >
+> > > To me this isn't a reason for a warning. If anything, this should
+> > > simply be documented (if it's not already).
+> >
+> > +1. This can only be useful in the development cycle.
+> >
+> > CONFIG_DEBUG_GPIO easily catches this as well.
+> >
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+>
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
 
-On 02/07/2020 14:57, Hanks Chen wrote:
-> this adds initial MT6779 dts settings for board support,
-> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
-> 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
-> ---
->   arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |   31 +++
->   arch/arm64/boot/dts/mediatek/mt6779.dtsi    |  271 +++++++++++++++++++++++++++
->   3 files changed, 303 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> 
-[...]
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
 
-I suppose that should be:
-
-clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
-
-
-Regards,
-Matthias
-
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		audio: clock-controller@11210000 {
-> +			compatible = "mediatek,mt6779-audio", "syscon";
-> +			reg = <0 0x11210000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mfgcfg: clock-controller@13fbf000 {
-> +			compatible = "mediatek,mt6779-mfgcfg", "syscon";
-> +			reg = <0 0x13fbf000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		mmsys: syscon@14000000 {
-> +			compatible = "mediatek,mt6779-mmsys", "syscon";
-> +			reg = <0 0x14000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		imgsys: clock-controller@15020000 {
-> +			compatible = "mediatek,mt6779-imgsys", "syscon";
-> +			reg = <0 0x15020000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vdecsys: clock-controller@16000000 {
-> +			compatible = "mediatek,mt6779-vdecsys", "syscon";
-> +			reg = <0 0x16000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		vencsys: clock-controller@17000000 {
-> +			compatible = "mediatek,mt6779-vencsys", "syscon";
-> +			reg = <0 0x17000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		camsys: clock-controller@1a000000 {
-> +			compatible = "mediatek,mt6779-camsys", "syscon";
-> +			reg = <0 0x1a000000 0 0x10000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +		ipesys: clock-controller@1b000000 {
-> +			compatible = "mediatek,mt6779-ipesys", "syscon";
-> +			reg = <0 0x1b000000 0 0x1000>;
-> +			#clock-cells = <1>;
-> +		};
-> +
-> +	};
-> +};
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
