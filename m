@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 016D321BA69
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 18:11:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC3921BA73
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 18:11:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgGJQLL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 12:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59698 "EHLO
+        id S1728224AbgGJQLp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 12:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728090AbgGJQLL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 12:11:11 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D958FC08C5DC
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:10 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id j21so1980126ual.11
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:10 -0700 (PDT)
+        with ESMTP id S1727915AbgGJQLo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 12:11:44 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED20C08C5CE
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:44 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id q15so3251724vso.9
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9VScCVlSfPm10VLDJ+axRDGvLBsXb3kNBBHpzq8FkJY=;
-        b=Wj9sHUVaOU3sganeLL8aaDicZfyUpHLNACr9EYLefs5Bo1d0zLKvSwqMCmX3tWo26I
-         4U9XetO9wuGMwLD5gDVZ53itPP2oEgt/FDBJ1SblPyzIvusj8uQzGFcvz112Y9B+4nUk
-         gVG7cvS2em6LtdjPdDDHIDvSExe3TYLJglB4s=
+        bh=yuuyGMPPXvJbhukGctpaGeXqFcZXftTaBLVOd6hvTaY=;
+        b=iD3Vj09RYSQk0VOmmHlNPXoLq3wYCqOqY5sTrl+2QE2Sz43ZGFHENAkHrCLJXz34nT
+         jIYryH1kh0zZkT9DfOyBCF0h3c+PefBclciTW3O3hg5y5EaTuj1KhgMICW50zkaFzzKU
+         hcux+sujAaDsBPqnjfkyKyrIUyWddynsL/iq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9VScCVlSfPm10VLDJ+axRDGvLBsXb3kNBBHpzq8FkJY=;
-        b=oIUKJYkgG4an39NjH2NvJET+ga1vjAohkX+8fcxynAYDQxKK2509acpKTv1Ttq3EgN
-         FI8rNrHCLoiKzJas0w2NRQUQP23g2h6yyN+WKjdyErhshLrbhsVuXDWlJketBhiTCyRx
-         pp3QjuzjC9F5uprdkldf7CtMElTnDYQv/IiImForN1AxOJ14/4SupDmVuDVfxWUdeVsq
-         Tffd50ejh9/czxcxv/1YA5cp0Ex8tPP48iUa5G+7A6EPNPXk/GAPEsFsk3OV4vg0Ac4P
-         4Z9yKe+b758leY4ajQxUD/5yYiGiAUlkDjR/G6Nkf7akVGzPgJZHt5WSiEe6H2S5gIze
-         VxYQ==
-X-Gm-Message-State: AOAM531MXUrA5YH/5MT5GNa5gXeRHLgvtJv/XljWPT8aQtk6+rT9EKBm
-        /99TUlc9wMCl+YfVocJD+zQhlp/V0MI=
-X-Google-Smtp-Source: ABdhPJyIqkb2WnOGEogyIKg+7OrCemKuwNcq6Ixu8HUE42WVHEElimdH8wLRyYNb0djFT1dkVCoFDQ==
-X-Received: by 2002:ab0:2e98:: with SMTP id f24mr21085929uaa.1.1594397469532;
-        Fri, 10 Jul 2020 09:11:09 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id q83sm869427vkq.46.2020.07.10.09.11.07
+        bh=yuuyGMPPXvJbhukGctpaGeXqFcZXftTaBLVOd6hvTaY=;
+        b=syD5ga2zGeZrk/0/GAij5nlKvPTSPo5p2QsNSJEDhWRAfIK1U66a6sO28C0v3uqrpQ
+         nSW0I8oQpg0jR+ds72hCq9TunA5tIrw2n39I8ZvS8NAp1Hx9ND9Ms1JIteWLBfs8MSRX
+         DKW/J5ZfTV5Ja6mbdCSpDEBjtLNY1w7ZQyzQDuQ+hYMxdUVAWZLm55LGqtGVkrf7bpYG
+         38IWQbVR+u9evMNiyHzqcGHuEqps/FlxoDNVZBGxKtU/4p7fpLQSERXPBWeqLOssTxxM
+         wrhG2NH0OVt0h+TrNQK/5kNGmX7bl4qpV3I6xylI4sYcr2elFgQX5ii9IqxNXvtJABpK
+         omcQ==
+X-Gm-Message-State: AOAM532NXELMSU/t/HSfbfRz2AlsCpgqMFu3Uy66hgs2fiL09PURabZf
+        Ma0y1ylf7UUV/6FtrbVGebaqbNlQKeo=
+X-Google-Smtp-Source: ABdhPJzesIJ9o5m45/M1PJJhmMHQonFdz2dk3RaJ+zpX15ajPnQZtTORCOBVYjf+kYLddGxzT3JazA==
+X-Received: by 2002:a67:d184:: with SMTP id w4mr34397320vsi.17.1594397503057;
+        Fri, 10 Jul 2020 09:11:43 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id g10sm914331vkm.35.2020.07.10.09.11.41
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 09:11:08 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id c7so1994398uap.0
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:07 -0700 (PDT)
-X-Received: by 2002:ab0:6e8e:: with SMTP id b14mr56616622uav.0.1594397467385;
- Fri, 10 Jul 2020 09:11:07 -0700 (PDT)
+        Fri, 10 Jul 2020 09:11:42 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id q15so3251660vso.9
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:41 -0700 (PDT)
+X-Received: by 2002:a05:6102:30b5:: with SMTP id y21mr29286187vsd.42.1594397501165;
+ Fri, 10 Jul 2020 09:11:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
- <87lfjreo7m.wl-maz@kernel.org>
-In-Reply-To: <87lfjreo7m.wl-maz@kernel.org>
+ <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
+In-Reply-To: <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 10 Jul 2020 09:10:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VzhdL67ocBPmAngxbZJsq-dSjhV2QjA8=7Ry+9oYxXHw@mail.gmail.com>
-Message-ID: <CAD=FV=VzhdL67ocBPmAngxbZJsq-dSjhV2QjA8=7Ry+9oYxXHw@mail.gmail.com>
+Date:   Fri, 10 Jul 2020 09:11:29 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VDj285gcUY83fK0OM_WzHDTHsTxgy9n04UgK6z88qMKw@mail.gmail.com>
+Message-ID: <CAD=FV=VDj285gcUY83fK0OM_WzHDTHsTxgy9n04UgK6z88qMKw@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
-To:     Marc Zyngier <maz@kernel.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     LinusW <linus.walleij@linaro.org>,
         Stephen Boyd <swboyd@chromium.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
@@ -66,8 +66,8 @@ Cc:     LinusW <linus.walleij@linaro.org>,
         Lina Iyer <ilina@codeaurora.org>,
         Andy Gross <agross@kernel.org>,
         Rajendra Nayak <rnayak@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -78,13 +78,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On Fri, Jul 10, 2020 at 2:03 AM Marc Zyngier <maz@kernel.org> wrote:
+On Thu, Jul 9, 2020 at 10:09 PM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
 > Hi Doug,
 >
-> On Wed, 08 Jul 2020 22:16:25 +0100,
-> Douglas Anderson <dianders@chromium.org> wrote:
-> >
+> On 7/9/2020 2:46 AM, Douglas Anderson wrote:
 > > As per Qualcomm, there is a PDC hardware issue (with the specific IP
 > > rev that exists on sc7180) that causes the PDC not to work properly
 > > when configured to handle dual edges.
@@ -111,23 +109,11 @@ On Fri, Jul 10, 2020 at 2:03 AM Marc Zyngier <maz@kernel.org> wrote:
 > > sending commands to our security chip to toggle it--not exactly great
 > > for testing to make sure there are no race conditions if the interrupt
 > > bounces a lot.
->
-> This looks positively awful (the erratum, not the patch). Is there an
-> actual description of the problem, outlining the circumstances that
-> triggers this issue? The PDC really never fails to disappoint...
-
-Hopefully someone from Qualcomm can chime in here.  My entire
-knowledge of the errata comes from:
-
-https://lore.kernel.org/r/c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org
-
-...and I tried to copy the exact phrasing that Rajendra gave.
-
-
-> >  drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
-> >  drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
-> >  drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
-> >  3 files changed, 85 insertions(+)
+> >
+> >   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
+> >   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
+> >   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
+> >   3 files changed, 85 insertions(+)
 > >
 > > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
 > > index 83b7d64bc4c1..45ca09ebb7b3 100644
@@ -135,7 +121,7 @@ https://lore.kernel.org/r/c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org
 > > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
 > > @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
 > >       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> >  }
+> >   }
 > >
 > > +/**
 > > + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
@@ -153,62 +139,21 @@ https://lore.kernel.org/r/c747043d-c69e-4153-f2ca-16f1fc3063c2@codeaurora.org
 > > +     const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
 > > +     unsigned long flags;
 > > +     int loop_limit = 100;
->
-> I guess this is a "finger up in the air" type of limit?
-
-Yes, the same "finger up in the air" as
-msm_gpio_update_dual_edge_pos() in the same file.  My function comment
-refers to the other function to try to tie them together at least a
-little.
-
-
 > > +     unsigned int val;
 > > +     unsigned int type;
 > > +
 > > +     /* Read the value and make a guess about what edge we need to catch */
 > > +     val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
->
-> What does this value represent? The input line value?
-
-Yes.  Coped from msm_gpio_update_dual_edge_pos().
-
-
 > > +     type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
 > > +
 > > +     raw_spin_lock_irqsave(&pctrl->lock, flags);
->
-> What is this lock protecting you against? In both cases, you are
-> already under the irq_desc lock, with interrupts disabled.
+> can you please move this spinlock covering above two lines as well?
 
-We are?  I put a breakpoint when the IRQ hits and did a bt.  I see
-this (I happen to be on 5.4 at the moment, so hopefully the same as
-mainline):
+I could, but it wouldn't accomplish anything would it?  We're reading
+the status of the pin straight from memory mapped registers.  Grabbing
+a spinlock won't stop the pin from toggling.
 
- kgdb_breakpoint+0x3c/0x74
- msm_gpio_update_dual_edge_parent+0x58/0x17c
- msm_gpio_handle_dual_edge_parent_irq+0x1c/0x30
- __handle_domain_irq+0x84/0xc4
- gic_handle_irq+0x170/0x220
- el1_irq+0xd0/0x180
-
-I think the stack is missing a few things due to aggressive inlining
-from my compiler, so the true backtrace would be:
-
-msm_gpio_handle_dual_edge_parent_irq()
-generic_handle_irq_desc()
-generic_handle_irq()
-__handle_domain_irq()
-handle_domain_irq()
-gic_handle_irq()
-
-The first place that got the "desc" was generic_handle_irq() and it
-got it via irq_to_desc().  That doesn't seem to do any locking.  Then
-generic_handle_irq_desc() just calls a function pointer so no locking
-there either.
-
-...ah, but maybe what you're saying is that
-msm_gpio_handle_dual_edge_parent_irq() should be holding "desc->lock"
-around the call to msm_gpio_update_dual_edge_parent()?  I can do that.
+...but from Mark's review I'll likely change the locking a bit anyway.
 
 
 > > +     do {
@@ -221,45 +166,6 @@ around the call to msm_gpio_update_dual_edge_parent()?  I can do that.
 > > +              * If the value didn't change (or changed and then changed
 > > +              * back) then we're done.
 > > +              */
->
-> If the line changed, shouldn't you actually inject a new interrupt
-> altogether? By changing the polarity more than once, you are
-> effectively loosing edges that should have triggered an interrupt.
-
-Are you sure this is needed?  My understanding of edge triggered
-interrupts is that until the interrupt handler is called that all
-edges can be coalesced into a single interrupt.  It's only after the
-interrupt handler is called that it's important to capture new edges.
-So if you have this:
-
-a) Be busy processing another unrelated interrupt
-b) 5 edges happen on the line
-c) Other interrupt finishes
-d) Edge interrupt is acked and handler is called
-
-You'll only get one call to the interrupt handler even though there
-were 5 edges, right?  It's only important that you queue another
-interrupt if that interrupt happens after the true interrupt handler
-(the one acting on the edge) has started.
-
-...actually, in theory you'll get _either_ one or two calls to the
-interrupt handler depending on timing, since the above could also
-happen as:
-
-a) Be busy processing another unrelated interrupt
-b) 4 edges happen on the line
-c) Other interrupt finishes
-d) Edge interrupt is acked and ...
-e) 1 more edge happens on the line
-f) ...handler is called
-g) Edge interrupt is acked and handler is called
-
-
-As long as msm_gpio_update_dual_edge_parent() is called _before_ the
-true interrupt handler is called then what I have should be fine,
-right?
-
-
 > > +             val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
 > > +             if (type == IRQ_TYPE_EDGE_RISING) {
 > > +                     if (!val)
@@ -275,6 +181,25 @@ right?
 > > +
 > > +     if (!loop_limit)
 > > +             dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+>
+> you will never enter this if condtion since loop_limit will become
+> negative value in above do..while loop.
+>
+> need to update this check to if (loop_limit <= 0)
+>
+> other than above comment this change looks good to me.
+
+Good catch, thanks!
+
+
+
+> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+>
+> Tested-by: Maulik Shah <mkshah@codeaurora.org>
+>
+> Thanks,
+> Maulik
+>
 > > +}
 > > +
 > > +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
@@ -283,62 +208,9 @@ right?
 > > +
 > > +     /* Make sure we're primed for the next edge */
 > > +     msm_gpio_update_dual_edge_parent(d);
->
-> I would have expected this to happen on EOI or ACK, rather than before
-> the flow is actually handled, once you have told the interrupt
-> controller that you were dealing with this interrupt.
-
-Having it on Ack would be ideal, but it appears that the Ack function
-isn't called in this case.  That's only called if our handler is
-handle_edge_irq() or handle_level_irq().  See more below.
-
-...I'm pretty sure I don't want it on EOI.  Specifically, if I did it
-on EOI then I think I _would_ need to re-queue another interrupt if an
-edge came in msm_gpio_update_dual_edge_parent().  Doing all the edge
-adjustment before calling the true interrupt handler avoids all that.
-
-
 > > +
 > > +     /* Pass on to the normal interrupt handler */
 > > +     handle_fasteoi_irq(desc);
->
-> Is that the right flow? It seems that the current code is using
-> handle_edge_irq. I guess it has been broken so far, and that this
-> patch actually fixes it by forcing a fasteoi flow...
-
-The code today only uses handle_level_irq() / handle_edge_irq() if
-"skip_wake_irqs" wasn't set for this IRQ.  In the case that
-"skip_wake_irqs" wasn't set then it leaves the handler alone.  I
-definitely had a hard time following all the flow and interactions
-between the pinctrl, PDC, and the GICv3 but I definitely did confirm
-that handle_fasteoi_irq() was the handler that was running when
-"skip_wake_irqs" was set before I stuck mine in the middle.
-
-I believe how things work today with the "skip_wake_irqs" case is
-that, for the most part, the pinctrl driver stays out of the way for
-setting up and handling IRQs and just passes some calls onto its
-parent (the PDC).  The PDC driver is actually quite minimal.  There's
-no "Ack" in there and no calls to set an IRQ handler--it seems to just
-rely on the GICv3 doing all that.  It looks there is an implicit Ack
-as part of gic_handle_irq() since reading the IAR counts as an Ack.
-
-
-So to try to sum up my understanding:
-
-1. In the case of "skip_wake_irqs" today there is no acking / handling
-code that is part of pinctrl-msm or the PDC.  They just configure
-things to direct to the GICv3.
-
-2. For my workaround I just need to make sure to intercept myself and
-prime the next edge _before_ the end-user interrupt handler gets
-called.  If edges are coalesced before the end-user interrupt handler
-is called then that's OK.
-
-
-I'll await your reply before sending out the next version.  Thanks
-much for all your time looking at this!
-
-
 > > +}
 > > +
 > > +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
@@ -352,8 +224,8 @@ much for all your time looking at this!
 > > +            test_bit(d->hwirq, pctrl->skip_wake_irqs);
 > > +}
 > > +
-> >  static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> >  {
+> >   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+> >   {
 > >       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 > > @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
 > >       unsigned long flags;
@@ -374,23 +246,23 @@ much for all your time looking at this!
 > > --- a/drivers/pinctrl/qcom/pinctrl-msm.h
 > > +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
 > > @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
-> >   * @pull_no_keeper: The SoC does not support keeper bias.
-> >   * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
-> >   * @nwakeirq_map:   The number of entries in @wakeirq_map
+> >    * @pull_no_keeper: The SoC does not support keeper bias.
+> >    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
+> >    * @nwakeirq_map:   The number of entries in @wakeirq_map
 > > + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
 > > + *                            to be aware that their parent can't handle dual
 > > + *                            edge interrupts.
-> >   */
-> >  struct msm_pinctrl_soc_data {
+> >    */
+> >   struct msm_pinctrl_soc_data {
 > >       const struct pinctrl_pin_desc *pins;
 > > @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
 > >       const int *reserved_gpios;
 > >       const struct msm_gpio_wakeirq_map *wakeirq_map;
 > >       unsigned int nwakeirq_map;
 > > +     bool wakeirq_dual_edge_errata;
-> >  };
+> >   };
 > >
-> >  extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
+> >   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
 > > diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
 > > index 1b6465a882f2..1d9acad3c1ce 100644
 > > --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
@@ -400,17 +272,10 @@ much for all your time looking at this!
 > >       .wakeirq_map = sc7180_pdc_map,
 > >       .nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
 > > +     .wakeirq_dual_edge_errata = true,
-> >  };
+> >   };
 > >
-> >  static int sc7180_pinctrl_probe(struct platform_device *pdev)
-> > --
-> > 2.27.0.383.g050319c2ae-goog
-> >
-> >
->
-> Thanks,
->
->         M.
+> >   static int sc7180_pinctrl_probe(struct platform_device *pdev)
 >
 > --
-> Without deviation from the norm, progress is not possible.
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>
