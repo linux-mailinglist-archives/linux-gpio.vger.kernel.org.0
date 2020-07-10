@@ -2,95 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AF3221AE0D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 06:27:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 197D821AE5D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 07:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgGJE1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 00:27:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:52154 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725777AbgGJE1o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Jul 2020 00:27:44 -0400
+        id S1725943AbgGJFL0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 01:11:26 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12967 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgGJFKh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Jul 2020 01:10:37 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1594355263; h=Content-Transfer-Encoding: Content-Type:
+ s=smtp; t=1594357836; h=Content-Transfer-Encoding: Content-Type:
  In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Wo79ogPKXRyrrdLfPbUvGaueappb89mVN3N+SG+jZaE=; b=IPpFENox2pJPN7+laOv4WXRhXa60GDQIe/XjUcxNzD9N05MGllHMzf+iFSLLUYd1YQzJ3p5D
- 49QthEip8nKDLtlDDgorqzjC4iKR7RV5rp0AF00pkU7vv9ol3SNa9UdNOra/FEM55/YTHaGf
- OnLi4I6LmzgtpExignWelVe/n58=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ Subject: Sender; bh=4cCihej0NMnulNb+7EXZtddOEx9DS7eYQDlDXZSl83s=; b=cC2bKnpTZw+h80CpV4UCrC4gJGVyuoRh++uP+v/4YgDQzYXgFi/VPHo4jq38G2JRvkRtwG+U
+ WiadipR6BSAOStTnCpQ742jhIOv8iMsH8jmd4AufMHq088T3VJ/WIDYoWO9TSWG0fBtHZDW0
+ 8zdLOx0Xs4aS7F6uY/EH8BukUiE=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f07ee2aa33b1a3dd4926107 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 04:27:22
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5f07f81ac431f7323b0102be (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 10 Jul 2020 05:09:46
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 00F6DC433C6; Fri, 10 Jul 2020 04:27:21 +0000 (UTC)
+        id 09032C433B1; Fri, 10 Jul 2020 05:09:46 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
         aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [192.168.1.11] (unknown [117.247.20.80])
+Received: from [192.168.29.129] (unknown [49.36.65.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6B4EC433C8;
-        Fri, 10 Jul 2020 04:27:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6B4EC433C8
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 25F0AC43395;
+        Fri, 10 Jul 2020 05:09:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 25F0AC43395
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
 To:     Douglas Anderson <dianders@chromium.org>, linus.walleij@linaro.org
 Cc:     swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
         cychiang@chromium.org, ilina@codeaurora.org, agross@kernel.org,
-        mkshah@codeaurora.org, bjorn.andersson@linaro.org,
+        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
         Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <b7736f60-ba4f-8bc3-c749-7e0b4746b09e@codeaurora.org>
-Date:   Fri, 10 Jul 2020 09:57:14 +0530
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
+Date:   Fri, 10 Jul 2020 10:39:38 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
 In-Reply-To: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Doug,
 
 On 7/9/2020 2:46 AM, Douglas Anderson wrote:
 > As per Qualcomm, there is a PDC hardware issue (with the specific IP
 > rev that exists on sc7180) that causes the PDC not to work properly
 > when configured to handle dual edges.
-> 
+>
 > Let's work around this by emulating only ever letting our parent see
 > requests for single edge interrupts on affected hardware.
-> 
+>
 > Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks Doug, this looks like a much better solution than what I was
-proposing :)
-
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
 > ---
 > As far as I can tell everything here should work and the limited
 > testing I'm able to give it shows that, in fact, I can detect both
 > edges.
-> 
+>
 > Please give this an extra thorough review since it's trying to find
 > the exact right place to insert this code and I'm not massively
 > familiar with all the frameworks.
-> 
+>
 > If someone has hardware where it's easy to stress test this that'd be
 > wonderful too.  The board I happen to have in front of me doesn't have
 > any easy-to-toggle GPIOs where I can just poke a button or a switch to
@@ -99,12 +93,12 @@ Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 > sending commands to our security chip to toggle it--not exactly great
 > for testing to make sure there are no race conditions if the interrupt
 > bounces a lot.
-> 
+>
 >   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
 >   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
 >   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
 >   3 files changed, 85 insertions(+)
-> 
+>
 > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
 > index 83b7d64bc4c1..45ca09ebb7b3 100644
 > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
@@ -137,6 +131,7 @@ Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 > +	type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
 > +
 > +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+can you please move this spinlock covering above two lines as well?
 > +	do {
 > +		/* Set the parent to catch the next edge */
 > +		irq_chip_set_type_parent(d, type);
@@ -162,6 +157,21 @@ Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 > +
 > +	if (!loop_limit)
 > +		dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+
+you will never enter this if condtion since loop_limit will become 
+negative value in above do..while loop.
+
+need to update this check to if (loop_limit <= 0)
+
+other than above comment this change looks good to me.
+
+Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
+
+Tested-by: Maulik Shah <mkshah@codeaurora.org>
+
+Thanks,
+Maulik
+
 > +}
 > +
 > +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
@@ -237,8 +247,7 @@ Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
 >   };
 >   
 >   static int sc7180_pinctrl_probe(struct platform_device *pdev)
-> 
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
