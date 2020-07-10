@@ -2,103 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC3E21B69F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 15:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4746B21B6A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 15:41:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgGJNiT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 09:38:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35880 "EHLO
+        id S1726820AbgGJNlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 09:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgGJNiS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 09:38:18 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90B5C08C5CE
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 06:38:18 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x11so2258667plo.7
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 06:38:18 -0700 (PDT)
+        with ESMTP id S1726774AbgGJNlF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 09:41:05 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1902BC08C5CE;
+        Fri, 10 Jul 2020 06:41:05 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id 17so5954503wmo.1;
+        Fri, 10 Jul 2020 06:41:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6Sv+M4adAfJ2KBtRs5C0W7kTUr6n09tXW5cgJGIdyAw=;
-        b=LtJSq9XDKod6tTtgAbU1RkPblFLJjaykur27qVZtTtOgLqpNZL3xg2Uj+YT+2Z/78Y
-         +33qXMQm497nQsGPWKGagcuNqN6x0vJmadtUywDwVcZO5yk/FJ9ut7Kkq2MYD73bN4dO
-         yqUPy1B0QxwwZAvBQHecFJeYqPZB3PzmPb9Z7XJP3Q5UiQaHeyCWSlxGAG5r8/kTticg
-         V3xmto+AAyZnkRgS/YtiFOj9u8I7la36xPSnTeath2CqnoSLGhKmDFVddpj4VAiWuVuE
-         RG8zBGmrPorlETOOcoI+a5pEQpsuRrjghrB/Frb4uNe0lddOU7ny2z5scnJfFSZ12Wim
-         mEaA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NVk9Crf1mCP3Su/M8SoSn97qMooLpR/mAl9IlnwRJA4=;
+        b=Uu1sn5nNB7Sk2aNPazNIEFCtVdCcpdH5lCco4ygL+kTt2/PBhi60P50AbM8xQppP0F
+         RKlf6pAgK5Qxxu7cZ2MGRnKr0V+Ifqyo6hkYynfPWMAGloJ48EFCp3q1gwjhFaDdDhK1
+         nrfuGcEh+xwG9imoD9iwlHfI+LDW+7e/6Amw0VsP9kH0zTMG+MTECRYAqJV4NFYumOpx
+         KbNeOvHHFJmB7BgNJRUG0Jy9KTCXsRrtlklumKed15meJmAfbgXUNIRkn+Fmq1k0OuT8
+         gcNlJLwXZdqsP7IKKVXaXsduUuedTY3Drg5Mg7YZt8wc4vEdYDE8CQiQBupiH1e5H1cV
+         0TYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6Sv+M4adAfJ2KBtRs5C0W7kTUr6n09tXW5cgJGIdyAw=;
-        b=BOp3uHv7l+CEcmI4pujMsXWSmxWI7CBIvgtjgJNojLTXfIH05bpqxMSUH/Nttascsp
-         yHk5NzltZvtsKzACnmbhP/l+E0vXu2uRbXv/+CONFsiodsuj/iBv7dfPXUYFsYU70wT2
-         uDnd9iG65GCS6JhBGissPp9c5NOIKNeuF0NXU6o6jdQxJxiZ9KS/jVpZpxGlk0DcpfHB
-         7WCcsh9m45z8O9OIOEkgYEmu2Cfu8G5kgdTCY4bJ/wVPoWxbtSGzWF8oV3CnKjIsejtV
-         e843D88cNDWbUx9aHmsddnkVyL2UN8aEIoPjrQzNgvhQlrCbQKft3BsQ0aDy0DYY1HYR
-         kWTQ==
-X-Gm-Message-State: AOAM533GgGAODMzZah4PVITj+OpG9yXSNbN8qfLNO8c/Wund0H2KVl+0
-        Z4QJ4b1m2iwu8aoFMpxMR5saD8/F6lTrL6Dm/84=
-X-Google-Smtp-Source: ABdhPJwZkzEGB5HuDtj/fTkBtveFlUr/+cj2Uj2F8lHvP3D0U3AHx3tPnOvmH2O+yLJI/wyrLCErU97x62QfbZSEUUI=
-X-Received: by 2002:a17:902:7288:: with SMTP id d8mr60520971pll.18.1594388298181;
- Fri, 10 Jul 2020 06:38:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <5f049035.1c69fb81.15cb1.53fdSMTPIN_ADDED_MISSING@mx.google.com>
- <CAMpxmJWDiF+x5YzYcgcQgH9C6U3rpZLex19UGFAAj7Dh-+BA=Q@mail.gmail.com>
- <CAHp75VevzXfUH2E6DPRt4QP82xcDqPAZeKfqFAmiwcNG4XaK2g@mail.gmail.com> <BY5PR12MB41141291F53618E098239A73F9650@BY5PR12MB4114.namprd12.prod.outlook.com>
-In-Reply-To: <BY5PR12MB41141291F53618E098239A73F9650@BY5PR12MB4114.namprd12.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 10 Jul 2020 16:38:01 +0300
-Message-ID: <CAHp75Vc8WTO5pO3wyuuRZczavE+QKJM3=ji1J3OEmzjFdjj+ww@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Add some warn print for easier to debug
-To:     qiao mnlife <mnlife.qiao@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        mnlife <mnlife@foxmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NVk9Crf1mCP3Su/M8SoSn97qMooLpR/mAl9IlnwRJA4=;
+        b=XxpPElfR1vROFd/tHwuFo3GkE+DItImypjkkqjuK7mY2T0Xe30rvM3V2FlXyjOSelg
+         6OmbwSG8mSCQ6C67BmeOCn+c5RJY5Lf1C1UcH+GvkZ46QgDT9rauMmEpT5X5rFXhQ+Xa
+         8ANpfi1gJ/JHr6aMgrJUEdChDlUWTjNBrPduZ881Ygu3ny874HNk5TOa6XiBdhepZ0tV
+         Jwa8sYkEfN5P9zhZ0qCEuW2vX8/hux76LxlgwVJFS4wUM+uNb/eqTrqABE0icn0E4fv9
+         cqrwdYoINL+IlhL9uJhbMTqllCii7cle8e0uwMkp4Is6Af2PqMIG8DO/xgdFEQqyD/Rq
+         4z+w==
+X-Gm-Message-State: AOAM530g/v6ecsAQgnuIy59KJl7lzhmf/DG6T0fE60SGJKiqDUOj0iT5
+        ChNW1nnb2LG04UwRwBgUOgg=
+X-Google-Smtp-Source: ABdhPJwL7Z6KQEina07YIcKXYKWMe2+LNfZsMpS9zXaDbsoXqyM4gJxLLC96zjezb0mkvVPil/F5+A==
+X-Received: by 2002:a1c:ab56:: with SMTP id u83mr5071631wme.94.1594388463868;
+        Fri, 10 Jul 2020 06:41:03 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.245])
+        by smtp.gmail.com with ESMTPSA id g195sm9714253wme.38.2020.07.10.06.41.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jul 2020 06:41:03 -0700 (PDT)
+Subject: Re: [PATCH v7 6/7] clk: mediatek: add UART0 clock support
+To:     Hanks Chen <hanks.chen@mediatek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+Cc:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+References: <1593694630-26604-1-git-send-email-hanks.chen@mediatek.com>
+ <1593694630-26604-8-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <c40d2739-92a1-3309-764a-ed3ac8ee7bc6@gmail.com>
+Date:   Fri, 10 Jul 2020 15:41:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <1593694630-26604-8-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 6:11 AM qiao mnlife <mnlife.qiao@gmail.com> wrote:
->
-> However, in development, it is not easy to know that this problem is caused, just looking at the documentation is not enough, I need to read the gpiolib source code more attentive
-
-Have you tried to enable CONFIG_GPIO_DEBUG?
-
-> From: linux-gpio-owner@vger.kernel.org <linux-gpio-owner@vger.kernel.org> on behalf of Andy Shevchenko <andy.shevchenko@gmail.com>
-> Sent: Thursday, July 9, 2020 11:40:52 PM
-> To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Cc: mnlife <mnlife@foxmail.com>; Linus Walleij <linus.walleij@linaro.org>; linux-gpio <linux-gpio@vger.kernel.org>
-> Subject: Re: [PATCH] gpiolib: Add some warn print for easier to debug
->
-> On Thu, Jul 9, 2020 at 4:27 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > On Tue, Jul 7, 2020 at 5:09 PM mnlife <mnlife@foxmail.com> wrote:
->
-> ...
->
-> > > +               if (size >= sizeof(prop_name))
-> > > +                       dev_warn(dev, "prop_name %s is truncated with size %d\n",
-> > > +                                prop_name, size);
->
-> > To me this isn't a reason for a warning. If anything, this should
-> > simply be documented (if it's not already).
->
-> +1. This can only be useful in the development cycle.
->
-> CONFIG_DEBUG_GPIO easily catches this as well.
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
 
 
+On 02/07/2020 14:57, Hanks Chen wrote:
+> Add MT6779 UART0 clock support.
+> 
+> Fixes: 710774e04861 ("clk: mediatek: Add MT6779 clock support")
+> Signed-off-by: Wendell Lin <wendell.lin@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>   drivers/clk/mediatek/clk-mt6779.c |    2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/mediatek/clk-mt6779.c b/drivers/clk/mediatek/clk-mt6779.c
+> index 9766ccc..6e0d3a1 100644
+> --- a/drivers/clk/mediatek/clk-mt6779.c
+> +++ b/drivers/clk/mediatek/clk-mt6779.c
+> @@ -919,6 +919,8 @@
+>   		    "pwm_sel", 19),
+>   	GATE_INFRA0(CLK_INFRA_PWM, "infra_pwm",
+>   		    "pwm_sel", 21),
+> +	GATE_INFRA0(CLK_INFRA_UART0, "infra_uart0",
+> +		    "uart_sel", 22),
+>   	GATE_INFRA0(CLK_INFRA_UART1, "infra_uart1",
+>   		    "uart_sel", 23),
+>   	GATE_INFRA0(CLK_INFRA_UART2, "infra_uart2",
+> 
