@@ -2,122 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C626521C012
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 00:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB0821C0A2
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 01:18:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGJWoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 18:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35704 "EHLO
+        id S1726588AbgGJXS3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 19:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgGJWoc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 18:44:32 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9E5C08E6DC
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id o36so1283147ooi.11
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
+        with ESMTP id S1726519AbgGJXS3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 19:18:29 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02C38C08C5DD
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 16:18:28 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so3191700pfu.3
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 16:18:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
-        b=pEe0x1D2oXhrROhhsfdBSl2Of0HeeOQzHLu21ytP7olDdMMZPcgjiV0SFxkgRAMS/a
-         zblIckErEPPlyKbegdkpsh0OW2Xqu9dnKnUdDl8IU+qez3avQGV8FZM14sbgNWmRlm7w
-         Ko1PO1Prn7C0/+tMbFDpECoaIDNxX4OffjwTb6Ox7od3D9ZNzpnW3pgRUR/h8hQQQUnw
-         NAWhdtBgvYpwFCMZjLHabISmRiZm6E7qj3wdj04qmnUqNzmD90pKyk3HAmgJ+Eu491o1
-         m/JxPxczvMRz7ZVoUvv+TZ8LvVDcYiZGgoZQEAs290rCxG9VW0H0QJwbyUdRTgYdcdoP
-         jx5Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=+59TPEQHEkQFZ55j35W3RLahGS4swop41zFjG28sQlI=;
+        b=I9cW5ytw2dorAQZ66yCowEnQV62rnN/AoriJkdNr7cJgAwgRwj3foDLRAYlJONTScc
+         BbvyMYrLXf4Ma+zp5w4jFN/HIONJxoJdg+7OmGipXEHe7gisS66qKVfKRlBoqOUH31qn
+         wdlM3M75kl8HdNZUVzn3N+FGPD2h4fOGQLnbpRVvuMrTmgYQrVAJE5f0IWajIogniJeT
+         WwHdWIIcRORBivihxFVnImhznJPtFQQkhPY2YeO0CDHXFqsgfkPHMNtsPcAWlceEH7wV
+         ypAqdA3/qsYYS4O8WWsdFHUqG0aYvqC7uFPkyzPtm3uT153Tcyn4kzKbLFUcmyeWclPu
+         PvfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
-        b=cDS/zVnE6PHpi9pqPkXcdBj781RmOfygqGu0vAEcwPgzek8c3C5n0b6Can0dkOUeob
-         a3h2zpvIJolZ7r5v3XLGrwHF85uaYFMrRvciNNtvi0kdIcmL0PFwflR4hBlHqsiI/8+n
-         JpTb1AqxN0avdyzfKo94oXJNjhsMzq/gNnA3DKWBAu07baGOfamIZooUUXWMg0AmXl3F
-         0nWOtDJlcLoipcc2Er1favETryqLfiuurlZqZfhK7bW6mhoII0frhO1W3gxf47S6LqJE
-         OkKEaWX40KRtfJoaqQLY79FwKnMv+sK3j3qdq7+ZobdjYdwtudwvrb/64CN0nyimZu7u
-         YxMA==
-X-Gm-Message-State: AOAM532zvh11udyIaXc7epBrlwgAfn4R27bunakmqK8Fcx9sDxT+mHZ9
-        OX9rsuYIwcXRDFOhkGdHjYBYpUxTfBXghO/M8UIlJA==
-X-Google-Smtp-Source: ABdhPJwHQLhjN0fx5nsYDQ/5gAMYf/FtTG+FNllJpIvQ3csH/hy0WBxDIT6X+tOsNnJi0NtINvoXzdjwg4qm1AYXGVE=
-X-Received: by 2002:a4a:d08a:: with SMTP id i10mr60007237oor.88.1594421071672;
- Fri, 10 Jul 2020 15:44:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200625001039.56174-1-john.stultz@linaro.org>
- <20200625001039.56174-4-john.stultz@linaro.org> <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
- <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
- <87wo3setn8.wl-maz@kernel.org> <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
-In-Reply-To: <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+59TPEQHEkQFZ55j35W3RLahGS4swop41zFjG28sQlI=;
+        b=GRZkgREcjltiPwVCJ1GFBA2Ttijom9AbE0iZFQPNA/Wi4dwswtLGV+ET9obdbQmg7S
+         YP/s1o9ayxmwyutB8KjnShmNT/5KhpRcNQDThQcbT8o2FPv44e/cZTe8c71QUYwd3gNq
+         7F5Vy9EfwZ1XkmqszMD78lp8Ublspo5b2VtzWemfRwByr93wrYKll+1WahIwQssvrxo9
+         NWorsIy0LT5SaXIUNbHnxzWRoxJMHNV3OmzBDj98tDkmpQErxXHItDDvvrK2wJ1kwBa9
+         WqaTALLBmke2OJkOEw16ItAv54vVbB1WWAr/AxNkIdRr40kpbxzH5v8c37z7WgWDF3Iv
+         jKIg==
+X-Gm-Message-State: AOAM533phnnyUU9YsMT4/ycxv8qKzErEzVmEA4rnMChTSFMR4mvVXZIc
+        OKWJwkQ9f7M8Ekqsm5ALSr00ZQ==
+X-Google-Smtp-Source: ABdhPJxusBkc/oj8NBCk1Oz/2pCV5zkZFfQeGkUp9I+VXwSkN8aJ/nKOn8xnoY32VVj2OMigYe1yUg==
+X-Received: by 2002:a62:1c13:: with SMTP id c19mr48626163pfc.52.1594423108114;
+        Fri, 10 Jul 2020 16:18:28 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id c14sm7296382pfj.82.2020.07.10.16.18.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 16:18:27 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 10 Jul 2020 15:44:18 -0700
-Message-ID: <CALAqxLW14f4Gn6Q3b89X10y7=Zct2NJSgjagUqxez_bObcp42w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a
- permanent module
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
         Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
         Saravana Kannan <saravanak@google.com>,
         Todd Kjos <tkjos@google.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/3]  Allow for qcom-pdc to be loadable as a module
+Date:   Fri, 10 Jul 2020 23:18:21 +0000
+Message-Id: <20200710231824.60699-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 9, 2020 at 11:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Marc Zyngier (2020-06-27 02:37:47)
-> > On Sat, 27 Jun 2020 02:34:25 +0100,
-> > John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > >
-> > > > Is there any reason to use IRQCHIP_DECLARE if this can work as a
-> > > > platform device driver?
-> > > >
-> > >
-> > > Hey! Thanks so much for the review!
-> > >
-> > > Mostly it was done this way to minimize the change in the non-module
-> > > case. But if you'd rather avoid the #ifdefery I'll respin it without.
-> >
-> > That would certainly be my own preference. In general, IRQCHIP_DECLARE
-> > and platform drivers should be mutually exclusive in the same driver:
-> > if you can delay the probing and have it as a proper platform device,
-> > then this should be the one true way.
-> >
->
-> Does it work? I haven't looked in detail but I worry that the child
-> irqdomain (i.e. pinctrl-msm) would need to delay probing until this
-> parent irqdomain is registered. Or has the hierarchical irqdomain code
-> been updated to handle the parent child relationship and wait for things
-> to probe or be loaded?
+This patch series provides exports and config tweaks to allow
+the qcom-pdc driver to be able to be configured as a permement
+modules (particularlly useful for the Android Generic Kernel
+Image efforts).
 
-So I can't say I know the underlying hardware particularly well, but
-I've been using this successfully on the Dragonboard 845c with both
-static builds as well as module enabled builds.
-And the same patch has been in the android-mainline and android-5.4
-kernels for a while without objections from QCOM.
+This was part of a larger patch series, to enable qcom_scm
+driver to be a module as well, but I've split it out as there
+are some outstanding objections I still need to address with
+the follow-on patches, and wanted to see if progress could be
+made on this subset of the series in the meantime.
 
-As to the probe ordering question, Saravana can maybe speak in more
-detail if it's involved in this case but the fw_devlink code has
-addressed many of these sorts of ordering issues.
-However, I'm not sure if I'm lucking into the right probe order, as we
-have been able to boot android-mainline w/ both fw_devlink=on and
-fw_devlink=off (though in the =off case, we need
-deferred_probe_timeout=30 to give us a bit more time for modules to
-load after init starts).
+New in v3:
+*  Drop conditional usage of IRQCHIP_DECLARE as suggested by
+   Stephen Boyd and Marc Zyngier
 
 thanks
 -john
+
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lina Iyer <ilina@codeaurora.org>
+Cc: Maulik Shah <mkshah@codeaurora.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: iommu@lists.linux-foundation.org
+Cc: linux-gpio@vger.kernel.org
+
+
+John Stultz (3):
+  irq: irqdomain: Export irq_domain_update_bus_token
+  irq: irqchip: Export irq_chip_retrigger_hierarchy and
+    irq_chip_set_vcpu_affinity_parent
+  irqchip: Allow QCOM_PDC to be loadable as a permanent module
+
+ drivers/irqchip/Kconfig    |  2 +-
+ drivers/irqchip/qcom-pdc.c | 28 +++++++++++++++++++++++++++-
+ kernel/irq/chip.c          |  3 ++-
+ kernel/irq/irqdomain.c     |  1 +
+ 4 files changed, 31 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
