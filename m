@@ -2,65 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB3DC21BFB9
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 00:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C626521C012
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 00:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGJWWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 18:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60440 "EHLO
+        id S1726801AbgGJWoc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 18:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgGJWWH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 18:22:07 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AFAC08C5DC
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:22:07 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id k4so6061154oik.2
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:22:07 -0700 (PDT)
+        with ESMTP id S1726795AbgGJWoc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 18:44:32 -0400
+Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9E5C08E6DC
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
+Received: by mail-oo1-xc43.google.com with SMTP id o36so1283147ooi.11
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 15:44:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sfPk1+u61DN4Dz/z2Pu4rTndUdKhPwDaWZtZBaUU1jg=;
-        b=CGWgrEwlpWSxGS28p+B9aKE3dWl38zgj4StlTqSCg3W9KgUJXjeDSaY6Jwx8i9lwRi
-         9UpvDUF7JWYl638DQLAuqEazgzf8DbZZ9YxsBc+6s4pA0JeV/ASd0IAshGRT8qT4BX0S
-         xxqg9moE+lu34pnF6PLPa3mQs1nK4VYFyAzoCRitXkydtj0aNPoPsnzkeIETzFjSHGPb
-         shBuYBhaTugM1OgtxES7TxTi/SzCN3mS/hMPilaBmHk0TAg8MoF64kvJ+n7z+8WllDhx
-         AAW0+zB1xhT0lObKRKFabhrxJAJ+RjvomcYh6bFq6juanWOudCq7LiXglEaxQI7fxDia
-         slHA==
+        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
+        b=pEe0x1D2oXhrROhhsfdBSl2Of0HeeOQzHLu21ytP7olDdMMZPcgjiV0SFxkgRAMS/a
+         zblIckErEPPlyKbegdkpsh0OW2Xqu9dnKnUdDl8IU+qez3avQGV8FZM14sbgNWmRlm7w
+         Ko1PO1Prn7C0/+tMbFDpECoaIDNxX4OffjwTb6Ox7od3D9ZNzpnW3pgRUR/h8hQQQUnw
+         NAWhdtBgvYpwFCMZjLHabISmRiZm6E7qj3wdj04qmnUqNzmD90pKyk3HAmgJ+Eu491o1
+         m/JxPxczvMRz7ZVoUvv+TZ8LvVDcYiZGgoZQEAs290rCxG9VW0H0QJwbyUdRTgYdcdoP
+         jx5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sfPk1+u61DN4Dz/z2Pu4rTndUdKhPwDaWZtZBaUU1jg=;
-        b=fkK+N+OhT2mlMpxkwNaQ10b9NTZrXa2u+/QGQ+eheDzqCXOyilDL6j3i3f7GMV+zmA
-         kYCLAkYCA7mTHQ91g5ojF0um7/1k9hvOw9xiEMKN75Ot7R+pBF0QR/c8AWK84ChavNbU
-         fDQtaO84tA6s6HQFNCwF6h5BGguJalkwp6E4RvIU6vaIyGCjcD3Kkjc3Re4r9fUrxpBC
-         20Mjs9lz6PXT2uAouV90fArvPpQGNPbd36/RPQsTjUDXdBSmPxy76ph/sH1dt7gx75JA
-         L4ToG5nN2ZmMbQSnFaeBSY09WevDxgk4aRVdkmvF7D1y1EFhWbvYGPkzrKMcSOT1/4u2
-         l8PA==
-X-Gm-Message-State: AOAM531vJus3T3dPt68Ck3sSNritNhI/wMru+30kv6zYpqv+fNmp899y
-        83xdpwDuV8N1Z60udAFIJeZlE/Zcd5zl9adrZ6MkxA==
-X-Google-Smtp-Source: ABdhPJxLt4Cehy4m7wD0RYUwN5jq18bgpscixR8K5qySY9mHffzEWL0hF8baUYqT7R4HfV0LqTJoVtMk95ufKZmESKg=
-X-Received: by 2002:aca:b5c3:: with SMTP id e186mr5976661oif.10.1594419726479;
- Fri, 10 Jul 2020 15:22:06 -0700 (PDT)
+        bh=gCyI0kUrT87FAQAI0Q1u+opAu/z1jGmTcNbCc0ywLlQ=;
+        b=cDS/zVnE6PHpi9pqPkXcdBj781RmOfygqGu0vAEcwPgzek8c3C5n0b6Can0dkOUeob
+         a3h2zpvIJolZ7r5v3XLGrwHF85uaYFMrRvciNNtvi0kdIcmL0PFwflR4hBlHqsiI/8+n
+         JpTb1AqxN0avdyzfKo94oXJNjhsMzq/gNnA3DKWBAu07baGOfamIZooUUXWMg0AmXl3F
+         0nWOtDJlcLoipcc2Er1favETryqLfiuurlZqZfhK7bW6mhoII0frhO1W3gxf47S6LqJE
+         OkKEaWX40KRtfJoaqQLY79FwKnMv+sK3j3qdq7+ZobdjYdwtudwvrb/64CN0nyimZu7u
+         YxMA==
+X-Gm-Message-State: AOAM532zvh11udyIaXc7epBrlwgAfn4R27bunakmqK8Fcx9sDxT+mHZ9
+        OX9rsuYIwcXRDFOhkGdHjYBYpUxTfBXghO/M8UIlJA==
+X-Google-Smtp-Source: ABdhPJwHQLhjN0fx5nsYDQ/5gAMYf/FtTG+FNllJpIvQ3csH/hy0WBxDIT6X+tOsNnJi0NtINvoXzdjwg4qm1AYXGVE=
+X-Received: by 2002:a4a:d08a:: with SMTP id i10mr60007237oor.88.1594421071672;
+ Fri, 10 Jul 2020 15:44:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200625001039.56174-1-john.stultz@linaro.org>
- <20200625001039.56174-6-john.stultz@linaro.org> <20200702141825.GA16941@willie-the-truck>
- <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com> <20200710075411.GA30011@willie-the-truck>
-In-Reply-To: <20200710075411.GA30011@willie-the-truck>
+ <20200625001039.56174-4-john.stultz@linaro.org> <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+ <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+ <87wo3setn8.wl-maz@kernel.org> <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
+In-Reply-To: <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
 From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 10 Jul 2020 15:21:53 -0700
-Message-ID: <CALAqxLWadLrxckRHRAR0Q417RnFKquQJbRfO_DLEVH56cykRow@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-To:     Will Deacon <will@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
+Date:   Fri, 10 Jul 2020 15:44:18 -0700
+Message-ID: <CALAqxLW14f4Gn6Q3b89X10y7=Zct2NJSgjagUqxez_bObcp42w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a
+ permanent module
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Marc Zyngier <maz@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Maulik Shah <mkshah@codeaurora.org>,
         Lina Iyer <ilina@codeaurora.org>,
@@ -75,82 +75,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 12:54 AM Will Deacon <will@kernel.org> wrote:
-> On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
-> > On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
-> > > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
-> > > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > > > index b510f67dfa49..714893535dd2 100644
-> > > > --- a/drivers/iommu/Kconfig
-> > > > +++ b/drivers/iommu/Kconfig
-> > > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
-> > > >  config ARM_SMMU
-> > > >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> > > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-> > > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > > >       select IOMMU_API
-> > > >       select IOMMU_IO_PGTABLE_LPAE
-> > > >       select ARM_DMA_USE_IOMMU if ARM
+On Thu, Jul 9, 2020 at 11:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> Quoting Marc Zyngier (2020-06-27 02:37:47)
+> > On Sat, 27 Jun 2020 02:34:25 +0100,
+> > John Stultz <john.stultz@linaro.org> wrote:
 > > >
-> > > This looks like a giant hack. Is there another way to handle this?
+> > > On Fri, Jun 26, 2020 at 12:42 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > > >
+> > > >
+> > > > Is there any reason to use IRQCHIP_DECLARE if this can work as a
+> > > > platform device driver?
+> > > >
+> > >
+> > > Hey! Thanks so much for the review!
+> > >
+> > > Mostly it was done this way to minimize the change in the non-module
+> > > case. But if you'd rather avoid the #ifdefery I'll respin it without.
 > >
-> > Sorry for the slow response here.
+> > That would certainly be my own preference. In general, IRQCHIP_DECLARE
+> > and platform drivers should be mutually exclusive in the same driver:
+> > if you can delay the probing and have it as a proper platform device,
+> > then this should be the one true way.
 > >
-> > So, I agree the syntax looks strange (requiring a comment obviously
-> > isn't a good sign), but it's a fairly common way to ensure drivers
-> > don't get built in if they optionally depend on another driver that
-> > can be built as a module.
-> >   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
-> > !USB_GADGET" in various Kconfig files.
-> >
-> > I'm open to using a different method, and in a different thread you
-> > suggested using something like symbol_get(). I need to look into it
-> > more, but that approach looks even more messy and prone to runtime
-> > failures. Blocking the unwanted case at build time seems a bit cleaner
-> > to me, even if the syntax is odd.
 >
-> Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
-> as that driver _really_ doesn't care about SoC details like this. In other
-> words, add a new entry along the lines of:
->
->         config ARM_SMMU_QCOM_IMPL
->         default y
->         #if QCOM_SCM=m this can't be =y
->         depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
->
-> and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
-> which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
-> so that we don't bother to compile arm-smmu-qcom.o in that case.
->
-> Would that work?
+> Does it work? I haven't looked in detail but I worry that the child
+> irqdomain (i.e. pinctrl-msm) would need to delay probing until this
+> parent irqdomain is registered. Or has the hierarchical irqdomain code
+> been updated to handle the parent child relationship and wait for things
+> to probe or be loaded?
 
-I think this proposal still has problems with the directionality of the call.
+So I can't say I know the underlying hardware particularly well, but
+I've been using this successfully on the Dragonboard 845c with both
+static builds as well as module enabled builds.
+And the same patch has been in the android-mainline and android-5.4
+kernels for a while without objections from QCOM.
 
-The arm-smmu-impl.o calls to arm-smmu-qcom.o which calls qcom_scm.o
-So if qcom_scm.o is part of a module, the calling code in
-arm-smmu-qcom.o also needs to be a module, which means CONFIG_ARM_SMMU
-needs to be a module.
-
-I know you said the arm-smmu driver doesn't care about SoC details,
-but the trouble is that currently the arm-smmu driver does directly
-call the qcom-scm code. So it is a real dependency. However, if
-QCOM_SCM is not configured, it calls stubs and that's ok.  In that
-way, the "depends on QCOM_SCM || !QCOM_SCM" line actually makes sense.
-It looks terrible because we're used to boolean logic, but it's
-ternary.
-
-Maybe can have the ARM_SMMU_QCOM_IMPL approach you suggest above, but
-that just holds the issue out at arms length, because we're still
-going to need to have:
-  depends on ARM_SMMU_QCOM_IMPL || !ARM_SMMU_QCOM_IMPL
-in the ARM_SMMU definition, which I suspect you're wanting to avoid.
-
-Otherwise the only thing I can think of is a deeper reworking of the
-arm-smmu-impl code so that the arm-smmu-qcom code probes itself and
-registers its hooks with the arm-smmu core.
-That way the arm-smmu driver would not directly call any SoC specific
-code (and thus have no dependencies outward). But it's probably a fair
-amount of churn vs the extra depends string.
+As to the probe ordering question, Saravana can maybe speak in more
+detail if it's involved in this case but the fw_devlink code has
+addressed many of these sorts of ordering issues.
+However, I'm not sure if I'm lucking into the right probe order, as we
+have been able to boot android-mainline w/ both fw_devlink=on and
+fw_devlink=off (though in the =off case, we need
+deferred_probe_timeout=30 to give us a bit more time for modules to
+load after init starts).
 
 thanks
 -john
