@@ -2,108 +2,217 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EE2621B0C1
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 09:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9569921B0F4
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 10:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726004AbgGJHyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 03:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgGJHyT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Jul 2020 03:54:19 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A68C2077D;
-        Fri, 10 Jul 2020 07:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594367658;
-        bh=+CLcnOoiP11vbaLWEE7x8Qo9XjfxI8bf98D7jhYvsTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sUWC9jE9AeBrFenvWyUJ08C2OMyYdCth41lSdl+CQ2V8fdS58LUZAE5I1XadKMOEA
-         keKID3B78XHkVhh2GKuELnZE3cw3xCKznbwgYEWS5MBQv6Uy9xrKR+Pp2oPgoouL2v
-         gC+YoTwxB9rnjYdo2Ut08PPTzS7aCibv0NhI0Xe8=
-Date:   Fri, 10 Jul 2020 08:54:12 +0100
-From:   Will Deacon <will@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] firmware: QCOM_SCM: Allow qcom_scm driver to be
- loadable as a permenent module
-Message-ID: <20200710075411.GA30011@willie-the-truck>
-References: <20200625001039.56174-1-john.stultz@linaro.org>
- <20200625001039.56174-6-john.stultz@linaro.org>
- <20200702141825.GA16941@willie-the-truck>
- <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
+        id S1727772AbgGJIFK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 04:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgGJIFJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 04:05:09 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2A6C08C5CE;
+        Fri, 10 Jul 2020 01:05:09 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id x9so4357913ila.3;
+        Fri, 10 Jul 2020 01:05:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5+G1uuop498qwxWK2qrr1h0MxQXkOdDS2Ry0PGIWZu8=;
+        b=YvxH9ESyKpS9/V9ii1PS6FtzJiZYFA9wClEEPvL0ONzCRrvtIAMoymOPopdNGOU9es
+         cCl/HDFzk52+lGUbBZ+KmCmFp+UFDkGYrQQ3LWsgLQzvzybigUzJT6u/ULtzOQ1Es58P
+         xvVaBNoICUYtGdRBHgOLhP3tRs6xjwLg5iqZ+RPvY7re1B+fPSavTcqfOIAa1LOetTAt
+         zT7LT7aaF8tICr7NRKZD4I49axIwa1877DsXecpUN9kN+S5lxOsp8h9vKCz1oQuSdjQO
+         6KENMzaEJM2UZnXDkTVJBWfFDVKZPM8CyTwus9kcN1b66+hHvLMgDJTw8mNcfKqN/xXt
+         yU4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5+G1uuop498qwxWK2qrr1h0MxQXkOdDS2Ry0PGIWZu8=;
+        b=eFJ23Eq2mDGJ8DRm+CvF4xbgcrIY+RnSarIRAedN5sGpYp80Boj9c0I4aF8pyISnPt
+         O3HnNWCjhM4htbJbdNBDDl0fhfVHEAqGOfBc/Weq35ge3Td5H9LHUYvr3unGb481JHAU
+         54dUD2jFEVLVQ1XQhS34CJSaT8S4wuMKnT6KQdoMnp8itRkAucmsJrRuuIkCBSVrsUaV
+         UUFOSXyHhowPUXs+szAkdtURNcv9MmvpB8gX5dC5BvNjmbuDSFanGhD8/EDa6u5pJykz
+         nxTv6Obi0sGADdf1p2+W1ph/6r53COSNj8u7tG4bdfaDJiEK//uVsoc0SUBcH+MHiGB7
+         Ndqw==
+X-Gm-Message-State: AOAM531XBKe96fAkICnE91RoD9xX7t9H9AhK3CXv8bJcecZV8AQZVm8/
+        Hl2pgpC8DmbkPtkFzEJ/erixpCy8kl2V7RyF7hw=
+X-Google-Smtp-Source: ABdhPJwQ7A/l6ebIgnp1a0yl+jTVZOrJKIN8Eqvyz9/+o7LaU3fFKI251S+kcR6ZFj4ZommmbaR0Ib6nr+7bNly3SpI=
+X-Received: by 2002:a92:c7c3:: with SMTP id g3mr51239040ilk.164.1594368308678;
+ Fri, 10 Jul 2020 01:05:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALAqxLVZ2EhutYjOt7Be1RgnYwHT6-4m6DxA-t1wuxuSy=6yDQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1593243079.git.syednwaris@gmail.com>
+In-Reply-To: <cover.1593243079.git.syednwaris@gmail.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 10 Jul 2020 13:34:57 +0530
+Message-ID: <CACG_h5q9UJcAx9q7guqH1nKhrg+k2CbWSDuFF4kBab8z6jdPhg@mail.gmail.com>
+Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>, rrichter@marvell.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 08:28:45PM -0700, John Stultz wrote:
-> On Thu, Jul 2, 2020 at 7:18 AM Will Deacon <will@kernel.org> wrote:
-> > On Thu, Jun 25, 2020 at 12:10:39AM +0000, John Stultz wrote:
-> > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > > index b510f67dfa49..714893535dd2 100644
-> > > --- a/drivers/iommu/Kconfig
-> > > +++ b/drivers/iommu/Kconfig
-> > > @@ -381,6 +381,7 @@ config SPAPR_TCE_IOMMU
-> > >  config ARM_SMMU
-> > >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> > >       depends on (ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)) && MMU
-> > > +     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > >       select IOMMU_API
-> > >       select IOMMU_IO_PGTABLE_LPAE
-> > >       select ARM_DMA_USE_IOMMU if ARM
-> >
-> > This looks like a giant hack. Is there another way to handle this?
-> 
-> Sorry for the slow response here.
-> 
-> So, I agree the syntax looks strange (requiring a comment obviously
-> isn't a good sign), but it's a fairly common way to ensure drivers
-> don't get built in if they optionally depend on another driver that
-> can be built as a module.
->   See "RFKILL || !RFKILL", "EXTCON || !EXTCON", or "USB_GADGET ||
-> !USB_GADGET" in various Kconfig files.
-> 
-> I'm open to using a different method, and in a different thread you
-> suggested using something like symbol_get(). I need to look into it
-> more, but that approach looks even more messy and prone to runtime
-> failures. Blocking the unwanted case at build time seems a bit cleaner
-> to me, even if the syntax is odd.
+On Sat, Jun 27, 2020 at 1:40 PM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
+>
+> Hello Linus,
+>
+> Since this patchset primarily affects GPIO drivers, would you like
+> to pick it up through your GPIO tree?
+>
+> This patchset introduces a new generic version of for_each_set_clump.
+> The previous version of for_each_set_clump8 used a fixed size 8-bit
+> clump, but the new generic version can work with clump of any size but
+> less than or equal to BITS_PER_LONG. The patchset utilizes the new macro
+> in several GPIO drivers.
+>
+> The earlier 8-bit for_each_set_clump8 facilitated a
+> for-loop syntax that iterates over a memory region entire groups of set
+> bits at a time.
+>
+> For example, suppose you would like to iterate over a 32-bit integer 8
+> bits at a time, skipping over 8-bit groups with no set bit, where
+> XXXXXXXX represents the current 8-bit group:
+>
+>     Example:        10111110 00000000 11111111 00110011
+>     First loop:     10111110 00000000 11111111 XXXXXXXX
+>     Second loop:    10111110 00000000 XXXXXXXX 00110011
+>     Third loop:     XXXXXXXX 00000000 11111111 00110011
+>
+> Each iteration of the loop returns the next 8-bit group that has at
+> least one set bit.
+>
+> But with the new for_each_set_clump the clump size can be different from 8 bits.
+> Moreover, the clump can be split at word boundary in situations where word
+> size is not multiple of clump size. Following are examples showing the working
+> of new macro for clump sizes of 24 bits and 6 bits.
+>
+> Example 1:
+> clump size: 24 bits, Number of clumps (or ports): 10
+> bitmap stores the bit information from where successive clumps are retrieved.
+>
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x000000aa000000aa;
+>         0xbbbbabcdeffedcba;  /* Least significant bits */
+>
+> Different iterations of for_each_set_clump:-
+> 'offset' is the bit position and 'clump' is the 24 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 0 clump: 0xfedcba
+> Iteration second:       offset: 24 clump: 0xabcdef
+> Iteration third:        offset: 48 clump: 0xaabbbb
+> Iteration fourth:       offset: 96 clump: 0xaa
+> Iteration fifth:        offset: 144 clump: 0xff
+> Iteration sixth:        offset: 168 clump: 0xaaaaaa
+> Iteration seventh:      offset: 216 clump: 0xff
+> Loop breaks because in the end the remaining bits (0x00aa) size was less
+> than clump size of 24 bits.
+>
+> In above example it can be seen that in iteration third, the 24 bit clump
+> that was retrieved was split between bitmap[0] and bitmap[1]. This example
+> also shows that 24 bit zeroes if present in between, were skipped (preserving
+> the previous for_each_set_macro8 behaviour).
+>
+> Example 2:
+> clump size = 6 bits, Number of clumps (or ports) = 3.
+>
+>      /* bitmap memory region */
+>         0x00aa0000ff000000;  /* Most significant bits */
+>         0xaaaaaa0000ff0000;
+>         0x0f00000000000000;
+>         0x0000000000000ac0;  /* Least significant bits */
+>
+> Different iterations of for_each_set_clump:
+> 'offset' is the bit position and 'clump' is the 6 bit clump from the
+> above bitmap.
+> Iteration first:        offset: 6 clump: 0x2b
+> Loop breaks because 6 * 3 = 18 bits traversed in bitmap.
+> Here 6 * 3 is clump size * no. of clumps.
+>
+> Changes in v9:
+>  - [Patch 4/4]: Remove looping of 'for_each_set_clump' and instead process two
+>    halves of a 64-bit bitmap separately or individually. Use normal spin_lock
+>    call for second inner lock. And take the spin_lock_init call outside the 'if'
+>    condition in the probe function of driver.
+>
+> Changes in v8:
+>  - [Patch 2/4]: Minor change: Use '__initdata' for correct section mismatch
+>    in 'clump_test_data' array.
+>
+> Changes in v7:
+>  - [Patch 2/4]: Minor changes: Use macro 'DECLARE_BITMAP()' and split 'struct'
+>    definition and test data.
+>
+> Changes in v6:
+>  - [Patch 2/4]: Make 'for loop' inside test_for_each_set_clump more
+>    succinct.
+>
+> Changes in v5:
+>  - [Patch 4/4]: Minor change: Hardcode value for better code readability.
+>
+> Changes in v4:
+>  - [Patch 2/4]: Use 'for' loop in test function of for_each_set_clump.
+>  - [Patch 3/4]: Minor change: Inline value for better code readability.
+>  - [Patch 4/4]: Minor change: Inline value for better code readability.
+>
+> Changes in v3:
+>  - [Patch 3/4]: Change datatype of some variables from u64 to unsigned long
+>    in function thunderx_gpio_set_multiple.
+>
+> CHanges in v2:
+>  - [Patch 2/4]: Unify different tests for 'for_each_set_clump'. Pass test data as
+>    function parameters.
+>  - [Patch 2/4]: Remove unnecessary bitmap_zero calls.
+>
+> Syed Nayyar Waris (4):
+>   bitops: Introduce the for_each_set_clump macro
+>   lib/test_bitmap.c: Add for_each_set_clump test cases
+>   gpio: thunderx: Utilize for_each_set_clump macro
+>   gpio: xilinx: Utilize generic bitmap_get_value and _set_value.
+>
+>  drivers/gpio/gpio-thunderx.c      |  11 ++-
+>  drivers/gpio/gpio-xilinx.c        |  66 +++++++-------
+>  include/asm-generic/bitops/find.h |  19 ++++
+>  include/linux/bitmap.h            |  61 +++++++++++++
+>  include/linux/bitops.h            |  13 +++
+>  lib/find_bit.c                    |  14 +++
+>  lib/test_bitmap.c                 | 145 ++++++++++++++++++++++++++++++
+>  7 files changed, 292 insertions(+), 37 deletions(-)
+>
+>
+> base-commit: b3a9e3b9622ae10064826dccb4f7a52bd88c7407
+> --
+> 2.26.2
+>
 
-Maybe just split it out then, so that the ARM_SMMU entry doesn't have this,
-as that driver _really_ doesn't care about SoC details like this. In other
-words, add a new entry along the lines of:
 
-	config ARM_SMMU_QCOM_IMPL
-	default y
-	#if QCOM_SCM=m this can't be =y
-	depends on ARM_SMMU & (QCOM_SCM || !QCOM_SCM)
+Hi Andrew, Linus
 
-and then have arm-smmu.h provide a static inline qcom_smmu_impl_init()
-which returns -ENODEV if CONFIG_ARM_SMMU_QCOM_IMPL=n and hack the Makefile
-so that we don't bother to compile arm-smmu-qcom.o in that case.
+What do you think about this patchset on 'for_each_set_clump' ?
 
-Would that work?
+if there's anything else you think that should be changed in this, or if this
+version looks good to you to pick up, kindly, let me know.
 
-Will
+Regards
+Syed Nayyar Waris
