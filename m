@@ -2,106 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFBE721B40E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 13:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C8621B52F
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 14:37:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgGJLeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 07:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgGJLeg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 07:34:36 -0400
-X-Greylist: delayed 1072 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 10 Jul 2020 04:34:36 PDT
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C94AC08C5CE
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 04:34:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QnCaOuIcCvhdYBaLUabKy4df1O0QApUXplyyBGGXirA=; b=POGAhwidXZA/FO2MzD+VgQyWM
-        GSo4tLG+skCosrnZ1xIBzj1L/J0XxDOdGJVtG5cPDsJXvxb6WsUVS/86X8mzv4IH/KO06x58lrwvZ
-        FF59kyB2cTMBhIv0IMY50JrRgGWFDOC0uv2fnqmfv3fgX1yGY08Q83tFTbt4geIcqoE5I=;
-Received: from p200300ccff110000e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff11:0:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jtr0m-0004gH-G1; Fri, 10 Jul 2020 13:16:12 +0200
-Received: from [::1] (helo=localhost)
-        by localhost with esmtp (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jtr0l-00020e-Se; Fri, 10 Jul 2020 13:16:11 +0200
-Date:   Fri, 10 Jul 2020 13:16:02 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     linux@armlinux.org.uk, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, oleksandr.suvorov@toradex.com,
-        aford173@gmail.com, hverkuil-cisco@xs4all.nl,
-        bjorn.andersson@linaro.org, leoyang.li@nxp.com, vkoul@kernel.org,
-        geert+renesas@glider.be, olof@lixom.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] ARM: imx_v6_v7_defconfig: Build in CONFIG_GPIO_MXC
- by default
-Message-ID: <20200710131435.38f1f8a0@kemnade.info>
-In-Reply-To: <1594164323-14920-3-git-send-email-Anson.Huang@nxp.com>
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
-        <1594164323-14920-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
+        id S1727820AbgGJMh0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 08:37:26 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:55405 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726664AbgGJMhZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Jul 2020 08:37:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 420E9BA0;
+        Fri, 10 Jul 2020 08:37:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 10 Jul 2020 08:37:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=d
+        gJ3aoc5NiXYKfv58xR0xZCsr1W6r/7ugdtfPSWBvns=; b=b8A3eBvXkGhpO3lzR
+        E7vusMZO/bWx2sr5lbEDQlvB7LDwVl2pMdAaevv0E6Ar/Xih61VxsTZnrWr7Aopd
+        S2JcAX+pU1IfYUr0Ro7p4CnIS3kovnn2vMUhqsssIflFuUog5cUy7zlKSW4tmuHO
+        ZTkF8udIHqJcsFmxk0kUWGSmaGVaEQmjUiEVvEjwdHvGS0OP9X9NakAN/qnw/4fc
+        aePE2w/U4vi9b/cMJqJpc5bekWzOvIsq9ggOc4Nu+X/N5vkun8WmdjOhwxtaX1cP
+        kFoxETysvQN7RWeYc84CJ0Cqm2dPFeAQj9drqtiHXA0ELV9RFglTq8XHpiXqkHhw
+        2RctA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=dgJ3aoc5NiXYKfv58xR0xZCsr1W6r/7ugdtfPSWBv
+        ns=; b=HQr9HBfRjC1cXeIA07LYz0c8ZamnWXn2wJ9N3Nj/pajxSKNL/CI60HxKA
+        8UBhyHNugxVf7roSxTMmmijjNLUd6CyymkFix+iqkm0I26iEZomS6C3h5LWs/jB4
+        08EzYiXkZ5udacOmMwRASP0BzrdpczgnuWOGjUqZHq/lgGvzfMaJKwp0bI638aJz
+        c0dIoZa8eZO0sBltDxRbU7WSlU+TNEJ2p6RDg2XaAhkRv7IBsg0JyRqeCuItvR+c
+        sKM8n8XxsleTUW33QGedESvk0EgAXha5EdU1zUa26O5J2cmeUbTFjOPNrHX76BHp
+        QKkf81q/kdmT/dCEp4Ihxc6GxGB9A==
+X-ME-Sender: <xms:AGEIX_VF2YIwxQaPlLqg_g5PHHnYRxNeQRosxYlfcLyEksUZj8-2Bw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrvddugdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttdejnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepgfejjeekjedttdethedtfeelteefffduvdevvdfhtdeiudetleejgeelfeef
+    uedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:AGEIX3kDLyfuDnJt50RhzCZPlSqB-rJAjUgyjDOis3SzVSKCHCF87w>
+    <xmx:AGEIX7aIDwXxD3jn55JAYhPPObaFEh-JIStZ6a4YUpJi7Os11x_Mmw>
+    <xmx:AGEIX6UlHD0EEf_cfp9_nX1DnacYVENmET5iVTpGLWVs_MqF1LVxYA>
+    <xmx:AWEIX9wL-1fAtDVWrg48pkcLVkqVqeWUIkk6jPlS_yXa5LvudaavZFsTLGo>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A08D2328005D;
+        Fri, 10 Jul 2020 08:37:19 -0400 (EDT)
+Date:   Fri, 10 Jul 2020 14:37:18 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Frank Lee <frank@allwinnertech.com>, robh+dt@kernel.org,
+        wens@csie.org, mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
+        icenowy@aosc.io, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        liyong@allwinnertech.com, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 04/16] dt-bindings: pinctrl: sunxi: make gpio banks
+ supplies required
+Message-ID: <20200710123718.mrvtk6rzkfuno5kn@gilmour.lan>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-5-frank@allwinnertech.com>
+ <20200709171713.tutnlchji4e6i5pv@core.my.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/d6/Rv7Yx5KojLO0Piux=DEc"; protocol="application/pgp-signature"
-X-Spam-Score: -1.0 (-)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200709171713.tutnlchji4e6i5pv@core.my.home>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---Sig_/d6/Rv7Yx5KojLO0Piux=DEc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
 Hi,
 
-On Wed,  8 Jul 2020 07:25:23 +0800
-Anson Huang <Anson.Huang@nxp.com> wrote:
-
-> i.MX GPIO is NOT default enabled now, so select CONFIG_GPIO_MXC
-> as built-in manually.
+On Thu, Jul 09, 2020 at 07:17:13PM +0200, Ond=C5=99ej Jirman wrote:
+> Hello,
 >=20
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  arch/arm/configs/imx_v6_v7_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> On Wed, Jul 08, 2020 at 03:19:30PM +0800, Frank Lee wrote:
+> > Since we don't really have to care about the existing DT for boards,
+> > it would be great to make the gpio banks supplies required.
 >=20
-shouldn't this be done also in the multi_v7_defconfig?
+> What if the borad doesn't use one of the banks? How would
+> I describe such a board if defining supplies for all banks
+> is required?
 
-Regards,
-Andreas
+If that case ever comes up, we can always drop the requirement, it's going =
+to be backward
+compatible.
 
---Sig_/d6/Rv7Yx5KojLO0Piux=DEc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl8ITfIACgkQl4jFM1s/
-ye92NBAAirKEXgFataafDg7cpIdPHiPdBtEQxJN0JqXbsleYOFa4XZX8UEaS5T+E
-bNQ8n7MLSorL1sxQL8JTTyaXcpZ0uWTLW1JYIxFTJmOZLvEg9CuiKWASFg2L78w6
-ie/jiFwZhUX5LitiikICMcXbdqMatE+UjeFbTIEWZfiSbX5UNSUMF5bPNTOatgvD
-K33z+2z9jc2rTToigZRJg2Qe3+x96rxTAZ8oJuX1fVR8Ini6cbUjI9LvBlPQmpmW
-asOU92aqMGIeBjZRJCO+GBfrP/Df1P/LoFcmZ98Q1G4OR+Gr/1dudhXjScEIzydF
-fmHW1vOsJQoLAdaX7Q8iiSNLR6S6yIkJSLbfP6aVSbjE3lq0OUti2aSQ56KxlUBt
-3JkVP19uql1hmhLYqFOObbwBjpE4xhvqJSHz0F//sun+KE1G//BqVZ5d049wyuV8
-VX9rWje+/cRD711W7/HKcrzY/juP74eFOt9zUDgx7DCVgVYaZ41HHSGtDdfD6dXf
-fsqoWvzf5o64jCC3taMnKA2nYH8yC0796+fXQVuaBWoZal6F0fIeUOVF7mGoqK2z
-rvCmfrWeRtDXfs9w1t8csiWMxgywYvkoPJ/dm3AAwtpSHKFdxB+XHmKw7traX6Bl
-IVTV+BN5qhs0XqDM95AlhSZ0RLINTgzFoUVjcpgWp40XMLq+szk=
-=nwOK
------END PGP SIGNATURE-----
-
---Sig_/d6/Rv7Yx5KojLO0Piux=DEc--
+Maxime
