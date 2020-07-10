@@ -2,280 +2,273 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BC3921BA73
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 18:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57DB321BB25
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Jul 2020 18:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgGJQLp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Jul 2020 12:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbgGJQLo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 12:11:44 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED20C08C5CE
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:44 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id q15so3251724vso.9
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yuuyGMPPXvJbhukGctpaGeXqFcZXftTaBLVOd6hvTaY=;
-        b=iD3Vj09RYSQk0VOmmHlNPXoLq3wYCqOqY5sTrl+2QE2Sz43ZGFHENAkHrCLJXz34nT
-         jIYryH1kh0zZkT9DfOyBCF0h3c+PefBclciTW3O3hg5y5EaTuj1KhgMICW50zkaFzzKU
-         hcux+sujAaDsBPqnjfkyKyrIUyWddynsL/iq8=
+        id S1727065AbgGJQjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Jul 2020 12:39:09 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38067 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgGJQjJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Jul 2020 12:39:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id s21so5597632ilk.5;
+        Fri, 10 Jul 2020 09:39:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yuuyGMPPXvJbhukGctpaGeXqFcZXftTaBLVOd6hvTaY=;
-        b=syD5ga2zGeZrk/0/GAij5nlKvPTSPo5p2QsNSJEDhWRAfIK1U66a6sO28C0v3uqrpQ
-         nSW0I8oQpg0jR+ds72hCq9TunA5tIrw2n39I8ZvS8NAp1Hx9ND9Ms1JIteWLBfs8MSRX
-         DKW/J5ZfTV5Ja6mbdCSpDEBjtLNY1w7ZQyzQDuQ+hYMxdUVAWZLm55LGqtGVkrf7bpYG
-         38IWQbVR+u9evMNiyHzqcGHuEqps/FlxoDNVZBGxKtU/4p7fpLQSERXPBWeqLOssTxxM
-         wrhG2NH0OVt0h+TrNQK/5kNGmX7bl4qpV3I6xylI4sYcr2elFgQX5ii9IqxNXvtJABpK
-         omcQ==
-X-Gm-Message-State: AOAM532NXELMSU/t/HSfbfRz2AlsCpgqMFu3Uy66hgs2fiL09PURabZf
-        Ma0y1ylf7UUV/6FtrbVGebaqbNlQKeo=
-X-Google-Smtp-Source: ABdhPJzesIJ9o5m45/M1PJJhmMHQonFdz2dk3RaJ+zpX15ajPnQZtTORCOBVYjf+kYLddGxzT3JazA==
-X-Received: by 2002:a67:d184:: with SMTP id w4mr34397320vsi.17.1594397503057;
-        Fri, 10 Jul 2020 09:11:43 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id g10sm914331vkm.35.2020.07.10.09.11.41
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jul 2020 09:11:42 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id q15so3251660vso.9
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Jul 2020 09:11:41 -0700 (PDT)
-X-Received: by 2002:a05:6102:30b5:: with SMTP id y21mr29286187vsd.42.1594397501165;
- Fri, 10 Jul 2020 09:11:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RDEiKXkfuo1LcvNVgxR5JlTZIhsrn+C+Okx9e1+bqZ4=;
+        b=saOGHK6ePcEtWiPDOLtNtdnjg/2nnJj61cNnhejzN3MUHDgNVBMyrGoYTZXrKmWqqo
+         +CCr0xyjQJMlyTcDXBlSGhIYapCqJOh9p/8mbJCVTX/yJUALX/wFZBR0+i6azcw5c6lZ
+         6ERaPuN51phFFg1SKqO0Is69oeoM+n1IZT4eNwM+5SsMjkdqXWWJR4adZ2yIGZ6jfXDW
+         L4OI3k7ILbD3Zjdt+l800X/lRFXMsJV4eJWv6jh8a63NCldFE4TMyBg8IH0Bnft9W0uq
+         ywwK2UlMpkKSSoAB7r9jW8KSiwfAm5VMOvNd8YdXjmFYjAtnjQ4oqXjaWtolKyjT7Mos
+         Bk7w==
+X-Gm-Message-State: AOAM5336JHOR/MP8TZaZLUt9VM9tjOqU6k5zdqSe2E82npmZLh1OMaUJ
+        KbMI8IMHlKKq8MwAzdD4Ng==
+X-Google-Smtp-Source: ABdhPJzLFaHStBCrMtyNEUyaEU9MNoIRNK7UH30HjnsBYGguV8MEdpVyBF9INgKlpdURHNTbgPM9bw==
+X-Received: by 2002:a92:5bdd:: with SMTP id c90mr47581679ilg.154.1594399147560;
+        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.254])
+        by smtp.gmail.com with ESMTPSA id y12sm3670759ilm.38.2020.07.10.09.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2020 09:39:07 -0700 (PDT)
+Received: (nullmailer pid 2774475 invoked by uid 1000);
+        Fri, 10 Jul 2020 16:39:05 -0000
+Date:   Fri, 10 Jul 2020 10:39:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
+        matthias.bgg@gmail.com, sean.wang@kernel.org,
+        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
+        eddie.huang@mediatek.com, chuanjia.liu@mediatek.com,
+        biao.huang@mediatek.com, hongzhou.yang@mediatek.com,
+        erin.lo@mediatek.com, sean.wang@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: pinctrl: mt8192: add binding document
+Message-ID: <20200710163905.GA2761779@bogus>
+References: <20200710072717.3056-1-zhiyong.tao@mediatek.com>
+ <20200710072717.3056-3-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
-References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
- <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
-In-Reply-To: <11dcb47c-60e3-3566-fc64-3a047354dff1@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 10 Jul 2020 09:11:29 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VDj285gcUY83fK0OM_WzHDTHsTxgy9n04UgK6z88qMKw@mail.gmail.com>
-Message-ID: <CAD=FV=VDj285gcUY83fK0OM_WzHDTHsTxgy9n04UgK6z88qMKw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200710072717.3056-3-zhiyong.tao@mediatek.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, Jul 10, 2020 at 03:27:16PM +0800, Zhiyong Tao wrote:
+> The commit adds mt8192 compatible node in binding document.
+> 
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> ---
+>  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 170 ++++++++++++++++++
+>  1 file changed, 170 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> new file mode 100644
+> index 000000000000..c698b7f65950
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
+> @@ -0,0 +1,170 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pinctrl-mt8192.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mediatek MT8192 Pin Controller
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
 
-On Thu, Jul 9, 2020 at 10:09 PM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Hi Doug,
->
-> On 7/9/2020 2:46 AM, Douglas Anderson wrote:
-> > As per Qualcomm, there is a PDC hardware issue (with the specific IP
-> > rev that exists on sc7180) that causes the PDC not to work properly
-> > when configured to handle dual edges.
-> >
-> > Let's work around this by emulating only ever letting our parent see
-> > requests for single edge interrupts on affected hardware.
-> >
-> > Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > As far as I can tell everything here should work and the limited
-> > testing I'm able to give it shows that, in fact, I can detect both
-> > edges.
-> >
-> > Please give this an extra thorough review since it's trying to find
-> > the exact right place to insert this code and I'm not massively
-> > familiar with all the frameworks.
-> >
-> > If someone has hardware where it's easy to stress test this that'd be
-> > wonderful too.  The board I happen to have in front of me doesn't have
-> > any easy-to-toggle GPIOs where I can just poke a button or a switch to
-> > generate edges.  My testing was done by hacking the "write protect"
-> > GPIO on my board into gpio-keys as a dual-edge interrupt and then
-> > sending commands to our security chip to toggle it--not exactly great
-> > for testing to make sure there are no race conditions if the interrupt
-> > bounces a lot.
-> >
-> >   drivers/pinctrl/qcom/pinctrl-msm.c    | 80 +++++++++++++++++++++++++++
-> >   drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
-> >   drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
-> >   3 files changed, 85 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > index 83b7d64bc4c1..45ca09ebb7b3 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> > @@ -860,6 +860,79 @@ static void msm_gpio_irq_ack(struct irq_data *d)
-> >       raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> >   }
-> >
-> > +/**
-> > + * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
-> > + * @d: The irq dta.
-> > + *
-> > + * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
-> > + * normally handled by the parent irqchip.  The logic here is slightly
-> > + * different due to what's easy to do with our parent, but in principle it's
-> > + * the same.
-> > + */
-> > +static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
-> > +{
-> > +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +     struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> > +     const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
-> > +     unsigned long flags;
-> > +     int loop_limit = 100;
-> > +     unsigned int val;
-> > +     unsigned int type;
-> > +
-> > +     /* Read the value and make a guess about what edge we need to catch */
-> > +     val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> > +     type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-> > +
-> > +     raw_spin_lock_irqsave(&pctrl->lock, flags);
-> can you please move this spinlock covering above two lines as well?
+Should be someone who knows the h/w (Mediatek).
 
-I could, but it wouldn't accomplish anything would it?  We're reading
-the status of the pin straight from memory mapped registers.  Grabbing
-a spinlock won't stop the pin from toggling.
+> +
+> +description: |
+> +  The Mediatek's Pin controller is used to control SoC pins.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt8192-pinctrl
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description:
+> +      Number of cells in GPIO specifier. Since the generic GPIO binding is used,
+> +      the amount of cells must be specified as 2. See the below
+> +      mentioned gpio binding representation for description of particular cells.
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    description: gpio valid number range.
+> +    maxItems: 1
+> +
+> +  reg:
+> +    description:
+> +      Physical address base for gpio base registers. There are 11 GPIO
+> +      physical address base in mt8192.
+> +    maxItems: 11
+> +
+> +  reg-names:
+> +    description:
+> +      Gpio base register names. There are 11 gpio base register names in mt8192.
+> +      They are "iocfg0", "iocfg_rm", "iocfg_bm", "iocfg_bl", "iocfg_br",
+> +      "iocfg_lm", "iocfg_lb", "iocfg_rt", "iocfg_lt", "iocfg_tl", "eint".
 
-...but from Mark's review I'll likely change the locking a bit anyway.
+Should be a schema.
 
+> +    maxItems: 11
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    description: The interrupt outputs to sysirq.
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  subnode format:
 
-> > +     do {
-> > +             /* Set the parent to catch the next edge */
-> > +             irq_chip_set_type_parent(d, type);
-> > +
-> > +             /*
-> > +              * Possibly the line changed between when we last read "val"
-> > +              * (and decided what edge we needed) and when set the edge.
-> > +              * If the value didn't change (or changed and then changed
-> > +              * back) then we're done.
-> > +              */
-> > +             val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-> > +             if (type == IRQ_TYPE_EDGE_RISING) {
-> > +                     if (!val)
-> > +                             break;
-> > +                     type = IRQ_TYPE_EDGE_FALLING;
-> > +             } else if (type == IRQ_TYPE_EDGE_FALLING) {
-> > +                     if (val)
-> > +                             break;
-> > +                     type = IRQ_TYPE_EDGE_RISING;
-> > +             }
-> > +     } while (loop_limit-- > 0);
-> > +     raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> > +
-> > +     if (!loop_limit)
-> > +             dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
->
-> you will never enter this if condtion since loop_limit will become
-> negative value in above do..while loop.
->
-> need to update this check to if (loop_limit <= 0)
->
-> other than above comment this change looks good to me.
+The child node name is 'subnode format'?
 
-Good catch, thanks!
+> +    description:
+> +      A pinctrl node should contain at least one subnodes representing the
+> +      pinctrl groups available on the machine. Each subnode will list the
+> +      pins it needs, and how they should be configured, with regard to muxer
+> +      configuration, pullups, drive strength, input enable/disable and
+> +      input schmitt.
+> +
+> +      node {
+> +        pinmux = <PIN_NUMBER_PINMUX>;
+> +        GENERIC_PINCONFIG;
+> +      };
 
+If you want to preserve formatting, description needs a literal block 
+notation on the end ('|').
 
+> +  '-pinmux$':
+> +    description:
+> +      Integer array, represents gpio pin number and mux setting.
+> +      Supported pin number and mux varies for different SoCs, and are defined
+> +      as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
+> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +  GENERIC_PINCONFIG:
 
-> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
->
-> Tested-by: Maulik Shah <mkshah@codeaurora.org>
->
-> Thanks,
-> Maulik
->
-> > +}
-> > +
-> > +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
-> > +{
-> > +     struct irq_data *d = &desc->irq_data;
-> > +
-> > +     /* Make sure we're primed for the next edge */
-> > +     msm_gpio_update_dual_edge_parent(d);
-> > +
-> > +     /* Pass on to the normal interrupt handler */
-> > +     handle_fasteoi_irq(desc);
-> > +}
-> > +
-> > +static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
-> > +                                                    unsigned int type)
-> > +{
-> > +     struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > +     struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> > +
-> > +     return type == IRQ_TYPE_EDGE_BOTH &&
-> > +            pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
-> > +            test_bit(d->hwirq, pctrl->skip_wake_irqs);
-> > +}
-> > +
-> >   static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> >   {
-> >       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > @@ -868,6 +941,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> >       unsigned long flags;
-> >       u32 val;
-> >
-> > +     if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-> > +             irq_set_handler_locked(d, msm_gpio_handle_dual_edge_parent_irq);
-> > +             msm_gpio_update_dual_edge_parent(d);
-> > +
-> > +             return 0;
-> > +     }
-> > +
-> >       if (d->parent_data)
-> >               irq_chip_set_type_parent(d, type);
-> >
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> > index 9452da18a78b..7486fe08eb9b 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> > +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> > @@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
-> >    * @pull_no_keeper: The SoC does not support keeper bias.
-> >    * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
-> >    * @nwakeirq_map:   The number of entries in @wakeirq_map
-> > + * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
-> > + *                            to be aware that their parent can't handle dual
-> > + *                            edge interrupts.
-> >    */
-> >   struct msm_pinctrl_soc_data {
-> >       const struct pinctrl_pin_desc *pins;
-> > @@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
-> >       const int *reserved_gpios;
-> >       const struct msm_gpio_wakeirq_map *wakeirq_map;
-> >       unsigned int nwakeirq_map;
-> > +     bool wakeirq_dual_edge_errata;
-> >   };
-> >
-> >   extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> > index 1b6465a882f2..1d9acad3c1ce 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> > @@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
-> >       .ntiles = ARRAY_SIZE(sc7180_tiles),
-> >       .wakeirq_map = sc7180_pdc_map,
-> >       .nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
-> > +     .wakeirq_dual_edge_errata = true,
-> >   };
-> >
-> >   static int sc7180_pinctrl_probe(struct platform_device *pdev)
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+You just defined a property called 'GENERIC_PINCONFIG'...
+
+> +    description:
+> +      It is the generic pinconfig options to use, bias-disable,
+> +      bias-pull-down, bias-pull-up, input-enable, input-disable, output-low,
+> +      output-high, input-schmitt-enable, input-schmitt-disable
+> +      and drive-strength are valid.
+> +
+> +      Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> +      resistors available, but for user, it's only need to set R1R0 as 00, 01,
+> +      10 or 11. So It needs config "mediatek,pull-up-adv" or
+> +      "mediatek,pull-down-adv" to support arguments for those special pins.
+> +      Valid arguments are from 0 to 3.
+> +
+> +      We can use "mediatek,tdsel" which is an integer describing the steps for
+> +      output level shifter duty cycle when asserted (high pulse width adjustment).
+> +      Valid arguments  are from 0 to 15.
+> +      We can use "mediatek,rdsel" which is an integer describing the steps for
+> +      input level shifter duty cycle when asserted (high pulse width adjustment).
+> +      Valid arguments are from 0 to 63.
+> +
+> +      When config drive-strength, it can support some arguments, such as
+> +      MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> +      It can only support 2/4/6/8/10/12/14/16mA in mt8192.
+> +      For I2C pins, there are existing generic driving setup and the specific
+> +      driving setup. I2C pins can only support 2/4/6/8/10/12/14/16mA driving
+> +      adjustment in generic driving setup. But in specific driving setup,
+> +      they can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
+> +      driving setup for I2C pins, the existing generic driving setup will be
+> +      disabled. For some special features, we need the I2C pins specific
+> +      driving setup. The specific driving setup is controlled by E1E0EN.
+> +      So we need add extra vendor driving preperty instead of
+> +      the generic driving property.
+> +      We can add "mediatek,drive-strength-adv = <XXX>;" to describe the specific
+> +      driving setup property. "XXX" means the value of E1E0EN. EN is 0 or 1.
+> +      It is used to enable or disable the specific driving setup.
+> +      E1E0 is used to describe the detail strength specification of the I2C pin.
+> +      When E1=0/E0=0, the strength is 0.125mA.
+> +      When E1=0/E0=1, the strength is 0.25mA.
+> +      When E1=1/E0=0, the strength is 0.5mA.
+> +      When E1=1/E0=1, the strength is 1mA.
+> +      So the valid arguments of "mediatek,drive-strength-adv" are from 0 to 7.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+> +
+> +examples:
+> +  - |
+> +            #include <dt-bindings/pinctrl/mt8192-pinfunc.h>
+> +            #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +            pio: pinctrl@10005000 {
+
+Drop unused labels.
+
+> +                    compatible = "mediatek,mt8192-pinctrl";
+> +                    reg = <0 0x10005000 0 0x1000>,
+> +                          <0 0x11c20000 0 0x1000>,
+> +                          <0 0x11d10000 0 0x1000>,
+> +                          <0 0x11d30000 0 0x1000>,
+> +                          <0 0x11d40000 0 0x1000>,
+> +                          <0 0x11e20000 0 0x1000>,
+> +                          <0 0x11e70000 0 0x1000>,
+> +                          <0 0x11ea0000 0 0x1000>,
+> +                          <0 0x11f20000 0 0x1000>,
+> +                          <0 0x11f30000 0 0x1000>,
+> +                          <0 0x1000b000 0 0x1000>;
+> +                    reg-names = "iocfg0", "iocfg_rm", "iocfg_bm",
+> +                          "iocfg_bl", "iocfg_br", "iocfg_lm",
+> +                          "iocfg_lb", "iocfg_rt", "iocfg_lt",
+> +                          "iocfg_tl", "eint";
+> +                    gpio-controller;
+> +                    #gpio-cells = <2>;
+> +                    gpio-ranges = <&pio 0 0 220>;
+> +                    interrupt-controller;
+> +                    interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH 0>;
+> +                    #interrupt-cells = <2>;
+> +                    i2c0_pins_a: i2c0 {
+
+Doesn't match the schema.
+
+> +                        pins {
+
+Doesn't match the schema. Why do you need 2 levels of nodes here?
+
+> +                                pinmux = <PINMUX_GPIO118__FUNC_SCL1>,
+> +                                         <PINMUX_GPIO119__FUNC_SDA1>;
+> +                                mediatek,pull-up-adv = <3>;
+> +                                mediatek,drive-strength-adv = <7>;
+> +                        };
+> +                    };
+> +                    i2c1_pins_a: i2c1 {
+> +                        pins {
+> +                                pinmux = <PINMUX_GPIO141__FUNC_SCL2>,
+> +                                         <PINMUX_GPIO142__FUNC_SDA2>;
+> +                                mediatek,pull-down-adv = <2>;
+> +                                mediatek,drive-strength-adv = <4>;
+> +                       };
+> +                   };
+> +            };
+> -- 
+> 2.18.0
