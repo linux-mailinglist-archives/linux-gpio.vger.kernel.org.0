@@ -2,59 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB02421C590
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 19:39:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A112F21C64F
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 23:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgGKRjv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Jul 2020 13:39:51 -0400
-Received: from sonic314-48.consmr.mail.bf2.yahoo.com ([74.6.132.222]:44900
-        "EHLO sonic314-48.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728510AbgGKRjv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 11 Jul 2020 13:39:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1594489190; bh=AEu8nK9QzTA2tbqo2l5BVwPShMs+2VsmLoZOZv6b3Lc=; h=Date:From:Reply-To:Subject:References:From:Subject; b=p4b0Y1nwTGVJDuMcE6h0nydvf0/cpmzL3/erV1jB5AkCN51bHCxxXGmha6zDlYzrPmpOlhaPpq2dl68vjJjb9PdWDHEkI//a/YOw14zInALdsprZmIH1/l94Lvg/e5i3ihWvdTZpsaBXVTI5EmU2X1HrlVMLuPBlI3b15sAfmqWH5YE9Vo4tADSQxtiBHPOL4jW0Ssi8jOIY9rf7x+jv6tJb+NhldujRol7cfgISOllloqevhi20T+qqj2oLgOM6POFWAjfoSlgr9ErhvCCGrJx36+zoDE1OWsn0KQ70+Giv8CiIxMfZJeZg+7Rx86j5MT0Ad0zljAQ7+2d0iP5izQ==
-X-YMail-OSG: w6raM0QVM1n3iDXw4i3OqZ74OSmIRS4MQeDpyJoD0a4Vc01VStzZbTcbZSN_Im5
- 4rf5mR_jomI1MxTjub6AdwwxAH8rAN7XkGtsLsy7qIvuHhVTY3SswyWR5PIf1sXqnrhUmEEWmA9i
- LFx48ixcLvIIiP3pAw2cd1zVWnuPWfQNGxLJcSmNn5IzIoh8JeKurF54wmNhNjiywjsbWpBa2GYd
- vuDJyBQcl5audnqyZgUGTCDLNlfJeasS6PFgJzpfufl1Va_ZwO.tlxzPbJABae.jypWXzaNPPeRs
- pnXMjyf8dNBlL2Yj5Qv4MTl5Mwd5XR0x8O6zh1AJh4jLfHbMWfdwEJRdYGHRxziRiK7H65KtBnLE
- mty.ajWTiuaQtQwNvpch8FIp4r213cHqmUCUls7riX4nuU0FOKr6tAkyv4qMf7ZHolxcKfmiETAf
- KCNDkYhtliw4XnynMTjHDUs5hJTDCZ_A77ibsS35PXJi04UsU6i8J5Ly3o6j0_7UQtjeC.nuzy62
- tMrT_o37w374WDQHxwGeuBlKZGr7dSSJ3NEKrWpJ4p.BZgKb9H9nLtIzC1YdDcJpR7o6kl_Xvr1C
- ibuKpdI9VgXYpIsRCwlaE2qT1OPqnT_fKJiwAk5zOdKM7UgbBuSfDY6B6TvfiSdsMBbL3Er.oxvz
- Gt5eBx8T0Jbw0hRSTuS2rt3tq_NnvUMeerNQ672waEwCektBX.SnpAc1sJRqE62ktrevWc991C9f
- B8Krrj4Pi7Fb9y4otyI_e0TophsoOBhbVX.3qT3DyaXCwygoq4x3A96Kx5LhHj430sfEzKC8LAac
- Q0oj1YNapVcqiaXgTEE9yv0Bb0mp3P82WYJQVkOTPVd5HieT5wBpNST0PqLFcT0dsA4GNRe7f8P8
- 0CbI9V9FNEbHIdRiNH7yO7xiEiJEMMFpbQc9iLht8OanMGdA4trX9eIKRu3e75eGDNklQhdgwdfQ
- ZsBjABAPuBejVfRRttbdP8A2l8BehoK3ZbWIkmFnoje9xJ3mvLzfkPQnbOVEqpfnMT9E5nJv93P1
- iabdrT.qd1jxgZDHEq0QBNhgjWFtUBuKTZm4bdgwqcWOeZKiWCpFJWTFBNWxQ4FJbCOAnw1feiaa
- ec18yUggnkcC9xZBonIPNV4DfxuD27dK6YhyvsyjXR_HumRHQqV.qko543GTPz0A2hNKUlVYEbyi
- 3wk5fGhMjHIod93zM8vsKsclP4thrpwz5EcGFCL2KfOryxcwjp1g15RCbxP5X7ni8fsPsISWWHen
- nMXlXTyP2FbmigWqHlEXm2LpcOm0u787R6M3F6qdGCeoouYZvJ9wJeOiAX9yN0PrmSMsG59YqDAf
- 375tSY1nlys.hJMPFcH7_xq3FNEG4HXmW
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.bf2.yahoo.com with HTTP; Sat, 11 Jul 2020 17:39:50 +0000
-Date:   Sat, 11 Jul 2020 17:37:48 +0000 (UTC)
-From:   "Mrs. Maureen Hinckley" <mau33@hgvt.in>
-Reply-To: maurhinck8@gmail.com
-Message-ID: <713739125.181155.1594489068941@mail.yahoo.com>
-Subject: RE
+        id S1727932AbgGKVHm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Jul 2020 17:07:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgGKVHm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jul 2020 17:07:42 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3310C08C5DD
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:07:41 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id k17so5169434lfg.3
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=k4nruq+oFiOvqyvb4/VdyM/ZTJbNZf/NdW35w9sc1Vw=;
+        b=JkFrPEBfH8dagE1gbcrczR+NaJRYTz6akXcZnsC2ggF2HTLUZaJhU0SQhevq7SR9A8
+         TOJvCa3mY07asVGgE2VAD20RElrOPt6KCtSjgGMlvTB3YKaQxIMxfIDiEDcggO6YGOdz
+         PM5yAGQkvoDKcKEQOJ344MZ0oFVlyliO9Vsii66zWJ2UdnmumhsVl6/CabNCg4sCK9GX
+         GgwXoF+gE/rmqAd9/bYsBcnF0GogprDeJJ17LniiVoWsnHw/HV8H+hvJ2m+wvkEULTEa
+         n6mGiKnXpvUMGeTuKpKWzKhSeJRyMYXXYcBkceT87oGMqAFowaOLvj5q82JYPQO0Yu0F
+         0mLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=k4nruq+oFiOvqyvb4/VdyM/ZTJbNZf/NdW35w9sc1Vw=;
+        b=bywcjlE0AQnmo4L55wyYMa4YDyzlSWPw4iqN/nfELK3NGXbZnrnGiL+EuZhPU4ToBd
+         8S/QjTIO8Ism108Rp69gSSCPZfWVnc36szASdsEsTuW/9M6Cu4EiCQVR/aXVhvaoK1zZ
+         QlMdTifuGjyxsFVprybZIimwiXdj6xDAFvLPEQeyXUA6OEw19jVDwtDiPq42P5rRGo9l
+         AdBaRx9rBYItUsxJJVci6jFiSCSN3rXVB+zi8XrmGXh721k8Fw8sC7NsnHl7w98+7KjU
+         ahSgQSZ7zUwLRtQiDBijzqMknW5P77xiMlUHvIvd3AZwg0570FCmzLnSbXhRQNif6SMN
+         lAFA==
+X-Gm-Message-State: AOAM533MT70YvDSX76AW6Jshat2k5Z1NtCS1VC9Tre0pBzmh0nKRONr6
+        EY4a2K9mtIe7KgCQtmcFBTPw1j4WmsySu1OMg2G238bYDNw=
+X-Google-Smtp-Source: ABdhPJyDiDsK12IuwKtw/dVRn5YAY+IfXPlqFWGCjxLbFu5B1b6OC79zeGSpRTe7ZBdq9RgfyCwrSSqQp7SJJDFTsQE=
+X-Received: by 2002:a05:6512:3150:: with SMTP id s16mr36960881lfi.47.1594501660354;
+ Sat, 11 Jul 2020 14:07:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <713739125.181155.1594489068941.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+ <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com> <760595a8cdfeb0156d5180ecaeb2ee4487f50cc7.camel@alliedtelesis.co.nz>
+ <86c009a8-05c4-40a3-daef-6d9e848642a3@gmail.com> <db96187e25342cd36133cde64ef742e03325c8c3.camel@alliedtelesis.co.nz>
+ <cd40f919-f8d9-cde4-6cc5-f523e4973c3b@gmail.com>
+In-Reply-To: <cd40f919-f8d9-cde4-6cc5-f523e4973c3b@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 11 Jul 2020 23:07:29 +0200
+Message-ID: <CACRpkdZRQq3EbibSWcKnTp6+iFJACeaytQEX+zR69Y_4LMSkYg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Mark Tomlinson <Mark.Tomlinson@alliedtelesis.co.nz>,
+        "ray.jui@broadcom.com" <ray.jui@broadcom.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Jul 1, 2020 at 6:44 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 6/30/2020 9:37 PM, Mark Tomlinson wrote:
 
+> > That was one of my thoughts too. I found someone had tried that
+> > earlier, but it was rejected:
+> >
+> >
+> > https://patchwork.ozlabs.org/project/linux-gpio/patch/1516566774-1786-1-git-send-email-david@lechnology.com/
+>
+> clk or reset APIs do not complain loudly on EPROBE_DEFER, it seems to me
+> that GPIO should follow here. Also, it does look like Linus was in
+> agreement in the end, not sure why it was not applied though.
 
-I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
- thousand USD) to you. Contact us via my email at (maurhinck8@gmail.com) fo=
-r further details.
+I never got an updated patch. My last message was:
 
-Best Regards,
-Mrs. Maureen Hinckley,
-Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
+>> so you mean something like this?
+>>
+>> if (err == -EPROBE_DEFER)
+>>         dev_info(dev, "deferring probe\n")
+>> else
+>>         dev_err(dev, "... failed to register\n")
+>
+> Yes exactly.
+
+Patches welcome :D
+
+Yours,
+Linus Walleij
