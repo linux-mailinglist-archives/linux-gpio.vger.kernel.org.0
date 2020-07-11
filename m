@@ -2,81 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC4321C65A
-	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 23:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A402A21C660
+	for <lists+linux-gpio@lfdr.de>; Sat, 11 Jul 2020 23:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgGKVMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 11 Jul 2020 17:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
+        id S1726948AbgGKVR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 11 Jul 2020 17:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgGKVMv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jul 2020 17:12:51 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F7BC08E6DC
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id d17so10386977ljl.3
-        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:12:51 -0700 (PDT)
+        with ESMTP id S1726281AbgGKVR5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 11 Jul 2020 17:17:57 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B91C08C5DD
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:17:56 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id r19so10353494ljn.12
+        for <linux-gpio@vger.kernel.org>; Sat, 11 Jul 2020 14:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
-        b=phqDGApFNUiMib/i5ixNCjfscEjoGG9dm6nGYkkuK89crua9hH+Tw7oPeffJC7QngU
-         RONlsfsM4KQjjbP4mPDj9QElR/qCsD9yv/qaQpjBCA6/oyONnMwuRKN7BB4cC0vhIiwY
-         kyAqCwFYD67vTukOgwi4SAOOJ3y4bWgX75+0NHKHaTOzQU1EfVepNIPR9OmInGdCueXn
-         tgKw5T5UbQ3RnhfyKVS6CypNrb7d2z6WvMAaa21KH/66WCySXG/dPzbDMW17AY9luj2q
-         ttE93UdvI29dJLsLDydAdDP/Ugx2PXg9S+F1Ay5326VSHypR6iQ4rRYxyLTwY7LgiIuE
-         ug/A==
+        bh=wqb18s+NYtJBD4ijNg7d8R2/EPoJeQ86xG7wEDLp5I0=;
+        b=UqNakKmZZ125zE7aCrUB/FRrke2hYX8bYIK72Azll6JhZ9g46WilSX2lPkVONVzkUn
+         38oy1jIZbRqpBJqkOD51aYCJmb4Q4ElI2SAzJzDx2C0I0q7XCi1+zbT/MjHXnpnjHz+B
+         lGug/VLskaWGmyA3bbZaudgCg2sieCTvxiamZDlgPXJDizun+WoNnsonxdYKxE4AT229
+         FcWc98rUvcWF3JXBq/Gwr55pydfM5BitCAzvjIymtpl+dfRDYQtrsmnHsEKEM1/bein5
+         iuAgSGLetrR08XSBvlJGEFzCLZo4AwNPGS2Wh3mZEJP/crq5RsZ3dA1A75XozhvnO5ES
+         yJrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HgHuk3yasiCaHOFp70C3S20yfZ/46i84UF/qS9vnKcc=;
-        b=BMO8e+BmNAMINPM+R3iykmF4m2bbPRNH1yfsZaVeRyRgs9TkMujLH1iOLl2dZLsSMG
-         kdJnd5HXG/+W+5TULmV95EVbot5E1psIAVHMIOydjjlqSb8v8QwEL1l6Mycc9WwV2v8a
-         NfYJiskmHqBuRfXU2S5PIgRZB0h3srn/ICsT2flz3gVcFRzK2yWBnpwkLkZTMaRSVcdP
-         LVyB64yG74c/sDgqOatEZp8PbEv2LVMASl2BecpdZt+1e+s4m632xt4wLdIy3tanalXV
-         4XcTGqVSmQ7nmj0+2aDZoHZUeOoGL7qHokW1r/RCIBRGxl3UauW39hYLiy64D3xTSg9K
-         23BQ==
-X-Gm-Message-State: AOAM530nO4RHhGIGNHkue+Qx1PJuwIetWLXgkWjgtdVMH/ZVaUybO+YW
-        M+CKRNBPjRWWWNl1WBaTOa7+/lhv2uFLVXIgcDFKmQ==
-X-Google-Smtp-Source: ABdhPJxfLX8yHShpQtjGOPNlAosmEBIPTvGmPBymA5g4mnnwVTGmE0j69am4R1NGfe/2Nhmcd1M6BuIbcIw3m1Dxgdc=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr27868119ljc.104.1594501970063;
- Sat, 11 Jul 2020 14:12:50 -0700 (PDT)
+        bh=wqb18s+NYtJBD4ijNg7d8R2/EPoJeQ86xG7wEDLp5I0=;
+        b=SWLX3hZfEErxlCSDBsW3/HJGMZn2t8KjarPqd4Mq1AN0BEjJY+aU7Q5pJMabKWUuQb
+         EW+ZozIZZjR5vKmbwzYFqFkZPJyQF5tE1LvM3wbHMnh1xsQ1GCAX0VKfjuwrqYCyJQ1i
+         M7Jxj8IyRndDJrq9TI+A48mZiX3+th2l6/+U8TxP8hK7TT96EGbp8d3uQN5LTmfANsEK
+         cL4O5+hKoapxqNMlTiK8DgwJCPmQx0D8G5x6sIkfAqfBDHspXLyRfKn6hpGoC9t7SJc1
+         hkSQvk+yH1MrBl4hYeTkzSRkIkTFmEITY3NdvGtqRRT7xvWMH2DWZzoKvXmOpoeu9jV7
+         9WgA==
+X-Gm-Message-State: AOAM533jZrEQuK9tEFHlhwogsqXQLAvnGdegfJcCyPojnv1hYrr1MLK/
+        9zYjMYVaZMjjlGEth2qGRcsNTJWgUwrz716axNkIsw==
+X-Google-Smtp-Source: ABdhPJxTb9eukJ235AFc+OGGaO7D1n9aCXDniaL1t98L7aPdbqsBZfzXdMGSsKdhxtpjBTSzm37thnqZs2YYXtskJPc=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr27400495lji.338.1594502275360;
+ Sat, 11 Jul 2020 14:17:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200701013320.130441-1-drew@beagleboard.org> <CACRpkdY3mUjczkJhV9BdZhUJGOgrbOMJnciBjOaPg6c9XUt8Ww@mail.gmail.com>
- <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
-In-Reply-To: <CAEf4M_ArGSpN5-7_zt6mQaWm8XkqTcQiOnCbs3_obCipDC1KNA@mail.gmail.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 11 Jul 2020 23:12:39 +0200
-Message-ID: <CACRpkdZRnS=xt6FKy6pSUQ+itkxoimAAKBc+=kupTXpEGg+b8g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] pinctrl: single: support #pinctrl-cells = 2
-To:     Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
+Date:   Sat, 11 Jul 2020 23:17:44 +0200
+Message-ID: <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        oleksandr.suvorov@toradex.com, Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        hverkuil-cisco@xs4all.nl,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
+        NXP Linux Team <Linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 7, 2020 at 1:02 PM Drew Fustini <pdp7pdp7@gmail.com> wrote:
+On Wed, Jul 8, 2020 at 1:28 AM Anson Huang <Anson.Huang@nxp.com> wrote:
 
-> Which repo/branch is the best for me to use if I am going to be
-> posting any further dts patches?
+>  subsys_initcall(gpio_mxc_init);
+> +
+> +MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
+> +MODULE_DESCRIPTION("i.MX GPIO Driver");
+> +MODULE_LICENSE("GPL");
 
-Mine, pinctrl devel branch during this (v5.9) cycle I suppose.
+You are making this modualrizable but keeping the subsys_initcall(),
+which doesn't make very much sense. It is obviously not necessary
+to do this probe at subsys_initcall() time, right?
+
+Take this opportunity to convert the driver to use
+module_platform_driver() as well.
 
 Yours,
 Linus Walleij
