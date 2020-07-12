@@ -2,122 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D2B21C80F
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2020 10:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C374D21C83D
+	for <lists+linux-gpio@lfdr.de>; Sun, 12 Jul 2020 11:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgGLIZl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Jul 2020 04:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbgGLIZl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Jul 2020 04:25:41 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDC5C061794
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2020 01:25:40 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g75so10248518wme.5
-        for <linux-gpio@vger.kernel.org>; Sun, 12 Jul 2020 01:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UcUxZUmBfsFjeEl1SwZiuUNXbzI40SK+PUAcakJbZOs=;
-        b=yW+5QrueqqjUaS0X9APtQTCpUIuYiolkmlW+LfodUxFDzzi801vGTygikrXIpp7dk1
-         d3TbJ9XbugxLGKm4a3r3/bspr3ayZBeyMCudoJpigAotCDwW5lbvsBSbGeBp0dbPKgLz
-         ObrVmhCOd3Cgx8ZHGperSbISJw8F3tRHWdsvI/mAq4cWvOrVPXo3/WpMta/NuHNlCGu3
-         H8X3C0eqklvzsf+4Xzkw8zx2FUFsQFNhPig06DjwbgYoho5/y3806EpsjQivH7txVfZO
-         0euZUgxn/55oEdX30sjddNuU8BokFR/bb0KKLlT2fBWLO9Gjp2FXoHLDV73rcx3soYKd
-         63+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UcUxZUmBfsFjeEl1SwZiuUNXbzI40SK+PUAcakJbZOs=;
-        b=qOe7iS/ZD1u/NScX6Dhh+aNdYCImcV7CHKzLkVprMTXUxLBgd1HQXz/Q1KED9M/2rb
-         z7TcURfCWLkqmvsJiswuV6foUwbAd4ZxDYVyu/Ndfyk65LM8wWJNpIA1n09mtpxH6Jkj
-         6EpTbv7djRUP2O/v7RF6fUZp1BkZV9wtQuqyjv5Zjo6tb2Qodywn8Psxcaq8dB7RNLYp
-         HGVTC26k9yKCAGt0IXpIj8ZJMP++rCLbWB54duLCuy5WYUmB6GC0oEd3IxZAOdkzS19q
-         0BvhxMVBqQ/HPqXtp782TVp5eEzzcpsvJ2+IYbo6aJGmllpvU8Dn9w90G3PU7kRMQom9
-         m/Fg==
-X-Gm-Message-State: AOAM533wXqp+IpCuIYcP5Fp2AUnUmCIEsGhw2wCWxkA9NTm3UzjEzj7Y
-        PfHJxdkIENAKWUVLPOj0Cj9Uy+LdG9M=
-X-Google-Smtp-Source: ABdhPJxcD7mJmvp8Yrw/ZQ4E5GJgoD7Oj/730uVsB2VwEJ2Bew2VINxGP1uvthlodCkw4DUGKGWmKg==
-X-Received: by 2002:a1c:7311:: with SMTP id d17mr13203574wmb.60.1594542338240;
-        Sun, 12 Jul 2020 01:25:38 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id j75sm7123353wrj.22.2020.07.12.01.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jul 2020 01:25:37 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [GIT PULL] gpio: updates for v5.9 - part 2
-Date:   Sun, 12 Jul 2020 10:25:29 +0200
-Message-Id: <20200712082529.21023-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1728341AbgGLJ1Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Jul 2020 05:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728112AbgGLJ1Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 12 Jul 2020 05:27:24 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7996820720;
+        Sun, 12 Jul 2020 09:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594546043;
+        bh=NQq5tQ5Tv0Dy7nOdr7LyJUeJ2lgk7kTvmCLrlv5YKvU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FnfqlTIPhPUHeKn4C1xmFFqoiFgmT/grB5qd0iMAkgEhLzQI9urPVYpWXMq9YJ+hY
+         IsCLJfe/GTbPVCbQFl/zawg1qBZtCR8MabVM/z+jEyQ/Q2gmD1TruIbd9u+9Wf+G/X
+         VR30NAj/p7Jcqqkh9ovjdwfX4x6Vfk/gTJarQn0M=
+Received: from host109-149-250-171.range109-149.btcentralplus.com ([109.149.250.171] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1juYGX-00B6VP-Mg; Sun, 12 Jul 2020 10:27:21 +0100
+Date:   Sun, 12 Jul 2020 10:27:20 +0100
+Message-ID: <87r1thxevb.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] irqchip: Allow QCOM_PDC to be loadable as a permanent module
+In-Reply-To: <159442366514.1987609.434612639050774557@swboyd.mtv.corp.google.com>
+References: <20200625001039.56174-1-john.stultz@linaro.org>
+        <20200625001039.56174-4-john.stultz@linaro.org>
+        <159315737502.62212.16093934831673347066@swboyd.mtv.corp.google.com>
+        <CALAqxLVNGar8g+FvHaVHN_e-MOZZ+=ZPmDt_GKKSC8AS-wLFGg@mail.gmail.com>
+        <87wo3setn8.wl-maz@kernel.org>
+        <159436097057.1987609.13993891118929459851@swboyd.mtv.corp.google.com>
+        <CALAqxLW14f4Gn6Q3b89X10y7=Zct2NJSgjagUqxez_bObcp42w@mail.gmail.com>
+        <159442366514.1987609.434612639050774557@swboyd.mtv.corp.google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 109.149.250.171
+X-SA-Exim-Rcpt-To: swboyd@chromium.org, john.stultz@linaro.org, linux-kernel@vger.kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, joro@8bytes.org, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, mkshah@codeaurora.org, ilina@codeaurora.org, saravanak@google.com, tkjos@google.com, gregkh@linuxfoundation.org, linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Sat, 11 Jul 2020 00:27:45 +0100,
+Stephen Boyd <swboyd@chromium.org> wrote:
+> 
+> Quoting John Stultz (2020-07-10 15:44:18)
+> > On Thu, Jul 9, 2020 at 11:02 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Does it work? I haven't looked in detail but I worry that the child
+> > > irqdomain (i.e. pinctrl-msm) would need to delay probing until this
+> > > parent irqdomain is registered. Or has the hierarchical irqdomain code
+> > > been updated to handle the parent child relationship and wait for things
+> > > to probe or be loaded?
+> > 
+> > So I can't say I know the underlying hardware particularly well, but
+> > I've been using this successfully on the Dragonboard 845c with both
+> > static builds as well as module enabled builds.
+> > And the same patch has been in the android-mainline and android-5.4
+> > kernels for a while without objections from QCOM.
+> > 
+> > As to the probe ordering question, Saravana can maybe speak in more
+> > detail if it's involved in this case but the fw_devlink code has
+> > addressed many of these sorts of ordering issues.
+> > However, I'm not sure if I'm lucking into the right probe order, as we
+> > have been able to boot android-mainline w/ both fw_devlink=on and
+> > fw_devlink=off (though in the =off case, we need
+> > deferred_probe_timeout=30 to give us a bit more time for modules to
+> > load after init starts).
+> > 
+> 
+> Ok I looked at the code (sorry for not checking earlier) and I see this in
+> msm_gpio_init()
+> 
+>         np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+>         if (np) {
+>                 chip->irq.parent_domain = irq_find_matching_host(np,
+>                                                  DOMAIN_BUS_WAKEUP);
+>                 of_node_put(np);
+>                 if (!chip->irq.parent_domain)
+>                         return -EPROBE_DEFER;
+> 
+> so it looks like we'll probe defer the pinctrl driver until the pdc module
+> loads. Meaning it should work to have pinctrl builtin and pdc as a module.
 
-Hi Linus,
+What I hope is that eventually fw_devlink will become the norm (on by
+default), and that probe deferral will become a thing of the past.
 
-please pull the following set of changes from Kent introducing a lot
-of improvements to the character device code. These are non-controversial
-changes before the V2 uAPI.
+	M.
 
-Best regards,
-Bartosz
-
-The following changes since commit 4672a4a9fbfe316e1153682b0790af6446255a50:
-
-  Merge branch 'devel' into for-next (2020-07-09 17:06:28 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v5.9-part2
-
-for you to fetch changes up to df51f402e3b15b00284309bd3016bb4536d2260c:
-
-  tools: gpio: fix spurious close warning in gpio-event-mon (2020-07-12 10:22:01 +0200)
-
-----------------------------------------------------------------
-gpio updates for v5.9 - part 2
-
-- several improvements and minor tweaks to the GPIO character device code
-
-----------------------------------------------------------------
-Kent Gibson (17):
-      gpiolib: move gpiolib-sysfs function declarations into their own header
-      gpiolib: cdev: sort includes
-      gpiolib: cdev: minor indentation fixes
-      gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
-      gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be consistent with other use
-      gpiolib: cdev: rename numdescs to num_descs
-      gpiolib: cdev: remove pointless decrement of i
-      gpiolib: cdev: use blocking notifier call chain instead of atomic
-      gpiolib: cdev: rename priv to cdev
-      gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
-      gpiolib: cdev: remove recalculation of offset
-      gpiolib: cdev: refactor linehandle cleanup into linehandle_free
-      gpiolib: cdev: refactor lineevent cleanup into lineevent_free
-      gpio: uapi: fix misplaced comment line
-      tools: gpio: fix spurious close warning in lsgpio
-      tools: gpio: fix spurious close warning in gpio-utils
-      tools: gpio: fix spurious close warning in gpio-event-mon
-
- drivers/gpio/gpiolib-cdev.c  | 385 ++++++++++++++++++++-----------------------
- drivers/gpio/gpiolib-sysfs.c |   1 +
- drivers/gpio/gpiolib-sysfs.h |  24 +++
- drivers/gpio/gpiolib.c       |  15 +-
- drivers/gpio/gpiolib.h       |  20 +--
- include/uapi/linux/gpio.h    |   2 +-
- tools/gpio/gpio-event-mon.c  |   3 +-
- tools/gpio/gpio-utils.c      |   4 +-
- tools/gpio/lsgpio.c          |   3 +-
- 9 files changed, 217 insertions(+), 240 deletions(-)
- create mode 100644 drivers/gpio/gpiolib-sysfs.h
+-- 
+Without deviation from the norm, progress is not possible.
