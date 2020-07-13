@@ -2,98 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5684D21E09D
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 21:21:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD4821E11A
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 22:02:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgGMTVf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 15:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbgGMTVe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 15:21:34 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F73AC061794
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 12:21:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z5so6452552pgb.6
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 12:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lnlvSS8yRTjaa31L4bdqfl6S2JOUPE+8vLPyFLQzIA0=;
-        b=Os6izMQO5HU2C9KMSKfCwZQxDgXOjXhkpAFRF2xk9FvopUV1KIpH3xyunGonqiRihD
-         YJDPvYc1aFxRAMGvPN5QPXG3IG86/9ascA8OlOT68leWXeVDnTfdbbBA6ZZiG68UdNac
-         QNzEtglbjw/alG4spZBMMxLRrFL8lgUlvHV7ERnck8TjIQSqwfXUmLIRjp+0zI/kFq0r
-         UdWsXlpULiynQmoeYVzMUgp+Srg/ZqSXqXh3QOkrUbnARBtNAO5mJLFLk4UVJU3o5SBC
-         dFfI3065HWFu8sUAD4e3lYGsD2YzmGKDNkatjLTAXI5tOTuyjRIAsnNZNpPOp4fgrK3S
-         gu0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lnlvSS8yRTjaa31L4bdqfl6S2JOUPE+8vLPyFLQzIA0=;
-        b=hTDPoFazUOVg+1OT3FlG2owkXTS8MK0H3BNLJkIMc0Q5mY/sHiXhD1BReMkzqYpfpd
-         FpTSCcgX3CeOc3seekXvSkcK0l3yoyOXZsyi1Gjj4PPVkC0kbzYCrIfzieZmyp3453uq
-         HtX8k51S6tK6Yk9ULuAr2P6PMWU4QNxSy986Vut6TJ1JWe6xdI4C7j/EcZpvwSVnO0vV
-         YxFee0tmoK4dDTQwI1035XKYqi32QVs4BGsbHOQR2DxFrKgUPZ+5XESyf8TS1Nc7tpiJ
-         AvowwrY9y2oKlKk+nDmNmjTUctCeLWe4iRl0zEQtBz95RSEhS3de99cIISeWOCYi/xVs
-         PqIg==
-X-Gm-Message-State: AOAM531FjQFFqXHIlSAr7CefR2PJxJdddvFQgCITyE90E0E95qnOu0IR
-        0wSq2LF9TpF8xrzQ5bt5siTG/w==
-X-Google-Smtp-Source: ABdhPJwGB1uxYOzm+iqLQAWuBTRahO/IW3KpbEcEwDkgmZiU7vjTTS+yyUzAEByjIHvJZETQz2iCaQ==
-X-Received: by 2002:a63:564e:: with SMTP id g14mr550912pgm.326.1594668093886;
-        Mon, 13 Jul 2020 12:21:33 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z10sm15863750pfr.90.2020.07.13.12.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 12:21:33 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 12:19:25 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Alexey Minnekhanov <alexey.min@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>, skrzynka@konradybcio.pl,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] mailbox: qcom: Add sdm660 hmss compatible
-Message-ID: <20200713191925.GD388985@builder.lan>
-References: <20200622192558.152828-1-konradybcio@gmail.com>
- <20200622192558.152828-8-konradybcio@gmail.com>
- <20200623072535.GX128451@builder.lan>
- <CANi4RBQY8dXU=74JfB3hHZYMqMgVwtHoQsLZXV7CpwZ8ue2icw@mail.gmail.com>
+        id S1726356AbgGMUCs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 16:02:48 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33109 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726318AbgGMUCr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 16:02:47 -0400
+X-Originating-IP: 90.65.108.121
+Received: from localhost (lfbn-lyo-1-1676-121.w90-65.abo.wanadoo.fr [90.65.108.121])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7E044240006;
+        Mon, 13 Jul 2020 20:02:44 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 22:02:44 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH 16/25] arch: arm: mach-at91: pm: Move prototypes to
+ mutually included header
+Message-ID: <20200713200244.GA23553@piout.net>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-17-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANi4RBQY8dXU=74JfB3hHZYMqMgVwtHoQsLZXV7CpwZ8ue2icw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713144930.1034632-17-lee.jones@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 26 Jun 08:48 PDT 2020, Alexey Minnekhanov wrote:
+Hi,
 
-> Tue, 23 Jun. 2020. 10:29, Bjorn Andersson <bjorn.andersson@linaro.org>:
-> >
-> > On Mon 22 Jun 12:25 PDT 2020, Konrad Dybcio wrote:
-> >
-> > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> >
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >
+On 13/07/2020 15:49:21+0100, Lee Jones wrote:
+> Both the caller and the supplier's source file should have access to
+> the include file containing the prototypes.
 > 
-> Hi, I can see dts file in linux-next using compatible
-> "qcom,sdm660-apcs-hmss-global",
-> but not this patch that adds it into the driver?
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/pinctrl/pinctrl-at91.c:1637:6: warning: no previous prototype for ‘at91_pinctrl_gpio_suspend’ [-Wmissing-prototypes]
+>  1637 | void at91_pinctrl_gpio_suspend(void)
+>  | ^~~~~~~~~~~~~~~~~~~~~~~~~
+>  drivers/pinctrl/pinctrl-at91.c:1661:6: warning: no previous prototype for ‘at91_pinctrl_gpio_resume’ [-Wmissing-prototypes]
+>  1661 | void at91_pinctrl_gpio_resume(void)
+>  | ^~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  arch/arm/mach-at91/pm.c             | 17 ++++++-----------
+>  drivers/pinctrl/pinctrl-at91.c      |  1 +
+>  include/linux/platform_data/atmel.h |  5 +++++
+>  3 files changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+> index 074bde64064e4..59f2a2d6fbbb8 100644
+> --- a/arch/arm/mach-at91/pm.c
+> +++ b/arch/arm/mach-at91/pm.c
+> @@ -25,17 +25,6 @@
+>  #include "generic.h"
+>  #include "pm.h"
+>  
+> -/*
+> - * FIXME: this is needed to communicate between the pinctrl driver and
+> - * the PM implementation in the machine. Possibly part of the PM
+> - * implementation should be moved down into the pinctrl driver and get
+> - * called as part of the generic suspend/resume path.
+> - */
+> -#ifdef CONFIG_PINCTRL_AT91
+> -extern void at91_pinctrl_gpio_suspend(void);
+> -extern void at91_pinctrl_gpio_resume(void);
+> -#endif
+> -
+>  struct at91_soc_pm {
+>  	int (*config_shdwc_ws)(void __iomem *shdwc, u32 *mode, u32 *polarity);
+>  	int (*config_pmc_ws)(void __iomem *pmc, u32 mode, u32 polarity);
+> @@ -325,6 +314,12 @@ static void at91_pm_suspend(suspend_state_t state)
+>  static int at91_pm_enter(suspend_state_t state)
+>  {
+>  #ifdef CONFIG_PINCTRL_AT91
+> +	/*
+> +	 * FIXME: this is needed to communicate between the pinctrl driver and
+> +	 * the PM implementation in the machine. Possibly part of the PM
+> +	 * implementation should be moved down into the pinctrl driver and get
+> +	 * called as part of the generic suspend/resume path.
+> +	 */
+>  	at91_pinctrl_gpio_suspend();
+>  #endif
+>  
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 9c52130876597..37997e5ab0538 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/pinctrl/pinmux.h>
+>  /* Since we request GPIOs from ourself */
+>  #include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_data/atmel.h>
+>  
+>  #include "pinctrl-at91.h"
+>  #include "core.h"
+> diff --git a/include/linux/platform_data/atmel.h b/include/linux/platform_data/atmel.h
+> index 99e6069c5fd89..666ef482ea8c0 100644
+> --- a/include/linux/platform_data/atmel.h
+> +++ b/include/linux/platform_data/atmel.h
 
-I take the dts patches through the Qualcomm tree, but the driver patch
-should go through the mailbox tree.
+The plan is to get rid of that file so you should probably find a better
+location.
 
-Regards,
-Bjorn
+> @@ -28,4 +28,9 @@ static inline int at91_suspend_entering_slow_clock(void)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_PINCTRL_AT91
+> +void at91_pinctrl_gpio_suspend(void);
+> +void at91_pinctrl_gpio_resume(void);
+> +#endif
+> +
+>  #endif /* __ATMEL_H__ */
+> -- 
+> 2.25.1
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
