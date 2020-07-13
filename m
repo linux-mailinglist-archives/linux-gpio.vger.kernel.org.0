@@ -2,168 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC4F521DF21
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 19:47:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 695A421DF38
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 19:59:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbgGMRrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 13:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
+        id S1729806AbgGMR7F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 13:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgGMRrw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 13:47:52 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4511C061794
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:47:51 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id lx13so18247660ejb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:47:51 -0700 (PDT)
+        with ESMTP id S1729703AbgGMR7F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 13:59:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46B8C061794
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:59:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so17542095wrl.8
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:59:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NAYGAJiN1ZYjSk2aXh/7Ifqmy+2+Cae3t1vPYJlsPH4=;
-        b=VGvOX1nuEgb7h5k831oyvkyzDXz/woLPHwX4iVAQZ7h5gcf1eLCYAa4lk7JK8+DJnW
-         /xwDg4Dvc3dJAH5Vl11HppYHMk9jyA/b7peTvJa8jRD7psu+NHtHi6j4m7Vxr137ypkc
-         3EePfhwbIYRXQBYnEPcvkoNcdwauACv68A1UaINPKTtLfj+nHWyNnXJ0kZF5vYuGuuHk
-         qCqW1CW5Sb3DZXZw+d/86NkInzsvVL5CoHTsNCSl33eusF/39xWrMogzxhCfdEA9BgAq
-         Rxl/8YcIzdVgHGHog3P4xOqPIywCoK+s0rRWANvoXrJDmNddRT8wv7Ac+IZpot6fhKah
-         sHPg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=E18MAc0nkNbRTaxZd2OKURgPcHFN+ctVoY0tSbowupY=;
+        b=KlMoSwm5GaRFwhGjudQHPHcNvOf6igTkPDH8EHdajH4zxPSjFP5rWmd17z1bcVLsm7
+         LkOYqJqhFKEuhZnCPZ22PWInbkhdW8r2Bozugx2h0/3rPCcTYBlXacgOO2+Rirf0kffM
+         EktHYj9Gzh4+L0aTBpPZAYuSEFVF0wqPMq/O0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NAYGAJiN1ZYjSk2aXh/7Ifqmy+2+Cae3t1vPYJlsPH4=;
-        b=lnGCA1FpVYPZQSAxjDj3KivDJqFUXfiG53rMTp+UdvG+s9idjBctUdv9tzWJAW3gm8
-         zmmzlvWLaRiTTuty0yjHObtCbLkT/eyBPZbvCTdotnX16ObUPXGcCQucoWvQJ6Rh0iLb
-         q0yeiFJmefVqk0PipNJguJvYx+gOz/eA4EIDxyCSi53ENvQFWyzEeRBGAAqDM4wrLI4J
-         IpFK3aFktsiJLUllAQ4yR9CxLWVlHNpfkxUUQGsMH3sGH8w/6FrUZZJerN/NgXwcgI3z
-         pT50PzbLshpk9s57dPCYWAfW2bSsqN5PONln3sVa/IsKtXpDUvbY03Nt+SKIf8KdWR/o
-         u1VA==
-X-Gm-Message-State: AOAM5302qnbB8B7vYNe8HvQ/Vr7rFMpCQ0WqagoEaA3nINWFT5O9pwAl
-        50Vj/sfdclxYlJQU0rjBuW4mFsIOHn/iPw==
-X-Google-Smtp-Source: ABdhPJwBQFgbqLG2n+beR63sv6dz9KgXWG0GGyx/HBqiz75rtndcHNAoShjZNAvE6D5+jbXB5Tg48w==
-X-Received: by 2002:a17:906:6d56:: with SMTP id a22mr860824ejt.440.1594662470396;
-        Mon, 13 Jul 2020 10:47:50 -0700 (PDT)
-Received: from x1 (i59F66838.versanet.de. [89.246.104.56])
-        by smtp.gmail.com with ESMTPSA id dn15sm10679094ejc.26.2020.07.13.10.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 10:47:49 -0700 (PDT)
-Date:   Mon, 13 Jul 2020 19:47:47 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: gpio-omap: handle bias flag for gpio line
-Message-ID: <20200713174747.GA1424108@x1>
-References: <20200625002736.GA24954@x1>
- <CACRpkdYze_6cM0R=rr7RF8h5WO4GoCcz4=K1_XLt0PJNxCYtbw@mail.gmail.com>
- <20200712215630.GA1298162@x1>
- <20200713150220.GJ5849@atomide.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=E18MAc0nkNbRTaxZd2OKURgPcHFN+ctVoY0tSbowupY=;
+        b=Z7P6D07s62ReIKKyc5lN/ud5S2ATGTQoE2osoJFYPU/vPSxAIQbtS+FkRIoOio5J6i
+         VzD3pXyiYpHRSFl55PGY6hqAgfTESsfVLw8M07DqoTWgrdd0DVqABsJzqrjOz2FW9iss
+         3IAhxKNGJFW9npitQgvDpsa2M+dhellJMpMdkDghgQT3Th2R/1+mak7s2drKZPlI2vxp
+         6Ob3mdUhrt4qeq43Cx4+8dkEbwAIxMQ+ygT5HufagEH7g4cJ4NHm0/k5MqiG7AAL+O0R
+         vMTXTN1+kbHcb+auZT5hsOWssrgutmGPaPaIHH8lOCA7TN43UBXSxZq1riDwSs89xTCF
+         UbKA==
+X-Gm-Message-State: AOAM530ZPBaQPqZI3iyy4HMPCHKlrd/GOKOIBzTAyxyItGoUNztG/gQj
+        +2HZUG6+7hglZJkolAJfZt/7HA==
+X-Google-Smtp-Source: ABdhPJwwageRyXNotoFdi435qR8tmlg2BgI5l+TGsSxD9nhW3MH9X1s0J4ee+M52L6C+NqBGu+nVZQ==
+X-Received: by 2002:adf:8091:: with SMTP id 17mr586143wrl.13.1594663143216;
+        Mon, 13 Jul 2020 10:59:03 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id f197sm510542wme.33.2020.07.13.10.59.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 10:59:02 -0700 (PDT)
+Subject: Re: [PATCH 04/25] pinctrl: bcm: pinctrl-iproc-gpio: Rename
+ incorrectly documented function param
+To:     Lee Jones <lee.jones@linaro.org>, linus.walleij@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-5-lee.jones@linaro.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <61bf1345-be78-a303-1199-7275fa5c6d89@broadcom.com>
+Date:   Mon, 13 Jul 2020 10:58:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200713150220.GJ5849@atomide.com>
+In-Reply-To: <20200713144930.1034632-5-lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 08:02:20AM -0700, Tony Lindgren wrote:
-> Hi,
-> 
-> * Drew Fustini <drew@beagleboard.org> [200712 21:56]:
-> > P2.03 header pin on PocketBeagle maps to gpiochip 0 line 23. It is PIN9
-> > which value on boot: 0x37 (input [0x20] pull-up [0x10] gpio mode [0x7])
-> > 
-> > $ cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins |grep ^'pin 9' |head -1
-> > pin 9 (PIN9) 44e10824 00000037 pinctrl-single
-> > 
-> > $ gpiomon -B pull-down 0 23
-> 
-> Nice it's getting quite close to a user usable feature :)
-> 
-> I think we really should have an easy way to use the dts configured
-> GPIO line names here though. Can we make the dts configured GPIO
-> line name show up in the pinctrl output directly?
-> 
-> This would allow grepping for the device specific GPIO line name
-> directly in from the debugfs "pins" output.
-> 
-> But Ideally this should be done with the gpio sysfs interface though
-> somehow rather than rely on pinctrl debugfs. The debugfs interface
-> should be optional, and can change.
-> 
-> Regards,
-> 
-> Tony
+thanks.
 
-There is gpio-ranges for pinctrl-single in debugfs:
+On 2020-07-13 7:49 a.m., Lee Jones wrote:
+> Fixes the following W=1 kernel build warning(s):
+>
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Function parameter or member 'chip' not described in 'iproc_set_bit'
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Excess function parameter 'iproc_gpio' description in 'iproc_set_bit'
+>
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> index a38f0d5f47ce9..e2bd2dce6bb41 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+> @@ -131,7 +131,7 @@ static inline unsigned iproc_pin_to_gpio(unsigned pin)
+>    *  iproc_set_bit - set or clear one bit (corresponding to the GPIO pin) in a
+>    *  Iproc GPIO register
+>    *
+> - *  @iproc_gpio: Iproc GPIO device
+> + *  @chip: Iproc GPIO device
+>    *  @reg: register offset
+>    *  @gpio: GPIO pin
+>    *  @set: set or clear
 
-debian@beaglebone:~$ sudo more /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/gpio-ranges
-GPIO ranges handled:
-0: gpio-0-31 GPIOS [0 - 7] PINS [82 - 89]
-8: gpio-0-31 GPIOS [8 - 11] PINS [52 - 55]
-12: gpio-0-31 GPIOS [12 - 15] PINS [94 - 97]
-16: gpio-0-31 GPIOS [16 - 17] PINS [71 - 72]
-18: gpio-0-31 GPIOS [18 - 18] PINS [135 - 135]
-19: gpio-0-31 GPIOS [19 - 20] PINS [108 - 109]
-21: gpio-0-31 GPIOS [21 - 21] PINS [73 - 73]
-22: gpio-0-31 GPIOS [22 - 23] PINS [8 - 9]
-26: gpio-0-31 GPIOS [26 - 27] PINS [10 - 11]
-28: gpio-0-31 GPIOS [28 - 28] PINS [74 - 74]
-29: gpio-0-31 GPIOS [29 - 29] PINS [81 - 81]
-30: gpio-0-31 GPIOS [30 - 31] PINS [28 - 29]
-0: gpio-32-63 GPIOS [32 - 39] PINS [0 - 7]
-8: gpio-32-63 GPIOS [40 - 43] PINS [90 - 93]
-12: gpio-32-63 GPIOS [44 - 59] PINS [12 - 27]
-28: gpio-32-63 GPIOS [60 - 63] PINS [30 - 33]
-0: gpio-64-95 GPIOS [64 - 81] PINS [34 - 51]
-18: gpio-64-95 GPIOS [82 - 85] PINS [77 - 80]
-22: gpio-64-95 GPIOS [86 - 95] PINS [56 - 65]
-0: gpio-96-127 GPIOS [96 - 100] PINS [66 - 70]
-5: gpio-96-127 GPIOS [101 - 102] PINS [98 - 99]
-7: gpio-96-127 GPIOS [103 - 104] PINS [75 - 76]
-13: gpio-96-127 GPIOS [109 - 109] PINS [141 - 141]
-14: gpio-96-127 GPIOS [110 - 117] PINS [100 - 107]
-
-Do you mean you would like to see the mapping added as a column in the pins file?
-
-debian@beaglebone:~$ sudo cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins  |head
-registered pins: 142
-pin 0 (PIN0) 44e10800 00000027 pinctrl-single
-pin 1 (PIN1) 44e10804 00000027 pinctrl-single
-pin 2 (PIN2) 44e10808 00000027 pinctrl-single
-pin 3 (PIN3) 44e1080c 00000027 pinctrl-single
-pin 4 (PIN4) 44e10810 00000027 pinctrl-single
-pin 5 (PIN5) 44e10814 00000027 pinctrl-single
-pin 6 (PIN6) 44e10818 00000027 pinctrl-single
-pin 7 (PIN7) 44e1081c 00000027 pinctrl-single
-pin 8 (PIN8) 44e10820 00000027 pinctrl-single
-
-So that could be:
-
-debian@beaglebone:~$ sudo cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins  |head
-registered pins: 142
-pin 0 (PIN0) 44e10800 00000027 pinctrl-single GPIO-32
-pin 1 (PIN1) 44e10804 00000027 pinctrl-single GPIO-33
-pin 2 (PIN2) 44e10808 00000027 pinctrl-single GPIO-34
-pin 3 (PIN3) 44e1080c 00000027 pinctrl-single GPIO-35
-pin 4 (PIN4) 44e10810 00000027 pinctrl-single GPIO-36
-pin 5 (PIN5) 44e10814 00000027 pinctrl-single GPIO-37
-pin 6 (PIN6) 44e10818 00000027 pinctrl-single GPIO-38
-pin 7 (PIN7) 44e1081c 00000027 pinctrl-single GPIO-39
-pin 8 (PIN8) 44e10820 00000027 pinctrl-single GPIO-22
-
-Should I try to add that in pcs_pin_dbg_show()?
-
-It currently prints:
-
-        seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
-
-so I could change that to include the GPIO number if mapping exists.
-
-
-thanks,
-drew
