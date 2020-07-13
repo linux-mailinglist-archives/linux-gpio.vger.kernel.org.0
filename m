@@ -2,272 +2,337 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEA4121DA07
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 17:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A60D021DA09
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 17:27:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgGMP1m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 11:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38634 "EHLO
+        id S1729308AbgGMP1w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 11:27:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729593AbgGMP1m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 11:27:42 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE88C08C5DB
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 08:27:42 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id 72so5662747ple.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 08:27:42 -0700 (PDT)
+        with ESMTP id S1729910AbgGMP1w (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 11:27:52 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D01C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 08:27:51 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id j186so6793701vsd.10
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 08:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YTEDj86jVOBOKy55+k8XdsSThYyvDWhrbgJpr5syovM=;
-        b=L9v5FK6aRvDNqE4B0WqbtZjiMd9iGJ+ycXEHwQ/uzoPFLCVuN+TmJohRtPArrWOdrz
-         THQITg4gaR13UL5D0JKs+8dwwL+zPMFmfAouKeTJRA8yevMip2antDue4BeK2VPh8MoF
-         gei8ezfQyYgQKOtLmHvmRIWE2TUU1ePV0B9QM=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6iEPUhiKr3M4ezuL+SwEmOApae428FvrCM4ScVSRZLg=;
+        b=UiqZFl/KMjYG1ojWDNqz0ODKAIVixIywN3OlHnGG2fr6KkZAyWS1w80jgSiPdKvVVG
+         aELQbZh/u6Phrtn3SsVKnGVN46QIPLDUVkxVS/PCC1UGE6+lx/g3D+bvJ29lYH6dddsA
+         iElpGnmEacPw6L7VhftHY/BzvTuzTNaXldY5I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YTEDj86jVOBOKy55+k8XdsSThYyvDWhrbgJpr5syovM=;
-        b=hezHbk8XD+AaCoIOJYN+/osXAsW370l2KVypWWHcvAqQuVOAgHznms+e7BmwovYpPe
-         jBE1gFD+vj1oGZf+sI+ZNH+HY7v+94DP07la5iBSlQybVO8qKJzI5HNMEPh3J6Bm2UES
-         2/vRK/6mLoofk6cDO0YYAORSaqtRiE2eCyZPvG9NDhecZcaQJjRY3KwVot31AUI86iuY
-         dmyMGlfcfFPe99XxjS74Al0IV970MS7FuwVcJaXjJJnONyrpKpf6d1EXbKYX2hUDTCWI
-         RCOGdui/9jCUue3JuDRB9P8fQuM22mvH+mmyvL6a/GOM4TFh1uBDKKCJdNOnZturivas
-         EalQ==
-X-Gm-Message-State: AOAM532W0Weg9OnVe/PmTCYcM8JX826yEuorolGghIItpFftJoTyg4KO
-        K8bOUgCXlwCa5VlNJOUrGXCmkQ==
-X-Google-Smtp-Source: ABdhPJzO4L0IXVmhW5EiVzQxJX1VczzInaieVj9uxJDtJxJm5Lf2o8tHdKS4BBnfwrEFbaR4WiYYZw==
-X-Received: by 2002:a17:902:6bca:: with SMTP id m10mr177239plt.210.1594654061334;
-        Mon, 13 Jul 2020 08:27:41 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id z2sm14730645pff.36.2020.07.13.08.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 08:27:40 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, cychiang@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, swboyd@chromium.org,
-        Marc Zyngier <maz@kernel.org>, agross@kernel.org,
-        mkshah@codeaurora.org, bjorn.andersson@linaro.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pinctrl: qcom: Handle broken/missing PDC dual edge IRQs on sc7180
-Date:   Mon, 13 Jul 2020 08:26:33 -0700
-Message-Id: <20200713082628.v2.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-X-Mailer: git-send-email 2.27.0.383.g050319c2ae-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6iEPUhiKr3M4ezuL+SwEmOApae428FvrCM4ScVSRZLg=;
+        b=lju+JkbWEafw5n+DysMQUGm8ohry3gUSBjA0FxseixKtbXNee5qRCopFljPsDhKLDv
+         TO7yb6gZb+ZbxFZpIh2HdvalfPsQtZ1Sw9LUsKVPi5c8wBNXpF3MoTmkJQRKWd00Nwox
+         7RG+4OL4SbMhyPMKkeVpKuJGHFVFx0RNQEUcrpn0N/jGUN6lzQWEOr4a2O5XZwR5ISJX
+         EDqbA1A1kzjhZ6Tf6CDG2SunYFBUS3VRtqwuFhjkL/g4RufA/JJOpglQHde9lqe+Ipur
+         ZKSs4WuWcxcIwjdO507wj27CmuqcS/GZjsXCPO40Bga/77irmOFs/Et8eEmpGPWCsQKG
+         faEw==
+X-Gm-Message-State: AOAM530CNTHKocd3sS7r0IX4wBbYjfqC8ggAKqCt4vPLmECYcbXvBshK
+        GnJx83zqajVBgzW9P+jEFt/WsEDi3uU=
+X-Google-Smtp-Source: ABdhPJwJyY6olrmUhfGzC40JA/Be0mSM5r7hH0G4QeW9aGDytCdxAqPOAKtVZMXRLJ7Wrz7FUQQ2Dw==
+X-Received: by 2002:a67:2a47:: with SMTP id q68mr4457980vsq.202.1594654070074;
+        Mon, 13 Jul 2020 08:27:50 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id d123sm2055178vke.43.2020.07.13.08.27.48
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jul 2020 08:27:49 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id d198so6815520vsc.1
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 08:27:48 -0700 (PDT)
+X-Received: by 2002:a67:e046:: with SMTP id n6mr31587759vsl.6.1594654068105;
+ Mon, 13 Jul 2020 08:27:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200708141610.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
+ <87lfjreo7m.wl-maz@kernel.org> <CAD=FV=VzhdL67ocBPmAngxbZJsq-dSjhV2QjA8=7Ry+9oYxXHw@mail.gmail.com>
+ <87sgdyxvh1.wl-maz@kernel.org>
+In-Reply-To: <87sgdyxvh1.wl-maz@kernel.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 Jul 2020 08:27:36 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XridBQVjGNm_S6OkMRN1xYPOGS6Kvm4pu-Abjvo7HgMQ@mail.gmail.com>
+Message-ID: <CAD=FV=XridBQVjGNm_S6OkMRN1xYPOGS6Kvm4pu-Abjvo7HgMQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: Handle broken PDC dual edge case on sc7180
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Depending on how you look at it, you can either say that:
-a) There is a PDC hardware issue (with the specific IP rev that exists
-   on sc7180) that causes the PDC not to work properly when configured
-   to handle dual edges.
-b) The dual edge feature of the PDC hardware was only added in later
-   HW revisions and thus isn't in all hardware.
+Hi,
 
-Regardless of how you look at it, let's work around the lack of dual
-edge support by only ever letting our parent see requests for single
-edge interrupts on affected hardware.
+On Sat, Jul 11, 2020 at 2:16 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Fri, 10 Jul 2020 17:10:55 +0100,
+> Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, Jul 10, 2020 at 2:03 AM Marc Zyngier <maz@kernel.org> wrote:
+> > >
+> > > Hi Doug,
+>
+> [...]
+>
+> > >
+> > > > +     type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
+> > > > +
+> > > > +     raw_spin_lock_irqsave(&pctrl->lock, flags);
+> > >
+> > > What is this lock protecting you against? In both cases, you are
+> > > already under the irq_desc lock, with interrupts disabled.
+> >
+> > We are?  I put a breakpoint when the IRQ hits and did a bt.  I see
+> > this (I happen to be on 5.4 at the moment, so hopefully the same as
+> > mainline):
+> >
+> >  kgdb_breakpoint+0x3c/0x74
+> >  msm_gpio_update_dual_edge_parent+0x58/0x17c
+> >  msm_gpio_handle_dual_edge_parent_irq+0x1c/0x30
+> >  __handle_domain_irq+0x84/0xc4
+> >  gic_handle_irq+0x170/0x220
+> >  el1_irq+0xd0/0x180
+> >
+> > I think the stack is missing a few things due to aggressive inlining
+> > from my compiler, so the true backtrace would be:
+> >
+> > msm_gpio_handle_dual_edge_parent_irq()
+> > generic_handle_irq_desc()
+> > generic_handle_irq()
+> > __handle_domain_irq()
+> > handle_domain_irq()
+> > gic_handle_irq()
+> >
+> > The first place that got the "desc" was generic_handle_irq() and it
+> > got it via irq_to_desc().  That doesn't seem to do any locking.  Then
+> > generic_handle_irq_desc() just calls a function pointer so no locking
+> > there either.
+> >
+> > ...ah, but maybe what you're saying is that
+> > msm_gpio_handle_dual_edge_parent_irq() should be holding "desc->lock"
+> > around the call to msm_gpio_update_dual_edge_parent()?  I can do that.
+>
+> No, I mentally did a fast-forward to moving this hack into the irq
+> flow, rather than doing before entering the flow. handle_fasteoi_irq
+> will take the lock, but obviously not with the current state of this
+> patch.
+>
+> >
+> >
+> > > > +     do {
+> > > > +             /* Set the parent to catch the next edge */
+> > > > +             irq_chip_set_type_parent(d, type);
+> > > > +
+> > > > +             /*
+> > > > +              * Possibly the line changed between when we last read "val"
+> > > > +              * (and decided what edge we needed) and when set the edge.
+> > > > +              * If the value didn't change (or changed and then changed
+> > > > +              * back) then we're done.
+> > > > +              */
+> > >
+> > > If the line changed, shouldn't you actually inject a new interrupt
+> > > altogether? By changing the polarity more than once, you are
+> > > effectively loosing edges that should have triggered an interrupt.
+> >
+> > Are you sure this is needed?  My understanding of edge triggered
+> > interrupts is that until the interrupt handler is called that all
+> > edges can be coalesced into a single interrupt.
+>
+> It really depends on whether the edges are semantically different, and
+> I'm not sure you can decide this at the interrupt controller
+> level. The core IRQ code doesn't give you a way to discriminate
+> between those, but endpoint drivers could, and could get terminally
+> confused if the see two rising edges without a falling edge in
+> between.
 
-NOTE: it's possible that a driver requesting a dual edge interrupt
-might get several edges coalesced into a single IRQ.  For instance if
-a line starts low and then goes high and low again, the driver that
-requested the IRQ is not guaranteed to be called twice.  However, it
-is guaranteed that once the driver's interrupt handler starts running
-its first instruction that any new edges coming in will cause the
-interrupt to fire again.  This is relatively commonplace for dual-edge
-gpio interrupts (many gpio controllers require software to emulate
-dual edge with single edge) so client drivers should be setup to
-handle it.
+I have added discussion about this in the commit message for v2.
+Hopefully it looks OK.  NOTE: it's actually quite common for pinctrl
+hardware to only support single edge and require dual edge emulation
+in solftware.  I think there are at least 4-5 examples that I found
+pretty easily.  ...so I think any drivers that are expecting dual
+edges to come from an external pin will have code to account for this.
 
-Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-As far as I can tell everything here should work and the limited
-testing I'm able to give it shows that, in fact, I can detect both
-edges.
 
-I specifically left off Reviewed-by and Tested-by tags from v2 becuase
-I felt that the implementation had changed just enough to invalidate
-previous reviews / testing.  Hopefully it's not too much of a hassle
-for folks to re-review and re-test.
+> > It's only after the
+> > interrupt handler is called that it's important to capture new edges.
+> > So if you have this:
+> >
+> > a) Be busy processing another unrelated interrupt
+> > b) 5 edges happen on the line
+> > c) Other interrupt finishes
+> > d) Edge interrupt is acked and handler is called
+> >
+> > You'll only get one call to the interrupt handler even though there
+> > were 5 edges, right?  It's only important that you queue another
+> > interrupt if that interrupt happens after the true interrupt handler
+> > (the one acting on the edge) has started.
+> >
+> > ...actually, in theory you'll get _either_ one or two calls to the
+> > interrupt handler depending on timing, since the above could also
+> > happen as:
+> >
+> > a) Be busy processing another unrelated interrupt
+> > b) 4 edges happen on the line
+> > c) Other interrupt finishes
+> > d) Edge interrupt is acked and ...
+> > e) 1 more edge happens on the line
+> > f) ...handler is called
+> > g) Edge interrupt is acked and handler is called
+> >
+> >
+> > As long as msm_gpio_update_dual_edge_parent() is called _before_ the
+> > true interrupt handler is called then what I have should be fine,
+> > right?
+>
+> I don't disagree with any of that, except that being fine at the
+> irqchip level doesn't necessarily mean being fine at the endpoint
+> driver level. On the other hand, the HW looks terminally broken, so
+> maybe it doesn't matter as the drivers will have to be written with
+> this limitation in mind...
+>
+> >
+> > > > +             val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+> > > > +             if (type == IRQ_TYPE_EDGE_RISING) {
+> > > > +                     if (!val)
+> > > > +                             break;
+> > > > +                     type = IRQ_TYPE_EDGE_FALLING;
+> > > > +             } else if (type == IRQ_TYPE_EDGE_FALLING) {
+> > > > +                     if (val)
+> > > > +                             break;
+> > > > +                     type = IRQ_TYPE_EDGE_RISING;
+> > > > +             }
+> > > > +     } while (loop_limit-- > 0);
+> > > > +     raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> > > > +
+> > > > +     if (!loop_limit)
+> > > > +             dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
+> > > > +}
+> > > > +
+> > > > +void msm_gpio_handle_dual_edge_parent_irq(struct irq_desc *desc)
+> > > > +{
+> > > > +     struct irq_data *d = &desc->irq_data;
+> > > > +
+> > > > +     /* Make sure we're primed for the next edge */
+> > > > +     msm_gpio_update_dual_edge_parent(d);
+> > >
+> > > I would have expected this to happen on EOI or ACK, rather than before
+> > > the flow is actually handled, once you have told the interrupt
+> > > controller that you were dealing with this interrupt.
+> >
+> > Having it on Ack would be ideal, but it appears that the Ack function
+> > isn't called in this case.  That's only called if our handler is
+> > handle_edge_irq() or handle_level_irq().  See more below.
+>
+> Easily fixed, see further down.
+>
+> >
+> > ...I'm pretty sure I don't want it on EOI.  Specifically, if I did it
+> > on EOI then I think I _would_ need to re-queue another interrupt if an
+> > edge came in msm_gpio_update_dual_edge_parent().  Doing all the edge
+> > adjustment before calling the true interrupt handler avoids all
+> > that.
+>
+> Requeuing interrupts would be fine, and we have the retrigger callback
+> for that. This can be used when you want to support level interrupts,
+> but your interrupt controller only supports edge. Something similar
+> could be done to deal with dual edge interrupts.
+>
+> >
+> >
+> > > > +
+> > > > +     /* Pass on to the normal interrupt handler */
+> > > > +     handle_fasteoi_irq(desc);
+> > >
+> > > Is that the right flow? It seems that the current code is using
+> > > handle_edge_irq. I guess it has been broken so far, and that this
+> > > patch actually fixes it by forcing a fasteoi flow...
+> >
+> > The code today only uses handle_level_irq() / handle_edge_irq() if
+> > "skip_wake_irqs" wasn't set for this IRQ.  In the case that
+> > "skip_wake_irqs" wasn't set then it leaves the handler alone.  I
+> > definitely had a hard time following all the flow and interactions
+> > between the pinctrl, PDC, and the GICv3 but I definitely did confirm
+> > that handle_fasteoi_irq() was the handler that was running when
+> > "skip_wake_irqs" was set before I stuck mine in the middle.
+>
+> OK.
+>
+> > I believe how things work today with the "skip_wake_irqs" case is
+> > that, for the most part, the pinctrl driver stays out of the way for
+> > setting up and handling IRQs and just passes some calls onto its
+> > parent (the PDC).  The PDC driver is actually quite minimal.  There's
+> > no "Ack" in there and no calls to set an IRQ handler--it seems to just
+> > rely on the GICv3 doing all that.  It looks there is an implicit Ack
+> > as part of gic_handle_irq() since reading the IAR counts as an Ack.
+> >
+> >
+> > So to try to sum up my understanding:
+> >
+> > 1. In the case of "skip_wake_irqs" today there is no acking / handling
+> > code that is part of pinctrl-msm or the PDC.  They just configure
+> > things to direct to the GICv3.
+> >
+> > 2. For my workaround I just need to make sure to intercept myself and
+> > prime the next edge _before_ the end-user interrupt handler gets
+> > called.  If edges are coalesced before the end-user interrupt handler
+> > is called then that's OK.
+> >
+> >
+> > I'll await your reply before sending out the next version.  Thanks
+> > much for all your time looking at this!
+>
+> So here are my suggestions:
+>
+> - Move your dual edge hack to the irq_ack callback
+>
+> - On detecting a dual edge interrupt, switch to the
+>   handle_fasteoi_ack_irq flow, which will call the irq_ack callback
+>
+> - Get rid of the now useless locking
 
-Changes in v2:
-- Use handle_fasteoi_ack_irq() and switch edges in the Ack now.
-- If we change types, switch back to the normal handle_fasteoi_irq().
-- No extra locking.
-- Properly print an error if we hit 100 loops w/ no stability.
-- Beefed up the commit message.
+OK, see how v2 looks to you.  Sending it out right after I hit "Send'
+on this message.
 
- drivers/pinctrl/qcom/Kconfig          |  2 +
- drivers/pinctrl/qcom/pinctrl-msm.c    | 74 ++++++++++++++++++++++++++-
- drivers/pinctrl/qcom/pinctrl-msm.h    |  4 ++
- drivers/pinctrl/qcom/pinctrl-sc7180.c |  1 +
- 4 files changed, 79 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index ff1ee159dca2..f8ff30cdafa6 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -7,6 +7,8 @@ config PINCTRL_MSM
- 	select PINCONF
- 	select GENERIC_PINCONF
- 	select GPIOLIB_IRQCHIP
-+	select IRQ_DOMAIN_HIERARCHY
-+	select IRQ_FASTEOI_HIERARCHY_HANDLERS
- 
- config PINCTRL_APQ8064
- 	tristate "Qualcomm APQ8064 pin controller driver"
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 83b7d64bc4c1..eae8f421ff63 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -832,6 +832,52 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
- 	msm_gpio_irq_clear_unmask(d, false);
- }
- 
-+/**
-+ * msm_gpio_update_dual_edge_parent() - Prime next edge for IRQs handled by parent.
-+ * @d: The irq dta.
-+ *
-+ * This is much like msm_gpio_update_dual_edge_pos() but for IRQs that are
-+ * normally handled by the parent irqchip.  The logic here is slightly
-+ * different due to what's easy to do with our parent, but in principle it's
-+ * the same.
-+ */
-+static void msm_gpio_update_dual_edge_parent(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+	const struct msm_pingroup *g = &pctrl->soc->groups[d->hwirq];
-+	int loop_limit = 100;
-+	unsigned int val;
-+	unsigned int type;
-+
-+	/* Read the value and make a guess about what edge we need to catch */
-+	val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-+	type = val ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-+
-+	do {
-+		/* Set the parent to catch the next edge */
-+		irq_chip_set_type_parent(d, type);
-+
-+		/*
-+		 * Possibly the line changed between when we last read "val"
-+		 * (and decided what edge we needed) and when set the edge.
-+		 * If the value didn't change (or changed and then changed
-+		 * back) then we're done.
-+		 */
-+		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-+		if (type == IRQ_TYPE_EDGE_RISING) {
-+			if (!val)
-+				return;
-+			type = IRQ_TYPE_EDGE_FALLING;
-+		} else if (type == IRQ_TYPE_EDGE_FALLING) {
-+			if (val)
-+				return;
-+			type = IRQ_TYPE_EDGE_RISING;
-+		}
-+	} while (loop_limit-- > 0);
-+	dev_err(pctrl->dev, "dual-edge irq failed to stabilize\n");
-+}
-+
- static void msm_gpio_irq_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-@@ -840,8 +886,11 @@ static void msm_gpio_irq_ack(struct irq_data *d)
- 	unsigned long flags;
- 	u32 val;
- 
--	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+	if (test_bit(d->hwirq, pctrl->skip_wake_irqs)) {
-+		if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
-+			msm_gpio_update_dual_edge_parent(d);
- 		return;
-+	}
- 
- 	g = &pctrl->soc->groups[d->hwirq];
- 
-@@ -860,6 +909,17 @@ static void msm_gpio_irq_ack(struct irq_data *d)
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
- 
-+static bool msm_gpio_needs_dual_edge_parent_workaround(struct irq_data *d,
-+						       unsigned int type)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-+
-+	return type == IRQ_TYPE_EDGE_BOTH &&
-+	       pctrl->soc->wakeirq_dual_edge_errata && d->parent_data &&
-+	       test_bit(d->hwirq, pctrl->skip_wake_irqs);
-+}
-+
- static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-@@ -868,11 +928,21 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	unsigned long flags;
- 	u32 val;
- 
-+	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-+		set_bit(d->hwirq, pctrl->dual_edge_irqs);
-+		irq_set_handler_locked(d, handle_fasteoi_ack_irq);
-+		msm_gpio_update_dual_edge_parent(d);
-+		return 0;
-+	}
-+
- 	if (d->parent_data)
- 		irq_chip_set_type_parent(d, type);
- 
--	if (test_bit(d->hwirq, pctrl->skip_wake_irqs))
-+	if (test_bit(d->hwirq, pctrl->skip_wake_irqs)) {
-+		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
-+		irq_set_handler_locked(d, handle_fasteoi_irq);
- 		return 0;
-+	}
- 
- 	g = &pctrl->soc->groups[d->hwirq];
- 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 9452da18a78b..7486fe08eb9b 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -113,6 +113,9 @@ struct msm_gpio_wakeirq_map {
-  * @pull_no_keeper: The SoC does not support keeper bias.
-  * @wakeirq_map:    The map of wakeup capable GPIOs and the pin at PDC/MPM
-  * @nwakeirq_map:   The number of entries in @wakeirq_map
-+ * @wakeirq_dual_edge_errata: If true then GPIOs using the wakeirq_map need
-+ *                            to be aware that their parent can't handle dual
-+ *                            edge interrupts.
-  */
- struct msm_pinctrl_soc_data {
- 	const struct pinctrl_pin_desc *pins;
-@@ -128,6 +131,7 @@ struct msm_pinctrl_soc_data {
- 	const int *reserved_gpios;
- 	const struct msm_gpio_wakeirq_map *wakeirq_map;
- 	unsigned int nwakeirq_map;
-+	bool wakeirq_dual_edge_errata;
- };
- 
- extern const struct dev_pm_ops msm_pinctrl_dev_pm_ops;
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index 1b6465a882f2..1d9acad3c1ce 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -1147,6 +1147,7 @@ static const struct msm_pinctrl_soc_data sc7180_pinctrl = {
- 	.ntiles = ARRAY_SIZE(sc7180_tiles),
- 	.wakeirq_map = sc7180_pdc_map,
- 	.nwakeirq_map = ARRAY_SIZE(sc7180_pdc_map),
-+	.wakeirq_dual_edge_errata = true,
- };
- 
- static int sc7180_pinctrl_probe(struct platform_device *pdev)
--- 
-2.27.0.383.g050319c2ae-goog
+> I bet you could reuse some of the existing hacks, though I haven't
+> looked too hard because it is Saturday and this code really makes my
+> eyes bleed.
 
+Thanks again for all your help!  For now I'll keep the code separate.
+While I agree that it could be unified with the existing
+msm_gpio_update_dual_edge_pos() function, doing so would mean:
+
+1. Changing the logic of msm_gpio_update_dual_edge_pos() slightly.
+That function does things that we can't quite do as easily.  For
+instance, it reads the current config and queries whether an interrupt
+is pending both of which didn't seem easy to do in my case.  I think
+it would be fine/possible to change msm_gpio_update_dual_edge_pos() to
+be more like my function, but I haven't quantified if it would be
+worse or better performance.
+
+2. Doing do would require an extra level of abstraction and I'm not
+100% sure it's worth it.
+
+If folks want me to work on trying to unify the two let me know and I
+can do a v3.
+
+
+-Doug
