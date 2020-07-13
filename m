@@ -2,127 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF37E21DF3D
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 19:59:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 412D321DF48
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 20:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbgGMR7m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 13:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730198AbgGMR7m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 13:59:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A2FC061755
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:59:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so17555112wrs.11
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 10:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=z7pEtA5iBAOAbSW9+7JuABPqZcvxnVfZbw6mRnzxJ9E=;
-        b=WPUYVKreDkf9yZMNMiDL5g6kVqFWZrvS3YFLZ1NOCtcnJ6+GNJR08CXlJtYXuNxZY7
-         yC7bXj/XqZ7RXv3VBUUYYAOXIaUZcY8CCOxK3BQV4xYBKG8nbNx1bVjoxxQp0swraKzV
-         SGt+WqKlPgmNRiyEBxYFFTM8PbRGheqZFmIb8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=z7pEtA5iBAOAbSW9+7JuABPqZcvxnVfZbw6mRnzxJ9E=;
-        b=l7LuRf5gJuvCisMJn6rZSkHgCYAtlPgFsW58BFSjDgT/WDTCenW+xE44hDmUwResw+
-         ZiJ5R8I0jzJcBV2BWO6kuc0LDpqTWYu96TS0ozaE+K1mZEl7OoiKA4EG4aaxZ0Z6xFtJ
-         fUqFIe4IBIBCD9ixHm9wrkXQT7z06lK9imIE6VCDBASNdRb1bBuWSjxzYHj3PfW9hCH3
-         Fh4lEt8FojOSqKw4qw+NzuzRRkqe3MnpVEmJ5OmpfMh4BKfZA/3bLQAIdGnbcrs/LAlG
-         0GIzWvnLPAHmGWJECXsGVBT087sfSYc4AF1VH2rV9hYe+AHPqnGHTGT/YsdQHzoeHyNr
-         4hCA==
-X-Gm-Message-State: AOAM530Rzy44PAyAF0ez4gmfKgzwYFXRWONSgHmaZ9cY1crhfyGKvDy0
-        bqcIjTrwSKs/zn2FJbmdf1rtYw==
-X-Google-Smtp-Source: ABdhPJxytEog4tJTCrdDFG3RCmZbbR4xRA/Mc59ogBaI4ze5XCZJrx0bTcdW+mmLhfgjFEbK3B3kVw==
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr618419wrp.412.1594663180760;
-        Mon, 13 Jul 2020 10:59:40 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id b10sm444242wmj.30.2020.07.13.10.59.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 10:59:40 -0700 (PDT)
-Subject: Re: [PATCH 03/25] pinctrl: bcm: pinctrl-bcm281xx: Demote obvious
- misuse of kerneldoc to standard comment blocks
-To:     Lee Jones <lee.jones@linaro.org>, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        YueHaibing <yuehaibing@huawei.com>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-4-lee.jones@linaro.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <62d7a3e7-c96d-8cf9-da22-16f8eae05def@broadcom.com>
-Date:   Mon, 13 Jul 2020 10:59:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1729703AbgGMSFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 14:05:23 -0400
+Received: from muru.com ([72.249.23.125]:36694 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729689AbgGMSFX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Jul 2020 14:05:23 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 41B8D8106;
+        Mon, 13 Jul 2020 18:05:20 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 11:05:19 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: gpio-omap: handle bias flag for gpio line
+Message-ID: <20200713180519.GN5849@atomide.com>
+References: <20200625002736.GA24954@x1>
+ <CACRpkdYze_6cM0R=rr7RF8h5WO4GoCcz4=K1_XLt0PJNxCYtbw@mail.gmail.com>
+ <20200712215630.GA1298162@x1>
+ <20200713150220.GJ5849@atomide.com>
+ <20200713174747.GA1424108@x1>
 MIME-Version: 1.0
-In-Reply-To: <20200713144930.1034632-4-lee.jones@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200713174747.GA1424108@x1>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-thanks.
+* Drew Fustini <drew@beagleboard.org> [200713 17:47]:
+> Do you mean you would like to see the mapping added as a column in the pins file?
+> 
+> debian@beaglebone:~$ sudo cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins  |head
+> registered pins: 142
+> pin 0 (PIN0) 44e10800 00000027 pinctrl-single
+> pin 1 (PIN1) 44e10804 00000027 pinctrl-single
+> pin 2 (PIN2) 44e10808 00000027 pinctrl-single
+> pin 3 (PIN3) 44e1080c 00000027 pinctrl-single
+> pin 4 (PIN4) 44e10810 00000027 pinctrl-single
+> pin 5 (PIN5) 44e10814 00000027 pinctrl-single
+> pin 6 (PIN6) 44e10818 00000027 pinctrl-single
+> pin 7 (PIN7) 44e1081c 00000027 pinctrl-single
+> pin 8 (PIN8) 44e10820 00000027 pinctrl-single
+> 
+> So that could be:
+> 
+> debian@beaglebone:~$ sudo cat /sys/kernel/debug/pinctrl/44e10800.pinmux-pinctrl-single/pins  |head
+> registered pins: 142
+> pin 0 (PIN0) 44e10800 00000027 pinctrl-single GPIO-32
+> pin 1 (PIN1) 44e10804 00000027 pinctrl-single GPIO-33
+> pin 2 (PIN2) 44e10808 00000027 pinctrl-single GPIO-34
+> pin 3 (PIN3) 44e1080c 00000027 pinctrl-single GPIO-35
+> pin 4 (PIN4) 44e10810 00000027 pinctrl-single GPIO-36
+> pin 5 (PIN5) 44e10814 00000027 pinctrl-single GPIO-37
+> pin 6 (PIN6) 44e10818 00000027 pinctrl-single GPIO-38
+> pin 7 (PIN7) 44e1081c 00000027 pinctrl-single GPIO-39
+> pin 8 (PIN8) 44e10820 00000027 pinctrl-single GPIO-22
 
-On 2020-07-13 7:49 a.m., Lee Jones wrote:
-> There has been little to no attempt to document any of the demoted
-> structures here.  These are obviously not kerneldoc headers.
->
-> Fixes the following W=1 kernel build warning(s):
->
->   drivers/pinctrl/bcm/pinctrl-bcm281xx.c:65: warning: cannot understand function prototype: 'enum bcm281xx_pin_type '
->   drivers/pinctrl/bcm/pinctrl-bcm281xx.c:79: warning: cannot understand function prototype: 'struct bcm281xx_pin_function '
->   drivers/pinctrl/bcm/pinctrl-bcm281xx.c:89: warning: cannot understand function prototype: 'struct bcm281xx_pinctrl_data '
->
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->   drivers/pinctrl/bcm/pinctrl-bcm281xx.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-> index 71e6661783006..9ab1f427286a7 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
-> @@ -59,7 +59,7 @@
->   #define BCM281XX_HDMI_PIN_REG_MODE_MASK		0x0010
->   #define BCM281XX_HDMI_PIN_REG_MODE_SHIFT	4
->   
-> -/**
-> +/*
->    * bcm281xx_pin_type - types of pin register
->    */
->   enum bcm281xx_pin_type {
-> @@ -73,7 +73,7 @@ static enum bcm281xx_pin_type std_pin = BCM281XX_PIN_TYPE_STD;
->   static enum bcm281xx_pin_type i2c_pin = BCM281XX_PIN_TYPE_I2C;
->   static enum bcm281xx_pin_type hdmi_pin = BCM281XX_PIN_TYPE_HDMI;
->   
-> -/**
-> +/*
->    * bcm281xx_pin_function- define pin function
->    */
->   struct bcm281xx_pin_function {
-> @@ -82,7 +82,7 @@ struct bcm281xx_pin_function {
->   	const unsigned ngroups;
->   };
->   
-> -/**
-> +/*
->    * bcm281xx_pinctrl_data - Broadcom-specific pinctrl data
->    * @reg_base - base of pinctrl registers
->    */
+Yes that would make the debugfs output more understandable and
+easier to use.
 
+> Should I try to add that in pcs_pin_dbg_show()?
+> 
+> It currently prints:
+> 
+>         seq_printf(s, "%zx %08x %s ", pa, val, DRIVER_NAME);
+> 
+> so I could change that to include the GPIO number if mapping exists.
+
+Sounds good to me yeah :) However, the issue of relying on
+debugfs for this still remains unsolved. But seems that
+probably should be done with the existing GPIO related
+API instead and a different issue from the pinctrl
+changes.
+
+Regards,
+
+Tony
