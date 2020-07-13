@@ -2,92 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C3B21DFC8
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 20:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A784721DFF5
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 20:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgGMSfw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 14:35:52 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:43794 "EHLO smtp.al2klimov.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726058AbgGMSfw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 13 Jul 2020 14:35:52 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 46C16BC070;
-        Mon, 13 Jul 2020 18:35:48 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     linus.walleij@linaro.org, heiko@sntech.de,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
-Date:   Mon, 13 Jul 2020 20:35:41 +0200
-Message-Id: <20200713183541.36963-1-grandmaster@al2klimov.de>
+        id S1726750AbgGMSk0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 14:40:26 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43563 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgGMSkX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 14:40:23 -0400
+Received: by mail-il1-f195.google.com with SMTP id i18so12085063ilk.10;
+        Mon, 13 Jul 2020 11:40:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3ceFnqYCGbooIgXW6yeKtrYkD957sdZYTwp/DqsXTjY=;
+        b=jB6oD5dzDw/NwLSyWylWa5oGFyxxYqCSTAerEZaTDY5+ErVkInxqRy0/YEn/2trFZU
+         MmkPuFxzzrGs1+YescX0dn3tuYik5fcX/gCETScWEJvT3x0WyZLAnJIoNwoBdD7gefID
+         odsxb10wSdMF/5IE3YvL5L8IBf0xTsIrR8SrKswCEnZz2bNRAR4237rOT0Y1OBJJchsv
+         LzeMsOYJqiNr7El2joj34RJRC9pEmjOiYl2Tg4uonQeOPLqdTXRWAiSNPNnC6GG8jTPk
+         LfCup65uwBHrbPEKuFrNqFnyZZhW1g9spxYCOaXZqbKoLwsi3wg2tbOtJSulkMKQf2sd
+         pxGQ==
+X-Gm-Message-State: AOAM5306t7G6DDt8snouHz8G/Ud1u6rYHlWC2KD9kP0aurkfkEAXPumc
+        vqJK1LRvZZtXkmIjyp4M/w==
+X-Google-Smtp-Source: ABdhPJxNqX+fHZQXrj1AMm21bB9hIFXpqoxh2URqWHJxUCuGiehKP4/THhmB17kOUxJ7RVx4n0Gl9w==
+X-Received: by 2002:a92:cf42:: with SMTP id c2mr1181124ilr.13.1594665622822;
+        Mon, 13 Jul 2020 11:40:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id x5sm8189715iow.37.2020.07.13.11.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 11:40:22 -0700 (PDT)
+Received: (nullmailer pid 515652 invoked by uid 1000);
+        Mon, 13 Jul 2020 18:40:21 -0000
+Date:   Mon, 13 Jul 2020 12:40:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Olof Johansson <olof@lixom.net>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-clk@vger.kernel.org, SoC Team <soc@kernel.org>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        Steen Hegelund <Steen.Hegelund@microchip.com>
+Subject: Re: [PATCH v3 01/10] dt-bindings: arm: sparx5: Add documentation for
+ Microchip Sparx5 SoC
+Message-ID: <20200713184021.GA515585@bogus>
+References: <20200615133242.24911-1-lars.povlsen@microchip.com>
+ <20200615133242.24911-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Spam-Level: ******
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615133242.24911-2-lars.povlsen@microchip.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Mon, 15 Jun 2020 15:32:33 +0200, Lars Povlsen wrote:
+> This adds the main Sparx5 SoC DT documentation file, with information
+> abut the supported board types.
+> 
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  .../bindings/arm/microchip,sparx5.yaml        | 65 +++++++++++++++++++
+>  .../devicetree/bindings/mfd/syscon.yaml       |  1 +
+>  2 files changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> 
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
-            If both the HTTP and HTTPS versions
-            return 200 OK and serve the same content:
-              Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely or at least not just HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
- Sorry again to all maintainers who complained about subject lines.
- Now I realized that you want an actually perfect prefixes,
- not just subsystem ones.
- I tried my best...
- And yes, *I could* (at least half-)automate it.
- Impossible is nothing! :)
-
-
- drivers/pinctrl/pinctrl-rockchip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c07324d1f265..a94b54636da9 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -9,7 +9,7 @@
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  * Copyright (c) 2012 Linaro Ltd
-- *		http://www.linaro.org
-+ *		https://www.linaro.org
-  *
-  * and pinctrl-at91:
-  * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
--- 
-2.27.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
