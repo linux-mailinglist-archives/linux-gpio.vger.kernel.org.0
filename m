@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95B1B21D8F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:49:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C78821D912
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:50:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgGMOts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 10:49:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        id S1730164AbgGMOtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 10:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbgGMOtr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:47 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AF8C08C5DD
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:47 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so13445290wml.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:47 -0700 (PDT)
+        with ESMTP id S1730159AbgGMOts (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3132DC061794
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:48 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so16866079wrm.4
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vd2sj2C+/BCAJxR/LaESZDmFFOuWK440rmdqEyE8mPM=;
-        b=XtQOx7in9ZZo01xvUwtPb71cD03LuqUg5mjxFCU8fVtsM9wgJaGzymWPTCk6RAAosp
-         ESWRw35FOp86sTVMJwxSp+XrILjPVNaKm5eCK2pxO2YBb6xZ9H+ZLaT2vHvITumQzbXA
-         e0xswYA716id0G4VTOndgM3E07J1+apu69twfPsO9ideH7JTLI24InIpLwGzS4rOXSku
-         iX53kFdsr7ZTu3NI1ma4fddkk7UOmVlsaKTdkRDJvVngDCOaNBReUbBp7Vl1d+PWdMPt
-         PhJ6s5Y+oUQR9YgEpQ4OFI9JYtM+nmya6l2zMAY7SOR3HlHAA0h9rqw1J/HhR4buc3eO
-         nfaw==
+        bh=SMipzZYJu8LR1S684y2mNrnWVA5TCC4bAA7Iz5/5CcI=;
+        b=zce1ip8zmaLh0pqXP0eF7z2mXwnarWeQ7nDj0kV29aJAUrksLMbtyCyhllEs4O/zyS
+         DlLimcmdIq0ekjAoJRvy7abIF6MIpRMlVwGZqqFjJmM+feJ7SxwO3vini+w+xBkwr7OD
+         K0Sp2LoSl9f+ClywO7+Y8RrJpb3Qa4qcT1X/hoH6r7aqg9zsAS+eWfEF7RHMs2P6zLQT
+         QDAqObXmaxXvWmG6Rxb/K0PrZSx5s2O5MMWL849pw4RPD3yOhQuoBj3jyLnbcLWhl+qw
+         CegHSweDUX51vGLFhU1CuFaRRnlpDmNOmWODanqUlMhFJN/IfwZXOV3szs34d9v0/zyP
+         BpNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vd2sj2C+/BCAJxR/LaESZDmFFOuWK440rmdqEyE8mPM=;
-        b=rBjVpdOh1ZC8nCXMJ2R9xOgM+NlLxzRSCA/cftu3Q4m/Nx3lCpxfWCeYLjwIw2a0eH
-         rXrEFcLehLEq7T6wEzXUX8Lsr2zzJWILndlea9D5ssYgsxkLwzx71FpRUDeKK+fMAxmw
-         t2z0inpqEvyfeEVRRXh8CF2WiPEWQUynPfz4sbiLiZFtg0zLPQ3dvUUmchYcy7pOpLP6
-         cVvQBhek09RhO4f6SZZfgIb7zswPKexBrHJgG28XhGptnnIa/ERvfbUQ60tvugnP22Z2
-         vrWh/KPx0KOohV3h5KlE2HwnJ88tnb14oXrPmD7keFS0YTYKdSUeJ434tbZcpMB9HzB6
-         oqug==
-X-Gm-Message-State: AOAM530Vc9nKHNNQ/Zy0bn1jIJe8+1z2shnJy+f0Avrwr7i89YKZI1pC
-        fgC7sncmJU3EuNZWyerBBtgpIg==
-X-Google-Smtp-Source: ABdhPJxZi7VY+XJomfZXlPnVlWacGDuJlQRdZkRS5KZ1z4wQpmgQAq+kQ5+pdP3A3wbPRVY3KfuHDg==
-X-Received: by 2002:a05:600c:21ca:: with SMTP id x10mr288300wmj.63.1594651785916;
-        Mon, 13 Jul 2020 07:49:45 -0700 (PDT)
+        bh=SMipzZYJu8LR1S684y2mNrnWVA5TCC4bAA7Iz5/5CcI=;
+        b=OwKi/5C2Z8eH0KaJ7jNMU6+7zUF8rIcyIOFFIi4pLCvPfR4sJGRQvAoQIl5v6FWdwX
+         hwMzQlbErszeha+sBhWMrfytgt59EMnstzex9pwygCqVekPZtSr9ui14Z+yw93+pJS3p
+         h5m5cp5MuRsrW9khJinEmKYCrtuG8PC3GkAuMa0i+YXDGgEMjX5js6cXk80zts9+TIHm
+         qfz3cFZtzkhJmVNv99aECEaIJtznQK2rCul6xbkJWVPwyMw9SHVY4/Z9lPSYlD7hE6nv
+         Xdnv0NBPFWC2Ek4qwuJZvSeqYrkF0+/2bSniUVHeKBkvNkjpUFEDJicR+WjXUjyxhFt7
+         RxMg==
+X-Gm-Message-State: AOAM532wq+7zuJRBeLW/kajVBEmUMCR/tgyhqSdagb2h3oQguQOMa4f0
+        5ScaR94Tx3e/wdllmFU9xugpaw==
+X-Google-Smtp-Source: ABdhPJw3ZQBd6lIQl7siqOdyvmglbqKHXtOVGj8IWar52W8ai94yFUDms0wk9biaFCx3CcZS6soCeg==
+X-Received: by 2002:a5d:474f:: with SMTP id o15mr77598965wrs.306.1594651786953;
+        Mon, 13 Jul 2020 07:49:46 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.44
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:45 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:46 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 12/25] pinctrl: pinmux: Add some missing parameter descriptions
-Date:   Mon, 13 Jul 2020 15:49:17 +0100
-Message-Id: <20200713144930.1034632-13-lee.jones@linaro.org>
+Subject: [PATCH 13/25] pinctrl: devicetree: Add one new attribute description and rename another two
+Date:   Mon, 13 Jul 2020 15:49:18 +0100
+Message-Id: <20200713144930.1034632-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -64,58 +64,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-And rename another which has probably bitrotted.
-
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/pinmux.c:83: warning: Function parameter or member 'pctldev' not described in 'pinmux_can_be_used_for_gpio'
- drivers/pinctrl/pinmux.c:108: warning: Function parameter or member 'pctldev' not described in 'pin_request'
- drivers/pinctrl/pinmux.c:261: warning: Function parameter or member 'gpio' not described in 'pinmux_request_gpio'
- drivers/pinctrl/pinmux.c:751: warning: Function parameter or member 'selector' not described in 'pinmux_generic_get_function'
- drivers/pinctrl/pinmux.c:751: warning: Excess function parameter 'group_selector' description in 'pinmux_generic_get_function'
+ drivers/pinctrl/devicetree.c:27: warning: Function parameter or member 'map' not described in 'pinctrl_dt_map'
+ drivers/pinctrl/devicetree.c:27: warning: Function parameter or member 'num_maps' not described in 'pinctrl_dt_map'
+ drivers/pinctrl/devicetree.c:409: warning: Function parameter or member 'out_args' not described in 'pinctrl_parse_index_with_args'
+ drivers/pinctrl/devicetree.c:409: warning: Excess function parameter 'out_arts' description in 'pinctrl_parse_index_with_args'
 
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/pinmux.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pinctrl/devicetree.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 9503ddf2edc76..bab888fe3f8e3 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -74,6 +74,7 @@ int pinmux_validate_map(const struct pinctrl_map *map, int i)
-  * pinmux_can_be_used_for_gpio() - check if a specific pin
-  *	is either muxed to a different function or used as gpio.
-  *
-+ * @pctldev: the associated pin controller device
-  * @pin: the pin number in the global pin space
-  *
-  * Controllers not defined as strict will always return true,
-@@ -96,6 +97,7 @@ bool pinmux_can_be_used_for_gpio(struct pinctrl_dev *pctldev, unsigned pin)
- 
- /**
-  * pin_request() - request a single pin to be muxed in, typically for GPIO
-+ * @pctldev: the associated pin controller device
-  * @pin: the pin number in the global pin space
-  * @owner: a representation of the owner of this pin; typically the device
-  *	name that controls its mux function, or the requested GPIO name
-@@ -254,6 +256,7 @@ static const char *pin_free(struct pinctrl_dev *pctldev, int pin,
-  * @pctldev: pin controller device affected
-  * @pin: the pin to mux in for GPIO
-  * @range: the applicable GPIO range
-+ * @gpio: number of requested GPIO
+diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
+index c6fe7d64c9137..5eff8c2965528 100644
+--- a/drivers/pinctrl/devicetree.c
++++ b/drivers/pinctrl/devicetree.c
+@@ -17,7 +17,8 @@
+  * struct pinctrl_dt_map - mapping table chunk parsed from device tree
+  * @node: list node for struct pinctrl's @dt_maps field
+  * @pctldev: the pin controller that allocated this struct, and will free it
+- * @maps: the mapping table entries
++ * @map: the mapping table entries
++ * @num_maps: number of mapping table entries
   */
- int pinmux_request_gpio(struct pinctrl_dev *pctldev,
- 			struct pinctrl_gpio_range *range,
-@@ -744,7 +747,7 @@ EXPORT_SYMBOL_GPL(pinmux_generic_get_function_groups);
- /**
-  * pinmux_generic_get_function() - returns a function based on the number
-  * @pctldev: pin controller device
-- * @group_selector: function number
-+ * @selector: function number
-  */
- struct function_desc *pinmux_generic_get_function(struct pinctrl_dev *pctldev,
- 						  unsigned int selector)
+ struct pinctrl_dt_map {
+ 	struct list_head node;
+@@ -397,7 +398,7 @@ static int pinctrl_copy_args(const struct device_node *np,
+  * @np: pointer to device node with the property
+  * @list_name: property that contains the list
+  * @index: index within the list
+- * @out_arts: entries in the list pointed by index
++ * @out_args: entries in the list pointed by index
+  *
+  * Finds the selected element in a pinctrl array consisting of an index
+  * within the controller and a number of u32 entries specified for each
 -- 
 2.25.1
 
