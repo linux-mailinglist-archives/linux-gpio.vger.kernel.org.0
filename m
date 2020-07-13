@@ -2,60 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A41421D929
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7126421D91D
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgGMOvL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 10:51:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
+        id S1730111AbgGMOtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 10:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730073AbgGMOtk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A83C061755
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id j18so13588282wmi.3
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
+        with ESMTP id S1730110AbgGMOtm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBFFC061794
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f18so16892620wrs.0
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uHw7vfvkoUl/p+J0u5Wb1MljRc1mmHUiGpf+lUlkzX0=;
-        b=LtwsOLQBSd935qDg45xtuJw1DsUvUlXVZjJbx/aESPvqCbQKILkSfnn5RNWUVbgV2x
-         VI914y8yiPOmbKi8YiBaEBwt/4cgx33qyJtNA0FA+AWJuy06NSblJBdOG25jj8XCMgFl
-         F/wju0wkxqQEpBHCKhEItmEYgl5Tw0Jp235Cu/tKBRc7JFGLMxWWyVWecZqmvJLOE+06
-         V/93fvuIbubbN+OFWr/CSjS1Zb+o2UDipa7mbGPRIiAqvZj6rkTDeApLzOii7vFPbJx2
-         +SzuCHJiY0n2N2GRz2TmSE2HbUb+I1PORUjdjg5PFrg2MelwSgdJbFkMZfMQcaAT1JGL
-         m2iA==
+        bh=EdngZibp0zWCAAM+UJcwsurIH7yKZeYEzW9/AfNLRBM=;
+        b=JW8ZfxngbL67Sj8u+8Odvmzrwr0Un0a8dfJga8fvIiSWVdYg9aR4Bmk+ZaZcNRFo4H
+         mYYCCmw1FyfXDWpX/JP8gcpGpLbGjVhpgBWMLQ7nU3B60mmVu0+j3wYxmW0D0X1k5/zs
+         4NS/fGYu/LscQ5CzpkfJBoQy0++MW25LdnoHtLiIDNIoujjsb4iXIpRxjgIXjCQSUeu5
+         5RKO/zCJXFqGKYoHk3QXfi69WgeFYkcFR2GtBorrikmsDs+1KrMwPTr8T2C2QkbQBRi/
+         bgI7VvRNsxOtIgc9DXtgUbv6Ox4Z0pppzdqBGQdi7TUTRWQYpytYkMNaweHWedM6aOUQ
+         zj4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uHw7vfvkoUl/p+J0u5Wb1MljRc1mmHUiGpf+lUlkzX0=;
-        b=YAp1ywdlle1A37J9sy80OfPQ2NMnDbCO6icxf6EArx6Hn4KL7Rv3gqsa/jQAPtIG0M
-         iTnkIZOzT99wHxuRzK65ejH1gNDmUiMTRm5gUFNWCTsNMIAEgL8FgTK2FK83FwA3rNt4
-         962oHIhm3gMfE+sDtDcxH+gC0v7ErAbOtSUB5Hlj2D+ssrmO6NVf4q19AFKfLZUGplHr
-         C5Yn0/Xn5jhtizC9aZPIoRrsKn3r3Sul0JLUPYsxoHjXw4oKq3BDZ29kjVAK7PkPtx0O
-         kIFHrht2JtZjga8FOR/oDdC2t0yDGxxMLid6tc7K5WtALL6wTBT2AIvGICfnf/UjMYzT
-         5IuA==
-X-Gm-Message-State: AOAM5304ypBMIUWc4I8GJmGkHXnG5+wuXSxS2nEw2jQropMB9y61jGab
-        vDPbVGFi+ZNduVRAe+GHjLe6Qw==
-X-Google-Smtp-Source: ABdhPJzdyzPd8UNr1xBZ1aB/AYvkeJC2J4Kk5V8tjjunLbWbzabpwC0c0v3arMWicoKNSwUlIpJUmw==
-X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr316828wmg.110.1594651778433;
-        Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
+        bh=EdngZibp0zWCAAM+UJcwsurIH7yKZeYEzW9/AfNLRBM=;
+        b=X2WAh79lT603sdO6B+JstmxObXPajkVbzJ/6CLatGxvA7cCMg+7JkM4IqaPwahlToG
+         Rv17ZhOaqyYka/Tad0EBr/pGK6SbfJ6VRjZWmB5oVnUuE5Pz11m0v7XcW3AHyjPcnAy6
+         kmkeZExXR8Mv4Rewywdm5f1Z+5hn+zEms2xrnkJnqdPjcIkRrzCa1U9hLdk1kpZEVKzM
+         OpBAxDaW2Hp0GJt4QKQLweKSV7q4ueL0A+ro5Gi2IaWloqdw5SDUar81DZ6LPce20kpp
+         SE0/BLosLfSNHz/rFpRmZc67K5qiPz/iZzE7qXx9Z17S25l0Kn48pdG8HyONNoxz7MQL
+         RArQ==
+X-Gm-Message-State: AOAM533XzVdeOiOziiar2oomLxodqJmrhMikERMwbXYdbUMiKs2Jb1mV
+        FoYN66f162LqvFQyRC4jJ7qP2w==
+X-Google-Smtp-Source: ABdhPJwbwkd7iM4SmIi+fTezp7zvJuFCTmoF3U2ec6u5Z2hwzXy9AZwysrE+mhaEjypi6okk23x0gg==
+X-Received: by 2002:a5d:6a07:: with SMTP id m7mr81416990wru.324.1594651779599;
+        Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.37
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:37 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 05/25] pinctrl: qcom: pinctrl-msm: Complete 'struct msm_pinctrl' documentation
-Date:   Mon, 13 Jul 2020 15:49:10 +0100
-Message-Id: <20200713144930.1034632-6-lee.jones@linaro.org>
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Thomas Abraham <thomas.ab@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH 06/25] pinctrl: samsung: pinctrl-samsung: Demote obvious misuse of kerneldoc to standard comment blocks
+Date:   Mon, 13 Jul 2020 15:49:11 +0100
+Message-Id: <20200713144930.1034632-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -66,50 +69,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add missing descriptions for attributes and fix 1 formatting issue.
+No attempt has been made to document either of the demoted functions here.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'desc' not described in 'msm_pinctrl'
- drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'irq_chip' not described in 'msm_pinctrl'
- drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'intr_target_use_scm' not described in 'msm_pinctrl'
- drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'soc' not described in 'msm_pinctrl'
- drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'phys_base' not described in 'msm_pinctrl'
+ drivers/pinctrl/samsung/pinctrl-samsung.c:1149: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_suspend'
+ drivers/pinctrl/samsung/pinctrl-samsung.c:1199: warning: Function parameter or member 'dev' not described in 'samsung_pinctrl_resume'
 
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Thomas Abraham <thomas.ab@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 83b7d64bc4c14..56b36d4b54668 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -40,16 +40,20 @@
-  * @dev:            device handle.
-  * @pctrl:          pinctrl handle.
-  * @chip:           gpiochip handle.
-+ * @desc:           pin controller descriptor
-  * @restart_nb:     restart notifier block.
-+ * @irq_chip:       irq chip information
-  * @irq:            parent irq for the TLMM irq_chip.
-+ * @intr_target_use_scm: route irq to application cpu using scm calls
-  * @lock:           Spinlock to protect register resources as well
-  *                  as msm_pinctrl data structures.
-  * @enabled_irqs:   Bitmap of currently enabled irqs.
-  * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
-  *                  detection.
-  * @skip_wake_irqs: Skip IRQs that are handled by wakeup interrupt controller
-- * @soc;            Reference to soc_data of platform specific data.
-+ * @soc:            Reference to soc_data of platform specific data.
-  * @regs:           Base addresses for the TLMM tiles.
-+ * @phys_base:      Physical base address
-  */
- struct msm_pinctrl {
- 	struct device *dev;
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+index f26574ef234ab..608eb5a07248e 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -1140,7 +1140,7 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * samsung_pinctrl_suspend - save pinctrl state for suspend
+  *
+  * Save data for all banks handled by this device.
+@@ -1187,7 +1187,7 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * samsung_pinctrl_resume - restore pinctrl state from suspend
+  *
+  * Restore one of the banks that was saved during suspend.
 -- 
 2.25.1
 
