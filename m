@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA41D21E300
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 00:25:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C34A21E2EA
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 00:20:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgGMWZR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 18:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46798 "EHLO
+        id S1726670AbgGMWTJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 18:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgGMWZR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 18:25:17 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3649DC061755
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:25:17 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id 66so3204281vka.13
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:25:17 -0700 (PDT)
+        with ESMTP id S1726347AbgGMWSK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 18:18:10 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A155C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:18:10 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id a17so7501235vsq.6
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q6bh/1yGmZao7f6eku70ZfEjUaW4mF5NYpD2HrmZqeI=;
-        b=j/XT5yyFl2LbkH2lZtHlwHq+F8pmbt1Tm85qFPI0z7iEFb3EPc0mzXcrqsqbTS90ZE
-         m+To0qUhXZYncSMgOThqPs0W9mh1DSWxfcv8lMcNrpkhXIgav4O5Rdvp3cc2hXPZIt4/
-         scL1jsPMSGprQyr2BJIXvr5HxYY7wWu9lH3s8=
+        bh=QHfgfv2mP6dp6kaJTVFYuFviBEEN6wpOON6T0JxtLVk=;
+        b=cSeqsacEiX0VNBd7mC9bj3A8JzJZlyD3j4cmXLuYevvPoeKEk8W+U5HnPEomxpm5bo
+         LRaqdmOo5RVCRntAP5RSqQ9O5u+EP+mswHCf4O+Kth2ygENQ1VWCkbAMFQ+01IILIQun
+         O0GExOUmlRIqEf/OfFr3Ctc6cYjV3RMpNtbgU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q6bh/1yGmZao7f6eku70ZfEjUaW4mF5NYpD2HrmZqeI=;
-        b=iKf1Me+z013gJdmQa7uUqy4z0VNHyMVojyq+IXiqvAM1q67VvNwjtfOzJJf49NlzsU
-         H/doG1ZPXotPz9axWXkyv6gW3Le7xReQiVPyfz4OoISUQgQuJJcgcabU0cdg0QorDS9d
-         nm1202Qg2MbYMtm08hI5XC50vUCoWNKrxlihOgEp/mn2JgtTy2VltkNz6cZ4CCvQKri2
-         C+2dPVCoQHFF97k0IGX+SA0l9h6E4IVJrtHAGMhoyc5fShDRTTp/XbkcpYNX0oWjxFMY
-         rDfcUMT45mXjsE51Fl/r1iXoy/0gAq+U4db3tFMNWJz+9q3+8QQI+Iz6/oD6y/P/98jo
-         /rWA==
-X-Gm-Message-State: AOAM530vGxFisMnzpa148kxVXWMIQmrb9aHRD5V/3JR1oDe04ga1nwu0
-        dQSxHmgyphgH0tvKi77wG8QtLVc3qBE=
-X-Google-Smtp-Source: ABdhPJwTGAh9Qi8CJMNs99gfuj3Fs0VNvOgDHCJUmrDzHndz4cP8oyV+KnXbp7QfLyBtNVFg2iz0XA==
-X-Received: by 2002:ac5:cbee:: with SMTP id i14mr1761147vkn.6.1594679116219;
-        Mon, 13 Jul 2020 15:25:16 -0700 (PDT)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id a24sm1965871uap.1.2020.07.13.15.25.15
+        bh=QHfgfv2mP6dp6kaJTVFYuFviBEEN6wpOON6T0JxtLVk=;
+        b=eTjiTgq58Pz6wqci7i2wgJ1Mbkrs5ngkF6ud2v1GgHNEQh5bTt2nlg/m+wu/GqJB8Y
+         pjQTv5yfxquoKBwCxnUPLNCkU0nZdAbBeVbW7CPxZHbDDD/fokhpYvvi5IpTsbjz20E1
+         8KZHnA/gvB6mBnwA2lPGbNaK4H974m6mFads97T5x8xRk7pznY+1RERyffjH0GRTi60F
+         jt78OYNAmr92FFTBORptGHF9uVALwlCHxUvsyQAFH/gp6rK4U2kNZu3pmB4myb7XxPyV
+         rxNyMrEv4IgcniHQY1vtdFAUhPVhYG7ID8zJfnTWQq0yJvNQ64hqzfEdlU57TjyCPwrY
+         jXpw==
+X-Gm-Message-State: AOAM531cKqj5NMf8PFIICc64YOvtC0J/rdrGQAxcGmy4Tc3O5P6cfbSe
+        DfjW/EkQkgvIKPBXQ/VM6RSKsAQ14zo=
+X-Google-Smtp-Source: ABdhPJyddhR+zMT5DnLHqWrI+OGzzjzk8/38vejyFDu2soHiKLZSXtSbh6QkcWam3OC2MHDua2uaUg==
+X-Received: by 2002:a67:f74f:: with SMTP id w15mr1215202vso.53.1594678689303;
+        Mon, 13 Jul 2020 15:18:09 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id i184sm1841294vsc.18.2020.07.13.15.18.07
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jul 2020 15:25:16 -0700 (PDT)
-Received: by mail-vk1-f169.google.com with SMTP id t187so3219472vke.5
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:25:15 -0700 (PDT)
-X-Received: by 2002:a05:6102:30b5:: with SMTP id y21mr1130601vsd.42.1594678673804;
- Mon, 13 Jul 2020 15:17:53 -0700 (PDT)
+        Mon, 13 Jul 2020 15:18:08 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id k7so7505889vso.2
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 15:18:07 -0700 (PDT)
+X-Received: by 2002:a67:e046:: with SMTP id n6mr1294693vsl.6.1594678686784;
+ Mon, 13 Jul 2020 15:18:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
+References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-2-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1592818308-23001-2-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 Jul 2020 15:17:42 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
-Message-ID: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] pinctrl: qcom: Add msmgpio irqchip flags
+Date:   Mon, 13 Jul 2020 15:17:55 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WcbEH2O+7xqCyDfrPR0+g+MpWWsgORNPepC=VrhOanFQ@mail.gmail.com>
+Message-ID: <CAD=FV=WcbEH2O+7xqCyDfrPR0+g+MpWWsgORNPepC=VrhOanFQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] pinctrl: qcom: Remove irq_disable callback from
+ msmgpio irqchip
 To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Marc Zyngier <maz@kernel.org>,
@@ -83,37 +84,51 @@ Hi,
 
 On Mon, Jun 22, 2020 at 2:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
-> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
-> during suspend and mask before setting irq type.
+> The gpio can be marked for wakeup and drivers can invoke disable_irq()
+> during suspend, in such cases unlazy approach will also disable at HW
+> and such gpios will not wakeup device from suspend to RAM.
 >
-> Masking before changing type should make sure any spurious interrupt
-> is not detected during this operation.
+> Remove irq_disable callback to allow gpio interrupts to lazy disabled.
+> The gpio interrupts will get disabled during irq_mask callback.
 >
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
 > Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 2419023..b909ffe 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->         pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
->         pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
-> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 13 -------------
+>  1 file changed, 13 deletions(-)
 
-I haven't tested it, but with my suggestion in patch #4 to use
-irq_suspend and irq_resume, I presume adding IRQCHIP_MASK_ON_SUSPEND
-is no longer needed?
+While the code of this patch looks fairly correct to me (there's no
+need to implement the irq_disable callback and we can just rely on the
+masking), I'm slightly anxious about the description.  It almost feels
+like you're somehow relying on the laziness to "fix" your issue here.
+...but the laziness is supposed to just be an optimization.
+Specifically if an interrupt happens to fire at any point in time
+after a driver has called disable_irq() then it acts just like a
+non-lazy disable.
+
+Said another way, I think this is a valid thing for a driver to do and
+it should get woken up if the irq fires in suspend:
+
+disable_irq();
+msleep(1000);
+enable_irq_wake()
+
+Specifically if an IRQ comes in during that sleep then it will be just
+like you had a non-lazy IRQ.
 
 
-> +                               | IRQCHIP_SET_TYPE_MASKED;
+So while I'm for this patch, I'd suggest a simpler description
+(assuming my understanding is correct):
 
-IIUC adding "IRQCHIP_SET_TYPE_MASKED" is unrelated to the rest of this
-series, right?
+There is no reason to implement irq_disable() and irq_mask().  Let's just
+use irq_mask() and let the rest of the core handle it.
+
+
+Also: it feels really weird to me that you're getting rid of the
+irq_disable() but keeping irq_enable().  That seems like asking for
+trouble, though I'd have to do more research to see if I could figure
+out exactly what might go wrong.  Could you remove your irq_enable()
+too?
+
 
 -Doug
