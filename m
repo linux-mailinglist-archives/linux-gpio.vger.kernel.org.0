@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A08521D906
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:50:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E7EA21D909
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:50:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbgGMOt5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Jul 2020 10:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32822 "EHLO
+        id S1730216AbgGMOu2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Jul 2020 10:50:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730205AbgGMOt4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:56 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D735C08C5E0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:56 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z13so16874084wrw.5
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:56 -0700 (PDT)
+        with ESMTP id S1730205AbgGMOt5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:57 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4214FC061794
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a6so16866602wrm.4
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cN4hxjZffgZiTP9rm/+61P197dYAAsxmh3k67ken7Lc=;
-        b=WTQoGW2es+DWWY184OTiOYJ7kP1gCvv1WQ1ASQc8H3lTiNUlHTvhvgokw5MlYOoQcb
-         xbItXOry4H/me4A1wb4XHXpe777Ljj2j2PknAYL9l5Queojhz9t3xFJmVNwHR8zJ3FHh
-         bowur06fz2y6nvUF56d2jjF3lrqddddvG8BYENEtvI7g4ZHPvMWU1gHLsk5vkKJrmIrO
-         oY34NgGyGzEm4WxR86ifRP9ONNsVzsA9XQhauVnIBm7MLH426LUj15DxIlnJ6LtJGOHl
-         lcGlArQ6p1HY3fzm/ioHcW8cff1EfGLZ4AJMIaaVLko2XmYUKKLb+1FdYJQVw+Qbw7AR
-         Fq3Q==
+        bh=MGVkPRp/+I1joXVdv6caEP06X1PF0rNG8kbo7/M1JBk=;
+        b=QiHDfDTGlAj/YS7C4u7kOc9JwEFDw3G0oGclidDhkGG3zqi1U3reU5/sFhI47sYphg
+         HeiZUEn/8P25l8ozcJNgk5z6bsdiI5c07DjWLBg3+bY/4kLVz2Q32r9LNafPsNTobcQS
+         qkH5Tm1h8TN6RDaCWLJT4g0EX6g+c1CeY4vDz8SsfIPEXVAwMrje1zKdA1KWa5H882OL
+         SZ1FPlR19YfURzt9hxk5H7HI8ywDaJ31gFsUOPmNz7070R9N6rjz0rom3oYN//QTvb+l
+         YmXn4Dpd0zghrInn3FZCpnIZl93yJoeIcYXPsxF9WdG+1WSYAZxAXJm+ILAFRi3bECqk
+         v7Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cN4hxjZffgZiTP9rm/+61P197dYAAsxmh3k67ken7Lc=;
-        b=IjM7DYOkBgBmtviKeqtN9eVMvrT3i3Bu3MIGH/QQ7vsEsNsao8uv7H2j0K/ZF87xxf
-         qTPet+i4BqEyANOUfKoxDWfm/Ss/d3NzWoGf/J5HlNBGvicDWcNZmzOeKkRvC0xNoZgU
-         8s4oxRQvteMN//jVFDvYE8b8cuAASRtTlk+Yqd4FQwmRMhDOHa9OJelcskz0TgeXFjeD
-         KVY/hf6GX4rP1+Z88T7ap/S+0Rnsg4oDeeR0JDz0mifZbphQN2aGppd+zBVWxG7yUjSY
-         iwjInSjd/bthNhVXXI2R09443yKTCGO9AnaqiEXJd/XrU00jfQ6opSi9VcSNCGaeMQ5z
-         pCyg==
-X-Gm-Message-State: AOAM533+QGAu7Zfi8IrrMRlnjJHzw2Hdyjz0MzZR7t2mt7SILsftpOZ3
-        UHYgyu2oAESAfgqLLbZaox683Q==
-X-Google-Smtp-Source: ABdhPJz8jfAdXhMgUGuKXug5KeJG6GRYTP016bM0s16EfAm3SEIqrcdRn9WoEAoC6M02wqoX9iLYiQ==
-X-Received: by 2002:a5d:4a45:: with SMTP id v5mr80799127wrs.228.1594651794974;
-        Mon, 13 Jul 2020 07:49:54 -0700 (PDT)
+        bh=MGVkPRp/+I1joXVdv6caEP06X1PF0rNG8kbo7/M1JBk=;
+        b=KD9FakPrxGTl86x2SUa4z53nr1cSv7ka2GM20T8LjnYeGUyHGNhuFUHcn9Wg8lgpLy
+         U1tB+3k/rwRyPt99oE1+x4gPRYnzzz6PxtdudRfHcvBboAPn7SpkZwqr/wsNLI7dUt+E
+         HCSytM4Ybj9bMfb7vsoILUH1okSsUmjW4/kM1CqyRWFPuKj/g3WkD+umNqQYbKPbmV9y
+         CH33EV1K6SuDfxRLdVmgHLPFpSZgjcAJFvoXUWmeY5I8Amg/BExdSKMmS1wUp+5mTbbq
+         6eNRFP49u64/UxtyLdi8WqISb8NzsoNcNUiGLgHZ8nWCIKtC0m/9wewaT9O22f6Ja0lW
+         gteg==
+X-Gm-Message-State: AOAM532YIktgJJvgS3yZhSIIjeqyoaso3732HHCG6uilV6UgZEa4vSV5
+        2N86eT4jfIF0/i0mF95kPpu2JA==
+X-Google-Smtp-Source: ABdhPJx9Drg7tITXelXrTGkjdiA4cztDP4a+w06kMhyQ79IF54jdT4nucp1hYkuJYWkR3yVfSNeQhA==
+X-Received: by 2002:a5d:6a90:: with SMTP id s16mr78126603wru.8.1594651796017;
+        Mon, 13 Jul 2020 07:49:56 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.53
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:54 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:55 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc headers and fix others
-Date:   Mon, 13 Jul 2020 15:49:25 +0100
-Message-Id: <20200713144930.1034632-21-lee.jones@linaro.org>
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH 21/25] pinctrl: pinctrl-single: Fix struct/function documentation blocks
+Date:   Mon, 13 Jul 2020 15:49:26 +0100
+Message-Id: <20200713144930.1034632-22-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -67,148 +67,106 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some description blocks are void of any description/documentation,
-others are missing 'struct' identifiers, there are also a couple of
-misspellings of function parameter names.  Fix all of them.
+Add some missing attributes/parameter descriptions, remove other
+superfluous ones, add struct header titles and fix misspellings.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/pinctrl-rza1.c:81: warning: cannot understand function prototype: 'struct rza1_bidir_pin '
- drivers/pinctrl/pinctrl-rza1.c:90: warning: cannot understand function prototype: 'struct rza1_bidir_entry '
- drivers/pinctrl/pinctrl-rza1.c:98: warning: cannot understand function prototype: 'struct rza1_swio_pin '
- drivers/pinctrl/pinctrl-rza1.c:108: warning: cannot understand function prototype: 'struct rza1_swio_entry '
- drivers/pinctrl/pinctrl-rza1.c:116: warning: cannot understand function prototype: 'struct rza1_pinmux_conf '
- drivers/pinctrl/pinctrl-rza1.c:443: warning: cannot understand function prototype: 'struct rza1_mux_conf '
- drivers/pinctrl/pinctrl-rza1.c:462: warning: cannot understand function prototype: 'struct rza1_port '
- drivers/pinctrl/pinctrl-rza1.c:482: warning: cannot understand function prototype: 'struct rza1_pinctrl '
- drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'port' not described in 'rza1_pinmux_get_flags'
- drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'pin' not described in 'rza1_pinmux_get_flags'
- drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'func' not described in 'rza1_pinmux_get_flags'
- drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pinmux_get_flags'
- drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'port' not described in 'rza1_set_bit'
- drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'reg' not described in 'rza1_set_bit'
- drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'bit' not described in 'rza1_set_bit'
- drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'set' not described in 'rza1_set_bit'
- drivers/pinctrl/pinctrl-rza1.c:672: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pin_mux_single'
- drivers/pinctrl/pinctrl-rza1.c:672: warning: Excess function parameter 'pinctrl' description in 'rza1_pin_mux_single'
+ drivers/pinctrl/pinctrl-single.c:50: warning: Function parameter or member 'mask' not described in 'pcs_func_vals'
+ drivers/pinctrl/pinctrl-single.c:97: warning: Function parameter or member 'conf' not described in 'pcs_function'
+ drivers/pinctrl/pinctrl-single.c:97: warning: Function parameter or member 'nconfs' not described in 'pcs_function'
+ drivers/pinctrl/pinctrl-single.c:659: warning: Function parameter or member 'pin_pos' not described in 'pcs_add_pin'
+ drivers/pinctrl/pinctrl-single.c:985: warning: Excess function parameter 'pctldev' description in 'pcs_parse_one_pinctrl_entry'
+ drivers/pinctrl/pinctrl-single.c:1357: warning: Cannot understand  * @reg:        virtual address of interrupt register
+ drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'pcs_soc' not described in 'pcs_irq_set'
+ drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'irq' not described in 'pcs_irq_set'
+ drivers/pinctrl/pinctrl-single.c:1377: warning: Function parameter or member 'enable' not described in 'pcs_irq_set'
+ drivers/pinctrl/pinctrl-single.c:1458: warning: Function parameter or member 'pcs_soc' not described in 'pcs_irq_handle'
+ drivers/pinctrl/pinctrl-single.c:1458: warning: Excess function parameter 'pcs_irq' description in 'pcs_irq_handle'
+ drivers/pinctrl/pinctrl-single.c:1506: warning: Excess function parameter 'irq' description in 'pcs_irq_chain_handler'
 
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: linux-renesas-soc@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: linux-omap@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/pinctrl-rza1.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/pinctrl/pinctrl-single.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
-index 38a14bbced5f6..511f232ab7bc2 100644
---- a/drivers/pinctrl/pinctrl-rza1.c
-+++ b/drivers/pinctrl/pinctrl-rza1.c
-@@ -75,7 +75,7 @@
-  * RZ/A1 pinmux flags
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index e6d1cf25782ce..542578d0bda2d 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -42,6 +42,7 @@
+  * struct pcs_func_vals - mux function register offset and value pair
+  * @reg:	register virtual address
+  * @val:	register value
++ * @mask:	mask
   */
- 
--/**
-+/*
-  * rza1_bidir_pin - describe a single pin that needs bidir flag applied.
+ struct pcs_func_vals {
+ 	void __iomem *reg;
+@@ -83,6 +84,8 @@ struct pcs_conf_type {
+  * @nvals:	number of entries in vals array
+  * @pgnames:	array of pingroup names the function uses
+  * @npgnames:	number of pingroup names the function uses
++ * @conf:	array of pin configurations
++ * @nconfs:	number of pin configurations available
+  * @node:	list node
   */
- struct rza1_bidir_pin {
-@@ -83,7 +83,7 @@ struct rza1_bidir_pin {
- 	u8 func: 4;
- };
- 
--/**
-+/*
-  * rza1_bidir_entry - describe a list of pins that needs bidir flag applied.
-  *		      Each struct rza1_bidir_entry describes a port.
+ struct pcs_function {
+@@ -653,6 +656,7 @@ static const struct pinconf_ops pcs_pinconf_ops = {
+  * pcs_add_pin() - add a pin to the static per controller pin array
+  * @pcs: pcs driver instance
+  * @offset: register offset from base
++ * @pin_pos: unused
   */
-@@ -92,7 +92,7 @@ struct rza1_bidir_entry {
- 	const struct rza1_bidir_pin *pins;
- };
- 
--/**
-+/*
-  * rza1_swio_pin - describe a single pin that needs swio flag applied.
-  */
- struct rza1_swio_pin {
-@@ -102,7 +102,7 @@ struct rza1_swio_pin {
- 	u16 input: 1;
- };
- 
--/**
-+/*
-  * rza1_swio_entry - describe a list of pins that needs swio flag applied
-  */
- struct rza1_swio_entry {
-@@ -110,7 +110,7 @@ struct rza1_swio_entry {
- 	const struct rza1_swio_pin *pins;
- };
- 
--/**
-+/*
-  * rza1_pinmux_conf - group together bidir and swio pinmux flag tables
-  */
- struct rza1_pinmux_conf {
-@@ -431,7 +431,7 @@ static const struct rza1_pinmux_conf rza1l_pmx_conf = {
-  * RZ/A1 types
-  */
- /**
-- * rza1_mux_conf - describes a pin multiplexing operation
-+ * struct rza1_mux_conf - describes a pin multiplexing operation
-  *
-  * @id: the pin identifier from 0 to RZA1_NPINS
-  * @port: the port where pin sits on
-@@ -450,7 +450,7 @@ struct rza1_mux_conf {
- };
+ static int pcs_add_pin(struct pcs_device *pcs, unsigned offset,
+ 		unsigned pin_pos)
+@@ -959,7 +963,6 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
  
  /**
-- * rza1_port - describes a pin port
-+ * struct rza1_port - describes a pin port
-  *
-  * This is mostly useful to lock register writes per-bank and not globally.
-  *
-@@ -467,12 +467,12 @@ struct rza1_port {
- };
- 
- /**
-- * rza1_pinctrl - RZ pincontroller device
-+ * struct rza1_pinctrl - RZ pincontroller device
-  *
-  * @dev: parent device structure
-  * @mutex: protect [pinctrl|pinmux]_generic functions
-  * @base: logical address base
-- * @nports: number of pin controller ports
-+ * @nport: number of pin controller ports
-  * @ports: pin controller banks
-  * @pins: pin array for pinctrl core
-  * @desc: pincontroller desc for pinctrl core
-@@ -536,7 +536,7 @@ static inline int rza1_pinmux_get_swio(unsigned int port,
- 	return -ENOENT;
+  * pcs_parse_one_pinctrl_entry() - parses a device tree mux entry
+- * @pctldev: pin controller device
+  * @pcs: pinctrl driver instance
+  * @np: device node of the mux entry
+  * @map: map entry
+@@ -1353,7 +1356,9 @@ static int pcs_add_gpio_func(struct device_node *node, struct pcs_device *pcs)
+ 	}
+ 	return ret;
  }
- 
--/**
-+/*
-  * rza1_pinmux_get_flags() - return pinmux flags associated to a pin
-  */
- static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
-@@ -566,7 +566,7 @@ static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
-  * RZ/A1 SoC operations
-  */
- 
--/**
-+/*
-  * rza1_set_bit() - un-locked set/clear a single bit in pin configuration
-  *		    registers
-  */
-@@ -664,7 +664,7 @@ static inline int rza1_pin_get(struct rza1_port *port, unsigned int pin)
++
  /**
-  * rza1_pin_mux_single() - configure pin multiplexing on a single pin
++ * struct pcs_interrupt
+  * @reg:	virtual address of interrupt register
+  * @hwirq:	hardware irq number
+  * @irq:	virtual irq number
+@@ -1368,6 +1373,9 @@ struct pcs_interrupt {
+ 
+ /**
+  * pcs_irq_set() - enables or disables an interrupt
++ * @pcs_soc: SoC specific settings
++ * @irq: interrupt
++ * @enable: enable or disable the interrupt
   *
-- * @pinctrl: RZ/A1 pin controller device
-+ * @rza1_pctl: RZ/A1 pin controller device
-  * @mux_conf: pin multiplexing descriptor
-  */
- static int rza1_pin_mux_single(struct rza1_pinctrl *rza1_pctl,
+  * Note that this currently assumes one interrupt per pinctrl
+  * register that is typically used for wake-up events.
+@@ -1448,7 +1456,7 @@ static int pcs_irq_set_wake(struct irq_data *d, unsigned int state)
+ 
+ /**
+  * pcs_irq_handle() - common interrupt handler
+- * @pcs_irq: interrupt data
++ * @pcs_soc: SoC specific settings
+  *
+  * Note that this currently assumes we have one interrupt bit per
+  * mux register. This interrupt is typically used for wake-up events.
+@@ -1496,7 +1504,6 @@ static irqreturn_t pcs_irq_handler(int irq, void *d)
+ 
+ /**
+  * pcs_irq_handle() - handler for the dedicated chained interrupt case
+- * @irq: interrupt
+  * @desc: interrupt descriptor
+  *
+  * Use this if you have a separate interrupt for each
 -- 
 2.25.1
 
