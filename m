@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A4421D92A
+	by mail.lfdr.de (Postfix) with ESMTP id 4A41421D929
 	for <lists+linux-gpio@lfdr.de>; Mon, 13 Jul 2020 16:51:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgGMOvL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1730359AbgGMOvL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Mon, 13 Jul 2020 10:51:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbgGMOti (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:38 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87083C061794
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so16827468wrj.13
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
+        with ESMTP id S1730073AbgGMOtk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Jul 2020 10:49:40 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A83C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id j18so13588282wmi.3
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 07:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TMIlOVRDCYaSAty7/afpaXFLg9AMRQm1G5k0VXrMmr0=;
-        b=kzgxGc3N8RHSM05U2cbTEttiKSICBcl2ap2J0SyaJCAFyWNkScXmvzI5l9237ZFd1d
-         tYsXS/CeVODSP5dh4AWxjwEuEkqLu+CgMnsfbDviVEovHt+0LGQZFxUHJruUpQtDWG72
-         qo5ALHeTQEJI9nQQsPE1He4vUb8WBW76u4uqMfiS0ju6c42oM7GTIJz4gufaQDzEsjpH
-         ezTKmNoHvf7lI7S2BZ5C1i5uvizrblnH0UrVvxd/Yn/iBUuFoaCcKGDq40SFwrGKhTOo
-         tKxOdIxWkjDQywgSxP6+Va8svUfh1YnRBM/zfU2PLdIyms1JpFYFkoqfCIE2NUfGNhGp
-         vIHA==
+        bh=uHw7vfvkoUl/p+J0u5Wb1MljRc1mmHUiGpf+lUlkzX0=;
+        b=LtwsOLQBSd935qDg45xtuJw1DsUvUlXVZjJbx/aESPvqCbQKILkSfnn5RNWUVbgV2x
+         VI914y8yiPOmbKi8YiBaEBwt/4cgx33qyJtNA0FA+AWJuy06NSblJBdOG25jj8XCMgFl
+         F/wju0wkxqQEpBHCKhEItmEYgl5Tw0Jp235Cu/tKBRc7JFGLMxWWyVWecZqmvJLOE+06
+         V/93fvuIbubbN+OFWr/CSjS1Zb+o2UDipa7mbGPRIiAqvZj6rkTDeApLzOii7vFPbJx2
+         +SzuCHJiY0n2N2GRz2TmSE2HbUb+I1PORUjdjg5PFrg2MelwSgdJbFkMZfMQcaAT1JGL
+         m2iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TMIlOVRDCYaSAty7/afpaXFLg9AMRQm1G5k0VXrMmr0=;
-        b=ct7u79K/EwZnfDwDfPjKtZyo46miVEZR/rP7EA4L0YkNJNioSnJqupp1ZWc/7tvYHa
-         5lIAsL5ezDTXTd+3n1hzFMteG3gBQbwx7Ciu3y+ATqcVfXYL+mmeZ8SdvP8/JBw2DFp1
-         C0dJzcFmM//HJIRC+CsYPLWFvsJ8ua9LS4Kly1WQTFslhuUWvffjhL8wRE+I5hx+J0/X
-         yY6UJbW9w+LeR6rmqUwkL+d1jZDD2AVdYyLRI2ycL98T0pdutAPnvpqx3ihct5G7rXQZ
-         9cCeaHdP4kdZcmUwQmuZNxz9vemA77jTuszvqraUH34AlCHIYXeh9SaR2M3DO3nbTUgy
-         8NDw==
-X-Gm-Message-State: AOAM533gw2UROqsy3G/dMza8RrIWz35TnLD3mGEyzRVKlFa2wXW5vUgf
-        4SdG79KG91Da15rqzmEC67o1IA==
-X-Google-Smtp-Source: ABdhPJwTKT4GJlQvG77L7gfYBSDpFZ6xtFBDE25t9ON82D4FbSU0ehp1cSeDnYtWZ7DbCKQ93IbN9w==
-X-Received: by 2002:a5d:684f:: with SMTP id o15mr76695440wrw.148.1594651777326;
-        Mon, 13 Jul 2020 07:49:37 -0700 (PDT)
+        bh=uHw7vfvkoUl/p+J0u5Wb1MljRc1mmHUiGpf+lUlkzX0=;
+        b=YAp1ywdlle1A37J9sy80OfPQ2NMnDbCO6icxf6EArx6Hn4KL7Rv3gqsa/jQAPtIG0M
+         iTnkIZOzT99wHxuRzK65ejH1gNDmUiMTRm5gUFNWCTsNMIAEgL8FgTK2FK83FwA3rNt4
+         962oHIhm3gMfE+sDtDcxH+gC0v7ErAbOtSUB5Hlj2D+ssrmO6NVf4q19AFKfLZUGplHr
+         C5Yn0/Xn5jhtizC9aZPIoRrsKn3r3Sul0JLUPYsxoHjXw4oKq3BDZ29kjVAK7PkPtx0O
+         kIFHrht2JtZjga8FOR/oDdC2t0yDGxxMLid6tc7K5WtALL6wTBT2AIvGICfnf/UjMYzT
+         5IuA==
+X-Gm-Message-State: AOAM5304ypBMIUWc4I8GJmGkHXnG5+wuXSxS2nEw2jQropMB9y61jGab
+        vDPbVGFi+ZNduVRAe+GHjLe6Qw==
+X-Google-Smtp-Source: ABdhPJzdyzPd8UNr1xBZ1aB/AYvkeJC2J4Kk5V8tjjunLbWbzabpwC0c0v3arMWicoKNSwUlIpJUmw==
+X-Received: by 2002:a7b:cf2b:: with SMTP id m11mr316828wmg.110.1594651778433;
+        Mon, 13 Jul 2020 07:49:38 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.6])
-        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.36
+        by smtp.gmail.com with ESMTPSA id o29sm26207756wra.5.2020.07.13.07.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2020 07:49:36 -0700 (PDT)
+        Mon, 13 Jul 2020 07:49:37 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 04/25] pinctrl: bcm: pinctrl-iproc-gpio: Rename incorrectly documented function param
-Date:   Mon, 13 Jul 2020 15:49:09 +0100
-Message-Id: <20200713144930.1034632-5-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
+Subject: [PATCH 05/25] pinctrl: qcom: pinctrl-msm: Complete 'struct msm_pinctrl' documentation
+Date:   Mon, 13 Jul 2020 15:49:10 +0100
+Message-Id: <20200713144930.1034632-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200713144930.1034632-1-lee.jones@linaro.org>
 References: <20200713144930.1034632-1-lee.jones@linaro.org>
@@ -66,32 +66,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Add missing descriptions for attributes and fix 1 formatting issue.
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Function parameter or member 'chip' not described in 'iproc_set_bit'
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c:141: warning: Excess function parameter 'iproc_gpio' description in 'iproc_set_bit'
+ drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'desc' not described in 'msm_pinctrl'
+ drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'irq_chip' not described in 'msm_pinctrl'
+ drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'intr_target_use_scm' not described in 'msm_pinctrl'
+ drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'soc' not described in 'msm_pinctrl'
+ drivers/pinctrl/qcom/pinctrl-msm.c:75: warning: Function parameter or member 'phys_base' not described in 'msm_pinctrl'
 
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/bcm/pinctrl-iproc-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-index a38f0d5f47ce9..e2bd2dce6bb41 100644
---- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
-@@ -131,7 +131,7 @@ static inline unsigned iproc_pin_to_gpio(unsigned pin)
-  *  iproc_set_bit - set or clear one bit (corresponding to the GPIO pin) in a
-  *  Iproc GPIO register
-  *
-- *  @iproc_gpio: Iproc GPIO device
-+ *  @chip: Iproc GPIO device
-  *  @reg: register offset
-  *  @gpio: GPIO pin
-  *  @set: set or clear
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 83b7d64bc4c14..56b36d4b54668 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -40,16 +40,20 @@
+  * @dev:            device handle.
+  * @pctrl:          pinctrl handle.
+  * @chip:           gpiochip handle.
++ * @desc:           pin controller descriptor
+  * @restart_nb:     restart notifier block.
++ * @irq_chip:       irq chip information
+  * @irq:            parent irq for the TLMM irq_chip.
++ * @intr_target_use_scm: route irq to application cpu using scm calls
+  * @lock:           Spinlock to protect register resources as well
+  *                  as msm_pinctrl data structures.
+  * @enabled_irqs:   Bitmap of currently enabled irqs.
+  * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
+  *                  detection.
+  * @skip_wake_irqs: Skip IRQs that are handled by wakeup interrupt controller
+- * @soc;            Reference to soc_data of platform specific data.
++ * @soc:            Reference to soc_data of platform specific data.
+  * @regs:           Base addresses for the TLMM tiles.
++ * @phys_base:      Physical base address
+  */
+ struct msm_pinctrl {
+ 	struct device *dev;
 -- 
 2.25.1
 
