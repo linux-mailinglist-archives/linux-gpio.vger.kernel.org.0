@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADAF821EE05
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 12:33:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C24321EDF5
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 12:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgGNKcM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 06:32:12 -0400
-Received: from mga11.intel.com ([192.55.52.93]:19156 "EHLO mga11.intel.com"
+        id S1725841AbgGNKbh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 06:31:37 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15910 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgGNKcK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:32:10 -0400
-IronPort-SDR: BGWc8aa7vi1zAoZvhlP8ydaW/Rk+v9N3+xGmCpw1rOEydTz4eTCsYRwDAF2K4zYUrgrapoDBVy
- OkGlRNPvQi9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="146872107"
+        id S1725906AbgGNKbg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:31:36 -0400
+IronPort-SDR: ix5ExmB/5lVhkyGi8kp3x2A01FpXTXefpZkH6s1xcEgCnKpbG3zGy99cun0OaZugt/jhYbAlKZ
+ 6sCZMztfCcdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150289029"
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="146872107"
+   d="scan'208";a="150289029"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:31:57 -0700
-IronPort-SDR: +gPg2/hGhywZXsBaY8RUrhfJAJEFhnYqhVoIcTsMXcbMMZxmuUVTLg+u9QO2YjTMbyqKbH8Bs3
- axZl2mFQeCRw==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:31:35 -0700
+IronPort-SDR: nlw3Z0zjOvpVw//6dKQXTCO99NbNdKQPxxd2tL20QpCzirn6z2l5slDxP7KV+3waY0ZrkAOhJB
+ hXJZxf1Kcq7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="299492534"
+   d="scan'208";a="360345920"
 Received: from lkp-server02.sh.intel.com (HELO 393d9bdf0d5c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jul 2020 03:31:56 -0700
+  by orsmga001.jf.intel.com with ESMTP; 14 Jul 2020 03:31:34 -0700
 Received: from kbuild by 393d9bdf0d5c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jvIE7-00003z-Td; Tue, 14 Jul 2020 10:31:55 +0000
-Date:   Tue, 14 Jul 2020 18:29:48 +0800
+        id 1jvIDl-00002m-Tq; Tue, 14 Jul 2020 10:31:33 +0000
+Date:   Tue, 14 Jul 2020 18:30:26 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- 1752911c6d10675154f1c8c8ba54331604cdbca7
-Message-ID: <5f0d891c.RXTWjvOgdu1VFybP%lkp@intel.com>
+Subject: [gpio:gpiochip-no-driver-h] BUILD SUCCESS
+ 9081249c24830da5bc3f43ef5a15d467bec449fe
+Message-ID: <5f0d8942.Ubxpg/FAfZx4D5nb%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -46,10 +46,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 1752911c6d10675154f1c8c8ba54331604cdbca7  Merge tag 'gpio-updates-for-v5.9-part2' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into devel
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpiochip-no-driver-h
+branch HEAD: 9081249c24830da5bc3f43ef5a15d467bec449fe  unremove
 
-elapsed time: 755m
+elapsed time: 756m
 
 configs tested: 111
 configs skipped: 8
@@ -57,18 +57,17 @@ configs skipped: 8
 The following configs have been built successfully.
 More configs may be tested in the coming days.
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
 arm64                            allyesconfig
 arm64                               defconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
 m68k                            mac_defconfig
-mips                            gpr_defconfig
-sh                          rsk7201_defconfig
 riscv                             allnoconfig
+mips                            gpr_defconfig
 mips                         tb0219_defconfig
 powerpc                     pq2fads_defconfig
 arm                         bcm2835_defconfig
@@ -81,9 +80,9 @@ sh                        apsh4ad0a_defconfig
 parisc                           alldefconfig
 ia64                      gensparse_defconfig
 sh                           se7721_defconfig
-arm                     am200epdkit_defconfig
-xtensa                       common_defconfig
-parisc                           allmodconfig
+mips                         bigsur_defconfig
+mips                           mtx1_defconfig
+sh                          sdk7786_defconfig
 i386                              allnoconfig
 i386                             allyesconfig
 i386                                defconfig
@@ -124,23 +123,24 @@ mips                             allmodconfig
 parisc                            allnoconfig
 parisc                              defconfig
 parisc                           allyesconfig
+parisc                           allmodconfig
 powerpc                             defconfig
 powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-i386                 randconfig-a001-20200713
-i386                 randconfig-a005-20200713
-i386                 randconfig-a006-20200713
-i386                 randconfig-a002-20200713
-i386                 randconfig-a003-20200713
-i386                 randconfig-a004-20200713
 i386                 randconfig-a001-20200714
 i386                 randconfig-a005-20200714
 i386                 randconfig-a002-20200714
 i386                 randconfig-a006-20200714
 i386                 randconfig-a003-20200714
 i386                 randconfig-a004-20200714
+i386                 randconfig-a001-20200713
+i386                 randconfig-a005-20200713
+i386                 randconfig-a006-20200713
+i386                 randconfig-a002-20200713
+i386                 randconfig-a003-20200713
+i386                 randconfig-a004-20200713
 i386                 randconfig-a016-20200714
 i386                 randconfig-a011-20200714
 i386                 randconfig-a015-20200714
