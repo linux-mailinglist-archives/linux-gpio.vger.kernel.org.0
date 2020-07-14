@@ -2,37 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB3321F54B
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:45:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102B721F455
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgGNOiy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 10:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
+        id S1728418AbgGNOi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 10:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNOix (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:38:53 -0400
+        id S1728387AbgGNOiz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:38:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0176B22516;
-        Tue, 14 Jul 2020 14:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8980C2067D;
+        Tue, 14 Jul 2020 14:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737532;
-        bh=90/WbSukEK5s1iW2h/xGVzDI+tjhox/mLpz3WTRUY30=;
+        s=default; t=1594737535;
+        bh=78btAS2b9p8DJC0sX4zuScTVsYWLaTYOwHo8pPXDDHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DqeoJj/GiDAp1RvLmDMah3S6zYyxA+7c7aDId6fNhduQGZUp2kf3mHuXSNaqlOpoS
-         QfMRwT9hCu4E37nSRpdxhBuKu9j8lU+AMINhRsoAIPKESdTgIIcbj3m7lvmVQzLhaM
-         B6gNxfkS4FW7TtWIdVLG7QhDpN2RGKtDhX+cURV8=
+        b=CuqUKrGLQ10Ue4z/RVgJ57uTUomSCBOTi77Z8Ihu3ENwQSSP13gt6IcJGtDBQeTNd
+         VUMZ2Y6fVI9xWTqyCUTDFlY2nega049lgGHt46bN+dsbRkqNYgvgIAh549Yorg6xtt
+         LNQ/v4XYBAXWXJCmTaYBm3MPvMtUo+R5COT6cNPw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+Cc:     Jacky Hu <hengqing.hu@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 02/19] gpio: arizona: put pm_runtime in case of failure
-Date:   Tue, 14 Jul 2020 10:38:32 -0400
-Message-Id: <20200714143849.4035283-2-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 04/19] pinctrl: amd: fix npins for uart0 in kerncz_groups
+Date:   Tue, 14 Jul 2020 10:38:34 -0400
+Message-Id: <20200714143849.4035283-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
 References: <20200714143849.4035283-1-sashal@kernel.org>
@@ -45,52 +43,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Jacky Hu <hengqing.hu@gmail.com>
 
-[ Upstream commit 861254d826499944cb4d9b5a15f5a794a6b99a69 ]
+[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+uart0_pins is defined as:
+static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200605030052.78235-1-navid.emamdoost@gmail.com
+which npins is wronly specified as 9 later
+	{
+		.name = "uart0",
+		.pins = uart0_pins,
+		.npins = 9,
+	},
+
+npins should be 5 instead of 9 according to the definition.
+
+Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-arizona.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-amd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 7520a13b4c7ca..5bda38e0780f2 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -64,6 +64,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
-@@ -72,12 +73,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to drop cache: %d\n",
- 				ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
- 
- 		ret = regmap_read(arizona->regmap, reg, &val);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
-+		}
- 
- 		pm_runtime_mark_last_busy(chip->parent);
- 		pm_runtime_put_autosuspend(chip->parent);
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 3e5760f1a7153..d4a192df5fabd 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -252,7 +252,7 @@ static const struct amd_pingroup kerncz_groups[] = {
+ 	{
+ 		.name = "uart0",
+ 		.pins = uart0_pins,
+-		.npins = 9,
++		.npins = 5,
+ 	},
+ 	{
+ 		.name = "uart1",
 -- 
 2.25.1
 
