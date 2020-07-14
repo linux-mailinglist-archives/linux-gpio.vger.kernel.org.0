@@ -2,173 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C24321EDF5
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 12:31:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E1921EE31
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 12:46:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725841AbgGNKbh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 06:31:37 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15910 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgGNKbg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 06:31:36 -0400
-IronPort-SDR: ix5ExmB/5lVhkyGi8kp3x2A01FpXTXefpZkH6s1xcEgCnKpbG3zGy99cun0OaZugt/jhYbAlKZ
- 6sCZMztfCcdA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150289029"
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="150289029"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 03:31:35 -0700
-IronPort-SDR: nlw3Z0zjOvpVw//6dKQXTCO99NbNdKQPxxd2tL20QpCzirn6z2l5slDxP7KV+3waY0ZrkAOhJB
- hXJZxf1Kcq7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
-   d="scan'208";a="360345920"
-Received: from lkp-server02.sh.intel.com (HELO 393d9bdf0d5c) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 14 Jul 2020 03:31:34 -0700
-Received: from kbuild by 393d9bdf0d5c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jvIDl-00002m-Tq; Tue, 14 Jul 2020 10:31:33 +0000
-Date:   Tue, 14 Jul 2020 18:30:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:gpiochip-no-driver-h] BUILD SUCCESS
- 9081249c24830da5bc3f43ef5a15d467bec449fe
-Message-ID: <5f0d8942.Ubxpg/FAfZx4D5nb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726934AbgGNKno (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 06:43:44 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:26801 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbgGNKno (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 06:43:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1594723423; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=tRdAbZo3R01ks+KVQQD/t8o7o2T01LJHhULszvC+t1g=; b=veoJ8LEujFJP19grxgRjS94+j9pZ5R9cqmYyeQe70aCd/dw1t29LQvODDKPswDqphYOGUR8B
+ vNdRfvQnOvPZ3hZ5mW6Uywu0MOseif9/juzjTxuatZbUOf+9MGuD23Z/gRzA3elZpPAdT9Ae
+ V0q72FqqDnTgFdlE/RCrvve+xWo=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f0d8c5ec9bd2efa2ecb0767 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 14 Jul 2020 10:43:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 58C71C433A0; Tue, 14 Jul 2020 10:43:42 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=2.0 tests=ALL_TRUSTED,NICE_REPLY_A,
+        SPF_NONE,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [192.168.29.129] (unknown [49.36.75.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D7C5C43387;
+        Tue, 14 Jul 2020 10:43:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D7C5C43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v3 2/5] pinctrl: qcom: Add msmgpio irqchip flags
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        LinusW <linus.walleij@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Srinivas Rao L <lsrao@codeaurora.org>
+References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org>
+ <1592818308-23001-3-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <5f6c3eec-5c2c-d546-ac3c-65e7d25c9031@codeaurora.org>
+Date:   Tue, 14 Jul 2020 16:13:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAD=FV=WcKB0AbcYNymAbfvDac-8c3uGgOn3B1Q-U4d3ZrvGuag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  gpiochip-no-driver-h
-branch HEAD: 9081249c24830da5bc3f43ef5a15d467bec449fe  unremove
+Hi,
 
-elapsed time: 756m
+On 7/14/2020 3:47 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Mon, Jun 22, 2020 at 2:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+>> during suspend and mask before setting irq type.
+>>
+>> Masking before changing type should make sure any spurious interrupt
+>> is not detected during this operation.
+>>
+>> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> index 2419023..b909ffe 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>>          pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+>>          pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
+>>          pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
+>> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
+> I haven't tested it, but with my suggestion in patch #4 to use
+> irq_suspend and irq_resume, I presume adding IRQCHIP_MASK_ON_SUSPEND
+> is no longer needed?
+it will still be needed, to let the non wakeup capable IRQ masked during 
+suspend.
+>
+>
+>> +                               | IRQCHIP_SET_TYPE_MASKED;
+> IIUC adding "IRQCHIP_SET_TYPE_MASKED" is unrelated to the rest of this
+> series, right?
 
-configs tested: 111
-configs skipped: 8
+Right, but since we are adding missing flags, i added it together.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Maulik
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-m68k                            mac_defconfig
-riscv                             allnoconfig
-mips                            gpr_defconfig
-mips                         tb0219_defconfig
-powerpc                     pq2fads_defconfig
-arm                         bcm2835_defconfig
-sh                             espt_defconfig
-ia64                        generic_defconfig
-arm                    vt8500_v6_v7_defconfig
-powerpc                     mpc5200_defconfig
-arm                           sama5_defconfig
-sh                        apsh4ad0a_defconfig
-parisc                           alldefconfig
-ia64                      gensparse_defconfig
-sh                           se7721_defconfig
-mips                         bigsur_defconfig
-mips                           mtx1_defconfig
-sh                          sdk7786_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-csky                             allyesconfig
-alpha                            allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200714
-i386                 randconfig-a005-20200714
-i386                 randconfig-a002-20200714
-i386                 randconfig-a006-20200714
-i386                 randconfig-a003-20200714
-i386                 randconfig-a004-20200714
-i386                 randconfig-a001-20200713
-i386                 randconfig-a005-20200713
-i386                 randconfig-a006-20200713
-i386                 randconfig-a002-20200713
-i386                 randconfig-a003-20200713
-i386                 randconfig-a004-20200713
-i386                 randconfig-a016-20200714
-i386                 randconfig-a011-20200714
-i386                 randconfig-a015-20200714
-i386                 randconfig-a012-20200714
-i386                 randconfig-a013-20200714
-i386                 randconfig-a014-20200714
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                               rhel-7.6
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
+>
+> -Doug
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
