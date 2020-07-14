@@ -2,93 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 965EF21F5DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 17:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB5BA21F66E
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 17:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgGNPJa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 11:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgGNPJ3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 11:09:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24AE120663;
-        Tue, 14 Jul 2020 15:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594739369;
-        bh=BJa6fLKmJwuRF1O/mc37Kc4DY7nUta/3nl09dK0slaA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zN+hQ9++SyHoH7aDcnQWGcJMzpKxXH941BOoyLFyBt5b+1JepfWlx2voN0SR4Hv+A
-         BmnXBYK4jvMIyVIc8tP7HdCIn57cRhd2d1YW6TxOV8eOLZVKYvqoaSkigu9wK4ZCk7
-         ZMokTGFkZi5LRAFJ1n9b4MDqxx814lpYtRTOB7YI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jvMYh-00Bipk-FQ; Tue, 14 Jul 2020 16:09:27 +0100
+        id S1728001AbgGNPtT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 11:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgGNPtS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 11:49:18 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D15BC061755;
+        Tue, 14 Jul 2020 08:49:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id p20so22524167ejd.13;
+        Tue, 14 Jul 2020 08:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1H4dhNeluJc6PmfPVu2dwjJilc9M0K3+/pSSegsHSMU=;
+        b=M7oahEXEKXEwJgKF/Bp1/K8h6eZI+M/87e6IbpHARagYHM3JDWTh1vkZZRhXzNs6R/
+         /t6AEMz71eBb5D1xJ1MT124wj/0rHWDnuuWgACFm5f4GdYbz/Mb1BNzTKqpcNL6Bif7i
+         smaFJnGw6aH5Nr/PK8Zjt54lhQQlH10l/4C8mI4wPGQ0buBGuROq3IhWVFyNj+Z37W7i
+         gH4sg5ei4YM2Y9HsFa9t7QgLEteOtsewIdzs40uZ6Vu4doWxcWcoeVWg5bN2xbyz2f+x
+         oRex7Gb18A7trMHYiDlPZNNouhIaeS3RHajOWKupiB0aEK1l5UDJ5dAbVXPKa/QSzJkz
+         nLXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1H4dhNeluJc6PmfPVu2dwjJilc9M0K3+/pSSegsHSMU=;
+        b=iaaqRa1/TMtBm7P14zuJ1DxyiPrOYRKeINVjLe+hWK5HsmaUpEP11GcBh6BnOONvQS
+         kZCsV0ToPQBtB06YDLNHZlbHIPsUcDdozENK6zFSlaUTgtrIdajaxDhIQVG3uY/lwYO9
+         jOuCIsD3WoB5ZKBA0p+8sn/UzyFByqkSGygSD+uoEuNX7Hl/FxQjWGJ8demGZ9j3Hfdk
+         naY5iE+nw9ZtXgvJ+ifoAkvZj7QIiQlypoYV5l6durc4Txyuv8ERi2QqNNQr7oFk+ypj
+         ohlUdibzCLNXbhHT8mI6a6qcK2fxKLPf1bKCGwSqm8pDhnxRAQ3n+fJxPxBCejsyna+W
+         2u2w==
+X-Gm-Message-State: AOAM532GC8F4p6uCEPpfk1waWW8BkiZZyAVx3V3PTxQwhLjwAdHn96ZM
+        t7M3NLZF5TEWZCmXtO46Nf3Y21M+
+X-Google-Smtp-Source: ABdhPJzC4iiO39pixEVj0uU66VZOzVnJ2fABhUrOPzIg2s1poH5/ZYA9GU+ZkthPgPCFlGEw7mJZYQ==
+X-Received: by 2002:a17:907:20d1:: with SMTP id qq17mr5151818ejb.214.1594741757383;
+        Tue, 14 Jul 2020 08:49:17 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id d26sm14470879edz.93.2020.07.14.08.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 08:49:16 -0700 (PDT)
+Date:   Tue, 14 Jul 2020 17:49:14 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 22/25] pinctrl: tegra: pinctrl-tegra194: Do not
+ initialise field twice
+Message-ID: <20200714154914.GA251696@ulmo>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-23-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jul 2020 16:09:27 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     linus.walleij@linaro.org, rnayak@codeaurora.org,
-        mkshah@codeaurora.org, ilina@codeaurora.org, cychiang@chromium.org,
-        swboyd@chromium.org, bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: qcom: Handle broken/missing PDC dual edge
- IRQs on sc7180
-In-Reply-To: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-References: <20200714080254.v3.1.Ie0d730120b232a86a4eac1e2909bcbec844d1766@changeid>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <ac694b7ad8ff6b7563475e014acde1cb@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: dianders@chromium.org, linus.walleij@linaro.org, rnayak@codeaurora.org, mkshah@codeaurora.org, ilina@codeaurora.org, cychiang@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, agross@kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Disposition: inline
+In-Reply-To: <20200713144930.1034632-23-lee.jones@linaro.org>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2020-07-14 16:04, Douglas Anderson wrote:
-> Depending on how you look at it, you can either say that:
-> a) There is a PDC hardware issue (with the specific IP rev that exists
->    on sc7180) that causes the PDC not to work properly when configured
->    to handle dual edges.
-> b) The dual edge feature of the PDC hardware was only added in later
->    HW revisions and thus isn't in all hardware.
-> 
-> Regardless of how you look at it, let's work around the lack of dual
-> edge support by only ever letting our parent see requests for single
-> edge interrupts on affected hardware.
-> 
-> NOTE: it's possible that a driver requesting a dual edge interrupt
-> might get several edges coalesced into a single IRQ.  For instance if
-> a line starts low and then goes high and low again, the driver that
-> requested the IRQ is not guaranteed to be called twice.  However, it
-> is guaranteed that once the driver's interrupt handler starts running
-> its first instruction that any new edges coming in will cause the
-> interrupt to fire again.  This is relatively commonplace for dual-edge
-> gpio interrupts (many gpio controllers require software to emulate
-> dual edge with single edge) so client drivers should be setup to
-> handle it.
-> 
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Linus, I assume you will get this one via the pinctrl tree once you
-are happy with it?
+On Mon, Jul 13, 2020 at 03:49:27PM +0100, Lee Jones wrote:
+> Both PIN_PINGROUP_ENTRY_Y() and DRV_PINGROUP_ENTRY_Y() macros are
+> called for each of the 2 pin groups defined here, and both of them
+> initialise 'drv_reg', causing the compiler to complain.
+>=20
+> Only initialise 'drv_reg' once.
+>=20
+> Fixes the following W=3D1 kernel build warning(s):
+>=20
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized fie=
+ld overwritten [-Woverride-init]
+>  71 | .drv_reg =3D ((r)), | ^
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of ma=
+cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
+>  105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
+>  | ^~~~~~~~~~~~~~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
+cro =E2=80=98drive_pex_l5_clkreq_n_pgg0=E2=80=99
+>  124 | drive_##pg_name, | ^~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of ma=
+cro =E2=80=98PINGROUP=E2=80=99
+>  128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, =
+0,
+>  | ^~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initializati=
+on for =E2=80=98tegra194_groups[0].drv_reg=E2=80=99)
+>  71 | .drv_reg =3D ((r)), | ^
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:105:2: note: in expansion of ma=
+cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
+>  105 | DRV_PINGROUP_ENTRY_Y(0x14004, 12, 5, 20, 5, -1, -1, -1, -1, 0)
+>  | ^~~~~~~~~~~~~~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
+cro =E2=80=98drive_pex_l5_clkreq_n_pgg0=E2=80=99
+>  124 | drive_##pg_name, | ^~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:128:2: note: in expansion of ma=
+cro =E2=80=98PINGROUP=E2=80=99
+>  128 | PINGROUP(pex_l5_clkreq_n_pgg0, PE5, RSVD1, RSVD2, RSVD3, 0x14000, =
+0,
+>  | ^~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: warning: initialized fie=
+ld overwritten [-Woverride-init]
+>  71 | .drv_reg =3D ((r)), | ^
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of ma=
+cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
+>  107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
+>  | ^~~~~~~~~~~~~~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
+cro =E2=80=98drive_pex_l5_rst_n_pgg1=E2=80=99
+>  124 | drive_##pg_name, | ^~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of ma=
+cro =E2=80=98PINGROUP=E2=80=99
+>  130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
+>  | ^~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:71:14: note: (near initializati=
+on for =E2=80=98tegra194_groups[1].drv_reg=E2=80=99)
+>  71 | .drv_reg =3D ((r)), | ^
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:107:2: note: in expansion of ma=
+cro =E2=80=98DRV_PINGROUP_ENTRY_Y=E2=80=99
+>  107 | DRV_PINGROUP_ENTRY_Y(0x1400c, 12, 5, 20, 5, -1, -1, -1, -1, 0)
+>  | ^~~~~~~~~~~~~~~~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:124:3: note: in expansion of ma=
+cro =E2=80=98drive_pex_l5_rst_n_pgg1=E2=80=99
+>  124 | drive_##pg_name, | ^~~~~~
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c:130:2: note: in expansion of ma=
+cro =E2=80=98PINGROUP=E2=80=99
+>  130 | PINGROUP(pex_l5_rst_n_pgg1, PE5, RSVD1, RSVD2, RSVD3, 0x14008, 0,
+>  | ^~~~~~~~
+>=20
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: linux-tegra@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pinctrl/tegra/pinctrl-tegra194.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Thanks,
+Indeed, looks correct to me:
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8N0/cACgkQ3SOs138+
+s6EyDg/8DvdSsh/xAJCs/CnR7MTGLh60dManNXVZn2FQihuEEXhDyqs7WC+JLmiw
+5mxbGiNt+0I6GsVizGeyuqtFUY0t4HpLLAY6mrMatr2lRnJ7+5VWnKhvj3ouRDqU
+Xmw96Gkc+aoQY2he1VyJ41OnZrdSNoaniDN7GUZ4rSg+oRYsv/7GzMcUGuH021oc
+MtOFXZZeaelUIE+AUqT7V4WBurTNW0EFmCC/l7n7ZWQBz4eZ1cbRS3XNZBDArqsv
+acF+a7W6RlgmiTYyQtVvew1KttdW8vXPLE4IvhibWe5EVW8x6ra7CeYDnsUZE7RY
+JuOImmlImnjwoJbRLuHcuOL9tGU6f5Lvchmt8moR/rADue3D0ltswJZE+jslleyp
+9aM4wtOOmymbbPLzNeNPwMU4FWmA3KR2DSa0GxLMuLOJR7s1bTyOb4ygWAPGnBUY
+gHxAjYLCTS+ZpLMEh0mHaSAxAt0pSq7j/wZVyEUe/QXTGrvq3D0LiL7jHJKcX46R
+x6mkVt7vFHlv4lhkUIpsE56BYws+9q1s5g63OHuJ+8VFkUwCaPFXX1MaLaBpXNTa
+9SmovIo0mG99ExVK1RZmba0Dd/SUF20cxK5NRtRTvEYMRAdzhNMHNa7vgDFlZLF2
+oplZw4k0f61kijz2+u8GF+gpyzEDsxJgBM1yOm+7JAy1L9OLQwg=
+=1tXh
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
