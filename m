@@ -2,131 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C06B521F8DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:15:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3E3121F95D
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGNSPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 14:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgGNSPD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 14:15:03 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7D2C061755;
-        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z2so23797409wrp.2;
-        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
-        b=iu3vQTCv0leQpsnybURB1+EIrvo+36TwXadSzcO7dbgQS5eJ/HVVXkryMCf3CZDa5V
-         M6zpTobveJkRbL2cnQ5//mKpcsLOjCk4I+owDrHcoVA49TcOal1FA/DFGqFR1VDp1elb
-         bZVfx7pgjMG5+9iixXvfyLDEkMNVPiZWHe+Eaw/3VaZB5NZWIOjnLNOZ4GR1+C3dUvmu
-         Cb+A9lbdIgT3TfNeeBpuID/O3oB+o44zv4HDE5EawQeEuLdZFzTdU3ID6szd/Xdb7hrj
-         r5TFHCPGGXl+0M4uYFlb5AydKP7l/ZHhuop0xk46VMyAG+dYBAk6gSRkJ8TaIqLv59BS
-         G//w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
-        b=iavXb0AOH09Nnqtsgl8TAd6aWH2nMs0m7y73kSEZyrxaK+JYCzvQkp3xYjkwPYdPeP
-         7jjOVlP+aPh5KG+I/NCpvDawqKxx1Zhouo8wHkJb67rfOv5rr40bbwtKnORK83RkA+Uf
-         3wfkHs10o7wB86p3Y8iYSO8roSh02pMQ/XCwHd3b/+pEE8Qm7E69pD2NRsKo9/BMERVm
-         lO7rBGPYHMD7BOndo1NnulQ0WmgZadgLL+7WnS5GjyJ0OReQC7m2v7iQ5QfChgJM7FZF
-         lapkZs0zf/UgdvwPSazdUHt9LyAcKN7klE7Kc6nqY3DOvGI3B8zr6zC4cL49Lzdf82ud
-         L1xQ==
-X-Gm-Message-State: AOAM531mAUv5IE+fGOMRtSA6GHYInAfmw/8C72Y/Ade4s9wlQMgNRqlW
-        s1omQQwiWAR3+G8+KOipYrI=
-X-Google-Smtp-Source: ABdhPJyyGdhWu0u0CbQOeLDCSz6P+/Yov6DrHDS6EiOJPgFRClfh0pllHT3IxqJnRE4/8NrmgSZ6fA==
-X-Received: by 2002:adf:e60e:: with SMTP id p14mr7062800wrm.31.1594750501837;
-        Tue, 14 Jul 2020 11:15:01 -0700 (PDT)
-Received: from ziggy.stardust ([84.236.220.84])
-        by smtp.gmail.com with ESMTPSA id k20sm5572396wmi.27.2020.07.14.11.15.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2020 11:15:00 -0700 (PDT)
-Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
- <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
-Date:   Tue, 14 Jul 2020 20:14:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726989AbgGNS1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 14:27:18 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34362 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbgGNS1R (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:27:17 -0400
+Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jvPe6-0008DB-1Y; Tue, 14 Jul 2020 20:27:14 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
+Date:   Tue, 14 Jul 2020 20:27:10 +0200
+Message-ID: <3739981.ORC64qsr6C@phil>
+In-Reply-To: <20200713183541.36963-1-grandmaster@al2klimov.de>
+References: <20200713183541.36963-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 14/07/2020 11:20, Hanks Chen wrote:
-> this adds initial MT6779 dts settings for board support,
-> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
+Am Montag, 13. Juli 2020, 20:35:41 CEST schrieb Alexander A. Klimov:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+
+At least from my cursory glance the www.samsung.com below
+also behaves the same with both http and https .
+
+In general ... I don't really believe anybody would use the rockchip
+pinctrl-driver to access either Linaro nor Samsung, but I don't care that
+much so ;-)
+
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
 > ---
->   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |  31 +++
->   arch/arm64/boot/dts/mediatek/mt6779.dtsi    | 271 ++++++++++++++++++++
->   3 files changed, 303 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
 > 
-[...]
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x400>;
-> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x400>;
-> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt6779-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
-> +			clock-names = "baud", "bus";
-> +			status = "disabled";
-> +		};
+>  If there are any URLs to be removed completely or at least not just HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  drivers/pinctrl/pinctrl-rockchip.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index c07324d1f265..a94b54636da9 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -9,7 +9,7 @@
+>   * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+>   *		http://www.samsung.com
+>   * Copyright (c) 2012 Linaro Ltd
+> - *		http://www.linaro.org
+> + *		https://www.linaro.org
+>   *
+>   * and pinctrl-at91:
+>   * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> 
 
-Devicetree describes the HW we have. As far as I know, we have 4 UARTs on 
-MT6779. So we should list them all here.
 
-Regards,
-Matthias
+
+
