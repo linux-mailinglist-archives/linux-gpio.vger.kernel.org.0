@@ -2,30 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3E3121F95D
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:27:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07FA521F972
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:30:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGNS1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 14:27:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34362 "EHLO gloria.sntech.de"
+        id S1729138AbgGNSaY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 14:30:24 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:34408 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbgGNS1R (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:27:17 -0400
+        id S1726989AbgGNSaY (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 14:30:24 -0400
 Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
         by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <heiko@sntech.de>)
-        id 1jvPe6-0008DB-1Y; Tue, 14 Jul 2020 20:27:14 +0200
+        id 1jvPh5-0008HH-Fi; Tue, 14 Jul 2020 20:30:19 +0200
 From:   Heiko Stuebner <heiko@sntech.de>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: rockchip: Replace HTTP links with HTTPS ones
-Date:   Tue, 14 Jul 2020 20:27:10 +0200
-Message-ID: <3739981.ORC64qsr6C@phil>
-In-Reply-To: <20200713183541.36963-1-grandmaster@al2klimov.de>
-References: <20200713183541.36963-1-grandmaster@al2klimov.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 07/25] pinctrl: samsung: pinctrl-s3c24xx: Fix formatting issues
+Date:   Tue, 14 Jul 2020 20:30:18 +0200
+Message-ID: <8131724.iLJVplcRQ0@phil>
+In-Reply-To: <20200713144930.1034632-8-lee.jones@linaro.org>
+References: <20200713144930.1034632-1-lee.jones@linaro.org> <20200713144930.1034632-8-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -34,71 +37,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 13. Juli 2020, 20:35:41 CEST schrieb Alexander A. Klimov:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+Am Montag, 13. Juli 2020, 16:49:12 CEST schrieb Lee Jones:
+> Kerneldoc struct titles must be followed by whitespace.  Also attributes
+> need to be in the format '@.*: ' else the checker gets confused.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> Fixes the following W=1 kernel build warning(s):
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>  drivers/pinctrl/samsung/pinctrl-s3c24xx.c:100: warning: cannot understand function prototype: 'struct s3c24xx_eint_domain_data '
+> 
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: linux-samsung-soc@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-At least from my cursory glance the www.samsung.com below
-also behaves the same with both http and https .
-
-In general ... I don't really believe anybody would use the rockchip
-pinctrl-driver to access either Linaro nor Samsung, but I don't care that
-much so ;-)
-
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
 > ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
+>  drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
->  If there are any URLs to be removed completely or at least not just HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  drivers/pinctrl/pinctrl-rockchip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index c07324d1f265..a94b54636da9 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -9,7 +9,7 @@
->   * Copyright (c) 2012 Samsung Electronics Co., Ltd.
->   *		http://www.samsung.com
->   * Copyright (c) 2012 Linaro Ltd
-> - *		http://www.linaro.org
-> + *		https://www.linaro.org
->   *
->   * and pinctrl-at91:
->   * Copyright (C) 2011-2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> diff --git a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+> index 9bd0a3de101dd..5e24838a582f5 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+> @@ -80,7 +80,7 @@ static const struct samsung_pin_bank_type bank_type_2bit = {
+>  	}
+>  
+>  /**
+> - * struct s3c24xx_eint_data: EINT common data
+> + * struct s3c24xx_eint_data - EINT common data
+>   * @drvdata: pin controller driver data
+>   * @domains: IRQ domains of particular EINT interrupts
+>   * @parents: mapped parent irqs in the main interrupt controller
+> @@ -92,10 +92,10 @@ struct s3c24xx_eint_data {
+>  };
+>  
+>  /**
+> - * struct s3c24xx_eint_domain_data: per irq-domain data
+> + * struct s3c24xx_eint_domain_data - per irq-domain data
+>   * @bank: pin bank related to the domain
+>   * @eint_data: common data
+> - * eint0_3_parent_only: live eints 0-3 only in the main intc
+> + * @eint0_3_parent_only: live eints 0-3 only in the main intc
+>   */
+>  struct s3c24xx_eint_domain_data {
+>  	struct samsung_pin_bank *bank;
 > 
 
 
