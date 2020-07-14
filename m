@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 271BE21F485
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F4CC21F4A9
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgGNOkO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 10:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55952 "EHLO mail.kernel.org"
+        id S1729497AbgGNOlL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 10:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbgGNOkM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:40:12 -0400
+        id S1729359AbgGNOk0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:40:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F582256F;
-        Tue, 14 Jul 2020 14:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC7D22203;
+        Tue, 14 Jul 2020 14:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594737612;
-        bh=uXpmu6psb5xH47uWhmnUMxGJmFYHmZdXZm3CUBvJp1o=;
+        s=default; t=1594737625;
+        bh=vheu8TZzVr7b5aGc1BoYKgMa8Ibhc2js0kaeO/WqSb8=;
         h=From:To:Cc:Subject:Date:From;
-        b=xLnoz7OfbU8Nr2UQJ+VaXzv925p/sK/dvo7zFpIQ0VeZxHOa7/DKL8O7V1ki5rPLy
-         DNSAr3ewZbwKJ1noProMwM9UGn5Cdu39kdjfGuA8U/sBhZTKBlY5ErQTUfS/YSZWaG
-         Udg8/Lucy27yKLNVdb1BwVpHFDr5vfnGPZbEINHg=
+        b=IYCs9JeiUnPnqawPQi+AbOF8cCHB9SOfCQdq9GRiP60uUpYTn9QAssMzKE0LaOkcA
+         bz0SBsOSjMCmkSGHKtFWFzckGsI2HUhzqRFCr2fM9UJYEt1CcOlPBCh5uRYaCKR81J
+         Q/XPxP6vYdkGe5oh9LukAHryJe14ANdWE3iDQaaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jacky Hu <hengqing.hu@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/10] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Tue, 14 Jul 2020 10:40:01 -0400
-Message-Id: <20200714144010.4035987-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/9] pinctrl: amd: fix npins for uart0 in kerncz_groups
+Date:   Tue, 14 Jul 2020 10:40:15 -0400
+Message-Id: <20200714144024.4036118-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 X-stable: review
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index e8bbb20779d0d..83597e1d6dcd7 100644
+index 7bfea47dbb472..f63417197a62f 100644
 --- a/drivers/pinctrl/pinctrl-amd.h
 +++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -250,7 +250,7 @@ static const struct amd_pingroup kerncz_groups[] = {
+@@ -249,7 +249,7 @@ static const struct amd_pingroup kerncz_groups[] = {
  	{
  		.name = "uart0",
  		.pins = uart0_pins,
