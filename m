@@ -2,479 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E615B21EF48
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 13:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EBB121EF8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 13:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgGNLbV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 07:31:21 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:53911 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNLbV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 07:31:21 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9E9F923E3E;
-        Tue, 14 Jul 2020 13:31:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1594726275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=53jZjqevdppNi/yPIRQg2AGTGap+wTalwrrJRLNTHkU=;
-        b=oZPuaMI5n9JcNcJazDlv0RSFMj4WOC+gqar4/Co4Kxz7/Hb7U5vgBXcQs6GEpXf7dh4F+9
-        okQu640x5S3A6ZNaTHQNsQlmknQW2gWwVclz7HLhS7lQthG7TrUC0pnvs2sO4NyNrfuNTI
-        15AGe/n0EBgZBcrxLxoNeBaPdV1MhCo=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 14 Jul 2020 13:31:13 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S1727858AbgGNLmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 07:42:20 -0400
+Received: from mail-eopbgr1310139.outbound.protection.outlook.com ([40.107.131.139]:55264
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726370AbgGNLmT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 07:42:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cfnCAz8yGyYW+NReN7H9FW5G8IZBREOfIjCRsOv6Sz4PaRaigR7xFmGxsVXwqJGFZzh11KWBeUFI9Mt/75rFOkUbHXfCuZSi0cSifQW0Of9u4hx7G04J5ktDmc5ROJ3KReoQR+eTk/SCAuhoxYOZnyKL845uP247p5djSg591yfY2bDlizMKKYegIPXw+ecvm976dacRjxSL0C7cO3dJ+cWFhHqO2cizjRpSefcTYcMN5TtloHhzL767rnorGQWTKeSKqNFyP4svj70qN9T8C7lSqd404dbiiVh1qScmfCGhRfvdNvcWVSvXHF4Ce50EPil4+tBgkZnHK+f/aE1xnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EaumU8bjD36B9WihkPMfdgN0iyWNTMYlNLUEJa8aNBo=;
+ b=MoSaeaZHisxM7isEIA5jTSe5Z+6SMkcJasTJrKIBqbNMnUwBo3dAHUXigDyTkvzwhPe1SuYvQuhji8zHQdbdFBD/6R3BSytgh5IDzvXHHRvURdymYOwYhrbU8FUzJ9pRKpK5CXxHdSCPEr8iFuHwwftg+O3oXdbMYK+s+CC6c8JPLXcUUrmp941pG1PJSdXdlVm0cXouEjhDC/KkQPklzfkC0RyzkgbPVZxQxW/ELxYUq3ux1D2DPTj/5sP7nKgj2+JOZTzLgk5LAGopFnJ4+asIAp3GjZDPqBqp6yn00HacsJd+/BkQbh9NA19bgxIc6JpJyuCvCSRdoyTSatYuJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EaumU8bjD36B9WihkPMfdgN0iyWNTMYlNLUEJa8aNBo=;
+ b=ZGmCD41KWj/Ejcxa4nz8FGKXeEDzsbF8uoBzB5xBMemwKKVy+UoPFAvi6mK+YEZJH5Iyr0PvVo1flN1bDOu59o5aknwNpoTEK6OxWtv1TppidMC7meF4Q58o4Y9ftayvzo80jwfv1xBDj3KMHBhMexW1wVNO/qpgRofiq3XP51M=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB4506.jpnprd01.prod.outlook.com (2603:1096:404:119::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
+ 2020 11:42:11 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
+ 11:42:11 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-In-Reply-To: <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
- <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <c0594c34c712ce26b3936d42c92d2361@walle.cc>
-X-Sender: michael@walle.cc
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
+Thread-Topic: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
+Thread-Index: AQHWWV2MbTXg+hkXBUeG2IKsFpTIWqkGuXGAgAAF1ACAAAM3gIAALMKg
+Date:   Tue, 14 Jul 2020 11:42:11 +0000
+Message-ID: <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
+ <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
+ <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linux-m68k.org; dkim=none (message not signed)
+ header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:2d25:f7bf:9b71:7e0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6097b998-8199-4d15-95ad-08d827eaf28c
+x-ms-traffictypediagnostic: TY2PR01MB4506:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB450618B750931E3B7AB7CDD0D8610@TY2PR01MB4506.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: GiDvEhjEHo9m/Mq2c5p/QHtl3xx0GiVkWWCb5AIDS2OlbOmDNeFqLJ/pEjPdo6QpdIyzEudL/lGBSyKxmPXXresq0dm21jFF+d/+lwoV3kOn0cS7FuW4c8QclCLGax6dtzYN9YfyIg5waMMqY28HI+0biG2uC7irj51CuNWIVV0I3sKThsztb89pd50U5+6ucvF6C/zMwrJHMKoKP35zqGATp9we8ShGE6LLCt+mn0nYNh37YdIsVWHh4ZhyVCUvrnNrbY7vOg8wp4n0LYbLcSDwK31yIKyvv58u5mJ1Y5d8VaTt+LVxBUqVCUlb00q0AkotqhQYPFJHa9DGyaFA8l3s/uvb1V1MZWhXA0NG8gTy/7cxyl+WNEZvyIwIT3X/dXOhQSOPHK4aIniBrwKcwQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66556008)(53546011)(6506007)(64756008)(66446008)(66476007)(86362001)(186003)(71200400001)(7696005)(54906003)(8936002)(110136005)(76116006)(4326008)(66946007)(52536014)(9686003)(2906002)(8676002)(55016002)(5660300002)(33656002)(498600001)(7416002)(83380400001)(52103002)(158003001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: loXaNbR5PEQBHs+48101/R0kj/aaSAkDAlI3RMZyOAL8XTOARGC0TOk58B4Fbz/aWiXDQt6wrKrCn+ATdFMJhNTbTm9etxtmPeqEjUgEOkNVaKBluB5X1dbs9uPJ9YCrrcC1T+t139hYxvNPoAuwxV2tKfXGDkHiazCuba4O/o+kemDRNidnz/6ez0A5khR7d4J54+F7Jc/pDA+KDVpffJ4I0y44BptzVaRRD1B4ymdv6suE8/Z49f687HqhTDemkda6OAOSDgdXBzDTwdWVs+5mI4I1RVDlukugnBG+yLCjJGCN6Kwzsk+aCWjO7gB8DgMTAyiIRpTApDIxrlZbNp+m+DkOCk5brg3bkQ2xOWQZeaaj3jx2lJQAgUMKE77cvYgXpNT7m8HCzXJybB0XxcqPoYcEikWKIHaLr9zi899QuQa0ev/GajUQOxiZspmhIWyDh1aqxu3lcgCw6tEGq17oCEtbmOezEQTddLAKJS8U210fx7dMWeeHAqN1LSnd1ZvWdvSMIqFOq99CRQ4p1L0P0xV3nS+mGWztLpCHiHU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6097b998-8199-4d15-95ad-08d827eaf28c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jul 2020 11:42:11.6846
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +ScZmrTio0vecAJe2vVQVEn3xs81LsK5HX1ocHzsHI/1PJ1FoAOqBbJ4vWkLl1H3JNNXTbjQKtb4olM9kL1BfLn5B7LBj94p9rEyb1I3J3MeElL2TKHCqn/CdB4sOS/G
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4506
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
-
-Am 2020-07-13 10:47, schrieb Uwe Kleine-König:
-> On Sat, Jul 11, 2020 at 07:28:05PM +0200, Michael Walle wrote:
->> Am 2020-07-09 10:50, schrieb Uwe Kleine-König:
->> > On Mon, Jul 06, 2020 at 07:53:47PM +0200, Michael Walle wrote:
->> > > diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
->> > > new file mode 100644
->> > > index 000000000000..8ee286b605bf
->> > > --- /dev/null
->> > > +++ b/drivers/pwm/pwm-sl28cpld.c
->> > > @@ -0,0 +1,187 @@
->> > > +// SPDX-License-Identifier: GPL-2.0-only
->> > > +/*
->> > > + * sl28cpld PWM driver
->> > > + *
->> > > + * Copyright 2020 Kontron Europe GmbH
->> > > + */
->> >
->> > Is there publically available documenation available? If so please add a
->> > link here.
->> 
->> Unfortunately not. But it should be easy enough and I'll describe it
->> briefly in the header.
-> 
-> That's fine.
-> 
->> > > +#include <linux/bitfield.h>
->> > > +#include <linux/kernel.h>
->> > > +#include <linux/mod_devicetable.h>
->> > > +#include <linux/module.h>
->> > > +#include <linux/platform_device.h>
->> > > +#include <linux/pwm.h>
->> > > +#include <linux/regmap.h>
->> > > +
->> > > +/*
->> > > + * PWM timer block registers.
->> > > + */
->> > > +#define PWM_CTRL		0x00
->> > > +#define   PWM_ENABLE		BIT(7)
->> > > +#define   PWM_MODE_250HZ	0
->> > > +#define   PWM_MODE_500HZ	1
->> > > +#define   PWM_MODE_1KHZ		2
->> > > +#define   PWM_MODE_2KHZ		3
->> > > +#define   PWM_MODE_MASK		GENMASK(1, 0)
->> > > +#define PWM_CYCLE		0x01
->> > > +#define   PWM_CYCLE_MAX		0x7f
->> >
->> > Please use a less generic prefix for your defines. Also I like having
->> > the defines for field names include register name. Something like:
->> >
->> > 	#define PWM_SL28CPLD_CTRL		0x00
->> > 	#define PWM_SL28CPLD_CTRL_ENABLE		BIT(7)
->> > 	#define PWM_SL28CPLD_CTRL_MODE_MASK		GENMASK(1, 0)
->> 
->> Ok.
->> 
->> > 	#define
->> > PWM_SL28CPLD_CTRL_MODE_250HZ		FIELD_PREP(PWM_SL28CPLD_CTRL_MODE_MASK,
->> > 0)
->> 
->> Shouldn't we just "#define ..MODE_250HZ 1" use FIELD_PREP inside the 
->> code,
->> so you can actually use the normalized enumeration values, too?
-> 
-> yeah, looks sane.
-> 
->> Actually, I'll rename the PWM_MODE to PWM_PRESCALER, because that is
->> more accurate.
-> 
-> Whatever suits you and is consistent is fine for me.
-> 
->> > > +struct sl28cpld_pwm {
->> > > +	struct pwm_chip pwm_chip;
->> > > +	struct regmap *regmap;
->> > > +	u32 offset;
->> > > +};
->> > > +
->> > > +struct sl28cpld_pwm_periods {
->> > > +	u8 ctrl;
->> > > +	unsigned long duty_cycle;
->> > > +};
->> > > +
->> > > +struct sl28cpld_pwm_config {
->> > > +	unsigned long period_ns;
->> > > +	u8 max_duty_cycle;
->> > > +};
->> > > +
->> > > +static struct sl28cpld_pwm_config sl28cpld_pwm_config[] = {
->> >
->> > const ? (Or drop as the values can be easily computed, see below.)
->> >
->> > > +	[PWM_MODE_250HZ] = { .period_ns = 4000000, .max_duty_cycle = 0x80 },
->> > > +	[PWM_MODE_500HZ] = { .period_ns = 2000000, .max_duty_cycle = 0x40 },
->> > > +	[PWM_MODE_1KHZ]  = { .period_ns = 1000000, .max_duty_cycle = 0x20 },
->> > > +	[PWM_MODE_2KHZ]  = { .period_ns =  500000, .max_duty_cycle = 0x10 },
->> > > +};
->> > > +
->> > > +static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
->> > > +				   struct pwm_device *pwm,
->> > > +				   struct pwm_state *state)
->> > > +{
->> > > +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
->> > > +	static struct sl28cpld_pwm_config *config;
->> > > +	unsigned int reg;
->> > > +	unsigned int mode;
->> > > +
->> > > +	regmap_read(priv->regmap, priv->offset + PWM_CTRL, &reg);
->> > > +
->> > > +	state->enabled = reg & PWM_ENABLE;
->> >
->> > Would it be more consisted to use FIELD_GET here, too?
->> 
->> I had used FIELD_GET only for bit-fields with more than one bit,
->> i.e. no flags. But that is just a matter of taste, I guess. I'd
->> prefer to keep the simple "reg & PWM_ENABLE". If you insist on
->> the FIELD_GET() I'll change it ;)
-> 
-> I think using FIELD_GET is more consistent, but I won't insist.
-> 
->> > > +	mode = FIELD_GET(PWM_MODE_MASK, reg);
->> > > +	config = &sl28cpld_pwm_config[mode];
->> > > +	state->period = config->period_ns;
->> >
->> > I wonder if this could be done more effectively without the above table.
->> > Something like:
->> >
->> > 	state->period = 4000000 >> mode.
->> 
->> The reason I introduced a lookup table here was that I need a
->> list of the supported modes; I wasn't aware of the rounding.
-> 
-> List of supported modes = [0, 1, 2, 3], isn't it?
-
-Back then it was the list of supported periods. But because we do
-the rounding now, we won't need it anymore.
-
->> See also below.
->> 
->> > (with a #define for 4000000 of course).
->> >
->> > > +	regmap_read(priv->regmap, priv->offset + PWM_CYCLE, &reg);
->> > > +	pwm_set_relative_duty_cycle(state, reg, config->max_duty_cycle);
->> >
->> > Oh, what a creative idea to use pwm_set_relative_duty_cycle here.
->> 
->> What is that helper for then? The former versions did the same
->> calculations (i.e. DIV_ROUND_CLOSEST_ULL()) just open coded. But
->> I guess then it was also rounding the wrong way.
-> 
-> Yes. In my book pwm_set_relative_duty_cycle is for consumers. And if
-> DIV_ROUND_CLOSEST_ULL is the right thing for them depends on their use
-> case.
-> 
->> > Unfortunately it's using the wrong rounding strategy. Please enable
->> > PWM_DEBUG which should diagnose these problems (given enough testing).
->> 
->> Is there any written documentation on how to round, i.e. up or down?
-> 
-> There are the checks implemented for PWM_DEBUG. I started to work on 
-> the
-> documentation
-> (https://patchwork.ozlabs.org/project/linux-pwm/patch/20191209213233.29574-2-u.kleine-koenig@pengutronix.de/)
-> but didn't get feedback yet. (And the rounding rules are not included
-> there.)
-> 
->> I had a look Documentation/driver-api/pwm.rst again. But couldn't find
->> anything. A grep DIV_ROUND_CLOSEST_ULL() turns out that quite a few
->> drivers use it, so I did the same ;)
-> 
-> Yes, the rounding requirement is new and many driver's are not
-> conforming (yet).
-
-ok, I'll then compute everything then and drop the table.
-
->> > (Hmm, on second thought I'm not sure that rounding is relevant with the
->> > numbers of this hardware. Still it's wrong in general and I don't want
->> > to have others copy this.)
->> >
->> > > +}
->> > > +
->> > > +static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct
->> > > pwm_device *pwm,
->> > > +			      const struct pwm_state *state)
->> > > +{
->> > > +	struct sl28cpld_pwm *priv = dev_get_drvdata(chip->dev);
->> > > +	struct sl28cpld_pwm_config *config;
->> > > +	unsigned int cycle;
->> > > +	int ret;
->> > > +	int mode;
->> > > +	u8 ctrl;
->> > > +
->> > > +	/* Get the configuration by comparing the period */
->> > > +	for (mode = 0; mode < ARRAY_SIZE(sl28cpld_pwm_config); mode++) {
->> > > +		config = &sl28cpld_pwm_config[mode];
->> > > +		if (state->period == config->period_ns)
->> > > +			break;
->> > > +	}
->> > > +
->> > > +	if (mode == ARRAY_SIZE(sl28cpld_pwm_config))
->> > > +		return -EINVAL;
->> >
->> > You're supposed to pick the biggest period that isn't bigger than the
->> > requested period. So something like:
->> >
->> > 	switch(period) {
->> > 	case 4000000 ... UINT_MAX:
->> > 		mode = 0;
->> > 		break;
->> > 	case 2000000 ... 3999999:
->> > 		mode = 1;
->> > 		break;
->> > 	...
->> > 	}
->> >
->> > (or:
->> >
->> > 	if period >= 4000000:
->> > 		mode = 0
->> > 	else:
->> > 		// I think ... please double-check
->> > 		mode = ilog2(4000000 / (period + 1)) + 1
->> >
->> > 	if mode > 3:
->> > 		return -ERANGE;
->> > )
->> 
->> I see. In this case I can of course drop the table. But the rounding
->> will be then very coarse for this driver. And there is no way to get
->> the value which is actually set, right? You can just read the cached
->> value. So that value might be far off the actual one set in the
->> hardware.
-> 
-> Yes, we once changed pwm_get_rate to return the actually implemented
-> setting, but this broke some stuff; see commit
-> 40a6b9a00930fd6b59aa2eb6135abc2efe5440c3.
-> 
-> I already thought about proposing pwm_get_rate_hw(), but for now there
-> is (AFAICT) no user who would need it. And it's hard to know which
-> variant is actually preferred by consumers. My expectation is that most
-> don't even care.
-> 
-> I also have a pwm_round_rate() function in mind that will give you the
-> actual rate without applying it. This can then be used by consumers who
-> care. But also there is no user who would need it today.
-
-Ok. I take it that all such improvements are still in the making ;)
-
->> During testing I've also found the following problem: Assume we set
->> a period of 5000000ns; this will be rounded to 4000000ns and written
->> to the hardware. But the usable duty cycle is still 0..5000000ns. The
->> driver will translate this input in the following manner:
->>  - 0..4000000 -> 0%..100%
->>  - >4000000 -> 100%
->> Is this behavior intended?
-> 
-> It's expected.
-ok
-
->> Even for PWM hardware which supports finer
->> grained frequencies there will be some upper and lower limits. Is
->> the user of the PWM supposed to know these?
-> 
-> There is nothing we can do on hardware imposed limits. In practise it
-> doesn't seem to matter. Also note that most consumers get a proposed
-> period length.
-> 
->> > 	real_period = 4000000 >> mode;
->> >
->> > > +	ctrl = FIELD_PREP(PWM_MODE_MASK, mode);
->> > > +	if (state->enabled)
->> > > +		ctrl |= PWM_ENABLE;
->> > > +
->> > > +	cycle = pwm_get_relative_duty_cycle(state, config->max_duty_cycle);
->> >
->> > Again the rounding is wrong. You need need to round down the requested
->> > duty_cycle to the next possible value. So something like:
->> >
->> > 	duty_cycle = min(real_period, state->duty_cycle);
->> >
->> > 	cycle = duty_cycle * (0x80 >> mode) / (4000000 >> mode);
->> >
->> > which can be further simplified to
->> >
->> > 	cycle = duty_cycle / 31250
->> 
->> Mh, this made me think where that "magic" number is coming from. Turns
->> out this is the NSECS_PE_SEC / base clock of the PWM.
-> 
-> It's a simplification of the line above, so it is 4000000 / 0x80. (But
-> it's not by chance this matches NSECS_PER_SEC / base clock of course.)
-> 
->> I guess I'll rework the get_state() and apply() to just use this
->> base frequency, dropping the table etc.
->> 
->> Btw what about the polarity. Do I have to support it or can I
->> return an error code if its != PWM_POLARITY_NORMAL? If so, which
->> error code? EINVAL?
-> 
-> ..ooOO(Did I really miss that during review? Bummer)
-> 
-> If your hardware only support normal polarity, only implement this and
-> return -EINVAL for inverted polarity requests.
-
-ok
-
->> I know I could just invert the duty cycle in
->> software, but shouldn't this be done in the core for any controller
->> which doesn't support changing the polarity in hardware?
-> 
-> Please don't. This should indeed be done at the framework level. (But
-> I'm not convinced doing this unconditionally is a good idea.)
-> 
->> > > +	/*
->> > > +	 * The hardware doesn't allow to set max_duty_cycle if the
->> > > +	 * 250Hz mode is enabled, thus we have to trap that here.
->> > > +	 * But because a 100% duty cycle is equal on all modes, i.e.
->> >
->> > It depends on how picky you are if you can agree here.
->> 
->> why is that? The only drawback is that the mode is changed without
->> the user seeing it.
-> 
-> Ideally periods are completed before they change. So if a user requests
-> .period = .duty_cycle = 100ms with having the PWM disabled before and
-> afterwards, the expectation is that it is active for (an integer
-> multiple of) 100 ms. But honestly there are not many hardware
-> implementation + driver combos that get this right.
-> 
->> But the PWM subsystem returns the cached state,
->> right? get_state() is called only on device request (and during
->> debug it seems). Actually, enabling PWM_DEBUG might choke on this
->> workaround (".apply didn't pick the best available period"). Is
->> this ok?
-> 
-> hmm, I didn't consider this when writing the checks for PWM_DEBUG.
-> According to the currently checked rules the expected configuration is
-> to pick the 250Hz mode and use cycle = 0x7f.
-
-Not to use 0x80, which is the max_duty_cycle? Like its 0x40 for the 
-500Hz
-mode.
-
-> Hmm, I have to think about
-> this. Maybe we should weaken the check to the cases with
-> 0 < duty_cycle < period. Thierry, what do you think?
-> 
-> Special casing 0% and 100% is annoying, but insisting 250Hz + 0x7f 
-> seems
-> to be far from reality. (Is it?)
-
-If you mean by insisting to clip at 0x7f, yeah thats bad IMHO, because
-the user wants an all-high line, but in the end it would be a toggling
-line. It wouldn't be that bad for anything in between 0% and 100% but
-IMHO its bad for exactly 0% and 100%.
-
-You could also ask the driver about known quirks, like special 0% and
-100% handling and exclude it from the tests accordingly.
-
-
->> > > +	ret = regmap_write(priv->regmap, priv->offset + PWM_CTRL, ctrl);
->> > > +	if (ret)
->> > > +		return ret;
->> > > +
->> > > +	return regmap_write(priv->regmap, priv->offset + PWM_CYCLE,
->> > > (u8)cycle);
->> >
->> > I assume this can result in broken output? Consider the hardware runs
->> > with mode = 1 & cycle = 0x23 and you want to go to mode = 0 & cycle =
->> > 0x42: Can this result in a period that has mode = 0 & cycle = 0x23?
->> 
->> Isn't that always the case if a write may fail and there are more than
->> one register to configure?
-> 
-> Depending on hardware capabilities you might not be able to prevent
-> this yes. Unfortunately this is quite common.
-> 
-> But there are hardware implementations that are not prone to such
-> failures. (E.g. the registers written can be only shadow values that 
-> are
-> latched into hardware only when the last value is written.)
-
-Maybe this could be improved in the future.
-
-> 
->> For example, have a look at pwm-iqs620a.c.
->> Btw. the get_state might also fail, but there is no return value to
->> return the error.
-> 
-> Yes, changing this is on my todo list.
-> 
->> > If this cannot be avoided, please document this in the Limitations
->> > paragraph.
->> 
->> Sure. There might be (or most likely are) gliches when you change the
->> mode.
-> 
-> If you change only cycle but not mode, does the hardware complete the
-> currently running period?
-
-No it does not.
-
-> What about disable()?
-
-Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there we can
-fix that (in hardware), not much we can do in the driver here. We are
-_very_ constraint in size, therefore all that little edge cases fall off
-the table.
-
-I'll post a new version soon.
-
--michael
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogVHVlc2Rh
+eSwgSnVseSAxNCwgMjAyMCA1OjQyIFBNDQo+IA0KPiBIaSBQcmFiaGFrYXIsDQo+IA0KPiBPbiBU
+dWUsIEp1bCAxNCwgMjAyMCBhdCAxMDozMCBBTSBMYWQsIFByYWJoYWthcg0KPiA8cHJhYmhha2Fy
+LmNzZW5nZ0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgSnVsIDE0LCAyMDIwIGF0IDk6
+MDkgQU0gR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9yZz4gd3JvdGU6DQo+
+ID4gPiBPbiBNb24sIEp1bCAxMywgMjAyMCBhdCAxMTozNSBQTSBMYWQgUHJhYmhha2FyDQo+ID4g
+PiA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+
+ID4gRnJvbTogTWFyaWFuLUNyaXN0aWFuIFJvdGFyaXUgPG1hcmlhbi1jcmlzdGlhbi5yb3Rhcml1
+LnJiQGJwLnJlbmVzYXMuY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBBZGQgc3VwcG9ydCBmb3IgUlov
+RzJIIChSOEE3NzRFMSkgU29DIElQTU1Vcy4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1i
+eTogTWFyaWFuLUNyaXN0aWFuIFJvdGFyaXUgPG1hcmlhbi1jcmlzdGlhbi5yb3Rhcml1LnJiQGJw
+LnJlbmVzYXMuY29tPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyIDxwcmFi
+aGFrYXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNhcy5jb20+DQo+ID4gPg0KPiA+ID4gVGhhbmtz
+IGZvciB5b3VyIHBhdGNoIQ0KPiA+ID4NCj4gPiA+ID4gLS0tIGEvZHJpdmVycy9pb21tdS9pcG1t
+dS12bXNhLmMNCj4gPiA+ID4gKysrIGIvZHJpdmVycy9pb21tdS9pcG1tdS12bXNhLmMNCj4gPiA+
+ID4gQEAgLTc1MSw2ICs3NTEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNvY19kZXZpY2VfYXR0
+cmlidXRlIHNvY19yY2FyX2dlbjNbXSA9IHsNCj4gPiA+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
+c29jX2RldmljZV9hdHRyaWJ1dGUgc29jX3JjYXJfZ2VuM193aGl0ZWxpc3RbXSA9IHsNCj4gPiA+
+ID4gICAgICAgICB7IC5zb2NfaWQgPSAicjhhNzc0YjEiLCB9LA0KPiA+ID4gPiAgICAgICAgIHsg
+LnNvY19pZCA9ICJyOGE3NzRjMCIsIH0sDQo+ID4gPiA+ICsgICAgICAgeyAuc29jX2lkID0gInI4
+YTc3NGUxIiwgfSwNCj4gPiA+DQo+ID4gPiBBZGRpbmcgYW4gZW50cnkgdG8gc29jX3JjYXJfZ2Vu
+M193aGl0ZWxpc3RbXSBkb2Vzbid0IGRvIGFueXRoaW5nLCB1bmxlc3MNCj4gPiA+IHlvdSBhbHNv
+IGFkZCB0aGUgc2FtZSBlbnRyeSB0byBzb2NfcmNhcl9nZW4zW10uDQo+ID4gPg0KPiA+IEkgdGhp
+bmsgdGhlIGNvbW1lbnQgIkZvciBSLUNhciBHZW4zIHVzZSBhIHdoaXRlIGxpc3QgdG8gb3B0LWlu
+IHNsYXZlDQo+ID4gZGV2aWNlcy4iIGlzIG1pc2xlYWRpbmcuICBCb290aW5nIHRocm91Z2ggdGhl
+IGtlcm5lbCBJIGRvIHNlZSBpb21tdQ0KPiA+IGdyb3VwcyAoYXR0YWNoZWQgaXMgdGhlIGxvZ3Mp
+Lg0KPiANCj4gSW5kZWVkLiBXaXRob3V0IGFuIGVudHJ5IGluIHNvY19yY2FyX2dlbjNbXSwgdGhl
+IElQTU1VIGlzIGVuYWJsZWQNCj4gdW5jb25kaXRpb25hbGx5LCBhbmQgc29jX3JjYXJfZ2VuM193
+aGl0ZWxpc3RbXSBpcyBpZ25vcmVkLg0KPiBUaGF0J3Mgd2h5IHlvdSB3YW50IGFuIGVudHJ5IGlu
+IGJvdGgsIHVubGVzcyB5b3UgaGF2ZSBhbiBSLUNhciBHZW4zDQo+IFNvQyB3aGVyZSB0aGUgSVBN
+TVUgd29ya3MgY29ycmVjdGx5IHdpdGggYWxsIHNsYXZlIGRldmljZXMgcHJlc2VudC4NCj4gUGVy
+aGFwcyBzb2NfcmNhcl9nZW4zW10gc2hvdWxkIGJlIHJlbmFtZWQgdG8gc29jX3JjYXJfZ2VuM19n
+cmV5bGlzdFtdDQo+IChvciBzb2NfcmNhcl9nZW4zX21heWJlbGlzdFtdKSB0byBtYWtlIHRoaXMg
+Y2xlYXI/DQoNCkkgdGhpbmsgc28gKHdlIHNob3VsZCByZW5hbWUgaXQpLg0KDQo+ID4gQWxzbyB0
+aGUgcmVjZW50IHBhdGNoIHRvIGFkZA0KPiA+ICJyOGE3Nzk2MSIganVzdCBhZGRzIHRvIHNvY19y
+Y2FyX2dlbjNfd2hpdGVsaXN0Lg0KPiANCj4gT29wcywgY29tbWl0IDE3ZmUxNjE4MTYzOTgwMWIg
+KCJpb21tdS9yZW5lc2FzOiBBZGQgc3VwcG9ydCBmb3IgcjhhNzc5NjEiKQ0KPiBkaWQgaXQgd3Jv
+bmcsIHRvby4NCg0KVGhhbmsgeW91IGZvciB0aGUgcG9pbnQgaXQgb3V0LiBXZSBzaG91bGQgYWRk
+IHI4YTc3OTYxIHRvIHRoZSBzb2NfcmNhcl9nZW4zW10uDQpIb3dldmVyLCBJIGRvbid0IGtub3cg
+d2h5IEkgY291bGQgbm90IHJlYWxpemUgdGhpcyBpc3N1ZS4uLg0KU28sIEkgaW52ZXN0aWdhdGVk
+IHRoaXMgYSBsaXR0bGUgYW5kIHRoZW4sIElJVUMsIGdsb2JfbWF0Y2goKSB3aGljaA0Kc29jX2Rl
+dmljZV9tYXRjaCgpIHVzZXMgc2VlbXMgdG8gcmV0dXJuIHRydWUsIGlmICpwYXQgPSAicjhhNzc5
+NiIgYW5kICpzdHIgPSAicjhhNzc5NjEiLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hp
+bW9kYQ0KDQo=
