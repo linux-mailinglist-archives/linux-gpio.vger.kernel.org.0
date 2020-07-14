@@ -2,116 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 096CF21F194
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 14:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF5AC21F21F
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 15:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgGNMjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 08:39:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33142 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNMjv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 08:39:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h13so12929224otr.0;
-        Tue, 14 Jul 2020 05:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gkM+uPTnitshLBuV08goagb6Ra5DyU+s9EwRHXtZeQ=;
-        b=mfkgj4eGLF/mS6HqwU2jRhvquP2KbIWOqQVHucEbNhtAlIGrgbXdXbsPnTkayf14FE
-         oQg/z0nbq0N+stgN7htDaEcBL5b8DITSlN2vdoPC/vnB3zkOh6sRIKIDyXcD/1Lhgpx7
-         m+8MBQqD39qOni3D0FQ2zPI0yLuLo/dvpXpuVO8fTJCWIv33HKy4tP1k5rwtAIhtdVpv
-         UaVqpCj6ZFTqN4K68xtGjsnmaVhCwf5aMHL/Xha/LRqNAcGfXsOX9uM8yCjmJAKJPaH9
-         5/ifjivkwWjaZvYMaZXQ2q80AIvuA3d9wqLnZCear2qONGYWSW+PuDfaQGwbDI7nK4AI
-         Mg4A==
-X-Gm-Message-State: AOAM5326I/hh7zqgBgwJ88VvQbW6sEr26AX/NfYV4yASaSuSSOLlPDNM
-        yHg8earbspn+2BzeO70WnYQNYum9VJMV/FRyviQ=
-X-Google-Smtp-Source: ABdhPJwQEGIYICCEl9+rMfVmtnnA3KEy1Oav7DAM0WyYTDfpBWgrg5GEkZrfN+c/weUUf5GnvXRjVxzrNetFysb/vow=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr3637009otb.107.1594730390491;
- Tue, 14 Jul 2020 05:39:50 -0700 (PDT)
+        id S1726955AbgGNNKe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 09:10:34 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58987 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNNKe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 09:10:34 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E2D5F1BF208;
+        Tue, 14 Jul 2020 13:10:30 +0000 (UTC)
+Date:   Tue, 14 Jul 2020 15:14:03 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc
+ headers and fix others
+Message-ID: <20200714131403.eguxpnzsioxfzzko@uno.localdomain>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-21-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
- <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
- <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com> <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 14:39:39 +0200
-Message-ID: <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200713144930.1034632-21-lee.jones@linaro.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Shimoda-san,
+Hi Lee,
 
-On Tue, Jul 14, 2020 at 1:42 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Tuesday, July 14, 2020 5:42 PM
-> > On Tue, Jul 14, 2020 at 10:30 AM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Tue, Jul 14, 2020 at 9:09 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-> > > Also the recent patch to add
-> > > "r8a77961" just adds to soc_rcar_gen3_whitelist.
-> >
-> > Oops, commit 17fe16181639801b ("iommu/renesas: Add support for r8a77961")
-> > did it wrong, too.
+On Mon, Jul 13, 2020 at 03:49:25PM +0100, Lee Jones wrote:
+> Some description blocks are void of any description/documentation,
+> others are missing 'struct' identifiers, there are also a couple of
+> misspellings of function parameter names.  Fix all of them.
 >
-> Thank you for the point it out. We should add r8a77961 to the soc_rcar_gen3[].
-> However, I don't know why I could not realize this issue...
-> So, I investigated this a little and then, IIUC, glob_match() which
-> soc_device_match() uses seems to return true, if *pat = "r8a7796" and *str = "r8a77961".
+> Fixes the following W=1 kernel build warning(s):
+>
+>  drivers/pinctrl/pinctrl-rza1.c:81: warning: cannot understand function prototype: 'struct rza1_bidir_pin '
+>  drivers/pinctrl/pinctrl-rza1.c:90: warning: cannot understand function prototype: 'struct rza1_bidir_entry '
+>  drivers/pinctrl/pinctrl-rza1.c:98: warning: cannot understand function prototype: 'struct rza1_swio_pin '
+>  drivers/pinctrl/pinctrl-rza1.c:108: warning: cannot understand function prototype: 'struct rza1_swio_entry '
+>  drivers/pinctrl/pinctrl-rza1.c:116: warning: cannot understand function prototype: 'struct rza1_pinmux_conf '
+>  drivers/pinctrl/pinctrl-rza1.c:443: warning: cannot understand function prototype: 'struct rza1_mux_conf '
+>  drivers/pinctrl/pinctrl-rza1.c:462: warning: cannot understand function prototype: 'struct rza1_port '
+>  drivers/pinctrl/pinctrl-rza1.c:482: warning: cannot understand function prototype: 'struct rza1_pinctrl '
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'port' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'pin' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'func' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pinmux_get_flags'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'port' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'reg' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'bit' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'set' not described in 'rza1_set_bit'
+>  drivers/pinctrl/pinctrl-rza1.c:672: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pin_mux_single'
+>  drivers/pinctrl/pinctrl-rza1.c:672: warning: Excess function parameter 'pinctrl' description in 'rza1_pin_mux_single'
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Are you sure about this?
-I enabled CONFIG_GLOB_SELFTEST, and globtest succeeded.
-It does test glob_match("a", "aa"), which is a similar test.
+Thanks, at the time I had no real idea about the implications of
+documenting with kerneldoc :)
 
-To be 100% sure, I added:
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
 
---- a/lib/globtest.c
-+++ b/lib/globtest.c
-@@ -59,6 +59,7 @@ static char const glob_tests[] __initconst =
-        "1" "a\0" "a\0"
-        "0" "a\0" "b\0"
-        "0" "a\0" "aa\0"
-+       "0" "r8a7796\0" "r8a77961\0"
-        "0" "a\0" "\0"
-        "1" "\0" "\0"
-        "0" "\0" "a\0"
+Thanks
+  j
 
-and it still succeeded.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  drivers/pinctrl/pinctrl-rza1.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 38a14bbced5f6..511f232ab7bc2 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -75,7 +75,7 @@
+>   * RZ/A1 pinmux flags
+>   */
+>
+> -/**
+> +/*
+>   * rza1_bidir_pin - describe a single pin that needs bidir flag applied.
+>   */
+>  struct rza1_bidir_pin {
+> @@ -83,7 +83,7 @@ struct rza1_bidir_pin {
+>  	u8 func: 4;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_bidir_entry - describe a list of pins that needs bidir flag applied.
+>   *		      Each struct rza1_bidir_entry describes a port.
+>   */
+> @@ -92,7 +92,7 @@ struct rza1_bidir_entry {
+>  	const struct rza1_bidir_pin *pins;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_swio_pin - describe a single pin that needs swio flag applied.
+>   */
+>  struct rza1_swio_pin {
+> @@ -102,7 +102,7 @@ struct rza1_swio_pin {
+>  	u16 input: 1;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_swio_entry - describe a list of pins that needs swio flag applied
+>   */
+>  struct rza1_swio_entry {
+> @@ -110,7 +110,7 @@ struct rza1_swio_entry {
+>  	const struct rza1_swio_pin *pins;
+>  };
+>
+> -/**
+> +/*
+>   * rza1_pinmux_conf - group together bidir and swio pinmux flag tables
+>   */
+>  struct rza1_pinmux_conf {
+> @@ -431,7 +431,7 @@ static const struct rza1_pinmux_conf rza1l_pmx_conf = {
+>   * RZ/A1 types
+>   */
+>  /**
+> - * rza1_mux_conf - describes a pin multiplexing operation
+> + * struct rza1_mux_conf - describes a pin multiplexing operation
+>   *
+>   * @id: the pin identifier from 0 to RZA1_NPINS
+>   * @port: the port where pin sits on
+> @@ -450,7 +450,7 @@ struct rza1_mux_conf {
+>  };
+>
+>  /**
+> - * rza1_port - describes a pin port
+> + * struct rza1_port - describes a pin port
+>   *
+>   * This is mostly useful to lock register writes per-bank and not globally.
+>   *
+> @@ -467,12 +467,12 @@ struct rza1_port {
+>  };
+>
+>  /**
+> - * rza1_pinctrl - RZ pincontroller device
+> + * struct rza1_pinctrl - RZ pincontroller device
+>   *
+>   * @dev: parent device structure
+>   * @mutex: protect [pinctrl|pinmux]_generic functions
+>   * @base: logical address base
+> - * @nports: number of pin controller ports
+> + * @nport: number of pin controller ports
+>   * @ports: pin controller banks
+>   * @pins: pin array for pinctrl core
+>   * @desc: pincontroller desc for pinctrl core
+> @@ -536,7 +536,7 @@ static inline int rza1_pinmux_get_swio(unsigned int port,
+>  	return -ENOENT;
+>  }
+>
+> -/**
+> +/*
+>   * rza1_pinmux_get_flags() - return pinmux flags associated to a pin
+>   */
+>  static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
+> @@ -566,7 +566,7 @@ static unsigned int rza1_pinmux_get_flags(unsigned int port, unsigned int pin,
+>   * RZ/A1 SoC operations
+>   */
+>
+> -/**
+> +/*
+>   * rza1_set_bit() - un-locked set/clear a single bit in pin configuration
+>   *		    registers
+>   */
+> @@ -664,7 +664,7 @@ static inline int rza1_pin_get(struct rza1_port *port, unsigned int pin)
+>  /**
+>   * rza1_pin_mux_single() - configure pin multiplexing on a single pin
+>   *
+> - * @pinctrl: RZ/A1 pin controller device
+> + * @rza1_pctl: RZ/A1 pin controller device
+>   * @mux_conf: pin multiplexing descriptor
+>   */
+>  static int rza1_pin_mux_single(struct rza1_pinctrl *rza1_pctl,
+> --
+> 2.25.1
+>
