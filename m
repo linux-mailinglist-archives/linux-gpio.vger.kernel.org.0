@@ -2,81 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A67821FEA7
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 22:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 289DB21FEAA
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 22:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGNUey (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 16:34:54 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44281 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgGNUex (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 16:34:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id i4so18716563iov.11;
-        Tue, 14 Jul 2020 13:34:53 -0700 (PDT)
+        id S1726354AbgGNUfd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 16:35:33 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44161 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgGNUfc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 16:35:32 -0400
+Received: by mail-il1-f193.google.com with SMTP id h16so15332146ilj.11;
+        Tue, 14 Jul 2020 13:35:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=uSvktDxrURDAPk1lcLpPbZnOgOU1nKqvNNzMxPxnjLA=;
-        b=QQP+VMae95pCWjdplR1wu4y2GSilNfyOwWKDVFTwXv90zUu9KExKgJaJz4ZxBWJIZc
-         9+IAGum2Bh+BLZxVuLK88p+2D91ThNlc0YnkqeYgqwTKSNtnTnq+vrFo+d5FTrxEGpz9
-         TI4lcjBwbN0gCb4f5QTn2md2zXv+5hkkiYz0TwlrJoijgoNC0VX1WcfFsDojwWlbSGHV
-         6eHIMdfRzl7DxlcuLUaNXLR2I20s79AU0Re2+NbmaB6mpOfNvTH0HUORT41xayDKLl1w
-         FYrPWfkrEyR8hOsbcHeiPIKl5iDNUYS3FSWuR7LZYzvJKbCeiqO45GA1isrtBoo/KTge
-         q+AA==
-X-Gm-Message-State: AOAM5336k87Sr7bktq6eTcEKpQnaL7I9jCEaQN6b/BMV9Kwnrg37cHei
-        Oqf6AoDYaMvJxNQMaDKTxg==
-X-Google-Smtp-Source: ABdhPJwH2lS3w18l1/H8LJeXEvXmYUueiCeILVoYmOiLCul1iDA501lA6N+qA5gZHxI9+fpA0OfgLA==
-X-Received: by 2002:a6b:1496:: with SMTP id 144mr6868679iou.6.1594758892683;
-        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
+        bh=dGBfIif028yRfOAIF7nvieaHolrVE+/bJyTO1qa47oM=;
+        b=Il8Rs8zutN4L9VY8B+TCS6hBqpN61PSytvyDCQEHVWXFWe8w9U6wb7lsjgjFqA8kbJ
+         /9AwtnMYib2A68MpTlN4n41Y/ny7Pl4EF9yidl08N1Zcdw3RqyB1fwOrfdj/ix0BvSzp
+         GO1JbxjCLrOrZkQMNUljRw5Jqg9L5E/UTp4bxGMjPKCSrSHugOsST7d7eOrNwCThJpos
+         zgBg4BY8feqZncRYFhndQXK6Apoc4VNfT1aS/miWE7ZtzPYCSS2wedgPeHeMh1Vhjv7D
+         6ACyjmy0h1MXXSKQNBGroz2ftIaH1sNn6YlqiyKGzl9k33W/l/0unwiekWe9U07BCM93
+         P6bQ==
+X-Gm-Message-State: AOAM532WrgPIN4yE5eUhvL5nbX9Ohjbe+EEc982YnDfRYYYkTft9wQEv
+        2iciQj1aBq1s+WHHIgg3sg==
+X-Google-Smtp-Source: ABdhPJybh/BzLaIPevAOuDihB4bRZa7+AeUmETXLadjPPMl4jbfYYXujNZQry7Wa4saZu0z0T+vYag==
+X-Received: by 2002:a92:d308:: with SMTP id x8mr6288332ila.3.1594758931658;
+        Tue, 14 Jul 2020 13:35:31 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id k1sm17128ilr.35.2020.07.14.13.34.51
+        by smtp.gmail.com with ESMTPSA id q4sm23374ils.11.2020.07.14.13.35.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
-Received: (nullmailer pid 2874342 invoked by uid 1000);
-        Tue, 14 Jul 2020 20:34:50 -0000
-Date:   Tue, 14 Jul 2020 14:34:50 -0600
+        Tue, 14 Jul 2020 13:35:31 -0700 (PDT)
+Received: (nullmailer pid 2875322 invoked by uid 1000);
+        Tue, 14 Jul 2020 20:35:30 -0000
+Date:   Tue, 14 Jul 2020 14:35:30 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        mtk01761 <wendell.lin@mediatek.com>, wsd_upstream@mediatek.com,
         linux-arm-kernel@lists.infradead.org,
-        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
-        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v8 1/7] pinctrl: mediatek: update pinmux definitions for
- mt6779
-Message-ID: <20200714203450.GA2874293@bogus>
+        Stephen Boyd <sboyd@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>, devicetree@vger.kernel.org,
+        Andy Teng <andy.teng@mediatek.com>
+Subject: Re: [PATCH v8 2/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+Message-ID: <20200714203530.GA2875265@bogus>
 References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
- <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
+ <1594718402-20813-3-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1594718402-20813-3-git-send-email-hanks.chen@mediatek.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 14 Jul 2020 17:19:56 +0800, Hanks Chen wrote:
-> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
+On Tue, 14 Jul 2020 17:19:57 +0800, Hanks Chen wrote:
+> From: Andy Teng <andy.teng@mediatek.com>
 > 
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+> 
 > Signed-off-by: Andy Teng <andy.teng@mediatek.com>
 > Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 > ---
->  include/dt-bindings/pinctrl/mt6779-pinfunc.h | 1242 ++++++++++++++++++
->  1 file changed, 1242 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
+>  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 203 ++++++++++++++++++
+>  1 file changed, 203 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
