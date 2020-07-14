@@ -2,124 +2,408 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD2521F2E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 15:45:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD99021F361
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbgGNNpK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 09:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgGNNpK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 09:45:10 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D54CDC061755
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2020 06:45:09 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 22so5942398wmg.1
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2020 06:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=smSfqWzZJxpTQw/VqREmipLrv4Sx7Dys34CbnDlAU7E=;
-        b=o7Zg0weyxdSjrD0g+eqgXHWEfH1xUQCcFTXIZpziuL+Ae/jug80qQ+38INEd+CeNk3
-         OUVkxKRnZx5Z+CCK0LlUJpo2dx5CtPOE/PFy4Y0lIrP7fVs5Zn6L2h+f1Be3FKlF2Vj9
-         EgBToUVUcXEue4hVPV5YVs1mCyJRsct0jGA23IhQyB/fVLwQ+hBt7d3acmjW4eIyOi5y
-         HgpArNzY9DLbtCP5MG7D5EviZLSLvoQvGJ8BklMgjmnU26hb2iWIlp7lUPpYjJUWOkSu
-         3QXpJh7UZ2HMKB5/6TLKPoDaNWwSm6u8QqF+KQRI9FxzdpxYmieTSTXacwN8CGQB4Zzz
-         S2dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=smSfqWzZJxpTQw/VqREmipLrv4Sx7Dys34CbnDlAU7E=;
-        b=tWeAQZ9xj2tcxzE2IawqZglWThokwmKZgAbNdTHdR93sDcFpFMZ0t4SCM94HJKieqE
-         0qxhJBUjoljERlCNdQCrJzkFKc4V50YWDl/EaT24Zy1ZwdzXQwap4g1xyVs4j6e4Uwtw
-         noj3jutYvFnnD2Vih4w60IxidoX2T3t0JTIailSfCbSmZJ4nuxyZzzZFTsxuJ8LPekEQ
-         15dSRSmY1H5S24demgrDoze9dMoPA0FbdvO9yQ/Ttdm/h89OjwxLS81vj4bGui3HCPqr
-         iw2r3Szu/0Nbn5+FvT7QtlIAj9TyV9l4LAPqjOY53o/jopM+y4Ir5vdFzfZNqPmC2a7B
-         p8AA==
-X-Gm-Message-State: AOAM533Ea2CVwqkYpC7C58YSjEe0DAwB2vrR+v7G7qXCyOpRwvkGKutH
-        e+R+wK1Ng8rx8e5NnXWX6tv6EE1nGeQ=
-X-Google-Smtp-Source: ABdhPJziCnTeG9/CGGJq5nJ2MGQ74Vd+XsXnjOYZY5B8Y+Ou8W9YV+1+WO3chgu59IGqHE4wX6r9Lg==
-X-Received: by 2002:a05:600c:2249:: with SMTP id a9mr4415026wmm.163.1594734308586;
-        Tue, 14 Jul 2020 06:45:08 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id z132sm4901605wmb.21.2020.07.14.06.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 06:45:07 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 14:45:04 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
+        id S1725906AbgGNOBy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 10:01:54 -0400
+Received: from smtpcmd0986.aruba.it ([62.149.156.86]:33536 "EHLO
+        smtpcmd0986.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgGNOBy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 10:01:54 -0400
+Received: from [192.168.1.129] ([93.146.66.165])
+        by smtpcmd09.ad.aruba.it with bizsmtp
+        id 321o230273Zw7e50121pt7; Tue, 14 Jul 2020 16:01:50 +0200
+Subject: Re: [RFC v2 GPIO lines [was: GPIO User I/O]
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc
- headers and fix others
-Message-ID: <20200714134504.GA1398296@dell>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-21-lee.jones@linaro.org>
- <20200714131403.eguxpnzsioxfzzko@uno.localdomain>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <01afcac0-bd34-3fd0-b991-a8b40d4b4561@enneenne.com>
+ <CACRpkdbX9T9EuN-nxkMPC=sN74PEdoLuWurNLdGCzZJwwFrdpQ@mail.gmail.com>
+ <1c4f1a83-835a-9317-3647-b55f6f39c0ba@enneenne.com>
+ <CACRpkdZPjJSryJc+RtYjRN=X7xKMcao5pYek1fUM2+sE9xgdFQ@mail.gmail.com>
+ <CAMuHMdUtguuu4FWU4nRS=pBUyEwKM1JZ8DYPdCQHXBYN0i_Frg@mail.gmail.com>
+ <87efe96c-3679-14d5-4d79-569b6c047b00@enneenne.com>
+ <CAMuHMdUght0hkJT1N8ub5xR5GB+U18MAhAg+zDmAAuxoRSRaYg@mail.gmail.com>
+ <d30e64c9-ad7f-7cd5-51a4-3f37d6f1e3d8@enneenne.com>
+ <070fa558-6e20-0fbf-d3e4-0a0eca4fe82c@enneenne.com>
+ <CACRpkdYFAW2bcB53M3_b2LsveJO_PWZJhprGhdTtfmW11B1WmQ@mail.gmail.com>
+ <f66dc9c4-b164-c934-72a8-d4aca063fca5@enneenne.com>
+ <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+From:   Rodolfo Giometti <giometti@enneenne.com>
+Message-ID: <cb6e208b-446e-eba4-b324-d88aec94a69b@enneenne.com>
+Date:   Tue, 14 Jul 2020 16:01:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200714131403.eguxpnzsioxfzzko@uno.localdomain>
+In-Reply-To: <CACRpkdbjc6vvpHVjnJNGisRw6LiLZd-95aHWJJORwvaRNigPcw@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------994CFF9A1AE7C48D7657D2A5"
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aruba.it; s=a1;
+        t=1594735310; bh=Df788FnsET2OlqizvcvQ0X8sBa2DlTMjEo7LCjxbbm8=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=nDCa++5w1+YwFCGyOc4Ps9rmN3SGg8smpNOGFLjszaIHygz3SXU3HVikop0jfIOHO
+         mpq8dPRShhWzt2i9IdQ+hhnzWhJYpxDf/+aefLTUTaYawUpXEbS1Qy1GDK70wIWJKn
+         CegMYuMRdSsyTC+F7xRD03TsWhYSZxM6wzQsqntQcPbeR1xiLlRLM7XJVjiTMX4HdW
+         1i6UE/X2pxxE309sMoW7yfQSuD0NRxz+r5M1dFquuP+C+VwkpbPavUtp5H6527JqtF
+         04CBqFxZps0P6NtEoBoiAFz+hQR/Rv/uBA580l5zGtay2gP0vXiIXK0sCP3admNowy
+         h3fwu/2dOEkow==
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 14 Jul 2020, Jacopo Mondi wrote:
+This is a multi-part message in MIME format.
+--------------994CFF9A1AE7C48D7657D2A5
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-> Hi Lee,
+On 13/07/2020 23:26, Linus Walleij wrote:
+> On Mon, Jul 13, 2020 at 4:20 PM Rodolfo Giometti <giometti@enneenne.com> wrote:
+>> Maybe I can do something similar to hog-gpio as below, if you prefer...
+>>
+>> bypass0 {
+>>         gpios = <&gpionb 10 GPIO_ACTIVE_LOW>;
+>>         output-low;
 > 
-> On Mon, Jul 13, 2020 at 03:49:25PM +0100, Lee Jones wrote:
-> > Some description blocks are void of any description/documentation,
-> > others are missing 'struct' identifiers, there are also a couple of
-> > misspellings of function parameter names.  Fix all of them.
-> >
-> > Fixes the following W=1 kernel build warning(s):
-> >
-> >  drivers/pinctrl/pinctrl-rza1.c:81: warning: cannot understand function prototype: 'struct rza1_bidir_pin '
-> >  drivers/pinctrl/pinctrl-rza1.c:90: warning: cannot understand function prototype: 'struct rza1_bidir_entry '
-> >  drivers/pinctrl/pinctrl-rza1.c:98: warning: cannot understand function prototype: 'struct rza1_swio_pin '
-> >  drivers/pinctrl/pinctrl-rza1.c:108: warning: cannot understand function prototype: 'struct rza1_swio_entry '
-> >  drivers/pinctrl/pinctrl-rza1.c:116: warning: cannot understand function prototype: 'struct rza1_pinmux_conf '
-> >  drivers/pinctrl/pinctrl-rza1.c:443: warning: cannot understand function prototype: 'struct rza1_mux_conf '
-> >  drivers/pinctrl/pinctrl-rza1.c:462: warning: cannot understand function prototype: 'struct rza1_port '
-> >  drivers/pinctrl/pinctrl-rza1.c:482: warning: cannot understand function prototype: 'struct rza1_pinctrl '
-> >  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'port' not described in 'rza1_pinmux_get_flags'
-> >  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'pin' not described in 'rza1_pinmux_get_flags'
-> >  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'func' not described in 'rza1_pinmux_get_flags'
-> >  drivers/pinctrl/pinctrl-rza1.c:546: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pinmux_get_flags'
-> >  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'port' not described in 'rza1_set_bit'
-> >  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'reg' not described in 'rza1_set_bit'
-> >  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'bit' not described in 'rza1_set_bit'
-> >  drivers/pinctrl/pinctrl-rza1.c:575: warning: Function parameter or member 'set' not described in 'rza1_set_bit'
-> >  drivers/pinctrl/pinctrl-rza1.c:672: warning: Function parameter or member 'rza1_pctl' not described in 'rza1_pin_mux_single'
-> >  drivers/pinctrl/pinctrl-rza1.c:672: warning: Excess function parameter 'pinctrl' description in 'rza1_pin_mux_single'
-> >
-> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Cc: linux-renesas-soc@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Yes this is better, just boolean flags is not natural than strings
+> for this.
+
+OK, changed.
+
+> However it addresses in a way an issue we have had popping
+> up from time to time which is assignment of default values to
+> lines before they are used overall.
 > 
-> Thanks, at the time I had no real idea about the implications of
-> documenting with kerneldoc :)
+> I think that would be a bit of thing that should be proper to
+> solve as part of this.
+> 
+> The discussion has often stopped short due to different
+> opinions on the device tree bindings for that.
 
-You and 1000 others! :D
+I see... however attached is a new version of my proposal patch with the
+following changelog:
 
-Don't lose any sleep over it.
+- GPIO line modes are now decoded as boolean properties (as for gpio-hogs).
+  Allowed values are" "input", "output-low" and "output-high". If nothing is
+  specified defaults to "as-is";
 
-> Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+- At boot a more descriptive message for each line is displayed as below:
 
-Thanks.
+[    1.834901] line bypass0: GPIO486 added as output-low
+
+Ciao,
+
+Rodolfo
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
+
+--------------994CFF9A1AE7C48D7657D2A5
+Content-Type: text/x-patch; charset=UTF-8;
+ name="gpio-line.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="gpio-line.patch"
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 4f52c3a8ec99..f117b0b9d33e 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -73,6 +73,16 @@ config GPIO_SYSFS
+ 	  Kernel drivers may also request that a particular GPIO be
+ 	  exported to userspace; this can be useful when debugging.
+ 
++config GPIO_LINE
++	bool "/sys/class/line/... (GPIO lines interface)"
++	depends on SYSFS
++	help
++	  Say Y here to add a sysfs interface to manage system's GPIO lines.
++
++	  Instead of the GPIO_SYSFS support, by using this support, you'll be
++	  able to use GPIOs from userspace as stated in the device-tree
++	  for well defined pourposes and by using proper names.
++
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index c256aff66a65..033a6b836dec 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_GPIOLIB)		+= gpiolib-legacy.o
+ obj-$(CONFIG_GPIOLIB)		+= gpiolib-devprop.o
+ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
+ obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
++obj-$(CONFIG_GPIO_LINE)		+= gpiolib-line.o
+ obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
+ 
+ # Device drivers. Generally keep list sorted alphabetically
+diff --git a/drivers/gpio/gpiolib-line.c b/drivers/gpio/gpiolib-line.c
+new file mode 100644
+index 000000000000..640c9971d97e
+--- /dev/null
++++ b/drivers/gpio/gpiolib-line.c
+@@ -0,0 +1,251 @@
++/*
++ * GPIOlib - userspace I/O line interface
++ *
++ *
++ * Copyright (C) 2020   Rodolfo Giometti <giometti@enneenne.com>
++ *
++ *   This program is free software; you can redistribute it and/or modify
++ *   it under the terms of the GNU General Public License as published by
++ *   the Free Software Foundation; either version 2 of the License, or
++ *   (at your option) any later version.
++ *
++ *   This program is distributed in the hope that it will be useful,
++ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *   GNU General Public License for more details.
++ *
++ *   You should have received a copy of the GNU General Public License
++ *   along with this program; if not, write to the Free Software
++ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/idr.h>
++#include <linux/kdev_t.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++
++#define GPIO_LINE_MAX_SOURCES       128      /* should be enough... */
++
++/*
++ * Local variables
++ */
++
++static dev_t gpio_line_devt;
++static struct class *gpio_line_class;
++
++static DEFINE_MUTEX(gpio_line_idr_lock);
++static DEFINE_IDR(gpio_line_idr);
++
++struct gpio_line_device {
++	struct gpio_desc *gpiod;
++	const char *name;
++	unsigned int id;
++	struct device *dev;
++};
++
++/*
++ * sysfs methods
++ */
++
++static ssize_t state_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++	int status, ret;
++
++	ret = sscanf(buf, "%d", &status);
++	if (ret != 1 && status != 0 && status != 1)
++		return -EINVAL;
++
++	gpiod_set_value_cansleep(gpio_line->gpiod, status);
++
++	return count;
++}
++
++static ssize_t state_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct gpio_line_device *gpio_line = dev_get_drvdata(dev);
++	int status = gpiod_get_value_cansleep(gpio_line->gpiod);
++
++	return sprintf(buf, "%d\n", status);
++}
++static DEVICE_ATTR_RW(state);
++
++/*
++ * Class attributes
++ */
++
++static struct attribute *gpio_line_attrs[] = {
++	&dev_attr_state.attr,
++	NULL,
++};
++
++static const struct attribute_group gpio_line_group = {
++	.attrs = gpio_line_attrs,
++};
++
++static const struct attribute_group *gpio_line_groups[] = {
++	&gpio_line_group,
++	NULL,
++};
++
++/*
++ * Driver stuff
++ */
++
++static struct gpio_line_device *gpio_line_create_entry(const char *name,
++				struct gpio_desc *gpiod,
++				struct device *parent)
++{
++	struct gpio_line_device *gpio_line;
++	dev_t devt;
++	int ret;
++
++	/* First allocate a new gpio_line device */
++	gpio_line = kmalloc(sizeof(struct gpio_line_device), GFP_KERNEL);
++	if (!gpio_line)
++		return ERR_PTR(-ENOMEM);
++
++	mutex_lock(&gpio_line_idr_lock);
++	/*
++	 * Get new ID for the new gpio_line source.  After idr_alloc() calling
++	 * the new source will be freely available into the kernel.
++	 */
++	ret = idr_alloc(&gpio_line_idr, gpio_line, 0,
++			GPIO_LINE_MAX_SOURCES, GFP_KERNEL);
++	if (ret < 0) {
++		if (ret == -ENOSPC) {
++			pr_err("%s: too many GPIO lines in the system\n",
++			       name);
++			ret = -EBUSY;
++		}
++		goto error_device_create;
++	}
++	gpio_line->id = ret;
++	mutex_unlock(&gpio_line_idr_lock);
++
++	/* Create the device and init the device's data */
++	devt = MKDEV(MAJOR(gpio_line_devt), gpio_line->id);
++	gpio_line->dev = device_create(gpio_line_class, parent, devt, gpio_line,
++				   "%s", name);
++	if (IS_ERR(gpio_line->dev)) {
++		dev_err(gpio_line->dev, "unable to create device %s\n", name);
++		ret = PTR_ERR(gpio_line->dev);
++		goto error_idr_remove;
++	}
++	dev_set_drvdata(gpio_line->dev, gpio_line);
++
++	/* Init the gpio_line data */
++	gpio_line->gpiod = gpiod;
++	gpio_line->name = name;
++
++	return gpio_line;
++
++error_idr_remove:
++	mutex_lock(&gpio_line_idr_lock);
++	idr_remove(&gpio_line_idr, gpio_line->id);
++
++error_device_create:
++	mutex_unlock(&gpio_line_idr_lock);
++	kfree(gpio_line);
++
++	return ERR_PTR(ret);
++}
++
++static int gpio_line_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct fwnode_handle *child;
++	struct gpio_line_device *gpio_line;
++	int ret;
++
++	device_for_each_child_node(dev, child) {
++		struct device_node *np = to_of_node(child);
++		const char *name;
++		enum gpiod_flags flags;
++		struct gpio_desc *gpiod;
++
++		ret = fwnode_property_read_string(child, "line-name", &name);
++		if (ret && IS_ENABLED(CONFIG_OF) && np)
++			name = np->name;
++		if (!name) {
++			dev_err(dev,
++				"name property not defined or invalid!\n");
++			goto skip;
++		}
++
++		flags = GPIOD_ASIS;
++		if (of_property_read_bool(np, "input"))
++			flags = GPIOD_IN;
++		else if (of_property_read_bool(np, "output-low"))
++			flags = GPIOD_OUT_LOW;
++		else if (of_property_read_bool(np, "output-high"))
++			flags = GPIOD_OUT_HIGH;
++		gpiod = devm_fwnode_get_gpiod_from_child(dev, NULL, child,
++							 flags, name);
++		if (IS_ERR(gpiod)) {
++			dev_err(dev, "gpios property not defined!\n");
++			goto skip;
++		}
++
++		gpio_line = gpio_line_create_entry(name, gpiod, dev);
++		if (IS_ERR(gpio_line))
++			goto skip;
++
++		/* Success, go to the next child */
++		dev_info(gpio_line->dev, "GPIO%d added as %s\n",
++			desc_to_gpio(gpiod),
++			flags == GPIOD_ASIS ? "as-is" :
++			  flags == GPIOD_OUT_HIGH ? "output-high" :
++			    flags == GPIOD_OUT_LOW ? "output-low" :
++			      flags == GPIOD_IN ? "input" : "unknow!");
++		continue;
++
++skip:		/* Error, skip the child */
++		fwnode_handle_put(child);
++		dev_err(dev, "failed to register GPIO lines interface\n");
++	}
++
++	return 0;
++}
++
++static const struct of_device_id of_gpio_gpio_line_match[] = {
++	{ .compatible = "gpio-line", },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver gpio_line_gpio_driver = {
++	.driver	 = {
++		.name   = "gpio-line",
++		.of_match_table = of_gpio_gpio_line_match,
++	},
++};
++
++builtin_platform_driver_probe(gpio_line_gpio_driver, gpio_line_gpio_probe);
++
++/*
++ * Module stuff
++ */
++
++static int __init gpiolib_line_init(void)
++{
++	/* Create the new class */
++	gpio_line_class = class_create(THIS_MODULE, "line");
++	if (!gpio_line_class) {
++		printk(KERN_ERR "gpio_line: failed to create class\n");
++		return -ENOMEM;
++	}
++	gpio_line_class->dev_groups = gpio_line_groups;
++
++	return 0;
++}
++
++postcore_initcall(gpiolib_line_init);
+
+--------------994CFF9A1AE7C48D7657D2A5--
