@@ -2,100 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C0921F37A
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1717921F54C
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 16:45:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgGNOF4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 10:05:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39580 "EHLO mail.kernel.org"
+        id S1726356AbgGNOiw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 10:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgGNOF4 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:05:56 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+        id S1725890AbgGNOiw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:38:52 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72389222C8;
-        Tue, 14 Jul 2020 14:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41AC2067D;
+        Tue, 14 Jul 2020 14:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594735555;
-        bh=P/b3qBim58jOi0T9iazFlSIK9JF/mfU1hTzN9suN5hA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Dcswyz5UqgNEro6U2tGc1+7TSVtrOoEjeQkDpmOzTtIp5OrgVP5yJMSf+eUiSZn9g
-         8Rm4slSOye1Wq+v6n/lSkE4SqlphAVYeRsdE4YHQk7v1FNGPax1rETYZb9/lPtka8F
-         M2W6UckPkuOH47FxomIioJPrdwDjrIJ4tqro5HIk=
-Received: by mail-oo1-f47.google.com with SMTP id v26so1778605ood.1;
-        Tue, 14 Jul 2020 07:05:55 -0700 (PDT)
-X-Gm-Message-State: AOAM532H8DPO9FJkRoF4GzolHN7yUuGCDtEp1D2p5GWR0APNF2wIOtgt
-        3ECEq4+pCFbksAv0sR+rogpzmOyilQAxtZC3Fw==
-X-Google-Smtp-Source: ABdhPJwt7s8kLRi4lZYvoY3CPMfpFeErf+RroL4RvEsrKUanQ9XskXBuGGgwa0AfXOesUjk3DztRE0blcNThYHxe6Ic=
-X-Received: by 2002:a05:6820:1015:: with SMTP id v21mr4586237oor.50.1594735550633;
- Tue, 14 Jul 2020 07:05:50 -0700 (PDT)
+        s=default; t=1594737531;
+        bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1F5EYAHmCRwqMMnRE5bVld7um5avSlqx0Ymoc3s7KmnbqAyoBhdesAFwwNAoAxYLz
+         t68cUHUMScb6VDgz/bc5QH2eIilOHDiON43JOZxxhz4a8jc7MJP/ZGs0s70KbMdv4n
+         nzV3Go5oJi3FX4ccvoVNHLe1/DHmSKJpXWRb9h9A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 01/19] gpio: arizona: handle pm_runtime_get_sync failure case
+Date:   Tue, 14 Jul 2020 10:38:31 -0400
+Message-Id: <20200714143849.4035283-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200622113740.46450-1-paul@crapouillou.net> <20200713153252.GA234029@bogus>
- <ADZEDQ.ZXJ99TAYD15S2@crapouillou.net>
-In-Reply-To: <ADZEDQ.ZXJ99TAYD15S2@crapouillou.net>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jul 2020 08:05:37 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+nHZsbOMPpXC7NWp1etgVL57Q+o=gr6BJ6ijAq1pLJUw@mail.gmail.com>
-Message-ID: <CAL_Jsq+nHZsbOMPpXC7NWp1etgVL57Q+o=gr6BJ6ijAq1pLJUw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2] dt-bindings: pinctrl: Convert
- ingenic,pinctrl.txt to YAML
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, od@zcrc.me,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 9:36 AM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi Rob,
->
-> Le lun. 13 juil. 2020 =C3=A0 9:32, Rob Herring <robh@kernel.org> a =C3=A9=
-crit :
-> > On Mon, Jun 22, 2020 at 01:37:40PM +0200, Paul Cercueil wrote:
-> >>  Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
-> >>
-> >>  In the process, some compatible strings now require a fallback, as
-> >> the
-> >>  corresponding SoCs are pin-compatible with their fallback variant.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>
-> >>  Notes:
-> >>      v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
-> >>          - remove 'additionalProperties: false' since we will have
-> >> pin conf nodes
-> >
-> > What do those look like? They need to be described, but that can be a
-> > follow-up.
->
-> These are generic conf nodes that are handled by the pinctrl core.
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-No such thing. There's a set of common properties, but that is all.
-You still need to document which properties apply because it is
-doubtful they all do.
+[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
 
-> Nothing specific to the hardware described here. The subnodes don't
-> have any specific pattern so it is not possible to represent them in
-> devicetree (we'd need a 'catch them all' wildcard pattern property).
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Ideally, the nodes should be named something we can match on like
-"-pins$", but if not you can do:
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpio/gpio-arizona.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-additionalProperties:
-  type: object
-  $ref: pincfg-node.yaml#
-  properties:
-    bias-disable: true
-    ...
-  additionalProperties: false
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index 5640efe5e7504..7520a13b4c7ca 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -106,6 +106,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put(chip->parent);
+ 			return ret;
+ 		}
+ 	}
+-- 
+2.25.1
 
-
-Rob
