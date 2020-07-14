@@ -2,115 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DFB221F805
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 19:18:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C06B521F8DE
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:15:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgGNRSc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 13:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52216 "EHLO
+        id S1726989AbgGNSPE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 14:15:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgGNRSc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 13:18:32 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D170C061755
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2020 10:18:32 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id i14so7842486pfu.13
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Jul 2020 10:18:32 -0700 (PDT)
+        with ESMTP id S1725951AbgGNSPD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 14:15:03 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7D2C061755;
+        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z2so23797409wrp.2;
+        Tue, 14 Jul 2020 11:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2Bgo+EwlywQpFj0pE/Su+4bABsjD1sCVUR7hvl6xKBo=;
-        b=FV23NmzIE04DIi8PhPUdryuuclb6dWf24zsJIveBqunEq3yjAFNoKc4vpw+PTmPF8R
-         eMu1v6Lz0x9QKnUQdQIWGtu7CvPMqmJmUPAhpF2UjXnRVfSprk7A1DvW6FYJLbWwoIgc
-         FC9Y+w942Q5uz6h/EqQls2Q4XVpMYwM6k4h5EOat8wRvJizYu3sK5oAIeEk8IR5rsE80
-         5GFvYA4rsonni5Ibeohb9BUzsNOGm5bhZXDhmAp68Jw+TorW7AGhHrJkFISo/FhgPN87
-         jc89oJ4Uf7Cw4rsaE5e/iIDwM4SkWoHSewGHxAy+hGLcL5U9TewXLj69im6rSAivgrxQ
-         9OFQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
+        b=iu3vQTCv0leQpsnybURB1+EIrvo+36TwXadSzcO7dbgQS5eJ/HVVXkryMCf3CZDa5V
+         M6zpTobveJkRbL2cnQ5//mKpcsLOjCk4I+owDrHcoVA49TcOal1FA/DFGqFR1VDp1elb
+         bZVfx7pgjMG5+9iixXvfyLDEkMNVPiZWHe+Eaw/3VaZB5NZWIOjnLNOZ4GR1+C3dUvmu
+         Cb+A9lbdIgT3TfNeeBpuID/O3oB+o44zv4HDE5EawQeEuLdZFzTdU3ID6szd/Xdb7hrj
+         r5TFHCPGGXl+0M4uYFlb5AydKP7l/ZHhuop0xk46VMyAG+dYBAk6gSRkJ8TaIqLv59BS
+         G//w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2Bgo+EwlywQpFj0pE/Su+4bABsjD1sCVUR7hvl6xKBo=;
-        b=bs+RV0y+mZME/vSma7AYVThcacCMyraw7m/lctLenLKc8yTxIHTsuDBak9zM1u92Cz
-         mLijRPHW+i2YD4K9XV2+AOen5yXEoIFOToUS4ZL6JacSM1wyb83gPmajXwcdALiaRhf1
-         NltpKhrwKoaXzahZW2X9FD9x/1bGy/fSjlpEWGdQu+3LFVWGQjgwPGGU0PEpI83PeEGL
-         0ipIW1PIhyUEGSOJFtpJA7Y66ofgZWVbxEu+/NIl5BIvgT1OFroXUnlL/8J8l4R/tvp3
-         v3YHwW8ypmxUPW89uYLtu9Z0A8+VhTeYcMRs3Yq030xk48BAR2IrmDJJDnP7FTrzPUBC
-         Vuwg==
-X-Gm-Message-State: AOAM531gIbuuJyYefWZ9dJludClIBCqm5b3DsUSqQtjfvnZ255Cr956p
-        zuXBf5+vRXKOnlsNNA24nq8L
-X-Google-Smtp-Source: ABdhPJyEqwY1nnJOTN22awXt+uGZJ7NHXl3YxP9b73/ZkOSKPCwl5Y+BHZbe5WvqX7p+q/Fs1C+S8A==
-X-Received: by 2002:aa7:8557:: with SMTP id y23mr5117516pfn.148.1594747111587;
-        Tue, 14 Jul 2020 10:18:31 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d83:a4f:d:a14d:ca62:5c15])
-        by smtp.gmail.com with ESMTPSA id y7sm3088884pjp.47.2020.07.14.10.18.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jul 2020 10:18:31 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 22:48:24 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        David Liu <liuwei@actions-semi.com>
-Subject: Re: [PATCH 01/25] pinctrl: actions: pinctrl-owl: Supply missing
- 'struct owl_pinctrl' attribute descriptions
-Message-ID: <20200714171824.GB7260@Mani-XPS-13-9360>
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-2-lee.jones@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dSp7R1vKTnKdzsxqMgBtcDq/n3QLykSpSbeQuD3hfjc=;
+        b=iavXb0AOH09Nnqtsgl8TAd6aWH2nMs0m7y73kSEZyrxaK+JYCzvQkp3xYjkwPYdPeP
+         7jjOVlP+aPh5KG+I/NCpvDawqKxx1Zhouo8wHkJb67rfOv5rr40bbwtKnORK83RkA+Uf
+         3wfkHs10o7wB86p3Y8iYSO8roSh02pMQ/XCwHd3b/+pEE8Qm7E69pD2NRsKo9/BMERVm
+         lO7rBGPYHMD7BOndo1NnulQ0WmgZadgLL+7WnS5GjyJ0OReQC7m2v7iQ5QfChgJM7FZF
+         lapkZs0zf/UgdvwPSazdUHt9LyAcKN7klE7Kc6nqY3DOvGI3B8zr6zC4cL49Lzdf82ud
+         L1xQ==
+X-Gm-Message-State: AOAM531mAUv5IE+fGOMRtSA6GHYInAfmw/8C72Y/Ade4s9wlQMgNRqlW
+        s1omQQwiWAR3+G8+KOipYrI=
+X-Google-Smtp-Source: ABdhPJyyGdhWu0u0CbQOeLDCSz6P+/Yov6DrHDS6EiOJPgFRClfh0pllHT3IxqJnRE4/8NrmgSZ6fA==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr7062800wrm.31.1594750501837;
+        Tue, 14 Jul 2020 11:15:01 -0700 (PDT)
+Received: from ziggy.stardust ([84.236.220.84])
+        by smtp.gmail.com with ESMTPSA id k20sm5572396wmi.27.2020.07.14.11.15.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2020 11:15:00 -0700 (PDT)
+Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
+To:     Hanks Chen <hanks.chen@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>
+Cc:     mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+ <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+Date:   Tue, 14 Jul 2020 20:14:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200713144930.1034632-2-lee.jones@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 03:49:06PM +0100, Lee Jones wrote:
-> Fixes the following W=1 kernel build warning(s):
+
+
+On 14/07/2020 11:20, Hanks Chen wrote:
+> this adds initial MT6779 dts settings for board support,
+> including cpu, gic, timer, ccf, pinctrl, uart, sysirq...etc.
 > 
->  drivers/pinctrl/actions/pinctrl-owl.c:52: warning: Function parameter or member 'clk' not described in 'owl_pinctrl'
->  drivers/pinctrl/actions/pinctrl-owl.c:52: warning: Function parameter or member 'irq_chip' not described in 'owl_pinctrl'
->  drivers/pinctrl/actions/pinctrl-owl.c:52: warning: Function parameter or member 'num_irq' not described in 'owl_pinctrl'
->  drivers/pinctrl/actions/pinctrl-owl.c:52: warning: Function parameter or member 'irq' not described in 'owl_pinctrl'
-> 
-> Cc: "Andreas Färber" <afaerber@suse.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: David Liu <liuwei@actions-semi.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 > ---
->  drivers/pinctrl/actions/pinctrl-owl.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>   arch/arm64/boot/dts/mediatek/mt6779-evb.dts |  31 +++
+>   arch/arm64/boot/dts/mediatek/mt6779.dtsi    | 271 ++++++++++++++++++++
+>   3 files changed, 303 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6779.dtsi
 > 
-> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-> index 5a0c8e87aa7cd..7efdfb4f3e9ba 100644
-> --- a/drivers/pinctrl/actions/pinctrl-owl.c
-> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
-> @@ -35,8 +35,12 @@
->   * @pctrldev: pinctrl handle
->   * @chip: gpio chip
->   * @lock: spinlock to protect registers
-> + * @clk: clock control
->   * @soc: reference to soc_data
->   * @base: pinctrl register base address
-> + * @irq_chip: IRQ chip information
-> + * @num_irq: number of possible interrupts
-> + * @irq: interrupt numbers
->   */
->  struct owl_pinctrl {
->  	struct device *dev;
-> -- 
-> 2.25.1
-> 
+[...]
+> +
+> +		uart0: serial@11002000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11002000 0 0x400>;
+> +			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART0>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@11003000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11003000 0 0x400>;
+> +			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART1>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@11004000 {
+> +			compatible = "mediatek,mt6779-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x11004000 0 0x400>;
+> +			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&clk26m>, <&infracfg_ao CLK_INFRA_UART2>;
+> +			clock-names = "baud", "bus";
+> +			status = "disabled";
+> +		};
+
+Devicetree describes the HW we have. As far as I know, we have 4 UARTs on 
+MT6779. So we should list them all here.
+
+Regards,
+Matthias
