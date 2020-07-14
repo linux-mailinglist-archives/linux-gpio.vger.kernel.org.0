@@ -2,74 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FAF221F979
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 20:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A67821FEA7
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 22:35:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgGNSci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 14:32:38 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:34436 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgGNSci (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 14:32:38 -0400
-Received: from x2f7fa33.dyn.telefonica.de ([2.247.250.51] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jvPjI-0008JF-Q6; Tue, 14 Jul 2020 20:32:36 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 19/25] pinctrl: pinctrl-rockchip: Fix a bunch of kerneldoc misdemeanours
-Date:   Tue, 14 Jul 2020 20:32:34 +0200
-Message-ID: <2181743.Gcv4MJzrWR@phil>
-In-Reply-To: <20200713144930.1034632-20-lee.jones@linaro.org>
-References: <20200713144930.1034632-1-lee.jones@linaro.org> <20200713144930.1034632-20-lee.jones@linaro.org>
+        id S1726782AbgGNUey (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 16:34:54 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44281 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbgGNUex (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 16:34:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id i4so18716563iov.11;
+        Tue, 14 Jul 2020 13:34:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uSvktDxrURDAPk1lcLpPbZnOgOU1nKqvNNzMxPxnjLA=;
+        b=QQP+VMae95pCWjdplR1wu4y2GSilNfyOwWKDVFTwXv90zUu9KExKgJaJz4ZxBWJIZc
+         9+IAGum2Bh+BLZxVuLK88p+2D91ThNlc0YnkqeYgqwTKSNtnTnq+vrFo+d5FTrxEGpz9
+         TI4lcjBwbN0gCb4f5QTn2md2zXv+5hkkiYz0TwlrJoijgoNC0VX1WcfFsDojwWlbSGHV
+         6eHIMdfRzl7DxlcuLUaNXLR2I20s79AU0Re2+NbmaB6mpOfNvTH0HUORT41xayDKLl1w
+         FYrPWfkrEyR8hOsbcHeiPIKl5iDNUYS3FSWuR7LZYzvJKbCeiqO45GA1isrtBoo/KTge
+         q+AA==
+X-Gm-Message-State: AOAM5336k87Sr7bktq6eTcEKpQnaL7I9jCEaQN6b/BMV9Kwnrg37cHei
+        Oqf6AoDYaMvJxNQMaDKTxg==
+X-Google-Smtp-Source: ABdhPJwH2lS3w18l1/H8LJeXEvXmYUueiCeILVoYmOiLCul1iDA501lA6N+qA5gZHxI9+fpA0OfgLA==
+X-Received: by 2002:a6b:1496:: with SMTP id 144mr6868679iou.6.1594758892683;
+        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id k1sm17128ilr.35.2020.07.14.13.34.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2020 13:34:52 -0700 (PDT)
+Received: (nullmailer pid 2874342 invoked by uid 1000);
+        Tue, 14 Jul 2020 20:34:50 -0000
+Date:   Tue, 14 Jul 2020 14:34:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
+        CC Hwang <cc.hwang@mediatek.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v8 1/7] pinctrl: mediatek: update pinmux definitions for
+ mt6779
+Message-ID: <20200714203450.GA2874293@bogus>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+ <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 13. Juli 2020, 16:49:24 CEST schrieb Lee Jones:
-> Demote headers which are clearly not kerneldoc, provide titles for
-> struct definition blocks, fix API slip (bitrot) misspellings and
-> provide some missing entries.
+On Tue, 14 Jul 2020 17:19:56 +0800, Hanks Chen wrote:
+> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
 > 
-> Fixes the following W=1 kernel build warning(s):
+> Acked-by: Sean Wang <sean.wang@kernel.org>
+> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>  include/dt-bindings/pinctrl/mt6779-pinfunc.h | 1242 ++++++++++++++++++
+>  1 file changed, 1242 insertions(+)
+>  create mode 100644 include/dt-bindings/pinctrl/mt6779-pinfunc.h
 > 
->  drivers/pinctrl/pinctrl-rockchip.c:82: warning: cannot understand function prototype: 'struct rockchip_iomux '
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_DEFAULT' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_OR_3V0' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_ONLY' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_1V8_3V0_AUTO' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_IO_3V3_ONLY' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:97: warning: Enum value 'DRV_TYPE_MAX' not described in enum 'rockchip_pin_drv_type'
->  drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_IO_DEFAULT' not described in enum 'rockchip_pin_pull_type'
->  drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_IO_1V8_ONLY' not described in enum 'rockchip_pin_pull_type'
->  drivers/pinctrl/pinctrl-rockchip.c:106: warning: Enum value 'PULL_TYPE_MAX' not described in enum 'rockchip_pin_pull_type'
->  drivers/pinctrl/pinctrl-rockchip.c:109: warning: Cannot understand  * @drv_type: drive strength variant using rockchip_perpin_drv_type
->  on line 109 - I thought it was a doc line
->  drivers/pinctrl/pinctrl-rockchip.c:122: warning: Cannot understand  * @reg_base: register base of the gpio bank
->  on line 109 - I thought it was a doc line
->  drivers/pinctrl/pinctrl-rockchip.c:325: warning: Function parameter or member 'route_location' not described in 'rockchip_mux_route_data'
->  drivers/pinctrl/pinctrl-rockchip.c:328: warning: Cannot understand  */
->  on line 109 - I thought it was a doc line
->  drivers/pinctrl/pinctrl-rockchip.c:375: warning: Function parameter or member 'data' not described in 'rockchip_pin_group'
->  drivers/pinctrl/pinctrl-rockchip.c:387: warning: Function parameter or member 'ngroups' not described in 'rockchip_pmx_func'
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-Thanks for fixing these doc issues
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
