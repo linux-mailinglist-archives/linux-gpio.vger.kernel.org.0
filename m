@@ -2,132 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 604F421E8AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 08:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15A5521E8B9
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Jul 2020 08:59:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725962AbgGNGzy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Jul 2020 02:55:54 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:54969 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725778AbgGNGzx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Jul 2020 02:55:53 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07630626|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0607517-0.000518279-0.93873;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03303;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=31;RT=31;SR=0;TI=SMTPD_---.I1TOQkU_1594709738;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I1TOQkU_1594709738)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Tue, 14 Jul 2020 14:55:44 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        gregory.clement@bootlin.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org,
-        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
-        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        lee.jones@linaro.org, p.zabel@pengutronix.de, clabbe@baylibre.com,
-        icenowy@aosc.io, megous@megous.com, stefan@olimex.com,
-        bage@linutronix.de, devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH v4 00/16] Allwinner A100 Initial support
-Date:   Tue, 14 Jul 2020 14:55:22 +0800
-Message-Id: <cover.1594708863.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
+        id S1725788AbgGNG7J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Jul 2020 02:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgGNG7J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Jul 2020 02:59:09 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8407C061755
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 23:59:08 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id q17so6629600pls.9
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Jul 2020 23:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from;
+        bh=jg2gd/S50iUHh0HuOUuNTxmh/Nlz+QnDxRziBHkErdY=;
+        b=LAR4Y5tO/n01rVmTzDEGCApoQ9uAQKGInhJbpK5jCJJ3W6d2fyivgqvgaRqFEunvsu
+         2fnyrQPsMZBKjAlG6tkJ4rXjR8/nafBUG5T+AZkrQuVMFZwjJ+dVsgvqlMvLm/9gtEC8
+         Rn3gkzIy4W73QMIHBkOPMZSRo62Vj8bwYL0/rS8qih3J0C2jAmsoCh8sK5jJmY6n/gXV
+         cJs8Vpjx8V9JCd4GeqeLmGnoZGrSvtzlwUnO6OyiOXMdzRMXXTf8OyK4kokOB0/fb27I
+         HO1dToA8hVbxLdmuQl8CcwdFNtZw8UlwcVCmHOG1gwT0tMHmc9eluL1IBB2gJrVzCr/p
+         byWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from;
+        bh=jg2gd/S50iUHh0HuOUuNTxmh/Nlz+QnDxRziBHkErdY=;
+        b=HK9CMTnYNvR2gx+rhWStk6X48qdptXYVDCOvXpbLsyJqUfzemKARShqJHmDQPbHSix
+         efwY5m/M7ffZ6/AoQ7eCnDGWia4oVgJQAEqfSY+hCqvl/tilqG1MCEUZNgeV1VRYX0Il
+         Qi3/P6OGo1RW6Lgi2/TLdlT95t9mc0bD7qdZrR03sg1OcL8Pr67ZwQQvbV0I7OPeLxlH
+         SS6PwxZcpTEa0UwRabk0TJCF78160pqt9rfetzSoYZXzqa6c5G2PZcvJ6orFrZ1cTx0l
+         X0TX/2OE5hwtDjVKuaJftuWVIVmw6GEL67ZxyC07xSdwpRCSdbvwfWg2Q+Se/wJnUAgU
+         vLUQ==
+X-Gm-Message-State: AOAM530ur9od7QxOEG1CdQ8MNZKkJUCMe0Rc1sr9qnN0xF4G0oc5wiX7
+        UDUVG2VLoW4zyiUXYfl1Us4CweW8EuU=
+X-Google-Smtp-Source: ABdhPJyZMdnbmx9dNZli+nYFrLgn3uAE6bO9M4/wso85PyCQGcjmYDTJCha+YkZUDMQGtuVT71wzfA==
+X-Received: by 2002:a17:90a:32cb:: with SMTP id l69mr2789973pjb.205.1594709948107;
+        Mon, 13 Jul 2020 23:59:08 -0700 (PDT)
+Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
+        by smtp.gmail.com with ESMTPSA id g3sm15962642pfq.19.2020.07.13.23.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jul 2020 23:59:07 -0700 (PDT)
+Message-ID: <5f0d57bb.1c69fb81.9725f.8354@mx.google.com>
+Date:   Mon, 13 Jul 2020 23:59:07 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: gpio-v5.8-2-58-g1752911c6d10
+X-Kernelci-Report-Type: test
+X-Kernelci-Tree: linusw
+X-Kernelci-Branch: for-next
+Subject: linusw/for-next baseline: 85 runs,
+ 2 regressions (gpio-v5.8-2-58-g1752911c6d10)
+To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
+From:   "kernelci.org bot" <bot@kernelci.org>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+linusw/for-next baseline: 85 runs, 2 regressions (gpio-v5.8-2-58-g1752911c6=
+d10)
 
-This patch set adds initial support for allwinner a100 soc,
-which is a 64-bit tablet chip.
+Regressions Summary
+-------------------
 
-v4:
--drop "dt-bindings: pinctrl: sunxi: make gpio banks supplies required"
--fix dcdc1 regulator name
--get rid of underscore in dts node name
--Some trivial things in yaml files
+platform              | arch  | lab          | compiler | defconfig        =
+  | results
+----------------------+-------+--------------+----------+------------------=
+--+--------
+at91-sama5d4_xplained | arm   | lab-baylibre | gcc-8    | multi_v7_defconfi=
+g | 0/1    =
 
-v3:
--Add pmu and nmi support
--Add read data mask for calibration
--Code style
--Some trivial things in yaml files
+hifive-unleashed-a00  | riscv | lab-baylibre | gcc-8    | defconfig        =
+  | 0/1    =
 
-v2:
--Some naming consistency
--Repair email address
--Fix mmc clock
--Don't export system clock
--Fix checkpatch warning
--Drop unneeded pin function, convert to jtag_gpu and i2s_x
 
-Yangtao Li (16):
-  dt-bindings: clk: sunxi-ccu: add compatible string for A100 CCU and
-    R-CCU
-  clk: sunxi-ng: add support for the Allwinner A100 CCU
-  dt-bindings: pinctrl: sunxi: Get rid of continual nesting
-  dt-bindings: pinctrl: sunxi: Add A100 pinctrl bindings
-  pinctrl: sunxi: add support for the Allwinner A100 pin controller
-  dt-bindings: nvmem: SID: add binding for A100's SID controller
-  dt-bindings: thermal: sun8i: Add binding for A100's THS controller
-  thermal: sun8i: add TEMP_CALIB_MASK for calibration data in
-    sun50i_h6_ths_calibrate
-  thermal: sun8i: Add A100's THS controller support
-  mfd: axp20x: Allow the AXP803 to be probed by I2C
-  dt-bindings: irq: sun7i-nmi: fix dt-binding for a80 nmi
-  dt-bindings: irq: sun7i-nmi: Add binding for A100's NMI controller
-  dt-bindings: i2c: mv64xxx: Add compatible for the A100 i2c node.
-  arm64: allwinner: A100: add the basical Allwinner A100 DTSI file
-  dt-bindings: arm: sunxi: Add Allwinner A100 Perf1 Board bindings
-  arm64: allwinner: A100: add support for Allwinner Perf1 board
+  Details:  https://kernelci.org/test/job/linusw/branch/for-next/kernel/gpi=
+o-v5.8-2-58-g1752911c6d10/plan/baseline/
 
- .../devicetree/bindings/arm/sunxi.yaml        |    5 +
- .../clock/allwinner,sun4i-a10-ccu.yaml        |    7 +-
- .../bindings/i2c/marvell,mv64xxx-i2c.yaml     |    3 +
- .../allwinner,sun7i-a20-sc-nmi.yaml           |    5 +-
- .../nvmem/allwinner,sun4i-a10-sid.yaml        |   19 +-
- .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  |  139 +-
- .../thermal/allwinner,sun8i-a83t-ths.yaml     |    6 +-
- arch/arm64/boot/dts/allwinner/Makefile        |    1 +
- .../allwinner/sun50i-a100-allwinner-perf1.dts |  180 +++
- .../arm64/boot/dts/allwinner/sun50i-a100.dtsi |  364 +++++
- drivers/clk/sunxi-ng/Kconfig                  |   10 +
- drivers/clk/sunxi-ng/Makefile                 |    2 +
- drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c      |  214 +++
- drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h      |   21 +
- drivers/clk/sunxi-ng/ccu-sun50i-a100.c        | 1276 +++++++++++++++++
- drivers/clk/sunxi-ng/ccu-sun50i-a100.h        |   56 +
- drivers/mfd/axp20x-i2c.c                      |    2 +
- drivers/pinctrl/sunxi/Kconfig                 |   10 +
- drivers/pinctrl/sunxi/Makefile                |    2 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c |  105 ++
- drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |  708 +++++++++
- drivers/thermal/sun8i_thermal.c               |   16 +-
- include/dt-bindings/clock/sun50i-a100-ccu.h   |  116 ++
- include/dt-bindings/clock/sun50i-a100-r-ccu.h |   23 +
- include/dt-bindings/reset/sun50i-a100-ccu.h   |   68 +
- include/dt-bindings/reset/sun50i-a100-r-ccu.h |   18 +
- 26 files changed, 3308 insertions(+), 68 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100-r.h
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun50i-a100.h
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100-r.c
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c
- create mode 100644 include/dt-bindings/clock/sun50i-a100-ccu.h
- create mode 100644 include/dt-bindings/clock/sun50i-a100-r-ccu.h
- create mode 100644 include/dt-bindings/reset/sun50i-a100-ccu.h
- create mode 100644 include/dt-bindings/reset/sun50i-a100-r-ccu.h
+  Test:     baseline
+  Tree:     linusw
+  Branch:   for-next
+  Describe: gpio-v5.8-2-58-g1752911c6d10
+  URL:      https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gp=
+io.git/
+  SHA:      1752911c6d10675154f1c8c8ba54331604cdbca7 =
 
--- 
-2.24.0
 
+
+Test Regressions
+---------------- =
+
+
+
+platform              | arch  | lab          | compiler | defconfig        =
+  | results
+----------------------+-------+--------------+----------+------------------=
+--+--------
+at91-sama5d4_xplained | arm   | lab-baylibre | gcc-8    | multi_v7_defconfi=
+g | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f0d4cffeadfee45c885bb3a
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: multi_v7_defconfig
+  Compiler:    gcc-8 (arm-linux-gnueabihf-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-58=
+-g1752911c6d10/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama=
+5d4_xplained.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-58=
+-g1752911c6d10/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama=
+5d4_xplained.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/armel/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f0d4cffeadfee45c885b=
+b3b
+      failing since 23 days (last pass: gpio-v5.7-3-2-gcdf59728a3cd, first =
+fail: v5.8-rc1-11-g42ba326cdeff) =
+
+
+
+platform              | arch  | lab          | compiler | defconfig        =
+  | results
+----------------------+-------+--------------+----------+------------------=
+--+--------
+hifive-unleashed-a00  | riscv | lab-baylibre | gcc-8    | defconfig        =
+  | 0/1    =
+
+
+  Details:     https://kernelci.org/test/plan/id/5f0d49c474acfc265085bb3b
+
+  Results:     0 PASS, 1 FAIL, 0 SKIP
+  Full config: defconfig
+  Compiler:    gcc-8 (riscv64-linux-gnu-gcc (Debian 8.3.0-2) 8.3.0)
+  Plain log:   https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-58=
+-g1752911c6d10/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed=
+-a00.txt
+  HTML log:    https://storage.kernelci.org//linusw/for-next/gpio-v5.8-2-58=
+-g1752911c6d10/riscv/defconfig/gcc-8/lab-baylibre/baseline-hifive-unleashed=
+-a00.html
+  Rootfs:      http://storage.kernelci.org/images/rootfs/buildroot/kci-2020=
+.05/riscv/baseline/rootfs.cpio.gz =
+
+
+  * baseline.login: https://kernelci.org/test/case/id/5f0d49c474acfc265085b=
+b3c
+      failing since 27 days (last pass: v5.7-rc7-82-g74910e15ab25, first fa=
+il: v5.8-rc1-2-g861254d82649) =20
