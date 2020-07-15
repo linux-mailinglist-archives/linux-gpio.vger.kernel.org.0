@@ -2,213 +2,315 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7902B22141B
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 20:18:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 079282215AF
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 22:03:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbgGOSSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jul 2020 14:18:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGOSSI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 14:18:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989DCC061755
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Jul 2020 11:18:08 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvlyo-0003Sd-Lv; Wed, 15 Jul 2020 20:18:06 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jvlyl-000415-ST; Wed, 15 Jul 2020 20:18:03 +0200
-Date:   Wed, 15 Jul 2020 20:18:03 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+        id S1726949AbgGOUDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jul 2020 16:03:13 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36082 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgGOUDN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 16:03:13 -0400
+Received: by mail-io1-f65.google.com with SMTP id y2so3612175ioy.3;
+        Wed, 15 Jul 2020 13:03:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ogUOp4JGqgwoafgoFFc1CIX6NEhBBY0MHsAVg2gITFo=;
+        b=tjINtUfgFsA1m5qxYbRcsOQACZGJ3vpzEPU30Wl3dBBrRdZdCM93uvCCtMTqShXsXb
+         dgaAY+m0sBpNbHgbcNQU5rHJTzv0tGn2KuaHmaZ88e2sGuIdJoshiVl4b9GwQ28Zj+DG
+         WNi8rgHFSq/lhPpsCOR2pBlK/jqmeVcExj5egetOedvtuI/lOrEMVj7snNe/j0FH7mxA
+         mTVSo0C4qAKnX+Ms6d1HP09vtVgKbnyfdBov1GNmTU/WQPRbfOaL/DND6LmsKSPRYg7N
+         W437PyfiwfdngS4OQcqQmjy1NzxlOpokuFstzO5LPV0LiFfVL2rDKn0HNeHdq3lgFaRx
+         RAjw==
+X-Gm-Message-State: AOAM5335JD8vH3HSveb9i+g344XKq8c0yioZa4ixs4ESvjEU6NQvkWuX
+        wuklVSj5fXstrFSRZg1OcQ==
+X-Google-Smtp-Source: ABdhPJwsziq59iOlBa+Kt8XZip0UziYyyst0hS+8KBy+vk1ZsVMVPck+D9DwvlfGniQO2Wf4XpW7GA==
+X-Received: by 2002:a5d:9752:: with SMTP id c18mr1048927ioo.10.1594843391130;
+        Wed, 15 Jul 2020 13:03:11 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s11sm1573072ili.79.2020.07.15.13.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2020 13:03:10 -0700 (PDT)
+Received: (nullmailer pid 730390 invoked by uid 1000);
+        Wed, 15 Jul 2020 20:03:09 -0000
+Date:   Wed, 15 Jul 2020 14:03:09 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 07/13] pwm: add support for sl28cpld PWM controller
-Message-ID: <20200715181803.nmgi32tugpbuqvjg@pengutronix.de>
-References: <20200706175353.16404-1-michael@walle.cc>
- <20200706175353.16404-8-michael@walle.cc>
- <20200709085006.b54ype3p4yu64upl@pengutronix.de>
- <72858253a9094074e9c8cd7a4e1db09f@walle.cc>
- <20200713084750.qj4hquzd6uz6y526@pengutronix.de>
- <c0594c34c712ce26b3936d42c92d2361@walle.cc>
- <20200714160856.rjqi7lv63geil3hm@pengutronix.de>
- <eedceb44cba9b54e0634f0e8e4f96f70@walle.cc>
- <20200715163620.xhi24mct5b64qpyp@pengutronix.de>
- <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
+ SoC
+Message-ID: <20200715200309.GA722435@bogus>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f4urrnelako4gbo3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d8e9f524f0fd81be282be0be50d16ad@walle.cc>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 11:16:18PM +0300, Cristian Ciocaltea wrote:
+> Add pinctrl and gpio bindings for Actions Semi S500 SoC.
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> ---
+>  .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
+>  1 file changed, 228 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..856947c70844
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> @@ -0,0 +1,228 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Actions Semi S500 SoC pinmux & GPIO controller
+> +
+> +maintainers:
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +description: |
+> +  Pinmux & GPIO controller manages pin multiplexing & configuration including
+> +  GPIO function selection & GPIO attributes configuration. Please refer to
+> +  pinctrl-bindings.txt in this directory for common binding part and usage.
+> +
+> +properties:
+> +  compatible:
+> +    const: actions,s500-pinctrl
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 4
 
---f4urrnelako4gbo3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Need to enumerate what each register range is.
 
-On Wed, Jul 15, 2020 at 07:45:10PM +0200, Michael Walle wrote:
-> Hi Uwe,
->=20
-> Am 2020-07-15 18:36, schrieb Uwe Kleine-K=F6nig:
-> > On Tue, Jul 14, 2020 at 11:09:28PM +0200, Michael Walle wrote:
-> > > > My wishlist (just as it comes to my mind, so no guarantee of
-> > > > completeness):
-> > > >
-> > > >  - can do 0% duty cycle for all supported period lengths
-> > > >  - can do 100% duty cycle for all supported period lengths
-> > > >  - supports both polarities
-> > > >  - supports immediate change of configuration and after completion =
-of
-> > > >    the currently running period
-> > > >  - atomic update (i.e. if you go from configuration A to configurat=
-ion B
-> > > >    the hardware guarantees to only emit periods of type A and then =
-type
-> > > >    B. (Depending on the item above, the last A period might be cut =
-off.)
-> > >=20
-> > > We actually discussed this, because the implementation would be
-> > > easier. But
-> > > if the change takes place immediately you might end up with a longer
-> > > duty
-> > > cycle. Assume the PWM runs at 80% duty cycle and starts with the
-> > > on-period.
-> > > If you now change that to 50% you might end up with one successive
-> > > duty
-> > > cycle of "130%". Eg. the 80% of the old and right after that you
-> > > switch to
-> > > the new 50% and then you'd have a high output which corresponds to a
-> > > 130%
-> > > cycle. I don't know if that is acceptable for all applications.
-> >=20
-> > I thought this is a "change takes place immediately" implementation?! So
-> > these problems are actually real here. (And this not happening is
-> > exactly
-> > my wish here. Is there a mis-understanding?)
->=20
-> I wasn't talking about the sl28cpld btw. What is the difference between
-> your proposed "change take place immediately" and "after the cycle".
-> I understand how the after the cycle should work. But how would the
-> immediate change work in your ideal PWM?
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  gpio-ranges:
+> +    maxItems: 1
+> +
+> +  '#gpio-cells':
+> +    description:
+> +      Specifies the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the pin number and flags, as defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  interrupts:
+> +    description:
+> +      One interrupt per each of the 5 GPIO ports supported by the controller,
+> +      sorted by port number ascending order.
+> +    minItems: 5
+> +    maxItems: 5
+> +
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
 
-If the PWM is running at 1/3 duty cycle and reconfigured for 2/3, then
-the two scenarios are (the * marks the moment where pwm_apply_state() is
-called, ^ marks the start of a period):
+For a new binding, can you do '-pins$' for the node names so we don't 
+need this if/then hack.
 
-immediately:
+> +    then:
+> +      patternProperties:
+> +        'pinmux$':
 
-  __       __    _____    _____
- /  \_____/  \__/     \__/
- ^        ^     ^        ^
-                *
+Is this really a pattern? Can't tell from the example.
 
-after the cycle
-  __       __       _____    _____
- /  \_____/  \_____/     \__/
- ^        ^        ^        ^
-                *
-
-and with my ideal PWM I can choose which of the two behaviours I want.
-
-> > > > > > What about disable()?
-> > > > >
-> > > > > Mhh well, it would do one 100% cycle.. mhh ;) Lets see if there w=
-e can
-> > > > > fix that (in hardware), not much we can do in the driver here. We=
- are
-> > > > > _very_ constraint in size, therefore all that little edge cases f=
-all
-> > > > > off
-> > > > > the table.
-> > > >
-> > > > You're saying that on disable the hardware emits a constant high le=
-vel
-> > > > for one cycle? I hope not ...
-> > >=20
-> > > Mh, I was mistaken, disabling the PWM will turn it off immediately,
-> > > but
-> >=20
-> > And does turn off mean, the output gets inactive?
-> > If so you might also disable the hardware if a 0% duty cycle is
-> > configured assuming this saves some energy without modifying the
-> > resulting wave form.
->=20
-> Disabling it has some side effects like switching to another function
-> for this multi function pin. So I'd rather keep it on ;)
-
-So IMHO you should also keep it on when pwm_apply_state is called with
-state.enabled =3D false to ensure a low output.
-
-> > > one 100% duty cycle may happen if you change from a higher to a lower
-> > > duty cycle setting. See above.
-> > >=20
-> > > > I never programmed a CPLD to emulate a hardware PWM, but I wonder if
-> > > > these are really edge cases that increase the size of the binary?!
-> > >=20
-> > > At the moment there is only one 8bit register which stores the value
-> > > which is used for matching. If you want to change that setting after
-> > > a whole cycle, you'd use another 8bit register to cache the new value.
-> > > So this would at least needs 8 additional flip-flops. This doesn't
-> > > sound much, but we are already near 100% usage of the CPLD. So its
-> > > hard to convince people why this is really necessary.
-> >=20
-> > OK. (Maybe there is enough space to allow implementing 100% for mode 0?)
->=20
-> Little bit here a little bit there ;) TBH there are some more critical
-> bugs which would need to be fixed first. So this would need to be a
-> limitation for now.
-
-Ok for me.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---f4urrnelako4gbo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8PSFgACgkQwfwUeK3K
-7AmGDwgAm95avWRsld3nTjBceB0wN2U3rfrBSGmvypuUp5vppogjIM6W07spEnxY
-m/vKOHxNGrm4DNXqFfmv3F/gygTbLMtKr3kbPHWsfA+k3CeMS+zxCh6Fojbf3Jih
-6Kh+ZnFNzyRwObAiK6biI5tyAJtJTvvlhrKZcLFraJce2wio8PLfUUPtDQiah1+9
-UxVnKfhhhpr1yeH6ke0CFKNCdRv74oewtYgMZlfp1Uk5XXTeXWi8qqb+l/GsO1KG
-OdAGj4vN1xPf/Ze7dGzxhXKoyDONSu9Hw5s2eQAJIVmstvVUjpN9IDOqYgbItZuN
-mcyqN8M8SnBgByA7QXOG0VtnMpXpIA==
-=43K8
------END PGP SIGNATURE-----
-
---f4urrnelako4gbo3--
+> +          type: object
+> +          description:
+> +            Pinctrl node's client devices specify pin muxes using subnodes,
+> +            which in turn use the standard properties below.
+> +          $ref: pinmux-node.yaml#
+> +
+> +          properties:
+> +            groups:
+> +              description:
+> +                List of gpio pin groups affected by the functions specified in
+> +                this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [lcd0_d18_mfp, rmii_crs_dv_mfp, rmii_txd0_mfp,
+> +                      rmii_txd1_mfp, rmii_txen_mfp, rmii_rxen_mfp,
+> +                      rmii_rxd1_mfp, rmii_rxd0_mfp, rmii_ref_clk_mfp,
+> +                      i2s_d0_mfp, i2s_pcm1_mfp, i2s0_pcm0_mfp, i2s1_pcm0_mfp,
+> +                      i2s_d1_mfp, ks_in2_mfp, ks_in1_mfp, ks_in0_mfp,
+> +                      ks_in3_mfp, ks_out0_mfp, ks_out1_mfp, ks_out2_mfp,
+> +                      lvds_o_pn_mfp, dsi_dn0_mfp, dsi_dp2_mfp, lcd0_d17_mfp,
+> +                      dsi_dp3_mfp, dsi_dn3_mfp, dsi_dp0_mfp, lvds_ee_pn_mfp,
+> +                      spi0_i2c_pcm_mfp, spi0_i2s_pcm_mfp, dsi_dnp1_cp_mfp,
+> +                      lvds_e_pn_mfp, dsi_dn2_mfp, uart2_rtsb_mfp,
+> +                      uart2_ctsb_mfp, uart3_rtsb_mfp, uart3_ctsb_mfp,
+> +                      sd0_d0_mfp, sd0_d1_mfp, sd0_d2_d3_mfp, sd1_d0_d3_mfp,
+> +                      sd0_cmd_mfp, sd0_clk_mfp, sd1_cmd_mfp, uart0_rx_mfp,
+> +                      clko_25m_mfp, csi_cn_cp_mfp, sens0_ckout_mfp,
+> +                      uart0_tx_mfp, i2c0_mfp, csi_dn_dp_mfp, sen0_pclk_mfp,
+> +                      pcm1_in_mfp, pcm1_clk_mfp, pcm1_sync_mfp, pcm1_out_mfp,
+> +                      dnand_data_wr_mfp, dnand_acle_ce0_mfp, nand_ceb2_mfp,
+> +                      nand_ceb3_mfp]
+> +              minItems: 1
+> +              maxItems: 32
+> +
+> +            function:
+> +              description:
+> +                Specify the alternative function to be configured for the
+> +                given gpio pin groups.
+> +              enum: [nor, eth_rmii, eth_smii, spi0, spi1, spi2, spi3, sens0,
+> +                sens1, uart0, uart1, uart2, uart3, uart4, uart5, uart6, i2s0,
+> +                i2s1, pcm1, pcm0, ks, jtag, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5,
+> +                p0, sd0, sd1, sd2, i2c0, i2c1, i2c3, dsi, lvds, usb30, clko_25m,
+> +                mipi_csi, nand, spdif, ts, lcd0]
+> +
+> +          required:
+> +            - groups
+> +            - function
+> +
+> +          additionalProperties: false
+> +
+> +        'pinconf$':
+> +          type: object
+> +          description:
+> +            Pinctrl node's client devices specify pin configurations using
+> +            subnodes, which in turn use the standard properties below.
+> +          $ref: pincfg-node.yaml#
+> +
+> +          properties:
+> +            groups:
+> +              description:
+> +                List of gpio pin groups affected by the drive-strength property
+> +                specified in this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [sirq_drv, rmii_txd01_txen_drv, rmii_rxer_drv,
+> +                      rmii_crs_drv, rmii_rxd10_drv, rmii_ref_clk_drv,
+> +                      smi_mdc_mdio_drv, i2s_d0_drv, i2s_bclk0_drv, i2s3_drv,
+> +                      i2s13_drv, pcm1_drv, ks_in_drv, ks_out_drv, lvds_all_drv,
+> +                      lcd_dsi_drv, dsi_drv, sd0_d0_d3_drv, sd1_d0_d3_drv,
+> +                      sd0_cmd_drv, sd0_clk_drv, sd1_cmd_drv, sd1_clk_drv,
+> +                      spi0_all_drv, uart0_rx_drv, uart0_tx_drv, uart2_all_drv,
+> +                      i2c0_all_drv, i2c12_all_drv, sens0_pclk_drv,
+> +                      sens0_ckout_drv, uart3_all_drv]
+> +              minItems: 1
+> +              maxItems: 32
+> +
+> +            pins:
+> +              description:
+> +                List of gpio pins affected by the bias-pull-* and
+> +                input-schmitt-* properties specified in this subnode.
+> +              items:
+> +                oneOf:
+> +                  - enum: [dnand_dqs, dnand_dqsn, eth_txd0, eth_txd1, eth_txen,
+> +                      eth_rxer, eth_crs_dv, eth_rxd1, eth_rxd0, eth_ref_clk,
+> +                      eth_mdc, eth_mdio, sirq0, sirq1, sirq2, i2s_d0, i2s_bclk0,
+> +                      i2s_lrclk0, i2s_mclk0, i2s_d1, i2s_bclk1, i2s_lrclk1,
+> +                      i2s_mclk1, ks_in0, ks_in1, ks_in2, ks_in3, ks_out0,
+> +                      ks_out1, ks_out2, lvds_oep, lvds_oen, lvds_odp, lvds_odn,
+> +                      lvds_ocp, lvds_ocn, lvds_obp, lvds_obn, lvds_oap,
+> +                      lvds_oan, lvds_eep, lvds_een, lvds_edp, lvds_edn,
+> +                      lvds_ecp, lvds_ecn, lvds_ebp, lvds_ebn, lvds_eap,
+> +                      lvds_ean, lcd0_d18, lcd0_d17, dsi_dp3, dsi_dn3, dsi_dp1,
+> +                      dsi_dn1, dsi_cp, dsi_cn, dsi_dp0, dsi_dn0, dsi_dp2,
+> +                      dsi_dn2, sd0_d0, sd0_d1, sd0_d2, sd0_d3, sd1_d0, sd1_d1,
+> +                      sd1_d2, sd1_d3, sd0_cmd, sd0_clk, sd1_cmd, sd1_clk,
+> +                      spi0_sclk, spi0_ss, spi0_miso, spi0_mosi, uart0_rx,
+> +                      uart0_tx, i2c0_sclk, i2c0_sdata, sensor0_pclk,
+> +                      sensor0_ckout, dnand_ale, dnand_cle, dnand_ceb0,
+> +                      dnand_ceb1, dnand_ceb2, dnand_ceb3, uart2_rx, uart2_tx,
+> +                      uart2_rtsb, uart2_ctsb, uart3_rx, uart3_tx, uart3_rtsb,
+> +                      uart3_ctsb, pcm1_in, pcm1_clk, pcm1_sync, pcm1_out,
+> +                      i2c1_sclk, i2c1_sdata, i2c2_sclk, i2c2_sdata, csi_dn0,
+> +                      csi_dp0, csi_dn1, csi_dp1, csi_dn2, csi_dp2, csi_dn3,
+> +                      csi_dp3, csi_cn, csi_cp, dnand_d0, dnand_d1, dnand_d2,
+> +                      dnand_d3, dnand_d4, dnand_d5, dnand_d6, dnand_d7,
+> +                      dnand_rb, dnand_rdb, dnand_rdbn, dnand_wrb, porb,
+> +                      clko_25m, bsel, pkg0, pkg1, pkg2, pkg3]
+> +              minItems: 1
+> +              maxItems: 64
+> +
+> +            bias-pull-up: true
+> +            bias-pull-down: true
+> +
+> +            drive-strength:
+> +              description:
+> +                Selects the drive strength for the specified pins, in mA.
+> +              enum: [2, 4, 8, 12]
+> +
+> +            input-schmitt-enable: true
+> +            input-schmitt-disable: true
+> +
+> +          additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - gpio-controller
+> +  - gpio-ranges
+> +  - '#gpio-cells'
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pinctrl: pinctrl@b01b0000 {
+> +        compatible = "actions,s500-pinctrl";
+> +        reg = <0xe01b0000 0x1000>;
+> +        clocks = <&cmu 20>;
+> +        gpio-controller;
+> +        gpio-ranges = <&pinctrl 0 0 132>;
+> +        #gpio-cells = <2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        i2c0_default: i2c0_default {
+> +            pinmux {
+> +                groups = "i2c0_mfp";
+> +                function = "i2c0";
+> +            };
+> +
+> +            pinconf {
+> +                pins = "i2c0_sclk", "i2c0_sdata";
+> +                bias-pull-up;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.27.0
+> 
