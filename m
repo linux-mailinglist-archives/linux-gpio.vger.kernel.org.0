@@ -2,284 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 129E7220909
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 11:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2478220993
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 12:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgGOJnt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jul 2020 05:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729592AbgGOJnt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 05:43:49 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 024B0C061755;
-        Wed, 15 Jul 2020 02:43:49 -0700 (PDT)
-Received: from Q.local (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E130564;
-        Wed, 15 Jul 2020 11:43:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594806226;
-        bh=R72+AIB3W1UESS+YG/XWiz5Ka/52SFPsZeV0CaaHkgg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/wlfLjBDvmE6FjlafxtGYIXIc6yLoBUNX0AHKgxs73ikGZmYmtis9pYvIb9Ybom7
-         v+tTLe6E+wB7be8i3VJ/UxmZ34hlnVsV3VbO6FZeLtv+nAgETB9fv0/8lXXnFxYF/v
-         /zSdjkhMWBGe4m52eJUFrEj3nosD+dzeAy5f3bKo=
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sakari.ailus@iki.fi, Rob Herring <robh+dt@kernel.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        id S1728048AbgGOKJi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jul 2020 06:09:38 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43622 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgGOKJh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 06:09:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FA9XaT078988;
+        Wed, 15 Jul 2020 05:09:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594807773;
+        bh=sMTWcQwj9SSVWBBOYJxyCg8cA16h64wowoGr34SIHPg=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=vboyXu33Odc33bxOb9zYBNP19dEf/g3Hs5QUsKdc7m2H9sgEGErwByuimfya75MTm
+         MYmVYABrsdcgaeH7ZW+mjsjIz2Q2YnlljuSrr78x7vyzpvBKx5OyeBPqs5nCsb69Dv
+         FmgzhSSFkmOTGRnh1zGTMrQkHP6nGEDYqBEOTIkQ=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FA9XsK021398
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 Jul 2020 05:09:33 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
+ Jul 2020 05:09:32 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 15 Jul 2020 05:09:32 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FA9JOd099515;
+        Wed, 15 Jul 2020 05:09:23 -0500
+Subject: Re: [PATCH] gpio: omap: handle pin config bias flags
+To:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v10.1 3/4] dt-bindings: media: i2c: Add bindings for IMI RDACM2x
-Date:   Wed, 15 Jul 2020 10:43:41 +0100
-Message-Id: <20200715094341.4123896-1-kieran.bingham+renesas@ideasonboard.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
-References: <20200612144713.502006-4-kieran.bingham+renesas@ideasonboard.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200709223401.780051-1-drew@beagleboard.org>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
+Date:   Wed, 15 Jul 2020 13:09:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200709223401.780051-1-drew@beagleboard.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-The IMI RDACM20 and IMI RDACM21 are Gigabit Multimedia Serial Link
-(GMSL) camera capable of transmitting video and I2C control messages on
-a coax cable physical link for automotive applications.
-
-Document their device tree bindings.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Provide imi vendor prefix
- - Fix minor spelling
-
-v3:
- - update binding descriptions
-
-v4:
- - No change
-
-v5:
- - Specify optional third reg address for the MCU
-
-v7:
- [Jacopo]
- - Rename to imi,rdacm2x-gmsl.yaml
- - Exand bindings to describe RDACM21
-
-v9:
-  [Jacopo]
-  - Rework 'compatible' property as suggested by Rob
-  - Re-order vendor prefixes ('g' comes before 'i' ... )
-  - Add Rob's tag
-
-v10.1:
- [Kieran]
-  - Fix up the two examples 'reg' value for the i2c nodes.
 
 
- .../bindings/media/i2c/imi,rdacm2x-gmsl.yaml  | 159 ++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- 2 files changed, 161 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+On 10/07/2020 01:34, Drew Fustini wrote:
+> Modify omap_gpio_set_config() to handle pin config bias flags by calling
+> gpiochip_generic_config().
+> 
+> The pin group for the gpio line must have the corresponding pinconf
+> properties:
+> 
+> PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
+> PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
+> 
+> This is necessary for pcs_pinconf_set() to find the requested bias
+> parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
+> 
+> Signed-off-by: Drew Fustini <drew@beagleboard.org>
+> ---
+>   drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
+>   1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index b8e2ecc3eade..a471a152f318 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -896,12 +896,25 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+>   				unsigned long config)
+>   {
+>   	u32 debounce;
+> +	int ret;
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-new file mode 100644
-index 000000000000..5ad4b8c356cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-@@ -0,0 +1,159 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+# Copyright (C) 2019 Renesas Electronics Corp.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/imi,rdacm2x-gmsl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title:  IMI D&D RDACM20 and RDACM21 Automotive Camera Platforms
-+
-+maintainers:
-+  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-+  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+  - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-+
-+description: -|
-+  The IMI D&D RDACM20 and RDACM21 are GMSL-compatible camera designed for
-+  automotive applications.
-+
-+  The RDACM20 camera module encloses a Maxim Integrated MAX9271 GMSL serializer,
-+  coupled with an OV10635 image sensor and an embedded MCU. Both the MCU and
-+  the image sensor are connected to the serializer local I2C bus and are
-+  accessible by the host SoC by direct addressing.
-+
-+  The RDACM21 camera module encloses the same serializer, coupled with an
-+  OV10640 image sensor and an OV490 ISP. Only the OV490 ISP is interfaced to
-+  the serializer local I2C bus while the image sensor is not accessible from
-+  the host SoC.
-+
-+  They both connect to a remote GMSL endpoint through a coaxial cable.
-+
-+                                                   IMI RDACM20
-+  +---------------+                        +--------------------------------+
-+  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-+  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV10635 |
-+  | de-serializer |   <- I2C messages ->   |                   \<-->MCU     |
-+  +---------------+                        +--------------------------------+
-+
-+                                                   IMI RDACM21
-+  +---------------+                        +--------------------------------+
-+  |      GMSL     |   <- Video Stream      |       <- Video--------\        |
-+  |               |< === GMSL Link ====== >|MAX9271<- I2C bus-> <-->OV490   |
-+  |               |   <- I2C messages ->   |                          |     |
-+  | de-serializer |                        |          OV10640 <-------|     |
-+  +---------------+                        +--------------------------------+
-+
-+  Both camera modules serialize video data generated by the embedded camera
-+  sensor on the GMSL serial channel to a remote GMSL de-serializer. They also
-+  receive and transmit I2C messages encapsulated and transmitted on the GMSL
-+  bidirectional control channel.
-+
-+  All I2C traffic received on the GMSL link not directed to the serializer is
-+  propagated on the local I2C bus to the remote device there connected. All the
-+  I2C traffic generated on the local I2C bus not directed to the serializer is
-+  propagated to the remote de-serializer encapsulated in the GMSL control
-+  channel.
-+
-+  The RDACM20 and RDACM21 DT node should be a direct child of the GMSL
-+  deserializer's I2C bus corresponding to the GMSL link that the camera is
-+  attached to.
-+
-+properties:
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  compatible:
-+    enum:
-+      - imi,rdacm20
-+      - imi,rdacm21
-+
-+  reg:
-+    description: -|
-+      I2C device addresses, the first to be assigned to the serializer, the
-+      following ones to be assigned to the remote devices.
-+
-+      For RDACM20 the second entry of the property is assigned to the
-+      OV10635 image sensor and the optional third one to the embedded MCU.
-+
-+      For RDACM21 the second entry is assigned to the OV490 ISP and the optional
-+      third one ignored.
-+
-+    minItems: 2
-+    maxItems: 3
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+    description: -|
-+      Connection to the remote GMSL endpoint are modelled using the OF graph
-+      bindings in accordance with the video interface bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+      The device node contains a single "port" child node with a single
-+      "endpoint" sub-device.
-+
-+    properties:
-+      endpoint:
-+        type: object
-+        additionalProperties: false
-+
-+        properties:
-+          remote-endpoint:
-+            description: -|
-+              phandle to the remote GMSL endpoint sub-node in the remote node
-+              port.
-+            maxItems: 1
-+
-+        required:
-+          - remote-endpoint
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
-+
-+examples:
-+  - |
-+    i2c@e66d8000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      reg = <0 0xe66d8000>;
-+
-+      camera@31 {
-+        compatible = "imi,rdacm20";
-+        reg = <0x31>, <0x41>, <0x51>;
-+
-+        port {
-+          rdacm20_out0: endpoint {
-+            remote-endpoint = <&max9286_in0>;
-+          };
-+        };
-+      };
-+    };
-+
-+  - |
-+    i2c@e66d8000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      reg = <0 0xe66d8000>;
-+
-+      camera@31 {
-+        compatible = "imi,rdacm21";
-+        reg = <0x31>, <0x41>;
-+
-+        port {
-+          rdacm21_out0: endpoint {
-+            remote-endpoint = <&max9286_in0>;
-+          };
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9aeab66be85f..8261ede298f8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -469,6 +469,8 @@ patternProperties:
-     description: ILI Technology Corporation (ILITEK)
-   "^img,.*":
-     description: Imagination Technologies Ltd.
-+  "^imi,.*":
-+    description: Integrated Micro-Electronics Inc.
-   "^incircuit,.*":
-     description: In-Circuit GmbH
-   "^inet-tek,.*":
+ret =  -ENOTSUPP;
+
+>   
+> -	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
+> -		return -ENOTSUPP;
+> +	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
+> +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
+> +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
+> +	{
+> +		ret = gpiochip_generic_config(chip, offset, config);
+> +	}
+> +	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
+> +	{
+> +		debounce = pinconf_to_config_argument(config);
+> +		ret = omap_gpio_debounce(chip, offset, debounce);
+> +	}
+> +	else
+> +	{
+> +		ret = -ENOTSUPP;
+> +	}
+
+drop above "else"?
+
+>   
+> -	debounce = pinconf_to_config_argument(config);
+> -	return omap_gpio_debounce(chip, offset, debounce);
+> +	return ret;
+>   }
+>   
+>   static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> 
+
+Minor comment, Otherwise:
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
 -- 
-2.25.1
-
+Best regards,
+grygorii
