@@ -2,131 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2478220993
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 12:09:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDB182209B8
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Jul 2020 12:19:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgGOKJi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jul 2020 06:09:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:43622 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbgGOKJh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 06:09:37 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06FA9XaT078988;
-        Wed, 15 Jul 2020 05:09:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594807773;
-        bh=sMTWcQwj9SSVWBBOYJxyCg8cA16h64wowoGr34SIHPg=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=vboyXu33Odc33bxOb9zYBNP19dEf/g3Hs5QUsKdc7m2H9sgEGErwByuimfya75MTm
-         MYmVYABrsdcgaeH7ZW+mjsjIz2Q2YnlljuSrr78x7vyzpvBKx5OyeBPqs5nCsb69Dv
-         FmgzhSSFkmOTGRnh1zGTMrQkHP6nGEDYqBEOTIkQ=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06FA9XsK021398
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jul 2020 05:09:33 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 15
- Jul 2020 05:09:32 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 15 Jul 2020 05:09:32 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06FA9JOd099515;
-        Wed, 15 Jul 2020 05:09:23 -0500
-Subject: Re: [PATCH] gpio: omap: handle pin config bias flags
-To:     Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
+        id S1728068AbgGOKTK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jul 2020 06:19:10 -0400
+Received: from mail-oo1-f66.google.com ([209.85.161.66]:44296 "EHLO
+        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgGOKTK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 06:19:10 -0400
+Received: by mail-oo1-f66.google.com with SMTP id o36so350247ooi.11;
+        Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NAkHhGCBdih32hqt76V0j8Veg+fQ7FChhZOK219jyyg=;
+        b=HRl5wwAxXD3aa/M3k9gHxLMLja++2JYkfphFhp49MwX5QEZUmB01bmHiL6U3AQQgBp
+         PYp5mlL2JZ7HMDdwcnYGMgzNidvq+hlxlN+KYwRMfYNEK8jRY3kv4uxzLzR6glqm+cjT
+         716mYGZsVXpB/1BPXJQp/GXAdPhQPFPmT7s+PL5g/oOT5/iWo77xm71I25Uon9OS10J8
+         OxvlqgjypZC+KzrPnkceZRtZ0Kck5G73NdRpsz/VX9fqc9kpJPvjBtbGEXLUBmmQTgAz
+         B2Df6nNlqWpjFd3eO+0wEj6MpLlJaQTRYw/JxbJ4HmbZVCLYyh2mHA6G9at/DWYvoIPE
+         pT/g==
+X-Gm-Message-State: AOAM533FxjB8VOE1z/8HBpDOqPY0GWlsiZ2NcMjiGqnlqS6oYrFAmEKQ
+        pQG0hAowT0O/CYR/o7yAxJ6uAdX+Ziuj0EX7jaA=
+X-Google-Smtp-Source: ABdhPJwSAaZJfpGKxkLLTXuhq5d9bq9sTol7NAMegIgcAukEn+36YLrrN0ajD7D+Vfxo36peiJOo78hXGiX/3pGPC7k=
+X-Received: by 2002:a4a:9552:: with SMTP id n18mr8646494ooi.1.1594808349233;
+ Wed, 15 Jul 2020 03:19:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Jul 2020 12:18:58 +0200
+Message-ID: <CAMuHMdUH4yVek8Fn2z1xneTS0Y_vkMv+w7VwEDJvCUXR9qVQRw@mail.gmail.com>
+Subject: Re: [PATCH 3/9] arm64: dts: renesas: r8a774e1: Add IPMMU device nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200709223401.780051-1-drew@beagleboard.org>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <1a0180f3-7693-672a-8070-7032854bb73c@ti.com>
-Date:   Wed, 15 Jul 2020 13:09:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200709223401.780051-1-drew@beagleboard.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Add RZ/G2H (R8A774E1) IPMMU nodes.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
 
-On 10/07/2020 01:34, Drew Fustini wrote:
-> Modify omap_gpio_set_config() to handle pin config bias flags by calling
-> gpiochip_generic_config().
-> 
-> The pin group for the gpio line must have the corresponding pinconf
-> properties:
-> 
-> PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
-> PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
-> 
-> This is necessary for pcs_pinconf_set() to find the requested bias
-> parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
-> 
-> Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> ---
->   drivers/gpio/gpio-omap.c | 21 +++++++++++++++++----
->   1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index b8e2ecc3eade..a471a152f318 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -896,12 +896,25 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
->   				unsigned long config)
->   {
->   	u32 debounce;
-> +	int ret;
+Gr{oetje,eeting}s,
 
-ret =  -ENOTSUPP;
-
->   
-> -	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
-> -		return -ENOTSUPP;
-> +	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
-> +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
-> +	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
-> +	{
-> +		ret = gpiochip_generic_config(chip, offset, config);
-> +	}
-> +	else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
-> +	{
-> +		debounce = pinconf_to_config_argument(config);
-> +		ret = omap_gpio_debounce(chip, offset, debounce);
-> +	}
-> +	else
-> +	{
-> +		ret = -ENOTSUPP;
-> +	}
-
-drop above "else"?
-
->   
-> -	debounce = pinconf_to_config_argument(config);
-> -	return omap_gpio_debounce(chip, offset, debounce);
-> +	return ret;
->   }
->   
->   static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> 
-
-Minor comment, Otherwise:
-Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+                        Geert
 
 -- 
-Best regards,
-grygorii
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
