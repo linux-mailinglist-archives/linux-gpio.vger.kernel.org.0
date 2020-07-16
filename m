@@ -2,116 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F5BC221FAD
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 11:28:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 575B3221FF7
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 11:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgGPJ2k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 05:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbgGPJ2j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 05:28:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8924FC061755
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 02:28:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so6347799ljp.6
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 02:28:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XNEhMap9NM6UItrRge++eefZ6Qhtg+Jsg73OotlholI=;
-        b=E2ZcvJf7E8ouMF600f9QqR21OopS0MMrnR1yJ6nAjPW2dOfw4gUpNnhnKBLtlrQvwj
-         IgvDfHzeRioHlULZI1EBwJEjL0rQbJGykuuDLrqkyY/9ZCk/T84hy3pcO2BGxstxCqtx
-         /7MCkoYn0QVycsMQ65MAgn7bzJc2SVB/E6s6U/IzsSwgNPSCgM7jTsqNnrJWQNxtgQqK
-         rJNtnsS4NuxewaOtF+uGAp4o/6zI63jtod5ZH0l5CXy3q65pY1qq4+JubFTzRbjOjssi
-         F6UvoFK1qIMwIUBAMGJPAzt+COyqllu8djPna2z2h4n3Nkw/8cqyok2GNL5tdXXP2kQj
-         sRyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XNEhMap9NM6UItrRge++eefZ6Qhtg+Jsg73OotlholI=;
-        b=YZXSDCYcLlmMEWihHOQmODHeckQBE9g92VIYUhhxHum3JSu4MYkG9aeWBtp5pys9TZ
-         WAahRFgKLkinvPsvOzaDZEhYITS876saK6eLiOuRRU1OoLC6fOJpWwD5uCl9Gs/RTL/M
-         vHy3fmoVbdSrBz6xCuLWVxCECfuSCExo0FIsa4wDDyPVVtUcR1BNgcGhYDjz68WspmEM
-         f/EkzvM+14bigKrWN1VZh/UO3rXG0g8WkoeUdmdAy3HmsjaobTXt2rJSut5EYm1McP6j
-         D6Vkp7sa0GufyBPTOZzoPYnWAhMah1q96aCR4jFGYr4DCWPXrvqAxKOLheKsqSNvCUfD
-         phZA==
-X-Gm-Message-State: AOAM533rM48XDOs5y/OpkDT122yAQCw4hFe6n7ykfbpYemquiKFHodB+
-        0pKSo/6LTLjaxbo1Om4CwjS3PY9sWsI=
-X-Google-Smtp-Source: ABdhPJzBwZZTBZt8m1PlPwxpRPXwSuY0mtIMZ3+Pofxzco6ikFeA+AS9fkT1L0bMzajoaVYhIWRybQ==
-X-Received: by 2002:a2e:9785:: with SMTP id y5mr1653309lji.383.1594891717893;
-        Thu, 16 Jul 2020 02:28:37 -0700 (PDT)
-Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id b26sm1120854lji.36.2020.07.16.02.28.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 02:28:37 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH] gpio: max77620: Use helper variable and clarify
-Date:   Thu, 16 Jul 2020 11:28:35 +0200
-Message-Id: <20200716092835.69176-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        id S1727034AbgGPJpT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 05:45:19 -0400
+Received: from mailrelay.armstrong.synacor.com ([64.8.71.22]:8712 "EHLO
+        smtp.zoominternet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgGPJpT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 05:45:19 -0400
+X-Greylist: delayed 1216 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jul 2020 05:45:19 EDT
+DKIM-Signature: v=1; a=rsa-sha1; d=zoominternet.net; s=20180516; c=relaxed/simple;
+        q=dns/txt; i=@zoominternet.net; t=1594891503;
+        h=From:Subject:Date:To:MIME-Version:Content-Type;
+        bh=9H6mIHY0KqDHMLL4LqkLLWUrgDY=;
+        b=RGYXvYqCRY+97gUqbIFMcr7MEtbX7W7eto01BJvmqTFqd2AwkGJ1LPb+AAg6mwHw
+        MzCtqoZwm14zHNm8Rd25WX8izouPGddWR/8/JS0LYkUI7xImf5qcqrvcxEjVYMzz
+        zPSB0be8O9EqL/C5isN0sFBcw95QZB2VseUxVRFerczJpLK1z4rZzTonkMD+2kym
+        rQdrievC/ai41WIFun+RDs/GfgwuYbqqMALAub3ejk/V8UKbnZG7dKNOyQg9W6Ge
+        QhcgLMEnHHI35/3enwFn8QBhmJ/8lwk9kUno5tyqhrgHhpWf9AQp3o5bctPHPr6s
+        t4hcf1rHdMSwvu7hsRqAJA==;
+X_CMAE_Category: , ,
+X-CNFS-Analysis: v=2.3 cv=H9SlPNQi c=1 sm=1 tr=0 a=VM7KJ31e1KNGh6xkEGse4A==:117 a=9cW_t1CCXrUA:10 a=KGjhK52YXX0A:10 a=FKkrIqjQGGEA:10 a=PJS9qEZKnNwA:10 a=IkcTkHD0fZMA:10 a=_RQrkK6FrEwA:10 a=OirutkuoYOMA:10 a=R0eIVPL1rM4A:10 a=QwuuhjdnAAAA:8 a=mg0QT4ct15kTEZzOOeQA:9 a=QEXdDO2ut3YA:10 a=lSz4obFp_rgA:10 a=nSmHb-GnRAYA:10 a=-FEs8UIgK8oA:10 a=VxAk22fqlfwA:10 a=NWVoK91CQyQA:10 a=ZpP24Yj66TXli5MajnOD:22 a=xGIkrBXCkqNFDDDOJSQg:22 a=4nfBGtV56Pt7G6Qk4joU:22 a=p-dnK0njbqwfn1k4-x12:22 a=MURpYVOlrLSSKvKaDb7l:22
+X-CM-Score: 0
+X-Scanned-by: Cloudmark Authority Engine
+X-Authed-Username: YXBfaG9zcGl0YWxAem9vbWludGVybmV0Lm5ldA==
+X_CMAE_Category: , ,
+X-CNFS-Analysis: 
+X-CM-Score: 
+X-Scanned-by: Cloudmark Authority Engine
+Received: from [10.35.66.1] ([10.35.66.1:48082] helo=md05.armstrong.cmh.synacor.com)
+        by smtp.zoominternet.net (envelope-from <ap_hospital@zoominternet.net>)
+        (ecelerity 3.6.2.43620 r(Platform:3.6.2.0)) with ESMTP
+        id 4E/31-02415-CEC101F5; Thu, 16 Jul 2020 05:25:01 -0400
+Date:   Thu, 16 Jul 2020 05:25:00 -0400 (EDT)
+From:   ap_hospital@zoominternet.net
+Message-ID: <2119467535.88156924.1594891500667.JavaMail.zimbra@zoominternet.net>
+Subject: Re:
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [64.62.187.80]
+X-Mailer: Zimbra 8.0.7_GA_6021 (zclient/8.0.7_GA_6021)
+Thread-Topic: 
+Thread-Index: BXrfchB2/q3eUlBuPYjATnnIgB+J7A==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Most other drivers fill out the gpio_irq_chip using a
-struct gpio_irq_chip *girq helper variable for ease of
-reading.
-
-We also make a habit of explicitly assigning NULL and
-zero to the parent IRQs when using ordinary IRQ handlers
-in the driver, mostly for code readability and
-maintenance.
-
-Cc: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-max77620.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
-index e090979659eb..7c0a9ef0b500 100644
---- a/drivers/gpio/gpio-max77620.c
-+++ b/drivers/gpio/gpio-max77620.c
-@@ -288,6 +288,7 @@ static int max77620_gpio_probe(struct platform_device *pdev)
- {
- 	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
- 	struct max77620_gpio *mgpio;
-+	struct gpio_irq_chip *girq;
- 	unsigned int gpio_irq;
- 	int ret;
- 
-@@ -316,11 +317,16 @@ static int max77620_gpio_probe(struct platform_device *pdev)
- 	mgpio->gpio_chip.can_sleep = 1;
- 	mgpio->gpio_chip.base = -1;
- 
--	mgpio->gpio_chip.irq.chip = &max77620_gpio_irqchip;
--	mgpio->gpio_chip.irq.default_type = IRQ_TYPE_NONE;
--	mgpio->gpio_chip.irq.handler = handle_edge_irq;
--	mgpio->gpio_chip.irq.init_hw = max77620_gpio_irq_init_hw,
--	mgpio->gpio_chip.irq.threaded = true;
-+	girq = &mgpio->gpio_chip.irq;
-+	girq->chip = &max77620_gpio_irqchip;
-+	/* This will let us handle the parent IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->parents = NULL;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_edge_irq;
-+	girq->init_hw = max77620_gpio_irq_init_hw,
-+	girq->threaded = true;
- 
- 	platform_set_drvdata(pdev, mgpio);
- 
--- 
-2.26.2
-
+Do you want to sell your kidney for money? contact us via email:(info@/kidneyshub.space) OR https://www.kidneyshub.space
+Dr Steevens .
+whatsApp +91-9585623470 .
