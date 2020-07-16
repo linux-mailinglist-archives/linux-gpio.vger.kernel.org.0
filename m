@@ -2,75 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5A1222478
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:57:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4E932224CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 16:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgGPN5z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 09:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
+        id S1728822AbgGPODd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 10:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgGPN5u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:57:50 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391FCC08C5CE
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:57:50 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c11so3321036lfh.8
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:57:50 -0700 (PDT)
+        with ESMTP id S1728853AbgGPODd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 10:03:33 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B07DC061755
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 07:03:32 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id h22so7251786lji.9
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 07:03:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3CikeVXsmSH3xLejOtc64KxmHFqUPdsBn8HUNTfiQdM=;
-        b=qCTvAswWd3m3SFChWcBhgjSBV9sXk0iKF+7Njy/yLDzYrxghImOwWXRjF9o8Wtrf/b
-         jLJt5mYhaXRH1FURrwzxmUh4LdwSR7X3n4vKK2nzsFmpCbRqoCluigSiSfXJMUFR7aFf
-         h+tkfv9tzeI6leN8Z8uGxSHi717r7MI+mxTew9gvnfTy0JC5OSG0bKToY5HAurR9vKfm
-         wK0wDBQliaJIptP6i7OGYKHh+rcyiiQqD3mXU/Pf3H4XLmi3xULSHCXqms6zk0Mov4Jg
-         x4vXazJcuaZz+UAGy5hsejggtpbZyzZeTWNaWqNHwKwId5M0sDi2mhXEwmmzacTJClMt
-         1nhg==
+        bh=LMVUtBja2SNgNlakfMOQ89lMDwiyOZMYueQ7OmzeKOc=;
+        b=s70NSuWYsBJZnUt1zfuwVLReLbh69acoUniM01qHMZ2j12NIRrmmyS4Vsa9luwKwkG
+         YIRZoaaafmMHDfyfDzP6+5do+UjVCwxFA1lwXa+uSClUc6cpdsNMJG9Lgj2X43N8YEXg
+         zH2bCgqu1L6CyZ5F1AtBgYqpIj84cutxHCq3Es/S0yVzsgVNaMls6GdM/AYfiVsMe9e7
+         EjbYa+X4EfRBQe0kZeeyL9anmUirYJi2Ze1NrRliRLtZxw/x/qad8wjlWR6xs8CXhvmw
+         ci2jfJ7/D3oArgAhYfpVqMJye++UoLPPMb8HP7o67g3reuTyc27gWYQQjmC2LvXJKfEu
+         JG7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3CikeVXsmSH3xLejOtc64KxmHFqUPdsBn8HUNTfiQdM=;
-        b=Ti4KvtrOIRWCHRnOEh8H8UdFNGk4ERRMkzj3a/ebFr10fpWjY7FD/VVJHIYGeMfVdM
-         wYRi+2W6+uT2I7EqWMmSQAUyooCbdzjn/hmM+cZGXNAUZxwZLPS7Ro4cOlx9SF7fzSyH
-         Z5j+ByE7F62ORqL0JPLTpwpiq8BNUFQ4MQuFZnGIDQBmw3s0EMjnwI6g8u3EKSVgq1js
-         YjgYzsi+YT6vgz+sXLfGUD9WAkFddTOwNye9q4RATHcRaXt2xZFg4zMjPk9jXS3ByhZd
-         yfyhsTzVpYyrIixl5cYUSvYxI0N5LlsWKRz6guBozEDkNziJpTJ8jKKuppbO8xLm+HBZ
-         fSMQ==
-X-Gm-Message-State: AOAM531/iUkeCFA04j6rtUz2ox/2Tte5Pc72xIrLT/S2yYDmSvHX3mhX
-        xLsBZ+5wjpKJ6hqJO4rZXFolv74YcfIt85XpnnkXxBJI0xM=
-X-Google-Smtp-Source: ABdhPJxVFqXa0LJbvSZZW1t3IXhfBWED/cnhyxm/+4d67HItSPQn+L5o6S2HvAr1UKqianvKT7hJBHSeaZYmBa2iAKE=
-X-Received: by 2002:a19:e05d:: with SMTP id g29mr2138883lfj.217.1594907868617;
- Thu, 16 Jul 2020 06:57:48 -0700 (PDT)
+        bh=LMVUtBja2SNgNlakfMOQ89lMDwiyOZMYueQ7OmzeKOc=;
+        b=Ywqk9IzT/EJyC2ty9iA7DCiUUgsYPlFgGnTcMteTTYpzxiMGFFZJg0j0hiIyJ2wZm0
+         U3WQJi9LEvquB11m5Z7aOQrPwn8wSStM7yoYkLVbEuEt2Ix8yfH6HSGsAJr526D+qvXm
+         6g5tIcQbSDa1RS3b7ikPHvP2J81U/xS86dT41PbqR6iy8rXX6cFSDivNtr8BVheKROC0
+         j0NVo/qrFeB4zDWLBRLX7FnmDkh2tVOpVZQ/1/+HovoFgLUDE1iGctHI7UhXcwTdsEHO
+         Xn2pQNtBZ3KrYi9Pb7hnNZlSQnfiTq3zmuSp/pQjOBwMxQbgnb9w/m21pnWDeS03YnV0
+         KOTw==
+X-Gm-Message-State: AOAM5336J5eBAN3vuqah0FeBVmVWAtHFRDxVrHHNKFA7PEwLQotQwxVQ
+        c81zisgIJ1YzrVyfNB3gwvXlCOjLr0SFcWyXrL+1NFQnAE0=
+X-Google-Smtp-Source: ABdhPJyGR+lfdX0ArBMfAZ1+XQfx5mFzLRS97WrtmtBm3jFw4kXFlOFiS0FfAH6u+pxFbh/gBOiMIWWYW9aJ51rn6zk=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2214470ljj.283.1594908209643;
+ Thu, 16 Jul 2020 07:03:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713144930.1034632-1-lee.jones@linaro.org>
- <20200713144930.1034632-21-lee.jones@linaro.org> <CAMuHMdWMUN8sU09J1eSsSJ9sXMhf10GUHeP47UDf6+yp8vnAnw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWMUN8sU09J1eSsSJ9sXMhf10GUHeP47UDf6+yp8vnAnw@mail.gmail.com>
+References: <20200716124244.50797-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200716124244.50797-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 15:57:37 +0200
-Message-ID: <CACRpkdYep_r1KsTnU2gVr-DeOf50hRiyTRq=jgeas=fD-qPHVg@mail.gmail.com>
-Subject: Re: [PATCH 20/25] pinctrl: pinctrl-rza1: Demote some kerneldoc
- headers and fix others
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Date:   Thu, 16 Jul 2020 16:03:18 +0200
+Message-ID: <CACRpkdbaus7etT4dUr_iAitpfbW-EEedW4Zj0HEN3xysZ6ab1w@mail.gmail.com>
+Subject: Re: [PATCH v1] pinctrl: intel: Add Intel Emmitsburg pin controller support
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 9:30 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Jul 16, 2020 at 2:42 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in sh-pfc-for-v5.9.
+> This driver adds pinctrl/GPIO support for Intel Emmitsburg PCH. The
+> GPIO controller is based on the next generation GPIO hardware but still
+> compatible with the one supported by the Intel core pinctrl/GPIO driver.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-OK since Geert is queueing this I'll drop this patch from my tree.
+FWIW:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Obviously Mika's review is more important than mine anyway.
 
 Yours,
 Linus Walleij
