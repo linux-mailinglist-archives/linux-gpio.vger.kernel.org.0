@@ -2,71 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 893B1222396
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 129D42223A9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:14:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgGPNIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 09:08:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35038 "EHLO
+        id S1728532AbgGPNOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 09:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGPNIR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:08:17 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018CAC061755
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:08:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e8so7112563ljb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:08:16 -0700 (PDT)
+        with ESMTP id S1728087AbgGPNOo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:14:44 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9231C08C5C0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:14:43 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id d17so7127897ljl.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R7N2aBROeX+YFprlGDk5Xmj7aeLtlymLdW0LHGxpCgE=;
-        b=WjNY2YnDSCilEnR5CUW1lJbcs4d7aMtWoaI8nNptasAqG9imG6yXmpfaRcdsySAJCP
-         HBiQEtJiR+/q8RDARzmk87LBt6Ju0XWKjh/UDNmIbrsoMnilmd924AVC6cKPowmAmgBZ
-         B0Eo6ptIaYVPOTtT9VJXwsn6Tx+ozPvXyTH8x2Buk7QujSz9M9r29BSx0gNfUfHWPfYW
-         mr3K8O/RbmE21gVBZySdPuTW3dXGsYLMfvyzg+jfFsQQv4uFRV8ptnNxr5n9yS8/3sV/
-         bHGcbKowd/QY0jo28t8VkJer+o1xNJfd5ytomDltrpyYAWxEMd5z5nLnAp3Fc132NEj0
-         COkg==
+        bh=bBoOhm+GV/yHPZh33fMz2aVrUQ8YpA+qKh/3LyamqOs=;
+        b=lnD2/ao0AusGxOT5rQ8o0aaxmWDu0KuU4mCKD8GmqAlMnn61XfetlQXd8z2nAXa/Ev
+         PCrXuisiZHfDNjy/LFjKhyZycHaPjSTyZZPWNRuCVY4x7yhf6ZPpZa+v9HAvPoGKdePt
+         N5yz0o10tcqY7jUPAS8+k26sWFXuz5v4TsN7XPjROpVsUivQcGtf6IDFAfgybSqYGHQK
+         9vGqxoV4+59ruRRjdAlbb5WQqaKpN8E1tSZXHPxXkaEN8+Zcbrqc92K4eU4I+CZ8k6jT
+         7IjxGhlU6lszhda2/pjerfnJDRz9dcNyBdsL0Ih5CSPOMXZwY0nAQblu/+5w0jdMMIKb
+         csbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R7N2aBROeX+YFprlGDk5Xmj7aeLtlymLdW0LHGxpCgE=;
-        b=Vrw/UwnqKcqy5e/Stbz5cpXNKt3Z8evkiZPwzje85RmH4AmHwFuZippQT0TVegN3n1
-         GYTWQj2CLxEhEINbXxoYCb7J1AYqCns7pWfEUrSd9o/lV86vHToWxh0Df4VK3izc60nz
-         GBLAcx3zCXkVcWmDpga1Fg34TWjiDhAs9C9iExVOebHi1dcfoNCgb8cEDmml0XZkf7xo
-         zQ/1DZ4wRzPYBTA34prIDMSEq4USr2IGCiR6D/u9B7qzovVO9fK8+1eHJn49IR4VI8io
-         fE0UofERpbmBcfPfDrqYZ+Fv5pKGoznub4oS4QT+WFPtU8oA3FGGqfiZmN5mcEYIjrgi
-         yvUw==
-X-Gm-Message-State: AOAM533biczKCrwvZvyqZRvinDfOnmHs5SLt/Ip/HXQjrRpQyvZm7SM/
-        huUfqW80GlZxdJhedO+KPDwNdQtZcTJ24QFkX+P/EA==
-X-Google-Smtp-Source: ABdhPJwyE5Pwlo7lg3lv+YfgIIcizMkHOnJ9VRbyuQybrBvoxm978VmVGEuiGExsFZOsp0nqgoIEw1WC81MDzx7dkew=
-X-Received: by 2002:a2e:9c3:: with SMTP id 186mr2067175ljj.293.1594904895506;
- Thu, 16 Jul 2020 06:08:15 -0700 (PDT)
+        bh=bBoOhm+GV/yHPZh33fMz2aVrUQ8YpA+qKh/3LyamqOs=;
+        b=mo8j5yyf2uWwXnjVEgOE5SmLGuB1n7qfVU2zy3J5BRLxn7DoJ9mWTMB3lAtdeff1lT
+         l/BhtQwSi6mqAWeRKtFIHr5ClLLLjnBCyepExLWqZOus+pH9CCf7jNPIwvIWVX2Xqe4q
+         9RAJhXPcs4Hfhv+PFuA3ZwLciqMCfg7W3sz2uIOel06x6A+0lyo4zziAgZSHu20qtCsT
+         Su8Av/SXRkpElHnG/+Yi1h3PgaCRLdEncXcP9ahZGY4lic2P5yZI7QrNKkjgMNCQHgR4
+         hoUq+xoM//XxLt8W0x1TkSmra88ct8IMAAcj1OmcVqmPrX+VWM9LYkUinO+NSiP5N3Xs
+         2gqA==
+X-Gm-Message-State: AOAM5329PRH2X0Sf5xrmt/iwbP8E4/fhRPU1IVibrpKWVAFj4k/Ir5X1
+        0d2dQoafZqa9qq7J6Y4Dk1Mt/e47N9bcEYO2uAbdqQ==
+X-Google-Smtp-Source: ABdhPJwmvWwrnn/zXFAaqbiFIZZ2k9t59pLji33UNkp5uvoqHLuaSdq0MMGTcbRxQFHJ1hNqXP/I0e7IFNSw0UUqHHo=
+X-Received: by 2002:a2e:810a:: with SMTP id d10mr1948021ljg.144.1594905282186;
+ Thu, 16 Jul 2020 06:14:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200713154429.23662-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200713154429.23662-1-andriy.shevchenko@linux.intel.com>
+References: <20200713144930.1034632-1-lee.jones@linaro.org>
+ <20200713144930.1034632-17-lee.jones@linaro.org> <20200713200244.GA23553@piout.net>
+In-Reply-To: <20200713200244.GA23553@piout.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 15:08:04 +0200
-Message-ID: <CACRpkdYvx9o_U2-PX-s7a8VPVJr+dNJmtdi7K9Qtnt1RGfH2+g@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: mmio: replace open-coded for_each_set_bit()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 16 Jul 2020 15:14:31 +0200
+Message-ID: <CACRpkdYcr9Tzt+=15KGhcbiBRhyZWYw8=ieNs=ZaX8CMdZv9qQ@mail.gmail.com>
+Subject: Re: [PATCH 16/25] arch: arm: mach-at91: pm: Move prototypes to
+ mutually included header
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 5:44 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Jul 13, 2020 at 10:02 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 13/07/2020 15:49:21+0100, Lee Jones wrote:
 
-> Use for_each_set_bit() instead of open-coding it to simplify the code.
+> > diff --git a/include/linux/platform_data/atmel.h b/include/linux/platform_data/atmel.h
+> > index 99e6069c5fd89..666ef482ea8c0 100644
+> > --- a/include/linux/platform_data/atmel.h
+> > +++ b/include/linux/platform_data/atmel.h
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> The plan is to get rid of that file so you should probably find a better
+> location.
 
-Excellent, patch applied!
+OK I dropped this one patch from the set for now.
 
 Yours,
 Linus Walleij
