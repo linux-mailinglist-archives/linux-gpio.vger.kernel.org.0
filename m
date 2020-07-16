@@ -2,78 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55900221E77
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 10:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26F1D221ED9
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 10:47:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgGPIcu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 04:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
+        id S1725950AbgGPIrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 04:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgGPIcl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 04:32:41 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA056C08C5CE
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:32:40 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e4so6196865ljn.4
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:32:40 -0700 (PDT)
+        with ESMTP id S1726332AbgGPIrm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 04:47:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E90C08C5C0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:47:42 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id x9so6229551ljc.5
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lNLNfVPPAHXyv+eb8ftyyjegAwGWrhOLC//iWWVh0IU=;
-        b=a8eMFsFUt5xNqeJpZ3u2ZRxxpxDwrwFJVD0nDwMFeJ15CvJdGCmCpcAsEd5yY57HJw
-         7F9jOmQE4A8ktqHSk6mk6o5iHDxqXwAZenN3sXTjvCYACKU4VLls6zvfWBijK6+kq/sT
-         tdA/GkXqAP3rMNLJAXISr1n/GwwfEx6RwTHBtLA0Ad47OlnvEB92xYwf+n6HbhhIynQ8
-         nWvwhUsgNk0gW3PNpaPHpiwsMnJhdFrvYpR5VayiO3JCzN5I3JQ1xLmpD8eLUszf/ged
-         AVdu4lh2dQOJyyvLUk7bonTsV0Id/v7h+05lFMqtmJu/I+F6cpIPemAqOVhSodAwOcem
-         cjpA==
+        bh=92XopjWnoleG4glqsG4BU2p6Ba/zWqLgWpalogX+TCM=;
+        b=vGgDGorzuOsneFcC3GpsD5YykNaUbLa2RmqVO839gEwfNOPrEWsw+JY2IAm6dSaLr7
+         k3vylz47FrnNst/TJjyPiMQb1a9+kOmPpO14osAdLWkhcir/GAA4jdHXBlODomeo9DG7
+         N7uN7ZsIsNVu3WtprIIdogMfWtMT6kR121fIeI8aY61Mgy3HW9FDwg48e/LmA+JEbSQW
+         ZDujGl2IaFZl2dkLaTotWiouiUsrQTPvDH9zriM2NtdlBkuazB/5SXFRcQJ/catxZEfi
+         j0VcnZBGwQXaRQFJA86ZN6hcssSICMTrrFR8sV9GOH+Z2yotj3brmFvCn+0YDgXp3XZU
+         2BMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lNLNfVPPAHXyv+eb8ftyyjegAwGWrhOLC//iWWVh0IU=;
-        b=ovUOQnPfw4T2Og4mJnrg3eqHWnWJ0Mm+ndVzaa0PD1iycKf/qFoPHKFkzBVZbfL8KA
-         ZXWbiDDmpCfL19cXX/69DXhVt4m8qGz2DF+Zk87Qq2neKNaj6tXuQ0Un/ilCIQdTlb89
-         zmWCPk8/45zNaor6tsIHNCPzYNKi01PPjW2TmHa550NGGuCNhrqUw67l4W177nIToljK
-         DmUHcBcBZcpfJ+o/SgSIm4eLC42/EnRXDNBP+psE0x8VErVxJJ8k0KgQvpeR9TCoNCGo
-         AxmfsldoDDg2CYbwS0yv/IDK6daJ9btA3xXGbyoVJKDnWmZ35Xcr376FD3eIPn3ZdBP+
-         VZ9g==
-X-Gm-Message-State: AOAM5306LaF0z1nCx0MwCYyacaHGjsPH6EToPL88csj8q0UVbKDVc00j
-        0InPck+u566RDtXl096DP/++5W5uumnS8aWCI3JNBfKjx4Q=
-X-Google-Smtp-Source: ABdhPJzgi2w25laszd9DgCZI4r2GaJsH2ivcxS3M0FLKQIG/i0s/VnFMZFUEdmKrZyboxEE1oxCCYQzJJx327kyUqjI=
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr1530220ljj.283.1594888359139;
- Thu, 16 Jul 2020 01:32:39 -0700 (PDT)
+        bh=92XopjWnoleG4glqsG4BU2p6Ba/zWqLgWpalogX+TCM=;
+        b=j9yeEgifmLtNDmyj1w7eTMtCc23W6Kad83RL/Ks71RHIEQyUwkiXGOJI3WhL+VvuX/
+         pePSUCNI/N/lpKgQl3mEhWfglaPFcAlqKwWGir3hK0kuFBQx2Hw5DqPe61GeTKYtgVgO
+         26k52U5Narz5L31kT/sxbk3v9pDS9LqX3AIgdnShA97ex7NvAjm2SjPkTsaPnYGODWV3
+         WqPa2rnx3MonqE2gkA0y+OAkEqmlNCYsQnRutvQ5iYq1yz12mtfYXhkfj1LoYpfJVCin
+         6azwZpqDmuf2aVxf1U3tj521ad55zuutmCh4KKnEqtqF+DBjyp1TfF+Bb6IW2nQSPU4+
+         2UMA==
+X-Gm-Message-State: AOAM532SdtLggv9nu9Y6THthWpkDsxvYoLKMh4griI/q1Kk2z6/Fr1ue
+        YGvsDoByxsOZflHuQcQUL2P143noMvwyUicGYjZzLw==
+X-Google-Smtp-Source: ABdhPJy82hgoliVm6eopFXRyK6GD8v0CzkbH74FPpFZaLSVg+5+aHAZq1hO5uiZU7LO2CprZctMqX0Xm68KIEVQ/u6I=
+X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr1558882ljj.283.1594889260812;
+ Thu, 16 Jul 2020 01:47:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200701030756.2834657-1-joel@jms.id.au>
-In-Reply-To: <20200701030756.2834657-1-joel@jms.id.au>
+References: <20200703080646.23233-1-computersforpeace@gmail.com>
+In-Reply-To: <20200703080646.23233-1-computersforpeace@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 10:32:28 +0200
-Message-ID: <CACRpkdbeFP_8R6Q1n7S7g+BS58P7bKx8EhLu73g6PsqfKCjcew@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: aspeed: Describe the heartbeat function on ball Y23
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+Date:   Thu, 16 Jul 2020 10:47:30 +0200
+Message-ID: <CACRpkdar+aBBFn6SKJ1a90D-NT3F6qGvouzjt-jxaiR0VSuUOg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pinctrl: qcom: ipq4019: add open drain support
+To:     Brian Norris <computersforpeace@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.or>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jaiganesh Narayanan <njaigane@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jul 1, 2020 at 5:08 AM Joel Stanley <joel@jms.id.au> wrote:
+On Fri, Jul 3, 2020 at 10:06 AM Brian Norris
+<computersforpeace@gmail.com> wrote:
 
-> From: Andrew Jeffery <andrew@aj.id.au>
+> From: Jaiganesh Narayanan <njaigane@codeaurora.org>
 >
-> The default pinmux configuration for Y23 is to route a heartbeat to
-> drive a LED. Previous revisions of the AST2600 datasheet did not include
-> a description of this function.
->
-> Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Jaiganesh Narayanan <njaigane@codeaurora.org>
+> [ Brian: adapted from from the Chromium OS kernel used on IPQ4019-based
+>   WiFi APs. ]
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
 
-Patch applied, thanks!
+Patch applied because this looks innocent and Rob
+ACKed the binding.
+
+If Bjorn opposes, I will simply pull the patch out again.
 
 Yours,
 Linus Walleij
