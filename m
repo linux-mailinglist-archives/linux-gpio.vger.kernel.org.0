@@ -2,93 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C58C222444
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:50:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C4C222462
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:55:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgGPNuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 09:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41576 "EHLO
+        id S1728973AbgGPNzM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 09:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgGPNuJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:50:09 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65183C08C5C0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:50:09 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x9so7230791ljc.5
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:50:09 -0700 (PDT)
+        with ESMTP id S1728940AbgGPNzI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:55:08 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A87BC08C5C0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:55:08 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id o4so3321866lfi.7
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=W0iuDU+qCWBUM7ba2OgUNPdlmGMl1pYMR/idMsHed54=;
-        b=UPe+Ak5h0P6Z8onkrvDvi6QUVwIWIGpi7uVLXWjnR50zvyoG8zkGEuyKrRvZqzeaVs
-         7flptBJJLbpHGwORkLYAmufCmWvGfUkoNyHT5bGmX36i/a0HegWUvz96XnbuJRHWAfmR
-         vaKpbaNCPOFd9kZAqffwVWkCSOErYcQim25VAwe6+We+6xCAbwHI++HQ5iwpKnw3NA6Z
-         AMU1wu9f4MKmZW6eE79d+LPAU3N+Gs/b0koGCHXt4m65RerZFlF0HvBXdiSkWQUAeFAp
-         VoAuMgRT2f502rMCwgG6H9qyyTldwRfWJxb6dzlxVVget/xx4QR57S/61FyI8/bRXMjq
-         g+ug==
+        bh=fSYl+obZVE+fUKznzfN+YjGdJqq6f8RfiQS+28i+3lU=;
+        b=yW0TqbV2Cmn34g+off5Xzod+BSQ8M1Xw4VxORpFRWUx+wIaEXJJhwqCsu+hmjEWM3V
+         PPGCXyWxy+R+W2N+bI0gtgOCetsz7Z1owadn47BzqxHpW9p53Ifhqefkn9j5GEfIVKq5
+         fOxjHE3rHiAeMdcJKce8rB8zIiKvTuuGTx67ld8xXchrZVzXBSWAGnbYPold/YYUaAto
+         i7EFg+cxceta14JfCDJZ5tHMznT+lsvoaLzdBaO1/+uPiyw92qJ0FxVswVSvg+ZJ9MyQ
+         /836A7RemmSD/r7Dt/coNl6VqvR67ATuNOirwQOyk3OYgq/k94bVCxNguezzutd+sM52
+         ZEFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=W0iuDU+qCWBUM7ba2OgUNPdlmGMl1pYMR/idMsHed54=;
-        b=eZDf3xFzidEe3TTobsSKwUSPR0EETcKuzXA+mIZ8VN9BhfEVpjyiPZ4uSDHiB2WQOc
-         O5Ek3PGZhc+GDYz1Pndj3itwBabxShv2rQqXVVHKfUFJOavK3JUsBH/IK8OIftFjtZDJ
-         CAMOYV+hvGvZV/0d2O4565L4lD076D9RbtpQYvQxRMWG8PF0mdMi86XZVU+Fpua85TG3
-         paOPdbqZI4CcIR68QK50vzVNJVa9hsLw9U2FhiKKKBhLPVuBasgMRPspi0NvaFvsyR2N
-         CI7u0EpQQKg4UYMWLYlQY6SNtTyXb1UiAgeTGJiEtygM6kX5BY4ACI1PMQhIbI+ZREth
-         pyJw==
-X-Gm-Message-State: AOAM533kXEYv3buy4I6xpo7iBs+MMyJW2CQW3vHy6mklBnjSTwK5U1Nr
-        Q1RFY0DlodJyIqt3z8HNmbbhlSbUb3xkLyjVhZXy2Q==
-X-Google-Smtp-Source: ABdhPJyuZR3go+MjRH0QD2hTjIiPi2nGSy2AbPjYJo0SRP7oWmUGCCRWXTzrLI3Eps1+wMn3Fs9p2fh605lNHa8lJsM=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr2010346ljc.104.1594907407852;
- Thu, 16 Jul 2020 06:50:07 -0700 (PDT)
+        bh=fSYl+obZVE+fUKznzfN+YjGdJqq6f8RfiQS+28i+3lU=;
+        b=T+dPuTTNfhiWjaAIa9ZquiCfd9WqBH85hYH6Q+S8kl9puQvVOheuR242Bj96RjrMp4
+         bsFyFMQPCl42HylhjNKIzODm/i1sPH1SioFhz8Gd1/s7qx1Yo1nWD9oGT5r/dQRSnKPk
+         1nVub7vvraXsvvZFzTx0QyJyWKHnbtrUBt2qLvI++ynth2w5ySyXshv8u6WD8i05gCN9
+         c9R9msv9W5uW4TFyToaY6F2VWt6A/Kyt6n5VTtEG0YhBQ5uvgykHA0LqJ06ZzOTM8cbR
+         0O0df+/8E/eKfMruqabLNugsk49KiImSY7KBOxB9tJzAtFTAPHd4cYHlTDBwQ827XR6D
+         VKig==
+X-Gm-Message-State: AOAM531EPBY1acq+TeqWmhxNR5LPajYVMbqRTobOtSQgWw2HkJMFefd2
+        NCoPHhQBD2HGpL1qo5Acy5CsY0g9/rruX3P/KsM+gA==
+X-Google-Smtp-Source: ABdhPJzPt8lneTMty4LKVohX0XpVyQrsxGQOfHKHWJDQ5g7QK57hNzDZxOt+c+QzpVfm9NT4EJMpAs/zLD29z0/+tig=
+X-Received: by 2002:a19:f20a:: with SMTP id q10mr2210486lfh.89.1594907706496;
+ Thu, 16 Jul 2020 06:55:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com> <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
-In-Reply-To: <1594718402-20813-2-git-send-email-hanks.chen@mediatek.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 15:49:57 +0200
-Message-ID: <CACRpkdYOtp027AOMgw_spyRdO2XjGjr4BOoEVfOJN9Y2TtJ=Kw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/7] pinctrl: mediatek: update pinmux definitions for mt6779
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+Date:   Thu, 16 Jul 2020 15:54:55 +0200
+Message-ID: <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 11:20 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
+On Wed, Jul 15, 2020 at 4:44 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-> Add devicetree bindings for Mediatek mt6779 SoC Pin Controller.
+> > Subject: RE: [PATCH 1/3] gpio: mxc: Support module build
+> >
+> > Hi, Linus
+> >
+> > > Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+> > >
+> > > On Wed, Jul 8, 2020 at 1:28 AM Anson Huang <Anson.Huang@nxp.com>
+> > > wrote:
+> > >
+> > > >  subsys_initcall(gpio_mxc_init);
+> > > > +
+> > > > +MODULE_AUTHOR("Shawn Guo <shawn.guo@linaro.org>");
+> > > > +MODULE_DESCRIPTION("i.MX GPIO Driver"); MODULE_LICENSE("GPL");
+> > >
+> > > You are making this modualrizable but keeping the subsys_initcall(),
+> > > which doesn't make very much sense. It is obviously not necessary to
+> > > do this probe at subsys_initcall() time, right?
+> > >
+> >
+> > If building it as module, the subsys_initcall() will be equal to module_init(), I
+> > keep it unchanged is because I try to make it identical when built-in, since
+> > most of the config will still have it built-in, except the Android GKI support.
+> > Does it make sense?
+> >
+> > > Take this opportunity to convert the driver to use
+> > > module_platform_driver() as well.
+> >
+> > If you think it has to be or it is better to use module_platform_driver(), I will do
+> > it in V2.
 >
-> Acked-by: Sean Wang <sean.wang@kernel.org>
-> Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> I tried to replace the subsys_initcall() with module_platform_driver(), but met issue
+> about " register_syscore_ops(&mxc_gpio_syscore_ops);" which is called in gpio_mxc_init()
+> function, this function should be called ONLY once, moving it to .probe function is NOT
+> working, so we may need to keep the gpio_mxc_init(), that is another reason that we may
+> need to keep subsys_initcall()?
 
-Sorry for responding to old patches :/
+This looks a bit dangerous to keep like this while allowing this
+code to be used from a module.
 
-This and the rest of the pinctrl patches are now applied
-to the pinctrl tree for v5.9.
+What happens if you insmod and rmmod this a few times, really?
+How is this tested?
 
-The DTS and clock patches need to be applied elsewhere.
+This is not really modularized if that isn't working, just that modprobing
+once works isn't real modularization IMO, it seems more like a
+quick and dirty way to get Androids GKI somewhat working with the module
+while not properly making the module a module.
+
+You need input from the driver maintainers on how to handle this.
 
 Yours,
 Linus Walleij
