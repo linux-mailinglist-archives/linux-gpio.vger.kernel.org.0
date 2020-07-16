@@ -2,139 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49A94222DD5
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 23:25:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C27C0222DD8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 23:26:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgGPVZY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 17:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55594 "EHLO
+        id S1726426AbgGPV0h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 17:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgGPVZY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 17:25:24 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62528C061755
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 14:25:24 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a24so4289013pfc.10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 14:25:24 -0700 (PDT)
+        with ESMTP id S1725970AbgGPV0g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 17:26:36 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB7C061755;
+        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n22so5278352ejy.3;
+        Thu, 16 Jul 2020 14:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GG+PNWm9iZNfqKSSIfajFJa0+VgslChKnK9y+Ke7jec=;
-        b=DUlzbd5sFRPqB/nf6WS2eQmmH+ojys4H+flIGMODRdvZf6uO9gVBX+fDGndvdBlL29
-         1Ue00nuTcjXFk7VKoOdbAuLsVgHQsRHUpkiU3Td0SKFUdOWpWPOGRAwzM9tQ1RDITYXT
-         VNwBiFOClaxSYHb8q3s3qlUT9huEtVxAifsH/w0iHKJDA3zuDPidoVVrErSri7g85vRE
-         1NfZtFcRD24dKxxT+dVd4POMNJ3XIYtI0hj6rOuTXPVMgJls7hsdteTYDQiG+u2bpQyW
-         +otE1x8xwgVdHE36JXik1edaUszy+fdhGjCSLWAijpYEPTKify1tBoJGgXwrfmCB745H
-         FEDA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
+        b=RzNAZoejioCvLIzByvtQGVtgUKb7+UXluj3R4ebR91VeNxXDXqhn/1nQu7qixemUju
+         lvd1pm3mo9dtStJ4jO1jA2sQD+J+y0XTqn0t7HjG/qPGj2is9EUTVvKNkixDUF105Ab5
+         SQINgUAcT3LjEbzb3g3qu4aAzpwfg+6AHBLhWTFZZhLIw1MG02TBNfGXudsDH9sioMwQ
+         hwQtaJoXjnFlddCrOEfOhW732LZQaZSs0Ze+lpLPhhObICHV5LgRJAOlE93qjqiJwmUE
+         QOrPzoZUiJee7xMoTbubCeTtzHCddwETMiGdL34b/4/JFdaUa4E76Lp3tnbBerKHKsin
+         op2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GG+PNWm9iZNfqKSSIfajFJa0+VgslChKnK9y+Ke7jec=;
-        b=GqPF7N6GpB9mDAgluzTn7oxNAc+2W6f/N3FqvQwfo7XEUMX4lDJVcSa8LsvyZNq+mx
-         793rtnQangWJ6utVgDF/g3Ze+TVW8NzYfv6Fv8Q6t1MMyQQBXNJ8wNqVyZA5A1gs/NAe
-         8q5lxVpG+NpO+UIvh7EnDxBlZSmoVVIXRtK0NFlbCFvV9W+B+IvVz/CP952ldm6w8669
-         qZl4AFBpE9n01+BFVdpF68DQJS3eOkVtb+4Hk/u4VLVZ7+epTJM+XOORO5x/tyfAizM9
-         akyYXlgeGSs0KXHMszVsm/9QUSR0GMMuUGLbFrl5Xbf6HwyM1WijseJ0zHrWyGt0lMN7
-         Ezkg==
-X-Gm-Message-State: AOAM533xbGud10VvVA1ByBRUee1QrRg6xXQF648xgnSFpFXtAfQXDPg6
-        YujwNLliOSAoSPU+MXCFZlKE44pCK6e8U3LbAes=
-X-Google-Smtp-Source: ABdhPJzbbXwP4V1T11Anunh8L312z6cbh0BhWWrU5fcsRFAGCq5q+3M91Z7Dw9eRGUd0hjk4xcZAX3CWP6uVWUo4gH4=
-X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr5118689pfd.170.1594934723849;
- Thu, 16 Jul 2020 14:25:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <202007170339.nHjeGJBw%lkp@intel.com>
-In-Reply-To: <202007170339.nHjeGJBw%lkp@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Jul 2020 00:25:07 +0300
-Message-ID: <CAHp75VezG1ZnC-1UWea2Q-q-=c_32HOcBTXrd7cy4HzB-uW8JA@mail.gmail.com>
-Subject: Re: [gpio:ib-for-each-clump 4/4] include/linux/bitmap.h:639:45:
- sparse: sparse: shift too big (64) for type unsigned long
-To:     kernel test robot <lkp@intel.com>
-Cc:     Syed Nayyar Waris <syednwaris@gmail.com>, kbuild-all@lists.01.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vAseUwcQJdDJQQra5TLeLm+SJbx5n23UWFenIaII7YI=;
+        b=fhjbeqYS/oEfvzNCqL4E5CRF+3V/73tf4+F/941N2qFk/jnp0q1JIMuc+vcQXmhIN1
+         dI54b5iTxs8YcO0sWD22DD5RNJwy1O80GN/qgDWI8bXWhq5OqK/STl5OiAO77KATjWrP
+         UxcGQd5vwa6pE7axwgHQ8gz6NbjIneZllP0vRsoG/V3BunDnBu3J+Iy59lHsizj/O/o1
+         4SIqYHE+/NUuuR5bedNVmwb0YzdBPq5I/AFVfkTKyEAzqj2KoLB22BT6WtNIetRh8wsV
+         SeneGoLy/mD+NZMD4r6oMrt2MTPXRQt8OGEn49Dl8Tg1iLiif8L0FY0/dTDNuTR9jSuc
+         ktqA==
+X-Gm-Message-State: AOAM532CIDkT3P6LsDfmvzp82IdkDiVsa1CVQDzxtmXKHUj0hPrKZyuN
+        dTlU7znYQ4DGchD6n/QH9Hg=
+X-Google-Smtp-Source: ABdhPJy07RGdNa3FOJhhw3BUf5RTKV1JBhUIdwZloMswtbvXh0JJPkU0i4+HLCgqbVLI3plPHTGP+w==
+X-Received: by 2002:a17:906:434c:: with SMTP id z12mr5444703ejm.33.1594934794860;
+        Thu, 16 Jul 2020 14:26:34 -0700 (PDT)
+Received: from BV030612LT ([188.24.137.55])
+        by smtp.gmail.com with ESMTPSA id o15sm6249168edv.55.2020.07.16.14.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 14:26:33 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 00:26:31 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for Actions S500
+ SoC
+Message-ID: <20200716212631.GA348917@BV030612LT>
+References: <cover.1593112402.git.cristian.ciocaltea@gmail.com>
+ <2a7610ff9f33cf72d9df6fc4598741fb6d7836e0.1593112402.git.cristian.ciocaltea@gmail.com>
+ <20200715200309.GA722435@bogus>
+ <20200716104316.GA309338@BV030612LT>
+ <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+8bX5duv=116e=hve1L-h8a=5quqCHVtSAs4PjK6xc1w@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 11:13 PM kernel test robot <lkp@intel.com> wrote:
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git ib-for-each-clump
-> head:   3358c938236d6a1be51124fbbb2698e50689d382
-> commit: 3358c938236d6a1be51124fbbb2698e50689d382 [4/4] gpio: xilinx: Utilize generic bitmap_get_value and _set_value.
-> config: alpha-randconfig-s031-20200716 (attached as .config)
-> compiler: alpha-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.2-49-g707c5017-dirty
->         git checkout 3358c938236d6a1be51124fbbb2698e50689d382
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=alpha
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
->
-> sparse warnings: (new ones prefixed by >>)
->
-> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
-> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
->    include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
-> >> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
-> >> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
->
-> vim +639 include/linux/bitmap.h
->
-> 169c474fb22d8a5 William Breathitt Gray 2019-12-04  613
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  614  /**
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  615   * bitmap_set_value - set n-bit value within a memory region
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  616   * @map: address to the bitmap memory region
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  617   * @value: value of nbits
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  618   * @start: bit offset of the n-bit value
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  619   * @nbits: size of value in bits
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  620   */
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  621  static inline void bitmap_set_value(unsigned long *map,
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  622                                      unsigned long value,
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  623                                      unsigned long start, unsigned long nbits)
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  624  {
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  625          const size_t index = BIT_WORD(start);
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  626          const unsigned long offset = start % BITS_PER_LONG;
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  627          const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  628          const unsigned long space = ceiling - start;
+On Thu, Jul 16, 2020 at 08:50:36AM -0600, Rob Herring wrote:
+> On Thu, Jul 16, 2020 at 4:43 AM Cristian Ciocaltea
+> <cristian.ciocaltea@gmail.com> wrote:
+> >
+> > On Wed, Jul 15, 2020 at 02:03:09PM -0600, Rob Herring wrote:
+> > > On Thu, Jun 25, 2020 at 11:16:18PM +0300, Cristian Ciocaltea wrote:
+> > > > Add pinctrl and gpio bindings for Actions Semi S500 SoC.
+> > > >
+> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > > ---
+> > > >  .../pinctrl/actions,s500-pinctrl.yaml         | 228 ++++++++++++++++++
+> > > >  1 file changed, 228 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..856947c70844
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+> > > > @@ -0,0 +1,228 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/pinctrl/actions,s500-pinctrl.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Actions Semi S500 SoC pinmux & GPIO controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > +
+> > > > +description: |
+> > > > +  Pinmux & GPIO controller manages pin multiplexing & configuration including
+> > > > +  GPIO function selection & GPIO attributes configuration. Please refer to
+> > > > +  pinctrl-bindings.txt in this directory for common binding part and usage.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: actions,s500-pinctrl
+> > > > +
+> > > > +  reg:
+> > > > +    minItems: 1
+> > > > +    maxItems: 4
+> > >
+> > > Need to enumerate what each register range is.
+> >
+> > Hi Rob,
+> >
+> > Thanks for the review!
+> >
+> > Would the update below suffice?
+> >
+> >   reg:
+> >     description: |
+> >       Specifies the memory region(s) associated with the pin-controller.
+> >       To improve granularity, up to four register ranges can be provided:
+> 
+> What does 'improve granularity' mean:
 
-If start == 0:
-  index = 0, offset = 0, ceiling = 64, space = 64
+Technically all the registers used by the driver could be specified via
+a single contiguous range. However, there are a few unrelated registers
+(i.e. PWM Output Control) which should be excluded in order to come up
+with a more accurate specification. The 4 ranges below are basically
+the result of this exclusion:
 
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  629
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  630          value &= GENMASK(nbits - 1, 0);
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  631
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  632          if (space >= nbits) {
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  633                  map[index] &= ~(GENMASK(nbits + offset - 1, offset));
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  634                  map[index] |= value << offset;
+> >       * GPIO Output + GPIO Input + GPIO Data
+> >       * Multiplexing Control
+> >       * PAD Pull Control + PAD Schmitt Trigger enable + PAD Control
+> >       * PAD Drive Capacity Select
+> 
+> The h/w sometimes has these and sometimes doesn't?
 
-if nbits > space...
+No, the h/w is fixed, the only reason of this approach was to allow a
+precise memory region specification, as explained above.
 
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  635          } else {
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  636                  map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  637                  map[index] |= value << offset;
+I'm not sure if this should be made mandatory or it's also fine to let
+(a lazy) user provide combined ranges or just a contiguous one (like
+in the example), with the drawback of loosing the accuracy, of course.
 
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @638                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @639                  map[index + 1] |= (value >> space);
+> If they do stay, then you want:
+> 
+> items:
+>   - description: GPIO Output + GPIO Input + GPIO Data
+>   - description: ...
 
-space = 64...
+Would this be applicable even if we keep this flexible approach and
+don't set 'minItems: 4'?
 
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  640          }
-> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  641  }
+> >
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  gpio-controller: true
+> > > > +
+> > > > +  gpio-ranges:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  '#gpio-cells':
+> > > > +    description:
+> > > > +      Specifies the pin number and flags, as defined in
+> > > > +      include/dt-bindings/gpio/gpio.h
+> > > > +    const: 2
+> > > > +
+> > > > +  interrupt-controller: true
+> > > > +
+> > > > +  '#interrupt-cells':
+> > > > +    description:
+> > > > +      Specifies the pin number and flags, as defined in
+> > > > +      include/dt-bindings/interrupt-controller/irq.h
+> > > > +    const: 2
+> > > > +
+> > > > +  interrupts:
+> > > > +    description:
+> > > > +      One interrupt per each of the 5 GPIO ports supported by the controller,
+> > > > +      sorted by port number ascending order.
+> > > > +    minItems: 5
+> > > > +    maxItems: 5
+> > > > +
+> > > > +patternProperties:
+> > > > +  '^.*$':
+> > > > +    if:
+> > > > +      type: object
+> > >
+> > > For a new binding, can you do '-pins$' for the node names so we don't
+> > > need this if/then hack.
+> >
+> > Right, the idea was to be consistent with the existing bindings for
+> > S700 and S900, which allow free node names, although they are not yet
+> > converted to yaml format.
+> 
+> If we want consistency, those should have their node names updated.
 
-I don't see the test case for this. Can you provide one?
+Fair enough, I have already updated the node names to use the '-pins'
+suffix.
 
+> >
+> > > > +    then:
+> > > > +      patternProperties:
+> > > > +        'pinmux$':
+> > >
+> > > Is this really a pattern? Can't tell from the example.
+> >
+> > pinmux and pinconf subnodes may appear multiple times, that's why I
+> > decided to match their names based on the suffix.
+> >
+> > The example is not complex enough, I will change it to the following:
+> >
+> >     mmc0_default: mmc0_default {
+> >         pinmux {
+> >             groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
+> >                      "sd0_cmd_mfp", "sd0_clk_mfp";
+> >             function = "sd0";
+> >         };
+> >
+> >         drv_pinconf {
+> 
+> drv-pinconf
+> 
+> Make the pattern '-?pinconf' to enforce that. (that '-' may need escaping?)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Actually the pattern should be '^(.*-)?pinconf$', to restrict the names
+to either 'pinconf' or '<label>-pinconf'.
+
+I have just made some more validation tests and noticed I had missed an
+'additionalProperties: false' line, for the 'pins' node. Should be fine
+now!
+
+Thanks,
+Cristi
+
