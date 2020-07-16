@@ -2,19 +2,19 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73C90221A1F
+	by mail.lfdr.de (Postfix) with ESMTP id E2468221A20
 	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 04:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgGPCeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jul 2020 22:34:22 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57619 "EHLO
+        id S1728072AbgGPCe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Jul 2020 22:34:28 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:57582 "EHLO
         rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgGPCeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 22:34:05 -0400
+        with ESMTP id S1727081AbgGPCeB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 22:34:01 -0400
 Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei56017581, This message is accepted by code: ctloc85258
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei66017581, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei56017581
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei66017581
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Thu, 16 Jul 2020 10:33:40 +0800
 Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
@@ -24,18 +24,18 @@ Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
 Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
  RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:39 +0800
+ 15.1.1779.2; Thu, 16 Jul 2020 10:33:40 +0800
 Received: from localhost.localdomain (172.21.252.101) by
  RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:39 +0800
+ 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:40 +0800
 From:   TY Chang <tychang@realtek.com>
 To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
 CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
         <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 7/8] pinctrl: realtek: DHC: Move pinctrl drivers to realtek directory and rename.
-Date:   Thu, 16 Jul 2020 10:33:37 +0800
-Message-ID: <20200716023338.14922-8-tychang@realtek.com>
+Subject: [PATCH v2 8/8] pinctrl: realtek: DHC: Add suspend/resume callback function.
+Date:   Thu, 16 Jul 2020 10:33:38 +0800
+Message-ID: <20200716023338.14922-9-tychang@realtek.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200716023338.14922-1-tychang@realtek.com>
 References: <20200716023338.14922-1-tychang@realtek.com>
@@ -47,813 +47,274 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Move Realtek DHC SoC pinctrl drivers to realtek directory and
-rename pinctrl-rtd119x.c to pinctrl-rtd.c.
+Add suspend and resume callback function for
+Realtek DHC SoC pinctrl driver.
 
 Signed-off-by: TY Chang <tychang@realtek.com>
 ---
- drivers/pinctrl/Kconfig                       |  10 +-
- drivers/pinctrl/Makefile                      |   2 +-
- drivers/pinctrl/realtek/Kconfig               |  14 ++
- drivers/pinctrl/realtek/Makefile              |   3 +
- .../pinctrl-rtd.c}                            | 166 +++++++++---------
- .../pinctrl/{ => realtek}/pinctrl-rtd1195.h   |  20 +--
- .../pinctrl/{ => realtek}/pinctrl-rtd1295.h   |  40 ++---
- 7 files changed, 132 insertions(+), 123 deletions(-)
- create mode 100644 drivers/pinctrl/realtek/Kconfig
- create mode 100644 drivers/pinctrl/realtek/Makefile
- rename drivers/pinctrl/{pinctrl-rtd119x.c => realtek/pinctrl-rtd.c} (69%)
- rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1195.h (98%)
- rename drivers/pinctrl/{ => realtek}/pinctrl-rtd1295.h (98%)
+ drivers/pinctrl/realtek/pinctrl-rtd.c     | 39 +++++++++++++
+ drivers/pinctrl/realtek/pinctrl-rtd1195.h | 33 +++++++++++
+ drivers/pinctrl/realtek/pinctrl-rtd1295.h | 67 ++++++++++++++++++++++-
+ 3 files changed, 138 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 311fe1eafe76..a3e1d45a604c 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -198,15 +198,6 @@ config PINCTRL_OXNAS
- 	select GPIOLIB_IRQCHIP
- 	select MFD_SYSCON
- 
--config PINCTRL_REALTEK
--	bool "Realtek RTD129x pinctrl driver"
--	depends on OF
--	depends on ARCH_REALTEK || COMPILE_TEST
--	select GENERIC_PINCONF
--	select PINMUX
--	help
--	  This selects pinctrl driver for Realtek RTD1295 platforms.
--
- config PINCTRL_ROCKCHIP
- 	bool
- 	select PINMUX
-@@ -430,6 +421,7 @@ source "drivers/pinctrl/mediatek/Kconfig"
- source "drivers/pinctrl/zte/Kconfig"
- source "drivers/pinctrl/meson/Kconfig"
- source "drivers/pinctrl/cirrus/Kconfig"
-+source "drivers/pinctrl/realtek/Kconfig"
- 
- config PINCTRL_XWAY
- 	bool
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index d4bec880c9bc..2bda2e19da8b 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -27,7 +27,6 @@ obj-$(CONFIG_PINCTRL_OXNAS)	+= pinctrl-oxnas.o
- obj-$(CONFIG_PINCTRL_PALMAS)	+= pinctrl-palmas.o
- obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
- obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
--obj-$(CONFIG_PINCTRL_REALTEK)	+= pinctrl-rtd119x.o
- obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
- obj-$(CONFIG_PINCTRL_RZA1)	+= pinctrl-rza1.o
- obj-$(CONFIG_PINCTRL_RZA2)	+= pinctrl-rza2.o
-@@ -73,3 +72,4 @@ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
- obj-y				+= mediatek/
- obj-$(CONFIG_PINCTRL_ZX)	+= zte/
- obj-y				+= cirrus/
-+obj-y				+= realtek/
-\ No newline at end of file
-diff --git a/drivers/pinctrl/realtek/Kconfig b/drivers/pinctrl/realtek/Kconfig
-new file mode 100644
-index 000000000000..12c05799d223
---- /dev/null
-+++ b/drivers/pinctrl/realtek/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config PINCTRL_REALTEK_DHC
-+	bool "Realtek DHC pinctrl driver"
-+	depends on OF
-+	depends on ARCH_REALTEK || COMPILE_TEST
-+	select GENERIC_PINCONF
-+	select PINMUX
-+	help
-+	  This is the pinctrl, pinmux, pinconf driver for
-+	  Realtek DHC SoC platforms.
-+
-+
-+
-diff --git a/drivers/pinctrl/realtek/Makefile b/drivers/pinctrl/realtek/Makefile
-new file mode 100644
-index 000000000000..0d18245ead77
---- /dev/null
-+++ b/drivers/pinctrl/realtek/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Realtek pin control drivers
-+obj-$(CONFIG_PINCTRL_REALTEK_DHC)	+= pinctrl-rtd.o
-diff --git a/drivers/pinctrl/pinctrl-rtd119x.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
-similarity index 69%
-rename from drivers/pinctrl/pinctrl-rtd119x.c
-rename to drivers/pinctrl/realtek/pinctrl-rtd.c
-index bda0d1328eb8..4d9740f875ff 100644
---- a/drivers/pinctrl/pinctrl-rtd119x.c
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
+index 4d9740f875ff..f327453b01df 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd.c
 +++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
-@@ -19,27 +19,27 @@
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
--#include "core.h"
--#include "pinctrl-utils.h"
-+#include "../core.h"
-+#include "../pinctrl-utils.h"
- 
--struct rtd119x_pin_group_desc {
-+struct rtd_pin_group_desc {
- 	const char *name;
- 	const unsigned int *pins;
- 	unsigned int num_pins;
+@@ -57,6 +57,12 @@ struct rtd_pin_desc {
+ 	const struct rtd_pin_mux_desc *functions;
  };
  
--struct rtd119x_pin_func_desc {
-+struct rtd_pin_func_desc {
- 	const char *name;
- 	const char * const *groups;
- 	unsigned int num_groups;
- };
- 
--struct rtd119x_pin_mux_desc {
-+struct rtd_pin_mux_desc {
- 	const char *name;
- 	u32 mux_value;
- };
- 
--struct rtd119x_pin_config_desc {
-+struct rtd_pin_config_desc {
- 	const char *name;
- 	unsigned int reg_offset;
- 	unsigned int base_bit;
-@@ -50,11 +50,11 @@ struct rtd119x_pin_config_desc {
- 	unsigned int curr_type;
- };
- 
--struct rtd119x_pin_desc {
-+struct rtd_pin_desc {
- 	const char *name;
- 	unsigned int mux_offset;
- 	u32 mux_mask;
--	const struct rtd119x_pin_mux_desc *functions;
-+	const struct rtd_pin_mux_desc *functions;
- };
- 
++struct rtd_pin_reg_list {
++	unsigned int reg_offset;
++	unsigned int val;
++};
++
++
  #define RTK_PIN_CONFIG(_name, _reg_off, _base_bit, _pud_en_off, \
-@@ -76,7 +76,7 @@ struct rtd119x_pin_desc {
- 		.name = # _name, \
- 		.mux_offset = _mux_off, \
- 		.mux_mask = _mux_mask, \
--		.functions = (const struct rtd119x_pin_mux_desc []) { \
-+		.functions = (const struct rtd_pin_mux_desc []) { \
- 			__VA_ARGS__, { } \
- 		}, \
- 	}
-@@ -87,16 +87,16 @@ struct rtd119x_pin_desc {
- 		.mux_value = _mux_val, \
- 	}
- 
--struct rtd119x_pinctrl_desc {
-+struct rtd_pinctrl_desc {
- 	const struct pinctrl_pin_desc *pins;
- 	unsigned int num_pins;
--	const struct rtd119x_pin_group_desc *groups;
-+	const struct rtd_pin_group_desc *groups;
- 	unsigned int num_groups;
--	const struct rtd119x_pin_func_desc *functions;
-+	const struct rtd_pin_func_desc *functions;
- 	unsigned int num_functions;
--	const struct rtd119x_pin_desc *muxes;
-+	const struct rtd_pin_desc *muxes;
+ 		_pud_sel_off, _curr_off, _smt_off, _curr_type) \
+ 	{ \
+@@ -98,6 +104,8 @@ struct rtd_pinctrl_desc {
  	unsigned int num_muxes;
--	const struct rtd119x_pin_config_desc *configs;
-+	const struct rtd_pin_config_desc *configs;
+ 	const struct rtd_pin_config_desc *configs;
  	unsigned int num_configs;
++	struct rtd_pin_reg_list *lists;
++	unsigned int num_regs;
  };
  
-@@ -108,33 +108,33 @@ struct rtd119x_pinctrl_desc {
- #include "pinctrl-rtd1195.h"
- #include "pinctrl-rtd1295.h"
- 
--struct rtd119x_pinctrl {
-+struct rtd_pinctrl {
- 	struct pinctrl_dev *pcdev;
- 	void __iomem *base;
- 	struct pinctrl_desc desc;
--	const struct rtd119x_pinctrl_desc *info;
-+	const struct rtd_pinctrl_desc *info;
- };
- 
--static int rtd119x_pinctrl_get_groups_count(struct pinctrl_dev *pcdev)
-+static int rtd_pinctrl_get_groups_count(struct pinctrl_dev *pcdev)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	return data->info->num_groups;
- }
- 
--static const char *rtd119x_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
-+static const char *rtd_pinctrl_get_group_name(struct pinctrl_dev *pcdev,
- 		unsigned int selector)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	return data->info->groups[selector].name;
- }
- 
--static int rtd119x_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
-+static int rtd_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
- 		unsigned int selector, const unsigned int **pins,
- 		unsigned int *num_pins)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	*pins		= data->info->groups[selector].pins;
- 	*num_pins	= data->info->groups[selector].num_pins;
-@@ -142,34 +142,34 @@ static int rtd119x_pinctrl_get_group_pins(struct pinctrl_dev *pcdev,
+ #define PCONF_UNSUPP 0xffffffff
+@@ -549,8 +557,39 @@ static int rtd_pinctrl_probe(struct platform_device *pdev)
  	return 0;
  }
  
--static const struct pinctrl_ops rtd119x_pinctrl_ops = {
-+static const struct pinctrl_ops rtd_pinctrl_ops = {
- 	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
- 	.dt_free_map = pinctrl_utils_free_map,
--	.get_groups_count = rtd119x_pinctrl_get_groups_count,
--	.get_group_name = rtd119x_pinctrl_get_group_name,
--	.get_group_pins = rtd119x_pinctrl_get_group_pins,
-+	.get_groups_count = rtd_pinctrl_get_groups_count,
-+	.get_group_name = rtd_pinctrl_get_group_name,
-+	.get_group_pins = rtd_pinctrl_get_group_pins,
- };
- 
--static int rtd119x_pinctrl_get_functions_count(struct pinctrl_dev *pcdev)
-+static int rtd_pinctrl_get_functions_count(struct pinctrl_dev *pcdev)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	return data->info->num_functions;
- }
- 
--static const char *rtd119x_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
-+static const char *rtd_pinctrl_get_function_name(struct pinctrl_dev *pcdev,
- 		unsigned int selector)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	return data->info->functions[selector].name;
- }
- 
--static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
-+static int rtd_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
- 		unsigned int selector, const char * const **groups,
- 		unsigned int * const num_groups)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 
- 	*groups		= data->info->functions[selector].groups;
- 	*num_groups	= data->info->functions[selector].num_groups;
-@@ -177,8 +177,8 @@ static int rtd119x_pinctrl_get_function_groups(struct pinctrl_dev *pcdev,
- 	return 0;
- }
- 
--static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(
--		struct rtd119x_pinctrl *data, int number)
-+static const struct pinctrl_pin_desc *rtd_pinctrl_get_pin_by_number(
-+		struct rtd_pinctrl *data, int number)
- {
- 	int i;
- 
-@@ -190,8 +190,8 @@ static const struct pinctrl_pin_desc *rtd119x_pinctrl_get_pin_by_number(
- 	return NULL;
- }
- 
--static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(
--		struct rtd119x_pinctrl *data, const char *name)
-+static const struct rtd_pin_desc *rtd_pinctrl_find_mux(
-+		struct rtd_pinctrl *data, const char *name)
- {
- 	int i;
- 
-@@ -203,8 +203,8 @@ static const struct rtd119x_pin_desc *rtd119x_pinctrl_find_mux(
- 	return NULL;
- }
- 
--static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(
--		struct rtd119x_pinctrl *data, const char *name)
-+static const struct rtd_pin_config_desc *rtd_pinctrl_find_config(
-+		struct rtd_pinctrl *data, const char *name)
- {
- 	int i;
- 
-@@ -217,23 +217,23 @@ static const struct rtd119x_pin_config_desc *rtd119x_pinctrl_find_config(
- }
- 
- 
--static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
-+static int rtd_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
- 	unsigned int pin, const char *func_name)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 	const struct pinctrl_pin_desc *pin_desc;
--	const struct rtd119x_pin_desc *mux;
-+	const struct rtd_pin_desc *mux;
- 	const char *pin_name;
- 	u32 val;
- 	int i;
- 
--	pin_desc = rtd119x_pinctrl_get_pin_by_number(data, pin);
-+	pin_desc = rtd_pinctrl_get_pin_by_number(data, pin);
- 	if (!pin_desc)
- 		return -ENOTSUPP;
- 
- 	pin_name = pin_desc->name;
- 
--	mux = rtd119x_pinctrl_find_mux(data, pin_name);
-+	mux = rtd_pinctrl_find_mux(data, pin_name);
- 	if (!mux)
- 		return -ENOTSUPP;
- 
-@@ -259,10 +259,10 @@ static int rtd119x_pinctrl_set_one_mux(struct pinctrl_dev *pcdev,
- 	return -EINVAL;
- }
- 
--static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
-+static int rtd_pinctrl_set_mux(struct pinctrl_dev *pcdev,
- 		unsigned int function, unsigned int group)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
- 	const unsigned int *pins;
- 	unsigned int num_pins;
- 	const char *func_name;
-@@ -272,7 +272,7 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
- 	func_name = data->info->functions[function].name;
- 	group_name = data->info->groups[group].name;
- 
--	ret = rtd119x_pinctrl_get_group_pins(pcdev, group, &pins, &num_pins);
-+	ret = rtd_pinctrl_get_group_pins(pcdev, group, &pins, &num_pins);
- 	if (ret) {
- 		dev_err(pcdev->dev, "Getting pins for group %s failed\n",
- 			group_name);
-@@ -280,7 +280,7 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
- 	}
- 
- 	for (i = 0; i < num_pins; i++) {
--		ret = rtd119x_pinctrl_set_one_mux(pcdev, pins[i], func_name);
-+		ret = rtd_pinctrl_set_one_mux(pcdev, pins[i], func_name);
- 		if (ret)
- 			return ret;
- 	}
-@@ -288,22 +288,22 @@ static int rtd119x_pinctrl_set_mux(struct pinctrl_dev *pcdev,
- 	return 0;
- }
- 
--static int rtd119x_pinctrl_gpio_request_enable(struct pinctrl_dev *pcdev,
-+static int rtd_pinctrl_gpio_request_enable(struct pinctrl_dev *pcdev,
- 	struct pinctrl_gpio_range *range, unsigned int offset)
- {
--	return rtd119x_pinctrl_set_one_mux(pcdev, offset, "gpio");
-+	return rtd_pinctrl_set_one_mux(pcdev, offset, "gpio");
- }
- 
--static const struct pinmux_ops rtd119x_pinmux_ops = {
--	.get_functions_count = rtd119x_pinctrl_get_functions_count,
--	.get_function_name = rtd119x_pinctrl_get_function_name,
--	.get_function_groups = rtd119x_pinctrl_get_function_groups,
--	.set_mux = rtd119x_pinctrl_set_mux,
--	.gpio_request_enable = rtd119x_pinctrl_gpio_request_enable,
-+static const struct pinmux_ops rtd_pinmux_ops = {
-+	.get_functions_count = rtd_pinctrl_get_functions_count,
-+	.get_function_name = rtd_pinctrl_get_function_name,
-+	.get_function_groups = rtd_pinctrl_get_function_groups,
-+	.set_mux = rtd_pinctrl_set_mux,
-+	.gpio_request_enable = rtd_pinctrl_gpio_request_enable,
- };
- 
--static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
--	const struct rtd119x_pin_config_desc *config_desc,
-+static int rtd_pconf_parse_conf(struct rtd_pinctrl *data,
-+	const struct rtd_pin_config_desc *config_desc,
- 	enum pin_config_param param, enum pin_config_param arg)
- {
- 	u8 set_val = 0;
-@@ -392,7 +392,7 @@ static int rtd119x_pconf_parse_conf(struct rtd119x_pinctrl *data,
- 	return 0;
- }
- 
--static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
-+static int rtd_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
- 		unsigned long *config)
- {
- 	unsigned int param = pinconf_to_config_param(*config);
-@@ -407,26 +407,26 @@ static int rtd119x_pin_config_get(struct pinctrl_dev *pcdev, unsigned int pinnr,
- 	return 0;
- }
- 
--static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
-+static int rtd_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
- 		unsigned long *configs, unsigned int num_configs)
- {
--	struct rtd119x_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
--	const struct rtd119x_pin_config_desc *config_desc;
-+	struct rtd_pinctrl *data = pinctrl_dev_get_drvdata(pcdev);
-+	const struct rtd_pin_config_desc *config_desc;
- 	const struct pinctrl_pin_desc *pin_desc;
- 	const char *pin_name;
- 	int i;
- 
--	pin_desc = rtd119x_pinctrl_get_pin_by_number(data, pinnr);
-+	pin_desc = rtd_pinctrl_get_pin_by_number(data, pinnr);
- 	if (!pin_desc)
- 		return -ENOTSUPP;
- 
- 	pin_name = pin_desc->name;
--	config_desc = rtd119x_pinctrl_find_config(data, pin_name);
-+	config_desc = rtd_pinctrl_find_config(data, pin_name);
- 	if (!config_desc)
- 		return -ENOTSUPP;
- 
- 	for (i = 0; i < num_configs; i++) {
--		rtd119x_pconf_parse_conf(data, config_desc,
-+		rtd_pconf_parse_conf(data, config_desc,
- 			pinconf_to_config_param(configs[i]),
- 			pinconf_to_config_argument(configs[i]));
- 	}
-@@ -436,16 +436,16 @@ static int rtd119x_pin_config_set(struct pinctrl_dev *pcdev, unsigned int pinnr,
- 
- 
- 
--static const struct pinconf_ops rtd119x_pinconf_ops = {
-+static const struct pinconf_ops rtd_pinconf_ops = {
- 	.is_generic = true,
--	.pin_config_get = rtd119x_pin_config_get,
--	.pin_config_set = rtd119x_pin_config_set,
-+	.pin_config_get = rtd_pin_config_get,
-+	.pin_config_set = rtd_pin_config_set,
- };
- 
--static void rtd119x_pinctrl_selftest(struct rtd119x_pinctrl *data)
-+static void rtd_pinctrl_selftest(struct rtd_pinctrl *data)
- {
- 	int i, j, k;
--	const struct rtd119x_pinctrl_desc *info = data->info;
-+	const struct rtd_pinctrl_desc *info = data->info;
- 
- 	for (i = 0; i < info->num_muxes; i++) {
- 		/* Check for pin */
-@@ -492,7 +492,7 @@ static void rtd119x_pinctrl_selftest(struct rtd119x_pinctrl *data)
- 	}
- }
- 
--static const struct of_device_id rtd119x_pinctrl_dt_ids[] = {
-+static const struct of_device_id rtd_pinctrl_dt_ids[] = {
- 	 { .compatible = "realtek,rtd1195-iso-pinctrl",
- 		.data = &rtd1195_iso_pinctrl_desc },
- 	 { .compatible = "realtek,rtd1195-crt-pinctrl",
-@@ -508,12 +508,12 @@ static const struct of_device_id rtd119x_pinctrl_dt_ids[] = {
- 	 { }
- };
- 
--static int rtd119x_pinctrl_probe(struct platform_device *pdev)
-+static int rtd_pinctrl_probe(struct platform_device *pdev)
- {
--	struct rtd119x_pinctrl *data;
-+	struct rtd_pinctrl *data;
- 	const struct of_device_id *match;
- 
--	match = of_match_node(rtd119x_pinctrl_dt_ids, pdev->dev.of_node);
-+	match = of_match_node(rtd_pinctrl_dt_ids, pdev->dev.of_node);
- 	if (!match)
- 		return -EINVAL;
- 
-@@ -529,9 +529,9 @@ static int rtd119x_pinctrl_probe(struct platform_device *pdev)
- 	data->desc.name = "foo";
- 	data->desc.pins = data->info->pins;
- 	data->desc.npins = data->info->num_pins;
--	data->desc.pctlops = &rtd119x_pinctrl_ops;
--	data->desc.pmxops = &rtd119x_pinmux_ops;
--	data->desc.confops = &rtd119x_pinconf_ops;
-+	data->desc.pctlops = &rtd_pinctrl_ops;
-+	data->desc.pmxops = &rtd_pinmux_ops;
-+	data->desc.confops = &rtd_pinconf_ops;
- 	data->desc.custom_params = NULL;
- 	data->desc.num_custom_params = 0;
- 	data->desc.owner = THIS_MODULE;
-@@ -542,20 +542,20 @@ static int rtd119x_pinctrl_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, data);
- 
--	rtd119x_pinctrl_selftest(data);
-+	rtd_pinctrl_selftest(data);
- 
- 	dev_info(&pdev->dev, "probed\n");
- 
- 	return 0;
- }
- 
--static struct platform_driver rtd119x_pinctrl_driver = {
--	.probe = rtd119x_pinctrl_probe,
-+static struct platform_driver rtd_pinctrl_driver = {
-+	.probe = rtd_pinctrl_probe,
++static int rtd_pinctrl_suspend(struct platform_device *pdev, pm_message_t state)
++{
++	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
++	struct rtd_pin_reg_list *list;
++	int i;
++
++	for (i = 0; i < data->info->num_regs; i++) {
++		list = &data->info->lists[i];
++		list->val = readl(data->base + list->reg_offset);
++	}
++
++	return 0;
++}
++
++static int rtd_pinctrl_resume(struct platform_device *pdev)
++{
++	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
++	const struct rtd_pin_reg_list *list;
++	int i;
++
++	for (i = 0; i < data->info->num_regs; i++) {
++		list = &data->info->lists[i];
++		writel(list->val, data->base + list->reg_offset);
++	}
++
++	return 0;
++}
++
++
+ static struct platform_driver rtd_pinctrl_driver = {
+ 	.probe = rtd_pinctrl_probe,
++	.suspend = rtd_pinctrl_suspend,
++	.resume = rtd_pinctrl_resume,
  	.driver = {
--		.name = "rtd1295-pinctrl",
--		.of_match_table	= rtd119x_pinctrl_dt_ids,
-+		.name = "rtd-pinctrl",
-+		.of_match_table	= rtd_pinctrl_dt_ids,
- 	},
- };
--builtin_platform_driver(rtd119x_pinctrl_driver);
--MODULE_DESCRIPTION("rtk pinctrl driver");
-+builtin_platform_driver(rtd_pinctrl_driver);
-+MODULE_DESCRIPTION("rtd pinctrl driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/pinctrl/pinctrl-rtd1195.h b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-similarity index 98%
-rename from drivers/pinctrl/pinctrl-rtd1195.h
-rename to drivers/pinctrl/realtek/pinctrl-rtd1195.h
-index f0dd91f416e8..74139345083c 100644
---- a/drivers/pinctrl/pinctrl-rtd1195.h
+ 		.name = "rtd-pinctrl",
+ 		.of_match_table	= rtd_pinctrl_dt_ids,
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1195.h b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
+index 74139345083c..c9d6e7894d66 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd1195.h
 +++ b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-@@ -107,7 +107,7 @@ static const unsigned int rtd1195_pwm_23_open_drain_pins[] = {
- 		.num_pins = ARRAY_SIZE(rtd1195_ ## _name ## _pins), \
- 	}
- 
--static const struct rtd119x_pin_group_desc rtd1195_iso_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1195_iso_pin_groups[] = {
- 	RTD1195_GROUP(iso_gpio_0),
- 	RTD1195_GROUP(iso_gpio_1),
- 	RTD1195_GROUP(usb0),
-@@ -212,7 +212,7 @@ static const char * const rtd1195_iso_pwm_23_open_drain_groups[] = {
- 		.num_groups = ARRAY_SIZE(rtd1195_iso_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1195_iso_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1195_iso_pin_functions[] = {
- 	RTD1195_FUNC(gpio),
- 	RTD1195_FUNC(ai_ur1),
- 	RTD1195_FUNC(ai_vfd),
-@@ -239,7 +239,7 @@ static const struct rtd119x_pin_func_desc rtd1195_iso_pin_functions[] = {
- 
- #undef RTD1195_FUNC
- 
--static const struct rtd119x_pin_desc rtd1195_iso_muxes[] = {
-+static const struct rtd_pin_desc rtd1195_iso_muxes[] = {
- 	RTK_PIN_MUX(vfd_d, 0x10, GENMASK(1, 0),
- 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 0, "vfd"),
-@@ -337,7 +337,7 @@ static const struct rtd119x_pin_desc rtd1195_iso_muxes[] = {
- 		RTK_PIN_FUNC(0x2 << 30, "ai_vfd")),
- };
- 
--static const struct rtd119x_pin_config_desc rtd1195_iso_configs[] = {
-+static const struct rtd_pin_config_desc rtd1195_iso_configs[] = {
- 	RTK_PIN_CONFIG(ir_rx, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(vfd_cs_n, 0x0, 12, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(vfd_clk, 0x0, 16, 1, 0, 2, 3, PADDRI_2_4),
-@@ -358,7 +358,7 @@ static const struct rtd119x_pin_config_desc rtd1195_iso_configs[] = {
+@@ -358,6 +358,16 @@ static const struct rtd_pin_config_desc rtd1195_iso_configs[] = {
  };
  
  
--static const struct rtd119x_pinctrl_desc rtd1195_iso_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
++static struct rtd_pin_reg_list rtd1195_iso_reg_lists[] = {
++	{.reg_offset = 0x0},
++	{.reg_offset = 0x4},
++	{.reg_offset = 0x8},
++	{.reg_offset = 0xc},
++	{.reg_offset = 0x10},
++	{.reg_offset = 0x14},
++};
++
++
+ static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
  	.pins = rtd1195_iso_pins,
  	.num_pins = ARRAY_SIZE(rtd1195_iso_pins),
- 	.groups = rtd1195_iso_pin_groups,
-@@ -586,7 +586,7 @@ static const unsigned int rtd1195_ao_loc_pins[] = { RTD1195_AO_LOC };
- 		.num_pins = ARRAY_SIZE(rtd1195_ ## _name ## _pins), \
- 	}
- 
--static const struct rtd119x_pin_group_desc rtd1195_crt_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1195_crt_pin_groups[] = {
- 	RTD1195_GROUP(gpio_0),
- 	RTD1195_GROUP(gpio_1),
- 	RTD1195_GROUP(gpio_2),
-@@ -764,7 +764,7 @@ static const char * const rtd1195_crt_usb_groups[] = { "sensor_cko_1" };
- 		.num_groups = ARRAY_SIZE(rtd1195_crt_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1195_crt_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1195_crt_pin_functions[] = {
- 	RTD1195_FUNC(gpio),
- 	RTD1195_FUNC(ao_tp0),
- 	RTD1195_FUNC(ao_gpio),
-@@ -794,7 +794,7 @@ static const struct rtd119x_pin_func_desc rtd1195_crt_pin_functions[] = {
- 
- #undef RTD1195_FUNC
- 
--static const struct rtd119x_pin_desc rtd1195_crt_muxes[] = {
-+static const struct rtd_pin_desc rtd1195_crt_muxes[] = {
- 	RTK_PIN_MUX(nf_rdy, 0x60, GENMASK(3, 2),
- 		RTK_PIN_FUNC(0x0 << 2, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 2, "nand"),
-@@ -1045,7 +1045,7 @@ static const struct rtd119x_pin_desc rtd1195_crt_muxes[] = {
- 		RTK_PIN_FUNC(0x2 << 2, "ao_gpio")),
+@@ -369,6 +379,8 @@ static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1195_iso_muxes),
+ 	.configs = rtd1195_iso_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1195_iso_configs),
++	.lists = rtd1195_iso_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1195_iso_reg_lists),
  };
  
--static const struct rtd119x_pin_config_desc rtd1195_crt_configs[] = {
-+static const struct rtd_pin_config_desc rtd1195_crt_configs[] = {
- 	RTK_PIN_CONFIG(nf_ale, 0x78, 4, 1, 0, 2, 3, PADDRI_4_8),
- 	RTK_PIN_CONFIG(nf_ce_n_0, 0x78, 8, 1, 0, 2, 3, PADDRI_4_8),
- 	RTK_PIN_CONFIG(nf_ce_n_1, 0x78, 12, 1, 0, 2, 3, PADDRI_4_8),
-@@ -1111,7 +1111,7 @@ static const struct rtd119x_pin_config_desc rtd1195_crt_configs[] = {
+ /* CRT */
+@@ -1110,6 +1122,25 @@ static const struct rtd_pin_config_desc rtd1195_crt_configs[] = {
+ 	RTK_PIN_CONFIG(sensor_cko_1, 0x9c, 28, 1, 0, 2, 3, PADDRI_2_4),
  };
  
++static struct rtd_pin_reg_list rtd1195_crt_reg_lists[] = {
++	{.reg_offset = 0x60},
++	{.reg_offset = 0x64},
++	{.reg_offset = 0x68},
++	{.reg_offset = 0x6c},
++	{.reg_offset = 0x70},
++	{.reg_offset = 0x74},
++	{.reg_offset = 0x78},
++	{.reg_offset = 0x7c},
++	{.reg_offset = 0x80},
++	{.reg_offset = 0x84},
++	{.reg_offset = 0x88},
++	{.reg_offset = 0x8c},
++	{.reg_offset = 0x90},
++	{.reg_offset = 0x94},
++	{.reg_offset = 0x98},
++	{.reg_offset = 0x9c},
++};
++
  
--static const struct rtd119x_pinctrl_desc rtd1195_crt_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
+ static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
  	.pins = rtd1195_crt_pins,
- 	.num_pins = ARRAY_SIZE(rtd1195_crt_pins),
- 	.groups = rtd1195_crt_pin_groups,
-diff --git a/drivers/pinctrl/pinctrl-rtd1295.h b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-similarity index 98%
-rename from drivers/pinctrl/pinctrl-rtd1295.h
-rename to drivers/pinctrl/realtek/pinctrl-rtd1295.h
-index f27debc96bb6..14d46baa97d8 100644
---- a/drivers/pinctrl/pinctrl-rtd1295.h
+@@ -1122,6 +1153,8 @@ static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1195_crt_muxes),
+ 	.configs = rtd1195_crt_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1195_crt_configs),
++	.lists = rtd1195_crt_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1195_crt_reg_lists),
+ };
+ 
+ #endif
+diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1295.h b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
+index 14d46baa97d8..7cd12f66e02f 100644
+--- a/drivers/pinctrl/realtek/pinctrl-rtd1295.h
 +++ b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-@@ -171,7 +171,7 @@ static const unsigned int rtd1295_uart2_1_pins[] = {
- 		.num_pins = ARRAY_SIZE(rtd1295_ ## _name ## _pins), \
- 	}
- 
--static const struct rtd119x_pin_group_desc rtd1295_iso_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1295_iso_pin_groups[] = {
- 	RTD1295_GROUP(iso_gpio_0),
- 	RTD1295_GROUP(iso_gpio_1),
- 	RTD1295_GROUP(iso_gpio_2),
-@@ -317,7 +317,7 @@ static const char * const rtd1295_iso_acpu_ejtag_loc_nf_groups[] = {
- 		.num_groups = ARRAY_SIZE(rtd1295_iso_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1295_iso_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1295_iso_pin_functions[] = {
- 	RTD1295_FUNC(gpio),
- 	RTD1295_FUNC(acpu_ejtag_loc_iso),
- 	RTD1295_FUNC(edp_hpd),
-@@ -350,7 +350,7 @@ static const struct rtd119x_pin_func_desc rtd1295_iso_pin_functions[] = {
- 
- #undef RTD1295_FUNC
- 
--static const struct rtd119x_pin_desc rtd1295_iso_muxes[] = {
-+static const struct rtd_pin_desc rtd1295_iso_muxes[] = {
- 	RTK_PIN_MUX(iso_gpio_4, 0x10, GENMASK(1, 0),
- 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 0, "uart2_0"),
-@@ -489,7 +489,7 @@ static const struct rtd119x_pin_desc rtd1295_iso_muxes[] = {
- 		RTK_PIN_FUNC(0x2 << 12, "uart2_1")),
+@@ -525,7 +525,17 @@ static const struct rtd_pin_config_desc rtd1295_iso_configs[] = {
+ 	RTK_PIN_CONFIG(iso_gpio_34, 0x20, 4, 1, 0, 2, 3, 2),
  };
  
--static const struct rtd119x_pin_config_desc rtd1295_iso_configs[] = {
-+static const struct rtd_pin_config_desc rtd1295_iso_configs[] = {
- 	RTK_PIN_CONFIG(iso_gpio_2, 0x0, 0, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(iso_gpio_3, 0x0, 4, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(ir_rx, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
-@@ -527,7 +527,7 @@ static const struct rtd119x_pin_config_desc rtd1295_iso_configs[] = {
+-
++static struct rtd_pin_reg_list rtd1295_iso_reg_lists[] = {
++	{.reg_offset = 0x0},
++	{.reg_offset = 0x4},
++	{.reg_offset = 0x8},
++	{.reg_offset = 0xc},
++	{.reg_offset = 0x10},
++	{.reg_offset = 0x14},
++	{.reg_offset = 0x18},
++	{.reg_offset = 0x1c},
++	{.reg_offset = 0x20},
++};
  
- 
- 
--static const struct rtd119x_pinctrl_desc rtd1295_iso_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
+ static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
  	.pins = rtd1295_iso_pins,
- 	.num_pins = ARRAY_SIZE(rtd1295_iso_pins),
- 	.groups = rtd1295_iso_pin_groups,
-@@ -756,7 +756,7 @@ static const unsigned int rtd1295_tp1_loc_pins[] = { RTD1295_TP1_LOC };
- 
- 
- 
--static const struct rtd119x_pin_group_desc rtd1295_sb2_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1295_sb2_pin_groups[] = {
- 	RTD1295_GROUP(gpio_0),
- 	RTD1295_GROUP(gpio_1),
- 	RTD1295_GROUP(gpio_2),
-@@ -921,7 +921,7 @@ static const char * const rtd1295_sb2_hif_loc_nf_groups[] = { "hif_loc" };
- 		.num_groups = ARRAY_SIZE(rtd1295_sb2_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1295_sb2_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1295_sb2_pin_functions[] = {
- 	RTD1295_FUNC(gpio),
- 	RTD1295_FUNC(ai),
- 	RTD1295_FUNC(dc_fan_sensor),
-@@ -951,7 +951,7 @@ static const struct rtd119x_pin_func_desc rtd1295_sb2_pin_functions[] = {
- 
- #undef RTD1295_FUNC
- 
--static const struct rtd119x_pin_desc rtd1295_sb2_muxes[] = {
-+static const struct rtd_pin_desc rtd1295_sb2_muxes[] = {
- 	RTK_PIN_MUX(tp0_data, 0x08, GENMASK(2, 0),
- 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 0, "tp0_loc_tp0"),
-@@ -1168,7 +1168,7 @@ static const struct rtd119x_pin_desc rtd1295_sb2_muxes[] = {
- 		RTK_PIN_FUNC(0x1 << 22, "rgmii")),
+@@ -538,6 +548,8 @@ static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1295_iso_muxes),
+ 	.configs = rtd1295_iso_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1295_iso_configs),
++	.lists = rtd1295_iso_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1295_iso_reg_lists),
  };
  
--static const struct rtd119x_pin_config_desc rtd1295_sb2_configs[] = {
-+static const struct rtd_pin_config_desc rtd1295_sb2_configs[] = {
- 	RTK_PIN_CONFIG(tp0_clk, 0x28, 0, 1, 0, 2, 3, PADDRI_4_8),
- 	RTK_PIN_CONFIG(tp0_sync, 0x28, 4, 1, 0, 2, 3, PADDRI_4_8),
- 	RTK_PIN_CONFIG(tp0_valid, 0x28, 8, 1, 0, 2, 3, PADDRI_4_8),
-@@ -1226,7 +1226,7 @@ static const struct rtd119x_pin_config_desc rtd1295_sb2_configs[] = {
+ /* SB2 */
+@@ -1225,6 +1237,28 @@ static const struct rtd_pin_config_desc rtd1295_sb2_configs[] = {
+ 	RTK_PIN_CONFIG(rgmii1_rxd_3, 0x78, 12, 1, 0, 2, 3, PADDRI_4_8),
  };
  
++static struct rtd_pin_reg_list rtd1295_sb2_reg_lists[] = {
++	{.reg_offset = 0x8},
++	{.reg_offset = 0xc},
++	{.reg_offset = 0x10},
++	{.reg_offset = 0x14},
++	{.reg_offset = 0x28},
++	{.reg_offset = 0x14},
++	{.reg_offset = 0x2c},
++	{.reg_offset = 0x30},
++	{.reg_offset = 0x34},
++	{.reg_offset = 0x38},
++	{.reg_offset = 0x3c},
++	{.reg_offset = 0x60},
++	{.reg_offset = 0x64},
++	{.reg_offset = 0x68},
++	{.reg_offset = 0x6c},
++	{.reg_offset = 0x70},
++	{.reg_offset = 0x74},
++	{.reg_offset = 0x78},
++	{.reg_offset = 0x7c},
++};
++
  
--static const struct rtd119x_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
+ static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
  	.pins = rtd1295_sb2_pins,
- 	.num_pins = ARRAY_SIZE(rtd1295_sb2_pins),
- 	.groups = rtd1295_sb2_pin_groups,
-@@ -1278,7 +1278,7 @@ static const unsigned int rtd1295_ao_sd_1_pins[] = { RTD1295_AO_SD_1 };
- static const unsigned int rtd1295_ao_sd_2_pins[] = { RTD1295_AO_SD_2 };
- static const unsigned int rtd1295_ao_sd_3_pins[] = { RTD1295_AO_SD_3 };
- 
--static const struct rtd119x_pin_group_desc rtd1295_disp_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1295_disp_pin_groups[] = {
- 	RTD1295_GROUP(spdif),
- 	RTD1295_GROUP(dmic_clk),
- 	RTD1295_GROUP(dmic_data),
-@@ -1313,7 +1313,7 @@ static const char * const rtd1295_disp_spdif_out_groups[] = { "spdif" };
- 		.num_groups = ARRAY_SIZE(rtd1295_disp_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1295_disp_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1295_disp_pin_functions[] = {
- 	RTD1295_FUNC(gpio),
- 	RTD1295_FUNC(ai),
- 	RTD1295_FUNC(ao),
-@@ -1323,7 +1323,7 @@ static const struct rtd119x_pin_func_desc rtd1295_disp_pin_functions[] = {
- 
- #undef RTD1295_FUNC
- 
--static const struct rtd119x_pin_desc rtd1295_disp_muxes[] = {
-+static const struct rtd_pin_desc rtd1295_disp_muxes[] = {
- 	RTK_PIN_MUX(spdif, 0x08, GENMASK(1, 0),
- 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 0, "spdif_out")),
-@@ -1360,7 +1360,7 @@ static const struct rtd119x_pin_desc rtd1295_disp_muxes[] = {
- 		RTK_PIN_FUNC(0x2 << 18, "ai")),
+@@ -1237,6 +1271,8 @@ static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1295_sb2_muxes),
+ 	.configs = rtd1295_sb2_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1295_sb2_configs),
++	.lists = rtd1295_sb2_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1295_sb2_reg_lists),
  };
  
--static const struct rtd119x_pin_config_desc rtd1295_disp_configs[] = {
-+static const struct rtd_pin_config_desc rtd1295_disp_configs[] = {
- 	RTK_PIN_CONFIG(spdif, 0x0, 0, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(dmic_clk, 0x0, 4, 1, 0, 2, 3, PADDRI_2_4),
- 	RTK_PIN_CONFIG(dmic_data, 0x0, 8, 1, 0, 2, 3, PADDRI_2_4),
-@@ -1374,7 +1374,7 @@ static const struct rtd119x_pin_config_desc rtd1295_disp_configs[] = {
+ /* Disp */
+@@ -1373,6 +1409,12 @@ static const struct rtd_pin_config_desc rtd1295_disp_configs[] = {
+ 	RTK_PIN_CONFIG(ao_sd_3, 0x4, 24, 1, 0, 2, 3, PADDRI_2_4),
  };
  
++static struct rtd_pin_reg_list rtd1295_disp_reg_lists[] = {
++	{.reg_offset = 0x0},
++	{.reg_offset = 0x4},
++	{.reg_offset = 0x8},
++};
++
  
--static const struct rtd119x_pinctrl_desc rtd1295_disp_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
+ static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
  	.pins = rtd1295_disp_pins,
- 	.num_pins = ARRAY_SIZE(rtd1295_disp_pins),
- 	.groups = rtd1295_disp_pin_groups,
-@@ -1513,7 +1513,7 @@ static const unsigned int rtd1295_prob_3_pins[] = { RTD1295_PROB_3 };
- static const unsigned int rtd1295_sdio_loc_pins[] = { RTD1295_SDIO_LOC };
- 
- 
--static const struct rtd119x_pin_group_desc rtd1295_cr_pin_groups[] = {
-+static const struct rtd_pin_group_desc rtd1295_cr_pin_groups[] = {
- 	RTD1295_GROUP(nf_cle),
- 	RTD1295_GROUP(nf_ale),
- 	RTD1295_GROUP(nf_rd_n),
-@@ -1616,7 +1616,7 @@ static const char * const rtd1295_cr_sdio_1_groups[] = {
- 		.num_groups = ARRAY_SIZE(rtd1295_cr_ ## _name ## _groups), \
- 	}
- 
--static const struct rtd119x_pin_func_desc rtd1295_cr_pin_functions[] = {
-+static const struct rtd_pin_func_desc rtd1295_cr_pin_functions[] = {
- 	RTD1295_FUNC(gpio),
- 	RTD1295_FUNC(avcpu_ej),
- 	RTD1295_FUNC(emmc),
-@@ -1633,7 +1633,7 @@ static const struct rtd119x_pin_func_desc rtd1295_cr_pin_functions[] = {
- 
- #undef RTD1295_FUNC
- 
--static const struct rtd119x_pin_desc rtd1295_cr_muxes[] = {
-+static const struct rtd_pin_desc rtd1295_cr_muxes[] = {
- 	RTK_PIN_MUX(nf_dqs, 0x00, GENMASK(1, 0),
- 		RTK_PIN_FUNC(0x0 << 0, "gpio"),
- 		RTK_PIN_FUNC(0x1 << 0, "nand")),
-@@ -1785,7 +1785,7 @@ static const struct rtd119x_pin_desc rtd1295_cr_muxes[] = {
- 		RTK_PIN_FUNC(0x1 << 12, "pll_test")),
+@@ -1385,6 +1427,8 @@ static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1295_disp_muxes),
+ 	.configs = rtd1295_disp_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1295_disp_configs),
++	.lists = rtd1295_disp_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1295_disp_reg_lists),
  };
  
--static const struct rtd119x_pin_config_desc rtd1295_cr_configs[] = {
-+static const struct rtd_pin_config_desc rtd1295_cr_configs[] = {
- 	RTK_PIN_CONFIG(nf_dqs, 0x8, 0, 1, 0, 2, 3, PCONF_UNSUPP),
- 	RTK_PIN_CONFIG(nf_ale, 0x8, 4, 1, 0, 2, 3, PCONF_UNSUPP),
- 	RTK_PIN_CONFIG(nf_ce_n_0, 0x8, 8, 1, 0, 2, 3, PCONF_UNSUPP),
-@@ -1826,7 +1826,7 @@ static const struct rtd119x_pin_config_desc rtd1295_cr_configs[] = {
+ /* CR */
+@@ -1825,6 +1869,25 @@ static const struct rtd_pin_config_desc rtd1295_cr_configs[] = {
+ 	RTK_PIN_CONFIG(prob_3, 0x18, 24, 1, 0, 2, 3, PADDRI_4_8),
  };
  
++static struct rtd_pin_reg_list rtd1295_cr_reg_lists[] = {
++	{.reg_offset = 0x0},
++	{.reg_offset = 0x4},
++	{.reg_offset = 0x8},
++	{.reg_offset = 0xc},
++	{.reg_offset = 0x10},
++	{.reg_offset = 0x14},
++	{.reg_offset = 0x18},
++	{.reg_offset = 0x1c},
++	{.reg_offset = 0x20},
++	{.reg_offset = 0x24},
++	{.reg_offset = 0x28},
++	{.reg_offset = 0x2c},
++	{.reg_offset = 0x30},
++	{.reg_offset = 0x34},
++	{.reg_offset = 0x38},
++	{.reg_offset = 0x3c},
++	{.reg_offset = 0x40},
++};
  
--static const struct rtd119x_pinctrl_desc rtd1295_cr_pinctrl_desc = {
-+static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
+ static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
  	.pins = rtd1295_cr_pins,
- 	.num_pins = ARRAY_SIZE(rtd1295_cr_pins),
- 	.groups = rtd1295_cr_pin_groups,
+@@ -1837,6 +1900,8 @@ static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
+ 	.num_muxes = ARRAY_SIZE(rtd1295_cr_muxes),
+ 	.configs = rtd1295_cr_configs,
+ 	.num_configs = ARRAY_SIZE(rtd1295_cr_configs),
++	.lists = rtd1295_cr_reg_lists,
++	.num_regs = ARRAY_SIZE(rtd1295_cr_reg_lists),
+ };
+ 
+ #endif
 -- 
 2.27.0
 
