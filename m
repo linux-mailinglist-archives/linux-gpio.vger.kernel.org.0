@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C99F3221FC2
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 11:35:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87DA6222045
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 12:07:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbgGPJfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 05:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
+        id S1726105AbgGPKGn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 06:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgGPJfE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 05:35:04 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB64C061755
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 02:35:03 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id o4so2936010lfi.7
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 02:35:03 -0700 (PDT)
+        with ESMTP id S1725965AbgGPKGn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 06:06:43 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F3DC061755
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 03:06:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s9so6435522ljm.11
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 03:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=v/ux3EqSZ6QqQYNSmgGhBPUjd+It6my6Xoplfq3uCHw=;
-        b=M9pMBVjfIRsbdxXW8FW4PmMaZzPxJEqN6/3VYM3pogy1IBVB1DbX2FqLKWsrwOHo4B
-         5OXMHaFyn/qnsCYVqyu5G0C4cjGFYtvVs3BJoEyCbxfXFJqiuE65kU7rjWU8qVTL3saS
-         TDMslJLICLujJY1LySJw/QhJ1K6puvJHZsVC//27sdH18QfJuFcHUcq/6od+vOr+Xdfd
-         v5u0IJADk/LlJEuYKpNUQ63iDCWESImylaV2vjlb1Gsieg2+EN8w/zc5X/JC7Zx5EjGG
-         JPkbHJw+GQksIZyRlrHdVWAxE4wB4qhrh8fs9hUR2MPJDvBloMkSmsEMp8A49VCsRYR4
-         yonw==
+        bh=assvlrGhZdtMJ0Zn3X2YWbUyaJC6SrxIJ2dc8swcu0c=;
+        b=VU1lzn0ulnKeWhfbf1+CeuxeKiVQSIGyVdBoOuDSjBKasSKPx69v48p+ejV5Ce+64P
+         Hkv3FBfVA9MZs5C6AsXEHnr5xid9XyhV6oGjqHyRSPWZ5XYuXstozA9yvUhuy1nvoBP2
+         fGFMQ84W3vtB4eBNwWxAlnpGJhY9veqBZCnFZ5iTON9O53lBUdReHsitkrHNjbTl8woc
+         +4LJqAImcSzUQgYcr+F7rS0+L1cMuKzcpZyXZGQu55910QaNYOWIG/asWVLLHx+WmgGx
+         ytZc1RyvvDFmr38GodxosIf7ATz7kWGddSxQxlNOwFsJKBBeC+nfmzdff6VKvLOqPdbW
+         Fe4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=v/ux3EqSZ6QqQYNSmgGhBPUjd+It6my6Xoplfq3uCHw=;
-        b=Ry4uJNjXWbDchigcYwQ2g6BR7ZjlqKdTWC8QEPuvYhxQa12EuNqfBuI/zQBjsb6W7b
-         vOCjuutm75B6vDcPtNcbcNPr7tGNtzzR5E81MMrQCTkUadiJYJ06F4llRBz+IvYGpfgk
-         ZUy0k1k60V/f+V3v0QS98LP88VENvXiZO29nbJc1KzxQcGwnzYGJMSQtASVIIdyfeEP3
-         qFiTnxhVWI9yQ7FvZCe1NwsP08k4xGVvMAaYE41e7cTLiiwTGueePZ+csKrtRGid0Y3z
-         PsWwirUVcvx1UJ2nsnrXX+sVKaVl9+ZMH+T30NVDM+Slj17/3J2kkjiOm0clCJQ84pUF
-         zg3Q==
-X-Gm-Message-State: AOAM531Zcx4IWHPssIchGeb1kxneyauxgeSBZqtp0L1nYvsUN5OYjbDw
-        WPqsydtsbGM2s8UxMe3QIm8ZE5igByM=
-X-Google-Smtp-Source: ABdhPJzl6j8iRaAXYjFz+LoTkTGkIRmd/HQpnKuAwqJLyFEVRZh9lTb7X8nw8452ExYaUDxYmqehJA==
-X-Received: by 2002:a05:6512:3195:: with SMTP id i21mr1699822lfe.131.1594892102134;
-        Thu, 16 Jul 2020 02:35:02 -0700 (PDT)
+        bh=assvlrGhZdtMJ0Zn3X2YWbUyaJC6SrxIJ2dc8swcu0c=;
+        b=hGGja61qLi6sYbmModEI2CLxo1B+baZAwdNsaO9nOOSm5dYTrp7YdEHaaEvemOASHt
+         FUORNqZViCWZml3F5XLAqPUssZ0xVg6n+wbcgXsu2ho3BQcf12xilNcJSHkabz9gx29e
+         mGCIlHHwv3mns8ZHLF4L5o1JMIiTRNOFRr7PPeMC5sPvxt+7eGpqId26vmC9qp3bixKA
+         PBMvuuOm8+K8X+45sck6Glr+qeqLw4dtY4A1NmT+g77EmlMHC1TVe73xtLz5Cs9B7t8O
+         IksJpdexklf352XQ4TqH08JIpW1IRGIPA1vAQHOj2XiFEW3M7a/X7MkSh6K4zz58Juyr
+         z52w==
+X-Gm-Message-State: AOAM5320ONOWfp4Gui4OvBv3m5410AhN7TRhnLIojcInaiclBX/V9zHj
+        Ej4ox5FyebKdCOgu4vp4eDDevlx/vmM=
+X-Google-Smtp-Source: ABdhPJzrz/AtEOau+HUQGwPdbwVhqv3rf+EY/IqOn3D6yIcsx8QPsK+DYCV14AxNTkqbly4Sf4oyuw==
+X-Received: by 2002:a2e:b607:: with SMTP id r7mr1711617ljn.5.1594894001242;
+        Thu, 16 Jul 2020 03:06:41 -0700 (PDT)
 Received: from genomnajs.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id m9sm1071772lfb.5.2020.07.16.02.35.01
+        by smtp.gmail.com with ESMTPSA id z23sm949981ljz.3.2020.07.16.03.06.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 02:35:01 -0700 (PDT)
+        Thu, 16 Jul 2020 03:06:40 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
 To:     linux-gpio@vger.kernel.org
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: tc35892: Use irqchip template
-Date:   Thu, 16 Jul 2020 11:34:59 +0200
-Message-Id: <20200716093459.76378-1-linus.walleij@linaro.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH] gpio: stmpe: Use irqchip template
+Date:   Thu, 16 Jul 2020 12:06:38 +0200
+Message-Id: <20200716100638.112451-1-linus.walleij@linaro.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,62 +70,56 @@ explicit calls to gpiochip_irqchip_add_nested() and
 gpiochip_set_nested_irqchip(). The irqchip is instead
 added while adding the gpiochip.
 
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpio-tc3589x.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+ drivers/gpio/gpio-stmpe.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index 6be0684cfa49..58b0da9eb76f 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -289,6 +289,7 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	struct tc3589x *tc3589x = dev_get_drvdata(pdev->dev.parent);
- 	struct device_node *np = pdev->dev.of_node;
- 	struct tc3589x_gpio *tc3589x_gpio;
-+	struct gpio_irq_chip *girq;
- 	int ret;
- 	int irq;
- 
-@@ -317,6 +318,16 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	tc3589x_gpio->chip.base = -1;
- 	tc3589x_gpio->chip.of_node = np;
- 
-+	girq = &tc3589x_gpio->chip.irq;
-+	girq->chip = &tc3589x_gpio_irq_chip;
-+	/* This will let us handle the parent IRQ in the driver */
-+	girq->parent_handler = NULL;
-+	girq->num_parents = 0;
-+	girq->parents = NULL;
-+	girq->default_type = IRQ_TYPE_NONE;
-+	girq->handler = handle_simple_irq;
-+	girq->threaded = true;
-+
- 	/* Bring the GPIO module out of reset */
- 	ret = tc3589x_set_bits(tc3589x, TC3589x_RSTCTRL,
- 			       TC3589x_RSTCTRL_GPIRST, 0);
-@@ -339,21 +350,6 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+index 542706a852e6..395ee51445ea 100644
+--- a/drivers/gpio/gpio-stmpe.c
++++ b/drivers/gpio/gpio-stmpe.c
+@@ -507,6 +507,8 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
  	}
  
--	ret =  gpiochip_irqchip_add_nested(&tc3589x_gpio->chip,
--					   &tc3589x_gpio_irq_chip,
--					   0,
--					   handle_simple_irq,
--					   IRQ_TYPE_NONE);
--	if (ret) {
--		dev_err(&pdev->dev,
--			"could not connect irqchip to gpiochip\n");
--		return ret;
--	}
--
--	gpiochip_set_nested_irqchip(&tc3589x_gpio->chip,
--				    &tc3589x_gpio_irq_chip,
--				    irq);
--
- 	platform_set_drvdata(pdev, tc3589x_gpio);
+ 	if (irq > 0) {
++		struct gpio_irq_chip *girq;
++
+ 		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+ 				stmpe_gpio_irq, IRQF_ONESHOT,
+ 				"stmpe-gpio", stmpe_gpio);
+@@ -514,20 +516,16 @@ static int stmpe_gpio_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev, "unable to get irq: %d\n", ret);
+ 			goto out_disable;
+ 		}
+-		ret =  gpiochip_irqchip_add_nested(&stmpe_gpio->chip,
+-						   &stmpe_gpio_irq_chip,
+-						   0,
+-						   handle_simple_irq,
+-						   IRQ_TYPE_NONE);
+-		if (ret) {
+-			dev_err(&pdev->dev,
+-				"could not connect irqchip to gpiochip\n");
+-			goto out_disable;
+-		}
  
- 	return 0;
+-		gpiochip_set_nested_irqchip(&stmpe_gpio->chip,
+-					    &stmpe_gpio_irq_chip,
+-					    irq);
++		girq = &stmpe_gpio->chip.irq;
++		girq->chip = &stmpe_gpio_irq_chip;
++		/* This will let us handle the parent IRQ in the driver */
++		girq->parent_handler = NULL;
++		girq->num_parents = 0;
++		girq->parents = NULL;
++		girq->default_type = IRQ_TYPE_NONE;
++		girq->handler = handle_simple_irq;
++		girq->threaded = true;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, stmpe_gpio);
 -- 
 2.26.2
 
