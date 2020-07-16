@@ -2,89 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A914222694
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 17:10:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E135F22268F
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 17:10:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgGPPKk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 11:10:40 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40758 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbgGPPKj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:10:39 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F3F0920168D;
-        Thu, 16 Jul 2020 17:10:37 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 38D48200688;
-        Thu, 16 Jul 2020 17:10:32 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F0416402E4;
-        Thu, 16 Jul 2020 23:10:24 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] pinctrl: imx: Support building i.MX pinctrl driver as module
-Date:   Thu, 16 Jul 2020 23:06:53 +0800
-Message-Id: <1594912013-20859-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
-References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726963AbgGPPKf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 11:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728150AbgGPPKe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 11:10:34 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC21C061755
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 08:10:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j4so7405267wrp.10
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 08:10:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2m1M98EH1nfWkFNzV2VhpZKvvoVfQRllbm5fo3WQqlY=;
+        b=LOendPNIH4Ofg8EGJ+B7ht+ifCEDSJEs0Y7UgjXJxJQUVInRrJUX57gDkVZxGHYjsZ
+         huOkeoMfVADRZfQ+hxvRIZr+u5Kw73rUxW0y/W4OQO3t7mbSNpedFbhfSUi/CdqiP++F
+         dZ8fMAHU7FhFKiF7paIyQ2XQR8qZlSeLOZeQLJCrzL6hVGpAq3BVRID66H3ssWcMrsNP
+         ozgidJwcVDai/+ESiQysfhiLSY1ow3zSgzAp8e/bia4rwkV0FH8pPGVHwWFAYZrzFOak
+         KfQ1/2F5dOZyvvoSt2ZCqsvWoyRER02JfoX87tgwcHKwMRAHLtZkyFcIzGaHF3A0DdNz
+         VxJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2m1M98EH1nfWkFNzV2VhpZKvvoVfQRllbm5fo3WQqlY=;
+        b=Gu17jDhwjh1e0xF/rC8qdBp94vEOsJMcNB/9Dr4a6WA09VRHSZV4YvdXmO38WTpAPt
+         +5qTtu/BHXts7x3NbuoxTlBPOPpyL69mQKGGEpr/nwTqxS+Ksbip9V+xlZ3Gimu9r5Tn
+         4beKUrTrMS/SnbokxwVVjvBL5Skh4z7IS0+Wfn09zqe9NHjJKSeVHDaXci1y+3QjwTTx
+         R9WKWqLK/99eudcF1V8qtXGHRoVDG7jDDgc1QUDW767lRphjy4ocjIaME/q0h6Q+kf4r
+         +E6D4lcyVwOWcrtUo0DD+lVaOXtEIchd42T0rr2pihyNyFeAiZEy2FMqvAIivxcpYEsw
+         VIkA==
+X-Gm-Message-State: AOAM533HRKmu/hyInMP8IXR6RX7jKmKDHWiRyUZZ1QAqS9ZtYSblZdJO
+        4G7rvRaVmgIowqqCLIKm47olxQ==
+X-Google-Smtp-Source: ABdhPJwBTtAOhrqKUUqfWPZvxA5XjDD38qzwHlXSFn/QJ+SGDyX9onIUUbkdHZL69xzg75el0nUvDw==
+X-Received: by 2002:a5d:55ca:: with SMTP id i10mr5507967wrw.225.1594912233054;
+        Thu, 16 Jul 2020 08:10:33 -0700 (PDT)
+Received: from dell ([2.31.163.61])
+        by smtp.gmail.com with ESMTPSA id w7sm8654363wmc.32.2020.07.16.08.10.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 08:10:32 -0700 (PDT)
+Date:   Thu, 16 Jul 2020 16:10:29 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     robh+dt@kernel.org, mripard@kernel.org, wens@csie.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        gregory.clement@bootlin.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org,
+        srinivas.kandagatla@linaro.org, linus.walleij@linaro.org,
+        anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        p.zabel@pengutronix.de, clabbe@baylibre.com, icenowy@aosc.io,
+        megous@megous.com, stefan@olimex.com, bage@linutronix.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v3 10/16] mfd: axp20x: Allow the AXP803 to be probed by
+ I2C
+Message-ID: <20200716151029.GA3165313@dell>
+References: <20200708071942.22595-1-frank@allwinnertech.com>
+ <20200708071942.22595-11-frank@allwinnertech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200708071942.22595-11-frank@allwinnertech.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change PINCTRL_IMX to tristate to support loadable module build.
+On Wed, 08 Jul 2020, Frank Lee wrote:
 
-And i.MX common pinctrl driver should depend on CONFIG_OF to make sure
-no build error when i.MX common pinctrl driver is enabled for different
-architectures without CONFIG_OF.
+> The AXP803 can be used both using the RSB proprietary bus, or a more
+> traditional I2C bus.
+> 
+> Let's add that possibility.
+> 
+> Signed-off-by: Frank Lee <frank@allwinnertech.com>
+> ---
+>  drivers/mfd/axp20x-i2c.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Also add module author, description and license.
+Applied, thanks.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/pinctrl/freescale/Kconfig       | 3 ++-
- drivers/pinctrl/freescale/pinctrl-imx.c | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 570355c..922ae4b 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config PINCTRL_IMX
--	bool
-+	tristate "IMX pinctrl driver"
-+	depends on OF
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index b80c450..3eaafb6 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
-@@ -898,3 +899,7 @@ const struct dev_pm_ops imx_pinctrl_pm_ops = {
- 					imx_pinctrl_resume)
- };
- EXPORT_SYMBOL_GPL(imx_pinctrl_pm_ops);
-+
-+MODULE_AUTHOR("Linus Walleij <linus.walleij@linaro.org>");
-+MODULE_DESCRIPTION("NXP i.MX common pinctrl driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
