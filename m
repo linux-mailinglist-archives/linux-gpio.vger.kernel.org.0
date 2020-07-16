@@ -2,36 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E11C6222D85
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 23:15:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04744222D91
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 23:16:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgGPVPo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 17:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54106 "EHLO mail.kernel.org"
+        id S1727052AbgGPVQu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 17:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725959AbgGPVPo (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Jul 2020 17:15:44 -0400
+        id S1726104AbgGPVQt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Jul 2020 17:16:49 -0400
 Received: from embeddedor (unknown [201.162.240.161])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D661420760;
-        Thu, 16 Jul 2020 21:15:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48DF720760;
+        Thu, 16 Jul 2020 21:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594934144;
-        bh=h/em9K6MxDXMOHjxGdY99yuk+p+fQPMn9vwXzhhReP4=;
+        s=default; t=1594934209;
+        bh=8VD2+aiY77GJqGWBooe1O36nHfabIoRq7MZJbjlehuY=;
         h=Date:From:To:Cc:Subject:From;
-        b=AlcV9UiXn76wQ5TPlMxwklxSfCcqzNCOttJ2E9/1K3oFP9+Fzbtg6x6fSy0sgK44A
-         hCax+kzlshEXMUscFumly+UKFmFSUzCc/ojX610pDXbonABJwcSbMfln0jgAMyTB0Q
-         W35XVUF/UweKiN/zSpsbxfLfLWR+SLS12SDCDyLA=
-Date:   Thu, 16 Jul 2020 16:21:09 -0500
+        b=D3fi9UQFPjePmFvXTssBTYmVIslmFyAvPO9ZmGrfJNPnBoT8S3Dh/37zZyk3o93/n
+         5htJuIY8AFIfy27Fjc/yxl026+hl+KO6u8lVw8wb5nJRGH+ALCi6Z+NC7Bp9OknnCq
+         CixBS0SX9fCY/CBu+EmbyhWFbCkBcW71qbiLzD9M=
+Date:   Thu, 16 Jul 2020 16:22:13 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Vladimir Zapolskiy <vz@mleia.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] pinctrl: lpc18xx: Use fallthrough pseudo-keyword
-Message-ID: <20200716212109.GA17525@embeddedor>
+Subject: [PATCH][next] pinctrl: qcom: spmi-gpio: Use fallthrough
+ pseudo-keyword
+Message-ID: <20200716212213.GA17623@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -48,43 +50,43 @@ the new pseudo-keyword macro fallthrough[1].
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/pinctrl/pinctrl-lpc18xx.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 4 ++--
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
-index e4677546aec4..7b2f885e68bd 100644
---- a/drivers/pinctrl/pinctrl-lpc18xx.c
-+++ b/drivers/pinctrl/pinctrl-lpc18xx.c
-@@ -838,11 +838,11 @@ static int lpc18xx_pconf_get_pin(struct pinctrl_dev *pctldev, unsigned param,
- 		*arg = (reg & LPC18XX_SCU_PIN_EHD_MASK) >> LPC18XX_SCU_PIN_EHD_POS;
- 		switch (*arg) {
- 		case 3: *arg += 5;
--			/* fall through */
-+			fallthrough;
- 		case 2: *arg += 5;
--			/* fall through */
-+			fallthrough;
- 		case 1: *arg += 3;
--			/* fall through */
-+			fallthrough;
- 		case 0: *arg += 4;
- 		}
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 66cbcfe7950e..17441388ce8f 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -794,13 +794,13 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
+ 	switch (subtype) {
+ 	case PMIC_GPIO_SUBTYPE_GPIO_4CH:
+ 		pad->have_buffer = true;
+-		/* Fall through */
++		fallthrough;
+ 	case PMIC_GPIO_SUBTYPE_GPIOC_4CH:
+ 		pad->num_sources = 4;
  		break;
-@@ -1057,11 +1057,11 @@ static int lpc18xx_pconf_set_pin(struct pinctrl_dev *pctldev, unsigned param,
- 
- 		switch (param_val) {
- 		case 20: param_val -= 5;
--			 /* fall through */
+ 	case PMIC_GPIO_SUBTYPE_GPIO_8CH:
+ 		pad->have_buffer = true;
+-		/* Fall through */
++		fallthrough;
+ 	case PMIC_GPIO_SUBTYPE_GPIOC_8CH:
+ 		pad->num_sources = 8;
+ 		break;
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index 338a15d08629..b5949f766a7a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -346,7 +346,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
+ 				return -EINVAL;
+ 			}
+ 			pin->pull_up_strength = arg;
+-			/* FALLTHROUGH */
 +			fallthrough;
- 		case 14: param_val -= 5;
--			 /* fall through */
-+			fallthrough;
- 		case  8: param_val -= 3;
--			 /* fall through */
-+			fallthrough;
- 		case  4: param_val -= 4;
- 			 break;
- 		default:
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+ 			pin->bias = pin->pull_up_strength;
+ 			banks |= BIT(2);
 -- 
 2.27.0
 
