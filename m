@@ -2,83 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F1D221ED9
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 10:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 497B4221EFD
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 10:52:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbgGPIrn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 04:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51162 "EHLO
+        id S1728347AbgGPIwj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 04:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgGPIrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 04:47:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E90C08C5C0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:47:42 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id x9so6229551ljc.5
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:47:42 -0700 (PDT)
+        with ESMTP id S1725867AbgGPIwj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 04:52:39 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E384C061755
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:52:39 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s9so6206444ljm.11
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 01:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=92XopjWnoleG4glqsG4BU2p6Ba/zWqLgWpalogX+TCM=;
-        b=vGgDGorzuOsneFcC3GpsD5YykNaUbLa2RmqVO839gEwfNOPrEWsw+JY2IAm6dSaLr7
-         k3vylz47FrnNst/TJjyPiMQb1a9+kOmPpO14osAdLWkhcir/GAA4jdHXBlODomeo9DG7
-         N7uN7ZsIsNVu3WtprIIdogMfWtMT6kR121fIeI8aY61Mgy3HW9FDwg48e/LmA+JEbSQW
-         ZDujGl2IaFZl2dkLaTotWiouiUsrQTPvDH9zriM2NtdlBkuazB/5SXFRcQJ/catxZEfi
-         j0VcnZBGwQXaRQFJA86ZN6hcssSICMTrrFR8sV9GOH+Z2yotj3brmFvCn+0YDgXp3XZU
-         2BMA==
+        bh=+4SkJVL9wnAlCfKY4DdUogrbTCM+/fohgbxw2ivrMDI=;
+        b=IVPN7uQz4RycEvnB+kUblr+7G5kcMWSjxVyOau6YkD2OKaEdg3pVafN4Qlgs/SvWRG
+         q6685eGAmEKhKiTPTJ10fgjhS6Haazk+r+a3l/p2Q35RKXjp6DYrzZ6YOB/YLKdRfZlJ
+         E0D4ZWts2qIQzCDvCKCf0NGu8uyicx9/v5gNydH3S6g3oa7h2mhuRSdmfKLlDUUXing+
+         /yKbvxVnqmJKid3I3lZ8Eezjp22hnoAkIOEkpyGM4pc78E1Q2NYd1/TRKKDhhSM9Fqwz
+         5sbOW1PIIWD/bN+fdagqfOD03K5TeyNWHcSSKkyssRpuLgumiGtK+qLL4J58A3QNdPkj
+         9t+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=92XopjWnoleG4glqsG4BU2p6Ba/zWqLgWpalogX+TCM=;
-        b=j9yeEgifmLtNDmyj1w7eTMtCc23W6Kad83RL/Ks71RHIEQyUwkiXGOJI3WhL+VvuX/
-         pePSUCNI/N/lpKgQl3mEhWfglaPFcAlqKwWGir3hK0kuFBQx2Hw5DqPe61GeTKYtgVgO
-         26k52U5Narz5L31kT/sxbk3v9pDS9LqX3AIgdnShA97ex7NvAjm2SjPkTsaPnYGODWV3
-         WqPa2rnx3MonqE2gkA0y+OAkEqmlNCYsQnRutvQ5iYq1yz12mtfYXhkfj1LoYpfJVCin
-         6azwZpqDmuf2aVxf1U3tj521ad55zuutmCh4KKnEqtqF+DBjyp1TfF+Bb6IW2nQSPU4+
-         2UMA==
-X-Gm-Message-State: AOAM532SdtLggv9nu9Y6THthWpkDsxvYoLKMh4griI/q1Kk2z6/Fr1ue
-        YGvsDoByxsOZflHuQcQUL2P143noMvwyUicGYjZzLw==
-X-Google-Smtp-Source: ABdhPJy82hgoliVm6eopFXRyK6GD8v0CzkbH74FPpFZaLSVg+5+aHAZq1hO5uiZU7LO2CprZctMqX0Xm68KIEVQ/u6I=
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr1558882ljj.283.1594889260812;
- Thu, 16 Jul 2020 01:47:40 -0700 (PDT)
+        bh=+4SkJVL9wnAlCfKY4DdUogrbTCM+/fohgbxw2ivrMDI=;
+        b=p7KrUxqkqfioQXVNnELHRCrDr0ju8StrWv38M3WEhNY5xVb9DGzRek9LYyIEG5eYuJ
+         Xx/XtCIL9KG0ZI2JoATbDYTyAKyapVDxTqLb5OclI5TDIkyhAMQkiYptFu0c19sH7Bs0
+         SjTzUuVcPuj7sKJopmFRsTS3fjPhK+6MZLxGv8RvXBQv202Ilqg7YQdRDLl2tUdfvos/
+         cvoLFNVYYl/RZTFxa+ZV156UNl53qn0Co3V+uKrlCYAhNA5Pn+4zlflTRdyvcvUNPK13
+         rePcEXAOCO04tQMHSi0ypMBr4Fs9dw14IQqHco+CmBkv6NwzxkZQSNucVzMY6b7M3qUr
+         V3/g==
+X-Gm-Message-State: AOAM5300QfwqZPB5KmRXV/B8oAw5TMTELRwvhRPaDHYD4d7bx9TuZYLC
+        fu+U62XayNvRa6qj+Ben8m/PTPZKALUM0BWTIbl10w==
+X-Google-Smtp-Source: ABdhPJxnjmMYaXbpYxjf3I78rpw/gV+A21zEdTZdXJDis0U9G4POoYVAm8UXaPmX1Ni16xc0ABeAmnVEozCLRMOC1lo=
+X-Received: by 2002:a2e:810a:: with SMTP id d10mr1452133ljg.144.1594889557461;
+ Thu, 16 Jul 2020 01:52:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200703080646.23233-1-computersforpeace@gmail.com>
-In-Reply-To: <20200703080646.23233-1-computersforpeace@gmail.com>
+References: <20200709171203.12950-1-digetx@gmail.com>
+In-Reply-To: <20200709171203.12950-1-digetx@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 10:47:30 +0200
-Message-ID: <CACRpkdar+aBBFn6SKJ1a90D-NT3F6qGvouzjt-jxaiR0VSuUOg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: qcom: ipq4019: add open drain support
-To:     Brian Norris <computersforpeace@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.or>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Thu, 16 Jul 2020 10:52:26 +0200
+Message-ID: <CACRpkdZNLDgsrPRenyvPZD6A+Wvj-P3AJBf5Ke-uY9=R9DyjxQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Improvements for MAX77620 GPIO driver
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-tegra@vger.kernel.org,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jaiganesh Narayanan <njaigane@codeaurora.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 3, 2020 at 10:06 AM Brian Norris
-<computersforpeace@gmail.com> wrote:
+On Thu, Jul 9, 2020 at 7:12 PM Dmitry Osipenko <digetx@gmail.com> wrote:
 
-> From: Jaiganesh Narayanan <njaigane@codeaurora.org>
+> This series addresses a problem that I discovered on Nexus 7 device where
+> GPIO interrupts may be left enabled after bootloader and the driver isn't
+> prepared to this. It also makes a small improvements to the code, fixes the
+> non-released interrupt bug and converts driver to use irqchip template.
 >
-> Signed-off-by: Jaiganesh Narayanan <njaigane@codeaurora.org>
-> [ Brian: adapted from from the Chromium OS kernel used on IPQ4019-based
->   WiFi APs. ]
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> Changelog:
+>
+> v4: - Added stable-tag to the patch "Fix missing release of interrupt".
 
-Patch applied because this looks innocent and Rob
-ACKed the binding.
+This v4 series applied, thanks a *LOT* for your patient work on this!
 
-If Bjorn opposes, I will simply pull the patch out again.
+I need to fix the USB port on my Nexus 7 so I can test how the
+mainline support is working these days!
 
 Yours,
 Linus Walleij
