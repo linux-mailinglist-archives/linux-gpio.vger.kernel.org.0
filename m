@@ -2,92 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26DB62222D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 14:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92CD52222EA
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 14:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgGPMtw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 08:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60354 "EHLO
+        id S1728488AbgGPMwI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 08:52:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728623AbgGPMts (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 08:49:48 -0400
+        with ESMTP id S1728093AbgGPMwI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 08:52:08 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3933FC08C5DB
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:49:48 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id e8so7042787ljb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:49:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E07C08C5CE
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:52:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z24so6976634ljn.8
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SMUqbM/2tAa8/paafO1/gccjmbEp76TZl0DYAO5Htac=;
-        b=vuSLav+Cii51LYAbUmO1o2Rs7yss7EnlSKUR20VVaxbbxAYlCtWHJRMDU2Py8c8JTY
-         WKhP3yKme72urB8ucBIKLAPShsPH9qJuaUcriEuBK9Wjv8FMrcnFMZbgbhNpHDLpfeb1
-         2ZUxDC9TUvSLcWYF1QnnLlRGGq+l5vEZ5VQHiE2Ik+JiWFkWFqZ86Wsve2eOzvhGL+9K
-         ihffOk/HZOePmw9cpO/AebqqXNtNfd7wNPftBpKcRDP4/lSsTY8DAa+BNuR8dIOnpM5y
-         thFQEosZBhaeERRBEgpmtYGFLXBddwyP7XPHXPSRBypnXeSA/gggCvyS+NkEQJv0Cvb7
-         IUAQ==
+        bh=HCnwyZoMzuPKsERhk3jj3Z4cbSkn3iN0nOs3nxQkMq0=;
+        b=sOjZAMG0GZhuc7hKNYzLVK9cSOp5waHIXzYWhb43Fz8ZgX9z9+bNavNcAEpG70dgBk
+         ymAxg8CBGeGJogHJ8EZfOJxQxQrcVu4fbyFxrtPhw/lrQtdZwuFiFnU3Ns9+2O77tI7T
+         t+cLNEO2tso3H8qv2p3wup/rHCTC9UnJFDeLIR9S3z+CUU/XMjzPHMO8ZlQKuTNz6l/0
+         eNvh5dAs47H6r7AMj0WyGKIZ3da6n+akTPo1vtDqAr7R9LVFcAQzgEkzK7V29ThxVSfl
+         tlafLPmggszgOc2KgLZv3yeFkDfhxzR7uBKLqBJdhVoSPaG7IxVDNowwB3Q79TU4M5aw
+         Us8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SMUqbM/2tAa8/paafO1/gccjmbEp76TZl0DYAO5Htac=;
-        b=cgA8z50MzrvH6tNy5jIfP752rgftN6a50MNxQnDy7CSmd3wGxSEUMqNKsUKIU0qpmu
-         E706JytSa83NgSDH5osltERMKajCnsAGwFWlHvlbYXjxykO9orw5xjaeaELByAwVIxyL
-         RL1FvV4axSO+bjQ+j8vH8Sisj3wVwAR/W7mDKMW1DO2mfDaoQfDdpFcW+vngbhceclEd
-         ugcfmOI3YDs87cfvm3XQuyBmbQ9YzlHo4RhL3vIn95sRgmMQmt1V8eD3dvdOmVQ3ZL+z
-         ZqozD3Q9yJChKyxOk8GngO63DL50nz+WGOL9xo9/nM7U7nveAZB/iKKzWtS55ozX8QQF
-         kXjw==
-X-Gm-Message-State: AOAM530MKLlue7EywnC9CACvAZP6LB/naKyXKAIFIc7XsJC4bMuxjis8
-        LoDMU4M+nQj36cNh+4oQ5iZWocUiLiGezEchtNy4GA==
-X-Google-Smtp-Source: ABdhPJzZjvVBo25Dqxum0154FLbEBUp91nFV11Hp0xSDYrsQ5aSM1HddHJViEwuAP/BPFZwNurh2InaBi7wl7mxu/zE=
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr1887718ljc.104.1594903786614;
- Thu, 16 Jul 2020 05:49:46 -0700 (PDT)
+        bh=HCnwyZoMzuPKsERhk3jj3Z4cbSkn3iN0nOs3nxQkMq0=;
+        b=rsIFd9w6f02XzO0rYQYWyUJFskh1WpyVxXSrJpU3RRRUloCP+4m0PFx2Q+uMlSuhkL
+         kPHo3oUrvx94h3eJakTGODrYl35fLS5ciIoHh/ezwGCfNHfnSwhd6DnxKT7y5TvD520M
+         2IU9EUEIpfpVCpElWzFtwOxShBIyG17NUjJ8sC0Dxd4pTMOI7Um3TYzG8D5yFIF8Wsst
+         625rtWLgmtidHi54I+eFPsH9uLA014Eg7Yn7iNTcHIwVLgqOPA4l31mQHIX9HB+q9gR0
+         hfnK2qwbh6IKisHreTQ077GOYVUNlfib4b2DoOg1PrMwDX3meW5i+GbmJRMR6ZsqdUkq
+         7FHw==
+X-Gm-Message-State: AOAM532XFem61Yaz0nEJrhkOiHrP/6I1SvrQPSGTpRGHZcM/kuqShL9b
+        M99Djsl8H3iXQ2m26DWbbpduhPFGq2juJcno4eU5Aw==
+X-Google-Smtp-Source: ABdhPJw/BhPEYT/8575MJQZaoQ8ocAWYoTgsBn5QFuT7ytXA0Q8/v+AT4JkXs2IK1Vyo3oIafinMzE0ToIsQaj9hRe4=
+X-Received: by 2002:a2e:810a:: with SMTP id d10mr1900535ljg.144.1594903926142;
+ Thu, 16 Jul 2020 05:52:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1593243079.git.syednwaris@gmail.com>
-In-Reply-To: <cover.1593243079.git.syednwaris@gmail.com>
+References: <20200710231824.60699-1-john.stultz@linaro.org>
+In-Reply-To: <20200710231824.60699-1-john.stultz@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 14:49:35 +0200
-Message-ID: <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
-To:     Syed Nayyar Waris <syednwaris@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arch@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
+Date:   Thu, 16 Jul 2020 14:51:55 +0200
+Message-ID: <CACRpkdaSiUwa0i5nQy8EZOg7smN3g2a+1AV2x+1PShNc071UFg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] Allow for qcom-pdc to be loadable as a module
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Syed,
+On Sat, Jul 11, 2020 at 1:18 AM John Stultz <john.stultz@linaro.org> wrote:
 
-sorry for taking so long. I was on vacation and a bit snowed
-under by work.
+> This patch series provides exports and config tweaks to allow
+> the qcom-pdc driver to be able to be configured as a permement
+> modules (particularlly useful for the Android Generic Kernel
+> Image efforts).
+>
+> This was part of a larger patch series, to enable qcom_scm
+> driver to be a module as well, but I've split it out as there
+> are some outstanding objections I still need to address with
+> the follow-on patches, and wanted to see if progress could be
+> made on this subset of the series in the meantime.
+>
+> New in v3:
+> *  Drop conditional usage of IRQCHIP_DECLARE as suggested by
+>    Stephen Boyd and Marc Zyngier
 
-On Sat, Jun 27, 2020 at 10:10 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
-
-> Since this patchset primarily affects GPIO drivers, would you like
-> to pick it up through your GPIO tree?
-
-I have applied the patches to an immutable branch and pushed
-to kernelorg for testing (autobuilders will play with it I hope).
-
-If all works fine I will merge this into my devel branch for v5.9.
-
-It would be desirable if Andrew gave his explicit ACK on it too.
+This patch set looks entirely reasonable to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
