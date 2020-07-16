@@ -2,96 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92CD52222EA
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 14:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 036F722231E
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 14:57:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgGPMwI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 08:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
+        id S1726863AbgGPM53 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 08:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbgGPMwI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 08:52:08 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E07C08C5CE
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:52:07 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z24so6976634ljn.8
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:52:07 -0700 (PDT)
+        with ESMTP id S1728237AbgGPM52 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 08:57:28 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A92AC08C5C0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:57:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so7058783ljl.3
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 05:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HCnwyZoMzuPKsERhk3jj3Z4cbSkn3iN0nOs3nxQkMq0=;
-        b=sOjZAMG0GZhuc7hKNYzLVK9cSOp5waHIXzYWhb43Fz8ZgX9z9+bNavNcAEpG70dgBk
-         ymAxg8CBGeGJogHJ8EZfOJxQxQrcVu4fbyFxrtPhw/lrQtdZwuFiFnU3Ns9+2O77tI7T
-         t+cLNEO2tso3H8qv2p3wup/rHCTC9UnJFDeLIR9S3z+CUU/XMjzPHMO8ZlQKuTNz6l/0
-         eNvh5dAs47H6r7AMj0WyGKIZ3da6n+akTPo1vtDqAr7R9LVFcAQzgEkzK7V29ThxVSfl
-         tlafLPmggszgOc2KgLZv3yeFkDfhxzR7uBKLqBJdhVoSPaG7IxVDNowwB3Q79TU4M5aw
-         Us8w==
+         :cc:content-transfer-encoding;
+        bh=YG2LKOdWYd/bTTjkxfoKbEzQhT3TK/zDfM+CI3ExrzM=;
+        b=Nk82UzN5seJrl1cNhd5ZZzA9N7Ryj8gabhrOFllw1G/xGomBuYnR9kgX/TTrnQAcKr
+         k4jd7BiRk0qKQPuyh75qogQZZlNbViUSqd8MGqHxIINCPaEELr9C5afXHS+E3c0gnQ+g
+         ztsOv6J9ZIQqkNwI8AR2U75UJT5O9CKySItQJit3hJq7M8SGQaYs+abu/ao2Oe8GwCvx
+         TfZU9OTKtmDUDSdLjPtglEbioJnRy8H+YI0t3K7hAqKYxsIh9xUtYwk6x8357KOhMt8N
+         DkYrW1qE0WcpoyQuBOFieGC1FffoFHQBtbdntuK4chG3KdSTT3/X8EEwD3JYx/ucxTm0
+         1OWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HCnwyZoMzuPKsERhk3jj3Z4cbSkn3iN0nOs3nxQkMq0=;
-        b=rsIFd9w6f02XzO0rYQYWyUJFskh1WpyVxXSrJpU3RRRUloCP+4m0PFx2Q+uMlSuhkL
-         kPHo3oUrvx94h3eJakTGODrYl35fLS5ciIoHh/ezwGCfNHfnSwhd6DnxKT7y5TvD520M
-         2IU9EUEIpfpVCpElWzFtwOxShBIyG17NUjJ8sC0Dxd4pTMOI7Um3TYzG8D5yFIF8Wsst
-         625rtWLgmtidHi54I+eFPsH9uLA014Eg7Yn7iNTcHIwVLgqOPA4l31mQHIX9HB+q9gR0
-         hfnK2qwbh6IKisHreTQ077GOYVUNlfib4b2DoOg1PrMwDX3meW5i+GbmJRMR6ZsqdUkq
-         7FHw==
-X-Gm-Message-State: AOAM532XFem61Yaz0nEJrhkOiHrP/6I1SvrQPSGTpRGHZcM/kuqShL9b
-        M99Djsl8H3iXQ2m26DWbbpduhPFGq2juJcno4eU5Aw==
-X-Google-Smtp-Source: ABdhPJw/BhPEYT/8575MJQZaoQ8ocAWYoTgsBn5QFuT7ytXA0Q8/v+AT4JkXs2IK1Vyo3oIafinMzE0ToIsQaj9hRe4=
-X-Received: by 2002:a2e:810a:: with SMTP id d10mr1900535ljg.144.1594903926142;
- Thu, 16 Jul 2020 05:52:06 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YG2LKOdWYd/bTTjkxfoKbEzQhT3TK/zDfM+CI3ExrzM=;
+        b=Z5VQD0BOFGUlXD2MYNBQl39aMZXXaWoAIPv0WDabIsv90SexnwNKvVv1T9v0rKd/3O
+         n3m22IwPNRyIBvBoz8nZM3aKR0H9WswPsNF1SZy48EZ0OPwH5AdiUtkHCCdXnoV26gXr
+         KgOrM7+IF+1qHekTSMZsdpSTpemQfSwGerxjsynR3aGD8ukXZhaudzgNCj/7W2ZJI5/2
+         pMj3rw14zUOPUPwHKxxVuQftXyRNP0NZEQiJ/1MVWu13jZf0v1j9DOZ9gwyg8vxJe40S
+         mxZCJrGrTFeSKtZK4CTUbNGRCLH3w1jeqUQiIb+6zM3UAod5BvaWs7MHC2Kk6x+y5NYG
+         keTw==
+X-Gm-Message-State: AOAM53143JOZ1aezTKL6JnYEFO+qknRj5fb30q8tn5p+sY7YFBWLqNud
+        Z6V3OhivSQPGdCRdyDKMa41I2z0Rqr0p/nctIXo6Wg==
+X-Google-Smtp-Source: ABdhPJwvgTFLxPouWe0ts45LeDMTroofYm7kdd4TAF9Saf4bU0BF0CtPgz4G2dEZU8LGfXYo1Kje5pie0asFSyBYuGI=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr1818019lji.338.1594904246944;
+ Thu, 16 Jul 2020 05:57:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710231824.60699-1-john.stultz@linaro.org>
-In-Reply-To: <20200710231824.60699-1-john.stultz@linaro.org>
+References: <CACRpkdbccHbhYcCyPiSoA7+zGXBtbL_LwLkPB3vQDyOqkTA7EQ@mail.gmail.com>
+ <20200711045441.19464-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20200711045441.19464-1-u.kleine-koenig@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 14:51:55 +0200
-Message-ID: <CACRpkdaSiUwa0i5nQy8EZOg7smN3g2a+1AV2x+1PShNc071UFg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Allow for qcom-pdc to be loadable as a module
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 16 Jul 2020 14:57:16 +0200
+Message-ID: <CACRpkdZ6AKfpAVbBgWffOonp1m7_AfeCw-6YTQxw1wSfMFsyFg@mail.gmail.com>
+Subject: Re: [PATCH v2] [RFC] dt-bindings: gpio: introduce hog properties with
+ less ambiguity
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jul 11, 2020 at 1:18 AM John Stultz <john.stultz@linaro.org> wrote:
+On Sat, Jul 11, 2020 at 6:54 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-> This patch series provides exports and config tweaks to allow
-> the qcom-pdc driver to be able to be configured as a permement
-> modules (particularlly useful for the Android Generic Kernel
-> Image efforts).
+> For active low lines the semantic of output-low and output-high is hard
+> to grasp because there is a double negation involved and so output-low
+> is actually a request to drive the line high (aka inactive).
 >
-> This was part of a larger patch series, to enable qcom_scm
-> driver to be a module as well, but I've split it out as there
-> are some outstanding objections I still need to address with
-> the follow-on patches, and wanted to see if progress could be
-> made on this subset of the series in the meantime.
+> So introduce output-inactive and output-active with the same semantic as
+> output-low and output-high respectively have today, but with a more
+> sensible name.
 >
-> New in v3:
-> *  Drop conditional usage of IRQCHIP_DECLARE as suggested by
->    Stephen Boyd and Marc Zyngier
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+>
+> compared to (implicit) v1, changed to ..asserted from ...active as Linus
+> Walleij suggested.
 
-This patch set looks entirely reasonable to me.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I'm fine to apply this but would prefer if I can apply it back-to-back
+with a patch adding support to the kernel.
+
+I know the bindings and the OS should be decoupled in theory
+but ... feels better for me.
 
 Yours,
 Linus Walleij
