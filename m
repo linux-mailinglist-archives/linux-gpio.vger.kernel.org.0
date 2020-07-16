@@ -2,91 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1479A2223BB
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C15E2223E0
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 15:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgGPNS7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 09:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36684 "EHLO
+        id S1728096AbgGPN1B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 09:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbgGPNS6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:18:58 -0400
+        with ESMTP id S1727044AbgGPN1B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 09:27:01 -0400
 Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E055C061755
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:18:58 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b25so7093199ljp.6
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:18:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CBAC08C5CE
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:27:00 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so7192008lji.2
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Jul 2020 06:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=V5Ca35ebl+wW+EHbz97RD52Fd1hjs4/Wel1X7KjjjwU=;
-        b=TM0YEFUdP7iBDYKwh4ec1iIrtslkCq4rp5m2aXZxanQ+giClbZOLrssAlnOWDqmgRD
-         NVe1+V28mxw70te0fvKlWItF1bihnaN4BQLocyLLj740og2JrlJWFyM3vVOx+F1D8XfE
-         NbO6kctlpEueZ2UdBTuKiQGMNYL/aH+CVET4yVibTBDMnSCfmZoS0lbnVxHbSEr9SLOM
-         SsPaWdCiFhGoT5F43qj1X0MDzPBshnHn4lwqGhiFlGqu7cR3VPvDeQY5x9WD6PGApyeQ
-         fs9pRPVcC71jxL4OVlBTrkxMImCb6WN3fpg0pUQfEgZutRqmInLMev0jucnLYgaSneTP
-         yE7w==
+        bh=g/vDuN1L2KCEbNuFEXJItw+g/c3pd50/6Ev+anSTygo=;
+        b=iczHf7TbyYkMy0BWfgpzsOiVABUoxFhLHlLkbkGc1mGYacGVfxuaNeXRmfY8Tnau+z
+         V6Ys4UJQjGsi5JXc/kEe3DFQJDzbxwH550fJ8UxQrLyQO49GGfXKxxwy4obQfa8wWEa6
+         g+OpiQcbhTwx0zOLwtOJblk7pD5ppy9+2lXf+PYzptH3GxfZwFiqoIdYiJ1uJXR1ATc+
+         NM7xGdxfXPP89AVXgXY7OGXTHN/PUEyibCJ/OdcLUauSg/BUIERlxnxfj61KO2pyt6eG
+         ed+RGobQ6iFu0SSN/psr6T78MeBntG+xbb6VaWqOoejleDe3SliONb1B7Xa+fo6XC6o0
+         TZQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=V5Ca35ebl+wW+EHbz97RD52Fd1hjs4/Wel1X7KjjjwU=;
-        b=CrMXIC91+26c3mCUGOqqu6dhXpHs37f82WuzS3QQhRVGmBGm8FjbTyiB9n69FfZqOf
-         xx3nQ8ZOrhGTRDheHQj5nBcHog2vm7AQbwPg8zGDobOz9KxIW9yY7tvvJ+epPJNV20R7
-         217ZaUzpOk+CfuQWdKe3GO0M+3771XFLT16Ckc9tcBGPrXgDFtG7wHsjyFRsQOmJQmqJ
-         +DC6rNw+BTzw8gejsmKNdJ6+9zYBKeS6fWF8QhcoTVWzOBhixCAPOm2KxNhnEDSBGeMP
-         vlgENTaGauBBEb/u1PHToIAfvJKaM4ieljLNc1/ojro0rNKAB21LTJO0LhQScegGbbP4
-         ToaA==
-X-Gm-Message-State: AOAM530a9UtWWL16KYL5aHCAHaJ2W07KHGx0RFxCIHszrMoJzWMxLyJt
-        fk7Zi8Nlmq5zEZqRzd6uW6GGJfzhLp8asg31PXTErg==
-X-Google-Smtp-Source: ABdhPJy86RFx5YN1TLuTTiPAQzbWyCQEl/ZTbibswwlk/TQOzRl8YXQ8Qu2VA9B3JmqypWkyIaj27nmrqbmtdbYLPbI=
-X-Received: by 2002:a2e:9a4d:: with SMTP id k13mr2115378ljj.283.1594905537158;
- Thu, 16 Jul 2020 06:18:57 -0700 (PDT)
+        bh=g/vDuN1L2KCEbNuFEXJItw+g/c3pd50/6Ev+anSTygo=;
+        b=DzbO1j05jp9y6SFTAnuMrUEadRL2gog0DeCtFhmsOxCURLxFu2MGaC48rx982uugSi
+         OmgAuVgHvaGWcfgD6cmeBKT7tVVOkrdZ5WHhfZ3yDlxvCN8uLcfRjwse+XyuZqYMI3TP
+         IJetay4pGnaSqcw0G8eROrG1+J0r9CTeCTFckxf7OtVfMXwMVsgFCXhrkCZh1v272eI2
+         cgJLQgKwNwzDvmy0xouekG9SUnR9wlQpJ0eGVNIRNYVr7qGwAezJceUl3kv7YyEPk1sN
+         coRWGKIQjg+yRSbbLteKr5tYbfqJ7XJShL+EvfBPAjzSPWZ4uyy8jDEqLnzO/+f5D7nX
+         ttyg==
+X-Gm-Message-State: AOAM531kvHhPdFyQNZHelEY9uP8O5QdmcoXmZBZw4AllXxypZp9Ga5qH
+        Emo3oY+9qWxSVAygEypSd9b9SwdUjQZy1HITua91QA==
+X-Google-Smtp-Source: ABdhPJzTvWzWY7xde2a3Mu6BMB59vLxHOlDAtL09MGxblo1BkRQCPu5O6Gx0M9FWfCAG68RIFcQ0zgAGPIhWb3rjt30=
+X-Received: by 2002:a2e:8597:: with SMTP id b23mr1876406lji.338.1594906019044;
+ Thu, 16 Jul 2020 06:26:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592818308-23001-1-git-send-email-mkshah@codeaurora.org> <1592818308-23001-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1592818308-23001-4-git-send-email-mkshah@codeaurora.org>
+References: <1594717479-8160-1-git-send-email-hanks.chen@mediatek.com> <1594717479-8160-3-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1594717479-8160-3-git-send-email-hanks.chen@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Jul 2020 15:18:46 +0200
-Message-ID: <CACRpkdb-3Tf4s5=Gxjhy62GX=HUYkLOcPKZ6JWaLTQipz-0r6A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] pinctrl: qcom: Use return value from irq_set_wake call
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
+Date:   Thu, 16 Jul 2020 15:26:48 +0200
+Message-ID: <CACRpkdZNL=mnF0dx63bQPpHVLcAHA=oSEiiHzH8vi3+X58y5Jw@mail.gmail.com>
+Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        =?UTF-8?Q?open_list=3AGPIO_SUBSYSTEM_=3Clinux=2Dgpio=40vger=2Ekernel=2Eorg=3E=2C_Andy_?=
-         =?UTF-8?Q?Gross_=3Cagross=40kernel=2Eorg=3E=2C_Thomas_Gleixner_=3Ctglx=40linutronix=2E?=
-         =?UTF-8?Q?de=3E=2C_Jason_Cooper_=3Cjason=40lakedaemon=2Enet=3E=2C_Doug_Anderson_=3Cdia?=
-         =?UTF-8?Q?nders=40chromium=2Eorg=3E=2C_Rajendra_Nayak_=3Crnayak=40codeaurora=2Eorg=3E=2C?=
-         =?UTF-8?Q?_Lina_Iyer_=3Cilina=40codeaurora=2Eorg=3E=2C?= 
-        <lsrao@codeaurora.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        wsd_upstream@mediatek.com, CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 11:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Tue, Jul 14, 2020 at 11:04 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-> msmgpio irqchip is not using return value of irq_set_wake call.
-> Start using it.
+> From: Andy Teng <andy.teng@mediatek.com>
 >
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+(...)
 
-Is this something that's causing regressions so I should apply it for
-fixes, or is it fine to keep this with the rest of the series for v5.9?
+Please make an attempt to reuse the generic schemas in
+Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+
+See how other bindings reuse them, e.g.:
+qcom,ipq6018-pinctrl.yaml
 
 Yours,
 Linus Walleij
