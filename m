@@ -2,319 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2468221A20
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 04:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7453C221B18
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Jul 2020 06:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgGPCe2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Jul 2020 22:34:28 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57582 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727081AbgGPCeB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Jul 2020 22:34:01 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 06G2Xei66017581, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 06G2Xei66017581
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 16 Jul 2020 10:33:40 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:40 +0800
-Received: from RTEXMB06.realtek.com.tw (172.21.6.99) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 16 Jul 2020 10:33:40 +0800
-Received: from localhost.localdomain (172.21.252.101) by
- RTEXMB01.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Thu, 16 Jul 2020 10:33:40 +0800
-From:   TY Chang <tychang@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>, <afaerber@suse.de>
-CC:     <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 8/8] pinctrl: realtek: DHC: Add suspend/resume callback function.
-Date:   Thu, 16 Jul 2020 10:33:38 +0800
-Message-ID: <20200716023338.14922-9-tychang@realtek.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200716023338.14922-1-tychang@realtek.com>
-References: <20200716023338.14922-1-tychang@realtek.com>
+        id S1725904AbgGPEEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 00:04:09 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:46431 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725268AbgGPEEJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 00:04:09 -0400
+X-UUID: ba749623530a4c2381c526515e220a1a-20200716
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=62ZGypyhLbFv7qQkPl4Eyj0oI3ptJBAGbtdl2xMz2ik=;
+        b=QBJJ0mwcI1a1/t7cjMQ7OKSGAblX+rPAgzGvgwGSkT21UE4wSOybWJPyOq8G5R1+PEgq9KU4RfSjiBfhsBgMoGb7fIneMqOdDdsEfB6SJ51QJtFZ2EVn4zbRbXpOG8ZutBSHJGEjypLItGQjIDoXTbyX1ihUub5Vv776AEJP87o=;
+X-UUID: ba749623530a4c2381c526515e220a1a-20200716
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 222755371; Thu, 16 Jul 2020 12:04:05 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 16 Jul 2020 12:04:01 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 16 Jul 2020 12:04:01 +0800
+Message-ID: <1594872242.11090.8.camel@mtkswgap22>
+Subject: Re: [PATCH v8 6/7] arm64: dts: add dts nodes for MT6779
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Date:   Thu, 16 Jul 2020 12:04:02 +0800
+In-Reply-To: <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+References: <1594718402-20813-1-git-send-email-hanks.chen@mediatek.com>
+         <1594718402-20813-7-git-send-email-hanks.chen@mediatek.com>
+         <1b335463-b0af-9010-feed-c4b673ebb6c5@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 267C81200BBF5CE7F5838CC7DAED8F81F4DD194442EADB67FA1A52BED7ABC1472000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add suspend and resume callback function for
-Realtek DHC SoC pinctrl driver.
-
-Signed-off-by: TY Chang <tychang@realtek.com>
----
- drivers/pinctrl/realtek/pinctrl-rtd.c     | 39 +++++++++++++
- drivers/pinctrl/realtek/pinctrl-rtd1195.h | 33 +++++++++++
- drivers/pinctrl/realtek/pinctrl-rtd1295.h | 67 ++++++++++++++++++++++-
- 3 files changed, 138 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd.c b/drivers/pinctrl/realtek/pinctrl-rtd.c
-index 4d9740f875ff..f327453b01df 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd.c
-@@ -57,6 +57,12 @@ struct rtd_pin_desc {
- 	const struct rtd_pin_mux_desc *functions;
- };
- 
-+struct rtd_pin_reg_list {
-+	unsigned int reg_offset;
-+	unsigned int val;
-+};
-+
-+
- #define RTK_PIN_CONFIG(_name, _reg_off, _base_bit, _pud_en_off, \
- 		_pud_sel_off, _curr_off, _smt_off, _curr_type) \
- 	{ \
-@@ -98,6 +104,8 @@ struct rtd_pinctrl_desc {
- 	unsigned int num_muxes;
- 	const struct rtd_pin_config_desc *configs;
- 	unsigned int num_configs;
-+	struct rtd_pin_reg_list *lists;
-+	unsigned int num_regs;
- };
- 
- #define PCONF_UNSUPP 0xffffffff
-@@ -549,8 +557,39 @@ static int rtd_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int rtd_pinctrl_suspend(struct platform_device *pdev, pm_message_t state)
-+{
-+	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
-+	struct rtd_pin_reg_list *list;
-+	int i;
-+
-+	for (i = 0; i < data->info->num_regs; i++) {
-+		list = &data->info->lists[i];
-+		list->val = readl(data->base + list->reg_offset);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rtd_pinctrl_resume(struct platform_device *pdev)
-+{
-+	struct rtd_pinctrl *data = platform_get_drvdata(pdev);
-+	const struct rtd_pin_reg_list *list;
-+	int i;
-+
-+	for (i = 0; i < data->info->num_regs; i++) {
-+		list = &data->info->lists[i];
-+		writel(list->val, data->base + list->reg_offset);
-+	}
-+
-+	return 0;
-+}
-+
-+
- static struct platform_driver rtd_pinctrl_driver = {
- 	.probe = rtd_pinctrl_probe,
-+	.suspend = rtd_pinctrl_suspend,
-+	.resume = rtd_pinctrl_resume,
- 	.driver = {
- 		.name = "rtd-pinctrl",
- 		.of_match_table	= rtd_pinctrl_dt_ids,
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1195.h b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-index 74139345083c..c9d6e7894d66 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1195.h
-@@ -358,6 +358,16 @@ static const struct rtd_pin_config_desc rtd1195_iso_configs[] = {
- };
- 
- 
-+static struct rtd_pin_reg_list rtd1195_iso_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+};
-+
-+
- static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
- 	.pins = rtd1195_iso_pins,
- 	.num_pins = ARRAY_SIZE(rtd1195_iso_pins),
-@@ -369,6 +379,8 @@ static const struct rtd_pinctrl_desc rtd1195_iso_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1195_iso_muxes),
- 	.configs = rtd1195_iso_configs,
- 	.num_configs = ARRAY_SIZE(rtd1195_iso_configs),
-+	.lists = rtd1195_iso_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1195_iso_reg_lists),
- };
- 
- /* CRT */
-@@ -1110,6 +1122,25 @@ static const struct rtd_pin_config_desc rtd1195_crt_configs[] = {
- 	RTK_PIN_CONFIG(sensor_cko_1, 0x9c, 28, 1, 0, 2, 3, PADDRI_2_4),
- };
- 
-+static struct rtd_pin_reg_list rtd1195_crt_reg_lists[] = {
-+	{.reg_offset = 0x60},
-+	{.reg_offset = 0x64},
-+	{.reg_offset = 0x68},
-+	{.reg_offset = 0x6c},
-+	{.reg_offset = 0x70},
-+	{.reg_offset = 0x74},
-+	{.reg_offset = 0x78},
-+	{.reg_offset = 0x7c},
-+	{.reg_offset = 0x80},
-+	{.reg_offset = 0x84},
-+	{.reg_offset = 0x88},
-+	{.reg_offset = 0x8c},
-+	{.reg_offset = 0x90},
-+	{.reg_offset = 0x94},
-+	{.reg_offset = 0x98},
-+	{.reg_offset = 0x9c},
-+};
-+
- 
- static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
- 	.pins = rtd1195_crt_pins,
-@@ -1122,6 +1153,8 @@ static const struct rtd_pinctrl_desc rtd1195_crt_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1195_crt_muxes),
- 	.configs = rtd1195_crt_configs,
- 	.num_configs = ARRAY_SIZE(rtd1195_crt_configs),
-+	.lists = rtd1195_crt_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1195_crt_reg_lists),
- };
- 
- #endif
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1295.h b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-index 14d46baa97d8..7cd12f66e02f 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1295.h
-@@ -525,7 +525,17 @@ static const struct rtd_pin_config_desc rtd1295_iso_configs[] = {
- 	RTK_PIN_CONFIG(iso_gpio_34, 0x20, 4, 1, 0, 2, 3, 2),
- };
- 
--
-+static struct rtd_pin_reg_list rtd1295_iso_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x18},
-+	{.reg_offset = 0x1c},
-+	{.reg_offset = 0x20},
-+};
- 
- static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
- 	.pins = rtd1295_iso_pins,
-@@ -538,6 +548,8 @@ static const struct rtd_pinctrl_desc rtd1295_iso_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_iso_muxes),
- 	.configs = rtd1295_iso_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_iso_configs),
-+	.lists = rtd1295_iso_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_iso_reg_lists),
- };
- 
- /* SB2 */
-@@ -1225,6 +1237,28 @@ static const struct rtd_pin_config_desc rtd1295_sb2_configs[] = {
- 	RTK_PIN_CONFIG(rgmii1_rxd_3, 0x78, 12, 1, 0, 2, 3, PADDRI_4_8),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_sb2_reg_lists[] = {
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x28},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x2c},
-+	{.reg_offset = 0x30},
-+	{.reg_offset = 0x34},
-+	{.reg_offset = 0x38},
-+	{.reg_offset = 0x3c},
-+	{.reg_offset = 0x60},
-+	{.reg_offset = 0x64},
-+	{.reg_offset = 0x68},
-+	{.reg_offset = 0x6c},
-+	{.reg_offset = 0x70},
-+	{.reg_offset = 0x74},
-+	{.reg_offset = 0x78},
-+	{.reg_offset = 0x7c},
-+};
-+
- 
- static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
- 	.pins = rtd1295_sb2_pins,
-@@ -1237,6 +1271,8 @@ static const struct rtd_pinctrl_desc rtd1295_sb2_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_sb2_muxes),
- 	.configs = rtd1295_sb2_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_sb2_configs),
-+	.lists = rtd1295_sb2_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_sb2_reg_lists),
- };
- 
- /* Disp */
-@@ -1373,6 +1409,12 @@ static const struct rtd_pin_config_desc rtd1295_disp_configs[] = {
- 	RTK_PIN_CONFIG(ao_sd_3, 0x4, 24, 1, 0, 2, 3, PADDRI_2_4),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_disp_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+};
-+
- 
- static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
- 	.pins = rtd1295_disp_pins,
-@@ -1385,6 +1427,8 @@ static const struct rtd_pinctrl_desc rtd1295_disp_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_disp_muxes),
- 	.configs = rtd1295_disp_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_disp_configs),
-+	.lists = rtd1295_disp_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_disp_reg_lists),
- };
- 
- /* CR */
-@@ -1825,6 +1869,25 @@ static const struct rtd_pin_config_desc rtd1295_cr_configs[] = {
- 	RTK_PIN_CONFIG(prob_3, 0x18, 24, 1, 0, 2, 3, PADDRI_4_8),
- };
- 
-+static struct rtd_pin_reg_list rtd1295_cr_reg_lists[] = {
-+	{.reg_offset = 0x0},
-+	{.reg_offset = 0x4},
-+	{.reg_offset = 0x8},
-+	{.reg_offset = 0xc},
-+	{.reg_offset = 0x10},
-+	{.reg_offset = 0x14},
-+	{.reg_offset = 0x18},
-+	{.reg_offset = 0x1c},
-+	{.reg_offset = 0x20},
-+	{.reg_offset = 0x24},
-+	{.reg_offset = 0x28},
-+	{.reg_offset = 0x2c},
-+	{.reg_offset = 0x30},
-+	{.reg_offset = 0x34},
-+	{.reg_offset = 0x38},
-+	{.reg_offset = 0x3c},
-+	{.reg_offset = 0x40},
-+};
- 
- static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
- 	.pins = rtd1295_cr_pins,
-@@ -1837,6 +1900,8 @@ static const struct rtd_pinctrl_desc rtd1295_cr_pinctrl_desc = {
- 	.num_muxes = ARRAY_SIZE(rtd1295_cr_muxes),
- 	.configs = rtd1295_cr_configs,
- 	.num_configs = ARRAY_SIZE(rtd1295_cr_configs),
-+	.lists = rtd1295_cr_reg_lists,
-+	.num_regs = ARRAY_SIZE(rtd1295_cr_reg_lists),
- };
- 
- #endif
--- 
-2.27.0
+T24gVHVlLCAyMDIwLTA3LTE0IGF0IDIwOjE0ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMTQvMDcvMjAyMCAxMToyMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4gPiB0aGlz
+IGFkZHMgaW5pdGlhbCBNVDY3NzkgZHRzIHNldHRpbmdzIGZvciBib2FyZCBzdXBwb3J0LA0KPiA+
+IGluY2x1ZGluZyBjcHUsIGdpYywgdGltZXIsIGNjZiwgcGluY3RybCwgdWFydCwgc3lzaXJxLi4u
+ZXRjLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEhhbmtzIENoZW4gPGhhbmtzLmNoZW5AbWVk
+aWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9N
+YWtlZmlsZSAgICAgICB8ICAgMSArDQo+ID4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L210Njc3OS1ldmIuZHRzIHwgIDMxICsrKw0KPiA+ICAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
+YXRlay9tdDY3NzkuZHRzaSAgICB8IDI3MSArKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgMyBm
+aWxlcyBjaGFuZ2VkLCAzMDMgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzc5LWV2Yi5kdHMNCj4gPiAgIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3OS5kdHNpDQo+
+ID4gDQo+IFsuLi5dDQo+ID4gKw0KPiA+ICsJCXVhcnQwOiBzZXJpYWxAMTEwMDIwMDAgew0KPiA+
+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPiArCQkJCSAgICAg
+Im1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPiArCQkJcmVnID0gPDAgMHgxMTAwMjAwMCAwIDB4
+NDAwPjsNCj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDExNSBJUlFfVFlQRV9MRVZFTF9M
+T1c+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJB
+X1VBUlQwPjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+ICsJCQlz
+dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXVhcnQxOiBzZXJp
+YWxAMTEwMDMwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS11YXJ0
+IiwNCj4gPiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPiArCQkJcmVnID0g
+PDAgMHgxMTAwMzAwMCAwIDB4NDAwPjsNCj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDEx
+NiBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmaW5m
+cmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQxPjsNCj4gPiArCQkJY2xvY2stbmFtZXMgPSAiYmF1ZCIs
+ICJidXMiOw0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCX07DQo+ID4gKw0K
+PiA+ICsJCXVhcnQyOiBzZXJpYWxAMTEwMDQwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gIm1l
+ZGlhdGVrLG10Njc3OS11YXJ0IiwNCj4gPiArCQkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0
+IjsNCj4gPiArCQkJcmVnID0gPDAgMHgxMTAwNDAwMCAwIDB4NDAwPjsNCj4gPiArCQkJaW50ZXJy
+dXB0cyA9IDxHSUNfU1BJIDExNyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiA+ICsJCQljbG9ja3Mg
+PSA8JmNsazI2bT4sIDwmaW5mcmFjZmdfYW8gQ0xLX0lORlJBX1VBUlQyPjsNCj4gPiArCQkJY2xv
+Y2stbmFtZXMgPSAiYmF1ZCIsICJidXMiOw0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0K
+PiA+ICsJCX07DQo+IA0KPiBEZXZpY2V0cmVlIGRlc2NyaWJlcyB0aGUgSFcgd2UgaGF2ZS4gQXMg
+ZmFyIGFzIEkga25vdywgd2UgaGF2ZSA0IFVBUlRzIG9uIA0KPiBNVDY3NzkuIFNvIHdlIHNob3Vs
+ZCBsaXN0IHRoZW0gYWxsIGhlcmUuDQo+IA0KDQpBY3R1YWxseSwgV2UgaGF2ZSBvbmx5IDMgVUFS
+VHMgSFcgb24gTVQ2Nzc5LCBidXQgaGF2ZSA0IFVBUlQgY2xrIGluDQpoZWFkZXIgZmlsZSBvZiBj
+bGsuDQpDTEtfSU5GUkFfVUFSVDMgaXMgYSBkdW1teSBjbGsgaW50ZXJmYWNlLCBpdCBoYXMgbm8g
+ZWZmZWN0IG9uIHRoZQ0Kb3BlcmF0aW9uIG9mIHRoZSByZWFkL3dyaXRlIGluc3RydWN0aW9uLg0K
+DQpJZiB5b3UgdGhpbmsgaXQgaXMgbm90IGdvb2QsIEkgY2FuIHJlbW92ZSBpdCBpbiB0aGUgaGVh
+ZGVyIGZpbGUgb2YgY2xrLg0KDQpUaGFua3MNCg0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KDQo=
 
