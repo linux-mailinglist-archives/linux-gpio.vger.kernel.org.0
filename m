@@ -2,139 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E38F1223BFE
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:11:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DCCB223C47
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgGQNLi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 09:11:38 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:48365 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726090AbgGQNLh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 09:11:37 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06HD8FkF006837;
-        Fri, 17 Jul 2020 15:11:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=8nLQ4BLOPtd+RIo+7t6Sr5QwFj1DO7gwx3ZjhqT5Eqc=;
- b=zO+rgX64ROgs+lF5zjg2Yy02V/SQoYxtoIp9KNdRHL+vlJLK2bREDqeSaIxc1nz+6dUF
- 0yma/xtUZ1cy2pcsQ1Td/wKo+wOwQsB/3dtQULkNvxCUZHe/58f4setL24egFq5FqvHM
- PUuzvOhAz9Xoq6hqRZXEVcCvMI5oamvVbtTrTlkku4MavOO0JnBWx97qiz+2OFK/tSaQ
- 7vDkDme4w6L38O2GI+rNQQb5TXu5G1DXXtxRUET29qSYZPR53aJw4xt2xFfTEJnp49l8
- o9nXFZI/j30aEHnJDia1y08R5YIWGvS1bAHHJ2CRtfRvUPHhfla1vkvBS7uwdk0KpB3J 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 327btt8h2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jul 2020 15:11:09 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CCD6A10002A;
-        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF8102B4D2D;
-        Fri, 17 Jul 2020 15:11:07 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jul
- 2020 15:11:07 +0200
-Subject: Re: [PATCH] irqchip/stm32-exti: map direct event to irq parent
-To:     Marc Zyngier <maz@kernel.org>
-CC:     kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>, <kbuild-all@lists.01.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <marex@denx.de>
-References: <20200706081106.25125-1-alexandre.torgue@st.com>
- <202007081232.bA2RH80f%lkp@intel.com> <87imevemwg.wl-maz@kernel.org>
- <69fb49b4-6a41-edf4-fea3-3f10934817ca@st.com> <87eepaxqot.wl-maz@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c95f45ba-5c1f-b252-6779-d3c4e11c4b26@st.com>
-Date:   Fri, 17 Jul 2020 15:11:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726837AbgGQNVM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 09:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgGQNVL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:21:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DD8F2064B;
+        Fri, 17 Jul 2020 13:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594992071;
+        bh=7S1J9y8itEN5wvEhbpYW+BZkO1zoG1KjirrP9G0+mZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yQngermH9mwpKC/FUGsAks4v6MfDXijifC+rDmR27Bt6uhDtFOYjJ2KSY5xs7PeLr
+         RfxRmMNyPT6WW1A8tPdegeS76iTpyS6LyOD1PJPCiz7Jnu+WKTl78eVBCrY3ZKe49Z
+         0DU/8yLX/miSAt6IDhdsQd3CEUqZzadR49zfo1Nw=
+Date:   Fri, 17 Jul 2020 15:21:01 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
+Message-ID: <20200717132101.GA2984939@kroah.com>
+References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
+ <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
+ <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
+ <20200717121436.GA2953399@kroah.com>
+ <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87eepaxqot.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-17_06:2020-07-17,2020-07-17 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 7/17/20 2:37 PM, Marc Zyngier wrote:
-> On Fri, 10 Jul 2020 10:37:47 +0100,
-> Alexandre Torgue <alexandre.torgue@st.com> wrote:
->>
->> Hi Marc,
->>
->> On 7/10/20 11:31 AM, Marc Zyngier wrote:
->>> Alexandre,
->>>
->>> On Wed, 08 Jul 2020 05:57:24 +0100,
->>> kernel test robot <lkp@intel.com> wrote:
->>>>
->>>> [1  <text/plain; us-ascii (7bit)>]
->>>> Hi Alexandre,
->>>>
->>>> I love your patch! Perhaps something to improve:
->>>>
->>>> [auto build test WARNING on stm32/stm32-next]
->>>> [also build test WARNING on soc/for-next v5.8-rc4 next-20200707]
->>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>>> And when submitting patch, we suggest to use  as documented in
->>>> https://git-scm.com/docs/git-format-patch]
->>>>
->>>> url:    https://github.com/0day-ci/linux/commits/Alexandre-Torgue/irqchip-stm32-exti-map-direct-event-to-irq-parent/20200706-161327
->>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
->>>> config: arm-randconfig-s031-20200707 (attached as .config)
->>>> compiler: arm-linux-gnueabi-gcc (GCC) 9.3.0
->>>> reproduce:
->>>>           wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>>           chmod +x ~/bin/make.cross
->>>>           # apt-get install sparse
->>>>           # sparse version: v0.6.2-31-gabbfd661-dirty
->>>>           # save the attached .config to linux build tree
->>>>           COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=arm
->>>>
->>>> If you fix the issue, kindly add following tag as appropriate
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>>
->>>> All warnings (new ones prefixed by >>):
->>>>
->>>>      In file included from include/linux/build_bug.h:5,
->>>>                       from include/linux/bits.h:23,
->>>>                       from include/linux/bitops.h:5,
->>>>                       from drivers/irqchip/irq-stm32-exti.c:8:
->>>>      drivers/irqchip/irq-stm32-exti.c: In function 'stm32_exti_h_domain_alloc':
->>>>      drivers/irqchip/irq-stm32-exti.c:683:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
->>>>        683 |  if (desc->irq_parent >= 0) {
->>>>            |                       ^~
->>>>      include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
->>>>         58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
->>>>            |                                                    ^~~~
->>>>>> drivers/irqchip/irq-stm32-exti.c:683:2: note: in expansion of macro 'if'
->>>>        683 |  if (desc->irq_parent >= 0) {
->>>
->>> Do you plan to address this? Looks like an actual bug to me.
->>
->> I'll fix it in v2, I was just waiting for other comments before
->> sending a v2. Do you prefer I send a v2 with this fix, and you'll do
->> your review on this v2 ?
+On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
+> Hi Greg,
 > 
-> I'm certainly not going to review something that has such a glaring
-> issue.
-
-Ok, I'll then send v2 quickly.
-
+> On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > Android is just finally pushing vendors to get their code upstream,
+> > which is a good thing to see.  And building things as a module is an
+> > even better thing as now it is finally allowing arm64 systems to be
+> > built to support more than one specific hardware platform at runtime.
 > 
-> 	M.
-> 
+> Can you please stop spreading this FUD?
+
+For many many SoCs today, this is not true.  Their drivers are required
+to be built in and will not work as modules, as we are seeing the
+patches try to fix.
+
+> As I said before, Arm64 kernels have supported more than one specific
+> hardware platform at runtime from the beginning of the arm64 port
+> (assumed the needed platform support has been enabled in the kernel
+>  config, of course).
+> Even most arm32 kernels support this, since the introduction of the
+> CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
+> introduced arm32 platform is usually v7, and must conform to this.
+> The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
+> due to architectural issues (the latter still support clusters of
+> platforms in a single kernel).
+
+I think the confusion here is that this really does not work well, if at
+all, on most "high end" SoC chips due to the collection of different
+things all of the vendors ship to their customers.  This is the work
+that is trying to be fixed up here.
+
+And look at the driver core work for many driver subsystems to be fixed
+up just to get a single kernel image to work on multiple platforms.
+Just because older ones did it, doesn't mean it actually works today :)
+
+thanks,
+
+greg k-h
