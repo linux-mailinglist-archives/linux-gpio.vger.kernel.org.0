@@ -2,92 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC6A6223DDB
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 16:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C2FF223DDE
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 16:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgGQONx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 10:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgGQONx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 10:13:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2B320717;
-        Fri, 17 Jul 2020 14:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594995233;
-        bh=0vXgDBDYlt7UxEihc32ZQjGeglsTllhEDcIkY6n/ZfU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wx38iT7WUFuCSbU+kkpm7v/fkfnbQy9OpadwXgeeR+ZAOQDbAwSWuF7abbH45xRKF
-         gwXVFLOSvsGMkiY6lmwN67BZwbIjM/0Vc+NgIrk/pE947gZ4fiOyziNQ0i7MJwhayh
-         iHVGoKwMXHE+W+/IMFfmncxN0GPDEy95J9Fnk118=
-Date:   Fri, 17 Jul 2020 16:13:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
-        Olof Johansson <olof@lixom.net>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-Message-ID: <20200717141344.GA2992942@kroah.com>
-References: <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
- <20200717121436.GA2953399@kroah.com>
- <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
- <20200717132101.GA2984939@kroah.com>
- <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+        id S1726446AbgGQOOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 10:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgGQOOt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 10:14:49 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BE8C0619D2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 07:14:49 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id i19so911585lfj.8
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 07:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vGd1t1QreFxRnPFXLOAZur94ZKOwnafzOlJY/eNNGd4=;
+        b=g5f9FXQqNRFZ1O7UHe3/2MVHxdS/LKA46yykIEWVD2HMezPTWoWB+kWtc6quXMBI1J
+         eg230C4qGwesk1w6z1vR9vNK2IzpedhC6ipybTCnRn8NZSNiAnKuRHFAI7acuJ0vb9KI
+         keMTCTOVT/A3mOmAS0IIFOf4ttkuxyKh8K1AFbLWWr5kMP7zz2qHzj5rFPdPxuKfdMSo
+         +f0BTG4zMZMrU4IQJsgtSUAgUcAQOT3T6sqq4Ymr6OVBS7GvXv1mQZuJ57nr0zM6bpNu
+         wQU1uP/Nwk2sDINBtgfst7eJhtZs0/AKcuk0mnzd2+J2c0OcgR6rhHT5usIuwa2lu/Bb
+         GPgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vGd1t1QreFxRnPFXLOAZur94ZKOwnafzOlJY/eNNGd4=;
+        b=OH7LtBZPAfxWfpkO/usSbpsXzvLH01bbo4sA7EKH4/Qp/Dg1YHdHpgu+smTO6IJSNz
+         oQDrJo39XfCeLW3sg9jG3Ytg9nWDCqe13TQIJ2rX47xkVUwDGYYVG3F6rS5QPiSTo4EG
+         QSutIRDXsZg91JeEJvo4eM+nSFFUl9M9dMaEfwmLszp4cHiTbPd9WN2+MbbgBMiEEdzj
+         hhqeIw37AeUHfbku3IfRpyB0Rki75J/GZUGmrKrfj1W7AXYi2NHxIzAZ58oITs7NcM3I
+         9IhZqq/363TvVKKF1t0nxvsrj3QVOC4k1Yj8cFR9Y9N/r8o4EW6PEDMV1+pzLcbWOYbP
+         WPhA==
+X-Gm-Message-State: AOAM531LCGzs99N70MIzahLMEO5ZlxOyuO8Mlp67oUaP2VTcHTR1FZlx
+        pu3mcZvyehy4yZC7HybN8pFH9Z51q0r7tE+lQ9ijaw==
+X-Google-Smtp-Source: ABdhPJyxXeaa7xBz0oSWjZzcy28PSGVQ9B09iJsameEOskWCvOl+OAOeOwBR4Hdk+FDkI6C2AVrnSug4741YgtN03tA=
+X-Received: by 2002:ac2:47ed:: with SMTP id b13mr4771331lfp.21.1594995287800;
+ Fri, 17 Jul 2020 07:14:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
+References: <20200717112558.15960-1-linus.walleij@linaro.org>
+ <d97d8c70-528e-f06b-3bf6-4faf51857a9c@redhat.com> <fb6bb42b-b657-5cd7-7a58-236e10bfb547@redhat.com>
+In-Reply-To: <fb6bb42b-b657-5cd7-7a58-236e10bfb547@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jul 2020 16:14:36 +0200
+Message-ID: <CACRpkdYJ=z=bE-twSXG=zARdq5zDNqpwwS8amBQs2tXVY7Osag@mail.gmail.com>
+Subject: Re: [PATCH] gpio: crystalcove: Use irqchip template
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 03:54:49PM +0200, Arnd Bergmann wrote:
-> > And look at the driver core work for many driver subsystems to be fixed
-> > up just to get a single kernel image to work on multiple platforms.
-> > Just because older ones did it, doesn't mean it actually works today :)
-> 
-> Can you give a specific example? The only problem I'm aware of for
-> those SoCs is drivers being outside of the mainline kernel. Clearly
-> having support for loadable modules helps SoC vendors because it
-> allows them to support a new platform with an existing binary kernel
-> by shipping third-party driver modules, but for stuff that is already
-> in mainline, we could in theory support all hardware in a single gigantic
-> binary kernel with no support for loadable modules at all.
+On Fri, Jul 17, 2020 at 4:02 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-That did not work for many drivers for some reason, look at all the work
-Saravana had to do in the driver core and device tree code for it to
-happen correctly over the past year.
+> Erm, it does not even compile:
+>
+> drivers/gpio/gpio-crystalcove.c: In function =E2=80=98crystalcove_gpio_pr=
+obe=E2=80=99:
+> drivers/gpio/gpio-crystalcove.c:357:10: error: =E2=80=98ch=E2=80=99 undec=
+lared (first use in this function); did you mean =E2=80=98cg=E2=80=99?
+>    357 |  girq =3D &ch->chip.irq;
+>        |          ^~
+>        |          cg
+> drivers/gpio/gpio-crystalcove.c:357:10: note: each undeclared identifier =
+is reported only once for each function it appears in
+>
+> I've fixed this up locally.
 
-thanks,
+Thanks, the SOC_PMIC isn't in the Intel default build, and you know
+me and Intel ...
 
-greg k-h
+Sorry for that.
+
+Yours,
+Linus Walleij
