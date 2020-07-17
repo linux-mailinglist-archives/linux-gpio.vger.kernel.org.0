@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A62E223F31
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 17:14:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E241223F43
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 17:15:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726233AbgGQPOY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 11:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        id S1727975AbgGQPPi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 11:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQPOX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 11:14:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14DCC0619D2;
-        Fri, 17 Jul 2020 08:14:23 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e8so6803930pgc.5;
-        Fri, 17 Jul 2020 08:14:23 -0700 (PDT)
+        with ESMTP id S1727942AbgGQPPf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 11:15:35 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9822FC0619D2;
+        Fri, 17 Jul 2020 08:15:35 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m9so5531694pfh.0;
+        Fri, 17 Jul 2020 08:15:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gnH2Zn48d+tF3Gr8V7xhcp7hCTYjQFyRnpkhaCFe4uE=;
-        b=rcMY1gAsEdu3Zm1TBCCIyqT3Hm+B51am3j1wzknk5T0iLwEcYDS0owXcM2+ii4qq+T
-         8LPoTcY+HGh3duhkuNesN87pKxKod4iD0i1a8JEvF1PCv7tgABCd2U7cs4FcHOdVdQI4
-         mjNtgk2HDLSsp9QYugCYdw884/A1FsSPZmzQtf/BW48fXiOBqaETsUzCu9k1BrYNggLy
-         po6ZBBomTqH6UEya4o2sDVWOHO7213oXkN8FEG9/MGptTeX4VK/tDiI5yShPku8DmEd/
-         ghBSwZ7Rwc9HrXx8yPdulgkw4QyxsIvOmAULkb0AzpEXpZNcAA3gQLX2c+WLvmq5MaQs
-         PdLQ==
+        bh=I6+Gg2dMEy8yC+S+Fxjs5glLlnuYKKsxqf5pCCJciRo=;
+        b=H+z3hlCuvV9BA2AGk60mTYNhgOJlhQBPzk4Dnae6P6ZbJXIhhtV/kvLliiuBGA9uYi
+         uMUav22rbb8b+oHRw766Bdp+BszYeLc6j24HpWoDLgZLwukZMoEz4GPbJrO86iz5+Lt+
+         bc29xiqaJKH2R0Ze8rvS/Hbc8/2aNgDbiFLlnuJf5RGslNi7rKsa849DyBR9mqwJ9wIV
+         mZ82ZYXnQJ83TbF38K4QB6zlltFmVbzuvg9mC9DhzniLNCpONNFjOw86AsxTf+IVG/Vz
+         7SLBxggy/HGvLFrKJ9B3dcULmAufVCJsrkya3zGmRZgBz6oLnHk9u3dMCIVbIOUsujMY
+         PFug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gnH2Zn48d+tF3Gr8V7xhcp7hCTYjQFyRnpkhaCFe4uE=;
-        b=eSm0YX+OfygyPqEqUQMKJjd2bDVi/DilhxfN3M+faWQoo4lOcIOsDAN52kIjDlkm11
-         RVRd168ZsNAVpJYYq3RYLZC9TnfO/+IBTs23wd34sT86qa/lWiSoiwjY6BBlVKYBKI9+
-         Jy71cr/7iPaxsQ47TRWnBHiNUjDSppwKxtbRDXBWVoiD1LKL1siX+Mi/esTV1/1HVABt
-         ttqqQzEG26keMYa/PXPRG/8qy4gr6pviT/tfeNPjkQ2UIbJudxxe3LJ5IZ0zewHX5gR2
-         QZXM4hjkjPrn1H5418t0MNh8OaIOWodmdsju9yw56wqNS4jX5MGRNj3KasIi3JUQ5nI2
-         2Z7A==
-X-Gm-Message-State: AOAM531TB1eY43HRV8MOFznovp95Af+E2COeP+d5QuTfjoqv8kN5cuOy
-        KNRlRGoSQw1XP18q1e7AB/U7KAbgIVfuaaF2RWs=
-X-Google-Smtp-Source: ABdhPJw28fJzlnfSnkm5la1142GtYSnfWlmduGKH1FXIzbcs0yHh0D8B3CX/HcA8SvMVhIeJc7IWB2H4RDGYmkonbVA=
-X-Received: by 2002:a63:a05f:: with SMTP id u31mr8820761pgn.4.1594998863139;
- Fri, 17 Jul 2020 08:14:23 -0700 (PDT)
+        bh=I6+Gg2dMEy8yC+S+Fxjs5glLlnuYKKsxqf5pCCJciRo=;
+        b=pTjY8SzzkNFpOINjWWsGH/40rNk/tHsa+Bl32Xpfq8NWlHUswAqz3JzhWJ21tsISsi
+         qlOsT3YKGUsXxb7HY1JCmlWSIrp15zck/bvzUVrNUxkJNDHDbvK0XFo3/lWCrugkPORL
+         Cctwz1bb1hy9hub6kJfWU4/Qj+ryNX6C5BVc5AuiL+RCHCKf1HmA7+J5o/BWPWsO4SvS
+         VkI+qMHM/4ol7iIlgMZOMagmpvOrcRZF4aHgc9A0OjAEf3f1NNJzwx+oYYYMLUAMzujd
+         gb50FybkwTpwKTEO3HNHs4KbglclZ9c8C9B4x4k20+OM1WKh7JxCTOErGj6bCHrPkX1c
+         YRcg==
+X-Gm-Message-State: AOAM530sJ1UD4QHj0aqs1699yIqs39O4vbdXOWkyyvgyeEFbbWM6Tk10
+        EYGJyvdpiRecWMWOgmfZvtL8anOPZfwQRa20Cdc=
+X-Google-Smtp-Source: ABdhPJy9LPCHV2KeqdiFYSHKoRKTI4XByWBUnS/DJGonreDp2oE3KFBCTzqd7qvaMzZ7XDT17DsoNkLKG6B/FmwgTfI=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr9287082pgi.203.1594998935011;
+ Fri, 17 Jul 2020 08:15:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717013338.1741659-1-drew@beagleboard.org>
-In-Reply-To: <20200717013338.1741659-1-drew@beagleboard.org>
+References: <20200715213738.1640030-1-drew@beagleboard.org>
+In-Reply-To: <20200715213738.1640030-1-drew@beagleboard.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 17 Jul 2020 18:14:06 +0300
-Message-ID: <CAHp75Vd_s-W7Z1iG4fA5JvY51OzstkTYUcQcd=OGJUQtcJ75Ww@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: single: print gpio number in pins debugfs file
+Date:   Fri, 17 Jul 2020 18:15:18 +0300
+Message-ID: <CAHp75VfYXuZgtkUvrm0VGX7CcyZoC2mzC_x4mVhzVCeTjZpiJg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: omap: handle pin config bias flags
 To:     Drew Fustini <drew@beagleboard.org>
 Cc:     Tony Lindgren <tony@atomide.com>,
         Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -64,26 +65,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 4:36 AM Drew Fustini <drew@beagleboard.org> wrote:
+On Thu, Jul 16, 2020 at 12:38 AM Drew Fustini <drew@beagleboard.org> wrote:
 >
-> If there is a gpio range mapping for the pin, then print out the gpio
-> number for the pin in the debugfs 'pins' file.
+> Modify omap_gpio_set_config() to handle pin config bias flags by calling
+> gpiochip_generic_config().
 >
-> Here is an example on the BeagleBone Black:
+> The pin group for the gpio line must have the corresponding pinconf
+> properties:
+>
+> PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
+> PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
+>
+> This is necessary for pcs_pinconf_set() to find the requested bias
+> parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
 
->   pin 0 (PIN0) 44e10800 00000027 pinctrl-single GPIO-32
->   pin 1 (PIN1) 44e10804 00000027 pinctrl-single GPIO-33
->   pin 2 (PIN2) 44e10808 00000027 pinctrl-single GPIO-34
->   pin 3 (PIN3) 44e1080c 00000027 pinctrl-single GPIO-35
->   pin 4 (PIN4) 44e10810 00000027 pinctrl-single GPIO-36
->   pin 5 (PIN5) 44e10814 00000027 pinctrl-single GPIO-37
->   pin 6 (PIN6) 44e10818 00000027 pinctrl-single GPIO-38
->   pin 7 (PIN7) 44e1081c 00000027 pinctrl-single GPIO-39
->   pin 8 (PIN8) 44e10820 00000027 pinctrl-single GPIO-22
->   pin 9 (PIN9) 44e10824 00000030 pinctrl-single GPIO-23
+...
 
-Wouldn't it be better to have this for all types of pin controllers?
-But I'm not sure about the format of output.
+> +       if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
+> +           (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
+> +           (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN))
+> +       {
+> +               ret = gpiochip_generic_config(chip, offset, config);
+> +       }
+> +       else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE)
+> +       {
+> +               debounce = pinconf_to_config_argument(config);
+> +               ret = omap_gpio_debounce(chip, offset, debounce);
+> +       }
+
+It's a rather strange indentation of the curly braces. Don't you run checkpatch?
 
 -- 
 With Best Regards,
