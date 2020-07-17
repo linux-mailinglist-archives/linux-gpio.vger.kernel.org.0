@@ -2,149 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB503223D70
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:55:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3E98223D8A
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 16:00:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGQNzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 09:55:10 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:39399 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgGQNzI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 09:55:08 -0400
-Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M27ix-1jyLZL49bF-002Vsh; Fri, 17 Jul 2020 15:55:07 +0200
-Received: by mail-qv1-f52.google.com with SMTP id ed14so4261995qvb.2;
-        Fri, 17 Jul 2020 06:55:06 -0700 (PDT)
-X-Gm-Message-State: AOAM531ODp20DY28PbUj0yWR7rLEccpc5k8Ovz5CcAi35OHgcqR/9gD8
-        Tvvv1Fy9VKCD9+Zbm+HqK4SdN4v/sKAQSLPye4g=
-X-Google-Smtp-Source: ABdhPJx8LtIaLQvziKo3lourUrEUkUS4ZMZUlWIjb/0jYwIJLV5qk1IAswyVggaESYzsgRC5Y1NVn7LRruYETW4HxFQ=
-X-Received: by 2002:a0c:f802:: with SMTP id r2mr9068143qvn.197.1594994105686;
- Fri, 17 Jul 2020 06:55:05 -0700 (PDT)
+        id S1726393AbgGQOAF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 10:00:05 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43509 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726974AbgGQOAD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jul 2020 10:00:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594994401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MIcSGma96SMTVgLnMC6YwvUeXYyvbLgwFFAU5hkmgJ4=;
+        b=WTfCqsB44B0lge8xttZd+LTY/TWd541QPEF+UJNGICNtrK657FRDvIsxpBzTjQUSWls/JS
+        CUsFIJ2FGoYmpqhNY9wuRZuAEgZ5XV+0r5h7zJLyAaJqyFekJkKFTpySq9Q30tcCX/wXWw
+        MIVbrFrRNtasntCP9T5Ee+EKRdiqspw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-461-V82aFqN9PiCA7e-mtO4MDg-1; Fri, 17 Jul 2020 10:00:00 -0400
+X-MC-Unique: V82aFqN9PiCA7e-mtO4MDg-1
+Received: by mail-wm1-f70.google.com with SMTP id c124so8492712wme.0
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 07:00:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MIcSGma96SMTVgLnMC6YwvUeXYyvbLgwFFAU5hkmgJ4=;
+        b=Eu1kGvxmvR+VFtkTOp+1oBV+Z4dNF4lyJzqFU4Q4uxh7/xpsEFNxZ8mw/nXCpZz52z
+         nSP+1wjentfzdPK8pFCODG+EcI4oeJmH4yw3p6BjT9PP13QNArJm+lLrI6IjE/aGHdYi
+         B2qAZj38ukMRL/fBtrxykRHlfyPVEo+6kqnyRICzYZYq+fPqXRTZSR2kPcpjyFBiSfbM
+         X8TzObTwJlro1vwELNmo32MyMYXWm5Ahnzi/xOQL+XtH61PgHHG3G8zSzcyA1WvzB3tE
+         5Q7PxMtffN+wwCuHC0wB8SnQJo5HxdziZVb1ztQ4NfKGMvkkVZIzEDkL/TA6SpGNB8Df
+         VtPA==
+X-Gm-Message-State: AOAM531UMiifKc6PdTVQLlh7N8sHf01vLWsIZOjPuvEhoh9TKopvwtcN
+        VctCgg7EVvzcvt6D7miO5GhRRUn6nAKJzo6NLdGXfFMtX9Kfb6ihLoDfQnZKX5MXmrG5AM351dr
+        jWz3Fh80eVnaTfoB0rkMPTQ==
+X-Received: by 2002:a1c:9a02:: with SMTP id c2mr10420640wme.16.1594994399183;
+        Fri, 17 Jul 2020 06:59:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyn/tkpIXfaNsVdSGkdLbO6p+gfowccIB6sOhFikweNVr0gPOITqJEklXKSNcMvHBlz0gG4GA==
+X-Received: by 2002:a1c:9a02:: with SMTP id c2mr10420622wme.16.1594994398977;
+        Fri, 17 Jul 2020 06:59:58 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id n16sm15973811wra.19.2020.07.17.06.59.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jul 2020 06:59:58 -0700 (PDT)
+Subject: Re: [PATCH] gpio: crystalcove: Use irqchip template
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20200717112558.15960-1-linus.walleij@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d97d8c70-528e-f06b-3bf6-4faf51857a9c@redhat.com>
+Date:   Fri, 17 Jul 2020 15:59:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com>
- <20200717121436.GA2953399@kroah.com> <CAMuHMdWdaQ_jK1T_ErJ36pJbUUS3SFBcqQmyvtufaKha2C76Gg@mail.gmail.com>
- <20200717132101.GA2984939@kroah.com>
-In-Reply-To: <20200717132101.GA2984939@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Jul 2020 15:54:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
-Message-ID: <CAK8P3a3fwwx-2gQTXZ9dbko+DuLELGm=nKrYFXfwcJJOf0Xz5g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>,
-        Olof Johansson <olof@lixom.net>,
-        Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dEZrwx+hzGiTO58D77scQNmTcn4qBOJ4MxH9Pt6/XGIoFsCYPgx
- 8+8Z4oqNp0EXx8voOmSwoJLPt4yIRYSbema98zXDcFZfv44gguS59RhHC/ya+BWeCtQf/0a
- 6JHum5COraJZ+48BGLVoiz/b2W/SxC7DRMhVrgkUlhBIk+XN/0UaZWqxAvsA/jrwJLNNtTu
- u21KH88s+7Z/WD4Y2NvdQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T+04+9APdXo=:t1jJfhZF3ic/+H9We7UQqy
- Qv7PMTQSjEKLQ9zt7L9oPnutUjn92bqyPYD3EGItpRVHV8BuVHnJk+knywJI+DQwsnJNfdqR+
- 2Dv0/ttH/40MpY8NPGYKnjSPaQG0u7j76oZFyWLM7/hnvdHGyoO1MdD9pbBqYJqsI0nnp50d7
- ebBD1424kWkXyko5xVMrr3AnUXte7L9sSkXRK8dCbwzz3L0LbIIJYkxRkRkmunJoCI30TQFT5
- A+zWR8QNISc6+S3ZZyTfjUtDVAEVrKzQ8hxioaARllP+++KZvtrOh3Se8e9qeeHJw/ty/zzsz
- GAl/UOeq4tnZrX1oTmkQ01n3DyGLnMIyxDr5E5FP/Hm5tL1w0nd6OOrZdQ3V/AOgnUt2OWJET
- qFZcWSlQIH25VVbNOZFFW63AGwWFtS99F9Pi4M4bzLRPyrLQKzXEdG70CTczsqfb78bfgaGy1
- 8NyZRAzmU+3RQ+RZB0ygTDXTpDnIFF8SP84dopLVQnaHdWgDtNXXFp9/kiYhZTKo96ejesz9b
- SBBP5+zY02C4JsITREaZUBzlrl/PZBlu0c0snwmFuhKp82EBuU31MjOm+DM83R9WtidiypJl0
- EiQKpsb22Oh85iGS1W0nScYAzadPD8Iuk3t9dqRVW/fRkhMsikm/RGMz/Dtj4uah2YqUbmGdd
- hPUHWRkCkiDqRrHGKjbcwECPRVBt2uPhhKhVb8itKSkJtETIH0Pbqc4M3xGNY/rDw0KCG0z85
- aERgimF5OMx5YKbWPb9W0KrsL6o4QWZQfOsON0fzXMIRwpZC1/xfqNXByf6dFn3Lvh3IQUqUL
- tGmDQLPTzk7SlprMXch4LQU+xA5P4k7WHQkR1ShZj4NIoj1Qu4PQvfWen/LoibFmDzeNC7eeI
- 6ng9/YWmAETYF/rBDMuSWS6vUDmg0C5chGLA2Z84k0OOO7C2a8RXxiBdz1A7vtNkaApNcLATv
- 3Mjhgmu1DFrzzpQ8gL2dpKCj23Wzf1Qm1t4yyUYoZzLxxXOJ6+NXc
+In-Reply-To: <20200717112558.15960-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 3:21 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Fri, Jul 17, 2020 at 02:27:43PM +0200, Geert Uytterhoeven wrote:
-> > Hi Greg,
-> >
-> > On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > Android is just finally pushing vendors to get their code upstream,
-> > > which is a good thing to see.  And building things as a module is an
-> > > even better thing as now it is finally allowing arm64 systems to be
-> > > built to support more than one specific hardware platform at runtime.
-> >
-> > Can you please stop spreading this FUD?
->
-> For many many SoCs today, this is not true.  Their drivers are required
-> to be built in and will not work as modules, as we are seeing the
-> patches try to fix.
+Hi,
 
-There are two different points here:
+On 7/17/20 1:25 PM, Linus Walleij wrote:
+> This makes the driver use the irqchip template to assign
+> properties to the gpio_irq_chip instead of using the
+> explicit calls to gpiochip_irqchip_add_nested() and
+> gpiochip_set_nested_irqchip(). The irqchip is instead
+> added while adding the gpiochip.
+> 
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> Intel folks and Hans: I hope someone can test this, I'm
+> a bit uncertain if IRQs could fire before registering
+> the chip and if we need a hw_init() in this driver to cope.
 
-a) having drivers as loadable modules: I think everyone agrees this
-is a good thing in general. Having more of them makes smaller kernels,
-which is good. arm64 is no different from arm32 and powerpc here,
-and probably a bit better than x86, which requires all platform specific
-core code (PC, numachip, UV, ScaleMP, ...) to be built-in.
+I've added this to my personal tree for testing. I will get back
+to you when I've either hit an issue, or used it for a while without
+issues :)
 
-b) supporting multiple hardware platforms at runtime: this is totally
-unrelated to the platform specific drivers being loadable modules.
-arm64 is a little better here than arm32 and powerpc, which need more
-than one configuration to support all hardware, about the same as
-x86 or s390 and much better than most others that have to chose
-a machine at compile time.
+Hmm, testing this might be tricky, I don't think any boards
+actually use any GPIOs on the PMIC (which this driver is for)
+as interrupts...
 
-> > As I said before, Arm64 kernels have supported more than one specific
-> > hardware platform at runtime from the beginning of the arm64 port
-> > (assumed the needed platform support has been enabled in the kernel
-> >  config, of course).
-> > Even most arm32 kernels support this, since the introduction of the
-> > CONFIG_ARCH_MULTIPLATFORM option.  In fact every recently
-> > introduced arm32 platform is usually v7, and must conform to this.
-> > The sole exceptions are very old platforms, and the v4/v5/v6/v7 split
-> > due to architectural issues (the latter still support clusters of
-> > platforms in a single kernel).
->
-> I think the confusion here is that this really does not work well, if at
-> all, on most "high end" SoC chips due to the collection of different
-> things all of the vendors ship to their customers.  This is the work
-> that is trying to be fixed up here.
->
-> And look at the driver core work for many driver subsystems to be fixed
-> up just to get a single kernel image to work on multiple platforms.
-> Just because older ones did it, doesn't mean it actually works today :)
+So the best I can do is boot a machine and test there are no
+regressions I guess.
 
-Can you give a specific example? The only problem I'm aware of for
-those SoCs is drivers being outside of the mainline kernel. Clearly
-having support for loadable modules helps SoC vendors because it
-allows them to support a new platform with an existing binary kernel
-by shipping third-party driver modules, but for stuff that is already
-in mainline, we could in theory support all hardware in a single gigantic
-binary kernel with no support for loadable modules at all.
 
-      Arnd
+Regards,
+
+Hans
+
+
+
+> ---
+>   drivers/gpio/gpio-crystalcove.c | 24 +++++++++++++++---------
+>   1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
+> index 14d1f4c933b6..424a00ba1c97 100644
+> --- a/drivers/gpio/gpio-crystalcove.c
+> +++ b/drivers/gpio/gpio-crystalcove.c
+> @@ -330,6 +330,7 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
+>   	int retval;
+>   	struct device *dev = pdev->dev.parent;
+>   	struct intel_soc_pmic *pmic = dev_get_drvdata(dev);
+> +	struct gpio_irq_chip *girq;
+>   
+>   	if (irq < 0)
+>   		return irq;
+> @@ -353,14 +354,15 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
+>   	cg->chip.dbg_show = crystalcove_gpio_dbg_show;
+>   	cg->regmap = pmic->regmap;
+>   
+> -	retval = devm_gpiochip_add_data(&pdev->dev, &cg->chip, cg);
+> -	if (retval) {
+> -		dev_warn(&pdev->dev, "add gpio chip error: %d\n", retval);
+> -		return retval;
+> -	}
+> -
+> -	gpiochip_irqchip_add_nested(&cg->chip, &crystalcove_irqchip, 0,
+> -				    handle_simple_irq, IRQ_TYPE_NONE);
+> +	girq = &ch->chip.irq;
+> +	girq->chip = &crystalcove_irqchip;
+> +	/* This will let us handle the parent IRQ in the driver */
+> +	girq->parent_handler = NULL;
+> +	girq->num_parents = 0;
+> +	girq->parents = NULL;
+> +	girq->default_type = IRQ_TYPE_NONE;
+> +	girq->handler = handle_simple_irq;
+> +	girq->threaded = true;
+>   
+>   	retval = request_threaded_irq(irq, NULL, crystalcove_gpio_irq_handler,
+>   				      IRQF_ONESHOT, KBUILD_MODNAME, cg);
+> @@ -370,7 +372,11 @@ static int crystalcove_gpio_probe(struct platform_device *pdev)
+>   		return retval;
+>   	}
+>   
+> -	gpiochip_set_nested_irqchip(&cg->chip, &crystalcove_irqchip, irq);
+> +	retval = devm_gpiochip_add_data(&pdev->dev, &cg->chip, cg);
+> +	if (retval) {
+> +		dev_warn(&pdev->dev, "add gpio chip error: %d\n", retval);
+> +		return retval;
+> +	}
+>   
+>   	return 0;
+>   }
+> 
+
