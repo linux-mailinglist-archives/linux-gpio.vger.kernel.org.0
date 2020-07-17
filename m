@@ -2,136 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C4322335F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 08:08:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CC0E223541
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 09:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgGQGIA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 02:08:00 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12659 "EHLO mga17.intel.com"
+        id S1726113AbgGQHPW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 03:15:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:10662 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbgGQGIA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Jul 2020 02:08:00 -0400
-IronPort-SDR: BUqv/yMOI4d/vWIxShPzdIjf1y+/7DwKOYmvAXHTR/vSj0UohUeTOz3DFMNGmbiYzwIKoCFqes
- WUNOEWsQJzMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="129626552"
+        id S1725995AbgGQHPW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jul 2020 03:15:22 -0400
+IronPort-SDR: gmIj8f1vY0PwJtoxy64Y77CezPIXO9Kovg029N3UgXfJX3Oisjr99eMjCJ9oRuHNiov434pwgM
+ vroZMwTQTDjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9684"; a="234400353"
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="129626552"
+   d="scan'208";a="234400353"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2020 23:07:59 -0700
-IronPort-SDR: ArBc/IDzjUYFMYx1xlEThHlm9ryAFqSyPZWGc9HWePKBXiIr64uBKO1tspR07th4jMEPOPo/Cm
- u1n1NEwn0vew==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2020 00:15:18 -0700
+IronPort-SDR: Khy1S/wlWAp+D46uetcQbZv89YW8jH2J8zZ+nqHv9A6s09UTwPiaaBLCq7/XbAbnBnFNWO5dXD
+ jXvWaYlHI52g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,362,1589266800"; 
-   d="scan'208";a="486367221"
-Received: from lkp-server02.sh.intel.com (HELO 50058c6ee6fc) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Jul 2020 23:07:58 -0700
-Received: from kbuild by 50058c6ee6fc with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jwJXJ-000080-Nl; Fri, 17 Jul 2020 06:07:57 +0000
-Date:   Fri, 17 Jul 2020 14:06:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [gpio:devel] BUILD SUCCESS
- 761b5c30c206ba1788c6ceb23e5812f319548b52
-Message-ID: <5f113feb.HJC0oYarQTJ7y5OH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="430758934"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jul 2020 00:15:15 -0700
+Subject: Re: [kbuild-all] Re: [gpio:ib-for-each-clump 4/4]
+ include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type
+ unsigned long
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Cc:     Syed Nayyar Waris <syednwaris@gmail.com>, kbuild-all@lists.01.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <202007170339.nHjeGJBw%lkp@intel.com>
+ <CAHp75VezG1ZnC-1UWea2Q-q-=c_32HOcBTXrd7cy4HzB-uW8JA@mail.gmail.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <4cd8eb7e-f21f-29a7-08ab-c691c1260c55@intel.com>
+Date:   Fri, 17 Jul 2020 15:14:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAHp75VezG1ZnC-1UWea2Q-q-=c_32HOcBTXrd7cy4HzB-uW8JA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git  devel
-branch HEAD: 761b5c30c206ba1788c6ceb23e5812f319548b52  gpio: mmio: replace open-coded for_each_set_bit()
 
-elapsed time: 830m
 
-configs tested: 74
-configs skipped: 1
+On 7/17/20 5:25 AM, Andy Shevchenko wrote:
+> On Thu, Jul 16, 2020 at 11:13 PM kernel test robot <lkp@intel.com> wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git ib-for-each-clump
+>> head:   3358c938236d6a1be51124fbbb2698e50689d382
+>> commit: 3358c938236d6a1be51124fbbb2698e50689d382 [4/4] gpio: xilinx: Utilize generic bitmap_get_value and _set_value.
+>> config: alpha-randconfig-s031-20200716 (attached as .config)
+>> compiler: alpha-linux-gcc (GCC) 9.3.0
+>> reproduce:
+>>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>          chmod +x ~/bin/make.cross
+>>          # apt-get install sparse
+>>          # sparse version: v0.6.2-49-g707c5017-dirty
+>>          git checkout 3358c938236d6a1be51124fbbb2698e50689d382
+>>          # save the attached .config to linux build tree
+>>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=alpha
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>>
+>> sparse warnings: (new ones prefixed by >>)
+>>
+>>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+>>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+>>     include/linux/bitmap.h:594:63: sparse: sparse: shift too big (64) for type unsigned long
+>>>> include/linux/bitmap.h:639:45: sparse: sparse: shift too big (64) for type unsigned long
+>>>> include/linux/bitmap.h:638:17: sparse: sparse: invalid access past the end of 'old' (8 8)
+>> vim +639 include/linux/bitmap.h
+>>
+>> 169c474fb22d8a5 William Breathitt Gray 2019-12-04  613
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  614  /**
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  615   * bitmap_set_value - set n-bit value within a memory region
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  616   * @map: address to the bitmap memory region
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  617   * @value: value of nbits
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  618   * @start: bit offset of the n-bit value
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  619   * @nbits: size of value in bits
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  620   */
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  621  static inline void bitmap_set_value(unsigned long *map,
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  622                                      unsigned long value,
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  623                                      unsigned long start, unsigned long nbits)
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  624  {
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  625          const size_t index = BIT_WORD(start);
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  626          const unsigned long offset = start % BITS_PER_LONG;
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  627          const unsigned long ceiling = roundup(start + 1, BITS_PER_LONG);
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  628          const unsigned long space = ceiling - start;
+> If start == 0:
+>    index = 0, offset = 0, ceiling = 64, space = 64
+>
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  629
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  630          value &= GENMASK(nbits - 1, 0);
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  631
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  632          if (space >= nbits) {
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  633                  map[index] &= ~(GENMASK(nbits + offset - 1, offset));
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  634                  map[index] |= value << offset;
+> if nbits > space...
+>
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  635          } else {
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  636                  map[index] &= ~BITMAP_FIRST_WORD_MASK(start);
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  637                  map[index] |= value << offset;
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @638                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @639                  map[index + 1] |= (value >> space);
+> space = 64...
+>
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  640          }
+>> e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27  641  }
+> I don't see the test case for this. Can you provide one?
+>
+>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi Andy,
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Sparse doesn't check the if condition, it found the issues related to 
+the below two lines
+when bitmap_set_value was first time used in this commit.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @638                  map[index + 1] &= ~BITMAP_LAST_WORD_MASK(start + nbits);
+e77c9b6f35c4bdf Syed Nayyar Waris      2020-06-27 @639                  map[index + 1] |= (value >> space);
+
+Best Regards,
+Rong Chen
+
