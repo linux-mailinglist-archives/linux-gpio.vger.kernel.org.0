@@ -2,251 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35EE22242A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 19:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 431B52242F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 20:12:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgGQR6U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 13:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
+        id S1726322AbgGQSMx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 14:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgGQR6T (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 13:58:19 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BEFCC0619D2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 10:58:19 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id gc9so6904371pjb.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 10:58:19 -0700 (PDT)
+        with ESMTP id S1726205AbgGQSMx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 14:12:53 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56ACC0619D2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:12:52 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z13so12088976wrw.5
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 11:12:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from;
-        bh=d84MKUCbpjdLb/0PFqWRVTY1dnWQC4KFwUK8/AQg0kE=;
-        b=eqqUPopvs47qDi1uoThbsXycDW4Vf/Pp7T3SOY0n9AhqVQnPaPe0WX2FYuWGjKROJA
-         DKPZo1QR1v4vhgCTj7HtLpi4MwEXDU0PA2KEq7EumXJLZCwiqDC65IaFUuh3zuxJUt+I
-         l53jkhKYNyde27jXyItkxgyUPaxI/AHuHeJWJJ4NF2wsEaTuI3RrxjUBrW36MfWNkNXD
-         KndhT1ibdh+op6rRKrd1H7cfZPsjhzot7wsJFz/GiL/FgG5xQTRS5i7aPIBgy6ejMNfc
-         P/uCqQJYyuXZz7a+rSZs1eKEn/XORzdaw4GbCIJmAodhtbqwjwj1DuCryzcbo0abr2an
-         dvmA==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=upQFUli2BQIGphggAgwr2cwewfby5/PoH7Z2pUjM4Zw=;
+        b=GevRKqO8V0nIo6VlLT39Y80u7jyMrcnpKhYLBSxM2rYq9grq7LaAmuC6H/QwH4UY8k
+         NIbIgkG5TDF1KmGYTF2NvExwLc8uC2hqfAjbkBuUDBMGRz/J/g7r3BRuzZ42pxw80uT9
+         hz8/N6qdGkD5jAvD1ZTrhEhm/T+L1/PJSvOlYf1PR/nmcgaZrlO9oig0SgTNPC2VQCkq
+         GEakW/zxNS6EemXQQYzzVtyKz2CxKkzwT8kN+qVTnRvbM4p7LR1KhIbT68TszE4/mO8Y
+         VdY7Xott9If0xVkN8dFssdk5hYzpxKDnIRGULu3fQDsKHJCyb41l7+lEGxbXlwuFCPaj
+         0X6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from;
-        bh=d84MKUCbpjdLb/0PFqWRVTY1dnWQC4KFwUK8/AQg0kE=;
-        b=ICo4cGTgXzw8B3dDEtEn2tfvqO8aUSZF0wVLGtW6owuiqbEyNMJGx7uw171IAVAUUn
-         gSn5ec+B9SVHbzCEQyLoyB2pBklXWsnTV0O2Qg4daN6D0XnQGx9RNeIakKBUp5VnbvTS
-         K/qmvOpJEJ/dUqz2u57BqrOuflpnCvq7HE4Va7HScPac1RxnpxvuVeEZs+0R3A8uhQr9
-         a6r6oVYk8scm1w+6BCZPhhQXWKvujfe1I5z7BUFucIQ55MX/f6mySiNZL5NNZXgdbKqg
-         Hp4a1P3TiIH2XXHnOzNvHBmGGqbEGOg3QBvlALjYfovzMsU8Ayk4fQ7QZxJf5/dRUBe8
-         e9iw==
-X-Gm-Message-State: AOAM533MVdeI6/fg2yKU1cuVhvI63P4O/he5NOszry9l0oR+ECK2t/iN
-        ii/YvhfoHs5q/CUO8Ut+LLEg7Om6JEk=
-X-Google-Smtp-Source: ABdhPJww61DIodkDWXYPkU+9ZXtg5aSSkpiX6NXsYxsIvOmfSrWMOQR71tVIz0bMoh0oj07D/MX1rQ==
-X-Received: by 2002:a17:90a:d48a:: with SMTP id s10mr10202523pju.116.1595008698179;
-        Fri, 17 Jul 2020 10:58:18 -0700 (PDT)
-Received: from kernelci-production.internal.cloudapp.net ([52.250.1.28])
-        by smtp.gmail.com with ESMTPSA id j17sm8026486pgn.87.2020.07.17.10.58.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=upQFUli2BQIGphggAgwr2cwewfby5/PoH7Z2pUjM4Zw=;
+        b=XbFKOZY/Vtwx+pzNxprUZsJsXwy2Bk6589nuQYHULZuu96YqL/F+4vm8wG2vRvji0G
+         OhMk9ci5GTKHKrQwsZzro5sCDeW8ucjCBje1p95YYd6xA8sZl6CPA7U1rjDqlCdPrHyR
+         ZKVgMqkqM2V5pyflMfCWILxm+U2bwjCo+er1yLm/4TDSDRXU5o/TaQVyWRNnZKEWebkV
+         gewRiolGj5PlYarD/FYo3+v7ypi4ST8v1eEIYorNNWo736Xap2DwD5CT6lG2Zr3DPKoj
+         rZ7rMLjFmxFAUliGcblV3WhtdREefM6QdZGU2deu30+pq4EOjEonHOpqhkV7MngfegtV
+         u48g==
+X-Gm-Message-State: AOAM530XCXM9lPJz9PfWUMS3e4TCOTvk914OpPFjPfXNmp0Q4SoK0jkI
+        tG/O/oMFB6lsS2jghmR0kiLMYA==
+X-Google-Smtp-Source: ABdhPJx0ec7bpGVb4a5i7w/ggaTEBxYQtbPa16wKdFAoxK1bjIScZtUp4P7w0Ui/3jJxO8Md5G7r+g==
+X-Received: by 2002:adf:a3d0:: with SMTP id m16mr10938057wrb.232.1595009571526;
+        Fri, 17 Jul 2020 11:12:51 -0700 (PDT)
+Received: from localhost.localdomain (94.197.121.234.threembb.co.uk. [94.197.121.234])
+        by smtp.gmail.com with ESMTPSA id y77sm17081135wmd.36.2020.07.17.11.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2020 10:58:17 -0700 (PDT)
-Message-ID: <5f11e6b9.1c69fb81.92ae6.9a6c@mx.google.com>
-Date:   Fri, 17 Jul 2020 10:58:17 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 17 Jul 2020 11:12:50 -0700 (PDT)
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v2] gpio: omap: handle pin config bias flags
+Date:   Fri, 17 Jul 2020 20:12:21 +0200
+Message-Id: <20200717181220.1773543-1-drew@beagleboard.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: gpio-v5.8-2-68-g80606cb24161
-X-Kernelci-Report-Type: build
-X-Kernelci-Tree: linusw
-X-Kernelci-Branch: devel
-Subject: linusw/devel build: 5 builds: 0 failed, 5 passed,
- 21 warnings (gpio-v5.8-2-68-g80606cb24161)
-To:     linux-gpio@vger.kernel.org, fellows@kernelci.org
-From:   "kernelci.org bot" <bot@kernelci.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-linusw/devel build: 5 builds: 0 failed, 5 passed, 21 warnings (gpio-v5.8-2-=
-68-g80606cb24161)
+Modify omap_gpio_set_config() to handle pin config bias flags by calling
+gpiochip_generic_config().
 
-Full Build Summary: https://kernelci.org/build/linusw/branch/devel/kernel/g=
-pio-v5.8-2-68-g80606cb24161/
+The pin group for the gpio line must have the corresponding pinconf
+properties:
 
-Tree: linusw
-Branch: devel
-Git Describe: gpio-v5.8-2-68-g80606cb24161
-Git Commit: 80606cb24161d504acb4d89f406d68f72196575e
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.=
-git/
-Built: 5 unique architectures
+PIN_CONFIG_BIAS_PULL_UP requires "pinctrl-single,bias-pullup"
+PIN_CONFIG_BIAS_PULL_DOWN requires "pinctrl-single,bias-pulldown"
 
-Warnings Detected:
+This is necessary for pcs_pinconf_set() to find the requested bias
+parameter in the PIN_MAP_TYPE_CONFIGS_GROUP pinctrl map.
 
-arm64:
-    defconfig (gcc-8): 8 warnings
-
-arm:
-    multi_v7_defconfig (gcc-8): 12 warnings
-
-i386:
-
-mips:
-
-riscv:
-    defconfig (gcc-8): 1 warning
-
-
-Warnings summary:
-
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #size-cells (1) differs from / (2)
-    3    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Wa=
-rning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but=
- its #address-cells (1) differs from / (2)
-    1    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=
-=98e1000e_check_me=E2=80=99 defined but not used [-Wunused-function]
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells=
- (1) differs from / (2)
-    1    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_range=
-s_format): /soc:dma-ranges: empty "dma-ranges" property but its #address-ce=
-lls (1) differs from / (2)
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: War=
-ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C add=
-ress must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4:=
- Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus=
- unit address format error, expected "40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: War=
-ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C add=
-ress must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4:=
- Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus=
- unit address format error, expected "40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: War=
-ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C add=
-ress must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4:=
- Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus=
- unit address format error, expected "40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: War=
-ning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C addr=
-ess must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4:=
- Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus =
-unit address format error, expected "40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C addr=
-ess must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: =
-Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus =
-unit address format error, expected "40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C addr=
-ess must be less than 10-bits, got "0x40000010"
-    1    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: =
-Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus =
-unit address format error, expected "40000010"
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-
-Detailed per-defconfig build reports:
-
----------------------------------------------------------------------------=
------
-32r2el_defconfig (mips, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sect=
-ion mismatches
-
----------------------------------------------------------------------------=
------
-defconfig (riscv, gcc-8) =E2=80=94 PASS, 0 errors, 1 warning, 0 section mis=
-matches
-
-Warnings:
-    drivers/net/ethernet/intel/e1000e/netdev.c:137:13: warning: =E2=80=98e1=
-000e_check_me=E2=80=99 defined but not used [-Wunused-function]
-
----------------------------------------------------------------------------=
------
-defconfig (arm64, gcc-8) =E2=80=94 PASS, 0 errors, 8 warnings, 0 section mi=
-smatches
-
-Warnings:
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#address-cells (1) differs from / (2)
-    arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14: Warning=
- (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges" property but its =
-#size-cells (1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #address-cells (=
-1) differs from / (2)
-    arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning (dma_ranges_for=
-mat): /soc:dma-ranges: empty "dma-ranges" property but its #size-cells (1) =
-differs from / (2)
-
----------------------------------------------------------------------------=
------
-i386_defconfig (i386, gcc-8) =E2=80=94 PASS, 0 errors, 0 warnings, 0 sectio=
-n mismatches
-
----------------------------------------------------------------------------=
------
-multi_v7_defconfig (arm, gcc-8) =E2=80=94 PASS, 0 errors, 12 warnings, 0 se=
-ction mismatches
-
-Warnings:
-    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: Warni=
-ng (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus unit =
-address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warning (=
-i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C address m=
-ust be less than 10-bits, got "0x40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: Warni=
-ng (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus unit =
-address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warning (=
-i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C address m=
-ust be less than 10-bits, got "0x40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:126.11-130.4: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10: I2C bus unit =
-address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:128.3-30: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@80/ipmb1@10:reg: I2C address m=
-ust be less than 10-bits, got "0x40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:137.11-141.4: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10: I2C bus unit=
- address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:139.3-30: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@100/ipmb3@10:reg: I2C address =
-must be less than 10-bits, got "0x40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:148.11-152.4: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10: I2C bus unit=
- address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:150.3-30: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@180/ipmb5@10:reg: I2C address =
-must be less than 10-bits, got "0x40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:159.11-163.4: Warn=
-ing (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10: I2C bus unit=
- address format error, expected "40000010"
-    arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts:161.3-30: Warning =
-(i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@300/ipmb7@10:reg: I2C address =
-must be less than 10-bits, got "0x40000010"
-
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Link: https://lore.kernel.org/r/20200715213738.1640030-1-drew@beagleboard.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-For more info write to <info@kernelci.org>
+ drivers/gpio/gpio-omap.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+V2 changes:
+- adjust the braces to match the correct coding style
+- Linus: should I be creating a patch that is just the delta for the
+  braces?
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index b8e2ecc3eade..0ccb31de0b67 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -896,12 +896,18 @@ static int omap_gpio_set_config(struct gpio_chip *chip, unsigned offset,
+ 				unsigned long config)
+ {
+ 	u32 debounce;
++	int ret = -ENOTSUPP;
++
++	if ((pinconf_to_config_param(config) == PIN_CONFIG_BIAS_DISABLE) ||
++	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_UP) ||
++	    (pinconf_to_config_param(config) == PIN_CONFIG_BIAS_PULL_DOWN)) {
++		ret = gpiochip_generic_config(chip, offset, config);
++	} else if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
++		debounce = pinconf_to_config_argument(config);
++		ret = omap_gpio_debounce(chip, offset, debounce);
++	}
+ 
+-	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
+-		return -ENOTSUPP;
+-
+-	debounce = pinconf_to_config_argument(config);
+-	return omap_gpio_debounce(chip, offset, debounce);
++	return ret;
+ }
+ 
+ static void omap_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+-- 
+2.25.1
+
