@@ -2,28 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 239652230D2
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 03:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A0D2230DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 03:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgGQBxi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Jul 2020 21:53:38 -0400
-Received: from lucky1.263xmail.com ([211.157.147.130]:43028 "EHLO
+        id S1726200AbgGQB4F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Jul 2020 21:56:05 -0400
+Received: from lucky1.263xmail.com ([211.157.147.131]:38752 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgGQBxh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 21:53:37 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id C8F58CA817;
-        Fri, 17 Jul 2020 09:53:34 +0800 (CST)
+        with ESMTP id S1726322AbgGQB4D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Jul 2020 21:56:03 -0400
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 58B0CB0406;
+        Fri, 17 Jul 2020 09:53:41 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
 X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P17843T139820223420160S1594950813542175_;
-        Fri, 17 Jul 2020 09:53:34 +0800 (CST)
+        by smtp.263.net (postfix) whith ESMTP id P18585T140686284289792S1594950820382085_;
+        Fri, 17 Jul 2020 09:53:41 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <2cd34631c355ac32b25d606a1e33602c>
+X-UNIQUE-TAG: <b3684f7a0e79ddc7dc7ebe77b9f2000b>
 X-RL-SENDER: jay.xu@rock-chips.com
 X-SENDER: xjq@rock-chips.com
 X-LOGIN-NAME: jay.xu@rock-chips.com
@@ -37,9 +37,9 @@ To:     heiko@sntech.de, linus.walleij@linaro.org
 Cc:     linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
         david.wu@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 10/13] pinctrl: rockchip: do codingstyle
-Date:   Fri, 17 Jul 2020 09:53:32 +0800
-Message-Id: <20200717015332.14383-1-jay.xu@rock-chips.com>
+Subject: [PATCH 11/13] pinctrl: rockchip: do codingstyle
+Date:   Fri, 17 Jul 2020 09:53:39 +0800
+Message-Id: <20200717015339.14440-1-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200717014908.13914-1-jay.xu@rock-chips.com>
 References: <20200717014908.13914-1-jay.xu@rock-chips.com>
@@ -48,60 +48,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add RK3288 definitons to separate from other SoCs.
+Add RK3128 definitions to separate from other SoCs.
 
 Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ drivers/pinctrl/pinctrl-rockchip.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index ec6a1a08f8b1..04e7027ec8e1 100644
+index 04e7027ec8e1..3b74455dcdb2 100644
 --- a/drivers/pinctrl/pinctrl-rockchip.c
 +++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1855,6 +1855,11 @@ static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+@@ -1799,6 +1799,8 @@ static void rk2928_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ };
+ 
+ #define RK3128_PULL_OFFSET	0x118
++#define RK3128_PULL_PINS_PER_REG	16
++#define RK3128_PULL_BANK_STRIDE		8
+ 
+ static void rk3128_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ 					 int pin_num, struct regmap **regmap,
+@@ -1808,10 +1810,10 @@ static void rk3128_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ 
+ 	*regmap = info->regmap_base;
+ 	*reg = RK3128_PULL_OFFSET;
+-	*reg += bank->bank_num * RK2928_PULL_BANK_STRIDE;
+-	*reg += ((pin_num / RK2928_PULL_PINS_PER_REG) * 4);
++	*reg += bank->bank_num * RK3128_PULL_BANK_STRIDE;
++	*reg += ((pin_num / RK3128_PULL_PINS_PER_REG) * 4);
+ 
+-	*bit = pin_num % RK2928_PULL_PINS_PER_REG;
++	*bit = pin_num % RK3128_PULL_PINS_PER_REG;
  }
  
- #define RK3288_PULL_OFFSET		0x140
-+#define RK3288_PULL_PMU_OFFSET		0x64
-+#define RK3288_PULL_BITS_PER_PIN	2
-+#define RK3288_PULL_PINS_PER_REG	8
-+#define RK3288_PULL_BANK_STRIDE		16
-+
- static void rk3288_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 				    int pin_num, struct regmap **regmap,
- 				    int *reg, u8 *bit)
-@@ -1864,22 +1869,22 @@ static void rk3288_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 	/* The first 24 pins of the first bank are located in PMU */
- 	if (bank->bank_num == 0) {
- 		*regmap = info->regmap_pmu;
--		*reg = RK3188_PULL_PMU_OFFSET;
-+		*reg = RK3288_PULL_PMU_OFFSET;
- 
--		*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
--		*bit = pin_num % RK3188_PULL_PINS_PER_REG;
--		*bit *= RK3188_PULL_BITS_PER_PIN;
-+		*reg += ((pin_num / RK3288_PULL_PINS_PER_REG) * 4);
-+		*bit = pin_num % RK3288_PULL_PINS_PER_REG;
-+		*bit *= RK3288_PULL_BITS_PER_PIN;
- 	} else {
- 		*regmap = info->regmap_base;
- 		*reg = RK3288_PULL_OFFSET;
- 
- 		/* correct the offset, as we're starting with the 2nd bank */
- 		*reg -= 0x10;
--		*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
--		*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
-+		*reg += bank->bank_num * RK3288_PULL_BANK_STRIDE;
-+		*reg += ((pin_num / RK3288_PULL_PINS_PER_REG) * 4);
- 
--		*bit = (pin_num % RK3188_PULL_PINS_PER_REG);
--		*bit *= RK3188_PULL_BITS_PER_PIN;
-+		*bit = (pin_num % RK3288_PULL_PINS_PER_REG);
-+		*bit *= RK3288_PULL_BITS_PER_PIN;
- 	}
- }
- 
+ #define RK3188_PULL_OFFSET		0x164
 -- 
 2.17.1
 
