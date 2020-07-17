@@ -2,103 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B809223D32
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C635223D2F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Jul 2020 15:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGQNob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Jul 2020 09:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgGQNo1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Jul 2020 09:44:27 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F587C061755
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 06:44:27 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u12so6071485lff.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Jul 2020 06:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1cUJdFz7tKiJruju+faOa4LG72A7NyvpvJU3G6JjCco=;
-        b=cZMposf8Bdnm371NM5sPZlM/Is0F5t0m+S9ezxyz5F0ewN5dQ4z9Gz4kV19AV/oGv7
-         AHwH4yY0xZA85B8vd03RqF+47bHBNo+zh9Gn0WtV4oYw7yuzYJg94UEpD+yhv+YuCIFk
-         DBN11Ba0xu3uapZyMG133CrLeSV5g0Md5zrsihIFZYDxIvcKlFifAd4KzKRbmJ8fUs13
-         nW3qsfXWmjnoRjIk8xtLhgfZyupBJncmE7HMrBGg3zdfRQpIbiS/0fkEZv6YRmM10hjo
-         1IDc22DAV+kyFgNesZmJCV92yMZpf8ajo9bFcrPoKc3k2puE/9sa3gjwE+Tl3cnJflBQ
-         2lQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1cUJdFz7tKiJruju+faOa4LG72A7NyvpvJU3G6JjCco=;
-        b=H9TwJdeFYpCfl8gz7vhYHJzCpDVJPTY1Y5NurBmys/qp3DoR1Vspgv8yriTFclHW1t
-         WBVDC6rT1mKgj5JKseKbDkeGNewj03gUj7Xsvs1DNwj5vfrLT2qWf9VM4yiIjCe0Yyak
-         cXB8OGINXmbE9C6l0sbRc/JvmEtfjpHzKStZcc8BZaHnVIwxXwlr1eFTDUDYmfuQt+fL
-         j9JcZty1m2Zzj9elglH6dpHiAyR/VBSPJ6tfznhY8QszbIv24E94nhpOl564/Z4aTdh3
-         5GqoaLYavFF0hK9ywaZLPn6BL4Nr3+MpUgySDms+jl0nLyzy7NI0RsbiHQZpnPEwD5+5
-         Mq4g==
-X-Gm-Message-State: AOAM530Z6dJxrjB1l4qydX4cCmVlUUZ4Sri3wlXsfUjtVbZtadlV3ex3
-        Re0wTzRNhkvBfv/2munl8YgBe8/8NYKu+4cTbML+KQ==
-X-Google-Smtp-Source: ABdhPJz9OaEbmRdr7tZ9xjj6gzeKrgTKyKKbHvXy2wlCBJ59h3kvRdQYhaDAYRnQwuY9xk+M8U0GuJTdEB6TDm8UksU=
-X-Received: by 2002:a19:203:: with SMTP id 3mr4730864lfc.77.1594993465647;
- Fri, 17 Jul 2020 06:44:25 -0700 (PDT)
+        id S1726079AbgGQNoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Jul 2020 09:44:20 -0400
+Received: from smtp48.i.mail.ru ([94.100.177.108]:59370 "EHLO smtp48.i.mail.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgGQNoU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Jul 2020 09:44:20 -0400
+X-Greylist: delayed 2861 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jul 2020 09:44:19 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=kh5wuKEi0rw79GCM0tHQndYjyVD4Ap4Wz6eWfkrClKs=;
+        b=IA27W7TVeqBU4sAsa8D1EEwqhvUgBg0u1XFb/GExoleSoI1NyrTWrfjVULbJUiazGFKPJxURmCFNcBe4xmEELbfdDV2fKTZ1odwMtHvBGCGYyHuEiEViZHmlQ6h1uGt3znZWfKR9sltRGHK7eyUlZp7aL8p2OsiFbeMd5qYNZoM=;
+Received: by smtp48.i.mail.ru with esmtpa (envelope-from <fido_max@inbox.ru>)
+        id 1jwQev-0003eG-HS; Fri, 17 Jul 2020 16:44:17 +0300
+Subject: Re: gpiolib gpio_chrdev_release duration is about 30 ms
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <7eb11c0d-cd11-f873-c336-4ec955a7bdb3@inbox.ru>
+ <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
+From:   Maxim Kochetkov <fido_max@inbox.ru>
+Message-ID: <9f141fd1-3c73-c839-b7ad-529a61645031@inbox.ru>
+Date:   Fri, 17 Jul 2020 16:44:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594164323-14920-1-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdYP4J+MZjxWUnkM-XGaMmFFZfMCfY13r7G6r2=v3F6zQw@mail.gmail.com>
- <DB3PR0402MB39168FEA9306CBF90A596E31F5630@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916FB27846F462C2210C3BFF57E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkda2gdu8FsSM0MC6g8C1mebmVc5dFWJZwNvQUPXNi5bnkQ@mail.gmail.com>
- <DB3PR0402MB39167A4BB808A0679257DEF9F57F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CACRpkdbCVZaHqijqMck+jLAJuCAT31HA=9wwcV_EnQc=hsXLwg@mail.gmail.com> <20200717121436.GA2953399@kroah.com>
-In-Reply-To: <20200717121436.GA2953399@kroah.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 17 Jul 2020 15:44:14 +0200
-Message-ID: <CACRpkdYd1g6GScFitPkf-VSn2kTmWOjUi07ZeVhZiP2=0qCUbA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: mxc: Support module build
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Adam Ford <aford173@gmail.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>, Jon Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACRpkda-pXF71vr5v90yipKubc14tbZW5Ryw1o7rdn4FbWwsTw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp48.i.mail.ru; auth=pass smtp.auth=fido_max@inbox.ru smtp.mailfrom=fido_max@inbox.ru
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD9BB76C036EA8E79AC8C6DDDA81CAC925A1649AE829B35E875182A05F538085040A7326E6647923DA28F627B927FF4DB1B31D200EA6C0F8E1856D14DDA4F1F77D3
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE72847AA60176ABEF3EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063715F166F2542EEE4C8638F802B75D45FF5571747095F342E8C7A0BC55FA0FE5FCFF7055EEDF52C4FF8A1F8490E0B463034436006E7F579C8E389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C0D9442B0B5983000E8941B15DA834481FCF19DD082D7633A0E7DDDDC251EA7DABA471835C12D1D977725E5C173C3A84C3CA5A41EBD8A3A0199FA2833FD35BB23DF004C906525384309383FD4D963104D47B076A6E789B0E975F5C1EE8F4F765FCB43D85947FB923253AA81AA40904B5D9CF19DD082D7633A0FEB97ECC69AE80BD3AA81AA40904B5D98AA50765F7900637ACB8A4D18BD750D9D81D268191BDAD3D18080C068C56568E156CCFE7AF13BCA413377AFFFEAFD26923F8577A6DFFEA7CA60C52B68663E2D593EC92FD9297F6715571747095F342E857739F23D657EF2BD5E8D9A59859A8B66F6A3E018CF4DC80089D37D7C0E48F6C5571747095F342E857739F23D657EF2B6825BDBE14D8E7028C9DFF55498CEFB0BD9CCCA9EDD067B1EDA766A37F9254B7
+X-C8649E89: 7A9803CE3BA91129237D4260330B54E0A5C68945EA9D8E5F95CA3A3E610280F79A0FC3F32F9EC09A
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojyFZPfq27zy/9fBaXEqPTBQ==
+X-Mailru-Internal-Actual: A:0.90678115368868
+X-Mailru-Sender: 11C2EC085EDE56FA9C10FA2967F5AB247B4F270C6BDE20563350FD734DA95EF98F0AAA4051A5F5B9EE9242D420CFEBFD3DDE9B364B0DF2891A624F84B2C74EDA4239CF2AF0A6D4F80DA7A0AF5A3A8387
+X-Mras: Ok
 Sender: linux-gpio-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 2:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+------------------------------------------
+#define GPIOS_NUM 8
+static char* gpio_names[GPIOS_NUM] = {"IO0", "IO1", "IO2", "IO3", "WR", 
+"CS", "OE", "ADD_EN"};
+................
+gpio_init() {
 
-> So moving drivers to modules is good.  If a module can be removed, even
-> better, but developers should not be lazy and just flat out not try at
-> all to make their code unloadable if at all possible.
->
-> Does that help?
-
-Yeah it confirms my intuitive maintenance approach: developer submits
-modularization patch, I will be a bit inquisitive and "can't you attempt
-to make this thing unload too" and if they conclude that that is
-an unfathomable effort I will likely merge it anyway as very likely
-the kernel looks better after than before provided all build and test
-coverage stays the same as well.
-
-Thanks!
-Linus Walleij
+     int i;
+     for (i = 0; i < GPIOS_NUM; ++i) {
+         syslog(LOG_INFO,"%s %d",__FUNCTION__,__LINE__);
+         gpio_lines[i] = gpiod_line_find(gpio_names[i]);
+         syslog(LOG_INFO,"%s %d",__FUNCTION__,__LINE__);
+     }
+}
+-------------------------------------------
+I used syslog/printk to measure time.
+syslog in example shows about 300ms on each gpiod_line_find call.
+17.07.2020 16:37, Linus Walleij пишет:
+> Hi Maxim,
+> 
+> On Fri, Jul 17, 2020 at 2:56 PM Maxim Kochetkov <fido_max@inbox.ru> wrote:
+> 
+>> I'm using libgpiod in userspace.
+>> I have 6 gpiochip's on my board.
+>> gpiod_line_find takes about 300ms to find GPIO line.
+>>
+>> gpiod_line_find calls gpiod_foreach_chip
+>> then gpiod_chip_iter_next
+>> then gpiod_chip_close then close(chip->fd)
+>> then we are going to kernel gpiolib gpio_chrdev_release
+>> then atomic_notifier_chain_unregister
+>> then synchronize_rcu()
+>>
+>> synchronize_rcu takes about 30 ms (6*30ms=280ms)
+>>
+>> I tried to remove synchronize_rcu from atomic_notifier_chain_unregister
+>> and gpiod_line_find takes about 2ms now.
+> 
+> Interesting! Can you provide some context? Are you just testing because
+> curious or do you need to meet a design objective?
+> 
+> Did you use ftrace or similar instrumentation to drill down and find
+> where time is spent?
+> 
+> Yours,
+> Linus Walleij
+> 
